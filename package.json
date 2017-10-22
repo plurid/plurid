@@ -1,0 +1,29 @@
+{
+	"name": "plurid",
+	"version": "0.1.0",
+	"description": "View media in three dimensions.",
+	"main": "index.js",
+	"scripts": {
+		"test": "mocha --reporter spec"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/plurid/plurid.js.git"
+	},
+	"keywords": [
+		"text",
+		"media",
+		"three",
+		"dimensions"
+	],
+	"author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/plurid/plurid.js/issues"
+	},
+	"homepage": "https://github.com/plurid/plurid.js#readme",
+	"devDependencies": {
+		"chai": "^4.1.2",
+		"mocha": "^4.0.1"
+	}
+}
