@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/plurid/plurid.js.svg?branch=master)](https://travis-ci.org/plurid/plurid.js)
+[![Coverage Status](https://coveralls.io/repos/github/plurid/plurid.js/badge.svg?branch=master)](https://coveralls.io/github/plurid/plurid.js?branch=master)
+
 plurid.js
 =========
 
