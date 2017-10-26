@@ -2,7 +2,7 @@
 
 var assert = require('chai').assert;
 
-const index = require('../index');
+const index = require('../app');
 
 describe('Mocha Work Test', function () {
     it('expects works', function () {
