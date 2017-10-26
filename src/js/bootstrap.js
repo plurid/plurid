@@ -1,5 +1,5 @@
 // require JS files
-require('./components/test');
+require('./components/plurid');
 
 
 // require Sass main file
