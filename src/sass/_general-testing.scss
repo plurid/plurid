@@ -1,0 +1,20 @@
+$body-color: hsl(0, 0%, 20%);
+$text-color: hsl(0, 0%, 90%);
+
+body {
+    background-color: $body-color;
+    color: $text-color;
+}
+
+a {
+    color: darken($text-color, 20%);
+}
+
+.content {
+    background-color: hsl(0, 0%, 40%);
+    padding: 50px;
+    width: 800px;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}

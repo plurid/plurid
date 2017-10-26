@@ -1,0 +1,27 @@
+#plurid {
+    margin: 0 auto;
+    width: 70%;
+    transform-origin: center center;
+
+    transform: rotateY(30deg);
+    transform-style: preserve-3d;
+
+    -webkit-transform: rotateY(30deg); /* Chrome, Safari, Opera */
+    -webkit-transform-style: preserve-3d; /* Chrome, Safari, Opera */
+
+    -webkit-backface-visibility: visible; /* Chrome, Safari, Opera */
+    backface-visibility: visible;
+}
+
+#plurid-container {
+    position: relative;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 50%;
+    margin: 50px auto;
+    height: 700px;
+    background-color: hsl(0, 0%, 10%);
+    overflow: hidden;
+    -webkit-perspective: 400px; /* Chrome, Safari, Opera */
+    perspective: 400px;
+}

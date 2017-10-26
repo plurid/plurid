@@ -6,7 +6,8 @@
 	"scripts": {
 		"test": "mocha --reporter spec",
 		"cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*",
-		"build": "webpack"
+		"build": "webpack",
+		"watch": "webpack --watch"
 	},
 	"repository": {
 		"type": "git",
