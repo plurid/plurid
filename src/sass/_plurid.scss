@@ -1,12 +1,14 @@
+$rotateYAngle: 0deg;
+
 #plurid {
     margin: 0 auto;
     width: 70%;
     transform-origin: center center;
 
-    transform: rotateY(30deg);
+    transform: rotateX($rotateYAngle);
     transform-style: preserve-3d;
 
-    -webkit-transform: rotateY(30deg); /* Chrome, Safari, Opera */
+    -webkit-transform: rotateX($rotateYAngle); /* Chrome, Safari, Opera */
     -webkit-transform-style: preserve-3d; /* Chrome, Safari, Opera */
 
     -webkit-backface-visibility: visible; /* Chrome, Safari, Opera */
