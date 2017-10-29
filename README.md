@@ -4,7 +4,7 @@
 plurid.js
 =========
 
-Plurid.js is an MIT-licensed, open source JavaScript library to view media in three dimensions
+Plurid.js is a MIT-licensed, open source JavaScript library to view media in three dimensions
 
 ## Installation
 
