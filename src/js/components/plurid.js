@@ -1,37 +1,55 @@
 var plurid = document.getElementById('plurid');
+var pluridContainer = document.getElementById('plurid-container');
 
-var lastPosition = {};
+
+pluridContainer.addEventListener("mousedown", function(e) {
+    var withShift = !!e.shiftKey;
+    console.log(withShift);
+    if (withShift) {
+        pluridContainer.addEventListener("mousemove", function(event) {
+                if(withShift) {
+                    getMouseDirection(event);
+                }
+                pluridContainer.addEventListener("click", function() {
+                    withShift = false;
+                })
+        });
+    }
+});
 
 
-plurid.addEventListener("mousedown", function() {
-    plurid.addEventListener("mousemove", function(event) {
-        detectDirection(event, lastPosition);
-    })
-})
+function getMouseDirection(event) {
+    var rotateX = parseInt(getTransform(plurid).rotateX);
+    var rotateY = parseInt(getTransform(plurid).rotateY);
+    var angleIncrement = 3;
 
-function detectDirection(e, pos) {
-    if (typeof(lastPosition.x) != 'undefined') {
-        var deltaX = lastPosition.x - event.offsetX,
-            deltaY = lastPosition.y - event.offsetY;
-        if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX > 0) {
-            //left
-            console.log("left");
-        } else if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
-            //right
-            console.log("right");
-        } else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > 0) {
-            //up
-            console.log("up");
-        } else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY < 0) {
-            //down
-            console.log("down");
-        }
+    if (event.movementX < 0 ) {
+        // left
+        console.log("left");
+        rotateY -= angleIncrement;
+        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+    } else if (event.movementX > 0) {
+        // right
+        console.log("right")
+        rotateY += angleIncrement;
+        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
     }
 
-    lastPosition = {
-        x : event.offsetX,
-        y : event.offsetY
-    };
+    if (event.movementY < 0) {
+        // up
+        console.log("up");
+        rotateX += angleIncrement;
+        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+    } else if (event.movementY > 0) {
+        // down
+        console.log("down");
+        rotateX -= angleIncrement;
+        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+    }
 }
 
 
@@ -51,16 +69,16 @@ function getTransform(element) {
         var sin2ForX = parseFloat(values[9]);
 
         if (sin1ForX > 0) {
-            console.log('X a');
-            var rotX = Math.acos(cos1ForX) * 180 / pi;
+            // console.log('X a');
+            var rotX = Math.round(Math.acos(cos1ForX) * 180 / pi);
         } else if (sin1ForX < 0 && cos1ForX < 0) {
-            console.log('X b');
+            // console.log('X b');
             var rotX = Math.asin(sin1ForX) * 180 / pi * (-1) + 180;
         } else if (cos1ForX == 0) {
-            console.log('X c');
+            // console.log('X c');
             var rotX = 0;
         } else {
-            console.log('X d');
+            // console.log('X d');
             var rotX = 360 - Math.acos(cos1ForX) * 180 / pi;
         }
 
@@ -69,24 +87,23 @@ function getTransform(element) {
         var sin1ForY = parseFloat(values[2]);
         var sin2ForY = parseFloat(values[8]);
 
-
         if (sin1ForY > 0 && sin2ForY < 0) {
-            console.log('Y a0');
+            // console.log('Y a0');
             var rotY = 360 - Math.acos(cos1ForY) * 180 / pi;
         } else if (sin1ForY > 0) {
-            console.log('Y a');
+            // console.log('Y a');
             var rotY = Math.acos(cos1ForY) * 180 / pi;
         } else if (sin1ForY < 0 && cos1ForY < 0) {
-            console.log('Y b');
+            // console.log('Y b');
             var rotY = Math.asin(sin2ForY) * 180 / pi * (-1) + 180;
         } else if (sin1ForY < 0) {
-            console.log('Y c');
+            // console.log('Y c');
             var rotY = Math.asin(sin2ForY) * 180 / pi;
         } else if (cos1ForY == 1) {
-            console.log('Y d');
+            // console.log('Y d');
             var rotY = 0;
         } else {
-            console.log('Y e');
+            // console.log('Y e');
             var rotY = 360 - Math.acos(cos1ForY) * 180 / pi;
         }
 
@@ -103,8 +120,7 @@ function getTransform(element) {
     };
 }
 
-console.log(getTransform(plurid));
-
+// console.log(getTransform(plurid));
 
 function getMatrixValues(element) {
     var transformValues = window.getComputedStyle(element, null).getPropertyValue("transform");
@@ -113,4 +129,4 @@ function getMatrixValues(element) {
     return matrixValues;
 }
 
-console.log(getMatrixValues(plurid));
+// console.log(getMatrixValues(plurid));
