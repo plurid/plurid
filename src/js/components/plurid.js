@@ -2,20 +2,25 @@ var plurid = document.getElementById('plurid');
 var pluridContainer = document.getElementById('plurid-container');
 
 
-pluridContainer.addEventListener("mousedown", function(e) {
-    var withShift = !!e.shiftKey;
-    console.log(withShift);
-    if (withShift) {
-        pluridContainer.addEventListener("mousemove", function(event) {
-                if(withShift) {
-                    getMouseDirection(event);
-                }
-                pluridContainer.addEventListener("click", function() {
-                    withShift = false;
-                })
-        });
+pluridContainer.addEventListener("mousemove", function(event) {
+    // console.log(event.shiftKey);
+    if (!!event.shiftKey) {
+        // getMouseDirection(event);
+        console.log("rotate");
+        // rotatePlurid();
+    }
+
+    if (!!event.altKey) {
+        console.log("move");
+        // movePlurid(event)
+    }
+
+    if (!!event.ctrlKey || !!event.metaKey) {
+        console.log("scroll")
+        // scrollPlurid(event)
     }
 });
+
 
 
 function getMouseDirection(event) {
@@ -25,13 +30,13 @@ function getMouseDirection(event) {
 
     if (event.movementX < 0 ) {
         // left
-        console.log("left");
+        // console.log("left");
         rotateY -= angleIncrement;
         plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
         plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
     } else if (event.movementX > 0) {
         // right
-        console.log("right")
+        // console.log("right")
         rotateY += angleIncrement;
         plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
         plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
@@ -39,13 +44,13 @@ function getMouseDirection(event) {
 
     if (event.movementY < 0) {
         // up
-        console.log("up");
+        // console.log("up");
         rotateX += angleIncrement;
         plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
         plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
     } else if (event.movementY > 0) {
         // down
-        console.log("down");
+        // console.log("down");
         rotateX -= angleIncrement;
         plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
         plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
