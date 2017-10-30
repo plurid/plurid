@@ -49,7 +49,6 @@ $rotateYAngle: 1deg;
 #plurid {
     margin: 0 auto;
     width: 70%;
-    transform-origin: center center;
 
     transform: rotateX($rotateXAngle) rotateY($rotateYAngle);
     transform-style: preserve-3d;
@@ -61,6 +60,22 @@ $rotateYAngle: 1deg;
     backface-visibility: visible;
 }
 
+
+// #plurid:after {
+//     content: '';
+//     right: 0px;
+//     bottom: 0px;
+//     position: absolute;
+//     top: 0px;
+//     left: 0px;
+//     background: hsla(0, 0%, 10%, 0.8);
+//     transform: rotateY(180deg);
+//     backface-visibility: hidden;
+//     -webkit-transform: rotateY(180deg);
+//     -webkit-backface-visibility: hidden;
+// }
+
+
 #plurid-container {
     position: relative;
     margin-top: 50px;
@@ -70,6 +85,13 @@ $rotateYAngle: 1deg;
     height: 700px;
     background-color: hsl(0, 0%, 10%);
     overflow: hidden;
-    -webkit-perspective: 400px; /* Chrome, Safari, Opera */
-    perspective: 400px;
+    -webkit-perspective: 500px; /* Chrome, Safari, Opera */
+    perspective: 500px;
+    transform-origin: center center;
+
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+
+    perspective-origin: 50% 50%;
+    -webkit-perspective-origin: 50% 50%;
 }
