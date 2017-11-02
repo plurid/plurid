@@ -10,8 +10,8 @@
 // $rotateXAngle: 0deg;
 // $rotateYAngle: 0deg;
 
-$rotateXAngle: 1deg;
-$rotateYAngle: 1deg;
+// $rotateXAngle: 1deg;
+// $rotateYAngle: 1deg;
 
 // $rotateXAngle: 89deg;
 // $rotateYAngle: 89deg;
@@ -43,17 +43,23 @@ $rotateYAngle: 1deg;
 // $rotateXAngle: 359deg;
 // $rotateYAngle: 359deg;
 
-// $rotateXAngle: 360deg;
-// $rotateYAngle: 360deg;
+$rotateXAngle: 0deg;
+$rotateYAngle: 12deg;
+
+$translateX: 55px;
+$translateY: 190px;
+
+$scale: 0.9;
+
 
 #plurid {
     margin: 0 auto;
     width: 70%;
 
-    transform: rotateX($rotateXAngle) rotateY($rotateYAngle);
+    transform: rotateX($rotateXAngle) rotateY($rotateYAngle) translateX($translateX) translateY($translateY) scale($scale);
     transform-style: preserve-3d;
 
-    -webkit-transform: rotateX($rotateXAngle) rotateY($rotateYAngle); /* Chrome, Safari, Opera */
+    -webkit-transform: rotateX($rotateXAngle) rotateY($rotateYAngle) translateX($translateX) translateY($translateY) scale($scale); /* Chrome, Safari, Opera */
     -webkit-transform-style: preserve-3d; /* Chrome, Safari, Opera */
 
     -webkit-backface-visibility: visible; /* Chrome, Safari, Opera */
