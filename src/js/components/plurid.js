@@ -1,17 +1,20 @@
-var plurid = document.getElementById('plurid');
-// var pluridRotate = document.getElementById('plurid-rotate');
-// var pluridTranslate = document.getElementById('plurid-translate');
-// var pluridScale = document.getElementById('plurid-scale');
 var pluridContainer = document.getElementById('plurid-container');
 
+var pluridRotate = document.getElementById('plurid-rotate');
+var pluridTranslate = document.getElementById('plurid-translate');
+var pluridScale = document.getElementById('plurid-scale');
 
+var pluridContent = document.getElementById('plurid-content');
+
+
+// Basic Rotation, Translation, Scaling of the Plurid Content
 pluridContainer.addEventListener("mousemove", function(event) {
     if (!!event.shiftKey) {
         rotatePlurid(event);
     }
 
     if (!!event.altKey) {
-        movePlurid(event)
+        translatePlurid(event)
     }
 
     if (!!event.ctrlKey || !!event.metaKey) {
@@ -19,6 +22,13 @@ pluridContainer.addEventListener("mousemove", function(event) {
     }
 });
 
+
+// Reset Transfor at Double Click
+pluridContent.addEventListener('dblclick', function() {
+    setTransformRotate(pluridRotate, 0, 0)
+    setTransformTranslate(pluridTranslate, 0, 0)
+    setTransformScale(pluridScale, 1.0)
+});
 
 
 function getMouseDirection(event) {
@@ -43,86 +53,86 @@ function getMouseDirection(event) {
 function rotatePlurid(event) {
     var direction = getMouseDirection(event);
 
-    var rotateX = getTransform(plurid).rotateX;
-    var rotateY = getTransform(plurid).rotateY;
-    var translateX = getTransform(plurid).translateX;
-    var translateY = getTransform(plurid).translateY;
-    var scale = getTransform(plurid).scale;
+    var rotateX = getTransformRotate(pluridRotate).rotateX;
+    var rotateY = getTransformRotate(pluridRotate).rotateY;
 
     var angleIncrement = 3;
 
     if (direction === "left") {
         rotateY -= angleIncrement;
-        console.log(rotateX, rotateY, translateX, translateY, scale);
-        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale)
-
-        // plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateX(" + translateX + "px) + translateY(" + translateY + "px) + scale(" + scale + ")";
-        // plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateX(" + translateX + "px) + translateY(" + translateY + "px) + scale(" + scale + ")";
+        setTransformRotate(pluridRotate, rotateX, rotateY)
     } else if (direction === "right") {
         rotateY += angleIncrement;
-
-        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale)
-
-        // plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-        // plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        setTransformRotate(pluridRotate, rotateX, rotateY)
     } else if (direction === "up") {
         rotateX += angleIncrement;
-
-        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale)
-
-        // plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-        // plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        setTransformRotate(pluridRotate, rotateX, rotateY)
     } else if (direction === "down") {
         rotateX -= angleIncrement;
-
-        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale)
-
-        // plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-        // plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        setTransformRotate(pluridRotate, rotateX, rotateY)
     }
+
+    // console.log(direction);
 }
 
 
-function movePlurid(event) {
+function translatePlurid(event) {
     var direction = getMouseDirection(event);
 
-    var rotateX = getTransform(plurid).rotateX;
-    var rotateY = getTransform(plurid).rotateY;
-    var translateX = getTransform(plurid).translateX;
-    var translateY = getTransform(plurid).translateY;
-    var scale = getTransform(plurid).scale;
+    var translateX = getTransformTranslate(pluridTranslate).translateX;
+    var translateY = getTransformTranslate(pluridTranslate).translateY;
+    console.log(translateX, translateY)
 
-    var linearIncrement = 3;
+    var linearIncrement = 10;
 
+    if (direction === "left") {
+        translateX -= linearIncrement;
+        setTransformTranslate(pluridTranslate, translateX, translateY);
+    } else if (direction === "right") {
+        translateX += linearIncrement;
+        setTransformTranslate(pluridTranslate, translateX, translateY);
+    } else if (direction === "up") {
+        translateY -= linearIncrement;
+        setTransformTranslate(pluridTranslate, translateX, translateY);
+    } else if (direction === "down") {
+        translateY += linearIncrement;
+        setTransformTranslate(pluridTranslate, translateX, translateY);
+    }
 
-    console.log(direction);
+    // console.log(direction);
 }
 
 
 function scalePlurid(event) {
     var direction = getMouseDirection(event);
 
-    var rotateX = getTransform(plurid).rotateX;
-    var rotateY = getTransform(plurid).rotateY;
-    var translateX = getTransform(plurid).translateX;
-    var translateY = getTransform(plurid).translateY;
-    var scale = getTransform(plurid).scale;
+    var scale = getTransformScale(pluridScale).scale;
 
     var scaleIncrement = 0.1;
 
+    if (direction === "up") {
+        scale += scaleIncrement;
+        if (scale > 4) {
+            scale = 4
+        }
+        setTransformScale(pluridScale, scale);
+    } else if (direction === "down") {
+        scale -= scaleIncrement;
+        if (scale < 0.1) {
+            scale = 0.1
+        }
+        setTransformScale(pluridScale, scale);
+    }
 
-    console.log(direction);
+    // console.log(direction);
 }
 
 
-function getTransform(element) {
+function getTransformRotate(element) {
     var values = getMatrixValues(element);
 
     var rotateX,
-        rotateY,
-        translateX,
-        translateY,
-        scale;
+        rotateY;
 
     var pi = Math.PI;
 
@@ -176,27 +186,49 @@ function getTransform(element) {
 
         rotateX = rotX;
         rotateY = rotY;
-        translateX = parseFloat(values[12]);
-        translateY = parseFloat(values[13]);
-        scale = parseFloat(values[0]);
     } else if (values.length == 6) {
         rotateX = 0;
         rotateY = 0;
-        translateX = parseFloat(values[4]);
-        translateY = parseFloat(values[5]);
-        scale = parseFloat(values[0]);
     }
 
     return {
         rotateX: rotateX,
-        rotateY: rotateY,
-        translateX: translateX,
-        translateY: translateY,
-        scale: scale
+        rotateY: rotateY
     };
 }
 
-// console.log(getTransform(plurid));
+
+function getTransformTranslate(element) {
+    var values = getMatrixValues(element);
+
+    var translateX,
+        translateY;
+
+    if (values.length == 16) {
+        translateX = parseFloat(values[12]);
+        translateY = parseFloat(values[13]);
+    } else if (values.length == 6) {
+        translateX = parseFloat(values[4]);
+        translateY = parseFloat(values[5]);
+    }
+
+    return {
+        translateX: translateX,
+        translateY: translateY
+    };
+}
+
+
+function getTransformScale(element) {
+    var values = getMatrixValues(element);
+
+    var scale = parseFloat(values[0]);
+
+    return {
+        scale: scale
+    }
+}
+
 
 function getMatrixValues(element) {
     var transformValues = window.getComputedStyle(element, null).getPropertyValue("transform");
@@ -208,8 +240,24 @@ function getMatrixValues(element) {
 // console.log(getMatrixValues(plurid));
 
 
-function setTransform(element, rotateX, rotateY, translateX, translateY, scale) {
-    var transformString = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateX(" + translateX + "px) translateY(" + translateY + "px) scale(" + scale + ")";
+function setTransformRotate(element, rotateX, rotateY) {
+    var transformString = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+
+    element.style.transform = transformString;
+    element.style.webkitTransform = transformString;
+}
+
+
+function setTransformTranslate(element, translateX, translateY) {
+    var transformString = "translateX(" + translateX + "px) translateY(" + translateY + "px)";
+
+    element.style.transform = transformString;
+    element.style.webkitTransform = transformString;
+}
+
+
+function setTransformScale(element, scale) {
+    var transformString = "scale(" + scale + ")";
 
     element.style.transform = transformString;
     element.style.webkitTransform = transformString;
