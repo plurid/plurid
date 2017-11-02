@@ -7,20 +7,52 @@
         <title>Basic</title>
 
         <style>
-            #plurid {
+
+            body {
+                background-color: hsl(0, 0%, 20%);
+                color: hsl(0, 0%, 90%);
+            }
+
+            a {
+                color: hsl(0, 0%, 70%);
+            }
+
+            .content {
+                background-color: hsl(0, 0%, 40%);
+                padding: 50px;
+                width: 800px;
+                margin: 0 auto;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+
+
+            #plurid-content {
                 margin: 0 auto;
                 width: 70%;
 
-                transform: rotateX(1deg) rotateY(1deg);
                 transform-style: preserve-3d;
 
-                -webkit-transform: rotateX(1deg) rotateY(1deg); /* Chrome, Safari, Opera */
                 -webkit-transform-style: preserve-3d; /* Chrome, Safari, Opera */
 
                 -webkit-backface-visibility: visible; /* Chrome, Safari, Opera */
                 backface-visibility: visible;
             }
 
+            #plurid-rotate {
+                transform: rotateX(0deg) rotateY(0deg);
+                -webkit-transform: rotateX(0deg) rotateY(0deg); /* Chrome, Safari, Opera */
+            }
+
+            #plurid-translate {
+                transform: translateX(0px) translateY(0px);
+                -webkit-transform: translateX(0px) translateY(0px); /* Chrome, Safari, Opera */
+            }
+
+            #plurid-scale {
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0); /* Chrome, Safari, Opera */
+            }
 
             #plurid-container {
                 position: relative;
@@ -41,25 +73,6 @@
                 perspective-origin: 50% 50%;
                 -webkit-perspective-origin: 50% 50%;
             }
-
-            body {
-                background-color: hsl(0, 0%, 20%);
-                color: hsl(0, 0%, 90%);
-            }
-
-            a {
-                color: hsl(0, 0%, 70%);
-            }
-
-            .content {
-                background-color: hsl(0, 0%, 40%);
-                padding: 50px;
-                width: 800px;
-                margin: 0 auto;
-                margin-top: 50px;
-                margin-bottom: 50px;
-            }
-
         </style>
 
 
@@ -68,142 +81,286 @@
     <body>
 
         <div id="plurid-container">
-            <div id="plurid" class="content">
-                <input type="text" style="text-align:center; color:red; width: 100%; font-size: 30px; padding: 10px;">
-                <p><b>Immanuel Kant</b> (<span class="nowrap"><span class="IPA nopopups noexcerpt"><a href="https://en.wikipedia.org/wiki/Help:IPA/English" title="Help:IPA/English">/<span style="border-bottom:1px dotted"><span title="'k' in 'kind'">k</span><span title="/æ/: 'a' in 'bad'">æ</span><span title="'n' in 'nigh'">n</span><span title="'t' in 'tie'">t</span></span>/</a></span></span>;<sup id="cite_ref-6" class="reference"><a href="#cite_note-6">[6]</a></sup> <small>German:</small> <span title="Representation in the International Phonetic Alphabet (IPA)" class="IPA"><a href="https://en.wikipedia.org/wiki/Help:IPA/Standard_German" title="Help:IPA/Standard German">[ɪˈmaːnu̯eːl kant]</a></span>; 22 April 1724&#160;– 12 February 1804) was a German <a href="https://en.wikipedia.org/wiki/List_of_German-language_philosophers" title="List of German-language philosophers">philosopher</a> who is a central figure in <a href="https://en.wikipedia.org/wiki/Modern_philosophy" title="Modern philosophy">modern philosophy</a>.<sup id="cite_ref-7" class="reference"><a href="#cite_note-7">[7]</a></sup> Kant argued that the human mind creates the structure of human experience, that <a href="https://en.wikipedia.org/wiki/Reason" title="Reason">reason</a> is the source of <a href="https://en.wikipedia.org/wiki/Morality" title="Morality">morality</a>, that <a href="https://en.wikipedia.org/wiki/Aesthetics" title="Aesthetics">aesthetics</a> arises from a faculty of disinterested <a href="https://en.wikipedia.org/wiki/Judgment" class="mw-redirect" title="Judgment">judgment</a>, that <a href="https://en.wikipedia.org/wiki/Space" title="Space">space</a> and <a href="https://en.wikipedia.org/wiki/Time" title="Time">time</a> are forms of our sensibility, and that the world as it is <a href="https://en.wikipedia.org/wiki/Thing-in-itself" title="Thing-in-itself">"in-itself"</a> is independent of our concepts of it. Kant took himself to have effected a "<a href="https://en.wikipedia.org/wiki/Copernican_Revolution#Immanuel_Kant" title="Copernican Revolution">Copernican revolution</a>" in <a href="https://en.wikipedia.org/wiki/Philosophy" title="Philosophy">philosophy</a>, akin to <a href="https://en.wikipedia.org/wiki/Copernicus" class="mw-redirect" title="Copernicus">Copernicus</a>' reversal of the <a href="https://en.wikipedia.org/wiki/Geocentric_model" title="Geocentric model">age-old belief</a> that the sun revolved around the earth. His beliefs continue to have a major influence on contemporary philosophy, especially the fields of <a href="https://en.wikipedia.org/wiki/Metaphysics" title="Metaphysics">metaphysics</a>, <a href="https://en.wikipedia.org/wiki/Epistemology" title="Epistemology">epistemology</a>, <a href="https://en.wikipedia.org/wiki/Ethics" title="Ethics">ethics</a>, <a href="https://en.wikipedia.org/wiki/Political_theory" class="mw-redirect" title="Political theory">political theory</a>, and <a href="https://en.wikipedia.org/wiki/Aesthetics" title="Aesthetics">aesthetics</a>.</p>
-                <p>Politically, Kant was one of the earliest exponents of the idea that <a href="https://en.wikipedia.org/wiki/Perpetual_peace" title="Perpetual peace">perpetual peace</a> could be secured through universal <a href="https://en.wikipedia.org/wiki/Democracy" title="Democracy">democracy</a> and <a href="https://en.wikipedia.org/wiki/International_cooperation" class="mw-redirect" title="International cooperation">international cooperation</a>. He believed that this will be the eventual outcome of <a href="https://en.wikipedia.org/wiki/Universal_history" title="Universal history">universal history</a>, although it is not rationally planned.<sup id="cite_ref-8" class="reference"><a href="#cite_note-8">[8]</a></sup> The exact nature of Kant's religious ideas continues to be the subject of especially heated philosophical dispute, as viewpoints are ranging from the idea that Kant was an early and radical exponent of <a href="https://en.wikipedia.org/wiki/Atheism" title="Atheism">atheism</a> who finally exploded the <a href="https://en.wikipedia.org/wiki/Ontological_argument" title="Ontological argument">ontological argument</a> for God's existence, to more critical treatments epitomized by <a href="https://en.wikipedia.org/wiki/Friedrich_Nietzsche" title="Friedrich Nietzsche">Nietzsche</a> who claimed that Kant had "theologian blood"<sup id="cite_ref-9" class="reference"><a href="#cite_note-9">[9]</a></sup> and that Kant was merely a sophisticated <a href="https://en.wikipedia.org/wiki/Apologist" class="mw-redirect" title="Apologist">apologist</a> for traditional <a href="https://en.wikipedia.org/wiki/Christian" title="Christian">Christian</a> religious belief, writing that "Kant wanted to prove, in a way that would dumbfound the common man, that the common man was right: that was the secret joke of this soul."<sup id="cite_ref-10" class="reference"><a href="#cite_note-10">[10]</a></sup></p>
-                <p>In one of Kant's major works, the <i><a href="https://en.wikipedia.org/wiki/Critique_of_Pure_Reason" title="Critique of Pure Reason">Critique of Pure Reason</a></i> (<i>Kritik der reinen Vernunft</i>, 1781),<sup id="cite_ref-11" class="reference"><a href="#cite_note-11">[11]</a></sup> he attempted to explain the relationship between reason and human experience and to move beyond the failures of traditional philosophy and metaphysics. Kant wanted to put an end to an era of futile and speculative theories of human experience, while resisting the <a href="https://en.wikipedia.org/wiki/Philosophical_skepticism" title="Philosophical skepticism">skepticism</a> of thinkers such as <a href="https://en.wikipedia.org/wiki/David_Hume" title="David Hume">David Hume</a>. Kant regarded himself as ending and showing the way beyond the impasse which modern philosophy had led to between <a href="https://en.wikipedia.org/wiki/Rationalists" class="mw-redirect" title="Rationalists">rationalists</a> and <a href="https://en.wikipedia.org/wiki/Empiricists" class="mw-redirect" title="Empiricists">empiricists</a>,<sup id="cite_ref-12" class="reference"><a href="#cite_note-12">[12]</a></sup> and is widely held to have synthesized these two early modern traditions in his thought.<sup id="cite_ref-13" class="reference"><a href="#cite_note-13">[13]</a></sup></p>
-                <p>Kant argued that our experiences are structured by necessary features of our minds. In his view, the mind shapes and structures experience so that, on an abstract level, all human experience shares certain essential structural features. Among other things, Kant believed that the concepts of <i>space</i> and <i>time</i> are integral to all human experience, as are our concepts of <i>cause</i> and <i>effect</i>.<sup id="cite_ref-Warburton_14-0" class="reference"><a href="#cite_note-Warburton-14">[14]</a></sup> One important consequence of this view is that our experience of things is always of the <i>phenomenal</i> world as conveyed by our senses: we do not have direct access to things in themselves, the so-called <i>noumenal</i> world. Kant published other important works on ethics, religion, law, aesthetics, astronomy, and history. These included the <i><a href="https://en.wikipedia.org/wiki/Critique_of_Practical_Reason" title="Critique of Practical Reason">Critique of Practical Reason</a></i> (<i>Kritik der praktischen Vernunft</i>, 1788), the <i><a href="https://en.wikipedia.org/wiki/Metaphysics_of_Morals" class="mw-redirect" title="Metaphysics of Morals">Metaphysics of Morals</a></i> (<i>Die Metaphysik der Sitten</i>, 1797), which dealt with <a href="https://en.wikipedia.org/wiki/Ethics" title="Ethics">ethics</a>, and the <i><a href="https://en.wikipedia.org/wiki/Critique_of_Judgment" title="Critique of Judgment">Critique of Judgment</a></i> (<i>Kritik der Urteilskraft</i>, 1790), which looks at <a href="https://en.wikipedia.org/wiki/Aesthetics" title="Aesthetics">aesthetics</a> and <a href="https://en.wikipedia.org/wiki/Teleology" title="Teleology">teleology</a>.</p>
+            <div id="plurid-rotate">
+                <div id="plurid-translate">
+                    <div id="plurid-scale">
+                        <div id="plurid-content" class="content">
+                            <input type="text" style="text-align:center; color:red; width: 100%; font-size: 30px; padding: 10px;">
+                            <p><b>Immanuel Kant</b> (<span class="nowrap"><span class="IPA nopopups noexcerpt"><a href="https://en.wikipedia.org/wiki/Help:IPA/English" title="Help:IPA/English">/<span style="border-bottom:1px dotted"><span title="'k' in 'kind'">k</span><span title="/æ/: 'a' in 'bad'">æ</span><span title="'n' in 'nigh'">n</span><span title="'t' in 'tie'">t</span></span>/</a></span></span>;<sup id="cite_ref-6" class="reference"><a href="#cite_note-6">[6]</a></sup> <small>German:</small> <span title="Representation in the International Phonetic Alphabet (IPA)" class="IPA"><a href="https://en.wikipedia.org/wiki/Help:IPA/Standard_German" title="Help:IPA/Standard German">[ɪˈmaːnu̯eːl kant]</a></span>; 22 April 1724&#160;– 12 February 1804) was a German <a href="https://en.wikipedia.org/wiki/List_of_German-language_philosophers" title="List of German-language philosophers">philosopher</a> who is a central figure in <a href="https://en.wikipedia.org/wiki/Modern_philosophy" title="Modern philosophy">modern philosophy</a>.<sup id="cite_ref-7" class="reference"><a href="#cite_note-7">[7]</a></sup> Kant argued that the human mind creates the structure of human experience, that <a href="https://en.wikipedia.org/wiki/Reason" title="Reason">reason</a> is the source of <a href="https://en.wikipedia.org/wiki/Morality" title="Morality">morality</a>, that <a href="https://en.wikipedia.org/wiki/Aesthetics" title="Aesthetics">aesthetics</a> arises from a faculty of disinterested <a href="https://en.wikipedia.org/wiki/Judgment" class="mw-redirect" title="Judgment">judgment</a>, that <a href="https://en.wikipedia.org/wiki/Space" title="Space">space</a> and <a href="https://en.wikipedia.org/wiki/Time" title="Time">time</a> are forms of our sensibility, and that the world as it is <a href="https://en.wikipedia.org/wiki/Thing-in-itself" title="Thing-in-itself">"in-itself"</a> is independent of our concepts of it. Kant took himself to have effected a "<a href="https://en.wikipedia.org/wiki/Copernican_Revolution#Immanuel_Kant" title="Copernican Revolution">Copernican revolution</a>" in <a href="https://en.wikipedia.org/wiki/Philosophy" title="Philosophy">philosophy</a>, akin to <a href="https://en.wikipedia.org/wiki/Copernicus" class="mw-redirect" title="Copernicus">Copernicus</a>' reversal of the <a href="https://en.wikipedia.org/wiki/Geocentric_model" title="Geocentric model">age-old belief</a> that the sun revolved around the earth. His beliefs continue to have a major influence on contemporary philosophy, especially the fields of <a href="https://en.wikipedia.org/wiki/Metaphysics" title="Metaphysics">metaphysics</a>, <a href="https://en.wikipedia.org/wiki/Epistemology" title="Epistemology">epistemology</a>, <a href="https://en.wikipedia.org/wiki/Ethics" title="Ethics">ethics</a>, <a href="https://en.wikipedia.org/wiki/Political_theory" class="mw-redirect" title="Political theory">political theory</a>, and <a href="https://en.wikipedia.org/wiki/Aesthetics" title="Aesthetics">aesthetics</a>.</p>
+                            <p>Politically, Kant was one of the earliest exponents of the idea that <a href="https://en.wikipedia.org/wiki/Perpetual_peace" title="Perpetual peace">perpetual peace</a> could be secured through universal <a href="https://en.wikipedia.org/wiki/Democracy" title="Democracy">democracy</a> and <a href="https://en.wikipedia.org/wiki/International_cooperation" class="mw-redirect" title="International cooperation">international cooperation</a>. He believed that this will be the eventual outcome of <a href="https://en.wikipedia.org/wiki/Universal_history" title="Universal history">universal history</a>, although it is not rationally planned.<sup id="cite_ref-8" class="reference"><a href="#cite_note-8">[8]</a></sup> The exact nature of Kant's religious ideas continues to be the subject of especially heated philosophical dispute, as viewpoints are ranging from the idea that Kant was an early and radical exponent of <a href="https://en.wikipedia.org/wiki/Atheism" title="Atheism">atheism</a> who finally exploded the <a href="https://en.wikipedia.org/wiki/Ontological_argument" title="Ontological argument">ontological argument</a> for God's existence, to more critical treatments epitomized by <a href="https://en.wikipedia.org/wiki/Friedrich_Nietzsche" title="Friedrich Nietzsche">Nietzsche</a> who claimed that Kant had "theologian blood"<sup id="cite_ref-9" class="reference"><a href="#cite_note-9">[9]</a></sup> and that Kant was merely a sophisticated <a href="https://en.wikipedia.org/wiki/Apologist" class="mw-redirect" title="Apologist">apologist</a> for traditional <a href="https://en.wikipedia.org/wiki/Christian" title="Christian">Christian</a> religious belief, writing that "Kant wanted to prove, in a way that would dumbfound the common man, that the common man was right: that was the secret joke of this soul."<sup id="cite_ref-10" class="reference"><a href="#cite_note-10">[10]</a></sup></p>
+                            <p>In one of Kant's major works, the <i><a href="https://en.wikipedia.org/wiki/Critique_of_Pure_Reason" title="Critique of Pure Reason">Critique of Pure Reason</a></i> (<i>Kritik der reinen Vernunft</i>, 1781),<sup id="cite_ref-11" class="reference"><a href="#cite_note-11">[11]</a></sup> he attempted to explain the relationship between reason and human experience and to move beyond the failures of traditional philosophy and metaphysics. Kant wanted to put an end to an era of futile and speculative theories of human experience, while resisting the <a href="https://en.wikipedia.org/wiki/Philosophical_skepticism" title="Philosophical skepticism">skepticism</a> of thinkers such as <a href="https://en.wikipedia.org/wiki/David_Hume" title="David Hume">David Hume</a>. Kant regarded himself as ending and showing the way beyond the impasse which modern philosophy had led to between <a href="https://en.wikipedia.org/wiki/Rationalists" class="mw-redirect" title="Rationalists">rationalists</a> and <a href="https://en.wikipedia.org/wiki/Empiricists" class="mw-redirect" title="Empiricists">empiricists</a>,<sup id="cite_ref-12" class="reference"><a href="#cite_note-12">[12]</a></sup> and is widely held to have synthesized these two early modern traditions in his thought.<sup id="cite_ref-13" class="reference"><a href="#cite_note-13">[13]</a></sup></p>
+                            <p>Kant argued that our experiences are structured by necessary features of our minds. In his view, the mind shapes and structures experience so that, on an abstract level, all human experience shares certain essential structural features. Among other things, Kant believed that the concepts of <i>space</i> and <i>time</i> are integral to all human experience, as are our concepts of <i>cause</i> and <i>effect</i>.<sup id="cite_ref-Warburton_14-0" class="reference"><a href="#cite_note-Warburton-14">[14]</a></sup> One important consequence of this view is that our experience of things is always of the <i>phenomenal</i> world as conveyed by our senses: we do not have direct access to things in themselves, the so-called <i>noumenal</i> world. Kant published other important works on ethics, religion, law, aesthetics, astronomy, and history. These included the <i><a href="https://en.wikipedia.org/wiki/Critique_of_Practical_Reason" title="Critique of Practical Reason">Critique of Practical Reason</a></i> (<i>Kritik der praktischen Vernunft</i>, 1788), the <i><a href="https://en.wikipedia.org/wiki/Metaphysics_of_Morals" class="mw-redirect" title="Metaphysics of Morals">Metaphysics of Morals</a></i> (<i>Die Metaphysik der Sitten</i>, 1797), which dealt with <a href="https://en.wikipedia.org/wiki/Ethics" title="Ethics">ethics</a>, and the <i><a href="https://en.wikipedia.org/wiki/Critique_of_Judgment" title="Critique of Judgment">Critique of Judgment</a></i> (<i>Kritik der Urteilskraft</i>, 1790), which looks at <a href="https://en.wikipedia.org/wiki/Aesthetics" title="Aesthetics">aesthetics</a> and <a href="https://en.wikipedia.org/wiki/Teleology" title="Teleology">teleology</a>.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-
-
         <script>
-                var plurid = document.getElementById('plurid');
-                var pluridContainer = document.getElementById('plurid-container');
+            var pluridContainer = document.getElementById('plurid-container');
 
-                pluridContainer.addEventListener("mousemove", function(event) {
-                    // console.log(event.altKey);
-                    if (!!event.altKey) {
-                        getMouseDirection(event);
+            var pluridRotate = document.getElementById('plurid-rotate');
+            var pluridTranslate = document.getElementById('plurid-translate');
+            var pluridScale = document.getElementById('plurid-scale');
+
+            var pluridContent = document.getElementById('plurid-content');
+
+
+            pluridContainer.addEventListener("mousemove", function(event) {
+                if (!!event.shiftKey) {
+                    rotatePlurid(event);
+                }
+
+                if (!!event.altKey) {
+                    translatePlurid(event)
+                }
+
+                if (!!event.ctrlKey || !!event.metaKey) {
+                    scalePlurid(event)
+                }
+            });
+
+            pluridContent.addEventListener('dblclick', function() {
+                setTransformRotate(pluridRotate, 0, 0)
+                setTransformTranslate(pluridTranslate, 0, 0)
+                setTransformScale(pluridScale, 1.0)
+            });
+
+            function getMouseDirection(event) {
+                var direction = "";
+
+                if (event.movementX < 0 ) {
+                    direction = "left";
+                } else if (event.movementX > 0) {
+                    direction = "right";
+                }
+
+                if (event.movementY < 0) {
+                    direction = "up";
+                } else if (event.movementY > 0) {
+                    direction = "down";
+                }
+
+                return direction;
+            }
+
+
+            function rotatePlurid(event) {
+                var direction = getMouseDirection(event);
+
+                var rotateX = getTransformRotate(pluridRotate).rotateX;
+                var rotateY = getTransformRotate(pluridRotate).rotateY;
+
+                var angleIncrement = 3;
+
+                if (direction === "left") {
+                    rotateY -= angleIncrement;
+                    setTransformRotate(pluridRotate, rotateX, rotateY)
+                } else if (direction === "right") {
+                    rotateY += angleIncrement;
+                    setTransformRotate(pluridRotate, rotateX, rotateY)
+                } else if (direction === "up") {
+                    rotateX += angleIncrement;
+                    setTransformRotate(pluridRotate, rotateX, rotateY)
+                } else if (direction === "down") {
+                    rotateX -= angleIncrement;
+                    setTransformRotate(pluridRotate, rotateX, rotateY)
+                }
+
+                console.log(direction);
+            }
+
+
+            function translatePlurid(event) {
+                var direction = getMouseDirection(event);
+
+                var translateX = getTransformTranslate(pluridTranslate).translateX;
+                var translateY = getTransformTranslate(pluridTranslate).translateY;
+                console.log(translateX, translateY)
+
+                var linearIncrement = 7;
+
+                if (direction === "left") {
+                    translateX -= linearIncrement;
+                    setTransformTranslate(pluridTranslate, translateX, translateY);
+                } else if (direction === "right") {
+                    translateX += linearIncrement;
+                    setTransformTranslate(pluridTranslate, translateX, translateY);
+                } else if (direction === "up") {
+                    translateY -= linearIncrement;
+                    setTransformTranslate(pluridTranslate, translateX, translateY);
+                } else if (direction === "down") {
+                    translateY += linearIncrement;
+                    setTransformTranslate(pluridTranslate, translateX, translateY);
+                }
+
+                console.log(direction);
+            }
+
+
+            function scalePlurid(event) {
+                var direction = getMouseDirection(event);
+
+                var scale = getTransformScale(pluridScale).scale;
+
+                var scaleIncrement = 0.1;
+
+                if (direction === "up") {
+                    scale += scaleIncrement;
+                    if (scale > 4) {
+                        scale = 4
                     }
-                });
-
-                function getMouseDirection(event) {
-                    var rotateX = parseInt(getTransform(plurid).rotateX);
-                    var rotateY = parseInt(getTransform(plurid).rotateY);
-                    var angleIncrement = 3;
-
-                    if (event.movementX < 0 ) {
-                        // left
-                        // console.log("left");
-                        rotateY -= angleIncrement;
-                        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-                        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-                    } else if (event.movementX > 0) {
-                        // right
-                        // console.log("right")
-                        rotateY += angleIncrement;
-                        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-                        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+                    setTransformScale(pluridScale, scale);
+                } else if (direction === "down") {
+                    scale -= scaleIncrement;
+                    if (scale < 0.1) {
+                        scale = 0.1
                     }
-
-                    if (event.movementY < 0) {
-                        // up
-                        // console.log("up");
-                        rotateX += angleIncrement;
-                        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-                        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-                    } else if (event.movementY > 0) {
-                        // down
-                        // console.log("down");
-                        rotateX -= angleIncrement;
-                        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-                        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-                    }
+                    setTransformScale(pluridScale, scale);
                 }
 
 
-                function getTransform(element) {
-                    var values = getMatrixValues(element);
+                console.log(direction);
+            }
 
-                    var rotateX = 0,
-                        rotateY = 0,
-                        rotateZ = 0;
 
-                    var pi = Math.PI;
+            function getTransformRotate(element) {
+                var values = getMatrixValues(element);
 
-                    if (values !== 'none') {
-                        // rotX
-                        var cos1ForX = parseFloat(values[5]);
-                        var sin1ForX = parseFloat(values[6]);
-                        var sin2ForX = parseFloat(values[9]);
+                var rotateX,
+                    rotateY;
 
-                        if (sin1ForX > 0) {
-                            // console.log('X a');
-                            var rotX = Math.round(Math.acos(cos1ForX) * 180 / pi);
-                        } else if (sin1ForX < 0 && cos1ForX < 0) {
-                            // console.log('X b');
-                            var rotX = Math.asin(sin1ForX) * 180 / pi * (-1) + 180;
-                        } else if (cos1ForX == 0) {
-                            // console.log('X c');
-                            var rotX = 0;
-                        } else {
-                            // console.log('X d');
-                            var rotX = 360 - Math.acos(cos1ForX) * 180 / pi;
-                        }
+                var pi = Math.PI;
 
-                        // rotY
-                        var cos1ForY = parseFloat(values[0]);
-                        var sin1ForY = parseFloat(values[2]);
-                        var sin2ForY = parseFloat(values[8]);
+                if (values.length == 16) {
+                    // rotX
+                    var cos1ForX = parseFloat(values[5]);
+                    var sin1ForX = parseFloat(values[6]);
+                    var sin2ForX = parseFloat(values[9]);
 
-                        if (sin1ForY > 0 && sin2ForY < 0) {
-                            // console.log('Y a0');
-                            var rotY = 360 - Math.acos(cos1ForY) * 180 / pi;
-                        } else if (sin1ForY > 0) {
-                            // console.log('Y a');
-                            var rotY = Math.acos(cos1ForY) * 180 / pi;
-                        } else if (sin1ForY < 0 && cos1ForY < 0) {
-                            // console.log('Y b');
-                            var rotY = Math.asin(sin2ForY) * 180 / pi * (-1) + 180;
-                        } else if (sin1ForY < 0) {
-                            // console.log('Y c');
-                            var rotY = Math.asin(sin2ForY) * 180 / pi;
-                        } else if (cos1ForY == 1) {
-                            // console.log('Y d');
-                            var rotY = 0;
-                        } else {
-                            // console.log('Y e');
-                            var rotY = 360 - Math.acos(cos1ForY) * 180 / pi;
-                        }
-
-                        // console.log(`sin1: ${sin1ForY}, sin2: ${sin2ForY}`);
-                        // console.log(`cos1: ${cos1ForY}`);
-
-                        rotateX = rotX.toPrecision(4);
-                        rotateY = rotY.toPrecision(4);
+                    if (sin1ForX > 0) {
+                        // console.log('X a');
+                        var rotX = Math.round(Math.acos(cos1ForX) * 180 / pi);
+                    } else if (sin1ForX < 0 && cos1ForX < 0) {
+                        // console.log('X b');
+                        var rotX = Math.asin(sin1ForX) * 180 / pi * (-1) + 180;
+                    } else if (cos1ForX == 0) {
+                        // console.log('X c');
+                        var rotX = 0;
+                    } else {
+                        // console.log('X d');
+                        var rotX = 360 - Math.acos(cos1ForX) * 180 / pi;
                     }
 
-                    return {
-                        rotateX: rotateX,
-                        rotateY: rotateY,
-                    };
+                    // rotY
+                    var cos1ForY = parseFloat(values[0]);
+                    var sin1ForY = parseFloat(values[2]);
+                    var sin2ForY = parseFloat(values[8]);
+
+                    if (sin1ForY > 0 && sin2ForY < 0) {
+                        // console.log('Y a0');
+                        var rotY = 360 - Math.acos(cos1ForY) * 180 / pi;
+                    } else if (sin1ForY > 0) {
+                        // console.log('Y a');
+                        var rotY = Math.acos(cos1ForY) * 180 / pi;
+                    } else if (sin1ForY < 0 && cos1ForY < 0) {
+                        // console.log('Y b');
+                        var rotY = Math.asin(sin2ForY) * 180 / pi * (-1) + 180;
+                    } else if (sin1ForY < 0) {
+                        // console.log('Y c');
+                        var rotY = Math.asin(sin2ForY) * 180 / pi;
+                    } else if (cos1ForY == 1) {
+                        // console.log('Y d');
+                        var rotY = 0;
+                    } else {
+                        // console.log('Y e');
+                        var rotY = 360 - Math.acos(cos1ForY) * 180 / pi;
+                    }
+
+                    // console.log(`sin1: ${sin1ForY}, sin2: ${sin2ForY}`);
+                    // console.log(`cos1: ${cos1ForY}`);
+
+                    rotateX = rotX;
+                    rotateY = rotY;
+                } else if (values.length == 6) {
+                    rotateX = 0;
+                    rotateY = 0;
                 }
 
-                // console.log(getTransform(plurid));
+                return {
+                    rotateX: rotateX,
+                    rotateY: rotateY
+                };
+            }
 
-                function getMatrixValues(element) {
-                    var transformValues = window.getComputedStyle(element, null).getPropertyValue("transform");
-                    var matrixValues = transformValues.split('(')[1].split(')')[0].split(',');
+            function getTransformTranslate(element) {
+                var values = getMatrixValues(element);
 
-                    return matrixValues;
+                var translateX,
+                    translateY;
+
+                if (values.length == 16) {
+                    translateX = parseFloat(values[12]);
+                    translateY = parseFloat(values[13]);
+                } else if (values.length == 6) {
+                    translateX = parseFloat(values[4]);
+                    translateY = parseFloat(values[5]);
                 }
 
-                // console.log(getMatrixValues(plurid));
-            </script>
+                return {
+                    translateX: translateX,
+                    translateY: translateY
+                };
+            }
+
+            function getTransformScale(element) {
+                var values = getMatrixValues(element);
+
+                var scale = parseFloat(values[0]);
+
+                return {
+                    scale: scale
+                }
+            }
 
 
+
+
+            // console.log(getTransform(plurid));
+
+            function getMatrixValues(element) {
+                var transformValues = window.getComputedStyle(element, null).getPropertyValue("transform");
+                var matrixValues = transformValues.split('(')[1].split(')')[0].split(',');
+
+                return matrixValues;
+            }
+
+            // console.log(getMatrixValues(plurid));
+
+
+            function setTransformRotate(element, rotateX, rotateY) {
+                var transformString = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+
+                element.style.transform = transformString;
+                element.style.webkitTransform = transformString;
+            }
+
+            function setTransformTranslate(element, translateX, translateY) {
+                var transformString = "translateX(" + translateX + "px) translateY(" + translateY + "px)";
+
+                element.style.transform = transformString;
+                element.style.webkitTransform = transformString;
+            }
+
+            function setTransformScale(element, scale) {
+                var transformString = "scale(" + scale + ")";
+
+                element.style.transform = transformString;
+                element.style.webkitTransform = transformString;
+            }
+
+
+
+        </script>
     </body>
 </html>
