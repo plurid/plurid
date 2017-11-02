@@ -1,73 +1,132 @@
 var plurid = document.getElementById('plurid');
+// var pluridRotate = document.getElementById('plurid-rotate');
+// var pluridTranslate = document.getElementById('plurid-translate');
+// var pluridScale = document.getElementById('plurid-scale');
 var pluridContainer = document.getElementById('plurid-container');
 
 
 pluridContainer.addEventListener("mousemove", function(event) {
-    // console.log(event.shiftKey);
     if (!!event.shiftKey) {
-        // getMouseDirection(event);
-        console.log("rotate");
-        // rotatePlurid();
+        rotatePlurid(event);
     }
 
     if (!!event.altKey) {
-        console.log("move");
-        // movePlurid(event)
+        movePlurid(event)
     }
 
     if (!!event.ctrlKey || !!event.metaKey) {
-        console.log("scroll")
-        // scrollPlurid(event)
+        scalePlurid(event)
     }
 });
 
 
 
 function getMouseDirection(event) {
-    var rotateX = parseInt(getTransform(plurid).rotateX);
-    var rotateY = parseInt(getTransform(plurid).rotateY);
-    var angleIncrement = 3;
+    var direction = "";
 
     if (event.movementX < 0 ) {
-        // left
-        // console.log("left");
-        rotateY -= angleIncrement;
-        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        direction = "left";
     } else if (event.movementX > 0) {
-        // right
-        // console.log("right")
-        rotateY += angleIncrement;
-        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        direction = "right";
     }
 
     if (event.movementY < 0) {
-        // up
-        // console.log("up");
-        rotateX += angleIncrement;
-        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        direction = "up";
     } else if (event.movementY > 0) {
-        // down
-        // console.log("down");
-        rotateX -= angleIncrement;
-        plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-        plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        direction = "down";
     }
+
+    return direction;
+}
+
+
+function rotatePlurid(event) {
+    var direction = getMouseDirection(event);
+
+    var rotateX = getTransform(plurid).rotateX;
+    var rotateY = getTransform(plurid).rotateY;
+    var translateX = getTransform(plurid).translateX;
+    var translateY = getTransform(plurid).translateY;
+    var scale = getTransform(plurid).scale;
+
+    var angleIncrement = 3;
+
+    if (direction === "left") {
+        rotateY -= angleIncrement;
+        console.log(rotateX, rotateY, translateX, translateY, scale);
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale)
+
+        // plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateX(" + translateX + "px) + translateY(" + translateY + "px) + scale(" + scale + ")";
+        // plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateX(" + translateX + "px) + translateY(" + translateY + "px) + scale(" + scale + ")";
+    } else if (direction === "right") {
+        rotateY += angleIncrement;
+
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale)
+
+        // plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        // plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+    } else if (direction === "up") {
+        rotateX += angleIncrement;
+
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale)
+
+        // plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        // plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+    } else if (direction === "down") {
+        rotateX -= angleIncrement;
+
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale)
+
+        // plurid.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+        // plurid.style.webkitTransform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+    }
+}
+
+
+function movePlurid(event) {
+    var direction = getMouseDirection(event);
+
+    var rotateX = getTransform(plurid).rotateX;
+    var rotateY = getTransform(plurid).rotateY;
+    var translateX = getTransform(plurid).translateX;
+    var translateY = getTransform(plurid).translateY;
+    var scale = getTransform(plurid).scale;
+
+    var linearIncrement = 3;
+
+
+    console.log(direction);
+}
+
+
+function scalePlurid(event) {
+    var direction = getMouseDirection(event);
+
+    var rotateX = getTransform(plurid).rotateX;
+    var rotateY = getTransform(plurid).rotateY;
+    var translateX = getTransform(plurid).translateX;
+    var translateY = getTransform(plurid).translateY;
+    var scale = getTransform(plurid).scale;
+
+    var scaleIncrement = 0.1;
+
+
+    console.log(direction);
 }
 
 
 function getTransform(element) {
     var values = getMatrixValues(element);
 
-    var rotateX = 0,
-        rotateY = 0,
-        rotateZ = 0;
+    var rotateX,
+        rotateY,
+        translateX,
+        translateY,
+        scale;
 
     var pi = Math.PI;
 
-    if (values !== 'none') {
+    if (values.length == 16) {
         // rotX
         var cos1ForX = parseFloat(values[5]);
         var sin1ForX = parseFloat(values[6]);
@@ -115,13 +174,25 @@ function getTransform(element) {
         // console.log(`sin1: ${sin1ForY}, sin2: ${sin2ForY}`);
         // console.log(`cos1: ${cos1ForY}`);
 
-        rotateX = rotX.toPrecision(4);
-        rotateY = rotY.toPrecision(4);
+        rotateX = rotX;
+        rotateY = rotY;
+        translateX = parseFloat(values[12]);
+        translateY = parseFloat(values[13]);
+        scale = parseFloat(values[0]);
+    } else if (values.length == 6) {
+        rotateX = 0;
+        rotateY = 0;
+        translateX = parseFloat(values[4]);
+        translateY = parseFloat(values[5]);
+        scale = parseFloat(values[0]);
     }
 
     return {
         rotateX: rotateX,
         rotateY: rotateY,
+        translateX: translateX,
+        translateY: translateY,
+        scale: scale
     };
 }
 
@@ -135,3 +206,11 @@ function getMatrixValues(element) {
 }
 
 // console.log(getMatrixValues(plurid));
+
+
+function setTransform(element, rotateX, rotateY, translateX, translateY, scale) {
+    var transformString = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateX(" + translateX + "px) translateY(" + translateY + "px) scale(" + scale + ")";
+
+    element.style.transform = transformString;
+    element.style.webkitTransform = transformString;
+}
