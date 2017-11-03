@@ -1,34 +1,38 @@
-var pluridContainer = document.getElementById('plurid-container');
+var pluridContainer = document.getElementsByClassName('plurid-container');
 
-var pluridRotate = document.getElementById('plurid-rotate');
-var pluridTranslate = document.getElementById('plurid-translate');
-var pluridScale = document.getElementById('plurid-scale');
+var pluridRotate = document.getElementsByClassName('plurid-rotate');
+var pluridTranslate = document.getElementsByClassName('plurid-translate');
+var pluridScale = document.getElementsByClassName('plurid-scale');
 
-var pluridContent = document.getElementById('plurid-content');
+var pluridContent = document.getElementsByClassName('plurid-content');
 
 
 // Basic Rotation, Translation, Scaling of the Plurid Content
-pluridContainer.addEventListener("mousemove", function(event) {
-    if (!!event.shiftKey) {
-        rotatePlurid(event);
-    }
+for (var i = 0; i < pluridContainer.length; i++) {
+    pluridContainer[i].addEventListener("mousemove", function(event) {
+        if (!!event.shiftKey) {
+            rotatePlurid(event, this.children[0]);
+        }
 
-    if (!!event.altKey) {
-        translatePlurid(event)
-    }
+        if (!!event.altKey) {
+            translatePlurid(event, this.children[0].children[0])
+        }
 
-    if (!!event.ctrlKey || !!event.metaKey) {
-        scalePlurid(event)
-    }
-});
+        if (!!event.ctrlKey || !!event.metaKey) {
+            scalePlurid(event, this.children[0].children[0].children[0])
+        }
+    });
+}
 
 
 // Reset Transfor at Double Click
-pluridContent.addEventListener('dblclick', function() {
-    setTransformRotate(pluridRotate, 0, 0)
-    setTransformTranslate(pluridTranslate, 0, 0)
-    setTransformScale(pluridScale, 1.0)
-});
+for (var i = 0; i < pluridContainer.length; i++) {
+    pluridContent[i].addEventListener('dblclick', function() {
+        setTransformRotate(this.parentElement.parentElement.parentElement, 0, 0)
+        setTransformTranslate(this.parentElement.parentElement, 0, 0)
+        setTransformScale(this.parentElement, 1.0)
+    });
+}
 
 
 function getMouseDirection(event) {
@@ -46,67 +50,70 @@ function getMouseDirection(event) {
         direction = "down";
     }
 
+    // console.log('----- direction: ', direction)
+    // console.log('movementX: ', event.movementX)
+    // console.log('movementY: ', event.movementY)
     return direction;
 }
 
 
-function rotatePlurid(event) {
+function rotatePlurid(event, plurid) {
     var direction = getMouseDirection(event);
 
-    var rotateX = getTransformRotate(pluridRotate).rotateX;
-    var rotateY = getTransformRotate(pluridRotate).rotateY;
+    var rotateX = getTransformRotate(plurid).rotateX;
+    var rotateY = getTransformRotate(plurid).rotateY;
 
-    var angleIncrement = 3;
+    var angleIncrement = 2.5;
 
     if (direction === "left") {
         rotateY -= angleIncrement;
-        setTransformRotate(pluridRotate, rotateX, rotateY)
+        setTransformRotate(plurid, rotateX, rotateY)
     } else if (direction === "right") {
         rotateY += angleIncrement;
-        setTransformRotate(pluridRotate, rotateX, rotateY)
+        setTransformRotate(plurid, rotateX, rotateY)
     } else if (direction === "up") {
         rotateX += angleIncrement;
-        setTransformRotate(pluridRotate, rotateX, rotateY)
+        setTransformRotate(plurid, rotateX, rotateY)
     } else if (direction === "down") {
         rotateX -= angleIncrement;
-        setTransformRotate(pluridRotate, rotateX, rotateY)
+        setTransformRotate(plurid, rotateX, rotateY)
     }
 
     // console.log(direction);
 }
 
 
-function translatePlurid(event) {
+function translatePlurid(event, plurid) {
     var direction = getMouseDirection(event);
 
-    var translateX = getTransformTranslate(pluridTranslate).translateX;
-    var translateY = getTransformTranslate(pluridTranslate).translateY;
-    console.log(translateX, translateY)
+    var translateX = getTransformTranslate(plurid).translateX;
+    var translateY = getTransformTranslate(plurid).translateY;
+    // console.log(translateX, translateY)
 
     var linearIncrement = 10;
 
     if (direction === "left") {
         translateX -= linearIncrement;
-        setTransformTranslate(pluridTranslate, translateX, translateY);
+        setTransformTranslate(plurid, translateX, translateY);
     } else if (direction === "right") {
         translateX += linearIncrement;
-        setTransformTranslate(pluridTranslate, translateX, translateY);
+        setTransformTranslate(plurid, translateX, translateY);
     } else if (direction === "up") {
         translateY -= linearIncrement;
-        setTransformTranslate(pluridTranslate, translateX, translateY);
+        setTransformTranslate(plurid, translateX, translateY);
     } else if (direction === "down") {
         translateY += linearIncrement;
-        setTransformTranslate(pluridTranslate, translateX, translateY);
+        setTransformTranslate(plurid, translateX, translateY);
     }
 
     // console.log(direction);
 }
 
 
-function scalePlurid(event) {
+function scalePlurid(event, plurid) {
     var direction = getMouseDirection(event);
 
-    var scale = getTransformScale(pluridScale).scale;
+    var scale = getTransformScale(plurid).scale;
 
     var scaleIncrement = 0.1;
 
@@ -115,13 +122,13 @@ function scalePlurid(event) {
         if (scale > 4) {
             scale = 4
         }
-        setTransformScale(pluridScale, scale);
+        setTransformScale(plurid, scale);
     } else if (direction === "down") {
         scale -= scaleIncrement;
         if (scale < 0.1) {
             scale = 0.1
         }
-        setTransformScale(pluridScale, scale);
+        setTransformScale(plurid, scale);
     }
 
     // console.log(direction);
@@ -262,3 +269,28 @@ function setTransformScale(element, scale) {
     element.style.transform = transformString;
     element.style.webkitTransform = transformString;
 }
+
+
+// links
+
+var pluridLinks = document.getElementsByTagName('a');
+
+// console.log(pluridLinks[0]);
+
+function pluridifyLinks(links) {
+    for (i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', function(event) {
+            event.preventDefault();
+
+            this.innerHTML = this.innerHTML +
+                            '<iframe src="' +
+                            this.href +
+                            '" class="plurid-link" height="500px" width="500px"></iframe>'
+
+            console.log(this.innerHTML)
+        })
+
+    }
+}
+
+pluridifyLinks(pluridLinks);
