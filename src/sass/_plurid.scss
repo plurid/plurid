@@ -1,103 +1,109 @@
-$rotateXAngle: 0deg;
-$rotateYAngle: 12deg;
+// $rotateXAngle: 0deg;
+// $rotateYAngle: 12deg;
 
-$translateX: 55px;
-$translateY: 190px;
+// $translateX: 55px;
+// $translateY: 190px;
 
-$scale: 0.9;
-
-
-.plurid-content {
-    margin: 0 auto;
-    width: 70%;
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d; /* Chrome, Safari, Opera */
-    -webkit-backface-visibility: visible; /* Chrome, Safari, Opera */
-    backface-visibility: visible;
-}
-
-.plurid-rotate {
-    transform: rotateX($rotateXAngle) rotateY($rotateYAngle);
-    -webkit-transform: rotateX($rotateXAngle) rotateY($rotateYAngle); /* Chrome, Safari, Opera */
-}
-
-.plurid-translate {
-    transform: translateX($translateX) translateY($translateY);
-    -webkit-transform: translateX($translateX) translateY($translateY); /* Chrome, Safari, Opera */
-}
-
-.plurid-scale {
-    transform: scale($scale);
-    -webkit-transform: scale($scale); /* Chrome, Safari, Opera */
-}
-
-
-
-// #plurid:after {
-//     content: '';
-//     right: 0px;
-//     bottom: 0px;
-//     position: absolute;
-//     top: 0px;
-//     left: 0px;
-//     background: hsla(0, 0%, 10%, 0.8);
-//     transform: rotateY(180deg);
-//     backface-visibility: hidden;
-//     -webkit-transform: rotateY(180deg);
-//     -webkit-backface-visibility: hidden;
-// }
+// $scale: 0.9;
 
 
 .plurid-container {
     position: relative;
     margin-top: 50px;
     margin-bottom: 50px;
-    width: 50%;
+    // width: 50%;
     margin: 50px auto;
     height: 700px;
     background-color: hsl(0, 0%, 10%);
     overflow: hidden;
-    -webkit-perspective: 500px; /* Chrome, Safari, Opera */
-    perspective: 500px;
+    -webkit-perspective: 1000px; /* Chrome, Safari, Opera */
+    perspective: 1000px;
     transform-origin: center center;
-
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
 
     perspective-origin: 50% 50%;
     -webkit-perspective-origin: 50% 50%;
 }
 
+.plurid-content {
+    margin: 0 auto;
+    width: 70%;
+}
 
-// .plurid-link-container {
-//     width: 300px;
-//     height: 200px;
-//     position: relative;
-
-//     -webkit-perspective: 500px; /* Chrome, Safari, Opera */
-//     perspective: 500px;
-//     transform-origin: center center;
-
-//     transform-style: preserve-3d;
-//     -webkit-transform-style: preserve-3d;
-
-//     perspective-origin: 50% 50%;
-//     -webkit-perspective-origin: 50% 50%;
+// .plurid-rotate {
+//     transform: rotateX($rotateXAngle) rotateY($rotateYAngle);
+//     -webkit-transform: rotateX($rotateXAngle) rotateY($rotateYAngle); /* Chrome, Safari, Opera */
 // }
 
-// $rotatePlurid: 60deg;
-
-// .plurid-link {
-//     width: 100%;
-//     height: 100%;
-//     position: absolute;
-
-//     transform-style: preserve-3d;
-//     -webkit-transform-style: preserve-3d; /* Chrome, Safari, Opera */
-//     -webkit-backface-visibility: visible; /* Chrome, Safari, Opera */
-//     backface-visibility: visible;
-
-//     background-color: red;
-//     transform: rotateX(30deg) rotateY($rotatePlurid) translateZ(30px);
-//     -webkit-transform: rotateX(30deg) rotateY($rotatePlurid) translateZ(30px); /* Chrome, Safari, Opera */
+// .plurid-translate {
+//     transform: translateX($translateX) translateY($translateY);
+//     -webkit-transform: translateX($translateX) translateY($translateY); /* Chrome, Safari, Opera */
 // }
+
+// .plurid-scale {
+//     transform: scale($scale);
+//     -webkit-transform: scale($scale); /* Chrome, Safari, Opera */
+// }
+
+
+
+.plurid-link-container {
+    margin-top: 300px;
+    margin-left: 200px;
+    width: 500px;
+    height: 200px;
+    position: absolute;
+    transform: rotateY(-90deg);
+}
+
+$rotatePlurid: 60deg;
+
+.plurid-link {
+    width: 100%;
+    height: 100%;
+    // position: absolute;
+
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d; /* Chrome, Safari, Opera */
+    -webkit-backface-visibility: visible; /* Chrome, Safari, Opera */
+    backface-visibility: visible;
+
+    background-color: red;
+    // -webkit-transform: rotateY(-90deg) rotateX(45deg) translateZ(100px);
+}
+
+
+
+
+.wrapper {
+    width: 500px;
+    height: 500px;
+    position: relative;
+    perspective: 500;
+    -webkit-perspective: 500;
+    margin: 100px auto;
+}
+
+.plurid {
+    margin-top: 300px;
+    margin-left: 200px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: rotateY(55deg);
+    -webkit-transform-style: preserve-3d;
+}
+
+.plurid-main {
+    background-color: red;
+    width: 196px;
+    height: 196px;
+    display: block;
+    position: absolute;
+    -webkit-transform: rotateY(0deg) translateZ(50px);
+
+}
+
+.plurid-secondary {
+    background-color: blue;
+    -webkit-transform: rotateY(-90deg) translateZ(100px);
+}
