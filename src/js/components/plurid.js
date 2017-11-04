@@ -1,8 +1,8 @@
 var pluridContainer = document.getElementsByClassName('plurid-container');
 
-var pluridRotate = document.getElementsByClassName('plurid-rotate');
-var pluridTranslate = document.getElementsByClassName('plurid-translate');
-var pluridScale = document.getElementsByClassName('plurid-scale');
+// var pluridRotate = document.getElementsByClassName('plurid-rotate');
+// var pluridTranslate = document.getElementsByClassName('plurid-translate');
+// var pluridScale = document.getElementsByClassName('plurid-scale');
 
 var pluridContent = document.getElementsByClassName('plurid-content');
 
@@ -10,29 +10,30 @@ var pluridContent = document.getElementsByClassName('plurid-content');
 // Basic Rotation, Translation, Scaling of the Plurid Content
 for (var i = 0; i < pluridContainer.length; i++) {
     pluridContainer[i].addEventListener("mousemove", function(event) {
+        console.log(this.children[0])
         if (!!event.shiftKey) {
             rotatePlurid(event, this.children[0]);
         }
 
         if (!!event.altKey) {
-            translatePlurid(event, this.children[0].children[0])
+            translatePlurid(event, this.children[0])
         }
 
         if (!!event.ctrlKey || !!event.metaKey) {
-            scalePlurid(event, this.children[0].children[0].children[0])
+            scalePlurid(event, this.children[0])
         }
     });
 }
 
 
 // Reset Transfor at Double Click
-for (var i = 0; i < pluridContainer.length; i++) {
-    pluridContent[i].addEventListener('dblclick', function() {
-        setTransformRotate(this.parentElement.parentElement.parentElement, 0, 0)
-        setTransformTranslate(this.parentElement.parentElement, 0, 0)
-        setTransformScale(this.parentElement, 1.0)
-    });
-}
+// for (var i = 0; i < pluridContainer.length; i++) {
+//     pluridContent[i].addEventListener('dblclick', function() {
+//         setTransformRotate(this.parentElement.parentElement.parentElement, 0, 0)
+//         setTransformTranslate(this.parentElement.parentElement, 0, 0)
+//         setTransformScale(this.parentElement, 1.0)
+//     });
+// }
 
 
 function getMouseDirection(event) {
@@ -62,6 +63,7 @@ function rotatePlurid(event, plurid) {
 
     var rotateX = getTransformRotate(plurid).rotateX;
     var rotateY = getTransformRotate(plurid).rotateY;
+    // console.log(rotateX, rotateY);
 
     var angleIncrement = 2.5;
 
@@ -88,7 +90,7 @@ function translatePlurid(event, plurid) {
 
     var translateX = getTransformTranslate(plurid).translateX;
     var translateY = getTransformTranslate(plurid).translateY;
-    // console.log(translateX, translateY)
+    console.log(translateX, translateY)
 
     var linearIncrement = 10;
 
@@ -114,6 +116,7 @@ function scalePlurid(event, plurid) {
     var direction = getMouseDirection(event);
 
     var scale = getTransformScale(plurid).scale;
+    console.log(scale);
 
     var scaleIncrement = 0.1;
 
@@ -207,6 +210,7 @@ function getTransformRotate(element) {
 
 function getTransformTranslate(element) {
     var values = getMatrixValues(element);
+    // console.log(values);
 
     var translateX,
         translateY;
@@ -282,12 +286,26 @@ function pluridifyLinks(links) {
         links[i].addEventListener('click', function(event) {
             event.preventDefault();
 
-            this.innerHTML = this.innerHTML +
-                            '<iframe src="' +
-                            this.href +
-                            '" class="plurid-link" height="500px" width="500px"></iframe>'
+            // this.innerHTML = this.innerHTML +
+            //                 '<iframe src="' +
+            //                 this.href +
+            //                 '" class="plurid-link" height="500px" width="500px"></iframe>'
 
-            console.log(this.innerHTML)
+
+
+            var newDiv = document.createElement("div")
+
+            newDiv.innerHTML = '<div class="plurid-link-container">' +
+                                    '<div class="plurid-link">' +
+                                        '<iframe src="' +
+                                            this.href +
+                                            '" class="plurid-link" height="500px" width="500px"></iframe>' +
+                                    '</div>' +
+                                '</div>'
+
+            this.parentElement.parentElement.parentElement.appendChild(newDiv);
+
+            console.log(this.parentElement.parentElement)
         })
 
     }
