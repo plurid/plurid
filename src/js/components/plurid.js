@@ -4,13 +4,13 @@ var pluridContainer = document.getElementsByClassName('plurid-container');
 // var pluridTranslate = document.getElementsByClassName('plurid-translate');
 // var pluridScale = document.getElementsByClassName('plurid-scale');
 
-var pluridContent = document.getElementsByClassName('plurid-content');
+// var pluridContent = document.getElementsByClassName('plurid-content');
 
 
 // Basic Rotation, Translation, Scaling of the Plurid Content
 for (var i = 0; i < pluridContainer.length; i++) {
     pluridContainer[i].addEventListener("mousemove", function(event) {
-        console.log(this.children[0])
+        // console.log(this.children[0]);
         if (!!event.shiftKey) {
             rotatePlurid(event, this.children[0]);
         }
@@ -63,22 +63,26 @@ function rotatePlurid(event, plurid) {
 
     var rotateX = getTransformRotate(plurid).rotateX;
     var rotateY = getTransformRotate(plurid).rotateY;
+    var translateX = getTransformTranslate(plurid).translateX;
+    var translateY = getTransformTranslate(plurid).translateY;
+    var scale = getTransformScale(plurid).scale;
+
     // console.log(rotateX, rotateY);
 
     var angleIncrement = 2.5;
 
     if (direction === "left") {
         rotateY -= angleIncrement;
-        setTransformRotate(plurid, rotateX, rotateY)
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     } else if (direction === "right") {
         rotateY += angleIncrement;
-        setTransformRotate(plurid, rotateX, rotateY)
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     } else if (direction === "up") {
         rotateX += angleIncrement;
-        setTransformRotate(plurid, rotateX, rotateY)
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     } else if (direction === "down") {
         rotateX -= angleIncrement;
-        setTransformRotate(plurid, rotateX, rotateY)
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     }
 
     // console.log(direction);
@@ -88,24 +92,30 @@ function rotatePlurid(event, plurid) {
 function translatePlurid(event, plurid) {
     var direction = getMouseDirection(event);
 
+    var rotateX = getTransformRotate(plurid).rotateX;
+    var rotateY = getTransformRotate(plurid).rotateY;
     var translateX = getTransformTranslate(plurid).translateX;
     var translateY = getTransformTranslate(plurid).translateY;
-    console.log(translateX, translateY)
+    var scale = getTransformScale(plurid).scale;
+
+    // console.log(translateX, translateY)
+    // console.log("TRANSLATE X from tp", translateX);
+    // console.log("TRANSLATE Y from tp", translateY);
 
     var linearIncrement = 10;
 
     if (direction === "left") {
         translateX -= linearIncrement;
-        setTransformTranslate(plurid, translateX, translateY);
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     } else if (direction === "right") {
         translateX += linearIncrement;
-        setTransformTranslate(plurid, translateX, translateY);
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     } else if (direction === "up") {
         translateY -= linearIncrement;
-        setTransformTranslate(plurid, translateX, translateY);
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     } else if (direction === "down") {
         translateY += linearIncrement;
-        setTransformTranslate(plurid, translateX, translateY);
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     }
 
     // console.log(direction);
@@ -115,8 +125,12 @@ function translatePlurid(event, plurid) {
 function scalePlurid(event, plurid) {
     var direction = getMouseDirection(event);
 
+    var rotateX = getTransformRotate(plurid).rotateX;
+    var rotateY = getTransformRotate(plurid).rotateY;
+    var translateX = getTransformTranslate(plurid).translateX;
+    var translateY = getTransformTranslate(plurid).translateY;
     var scale = getTransformScale(plurid).scale;
-    console.log(scale);
+    // console.log(scale);
 
     var scaleIncrement = 0.1;
 
@@ -125,13 +139,13 @@ function scalePlurid(event, plurid) {
         if (scale > 4) {
             scale = 4
         }
-        setTransformScale(plurid, scale);
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     } else if (direction === "down") {
         scale -= scaleIncrement;
         if (scale < 0.1) {
             scale = 0.1
         }
-        setTransformScale(plurid, scale);
+        setTransform(plurid, rotateX, rotateY, translateX, translateY, scale);
     }
 
     // console.log(direction);
@@ -139,7 +153,18 @@ function scalePlurid(event, plurid) {
 
 
 function getTransformRotate(element) {
-    var values = getMatrixValues(element);
+    var values = getRotationMatrix(element);
+    // console.log(values);
+
+    var scale = getTransformScale(element).scale;
+    // console.log(scale)
+
+    for (var i = 0; i < values.length; i++) {
+        // console.log(values[i])
+        values[i] = values[i] / scale;
+        // console.log(values[i])
+    }
+    // console.log(values);
 
     var rotateX,
         rotateY;
@@ -209,19 +234,17 @@ function getTransformRotate(element) {
 
 
 function getTransformTranslate(element) {
-    var values = getMatrixValues(element);
-    // console.log(values);
+    var values = getTranslationMatrix(element);
+    // console.log("VALUES", values);
 
     var translateX,
         translateY;
 
-    if (values.length == 16) {
-        translateX = parseFloat(values[12]);
-        translateY = parseFloat(values[13]);
-    } else if (values.length == 6) {
-        translateX = parseFloat(values[4]);
-        translateY = parseFloat(values[5]);
-    }
+    translateX = parseFloat(values[0]);
+    translateY = parseFloat(values[1]);
+    // console.log("TRANSLATE X", translateX);
+    // console.log("TRANSLATE Y", translateY);
+
 
     return {
         translateX: translateX,
@@ -231,9 +254,8 @@ function getTransformTranslate(element) {
 
 
 function getTransformScale(element) {
-    var values = getMatrixValues(element);
-
-    var scale = parseFloat(values[0]);
+    var scale = getScaleMatrix(element);
+    // console.log(scale);
 
     return {
         scale: scale
@@ -244,38 +266,126 @@ function getTransformScale(element) {
 function getMatrixValues(element) {
     var transformValues = window.getComputedStyle(element, null).getPropertyValue("transform");
     var matrixValues = transformValues.split('(')[1].split(')')[0].split(',');
+    // console.log(matrixValues);
 
     return matrixValues;
 }
 
-// console.log(getMatrixValues(plurid));
+function getTranslationMatrix(element) {
+    var valuesMatrix = getMatrixValues(element);
+    console.log(valuesMatrix)
+
+    if (valuesMatrix.length == 16) {
+        var translationMatrix = getMatrixValues(element).slice(12, 14);
+        // console.log("16", translationMatrix)
+
+    } else if (valuesMatrix.length == 6) {
+        var translationMatrix = getMatrixValues(element).slice(4);
+        // console.log("6", translationMatrix)
+
+    }
+    // console.log("FINAL", translationMatrix)
+
+    return translationMatrix;
+}
+
+function getScaleMatrix(element) {
+    var valuesMatrix = getMatrixValues(element);
+    // console.log(valuesMatrix);
+
+    if (valuesMatrix.length == 16) {
+        var scaleMatrix = getMatrixValues(element).slice(0, 4);
+        // console.log(scaleMatrix);
+
+        var scale = 0;
+
+        for (var i = 0; i < scaleMatrix.length; i++) {
+            scale += parseFloat(scaleMatrix[i]) * parseFloat(scaleMatrix[i]);
+            // console.log(scale);
+        }
+
+        // console.log(scale);
+
+        scale = Math.sqrt(scale).toPrecision(4);;
+    }
+
+    return scale;
+}
+
+function getRotationMatrix(element) {
+    var valuesMatrix = getMatrixValues(element);
+    var scale = getScaleMatrix(element);
+
+    if (valuesMatrix.length == 16) {
+        for (var i=0; i < 11; i++) {
+            valuesMatrix[i] /= scale;
+        }
+    }
+
+    var rotationMatrix = valuesMatrix;
+
+    return rotationMatrix;
+}
 
 
-function setTransformRotate(element, rotateX, rotateY) {
-    var transformString = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+
+
+// console.log(getTranslationMatrix(pluridContainer[1].children[0]));
+
+
+function setTransform(element, rotateX, rotateY, translateX, translateY, scale) {
+    var transformString = "scale(" + scale + ") rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateX(" + translateX + "px) translateY(" + translateY + "px)";
+    console.log(transformString);
 
     element.style.transform = transformString;
     element.style.webkitTransform = transformString;
 }
 
 
-function setTransformTranslate(element, translateX, translateY) {
-    var transformString = "translateX(" + translateX + "px) translateY(" + translateY + "px)";
+// function setTransformRotate(element, rotateX, rotateY) {
+//     var transformString = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
 
-    element.style.transform = transformString;
-    element.style.webkitTransform = transformString;
-}
-
-
-function setTransformScale(element, scale) {
-    var transformString = "scale(" + scale + ")";
-
-    element.style.transform = transformString;
-    element.style.webkitTransform = transformString;
-}
+//     element.style.transform = transformString;
+//     element.style.webkitTransform = transformString;
+// }
 
 
-// links
+// function setTransformTranslate(element, translateX, translateY) {
+//     var transformString = "translateX(" + translateX + "px) translateY(" + translateY + "px)";
+
+//     element.style.transform = transformString;
+//     element.style.webkitTransform = transformString;
+// }
+
+
+// function setTransformScale(element, scale) {
+//     var transformString = "scale(" + scale + ")";
+
+//     element.style.transform = transformString;
+//     element.style.webkitTransform = transformString;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ---- LINKS
 
 var pluridLinks = document.getElementsByTagName('a');
 
