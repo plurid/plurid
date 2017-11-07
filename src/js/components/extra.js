@@ -5,3 +5,16 @@
 4. Update transform
 
 */
+
+
+
+// to export
+export function testfun(works) {
+    return console.log(works)
+}
+
+
+// to import
+import {testfun} from "./matrix.js";
+
+testfun("aa")
