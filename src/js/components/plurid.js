@@ -23,6 +23,28 @@ for (var i = 0; i < pluridContainer.length; i++) {
     });
 }
 
+// var pluridSheets = document.getElementsByClassName('plurid-sheet');
+
+// console.log(pluridSheets[0]);
+
+// for (var i = 0; i < pluridContainer.length; i++) {
+//     pluridSheets[0].addEventListener("mousemove", function(event) {
+//         // console.log(this.children[0]);
+//         if (!!event.shiftKey) {
+//             rotatePlurid(event, this);
+//         }
+
+//         if (!!event.altKey) {
+//             translatePlurid(event, this)
+//         }
+
+//         if (!!event.ctrlKey || !!event.metaKey) {
+//             scalePlurid(event, this)
+//         }
+//     });
+// }
+
+
 // Reset Transforms at Double Click
 for (var i = 0; i < pluridContainer.length; i++) {
     pluridContainer[i].addEventListener('dblclick', function(event) {
