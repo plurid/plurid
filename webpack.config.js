@@ -28,10 +28,11 @@ module.exports = {
             cssProcessor: require('cssnano'),
             cssProcessorOptions: { discardComments: { removeAll: true } },
             canPrint: true
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            include: /\.min\.js$/,
-            minimize: true
         })
+        // ,
+        // new webpack.optimize.UglifyJsPlugin({
+        //     include: /\.min\.js$/,
+        //     minimize: true
+        // })
     ]
 };
