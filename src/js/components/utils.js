@@ -1,6 +1,19 @@
 // Utilities Functions
+
 // Get User's Mouse Direction
+// getMouseDirection(event)
+
 // Get Transform Values and Decomposed Matrix from CSS
+// getTransformRotate(element)
+// getTransformTranslate(element)
+// getTransformScale(element)
+// getMatrixValues(element)
+// getRotationMatrix(element)
+// getTranslationMatrix(element)
+// getScaleMatrix(element)
+// setTransform(element, rotateXMatrix, rotateYMatrix, translateMatrix, scaleMatrix, xPosPercentarge, yPosPercentarge)
+// setCursor
+// getyPos
 
 import * as matrix from "./matrix.js";
 
@@ -194,7 +207,7 @@ export function getScaleMatrix(element) {
 // console.log("Scale Matrix", getScaleMatrix(pluridContainer[0].children[0]));
 
 
-export function setTransform(element, rotateXMatrix, rotateYMatrix, translateMatrix, scaleMatrix, xPosPercentarge, yPosPercentarge) {
+export function setTransform(element, rotateXMatrix, rotateYMatrix, translateMatrix, scaleMatrix, yPos = 0) {
     var transformMatrix = matrix.multiplyArrayOfMatrices([
         translateMatrix,
         rotateXMatrix,
@@ -203,15 +216,39 @@ export function setTransform(element, rotateXMatrix, rotateYMatrix, translateMat
     ]);
     // console.log("Transform Matrix", transformMatrix);
 
-    // Returns a result like: "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 50, 100, 0, 1);"
+    // Set the transform
+    var transformOriginRule = "50% " + yPos + "px";
+    element.style.transformOrigin = transformOriginRule;
+
+    // Returns a a matrix3d() CSS string
     var matrix3dRule = matrix.matrixArrayToCssMatrix(transformMatrix);
     // console.log("CSS Rule", matrix3dRule);
-
-    xPosPercentarge = (xPosPercentarge*100).toPrecision(6);
-    yPosPercentarge = (yPosPercentarge*100).toPrecision(6);
-
-    // Set the transform
     element.style.transform = matrix3dRule;
-    // element.style.transformOrigin = xPosPercentarge + "% " + yPosPercentarge + "%";
-    // console.log("Percentage", xPosPercentarge, yPosPercentarge);
+}
+
+
+export function setCursor(mode) {
+    switch(mode) {
+        case "rotate":
+            document.body.style.cursor = "ew-resize";
+            break;
+        case "translate":
+            document.body.style.cursor = "move";
+            break;
+        case "scale":
+            document.body.style.cursor = "nesw-resize";
+            break;
+        default:
+            document.body.style.cursor = "default";
+    }
+}
+
+
+export function getyPos(event, plurid) {
+    var yCenter = window.innerHeight / 2;
+    var translateY = getTransformTranslate(plurid).translateY;
+
+    var yPos = translateY * -1 + yCenter;
+
+    return yPos;
 }
