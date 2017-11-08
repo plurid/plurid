@@ -7,14 +7,6 @@
 */
 
 
-
-// to export
-export function testfun(works) {
-    return console.log(works)
-}
-
-
-// to import
-import {testfun} from "./matrix.js";
-
-testfun("aa")
+/*
+    to have an active element which can be selected as target for transform-origin
+*/

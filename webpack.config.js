@@ -14,6 +14,13 @@ module.exports = {
     module: {
         loaders: [
             {
+                test: /\.(jpg|png|svg)$/,
+                loader: 'file-loader',
+                options: {
+                  name: '../images/[name].[ext]',
+                },
+            },
+            {
                 test:/\.scss$/,
                 loaders: ExtractTextPlugin.extract('css-loader!sass-loader')
             }
@@ -34,5 +41,5 @@ module.exports = {
         //     include: /\.min\.js$/,
         //     minimize: true
         // })
-    ]
+    ],
 };
