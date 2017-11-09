@@ -20,22 +20,46 @@ import * as matrix from "./matrix.js";
 
 export function getMouseDirection(event) {
     var direction = "";
+    var threshhold = 0;
 
-    if (event.movementX < 0 ) {
+    var positionX = event.movementX;
+    var positionY = event.movementY;
+
+    if (positionX < threshhold) {
         direction = "left";
-    } else if (event.movementX > 0) {
+    }
+
+    if (positionX > threshhold) {
         direction = "right";
     }
 
-    if (event.movementY < 0) {
+    if (positionY < threshhold) {
         direction = "up";
-    } else if (event.movementY > 0) {
+    }
+
+    if (positionY > threshhold) {
         direction = "down";
     }
 
-    // console.log('----- direction: ', direction)
-    // console.log('movementX: ', event.movementX)
-    // console.log('movementY: ', event.movementY)
+    // if (positionX < threshhold && positionY < threshhold) {
+    //     direction = "upleft";
+    // }
+
+    // if (positionX < threshhold && positionY > threshhold ) {
+    //     direction = "downleft";
+    // }
+
+    // if (positionX > threshhold && positionY > threshhold ) {
+    //     direction = "downright";
+    // }
+
+    // if (positionX > threshhold && positionY < threshhold ) {
+    //     direction = "upright";
+    // }
+
+    console.log('----- direction: ', direction);
+    console.log('movementX: ', event.movementX);
+    console.log('movementY: ', event.movementY);
     return direction;
 }
 
@@ -229,7 +253,7 @@ export function setTransform(element, rotateXMatrix, rotateYMatrix, translateMat
 
 export function setCursor(mode) {
     switch(mode) {
-        case "rotate":
+            case "rotate":
             document.body.style.cursor = "ew-resize";
             break;
         case "translate":
