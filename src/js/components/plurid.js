@@ -1,8 +1,8 @@
 import * as matrix from "./matrix.js";
 import * as utils from "./utils.js";
-import * as bridges from "./bridges.js"
+import * as bridges from "./bridges.js";
 
-var pluridContainer = document.getElementsByClassName('plurid-container');
+export var pluridContainer = document.getElementsByClassName('plurid-container');
 
 
 // Basic Rotation, Translation, Scaling of the Plurid Card
@@ -10,17 +10,20 @@ for (var i = 0; i < pluridContainer.length; i++) {
     pluridContainer[i].addEventListener("mousemove", function(event) {
         // console.log(this.children[0]);
         if (!!event.shiftKey) {
-            rotatePlurid(event, this.children[0]);
+            var direction = utils.getMouseDirection(event);
+            rotatePlurid(event, this.children[0], direction);
             utils.setCursor("rotate");
         }
 
         if (!!event.altKey) {
-            translatePlurid(event, this.children[0]);
+            var direction = utils.getMouseDirection(event);
+            translatePlurid(event, this.children[0], direction);
             utils.setCursor("translate");
         }
 
         if (!!event.ctrlKey || !!event.metaKey) {
-            scalePlurid(event, this.children[0]);
+            var direction = utils.getMouseDirection(event);
+            scalePlurid(event, this.children[0], direction);
             utils.setCursor("scale");
         }
     });
@@ -78,8 +81,8 @@ for (var i = 0; i < pluridContainer.length; i++) {
 }
 
 
-function rotatePlurid(event, plurid) {
-    var direction = utils.getMouseDirection(event);
+export function rotatePlurid(event, plurid, direction) {
+    // var direction = utils.getMouseDirection(event);
     // console.log("Direction", direction);
 
     var rotateX = utils.getTransformRotate(plurid).rotateX;
@@ -153,8 +156,8 @@ function rotatePlurid(event, plurid) {
 }
 
 
-function translatePlurid(event, plurid) {
-    var direction = utils.getMouseDirection(event);
+export function translatePlurid(event, plurid, direction) {
+    // var direction = utils.getMouseDirection(event);
     // console.log("Direction", direction);
 
     var rotateX = utils.getTransformRotate(plurid).rotateX;
@@ -252,8 +255,8 @@ function translatePlurid(event, plurid) {
 }
 
 
-function scalePlurid(event, plurid) {
-    var direction = utils.getMouseDirection(event);
+export function scalePlurid(event, plurid, direction) {
+    // var direction = utils.getMouseDirection(event);
     // console.log("Direction", direction);
 
     var rotateX = utils.getTransformRotate(plurid).rotateX;
@@ -309,3 +312,15 @@ function scalePlurid(event, plurid) {
         utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 }
+
+
+
+window.addEventListener('wheel', function(event) {
+    if (event.deltaY < 0) {
+      console.log('scrolling up');
+    }
+
+    if (event.deltaY > 0) {
+      console.log('scrolling down');
+    }
+});
