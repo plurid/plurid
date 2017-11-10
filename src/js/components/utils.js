@@ -57,9 +57,9 @@ export function getMouseDirection(event) {
     //     direction = "upright";
     // }
 
-    console.log('----- direction: ', direction);
-    console.log('movementX: ', event.movementX);
-    console.log('movementY: ', event.movementY);
+    // console.log('----- direction: ', direction);
+    // console.log('movementX: ', event.movementX);
+    // console.log('movementY: ', event.movementY);
     return direction;
 }
 
