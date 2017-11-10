@@ -11,6 +11,8 @@ var translateRight = document.getElementsByClassName('plurid-container-translate
 var scaleUp = document.getElementsByClassName('plurid-container-scale-up');
 var scaleDown = document.getElementsByClassName('plurid-container-scale-down');
 
+var moreButton = document.getElementsByClassName('plurid-container-more-button');
+var moreMenu = document.getElementsByClassName('plurid-container-options-more');
 
 var timer;
 
@@ -126,3 +128,44 @@ for (var i=0; i < scaleDown.length; i++) {
         clearTimeout(timer);
     });
 }
+
+
+
+// background color
+
+var pluridContainerBackground = document.getElementsByClassName('plurid-container-color');
+
+
+pluridContainerBackground[0].addEventListener("click", function() {
+    var pluridBackgroundColor = window.getComputedStyle(plurid.pluridContainer[0], null).getPropertyValue("background-color");
+    if (pluridBackgroundColor == "rgb(26, 26, 26)" || pluridBackgroundColor == "rgb(25, 25, 25)") {
+        plurid.pluridContainer[0].style.backgroundColor = "hsl(0, 0%, 40%)";
+        pluridContainerBackground[0].style.backgroundColor = "hsl(0, 0%, 40%)";
+    }
+
+    if (pluridBackgroundColor == "rgb(102, 102, 102)") {
+        plurid.pluridContainer[0].style.backgroundColor = "hsl(0, 0%, 93%)";
+        pluridContainerBackground[0].style.backgroundColor = "hsl(0, 0%, 93%)";
+    }
+
+    if (pluridBackgroundColor == "rgb(238, 238, 238)") {
+        plurid.pluridContainer[0].style.backgroundColor = "hsl(0, 0%, 10%)";
+        pluridContainerBackground[0].style.backgroundColor = "hsl(0, 0%, 10%)";
+    }
+});
+
+// console.log(window.getComputedStyle(plurid.pluridContainer[0], null).getPropertyValue("background-color"))
+
+
+// more menu
+
+moreButton[0].addEventListener("click", function() {
+    // if (moreMenu[0].style.display == "" || moreMenu[0].style.display == "none") {
+    //     moreMenu[0].style.display = "block";
+    // } else if (moreMenu[0].style.display == "block") {
+    //     moreMenu[0].style.display = "none";
+    // }
+
+    moreMenu[0].classList.toggle('plurid-container-options-more-clicked');
+
+});

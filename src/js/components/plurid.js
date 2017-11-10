@@ -8,21 +8,20 @@ export var pluridContainer = document.getElementsByClassName('plurid-container')
 // Basic Rotation, Translation, Scaling of the Plurid Card
 for (var i = 0; i < pluridContainer.length; i++) {
     pluridContainer[i].addEventListener("mousemove", function(event) {
+        var direction = utils.getMouseDirection(event);
         // console.log(this.children[0]);
+
         if (!!event.shiftKey) {
-            var direction = utils.getMouseDirection(event);
             rotatePlurid(event, this.children[0], direction);
             utils.setCursor("rotate");
         }
 
         if (!!event.altKey) {
-            var direction = utils.getMouseDirection(event);
             translatePlurid(event, this.children[0], direction);
             utils.setCursor("translate");
         }
 
         if (!!event.ctrlKey || !!event.metaKey) {
-            var direction = utils.getMouseDirection(event);
             scalePlurid(event, this.children[0], direction);
             utils.setCursor("scale");
         }
@@ -63,8 +62,8 @@ document.addEventListener("keyup", function (event) {
 
 // Reset Transforms at Double Click
 for (var i = 0; i < pluridContainer.length; i++) {
-    pluridContainer[i].addEventListener('dblclick', function(event) {
-        var plurid = this.children[0];
+    pluridContainer[i].children[0].addEventListener('dblclick', function(event) {
+        var plurid = this;
         plurid.style.transition = "1s ease-in-out";
 
         var translateY = utils.getTransformTranslate(plurid).translateY;
