@@ -30,10 +30,10 @@ for (var i = 0; i < pluridContainer.length; i++) {
 
 // TO DO set cursor back to default
 // Set cursor back to default (a bit laggy/buggy)
-document.addEventListener("keyup", function (event) {
+document.addEventListener("keyup", function(event) {
     // console.log(event);
     if (event.key == "Ctrl" || event.key == "Shift" || event.key == "Alt" || event.key == "Meta") {
-            utils.setCursor("default");
+        utils.setCursor("default");
     }
 });
 
@@ -119,7 +119,7 @@ export function rotatePlurid(event, plurid, direction) {
 
     plurid.style.transition = "0ms ease-in-out";
 
-    if (direction === "left"  || direction === "downleft" || direction === "upleft") {
+    if (direction === "left" || direction === "downleft" || direction === "upleft") {
         rotateY -= angleIncrement;
         valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
 
@@ -313,13 +313,3 @@ export function scalePlurid(event, plurid, direction) {
 }
 
 
-
-window.addEventListener('wheel', function(event) {
-    if (event.deltaY < 0) {
-      console.log('scrolling up');
-    }
-
-    if (event.deltaY > 0) {
-      console.log('scrolling down');
-    }
-});
