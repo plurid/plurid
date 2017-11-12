@@ -1,4 +1,5 @@
 import * as plurid from "./plurid.js";
+import * as utils from "./utils.js";
 
 var rotateLeft = document.getElementsByClassName('plurid-container-rotate-left');
 var rotateRight = document.getElementsByClassName('plurid-container-rotate-right');
@@ -13,6 +14,10 @@ var scaleDown = document.getElementsByClassName('plurid-container-scale-down');
 
 var moreButton = document.getElementsByClassName('plurid-container-more-button');
 var moreMenu = document.getElementsByClassName('plurid-container-options-more');
+
+var shortcutsButton = document.getElementsByClassName('plurid-container-shortcuts-button');
+var shortcutsMenu = document.getElementsByClassName('plurid-container-options-shortcuts');
+
 
 var timer;
 
@@ -158,14 +163,87 @@ pluridContainerBackground[0].addEventListener("click", function() {
 
 
 // more menu
-
 moreButton[0].addEventListener("click", function() {
-    // if (moreMenu[0].style.display == "" || moreMenu[0].style.display == "none") {
-    //     moreMenu[0].style.display = "block";
-    // } else if (moreMenu[0].style.display == "block") {
-    //     moreMenu[0].style.display = "none";
-    // }
-
     moreMenu[0].classList.toggle('plurid-container-options-more-clicked');
+});
 
+
+
+// Scroll to Translate
+var useScrollCheckbox = document.getElementsByClassName('plurid-container-use-scroll');
+
+var useScrollToTranslate = useScrollCheckbox[0].checked;
+
+useScrollCheckbox[0].addEventListener("change", function() {
+    if (this.checked) {
+        useScrollToTranslate = 1;
+        plurid.pluridContainer[0].addEventListener('wheel', useScrollTranslation);
+        // console.log(useScrollToTranslate);
+    } else {
+        useScrollToTranslate = 0;
+        // console.log(useScrollToTranslate);
+        plurid.pluridContainer[0].removeEventListener('wheel', useScrollTranslation);
+    }
+});
+
+var previousScrollDeltaX = 0;
+var previousScrollDeltaY = 0;
+
+if (useScrollToTranslate) {
+    plurid.pluridContainer[0].addEventListener('wheel', useScrollTranslation);
+}
+
+function useScrollTranslation(event) {
+    event.preventDefault();
+
+    var currentScrollDeltaX = event.deltaX;
+    var currentScrollDeltaY = event.deltaY;
+
+    if (currentScrollDeltaY < 0
+        //  &&
+        //  currentScrollDeltaY == previousScrollDeltaY
+        ) {
+        // console.log('scrolling up');
+        plurid.translatePlurid(event, plurid.pluridContainer[0].children[0], "up");
+        utils.setCursor("translate");
+    }
+
+    if (currentScrollDeltaY > 0
+        // &&
+        // currentScrollDeltaY == previousScrollDeltaY
+        ) {
+        // console.log('scrolling down');
+        plurid.translatePlurid(event, plurid.pluridContainer[0].children[0], "down");
+        utils.setCursor("translate");
+    }
+
+    if (currentScrollDeltaX > 0
+        // &&
+        // currentScrollDeltaX == previousScrollDeltaX
+        ) {
+        // console.log('scrolling right');
+        plurid.translatePlurid(event, plurid.pluridContainer[0].children[0], "right");
+        utils.setCursor("translate");
+    }
+
+    if (currentScrollDeltaX < 0
+        // &&
+        // currentScrollDeltaX == previousScrollDeltaX
+        ) {
+        // console.log('scrolling left');
+        plurid.translatePlurid(event, plurid.pluridContainer[0].children[0], "left");
+        utils.setCursor("translate");
+    }
+
+    previousScrollDeltaX = currentScrollDeltaX
+    previousScrollDeltaY = currentScrollDeltaY
+
+    // console.log("X", event.deltaX, "|", "Y", event.deltaY);
+}
+
+
+// Shortcuts Menu
+shortcutsButton[0].addEventListener("click", function() {
+    console.log("a");
+    shortcutsMenu[0].classList.toggle('plurid-container-options-shortcuts-clicked');
 });
