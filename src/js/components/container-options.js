@@ -44,7 +44,7 @@ var scalePlurid = function(event, direction) {
 // rotation
 for (var i=0; i < rotateLeft.length; i++) {
     rotateLeft[i].addEventListener("mousedown", function(event) {
-        var direction = "left";
+        var direction = "right";
         timer = setTimeout(rotatePlurid, 35, event, direction);
     });
 
@@ -55,7 +55,7 @@ for (var i=0; i < rotateLeft.length; i++) {
 
 for (var i=0; i < rotateRight.length; i++) {
     rotateRight[i].addEventListener("mousedown", function(event) {
-        var direction = "right";
+        var direction = "left";
         timer = setTimeout(rotatePlurid, 35, event, direction);
     });
 

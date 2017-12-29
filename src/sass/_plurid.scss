@@ -55,8 +55,11 @@
 // $rotatePlurid: 60deg;
 
 .plurid-bridge-container {
-    margin-top: -1600px;
-    margin-left: 820px;
+    // 360 151
+    // margin-top: -1600px;
+    // margin-left: 820px;
+    margin-top: 0px;
+    margin-left: 0px;
     width: 500px;
     position: absolute;
     transform: rotateY(90deg) translateX(250px);
@@ -67,7 +70,7 @@
     height: 100%;
     padding: 20px;
 
-    // position: absolute;
+    // position: relative;
 
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d; /* Chrome, Safari, Opera */
