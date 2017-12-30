@@ -112,3 +112,16 @@
 .plurid-container-options-shortcuts-clicked {
     display: block;
 }
+
+
+.plurid-bridge-close {
+    cursor: pointer;
+    position: relative;
+    z-index: 20;
+    top: 20px;
+    left: 525px;
+}
+
+.plurid-bridge-close:hover {
+    color: hsl(0, 0%, 70%)
+}
