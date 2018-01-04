@@ -67,5 +67,5 @@
 ----------------------
 
 <p align="center">
-    <img src="/images/plurid-elements.png" height="500px">
+    <img src="https://github.com/plurid/plurid.js/blob/master/notes/Images/plurid-elements.png" height="500px">
 </p>
