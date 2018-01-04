@@ -1,0 +1,14 @@
+html, body {
+    background-color: #1b293f;
+    color: white;
+    font-size: 16px;
+}
+
+h1, h2, p {
+    color: white;
+}
+
+code {
+    background-color: #2f4972;
+    color: white;
+}
