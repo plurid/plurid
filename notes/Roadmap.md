@@ -13,7 +13,20 @@
     + `<plurid-sheet>`;
     + `<plurid-sheet-double>`;
     + `<plurid-solid>`;
-    + `<plurid-branch>`.
+        + `<plurid-front>`;
+        + `<plurid-back>`;
+        + `<plurid-top>`;
+        + `<plurid-bottom>`;
+        + `<plurid-left>`;
+        + `<plurid-right>`;
+    + `<plurid-content>`;
+    + `<plurid-branch>`;
+    + `<plurid-insertion>`;
+    + `<plurid-bridge>`;
+    + `<plurid-branch>`;
+    + `<plurid-controls>`;
+    + `<plurid-options>`;
+
 
 
 - [ ] Develop Smooth Transforms (Translate, Scale, Rotate);
