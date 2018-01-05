@@ -41,22 +41,53 @@ The `<plurid-options>` are:
 
 The `<plurid-controls>` are:
 
-+ button: move camera back to the parent plurid;
++ button: back to the parent plurid;
 
-+ button: isolate the current plurid (ctrl/cmd + i);
-
-+ button: close the current plurid (x);
-
-+ button: open the current plurid in new tab;
++ button: close the current `<plurid-branch>`;
 
 + button: extend the `<plurid-bridge>`;
 
-+ button: flip the branch to the other side of the insertion plurid;
++ button: isolate the current `<plurid-branch>`;
 
-+ button: flip the content on the other side (revert content in the case of `<plurid-sheet-double>`, unusable in case of `<plurid-solid>`);
++ input: URL of the current `<plurid-branch>`;
+
++ button: open the current `<plurid-branch>` in new tab;
+
++ opacity slider (lower-limited to 3%);
+
++ button: flip the `<plurid-branch>` to the other side of the `<plurid-insertion>`;
+
++ button: flip the content to the other side (revert content in the case of `<plurid-sheet-double>`, unusable in case of `<plurid-solid>`);
 
 + button: opaque back (in case of `<plurid-sheet>`);
 
-+ opacity slider lower-limited to 3%;
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/plurid.js/master/notes/Images/plurid-branch.png" height="500px">
+</p>
 
-+ url input (with the link to the current page);
+
+
+
+## Shortcuts
+
++ `shift + mouse-movements (up/down, left-right)` :: rotate;
+
++ `alt/opt + mouse-movements (up/down, left-right)` :: translation;
+
++ `ctrl/cmd + mouse-movements (up/down)` :: scale;
+
++ `alt/opt + i` :: isolate current plurid;
+
++ `alt/opt + x` :: close current plurid;
+
++ `alt/opt + n` :: open current plurid in new tab;
+
++ `ctrl/cmd + 1` :: transform to center on front plane;
+
++ `ctrl/cmd + 2` :: transform to center on right plane;
+
++ `ctrl/cmd + 3` :: transform to center on back plane;
+
++ `ctrl/cmd + 4` :: transform to center on left plane;
+
++ `double-click/tap` :: transform to center on the clicked/tapped plane;
