@@ -2,7 +2,6 @@
 
 
 # Implementation
-----------------
 
 
 For `git commit`:
@@ -14,8 +13,6 @@ For `git commit`:
 
 
 ## TODOs
--------
 
 
 ## Bugs
--------

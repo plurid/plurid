@@ -2,7 +2,6 @@
 
 
 # Roadmap
----------
 
 
 - [x] Establish General Design & Architecture;

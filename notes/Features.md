@@ -2,11 +2,9 @@
 
 
 # Features
-----------
 
 
 ## Camera
----------
 
 + Double-clicking any `<plurid-sheet>`, `<plurid-sheet-double>`, `<plurid-solid>` makes the plane normal to the camera and hides everything else. Transforming (translation/rotation/scale) brings everything back into display.
 
@@ -15,7 +13,6 @@
 
 
 ## Options
-----------
 
 The `<plurid-options>` are:
 
@@ -41,7 +38,6 @@ The `<plurid-options>` are:
 
 
 ## Controls
------------
 
 The `<plurid-controls>` are:
 
