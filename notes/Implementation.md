@@ -5,9 +5,6 @@
 ----------------
 
 
-## TODOs
--------
-
 For `git commit`:
 
 + Feat
@@ -15,6 +12,9 @@ For `git commit`:
 + Fix
 + Note
 
+
+## TODOs
+-------
 
 
 ## Bugs
