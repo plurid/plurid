@@ -28,13 +28,13 @@ The `<plurid-options>` are:
 
 + checkmark: use scroll to translate;
 
-+ checkmark: clicking a `<plurid-insertion>` link transforms the targetted `<plurid-content>`
++ checkmark: clicking a `<plurid-insertion>` link transforms the targetted `<plurid-content>` in order to face it from the normal vector (default on);
 
-+ checkmark: when clicking a `<plurid-insertion>` link or double-clicking any plurid structure everything else has opacity reduced to 0%.
++ checkmark: when clicking a `<plurid-insertion>` link or double-clicking any plurid structure everything else has opacity reduced to 0% (isolate mode on always) (default off);
 
 + list of (modifiable?) shortcuts;
 
-+ ? button: insert other plurid-roots on the left and right of the main `<plurid-root>`, each 3D transformable on it's own;
++ button: insert other `<plurid-root>`s on the left and right of the main `<plurid-root>`, each 3D transformable on it's own (?);
 
 
 ## Controls
@@ -42,6 +42,8 @@ The `<plurid-options>` are:
 The `<plurid-controls>` are:
 
 + button: back to the parent plurid;
+
++ button: minimize the current `<plurid-branch>`;
 
 + button: close the current `<plurid-branch>`;
 
@@ -55,11 +57,15 @@ The `<plurid-controls>` are:
 
 + opacity slider (lower-limited to 3%);
 
-+ button: flip the `<plurid-branch>` to the other side of the `<plurid-insertion>`;
++ more -> button: flip the `<plurid-branch>` to the other side of the `<plurid-insertion>`;
 
-+ button: flip the content to the other side (revert content in the case of `<plurid-sheet-double>`, unusable in case of `<plurid-solid>`);
++ more -> button: flip the content to the other side (revert content in the case of `<plurid-sheet-double>`, unusable in case of `<plurid-solid>`);
 
-+ button: opaque back (in case of `<plurid-sheet>`);
++ more -> button: opaque back (in case of `<plurid-sheet>`);
+
++ more -> slider for angle to the parent plurid (default 90 degrees) (?);
+
++ more -> button: reset to default;
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/plurid.js/master/notes/Images/plurid-branch.png" height="500px">
@@ -77,6 +83,8 @@ The `<plurid-controls>` are:
 + `ctrl/cmd + mouse-movements (up/down)` :: scale;
 
 + `alt/opt + i` :: isolate current plurid;
+
++ `alt/opt + m` :: minimize current plurid;
 
 + `alt/opt + x` :: close current plurid;
 

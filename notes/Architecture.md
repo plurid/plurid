@@ -54,11 +54,10 @@
     + `<plurid-left>`.
 
 
-- `<plurid-options>` :: container for options. Belongs to `<plurid-container>`.
+- `<plurid-options>` :: container for options. Belongs to `<plurid-container>` and affects everything in the `<plurid-container>`.
 
 
-
-- `<plurid-controls>` :: container for controls. Belongs to `<plurid-sheet>`, `<plurid-sheet-double>`, or to each of the six planes of `<plurid-solid>`.
+- `<plurid-controls>` :: container for controls. Belongs to each `<plurid-sheet>`, `<plurid-sheet-double>`, or to each of the six planes of `<plurid-solid>`, and affects each of them individually.
 
 
 ## Anatomy of a Plurid
