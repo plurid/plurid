@@ -1,7 +1,6 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 
 # Architecture
---------------
 
 - `<plurid-container>` :: in general, contains everything on the web page and so it is preceded by `<body>` and succeded by `</body>`.
 
@@ -33,7 +32,6 @@
 
 
 ## Elements
------------
 
 - `<plurid-sheet>` :: a plane that contains `<plurid-content>` on one side.
 
@@ -64,8 +62,7 @@
 
 
 ## Anatomy of a Plurid
-----------------------
 
 <p align="center">
-    <img src="https://github.com/plurid/plurid.js/blob/master/notes/Images/plurid-elements.png" height="500px">
+    <img src="https://raw.githubusercontent.com/plurid/plurid.js/master/notes/Images/plurid-elements.png" height="500px">
 </p>
