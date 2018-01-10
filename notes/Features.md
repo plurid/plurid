@@ -4,11 +4,13 @@
 # Features
 
 
-## Camera
+## Behavior
 
 + Double-clicking any `<plurid-sheet>`, `<plurid-sheet-double>`, `<plurid-solid>` makes the plane normal to the camera and hides everything else. Transforming (translation/rotation/scale) brings everything back into display.
 
 + When clicking a `<plurid-insertion>` link the `<plurid-content>` is animated, moved and centered normal to the camera.
+
++ To be able to detach a `<plurid-branch>` from it's current plurid parent and upgrade it to `<plurid-root>`.
 
 
 
