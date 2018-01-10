@@ -32,6 +32,8 @@ The `<plurid-options>` are:
 
 + checkmark: when clicking a `<plurid-insertion>` link or double-clicking any plurid structure everything else has opacity reduced to 0% (isolate mode on always) (default off);
 
++ checkmark: reduce opacity of the plurid parent after clicking on a `<plurid-branch>`;
+
 + list of (modifiable?) shortcuts;
 
 + button: insert other `<plurid-root>`s on the left and right of the main `<plurid-root>`, each 3D transformable on it's own (?);
