@@ -10,7 +10,7 @@ For `git commit`:
 + Refact
 + Fix
 + Note
-
++ Setup
 
 ## TODOs
 
