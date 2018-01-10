@@ -39,19 +39,19 @@
 - `<plurid-sheet-double>` :: a plane that contains `<plurid-content>` on both sides.
 
     The two sides are:
-    + `<plurid-front>`;
-    + `<plurid-back>`.
+    + `<plurid-sheet-double-front>`;
+    + `<plurid-sheet-double-back>`.
 
 
 - `<plurid-solid>` :: a group of six one-sided planes, forming a cuboid, that can contain `<plurid-content>` on each side.
 
     The six planes are:
-    + `<plurid-front>`;
-    + `<plurid-back>`;
-    + `<plurid-top>`;
-    + `<plurid-bottom>`;
-    + `<plurid-right>`;
-    + `<plurid-left>`.
+    + `<plurid-solid-front>`;
+    + `<plurid-solid-back>`;
+    + `<plurid-solid-top>`;
+    + `<plurid-solid-bottom>`;
+    + `<plurid-solid-right>`;
+    + `<plurid-solid-left>`.
 
 
 - `<plurid-options>` :: container for options. Belongs to `<plurid-container>` and affects everything in the `<plurid-container>`.
