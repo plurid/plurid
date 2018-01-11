@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Test</title>
+
+        <link rel="stylesheet" href="../../dist/css/styles.min.css">
+
+        <script defer src="../../dist/js/app.min.js"></script>
+    </head>
+
+    <body>
+
+        <plurid-container>
+            <plurid-root>
+                <plurid-sheet>
+                    <plurid-content>
+                        Text with <plurid-branch>
+                                        <plurid-insertion></plurid-insertion>
+
+                                        <plurid-bridge></plurid-bridge>
+
+                                        <plurid-scion>
+                                            <plurid-sheet>
+                                                <plurid-content>
+                                                    content in branch
+                                                </plurid-content>
+
+                                                <plurid-controls>
+                                                </plurid-controls>
+                                            </plurid-sheet>
+                                        </plurid-scion>
+                                  </plurid-branch>
+                                                content
+                    </plurid-content>
+
+                    <plurid-controls></plurid-controls>
+                </plurid-sheet>
+            </plurid-root>
+
+            <plurid-root>
+                Additional Root(s)?
+            </plurid-root>
+
+            <plurid-options>
+                Options for the Container
+            </plurid-options>
+        </plurid-container>
+
+    </body>
+</html>
