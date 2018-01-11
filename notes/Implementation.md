@@ -11,6 +11,7 @@ For `git commit`:
 + Fix
 + Note
 + Setup
++ Test
 
 ## TODOs
 
