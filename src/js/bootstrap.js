@@ -1,6 +1,6 @@
 // require JS files
-require('./source/plurid');
-require('./source/container-options');
+require('./source/legacy/plurid');
+require('./source/legacy/container-options');
 
 
 // require Elements
