@@ -7,18 +7,20 @@
 - [x] Establish General Design & Architecture;
 
 
-- [ ] Create Custom HTML Elements
+- [x] Create Custom HTML Elements
     + `<plurid-container>`;
     + `<plurid-root>`;
     + `<plurid-sheet>`;
     + `<plurid-sheet-double>`;
+        + `<plurid-sheet-double-front>`;
+        + `<plurid-sheet-double-back>`;
     + `<plurid-solid>`;
-        + `<plurid-front>`;
-        + `<plurid-back>`;
-        + `<plurid-top>`;
-        + `<plurid-bottom>`;
-        + `<plurid-left>`;
-        + `<plurid-right>`;
+        + `<plurid-solid-front>`;
+        + `<plurid-solid-back>`;
+        + `<plurid-solid-top>`;
+        + `<plurid-solid-bottom>`;
+        + `<plurid-solid-left>`;
+        + `<plurid-solid-right>`;
     + `<plurid-content>`;
     + `<plurid-branch>`;
     + `<plurid-insertion>`;
@@ -26,7 +28,6 @@
     + `<plurid-branch>`;
     + `<plurid-controls>`;
     + `<plurid-options>`;
-
 
 
 - [ ] Develop Smooth Transforms (Translate, Scale, Rotate);
