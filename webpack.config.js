@@ -3,6 +3,7 @@ const path = require('path');
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const Uglify = require("uglifyjs-webpack-plugin");
 
 
 module.exports = {
@@ -36,10 +37,10 @@ module.exports = {
             cssProcessorOptions: { discardComments: { removeAll: true } },
             canPrint: true
         })
-        // ,
-        // new webpack.optimize.UglifyJsPlugin({
-        //     include: /\.min\.js$/,
-        //     minimize: true
-        // })
+        ,
+        new Uglify({
+            include: /\.min\.js$/,
+            minimize: true
+        })
     ],
 };
