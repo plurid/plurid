@@ -23,3 +23,9 @@ a {
     margin-top: 50px;
     margin-bottom: 50px;
 }
+
+:unresolved {
+    background-color: red;
+    color: white;
+    padding: 10px;
+}
