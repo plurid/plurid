@@ -1,9 +1,9 @@
-$body-color: hsl(0, 0%, 20%);
+$body-color: hsl(0, 0%, 10%);
 $text-color: hsl(0, 0%, 90%);
 
 
 body {
-    background-color: $body-color;
+    // background-color: $body-color;
     color: $text-color;
     text-align: justify;
 }
