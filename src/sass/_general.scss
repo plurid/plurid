@@ -1,8 +1,6 @@
 * {
     box-sizing: border-box;
     text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     font-kerning: auto;
 }
 
@@ -14,5 +12,4 @@ html, body {
 
 html {
     overflow: hidden;
-    -webkit-text-size-adjust: 100%;
 }
