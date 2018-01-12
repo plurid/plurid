@@ -1,9 +1,6 @@
 $body-color: hsl(0, 0%, 20%);
 $text-color: hsl(0, 0%, 90%);
 
-html, body {
-    margin: 0;
-}
 
 body {
     background-color: $body-color;
@@ -25,7 +22,7 @@ a {
 }
 
 :unresolved {
-    background-color: red;
+    // background-color: red;
     color: white;
     padding: 10px;
 }

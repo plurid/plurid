@@ -6,12 +6,14 @@
 
 For `git commit`:
 
++ Dev
 + Feat
 + Refact
 + Fix
 + Note
 + Setup
 + Test
+
 
 ## TODOs
 

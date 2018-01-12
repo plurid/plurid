@@ -1,11 +1,12 @@
 plurid-container {
-    position: relative;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    // width: 50%;
-    margin: 0px auto;
-    // height: 700px;
-    height: 100vh;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    // position: relative;
+    // width: 100%;
+    // height: 100%;
     background-color: hsl(0, 0%, 10%);
     overflow: hidden;
     -webkit-perspective: 1000px; /* Chrome, Safari, Opera */
@@ -16,30 +17,30 @@ plurid-container {
 }
 
 
-plurid-root {
-    width: 100%;
-    position: absolute;
-    // transform-origin: 50% 0px 0px;
-    transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
-    // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-}
+// plurid-root {
+//     width: 100%;
+//     position: absolute;
+//     // transform-origin: 50% 0px 0px;
+//     transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+//     // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
+//     transform-style: preserve-3d;
+//     -webkit-transform-style: preserve-3d;
+// }
 
 
-plurid-content {
-    margin: 0 auto;
-    width: 50%;
-    // transform: rotateY(35deg);
-}
+// plurid-content {
+//     margin: 0 auto;
+//     width: 50%;
+//     // transform: rotateY(35deg);
+// }
 
 
-plurid-sheet {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
-    // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-}
+// plurid-sheet {
+//     width: 100%;
+//     height: 100%;
+//     position: absolute;
+//     transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+//     // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
+//     transform-style: preserve-3d;
+//     -webkit-transform-style: preserve-3d;
+// }
