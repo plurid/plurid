@@ -4,7 +4,7 @@
 plurid.js
 =========
 
-Plurid.js is a MIT-licensed, open source JavaScript framework to view media in three dimensions
+Plurid.js is a MIT-licensed, open source JavaScript framework to view and use web content in three dimensions.
 
 ## Installation
 
@@ -12,7 +12,9 @@ Plurid.js is a MIT-licensed, open source JavaScript framework to view media in t
 
 ## Description
 
-See `/notes/`.
+The framework files are in `/dist/`. Examples can be found in `/src/examples/`.
+
+For architecture, features, and more see `/notes/`.
 
 ## License
 
