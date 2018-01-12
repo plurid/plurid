@@ -12,6 +12,9 @@ require('./source/elements/sheet.js');
 require('./source/elements/solid.js');
 
 
+// require Logic
+require('./source/logic/directions.js');
+
 
 // require Sass main file
 require('../sass/app.scss');
