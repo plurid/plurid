@@ -1,3 +1,12 @@
+plurid-roots {
+    width: 100%;
+    position: absolute;
+    transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(30deg) rotateZ(0deg) scale(1);
+    // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+}
+
 plurid-root {
     width: 100%;
     position: absolute;
@@ -5,7 +14,6 @@ plurid-root {
     // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
-    z-index: -20;
 }
 
 plurid-content {
