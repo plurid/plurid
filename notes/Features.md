@@ -11,7 +11,7 @@
 
 + When clicking a `<plurid-insertion>` link the `<plurid-content>` is animated, moved and centered normal to the camera.
 
-+ In the case of multiple `<plurid-root>`s, each can be transformed (translation, rotation, scale) separately by selecting only a specific `<plurid-root>`, or all the `<plurid-root>`s can be transformed simultaneously by selecting the `<plurid-roots>` space (deselecting all the individual `<plurid-root>`s);
++ In the case of multiple `<plurid-root>`s, each can be transformed (rotation, translation, scale) separately by selecting only a specific `<plurid-root>`, or all the `<plurid-root>`s can be transformed simultaneously by selecting the `<plurid-roots>` space (hence, deselecting all the individual `<plurid-root>`s);
 
 
 
