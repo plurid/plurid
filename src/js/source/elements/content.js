@@ -1,10 +1,14 @@
-class PluridContent extends HTMLElement {
-    constructor() {
-        super();
+import * as command from "./commands.js";
 
+
+var pluridContent = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridContent works");
+        }
     }
+});
 
-}
-
-var pluridContent = document.registerElement("plurid-content", PluridContent);
-// customElements.define("plurid-content", PluridContent);
+document.registerElement( "plurid-content", {
+    prototype: pluridContent
+});

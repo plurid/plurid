@@ -1,51 +1,55 @@
 /////////
 // BRANCH
-class PluridBranch extends HTMLElement {
-    constructor() {
-        super();
-
+var pluridBranch = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridBranch works");
+        }
     }
+});
 
-}
-
-var pluridBranch = document.registerElement("plurid-branch", PluridBranch);
-// customElements.define("plurid-branch", PluridBranch);
-
+document.registerElement( "plurid-branch", {
+    prototype: pluridBranch
+});
 
 
-class PluridInsertion extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridInsertion = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridInsertion works");
+        }
     }
+});
 
-}
-
-var pluridInsertion = document.registerElement("plurid-insertion", PluridInsertion);
-// customElements.define("plurid-insertion", PluridInsertion);
-
+document.registerElement( "plurid-insertion", {
+    prototype: pluridInsertion
+});
 
 
-class PluridBridge extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridBridge = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridBridge works");
+        }
     }
+});
 
-}
-
-var pluridBridge = document.registerElement("plurid-bridge", PluridBridge);
-// customElements.define("plurid-bridge", PluridBridge);
-
+document.registerElement( "plurid-bridge", {
+    prototype: pluridBridge
+});
 
 
-class PluridScion extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridScion = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridScion works");
+        }
     }
+});
 
-}
-
-var pluridScion = document.registerElement("plurid-scion", PluridScion);
-// customElements.define("plurid-scion", PluridScion);
+document.registerElement( "plurid-scion", {
+    prototype: pluridScion
+});

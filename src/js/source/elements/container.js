@@ -1,24 +1,30 @@
+import * as command from "./commands.js";
+
+
 ////////////
 // CONTAINER
-class PluridContainer extends HTMLElement {
-    constructor() {
-        super();
-
+var pluridContainer = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            command.transform(this);
+        }
     }
+});
 
-}
+document.registerElement( "plurid-container", {
+    prototype: pluridContainer
+});
 
-var pluridContainer = document.registerElement("plurid-container", PluridContainer);
-// customElements.define("plurid-container", PluridContainer);
 
-
-class PluridContainerOptions extends HTMLElement {
-    constructor() {
-        super();
-
+var pluridContainerOptions = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridContainerOptions works");
+        }
     }
+});
 
-}
+document.registerElement( "plurid-options", {
+    prototype: pluridContainerOptions
+});
 
-var pluridContainerOptions = document.registerElement("plurid-options", PluridContainerOptions);
-// customElements.define("plurid-options", PluridContainerOptions);

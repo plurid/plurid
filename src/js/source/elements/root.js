@@ -1,12 +1,16 @@
+import * as command from "./commands.js";
+
+
 ///////
 // ROOT
-class PluridRoot extends HTMLElement {
-    constructor() {
-        super();
-
+var pluridRoot = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridRoot works");
+        }
     }
+});
 
-}
-
-var pluridRoot = document.registerElement("plurid-root", PluridRoot);
-// customElements.define("plurid-root", PluridRoot);
+document.registerElement( "plurid-root", {
+    prototype: pluridRoot
+});
