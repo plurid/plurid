@@ -4,6 +4,7 @@
 # Features
 
 
+
 ## Behavior
 
 + Double-clicking any `<plurid-sheet>`, `<plurid-sheet-double>`, `<plurid-solid>` makes the plane normal to the camera and hides everything else. Transforming (translation/rotation/scale) brings everything back into display.
@@ -14,9 +15,7 @@
 
 
 
-## Options
-
-The `<plurid-options>` are:
+## Options in `<plurid-options>`
 
 + buttons: rotation;
 
@@ -41,15 +40,16 @@ The `<plurid-options>` are:
 + button: insert other `<plurid-root>`s on the left and right of the main `<plurid-root>`, each 3D transformable on it's own (?);
 
 
-## Controls
 
-The `<plurid-controls>` are:
+## Controls in `<plurid-controls>`
 
-+ button: back to the parent plurid;
++ button: back to the parent `plurid`;
 
-+ button: minimize the current `<plurid-branch>`;
++ button: minimize the current `<plurid-sheet>` plane;
 
-+ button: close the current `<plurid-branch>`;
++ button: reduce height of the current `<plurid-sheet>` plane to the current height of the viewport;
+
++ button: close the current `<plurid-sheet>` plane;
 
 + button: extend the `<plurid-bridge>`;
 
@@ -57,9 +57,11 @@ The `<plurid-controls>` are:
 
 + input: URL of the current `<plurid-branch>`;
 
-+ button: open the current `<plurid-branch>` in new tab;
++ button: extract the current `<plurid-branch>` to a separate, different `<plurid-root>`;
 
 + opacity slider (lower-limited to 3%);
+
++ move -> button: open the current `<plurid-branch>` in new tab;
 
 + more -> button: flip the `<plurid-branch>` to the other side of the `<plurid-insertion>`;
 
@@ -77,7 +79,6 @@ The `<plurid-controls>` are:
 
 
 
-
 ## Shortcuts
 
 + `shift + mouse-movements (up/down, left-right)` :: rotate;
@@ -86,20 +87,22 @@ The `<plurid-controls>` are:
 
 + `ctrl/cmd + mouse-movements (up/down)` :: scale;
 
-+ `alt/opt + i` :: isolate current plurid;
++ `alt/opt + i` :: isolate current `plurid`;
 
-+ `alt/opt + m` :: minimize current plurid;
++ `alt/opt + m` :: minimize current `plurid`;
 
-+ `alt/opt + x` :: close current plurid;
++ `alt/opt + x` :: close current `plurid`;
 
-+ `alt/opt + n` :: open current plurid in new tab;
++ `alt/opt + r` :: extract the current `plurid` to a separate, different `<plurid-root>`;
 
-+ `ctrl/cmd + 1` :: transform to center on front plane;
++ `alt/opt + n` :: open current `plurid` in new tab;
 
-+ `ctrl/cmd + 2` :: transform to center on right plane;
++ `alt/opt + 1` :: transform to center on front plane;
 
-+ `ctrl/cmd + 3` :: transform to center on back plane;
++ `alt/opt + 2` :: transform to center on right plane;
 
-+ `ctrl/cmd + 4` :: transform to center on left plane;
++ `alt/opt + 3` :: transform to center on back plane;
 
-+ `double-click/tap` :: transform to center on the clicked/tapped plane;
++ `alt/opt + 4` :: transform to center on left plane;
+
++ `double-click/tap` :: transform to center on the clicked/tapped `plurid` plane;
