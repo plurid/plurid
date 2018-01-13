@@ -9,6 +9,7 @@
 
 - [x] Create Custom HTML Elements
     + `<plurid-container>`;
+    + `<plurid-roots>`;
     + `<plurid-root>`;
     + `<plurid-sheet>`;
     + `<plurid-sheet-double>`;
@@ -33,7 +34,7 @@
 - [ ] Develop Smooth Transforms (Translate, Scale, Rotate);
 
 
-- [ ] Apply Transforms to  `<plurid-container>`s and `<plurid-root>`s;
+- [ ] Apply Transforms to  `<plurid-roots>` and `<plurid-root>`s;
 
 
 - [ ] Handle `<plurid-branch>` insertion;

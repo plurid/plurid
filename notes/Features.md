@@ -25,7 +25,9 @@
 
 + translation/rotation/scale sensitivity slider;
 
-+ button: background color changer;
++ color-picker: `<plurid-container>` background color changer;
+
++ color-picker: color theme for `<plurid-bridge>` (dynamic option to use the dominant color of the web page it has in the `<plurid-scion>`);
 
 + checkmark: use scroll to translate;
 
@@ -35,9 +37,9 @@
 
 + slider: reduce opacity of the `plurid` parent after clicking on a `<plurid-branch>` to 0–100%;
 
-+ list of (modifiable?) shortcuts;
++ list of modifiable shortcuts;
 
-+ button: insert other `<plurid-root>`s on the left and right of the main `<plurid-root>`, each 3D transformable on it's own (?);
++ button: insert other `<plurid-root>`s on the left and right of the main `<plurid-root>`, each 3D transformable on it's own;
 
 
 
@@ -69,7 +71,7 @@
 
 + more -> button: opaque back (in case of `<plurid-sheet>`);
 
-+ more -> slider for angle to the parent plurid (default 90 degrees) (?);
++ more -> slider for angle to the parent `plurid` (default 90 degrees);
 
 + more -> button: reset to default;
 
