@@ -4,15 +4,15 @@
 # Implementation
 
 
-For `git commit`:
+### `git commit` sufixes
 
-+ Dev
-+ Feat
-+ Refact
-+ Fix
-+ Note
-+ Setup
-+ Test
++ Dev :: initial development;
++ Feat :: feature polishing;
++ Refact :: refactoring;
++ Fix :: bugs and their fixes;
++ Note :: clarification, documentation;
++ Setup :: system enclosure;
++ Test :: testing;
 
 
 ## TODOs

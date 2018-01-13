@@ -2,18 +2,18 @@
 
 # Architecture
 
-- `<plurid-container>` :: in general, contains everything on the web page and so it is preceded by `<body>` and succeded by `</body>`.
+- `<plurid-container>` :: in general, contains everything on the web page and so it is a direct and possibly the only child of `<body>`.
 
-    It provides the context for 3D manipulations.
+    It provides the context for 3D transformations (rotation, translation, scale).
 
-    In special cases, a webpage can have multiple `<plurid-container>`s.
+    In special cases, a web page can have multiple `<plurid-container>`s.
 
     Can have the attribute `optionsless`.
 
 
 - `<plurid-roots>` :: contains one or more `<plurid-root>`s.
 
-    Can be transformed (rotation, translation, scale) by itself, transforming everything it contains.
+    Can be transformed (rotation, translation, scale) by itself, transforming all the `<plurid-root>`s it contains.
 
 
 - `<plurid-root>` :: content container.
@@ -25,9 +25,9 @@
 
 - `<plurid-branch>` :: additional content container.
 
-    Can be inserted into the `<plurid-root>` or into another `<plurid-branch>`.
+    Can be inserted into the `<plurid-root>`'s `<plurid-content>` or into another `<plurid-branch>`'s `<plurid-content>`.
 
-     It appears at an angle of 90 degrees from the generating plane. It can be flipped to the other side or (maybe) the angle can be changed.
+    It appears at an angle of 90 degrees from the generating plane. It can be flipped to the other side or the angle can be changed.
 
     It is composed of:
     + `<plurid-insertion>` :: the insertion point/space;
@@ -40,7 +40,7 @@
 
 - `<plurid-sheet>` :: a plane that contains `<plurid-content>` on one side.
 
-    Can have the attribute `controlsless`.
+    Can have the attributes: `controlsless`, `unresizable`.
 
 
 - `<plurid-sheet-double>` :: a plane that contains `<plurid-content>` on both sides.
@@ -49,10 +49,10 @@
     + `<plurid-sheet-double-front>`;
     + `<plurid-sheet-double-back>`.
 
-    Each can have the attribute `controlsless`.
+    Each can have the attributes: `controlsless`, `unresizable`.
 
 
-- `<plurid-solid>` :: a group of six one-sided planes, forming a cuboid, that can contain `<plurid-content>` on each side.
+- `<plurid-solid>` :: a group of six one-sided planes, forming a cuboid, that can each contain `<plurid-content>`.
 
     The six planes are:
     + `<plurid-solid-front>`;
@@ -62,7 +62,7 @@
     + `<plurid-solid-right>`;
     + `<plurid-solid-left>`.
 
-    Each can have the attribute `controlsless`.
+    Each can have the attributes: `controlsless`, `unresizable`.
 
 
 - `<plurid-options>` :: container for options. Belongs to `<plurid-container>` and affects everything in the `<plurid-container>`.
