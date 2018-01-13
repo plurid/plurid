@@ -1,89 +1,96 @@
 // PLURID SOLID
-class PluridSolid extends HTMLElement {
-    constructor() {
-        super();
-
+var pluridSolid = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSolid works");
+        }
     }
+});
 
-}
-
-var pluridSolid = document.registerElement("plurid-solid", PluridSolid);
-// customElements.define("plurid-solid", PluridSolid);
-
+document.registerElement( "plurid-solid", {
+    prototype: pluridSolid
+});
 
 
-class PluridSolidFront extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridSolidFront = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSolidFront works");
+        }
     }
+});
 
-}
-
-var pluridSolidFront = document.registerElement("plurid-solid-front", PluridSolidFront);
-// customElements.define("plurid-solid-front", PluridSolidFront);
-
+document.registerElement( "plurid-solid-front", {
+    prototype: pluridSolidFront
+});
 
 
-class PluridSolidBack extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridSolidBack = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSolidBack works");
+        }
     }
+});
 
-}
-
-var pluridSolidBack = document.registerElement("plurid-solid-back", PluridSolidBack);
-// customElements.define("plurid-solid-back", PluridSolidBack);
-
+document.registerElement( "plurid-solid-back", {
+    prototype: pluridSolidBack
+});
 
 
-class PluridSolidTop extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridSolidTop = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSolidTop works");
+        }
     }
+});
 
-}
-
-var pluridSolidTop = document.registerElement("plurid-solid-top", PluridSolidTop);
-// customElements.define("plurid-solid-top", PluridSolidTop);
-
+document.registerElement( "plurid-solid-top", {
+    prototype: pluridSolidTop
+});
 
 
-class PluridSolidBottom extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridSolidBottom = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSolidBottom works");
+        }
     }
+});
 
-}
-
-var pluridSolidBottom = document.registerElement("plurid-solid-bottom", PluridSolidBottom);
-// customElements.define("plurid-solid-bottom", PluridSolidBottom);
-
+document.registerElement( "plurid-solid-bottom", {
+    prototype: pluridSolidBottom
+});
 
 
-class PluridSolidRight extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridSolidRight = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSolidRight works");
+        }
     }
+});
 
-}
-
-var pluridSolidRight = document.registerElement("plurid-solid-right", PluridSolidRight);
-// customElements.define("plurid-solid-right", PluridSolidRight);
-
+document.registerElement( "plurid-solid-right", {
+    prototype: pluridSolidRight
+});
 
 
-class PluridSolidLeft extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridSolidLeft = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSolidLeft works");
+        }
     }
+});
 
-}
-
-var pluridSolidLeft = document.registerElement("plurid-solid-left", PluridSolidLeft);
-// customElements.define("plurid-solid-left", PluridSolidLeft);
+document.registerElement( "plurid-solid-left", {
+    prototype: pluridSolidLeft
+});

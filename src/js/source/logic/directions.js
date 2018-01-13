@@ -11,25 +11,25 @@ export function getMouseWheelDirection(event) {
     if (wheelDeltaX > threshold
         && absWheelDeltaY < absThreshold
         && absWheelDeltaX > absWheelDeltaY) {
-        direction = "left";
+        direction = "Left";
     }
 
     if (wheelDeltaX < threshold
         && absWheelDeltaY < absThreshold
         && absWheelDeltaX > absWheelDeltaY) {
-        direction = "right";
+        direction = "Right";
     }
 
     if (wheelDeltaY > threshold
         && absWheelDeltaX < absThreshold
         && absWheelDeltaY > absWheelDeltaX) {
-        direction = "up";
+        direction = "Up";
     }
 
     if (wheelDeltaY < threshold
         && absWheelDeltaX < absThreshold
         && absWheelDeltaY > absWheelDeltaX) {
-        direction = "down";
+        direction = "Down";
     }
 
     // if (positionX < threshold && positionY < threshold) {

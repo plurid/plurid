@@ -1,62 +1,67 @@
-class PluridSheet extends HTMLElement {
-    constructor() {
-        super();
-
+var pluridSheet = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSheet works");
+        }
     }
+});
 
-}
-
-var pluridSheet = document.registerElement("plurid-sheet", PluridSheet);
-// customElements.define("plurid-sheet", PluridSheet);
-
+document.registerElement( "plurid-sheet", {
+    prototype: pluridSheet
+});
 
 
-class PluridSheetDouble extends PluridSheet {
-    constructor() {
-        super();
 
+var pluridSheetDouble = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSheetDouble works");
+        }
     }
+});
 
-}
-
-var pluridSheetDouble = document.registerElement("plurid-sheet-double", PluridSheetDouble);
-// customElements.define("plurid-sheet-double", PluridSheetDouble);
-
+document.registerElement( "plurid-sheet-double", {
+    prototype: pluridSheetDouble
+});
 
 
-class PluridSheetDoubleFront extends PluridSheet {
-    constructor() {
-        super();
 
+var pluridSheetDoubleFront = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSheetDoubleFront works");
+        }
     }
+});
 
-}
-
-var pluridSheetDoubleFront = document.registerElement("plurid-sheet-double-front", PluridSheetDoubleFront);
-// customElements.define("plurid-sheet-double-front", PluridSheetDoubleFront);
-
+document.registerElement( "plurid-sheet-double-front", {
+    prototype: pluridSheetDoubleFront
+});
 
 
-class PluridSheetDoubleBack extends PluridSheet {
-    constructor() {
-        super();
 
+var pluridSheetDoubleBack = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSheetDoubleBack works");
+        }
     }
+});
 
-}
-
-var pluridSheetDoubleBack = document.registerElement("plurid-sheet-double-back", PluridSheetDoubleBack);
-// customElements.define("plurid-sheet-double-back", PluridSheetDoubleBack);
-
+document.registerElement( "plurid-sheet-double-back", {
+    prototype: pluridSheetDoubleBack
+});
 
 
-class PluridSheetControls extends HTMLElement {
-    constructor() {
-        super();
 
+var pluridSheetControls = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+        value: function() {
+            console.log("pluridSheetControls works");
+        }
     }
+});
 
-}
-
-var pluridSheetControls = document.registerElement("plurid-controls", PluridSheetControls);
-// customElements.define("plurid-controls", PluridSheetControls);
+document.registerElement( "plurid-controls", {
+    prototype: pluridSheetControls
+});
