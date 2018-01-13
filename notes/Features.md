@@ -33,7 +33,7 @@
 
 + checkmark: when clicking a `<plurid-insertion>` link or double-clicking any plurid structure everything else has opacity reduced to 0% (isolate mode on always) (default off);
 
-+ checkmark: reduce opacity of the plurid parent after clicking on a `<plurid-branch>`;
++ slider: reduce opacity of the `plurid` parent after clicking on a `<plurid-branch>` to 0–100%;
 
 + list of (modifiable?) shortcuts;
 
