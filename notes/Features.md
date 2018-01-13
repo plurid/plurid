@@ -11,11 +11,11 @@
 
 + When clicking a `<plurid-insertion>` link the `<plurid-content>` is animated, moved and centered normal to the camera.
 
-+ To be able to detach a `<plurid-branch>` from it's current plurid parent and upgrade it to `<plurid-root>`.
++ In the case of multiple `<plurid-root>`s, each can be transformed (translation, rotation, scale) separately by selecting only a specific `<plurid-root>`, or all the `<plurid-root>`s can be transformed simultaneously by selecting the `<plurid-roots>` space (deselecting all the individual `<plurid-root>`s);
 
 
 
-## Options in `<plurid-options>`
+### Options in `<plurid-options>`
 
 + buttons: rotation;
 
@@ -43,7 +43,7 @@
 
 
 
-## Controls in `<plurid-controls>`
+### Controls in `<plurid-controls>`
 
 + button: back to the parent `plurid`;
 
