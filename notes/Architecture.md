@@ -2,37 +2,39 @@
 
 # Architecture
 
-- `<plurid-container>` :: in general, contains everything on the web page and so it is a direct and possibly the only child of `<body>`.
+- `<plurid-container>` :: in general, contains everything on the web page and so it is a direct and possibly the only child of `<body>`, except `<script>`(s).
+
+    It has the children `<plurid-roots>` and `<plurid-options>`.
 
     It provides the context for 3D transformations (rotation, translation, scale).
 
     In special cases, a web page can have multiple `<plurid-container>`s.
 
-    Can have the attribute `optionsless`.
+    It can have the attribute `optionsless`, removing the child `<plurid-options>`.
 
 
 - `<plurid-roots>` :: contains one or more `<plurid-root>`s.
 
-    Can be transformed (rotation, translation, scale) by itself, transforming all the `<plurid-root>`s it contains.
+    It can be transformed (rotation, translation, scale) by itself, transforming all the `<plurid-root>`s it contains.
 
 
 - `<plurid-root>` :: content container.
 
-    Contains `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>`.
+    It has the children `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>`.
 
     Each `<plurid-root>` can be transformed (rotation, translation, scale) independently, or by transforming the `<plurid-roots>` parent container.
 
 
 - `<plurid-branch>` :: additional content container.
 
-    Can be inserted into the `<plurid-root>`'s `<plurid-content>` or into another `<plurid-branch>`'s `<plurid-content>`.
+    It can be inserted into the `<plurid-root>`'s `<plurid-content>` or into another `<plurid-branch>`'s `<plurid-content>`.
 
-    It appears at an angle of 90 degrees from the generating plane. It can be flipped to the other side or the angle can be changed.
+    It appears at an angle of 90 degrees from the generating plane (default). It can be flipped to the other side or the angle can be changed.
 
     It is composed of:
     + `<plurid-insertion>` :: the insertion point/space;
     + `<plurid-bridge>` :: the connection between the two `plurid`s, can be extended for a better spatiation;
-    + `<plurid-scion>` :: content container. Contains `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>`.
+    + `<plurid-scion>` :: content container. It contains `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>`.
 
 
 
@@ -40,7 +42,7 @@
 
 - `<plurid-sheet>` :: a plane that contains `<plurid-content>` on one side.
 
-    Can have the attributes: `controlsless`, `unresizable`.
+    It can have the attributes: `controlsless`, `unresizable`.
 
 
 - `<plurid-sheet-double>` :: a plane that contains `<plurid-content>` on both sides.
