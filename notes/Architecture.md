@@ -4,13 +4,13 @@
 
 - `<plurid-container>` :: in general, contains everything on the web page and so it is a direct and possibly the only child of `<body>`, except `<script>`(s).
 
-    It has the children `<plurid-roots>` and `<plurid-options>`.
+    It has the children elements `<plurid-roots>` and `<plurid-options>`.
 
     It provides the context for 3D transformations (rotation, translation, scale).
 
     In special cases, a web page can have multiple `<plurid-container>`s.
 
-    It can have the attribute `optionsless`, removing the child `<plurid-options>`.
+    It can have the attribute `optionsless`, removing the child element `<plurid-options>`.
 
 
 - `<plurid-roots>` :: contains one or more `<plurid-root>`s.
@@ -20,7 +20,7 @@
 
 - `<plurid-root>` :: content container.
 
-    It has the children `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>`.
+    It can have the child elements `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>`.
 
     Each `<plurid-root>` can be transformed (rotation, translation, scale) independently, or by transforming the `<plurid-roots>` parent container.
 
@@ -67,10 +67,10 @@
     Each can have the attributes: `controlsless`, `unresizable`.
 
 
-- `<plurid-options>` :: container for options. Belongs to `<plurid-container>` and affects everything in the `<plurid-container>`.
+- `<plurid-options>` :: container for options. Belongs to `<plurid-container>` and affects everything in the `<plurid-container>`. It is automatically injected at render time.
 
 
-- `<plurid-controls>` :: container for controls. Belongs to each `<plurid-sheet>`, each plane of the `<plurid-sheet-double>`, or to each of the six planes of the `<plurid-solid>`.
+- `<plurid-controls>` :: container for controls. Belongs to each `<plurid-sheet>`, each plane of the `<plurid-sheet-double>`, or to each of the six planes of the `<plurid-solid>`. It is automatically injected at render time.
 
 
 ## Anatomy of a Plurid
