@@ -7,9 +7,9 @@
 
 ## Behavior
 
-+ Double-clicking any `<plurid-sheet>`, `<plurid-sheet-double>` plane, or `<plurid-solid>` plane makes the plane normal to the camera and hides everything else (hidden status controlled through `<plurid-options>`). Rotation transformation brings everything back into display.
++ Double-clicking any `<plurid-sheet>`, `<plurid-sheet-double>` plane, or `<plurid-solid>` plane makes the plane normal to the camera and reduces the opacity of everything else (opacity level controlled through `<plurid-options>`). Rotation transformation brings everything back to 100% opacity.
 
-+ When clicking a `<plurid-insertion>` link the `<plurid-content>` is animated, moved and centered normal to the camera.
++ When clicking a `<plurid-insertion>` link the `<plurid-content>` is transformed (rotation, translation, scale) to the normal view.
 
 + In the case of multiple `<plurid-root>`s, each can be transformed (rotation, translation, scale) separately by selecting only a specific `<plurid-root>`, or all the `<plurid-root>`s can be transformed simultaneously by selecting the `<plurid-roots>` space (hence deselecting all the individual `<plurid-root>`s);
 
@@ -29,13 +29,13 @@
 
 + more -> color-picker :: `<plurid-container>` background color changer;
 
-+ more -> color-picker :: color theme for `<plurid-bridge>` (dynamic option to use the dominant color of the web page it has in the `<plurid-scion>`);
++ more -> color-picker :: color theme for `<plurid-bridge>` (option to use the color of the web page's `<body>` it has in the `<plurid-scion>`);
 
 + more -> checkmark :: clicking/tapping a `<plurid-insertion>` link transforms the targetted `<plurid-content>` to the normal view (default on);
 
-+ more -> slider :: opacity of the `plurid` parent after clicking/tapping on a `<plurid-insertion>` link (5–100%, default 80%) [rotation brings it back to 100%];
++ more -> slider :: opacity of the `plurid` parent after clicking/tapping on a `<plurid-insertion>` link (5–100%, default 80%) [checkmark: rotation brings it back to 100%];
 
-+ more -> slider :: opacity of everything else after double-clicking/tapping on a `<plurid-content>` (5–100%, default 80%) [rotation brings it back to 100%];
++ more -> slider :: opacity of everything else after double-clicking/tapping on a `<plurid-content>` (5–100%, default 80%) [checkmark: rotation brings it back to 100%];
 
 + more -> checkmark :: use scroll without modifier to translate;
 
@@ -59,6 +59,10 @@
 
 + button :: isolate the current `<plurid-branch>`;
 
++ button :: back to the previous URL within the curent `<plurid-branch>`;
+
++ button :: forward to the next URL within the curent `<plurid-branch>`;
+
 + input :: URL of the current `<plurid-branch>`;
 
 + button :: extract the current `<plurid-branch>` to a separate `<plurid-root>`;
@@ -71,9 +75,15 @@
 
 + more -> button :: flip the content to the other side (revert content in the case of `<plurid-sheet-double>`, unusable in case of `<plurid-solid>`);
 
-+ more -> button :: opaque back (in case of `<plurid-sheet>`);
++ more -> checkmark :: opaque back (in case of `<plurid-sheet>`);
+
++ more -> color-picker :: color of the `<plurid-sheet>` back;
 
 + more -> slider :: angle to the parent `plurid` (default 90 degrees);
+
++ more -> inputs :: width and height of the current `<plurid-content>`;
+
++ more -> checkmark :: lock size of the current `<plurid-content>` (default on);
 
 + more -> button :: reset to default;
 
@@ -111,7 +121,9 @@
 
 + `alt/opt + i` :: isolate current `plurid`;
 
-+ `alt/opt + b` :: back to the previous page within the same `plurid`;
++ `alt/opt + a` :: back to the previous web page within the same `plurid`;
+
++ `alt/opt + z` :: forward to the next web page within the same `plurid`;
 
 + `alt/opt + s` :: activate the `plurid` URL input;
 
