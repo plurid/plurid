@@ -87,9 +87,15 @@
 
 + `shift + mouse-movements (up/down, left-right)` :: rotate;
 
++ `shift + arrows (up/down, left-right)` :: rotate;
+
 + `alt/opt + mouse-movements (up/down, left-right)` :: translation;
 
++ `alt/opt + arrows (up/down, left-right)` :: translation;
+
 + `ctrl/cmd + mouse-movements (up/down)` :: scale;
+
++ `ctrl/cmd + arrow (up/down)` :: scale;
 
 + `alt/opt + p` :: bring the parent of the current `plurid` to normal view;
 
