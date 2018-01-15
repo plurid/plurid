@@ -17,5 +17,8 @@
 
 ## TODOs
 
++ Toggle `<plurid-options>` between `display: none;` and `display: block;` by calculating the position of the cursor with respect to the bottom;
+
+
 
 ## Bugs

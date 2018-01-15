@@ -17,10 +17,15 @@ document.registerElement( "plurid-roots", {
 
 
 
+var rootId = 1;
+
 var pluridRoot = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
             console.log("pluridRoot works");
+            this.id=`plurid-root-${rootId}`;
+            // console.log(this.id);
+            rootId++;
         }
     }
 });

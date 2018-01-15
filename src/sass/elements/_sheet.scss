@@ -1,9 +1,16 @@
 plurid-sheet {
+    position: absolute;
     width: 100%;
     height: 100%;
-    position: absolute;
+    background-color: hsl(0, 0%, 30%);
+
     transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
     // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
+}
+
+
+#plurid-sheet-3 {
+    background-color: hsl(21, 32%, 32%);
 }

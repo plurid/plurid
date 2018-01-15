@@ -1,7 +1,12 @@
+var sheetId = 1;
+
 var pluridSheet = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
             console.log("pluridSheet works");
+            this.id=`plurid-sheet-${sheetId}`;
+            // console.log(this.id);
+            sheetId++;
         }
     }
 });
