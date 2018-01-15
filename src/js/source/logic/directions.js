@@ -11,25 +11,25 @@ export function getDirection(event) {
     if (wheelDeltaX > threshold
         && absWheelDeltaY < absThreshold
         && absWheelDeltaX > absWheelDeltaY) {
-        direction = "Left";
+        direction = "left";
     }
 
     if (wheelDeltaX < threshold
         && absWheelDeltaY < absThreshold
         && absWheelDeltaX > absWheelDeltaY) {
-        direction = "Right";
+        direction = "right";
     }
 
     if (wheelDeltaY > threshold
         && absWheelDeltaX < absThreshold
         && absWheelDeltaY > absWheelDeltaX) {
-        direction = "Up";
+        direction = "up";
     }
 
     if (wheelDeltaY < threshold
         && absWheelDeltaX < absThreshold
         && absWheelDeltaY > absWheelDeltaX) {
-        direction = "Down";
+        direction = "down";
     }
 
     // if (positionX < threshold && positionY < threshold) {

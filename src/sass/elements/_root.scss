@@ -2,7 +2,7 @@ plurid-roots {
     position: absolute;
     height: 100%;
     width: 100%;
-    transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(30deg) rotateZ(0deg) scale(1);
+    transform: translateX(10px) translateY(10px) translateZ(0px) rotateX(0deg) rotateY(50deg) rotateZ(0deg) scale(1);
     // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
@@ -12,7 +12,7 @@ plurid-root {
     position: absolute;
     height: 100%;
     width: 100%;
-    transform: translateX(300px) translateY(300px) translateZ(0px) rotateX(0deg) rotateY(30deg) rotateZ(0deg) scale(1);
+    transform: translateX(300px) translateY(300px) translateZ(0px) rotateX(0deg) rotateY(40deg) rotateZ(0deg) scale(1);
     // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
