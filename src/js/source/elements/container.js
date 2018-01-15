@@ -1,4 +1,4 @@
-import * as command from "./commands.js";
+import { transform } from "./commands.js";
 
 
 ////////////
@@ -6,7 +6,7 @@ import * as command from "./commands.js";
 var pluridContainer = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            command.transform(this);
+            transform(this);
         }
     }
 });
@@ -27,4 +27,3 @@ var pluridContainerOptions = Object.create(HTMLElement.prototype, {
 document.registerElement( "plurid-options", {
     prototype: pluridContainerOptions
 });
-
