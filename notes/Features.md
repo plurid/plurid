@@ -23,6 +23,8 @@
 
 + buttons :: scale;
 
++ button :: center everything;
+
 + button :: insert other `<plurid-root>`s on the left and right of the main `<plurid-root>`, each 3D transformable on it's own;
 
 + more -> slider :: sensitivity of translation, rotation, and scale;
