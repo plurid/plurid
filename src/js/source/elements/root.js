@@ -7,6 +7,7 @@ var pluridRoots = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
             console.log("pluridRoots works");
+            this.id=`plurid-roots`;
         }
     }
 });
