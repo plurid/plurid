@@ -33,13 +33,15 @@
 
 + more -> color-picker :: color theme for `<plurid-bridge>` (option to use the color of the web page's `<body>` it has in the `<plurid-scion>`);
 
++ move -> color-picker :: box-shadow for active `plurid`;
+
 + more -> checkmark :: clicking/tapping a `<plurid-insertion>` link transforms the targetted `<plurid-content>` to the normal view (default on);
 
 + more -> slider :: opacity of the `plurid` parent after clicking/tapping on a `<plurid-insertion>` link (5–100%, default 80%) [checkmark: rotation brings it back to 100%];
 
 + more -> slider :: opacity of everything else after double-clicking/tapping on a `<plurid-content>` (5–100%, default 80%) [checkmark: rotation brings it back to 100%];
 
-+ more -> checkmark :: use scroll without modifier to translate;
++ more -> checkmark :: use scroll without modifier to translate and use scroll with modifier for normal scroll;
 
 + more -> list of modifiable shortcuts;
 
@@ -69,7 +71,7 @@
 
 + button :: extract the current `<plurid-branch>` to a separate `<plurid-root>`;
 
-+ slider :: opacity of the current `<plurid-branch>` (lower-limited to 3%);
++ slider :: opacity of the current `<plurid-branch>` (lower-limited to 5%);
 
 + more -> button :: open the current `<plurid-branch>` in new tab;
 
