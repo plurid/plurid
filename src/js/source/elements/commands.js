@@ -1,18 +1,18 @@
 import { getPlurid } from "../logic/get-plurid.js";
 import { stylePlurid as style } from "../logic/style-plurid.js"
-import {rotatePlurid,
+import { rotatePlurid,
         translatePlurid,
-        scalePlurid} from "../logic/transforms.js";
+        scalePlurid } from "../logic/transforms.js";
 
-let pluridStack = new Set();
 
 export function transform(element) {
+    let pluridStack = new Set();
     let plurid = document.querySelector("plurid-roots");
 
     element.addEventListener("click", event => {
         plurid = getPlurid(event);
         pluridStack.add(plurid);
-        style(plurid, pluridStack);
+        plurid = style(plurid, pluridStack);
     });
 
     element.addEventListener('wheel', event => {
