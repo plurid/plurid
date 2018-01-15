@@ -1,213 +1,270 @@
-
-export function getTransformRotate(element) {
-    var values = getRotationMatrix(element);
-    // console.log("getTransformRotate Matrix", values);
-
-    var rotateX,
-        rotateY;
-
-    var pi = Math.PI;
-
-    if (values.length == 6) {
-        var cosa = parseFloat(values[0]);
-        var sina = parseFloat(values[1]);
-        // console.log("cos A", cosa);
-        // console.log("sin A", sina);
-
-        if (cosa == 1 && sina == 0) {
-            rotateX = Math.asin(sina);
-            rotateY = Math.acos(cosa);
-        }
-    }
-
-    if (values.length == 16) {
-        var cosaX = parseFloat(values[5]);
-        var sinaX = parseFloat(values[9]);
-        // console.log("cos A X", cosaX);
-        // console.log("sin A X", sinaX);
-
-        // 0-180
-        if (sinaX <= 0) {
-            rotateX = Math.acos(cosaX);
-        }
-
-        // 181-360
-        if (sinaX > 0) {
-            rotateX = 2*pi - Math.acos(cosaX);
-        }
-
-        // console.log("rotateX in Radians", rotateX);
-        // console.log("rotateX in Degrees", rotateX*180/pi);
+import { getPlurid } from "./get-plurid.js";
+import { getDirection } from "./directions.js";
 
 
-        var cosaY = parseFloat(values[0]);
-        var sinaY = parseFloat(values[2]);
-        // console.log("cos A Y", cosaY);
-        // console.log("sin A Y", sinaY);
+export function rotatePlurid(event) {
+    console.log("ROTATE");
+    console.log("Event", event);
 
-        // 0-180
-        if (sinaY <= 0) {
-            rotateY = Math.acos(cosaY);
-        }
+    let plurid = getPlurid(event);
+    console.log("Plurid", plurid);
 
-        // 181-360
-        if (sinaY > 0) {
-            rotateY = 2*pi - Math.acos(cosaY);
-        }
+    let direction = getDirection(event);
+    console.log("Direction", direction);
 
-        // console.log("rotateY in Radians", rotateY);
-        // console.log("rotateY in Degrees", rotateY*180/pi);
-    }
 
-    return {
-        rotateX: rotateX,
-        rotateY: rotateY
-    };
+
+    // // var direction = utils.getMouseDirection(event);
+    // // console.log("Direction", direction);
+
+    // var rotateX = utils.getTransformRotate(plurid).rotateX;
+    // var rotateY = utils.getTransformRotate(plurid).rotateY;
+    // var translateX = utils.getTransformTranslate(plurid).translateX;
+    // var translateY = utils.getTransformTranslate(plurid).translateY;
+    // var translateZ = 0;
+    // var scale = utils.getTransformScale(plurid).scale;
+
+    // var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    // var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    // var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+    // var valscaleMatrix = matrix.scaleMatrix(scale);
+
+    // var yPos = utils.getyPos(event, plurid);
+
+    // if (scale < 0.5) {
+    //     var angleIncrement = 0.12;
+    // } else {
+    //     var angleIncrement = 0.07;
+    // }
+
+    // // console.log("----------------------------------")
+    // // console.log("Rotate X", rotateX);
+    // // console.log("Rotate X in Degrees", rotateX*180/Math.PI);
+    // // console.log("Rotate Y",rotateY);
+    // // console.log("Rotate Y in Degrees",rotateY*180/Math.PI);
+    // // console.log("Rotate Y",rotateY);
+    // // console.log("Translate X", translateX);
+    // // console.log("Translate Y", translateY);
+    // // console.log("Scale", scale);
+
+    // // ISSUE
+    // // issue with the angle jumping over 2*pi when having both X and Y movement
+
+    // plurid.style.transition = "0ms ease-in-out";
+
+    // if (direction === "left" || direction === "downleft" || direction === "upleft") {
+    //     rotateY -= angleIncrement;
+    //     valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+
+    //     // console.log("valrotationXMatrix", valrotationXMatrix);
+    //     // console.log("valrotationYMatrix", valrotationYMatrix);
+    //     // console.log("valtranslationMatrix", valtranslationMatrix);
+    //     // console.log("valscaleMatrix", valscaleMatrix);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
+
+    // if (direction === "right" || direction === "upright" || direction === "downright") {
+    //     rotateY += angleIncrement;
+    //     valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
+
+    // // if (direction === "up") {
+    // //     rotateX += angleIncrement;
+    // //     valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+
+    // //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // // }
+
+    // // if (direction === "down") {
+    // //     rotateX -= angleIncrement;
+
+    // //     valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+
+    // //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // // }
 }
 
 
-export function getTransformTranslate(element) {
-    var values = getTranslationMatrix(element);
+export function translatePlurid(event) {
+    console.log("TRANSLATE");
+    console.log("Event", event);
 
-    var translateX,
-        translateY;
+    let plurid = getPlurid(event);
+    console.log("Plurid", plurid);
 
-    translateX = parseFloat(values[0]);
-    translateY = parseFloat(values[1]);
+    let direction = getDirection(event);
+    console.log("Direction", direction);
 
-    return {
-        translateX: translateX,
-        translateY: translateY
-    };
+
+
+
+    // // var direction = utils.getMouseDirection(event);
+    // // console.log("Direction", direction);
+
+    // var rotateX = utils.getTransformRotate(plurid).rotateX;
+    // var rotateY = utils.getTransformRotate(plurid).rotateY;
+    // var translateX = utils.getTransformTranslate(plurid).translateX;
+    // var translateY = utils.getTransformTranslate(plurid).translateY;
+    // var translateZ = 0;
+    // var scale = utils.getTransformScale(plurid).scale;
+
+    // var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    // var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    // var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+    // var valscaleMatrix = matrix.scaleMatrix(scale);
+
+    // var yPos = utils.getyPos(event, plurid);
+
+    // if (scale < 0.5) {
+    //     var linearIncrement = 50;
+    // } else {
+    //     var linearIncrement = 10;
+    // }
+
+    // // console.log("----------------------------------")
+    // // console.log("Rotate X", rotateX);
+    // // console.log("Rotate Y",rotateY);
+    // // console.log("Translate X", translateX);
+    // // console.log("Translate Y", translateY);
+    // // console.log("Scale", scale);
+    // // console.log("getRotateXMatrix", getRotateXMatrix);
+    // // console.log("getRotateYMatrix", getRotateYMatrix);
+    // // console.log("getTranslateMatrix", getTranslateMatrix);
+    // // console.log("getScaleMatrix", getScaleMatrix);
+
+    // plurid.style.transition = "20ms ease-in-out";
+
+    // if (direction === "left") {
+    //     translateX -= linearIncrement;
+    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
+
+    // if (direction === "right") {
+    //     translateX += linearIncrement;
+    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
+
+    // if (direction === "up") {
+    //     translateY -= linearIncrement;
+    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
+
+    // if (direction === "down") {
+    //     translateY += linearIncrement;
+    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
+
+    // if (direction === "upleft") {
+    //     translateY -= linearIncrement;
+    //     translateX -= linearIncrement;
+    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
+
+    // if (direction === "downleft") {
+    //     translateY += linearIncrement;
+    //     translateX -= linearIncrement;
+    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
+
+    // if (direction === "downright") {
+    //     translateY += linearIncrement;
+    //     translateX += linearIncrement;
+    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
+
+    // if (direction === "upright") {
+    //     translateY -= linearIncrement;
+    //     translateX += linearIncrement;
+    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
 }
 
 
-export function getTransformScale(element) {
-    var scale = getScaleMatrix(element);
-    // console.log(scale);
+export function scalePlurid(event) {
+    console.log("SCALE");
+    console.log("Event", event);
 
-    return {
-        scale: scale
-    }
-}
+    let plurid = getPlurid(event);
+    console.log("Plurid", plurid);
 
-
-export function getMatrixValues(element) {
-    var transformValues = window.getComputedStyle(element, null).getPropertyValue("transform");
-    var matrixValues = transformValues.split('(')[1].split(')')[0].split(',');
-
-    for (var i = 0; i < matrixValues.length; i++) {
-        matrixValues[i] = parseFloat(matrixValues[i]);
-    }
-
-    return matrixValues;
-}
+    let direction = getDirection(event);
+    console.log("Direction", direction);
 
 
-export function getRotationMatrix(element) {
-    var valuesMatrix = getMatrixValues(element);
-    var scale = getScaleMatrix(element);
-
-    if (valuesMatrix.length == 16) {
-        for (var i=0; i < 11; i++) {
-            valuesMatrix[i] /= scale;
-        }
-    } else if(valuesMatrix.length == 6) {
-        for (var i=0; i < 4; i++) {
-            valuesMatrix[i] /= scale;
-        }
-    }
-
-    var rotationMatrix = valuesMatrix;
-
-    return rotationMatrix;
-}
 
 
-export function getTranslationMatrix(element) {
-    var valuesMatrix = getMatrixValues(element);
+    // // var direction = utils.getMouseDirection(event);
+    // // console.log("Direction", direction);
 
-    if (valuesMatrix.length == 16) {
-        var translationMatrix = getMatrixValues(element).slice(12, 15);
+    // var rotateX = utils.getTransformRotate(plurid).rotateX;
+    // var rotateY = utils.getTransformRotate(plurid).rotateY;
+    // var translateX = utils.getTransformTranslate(plurid).translateX;
+    // var translateY = utils.getTransformTranslate(plurid).translateY;
+    // var translateZ = 0;
+    // var scale = utils.getTransformScale(plurid).scale;
 
-    } else if (valuesMatrix.length == 6) {
-        var translationMatrix = getMatrixValues(element).slice(4);
-    }
+    // var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    // var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    // var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+    // var valscaleMatrix = matrix.scaleMatrix(scale);
 
-    return translationMatrix;
-}
+    // var yPos = utils.getyPos(event, plurid);
 
+    // var scaleIncrement = 0.05;
 
-export function getScaleMatrix(element) {
-    var valuesMatrix = getMatrixValues(element);
-    var temp = 0;
+    // // console.log("----------------------------------")
+    // // console.log("Rotate X", rotateX);
+    // // console.log("Rotate Y",rotateY);
+    // // console.log("Translate X", translateX);
+    // // console.log("Translate Y", translateY);
+    // // console.log("Scale", scale);
+    // // console.log("getRotateXMatrix", getRotateXMatrix);
+    // // console.log("getRotateYMatrix", getRotateYMatrix);
+    // // console.log("getTranslateMatrix", getTranslateMatrix);
+    // // console.log("getScaleMatrix", getScaleMatrix);
 
-    if (valuesMatrix.length == 16) {
-        var scaleMatrix = getMatrixValues(element).slice(0, 4);
-        var scale = 0;
+    // plurid.style.transition = "20ms ease-in-out";
 
-        for (var i = 0; i < scaleMatrix.length; i++) {
-            scale += parseFloat(scaleMatrix[i]) * parseFloat(scaleMatrix[i]);
-        }
+    // if (direction === "up" || direction === "upright" || direction === "upleft") {
+    //     scale += scaleIncrement;
 
-        scale = parseFloat(Math.sqrt(scale).toPrecision(4));
-    } else if (valuesMatrix.length == 6) {
-        temp = valuesMatrix[0]*valuesMatrix[0] + valuesMatrix[1]*valuesMatrix[1];
-        var scale = parseFloat(Math.sqrt(temp).toPrecision(4));
-    }
+    //     if (scale > 4) {
+    //         scale = 4
+    //     }
 
-    return scale;
-}
+    //     var valscaleMatrix = matrix.scaleMatrix(scale);
 
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
 
-// console.log("Direct Matrix", getMatrixValues(pluridContainer[0].children[0]));
-// console.log("Rotation Matrix", getRotationMatrix(pluridContainer[0].children[0]));
-// console.log("Translation Matrix", getTranslationMatrix(pluridContainer[0].children[0]));
-// console.log("Scale Matrix", getScaleMatrix(pluridContainer[0].children[0]));
+    // if (direction === "down" || direction === "downleft" || direction === "downright") {
+    //     scale -= scaleIncrement;
 
+    //     if (scale < 0.1) {
+    //         scale = 0.1
+    //     }
 
-export function setTransform(element, rotateXMatrix, rotateYMatrix, translateMatrix, scaleMatrix, yPos = 0) {
-    var transformMatrix = matrix.multiplyArrayOfMatrices([
-        translateMatrix,
-        rotateXMatrix,
-        rotateYMatrix,
-        scaleMatrix
-    ]);
-    // console.log("Transform Matrix", transformMatrix);
+    //     var valscaleMatrix = matrix.scaleMatrix(scale);
 
-    // Set the transform
-    var transformOriginRule = "50% " + yPos + "px";
-    element.style.transformOrigin = transformOriginRule;
-
-    // Returns a a matrix3d() CSS string
-    var matrix3dRule = matrix.matrixArrayToCssMatrix(transformMatrix);
-    // console.log("CSS Rule", matrix3dRule);
-    element.style.transform = matrix3dRule;
-}
-
-
-export function setCursor(mode) {
-    switch(mode) {
-            case "rotate":
-            document.body.style.cursor = "ew-resize";
-            break;
-        case "translate":
-            document.body.style.cursor = "move";
-            break;
-        case "scale":
-            document.body.style.cursor = "nesw-resize";
-            break;
-        default:
-            document.body.style.cursor = "default";
-    }
-}
-
-
-export function getyPos(event, plurid) {
-    var yCenter = window.innerHeight / 2;
-    var translateY = getTransformTranslate(plurid).translateY;
-
-    var yPos = translateY * -1 + yCenter;
-
-    return yPos;
+    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
 }
