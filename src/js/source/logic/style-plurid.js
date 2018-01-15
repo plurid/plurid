@@ -1,9 +1,16 @@
-let styleString = "0px 0px 6px 3px rgba(194,194,194,0.7)";
+let styleString = "rgba(194, 194, 194, 0.7) 0px 0px 6px 3px";
 
 export function stylePlurid(plurid, stack) {
+    // console.log(plurid.style.boxShadow);
+
     function style(stackItem) {
         if (stackItem.id === plurid.id) {
-            stackItem.style.boxShadow = styleString;
+            if (plurid.style.boxShadow === styleString) {
+                stackItem.style.boxShadow = "";
+                plurid = document.querySelector("plurid-roots");
+            } else {
+                stackItem.style.boxShadow = styleString;
+            }
         }
 
         if (stackItem.id === "plurid-roots" || stackItem.id != plurid.id) {
@@ -12,4 +19,6 @@ export function stylePlurid(plurid, stack) {
     }
 
     stack.forEach(style);
+
+    return plurid;
 }
