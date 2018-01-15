@@ -4,7 +4,16 @@ plurid-options {
     right: 0;
     bottom: 25px;
     height: 50px;
-    opacity: 0;
+
+
+    // control render through display instead of opacity
+    // in order to have no interference with command.transform plurid selection
+
+    // TO DO: detect position of the mouse regarding
+    // bottom of the screen to change to display:block
+    display: none;
+
+
     color: white;
     transition: 150ms ease-in-out;
     font-family: sans-serif;
