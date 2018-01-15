@@ -22,3 +22,7 @@
 
 
 ## Bugs
+
++ Issue when rotating past 180/360 degrees, sign change in the value within matrix3d rule;
+
++ To account for transforms on a first position basis, and affect only that plurid which was first;

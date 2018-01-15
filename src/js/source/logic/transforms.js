@@ -1,5 +1,7 @@
 import { getPlurid } from "./get-plurid.js";
 import { getDirection } from "./directions.js";
+import * as utils from "./transforms-setup.js";
+import * as matrix from "./matrix.js";
 
 
 export function rotatePlurid(event) {
@@ -13,78 +15,74 @@ export function rotatePlurid(event) {
     console.log("Direction", direction);
 
 
+    var rotateX = utils.getTransformRotate(plurid).rotateX;
+    var rotateY = utils.getTransformRotate(plurid).rotateY;
+    var translateX = utils.getTransformTranslate(plurid).translateX;
+    var translateY = utils.getTransformTranslate(plurid).translateY;
+    var translateZ = 0;
+    var scale = utils.getTransformScale(plurid).scale;
 
-    // // var direction = utils.getMouseDirection(event);
-    // // console.log("Direction", direction);
+    var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+    var valscaleMatrix = matrix.scaleMatrix(scale);
 
-    // var rotateX = utils.getTransformRotate(plurid).rotateX;
-    // var rotateY = utils.getTransformRotate(plurid).rotateY;
-    // var translateX = utils.getTransformTranslate(plurid).translateX;
-    // var translateY = utils.getTransformTranslate(plurid).translateY;
-    // var translateZ = 0;
-    // var scale = utils.getTransformScale(plurid).scale;
+    var yPos = utils.getyPos(event, plurid);
 
-    // var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-    // var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
-    // var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
-    // var valscaleMatrix = matrix.scaleMatrix(scale);
+    if (scale < 0.5) {
+        var angleIncrement = 0.12;
+    } else {
+        var angleIncrement = 0.07;
+    }
 
-    // var yPos = utils.getyPos(event, plurid);
+    // console.log("----------------------------------")
+    // console.log("Rotate X", rotateX);
+    // console.log("Rotate X in Degrees", rotateX*180/Math.PI);
+    // console.log("Rotate Y",rotateY);
+    // console.log("Rotate Y in Degrees",rotateY*180/Math.PI);
+    // console.log("Rotate Y",rotateY);
+    // console.log("Translate X", translateX);
+    // console.log("Translate Y", translateY);
+    // console.log("Scale", scale);
 
-    // if (scale < 0.5) {
-    //     var angleIncrement = 0.12;
-    // } else {
-    //     var angleIncrement = 0.07;
-    // }
+    // ISSUE
+    // issue with the angle jumping over 2*pi when having both X and Y movement
 
-    // // console.log("----------------------------------")
-    // // console.log("Rotate X", rotateX);
-    // // console.log("Rotate X in Degrees", rotateX*180/Math.PI);
-    // // console.log("Rotate Y",rotateY);
-    // // console.log("Rotate Y in Degrees",rotateY*180/Math.PI);
-    // // console.log("Rotate Y",rotateY);
-    // // console.log("Translate X", translateX);
-    // // console.log("Translate Y", translateY);
-    // // console.log("Scale", scale);
+    plurid.style.transition = "0ms ease-in-out";
 
-    // // ISSUE
-    // // issue with the angle jumping over 2*pi when having both X and Y movement
+    if (direction === "left") {
+        rotateY -= angleIncrement;
+        valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
 
-    // plurid.style.transition = "0ms ease-in-out";
+        // console.log("valrotationXMatrix", valrotationXMatrix);
+        // console.log("valrotationYMatrix", valrotationYMatrix);
+        // console.log("valtranslationMatrix", valtranslationMatrix);
+        // console.log("valscaleMatrix", valscaleMatrix);
 
-    // if (direction === "left" || direction === "downleft" || direction === "upleft") {
-    //     rotateY -= angleIncrement;
-    //     valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    //     // console.log("valrotationXMatrix", valrotationXMatrix);
-    //     // console.log("valrotationYMatrix", valrotationYMatrix);
-    //     // console.log("valtranslationMatrix", valtranslationMatrix);
-    //     // console.log("valscaleMatrix", valscaleMatrix);
+    if (direction === "right") {
+        rotateY += angleIncrement;
+        valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
 
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    // if (direction === "right" || direction === "upright" || direction === "downright") {
-    //     rotateY += angleIncrement;
-    //     valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    if (direction === "up") {
+        rotateX += angleIncrement;
+        valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
 
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    // // if (direction === "up") {
-    // //     rotateX += angleIncrement;
-    // //     valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    if (direction === "down") {
+        rotateX -= angleIncrement;
 
-    // //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // // }
+        valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
 
-    // // if (direction === "down") {
-    // //     rotateX -= angleIncrement;
-
-    // //     valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-
-    // //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // // }
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 }
 
 
@@ -99,103 +97,98 @@ export function translatePlurid(event) {
     console.log("Direction", direction);
 
 
+    var rotateX = utils.getTransformRotate(plurid).rotateX;
+    var rotateY = utils.getTransformRotate(plurid).rotateY;
+    var translateX = utils.getTransformTranslate(plurid).translateX;
+    var translateY = utils.getTransformTranslate(plurid).translateY;
+    var translateZ = 0;
+    var scale = utils.getTransformScale(plurid).scale;
 
+    var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+    var valscaleMatrix = matrix.scaleMatrix(scale);
 
-    // // var direction = utils.getMouseDirection(event);
-    // // console.log("Direction", direction);
+    var yPos = utils.getyPos(event, plurid);
 
-    // var rotateX = utils.getTransformRotate(plurid).rotateX;
-    // var rotateY = utils.getTransformRotate(plurid).rotateY;
-    // var translateX = utils.getTransformTranslate(plurid).translateX;
-    // var translateY = utils.getTransformTranslate(plurid).translateY;
-    // var translateZ = 0;
-    // var scale = utils.getTransformScale(plurid).scale;
+    if (scale < 0.5) {
+        var linearIncrement = 50;
+    } else {
+        var linearIncrement = 10;
+    }
 
-    // var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-    // var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
-    // var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
-    // var valscaleMatrix = matrix.scaleMatrix(scale);
+    // console.log("----------------------------------")
+    // console.log("Rotate X", rotateX);
+    // console.log("Rotate Y",rotateY);
+    // console.log("Translate X", translateX);
+    // console.log("Translate Y", translateY);
+    // console.log("Scale", scale);
+    // console.log("getRotateXMatrix", getRotateXMatrix);
+    // console.log("getRotateYMatrix", getRotateYMatrix);
+    // console.log("getTranslateMatrix", getTranslateMatrix);
+    // console.log("getScaleMatrix", getScaleMatrix);
 
-    // var yPos = utils.getyPos(event, plurid);
+    plurid.style.transition = "20ms ease-in-out";
 
-    // if (scale < 0.5) {
-    //     var linearIncrement = 50;
-    // } else {
-    //     var linearIncrement = 10;
-    // }
+    if (direction === "left") {
+        translateX -= linearIncrement;
+        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-    // // console.log("----------------------------------")
-    // // console.log("Rotate X", rotateX);
-    // // console.log("Rotate Y",rotateY);
-    // // console.log("Translate X", translateX);
-    // // console.log("Translate Y", translateY);
-    // // console.log("Scale", scale);
-    // // console.log("getRotateXMatrix", getRotateXMatrix);
-    // // console.log("getRotateYMatrix", getRotateYMatrix);
-    // // console.log("getTranslateMatrix", getTranslateMatrix);
-    // // console.log("getScaleMatrix", getScaleMatrix);
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    // plurid.style.transition = "20ms ease-in-out";
+    if (direction === "right") {
+        translateX += linearIncrement;
+        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-    // if (direction === "left") {
-    //     translateX -= linearIncrement;
-    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+    if (direction === "up") {
+        translateY -= linearIncrement;
+        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-    // if (direction === "right") {
-    //     translateX += linearIncrement;
-    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+    if (direction === "down") {
+        translateY += linearIncrement;
+        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-    // if (direction === "up") {
-    //     translateY -= linearIncrement;
-    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+    if (direction === "upleft") {
+        translateY -= linearIncrement;
+        translateX -= linearIncrement;
+        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-    // if (direction === "down") {
-    //     translateY += linearIncrement;
-    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+    if (direction === "downleft") {
+        translateY += linearIncrement;
+        translateX -= linearIncrement;
+        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-    // if (direction === "upleft") {
-    //     translateY -= linearIncrement;
-    //     translateX -= linearIncrement;
-    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+    if (direction === "downright") {
+        translateY += linearIncrement;
+        translateX += linearIncrement;
+        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-    // if (direction === "downleft") {
-    //     translateY += linearIncrement;
-    //     translateX -= linearIncrement;
-    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+    if (direction === "upright") {
+        translateY -= linearIncrement;
+        translateX += linearIncrement;
+        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-    // if (direction === "downright") {
-    //     translateY += linearIncrement;
-    //     translateX += linearIncrement;
-    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
-
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
-
-    // if (direction === "upright") {
-    //     translateY -= linearIncrement;
-    //     translateX += linearIncrement;
-    //     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
-
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 }
 
 
@@ -209,62 +202,56 @@ export function scalePlurid(event) {
     let direction = getDirection(event);
     console.log("Direction", direction);
 
+    var rotateX = utils.getTransformRotate(plurid).rotateX;
+    var rotateY = utils.getTransformRotate(plurid).rotateY;
+    var translateX = utils.getTransformTranslate(plurid).translateX;
+    var translateY = utils.getTransformTranslate(plurid).translateY;
+    var translateZ = 0;
+    var scale = utils.getTransformScale(plurid).scale;
 
+    var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+    var valscaleMatrix = matrix.scaleMatrix(scale);
 
+    var yPos = utils.getyPos(event, plurid);
 
-    // // var direction = utils.getMouseDirection(event);
-    // // console.log("Direction", direction);
+    var scaleIncrement = 0.05;
 
-    // var rotateX = utils.getTransformRotate(plurid).rotateX;
-    // var rotateY = utils.getTransformRotate(plurid).rotateY;
-    // var translateX = utils.getTransformTranslate(plurid).translateX;
-    // var translateY = utils.getTransformTranslate(plurid).translateY;
-    // var translateZ = 0;
-    // var scale = utils.getTransformScale(plurid).scale;
+    // console.log("----------------------------------")
+    // console.log("Rotate X", rotateX);
+    // console.log("Rotate Y",rotateY);
+    // console.log("Translate X", translateX);
+    // console.log("Translate Y", translateY);
+    // console.log("Scale", scale);
+    // console.log("getRotateXMatrix", getRotateXMatrix);
+    // console.log("getRotateYMatrix", getRotateYMatrix);
+    // console.log("getTranslateMatrix", getTranslateMatrix);
+    // console.log("getScaleMatrix", getScaleMatrix);
 
-    // var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-    // var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
-    // var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
-    // var valscaleMatrix = matrix.scaleMatrix(scale);
+    plurid.style.transition = "20ms ease-in-out";
 
-    // var yPos = utils.getyPos(event, plurid);
+    if (direction === "up" || direction === "upright" || direction === "upleft") {
+        scale += scaleIncrement;
 
-    // var scaleIncrement = 0.05;
+        if (scale > 4) {
+            scale = 4
+        }
 
-    // // console.log("----------------------------------")
-    // // console.log("Rotate X", rotateX);
-    // // console.log("Rotate Y",rotateY);
-    // // console.log("Translate X", translateX);
-    // // console.log("Translate Y", translateY);
-    // // console.log("Scale", scale);
-    // // console.log("getRotateXMatrix", getRotateXMatrix);
-    // // console.log("getRotateYMatrix", getRotateYMatrix);
-    // // console.log("getTranslateMatrix", getTranslateMatrix);
-    // // console.log("getScaleMatrix", getScaleMatrix);
+        var valscaleMatrix = matrix.scaleMatrix(scale);
 
-    // plurid.style.transition = "20ms ease-in-out";
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 
-    // if (direction === "up" || direction === "upright" || direction === "upleft") {
-    //     scale += scaleIncrement;
+    if (direction === "down" || direction === "downleft" || direction === "downright") {
+        scale -= scaleIncrement;
 
-    //     if (scale > 4) {
-    //         scale = 4
-    //     }
+        if (scale < 0.1) {
+            scale = 0.1
+        }
 
-    //     var valscaleMatrix = matrix.scaleMatrix(scale);
+        var valscaleMatrix = matrix.scaleMatrix(scale);
 
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
-
-    // if (direction === "down" || direction === "downleft" || direction === "downright") {
-    //     scale -= scaleIncrement;
-
-    //     if (scale < 0.1) {
-    //         scale = 0.1
-    //     }
-
-    //     var valscaleMatrix = matrix.scaleMatrix(scale);
-
-    //     utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    // }
+        utils.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    }
 }
