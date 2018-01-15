@@ -4,11 +4,11 @@ import * as utils from "./transforms-setup.js";
 import * as matrix from "./matrix.js";
 
 
-export function rotatePlurid(event) {
+export function rotatePlurid(event, plurid) {
     console.log("ROTATE");
     console.log("Event", event);
 
-    let plurid = getPlurid(event);
+    // let plurid = getPlurid(event);
     console.log("Plurid", plurid);
 
     let direction = getDirection(event);
@@ -86,11 +86,11 @@ export function rotatePlurid(event) {
 }
 
 
-export function translatePlurid(event) {
+export function translatePlurid(event, plurid) {
     console.log("TRANSLATE");
     console.log("Event", event);
 
-    let plurid = getPlurid(event);
+    // let plurid = getPlurid(event);
     console.log("Plurid", plurid);
 
     let direction = getDirection(event);
@@ -192,11 +192,11 @@ export function translatePlurid(event) {
 }
 
 
-export function scalePlurid(event) {
+export function scalePlurid(event, plurid) {
     console.log("SCALE");
     console.log("Event", event);
 
-    let plurid = getPlurid(event);
+    // let plurid = getPlurid(event);
     console.log("Plurid", plurid);
 
     let direction = getDirection(event);
