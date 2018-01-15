@@ -1,49 +1,48 @@
 export function transform(element) {
     element.addEventListener('wheel', event => {
         // console.log(event)
-        // console.log(event.path);
-        // console.log(searchForRootId(event.path));
 
-        let pluridToTransform = getPluridToTransform(event.path)
+        let pluridToTransformId = getPluridToTransformId(event.path);
+        let pluridToTransformElement = document.querySelector(`#${pluridToTransformId}`);
+
+        console.log("Plurid to Transform Element", pluridToTransformElement);
 
         if(event.shiftKey) {
-            console.log(`Rotate ${pluridToTransform}`);
+            console.log(`Rotate ${pluridToTransformId}`);
         }
 
         if(event.altKey) {
-            console.log(`Translate ${pluridToTransform}`);
+            console.log(`Translate ${pluridToTransformId}`);
         }
 
         if(event.metaKey) {
-            console.log(`Scale ${pluridToTransform}`);
+            console.log(`Scale ${pluridToTransformId}`);
         }
     });
 }
 
 
-function getPluridToTransform(path) {
-    let pluridToTransform = path[0].localName;
+function getPluridToTransformId(path) {
+    let pluridToTransformId = path[0].localName;
 
-    if (pluridToTransform === "plurid-options") {
-        // do nothing
+    if (pluridToTransformId === "plurid-options") {
+        // no transforms are performable while cursor is over <plurid-options>
+        return null;
     }
 
-    if (pluridToTransform === "plurid-roots" || pluridToTransform === "plurid-container") {
-        pluridToTransform = "plurid-roots";
+    if (pluridToTransformId === "plurid-roots"
+        || pluridToTransformId === "plurid-container") {
+        pluridToTransformId = "plurid-roots";
     } else {
-        // console.log(searchForRootId(path));
-        pluridToTransform = searchForRootId(path);
+        pluridToTransformId = searchForPluridRootId(path);
     }
 
-    return pluridToTransform;
+    return pluridToTransformId;
 }
 
 
-
-function searchForRootId(path) {
-    // console.log(path.length);
-    for (var i = 0; i < path.length; i++) {
-        // console.log(path[i]);
+function searchForPluridRootId(path) {
+    for (let i = 0; i < path.length; i++) {
         if (path[i].localName === "plurid-root") {
             return path[i].id;
         }
