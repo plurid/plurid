@@ -26,10 +26,6 @@ The `plurid` folder contains:
     + styles.css (minified)
 
 
-+ html
-    + plurid.html (minified)
-
-
 + js
     + plurid.js (minified)
 
