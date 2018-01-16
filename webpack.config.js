@@ -9,7 +9,7 @@ const Uglify = require("uglifyjs-webpack-plugin");
 module.exports = {
     entry: './src/js/app.js',
     output: {
-        filename: 'app.min.js',
+        filename: 'plurid.min.js',
         path: path.resolve(__dirname, 'dist/js')
     },
     module: {
@@ -28,7 +28,7 @@ module.exports = {
         ]
     },
     plugins: [
-        new ExtractTextPlugin('../css/styles.min.css', {
+        new ExtractTextPlugin('../css/plurid.min.css', {
             allChunks: true
         }),
         new OptimizeCssAssetsPlugin({
