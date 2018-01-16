@@ -35,17 +35,17 @@ export function transform(element) {
 
 
 export function renderOptions(element) {
-    console.log(element);
-    var link = document.createElement('link');
-    link.rel = 'import';
-    link.id = 'import-plurid-options';
-    link.href = '../../src/html/source/templates/options.html';
+    // console.log(element);
+    // var link = document.createElement('link');
+    // link.rel = 'import';
+    // link.id = 'import-plurid-options';
+    // link.href = '../../src/html/source/templates/options.html';
 
-    document.head.appendChild(link);
+    // document.head.appendChild(link);
 
 
-    let importDocument = document.querySelector('#import-plurid-options');
-    console.log(importDocument);
+    // let importDocument = document.querySelector('#import-plurid-options');
+    // console.log(importDocument);
 
     // let templateOptions = importDocument.querySelector("#template-plurid-options");
 

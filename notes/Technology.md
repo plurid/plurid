@@ -9,11 +9,11 @@ place the folder `plurid` at the same level with a `.html` file,
 
 import in the `<head>` of the `.html` document
 
-    `<link rel="import" href="./plurid/html/plurid.html">`,
+    <link rel="stylesheet" type="text/css" href="./plurid/css/plurid.css">
 
 import at the end of the `<body>`
 
-    `<script type="text/javascript" src="./plurid/js/plurid.js"></script>`,
+    <script type="text/javascript" src="./plurid/js/plurid.js"></script>
 
 place the content of the webpage in a `<plurid-content>` tag.
 
