@@ -31,3 +31,26 @@ export function transform(element) {
         }
     });
 }
+
+
+export function displayOptions(element) {
+    element.addEventListener("mousemove", event => {
+        let cursorYLocation = event.pageY;
+        let containerHeight = element.clientHeight;
+        let optionsDisplayLimitOn = 80;
+        let optionsDisplayLimitOff = 100;
+        let optionsTag = document.getElementsByTagName("plurid-options");
+
+        if (cursorYLocation > (containerHeight - optionsDisplayLimitOn)) {
+            for (let optionsElement of optionsTag) {
+                optionsElement.style.display = "block";
+            }
+        }
+
+        if (cursorYLocation < (containerHeight - optionsDisplayLimitOff)){
+            for (let optionsElement of optionsTag) {
+                optionsElement.style.display = "none";
+            }
+        }
+    })
+}
