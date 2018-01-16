@@ -1,12 +1,12 @@
 // import partials
-@import "general-testing";
-@import "container-options";
-@import "plurid";
+@import "./source/general-testing";
+@import "./source/container-options";
+@import "./source/plurid";
 
 
-@import "general";
+@import "./source/general";
 
-@import "elements/container";
-@import "elements/options";
-@import "elements/root";
-@import "elements/sheet";
+@import "./source/elements/container";
+@import "./source/elements/options";
+@import "./source/elements/root";
+@import "./source/elements/sheet";

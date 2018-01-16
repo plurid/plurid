@@ -39,7 +39,7 @@ export function renderOptions(element) {
     var link = document.createElement('link');
     link.rel = 'import';
     link.id = 'import-plurid-options';
-    link.href = '../js/source/templates/options.html';
+    link.href = '../../src/html/source/templates/options.html';
 
     document.head.appendChild(link);
 
