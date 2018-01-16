@@ -33,6 +33,26 @@ export function transform(element) {
 }
 
 
+
+export function renderOptions(element) {
+    console.log(element);
+    var link = document.createElement('link');
+    link.rel = 'import';
+    link.id = 'import-plurid-options';
+    link.href = '../js/source/templates/options.html';
+
+    document.head.appendChild(link);
+
+
+    let importDocument = document.querySelector('#import-plurid-options');
+    console.log(importDocument);
+
+    // let templateOptions = importDocument.querySelector("#template-plurid-options");
+
+    // console.log(templateOptions);
+}
+
+
 export function displayOptions(element) {
     element.addEventListener("mousemove", event => {
         let cursorYLocation = event.pageY;
@@ -54,3 +74,7 @@ export function displayOptions(element) {
         }
     })
 }
+
+
+// let templateOptions = document.querySelector("#template-plurid-options");
+// console.log(templateOptions);
