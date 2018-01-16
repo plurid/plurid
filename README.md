@@ -12,7 +12,7 @@ Plurid.js is a MIT-licensed, open source JavaScript framework to view and use we
 
 ## Description
 
-The framework compiled files are in `dist/`. Examples can be found in `src/examples/`.
+The framework compiled files are in `dist/`. Examples can be found in `test/examples/`.
 
 For general design & architecture, features, and more: see `notes/`.
 
