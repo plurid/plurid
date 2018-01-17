@@ -15,6 +15,8 @@ require('./source/elements/solid.js');
 // require Logic
 require('./source/logic/directions.js');
 
+require('./source/options/options.js');
+
 
 // require Sass main file
 require('../sass/app.scss');
