@@ -30,5 +30,9 @@ function searchForPluridRootId(path) {
         if (path[i].localName === "plurid-root") {
             return path[i].id;
         }
+
+        if (path[i].localName === "plurid-options") {
+            return "plurid-roots";
+        }
     }
 }

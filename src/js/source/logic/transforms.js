@@ -4,14 +4,15 @@ import * as utils from "./transforms-setup.js";
 import * as matrix from "./matrix.js";
 
 
-export function rotatePlurid(event, plurid) {
-    console.log("ROTATE");
-    console.log("Event", event);
+export function rotatePlurid(event, plurid, direction) {
+    // console.log("ROTATE");
+    // console.log("Event", event);
+    console.log("----------------------------------")
 
     // let plurid = getPlurid(event);
     console.log("Plurid", plurid);
 
-    let direction = getDirection(event);
+    // let direction = getDirection(event);
     console.log("Direction", direction);
 
 
@@ -35,12 +36,11 @@ export function rotatePlurid(event, plurid) {
         var angleIncrement = 0.07;
     }
 
-    // console.log("----------------------------------")
-    // console.log("Rotate X", rotateX);
-    // console.log("Rotate X in Degrees", rotateX*180/Math.PI);
-    // console.log("Rotate Y",rotateY);
-    // console.log("Rotate Y in Degrees",rotateY*180/Math.PI);
-    // console.log("Rotate Y",rotateY);
+    console.log("----------------------------------")
+    console.log("Rotate X", rotateX);
+    console.log("Rotate X in Degrees", rotateX*180/Math.PI);
+    console.log("Rotate Y",rotateY);
+    console.log("Rotate Y in Degrees",rotateY*180/Math.PI);
     // console.log("Translate X", translateX);
     // console.log("Translate Y", translateY);
     // console.log("Scale", scale);

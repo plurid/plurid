@@ -37,10 +37,10 @@ module.exports = {
             cssProcessorOptions: { discardComments: { removeAll: true } },
             canPrint: true
         })
-        ,
-        new Uglify({
-            include: /\.min\.js$/,
-            minimize: true
-        })
+        // ,
+        // new Uglify({
+        //     include: /\.min\.js$/,
+        //     minimize: true
+        // })
     ],
 };
