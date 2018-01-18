@@ -1,9 +1,7 @@
-/////////
-// BRANCH
 var pluridBranch = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridBranch works");
+            // console.log("pluridBranch works");
         }
     }
 });
@@ -17,7 +15,7 @@ document.registerElement( "plurid-branch", {
 var pluridInsertion = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridInsertion works");
+            // console.log("pluridInsertion works");
         }
     }
 });
@@ -31,7 +29,7 @@ document.registerElement( "plurid-insertion", {
 var pluridBridge = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridBridge works");
+            // console.log("pluridBridge works");
         }
     }
 });
@@ -45,7 +43,7 @@ document.registerElement( "plurid-bridge", {
 var pluridScion = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridScion works");
+            // console.log("pluridScion works");
         }
     }
 });
