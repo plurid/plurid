@@ -1,7 +1,7 @@
 import { transform } from "./container-core.js";
+import { initOptions } from "./options.js";
 import { renderOptions,
-         displayOptions,
-         contentOptions } from "./options-core.js";
+         displayOptions } from "./options-core.js";
 
 
 
@@ -10,6 +10,7 @@ var pluridContainer = Object.create(HTMLElement.prototype, {
         value: function() {
             transform(this);
 
+            initOptions()
             renderOptions(this);
             displayOptions(this);
         }
@@ -18,19 +19,4 @@ var pluridContainer = Object.create(HTMLElement.prototype, {
 
 document.registerElement( "plurid-container", {
     prototype: pluridContainer
-});
-
-
-
-var pluridContainerOptions = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            this.id = "plurid-options";
-            this.innerHTML = contentOptions();
-        }
-    }
-});
-
-document.registerElement( "plurid-options", {
-    prototype: pluridContainerOptions
 });
