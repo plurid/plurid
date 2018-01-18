@@ -7,15 +7,15 @@ import * as matrix from "./matrix.js";
 export function rotatePlurid(event, plurid, direction = null) {
     // console.log("ROTATE");
     // console.log("Event", event);
-    console.log("----------------------------------")
+    // console.log("----------------------------------")
 
     // let plurid = getPlurid(event);
-    console.log("Plurid", plurid);
+    // console.log("Plurid", plurid);
 
     if (direction == null) {
         direction = getDirection(event);
     }
-    console.log("Direction", direction);
+    // console.log("Direction", direction);
 
 
     var rotateX = transcore.getTransformRotate(plurid).rotateX;
@@ -38,11 +38,11 @@ export function rotatePlurid(event, plurid, direction = null) {
         var angleIncrement = 0.07;
     }
 
-    console.log("----------------------------------")
-    console.log("Rotate X", rotateX);
-    console.log("Rotate X in Degrees", rotateX*180/Math.PI);
-    console.log("Rotate Y",rotateY);
-    console.log("Rotate Y in Degrees",rotateY*180/Math.PI);
+    // console.log("----------------------------------")
+    // console.log("Rotate X", rotateX);
+    // console.log("Rotate X in Degrees", rotateX*180/Math.PI);
+    // console.log("Rotate Y",rotateY);
+    // console.log("Rotate Y in Degrees",rotateY*180/Math.PI);
     // console.log("Translate X", translateX);
     // console.log("Translate Y", translateY);
     // console.log("Scale", scale);
@@ -88,15 +88,17 @@ export function rotatePlurid(event, plurid, direction = null) {
 }
 
 
-export function translatePlurid(event, plurid) {
-    console.log("TRANSLATE");
-    console.log("Event", event);
+export function translatePlurid(event, plurid, direction = null) {
+    // console.log("TRANSLATE");
+    // console.log("Event", event);
 
     // let plurid = getPlurid(event);
-    console.log("Plurid", plurid);
+    // console.log("Plurid", plurid);
 
-    let direction = getDirection(event);
-    console.log("Direction", direction);
+    if (direction == null) {
+        direction = getDirection(event);
+    }
+    // console.log("Direction", direction);
 
 
     var rotateX = transcore.getTransformRotate(plurid).rotateX;
@@ -159,50 +161,20 @@ export function translatePlurid(event, plurid) {
 
         transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
-
-    if (direction === "upleft") {
-        translateY -= linearIncrement;
-        translateX -= linearIncrement;
-        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
-
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    }
-
-    if (direction === "downleft") {
-        translateY += linearIncrement;
-        translateX -= linearIncrement;
-        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
-
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    }
-
-    if (direction === "downright") {
-        translateY += linearIncrement;
-        translateX += linearIncrement;
-        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
-
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    }
-
-    if (direction === "upright") {
-        translateY -= linearIncrement;
-        translateX += linearIncrement;
-        var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
-
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    }
 }
 
 
-export function scalePlurid(event, plurid) {
-    console.log("SCALE");
-    console.log("Event", event);
+export function scalePlurid(event, plurid, direction = null) {
+    // console.log("SCALE");
+    // console.log("Event", event);
 
     // let plurid = getPlurid(event);
-    console.log("Plurid", plurid);
+    // console.log("Plurid", plurid);
 
-    let direction = getDirection(event);
-    console.log("Direction", direction);
+    if (direction == null) {
+        direction = getDirection(event);
+    }
+    // console.log("Direction", direction);
 
     var rotateX = transcore.getTransformRotate(plurid).rotateX;
     var rotateY = transcore.getTransformRotate(plurid).rotateY;
