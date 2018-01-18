@@ -4,7 +4,7 @@ import * as utils from "./transforms-setup.js";
 import * as matrix from "./matrix.js";
 
 
-export function rotatePlurid(event, plurid, direction) {
+export function rotatePlurid(event, plurid, direction = null) {
     // console.log("ROTATE");
     // console.log("Event", event);
     console.log("----------------------------------")
@@ -12,7 +12,9 @@ export function rotatePlurid(event, plurid, direction) {
     // let plurid = getPlurid(event);
     console.log("Plurid", plurid);
 
-    // let direction = getDirection(event);
+    if (direction == null) {
+        direction = getDirection(event);
+    }
     console.log("Direction", direction);
 
 

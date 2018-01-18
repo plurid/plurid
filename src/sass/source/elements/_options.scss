@@ -20,7 +20,7 @@ plurid-options {
     height: 100%;
     width: 42%;
     margin: 0 auto;
-    border-radius: 25px;
+    border-radius: 0px;
     text-align: center;
     overflow-x: scroll;
     overflow-y: hidden;
@@ -30,7 +30,7 @@ plurid-options {
 .plurid-container-options-more {
     position: absolute;
     bottom: 3px;
-    border-radius: 25px;
+    // border-radius: 25px;
     background-color: hsla(0, 0%, 25%, 0.9);
     width: 42%;
     display: none;

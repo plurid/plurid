@@ -39,3 +39,19 @@ Rotate X 1.680002261230098
 Rotate X in Degrees 96.25703914091943
 Rotate Y 0.8726641164790192
 Rotate Y in Degrees 49.99997080676067
+
+
+The issue appears when rotate X/Y is non-zero
+
+
+possible issue with the sign of matrix3d[1] and matrix3d[8]
+
+
+
+Rotate Y 6.108653804331896
+Rotate Y in Degrees 350.00008149475184
+matrix3d(0.984808, 0.164875, 0.0544925, 0, 0, -0.313812, 0.949485, 0, 0.173647, -0.93506, -0.309045, 0, 10, 10, 0, 1)
+
+Rotate Y 0.1745315028476902
+Rotate Y in Degrees 9.99991850524815
+matrix3d(0.984808, -0.16066, -0.0658908, 0, 0, -0.379453, 0.925211, 0, -0.173647, -0.911155, -0.373689, 0, 10, 10, 0, 1)
