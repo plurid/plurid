@@ -3,12 +3,14 @@ import * as utils from "../logic/transforms-setup.js";
 import { getPlurid } from "../logic/get-plurid.js";
 
 var rotateLeft = document.getElementsByClassName('plurid-container-rotate-left');
+var rotateUp = document.getElementsByClassName('plurid-container-rotate-up');
 var rotateRight = document.getElementsByClassName('plurid-container-rotate-right');
+var rotateDown = document.getElementsByClassName('plurid-container-rotate-down');
 
 var translateLeft = document.getElementsByClassName('plurid-container-translate-left');
 var translateUp = document.getElementsByClassName('plurid-container-translate-up');
-var translateDown = document.getElementsByClassName('plurid-container-translate-down');
 var translateRight = document.getElementsByClassName('plurid-container-translate-right');
+var translateDown = document.getElementsByClassName('plurid-container-translate-down');
 
 var scaleUp = document.getElementsByClassName('plurid-container-scale-up');
 var scaleDown = document.getElementsByClassName('plurid-container-scale-down');
@@ -30,17 +32,28 @@ var timer;
 
 
 rotateLeft[0].addEventListener("click", event => {
-    let direction = "up";
+    let direction = "left";
     plurid.rotatePlurid(event, pluridToTransform, direction);
     // console.log(event);
 })
 
 rotateRight[0].addEventListener("click", event => {
-    let direction = "down";
+    let direction = "right";
     plurid.rotatePlurid(event, pluridToTransform, direction);
     // console.log(event);
 })
 
+rotateUp[0].addEventListener("click", event => {
+    let direction = "up";
+    plurid.rotatePlurid(event, pluridToTransform, direction);
+    // console.log(event);
+})
+
+rotateDown[0].addEventListener("click", event => {
+    let direction = "down";
+    plurid.rotatePlurid(event, pluridToTransform, direction);
+    // console.log(event);
+})
 
 
 
