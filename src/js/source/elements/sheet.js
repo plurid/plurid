@@ -1,9 +1,16 @@
+import { renderControls,
+         contentControls } from "./controls-core.js";
+
+
+
 var sheetId = 1;
 
 var pluridSheet = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
             this.id=`plurid-sheet-${sheetId}`;
+            renderControls(this, sheetId);
+
             sheetId++;
         }
     }
@@ -57,10 +64,10 @@ document.registerElement( "plurid-sheet-double-back", {
 
 
 
-var pluridSheetControls = Object.create(HTMLElement.prototype, {
+let pluridSheetControls = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            // console.log("pluridSheetControls works");
+            this.innerHTML = contentControls();
         }
     }
 });

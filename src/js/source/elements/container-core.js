@@ -1,5 +1,5 @@
 import { getPlurid } from "../logic/get-plurid.js";
-import { stylePlurid as style } from "../logic/style-plurid.js"
+import { stylePlurid as style } from "../logic/style-plurid.js";
 import { rotatePlurid,
         translatePlurid,
         scalePlurid } from "../logic/transforms.js";
