@@ -1,4 +1,7 @@
-import { transform, renderOptions, displayOptions } from "./commands.js";
+import { transform,
+         renderOptions,
+         displayOptions,
+         contentOptions } from "./commands.js";
 
 
 ////////////
@@ -22,6 +25,8 @@ var pluridContainerOptions = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
             console.log("pluridContainerOptions works");
+            this.id = "plurid-options";
+            this.innerHTML = contentOptions();
         }
     }
 });
