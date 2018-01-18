@@ -211,17 +211,11 @@ export function getScaleMatrix(element) {
 }
 
 
-// console.log("Direct Matrix", getMatrixValues(pluridContainer[0].children[0]));
-// console.log("Rotation Matrix", getRotationMatrix(pluridContainer[0].children[0]));
-// console.log("Translation Matrix", getTranslationMatrix(pluridContainer[0].children[0]));
-// console.log("Scale Matrix", getScaleMatrix(pluridContainer[0].children[0]));
-
-
 export function setTransform(element, rotateXMatrix, rotateYMatrix, translateMatrix, scaleMatrix, yPos = 0) {
     var transformMatrix = matrix.multiplyArrayOfMatrices([
         translateMatrix,
-        rotateXMatrix,
         rotateYMatrix,
+        rotateXMatrix,
         scaleMatrix
     ]);
     // console.log("Transform Matrix", transformMatrix);

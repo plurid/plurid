@@ -1,5 +1,5 @@
 import * as plurid from "../logic/transforms.js";
-import * as utils from "../logic/transforms-setup.js";
+import * as transcore from "../logic/transforms-core.js";
 import { getPlurid } from "../logic/get-plurid.js";
 
 var rotateLeft = document.getElementsByClassName('plurid-container-rotate-left');
@@ -241,7 +241,7 @@ rotateDown[0].addEventListener("click", event => {
 //         ) {
 //         // console.log('scrolling up');
 //         plurid.translatePlurid(event, plurid.pluridContainer[0].children[0], "up");
-//         utils.setCursor("translate");
+//         transcore.setCursor("translate");
 //     }
 
 //     if (currentScrollDeltaY > 0
@@ -250,7 +250,7 @@ rotateDown[0].addEventListener("click", event => {
 //         ) {
 //         // console.log('scrolling down');
 //         plurid.translatePlurid(event, plurid.pluridContainer[0].children[0], "down");
-//         utils.setCursor("translate");
+//         transcore.setCursor("translate");
 //     }
 
 //     if (currentScrollDeltaX > 0
@@ -259,7 +259,7 @@ rotateDown[0].addEventListener("click", event => {
 //         ) {
 //         // console.log('scrolling right');
 //         plurid.translatePlurid(event, plurid.pluridContainer[0].children[0], "right");
-//         utils.setCursor("translate");
+//         transcore.setCursor("translate");
 //     }
 
 //     if (currentScrollDeltaX < 0
@@ -268,7 +268,7 @@ rotateDown[0].addEventListener("click", event => {
 //         ) {
 //         // console.log('scrolling left');
 //         plurid.translatePlurid(event, plurid.pluridContainer[0].children[0], "left");
-//         utils.setCursor("translate");
+//         transcore.setCursor("translate");
 //     }
 
 //     previousScrollDeltaX = currentScrollDeltaX
