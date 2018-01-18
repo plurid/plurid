@@ -3,9 +3,7 @@ var sheetId = 1;
 var pluridSheet = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSheet works");
             this.id=`plurid-sheet-${sheetId}`;
-            // console.log(this.id);
             sheetId++;
         }
     }
@@ -20,7 +18,7 @@ document.registerElement( "plurid-sheet", {
 var pluridSheetDouble = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSheetDouble works");
+            // console.log("pluridSheetDouble works");
         }
     }
 });
@@ -34,7 +32,7 @@ document.registerElement( "plurid-sheet-double", {
 var pluridSheetDoubleFront = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSheetDoubleFront works");
+            // console.log("pluridSheetDoubleFront works");
         }
     }
 });
@@ -48,7 +46,7 @@ document.registerElement( "plurid-sheet-double-front", {
 var pluridSheetDoubleBack = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSheetDoubleBack works");
+            // console.log("pluridSheetDoubleBack works");
         }
     }
 });
@@ -62,7 +60,7 @@ document.registerElement( "plurid-sheet-double-back", {
 var pluridSheetControls = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSheetControls works");
+            // console.log("pluridSheetControls works");
         }
     }
 });

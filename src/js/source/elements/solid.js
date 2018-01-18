@@ -1,8 +1,7 @@
-// PLURID SOLID
 var pluridSolid = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSolid works");
+            // console.log("pluridSolid works");
         }
     }
 });
@@ -16,7 +15,7 @@ document.registerElement( "plurid-solid", {
 var pluridSolidFront = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSolidFront works");
+            // console.log("pluridSolidFront works");
         }
     }
 });
@@ -30,7 +29,7 @@ document.registerElement( "plurid-solid-front", {
 var pluridSolidBack = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSolidBack works");
+            // console.log("pluridSolidBack works");
         }
     }
 });
@@ -44,7 +43,7 @@ document.registerElement( "plurid-solid-back", {
 var pluridSolidTop = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSolidTop works");
+            // console.log("pluridSolidTop works");
         }
     }
 });
@@ -58,7 +57,7 @@ document.registerElement( "plurid-solid-top", {
 var pluridSolidBottom = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSolidBottom works");
+            // console.log("pluridSolidBottom works");
         }
     }
 });
@@ -72,7 +71,7 @@ document.registerElement( "plurid-solid-bottom", {
 var pluridSolidRight = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSolidRight works");
+            // console.log("pluridSolidRight works");
         }
     }
 });
@@ -86,7 +85,7 @@ document.registerElement( "plurid-solid-right", {
 var pluridSolidLeft = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            console.log("pluridSolidLeft works");
+            // console.log("pluridSolidLeft works");
         }
     }
 });

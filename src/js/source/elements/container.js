@@ -1,15 +1,13 @@
-import { transform,
-         renderOptions,
-         displayOptions,
-         contentOptions } from "./commands.js";
+import { transform } from "./container-core.js";
+import { renderOptions,
+         displayOptions } from "./options-core.js"
 
 
-////////////
-// CONTAINER
 var pluridContainer = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
             transform(this);
+
             renderOptions(this);
             displayOptions(this);
         }
@@ -18,19 +16,4 @@ var pluridContainer = Object.create(HTMLElement.prototype, {
 
 document.registerElement( "plurid-container", {
     prototype: pluridContainer
-});
-
-
-var pluridContainerOptions = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            console.log("pluridContainerOptions works");
-            this.id = "plurid-options";
-            this.innerHTML = contentOptions();
-        }
-    }
-});
-
-document.registerElement( "plurid-options", {
-    prototype: pluridContainerOptions
 });
