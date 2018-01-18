@@ -27,6 +27,8 @@
 
 + button :: insert other `<plurid-root>`s on the left and right of the main `<plurid-root>`, each 3D transformable on it's own;
 
++ more -> buttons :: lock rotate x, rotate y, translate x, translate y;
+
 + more -> slider :: sensitivity of translation, rotation, and scale;
 
 + more -> color-picker :: `<plurid-container>` background color changer;
