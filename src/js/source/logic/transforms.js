@@ -68,20 +68,20 @@ export function rotatePlurid(event, plurid, direction = null) {
         transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
-    if (direction === "up") {
-        rotateX += angleIncrement;
-        valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    // if (direction === "up") {
+    //     rotateX += angleIncrement;
+    //     valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    }
+    //     transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
 
-    if (direction === "down") {
-        rotateX -= angleIncrement;
+    // if (direction === "down") {
+    //     rotateX -= angleIncrement;
 
-        valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    //     valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
-    }
+    //     transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+    // }
 }
 
 

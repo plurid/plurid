@@ -1,0 +1,41 @@
+plurid-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: hsl(0, 0%, 20%);
+    height: 70px;
+    width: 100%;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+
+.plurid-container-controls-content {
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    margin-right: 50px;
+    margin-left: 50px;
+    justify-content: space-between;
+}
+
+
+.plurid-controls-button svg {
+    fill: white;
+    width: 20px;
+    height: 20px;
+}
+
+.plurid-controls-url {
+    width: 60%;
+}
+
+.plurid-controls-url input {
+    height: 40px;
+    width: 100%;
+    font-size: 16px;
+}
