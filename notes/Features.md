@@ -121,7 +121,9 @@
 
 + `alt/opt + r` :: reload current `plurid`;
 
-+ `alt/opt + e + left-arrow/right-arrow` :: extend the `<plurid-bridge>` of the current `plurid`;
++ `alt/opt + e` :: extend positive the `<plurid-bridge>` of the current `plurid`;
+
++ `shift + e` :: extend negative the `<plurid-bridge>` of the current `plurid`;
 
 + `alt/opt + x` :: close current `plurid`;
 
