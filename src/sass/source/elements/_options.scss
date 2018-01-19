@@ -18,7 +18,7 @@ plurid-options {
 .plurid-container-options-content {
     background-color: hsla(0, 0%, 20%, 0.9);
     height: 100%;
-    width: 42%;
+    width: 700px;
     margin: 0 auto;
     border-radius: 0px;
     text-align: center;
@@ -26,6 +26,13 @@ plurid-options {
     overflow-y: hidden;
     white-space: nowrap;
 }
+
+@media (max-width: 800px) {
+    .plurid-container-options-content {
+        width: 400px;
+    }
+}
+
 
 .plurid-container-options-more {
     position: absolute;

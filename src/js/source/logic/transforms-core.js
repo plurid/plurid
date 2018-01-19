@@ -27,19 +27,19 @@ export function getTransformRotate(element) {
         var sinaX2 = parseFloat(values[6]);
         var sinaX3 = parseFloat(values[9]);
         var cosaX4 = parseFloat(values[10]);
-        console.log("----------------------")
-        console.log("cos A X 1", cosaX1);
-        console.log("cos A X 1", cosaX1 > 0 ? "POSITIVE" : "NEGATIVE");
-        console.log("arccos A X 1", Math.acos(cosaX1)*180/pi);
-        console.log("sin A X 2", sinaX2);
-        console.log("sin A X 2", sinaX2 > 0 ? "POSITIVE" : "NEGATIVE");
-        console.log("arcsin A X 2", Math.asin(sinaX2)*180/pi);
-        console.log("sin A X 3", sinaX3);
-        console.log("sin A X 3", sinaX3 > 0 ? "POSITIVE" : "NEGATIVE");
-        console.log("arcsin A X 3", Math.asin(sinaX3)*180/pi);
-        console.log("cos A X 4", cosaX4);
-        console.log("cos A X 4", cosaX4 > 0 ? "POSITIVE" : "NEGATIVE");
-        console.log("arccos A X 4", Math.acos(cosaX4)*180/pi);
+        // console.log("----------------------")
+        // console.log("cos A X 1", cosaX1);
+        // console.log("cos A X 1", cosaX1 > 0 ? "POSITIVE" : "NEGATIVE");
+        // console.log("arccos A X 1", Math.acos(cosaX1)*180/pi);
+        // console.log("sin A X 2", sinaX2);
+        // console.log("sin A X 2", sinaX2 > 0 ? "POSITIVE" : "NEGATIVE");
+        // console.log("arcsin A X 2", Math.asin(sinaX2)*180/pi);
+        // console.log("sin A X 3", sinaX3);
+        // console.log("sin A X 3", sinaX3 > 0 ? "POSITIVE" : "NEGATIVE");
+        // console.log("arcsin A X 3", Math.asin(sinaX3)*180/pi);
+        // console.log("cos A X 4", cosaX4);
+        // console.log("cos A X 4", cosaX4 > 0 ? "POSITIVE" : "NEGATIVE");
+        // console.log("arccos A X 4", Math.acos(cosaX4)*180/pi);
 
 
         // rotateX = 0;
@@ -47,21 +47,21 @@ export function getTransformRotate(element) {
         // 0-180
         if (sinaX3 <= 0) {
             rotateX = Math.acos(cosaX1);
-            console.log("ONE X");
-            console.log("++++++");
+            // console.log("ONE X");
+            // console.log("++++++");
         }
 
         // // 181-360
         if (sinaX3 > 0) {
             rotateX = 2*pi - Math.acos(cosaX1);
-            console.log("TWO X");
-            console.log("++++++");
+            // console.log("TWO X");
+            // console.log("++++++");
         }
 
         // console.log("rotateX in Radians", rotateX);
         // console.log("rotateX in Degrees", rotateX*180/pi);
 
-        console.log("-------------")
+        // console.log("-------------")
 
 
         // var cosaY = parseFloat(values[0]);
@@ -73,32 +73,32 @@ export function getTransformRotate(element) {
         var sinaY2 = parseFloat(values[2]);
         var sinaY3 = parseFloat(values[8]);
         var cosaY4 = parseFloat(values[10]);
-        console.log("cos A Y 1", cosaY1);
-        console.log("cos A Y 1", cosaY1 > 0 ? "POSITIVE" : "NEGATIVE");
-        console.log("arccos A Y 1", Math.acos(cosaY1));
-        console.log("arccos A Y 1 in degs", Math.acos(cosaY1)*180/pi);
-        console.log("sin A Y 2", sinaY2);
-        console.log("sin A Y 2", sinaY2 > 0 ? "POSITIVE" : "NEGATIVE");
-        console.log("arcsin A Y 2", Math.asin(sinaY2)*180/pi);
-        console.log("sin A Y 3", sinaY3);
-        console.log("sin A Y 3", sinaY3 > 0 ? "POSITIVE" : "NEGATIVE");
-        console.log("arcsin A Y 3", Math.asin(sinaY3)*180/pi);
-        console.log("cos A Y 4", cosaY4);
-        console.log("cos A Y 4", cosaY4 > 0 ? "POSITIVE" : "NEGATIVE");
-        console.log("arccos A Y 4", Math.acos(cosaY4)*180/pi);
+        // console.log("cos A Y 1", cosaY1);
+        // console.log("cos A Y 1", cosaY1 > 0 ? "POSITIVE" : "NEGATIVE");
+        // console.log("arccos A Y 1", Math.acos(cosaY1));
+        // console.log("arccos A Y 1 in degs", Math.acos(cosaY1)*180/pi);
+        // console.log("sin A Y 2", sinaY2);
+        // console.log("sin A Y 2", sinaY2 > 0 ? "POSITIVE" : "NEGATIVE");
+        // console.log("arcsin A Y 2", Math.asin(sinaY2)*180/pi);
+        // console.log("sin A Y 3", sinaY3);
+        // console.log("sin A Y 3", sinaY3 > 0 ? "POSITIVE" : "NEGATIVE");
+        // console.log("arcsin A Y 3", Math.asin(sinaY3)*180/pi);
+        // console.log("cos A Y 4", cosaY4);
+        // console.log("cos A Y 4", cosaY4 > 0 ? "POSITIVE" : "NEGATIVE");
+        // console.log("arccos A Y 4", Math.acos(cosaY4)*180/pi);
 
         // rotateY = 0
 
         if (sinaY2 <= 0) {
             rotateY = Math.acos(cosaY1);
-            console.log("ONE Y");
-            console.log("++++++");
+            // console.log("ONE Y");
+            // console.log("++++++");
         }
 
         if (sinaY2 > 0) {
             rotateY = 2*pi - Math.acos(cosaY1);
-            console.log("TWO Y");
-            console.log("++++++");
+            // console.log("TWO Y");
+            // console.log("++++++");
         }
     }
 

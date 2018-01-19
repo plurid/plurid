@@ -1,5 +1,6 @@
 import { transform } from "./container-core.js";
 import { initOptions } from "./options.js";
+import { initShortcuts } from "../logic/shortcuts.js";
 import { renderOptions,
          displayOptions } from "./options-core.js";
 
@@ -13,6 +14,8 @@ var pluridContainer = Object.create(HTMLElement.prototype, {
             initOptions()
             renderOptions(this);
             displayOptions(this);
+
+            initShortcuts(this);
         }
     }
 });
