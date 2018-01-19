@@ -16,17 +16,21 @@ export function transform(element) {
     });
 
     element.addEventListener('wheel', event => {
-        event.preventDefault();
-
         if(event.shiftKey) {
+            event.preventDefault();
+
             rotatePlurid(event, plurid);
         }
 
         if(event.altKey) {
+            event.preventDefault();
+
             translatePlurid(event, plurid);
         }
 
         if(event.metaKey) {
+            event.preventDefault();
+
             scalePlurid(event, plurid);
         }
     });
