@@ -18,13 +18,6 @@ plurid-root {
     -webkit-transform-style: preserve-3d;
 }
 
-plurid-content {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    // margin: 0 auto;
-    // transform: rotateY(35deg);
-}
 
 #plurid-root-2 {
     transform: translateX(200px) translateY(200px) translateZ(0px) rotateX(0deg) rotateY(90deg) rotateZ(0deg) scale(1);
