@@ -47,9 +47,6 @@ export function rotatePlurid(event, plurid, direction = null) {
     // console.log("Translate Y", translateY);
     // console.log("Scale", scale);
 
-    // ISSUE
-    // issue with the angle jumping over 2*pi when having both X and Y movement
-
     plurid.style.transition = "0ms ease-in-out";
 
     if (direction === "left") {
