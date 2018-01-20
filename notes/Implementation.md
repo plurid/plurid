@@ -17,6 +17,8 @@
 
 ## TODOs
 
++ when using reduce height apply the CSS rule "overflow: overlay;"
+
 
 
 ## Bugs
