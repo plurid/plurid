@@ -1,38 +1,61 @@
 export function getPlurid(event) {
-    let pluridToTransformId = getPluridToTransformId(event.path);
-    let pluridToTransformElement = document.querySelector(`#${pluridToTransformId}`);
+    // let pluridToTransformId = getPluridToTransformId(event.path);
+    // let pluridToTransformElement = document.querySelector(`#${pluridToTransformId}`);
 
-    return pluridToTransformElement;
+    let selectedPluridRoot = getSelectedPlurids(event.path).root;
+    let selectedPluridSheet = getSelectedPlurids(event.path).sheet;
+
+    return {
+        root: selectedPluridRoot,
+        sheet: selectedPluridSheet
+    }
 }
 
 
-function getPluridToTransformId(path) {
-    let pluridToTransformId = path[0].localName;
+function getSelectedPlurids(path) {
+    let selectedPluridRootID = path[0].localName;
+    // console.log(path);
 
-    if (pluridToTransformId === "plurid-options") {
-        // no transforms are performable while cursor is over <plurid-options>
-        return null;
-    }
-
-    if (pluridToTransformId === "plurid-roots"
-        || pluridToTransformId === "plurid-container") {
-        pluridToTransformId = "plurid-roots";
+    if (selectedPluridRootID === "plurid-roots"
+        || selectedPluridRootID === "plurid-container") {
+        selectedPluridRootID = "plurid-roots";
     } else {
-        pluridToTransformId = searchForPluridRootId(path);
+        selectedPluridRootID = searchForSelectedIDs(path).root;
     }
 
-    return pluridToTransformId;
+    let selectedPluridSheetID = searchForSelectedIDs(path).sheet;
+
+    let selectedPluridRoot = document.querySelector(`#${selectedPluridRootID}`);
+    let selectedPluridSheet = selectedPluridSheetID ? document.querySelector(`#${selectedPluridSheetID}`) : null ;
+
+    return {
+        root: selectedPluridRoot,
+        sheet: selectedPluridSheet
+    }
 }
 
 
-function searchForPluridRootId(path) {
+function searchForSelectedIDs(path) {
+    let root = "";
+    let sheet = "";
+
     for (let i = 0; i < path.length; i++) {
         if (path[i].localName === "plurid-root") {
-            return path[i].id;
+            root = path[i].id;
+            // return path[i].id;
+        }
+
+        if (path[i].localName === "plurid-sheet") {
+            sheet = path[i].id;
         }
 
         if (path[i].localName === "plurid-options") {
-            return "plurid-roots";
+             root = "plurid-roots";
         }
+    }
+
+    return {
+        root: root,
+        sheet: sheet
     }
 }

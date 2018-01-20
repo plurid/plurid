@@ -3,7 +3,6 @@ import { renderControls } from "./controls-core.js";
 
 
 
-
 var sheetId = 1;
 
 var pluridSheet = Object.create(HTMLElement.prototype, {
