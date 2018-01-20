@@ -51,6 +51,8 @@
 
 ### Controls in `<plurid-controls>`
 
++ button :: select the `<plurid-root>` of the current `<plurid-sheet>` for transforms;
+
 + button :: bring the parent `plurid` to normal view;
 
 + button :: minimize the current `<plurid-sheet>` plane;
