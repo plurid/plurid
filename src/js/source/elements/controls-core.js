@@ -7,48 +7,60 @@ export function renderControls(element, id) {
 
 export function contentControls () {
     let content = `<div class="plurid-container-controls-content">
+                        <div class="plurid-controls-button plurid-controls-select">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 715.45 731.22"><defs></defs><title>Select</title><g><g id="Select"><path class="plurid-controls-buttons-svg" d="M354.25,731.22,340.3,363.64,0,316.45,715.45,0ZM181,291.07l207.7,28.81,8.06,212.42L609.53,101.52Z"/></g></g></svg>
+                        </div>
+
                         <div class="plurid-controls-button plurid-controls-parent">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 999.35 1001.55"><defs><style>.cls-1{fill:none;stroke-width:50px;}.cls-1,.cls-2{stroke:#fff;stroke-miterlimit:10;}</style></defs><title>Parent</title><g id="parent" data-name="parent"><g id="Parent"><polygon class="cls-1" points="405.92 307.64 405.92 434.86 617.99 411.22 617.99 924.77 974.35 874.36 974.35 247.77 405.92 307.64"/><polygon class="cls-2" points="0.5 0.77 0.5 792.01 460.92 1000.77 460.92 208.07 0.5 0.77"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 878.5 880.44"><defs></defs><title>Parent</title><g><g id="Parent"><path class="plurid-controls-buttons-svg" d="M521.28,838.25V386.06L334.86,406.83V250.66L878.5,193.4V787.71Zm44-501.32V787.64l269.31-38.1V242.22l-455.74,48v67.48Z"/><polygon class="plurid-controls-buttons-svg" points="0.44 0.68 0.44 696.24 405.19 879.75 405.19 182.91 0.44 0.68"/><path class="plurid-controls-buttons-svg" d="M405.63,880.44,0,696.52V0L405.63,182.63ZM.88,696,404.75,879.07V183.2L.88,1.36Z"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-minimize">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 999.5 50"><defs><style>.cls-1{stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>Minimize</title><g id="minimize" data-name="minimize"><g id="Minimize"><line class="cls-1" y1="25" x2="999.5" y2="25"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 874.5 50"><defs></defs><title>Minimize</title><g><g id="Minimize"><line class="plurid-controls-buttons-svg" y1="25" x2="874.5" y2="25"/><rect class="plurid-controls-buttons-svg" width="874.5" height="50"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-reduce-height">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 998 374"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>Reduce Height</title><g id="reduce" data-name="reduce"><g id="Reduce_Height" data-name="Reduce Height"><polygon class="cls-1" points="0 25 973 25 973 349 287 349 287 25 0 25"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 869.91 326"><defs></defs><title>Reduce</title><g><g id="Reduce_Height" data-name="Reduce Height"><path class="plurid-controls-buttons-svg" d="M869.91,326H228.37V43.58H0V0H869.91ZM272,282.42H826.33V43.58H272Z"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-reload">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 872.68 701"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>Reload</title><g id="Layer_2" data-name="Layer 2"><g id="Reload"><polyline class="cls-1" points="769 239 769 676 25 676 25 25 775 25"/><polyline class="cls-1" points="684 446 772 219 849 446"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 872.67 701"><defs></defs><title>Reload</title><g><g id="Reload"><polygon class="plurid-controls-buttons-svg" points="794 701 0 701 0 0 775 0 775 50 50 50 50 651 744 651 744 239 794 239 794 701"/><polygon class="plurid-controls-buttons-svg" points="707.31 455.04 660.69 436.96 773.57 145.79 872.67 437.97 825.33 454.03 770.43 292.21 707.31 455.04"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-extend">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 999.6 433.88"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>Extend</title><g id="Layer_2" data-name="Layer 2"><g id="Extend"><line class="cls-1" x1="35.8" y1="215.94" x2="954.8" y2="215.94"/><polyline class="cls-1" points="239.8 17.94 35.8 215.94 239.8 415.94"/><polyline class="cls-1" points="759.8 415.94 963.8 217.94 759.8 17.94"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 866 375.89"><defs></defs><title>Extend</title><g><g id="Extend"><rect class="plurid-controls-buttons-svg" x="31.02" y="165.42" width="796.17" height="43.32"/><polygon class="plurid-controls-buttons-svg" points="192.59 375.81 0 187 192.67 0 222.84 31.08 62.03 187.16 222.91 344.88 192.59 375.81"/><polygon class="plurid-controls-buttons-svg" points="673.33 375.89 643.16 344.8 803.97 188.73 643.09 31.01 673.41 0.08 866 188.89 673.33 375.89"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-close">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 984.46 985.29"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>Close</title><g id="Layer_2" data-name="Layer 2"><g id="Close"><line class="cls-1" x1="17.78" y1="17.67" x2="966.78" y2="967.62"/><line class="cls-1" x1="17.78" y1="967.62" x2="957.28" y2="17.67"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 875.09 875.82"><defs></defs><title>Close</title><g><g id="Close"><rect class="plurid-controls-buttons-svg" x="415.36" y="-158.88" width="44.45" height="1193.58" transform="translate(-181.48 437.37) rotate(-44.97)"/><rect class="plurid-controls-buttons-svg" x="-160.45" y="415.69" width="1187.63" height="44.45" transform="translate(-182.73 438.11) rotate(-45.32)"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-isolate">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 646 1000"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>Isolate</title><g id="Layer_2" data-name="Layer 2"><g id="Isolate"><rect class="cls-1" x="25" y="25" width="596" height="950"/><line class="cls-1" x1="323" y1="191" x2="323" y2="809"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 562 869.97"><defs></defs><title>Isolate</title><g><g id="Isolate"><path class="plurid-controls-buttons-svg" d="M562,870H0V0H562ZM43.5,826.47h475V43.5H43.5Z"/><rect class="plurid-controls-buttons-svg" x="259.25" y="166.16" width="43.5" height="537.64"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-back">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 997.8 433.79"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>Back</title><g id="Layer_2" data-name="Layer 2"><g id="Back"><line class="cls-1" x1="32.8" y1="215.94" x2="997.8" y2="215.94"/><polyline class="cls-1" points="239.8 17.94 35.8 215.94 239.8 415.94"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 874.8 394.66"><defs></defs><title>Back</title><g><g id="Back"><rect class="plurid-controls-buttons-svg" x="46.8" y="173.72" width="828" height="45.49"/><polygon class="plurid-controls-buttons-svg" points="202.25 394.66 0 196.38 202.33 0 234.01 32.64 65.15 196.54 234.1 362.18 202.25 394.66"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-forward">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 999.8 433.79"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>Next</title><g id="Layer_2" data-name="Layer 2"><g id="Next"><line class="cls-1" y1="215.85" x2="965" y2="215.85"/><polyline class="cls-1" points="760 415.85 964 217.85 760 17.85"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 871.97 361.91"><defs></defs><title>Forward</title><g><g id="Next"><rect class="plurid-controls-buttons-svg" y="159.23" width="842.93" height="41.72"/><polygon class="plurid-controls-buttons-svg" points="686.43 361.91 657.38 331.98 812.23 181.68 657.3 29.79 686.5 0 871.97 181.83 686.43 361.91"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-url">
-                            <input type="text">
+                            <div class="plurid-controls-url-container">
+                                <div class="plurid-controls-button plurid-controls-button-url plurid-controls-search">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 716.83 722.52"><defs></defs><title>Search</title><g><g id="Search"><line class="plurid-controls-buttons-svg" x1="17.83" y1="705" x2="350.33" y2="366.5"/><rect class="plurid-controls-buttons-svg" x="-53.16" y="510.75" width="474.49" height="50" transform="translate(-327.12 291.65) rotate(-45.51)"/><path class="plurid-controls-buttons-svg" d="M491.83,450A225,225,0,0,1,332.74,65.9,225,225,0,0,1,650.93,384.1,223.5,223.5,0,0,1,491.83,450Zm0-400c-96.49,0-175,78.5-175,175s78.51,175,175,175,175-78.5,175-175S588.33,50,491.83,50Z"/></g></g></svg>
+                                </div>
+                                <input class="plurid-controls-url-input" type="text">
+                                <div class="plurid-controls-button plurid-controls-button-url plurid-controls-cancel">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 875.09 875.82"><defs></defs><title>Close</title><g><g id="Close"><rect class="plurid-controls-buttons-svg" x="415.36" y="-158.88" width="44.45" height="1193.58" transform="translate(-181.48 437.37) rotate(-44.97)"/><rect class="plurid-controls-buttons-svg" x="-160.45" y="415.69" width="1187.63" height="44.45" transform="translate(-182.73 438.11) rotate(-45.32)"/></g></g></svg>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-extract">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 796 1002"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>Extract Root</title><g id="Layer_2" data-name="Layer 2"><g id="Extract_Root" data-name="Extract Root"><rect class="cls-1" x="25" y="194" width="524" height="783"/><polyline class="cls-1" points="229.79 184 230 25 771 25 771 868 556 868"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 697.49 878"><defs></defs><title>Extract</title><g><g id="Extract_Root" data-name="Extract Root"><path class="plurid-controls-buttons-svg" d="M503,878H0V148.09H503ZM43.81,834.19H459.15V191.9H43.81Z"/><polygon class="plurid-controls-buttons-svg" points="697.49 782.49 487.19 782.49 487.19 738.68 653.68 738.68 653.68 43.81 223.41 43.81 223.26 161.26 179.45 161.2 179.66 0 697.49 0 697.49 782.49"/></g></g></svg>
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-opacity">
@@ -56,7 +68,7 @@ export function contentControls () {
                         </div>
 
                         <div class="plurid-controls-button plurid-controls-more">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 708.51 161"><defs><style>.cls-1{stroke:#fff;stroke-miterlimit:10;stroke-width:50px;}</style></defs><title>More</title><g id="Layer_2" data-name="Layer 2"><g id="More"><rect class="cls-1" x="25" y="25" width="111" height="111"/><rect class="cls-1" x="298.51" y="25" width="111" height="111"/><rect class="cls-1" x="572.51" y="25" width="111" height="111"/></g></g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 622.51 130.1"><defs></defs><title>More</title><g id="Layer_2" data-name="Layer 2"><g id="More"><rect class="plurid-controls-buttons-svg" x="20.2" y="20.2" width="89.69" height="89.69"/><path class="plurid-controls-buttons-svg" d="M130.1,130.1H0V0H130.1ZM40.4,89.69H89.69V40.4H40.4Z"/><rect class="plurid-controls-buttons-svg" x="266.21" y="20.2" width="89.69" height="89.69"/><path class="plurid-controls-buttons-svg" d="M376.11,130.1H246V0h130.1Zm-89.7-40.41H335.7V40.4H286.41Z"/><rect class="plurid-controls-buttons-svg" x="512.62" y="20.2" width="89.69" height="89.69"/><path class="plurid-controls-buttons-svg" d="M622.51,130.1H492.42V0H622.51ZM532.82,89.69h49.29V40.4H532.82Z"/></g></g></svg>
                         </div>
 
                     </div>`

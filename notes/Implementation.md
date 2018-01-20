@@ -19,6 +19,8 @@
 
 + when using reduce height apply the CSS rule "overflow: overlay;"
 
++ tooltips for icons in plurid controls
+
 
 
 ## Bugs
