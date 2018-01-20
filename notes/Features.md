@@ -71,7 +71,7 @@
 
 + button :: forward to the next URL within the curent `<plurid-branch>`;
 
-+ input :: URL of the current `<plurid-branch>`;
++ input :: URL of the current `<plurid-branch>` (on the right a search button /enter shortcut/; on the left an X to cancel /esc shortcut/);
 
 + button :: extract the current `<plurid-branch>` to a separate `<plurid-root>`;
 
@@ -92,6 +92,8 @@
 + more -> inputs :: width and height of the current `<plurid-content>`;
 
 + more -> checkmark :: lock size of the current `<plurid-content>` (default on);
+
++ more -> checkmark :: show icon tooltip;
 
 + more -> button :: reset to default;
 
