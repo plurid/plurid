@@ -32,6 +32,7 @@ plurid-controls {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    outline: none;
 }
 
 .plurid-controls-button svg {
@@ -55,6 +56,8 @@ plurid-controls {
 }
 
 
+
+// URL
 .plurid-controls-url {
     width: 60%;
 }
@@ -85,6 +88,10 @@ plurid-controls {
     border: none;
 }
 
+.plurid-controls-url input::placeholder {
+    color: hsl(0, 0%, 70%);
+}
+
 .plurid-controls-url-container {
     display: inline-flex;
     align-items: center;
@@ -105,4 +112,30 @@ plurid-controls {
     z-index: 999;
     top: 0;
     right: 0;
+}
+
+
+
+// OPEN-CLOSE
+.plurid-controls-open-close {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.plurid-controls-open-close-character {
+    font-size: 6px;
+    margin: 0 auto;
+    width: 20px;
+    cursor: pointer;
+}
+
+.plurid-controls-open-close-character:hover {
+    background-color: hsl(0, 0%, 70%);
+    border-radius: 4px;
+    color: black;
 }
