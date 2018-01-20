@@ -93,6 +93,8 @@
 
 + more -> checkmark :: lock size of the current `<plurid-content>` (default on);
 
++ more -> radio buttons :: use google.com, bing.com, duckduckgo.com as search engine within the URL input;
+
 + more -> checkmark :: show icon tooltip;
 
 + more -> button :: reset to default;
