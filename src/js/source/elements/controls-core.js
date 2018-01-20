@@ -82,3 +82,33 @@ export function contentControls () {
 
     return content;
 }
+
+
+export function setControls(element) {
+
+    let pluridControlsContent = element.getElementsByClassName("plurid-container-controls-content")[0];
+
+    let pluridControlsOpenClose = element.getElementsByClassName("plurid-controls-open-close")[0];
+    let pluridControlsOpenCloseCharacter = element.getElementsByClassName("plurid-controls-open-close-character")[0];
+    let pluridControlsOpenCloseState = 1;
+
+    pluridControlsOpenClose.addEventListener("click", event => {
+        let parentPlurid = element.parentElement;
+
+        if (pluridControlsOpenCloseState == 1) {
+            parentPlurid.style.paddingTop = "50px";
+            pluridControlsContent.style.display = "none";
+            element.style.height = "15px";
+            pluridControlsOpenCloseCharacter.innerHTML = "&#9661;";
+        }
+
+        if (pluridControlsOpenCloseState == 0) {
+            parentPlurid.style.paddingTop = "100px";
+            pluridControlsContent.style.display = "inline-flex";
+            element.style.height = "60px";
+            pluridControlsOpenCloseCharacter.innerHTML = "&#9651;";
+        }
+
+        pluridControlsOpenCloseState = pluridControlsOpenCloseState ? 0 : 1;
+    })
+}
