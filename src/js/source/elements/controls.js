@@ -1,4 +1,4 @@
-import { contentControls } from "./controls-core.js";
+import { contentControls, setControls } from "./controls-core.js";
 
 
 
@@ -7,6 +7,7 @@ export function initControls() {
         createdCallback: {
             value: function() {
                 this.innerHTML = contentControls();
+                setControls(this);
             }
         }
     });
