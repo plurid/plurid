@@ -15,15 +15,8 @@ export function transform(element) {
         // console.log("PLURID ROOT ", pluridRoot);
         // console.log("PLURID SHEET", pluridSheet);
 
-        if (pluridSheet) {
-            pluridStack.add(pluridSheet);
-            plurid = style(pluridSheet, pluridStack);
-        }
-
-        if (!pluridSheet) {
-            style(pluridRoot, pluridStack);
-            plurid = pluridRoot;
-        }
+        pluridStack.add(pluridRoot);
+        plurid = style(pluridRoot, pluridStack);
     });
 
     element.addEventListener('wheel', event => {
