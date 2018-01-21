@@ -23,7 +23,7 @@
 
 + buttons :: scale;
 
-+ button :: center everything;
++ button :: center everything, make of the same scale;
 
 + button :: insert other `<plurid-root>`s on the left and right of the main `<plurid-root>`, each 3D transformable on it's own;
 
@@ -158,3 +158,5 @@
 + `alt/opt + 4` :: transform to normal view left plane;
 
 + `double-click/tap` :: transform to normal view the clicked/tapped `<plurid-content>` plane;
+
++ `ctrl/cmd + click` :: follow the link on the same plurid;
