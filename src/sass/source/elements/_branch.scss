@@ -1,0 +1,21 @@
+plurid-branch {
+    position: absolute;
+    transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(90deg) rotateZ(0deg) scale(1);
+    // backface-visibility: hidden;
+
+}
+
+plurid-scion {
+    width: 100%;
+    height: 100%;
+    background-color: red;
+    position: absolute;
+    // transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(90deg) rotateZ(0deg) scale(1);
+
+    plurid-sheet {
+        width: 1000px;
+        height: 1000px;
+        z-index: -500;
+
+    }
+}
