@@ -1,42 +1,91 @@
 export function testFun() {
     let contentTest = document.getElementById("test-content");
 
-    // let content = document.createElement("div");
-    // let contentInput = document.createElement("input");
-
-    // content.innerHTML = "TEST"
-
-    // contentTest.appendChild(content);
-    // contentTest.appendChild(contentInput);
-
-    // let contentExtraDiv = document.createElement("div");
-    // contentExtraDiv.innerHTML = `<input type="text"><h1>aAAA</h1>`;
-    // contentTest.appendChild(contentExtraDiv);
-
-    // console.log(contentTest);
 
 
 
 
-    let httpRequest = new XMLHttpRequest();
 
-    httpRequest.onreadystatechange = innerHTMLContents;
-    httpRequest.open('GET', 'http://localhost:8000/test/examples/insert.html', true);
-    httpRequest.withCredentials = true;
-    httpRequest.send();
+    // console.log(pageOrigin);
 
-    let httpReqDiv = document.createElement("div");
+    // console.log(allAnchorTags);
 
-    function innerHTMLContents() {
-        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            if (httpRequest.status === 200) {
-                httpReqDiv.innerHTML = httpRequest.responseText;
-            } else {
-                console.log('There was a problem with the request.');
-            }
+}
+
+
+
+export function renderBranch() {
+
+    let allAnchorTags = document.getElementsByTagName("a");
+    let sameOriginAnchorTags = new Set();
+    let pageOrigin = window.location.origin;
+
+    for (let anchorTag of allAnchorTags) {
+        if (pageOrigin == anchorTag.origin) {
+            sameOriginAnchorTags.add(anchorTag);
+            // console.log(anchorTag);
         }
     }
 
-    contentTest.appendChild(httpReqDiv);
+    // console.log(sameOriginAnchorTags);
 
+    for (let anchorTag of sameOriginAnchorTags) {
+        anchorTag.addEventListener("click", event => {
+            event.preventDefault();
+            // console.log(anchorTag.href);
+            // console.log(anchorTag);
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // console.log(this.responseText);
+                    pluridifyResponse(this.responseText);
+
+                    let newBranch = document.createElement("plurid-branch");
+
+                    let newBranchContent = `
+                                            <h1>Works</h1>
+                                            <a href="http://localhost:8000/test/examples/insert.html">Text</a>
+                                            <p>This is inserted:</p>
+                                            ${this.responseText}
+                                            `;
+
+                    newBranch.innerHTML = `
+                                            <plurid-insertion></plurid-insertion>
+                                            <plurid-bridge></plurid-bridge>
+
+                                            <plurid-scion>
+                                                <plurid-sheet>
+                                                    <plurid-content>
+                                                    ${newBranchContent}
+                                                    </plurid-content>
+                                                </plurid-sheet>
+                                            </plurid-scion>
+                                        `;
+
+                    insertAfter(newBranch, anchorTag);
+                    renderBranch();
+                }
+            };
+
+            xhttp.open("GET", anchorTag.href, true);
+            xhttp.setRequestHeader("Cache-Control", "no-cache");
+            xhttp.setRequestHeader("Pragma", "no-cache");
+            xhttp.send();
+        });
+    }
+
+}
+
+function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+function pluridifyResponse(response) {
+    let parser = document.createElement('body');
+    parser.innerHTML = response;
+
+    let anchorTags = parser.getElementsByTagName("a");
+
+    console.log(anchorTags);
 }

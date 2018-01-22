@@ -3,7 +3,7 @@ import { testFun } from "./branch-core.js";
 var pluridBranch = Object.create(HTMLElement.prototype, {
     createdCallback: {
         value: function() {
-            testFun();
+            // testFun();
             // console.log("pluridBranch works");
         }
     }
