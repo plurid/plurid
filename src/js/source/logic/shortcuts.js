@@ -1,11 +1,19 @@
-export function initShortcuts(element) {
+import { closePlurid } from "../elements/controls-core.js";
+import { activePlurid } from "./get-plurid.js";
+
+
+export function initShortcuts() {
     document.addEventListener("keydown", (event) => {
         shortcuts(event);
     });
 }
 
-function shortcuts(event, keys) {
+function shortcuts(event) {
+    let activePluridID = activePlurid.selected.id;
+    let activePluridElement = document.getElementById(activePluridID);
+
     let ultimateKey = event.which;
+
 
     // ROTATE
     if(event.shiftKey && ultimateKey == 37) {
@@ -112,7 +120,16 @@ function shortcuts(event, keys) {
 
     // alt/opt + x
     if(event.altKey && ultimateKey == 88) {
-        console.log("close current plurid");
+        if (activePluridElement.parentElement.nodeName == "PLURID-ROOT") {
+            activePluridElement.parentElement.style.display = "none";
+        }
+
+        if (activePluridElement.parentElement.nodeName == "PLURID-SCION") {
+            activePluridElement.parentElement.parentElement.style.display = "none";
+        }
+
+        // console.log(activePluridElement.parentElement.parentElement.nodeName);
+        // console.log(`close current plurid with ID: ${activePluridID}`);
     }
 
     // alt/opt + i
