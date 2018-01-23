@@ -59,3 +59,13 @@ function searchForSelectedIDs(path) {
         sheet: sheet
     }
 }
+
+
+export var activePlurid = {}
+
+Object.defineProperty(activePlurid, 'selected', {
+    value: document.querySelector("plurid-roots"),
+    writable: true
+});
+
+// console.log("1", activePlurid.selected);

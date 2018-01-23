@@ -1,3 +1,7 @@
+import { activePlurid } from "../logic/get-plurid.js";
+// console.log(activePlurid);
+
+
 export function renderControls(element, id) {
     var controls = document.createElement("plurid-controls");
     controls.id = `plurid-controls-${id}`;
@@ -85,6 +89,16 @@ export function contentControls () {
 
 
 export function setControls(element) {
+    setActivePlurid(element);
+
+    openCloseControls(element)
+
+    closePlurid(element);
+
+}
+
+
+function openCloseControls(element) {
 
     let pluridControlsContent = element.getElementsByClassName("plurid-container-controls-content")[0];
 
@@ -112,3 +126,28 @@ export function setControls(element) {
         pluridControlsOpenCloseState = pluridControlsOpenCloseState ? 0 : 1;
     })
 }
+
+
+function closePlurid(element) {
+    let pluridParentClose = element.getElementsByClassName("plurid-controls-close")[0];
+
+    pluridParentClose.addEventListener("click", event => {
+        let parentPlurid = element.parentElement.parentElement.parentElement;
+
+        parentPlurid.style.display = "none";
+        console.log(parentPlurid);
+    });
+}
+
+
+function setActivePlurid(element) {
+    let pluridSelect= element.getElementsByClassName("plurid-controls-select")[0];
+
+    pluridSelect.addEventListener("click", (event) => {
+        // console.log(pluridSelect.parentElement.parentElement.parentElement);
+        activePlurid.selected = pluridSelect.parentElement.parentElement.parentElement;
+        console.log(activePlurid);
+    });
+}
+
+console.log("HERE", activePlurid.selected);
