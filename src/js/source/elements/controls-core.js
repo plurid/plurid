@@ -132,10 +132,20 @@ function closePlurid(element) {
     let pluridParentClose = element.getElementsByClassName("plurid-controls-close")[0];
 
     pluridParentClose.addEventListener("click", event => {
-        let parentPlurid = element.parentElement.parentElement.parentElement;
+        let pluridParent = pluridParentClose.parentElement.parentElement.parentElement;
+        // console.log(pluridParent.parentElement.nodeName)
+        if (pluridParent.parentElement.nodeName == "PLURID-ROOT") {
+            // pluridParent.parentElement.style.display = "none";
+            pluridParent.parentElement.parentElement.removeChild(pluridParent.parentElement);
+        }
 
-        parentPlurid.style.display = "none";
-        console.log(parentPlurid);
+        if (pluridParent.parentElement.nodeName == "PLURID-SCION") {
+            // pluridParent.parentElement.parentElement.style.display = "none";
+            pluridParent.parentElement.parentElement.parentElement.removeChild(pluridParent.parentElement.parentElement);
+
+        }
+
+        activePlurid.selected = document.querySelector("plurid-roots");
     });
 }
 
@@ -150,4 +160,4 @@ function setActivePlurid(element) {
     });
 }
 
-console.log("HERE", activePlurid.selected);
+// console.log("HERE", activePlurid.selected);

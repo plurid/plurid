@@ -1,21 +1,4 @@
-export function testFun() {
-    let contentTest = document.getElementById("test-content");
-
-
-
-
-
-
-    // console.log(pageOrigin);
-
-    // console.log(allAnchorTags);
-
-}
-
-
-
 export function renderBranch() {
-
     let allAnchorTags = document.getElementsByTagName("a");
     let sameOriginAnchorTags = new Set();
     let pageOrigin = window.location.origin;
@@ -27,7 +10,7 @@ export function renderBranch() {
         }
     }
 
-    // console.log(sameOriginAnchorTags);
+    console.log(sameOriginAnchorTags);
 
     for (let anchorTag of sameOriginAnchorTags) {
         anchorTag.addEventListener("click", event => {
@@ -39,7 +22,8 @@ export function renderBranch() {
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     // console.log(this.responseText);
-                    pluridifyResponse(this.responseText);
+                    // pluridifyResponse(this.responseText);
+                    console.log("a");
 
                     let newBranch = document.createElement("plurid-branch");
 
@@ -81,11 +65,11 @@ function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-function pluridifyResponse(response) {
-    let parser = document.createElement('body');
-    parser.innerHTML = response;
+// function pluridifyResponse(response) {
+//     let parser = document.createElement('body');
+//     parser.innerHTML = response;
 
-    let anchorTags = parser.getElementsByTagName("a");
+//     let anchorTags = parser.getElementsByTagName("a");
 
-    console.log(anchorTags);
-}
+//     console.log(anchorTags);
+// }
