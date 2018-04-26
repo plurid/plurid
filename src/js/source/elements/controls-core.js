@@ -152,11 +152,22 @@ function closePlurid(element) {
 
 function setActivePlurid(element) {
     let pluridSelect= element.getElementsByClassName("plurid-controls-select")[0];
+    // console.log(pluridSelect);
 
     pluridSelect.addEventListener("click", (event) => {
         // console.log(pluridSelect.parentElement.parentElement.parentElement);
         activePlurid.selected = pluridSelect.parentElement.parentElement.parentElement;
-        console.log(activePlurid);
+        // console.log(activePlurid);
+    });
+
+    pluridSelect.addEventListener("dblclick", (event) => {
+        // console.log(pluridSelect.parentElement.parentElement.parentElement);
+        activePlurid.selected = pluridSelect.parentElement.parentElement.parentElement;
+        let activeRoot = document.getElementById(activePlurid.selected.id).parentElement;
+        let activeRoots = document.getElementById(activePlurid.selected.id).parentElement.parentElement;
+        // console.log(active);
+        activeRoot.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
+        activeRoots.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
     });
 }
 

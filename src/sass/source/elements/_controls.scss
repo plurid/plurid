@@ -10,7 +10,7 @@ plurid-controls {
     display: flex;
     align-items: center;
     font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    transition: height 250ms;
+    // transition: height 250ms;
 }
 
 
@@ -34,6 +34,7 @@ plurid-controls {
     align-items: center;
     justify-content: center;
     outline: none;
+    margin: 0 5px;
 }
 
 .plurid-controls-button svg {

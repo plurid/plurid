@@ -5,6 +5,8 @@ let absThreshold = 10;
 export function getDirection(event) {
     const wheelDeltaX = event.wheelDeltaX;
     const wheelDeltaY = event.wheelDeltaY;
+    // console.log(wheelDeltaX);
+    // console.log(wheelDeltaY);
     const absWheelDeltaX = Math.abs(wheelDeltaX)
     const absWheelDeltaY = Math.abs(wheelDeltaY)
 
