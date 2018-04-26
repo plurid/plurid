@@ -10,7 +10,7 @@ export function renderBranch() {
         }
     }
 
-    console.log(sameOriginAnchorTags);
+    // console.log(sameOriginAnchorTags);
 
     for (let anchorTag of sameOriginAnchorTags) {
         anchorTag.addEventListener("click", event => {
@@ -23,13 +23,15 @@ export function renderBranch() {
                 if (this.readyState == 4 && this.status == 200) {
                     // console.log(this.responseText);
                     // pluridifyResponse(this.responseText);
-                    console.log("a");
+                    // console.log("a");
 
                     let newBranch = document.createElement("plurid-branch");
+                    // console.log(newBranch);
 
                     let newBranchContent = `
                                             <h1>Works</h1>
                                             <a href="http://localhost:8000/test/examples/insert.html">Text</a>
+                                            <br>
                                             <p>This is inserted:</p>
                                             ${this.responseText}
                                             `;

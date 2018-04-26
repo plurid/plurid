@@ -35,7 +35,7 @@ export function rotatePlurid(event, plurid, direction = null) {
     if (scale < 0.5) {
         var angleIncrement = 0.12;
     } else {
-        var angleIncrement = 0.07;
+        var angleIncrement = 0.12;
     }
 
     // console.log("----------------------------------")
@@ -115,7 +115,7 @@ export function translatePlurid(event, plurid, direction = null) {
     if (scale < 0.5) {
         var linearIncrement = 50;
     } else {
-        var linearIncrement = 10;
+        var linearIncrement = 30;
     }
 
     // console.log("----------------------------------")

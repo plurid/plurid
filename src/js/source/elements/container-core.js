@@ -9,15 +9,15 @@ export function transform(element) {
     let pluridStack = new Set();
     let plurid = document.querySelector("plurid-roots");
 
-    element.addEventListener("click", event => {
-        let pluridRoot = getPlurid(event).root;
-        let pluridSheet = getPlurid(event).sheet;
-        // console.log("PLURID ROOT ", pluridRoot);
-        // console.log("PLURID SHEET", pluridSheet);
+    // element.addEventListener("click", event => {
+    //     let pluridRoot = getPlurid(event).root;
+    //     let pluridSheet = getPlurid(event).sheet;
+    //     // console.log("PLURID ROOT ", pluridRoot);
+    //     // console.log("PLURID SHEET", pluridSheet);
 
-        pluridStack.add(pluridRoot);
-        plurid = style(pluridRoot, pluridStack);
-    });
+    //     pluridStack.add(pluridRoot);
+    //     plurid = style(pluridRoot, pluridStack);
+    // });
 
     element.addEventListener('wheel', event => {
         if(event.shiftKey) {
