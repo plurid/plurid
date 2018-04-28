@@ -3,6 +3,9 @@
 // require('./source/legacy/container-options');
 
 
+require('./source/state/plurid-scene.js');
+
+
 // require Elements
 require('./source/elements/branch.js');
 require('./source/elements/container.js');
@@ -10,6 +13,7 @@ require('./source/elements/content.js');
 require('./source/elements/root.js');
 require('./source/elements/sheet.js');
 require('./source/elements/solid.js');
+require('./source/elements/page.js');
 
 
 // require Logic

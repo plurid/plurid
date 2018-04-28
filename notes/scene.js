@@ -1,8 +1,14 @@
 // the pluridScene object that groups all the information about the scene
 
+// the object should be created by parsing a .html file
+// checking for <plurid-page> tags
+
+
+
+
 let pluridScene = {
     metadata: {
-
+        containers: 2,
     },
     content: {
         pluridContainerC1: {

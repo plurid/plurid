@@ -4,7 +4,7 @@ import { rotatePlurid,
         translatePlurid,
         scalePlurid } from "../logic/transforms.js";
 
-
+// transform receives the selected plurid
 export function transform(element) {
     let pluridStack = new Set();
     let plurid = document.querySelector("plurid-roots");
