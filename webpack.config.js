@@ -1,53 +1,36 @@
-var webpack = require('webpack');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+const extractSass = new ExtractTextPlugin({
+    filename: "../css/plurid.min.css",
+    disable: process.env.NODE_ENV === "development"
+});
+
+
 const path = require('path');
 
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const Uglify = require("uglifyjs-webpack-plugin");
-
-
 module.exports = {
+    mode: 'development',
+    // mode: 'production',
     entry: './src/js/app.js',
     output: {
         filename: 'plurid.min.js',
         path: path.resolve(__dirname, 'dist/js')
     },
     module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['env']
-                }
-            },
-            {
-                test: /\.(jpg|png|svg)$/,
-                loader: 'file-loader',
-                options: {
-                  name: '../images/[name].[ext]',
-                },
-            },
-            {
-                test:/\.scss$/,
-                loaders: ExtractTextPlugin.extract('css-loader!sass-loader')
-            }
-        ]
+        rules: [{
+            test: /\.scss$/,
+            use: extractSass.extract({
+                use: [{
+                    loader: "css-loader"
+                }, {
+                    loader: "sass-loader"
+                }],
+                // use style-loader in development
+                fallback: "style-loader"
+            })
+        }]
     },
     plugins: [
-        new ExtractTextPlugin('../css/plurid.min.css', {
-            allChunks: true
-        }),
-        new OptimizeCssAssetsPlugin({
-            assetNameRegExp: /\.min\.css$/g,
-            cssProcessor: require('cssnano'),
-            cssProcessorOptions: { discardComments: { removeAll: true } },
-            canPrint: true
-        })
-        // ,
-        // new Uglify({
-        //     include: /\.min\.js$/,
-        //     minimize: true
-        // })
-    ],
+        extractSass
+    ]
 };
