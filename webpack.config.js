@@ -15,6 +15,13 @@ module.exports = {
     module: {
         loaders: [
             {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['env']
+                }
+            },
+            {
                 test: /\.(jpg|png|svg)$/,
                 loader: 'file-loader',
                 options: {
