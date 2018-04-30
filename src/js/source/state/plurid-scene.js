@@ -3,6 +3,7 @@
 (function (global) {
     global.pluridScene = {
         metadata: {
+            rootPages: [],
             pages: 0
         },
         content: {}

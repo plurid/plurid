@@ -7,23 +7,35 @@ import { renderOptions,
 
 
 
-var pluridContainer = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            transform(this);
+// var pluridContainer = Object.create(HTMLElement.prototype, {
+//     createdCallback: {
+//         value: function() {
+//             transform(this);
 
-            initOptions()
-            renderOptions(this);
-            displayOptions(this);
+//             initOptions()
+//             renderOptions(this);
+//             displayOptions(this);
 
-            initShortcuts(this);
+//             initShortcuts(this);
 
-            renderBranch();
+//             renderBranch();
 
-        }
+//         }
+//     }
+// });
+
+// document.registerElement( "plurid-container", {
+//     prototype: pluridContainer
+// });
+
+
+class PluridContainer extends HTMLElement {
+    constructor() {
+        super()
+
     }
-});
+}
 
-document.registerElement( "plurid-container", {
-    prototype: pluridContainer
-});
+
+
+customElements.define('plurid-container', PluridContainer);
