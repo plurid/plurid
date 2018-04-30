@@ -21,6 +21,8 @@ require('./source/logic/directions.js');
 
 require('./source/options/options.js');
 
+require('./source/logic/dev.js');
+
 
 // require Sass main file
 require('../sass/app.scss');
