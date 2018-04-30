@@ -17,18 +17,28 @@ module.exports = {
         path: path.resolve(__dirname, 'dist/js')
     },
     module: {
-        rules: [{
-            test: /\.scss$/,
-            use: extractSass.extract({
-                use: [{
-                    loader: "css-loader"
-                }, {
-                    loader: "sass-loader"
-                }],
-                // use style-loader in development
-                fallback: "style-loader"
-            })
-        }]
+        rules: [
+            {
+                test: /\.scss$/,
+                use: extractSass.extract({
+                    use: [{
+                        loader: "css-loader"
+                    }, {
+                        loader: "sass-loader"
+                    }],
+                    // use style-loader in development
+                    fallback: "style-loader"
+                })
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                // loader: "babel-loader"
+                use: {
+                    loader: "babel-loader"
+                }
+            }
+        ]
     },
     plugins: [
         extractSass
