@@ -254,7 +254,7 @@ plurid-root {
   position: absolute;
   height: auto;
   width: 100%;
-  transform: translateX(300px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(20deg) rotateZ(0deg) scale(1);
+  transform: translateX(300px) translateY(100px) translateZ(0px) rotateX(0deg) rotateY(40deg) rotateZ(0deg) scale(1);
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d; }
 

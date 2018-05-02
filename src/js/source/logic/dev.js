@@ -34,6 +34,7 @@ function setLink() {
                     insertAfter(newBranch, anchorTag);
                     // renderBranch();
                     setLink();
+                    setContainer();
                 }
             };
 
@@ -53,54 +54,44 @@ function insertAfter(newNode, referenceNode) {
 
 setLink()
 
-
+setContainer()
 
 
 function checkForContainers() {
     return !!document.getElementsByTagName('plurid-container')[0];
 }
 
+function setContainer() {
+    if (!checkForContainers()) {
+        // console.log(checkForContainers());
+        let body = document.body;
+        let pluridPages = document.getElementsByTagName('plurid-page');
+        console.log('-----');
+        console.log(pluridPages);
 
-if (!checkForContainers()) {
-    // console.log(checkForContainers());
-    let body = document.body;
-    let pluridPages = document.getElementsByTagName('plurid-page');
-    // console.log(pluridPages);
+        let container = document.createElement("plurid-container");
+        let pluridRoots = document.createElement("plurid-roots");
+        let pluridRoot = document.createElement("plurid-root");
 
-    let container = document.createElement("plurid-container");
+        pluridRoots.appendChild(pluridRoot);
+        container.appendChild(pluridRoots);
 
-    for (let pluridPage of pluridPages) {
-        let html = pluridPage.innerHTML;
-        let plurid = document.createElement('plurid-sheet');
-        plurid.innerHTML = html;
-        container.appendChild(plurid);
+        for (let pluridPage of pluridPages) {
+            let html = pluridPage.innerHTML;
+            let plurid = document.createElement('plurid-sheet');
+            plurid.innerHTML = html;
+            pluridRoot.appendChild(plurid);
+        }
+
+        body.removeChild(body.children[0]);
+        // body.removeChild(body.children[0]);
+
+        let scripts = document.getElementsByTagName('script');
+        console.log(scripts);
+
+        body.insertBefore(container, scripts[0]);
+
+        setLink()
+        console.log(container);
     }
-
-    console.log(container);
-
-    // for (let i = 0; i < scripts.length; i++) {
-    //     body.removeChild(scripts[i]);
-    // }
-
-    // for (let script in scripts) {
-    //     body.removeChild(script);
-    // }
-
-    // let children = body.children;
-    // let container = document.createElement("plurid-container");
-
-    // console.log(children);
-    // console.log('aa', container);
-
-    // for (let child of children) {
-    //     // console.log(child);
-    //     // container.appendChild(child);
-    // }
-
-    // console.log('bb', container);
-
-
-    // console.log(container);
-    // console.log(body.children);
-    // console.log(children);
 }
