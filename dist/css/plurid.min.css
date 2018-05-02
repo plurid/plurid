@@ -198,15 +198,18 @@ html {
 body {
   background-color: #1a1a1a; }
 
+plurid-branch {
+  position: relative; }
+
 plurid-scion {
   width: 100%;
   height: 100%;
   right: -100px;
-  position: absolute; }
+  position: absolute;
+  transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(30deg) rotateZ(0deg) scale(1); }
   plurid-scion plurid-sheet {
     width: 1000px;
-    height: 1000px;
-    z-index: -500; }
+    height: 1000px; }
 
 plurid-bridge {
   position: absolute;
@@ -214,19 +217,11 @@ plurid-bridge {
   height: 20px;
   background-color: #333333; }
 
-#test-content {
+plurid-insertion {
   position: absolute;
-  transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(91deg) rotateZ(0deg) scale(1); }
-
-#test-content-secondary {
-  position: absolute;
-  height: 2000px;
-  background-color: red;
-  transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(90deg) rotateZ(0deg) scale(1); }
-
-#test-content-tertiary {
-  position: absolute;
-  transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(93deg) rotateZ(0deg) scale(1); }
+  width: 10px;
+  height: 20px;
+  background-color: #666666; }
 
 plurid-container {
   position: absolute;
