@@ -87,7 +87,7 @@ function setContainer() {
         // body.removeChild(body.children[0]);
 
         let scripts = document.getElementsByTagName('script');
-        console.log(scripts);
+        // console.log(scripts);
 
         body.insertBefore(container, scripts[0]);
 
