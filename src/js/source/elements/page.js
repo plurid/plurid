@@ -19,11 +19,8 @@ class PluridPage extends HTMLElement {
         if (nodeName == 'BODY' || nodeName == 'PLURID-CONTAINER') {
             pluridScene.metadata.rootPages.push(pageId);
         }
-
-
     }
 }
-
 
 
 customElements.define('plurid-page', PluridPage);

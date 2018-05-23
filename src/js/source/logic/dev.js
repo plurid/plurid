@@ -46,16 +46,9 @@ function setLink() {
     }
 }
 
-
 function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
-
-
-setLink()
-
-setContainer()
-
 
 function checkForContainers() {
     return !!document.getElementsByTagName('plurid-container')[0];
@@ -63,24 +56,24 @@ function checkForContainers() {
 
 function setContainer() {
     if (!checkForContainers()) {
-        // console.log(checkForContainers());
+        console.log(checkForContainers());
         let body = document.body;
         let pluridPages = document.getElementsByTagName('plurid-page');
-        console.log('-----');
-        console.log(pluridPages);
+        // console.log('-----');
+        // console.log(pluridPages);
 
         let container = document.createElement("plurid-container");
         let pluridRoots = document.createElement("plurid-roots");
-        let pluridRoot = document.createElement("plurid-root");
 
-        pluridRoots.appendChild(pluridRoot);
         container.appendChild(pluridRoots);
 
         for (let pluridPage of pluridPages) {
+            let pluridRoot = document.createElement("plurid-root");
             let html = pluridPage.innerHTML;
             let plurid = document.createElement('plurid-sheet');
             plurid.innerHTML = html;
             pluridRoot.appendChild(plurid);
+            pluridRoots.appendChild(pluridRoot);
         }
 
         body.removeChild(body.children[0]);
@@ -92,6 +85,21 @@ function setContainer() {
         body.insertBefore(container, scripts[0]);
 
         setLink()
-        console.log(container);
+        // console.log(container);
+    } else {
+        let containers = document.getElementsByTagName('plurid-container');
+
+        console.log('a', containers);
     }
+}
+
+
+setLink()
+setContainer()
+
+
+
+function generatePluridStructure(page) {
+    // receives a plurid-page
+    // generates the content of it
 }
