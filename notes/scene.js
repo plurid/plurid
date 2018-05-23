@@ -8,6 +8,7 @@
 
 let pluridScene = {
     metadata: {
+        rootPages: [],
         containers: 2,
     },
     content: {
