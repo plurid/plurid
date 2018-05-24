@@ -12,16 +12,46 @@
     <body>
 
         <plurid-page>
-            (Words more or <a href="/test/examples/pages/plurid-page-2.html">less</a>
+            <div>
+                1: (Words more or <a href="/test/examples/pages/plurid-page-2.html">less</a>
+            </div>
+
+            <div>
+                <p>Text
+                    <plurid-page>
+                        1.1: (text in page)
+                    </plurid-page>
+                    and more text
+                </p>
+            </div>
+
+            <div>
+                <p>Text
+                    <plurid-page>
+                        <p>1.2: Text
+                            <plurid-page>
+                                1.2.1: (text in page)
+                            </plurid-page>
+                            and more text
+                        </p>
+                    </plurid-page>
+                and more text</p>
+            </div>
         </plurid-page>
 
         <plurid-page>
-            (Even more words)
+            2: (Wordss)
         </plurid-page>
 
         <plurid-page>
-            (Wordss)
+            3: (Wordsss)
         </plurid-page>
+
+        <plurid-page>
+            4: (Wordssss)
+        </plurid-page>
+
+
 <!--
         <plurid-container id="plurid-container-1">
             <plurid-page>

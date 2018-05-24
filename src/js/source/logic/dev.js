@@ -56,36 +56,39 @@ function checkForContainers() {
 
 function setContainer() {
     if (!checkForContainers()) {
-        console.log(checkForContainers());
+        // console.log(checkForContainers());
         let body = document.body;
-        let pluridPages = document.getElementsByTagName('plurid-page');
-        // console.log('-----');
-        // console.log(pluridPages);
+        console.log(body);
 
-        let container = document.createElement("plurid-container");
-        let pluridRoots = document.createElement("plurid-roots");
+        // let pluridPages = document.getElementsByTagName('plurid-page');
+        // // console.log('-----');
+        // // console.log(pluridPages);
 
-        container.appendChild(pluridRoots);
+        // let container = document.createElement("plurid-container");
+        // let pluridRoots = document.createElement("plurid-roots");
 
-        for (let pluridPage of pluridPages) {
-            let pluridRoot = document.createElement("plurid-root");
-            let html = pluridPage.innerHTML;
-            let plurid = document.createElement('plurid-sheet');
-            plurid.innerHTML = html;
-            pluridRoot.appendChild(plurid);
-            pluridRoots.appendChild(pluridRoot);
-        }
+        // container.appendChild(pluridRoots);
 
-        body.removeChild(body.children[0]);
-        // body.removeChild(body.children[0]);
+        // for (let pluridPage of pluridPages) {
+        //     let pluridRoot = document.createElement("plurid-root");
+        //     let html = pluridPage.innerHTML;
+        //     let plurid = document.createElement('plurid-sheet');
+        //     plurid.innerHTML = html;
+        //     pluridRoot.appendChild(plurid);
+        //     pluridRoots.appendChild(pluridRoot);
+        // }
 
-        let scripts = document.getElementsByTagName('script');
-        // console.log(scripts);
+        // for (let i = pluridPages.length - 1; i >= 0; i--) {
+        //     pluridPages[i].parentNode.removeChild(pluridPages[i]);
+        // }
 
-        body.insertBefore(container, scripts[0]);
+        // let scripts = document.getElementsByTagName('script');
+        // // console.log(scripts);
 
-        setLink()
-        // console.log(container);
+        // body.insertBefore(container, scripts[0]);
+
+        // setLink()
+        // // console.log(container);
     } else {
         let containers = document.getElementsByTagName('plurid-container');
 
