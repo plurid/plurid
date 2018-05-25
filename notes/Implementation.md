@@ -38,7 +38,7 @@ To be able to link pages like this
         Words <plurid-link page="water"></plurid-link>
     </plurid-page>
 
-    <plurid-page link="water">
+    <plurid-page title="water">
         Water
     </plurid-page>
 
@@ -50,6 +50,6 @@ but also
     </plurid-page>
 
     // water.html
-    <plurid-page>
+    <plurid-page title="water">
         Water
     </plurid-page>
