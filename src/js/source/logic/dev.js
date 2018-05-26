@@ -57,38 +57,45 @@ function checkForContainers() {
 function setContainer() {
     if (!checkForContainers()) {
         // console.log(checkForContainers());
-        let body = document.body;
-        console.log(body);
+        const body = document.body;
+        // console.log(body);
 
-        // let pluridPages = document.getElementsByTagName('plurid-page');
-        // // console.log('-----');
-        // // console.log(pluridPages);
+        let pluridPages = document.getElementsByTagName('plurid-page');
+        // console.log('-----');
+        let pluridPagesRoots = []
 
-        // let container = document.createElement("plurid-container");
-        // let pluridRoots = document.createElement("plurid-roots");
+        for (let pluridPage of pluridPages) {
+            if (checkPluridParent(pluridPage)) {
+                pluridPagesRoots.push(pluridPage);
+            }
+        }
+        // console.log(pluridPagesRoots);
 
-        // container.appendChild(pluridRoots);
+        let container = document.createElement("plurid-container");
+        let pluridRoots = document.createElement("plurid-roots");
 
-        // for (let pluridPage of pluridPages) {
-        //     let pluridRoot = document.createElement("plurid-root");
-        //     let html = pluridPage.innerHTML;
-        //     let plurid = document.createElement('plurid-sheet');
-        //     plurid.innerHTML = html;
-        //     pluridRoot.appendChild(plurid);
-        //     pluridRoots.appendChild(pluridRoot);
-        // }
+        container.appendChild(pluridRoots);
 
-        // for (let i = pluridPages.length - 1; i >= 0; i--) {
-        //     pluridPages[i].parentNode.removeChild(pluridPages[i]);
-        // }
+        for (let pluridPage of pluridPagesRoots) {
+            let pluridRoot = document.createElement("plurid-root");
+            let html = pluridPage.innerHTML;
+            let plurid = document.createElement('plurid-sheet');
+            plurid.innerHTML = html;
+            pluridRoot.appendChild(plurid);
+            pluridRoots.appendChild(pluridRoot);
+        }
 
-        // let scripts = document.getElementsByTagName('script');
-        // // console.log(scripts);
+        for (let i = pluridPages.length - 1; i >= 0; i--) {
+            pluridPages[i].parentNode.removeChild(pluridPages[i]);
+        }
 
-        // body.insertBefore(container, scripts[0]);
+        let scripts = document.getElementsByTagName('script');
+        // console.log(scripts);
 
-        // setLink()
-        // // console.log(container);
+        body.insertBefore(container, scripts[0]);
+
+        setLink()
+        // console.log(container);
     } else {
         let containers = document.getElementsByTagName('plurid-container');
 
@@ -106,3 +113,19 @@ function generatePluridStructure(page) {
     // receives a plurid-page
     // generates the content of it
 }
+
+function checkPluridParent(pluridElement) {
+    // // checks if the parents of the given pluridElement are plurid-page
+    if (pluridElement.nodeName != 'HTML') {
+        if (pluridElement.parentElement.nodeName == 'PLURID-PAGE') {
+            // console.log('is NOT a plurid root');
+            return false;
+        } else {
+            return checkPluridParent(pluridElement.parentElement);
+        }
+    } else {
+        // console.log('is a plurid-root');
+        return true;
+    }
+}
+
