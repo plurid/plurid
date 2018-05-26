@@ -60,8 +60,8 @@ function setContainer() {
         const body = document.body;
         // console.log(body);
 
-        let pluridPages = document.getElementsByTagName('plurid-page');
         // console.log('-----');
+        let pluridPages = document.getElementsByTagName('plurid-page');
         let pluridPagesRoots = []
 
         for (let pluridPage of pluridPages) {
@@ -114,8 +114,14 @@ function generatePluridStructure(page) {
     // generates the content of it
 }
 
+
+/**
+ * Checks recursively if the parents of the given pluridElement are <plurid-page>
+ *
+ * @param {object} pluridElement    Given <plurid-page> element.
+ * @return {boolean}                True if pluridElement should be a <plurid-root>.
+ */
 function checkPluridParent(pluridElement) {
-    // // checks if the parents of the given pluridElement are plurid-page
     if (pluridElement.nodeName != 'HTML') {
         if (pluridElement.parentElement.nodeName == 'PLURID-PAGE') {
             // console.log('is NOT a plurid root');
@@ -128,4 +134,3 @@ function checkPluridParent(pluridElement) {
         return true;
     }
 }
-
