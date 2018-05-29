@@ -6,36 +6,23 @@ import { renderOptions,
          displayOptions } from "./options-core.js";
 
 
-
-// var pluridContainer = Object.create(HTMLElement.prototype, {
-//     createdCallback: {
-//         value: function() {
-//             transform(this);
-
-//             initOptions()
-//             renderOptions(this);
-//             displayOptions(this);
-
-//             initShortcuts(this);
-
-//             renderBranch();
-
-//         }
-//     }
-// });
-
-// document.registerElement( "plurid-container", {
-//     prototype: pluridContainer
-// });
-
-
 class PluridContainer extends HTMLElement {
     constructor() {
         super()
+    }
 
+    connectedCallback() {
+        transform(this);
+
+        initOptions()
+        renderOptions(this);
+        displayOptions(this);
+
+        initShortcuts(this);
+
+        renderBranch();
     }
 }
-
 
 
 customElements.define('plurid-container', PluridContainer);

@@ -64,7 +64,12 @@ function setContainer() {
         let pluridPages = document.getElementsByTagName('plurid-page');
         let pluridPagesRoots = []
 
+        let pluridLinks = document.getElementsByTagName('plurid-link');
+
         for (let pluridPage of pluridPages) {
+            // console.log(pluridPage.name);
+            // console.log(pluridPage.visible);
+
             if (checkPluridParent(pluridPage)) {
                 pluridPagesRoots.push(pluridPage);
             }
@@ -80,6 +85,10 @@ function setContainer() {
             let pluridRoot = document.createElement("plurid-root");
             let html = pluridPage.innerHTML;
             let plurid = document.createElement('plurid-sheet');
+
+            if (pluridPage.visible) {
+                plurid.visible = pluridPage.visible;
+            }
             plurid.innerHTML = html;
             pluridRoot.appendChild(plurid);
             pluridRoots.appendChild(pluridRoot);

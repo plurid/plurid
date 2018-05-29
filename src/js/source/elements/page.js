@@ -3,7 +3,7 @@
 
 class PluridPage extends HTMLElement {
     constructor() {
-        super()
+        super();
 
         // Count pages from the html document
         pluridScene.metadata.pages++;
@@ -19,6 +19,29 @@ class PluridPage extends HTMLElement {
         if (nodeName == 'BODY' || nodeName == 'PLURID-CONTAINER') {
             pluridScene.metadata.rootPages.push(pageId);
         }
+    }
+
+    get name() {
+        return this.getAttribute('name');
+    }
+    set name(newName) {
+        this.setAttribute('name', newName);
+    }
+
+    get visible() {
+        switch(this.getAttribute('visible')) {
+            case "":
+                return true;
+            case "true":
+                return true;
+            case "false":
+                return false;
+            default:
+                return false;
+        }
+    }
+    set visible(newVisible) {
+        this.setAttribute('visible', newVisible);
     }
 }
 
