@@ -2,8 +2,11 @@ export function getPlurid(event) {
     // let pluridToTransformId = getPluridToTransformId(event.path);
     // let pluridToTransformElement = document.querySelector(`#${pluridToTransformId}`);
 
-    let selectedPluridRoot = getSelectedPlurids(event.path).root;
-    let selectedPluridSheet = getSelectedPlurids(event.path).sheet;
+    // let selectedPluridRoot = getSelectedPlurids(event.path).root;
+    // let selectedPluridSheet = getSelectedPlurids(event.path).sheet;
+
+    let selectedPluridRoot = document.getElementById("plurid-roots");
+    let selectedPluridSheet = document.getElementById("plurid-sheet-1");
 
     return {
         root: selectedPluridRoot,
@@ -61,11 +64,13 @@ function searchForSelectedIDs(path) {
 }
 
 
-export var activePlurid = {}
+export var activePlurid = {
+    selected: 'plurid-sheet-1'
+}
 
-Object.defineProperty(activePlurid, 'selected', {
-    value: document.querySelector("plurid-roots"),
-    writable: true
-});
+// Object.defineProperty(activePlurid, 'selected', {
+//     value: document.querySelector("plurid-roots"),
+//     writable: true
+// });
 
 // console.log("1", activePlurid.selected);
