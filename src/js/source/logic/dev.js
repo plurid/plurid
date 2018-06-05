@@ -36,14 +36,20 @@ function setLink() {
                                             </plurid-scion>
                                         `;
                     // newBranch.innerHTML = `${doc.body.innerHTML}`;
-                    let right = anchorTag.getBoundingClientRect().right;
-                    let top = anchorTag.getBoundingClientRect().top;
+                    let right = anchorTag.offsetLeft + anchorTag.offsetWidth;
+                    let top = anchorTag.offsetTop;
                     // make the transform based after multiplying with a transform factor?
-                    // console.log(anchorTag.getBoundingClientRect());
+                    // console.log(anchorTag.getBoundingClientRect().right);
+                    // console.log(anchorTag.offsetLeft);
+                    // console.log(anchorTag.offsetTop);
+                    console.log('right', right);
+                    console.log('top', top);
+                    console.log('offset parent', anchorTag.offsetParent);
 
                     // console.log(transcore.getTransformRotate(pluridRoot).rotateY);
                     let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
                     let angleDeg = angleRad * 180 / Math.PI + 90;
+                    // Math.floor(Math.random() * 180);
                     newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
 
 
@@ -127,7 +133,7 @@ function setContainer() {
     } else {
         let containers = document.getElementsByTagName('plurid-container');
 
-        console.log('a', containers);
+        // console.log('a', containers);
     }
 }
 
