@@ -2,6 +2,9 @@ import * as plurid from "../logic/transforms.js";
 import * as transcore from "../logic/transforms-core.js";
 import { getPlurid } from "../logic/get-plurid.js";
 
+
+setTimeout(() => {
+
 var rotateLeft = document.getElementsByClassName('plurid-container-rotate-left');
 var rotateUp = document.getElementsByClassName('plurid-container-rotate-up');
 var rotateRight = document.getElementsByClassName('plurid-container-rotate-right');
@@ -31,29 +34,29 @@ var timer;
 // fix bug when clicking and moving mouse out of the hover area
 
 
-// rotateLeft[0].addEventListener("click", event => {
-//     let direction = "left";
-//     plurid.rotatePlurid(event, pluridToTransform, direction);
-//     // console.log(event);
-// })
+rotateLeft[0].addEventListener("click", event => {
+    let direction = "left";
+    plurid.rotatePlurid(event, pluridToTransform, direction);
+    // console.log(event);
+})
 
-// rotateRight[0].addEventListener("click", event => {
-//     let direction = "right";
-//     plurid.rotatePlurid(event, pluridToTransform, direction);
-//     // console.log(event);
-// })
+rotateRight[0].addEventListener("click", event => {
+    let direction = "right";
+    plurid.rotatePlurid(event, pluridToTransform, direction);
+    // console.log(event);
+})
 
-// rotateUp[0].addEventListener("click", event => {
-//     let direction = "up";
-//     plurid.rotatePlurid(event, pluridToTransform, direction);
-//     // console.log(event);
-// })
+rotateUp[0].addEventListener("click", event => {
+    let direction = "up";
+    plurid.rotatePlurid(event, pluridToTransform, direction);
+    // console.log(event);
+})
 
-// rotateDown[0].addEventListener("click", event => {
-//     let direction = "down";
-//     plurid.rotatePlurid(event, pluridToTransform, direction);
-//     // console.log(event);
-// })
+rotateDown[0].addEventListener("click", event => {
+    let direction = "down";
+    plurid.rotatePlurid(event, pluridToTransform, direction);
+    // console.log(event);
+})
 
 
 
@@ -306,3 +309,5 @@ for (var i=0; i < scaleDown.length; i++) {
 //     console.log("a");
 //     shortcutsMenu[0].classList.toggle('plurid-container-options-shortcuts-clicked');
 // });
+
+}, 500 );
