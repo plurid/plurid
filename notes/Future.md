@@ -5,6 +5,8 @@
 
 + a 3D cube to for quick selection of front-back-left-right planes
 
++ quick fit for view (2 plurids side by side, all plurids side by side etc.)
+
 + `<plurid-sheet>`, `<plurid-sheet-double>`, `<plurid-solid>` with modifiable, non-rectangular general form;
 
 + to be able to `shift + click` multiple `plurid`s to select them and apply the same transform further on;
