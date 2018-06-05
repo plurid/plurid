@@ -10,7 +10,8 @@
 + Feat :: feature polishing;
 + Refact :: refactoring;
 + Fix :: bugs and their fixes;
-+ Note :: clarification, documentation;
++ Note :: clarification;
++ Docs :: documentation;
 + Setup :: system enclosure;
 + Test :: testing;
 
