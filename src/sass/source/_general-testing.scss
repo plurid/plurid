@@ -26,3 +26,12 @@ a {
     color: white;
     // padding: 10px;
 }
+
+.grid {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.grid p {
+    margin: 30px;
+}
