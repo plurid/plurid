@@ -1,7 +1,11 @@
+import * as transcore from "./transforms-core.js";
+
+
 function setLink() {
     let pageBody = document.getElementsByTagName('body');
 
     let anchorTags = document.getElementsByTagName('a');
+    let pluridRoot = document.getElementById('plurid-root-1');
 
     for (var i = 0; i < anchorTags.length; i++) {
         let anchorTag = anchorTags[i];
@@ -14,8 +18,10 @@ function setLink() {
                     let parser = new DOMParser();
                     let doc = parser.parseFromString(this.responseText, "text/html");
                     // console.log(doc.body);
+                    // console.log(pluridRoot);
 
                     let newBranch = document.createElement("plurid-branch");
+                    // newBranch.id="test";
 
                     newBranch.innerHTML = `
                                             <plurid-insertion></plurid-insertion>
@@ -30,8 +36,21 @@ function setLink() {
                                             </plurid-scion>
                                         `;
                     // newBranch.innerHTML = `${doc.body.innerHTML}`;
+                    let right = anchorTag.getBoundingClientRect().right;
+                    let top = anchorTag.getBoundingClientRect().top;
+                    // make the transform based after multiplying with a transform factor?
+                    // console.log(anchorTag.getBoundingClientRect());
 
-                    insertAfter(newBranch, anchorTag);
+                    // console.log(transcore.getTransformRotate(pluridRoot).rotateY);
+                    let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
+                    let angleDeg = angleRad * 180 / Math.PI + 90;
+                    newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
+
+
+                    let lastChild = pluridRoot.lastChild;
+                    // console.log(lastChild);
+
+                    insertAfter(newBranch, lastChild);
                     // renderBranch();
                     setLink();
                     setContainer();

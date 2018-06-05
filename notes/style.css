@@ -13,11 +13,13 @@ h1, h2, h3, p {
 .hljs-number,
 .hljs-selector-id,
 .hljs-selector-class,
+.hljs-comment,
 pre code,
 .hljs-strong, .hljs-string, .hljs-deletion,
 code {
     background-color: #385fa1;
     color: white;
+    font-style: normal;
 }
 
 pre {

@@ -16,6 +16,13 @@ a {
 :unresolved {
   color: white; }
 
+.grid {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr 1fr; }
+
+.grid p {
+  margin: 30px; }
+
 .plurid-container-options {
   color: white;
   position: absolute;
@@ -200,27 +207,18 @@ html {
 body {
   background-color: #1a1a1a; }
 
-#plurid-root-1 {
-  transform: translateX(200px) translateY(100px) translateZ(0px) rotateX(0deg) rotateY(10deg) rotateZ(0deg) scale(1); }
-
-#plurid-root-2 {
-  transform: translateX(200px) translateY(100px) translateZ(0px) rotateX(0deg) rotateY(70deg) rotateZ(0deg) scale(1); }
-
-#plurid-root-3 {
-  transform: translateX(200px) translateY(100px) translateZ(0px) rotateX(0deg) rotateY(150deg) rotateZ(0deg) scale(1); }
-
 plurid-branch {
-  position: relative; }
+  position: absolute;
+  transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(90deg) rotateZ(0deg) scale(1); }
 
 plurid-scion {
   width: 100%;
   height: 100%;
   right: -100px;
-  position: absolute;
-  transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(30deg) rotateZ(0deg) scale(1); }
+  position: absolute; }
   plurid-scion plurid-sheet {
-    width: 1000px;
-    height: 1000px; }
+    width: 100vw;
+    height: auto; }
 
 plurid-bridge {
   position: absolute;
@@ -265,7 +263,7 @@ plurid-root {
   position: absolute;
   height: auto;
   width: 100%;
-  transform: translateX(300px) translateY(100px) translateZ(0px) rotateX(0deg) rotateY(40deg) rotateZ(0deg) scale(1);
+  transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d; }
 

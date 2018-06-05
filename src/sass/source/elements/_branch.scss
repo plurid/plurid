@@ -1,9 +1,8 @@
 plurid-branch {
-    // position: absolute;
-    position: relative;
+    position: absolute;
     // width: 50px;
     // height: 50px;
-    // transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+    transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(90deg) rotateZ(0deg) scale(1);
     // backface-visibility: hidden;
 }
 
@@ -13,11 +12,11 @@ plurid-scion {
     // background-color: red;
     right: -100px;
     position: absolute;
-    transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(30deg) rotateZ(0deg) scale(1);
+    // transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(30deg) rotateZ(0deg) scale(1);
 
     plurid-sheet {
-        width: 1000px;
-        height: 1000px;
+        width: 100vw;
+        height: auto;
         // z-index: -500;
 
     }
