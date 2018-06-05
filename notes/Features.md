@@ -7,7 +7,7 @@
 
 ## Behavior
 
-+ Double-clicking any `<plurid-sheet>`, `<plurid-sheet-double>` plane, or `<plurid-solid>` plane makes the plane normal to the camera and reduces the opacity of everything else (opacity level controlled through `<plurid-options>`). Rotation transformation brings everything back to 100% opacity.
++ Double-clicking any `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>` select button makes the plane normal to the camera and reduces the opacity of everything else (opacity level controlled through `<plurid-options>`). Rotation transformation brings everything back to 100% opacity.
 
 + When clicking a `<plurid-insertion>` link the `<plurid-content>` is transformed (rotation, translation, scale) to the normal view.
 

@@ -20,7 +20,7 @@ class PluridContainer extends HTMLElement {
 
         initShortcuts(this);
 
-        renderBranch();
+        // renderBranch();
     }
 }
 
