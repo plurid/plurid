@@ -5,7 +5,8 @@ function setLink() {
     let pageBody = document.getElementsByTagName('body');
 
     let anchorTags = document.getElementsByTagName('a');
-    let pluridRoot = document.getElementById('plurid-root-1');
+    let pluridLinkTags = document.getElementsByTagName('plurid-link');
+    // let pluridRoot = document.getElementById('plurid-root-1');
 
     for (var i = 0; i < anchorTags.length; i++) {
         let anchorTag = anchorTags[i];
@@ -46,9 +47,11 @@ function setLink() {
                     console.log('anchor top ---- Y', top);
                     // console.log('offset parent', anchorTag.offsetParent);
 
+                    let pluridRoot = getPluridRoot(anchorTag);
+
                     // console.log(transcore.getTransformRotate(pluridRoot).rotateY);
-                    let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
-                    let angleDeg = angleRad * 180 / Math.PI + 90;
+                    // let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
+                    let angleDeg = 90;
                     // Math.floor(Math.random() * 180);
                     newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
 
@@ -68,6 +71,65 @@ function setLink() {
             xhttp.setRequestHeader("Pragma", "no-cache");
             xhttp.send();
         });
+    }
+
+    for (let pluridLink of pluridLinkTags) {
+        pluridLink.addEventListener('click', event => {
+            var xhttp = new XMLHttpRequest();
+
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(this.responseText, "text/html");
+                    // console.log(doc.body);
+                    // console.log(pluridRoot);
+
+                    let newBranch = document.createElement("plurid-branch");
+                    // newBranch.id="test";
+
+                    newBranch.innerHTML = `
+                                            <plurid-insertion></plurid-insertion>
+                                            <plurid-bridge></plurid-bridge>
+
+                                            <plurid-scion>
+                                                <plurid-sheet>
+                                                    <plurid-content>
+                                                    ${doc.body.innerHTML}
+                                                    </plurid-content>
+                                                </plurid-sheet>
+                                            </plurid-scion>
+                                        `;
+
+                    let right = pluridLink.offsetLeft + pluridLink.offsetWidth;
+                    let top = pluridLink.offsetTop;
+                    console.log('pluridLink right -- X', right);
+                    console.log('pluridLink top ---- Y', top);
+                    // console.log('offset parent', anchorTag.offsetParent);
+
+                    let pluridRoot = getPluridRoot(pluridLink);
+                    // console.log(pluridRoot);
+
+                    let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
+                    // console.log(angleRad);
+                    let angleDeg = 90;
+                    // console.log(angleDeg);
+                    newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
+
+
+
+                    let lastChild = pluridRoot.lastChild;
+
+                    insertAfter(newBranch, lastChild);
+                    setLink();
+                    setContainer();
+                }
+            };
+
+            xhttp.open("GET", pluridLink.page, true);
+            xhttp.setRequestHeader("Cache-Control", "no-cache");
+            xhttp.setRequestHeader("Pragma", "no-cache");
+            xhttp.send();
+        })
     }
 }
 
@@ -167,4 +229,16 @@ function checkPluridParent(pluridElement) {
         // console.log('is a plurid-root');
         return true;
     }
+}
+
+
+function getPluridRoot(pluridLink) {
+    // console.log(pluridLink.parentElement.parentElement.parentElement.parentElement.nodeName);
+    if (pluridLink.parentElement.nodeName == 'PLURID-ROOT') {
+        // console.log('is NOT a plurid root');
+        return pluridLink.parentElement;
+    } else {
+        return getPluridRoot(pluridLink.parentElement);
+    }
+
 }

@@ -10,8 +10,9 @@ class PluridLink extends HTMLElement {
             let right = this.offsetLeft + this.offsetWidth;
             let top = this.offsetTop;
 
-            console.log('link right -- X', right);
-            console.log('link top ---- Y', top);
+            // console.log('link right -- X', right);
+            // console.log('link top ---- Y', top);
+            // console.log(this.page);
         })
     }
 
