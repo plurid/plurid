@@ -207,6 +207,12 @@ html {
 body {
   background-color: #1a1a1a; }
 
+#plurid-root-2 {
+  transform: translateX(1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(-60deg) rotateZ(0deg) scale(1); }
+
+#plurid-root-3 {
+  transform: translateX(-1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(60deg) rotateZ(0deg) scale(1); }
+
 plurid-branch {
   position: absolute;
   transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(90deg) rotateZ(0deg) scale(1); }
@@ -281,6 +287,13 @@ plurid-sheet {
 
 #plurid-sheet-3 {
   background-color: #6c4a37; }
+
+plurid-link {
+  color: #8a8a8a;
+  cursor: pointer; }
+
+plurid-link:hover {
+  color: white; }
 
 plurid-options {
   position: absolute;
