@@ -88,7 +88,6 @@ function setLink() {
                     // newBranch.id="test";
 
                     newBranch.innerHTML = `
-                                            <plurid-insertion></plurid-insertion>
                                             <plurid-bridge></plurid-bridge>
 
                                             <plurid-scion>
@@ -107,13 +106,29 @@ function setLink() {
                     // console.log('offset parent', anchorTag.offsetParent);
 
                     let pluridRoot = getPluridRoot(pluridLink);
-                    // console.log(pluridRoot);
+                    console.log('root', pluridRoot);
+                    let pluridBranch = getPluridBranch(pluridLink);
+                    let angleBranch;
+                    console.log('branch', pluridBranch);
 
                     let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
+
+                    if (pluridBranch) {
+                        angleBranch = transcore.getTransformRotate(pluridBranch).rotateY;
+                        angleBranch = angleBranch * 180 / Math.PI;
+                    }
+
+                    console.log(angleBranch)
+
                     // console.log(angleRad);
                     let angleDeg = 90;
                     // console.log(angleDeg);
-                    newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
+                    if (angleBranch) {
+                        angleBranch = angleBranch + 90;
+                        newBranch.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(${angleBranch}deg) rotateZ(0deg) scale(1)`;
+                    } else {
+                        newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
+                    }
 
 
 
@@ -240,5 +255,16 @@ function getPluridRoot(pluridLink) {
     } else {
         return getPluridRoot(pluridLink.parentElement);
     }
+}
 
+function getPluridBranch(pluridLink) {
+    // console.log(pluridLink.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.nodeName);
+    if (pluridLink.nodeName != 'HTML') {
+        if (pluridLink.parentElement.nodeName == 'PLURID-BRANCH') {
+            // console.log('is NOT a plurid root');
+            return pluridLink.parentElement;
+        } else {
+            return getPluridBranch(pluridLink.parentElement);
+        }
+    }
 }
