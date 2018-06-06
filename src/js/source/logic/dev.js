@@ -42,9 +42,9 @@ function setLink() {
                     // console.log(anchorTag.getBoundingClientRect().right);
                     // console.log(anchorTag.offsetLeft);
                     // console.log(anchorTag.offsetTop);
-                    console.log('right', right);
-                    console.log('top', top);
-                    console.log('offset parent', anchorTag.offsetParent);
+                    console.log('anchor right -- X', right);
+                    console.log('anchor top ---- Y', top);
+                    // console.log('offset parent', anchorTag.offsetParent);
 
                     // console.log(transcore.getTransformRotate(pluridRoot).rotateY);
                     let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
