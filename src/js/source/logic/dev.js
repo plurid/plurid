@@ -13,137 +13,14 @@ function setLink() {
 
         anchorTag.addEventListener('click', event => {
             event.preventDefault();
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    let parser = new DOMParser();
-                    let doc = parser.parseFromString(this.responseText, "text/html");
-                    // console.log(doc.body);
-                    // console.log(pluridRoot);
 
-                    let newBranch = document.createElement("plurid-branch");
-                    // newBranch.id="test";
-
-                    newBranch.innerHTML = `
-                                            <plurid-insertion></plurid-insertion>
-                                            <plurid-bridge></plurid-bridge>
-
-                                            <plurid-scion>
-                                                <plurid-sheet>
-                                                    <plurid-content>
-                                                    ${doc.body.innerHTML}
-                                                    </plurid-content>
-                                                </plurid-sheet>
-                                            </plurid-scion>
-                                        `;
-                    // newBranch.innerHTML = `${doc.body.innerHTML}`;
-                    let right = anchorTag.offsetLeft + anchorTag.offsetWidth;
-                    let top = anchorTag.offsetTop;
-                    // make the transform based after multiplying with a transform factor?
-                    // console.log(anchorTag.getBoundingClientRect().right);
-                    // console.log(anchorTag.offsetLeft);
-                    // console.log(anchorTag.offsetTop);
-                    console.log('anchor right -- X', right);
-                    console.log('anchor top ---- Y', top);
-                    // console.log('offset parent', anchorTag.offsetParent);
-
-                    let pluridRoot = getPluridRoot(anchorTag);
-
-                    // console.log(transcore.getTransformRotate(pluridRoot).rotateY);
-                    // let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
-                    let angleDeg = 90;
-                    // Math.floor(Math.random() * 180);
-                    newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
-
-
-                    let lastChild = pluridRoot.lastChild;
-                    // console.log(lastChild);
-
-                    insertAfter(newBranch, lastChild);
-                    // renderBranch();
-                    setLink();
-                    setContainer();
-                }
-            };
-
-            xhttp.open("GET", anchorTag.href, true);
-            xhttp.setRequestHeader("Cache-Control", "no-cache");
-            xhttp.setRequestHeader("Pragma", "no-cache");
-            xhttp.send();
+            setPluridLinks(anchorTag);
         });
     }
 
     for (let pluridLink of pluridLinkTags) {
         pluridLink.addEventListener('click', event => {
-            var xhttp = new XMLHttpRequest();
-
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    let parser = new DOMParser();
-                    let doc = parser.parseFromString(this.responseText, "text/html");
-                    // console.log(doc.body);
-                    // console.log(pluridRoot);
-
-                    let newBranch = document.createElement("plurid-branch");
-                    // newBranch.id="test";
-
-                    newBranch.innerHTML = `
-                                            <plurid-bridge></plurid-bridge>
-
-                                            <plurid-scion>
-                                                <plurid-sheet>
-                                                    <plurid-content>
-                                                    ${doc.body.innerHTML}
-                                                    </plurid-content>
-                                                </plurid-sheet>
-                                            </plurid-scion>
-                                        `;
-
-                    let right = pluridLink.offsetLeft + pluridLink.offsetWidth;
-                    let top = pluridLink.offsetTop;
-                    console.log('pluridLink right -- X', right);
-                    console.log('pluridLink top ---- Y', top);
-                    // console.log('offset parent', anchorTag.offsetParent);
-
-                    let pluridRoot = getPluridRoot(pluridLink);
-                    console.log('root', pluridRoot);
-                    let pluridBranch = getPluridBranch(pluridLink);
-                    let angleBranch;
-                    console.log('branch', pluridBranch);
-
-                    let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
-
-                    if (pluridBranch) {
-                        angleBranch = transcore.getTransformRotate(pluridBranch).rotateY;
-                        angleBranch = angleBranch * 180 / Math.PI;
-                    }
-
-                    console.log(angleBranch)
-
-                    // console.log(angleRad);
-                    let angleDeg = 90;
-                    // console.log(angleDeg);
-                    if (angleBranch) {
-                        angleBranch = angleBranch + 90;
-                        newBranch.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(${angleBranch}deg) rotateZ(0deg) scale(1)`;
-                    } else {
-                        newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
-                    }
-
-
-
-                    let lastChild = pluridRoot.lastChild;
-
-                    insertAfter(newBranch, lastChild);
-                    setLink();
-                    setContainer();
-                }
-            };
-
-            xhttp.open("GET", pluridLink.page, true);
-            xhttp.setRequestHeader("Cache-Control", "no-cache");
-            xhttp.setRequestHeader("Pragma", "no-cache");
-            xhttp.send();
+            setPluridLinks(pluridLink);
         })
     }
 }
@@ -215,22 +92,11 @@ function setContainer() {
 }
 
 
-setLink()
-setContainer()
-
-
-
-function generatePluridStructure(page) {
-    // receives a plurid-page
-    // generates the content of it
-}
-
-
 /**
  * Checks recursively if the parents of the given pluridElement are <plurid-page>
  *
- * @param {object} pluridElement    Given <plurid-page> element.
- * @return {boolean}                True if pluridElement should be a <plurid-root>.
+ * @param {object} pluridElement            Given <plurid-page> element.
+ * @return {boolean}                        True if pluridElement should be a <plurid-root>.
  */
 function checkPluridParent(pluridElement) {
     if (pluridElement.nodeName != 'HTML') {
@@ -247,24 +113,98 @@ function checkPluridParent(pluridElement) {
 }
 
 
-function getPluridRoot(pluridLink) {
-    // console.log(pluridLink.parentElement.parentElement.parentElement.parentElement.nodeName);
-    if (pluridLink.parentElement.nodeName == 'PLURID-ROOT') {
-        // console.log('is NOT a plurid root');
-        return pluridLink.parentElement;
-    } else {
-        return getPluridRoot(pluridLink.parentElement);
-    }
-}
-
-function getPluridBranch(pluridLink) {
-    // console.log(pluridLink.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.nodeName);
-    if (pluridLink.nodeName != 'HTML') {
-        if (pluridLink.parentElement.nodeName == 'PLURID-BRANCH') {
-            // console.log('is NOT a plurid root');
-            return pluridLink.parentElement;
+/**
+ * Checks recursively if the parents of the given pluridElement are the specified parent
+ *
+ * @param {string} specifiedParent          HTMLElement.nodeName for a parent of the pluridElement.
+ * @param {HTMLElement} pluridElement       plurid HTMLElement.
+ * @return {HTMLElement}                    The specified parent element.
+ */
+function getSpecifiedParent(pluridElement, specifiedParent) {
+    if (pluridElement.nodeName != 'HTML') {
+        if (pluridElement.parentElement.nodeName == specifiedParent) {
+            return pluridElement.parentElement;
         } else {
-            return getPluridBranch(pluridLink.parentElement);
+            return getSpecifiedParent(pluridElement.parentElement, specifiedParent);
         }
     }
 }
+
+
+function setPluridLinks(pluridLink) {
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(this.responseText, "text/html");
+            // console.log(doc.body);
+            // console.log(pluridRoot);
+
+            let newBranch = document.createElement("plurid-branch");
+            // newBranch.id="test";
+
+            newBranch.innerHTML = `
+                                    <plurid-bridge></plurid-bridge>
+
+                                    <plurid-scion>
+                                        <plurid-sheet>
+                                            <plurid-content>
+                                            ${doc.body.innerHTML}
+                                            </plurid-content>
+                                        </plurid-sheet>
+                                    </plurid-scion>
+                                `;
+
+            let right = pluridLink.offsetLeft + pluridLink.offsetWidth;
+            let top = pluridLink.offsetTop;
+            // console.log('pluridLink right -- X', right);
+            // console.log('pluridLink top ---- Y', top);
+            // console.log('offset parent', anchorTag.offsetParent);
+
+            let pluridRoot = getSpecifiedParent(pluridLink, 'PLURID-ROOT');
+            let pluridBranch = getSpecifiedParent(pluridLink, 'PLURID-BRANCH');
+            // console.log('root', pluridRoot);
+            // console.log('branch', pluridBranch);
+            let angleBranch;
+            let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
+            // console.log(angleRad);
+            if (pluridBranch) {
+                angleBranch = transcore.getTransformRotate(pluridBranch).rotateY;
+                angleBranch = angleBranch * 180 / Math.PI;
+            }
+            // console.log(angleBranch);
+
+            let angleDeg = 90;
+            // console.log(angleDeg);
+            if (angleBranch) {
+                angleBranch = angleBranch + 90;
+                newBranch.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(${angleBranch}deg) rotateZ(0deg) scale(1)`;
+            } else {
+                newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
+            }
+
+            let lastChild = pluridRoot.lastChild;
+
+            insertAfter(newBranch, lastChild);
+            setLink();
+            setContainer();
+        }
+    };
+
+    let href = '';
+    if (pluridLink.page) {
+        href = pluridLink.page;
+    } else {
+        href = pluridLink.href;
+    }
+
+    xhttp.open("GET", href, true);
+    xhttp.setRequestHeader("Cache-Control", "no-cache");
+    xhttp.setRequestHeader("Pragma", "no-cache");
+    xhttp.send();
+}
+
+
+setLink()
+setContainer()
