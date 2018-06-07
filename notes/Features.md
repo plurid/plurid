@@ -79,7 +79,7 @@
 
 + more -> button :: open the current `<plurid-branch>` in new tab;
 
-+ more -> button :: flip the `<plurid-branch>` to the other side of the `<plurid-insertion>`;
++ more -> button :: flip the `<plurid-branch>` to the other side of the parent  `<plurid-sheet>`/`<plurid-branch>`;
 
 + more -> button :: flip the content to the other side (revert content in the case of `<plurid-sheet-double>`, unusable in case of `<plurid-solid>`);
 
@@ -87,7 +87,7 @@
 
 + more -> color-picker :: color of the `<plurid-sheet>` back;
 
-+ more -> slider :: angle to the parent `plurid` (default 90 degrees);
++ more -> slider :: angle to the parent `plurid` (default `90` degrees);
 
 + more -> inputs :: width and height of the current `<plurid-content>`;
 
