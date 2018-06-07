@@ -1,99 +1,30 @@
 import * as transcore from "./transforms-core.js";
 
 
-function setLink() {
-    let pageBody = document.getElementsByTagName('body');
-
-    let anchorTags = document.getElementsByTagName('a');
-    let pluridLinkTags = document.getElementsByTagName('plurid-link');
-    // let pluridRoot = document.getElementById('plurid-root-1');
-
-    for (var i = 0; i < anchorTags.length; i++) {
-        let anchorTag = anchorTags[i];
-
-        anchorTag.addEventListener('click', event => {
-            event.preventDefault();
-
-            setPluridLinks(anchorTag);
-        });
-    }
-
-    for (let pluridLink of pluridLinkTags) {
-        pluridLink.addEventListener('click', event => {
-            setPluridLinks(pluridLink);
-        })
-    }
-}
-
+/**
+ * Inserts newNode after the referenceNode.
+ *
+ * @param {HTMLElement} newNode
+ * @param {HTMLElement} referenceNode
+ */
 function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
+
+/**
+ * Checks document if it contains the HTML tag <plurid-container>.
+ *
+ * @return {boolean}
+ * */
 function checkForContainers() {
     return !!document.getElementsByTagName('plurid-container')[0];
 }
 
-function setContainer() {
-    if (!checkForContainers()) {
-        // console.log(checkForContainers());
-        const body = document.body;
-        // console.log(body);
-
-        // console.log('-----');
-        let pluridPages = document.getElementsByTagName('plurid-page');
-        let pluridPagesRoots = []
-
-        let pluridLinks = document.getElementsByTagName('plurid-link');
-
-        for (let pluridPage of pluridPages) {
-            // console.log(pluridPage.name);
-            // console.log(pluridPage.visible);
-
-            if (checkPluridParent(pluridPage)) {
-                pluridPagesRoots.push(pluridPage);
-            }
-        }
-        // console.log(pluridPagesRoots);
-
-        let container = document.createElement("plurid-container");
-        let pluridRoots = document.createElement("plurid-roots");
-
-        container.appendChild(pluridRoots);
-
-        for (let pluridPage of pluridPagesRoots) {
-            let pluridRoot = document.createElement("plurid-root");
-            let html = pluridPage.innerHTML;
-            let plurid = document.createElement('plurid-sheet');
-
-            if (pluridPage.visible) {
-                plurid.visible = pluridPage.visible;
-            }
-            plurid.innerHTML = html;
-            pluridRoot.appendChild(plurid);
-            pluridRoots.appendChild(pluridRoot);
-        }
-
-        for (let i = pluridPages.length - 1; i >= 0; i--) {
-            pluridPages[i].parentNode.removeChild(pluridPages[i]);
-        }
-
-        let scripts = document.getElementsByTagName('script');
-        // console.log(scripts);
-
-        body.insertBefore(container, scripts[0]);
-
-        setLink()
-        // console.log(container);
-    } else {
-        let containers = document.getElementsByTagName('plurid-container');
-
-        // console.log('a', containers);
-    }
-}
-
 
 /**
- * Checks recursively if the parents of the given pluridElement are <plurid-page>
+ * Checks recursively if the parents of the given pluridElement
+ * have the nodeName 'PLURID-PAGE'.
  *
  * @param {object} pluridElement            Given <plurid-page> element.
  * @return {boolean}                        True if pluridElement should be a <plurid-root>.
@@ -114,7 +45,8 @@ function checkPluridParent(pluridElement) {
 
 
 /**
- * Checks recursively if the parents of the given pluridElement are the specified parent
+ * Checks recursively if the parents of the given pluridElement
+ * are the specifiedParent.
  *
  * @param {string} specifiedParent          HTMLElement.nodeName for a parent of the pluridElement.
  * @param {HTMLElement} pluridElement       plurid HTMLElement.
@@ -131,6 +63,14 @@ function getSpecifiedParent(pluridElement, specifiedParent) {
 }
 
 
+/**
+ * Sends the XHR request given on the pluridLink page/href,
+ * creates the plurid structure from the response,
+ * renders the plurid element
+ *
+ *
+ * @param {HTMLElement} pluridLink       plurid HTMLElement.
+ */
 function setPluridLinks(pluridLink) {
     var xhttp = new XMLHttpRequest();
 
@@ -206,5 +146,95 @@ function setPluridLinks(pluridLink) {
 }
 
 
+/**
+ * For all the anchorTags <a> and pluridLinks <plurid-link>
+ * adds event listeners on click to generate the plurid structure.
+ */
+function setLink() {
+    let pageBody = document.getElementsByTagName('body');
+
+    let anchorTags = document.getElementsByTagName('a');
+    let pluridLinkTags = document.getElementsByTagName('plurid-link');
+    // let pluridRoot = document.getElementById('plurid-root-1');
+
+    for (var i = 0; i < anchorTags.length; i++) {
+        let anchorTag = anchorTags[i];
+
+        anchorTag.addEventListener('click', event => {
+            event.preventDefault();
+
+            setPluridLinks(anchorTag);
+        });
+    }
+
+    for (let pluridLink of pluridLinkTags) {
+        pluridLink.addEventListener('click', event => {
+            setPluridLinks(pluridLink);
+        })
+    }
+}
 setLink()
+
+
+/**
+ * Given an adequately plurid-formatted HTML document,
+ * generates the plurid structure.
+ */
+function setContainer() {
+    if (!checkForContainers()) {
+        // console.log(checkForContainers());
+        const body = document.body;
+        // console.log(body);
+
+        // console.log('-----');
+        let pluridPages = document.getElementsByTagName('plurid-page');
+        let pluridPagesRoots = []
+
+        let pluridLinks = document.getElementsByTagName('plurid-link');
+
+        for (let pluridPage of pluridPages) {
+            // console.log(pluridPage.name);
+            // console.log(pluridPage.visible);
+
+            if (checkPluridParent(pluridPage)) {
+                pluridPagesRoots.push(pluridPage);
+            }
+        }
+        // console.log(pluridPagesRoots);
+
+        let container = document.createElement("plurid-container");
+        let pluridRoots = document.createElement("plurid-roots");
+
+        container.appendChild(pluridRoots);
+
+        for (let pluridPage of pluridPagesRoots) {
+            let pluridRoot = document.createElement("plurid-root");
+            let html = pluridPage.innerHTML;
+            let plurid = document.createElement('plurid-sheet');
+
+            if (pluridPage.visible) {
+                plurid.visible = pluridPage.visible;
+            }
+            plurid.innerHTML = html;
+            pluridRoot.appendChild(plurid);
+            pluridRoots.appendChild(pluridRoot);
+        }
+
+        for (let i = pluridPages.length - 1; i >= 0; i--) {
+            pluridPages[i].parentNode.removeChild(pluridPages[i]);
+        }
+
+        let scripts = document.getElementsByTagName('script');
+        // console.log(scripts);
+
+        body.insertBefore(container, scripts[0]);
+
+        setLink()
+        // console.log(container);
+    } else {
+        let containers = document.getElementsByTagName('plurid-container');
+
+        // console.log('a', containers);
+    }
+}
 setContainer()
