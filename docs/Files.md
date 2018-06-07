@@ -2,18 +2,18 @@
 
 
     .
-    +-- src
-    |   +-- images
+    --- src
+    |   --- images
     |       +-- controls
-    |   +-- js
-    |       +-- source
+    |   --- js
+    |       --- source
     |           +--
     |           +--
-    |       +-- app.js
-    |   +-- sass
-    |       +-- source
+    |       --- app.js
+    |   --- sass
+    |       --- source
     |           +--
-    |       +-- app.scss
+    |       --- app.scss
 
 
 

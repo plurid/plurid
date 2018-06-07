@@ -2,6 +2,33 @@
 
 # Architecture
 
+
+    <body>
+        --- <plurid-container>
+        |   --- <plurid-roots>
+        |   |   --- <plurid-root>                           // 1st root
+        |   |   |   --- <plurid-sheet>                      // original content
+        |   |   |   |   +- <div>                            // <div> containing <plurid-link>s
+        |   |   |   |--                                     // to the 1st and 2nd branch
+        |   |   |   --- <plurid-branch>                     // 1st branch
+        |   |   |   |   --- <plurid-bridge>
+        |   |   |   |   --- <plurid-scion>
+        |   |   |   |   |   --- <plurid-sheet>
+        |   |   |   |   |   |   +-- <plurid-content>        // content received from the
+        |   |   |   |   |   |                               // page attribute of the <plurid-link>
+        |   |   |   |   |   |   +-- <plurid-controls>
+        |   |   |   |   |   |--
+        |   |   |   |   |--
+        |   |   |   |--
+        |   |   |   +-- <plurid-branch>                     // 2nd branch
+        |   |   |--
+        |   |   +-- <plurid-root>                           // 2nd root
+        |   |--
+        |   +-- <plurid-options>
+        |--
+        +-- <script>
+    </body>
+
 - `<plurid-container>` :: in general, contains everything on the web page and so it is a direct and possibly the only child of `<body>`, except `<script>`(s).
 
     It has the children elements `<plurid-roots>` and `<plurid-options>`.
@@ -32,7 +59,6 @@
     It appears at an angle of 90 degrees from the generating plane (default). It can be flipped to the other side or the angle can be changed.
 
     It is composed of:
-    + `<plurid-insertion>` :: the insertion point/space;
     + `<plurid-bridge>` :: the connection between the two `plurid`s, can be extended for a better spatiation;
     + `<plurid-scion>` :: content container. It contains `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>`.
 
