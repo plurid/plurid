@@ -112,7 +112,7 @@ function openCloseControls(element) {
         if (pluridControlsOpenCloseState == 1) {
             parentPlurid.style.paddingTop = "50px";
             pluridControlsContent.style.display = "none";
-            element.style.height = "15px";
+            element.style.height = "20px";
             pluridControlsOpenCloseCharacter.innerHTML = "&#9661;";
         }
 
