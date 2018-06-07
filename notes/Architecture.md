@@ -54,11 +54,15 @@
 
 - `<plurid-branch>` :: additional content container.
 
-    It can be inserted into the `<plurid-root>`'s `<plurid-content>` or into another `<plurid-branch>`'s `<plurid-content>`.
+    It is connected with a `<plurid-link>` or an `<a>` tag inside the `<plurid-root>`'s `<plurid-sheet>` or inside the `<plurid-root>`'s other `<plurid-branch>`.
 
-    It appears at an angle of 90 degrees from the generating plane (default). It can be flipped to the other side or the angle can be changed.
+    It is inserted into the `<plurid-root>` as last child, containing the contents of the webpage from the `page` or `href` attribute of the `<plurid-link>` or `<a>` tag respectively.
 
-    It is composed of:
+    It appears at an angle of 90 degrees from the generating plane (default). It can be flipped to the other side or the angle can be changed, extracted as a `<plurid-root>`, and more.
+
+    If the `page` or `href` attribute of the `<plurid-link>` or `<a>` tag respectively link to a webpage that has more than one `<plurid-page>` tags, then each `<plurid-page>` is imported into it's own `<plurid-scion>` and displayed side by side.
+
+    It contains:
     + `<plurid-bridge>` :: the connection between the two `plurid`s, can be extended for a better spatiation;
     + `<plurid-scion>` :: content container. It contains `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>`.
 
