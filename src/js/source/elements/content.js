@@ -1,11 +1,8 @@
-var pluridContent = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            // console.log("pluridContent works");
-        }
+class PluridContent extends HTMLElement {
+    constructor() {
+        super();
     }
-});
+}
 
-document.registerElement( "plurid-content", {
-    prototype: pluridContent
-});
+
+customElements.define('plurid-content', PluridContent);

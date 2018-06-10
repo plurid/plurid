@@ -1,28 +1,30 @@
-var pluridRoots = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            this.id=`plurid-roots`;
-        }
+class PluridRoots extends HTMLElement {
+    constructor() {
+        super();
     }
-});
 
-document.registerElement( "plurid-roots", {
-    prototype: pluridRoots
-});
+    connectedCallback() {
+        this.id=`plurid-roots`;
+    }
+}
+
+
+customElements.define('plurid-roots', PluridRoots);
 
 
 
 var rootId = 1;
 
-var pluridRoot = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            this.id=`plurid-root-${rootId}`;
-            rootId++;
-        }
+class PluridRoot extends HTMLElement {
+    constructor() {
+        super();
     }
-});
 
-document.registerElement( "plurid-root", {
-    prototype: pluridRoot
-});
+    connectedCallback() {
+        this.id=`plurid-root-${rootId}`;
+        rootId++;
+    }
+}
+
+
+customElements.define('plurid-root', PluridRoot);
