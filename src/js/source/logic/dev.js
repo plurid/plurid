@@ -72,7 +72,7 @@ function getSpecifiedParent(pluridElement, specifiedParent) {
  * @param {HTMLElement} pluridLink       plurid HTMLElement.
  */
 function setPluridLinks(pluridLink) {
-    var xhttp = new XMLHttpRequest();
+    let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -82,8 +82,6 @@ function setPluridLinks(pluridLink) {
             // console.log(pluridRoot);
 
             let newBranch = document.createElement("plurid-branch");
-            // newBranch.id="test";
-
             newBranch.innerHTML = `
                                     <plurid-bridge></plurid-bridge>
 
@@ -127,8 +125,12 @@ function setPluridLinks(pluridLink) {
             let lastChild = pluridRoot.lastChild;
 
             insertAfter(newBranch, lastChild);
+
+            // TODO
+            // handle setting links for the new branch
+            // at this moment, creates twice the ammount of new plurid-branches
             setLink();
-            setContainer();
+            // setContainer();
         }
     };
 
@@ -151,24 +153,18 @@ function setPluridLinks(pluridLink) {
  * adds event listeners on click to generate the plurid structure.
  */
 function setLink() {
-    let pageBody = document.getElementsByTagName('body');
-
     let anchorTags = document.getElementsByTagName('a');
     let pluridLinkTags = document.getElementsByTagName('plurid-link');
-    // let pluridRoot = document.getElementById('plurid-root-1');
 
-    for (var i = 0; i < anchorTags.length; i++) {
-        let anchorTag = anchorTags[i];
-
+    for (let anchorTag of anchorTags) {
         anchorTag.addEventListener('click', event => {
             event.preventDefault();
-
             setPluridLinks(anchorTag);
         });
     }
 
     for (let pluridLink of pluridLinkTags) {
-        pluridLink.addEventListener('click', event => {
+        pluridLink.addEventListener('click', () => {
             setPluridLinks(pluridLink);
         })
     }
@@ -185,17 +181,15 @@ function setContainer() {
         // console.log(checkForContainers());
         const body = document.body;
         // console.log(body);
-
         // console.log('-----');
         let pluridPages = document.getElementsByTagName('plurid-page');
-        let pluridPagesRoots = []
+        let pluridPagesRoots = [];
 
         let pluridLinks = document.getElementsByTagName('plurid-link');
 
         for (let pluridPage of pluridPages) {
             // console.log(pluridPage.name);
             // console.log(pluridPage.visible);
-
             if (checkPluridParent(pluridPage)) {
                 pluridPagesRoots.push(pluridPage);
             }
@@ -204,7 +198,6 @@ function setContainer() {
 
         let container = document.createElement("plurid-container");
         let pluridRoots = document.createElement("plurid-roots");
-
         container.appendChild(pluridRoots);
 
         for (let pluridPage of pluridPagesRoots) {
@@ -225,16 +218,12 @@ function setContainer() {
         }
 
         let scripts = document.getElementsByTagName('script');
-        // console.log(scripts);
-
         body.insertBefore(container, scripts[0]);
-
         setLink()
         // console.log(container);
     } else {
         let containers = document.getElementsByTagName('plurid-container');
 
-        // console.log('a', containers);
     }
 }
 setContainer()

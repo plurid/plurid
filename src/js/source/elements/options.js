@@ -1,18 +1,21 @@
 import { contentOptions } from "./options-core.js";
 
 
+export function initOptions(container) {
+    // TO DO
+    // define only if multiple plurid-containers
 
-export function initOptions() {
-    var pluridContainerOptions = Object.create(HTMLElement.prototype, {
-        createdCallback: {
-            value: function() {
-                this.id = "plurid-options";
-                this.innerHTML = contentOptions();
-            }
-        }
-    });
+    // if (container.id == 'plurid-container-1') {
+        customElements.define('plurid-options', PluridOptions);
+    // }
+}
 
-    document.registerElement( "plurid-options", {
-        prototype: pluridContainerOptions
-    });
+class PluridOptions extends HTMLElement {
+    constructor() {
+        super()
+    }
+
+    connectedCallback() {
+        this.innerHTML = contentOptions();
+    }
 }

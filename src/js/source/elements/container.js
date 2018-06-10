@@ -14,7 +14,7 @@ class PluridContainer extends HTMLElement {
     connectedCallback() {
         transform(this);
 
-        initOptions()
+        initOptions(this);
         renderOptions(this);
         displayOptions(this);
 
