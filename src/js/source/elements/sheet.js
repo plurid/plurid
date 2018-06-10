@@ -79,42 +79,31 @@ customElements.define('plurid-sheet', PluridSheet);
 
 
 
-var pluridSheetDouble = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            // console.log("pluridSheetDouble works");
-        }
+class PluridSheetDouble extends HTMLElement {
+    constructor() {
+        super();
     }
-});
-
-document.registerElement( "plurid-sheet-double", {
-    prototype: pluridSheetDouble
-});
+}
 
 
+customElements.define('plurid-sheet-double', PluridSheetDouble);
 
-var pluridSheetDoubleFront = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            // console.log("pluridSheetDoubleFront works");
-        }
+
+class PluridSheetDoubleFront extends HTMLElement {
+    constructor() {
+        super();
     }
-});
-
-document.registerElement( "plurid-sheet-double-front", {
-    prototype: pluridSheetDoubleFront
-});
+}
 
 
+customElements.define('plurid-sheet-double-front', PluridSheetDoubleFront);
 
-var pluridSheetDoubleBack = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            // console.log("pluridSheetDoubleBack works");
-        }
+
+class PluridSheetDoubleBack extends HTMLElement {
+    constructor() {
+        super();
     }
-});
+}
 
-document.registerElement( "plurid-sheet-double-back", {
-    prototype: pluridSheetDoubleBack
-});
+
+customElements.define('plurid-sheet-double-back', PluridSheetDoubleBack);

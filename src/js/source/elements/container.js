@@ -8,7 +8,7 @@ import { renderOptions,
 
 class PluridContainer extends HTMLElement {
     constructor() {
-        super()
+        super();
     }
 
     connectedCallback() {

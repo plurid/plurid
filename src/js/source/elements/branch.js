@@ -1,52 +1,28 @@
-var pluridBranch = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-        }
+class PluridBranch extends HTMLElement {
+    constructor() {
+        super();
     }
-});
-
-document.registerElement( "plurid-branch", {
-    prototype: pluridBranch
-});
+}
 
 
+customElements.define('plurid-branch', PluridBranch);
 
-var pluridInsertion = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            // console.log("pluridInsertion works");
-        }
+
+
+class PluridBridge extends HTMLElement {
+    constructor() {
+        super();
     }
-});
+}
 
-document.registerElement( "plurid-insertion", {
-    prototype: pluridInsertion
-});
+customElements.define('plurid-bridge', PluridBridge);
 
 
 
-var pluridBridge = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            // console.log("pluridBridge works");
-        }
+class PluridScion extends HTMLElement {
+    constructor() {
+        super();
     }
-});
+}
 
-document.registerElement( "plurid-bridge", {
-    prototype: pluridBridge
-});
-
-
-
-var pluridScion = Object.create(HTMLElement.prototype, {
-    createdCallback: {
-        value: function() {
-            // console.log("pluridScion works");
-        }
-    }
-});
-
-document.registerElement( "plurid-scion", {
-    prototype: pluridScion
-});
+customElements.define('plurid-scion', PluridScion);

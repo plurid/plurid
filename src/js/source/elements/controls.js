@@ -2,17 +2,18 @@ import { contentControls, setControls } from "./controls-core";
 
 
 
-export function initControls() {
-    let pluridSheetControls = Object.create(HTMLElement.prototype, {
-        createdCallback: {
-            value: function() {
-                this.innerHTML = contentControls();
-                setControls(this);
-            }
-        }
-    });
+class PluridControls extends HTMLElement {
+    constructor() {
+        super();
+    }
 
-    document.registerElement( "plurid-controls", {
-        prototype: pluridSheetControls
-    });
+    connectedCallback() {
+        this.innerHTML = contentControls();
+        setControls(this);
+    }
+}
+
+
+export function initControls() {
+    customElements.define('plurid-controls', PluridControls);
 }
