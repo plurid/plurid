@@ -1,9 +1,9 @@
-import { transform } from "./container-core.js";
-import { initOptions } from "./options.js";
-import { initShortcuts } from "../logic/shortcuts.js";
-import { renderBranch } from "./branch-core.js";
+import { transform } from "./container-core";
+import { initOptions } from "./options";
+import { initShortcuts } from "../logic/shortcuts";
+import { renderBranch } from "./branch-core";
 import { renderOptions,
-         displayOptions } from "./options-core.js";
+         displayOptions } from "./options-core";
 
 
 class PluridContainer extends HTMLElement {

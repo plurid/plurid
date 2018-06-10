@@ -1,4 +1,4 @@
-import { contentOptions } from "./options-core.js";
+import { contentOptions } from "./options-core";
 
 
 export function initOptions(container) {

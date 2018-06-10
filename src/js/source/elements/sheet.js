@@ -1,46 +1,14 @@
-import { initControls } from "./controls.js";
-import { renderControls } from "./controls-core.js";
-
+import { initControls } from "./controls";
+import { renderControls } from "./controls-core";
+import { setLink } from "./sheet-core";
 
 
 var sheetId = 1;
 
-// var pluridSheet = Object.create(HTMLElement.prototype, {
-//     createdCallback: {
-//         value: function() {
-//             this.id=`plurid-sheet-${sheetId}`;
-
-//             if (sheetId == 1) {
-//                 initControls();
-//             }
-
-//             renderControls(this, sheetId);
-
-//             sheetId++;
-//         }
-//     }
-// });
-
-// document.registerElement( "plurid-sheet", {
-//     prototype: pluridSheet
-// });
-
-
 class PluridSheet extends HTMLElement {
     constructor() {
         super();
-
-        // this.id=`plurid-sheet-${sheetId}`;
-
-        // if (sheetId == 1) {
-        //     initControls();
-        // }
-
-        // renderControls(this, sheetId);
-
-        // sheetId++;
     }
-
 
     connectedCallback() {
         this.id=`plurid-sheet-${sheetId}`;
@@ -48,10 +16,9 @@ class PluridSheet extends HTMLElement {
         if (sheetId == 1) {
             initControls();
         }
-
-        renderControls(this, sheetId);
-
         sheetId++;
+        renderControls(this, sheetId);
+        setLink(this);
 
         this.addEventListener('click', event => {
             // let cX = event.clientX;
