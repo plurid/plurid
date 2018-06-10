@@ -1,4 +1,4 @@
-import { contentControls, setControls } from "./controls-core.js";
+import { contentControls, setControls } from "./controls-core";
 
 
 

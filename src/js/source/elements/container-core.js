@@ -7,7 +7,8 @@ import { rotatePlurid,
 
 // transform receives the selected plurid
 export function transform(element) {
-    let pluridStack = new Set();
+    // let pluridStack = new Set();
+    // let plurid = document.getElementById(pluridScene.selectedPluridRoot);
     let plurid = document.querySelector("plurid-roots");
 
     // element.addEventListener("click", event => {

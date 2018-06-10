@@ -1,4 +1,4 @@
-// import {  } from "./page-core.js";
+import { setLink } from "./page-core";
 
 
 class PluridPage extends HTMLElement {
@@ -19,8 +19,11 @@ class PluridPage extends HTMLElement {
         if (nodeName == 'BODY' || nodeName == 'PLURID-CONTAINER') {
             pluridScene.metadata.rootPages.push(pageId);
         }
+    }
 
-        console.log(this);
+    connectedCallback() {
+        // console.log(this);
+        // setLink(this);
     }
 
     get name() {
