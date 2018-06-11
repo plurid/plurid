@@ -1,4 +1,5 @@
-import { transform } from "./container-core";
+import { transform,
+         setActiveContainer } from "./container-core";
 import { initOptions } from "./options";
 import { initShortcuts } from "../logic/shortcuts";
 import { renderBranch } from "./branch-core";
@@ -15,7 +16,6 @@ class PluridContainer extends HTMLElement {
 
     connectedCallback() {
         this.id=`plurid-container-${containerId}`;
-        containerId++;
 
         transform(this);
 
@@ -26,6 +26,7 @@ class PluridContainer extends HTMLElement {
         initShortcuts(this);
 
         // renderBranch();
+        containerId++;
     }
 }
 

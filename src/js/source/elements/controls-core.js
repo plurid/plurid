@@ -1,5 +1,5 @@
-import { activePlurid } from "../logic/get-plurid.js";
-// console.log(activePlurid);
+import { activePlurid } from "../logic/get-plurid";
+import { getSpecifiedParent } from "./sheet-core";
 
 
 export function renderControls(element, id) {
@@ -137,38 +137,36 @@ function closePlurid(element) {
         if (pluridParent.parentElement.nodeName == "PLURID-ROOT") {
             // pluridParent.parentElement.style.display = "none";
             pluridParent.parentElement.parentElement.removeChild(pluridParent.parentElement);
+            pluridScene.metadata.activePlurid = 'plurid-roots-1';
         }
 
         if (pluridParent.parentElement.nodeName == "PLURID-SCION") {
             // pluridParent.parentElement.parentElement.style.display = "none";
+            pluridScene.metadata.activePlurid = pluridParent.parentElement.parentElement.parentElement.id;
             pluridParent.parentElement.parentElement.parentElement.removeChild(pluridParent.parentElement.parentElement);
-
         }
-
-        activePlurid.selected = document.querySelector("plurid-roots");
     });
 }
 
 
 function setActivePlurid(element) {
-    let pluridSelect= element.getElementsByClassName("plurid-controls-select")[0];
-    // console.log(pluridSelect);
+    let pluridSelect = element.getElementsByClassName("plurid-controls-select")[0];
 
     pluridSelect.addEventListener("click", (event) => {
-        // console.log(pluridSelect.parentElement.parentElement.parentElement);
-        activePlurid.selected = pluridSelect.parentElement.parentElement.parentElement;
-        // console.log(activePlurid);
+        let pluridRoot = getSpecifiedParent(pluridSelect, 'PLURID-ROOT');
+        // console.log('BEFORE', pluridScene.metadata.activePlurid);
+        pluridScene.metadata.activePlurid = pluridRoot.id;
+        pluridScene.metadata.activeSheet = element.parentElement.id;
+        // console.log('AFTER', pluridScene.metadata.activePlurid);
     });
 
-    pluridSelect.addEventListener("dblclick", (event) => {
-        // console.log(pluridSelect.parentElement.parentElement.parentElement);
-        activePlurid.selected = pluridSelect.parentElement.parentElement.parentElement;
-        let activeRoot = document.getElementById(activePlurid.selected.id).parentElement;
-        let activeRoots = document.getElementById(activePlurid.selected.id).parentElement.parentElement;
-        // console.log(active);
-        activeRoot.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
-        activeRoots.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
-    });
+    // pluridSelect.addEventListener("dblclick", (event) => {
+    //     // console.log(pluridSelect.parentElement.parentElement.parentElement);
+    //     activePlurid.selected = pluridSelect.parentElement.parentElement.parentElement;
+    //     let activeRoot = document.getElementById(activePlurid.selected.id).parentElement;
+    //     let activeRoots = document.getElementById(activePlurid.selected.id).parentElement.parentElement;
+    //     // console.log(active);
+    //     activeRoot.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
+    //     activeRoots.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
+    // });
 }
-
-// console.log("HERE", activePlurid.selected);
