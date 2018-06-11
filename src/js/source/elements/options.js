@@ -10,12 +10,18 @@ export function initOptions(container) {
     // }
 }
 
+
+var optionsId = 1;
+
 class PluridOptions extends HTMLElement {
     constructor() {
         super()
     }
 
     connectedCallback() {
+        this.id=`plurid-options-${optionsId}`;
+        optionsId++;
+
         this.innerHTML = contentOptions();
     }
 }

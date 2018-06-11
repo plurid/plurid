@@ -5,7 +5,7 @@ export function getPlurid(event) {
     // let selectedPluridRoot = getSelectedPlurids(event.path).root;
     // let selectedPluridSheet = getSelectedPlurids(event.path).sheet;
 
-    let selectedPluridRoot = document.getElementById("plurid-roots");
+    let selectedPluridRoot = document.getElementById("plurid-roots-1");
     let selectedPluridSheet = document.getElementById("plurid-sheet-1");
 
     return {
@@ -65,7 +65,7 @@ function searchForSelectedIDs(path) {
 
 
 export var activePlurid = {
-    selected: 'plurid-sheet-1'
+    selected: 'plurid-root-2'
 }
 
 // Object.defineProperty(activePlurid, 'selected', {
