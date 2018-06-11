@@ -83,6 +83,7 @@ function setPluridLinks(pluridLink) {
                                         </plurid-sheet>
                                     </plurid-scion>
                                 `;
+            newBranch.link = pluridLink.id;
 
             let right = pluridLink.offsetLeft + pluridLink.offsetWidth;
             let top = pluridLink.offsetTop;
@@ -115,12 +116,6 @@ function setPluridLinks(pluridLink) {
             let lastChild = pluridRoot.lastChild;
 
             insertAfter(newBranch, lastChild);
-
-            // TODO
-            // handle setting links for the new branch
-            // at this moment, creates twice the ammount of new plurid-branches
-            // setLink();
-            // setContainer();
         }
     };
 
@@ -143,29 +138,76 @@ function setPluridLinks(pluridLink) {
  * adds event listeners on click to generate the plurid structure.
  */
 export function setLink(pluridPage) {
-    // console.log(pluridPage);
     let pluridPageId = pluridPage.id;
-    // console.log(pluridPageId)
     let pageAnchorTags = document.querySelectorAll(`#${pluridPageId} a`);
     let pagePluridLinks = document.querySelectorAll(`#${pluridPageId} plurid-link`);
-    // let anchorTags = document.getElementsByTagName('a');
-    // let pluridLinkTags = document.getElementsByTagName('plurid-link');
-    // console.log(pageAnchorTags);
-    // console.log(pagePluridLinks);
 
     for (let anchorTag of pageAnchorTags) {
-        // console.log(anchorTag);
         anchorTag.addEventListener('click', event => {
-            console.log('click tag');
             event.preventDefault();
-            setPluridLinks(anchorTag);
+
+            if (!checkBranchExistence(anchorTag.id)) {
+                setPluridLinks(anchorTag);
+            } else {
+                // TODO
+                // translate into view of the new plurid-branch
+                // console.log('anchorTag already set');
+            };
         });
     }
 
     for (let pluridLink of pagePluridLinks) {
         pluridLink.addEventListener('click', () => {
-            console.log('click link');
-            setPluridLinks(pluridLink);
+            if (!checkBranchExistence(pluridLink.id)) {
+                setPluridLinks(pluridLink);
+            } else {
+                // TODO
+                // translate into view of the new plurid-branch
+                // console.log('pluridLink already set');
+            };
         })
+    }
+}
+
+
+/**
+ * Checks recursively if the parents of the given pluridElement
+ * are the specifiedParent.
+ *
+ * @param {string} specifiedParent          HTMLElement.nodeName for a parent of the pluridElement.
+ * @param {HTMLElement} pluridElement       plurid HTMLElement.
+ * @return {HTMLElement}                    The specified parent element.
+ */
+function checkBranchExistence(linkId) {
+    let branches = document.getElementsByTagName('plurid-branch');
+    let count = 0;
+
+    for (let branch of branches) {
+        if (branch.link == linkId) {
+            count++;
+            if (count >= 1) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+
+
+var anchorTagId = 1
+
+/**
+ * Sets the id on all the <a> anchor tags within a certain <plurid-sheet>
+ *
+ * @param {string} sheetId          Id of a <plurid-sheet>
+ */
+export function setAnchorTagsId(sheetId) {
+    let pageAnchorTags = document.querySelectorAll(`#${sheetId} a`);
+
+    for (let anchorTag of pageAnchorTags) {
+        anchorTag.id = `plurid-anchor-${anchorTagId}`;
+        anchorTagId++;
     }
 }
