@@ -6,12 +6,17 @@ import { renderOptions,
          displayOptions } from "./options-core";
 
 
+var containerId = 1;
+
 class PluridContainer extends HTMLElement {
     constructor() {
         super();
     }
 
     connectedCallback() {
+        this.id=`plurid-container-${containerId}`;
+        containerId++;
+
         transform(this);
 
         initOptions(this);

@@ -1,10 +1,13 @@
+var rootsId = 1;
+
 class PluridRoots extends HTMLElement {
     constructor() {
         super();
     }
 
     connectedCallback() {
-        this.id=`plurid-roots`;
+        this.id=`plurid-roots-${rootsId}`;
+        rootsId++;
     }
 }
 
