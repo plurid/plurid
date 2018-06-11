@@ -42,7 +42,7 @@ function checkPluridParent(pluridElement) {
  * @param {HTMLElement} pluridElement       plurid HTMLElement.
  * @return {HTMLElement}                    The specified parent element.
  */
-function getSpecifiedParent(pluridElement, specifiedParent) {
+export function getSpecifiedParent(pluridElement, specifiedParent) {
     if (pluridElement.nodeName != 'HTML') {
         if (pluridElement.parentElement.nodeName == specifiedParent) {
             return pluridElement.parentElement;

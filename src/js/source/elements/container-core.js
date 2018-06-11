@@ -1,23 +1,22 @@
-import { getPlurid } from "../logic/get-plurid.js";
-import { stylePlurid as style } from "../logic/style-plurid.js";
+import { getPlurid } from "../logic/get-plurid";
+import { stylePlurid as style } from "../logic/style-plurid";
 import { rotatePlurid,
-        translatePlurid,
-        scalePlurid } from "../logic/transforms.js";
+         translatePlurid,
+         scalePlurid } from "../logic/transforms";
 
 
 // transform receives the selected plurid
 export function transform(element) {
     // let pluridStack = new Set();
-    // let plurid = document.getElementById(pluridScene.selectedPluridRoot);
-    let plurid = document.querySelector("plurid-roots");
-    // let plurid = document.getElementById("plurid-roots-1");
-    // console.log(plurid);
+    let plurid = element.children[0];
 
     element.addEventListener("click", event => {
+        if (event.path[0].id == element.id) {
+            pluridScene.metadata.activePlurid = 'plurid-roots-1';
+        }
+
         plurid = getPlurid(event).root;
-        let pluridSheet = getPlurid(event).sheet;
-        // console.log("PLURID ROOT ", pluridRoot);
-        // console.log("PLURID SHEET", pluridSheet);
+        // let pluridSheet = getPlurid(event).sheet;
 
         // pluridStack.add(pluridRoot);
         // plurid = style(pluridRoot, pluridStack);

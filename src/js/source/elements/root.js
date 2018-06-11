@@ -7,6 +7,11 @@ class PluridRoots extends HTMLElement {
 
     connectedCallback() {
         this.id=`plurid-roots-${rootsId}`;
+
+        if (this.id == 'plurid-roots-1') {
+            pluridScene.metadata.activePlurid = 'plurid-roots-1';
+        }
+
         rootsId++;
     }
 }

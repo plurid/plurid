@@ -1,5 +1,5 @@
 import { closePlurid } from "../elements/controls-core.js";
-import { activePlurid } from "./get-plurid.js";
+import { getPlurid } from "./get-plurid.js";
 
 
 export function initShortcuts() {
@@ -9,8 +9,9 @@ export function initShortcuts() {
 }
 
 function shortcuts(event) {
-    let activePluridID = activePlurid.selected.id;
-    let activePluridElement = document.getElementById(activePluridID);
+    // let activePluridID = getPlurid.sheet
+    // let activePluridElement = document.getElementById(activePluridID);
+    let activePluridElement = getPlurid().sheet;
 
     let ultimateKey = event.which;
 
