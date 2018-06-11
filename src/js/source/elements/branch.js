@@ -2,6 +2,13 @@ class PluridBranch extends HTMLElement {
     constructor() {
         super();
     }
+
+    get link() {
+        return this.getAttribute('link');
+    }
+    set link(newLink) {
+        this.setAttribute('link', newLink);
+    }
 }
 
 

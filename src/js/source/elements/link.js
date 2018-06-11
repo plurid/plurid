@@ -1,3 +1,5 @@
+var linkId = 1;
+
 class PluridLink extends HTMLElement {
     constructor() {
         super();
@@ -11,11 +13,13 @@ class PluridLink extends HTMLElement {
         this.addEventListener('click', event => {
             let right = this.offsetLeft + this.offsetWidth;
             let top = this.offsetTop;
-
             // console.log('link right -- X', right);
             // console.log('link top ---- Y', top);
             // console.log(this.page);
         })
+
+        this.id=`plurid-link-${linkId}`;
+        linkId++;
     }
 
     get page() {
