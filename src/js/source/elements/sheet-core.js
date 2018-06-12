@@ -54,6 +54,28 @@ export function getSpecifiedParent(pluridElement, specifiedParent) {
 
 
 /**
+ * Search recursively for children of children,
+ * check if id matches,
+ * push the sceneObject where it matches.
+ *
+ * @param {Array} childrenArray
+ * @param {Object} sceneObject
+ */
+function pushChildren(childrenArray, sceneObject) {
+    for (let child of childrenArray) {
+        if (child.branchId == sceneObject.linkParentId) {
+            child.children.push(sceneObject);
+        } else {
+            pushChildren(child.children, sceneObject);
+        }
+    }
+}
+
+
+
+var branchId = 1;
+
+/**
  * Sends the XHR request given on the pluridLink page/href,
  * creates the plurid structure from the response,
  * renders the plurid element
@@ -84,17 +106,22 @@ function setPluridLinks(pluridLink) {
                                     </plurid-scion>
                                 `;
             newBranch.link = pluridLink.id;
+            newBranch.id = `plurid-branch-${branchId}`;
+            branchId++;
 
             let right = pluridLink.offsetLeft + pluridLink.offsetWidth;
             let top = pluridLink.offsetTop;
-            console.log('pluridLink right -- X', right);
-            console.log('pluridLink top ---- Y', top);
+            // console.log('pluridLink right -- X', right);
+            // console.log('pluridLink top ---- Y', top);
             // console.log('offset parent', anchorTag.offsetParent);
 
             let pluridRoot = getSpecifiedParent(pluridLink, 'PLURID-ROOT');
+            let pluridSheet = getSpecifiedParent(pluridLink, 'PLURID-SHEET');
             let pluridBranch = getSpecifiedParent(pluridLink, 'PLURID-BRANCH');
-            console.log('root', pluridRoot);
-            console.log('branch', pluridBranch);
+            // console.log('link', pluridLink);
+            // console.log('root', pluridRoot);
+            // console.log('sheet', pluridSheet);
+            // console.log('branch', pluridBranch);
             let angleBranch;
             // let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
             // console.log(angleRad);
@@ -104,7 +131,7 @@ function setPluridLinks(pluridLink) {
             }
             // console.log(angleBranch);
 
-            let angleDeg = 10;
+            let angleDeg = 90;
             // console.log(angleDeg);
 
 
@@ -147,7 +174,7 @@ function setPluridLinks(pluridLink) {
                     break;
                 case 'quadrantD':
                     quadrantCoefX = 1
-                    quadrantCoefZ = 1
+                    quadrantCoefZ = -1
                     break;
                 // default:
                 //     quadrantCoefX = 1
@@ -155,11 +182,11 @@ function setPluridLinks(pluridLink) {
                 //     break;
             }
 
-            console.log(quadrant);
-            console.log('quadrantCoefX', quadrantCoefX);
-            console.log('quadrantCoefZ', quadrantCoefZ);
+            // console.log(quadrant);
+            // console.log('quadrantCoefX', quadrantCoefX);
+            // console.log('quadrantCoefZ', quadrantCoefZ);
 
-            let rotXbranch = 10;
+            let rotXbranch = angleDeg;
             let prevTransX = 261;
             let clickTransX = 1067;
             let prevTransY = 257;
@@ -172,9 +199,9 @@ function setPluridLinks(pluridLink) {
             // let transX = 1086.19;
             // let transY = 457;
             // let transZ = quadrantCoefZ * 825.19;
-            console.log('transX', transX);
-            console.log('transY', transY);
-            console.log('transZ', transZ);
+            // console.log('transX', transX);
+            // console.log('transY', transY);
+            // console.log('transZ', transZ);
 
             if (angleBranch) {
                 angleBranch = angleBranch + 90;
@@ -186,6 +213,29 @@ function setPluridLinks(pluridLink) {
             let lastChild = pluridRoot.lastChild;
 
             insertAfter(newBranch, lastChild);
+
+
+
+            let sceneObject = {
+                linkParentId: pluridBranch ? pluridBranch.id : pluridSheet.id,
+                link: newBranch.link,
+                branchId: newBranch.id,
+                coordinates: {
+                    linkX: right,
+                    linkY: top
+                },
+                children: []
+            }
+
+            for (let rootScene of pluridScene.content) {
+                if (rootScene.id == pluridRoot.id) {
+                    if (sceneObject.linkParentId.includes('branch')) {
+                        pushChildren(rootScene.children, sceneObject);
+                    } else {
+                        rootScene.children.push(sceneObject);
+                    }
+                }
+            }
         }
     };
 
@@ -279,5 +329,26 @@ export function setAnchorTagsId(sheetId) {
     for (let anchorTag of pageAnchorTags) {
         anchorTag.id = `plurid-anchor-${anchorTagId}`;
         anchorTagId++;
+    }
+}
+
+
+/**
+ * Pushes the current <plurid-sheet> to pluridScene global
+ * if element is direct child of <plurid-root>.
+ *
+ * @param {HTMLElement} pluridSheet
+ */
+export function setPluridRoots(pluridSheet) {
+    if (pluridSheet.parentElement.nodeName == 'PLURID-ROOT') {
+        let sheet = {
+            id: pluridSheet.parentElement.id,
+            sheetId: pluridSheet.id,
+            metadata: [],
+            children: []
+        };
+
+        pluridScene.metadata.rootSheets.push(pluridSheet.id);
+        pluridScene.content.push(sheet);
     }
 }
