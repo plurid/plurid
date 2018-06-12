@@ -27,15 +27,12 @@ class PluridSheet extends HTMLElement {
             // let sY = event.screenY;
             // let pX = event.pageX;
             // let pY = event.pageY;
-            // let oX = event.offsetX;
-            // let oY = event.offsetY;
+            let oX = event.offsetX;
+            let oY = event.offsetY;
             // let thisTop = this.offsetTop;
             // let thisLeft = this.offsetLeft;
 
-            // var x = event.pageX - this.offsetLeft;
-            // var y = event.pageY - this.offsetTop;
-
-            // console.log('-----------------');
+            console.log('-----------------');
             // console.log('clientX', cX);
             // console.log('clientY', cY);
             // console.log('screenX', sX);
@@ -49,13 +46,25 @@ class PluridSheet extends HTMLElement {
 
             // console.log('x', x);
             // console.log('y', y);
-            // console.log(event);
-            // console.log(this);
-            // let right = this.offsetLeft + this.offsetWidth;
-            // let top = this.offsetTop;
 
             // console.log('sheet right', right);
             // console.log('sheet top', top);
+
+
+            // let sheet = event.path[2];
+            // let rect = sheet.getBoundingClientRect();
+            let rect2 = event.target.getBoundingClientRect();
+            // console.log(rect2);
+            // console.log('a', event);
+            // console.log(event.path[2]);
+
+            let oX2 = event.offsetX + rect2.x ;
+            let oY2 = event.offsetY + rect2.y;
+
+            // console.log('-----');
+            // console.log('offsetX2', oX2);
+            // console.log('offsetY2', oY2);
+
         });
 
         sheetId++;
