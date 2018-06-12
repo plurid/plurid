@@ -142,7 +142,9 @@ function closePlurid(element) {
 
         if (pluridParent.parentElement.nodeName == "PLURID-SCION") {
             // pluridParent.parentElement.parentElement.style.display = "none";
-            pluridScene.metadata.activePlurid = pluridParent.parentElement.parentElement.parentElement.id;
+            if (pluridScene.metadata.activePlurid != 'plurid-roots-1') {
+                pluridScene.metadata.activePlurid = pluridParent.parentElement.parentElement.parentElement.id;
+            }
             pluridParent.parentElement.parentElement.parentElement.removeChild(pluridParent.parentElement.parentElement);
         }
     });

@@ -87,16 +87,16 @@ function setPluridLinks(pluridLink) {
 
             let right = pluridLink.offsetLeft + pluridLink.offsetWidth;
             let top = pluridLink.offsetTop;
-            // console.log('pluridLink right -- X', right);
-            // console.log('pluridLink top ---- Y', top);
+            console.log('pluridLink right -- X', right);
+            console.log('pluridLink top ---- Y', top);
             // console.log('offset parent', anchorTag.offsetParent);
 
             let pluridRoot = getSpecifiedParent(pluridLink, 'PLURID-ROOT');
             let pluridBranch = getSpecifiedParent(pluridLink, 'PLURID-BRANCH');
-            // console.log('root', pluridRoot);
-            // console.log('branch', pluridBranch);
+            console.log('root', pluridRoot);
+            console.log('branch', pluridBranch);
             let angleBranch;
-            let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
+            // let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
             // console.log(angleRad);
             if (pluridBranch) {
                 angleBranch = transcore.getTransformRotate(pluridBranch).rotateY;
@@ -104,11 +104,81 @@ function setPluridLinks(pluridLink) {
             }
             // console.log(angleBranch);
 
-            let angleDeg = 90;
+            let angleDeg = 10;
             // console.log(angleDeg);
+
+
+            // calculate transX, transY, transZ based on:
+            // plurid-link's position within the plurid-sheet
+            // plurid-sheet's plurid-branch rotateY
+            //
+            let bridgeLength = 100;
+
+            let quadrantCoefX;
+            let quadrantCoefZ;
+            let quadrant;
+
+            if (angleDeg > 0 && angleDeg <= 90) {
+                quadrant = 'quadrantA';
+            }
+            if (angleDeg > 90 && angleDeg <= 180) {
+                quadrant = 'quadrantB';
+            }
+            if (angleDeg > 180 && angleDeg <= 270) {
+                quadrant = 'quadrantC';
+            }
+            if (angleDeg > 270 && angleDeg <= 360) {
+                quadrant = 'quadrantD';
+            }
+
+
+            switch (quadrant) {
+                case 'quadrantA':
+                    quadrantCoefX = 1
+                    quadrantCoefZ = -1
+                    break;
+                case 'quadrantB':
+                    quadrantCoefX = 1
+                    quadrantCoefZ = -1
+                    break;
+                case 'quadrantC':
+                    quadrantCoefX = 1
+                    quadrantCoefZ = -1
+                    break;
+                case 'quadrantD':
+                    quadrantCoefX = 1
+                    quadrantCoefZ = 1
+                    break;
+                // default:
+                //     quadrantCoefX = 1
+                //     quadrantCoefZ = -1
+                //     break;
+            }
+
+            console.log(quadrant);
+            console.log('quadrantCoefX', quadrantCoefX);
+            console.log('quadrantCoefZ', quadrantCoefZ);
+
+            let rotXbranch = 10;
+            let prevTransX = 261;
+            let clickTransX = 1067;
+            let prevTransY = 257;
+            let clickTransY = 200;
+            // console.log(Math.cos(rotXbranch * Math.PI / 180));
+
+            let transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
+            let transY = prevTransY + clickTransY;
+            let transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+            // let transX = 1086.19;
+            // let transY = 457;
+            // let transZ = quadrantCoefZ * 825.19;
+            console.log('transX', transX);
+            console.log('transY', transY);
+            console.log('transZ', transZ);
+
             if (angleBranch) {
                 angleBranch = angleBranch + 90;
-                newBranch.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(${angleBranch}deg) rotateZ(0deg) scale(1)`;
+                newBranch.style.transform = `translateX(${transX}px) translateY(${transY}px) translateZ(${transZ}px) rotateX(0deg) rotateY(${angleBranch}deg) rotateZ(0deg) scale(1)`;
             } else {
                 newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
             }
