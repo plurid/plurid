@@ -1,6 +1,8 @@
 import { initControls } from "./controls";
 import { renderControls } from "./controls-core";
-import { setLink, setAnchorTagsId } from "./sheet-core";
+import { setLink,
+         setAnchorTagsId,
+         setPluridRoots } from "./sheet-core";
 
 
 var sheetId = 1;
@@ -19,6 +21,7 @@ class PluridSheet extends HTMLElement {
         renderControls(this, sheetId);
         setLink(this);
         setAnchorTagsId(this.id);
+        setPluridRoots(this);
 
         this.addEventListener('click', event => {
             // let cX = event.clientX;
@@ -32,7 +35,7 @@ class PluridSheet extends HTMLElement {
             // let thisTop = this.offsetTop;
             // let thisLeft = this.offsetLeft;
 
-            console.log('-----------------');
+            // console.log('-----------------');
             // console.log('clientX', cX);
             // console.log('clientY', cY);
             // console.log('screenX', sX);

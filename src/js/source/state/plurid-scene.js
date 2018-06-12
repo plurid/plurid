@@ -7,8 +7,9 @@
             activeSheet: '',
             containers: 0,
             rootPages: [],
+            rootSheets: [],
             pages: 0
         },
-        content: {}
+        content: []
     }
 }).call(this, global)
