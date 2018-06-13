@@ -135,6 +135,12 @@ function setPluridLinks(pluridLink) {
             // console.log(angleDeg);
 
 
+            let linkParentId = pluridBranch ? pluridBranch.id : pluridSheet.id;
+            console.log(linkParentId, 'is the parent of', newBranch.id);
+
+            let parentBranch = pluridScene.getBranchById(linkParentId);
+            console.log(parentBranch);
+
             // calculate transX, transY, transZ based on:
             // plurid-link's position within the plurid-sheet
             // plurid-sheet's plurid-branch rotateY
@@ -145,16 +151,18 @@ function setPluridLinks(pluridLink) {
             let quadrantCoefZ;
             let quadrant;
 
-            if (angleDeg > 0 && angleDeg <= 90) {
+            let parentAngleY = parentBranch ? parentBranch.coordinates.angleY : angleDeg;
+
+            if (parentAngleY > 0 && parentAngleY <= 90) {
                 quadrant = 'quadrantA';
             }
-            if (angleDeg > 90 && angleDeg <= 180) {
+            if (parentAngleY > 90 && parentAngleY <= 180) {
                 quadrant = 'quadrantB';
             }
-            if (angleDeg > 180 && angleDeg <= 270) {
+            if (parentAngleY > 180 && parentAngleY <= 270) {
                 quadrant = 'quadrantC';
             }
-            if (angleDeg > 270 && angleDeg <= 360) {
+            if (parentAngleY > 270 && parentAngleY <= 360) {
                 quadrant = 'quadrantD';
             }
 
@@ -165,11 +173,11 @@ function setPluridLinks(pluridLink) {
                     quadrantCoefZ = -1
                     break;
                 case 'quadrantB':
-                    quadrantCoefX = 1
+                    quadrantCoefX = -1
                     quadrantCoefZ = -1
                     break;
                 case 'quadrantC':
-                    quadrantCoefX = 1
+                    quadrantCoefX = -1
                     quadrantCoefZ = -1
                     break;
                 case 'quadrantD':
@@ -182,9 +190,9 @@ function setPluridLinks(pluridLink) {
                 //     break;
             }
 
-            // console.log(quadrant);
-            // console.log('quadrantCoefX', quadrantCoefX);
-            // console.log('quadrantCoefZ', quadrantCoefZ);
+            console.log(quadrant);
+            console.log('quadrantCoefX', quadrantCoefX);
+            console.log('quadrantCoefZ', quadrantCoefZ);
 
             let rotXbranch = angleDeg;
             // let prevTransX = 261;
@@ -192,18 +200,11 @@ function setPluridLinks(pluridLink) {
             // let clickTransX = 1067;
             // let clickTransY = 200;
 
-
-            let linkParentId = pluridBranch ? pluridBranch.id : pluridSheet.id;
-            // console.log(linkParentId, 'is the parent of', newBranch.id);
-
-            let parentBranch = pluridScene.getBranchById(linkParentId);
-            // console.log(parentBranch);
-
             let prevTransX;
             let prevTransY;
             if (parentBranch) {
                 prevTransX = parentBranch.coordinates.linkX;
-                prevTransY = parentBranch.coordinates.linkY;
+                prevTransY = parentBranch.coordinates.transY ? parentBranch.coordinates.transY : parentBranch.coordinates.linkY;
             }
 
             let clickTransX = right;
@@ -214,15 +215,20 @@ function setPluridLinks(pluridLink) {
 
             // console.log(Math.cos(rotXbranch * Math.PI / 180));
 
+            // console.log(quadrant);
+
             let transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
+
+            // console.log(prevTransY);
+            // console.log(clickTransY);
             let transY = prevTransY + clickTransY;
             let transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
             // let transX = 1086.19;
             // let transY = 457;
             // let transZ = quadrantCoefZ * 825.19;
-            // console.log('transX', transX);
-            // console.log('transY', transY);
-            // console.log('transZ', transZ);
+            console.log('transX', transX);
+            console.log('transY', transY);
+            console.log('transZ', transZ);
 
             if (angleBranch) {
                 angleBranch = angleBranch + 90;
@@ -235,7 +241,7 @@ function setPluridLinks(pluridLink) {
 
             insertAfter(newBranch, lastChild);
 
-
+            let angleRotY = angleBranch ? angleBranch : angleDeg;
 
             let sceneObject = {
                 linkParentId: linkParentId,
@@ -243,7 +249,11 @@ function setPluridLinks(pluridLink) {
                 branchId: newBranch.id,
                 coordinates: {
                     linkX: right,
-                    linkY: top
+                    linkY: top,
+                    transX: transX,
+                    transY: transY,
+                    transZ: transZ,
+                    angleY: angleRotY
                 },
                 children: []
             }
