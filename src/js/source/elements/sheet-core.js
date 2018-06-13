@@ -187,10 +187,55 @@ function setPluridLinks(pluridLink) {
             // console.log('quadrantCoefZ', quadrantCoefZ);
 
             let rotXbranch = angleDeg;
-            let prevTransX = 261;
-            let clickTransX = 1067;
-            let prevTransY = 257;
-            let clickTransY = 200;
+            // let prevTransX = 261;
+            // let prevTransY = 257;
+            // let clickTransX = 1067;
+            // let clickTransY = 200;
+
+
+            let linkParentId = pluridBranch ? pluridBranch.id : pluridSheet.id;
+            // console.log(linkParentId, 'is the parent of', newBranch.id);
+
+            function getBranchById(linkParentId) {
+                for (let rootElement of pluridScene.content) {
+                    for (let child of rootElement.children) {
+                        if (child.branchId == linkParentId) {
+                            // console.log(child);
+                            return child;
+                        } else if (child.children != []) {
+                            return getChild(linkParentId, child.children);
+                        }
+                    }
+                }
+            }
+
+            function getChild(linkParentId, children) {
+                for (let child of children) {
+                    if (child.branchId == linkParentId) {
+                        // console.log(child);
+                        return child;
+                    } else if (child.children != []) {
+                        return getChild(linkParentId, child.children);
+                    }
+                }
+            }
+
+            let parentBranch = getBranchById(linkParentId);
+            // let parentBranch = pluridScene.getBranchById(linkParentId);
+
+            let prevTransX;
+            let prevTransY;
+            if (parentBranch) {
+                prevTransX = parentBranch.coordinates.linkX;
+                prevTransY = parentBranch.coordinates.linkY;
+            }
+
+            let clickTransX = right;
+            let clickTransY = top;
+
+            // console.log(prevTransX);
+            // console.log(prevTransY);
+
             // console.log(Math.cos(rotXbranch * Math.PI / 180));
 
             let transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
@@ -217,7 +262,7 @@ function setPluridLinks(pluridLink) {
 
 
             let sceneObject = {
-                linkParentId: pluridBranch ? pluridBranch.id : pluridSheet.id,
+                linkParentId: linkParentId,
                 link: newBranch.link,
                 branchId: newBranch.id,
                 coordinates: {
