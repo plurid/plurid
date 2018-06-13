@@ -139,7 +139,7 @@ function setPluridLinks(pluridLink) {
             console.log(linkParentId, 'is the parent of', newBranch.id);
 
             let parentBranch = pluridScene.getBranchById(linkParentId);
-            console.log(parentBranch);
+            console.log('the parentBranch is ', parentBranch);
 
             // calculate transX, transY, transZ based on:
             // plurid-link's position within the plurid-sheet
@@ -152,8 +152,11 @@ function setPluridLinks(pluridLink) {
             let quadrant;
 
             let parentAngleY = parentBranch ? parentBranch.coordinates.angleY : angleDeg;
+            console.log('parentAngleY', parentAngleY)
+            console.log('parentAngleY % 360', parentAngleY % 360)
+            parentAngleY = parentAngleY % 360;
 
-            if (parentAngleY > 0 && parentAngleY <= 90) {
+            if (parentAngleY >= 0 && parentAngleY <= 90) {
                 quadrant = 'quadrantA';
             }
             if (parentAngleY > 90 && parentAngleY <= 180) {
@@ -190,7 +193,7 @@ function setPluridLinks(pluridLink) {
                 //     break;
             }
 
-            console.log(quadrant);
+            console.log('quadrant', quadrant);
             console.log('quadrantCoefX', quadrantCoefX);
             console.log('quadrantCoefZ', quadrantCoefZ);
 
