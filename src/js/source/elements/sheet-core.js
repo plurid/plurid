@@ -196,32 +196,8 @@ function setPluridLinks(pluridLink) {
             let linkParentId = pluridBranch ? pluridBranch.id : pluridSheet.id;
             // console.log(linkParentId, 'is the parent of', newBranch.id);
 
-            function getBranchById(linkParentId) {
-                for (let rootElement of pluridScene.content) {
-                    for (let child of rootElement.children) {
-                        if (child.branchId == linkParentId) {
-                            // console.log(child);
-                            return child;
-                        } else if (child.children != []) {
-                            return getChild(linkParentId, child.children);
-                        }
-                    }
-                }
-            }
-
-            function getChild(linkParentId, children) {
-                for (let child of children) {
-                    if (child.branchId == linkParentId) {
-                        // console.log(child);
-                        return child;
-                    } else if (child.children != []) {
-                        return getChild(linkParentId, child.children);
-                    }
-                }
-            }
-
-            let parentBranch = getBranchById(linkParentId);
-            // let parentBranch = pluridScene.getBranchById(linkParentId);
+            let parentBranch = pluridScene.getBranchById(linkParentId);
+            // console.log(parentBranch);
 
             let prevTransX;
             let prevTransY;
