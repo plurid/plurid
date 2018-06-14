@@ -90,8 +90,6 @@ function setPluridLinks(pluridLink) {
         if (this.readyState == 4 && this.status == 200) {
             let parser = new DOMParser();
             let doc = parser.parseFromString(this.responseText, "text/html");
-            // console.log(doc.body);
-            // console.log(pluridRoot);
 
             let newBranch = document.createElement("plurid-branch");
             newBranch.innerHTML = `
@@ -113,7 +111,6 @@ function setPluridLinks(pluridLink) {
             let top = pluridLink.offsetTop;
             // console.log('pluridLink right -- X', right);
             // console.log('pluridLink top ---- Y', top);
-            // console.log('offset parent', anchorTag.offsetParent);
 
             let pluridRoot = getSpecifiedParent(pluridLink, 'PLURID-ROOT');
             let pluridSheet = getSpecifiedParent(pluridLink, 'PLURID-SHEET');
@@ -122,53 +119,43 @@ function setPluridLinks(pluridLink) {
             // console.log('root', pluridRoot);
             // console.log('sheet', pluridSheet);
             // console.log('branch', pluridBranch);
+
+            let angleDeg = 90;
             let angleBranch;
-            // let angleRad = transcore.getTransformRotate(pluridRoot).rotateY;
-            // console.log(angleRad);
             if (pluridBranch) {
                 angleBranch = transcore.getTransformRotate(pluridBranch).rotateY;
                 angleBranch = angleBranch * 180 / Math.PI;
             }
             // console.log(angleBranch);
 
-            let angleDeg = 90;
-            // console.log(angleDeg);
-
-
             let linkParentId = pluridBranch ? pluridBranch.id : pluridSheet.id;
             console.log(linkParentId, 'is the parent of', newBranch.id);
-
             let parentBranch = pluridScene.getBranchById(linkParentId);
             console.log('the parentBranch is ', parentBranch);
 
-            // calculate transX, transY, transZ based on:
-            // plurid-link's position within the plurid-sheet
-            // plurid-sheet's plurid-branch rotateY
-            //
             let bridgeLength = 100;
-
             let quadrantCoefX;
             let quadrantCoefZ;
-            let quadrant;
 
-            let parentAngleY = parentBranch ? parentBranch.coordinates.angleY : angleDeg;
-            console.log('parentAngleY', parentAngleY)
-            console.log('parentAngleY % 360', parentAngleY % 360)
+            let parentAngleY = parentBranch ? parentBranch.coordinates.angleY : 0;
+            // console.log('parentAngleY % 360', parentAngleY % 360)
             parentAngleY = parentAngleY % 360;
+            console.log('parentAngleY', parentAngleY)
 
-            if (parentAngleY >= 0 && parentAngleY <= 90) {
-                quadrant = 'quadrantA';
-            }
-            if (parentAngleY > 90 && parentAngleY <= 180) {
-                quadrant = 'quadrantB';
-            }
-            if (parentAngleY > 180 && parentAngleY <= 270) {
-                quadrant = 'quadrantC';
-            }
-            if (parentAngleY > 270 && parentAngleY <= 360) {
-                quadrant = 'quadrantD';
-            }
+            let quadrant = getQuadrant(parentAngleY);
 
+            // if (parentAngleY >= 0 && parentAngleY <= 90) {
+            //     quadrant = 'quadrantA';
+            // }
+            // if (parentAngleY > 90 && parentAngleY <= 180) {
+            //     quadrant = 'quadrantB';
+            // }
+            // if (parentAngleY > 180 && parentAngleY <= 270) {
+            //     quadrant = 'quadrantC';
+            // }
+            // if (parentAngleY > 270 && parentAngleY <= 360) {
+            //     quadrant = 'quadrantD';
+            // }
 
             switch (quadrant) {
                 case 'quadrantA':
@@ -187,21 +174,13 @@ function setPluridLinks(pluridLink) {
                     quadrantCoefX = 1
                     quadrantCoefZ = -1
                     break;
-                // default:
-                //     quadrantCoefX = 1
-                //     quadrantCoefZ = -1
-                //     break;
             }
 
-            console.log('quadrant', quadrant);
+            console.log('parent quadrant', quadrant);
             console.log('quadrantCoefX', quadrantCoefX);
             console.log('quadrantCoefZ', quadrantCoefZ);
 
             let rotXbranch = angleDeg;
-            // let prevTransX = 261;
-            // let prevTransY = 257;
-            // let clickTransX = 1067;
-            // let clickTransY = 200;
 
             let prevTransX;
             let prevTransY;
@@ -213,25 +192,20 @@ function setPluridLinks(pluridLink) {
             let clickTransX = right;
             let clickTransY = top;
 
-            // console.log(prevTransX);
-            // console.log(prevTransY);
-
-            // console.log(Math.cos(rotXbranch * Math.PI / 180));
-
-            // console.log(quadrant);
+            console.log('prevTransX', prevTransX);
+            console.log('prevTransY', prevTransY);
+            console.log('clickTransX', clickTransX);
+            console.log('clickTransY', clickTransY);
 
             let transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
 
-            // console.log(prevTransY);
-            // console.log(clickTransY);
             let transY = prevTransY + clickTransY;
             let transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
-            // let transX = 1086.19;
-            // let transY = 457;
-            // let transZ = quadrantCoefZ * 825.19;
-            console.log('transX', transX);
-            console.log('transY', transY);
-            console.log('transZ', transZ);
+
+            // console.log('transX', transX);
+            // console.log('transY', transY);
+            // console.log('transZ', transZ);
+            console.log('-----');
 
             if (angleBranch) {
                 angleBranch = angleBranch + 90;
@@ -384,5 +358,29 @@ export function setPluridRoots(pluridSheet) {
 
         pluridScene.metadata.rootSheets.push(pluridSheet.id);
         pluridScene.content.push(sheet);
+    }
+}
+
+
+/**
+ * Based on angle returns the specific quadrant.
+ *
+ * @param {number} angle        Angle value between 0 and 360 degrees.
+ * @return {string}
+ */
+function getQuadrant(angle) {
+    let quadrant;
+
+    if (angle >= 0 && angle <= 90) {
+        return quadrant = 'quadrantA';
+    }
+    if (angle > 90 && angle <= 180) {
+        return quadrant = 'quadrantB';
+    }
+    if (angle > 180 && angle <= 270) {
+        return quadrant = 'quadrantC';
+    }
+    if (angle > 270 && angle <= 360) {
+        return quadrant = 'quadrantD';
     }
 }
