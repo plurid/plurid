@@ -134,8 +134,6 @@ function setPluridLinks(pluridLink) {
             console.log('the parentBranch is ', parentBranch);
 
             let bridgeLength = 100;
-            let quadrantCoefX;
-            let quadrantCoefZ;
 
             let parentAngleY = parentBranch ? parentBranch.coordinates.angleY : 0;
             // console.log('parentAngleY % 360', parentAngleY % 360)
@@ -143,38 +141,9 @@ function setPluridLinks(pluridLink) {
             console.log('parentAngleY', parentAngleY)
 
             let quadrant = getQuadrant(parentAngleY);
-
-            // if (parentAngleY >= 0 && parentAngleY <= 90) {
-            //     quadrant = 'quadrantA';
-            // }
-            // if (parentAngleY > 90 && parentAngleY <= 180) {
-            //     quadrant = 'quadrantB';
-            // }
-            // if (parentAngleY > 180 && parentAngleY <= 270) {
-            //     quadrant = 'quadrantC';
-            // }
-            // if (parentAngleY > 270 && parentAngleY <= 360) {
-            //     quadrant = 'quadrantD';
-            // }
-
-            switch (quadrant) {
-                case 'quadrantA':
-                    quadrantCoefX = 1
-                    quadrantCoefZ = -1
-                    break;
-                case 'quadrantB':
-                    quadrantCoefX = -1
-                    quadrantCoefZ = -1
-                    break;
-                case 'quadrantC':
-                    quadrantCoefX = -1
-                    quadrantCoefZ = -1
-                    break;
-                case 'quadrantD':
-                    quadrantCoefX = 1
-                    quadrantCoefZ = -1
-                    break;
-            }
+            let quadrantCoefficients = getQuadrantCoefficients(quadrant);
+            let quadrantCoefX = quadrantCoefficients.X;
+            let quadrantCoefZ = quadrantCoefficients.Z;
 
             console.log('parent quadrant', quadrant);
             console.log('quadrantCoefX', quadrantCoefX);
@@ -197,10 +166,22 @@ function setPluridLinks(pluridLink) {
             console.log('clickTransX', clickTransX);
             console.log('clickTransY', clickTransY);
 
-            let transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
+            let transX;
+            let transY;
+            let transZ;
 
-            let transY = prevTransY + clickTransY;
-            let transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+            if (quadrant == 'quadrantB') {
+                console.log('AAA > quadrantB');
+                // transX = quadrantCoefX * ((prevTransX - (clickTransX + bridgeLength)) * Math.cos(rotXbranch * Math.PI / 180));
+                transX = quadrantCoefX * (261 - (clickTransX + bridgeLength));
+                // transZ = quadrantCoefZ * ((prevTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180));
+                transZ = quadrantCoefZ * (prevTransX + bridgeLength);
+            } else {
+                transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
+                transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+            }
+
+            transY = prevTransY + clickTransY;
 
             // console.log('transX', transX);
             // console.log('transY', transY);
@@ -382,5 +363,41 @@ function getQuadrant(angle) {
     }
     if (angle > 270 && angle <= 360) {
         return quadrant = 'quadrantD';
+    }
+}
+
+
+/**
+ * Based on quadrant returns the specific quadrant coefficients.
+ *
+ * @param {string} quadrant
+ * @return {object}
+ */
+function getQuadrantCoefficients(quadrant) {
+    let quadrantCoefficientX;
+    let quadrantCoefficientZ;
+
+    switch (quadrant) {
+        case 'quadrantA':
+            quadrantCoefficientX = 1;
+            quadrantCoefficientZ = -1;
+            break;
+        case 'quadrantB':
+            quadrantCoefficientX = 1;
+            quadrantCoefficientZ = -1;
+            break;
+        case 'quadrantC':
+            quadrantCoefficientX = -1;
+            quadrantCoefficientZ = -1;
+            break;
+        case 'quadrantD':
+            quadrantCoefficientX = 1;
+            quadrantCoefficientZ = -1;
+            break;
+    }
+
+    return {
+        X: quadrantCoefficientX,
+        Z: quadrantCoefficientZ
     }
 }
