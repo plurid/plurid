@@ -166,23 +166,22 @@ function setPluridLinks(pluridLink) {
             console.log('clickTransX', clickTransX);
             console.log('clickTransY', clickTransY);
 
-            let transX;
-            let transY;
-            let transZ;
-
-            if (quadrant == 'quadrantB') {
-                console.log('AAA > quadrantB');
-                // transX = quadrantCoefX * ((prevTransX - (clickTransX + bridgeLength)) * Math.cos(rotXbranch * Math.PI / 180));
-                transX = quadrantCoefX * (261 - (clickTransX + bridgeLength));
-                // transZ = quadrantCoefZ * ((prevTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180));
-                transZ = quadrantCoefZ * (prevTransX + bridgeLength);
-            } else {
-                transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
-                transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+            let translationData = {
+                prevTransX: prevTransX,
+                prevTransY: prevTransY,
+                clickTransX: clickTransX,
+                clickTransY: clickTransY,
+                bridgeLength: bridgeLength,
+                quadrant: quadrant,
+                quadrantCoefX: quadrantCoefX,
+                quadrantCoefZ: quadrantCoefZ,
+                rotXbranch: rotXbranch
             }
 
-            transY = prevTransY + clickTransY;
-
+            let translations = getTranslations(translationData);
+            let transX = translations.X;
+            let transY = translations.Y;
+            let transZ = translations.Z;
             // console.log('transX', transX);
             // console.log('transY', transY);
             // console.log('transZ', transZ);
@@ -399,5 +398,40 @@ function getQuadrantCoefficients(quadrant) {
     return {
         X: quadrantCoefficientX,
         Z: quadrantCoefficientZ
+    }
+}
+
+
+function getTranslations(translationData) {
+    let prevTransX = translationData.prevTransX;
+    let prevTransY = translationData.prevTransY;
+    let clickTransX = translationData.clickTransX;
+    let clickTransY = translationData.clickTransY;
+    let bridgeLength = translationData.bridgeLength;
+    let quadrant = translationData.quadrant;
+    let quadrantCoefX = translationData.quadrantCoefX;
+    let quadrantCoefZ = translationData.quadrantCoefZ;
+    let rotXbranch = translationData.rotXbranch;
+    let transX;
+    let transY;
+    let transZ;
+
+    if (quadrant == 'quadrantB') {
+        console.log('AAA > quadrantB');
+        // transX = quadrantCoefX * ((prevTransX - (clickTransX + bridgeLength)) * Math.cos(rotXbranch * Math.PI / 180));
+        transX = quadrantCoefX * (261 - (clickTransX + bridgeLength));
+        // transZ = quadrantCoefZ * ((prevTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180));
+        transZ = quadrantCoefZ * (prevTransX + bridgeLength);
+    } else {
+        transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
+        transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+    }
+
+    transY = prevTransY + clickTransY;
+
+    return {
+        X: transX,
+        Y: transY,
+        Z: transZ,
     }
 }
