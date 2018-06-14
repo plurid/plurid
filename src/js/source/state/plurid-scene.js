@@ -12,13 +12,12 @@
         },
         content: [],
         getBranchById: (branchId) => {
-            console.log('enter');
-
+            // console.log('enter');
             for (let rootElement of pluridScene.content) {
-                console.log('rootElement', rootElement);
+                // console.log('rootElement', rootElement);
                 for (let child of rootElement.children) {
                     if (child.branchId == branchId) {
-                        console.log('child A', child);
+                        // console.log('child A', child);
                         return child;
                     } else if (child.children != []) {
                         let result = getChild(branchId, child.children);
@@ -32,7 +31,7 @@
             function getChild(branchId, children) {
                 for (let child of children) {
                     if (child.branchId == branchId) {
-                        console.log('child B', child);
+                        // console.log('child B', child);
                         return child;
                     } else if (child.children != []) {
                         let result = getChild(branchId, child.children);
