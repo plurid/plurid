@@ -200,6 +200,10 @@ function setPluridLinks(pluridLink) {
 
             let angleRotY = angleBranch ? angleBranch : angleDeg;
 
+            let path = generatePath(newBranch.id, linkParentId);
+            // console.log('path', path);
+
+
             let sceneObject = {
                 linkParentId: linkParentId,
                 link: newBranch.link,
@@ -212,7 +216,8 @@ function setPluridLinks(pluridLink) {
                     transZ: transZ,
                     angleY: angleRotY
                 },
-                children: []
+                children: [],
+                path: path
             }
 
             for (let rootScene of pluridScene.content) {
@@ -398,6 +403,36 @@ function getQuadrantCoefficients(quadrant) {
     return {
         X: quadrantCoefficientX,
         Z: quadrantCoefficientZ
+    }
+}
+
+
+/**
+ * Based on the parent branch with the linkParentId
+ * of the branch with currentId, obtain the path
+ * to the current branch.
+ *
+ * @param {string} currentId
+ * @param {string} linkParentId
+ * @return {Array}
+ */
+function generatePath(currentId, linkParentId) {
+    let parent = pluridScene.getBranchById(linkParentId);
+    if (parent) {
+        let path = [];
+
+        let parentPath = parent.path;
+        for (let pathElement of parentPath) {
+            let pluridElement = pluridScene.getBranchById(pathElement);
+            if (pluridElement.linkParentId != linkParentId) {
+                path.push(pathElement);
+            }
+        }
+
+        path.push(currentId);
+        return path;
+    } else {
+        return [currentId];
     }
 }
 
