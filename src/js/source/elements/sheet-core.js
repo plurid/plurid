@@ -166,6 +166,10 @@ function setPluridLinks(pluridLink) {
             console.log('clickTransX', clickTransX);
             console.log('clickTransY', clickTransY);
 
+
+            let path = generatePath(newBranch.id, linkParentId);
+            // console.log('path', path);
+
             let translationData = {
                 prevTransX: prevTransX,
                 prevTransY: prevTransY,
@@ -175,7 +179,8 @@ function setPluridLinks(pluridLink) {
                 quadrant: quadrant,
                 quadrantCoefX: quadrantCoefX,
                 quadrantCoefZ: quadrantCoefZ,
-                rotXbranch: rotXbranch
+                rotXbranch: rotXbranch,
+                path: path
             }
 
             let translations = getTranslations(translationData);
@@ -199,9 +204,6 @@ function setPluridLinks(pluridLink) {
             insertAfter(newBranch, lastChild);
 
             let angleRotY = angleBranch ? angleBranch : angleDeg;
-
-            let path = generatePath(newBranch.id, linkParentId);
-            // console.log('path', path);
 
 
             let sceneObject = {
@@ -437,6 +439,12 @@ function generatePath(currentId, linkParentId) {
 }
 
 
+/**
+ * Calculate translations based on the translationData
+ *
+ * @param {Object} translationData
+ * @return {Object}
+ */
 function getTranslations(translationData) {
     let prevTransX = translationData.prevTransX;
     let prevTransY = translationData.prevTransY;
@@ -447,14 +455,16 @@ function getTranslations(translationData) {
     let quadrantCoefX = translationData.quadrantCoefX;
     let quadrantCoefZ = translationData.quadrantCoefZ;
     let rotXbranch = translationData.rotXbranch;
+    let path = translationData.path;
     let transX;
     let transY;
     let transZ;
 
     if (quadrant == 'quadrantB') {
-        console.log('AAA > quadrantB');
+        let parentRoot = pluridScene.getBranchById(path[0]);
+        let parentRootLinkX = parentRoot.coordinates.linkX;
         // transX = quadrantCoefX * ((prevTransX - (clickTransX + bridgeLength)) * Math.cos(rotXbranch * Math.PI / 180));
-        transX = quadrantCoefX * (261 - (clickTransX + bridgeLength));
+        transX = quadrantCoefX * (parentRootLinkX - (clickTransX + bridgeLength));
         // transZ = quadrantCoefZ * ((prevTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180));
         transZ = quadrantCoefZ * (prevTransX + bridgeLength);
     } else {
