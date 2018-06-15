@@ -213,6 +213,8 @@ function setPluridLinks(pluridLink) {
                 coordinates: {
                     linkX: right,
                     linkY: top,
+                    prevTransX: prevTransX,
+                    prevTransY: prevTransY,
                     transX: transX,
                     transY: transY,
                     transZ: transZ,
@@ -221,6 +223,8 @@ function setPluridLinks(pluridLink) {
                 children: [],
                 path: path
             }
+
+            // console.log('aaaa', sceneObject.coordinates);
 
             for (let rootScene of pluridScene.content) {
                 if (rootScene.id == pluridRoot.id) {
@@ -467,6 +471,18 @@ function getTranslations(translationData) {
         transX = quadrantCoefX * (parentRootLinkX - (clickTransX + bridgeLength));
         // transZ = quadrantCoefZ * ((prevTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180));
         transZ = quadrantCoefZ * (prevTransX + bridgeLength);
+    } else if (quadrant == 'quadrantC') {
+        let parentRoot = pluridScene.getBranchById(path[0]);
+        let parentRootLinkX = parentRoot.coordinates.linkX;
+        // let parentRootPrevTransX = parentRoot.coordinates.prevTransX;
+
+        let antepenultimateRoot = pluridScene.getBranchById(path[path.length-3]);
+        let antepenultimateRootLinkX = antepenultimateRoot.coordinates.linkX;
+        console.log('parentRoot.coordinates', parentRoot.coordinates);
+
+        transX = quadrantCoefX * ((prevTransX + bridgeLength) - parentRootLinkX);
+        transZ = quadrantCoefX * (antepenultimateRootLinkX - clickTransX);
+
     } else {
         transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
         transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
