@@ -464,14 +464,24 @@ function getTranslations(translationData) {
     let transY;
     let transZ;
 
-    if (quadrant == 'quadrantB') {
+    if (path.length == 1 || path.length == 2 ) {
+        transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
+        transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+        console.log('PATH LENGTH', path.length);
+    }
+
+    if (path.length == 3) {
         let parentRoot = pluridScene.getBranchById(path[0]);
         let parentRootLinkX = parentRoot.coordinates.linkX;
         // transX = quadrantCoefX * ((prevTransX - (clickTransX + bridgeLength)) * Math.cos(rotXbranch * Math.PI / 180));
         transX = quadrantCoefX * (parentRootLinkX - (clickTransX + bridgeLength));
         // transZ = quadrantCoefZ * ((prevTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180));
         transZ = quadrantCoefZ * (prevTransX + bridgeLength);
-    } else if (quadrant == 'quadrantC') {
+
+        console.log('PATH LENGTH', path.length);
+    }
+
+    if (path.length == 4) {
         let parentRoot = pluridScene.getBranchById(path[0]);
         let parentRootLinkX = parentRoot.coordinates.linkX;
         // let parentRootPrevTransX = parentRoot.coordinates.prevTransX;
@@ -483,10 +493,58 @@ function getTranslations(translationData) {
         transX = quadrantCoefX * ((prevTransX + bridgeLength) - parentRootLinkX);
         transZ = quadrantCoefX * (antepenultimateRootLinkX - clickTransX);
 
-    } else {
-        transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
-        transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+        console.log('PATH LENGTH', path.length);
     }
+
+    if (path.length == 5) {
+        let parentRoot = pluridScene.getBranchById(path[0]);
+        let parentRootLinkX = parentRoot.coordinates.linkX;
+
+        let antepenultimateRoot = pluridScene.getBranchById(path[path.length-3]);
+        let antepenultimateRootLinkX = antepenultimateRoot.coordinates.linkX;
+
+
+        let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+
+        transX = quadrantCoefX * (penultimateRootTransX + clickTransX + bridgeLength);
+        transZ = penultimateRootTransZ;
+
+        console.log('PATH LENGTH', path.length);
+    }
+
+    if (path.length == 6) {
+        console.log('PATH LENGTH', path.length);
+    }
+
+    if (path.length == 7) {
+        console.log('PATH LENGTH', path.length);
+    }
+
+    // if (quadrant == 'quadrantB') {
+    //     let parentRoot = pluridScene.getBranchById(path[0]);
+    //     let parentRootLinkX = parentRoot.coordinates.linkX;
+    //     // transX = quadrantCoefX * ((prevTransX - (clickTransX + bridgeLength)) * Math.cos(rotXbranch * Math.PI / 180));
+    //     transX = quadrantCoefX * (parentRootLinkX - (clickTransX + bridgeLength));
+    //     // transZ = quadrantCoefZ * ((prevTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180));
+    //     transZ = quadrantCoefZ * (prevTransX + bridgeLength);
+    // } else if (quadrant == 'quadrantC') {
+    //     let parentRoot = pluridScene.getBranchById(path[0]);
+    //     let parentRootLinkX = parentRoot.coordinates.linkX;
+    //     // let parentRootPrevTransX = parentRoot.coordinates.prevTransX;
+
+    //     let antepenultimateRoot = pluridScene.getBranchById(path[path.length-3]);
+    //     let antepenultimateRootLinkX = antepenultimateRoot.coordinates.linkX;
+    //     console.log('parentRoot.coordinates', parentRoot.coordinates);
+
+    //     transX = quadrantCoefX * ((prevTransX + bridgeLength) - parentRootLinkX);
+    //     transZ = quadrantCoefX * (antepenultimateRootLinkX - clickTransX);
+
+    // } else {
+    //     transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
+    //     transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+    // }
 
     transY = prevTransY + clickTransY;
 
