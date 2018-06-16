@@ -515,10 +515,30 @@ function getTranslations(translationData) {
     }
 
     if (path.length == 6) {
+        // let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        // let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        // let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+        let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+
+        transX = penultimateRootTransX;
+        transZ = penultimateRootTransZ - bridgeLength - clickTransX;
+
+        // transX = quadrantCoefX * (penultimateRootTransX + clickTransX + bridgeLength);
+        // transZ = penultimateRootTransZ;
+
         console.log('PATH LENGTH', path.length);
     }
 
     if (path.length == 7) {
+        let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+
+        transX = penultimateRootTransX - clickTransX - bridgeLength;
+        transZ = penultimateRootTransZ;
+
         console.log('PATH LENGTH', path.length);
     }
 
