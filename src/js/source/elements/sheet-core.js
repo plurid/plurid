@@ -464,6 +464,7 @@ function getTranslations(translationData) {
     let transY;
     let transZ;
 
+
     if (path.length == 1 || path.length == 2 ) {
         transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
         transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
@@ -542,7 +543,8 @@ function getTranslations(translationData) {
         console.log('PATH LENGTH', path.length);
     }
 
-    if (path.length > 7 && path.length % 5 == 3) {
+    // if (path.length > 7 && path.length % 5 == 3 && path.length != 13) {
+    if (path.length == 8) {
         let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
         let penultimateRootTransX = penultimateRoot.coordinates.transX;
         let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
@@ -553,7 +555,8 @@ function getTranslations(translationData) {
         console.log('PATH LENGTH', path.length);
     }
 
-    if (path.length > 8 && path.length % 5 == 4) {
+    // if (path.length > 8 && path.length % 5 == 4) {
+    if (path.length == 9) {
         let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
         let penultimateRootTransX = penultimateRoot.coordinates.transX;
         let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
@@ -564,21 +567,19 @@ function getTranslations(translationData) {
         console.log('PATH LENGTH', path.length);
     }
 
-
-
-
-    if (path.length > 7 && path.length % 5 == 2) {
+    // if (path.length > 8 && path.length % 5 == 0) {
+    if (path.length == 10) {
         let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
         let penultimateRootTransX = penultimateRoot.coordinates.transX;
         let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
 
         transX = penultimateRootTransX;
-        transZ = penultimateRootTransZ + bridgeLength + clickTransX;
+        transZ = penultimateRootTransZ - bridgeLength - clickTransX;
 
         console.log('PATH LENGTH', path.length);
     }
 
-    if (path.length > 8 && path.length % 5 == 1) {
+    if (path.length == 11) {
         let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
         let penultimateRootTransX = penultimateRoot.coordinates.transX;
         let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
@@ -589,14 +590,76 @@ function getTranslations(translationData) {
         console.log('PATH LENGTH', path.length);
     }
 
-    if (path.length > 8 && path.length % 5 == 0) {
+    // if (path.length > 7 && path.length % 5 == 2) {
+    if (path.length == 12) {
+        let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+
+        transX = penultimateRootTransX;
+        transZ = penultimateRootTransZ + bridgeLength + clickTransX;
+
+        console.log('PATH LENGTH', path.length);
+    }
+
+    if (path.length == 13) {
+        let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+
+        transX = penultimateRootTransX + clickTransX + bridgeLength;
+        transZ = penultimateRootTransZ;
+        console.log('PATH LENGTH', path.length);
+    }
+
+    if (path.length == 14) {
         let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
         let penultimateRootTransX = penultimateRoot.coordinates.transX;
         let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
 
         transX = penultimateRootTransX;
         transZ = penultimateRootTransZ - bridgeLength - clickTransX;
+        console.log('PATH LENGTH', path.length);
+    }
 
+    if (path.length == 15) {
+        let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+
+        transX = penultimateRootTransX - clickTransX - bridgeLength;
+        transZ = penultimateRootTransZ;
+        console.log('PATH LENGTH', path.length);
+    }
+
+    if (path.length == 16) {
+        let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+
+        transX = penultimateRootTransX;
+        transZ = penultimateRootTransZ + bridgeLength + clickTransX;
+
+        console.log('PATH LENGTH', path.length);
+    }
+
+    if (path.length == 17) {
+        let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+
+        transX = penultimateRootTransX + clickTransX + bridgeLength;
+        transZ = penultimateRootTransZ;
+        console.log('PATH LENGTH', path.length);
+    }
+
+    if (path.length == 18) {
+        let penultimateRoot = pluridScene.getBranchById(path[path.length-2]);
+        let penultimateRootTransX = penultimateRoot.coordinates.transX;
+        let penultimateRootTransZ = penultimateRoot.coordinates.transZ;
+
+        transX = penultimateRootTransX;
+        transZ = penultimateRootTransZ - bridgeLength - clickTransX;
         console.log('PATH LENGTH', path.length);
     }
 
