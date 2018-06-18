@@ -151,18 +151,28 @@ function setPluridLinks(pluridLink) {
 
             let rotXbranch = angleDeg;
 
+            let prevLinkX;
+            let prevLinkY;
             let prevTransX;
             let prevTransY;
+            let prevTransZ;
+
             if (parentBranch) {
-                prevTransX = parentBranch.coordinates.linkX;
+                // console.log('parentBranch', parentBranch);
+                prevLinkX = parentBranch.coordinates.linkX;
+                prevLinkY = parentBranch.coordinates.linkY;
+                prevTransX = parentBranch.coordinates.transX;
                 prevTransY = parentBranch.coordinates.transY ? parentBranch.coordinates.transY : parentBranch.coordinates.linkY;
+                prevTransZ = parentBranch.coordinates.transZ;
             }
+
 
             let clickTransX = right;
             let clickTransY = top;
 
             console.log('prevTransX', prevTransX);
             console.log('prevTransY', prevTransY);
+            console.log('prevTransZ', prevTransZ);
             console.log('clickTransX', clickTransX);
             console.log('clickTransY', clickTransY);
 
@@ -171,8 +181,11 @@ function setPluridLinks(pluridLink) {
             // console.log('path', path);
 
             let translationData = {
+                prevLinkX: prevLinkX,
+                prevLinkY: prevLinkY,
                 prevTransX: prevTransX,
                 prevTransY: prevTransY,
+                prevTransZ: prevTransZ,
                 clickTransX: clickTransX,
                 clickTransY: clickTransY,
                 bridgeLength: bridgeLength,
@@ -211,10 +224,13 @@ function setPluridLinks(pluridLink) {
                 link: newBranch.link,
                 branchId: newBranch.id,
                 coordinates: {
+                    prevLinkX: prevLinkX,
+                    prevLinkY: prevLinkY,
                     linkX: right,
                     linkY: top,
                     prevTransX: prevTransX,
                     prevTransY: prevTransY,
+                    prevTransZ: prevTransZ,
                     transX: transX,
                     transY: transY,
                     transZ: transZ,
@@ -223,8 +239,6 @@ function setPluridLinks(pluridLink) {
                 children: [],
                 path: path
             }
-
-            // console.log('aaaa', sceneObject.coordinates);
 
             for (let rootScene of pluridScene.content) {
                 if (rootScene.id == pluridRoot.id) {
@@ -450,8 +464,11 @@ function generatePath(currentId, linkParentId) {
  * @return {Object}
  */
 function getTranslations(translationData) {
+    let prevLinkX = translationData.prevLinkX;
+    let prevLinkY = translationData.prevLinkY;
     let prevTransX = translationData.prevTransX;
     let prevTransY = translationData.prevTransY;
+    let prevTransZ = translationData.prevTransZ;
     let clickTransX = translationData.clickTransX;
     let clickTransY = translationData.clickTransY;
     let bridgeLength = translationData.bridgeLength;
@@ -464,6 +481,8 @@ function getTranslations(translationData) {
     let penultimateRoot;
     let penultimateRootTransX;
     let penultimateRootTransZ;
+    let penultimateRootAngleY;
+    let penultimateRootAngleYRad;
     let penultimate = path.length - 2;
 
     let transX;
@@ -472,13 +491,17 @@ function getTranslations(translationData) {
 
     if (penultimate > 0) {
         penultimateRoot = pluridScene.getBranchById(path[penultimate]);
+        penultimateRootAngleY = penultimateRoot.coordinates.angleY;
+        // console.log(penultimateRootAngleY);
+        penultimateRootAngleYRad = penultimateRootAngleY * Math.PI / 180;
         penultimateRootTransX = penultimateRoot.coordinates.transX;
         penultimateRootTransZ = penultimateRoot.coordinates.transZ;
     }
 
 
-    if (path.length == 1 || path.length == 2 ) {
-        transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
+
+    if (path.length == 2) {
+        transX = quadrantCoefX * (prevLinkX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
         transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
         console.log('PATH LENGTH', path.length);
     }
@@ -505,8 +528,33 @@ function getTranslations(translationData) {
     }
 
     if (path.length > 2 && path.length % 4 == 3) {
-        transX = penultimateRootTransX - clickTransX - bridgeLength;
-        transZ = penultimateRootTransZ;
+        // transX = (penultimateRootTransX - clickTransX - bridgeLength) * Math.sin(penultimateRootAngleYRad);
+        // transZ = penultimateRootTransZ * Math.cos(penultimateRootAngleYRad);
+
+        // transX = prevTransX * Math.cos(0.523599) - prevTransZ * Math.sin(0.523599);
+        // transZ = prevTransX * Math.sin(0.523599) + prevTransZ * Math.cos(0.523599);
+        console.log('AAAAAAA prevTransX', prevTransX);
+        console.log('AAAAAAA clickTransX', clickTransX);
+        console.log('AAAAAAA Math.cos(penultimateRootAngleYRad)', Math.cos(penultimateRootAngleYRad));
+
+        console.log('BBBBBB prevTransX', prevTransZ);
+        console.log('BBBBBB clickTransX', clickTransX);
+        console.log('BBBBBB Math.sin(penultimateRootAngleYRad)', Math.sin(penultimateRootAngleYRad));
+
+
+        transX = prevTransX + Math.cos(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+        transZ = prevTransZ - Math.sin(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+
+
+
+        // transX = (penultimateRootTransX - clickTransX - bridgeLength);
+        // transZ = penultimateRootTransZ;
+
+        // transX = (penultimateRootTransX - clickTransX - bridgeLength);
+        // transZ = (clickTransX + bridgeLength) / Math.sin(180 - penultimateRootAngleYRad);
+
+        // transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) / Math.cos(rotXbranch * Math.PI / 180))
+        // transZ = quadrantCoefZ * (clickTransX + bridgeLength) / Math.sin(rotXbranch * Math.PI / 180);
 
         console.log('PATH LENGTH', path.length);
     }
