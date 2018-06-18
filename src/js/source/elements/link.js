@@ -1,24 +1,13 @@
+import { setLinkContent } from './link-core';
+
 var linkId = 1;
 
 class PluridLink extends HTMLElement {
     constructor() {
         super();
-
-        if (this.innerHTML == "") {
-            this.innerHTML = '&#9624;'; // 'QUADRANT UPPER LEFT' (U+2598)
-            // this.innerHTML = '&#9612;'; // 'LEFT HALF BLOCK' (U+258C)
-            // this.innerHTML = '&#9614;'; // 'LEFT ONE QUARTER BLOCK' (U+258E)
-        }
-
-        this.addEventListener('click', event => {
-            let right = this.offsetLeft + this.offsetWidth;
-            let top = this.offsetTop;
-            // console.log('link right -- X', right);
-            // console.log('link top ---- Y', top);
-            // console.log(this.page);
-        })
-
         this.id=`plurid-link-${linkId}`;
+        setLinkContent(this);
+
         linkId++;
     }
 
@@ -39,5 +28,6 @@ class PluridLink extends HTMLElement {
         }
     }
 }
+
 
 customElements.define('plurid-link', PluridLink);
