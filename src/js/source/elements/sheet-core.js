@@ -120,7 +120,7 @@ function setPluridLinks(pluridLink) {
             // console.log('sheet', pluridSheet);
             // console.log('branch', pluridBranch);
 
-            let angleDeg = 90;
+            let angleDeg = 40;
             let angleBranch;
             if (pluridBranch) {
                 angleBranch = transcore.getTransformRotate(pluridBranch).rotateY;
@@ -129,25 +129,25 @@ function setPluridLinks(pluridLink) {
             // console.log(angleBranch);
 
             let linkParentId = pluridBranch ? pluridBranch.id : pluridSheet.id;
-            console.log(linkParentId, 'is the parent of', newBranch.id);
+            // console.log(linkParentId, 'is the parent of', newBranch.id);
             let parentBranch = pluridScene.getBranchById(linkParentId);
-            console.log('the parentBranch is ', parentBranch);
+            // console.log('the parentBranch is ', parentBranch);
 
             let bridgeLength = 100;
 
             let parentAngleY = parentBranch ? parentBranch.coordinates.angleY : 0;
             // console.log('parentAngleY % 360', parentAngleY % 360)
             parentAngleY = parentAngleY % 360;
-            console.log('parentAngleY', parentAngleY)
+            // console.log('parentAngleY', parentAngleY)
 
             let quadrant = getQuadrant(parentAngleY);
             let quadrantCoefficients = getQuadrantCoefficients(quadrant);
             let quadrantCoefX = quadrantCoefficients.X;
             let quadrantCoefZ = quadrantCoefficients.Z;
 
-            console.log('parent quadrant', quadrant);
-            console.log('quadrantCoefX', quadrantCoefX);
-            console.log('quadrantCoefZ', quadrantCoefZ);
+            // console.log('parent quadrant', quadrant);
+            // console.log('quadrantCoefX', quadrantCoefX);
+            // console.log('quadrantCoefZ', quadrantCoefZ);
 
             let rotXbranch = angleDeg;
 
@@ -170,11 +170,11 @@ function setPluridLinks(pluridLink) {
             let clickTransX = right;
             let clickTransY = top;
 
-            console.log('prevTransX', prevTransX);
-            console.log('prevTransY', prevTransY);
-            console.log('prevTransZ', prevTransZ);
-            console.log('clickTransX', clickTransX);
-            console.log('clickTransY', clickTransY);
+            // console.log('prevTransX', prevTransX);
+            // console.log('prevTransY', prevTransY);
+            // console.log('prevTransZ', prevTransZ);
+            // console.log('clickTransX', clickTransX);
+            // console.log('clickTransY', clickTransY);
 
 
             let path = generatePath(newBranch.id, linkParentId);
@@ -203,10 +203,10 @@ function setPluridLinks(pluridLink) {
             // console.log('transX', transX);
             // console.log('transY', transY);
             // console.log('transZ', transZ);
-            console.log('-----');
+            // console.log('-----');
 
             if (angleBranch) {
-                angleBranch = angleBranch + 90;
+                angleBranch = angleBranch + 40;
                 newBranch.style.transform = `translateX(${transX}px) translateY(${transY}px) translateZ(${transZ}px) rotateX(0deg) rotateY(${angleBranch}deg) rotateZ(0deg) scale(1)`;
             } else {
                 newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
@@ -411,7 +411,7 @@ function getQuadrantCoefficients(quadrant) {
             quadrantCoefficientZ = -1;
             break;
         case 'quadrantC':
-            quadrantCoefficientX = -1;
+            quadrantCoefficientX = 1;
             quadrantCoefficientZ = -1;
             break;
         case 'quadrantD':
@@ -506,58 +506,73 @@ function getTranslations(translationData) {
         console.log('PATH LENGTH', path.length);
     }
 
-    if (path.length > 2 && path.length % 4 == 0) {
-        transX = penultimateRootTransX;
-        transZ = penultimateRootTransZ + bridgeLength + clickTransX;
-
-        console.log('PATH LENGTH', path.length);
-    }
-
-    if (path.length > 2 && path.length % 4 == 1) {
-        transX = penultimateRootTransX + clickTransX + bridgeLength;
-        transZ = penultimateRootTransZ;
-
-        console.log('PATH LENGTH', path.length);
-    }
-
-    if (path.length > 2 && path.length % 4 == 2) {
-        transX = penultimateRootTransX;
-        transZ = penultimateRootTransZ - bridgeLength - clickTransX;
-
-        console.log('PATH LENGTH', path.length);
-    }
-
-    if (path.length > 2 && path.length % 4 == 3) {
-        // transX = (penultimateRootTransX - clickTransX - bridgeLength) * Math.sin(penultimateRootAngleYRad);
-        // transZ = penultimateRootTransZ * Math.cos(penultimateRootAngleYRad);
-
-        // transX = prevTransX * Math.cos(0.523599) - prevTransZ * Math.sin(0.523599);
-        // transZ = prevTransX * Math.sin(0.523599) + prevTransZ * Math.cos(0.523599);
-        console.log('AAAAAAA prevTransX', prevTransX);
-        console.log('AAAAAAA clickTransX', clickTransX);
-        console.log('AAAAAAA Math.cos(penultimateRootAngleYRad)', Math.cos(penultimateRootAngleYRad));
-
-        console.log('BBBBBB prevTransX', prevTransZ);
-        console.log('BBBBBB clickTransX', clickTransX);
-        console.log('BBBBBB Math.sin(penultimateRootAngleYRad)', Math.sin(penultimateRootAngleYRad));
-
-
+    if (path.length > 2) {
         transX = prevTransX + Math.cos(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
         transZ = prevTransZ - Math.sin(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
 
-
-
-        // transX = (penultimateRootTransX - clickTransX - bridgeLength);
-        // transZ = penultimateRootTransZ;
-
-        // transX = (penultimateRootTransX - clickTransX - bridgeLength);
-        // transZ = (clickTransX + bridgeLength) / Math.sin(180 - penultimateRootAngleYRad);
-
-        // transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) / Math.cos(rotXbranch * Math.PI / 180))
-        // transZ = quadrantCoefZ * (clickTransX + bridgeLength) / Math.sin(rotXbranch * Math.PI / 180);
-
         console.log('PATH LENGTH', path.length);
     }
+
+    // if (path.length > 2 && path.length % 4 == 0) {
+    //     // transX = penultimateRootTransX;
+    //     // transZ = penultimateRootTransZ + bridgeLength + clickTransX;
+    //     transX = prevTransX + Math.cos(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+    //     transZ = prevTransZ - Math.sin(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+
+
+    //     console.log('PATH LENGTH', path.length);
+    // }
+
+    // if (path.length > 2 && path.length % 4 == 1) {
+    //     // transX = penultimateRootTransX + clickTransX + bridgeLength;
+    //     // transZ = penultimateRootTransZ;
+    //     transX = prevTransX + Math.cos(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+    //     transZ = prevTransZ - Math.sin(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+
+
+    //     console.log('PATH LENGTH', path.length);
+    // }
+
+    // if (path.length > 2 && path.length % 4 == 2) {
+    //     // transX = penultimateRootTransX;
+    //     // transZ = penultimateRootTransZ - bridgeLength - clickTransX;
+    //     transX = prevTransX + Math.cos(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+    //     transZ = prevTransZ - Math.sin(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+
+    //     console.log('PATH LENGTH', path.length);
+    // }
+
+    // if (path.length > 2 && path.length % 4 == 3) {
+    //     // transX = (penultimateRootTransX - clickTransX - bridgeLength) * Math.sin(penultimateRootAngleYRad);
+    //     // transZ = penultimateRootTransZ * Math.cos(penultimateRootAngleYRad);
+
+    //     // transX = prevTransX * Math.cos(0.523599) - prevTransZ * Math.sin(0.523599);
+    //     // transZ = prevTransX * Math.sin(0.523599) + prevTransZ * Math.cos(0.523599);
+    //     console.log('AAAAAAA prevTransX', prevTransX);
+    //     console.log('AAAAAAA clickTransX', clickTransX);
+    //     console.log('AAAAAAA Math.cos(penultimateRootAngleYRad)', Math.cos(penultimateRootAngleYRad));
+
+    //     console.log('BBBBBB prevTransX', prevTransZ);
+    //     console.log('BBBBBB clickTransX', clickTransX);
+    //     console.log('BBBBBB Math.sin(penultimateRootAngleYRad)', Math.sin(penultimateRootAngleYRad));
+
+
+    //     transX = prevTransX + Math.cos(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+    //     transZ = prevTransZ - Math.sin(penultimateRootAngleYRad) * (clickTransX + bridgeLength);
+
+
+
+    //     // transX = (penultimateRootTransX - clickTransX - bridgeLength);
+    //     // transZ = penultimateRootTransZ;
+
+    //     // transX = (penultimateRootTransX - clickTransX - bridgeLength);
+    //     // transZ = (clickTransX + bridgeLength) / Math.sin(180 - penultimateRootAngleYRad);
+
+    //     // transX = quadrantCoefX * (prevTransX + (clickTransX + bridgeLength) / Math.cos(rotXbranch * Math.PI / 180))
+    //     // transZ = quadrantCoefZ * (clickTransX + bridgeLength) / Math.sin(rotXbranch * Math.PI / 180);
+
+    //     console.log('PATH LENGTH', path.length);
+    // }
 
     transY = prevTransY + clickTransY;
 
