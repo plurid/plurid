@@ -2,7 +2,6 @@ import { transform,
          setActiveContainer } from "./container-core";
 import { initOptions } from "./options";
 import { initShortcuts } from "../logic/shortcuts";
-import { renderBranch } from "./branch-core";
 import { renderOptions,
          displayOptions } from "./options-core";
 
@@ -25,7 +24,6 @@ class PluridContainer extends HTMLElement {
 
         initShortcuts(this);
 
-        // renderBranch();
         containerId++;
     }
 }
