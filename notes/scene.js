@@ -8,119 +8,34 @@
 
 let pluridScene = {
     metadata: {
+        activePlurid: '',
+        activeSheet: '',
+        containers: 0,
         rootPages: [],
-        containers: 2,
+        rootSheets: [],
+        pages: 0
     },
     content: {
-        pluridContainerC1: {
-            metadata: {
-
-            },
-            content: {
-                pluridRootC1R1: {
-                    metadata: {
-
-                    },
-                    content: {
-                        pluridSheetC1R1S1: {
-                            metadata: {
-
-                            },
-                            content: {
-
-                            }
-                        },
-                        pluridSheetC1R1S2: {
-                            metadata: {
-
-                            },
-                            content: {
-
-                            }
-                        }
-                    }
-                },
-                pluridRootC1R2: {
-                    metadata: {
-
-                    },
-                    content: {
-                        pluridSheetC1R2S1: {
-                            metadata: {
-
-                            },
-                            content: {
-
-                            }
-                        },
-                        pluridSheetC1R2S2: {
-                            metadata: {
-
-                            },
-                            content: {
-
-                            }
-                        },
-                        pluridSheetC1R2S3: {
-                            metadata: {
-
-                            },
-                            content: {
-
-                            }
-                        },
-                    }
-                }
-            }
+        linkParentId: linkParentId,
+        link: newBranch.link,
+        branchId: newBranch.id,
+        coordinates: {
+            prevLinkX: prevLinkX,
+            prevLinkY: prevLinkY,
+            linkX: right,
+            linkY: top,
+            prevTransX: prevTransX,
+            prevTransY: prevTransY,
+            prevTransZ: prevTransZ,
+            transX: transX,
+            transY: transY,
+            transZ: transZ,
+            angleY: angleRotY
         },
-
-        pluridContainerC2: {
-            metadata: {
-
-            },
-            content: {
-                pluridRootC2R1: {
-                    metadata: {
-
-                    },
-                    content: {
-                        pluridSheetC2R1S1: {
-                            metadata: {
-
-                            },
-                            content: {
-
-                            }
-                        },
-                        pluridSheetC2R1S2: {
-                            metadata: {
-
-                            },
-                            content: {
-
-                            }
-                        },
-                        pluridSheetC2R1S3: {
-                            metadata: {
-
-                            },
-                            content: {
-
-                            }
-                        }
-                    }
-                },
-                pluridRootC2R2: {
-                    metadata: {
-
-                    },
-                    content: {
-                        pluridSheetC2R2S1: {
-
-                        },
-                    }
-                }
-            }
-        }
+        children: [],
+        path: path
+    },
+    getBranchById: (branchId) => {
+        return branchById;
     }
 }
