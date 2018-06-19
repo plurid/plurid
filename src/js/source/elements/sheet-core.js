@@ -519,3 +519,33 @@ function getTranslations(translationData) {
         Z: transZ,
     }
 }
+
+/**
+ * Sets eventListener on window to detect active sheet.
+ */
+function setActiveSheet() {
+    window.addEventListener('click', event => {
+        let activeSheet = pluridScene.metadata.activeSheet;
+        let currentSheet = checkSheet(event.path);
+        if (currentSheet) {
+            if (currentSheet != activeSheet) {
+                pluridScene.metadata.activeSheet = currentSheet;
+            }
+        }
+    })
+
+    /**
+     * Checks if the path contains a <plurid-sheet> element
+     *
+     * @param {Array} path
+     * @return {string}
+     */
+    function checkSheet(path) {
+        for (let pathElement of path) {
+            if (pathElement.nodeName == 'PLURID-SHEET') {
+                return pathElement.id;
+            }
+        }
+    }
+}
+setActiveSheet();
