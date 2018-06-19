@@ -91,7 +91,8 @@ export function contentControls () {
 
 export function setControls(element) {
     setActivePlurid(element);
-
+    minimizeSelectedSheet(element);
+    reduceSelectedSheet(element);
     openCloseControls(element)
 
     closePlurid(element);
@@ -180,4 +181,32 @@ function setActivePlurid(element) {
     //     activeRoot.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
     //     activeRoots.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
     // });
+}
+
+
+function minimizeSelectedSheet(element) {
+    let pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
+
+    pluridMinimize.addEventListener('click', event => {
+        let sheet = element.parentElement;
+        sheet.classList.toggle("plurid-sheet-minimize");
+    })
+}
+
+function reduceSelectedSheet(element) {
+    let pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
+
+    pluridReduce.addEventListener('click', event => {
+        let sheet = element.parentElement;
+        let sheetHeight = window.getComputedStyle(sheet,null).getPropertyValue("height");
+        // console.log(parseInt(sheetHeight));
+        if (parseInt(sheetHeight) > 699) {
+            sheet.classList.toggle("plurid-sheet-reduce-height");
+        }
+    })
+
+    // TODO
+    // toggle hide/show all the branches
+    // no branches visibile while reduce is on
+    // same for minimize
 }

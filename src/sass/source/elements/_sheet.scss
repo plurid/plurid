@@ -33,6 +33,21 @@ plurid-sheet {
 }
 
 
+.plurid-sheet-minimize {
+    height: 0px;
+    overflow: hidden;
+    padding-bottom: 0;
+    padding-top: 60px;
+}
+
+.plurid-sheet-reduce-height {
+    height: 700px;
+    overflow: hidden;
+    // padding-bottom: 0;
+    // padding-top: 60px;
+}
+
+
 // #plurid-sheet-3 {
 //     background-color: hsl(21, 32%, 32%);
 // }
