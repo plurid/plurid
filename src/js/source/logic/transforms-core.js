@@ -212,7 +212,7 @@ export function getScaleMatrix(element) {
 
 
 export function setTransform(element, rotateXMatrix, rotateYMatrix, translateMatrix, scaleMatrix, yPos = 0) {
-    var transformMatrix = matrix.multiplyArrayOfMatrices([
+    let transformMatrix = matrix.multiplyArrayOfMatrices([
         translateMatrix,
         rotateYMatrix,
         rotateXMatrix,
@@ -220,12 +220,22 @@ export function setTransform(element, rotateXMatrix, rotateYMatrix, translateMat
     ]);
     // console.log("Transform Matrix", transformMatrix);
 
+    // window.addEventListener('wheel', event => {
+        // console.log(event);
+        // console.log(event.clientX, event.clientY);
+        // var transformOriginRule = `${event.x}px ${yPos}px`;
+        // element.style.transformOrigin = transformOriginRule;
+    // })
+
+    // console.log(element);
+
     // Set the transform
-    var transformOriginRule = "50% " + yPos + "px";
+    let transformOriginRule = "50% " + yPos + "px";
     element.style.transformOrigin = transformOriginRule;
 
+
     // Returns a a matrix3d() CSS string
-    var matrix3dRule = matrix.matrixArrayToCssMatrix(transformMatrix);
+    let matrix3dRule = matrix.matrixArrayToCssMatrix(transformMatrix);
     // console.log("CSS Rule", matrix3dRule);
     element.style.transform = matrix3dRule;
 }
