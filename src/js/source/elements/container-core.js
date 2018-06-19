@@ -12,12 +12,17 @@ export function transform(element) {
     let plurid = element.children[0];
 
     element.addEventListener("click", event => {
-        if (event.path[0].id == element.id) {
+        // console.log(event.path);
+        let currentPluridRoot = checkCurrentPluridRoot(event.path);
+
+        if (event.path[0].id == element.id || !currentPluridRoot) {
+        // if (!currentPluridRoot) {
             pluridScene.metadata.activePlurid = 'plurid-roots-1';
             pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
             pluridScene.metadata.activeSheet = "";
 
-            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet);
+            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active');
+            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active-transform');
         }
 
         plurid = getPlurid(event).root;
@@ -46,4 +51,64 @@ export function transform(element) {
             scalePlurid(event, plurid);
         }
     });
+}
+
+
+function checkCurrentPluridRoot(eventPath) {
+    // console.log('eventPath', eventPath);
+
+    let pluridSheet;
+    let pluridSheetId = '';
+    let pluridBranch;
+    let pluridBranchId = '';
+    let pluridBranchScene;
+
+    for (let eventPathElement of eventPath) {
+        if (eventPathElement.classList) {
+            if (eventPathElement.classList.contains('plurid-controls-select')) {
+                return true;
+            }
+        }
+
+        if (eventPathElement.nodeName == 'PLURID-SHEET') {
+            pluridSheet = eventPathElement;
+            pluridSheetId = eventPathElement.id;
+        }
+    }
+
+    for (let pluridSceneContent of pluridScene.content) {
+        // console.log(pluridSceneContent.id);
+        for (let child of pluridSceneContent.children) {
+            if (child.sheetId == pluridSheetId) {
+                return verifyChild(pluridSceneContent.id);
+            } else {
+                return recursiveCheck(child.children, pluridSceneContent.id);
+            }
+        }
+
+        if (pluridSceneContent.sheetId == pluridSheetId) {
+            return verifyChild(pluridSceneContent.id);
+        }
+    }
+
+
+    function verifyChild(verifyId) {
+        if (verifyId == pluridScene.metadata.activePlurid) {
+            // console.log(verifyId);
+            // console.log(pluridScene.metadata.activePlurid);
+            return true;
+        }
+    }
+
+    function recursiveCheck(children, verifyId) {
+        for (let child of children) {
+            if (child.sheetId == pluridSheetId) {
+                return verifyChild(verifyId);
+            } else {
+                return recursiveCheck(child.children, verifyId);
+            }
+        }
+    }
+
+    return false;
 }

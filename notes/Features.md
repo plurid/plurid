@@ -51,13 +51,13 @@
 
 ### Controls in `<plurid-controls>`
 
-+ button :: select the `<plurid-root>` of the current `<plurid-sheet>` for transforms;
++ button :: select the `<plurid-root>` of the current `<plurid-sheet>` for transforms; `double-click` brings to normal view the current `<plurid-sheet>`;
 
 + button :: bring the parent `plurid` to normal view;
 
 + button :: minimize the current `<plurid-sheet>` plane;
 
-+ button :: reduce height of the current `<plurid-sheet>` plane to the current height of the viewport;
++ button :: reduce height of the current `<plurid-sheet>` plane to the current height of the viewport (toggle between full and reduced height);
 
 + button :: reload the current `<plurid-sheet>` plane;
 
@@ -65,7 +65,7 @@
 
 + button :: close the current `<plurid-sheet>` plane;
 
-+ button :: isolate the current `<plurid-branch>`;
++ button :: isolate the current `<plurid-sheet>` (toggle);
 
 + button :: back to the previous URL within the curent `<plurid-branch>`;
 

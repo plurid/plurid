@@ -12,6 +12,8 @@ plurid-controls {
     align-items: center;
     font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     // transition: height 250ms;
+
+    box-shadow: 0 4px 2px -2px hsl(200, 2%, 5%);
 }
 
 
@@ -142,12 +144,12 @@ plurid-controls {
     user-select: none;
     font-size: 6px;
     margin: 0 auto;
-    width: 20px;
+    width: 10px;
     cursor: pointer;
 }
 
 .plurid-controls-open-close-character:hover {
     background-color: hsl(0, 0%, 70%);
-    border-radius: 4px;
+    border-radius: 24px;
     color: black;
 }
