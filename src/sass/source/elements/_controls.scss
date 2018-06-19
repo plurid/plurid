@@ -53,6 +53,14 @@ plurid-controls {
     }
 }
 
+
+.plurid-controls-cancel:hover,
+.plurid-controls-search:hover {
+    background-color: transparent;
+    border-radius: 0px;
+}
+
+
 .plurid-controls-buttons-svg {
     fill: hsl(0, 0%, 90%);
 }
