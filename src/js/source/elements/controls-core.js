@@ -107,19 +107,21 @@ function openCloseControls(element) {
     let pluridControlsOpenCloseCharacter = element.getElementsByClassName("plurid-controls-open-close-character")[0];
     let pluridControlsOpenCloseState = 1;
 
-    pluridControlsOpenClose.addEventListener("click", event => {
+    pluridControlsOpenCloseCharacter.addEventListener("click", event => {
         let parentPlurid = element.parentElement;
 
         if (pluridControlsOpenCloseState == 1) {
             parentPlurid.style.paddingTop = "50px";
             pluridControlsContent.style.display = "none";
             element.style.height = "20px";
+            pluridControlsOpenClose.style.bottom = "4px";
             pluridControlsOpenCloseCharacter.innerHTML = "&#9661;";
         }
 
         if (pluridControlsOpenCloseState == 0) {
             parentPlurid.style.paddingTop = "100px";
             pluridControlsContent.style.display = "inline-flex";
+            pluridControlsOpenClose.style.bottom = "2px";
             element.style.height = "60px";
             pluridControlsOpenCloseCharacter.innerHTML = "&#9651;";
         }
@@ -133,6 +135,8 @@ function closePlurid(element) {
     let pluridParentClose = element.getElementsByClassName("plurid-controls-close")[0];
 
     pluridParentClose.addEventListener("click", event => {
+        console.log(pluridParentClose);
+
         let pluridParent = pluridParentClose.parentElement.parentElement.parentElement;
         // console.log(pluridParent.parentElement.nodeName)
         if (pluridParent.parentElement.nodeName == "PLURID-ROOT") {
@@ -157,18 +161,17 @@ function setActivePlurid(element) {
 
     pluridSelect.addEventListener("click", (event) => {
         let pluridRoot = getSpecifiedParent(pluridSelect, 'PLURID-ROOT');
-        // console.log('BEFORE', pluridScene.metadata.activePlurid);
         pluridScene.metadata.activePlurid = pluridRoot.id;
 
         pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
         pluridScene.metadata.activeSheet = element.parentElement.id;
 
-        removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet);
-        addActiveSheetShadow(pluridScene.metadata.activeSheet);
-        // console.log('AFTER', pluridScene.metadata.activePlurid);
+        removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active-transform');
+        addActiveSheetShadow(pluridScene.metadata.activeSheet, 'plurid-sheet-active-transform');
     });
 
     // pluridSelect.addEventListener("dblclick", (event) => {
+    //     // console.log('dblclick', pluridSelect);
     //     // console.log(pluridSelect.parentElement.parentElement.parentElement);
     //     activePlurid.selected = pluridSelect.parentElement.parentElement.parentElement;
     //     let activeRoot = document.getElementById(activePlurid.selected.id).parentElement;

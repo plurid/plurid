@@ -284,9 +284,14 @@ plurid-sheet {
   -webkit-transform-style: preserve-3d; }
 
 .plurid-sheet-active {
-  -webkit-box-shadow: 0px 0px 0px 1px #707475;
-  -moz-box-shadow: 0px 0px 0px 1px #707475;
-  box-shadow: 0px 0px 0px 1px #707475; }
+  -webkit-box-shadow: 0px 0px 0px 1px #646768;
+  -moz-box-shadow: 0px 0px 0px 1px #646768;
+  box-shadow: 0px 0px 0px 1px #646768; }
+
+.plurid-sheet-active-transform {
+  -webkit-box-shadow: 0px 0px 0px 1px white;
+  -moz-box-shadow: 0px 0px 0px 1px white;
+  box-shadow: 0px 0px 0px 1px white; }
 
 plurid-link {
   color: #8a8a8a;
@@ -307,7 +312,7 @@ plurid-options {
   font-size: 12px; }
 
 .plurid-container-options-content {
-  background-color: rgba(51, 51, 51, 0.9);
+  background-color: #252727;
   height: 100%;
   width: 700px;
   margin: 0 auto;
@@ -415,7 +420,8 @@ plurid-controls {
   z-index: 999;
   display: flex;
   align-items: center;
-  font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; }
+  font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 2px -2px #0c0d0d; }
 
 .plurid-container-controls-content {
   height: 50px;
@@ -517,10 +523,10 @@ plurid-controls {
   user-select: none;
   font-size: 6px;
   margin: 0 auto;
-  width: 20px;
+  width: 10px;
   cursor: pointer; }
 
 .plurid-controls-open-close-character:hover {
   background-color: #b3b3b3;
-  border-radius: 4px;
+  border-radius: 24px;
   color: black; }

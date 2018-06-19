@@ -217,12 +217,13 @@ function setPluridLinks(pluridLink) {
             insertAfter(newBranch, lastChild);
 
             let angleRotY = angleBranch ? angleBranch : angleDeg;
-
+            let branchSheet = newBranch.getElementsByTagName('plurid-sheet')[0];
 
             let sceneObject = {
                 linkParentId: linkParentId,
                 link: newBranch.link,
                 branchId: newBranch.id,
+                sheetId: branchSheet.id,
                 coordinates: {
                     prevLinkX: prevLinkX,
                     prevLinkY: prevLinkY,
@@ -542,14 +543,12 @@ function setActiveSheet(eventPath) {
             pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
             pluridScene.metadata.activeSheet = currentSheet;
 
-            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet);
-            addActiveSheetShadow(pluridScene.metadata.activeSheet);
-            // setActiveSheetShadow(pluridScene.metadata.previousActiveSheet,
-                                //  pluridScene.metadata.activeSheet);
+            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active-transform');
+            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active');
+            addActiveSheetShadow(pluridScene.metadata.activeSheet, 'plurid-sheet-active');
         }
     }
 }
-
 
 /**
  * Checks if the path contains a <plurid-sheet> element
@@ -570,11 +569,11 @@ function checkSheet(path) {
  *
  * @param {string} sheetId
  */
-export function removeActiveSheetShadow(sheetId) {
+export function removeActiveSheetShadow(sheetId, activeSheetClass) {
     let sheet = document.getElementById(sheetId);
 
     if (sheet) {
-        sheet.classList.remove("plurid-sheet-active");
+        sheet.classList.remove(activeSheetClass);
     }
 }
 
@@ -583,10 +582,10 @@ export function removeActiveSheetShadow(sheetId) {
  *
  * @param {string} sheetId
  */
-export function addActiveSheetShadow(sheetId) {
+export function addActiveSheetShadow(sheetId, activeSheetClass) {
     let sheet = document.getElementById(sheetId);
 
     if (sheet) {
-        sheet.classList.add("plurid-sheet-active");
+        sheet.classList.add(activeSheetClass);
     }
 }
