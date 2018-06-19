@@ -1,9 +1,9 @@
 body {
-  color: #e6e6e6;
+  color: #d8d9da;
   text-align: justify; }
 
 a {
-  color: #b3b3b3; }
+  color: #a4a6a8; }
 
 .content {
   background-color: #666666;
@@ -245,7 +245,7 @@ plurid-container {
   bottom: 0;
   right: 0;
   left: 0;
-  background-color: #1a1a1a;
+  background-color: #1e1f1f;
   overflow: hidden;
   perspective: 1000px;
   -webkit-perspective: 1000px;
@@ -277,15 +277,11 @@ plurid-root {
 plurid-sheet {
   position: absolute;
   width: 100%;
-  background-color: #4d4d4d;
+  background-color: #3e4041;
   padding: 50px;
   padding-top: 100px;
-  opacity: 0.7;
   transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d;
-  -webkit-box-shadow: 0px 0px 0px 1px #a8a8a8;
-  -moz-box-shadow: 0px 0px 0px 1px #a8a8a8;
-  box-shadow: 0px 0px 0px 1px #a8a8a8; }
+  -webkit-transform-style: preserve-3d; }
 
 plurid-link {
   color: #8a8a8a;
@@ -408,7 +404,7 @@ plurid-controls {
   top: 0;
   left: 0;
   right: 0;
-  background-color: #333333;
+  background-color: #252727;
   height: 60px;
   width: 100%;
   z-index: 999;

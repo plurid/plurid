@@ -2,20 +2,20 @@ plurid-sheet {
     position: absolute;
     width: 100%;
     // height: auto;
-    background-color: hsl(0, 0%, 30%);
+    background-color: hsl(200, 2%, 25%);
     padding: 50px;
     padding-top: 100px;
     // backface-visibility: hidden;
-    opacity: 0.7;
+    // opacity: 0.7;
 
     // transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
     // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
 
-    -webkit-box-shadow: 0px 0px 0px 1px rgba(168,168,168,1);
-    -moz-box-shadow: 0px 0px 0px 1px rgba(168,168,168,1);
-    box-shadow: 0px 0px 0px 1px rgba(168,168,168,1);
+    // -webkit-box-shadow: 0px 0px 0px 1px rgba(168,168,168,1);
+    // -moz-box-shadow: 0px 0px 0px 1px rgba(168,168,168,1);
+    // box-shadow: 0px 0px 0px 1px rgba(168,168,168,1);
 
 }
 
