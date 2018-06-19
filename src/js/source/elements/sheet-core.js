@@ -524,29 +524,69 @@ function getTranslations(translationData) {
 /**
  * Sets eventListener on window to detect active sheet.
  */
-function setActiveSheet() {
+function setActiveSheetListener() {
     window.addEventListener('click', event => {
-        let activeSheet = pluridScene.metadata.activeSheet;
-        let currentSheet = checkSheet(event.path);
-        if (currentSheet) {
-            if (currentSheet != activeSheet) {
-                pluridScene.metadata.activeSheet = currentSheet;
-            }
-        }
+        setActiveSheet(event.path);
     })
+}
+setActiveSheetListener();
 
-    /**
-     * Checks if the path contains a <plurid-sheet> element
-     *
-     * @param {Array} path
-     * @return {string}
-     */
-    function checkSheet(path) {
-        for (let pathElement of path) {
-            if (pathElement.nodeName == 'PLURID-SHEET') {
-                return pathElement.id;
-            }
+/**
+ * Set active sheet logic
+ */
+function setActiveSheet(eventPath) {
+    let activeSheet = pluridScene.metadata.activeSheet;
+    let currentSheet = checkSheet(eventPath);
+    if (currentSheet) {
+        if (currentSheet != activeSheet) {
+            pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
+            pluridScene.metadata.activeSheet = currentSheet;
+
+            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet);
+            addActiveSheetShadow(pluridScene.metadata.activeSheet);
+            // setActiveSheetShadow(pluridScene.metadata.previousActiveSheet,
+                                //  pluridScene.metadata.activeSheet);
         }
     }
 }
-setActiveSheet();
+
+
+/**
+ * Checks if the path contains a <plurid-sheet> element
+ *
+ * @param {Array} path
+ * @return {string}
+ */
+function checkSheet(path) {
+    for (let pathElement of path) {
+        if (pathElement.nodeName == 'PLURID-SHEET') {
+            return pathElement.id;
+        }
+    }
+}
+
+/**
+ * Remove CSS class .plurid-sheet-active.
+ *
+ * @param {string} sheetId
+ */
+export function removeActiveSheetShadow(sheetId) {
+    let sheet = document.getElementById(sheetId);
+
+    if (sheet) {
+        sheet.classList.remove("plurid-sheet-active");
+    }
+}
+
+/**
+ * Add CSS class .plurid-sheet-active.
+ *
+ * @param {string} sheetId
+ */
+export function addActiveSheetShadow(sheetId) {
+    let sheet = document.getElementById(sheetId);
+
+    if (sheet) {
+        sheet.classList.add("plurid-sheet-active");
+    }
+}

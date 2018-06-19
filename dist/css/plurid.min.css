@@ -283,6 +283,11 @@ plurid-sheet {
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d; }
 
+.plurid-sheet-active {
+  -webkit-box-shadow: 0px 0px 0px 1px #707475;
+  -moz-box-shadow: 0px 0px 0px 1px #707475;
+  box-shadow: 0px 0px 0px 1px #707475; }
+
 plurid-link {
   color: #8a8a8a;
   cursor: pointer; }

@@ -3,6 +3,7 @@ import { stylePlurid as style } from "../logic/style-plurid";
 import { rotatePlurid,
          translatePlurid,
          scalePlurid } from "../logic/transforms";
+import { removeActiveSheetShadow } from "./sheet-core";
 
 
 // transform receives the selected plurid
@@ -13,6 +14,10 @@ export function transform(element) {
     element.addEventListener("click", event => {
         if (event.path[0].id == element.id) {
             pluridScene.metadata.activePlurid = 'plurid-roots-1';
+            pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
+            pluridScene.metadata.activeSheet = "";
+
+            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet);
         }
 
         plurid = getPlurid(event).root;

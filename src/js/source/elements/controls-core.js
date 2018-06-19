@@ -1,6 +1,7 @@
 import { activePlurid } from "../logic/get-plurid";
 import { getSpecifiedParent } from "./sheet-core";
-
+import { removeActiveSheetShadow,
+         addActiveSheetShadow } from "./sheet-core";
 
 export function renderControls(element, id) {
     var controls = document.createElement("plurid-controls");
@@ -158,7 +159,12 @@ function setActivePlurid(element) {
         let pluridRoot = getSpecifiedParent(pluridSelect, 'PLURID-ROOT');
         // console.log('BEFORE', pluridScene.metadata.activePlurid);
         pluridScene.metadata.activePlurid = pluridRoot.id;
+
+        pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
         pluridScene.metadata.activeSheet = element.parentElement.id;
+
+        removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet);
+        addActiveSheetShadow(pluridScene.metadata.activeSheet);
         // console.log('AFTER', pluridScene.metadata.activePlurid);
     });
 

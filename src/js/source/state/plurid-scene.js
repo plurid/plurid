@@ -6,6 +6,7 @@ import { getBranchById } from './scene-core';
     global.pluridScene = {
         metadata: {
             activePlurid: '',
+            previousActiveSheet: '',
             activeSheet: '',
             containers: 0,
             rootPages: [],
