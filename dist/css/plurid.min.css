@@ -448,6 +448,11 @@ plurid-controls {
   .plurid-controls-button:hover .plurid-controls-buttons-svg {
     fill: #1a1a1a; }
 
+.plurid-controls-cancel:hover,
+.plurid-controls-search:hover {
+  background-color: transparent;
+  border-radius: 0px; }
+
 .plurid-controls-buttons-svg {
   fill: #e6e6e6; }
 

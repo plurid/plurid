@@ -520,6 +520,7 @@ function getTranslations(translationData) {
     }
 }
 
+
 /**
  * Sets eventListener on window to detect active sheet.
  */
