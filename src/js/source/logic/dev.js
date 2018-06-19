@@ -90,3 +90,59 @@ function setContainer() {
     }
 }
 setContainer()
+
+
+
+
+function setTransformOriginCoordinates() {
+    let elementPositiveX = 200;
+    let elementNegativeX = -210;
+    let elementPositiveY = 231;
+    let elementNegativeY = -211;
+    let elementPositiveZ = 131;
+    let elementNegativeZ = -1231;
+    let transformOrigin = pluridScene.metadata.transformOrigin;
+
+    if (elementPositiveX > transformOrigin.maxPositiveX) {
+        transformOrigin.maxPositiveX = elementPositiveX;
+    }
+
+    if (elementNegativeX < transformOrigin.maxNegativeX) {
+        transformOrigin.maxNegativeX = elementNegativeX;
+    }
+
+    if (elementPositiveY > transformOrigin.maxPositiveY) {
+        transformOrigin.maxPositiveY = elementPositiveY;
+    }
+
+    if (elementNegativeY < transformOrigin.maxNegativeY) {
+        transformOrigin.maxNegativeY = elementNegativeY;
+    }
+
+    if (elementPositiveZ > transformOrigin.maxPositiveZ) {
+        transformOrigin.maxPositiveZ = elementPositiveZ;
+    }
+
+    if (elementNegativeZ < transformOrigin.maxNegativeZ) {
+        transformOrigin.maxNegativeZ = elementNegativeZ;
+    }
+}
+
+setTransformOriginCoordinates();
+
+
+function calculateTransformOriginCenters() {
+    let transformOrigin = pluridScene.metadata.transformOrigin;
+    let positiveX = transformOrigin.maxPositiveX;
+    let negativeX = transformOrigin.maxNegativeX;
+    let positiveY = transformOrigin.maxPositiveY;
+    let negativeY = transformOrigin.maxNegativeY;
+    let positiveZ = transformOrigin.maxPositiveZ;
+    let negativeZ = transformOrigin.maxNegativeZ;
+
+    transformOrigin.transformOriginX = (positiveX + negativeX)/2;
+    transformOrigin.transformOriginY = (positiveY + negativeY)/2;
+    transformOrigin.transformOriginZ = (positiveZ + negativeZ)/2;
+}
+
+calculateTransformOriginCenters();
