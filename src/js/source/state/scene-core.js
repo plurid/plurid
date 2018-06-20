@@ -39,3 +39,37 @@ export function getBranchById(branchId) {
         }
     }
 }
+
+
+
+/**
+ * Gets children <plurid-branch> IDs based on sheet.id
+ *
+ * @param {string} sheetId
+ * @return {Array}
+ */
+export function getChildrenBySheetId(sheetId) {
+    let childrenBranch = [];
+
+    for (let rootElement of pluridScene.content) {
+        if (rootElement.sheetId == sheetId) {
+            for (let child of rootElement.children) {
+                childrenBranch.push(child.branchId);
+                for (let childs of child.children) {
+                    childrenBranch.push(childs.branchId);
+                }
+            }
+
+        } else {
+            for (let child of rootElement.children) {
+                if (child.sheetId == sheetId) {
+                    for (let childs of child.children) {
+                        childrenBranch.push(childs.branchId);
+                    }
+                }
+            }
+        }
+    }
+
+    return childrenBranch;
+}
