@@ -53,20 +53,25 @@ export function getChildrenBySheetId(sheetId) {
 
     for (let rootElement of pluridScene.content) {
         if (rootElement.sheetId == sheetId) {
-            for (let child of rootElement.children) {
-                childrenBranch.push(child.branchId);
-                for (let childs of child.children) {
-                    childrenBranch.push(childs.branchId);
-                }
-            }
-
+            pushChildrenOfChildren(childrenBranch, rootElement.children);
         } else {
-            for (let child of rootElement.children) {
-                if (child.sheetId == sheetId) {
-                    for (let childs of child.children) {
-                        childrenBranch.push(childs.branchId);
-                    }
-                }
+            checkChildren(sheetId, childrenBranch, rootElement.children);
+        }
+    }
+
+    function pushChildrenOfChildren(childrenBranch, children) {
+        for (let child of children) {
+            childrenBranch.push(child.branchId);
+            pushChildrenOfChildren(childrenBranch, child.children);
+        }
+    }
+
+    function checkChildren(sheetId, childrenBranch, children) {
+        for (let child of children) {
+            if (child.sheetId == sheetId) {
+                pushChildrenOfChildren(childrenBranch, child.children);
+            } else {
+                checkChildren(sheetId, childrenBranch, child.children);
             }
         }
     }

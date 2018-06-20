@@ -150,9 +150,9 @@ function minimizeSelectedSheet(element) {
     let pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
     let pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
 
-
     pluridMinimize.addEventListener('click', event => {
         let sheet = element.parentElement;
+        let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
 
         if (pluridReduce.classList.contains("plurid-sheet-control-active")) {
             pluridReduce.classList.remove("plurid-sheet-control-active");
@@ -164,6 +164,7 @@ function minimizeSelectedSheet(element) {
 
         sheet.classList.toggle("plurid-sheet-minimize");
         pluridMinimize.classList.toggle("plurid-sheet-control-active");
+        toggleChildren(sheetChildren);
     })
 }
 
@@ -176,12 +177,9 @@ function reduceSelectedSheet(element) {
     pluridReduce.addEventListener('click', event => {
         let sheet = element.parentElement;
         let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
-        // console.log(sheet.id);
-        console.log(sheetChildren);
 
         let sheetHeight = window.getComputedStyle(sheet,null).getPropertyValue("height");
         sheetHeight = parseInt(sheetHeight);
-        // console.log(sheetHeight);
         if (sheetHeight > 699 && sheetHeight > 60) {
             if (sheet.classList.contains("plurid-sheet-minimize")) {
                 sheet.classList.remove("plurid-sheet-minimize")
@@ -199,23 +197,24 @@ function reduceSelectedSheet(element) {
             toggleChildren(sheetChildren);
         }
     });
+}
 
 
-    function toggleChildren(sheetChildren) {
-        for (let child of sheetChildren) {
-            let branch = document.getElementById(child);
-            if (branch.style.display === "none") {
-                branch.style.display = "block";
-            } else {
-                branch.style.display = "none";
-            }
+
+/**
+ * Helper function to toggle show/hide of plurid branches.
+ *
+ * @param {Array} sheetChildren
+ */
+function toggleChildren(sheetChildren) {
+    for (let child of sheetChildren) {
+        let branch = document.getElementById(child);
+        if (branch.style.display === "none") {
+            branch.style.display = "block";
+        } else {
+            branch.style.display = "none";
         }
     }
-
-    // TODO
-    // toggle hide/show all the branches
-    // no branches visibile while reduce is on
-    // same for minimize
 }
 
 
@@ -223,7 +222,11 @@ function closePlurid(element) {
     let pluridParentClose = element.getElementsByClassName("plurid-controls-close")[0];
 
     pluridParentClose.addEventListener("click", event => {
-        console.log(pluridParentClose);
+        // TO DO
+        // remove the branches also
+        let sheet = element.parentElement;
+        let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
+        // console.log(pluridParentClose);
 
         let pluridParent = pluridParentClose.parentElement.parentElement.parentElement;
         // console.log(pluridParent.parentElement.nodeName)
