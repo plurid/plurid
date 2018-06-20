@@ -159,7 +159,8 @@ function minimizeSelectedSheet(element) {
         }
 
         if (sheet.classList.contains("plurid-sheet-reduce-height")) {
-            sheet.classList.remove("plurid-sheet-reduce-height")
+            sheet.classList.remove("plurid-sheet-reduce-height");
+            toggleChildren(sheetChildren);
         }
 
         sheet.classList.toggle("plurid-sheet-minimize");
@@ -182,7 +183,8 @@ function reduceSelectedSheet(element) {
         sheetHeight = parseInt(sheetHeight);
         if (sheetHeight > 699 && sheetHeight > 60) {
             if (sheet.classList.contains("plurid-sheet-minimize")) {
-                sheet.classList.remove("plurid-sheet-minimize")
+                sheet.classList.remove("plurid-sheet-minimize");
+                toggleChildren(sheetChildren);
             }
             sheet.classList.toggle("plurid-sheet-reduce-height");
             pluridReduce.classList.toggle("plurid-sheet-control-active");
@@ -191,7 +193,10 @@ function reduceSelectedSheet(element) {
 
         if (sheetHeight <= 60) {
             pluridMinimize.classList.remove("plurid-sheet-control-active");
-            sheet.classList.remove("plurid-sheet-minimize")
+            if (sheet.classList.contains("plurid-sheet-minimize")) {
+                sheet.classList.remove("plurid-sheet-minimize");
+                toggleChildren(sheetChildren);
+            }
             sheet.classList.add("plurid-sheet-reduce-height");
             pluridReduce.classList.add("plurid-sheet-control-active");
             toggleChildren(sheetChildren);
