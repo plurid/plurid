@@ -222,28 +222,42 @@ function closePlurid(element) {
     let pluridParentClose = element.getElementsByClassName("plurid-controls-close")[0];
 
     pluridParentClose.addEventListener("click", event => {
-        // TO DO
-        // remove the branches also
         let sheet = element.parentElement;
         let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
-        // console.log(pluridParentClose);
 
-        let pluridParent = pluridParentClose.parentElement.parentElement.parentElement;
-        // console.log(pluridParent.parentElement.nodeName)
-        if (pluridParent.parentElement.nodeName == "PLURID-ROOT") {
-            // pluridParent.parentElement.style.display = "none";
-            pluridParent.parentElement.parentElement.removeChild(pluridParent.parentElement);
-            pluridScene.metadata.activePlurid = 'plurid-roots-1';
-        }
-
-        if (pluridParent.parentElement.nodeName == "PLURID-SCION") {
-            // pluridParent.parentElement.parentElement.style.display = "none";
-            if (pluridScene.metadata.activePlurid != 'plurid-roots-1') {
-                pluridScene.metadata.activePlurid = pluridParent.parentElement.parentElement.parentElement.id;
+        if (sheet.parentElement.nodeName == "PLURID-ROOT") {
+            let pluridRoot = sheet.parentElement;
+            pluridRoot.removeChild(sheet);
+            removeChildren(pluridRoot, sheetChildren);
+        } else {
+            let pluridRoot = sheet.parentElement.parentElement.parentElement;
+            if (pluridRoot.nodeName == "PLURID-ROOT") {
+                let branch = sheet.parentElement.parentElement;
+                pluridRoot.removeChild(branch);
+                removeChildren(pluridRoot, sheetChildren);
             }
-            pluridParent.parentElement.parentElement.parentElement.removeChild(pluridParent.parentElement.parentElement);
         }
+
+        pluridScene.metadata.activePlurid = 'plurid-roots-1';
     });
+}
+
+
+/**
+ * Helper function to remove plurid branches.
+ *
+ * @param {HTMLElement} pluridRoot
+ * @param {Array} sheetChildren
+ */
+function removeChildren(pluridRoot, children) {
+    if (children) {
+        for (let child of children) {
+            let branch = document.getElementById(child);
+            if (branch) {
+                pluridRoot.removeChild(branch);
+            }
+        }
+    }
 }
 
 
