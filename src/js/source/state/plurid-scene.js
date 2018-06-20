@@ -1,4 +1,5 @@
-import { getBranchById } from './scene-core';
+import { getBranchById,
+         getChildrenBySheetId } from './scene-core';
 
 
 // set pluridScene as global variable
@@ -25,6 +26,7 @@ import { getBranchById } from './scene-core';
             }
         },
         content: [],
-        getBranchById: getBranchById
+        getBranchById: getBranchById,
+        getChildrenBySheetId: getChildrenBySheetId
     }
 }).call(this, global)

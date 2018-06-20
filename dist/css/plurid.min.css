@@ -458,10 +458,12 @@ plurid-controls {
   height: 30px;
   padding: 7px; }
 
+.plurid-sheet-control-active,
 .plurid-controls-button:hover {
   background-color: #b3b3b3;
   border-radius: 15px;
   color: #1a1a1a; }
+  .plurid-sheet-control-active .plurid-controls-buttons-svg,
   .plurid-controls-button:hover .plurid-controls-buttons-svg {
     fill: #1a1a1a; }
 

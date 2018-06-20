@@ -148,25 +148,69 @@ function goToParent(element) {
 
 function minimizeSelectedSheet(element) {
     let pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
+    let pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
+
 
     pluridMinimize.addEventListener('click', event => {
         let sheet = element.parentElement;
+
+        if (pluridReduce.classList.contains("plurid-sheet-control-active")) {
+            pluridReduce.classList.remove("plurid-sheet-control-active");
+        }
+
+        if (sheet.classList.contains("plurid-sheet-reduce-height")) {
+            sheet.classList.remove("plurid-sheet-reduce-height")
+        }
+
         sheet.classList.toggle("plurid-sheet-minimize");
+        pluridMinimize.classList.toggle("plurid-sheet-control-active");
     })
 }
 
 
 function reduceSelectedSheet(element) {
     let pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
+    let pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
+
 
     pluridReduce.addEventListener('click', event => {
         let sheet = element.parentElement;
+        let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
+        // console.log(sheet.id);
+        console.log(sheetChildren);
+
         let sheetHeight = window.getComputedStyle(sheet,null).getPropertyValue("height");
-        // console.log(parseInt(sheetHeight));
-        if (parseInt(sheetHeight) > 699) {
+        sheetHeight = parseInt(sheetHeight);
+        // console.log(sheetHeight);
+        if (sheetHeight > 699 && sheetHeight > 60) {
+            if (sheet.classList.contains("plurid-sheet-minimize")) {
+                sheet.classList.remove("plurid-sheet-minimize")
+            }
             sheet.classList.toggle("plurid-sheet-reduce-height");
+            pluridReduce.classList.toggle("plurid-sheet-control-active");
+            toggleChildren(sheetChildren);
         }
-    })
+
+        if (sheetHeight <= 60) {
+            pluridMinimize.classList.remove("plurid-sheet-control-active");
+            sheet.classList.remove("plurid-sheet-minimize")
+            sheet.classList.add("plurid-sheet-reduce-height");
+            pluridReduce.classList.add("plurid-sheet-control-active");
+            toggleChildren(sheetChildren);
+        }
+    });
+
+
+    function toggleChildren(sheetChildren) {
+        for (let child of sheetChildren) {
+            let branch = document.getElementById(child);
+            if (branch.style.display === "none") {
+                branch.style.display = "block";
+            } else {
+                branch.style.display = "none";
+            }
+        }
+    }
 
     // TODO
     // toggle hide/show all the branches
