@@ -91,12 +91,254 @@ export function contentControls () {
 
 export function setControls(element) {
     setActivePlurid(element);
+    goToParent(element);
     minimizeSelectedSheet(element);
     reduceSelectedSheet(element);
+    reloadPlurid(element);
+    extendBridge(element);
+    closePlurid(element);
+    isolatePlurid(element);
+    backPlurid(element);
+    forwardPlurid(element);
+    searchPlurid(element);
+    extractRoot(element);
+    opacityPlurid(element);
+
     openCloseControls(element)
 
-    closePlurid(element);
 
+}
+
+
+function setActivePlurid(element) {
+    let pluridSelect = element.getElementsByClassName("plurid-controls-select")[0];
+
+    pluridSelect.addEventListener("click", (event) => {
+        let pluridRoot = getSpecifiedParent(pluridSelect, 'PLURID-ROOT');
+        pluridScene.metadata.activePlurid = pluridRoot.id;
+
+        pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
+        pluridScene.metadata.activeSheet = element.parentElement.id;
+
+        removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active-transform');
+        addActiveSheetShadow(pluridScene.metadata.activeSheet, 'plurid-sheet-active-transform');
+    });
+
+    // pluridSelect.addEventListener("dblclick", (event) => {
+    //     // console.log('dblclick', pluridSelect);
+    //     // console.log(pluridSelect.parentElement.parentElement.parentElement);
+    //     activePlurid.selected = pluridSelect.parentElement.parentElement.parentElement;
+    //     let activeRoot = document.getElementById(activePlurid.selected.id).parentElement;
+    //     let activeRoots = document.getElementById(activePlurid.selected.id).parentElement.parentElement;
+    //     // console.log(active);
+    //     activeRoot.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
+    //     activeRoots.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
+    // });
+}
+
+
+function goToParent(element) {
+    let pluridParent = element.getElementsByClassName("plurid-controls-parent")[0];
+
+    pluridParent.addEventListener('click', event => {
+        console.log('Plurid Parent');
+    });
+}
+
+
+function minimizeSelectedSheet(element) {
+    let pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
+
+    pluridMinimize.addEventListener('click', event => {
+        let sheet = element.parentElement;
+        sheet.classList.toggle("plurid-sheet-minimize");
+    })
+}
+
+
+function reduceSelectedSheet(element) {
+    let pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
+
+    pluridReduce.addEventListener('click', event => {
+        let sheet = element.parentElement;
+        let sheetHeight = window.getComputedStyle(sheet,null).getPropertyValue("height");
+        // console.log(parseInt(sheetHeight));
+        if (parseInt(sheetHeight) > 699) {
+            sheet.classList.toggle("plurid-sheet-reduce-height");
+        }
+    })
+
+    // TODO
+    // toggle hide/show all the branches
+    // no branches visibile while reduce is on
+    // same for minimize
+}
+
+
+function closePlurid(element) {
+    let pluridParentClose = element.getElementsByClassName("plurid-controls-close")[0];
+
+    pluridParentClose.addEventListener("click", event => {
+        console.log(pluridParentClose);
+
+        let pluridParent = pluridParentClose.parentElement.parentElement.parentElement;
+        // console.log(pluridParent.parentElement.nodeName)
+        if (pluridParent.parentElement.nodeName == "PLURID-ROOT") {
+            // pluridParent.parentElement.style.display = "none";
+            pluridParent.parentElement.parentElement.removeChild(pluridParent.parentElement);
+            pluridScene.metadata.activePlurid = 'plurid-roots-1';
+        }
+
+        if (pluridParent.parentElement.nodeName == "PLURID-SCION") {
+            // pluridParent.parentElement.parentElement.style.display = "none";
+            if (pluridScene.metadata.activePlurid != 'plurid-roots-1') {
+                pluridScene.metadata.activePlurid = pluridParent.parentElement.parentElement.parentElement.id;
+            }
+            pluridParent.parentElement.parentElement.parentElement.removeChild(pluridParent.parentElement.parentElement);
+        }
+    });
+}
+
+
+function reloadPlurid(element) {
+    let pluridReload = element.getElementsByClassName("plurid-controls-reload")[0];
+
+    pluridReload.addEventListener('click', event => {
+        console.log('Plurid Reload');
+    });
+}
+
+
+function extendBridge(element) {
+    let bridgeExtend = element.getElementsByClassName("plurid-controls-extend")[0];
+
+    bridgeExtend.addEventListener('click', event => {
+        console.log('Plurid Extend');
+    });
+}
+
+
+function isolatePlurid(element) {
+    let pluridIsolate = element.getElementsByClassName("plurid-controls-isolate")[0];
+
+    pluridIsolate.addEventListener('click', event => {
+        console.log('Plurid Isolate');
+    });
+}
+
+
+function backPlurid(element) {
+    let pluridBack = element.getElementsByClassName("plurid-controls-back")[0];
+
+    pluridBack.addEventListener('click', event => {
+        console.log('Plurid Back');
+    });
+}
+
+
+function forwardPlurid(element) {
+    let pluridForward = element.getElementsByClassName("plurid-controls-forward")[0];
+
+    pluridForward.addEventListener('click', event => {
+        console.log('Plurid Forward');
+    });
+}
+
+
+function searchPlurid(element) {
+    let pluridSearch = element.getElementsByClassName("plurid-controls-search")[0];
+    let pluridSearchInput = element.getElementsByClassName("plurid-controls-url-input")[0];
+    let pluridCancelSearch = element.getElementsByClassName("plurid-controls-cancel")[0];
+
+    pluridSearch.addEventListener('click', event => {
+        search(pluridSearchInput.value);
+    });
+
+    pluridCancelSearch.addEventListener('click', event => {
+        clearSearch(pluridSearchInput);
+    });
+
+    pluridSearchInput.addEventListener('keydown', event => {
+        if (event.key == "Escape") {
+            clearSearch(pluridSearchInput);
+        }
+
+        if (event.key == "Enter") {
+            search(pluridSearchInput.value);
+        }
+    })
+
+    function clearSearch(searchInput) {
+        searchInput.value = "";
+        searchInput.focus();
+    }
+
+    function search(url) {
+        console.log("Search for", url);
+    }
+}
+
+
+function extractRoot(element) {
+    let pluridExtract = element.getElementsByClassName("plurid-controls-extract")[0];
+
+    pluridExtract.addEventListener('click', event => {
+        console.log('Plurid Root Extract');
+    });
+}
+
+
+function opacityPlurid(element) {
+    let pluridOpacity = element.getElementsByClassName("plurid-controls-opacity")[0];
+    let sheet = element.parentElement;
+
+    pluridOpacity.addEventListener('click', event => {
+        // MAYBE
+        // type into the opacity button text
+
+        // if (event.shiftKey) {
+        //     pluridOpacity.setAttribute("contenteditable", "true");
+        //     pluridOpacity.addEventListener('keydown', event => {
+        //         // console.log(event.key);
+        //         const isNumber = isFinite(event.key);
+        //         if (!isNumber) {
+        //             if (event.key != "Backspace"
+        //                 && event.key != "Delete"
+        //                 && event.key != "Enter") {
+        //                 event.preventDefault();
+        //             }
+        //         }
+
+        //         pluridOpacity.addEventListener('input', event => {
+        //             let opacity = pluridOpacity.innerText;
+        //             // console.log(opacity);
+        //             sheet.style.opacity = opacity / 100;
+        //         })
+
+        //         if (event.key == "Enter") {
+        //             pluridOpacity.setAttribute("contenteditable", "false");
+        //             pluridOpacity.blur();
+        //         }
+        //     });
+        // } else {
+            setOpacity(event, sheet, pluridOpacity);
+        // }
+    });
+
+    function setOpacity(event, sheet, pluridOpacity) {
+        let opacity = parseInt(pluridOpacity.innerText);
+
+        if (opacity == 100) {
+            pluridOpacity.innerText = 70;
+            sheet.style.opacity = 0.7;
+        } else if (opacity == 70) {
+            pluridOpacity.innerText = 35;
+            sheet.style.opacity = .35;
+        } else {
+            pluridOpacity.innerText = 100;
+            sheet.style.opacity = 1;
+        }
+    }
 }
 
 
@@ -129,84 +371,4 @@ function openCloseControls(element) {
 
         pluridControlsOpenCloseState = pluridControlsOpenCloseState ? 0 : 1;
     })
-}
-
-
-function closePlurid(element) {
-    let pluridParentClose = element.getElementsByClassName("plurid-controls-close")[0];
-
-    pluridParentClose.addEventListener("click", event => {
-        console.log(pluridParentClose);
-
-        let pluridParent = pluridParentClose.parentElement.parentElement.parentElement;
-        // console.log(pluridParent.parentElement.nodeName)
-        if (pluridParent.parentElement.nodeName == "PLURID-ROOT") {
-            // pluridParent.parentElement.style.display = "none";
-            pluridParent.parentElement.parentElement.removeChild(pluridParent.parentElement);
-            pluridScene.metadata.activePlurid = 'plurid-roots-1';
-        }
-
-        if (pluridParent.parentElement.nodeName == "PLURID-SCION") {
-            // pluridParent.parentElement.parentElement.style.display = "none";
-            if (pluridScene.metadata.activePlurid != 'plurid-roots-1') {
-                pluridScene.metadata.activePlurid = pluridParent.parentElement.parentElement.parentElement.id;
-            }
-            pluridParent.parentElement.parentElement.parentElement.removeChild(pluridParent.parentElement.parentElement);
-        }
-    });
-}
-
-
-function setActivePlurid(element) {
-    let pluridSelect = element.getElementsByClassName("plurid-controls-select")[0];
-
-    pluridSelect.addEventListener("click", (event) => {
-        let pluridRoot = getSpecifiedParent(pluridSelect, 'PLURID-ROOT');
-        pluridScene.metadata.activePlurid = pluridRoot.id;
-
-        pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
-        pluridScene.metadata.activeSheet = element.parentElement.id;
-
-        removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active-transform');
-        addActiveSheetShadow(pluridScene.metadata.activeSheet, 'plurid-sheet-active-transform');
-    });
-
-    // pluridSelect.addEventListener("dblclick", (event) => {
-    //     // console.log('dblclick', pluridSelect);
-    //     // console.log(pluridSelect.parentElement.parentElement.parentElement);
-    //     activePlurid.selected = pluridSelect.parentElement.parentElement.parentElement;
-    //     let activeRoot = document.getElementById(activePlurid.selected.id).parentElement;
-    //     let activeRoots = document.getElementById(activePlurid.selected.id).parentElement.parentElement;
-    //     // console.log(active);
-    //     activeRoot.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
-    //     activeRoots.style.transform = "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)";
-    // });
-}
-
-
-function minimizeSelectedSheet(element) {
-    let pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
-
-    pluridMinimize.addEventListener('click', event => {
-        let sheet = element.parentElement;
-        sheet.classList.toggle("plurid-sheet-minimize");
-    })
-}
-
-function reduceSelectedSheet(element) {
-    let pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
-
-    pluridReduce.addEventListener('click', event => {
-        let sheet = element.parentElement;
-        let sheetHeight = window.getComputedStyle(sheet,null).getPropertyValue("height");
-        // console.log(parseInt(sheetHeight));
-        if (parseInt(sheetHeight) > 699) {
-            sheet.classList.toggle("plurid-sheet-reduce-height");
-        }
-    })
-
-    // TODO
-    // toggle hide/show all the branches
-    // no branches visibile while reduce is on
-    // same for minimize
 }
