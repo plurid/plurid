@@ -122,9 +122,13 @@ function setPluridLinks(pluridLink) {
 
             let angleDeg = 90;
             let angleBranch;
+            let branchBridge;
+            let bridgeWidth;
             if (pluridBranch) {
                 angleBranch = transcore.getTransformRotate(pluridBranch).rotateY;
                 angleBranch = angleBranch * 180 / Math.PI;
+                branchBridge = pluridBranch.children[0];
+                bridgeWidth = parseInt(branchBridge.style.width) || 100;
             }
             // console.log(angleBranch);
 
@@ -133,7 +137,8 @@ function setPluridLinks(pluridLink) {
             let parentBranch = pluridScene.getBranchById(linkParentId);
             // console.log('the parentBranch is ', parentBranch);
 
-            let bridgeLength = 100;
+            // console.log(bridgeWidth);
+            let bridgeLength = bridgeWidth || 100;
 
             let parentAngleY = parentBranch ? parentBranch.coordinates.angleY : 0;
             // console.log('parentAngleY % 360', parentAngleY % 360)

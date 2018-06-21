@@ -38,7 +38,7 @@ plurid-controls {
     justify-content: center;
     outline: none;
     margin: 0 5px;
-    // user-select: none;
+    user-select: none;
 }
 
 .plurid-controls-button svg {
@@ -59,6 +59,18 @@ plurid-controls {
 }
 
 
+.plurid-sheet-controls-disabled,
+.plurid-sheet-controls-disabled:hover {
+    cursor: not-allowed;
+    background-color: hsl(200, 2%, 15%);
+    color: hsl(0, 0%, 90%);
+
+    .plurid-controls-buttons-svg {
+        fill: hsl(0, 0%, 30%);
+    }
+}
+
+
 .plurid-controls-cancel:hover,
 .plurid-controls-search:hover {
     background-color: transparent;
@@ -70,6 +82,10 @@ plurid-controls {
     fill: hsl(0, 0%, 90%);
 }
 
+.plurid-controls-extend {
+    cursor: -webkit-grab;
+    cursor: grab;
+}
 
 
 // URL

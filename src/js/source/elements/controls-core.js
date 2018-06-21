@@ -105,8 +105,6 @@ export function setControls(element) {
     opacityPlurid(element);
 
     openCloseControls(element)
-
-
 }
 
 
@@ -139,10 +137,17 @@ function setActivePlurid(element) {
 
 function goToParent(element) {
     let pluridParent = element.getElementsByClassName("plurid-controls-parent")[0];
+    let bridge = element.parentElement.parentElement.parentElement.children[0];
+    let scion = element.parentElement.parentElement.parentElement.children[1];
+    let controls = pluridParent.parentElement;
 
-    pluridParent.addEventListener('click', event => {
-        console.log('Plurid Parent');
-    });
+    if (bridge.nodeName == "PLURID-BRIDGE") {
+        pluridParent.addEventListener('click', event => {
+            console.log('Plurid Parent');
+        });
+    } else {
+        pluridParent.classList.add("plurid-sheet-controls-disabled");
+    }
 }
 
 
@@ -203,7 +208,6 @@ function reduceSelectedSheet(element) {
         }
     });
 }
-
 
 
 /**
@@ -277,10 +281,55 @@ function reloadPlurid(element) {
 
 function extendBridge(element) {
     let bridgeExtend = element.getElementsByClassName("plurid-controls-extend")[0];
+    let bridge = element.parentElement.parentElement.parentElement.children[0];
+    let scion = element.parentElement.parentElement.parentElement.children[1];
+    let controls = bridgeExtend.parentElement;
 
-    bridgeExtend.addEventListener('click', event => {
-        console.log('Plurid Extend');
-    });
+    if (bridge.nodeName == "PLURID-BRIDGE") {
+        bridgeExtend.addEventListener('mousedown', () => {
+            document.body.style.cursor = "-webkit-grabbing";
+            document.body.style.cursor = "grabbing";
+            bridgeExtend.style.cursor = "-webkit-grabbing";
+            bridgeExtend.style.cursor = "grabbing";
+            window.addEventListener('mousemove', extend);
+
+            window.addEventListener('mouseup', () => {
+                document.body.style.cursor = "default";
+                bridgeExtend.style.cursor = "-webkit-grab";
+                bridgeExtend.style.cursor = "grab";
+                window.removeEventListener('mousemove', extend);
+            });
+        });
+
+    } else {
+        bridgeExtend.classList.add("plurid-sheet-controls-disabled");
+    }
+
+    function extend(event) {
+        let width = parseInt(bridge.style.width) || 100;
+        let right = parseInt(scion.style.right) || -100;
+        // console.log('bridge.style.width', bridge.style.width);
+        // console.log('scion.style.right', scion.style.right);
+        // console.log(width);
+        width = width + event.movementX + "px";
+        right = right - event.movementX + "px";
+
+        if (parseInt(bridge.style.width) <= 0) {
+            // console.log(parseInt(width));
+            // if (parseInt(width) > 0) {
+                bridge.style.width = "100px";
+                scion.style.right = "-100px";
+            // }
+        } else {
+            bridge.style.width = width;
+            scion.style.right = right;
+        }
+
+        // TODO
+        // update <plurid-branch>es currently open
+        // with the appropriate length of the <plurid-bridge>
+    }
+
 }
 
 
