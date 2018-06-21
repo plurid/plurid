@@ -451,7 +451,8 @@ plurid-controls {
   align-items: center;
   justify-content: center;
   outline: none;
-  margin: 0 5px; }
+  margin: 0 5px;
+  user-select: none; }
 
 .plurid-controls-button svg {
   width: 30px;
@@ -467,6 +468,15 @@ plurid-controls {
   .plurid-controls-button:hover .plurid-controls-buttons-svg {
     fill: #1a1a1a; }
 
+.plurid-sheet-controls-disabled,
+.plurid-sheet-controls-disabled:hover {
+  cursor: not-allowed;
+  background-color: #252727;
+  color: #e6e6e6; }
+  .plurid-sheet-controls-disabled .plurid-controls-buttons-svg,
+  .plurid-sheet-controls-disabled:hover .plurid-controls-buttons-svg {
+    fill: #4d4d4d; }
+
 .plurid-controls-cancel:hover,
 .plurid-controls-search:hover {
   background-color: transparent;
@@ -474,6 +484,10 @@ plurid-controls {
 
 .plurid-controls-buttons-svg {
   fill: #e6e6e6; }
+
+.plurid-controls-extend {
+  cursor: -webkit-grab;
+  cursor: grab; }
 
 .plurid-controls-url {
   width: 60%; }
