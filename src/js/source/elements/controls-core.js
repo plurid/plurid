@@ -83,6 +83,13 @@ export function contentControls () {
                             &#9651;
                         </div>
                     </div>
+
+                    <div class="plurid-controls-message">
+                        <div class="plurid-controls-message-close">✕</div>
+                        <div class="plurid-controls-message-content">
+                            Page not found, falling back to known page.
+                        </div>
+                    </div>
                     `
 
     return content;
@@ -104,7 +111,8 @@ export function setControls(element) {
     extractRoot(element);
     opacityPlurid(element);
 
-    openCloseControls(element)
+    openCloseControls(element);
+    setControlsMessageClose(element);
 }
 
 
@@ -283,11 +291,8 @@ function reloadPlurid(element) {
     pluridReload.addEventListener('click', event => {
         url = pluridSearchInput.value;
         if (url) {
-            getPage(url, sheet);
+            getPage(url, sheet, element);
         }
-        // else {
-        //     console.log('no url');
-        // }
     });
 }
 
@@ -432,12 +437,17 @@ function searchPlurid(element) {
     }
 
     function search(url, sheet) {
-        getPage(url, sheet);
+        if (!url) {
+            let message = "Nothing to search for.";
+            setControlsMessage(element, message);
+        } else {
+            getPage(url, sheet, element);
+        }
     }
 }
 
 
-function getPage(url, sheet) {
+function getPage(url, sheet, element) {
     let sheetContent = sheet.getElementsByTagName('plurid-content')[0];
     let xhttp = new XMLHttpRequest();
 
@@ -447,6 +457,11 @@ function getPage(url, sheet) {
             let doc = parser.parseFromString(this.responseText, "text/html");
 
             sheetContent.innerHTML = doc.body.innerHTML;
+        }
+
+        if (this.status === 404) {
+            let message = `Page not found.`;
+            setControlsMessage(element, message)
         }
     };
 
@@ -521,9 +536,7 @@ function opacityPlurid(element) {
 
 
 function openCloseControls(element) {
-
     let pluridControlsContent = element.getElementsByClassName("plurid-container-controls-content")[0];
-
     let pluridControlsOpenClose = element.getElementsByClassName("plurid-controls-open-close")[0];
     let pluridControlsOpenCloseCharacter = element.getElementsByClassName("plurid-controls-open-close-character")[0];
     let pluridControlsOpenCloseState = 1;
@@ -548,5 +561,32 @@ function openCloseControls(element) {
         }
 
         pluridControlsOpenCloseState = pluridControlsOpenCloseState ? 0 : 1;
-    })
+    });
+}
+
+
+function setControlsMessageClose(element) {
+    let pluridMessage = element.getElementsByClassName("plurid-controls-message")[0];
+    let pluridMessageClose = element.getElementsByClassName("plurid-controls-message-close")[0];
+    let pluridMessageContent = element.getElementsByClassName("plurid-controls-message-content")[0];
+
+    pluridMessageClose.addEventListener("click", event => {
+        pluridMessage.style.display = "none";
+        pluridMessageContent.innerHTML = "";
+    });
+}
+
+
+function setControlsMessage(element, message) {
+    let pluridMessage = element.getElementsByClassName("plurid-controls-message")[0];
+    let pluridMessageContent = element.getElementsByClassName("plurid-controls-message-content")[0];
+
+    pluridMessageContent.innerHTML = message;
+    pluridMessage.style.display = "block";
+    let timeout = 1250;
+
+    setTimeout(() => {
+        pluridMessage.style.display = "none";
+        pluridMessageContent.innerHTML = "";
+    }, timeout);
 }

@@ -559,3 +559,26 @@ plurid-controls {
   background-color: #b3b3b3;
   border-radius: 24px;
   color: black; }
+
+.plurid-controls-message {
+  position: absolute;
+  display: none;
+  padding: 20px;
+  padding-top: 30px;
+  padding-right: 30px;
+  max-width: 400px;
+  background-color: #252727;
+  box-shadow: 0 4px 2px -2px #0c0d0d;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px; }
+
+.plurid-controls-message-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer; }
+
+.plurid-controls-message-close:hover {
+  color: #707475; }
