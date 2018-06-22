@@ -418,7 +418,7 @@ function searchPlurid(element) {
 
 
     pluridSearch.addEventListener('click', event => {
-        search(pluridSearchInput.value, sheet);
+        search(pluridSearchInput.value, sheet, element);
     });
 
     pluridCancelSearch.addEventListener('click', event => {
@@ -431,7 +431,7 @@ function searchPlurid(element) {
         }
 
         if (event.key == "Enter") {
-            search(pluridSearchInput.value, sheet);
+            search(pluridSearchInput.value, sheet, element);
         }
     })
 
@@ -445,6 +445,20 @@ function searchPlurid(element) {
             let message = "Nothing to search for.";
             setControlsMessage(element, message);
         } else {
+            let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
+
+            if (sheet.parentElement.nodeName == "PLURID-ROOT") {
+                let pluridRoot = sheet.parentElement;
+                pluridRoot.removeChild(sheet);
+                removeChildren(pluridRoot, sheetChildren);
+            } else {
+                let pluridRoot = sheet.parentElement.parentElement.parentElement;
+                if (pluridRoot.nodeName == "PLURID-ROOT") {
+                    let branch = sheet.parentElement.parentElement;
+                    removeChildren(pluridRoot, sheetChildren);
+                }
+            }
+
             getPage(url, sheet, element);
         }
     }
@@ -465,7 +479,7 @@ function getPage(url, sheet, element) {
 
         if (this.status === 404) {
             let message = `Page not found.`;
-            setControlsMessage(element, message)
+            setControlsMessage(element, message);
         }
     };
 
