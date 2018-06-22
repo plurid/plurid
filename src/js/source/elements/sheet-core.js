@@ -98,7 +98,7 @@ function setPluridLinks(pluridLink) {
                                     <plurid-scion>
                                         <plurid-sheet>
                                             <plurid-content>
-                                            ${doc.body.innerHTML}
+                                                ${doc.body.innerHTML}
                                             </plurid-content>
                                         </plurid-sheet>
                                     </plurid-scion>

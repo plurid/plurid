@@ -272,9 +272,22 @@ function removeChildren(pluridRoot, children) {
 
 function reloadPlurid(element) {
     let pluridReload = element.getElementsByClassName("plurid-controls-reload")[0];
+    let sheet = element.parentElement;
+    let pluridSearchInput = element.getElementsByClassName("plurid-controls-url-input")[0];
+    let url = pluridSearchInput.value;
+
+    if (!url) {
+        pluridReload.classList.add("plurid-sheet-controls-disabled");
+    }
 
     pluridReload.addEventListener('click', event => {
-        console.log('Plurid Reload');
+        url = pluridSearchInput.value;
+        if (url) {
+            getPage(url, sheet);
+        }
+        // else {
+        //     console.log('no url');
+        // }
     });
 }
 
@@ -390,11 +403,13 @@ function searchPlurid(element) {
         }
 
         pluridSearchInput.value = linkHref;
+        let pluridReload = element.getElementsByClassName("plurid-controls-reload")[0];
+        pluridReload.classList.remove("plurid-sheet-controls-disabled");
     }
 
 
     pluridSearch.addEventListener('click', event => {
-        search(pluridSearchInput.value);
+        search(pluridSearchInput.value, sheet);
     });
 
     pluridCancelSearch.addEventListener('click', event => {
@@ -407,7 +422,7 @@ function searchPlurid(element) {
         }
 
         if (event.key == "Enter") {
-            search(pluridSearchInput.value);
+            search(pluridSearchInput.value, sheet);
         }
     })
 
@@ -416,9 +431,29 @@ function searchPlurid(element) {
         searchInput.focus();
     }
 
-    function search(url) {
-        console.log("Search for", url);
+    function search(url, sheet) {
+        getPage(url, sheet);
     }
+}
+
+
+function getPage(url, sheet) {
+    let sheetContent = sheet.getElementsByTagName('plurid-content')[0];
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(this.responseText, "text/html");
+
+            sheetContent.innerHTML = doc.body.innerHTML;
+        }
+    };
+
+    xhttp.open("GET", url, true);
+    xhttp.setRequestHeader("Cache-Control", "no-cache");
+    xhttp.setRequestHeader("Pragma", "no-cache");
+    xhttp.send();
 }
 
 
