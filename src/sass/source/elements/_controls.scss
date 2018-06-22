@@ -96,7 +96,7 @@ plurid-controls {
 .plurid-controls-url-container input {
     background-color: hsl(0, 0%, 40%);
     border: none;
-    color: white;
+    color: hsl(0, 0%, 70%);
     height: 34px;
     width: 100%;
     font-size: 14px;
@@ -104,6 +104,10 @@ plurid-controls {
     padding-right: 38px;
     margin-right: -34px;
     margin-left: -34px;
+}
+
+.plurid-controls-url-container input:focus {
+    color: hsl(0, 0%, 90%);
 }
 
 .plurid-controls-url-input {
