@@ -291,7 +291,11 @@ function reloadPlurid(element) {
     pluridReload.addEventListener('click', event => {
         url = pluridSearchInput.value;
         if (url) {
+            pluridReload.classList.add("rotate-button");
             getPage(url, sheet, element);
+            setTimeout(() => {
+                pluridReload.classList.remove("rotate-button");
+            }, 600);
         }
     });
 }
