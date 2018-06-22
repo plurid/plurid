@@ -495,7 +495,7 @@ plurid-controls {
 .plurid-controls-url-container input {
   background-color: #666666;
   border: none;
-  color: white;
+  color: #b3b3b3;
   height: 34px;
   width: 100%;
   font-size: 14px;
@@ -503,6 +503,9 @@ plurid-controls {
   padding-right: 38px;
   margin-right: -34px;
   margin-left: -34px; }
+
+.plurid-controls-url-container input:focus {
+  color: #e6e6e6; }
 
 .plurid-controls-url-input {
   width: 100%;

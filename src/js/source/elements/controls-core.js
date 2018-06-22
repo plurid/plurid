@@ -364,6 +364,34 @@ function searchPlurid(element) {
     let pluridSearch = element.getElementsByClassName("plurid-controls-search")[0];
     let pluridSearchInput = element.getElementsByClassName("plurid-controls-url-input")[0];
     let pluridCancelSearch = element.getElementsByClassName("plurid-controls-cancel")[0];
+    let sheet = element.parentElement;
+
+    if (sheet.parentElement.nodeName == "PLURID-ROOT") {
+        let pluridRoot = sheet.parentElement;
+    } else {
+        let pluridRoot = sheet.parentElement.parentElement.parentElement;
+        if (pluridRoot.nodeName == "PLURID-ROOT") {
+            let branch = sheet.parentElement.parentElement;
+            setSearchLink(branch.link, pluridSearchInput);
+        }
+    }
+
+    function setSearchLink(branchLink, pluridSearchInput) {
+        let link = document.getElementById(branchLink);
+        let linkHref;
+
+        if (link.nodeName == "A") {
+            linkHref = link.href;
+        }
+
+        if (link.nodeName == "PLURID-LINK") {
+            linkHref = link.page;
+            linkHref = new URL(linkHref, window.location.href).href;
+        }
+
+        pluridSearchInput.value = linkHref;
+    }
+
 
     pluridSearch.addEventListener('click', event => {
         search(pluridSearchInput.value);
