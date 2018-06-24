@@ -24,7 +24,6 @@
         + `<plurid-solid-right>`;
     + `<plurid-content>`;
     + `<plurid-branch>`;
-    + `<plurid-insertion>`;
     + `<plurid-bridge>`;
     + `<plurid-branch>`;
     + `<plurid-controls>`;
