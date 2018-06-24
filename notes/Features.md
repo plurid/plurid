@@ -9,7 +9,7 @@
 
 + Double-clicking any `<plurid-sheet>`, `<plurid-sheet-double>`, or `<plurid-solid>` select button makes the plane normal to the camera and reduces the opacity of everything else (opacity level controlled through `<plurid-options>`). Rotation transformation brings everything back to 100% opacity.
 
-+ When clicking a `<plurid-insertion>` link the `<plurid-content>` is transformed (rotation, translation, scale) to the normal view.
++ When clicking an already open `<plurid-link>` (or `<a>`) the view is transformed (rotation, translation, scale) normal to the `<plurid-branch>` of the link.
 
 + In the case of multiple `<plurid-root>`s, each can be transformed (rotation, translation, scale) separately by selecting only a specific `<plurid-root>`, or all the `<plurid-root>`s can be transformed simultaneously by selecting the `<plurid-roots>` space (hence deselecting all the individual `<plurid-root>`s);
 
@@ -75,7 +75,7 @@
 
 + button :: extract the current `<plurid-branch>` to a separate `<plurid-root>`;
 
-+ slider :: opacity of the current `<plurid-branch>` (lower-limited to 5%);
++ slider :: opacity of the current `<plurid-branch>` (lower-limited to 15%);
 
 + more -> button :: open the current `<plurid-branch>` in new tab;
 
@@ -93,9 +93,11 @@
 
 + more -> checkmark :: lock size of the current `<plurid-content>` (default on);
 
-+ more -> radio buttons :: use google.com, bing.com, duckduckgo.com as search engine within the URL input;
++ more -> radio buttons :: use google.com, bing.com, duckduckgo.com as search engine within the URL input (will not work due to Cross-Origin Resource Sharing, to be achieved in a future pluridal browser);
 
 + more -> checkmark :: show icon tooltip;
+
++ more -> button :: edit buttons > while active, the user can drag around the buttons of the controls toolbar to reorder them;
 
 + more -> button :: reset to default;
 
