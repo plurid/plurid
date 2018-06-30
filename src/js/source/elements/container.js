@@ -4,9 +4,8 @@ import { initOptions } from "./options";
 import { initShortcuts } from "../logic/shortcuts";
 import { renderOptions,
          displayOptions } from "./options-core";
+import { setId } from "./element-utils/utils";
 
-
-var containerId = 1;
 
 class PluridContainer extends HTMLElement {
     constructor() {
@@ -14,7 +13,7 @@ class PluridContainer extends HTMLElement {
     }
 
     connectedCallback() {
-        this.id=`plurid-container-${containerId}`;
+        setId(this, 'container');
 
         transform(this);
 
@@ -23,8 +22,6 @@ class PluridContainer extends HTMLElement {
         displayOptions(this);
 
         initShortcuts(this);
-
-        containerId++;
     }
 }
 

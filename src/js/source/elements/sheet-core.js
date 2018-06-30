@@ -1,4 +1,5 @@
 import * as transcore from "../logic/transforms-core";
+import { setId } from "./element-utils/utils";
 
 
 /**
@@ -73,8 +74,6 @@ function pushChildren(childrenArray, sceneObject) {
 
 
 
-var branchId = 1;
-
 /**
  * Sends the XHR request given on the pluridLink page/href,
  * creates the plurid structure from the response,
@@ -104,8 +103,8 @@ function setPluridLinks(pluridLink) {
                                     </plurid-scion>
                                 `;
             newBranch.link = pluridLink.id;
-            newBranch.id = `plurid-branch-${branchId}`;
-            branchId++;
+            setId(newBranch, 'branch');
+
 
             let right = pluridLink.offsetLeft + pluridLink.offsetWidth;
             let top = pluridLink.offsetTop;
@@ -334,9 +333,6 @@ function checkBranchExistence(linkId) {
 }
 
 
-
-var anchorTagId = 1
-
 /**
  * Sets the id on all the <a> anchor tags within a certain <plurid-sheet>
  *
@@ -346,8 +342,7 @@ export function setAnchorTagsId(sheetId) {
     let pageAnchorTags = document.querySelectorAll(`#${sheetId} a`);
 
     for (let anchorTag of pageAnchorTags) {
-        anchorTag.id = `plurid-anchor-${anchorTagId}`;
-        anchorTagId++;
+        setId(anchorTag, 'anchor');
     }
 }
 

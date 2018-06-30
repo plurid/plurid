@@ -3,9 +3,8 @@ import { renderControls } from "./controls-core";
 import { setLink,
          setAnchorTagsId,
          setPluridRoots } from "./sheet-core";
+import { setId } from "./element-utils/utils";
 
-
-var sheetId = 1;
 
 class PluridSheet extends HTMLElement {
     constructor() {
@@ -13,17 +12,15 @@ class PluridSheet extends HTMLElement {
     }
 
     connectedCallback() {
-        this.id=`plurid-sheet-${sheetId}`;
+        let sheetIdNumber = setId(this, 'sheet');
 
-        if (sheetId == 1) {
+        if (sheetIdNumber == 1) {
             initControls();
         }
-        renderControls(this, sheetId);
+        renderControls(this, sheetIdNumber);
         setLink(this);
         setAnchorTagsId(this.id);
         setPluridRoots(this);
-
-        sheetId++;
     }
 
     get name() {
