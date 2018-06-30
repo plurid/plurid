@@ -1,4 +1,6 @@
-var rootsId = 1;
+import { setId } from "./element-utils/utils";
+
+
 
 class PluridRoots extends HTMLElement {
     constructor() {
@@ -6,13 +8,11 @@ class PluridRoots extends HTMLElement {
     }
 
     connectedCallback() {
-        this.id=`plurid-roots-${rootsId}`;
+        setId(this, 'roots');
 
         if (this.id == 'plurid-roots-1') {
             pluridScene.metadata.activePlurid = 'plurid-roots-1';
         }
-
-        rootsId++;
     }
 }
 
@@ -21,16 +21,13 @@ customElements.define('plurid-roots', PluridRoots);
 
 
 
-var rootId = 1;
-
 class PluridRoot extends HTMLElement {
     constructor() {
         super();
     }
 
     connectedCallback() {
-        this.id=`plurid-root-${rootId}`;
-        rootId++;
+        setId(this, 'root');
     }
 }
 

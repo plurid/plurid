@@ -1,4 +1,5 @@
 import { contentOptions } from "./options-core";
+import { setId } from "./element-utils/utils";
 
 
 export function initOptions(container) {
@@ -11,16 +12,13 @@ export function initOptions(container) {
 }
 
 
-var optionsId = 1;
-
 class PluridOptions extends HTMLElement {
     constructor() {
         super()
     }
 
     connectedCallback() {
-        this.id=`plurid-options-${optionsId}`;
-        optionsId++;
+        setId(this, 'options');
 
         this.innerHTML = contentOptions();
     }
