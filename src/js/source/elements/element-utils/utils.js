@@ -8,6 +8,9 @@
 export let setId = (function () {
     let id = {};
     id.containerNumber = 0;
+    id.rootsNumber = 0;
+    id.rootNumber = 0;
+    id.optionsNumber = 0;
     id.sheetNumber = 0;
     id.linkNumber = 0;
     id.anchorNumber = 0;
@@ -30,6 +33,12 @@ export let setId = (function () {
         switch(type) {
             case 'container':
                 return id.containerNumber = set(element, type, id.containerNumber);
+            case 'roots':
+                return id.rootsNumber = set(element, type, id.rootsNumber);
+            case 'root':
+                return id.rootNumber = set(element, type, id.rootNumber);
+            case 'options':
+                return id.optionsNumber = set(element, type, id.optionsNumber);
             case 'sheet':
                 return id.sheetNumber = set(element, type, id.sheetNumber);
             case 'link':
