@@ -1,14 +1,12 @@
 import { setLinkContent } from './link-core';
-
-var linkId = 1;
+import { setId } from "./element-utils/utils";
 
 class PluridLink extends HTMLElement {
     constructor() {
         super();
-        this.id=`plurid-link-${linkId}`;
-        setLinkContent(this);
 
-        linkId++;
+        setId(this, 'link');
+        setLinkContent(this);
     }
 
     get page() {
