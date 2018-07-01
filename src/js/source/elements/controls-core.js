@@ -136,13 +136,35 @@ export function contentControls () {
                                     &#8997; V
                                 </span>
                             </li>
-                            <li>
+                            <li class="plurid-controls-more-sheet-history">
                                 <span class="plurid-controls-more-container-text">
                                     Sheet History
                                 </span>
                                 <span class="plurid-controls-more-container-shortcut">
                                     &#9654;
                                 </span>
+                                <div class="plurid-controls-sheet-history-container">
+                                    <ul>
+                                        <li>
+                                            https://plurid.com/
+                                        </li>
+                                        <li>
+                                            https://deview.plurid.com/3kagndleoa
+                                        </li>
+                                        <li>
+                                            https://plurid.com/
+                                        </li>
+                                        <li>
+                                            https://deview.plurid.com/jdpiar1nra
+                                        </li>
+                                        <li>
+                                            https://plurid.com/
+                                        </li>
+                                        <li>
+                                            https://deview.plurid.com/dkpaosn11z
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
 
                             <hr>
@@ -240,6 +262,7 @@ export function contentControls () {
                             <li>Edit Buttons</li>
                             <li>Reset to Default</li>
                         </ul>
+
                     </div>
                     `
 

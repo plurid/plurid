@@ -608,14 +608,17 @@ plurid-controls {
   height: 400px;
   position: absolute;
   right: 0;
-  overflow: auto;
   top: 60px;
   width: 300px; }
 
 .plurid-controls-more-container ul {
   font-size: 12px;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  position: relative;
+  max-height: 400px;
+  overflow-x: hidden;
+  overflow-y: auto; }
 
 .plurid-controls-more-container ul li {
   cursor: pointer;
@@ -730,3 +733,20 @@ plurid-controls {
 .plurid-controls-more-branch-angle-span-range {
   text-align: left;
   width: 100%; }
+
+.plurid-controls-more-sheet-history {
+  position: relative; }
+
+.plurid-controls-more-sheet-history:hover > .plurid-controls-sheet-history-container {
+  display: block; }
+
+.plurid-controls-sheet-history-container {
+  position: absolute;
+  display: none;
+  top: 36px;
+  width: 300px;
+  height: 108px;
+  background-color: #333333;
+  box-shadow: 0 4px 2px -2px #0c0d0d;
+  z-index: 50;
+  overflow: auto; }
