@@ -4,7 +4,7 @@ import { removeActiveSheetShadow,
          addActiveSheetShadow } from "./sheet-core";
 
 export function renderControls(element, id) {
-    var controls = document.createElement("plurid-controls");
+    let controls = document.createElement("plurid-controls");
     controls.id = `plurid-controls-${id}`;
     element.appendChild(controls);
 }
@@ -90,6 +90,157 @@ export function contentControls () {
                             Page not found, falling back to known page.
                         </div>
                     </div>
+
+                    <div class="plurid-controls-more-container">
+                        <ul>
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Open in New Tab
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut">
+                                    &#8997; &#8984; T
+                                </span>
+                            </li>
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Open in New Window
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut">
+                                    &#8997; &#8984; N
+                                </span>
+                            </li>
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Open in New Incognito Window
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut">
+                                    &#8679; &#8997; &#8984; N
+                                </span>
+                            </li>
+
+                            <hr>
+
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Flip Branch
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut">
+                                    &#8997; F
+                                </span>
+                            </li>
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Flip Content
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut">
+                                    &#8997; V
+                                </span>
+                            </li>
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Sheet History
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut">
+                                    &#9654;
+                                </span>
+                            </li>
+
+                            <hr>
+
+                            <label class="plurid-controls-more-checkmark-container">
+                                <li>
+                                    <span class="plurid-controls-more-container-text">
+                                        Opaque Back
+                                    </span>
+                                    <span class="plurid-controls-more-container-shortcut">
+                                        <input type="checkbox">
+                                        <span class="plurid-controls-more-checkmark"></span>
+                                    </span>
+                                </li>
+                            </label>
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Back Background Color
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut plurid-controls-more-back-color-input">
+                                    <input type="text" value="#ff0000">
+                                </span>
+                            </li>
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Front Background Color
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut plurid-controls-more-front-color-input">
+                                    <input type="text" value="#ff0000">
+                                </span>
+                            </li>
+
+                            <hr>
+
+                            <li class="plurid-controls-more-branch-angle">
+                                <span class="plurid-controls-more-container-text">
+                                    <span class="plurid-controls-more-branch-angle-span-text">
+                                        Branch Angle
+                                    </span>
+                                    <span class="plurid-controls-more-branch-angle-span-range">
+                                        <input type="range" min="1" max="180" value="90">
+                                    </span>
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut plurid-controls-more-branch-angle-input">
+                                    <input type="text" value="90"> °
+                                </span>
+                            </li>
+
+                            <hr>
+
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Sheet Width
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut plurid-controls-more-sheet-width-input">
+                                    <input type="text" value="1440"> px
+                                </span>
+                            </li>
+                            <li>
+                                <span class="plurid-controls-more-container-text">
+                                    Sheet Height
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut plurid-controls-more-sheet-height-input">
+                                    <input type="text" value="950"> px
+                                </span>
+                            </li>
+
+                            <label class="plurid-controls-more-checkmark-container">
+                                <li>
+                                    <span class="plurid-controls-more-container-text">
+                                        Lock Sheet Size
+                                    </span>
+                                    <span class="plurid-controls-more-container-shortcut">
+                                        <input type="checkbox">
+                                        <span class="plurid-controls-more-checkmark"></span>
+                                    </span>
+                                </li>
+                            </label>
+
+                            <hr>
+
+                            <label class="plurid-controls-more-checkmark-container">
+                                <li>
+                                    <span class="plurid-controls-more-container-text">
+                                        Show Icons Tooltips
+                                    </span>
+                                    <span class="plurid-controls-more-container-shortcut">
+                                        <input type="checkbox">
+                                        <span class="plurid-controls-more-checkmark"></span>
+                                    </span>
+                                </li>
+                            </label>
+
+                            <li>Shortcuts</li>
+                            <li>Edit Buttons</li>
+                            <li>Reset to Default</li>
+                        </ul>
+                    </div>
                     `
 
     return content;
@@ -111,6 +262,7 @@ export function setControls(element) {
     extractRoot(element);
     opacityPlurid(element);
 
+    morePlurid(element);
     openCloseControls(element);
     setControlsMessageClose(element);
 }
@@ -550,6 +702,24 @@ function opacityPlurid(element) {
             sheet.style.opacity = 1;
         }
     }
+}
+
+
+function morePlurid(element) {
+    let pluridMore = element.getElementsByClassName("plurid-controls-more")[0];
+    let pluridMoreContainer = element.getElementsByClassName("plurid-controls-more-container")[0];
+    let sheet = element.parentElement;
+
+    pluridMore.addEventListener('click', event => {
+        if (pluridMoreContainer.style.display == "" ||
+            pluridMoreContainer.style.display == "none") {
+            pluridMoreContainer.style.display = "block";
+            pluridMore.classList.add("plurid-sheet-control-active");
+        } else {
+            pluridMoreContainer.style.display = "none";
+            pluridMore.classList.remove("plurid-sheet-control-active");
+        }
+    });
 }
 
 
