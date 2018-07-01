@@ -600,3 +600,133 @@ plurid-controls {
   100% {
     -webkit-transform: rotate(-360deg);
     transform: rotate(-360deg); } }
+
+.plurid-controls-more-container {
+  background: #252727;
+  box-shadow: 0 4px 2px -2px #0c0d0d;
+  display: none;
+  height: 400px;
+  position: absolute;
+  right: 0;
+  overflow: auto;
+  top: 60px;
+  width: 300px; }
+
+.plurid-controls-more-container ul {
+  font-size: 12px;
+  margin: 0;
+  padding: 0; }
+
+.plurid-controls-more-container ul li {
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 70% 30%;
+  list-style-type: none;
+  margin: 0;
+  padding: 10px 20px;
+  user-select: none; }
+
+.plurid-controls-more-container ul li:first-child {
+  margin-top: 0; }
+
+.plurid-controls-more-container ul li:last-child {
+  margin-bottom: 0; }
+
+.plurid-controls-more-container ul li:hover {
+  background-color: rgba(74, 77, 79, 0.5);
+  color: white; }
+
+.plurid-controls-more-container hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid rgba(74, 77, 79, 0.5);
+  margin: 5px 0;
+  padding: 0; }
+
+.plurid-controls-more-container input[type="text"] {
+  background-color: #191a1a;
+  border: none;
+  color: #b0b3b5;
+  outline: none;
+  padding: 5px;
+  text-align: center;
+  width: 100%; }
+
+.plurid-controls-more-container-text {
+  align-self: center; }
+
+.plurid-controls-more-container-shortcut {
+  justify-self: right;
+  align-self: center; }
+
+.plurid-controls-more-branch-angle-input input[type="text"] {
+  width: 89%; }
+
+.plurid-controls-more-sheet-width-input input[type="text"],
+.plurid-controls-more-sheet-height-input input[type="text"] {
+  width: 77%; }
+
+/* The container */
+.plurid-controls-more-checkmark-container {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+/* Hide the browser's default checkbox */
+.plurid-controls-more-checkmark-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer; }
+
+/* Create a custom checkbox */
+.plurid-controls-more-checkmark {
+  position: absolute;
+  top: 7.5px;
+  right: 20px;
+  height: 20px;
+  width: 20px;
+  background-color: #191a1a; }
+
+/* On mouse-over, add a grey background color */
+/* When the checkbox is checked, add a blue background */
+.plurid-controls-more-checkmark-container input:checked ~ .plurid-controls-more-checkmark {
+  background-color: #b3b3b3; }
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.plurid-controls-more-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none; }
+
+/* Show the checkmark when checked */
+.plurid-controls-more-checkmark-container input:checked ~ .plurid-controls-more-checkmark:after {
+  display: block; }
+
+/* Style the checkmark/indicator */
+.plurid-controls-more-checkmark-container .plurid-controls-more-checkmark:after {
+  left: 7px;
+  top: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid #1a1a1a;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg); }
+
+.plurid-controls-more-branch-angle input[type="range"] {
+  margin-top: 10px;
+  width: 90%; }
+
+.plurid-controls-more-branch-angle-span-text,
+.plurid-controls-more-branch-angle-span-range {
+  display: inline-block; }
+
+.plurid-controls-more-branch-angle-span-range {
+  text-align: left;
+  width: 100%; }

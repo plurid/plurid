@@ -77,15 +77,23 @@
 
 + slider :: opacity of the current `<plurid-branch>` (lower-limited to 15%);
 
-+ more -> button :: open the current `<plurid-branch>` in new tab;
++ more -> button :: open the current active `<plurid-sheet>` in new tab;
+
++ more -> button :: open the current active `<plurid-sheet>` in new window;
+
++ more -> button :: open the current active `<plurid-sheet>` in new incognito window;
 
 + more -> button :: flip the `<plurid-branch>` to the other side of the parent  `<plurid-sheet>`/`<plurid-branch>`;
 
 + more -> button :: flip the content to the other side (revert content in the case of `<plurid-sheet-double>`, unusable in case of `<plurid-solid>`);
 
++ more -> button :: sheet history;
+
 + more -> checkmark :: opaque back (in case of `<plurid-sheet>`);
 
 + more -> color-picker :: color of the `<plurid-sheet>` back;
+
++ more -> color-picker :: color of the `<plurid-sheet>` front;
 
 + more -> slider :: angle to the parent `plurid` (default `90` degrees);
 
@@ -95,7 +103,9 @@
 
 + more -> radio buttons :: use google.com, bing.com, duckduckgo.com as search engine within the URL input (will not work due to Cross-Origin Resource Sharing, to be achieved in a future pluridal browser);
 
-+ more -> checkmark :: show icon tooltip;
++ more -> checkmark :: show icon tooltips;
+
++ more -> button :: shortcuts;
 
 + more -> button :: edit buttons > while active, the user can drag around the buttons of the controls toolbar to reorder them;
 
@@ -145,7 +155,11 @@
 
 + `alt/opt + t` :: extract the current `plurid` to a separate `<plurid-root>`;
 
-+ `alt/opt + n` :: open current `plurid` in new tab;
++ `alt/opt + ctrl/cmd + t` :: open current `plurid` in new tab;
+
++ `alt/opt + ctrl/cmd + n` :: open current `plurid` in new window;
+
++ `shift + alt/opt + ctrl/cmd + n` :: open current `plurid` in new incognito window;
 
 + `alt/opt + f` :: flip the `<plurid-branch>` to the other side of the `<plurid-insertion>`;
 
