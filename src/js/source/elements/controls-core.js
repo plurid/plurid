@@ -180,21 +180,102 @@ export function contentControls () {
                                     </span>
                                 </li>
                             </label>
-                            <li>
+                            <li class="plurid-controls-more-back-color">
                                 <span class="plurid-controls-more-container-text">
                                     Back Background Color
                                 </span>
                                 <span class="plurid-controls-more-container-shortcut plurid-controls-more-back-color-input">
                                     <input type="text" value="#ff0000">
                                 </span>
+                                <div class="plurid-controls-more-back-color-container">
+                                    <div class="plurid-controls-more-selected-color">
+                                    </div>
+                                    <div class="plurid-controls-more-select-color">
+                                        <div class="plurid-controls-more-select-color-group">
+                                            <div class="plurid-controls-more-select-color-group-element">
+                                                <div>
+                                                    Hue
+                                                </div>
+                                                <div>
+                                                    <input type="text">
+                                                </div>
+                                            </div>
+                                            <input type="range">
+                                        </div>
+                                        <div class="plurid-controls-more-select-color-group">
+                                            <div class="plurid-controls-more-select-color-group-element">
+                                                <div>
+                                                    Saturation
+                                                </div>
+                                                <div>
+                                                    <input type="text"> %
+                                                </div>
+                                            </div>
+                                            <input type="range">
+                                        </div>
+                                        <div class="plurid-controls-more-select-color-group">
+                                            <div class="plurid-controls-more-select-color-group-element">
+                                                <div>
+                                                    Lightness
+                                                </div>
+                                                <div>
+                                                    <input type="text"> %
+                                                </div>
+                                            </div>
+                                            <input type="range">
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
-                            <li>
+                            <li class="plurid-controls-more-front-color">
                                 <span class="plurid-controls-more-container-text">
                                     Front Background Color
                                 </span>
                                 <span class="plurid-controls-more-container-shortcut plurid-controls-more-front-color-input">
                                     <input type="text" value="#ff0000">
                                 </span>
+                                <div class="plurid-controls-more-front-color-container">
+                                    <div class="plurid-controls-more-selected-color">
+                                    </div>
+                                    <div class="plurid-controls-more-select-color">
+                                        <div class="plurid-controls-more-select-color-group">
+                                            <div class="plurid-controls-more-select-color-group-element">
+                                                <div>
+                                                    Hue
+                                                </div>
+                                                <div>
+                                                    <input type="text">
+                                                </div>
+                                            </div>
+                                            <input type="range">
+                                        </div>
+                                        <div class="plurid-controls-more-select-color-group">
+                                            <div class="plurid-controls-more-select-color-group-element">
+                                                <div>
+                                                    Saturation
+                                                </div>
+                                                <div>
+                                                    <input type="text"> %
+                                                </div>
+                                            </div>
+                                            <input type="range">
+                                        </div>
+                                        <div class="plurid-controls-more-select-color-group">
+                                            <div class="plurid-controls-more-select-color-group-element">
+                                                <div>
+                                                    Lightness
+                                                </div>
+                                                <div>
+                                                    <input type="text"> %
+                                                </div>
+                                            </div>
+                                            <input type="range">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                Reset Colors
                             </li>
 
                             <hr>
@@ -243,6 +324,7 @@ export function contentControls () {
                                     </span>
                                 </li>
                             </label>
+                            <li>Reset Sheet Size</li>
 
                             <hr>
 
