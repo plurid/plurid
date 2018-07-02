@@ -1,7 +1,7 @@
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const extractSass = new ExtractTextPlugin({
-    filename: "../css/plurid.min.css",
+    filename: "../css/plurid.css",
     disable: process.env.NODE_ENV === "development"
 });
 
@@ -13,7 +13,7 @@ module.exports = {
     // mode: 'production',
     entry: './src/js/app.js',
     output: {
-        filename: 'plurid.min.js',
+        filename: 'plurid.js',
         path: path.resolve(__dirname, 'dist/js')
     },
     module: {
