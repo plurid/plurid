@@ -750,3 +750,45 @@ plurid-controls {
   box-shadow: 0 4px 2px -2px #0c0d0d;
   z-index: 50;
   overflow: auto; }
+
+.plurid-controls-more-back-color,
+.plurid-controls-more-front-color {
+  position: relative; }
+
+.plurid-controls-more-back-color:hover > .plurid-controls-more-back-color-container,
+.plurid-controls-more-front-color:hover > .plurid-controls-more-front-color-container {
+  display: grid;
+  grid-template-columns: 40% 60%; }
+
+.plurid-controls-more-back-color-container,
+.plurid-controls-more-front-color-container {
+  position: absolute;
+  display: none;
+  top: 36px;
+  width: 300px;
+  height: 240px;
+  background-color: #333333;
+  box-shadow: 0 4px 2px -2px #0c0d0d;
+  z-index: 50;
+  overflow: auto; }
+
+.plurid-controls-more-selected-color {
+  background-color: #294756;
+  height: 100%;
+  width: 100%; }
+
+.plurid-controls-more-select-color {
+  display: grid;
+  grid-template-columns: 100%; }
+
+.plurid-controls-more-select-color input[type="text"] {
+  width: 35px; }
+
+.plurid-controls-more-select-color-group {
+  display: grid;
+  justify-self: center;
+  align-self: center; }
+
+.plurid-controls-more-select-color-group-element {
+  display: grid;
+  grid-template-columns: 60% 40%; }

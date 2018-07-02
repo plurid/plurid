@@ -95,11 +95,15 @@
 
 + more -> color-picker :: color of the `<plurid-sheet>` front;
 
++ more -> button :: reset colors;
+
 + more -> slider :: angle to the parent `plurid` (default `90` degrees);
 
 + more -> inputs :: width and height of the current `<plurid-content>`;
 
 + more -> checkmark :: lock size of the current `<plurid-content>` (default on);
+
++ more -> button :: reset sheet size;
 
 + more -> radio buttons :: use google.com, bing.com, duckduckgo.com as search engine within the URL input (will not work due to Cross-Origin Resource Sharing, to be achieved in a future pluridal browser);
 
