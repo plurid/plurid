@@ -87,7 +87,6 @@ export function contentControls () {
                     <div class="plurid-controls-message">
                         <div class="plurid-controls-message-close">✕</div>
                         <div class="plurid-controls-message-content">
-                            Page not found, falling back to known page.
                         </div>
                     </div>
 
