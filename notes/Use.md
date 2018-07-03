@@ -60,6 +60,28 @@ place the content of the web page in a `<plurid-page>` tag, inside the `<body>`
         </body>
     </html>
 
+
+### Linking
+
+In order to create a link, add a `plurid-link`
+
+    <div>
+        The content of the web page with a <plurid-link page="/link">link</plurid-link>
+    </div>
+
+The `page` attribute can be used as an `href` to link to an external document on the same domain (due to CORS) or can be used to link to a `plurid-page` in the same document.
+
+To link to a `plurid-page` in the same document, the linked page must be named
+
+    <plurid-page name="nameOfPage">
+        Content of the linked page
+    </plurid-page>
+
+and the link will be
+
+    <plurid-link page="nameOfPage">link</plurid-link>
+
+
 ---
 
 

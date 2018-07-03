@@ -35,8 +35,6 @@
 
 + more -> color-picker :: color theme for `<plurid-bridge>` (option to use the color of the web page's `<body>` it has in the `<plurid-scion>`);
 
-+ move -> color-picker :: box-shadow for active `plurid`;
-
 + more -> checkmark :: clicking/tapping a `<plurid-insertion>` link transforms the targetted `<plurid-content>` to the normal view (default on);
 
 + more -> slider :: opacity of the `plurid` parent after clicking/tapping on a `<plurid-insertion>` link (5–100%, default 80%) [checkmark: rotation brings it back to 100%];
