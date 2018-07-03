@@ -1,6 +1,8 @@
 import { contentOptions } from "./options-core";
 import { setId } from "./element-utils/utils";
-
+import { renderOptions,
+         displayOptions,
+         displayMoreOptions } from "./options-core";
 
 export function initOptions(container) {
     // TO DO
@@ -9,6 +11,10 @@ export function initOptions(container) {
     // if (container.id == 'plurid-container-1') {
         customElements.define('plurid-options', PluridOptions);
     // }
+
+    renderOptions(container);
+    displayOptions(container);
+    displayMoreOptions(container);
 }
 
 
