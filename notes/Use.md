@@ -33,11 +33,15 @@ place the content of the web page in a `<plurid-page>` tag, inside the `<body>`
     .
     --- simple-page
     |   --- plurid
-    |       --- css
-    |           --- plurid.css
-    |       --- js
-    |           --- plurid.js
+    |   |   --- css
+    |   |   |   --- plurid.css
+    |   |   |--
+    |   |   --- js
+    |   |   |   --- plurid.js
+    |   |   |--
+    |   |--
     |   --- index.html
+    |---
 
 <br>
 
@@ -88,13 +92,15 @@ The `page` attribute can be used as a `href` to link to an external document on 
 
 <br>
 
+### Same Document Linked-Page
+
 To link to a `plurid-page` in the same document, the linked page must be named
 
     <plurid-page name="nameOfPage">
         Content of the linked page
     </plurid-page>
 
-and the link will be
+and the `<plurid-link>` will be
 
     <plurid-link page="nameOfPage">link</plurid-link>
 
@@ -104,7 +110,7 @@ therefore, the `<body>` of `index.html` might look like
     <body>
         <plurid-page>
             <div>
-                The content of the web page with <plurid-link page="nameOfPage">link</plurid-link>
+                The content of the page with <plurid-link page="nameOfPage">link</plurid-link>
             </div>
         </plurid-page>
 
@@ -123,7 +129,7 @@ If the `<plurid-link>` has the attribute `samepage` then the link will be follow
 
 ### Same Document Multi-Page
 
-A document can have multiple `<plurid-page>`s independent of each other (not linked between them). In such a case the pages will be rendered one near another, based on the order of the document.
+A document can have multiple `<plurid-page>`s independent of each other (not linked between them). In such a case the pages will be rendered one near another, based on the order of the document. The gap between pages can be modified from the global JavaScript object `pluridScene` > `pluridscene.metadata.multiPageGap` :: number.
 
     /-- index.html
     <body>
@@ -173,7 +179,7 @@ Instead of specifying number values to position, e.g. `position="200, -350, 450,
 
 or
 
-instead of accurate numbers resolving to pixel values, the value of `position` can be set to dynamically adjust, e.g. `position="screen, -350, 450, 0, 50, 0, 1"`, where `screen` will resolve to the current value of the viewing window in pixels.
+instead of crisp numbers resolving to pixel values, the value of `position` can be set to dynamically adjust, e.g. `position="screen, -350, 450, 0, 50, 0, 1"`, where `screen` will resolve to the current value of the viewing window in pixels.
 
 Additionally, position can receive a short-hand value, e.g. `position="touchleft, 30"`, indicating that the `<plurid-page>` will be positioned to the left of the previous `<plurid-page>`, in the document order, touching its left margin (with the right margin) and rotated at 30 degrees on the Y axis. The options are `left`, `right`, `touchleft`, and `touchright`
 
