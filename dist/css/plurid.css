@@ -369,6 +369,9 @@ plurid-controls {
   font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   box-shadow: 0 4px 2px -2px #0c0d0d; }
 
+plurid-controls plurid-link {
+  color: #e6e6e6; }
+
 .plurid-container-controls-content {
   height: 50px;
   display: inline-flex;
