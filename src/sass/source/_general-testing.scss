@@ -36,3 +36,15 @@ a {
 .grid p {
     margin: 30px;
 }
+
+.grid-ads {
+    width: 100%;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.grid-ads h1 {
+    align-self: center;
+    justify-self: center;
+    padding: 100px;
+}
