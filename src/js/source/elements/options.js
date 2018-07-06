@@ -2,7 +2,8 @@ import { contentOptions } from "./options-core";
 import { setId } from "./element-utils/utils";
 import { renderOptions,
          displayOptions,
-         displayMoreOptions } from "./options-core";
+         setButtons } from "./options-core";
+
 
 export function initOptions(container) {
     // TO DO
@@ -14,7 +15,7 @@ export function initOptions(container) {
 
     renderOptions(container);
     displayOptions(container);
-    displayMoreOptions(container);
+    setButtons(container);
 }
 
 

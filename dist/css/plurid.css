@@ -218,7 +218,7 @@ plurid-options {
   right: 0;
   bottom: 25px;
   height: 50px;
-  display: block;
+  display: none;
   color: #e6e6e6;
   font-family: sans-serif;
   font-size: 12px; }
