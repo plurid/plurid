@@ -16,3 +16,5 @@
 + to have one or more `<plurid-roots>` in the same `<plurid-container>`
 
 + the `<plurid-bridge>` can be extended in a snake-like shape
+
++ shadows projected from the sheets onto the container
