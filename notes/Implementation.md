@@ -60,6 +60,12 @@
 
 ## Bugs
 
+
+### Sheet Positioning
+
++ when `<plurid-link>` or `<a>` breaks at end of row onto the next row, the respective plurid is misplaced;
+
+
 ### Sheet Controls
 
 + select :: deselects the selected <plurid-root> when clicking, even if clicked on itself;
