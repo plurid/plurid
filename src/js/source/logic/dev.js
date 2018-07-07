@@ -64,13 +64,19 @@ function setContainer() {
         for (let pluridPage of pluridPagesRoots) {
             let pluridRoot = document.createElement("plurid-root");
             let html = pluridPage.innerHTML;
-            let plurid = document.createElement('plurid-sheet');
+            let pluridSheet = document.createElement('plurid-sheet');
+            let pluridContent = document.createElement('plurid-content');
+            let pluridShadow = document.createElement('plurid-shadow');
+
+            pluridSheet.appendChild(pluridContent);
+            // pluridSheet.appendChild(pluridShadow);
 
             if (pluridPage.visible) {
-                plurid.visible = pluridPage.visible;
+                pluridSheet.visible = pluridPage.visible;
             }
-            plurid.innerHTML = html;
-            pluridRoot.appendChild(plurid);
+            pluridContent.innerHTML = html;
+            pluridRoot.appendChild(pluridSheet);
+            pluridRoot.appendChild(pluridShadow);
             pluridRoots.appendChild(pluridRoot);
         }
 
