@@ -14,7 +14,11 @@ export function displayOptions(element) {
             path.map(el => { el.nodeName === element ? contains = true : ''; });
             return contains;
         }
-        let containsOptions = pathContains('PLURID-OPTIONS', event.path);
+
+        // cross-browsers eventPath
+        let eventPath = event.path || (event.composedPath && event.composedPath());
+
+        let containsOptions = pathContains('PLURID-OPTIONS', eventPath);
 
         let cursorYLocation = event.pageY;
         let containerHeight = element.clientHeight;
@@ -136,11 +140,6 @@ export function contentOptions() {
                         <hr>
 
                         <div class="plurid-container-options-more-group-opacity">
-                            <div class="plurid-container-options-group-more plurid-container-more-link-click-transform">
-                                <p>Click on Link Transforms to Normal View</p>
-                                <input type="checkbox">
-                            </div>
-
                             <div class="plurid-container-options-group-more plurid-container-more-opacity-after-click">
                                 <p>Parent Opacity After Click on Link</p>
                                 <input type="text">
@@ -151,6 +150,17 @@ export function contentOptions() {
                                 <p>General Opacity After Double-Click on Select</p>
                                 <input type="text">
                                 <input type="range">
+                            </div>
+
+                            <div class="plurid-container-options-group-more plurid-container-more-perspective">
+                                <p>Perspective</p>
+                                <input type="text">
+                                <input type="range">
+                            </div>
+
+                            <div class="plurid-container-options-group-more plurid-container-more-link-click-transform">
+                                <p>Click on Link Transforms to Normal View</p>
+                                <input type="checkbox">
                             </div>
                         </div>
 

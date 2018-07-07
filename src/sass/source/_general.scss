@@ -1,15 +1,18 @@
+@import "./variables";
+
+
 *,
 *:after,
 *:before {
     box-sizing: border-box;
-    text-rendering: optimizeLegibility;
     font-kerning: auto;
+    text-rendering: optimizeLegibility;
 }
 
 html, body {
     height: 100%;
-    width: 100%;
     margin: 0;
+    width: 100%;
 }
 
 html {
@@ -17,5 +20,5 @@ html {
 }
 
 body {
-    background-color: hsl(0, 0%, 10%);
+    background-color: $dark-background;
 }

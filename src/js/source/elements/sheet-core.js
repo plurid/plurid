@@ -527,7 +527,10 @@ function getTranslations(translationData) {
  */
 function setActiveSheetListener() {
     window.addEventListener('click', event => {
-        setActiveSheet(event.path);
+        // cross-browsers eventPath
+        let eventPath = event.path || (event.composedPath && event.composedPath());
+
+        setActiveSheet(eventPath);
     })
 }
 setActiveSheetListener();

@@ -12,10 +12,11 @@ export function transform(element) {
     let plurid = element.children[0];
 
     element.addEventListener("click", event => {
-        // console.log(event.path);
-        let currentPluridRoot = checkCurrentPluridRoot(event.path);
+        // cross-browsers eventPath
+        let eventPath = event.path || (event.composedPath && event.composedPath());
+        let currentPluridRoot = checkCurrentPluridRoot(eventPath);
 
-        if (event.path[0].id == element.id || !currentPluridRoot) {
+        if (eventPath[0].id == element.id || !currentPluridRoot) {
         // if (!currentPluridRoot) {
             pluridScene.metadata.activePlurid = 'plurid-roots-1';
             pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
