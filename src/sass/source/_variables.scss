@@ -1,10 +1,11 @@
 $perspective: 1000px;
 
 $dark-theme-background-color: hsl(200, 2%, 12%);
+$light-theme-background-color: hsl(200, 2%, 82%);
 $dark-theme-color: hsl(0, 0%, 90%);
 $plurid-link-color: hsl(200, 2%, 52%);
 
-
+// DARK
 %container-background {
     background: $dark-theme-background-color;
     background: -moz-radial-gradient(center, ellipse cover, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
@@ -15,6 +16,21 @@ $plurid-link-color: hsl(200, 2%, 52%);
     background: radial-gradient(ellipse at center, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#373838', endColorstr='#0d0d0d', GradientType=1 );
 }
+
+
+// LIGHT
+// %container-background {
+//     background: $light-theme-background-color;
+//     background: -moz-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(255,255,255,1)), color-stop(100%, rgba(181,181,181,1)));
+//     background: -webkit-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     background: -o-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     background: -ms-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#b5b5b5', GradientType=1 );
+// }
+
+
 
 
 // generic transform

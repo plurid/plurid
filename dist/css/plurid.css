@@ -284,7 +284,7 @@ plurid-options {
 
 .plurid-container-options-more-group-colors {
   display: grid;
-  grid-template-columns: 1fr 1fr; }
+  grid-template-columns: 1fr 1fr 1fr; }
 
 .plurid-container-options-more-group-opacity {
   display: grid;
@@ -306,7 +306,6 @@ plurid-controls {
   background-color: #252727;
   height: 60px;
   width: 100%;
-  z-index: 999;
   display: flex;
   align-items: center;
   font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -492,7 +491,8 @@ plurid-controls plurid-link {
   position: absolute;
   right: 0;
   top: 60px;
-  width: 300px; }
+  width: 300px;
+  z-index: 2; }
 
 .plurid-controls-more-container ul {
   font-size: 12px;
