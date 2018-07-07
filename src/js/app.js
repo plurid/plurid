@@ -15,6 +15,7 @@ require('./source/elements/sheet.js');
 require('./source/elements/solid.js');
 require('./source/elements/page.js');
 require('./source/elements/link.js');
+require('./source/elements/shadow.js');
 
 
 // require Logic
