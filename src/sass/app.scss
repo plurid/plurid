@@ -1,11 +1,9 @@
-// import partials
-@import "./source/general-testing";
-@import "./source/container-options";
+// @import "./source/general-testing";
 
 
+@import "./source/variables";
 @import "./source/general";
 
-@import "./source/elements/dev";
 @import "./source/elements/page";
 @import "./source/elements/branch";
 @import "./source/elements/container";

@@ -1,6 +1,3 @@
-@import "./variables";
-
-
 *,
 *:after,
 *:before {
@@ -21,4 +18,8 @@ html {
 
 body {
     background-color: $dark-background;
+}
+
+:unresolved {
+    display: none;
 }

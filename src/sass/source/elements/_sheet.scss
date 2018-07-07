@@ -1,53 +1,30 @@
 plurid-sheet {
+    background-color: hsl(200, 2%, 25%);
+    padding: 40px;
+    padding-top: 80px;
     position: absolute;
     width: 100%;
-    // height: auto;
-    background-color: hsl(200, 2%, 25%);
-    padding: 50px;
-    padding-top: 100px;
     // backface-visibility: hidden;
-    // opacity: 0.7;
-
-    // transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
-    // transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 10, 0, 1);
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-
-    // -webkit-box-shadow: 0px 0px 0px 1px rgba(168,168,168,1);
-    // -moz-box-shadow: 0px 0px 0px 1px rgba(168,168,168,1);
-    // box-shadow: 0px 0px 0px 1px rgba(168,168,168,1);
-
 }
 
 
 .plurid-sheet-active {
-    -webkit-box-shadow: 0px 0px 0px 1px hsl(200, 2%, 40%);
-    -moz-box-shadow: 0px 0px 0px 1px hsl(200, 2%, 40%);
-    box-shadow: 0px 0px 0px 1px hsl(200, 2%, 40%);
+    @include box-shadow($boxShadowSheetActive);
 }
 
 .plurid-sheet-active-transform {
-    -webkit-box-shadow: 0px 0px 0px 1px hsl(200, 2%, 100%);
-    -moz-box-shadow: 0px 0px 0px 1px hsl(200, 2%, 100%);
-    box-shadow: 0px 0px 0px 1px hsl(200, 2%, 100%);
+    @include box-shadow($boxShadowSheetTransform);
 }
 
 
 .plurid-sheet-minimize {
     height: 0px;
-    overflow: hidden;
     padding-bottom: 0;
     padding-top: 60px;
+    overflow: hidden;
 }
 
 .plurid-sheet-reduce-height {
     height: 700px;
     overflow: hidden;
-    // padding-bottom: 0;
-    // padding-top: 60px;
 }
-
-
-// #plurid-sheet-3 {
-//     background-color: hsl(21, 32%, 32%);
-// }
