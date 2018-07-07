@@ -87,32 +87,32 @@ export function contentOptions() {
                                 </span>
                             </label> -->
 
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-lock-rotation-x">
                                 <p>Lock Rotation X</p>
                                 <input type="checkbox">
                             </div>
 
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-lock-rotation-y">
                                 <p>Lock Rotation Y</p>
                                 <input type="checkbox">
                             </div>
 
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-scroll-translate">
                                 <p>Use Scroll to Translate</p>
                                 <input type="checkbox" class="plurid-container-use-scroll">
                             </div>
 
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-lock-translation-x">
                                 <p>Lock Translation X</p>
                                 <input type="checkbox">
                             </div>
 
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-lock-translation-y">
                                 <p>Lock Translation Y</p>
                                 <input type="checkbox">
                             </div>
 
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-transform-sensitivity">
                                 <p>Transform Sensitivity</p>
                                 <input type="text">
                                 <input type="range">
@@ -122,12 +122,12 @@ export function contentOptions() {
                         <hr>
 
                         <div class="plurid-container-options-more-group-colors">
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-container-background">
                                 <p>Container Background</p>
-                            <span class="plurid-container-button plurid-container-color"></span>
+                                <span class="plurid-container-button plurid-container-color"></span>
                             </div>
 
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-general-theme">
                                 <p>General Theme</p>
                                 <span class="plurid-container-button plurid-container-color"></span>
                             </div>
@@ -136,18 +136,18 @@ export function contentOptions() {
                         <hr>
 
                         <div class="plurid-container-options-more-group-opacity">
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-link-click-transform">
                                 <p>Click on Link Transforms to Normal View</p>
                                 <input type="checkbox">
                             </div>
 
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-opacity-after-click">
                                 <p>Parent Opacity After Click on Link</p>
                                 <input type="text">
                                 <input type="range">
                             </div>
 
-                            <div class="plurid-container-options-group-more">
+                            <div class="plurid-container-options-group-more plurid-container-more-opacity-after-doubleclick">
                                 <p>General Opacity After Double-Click on Select</p>
                                 <input type="text">
                                 <input type="range">
@@ -156,14 +156,14 @@ export function contentOptions() {
 
                         <hr>
 
-                        <div class="plurid-container-options-group-more">
+                        <div class="plurid-container-options-group-more plurid-container-more-shortcuts">
                             <p class="plurid-container-link-expand plurid-container-shortcuts-button">Shortcuts</p>
                         </div>
-                        <div class="plurid-container-options-group-more">
+                        <div class="plurid-container-options-group-more plurid-container-more-always-show-options">
                             <p class="plurid-container-link-expand ">Always Show Options Bar</p>
                             <input type="checkbox">
                         </div>
-                        <div class="plurid-container-options-group-more">
+                        <div class="plurid-container-options-group-more plurid-container-more-reset">
                             <p class="plurid-container-link-expand ">Reset to Default</p>
                         </div>
                     </div>
@@ -193,6 +193,17 @@ export function setButtons(container) {
     centerEverything(container);
     addAnotherRoot(container);
     moreOptions(container);
+    lockTransforms(container);
+    scrollTransform(container);
+    transformSensitivity(container);
+    containerBackground(container);
+    generalTheme(container);
+    linkTransformNormal(container);
+    parentOpacityAfterClick(container);
+    generalOpacityAfterDoubleClick(container);
+    shortcuts(container);
+    alwaysShowOptions(container);
+    resetDefault(container);
 }
 
 
@@ -201,6 +212,8 @@ function transformButtons(container) {
         let button = container.getElementsByClassName(`plurid-container-${type}-${direction}`)[0];
 
         button.addEventListener('click', event => {
+            // transformPlurid = pluridScene.metadata.activePlurid ? container.getElementById(pluridScene.metadata.activePlurid) : container.getElementsByTagName("plurid-roots")[0];
+
             if (type === 'rotate') {
                 plurid.rotatePlurid(event, transformPlurid, direction);
             }
@@ -231,6 +244,8 @@ function transformButtons(container) {
 
 
         button.addEventListener("mousedown", function(event) {
+            // transformPlurid = pluridScene.metadata.activePlurid ? container.getElementById(pluridScene.metadata.activePlurid) : container.getElementsByTagName("plurid-roots")[0];
+
             if (type === 'rotate') {
                 timer = setTimeout(rotatePlurid, 35, event, direction);
             }
@@ -247,7 +262,11 @@ function transformButtons(container) {
         });
     }
 
+    // TO DO
+    // get activePlurid for transformPlurid
+    // let transformPlurid = pluridScene.metadata.activePlurid ? container.getElementById(pluridScene.metadata.activePlurid) : container.getElementsByTagName("plurid-roots")[0];
     let transformPlurid = container.getElementsByTagName("plurid-roots")[0];
+
     let transformButtons = [
         {
             type: "rotate",
@@ -327,3 +346,106 @@ function moreOptions(container) {
         }
     });
 }
+
+
+function lockTransforms(container) {
+    function setLocks(type, axis) {
+        let button = container.getElementsByClassName(`plurid-container-more-lock-${type}-${axis}`)[0];
+
+        button.addEventListener('click', event => {
+            console.log('lock', type, axis);
+        });
+    }
+
+    let locks = [
+        {
+            type: "rotation",
+            axis: "x"
+        },
+        {
+            type: "rotation",
+            axis: "y"
+        },
+        {
+            type: "translation",
+            axis: "x"
+        },
+        {
+            type: "translation",
+            axis: "y"
+        }
+    ];
+
+    locks.map(button => { setLocks(button.type, button.axis) });
+}
+
+
+function scrollTransform(container) {
+    let button = container.getElementsByClassName('plurid-container-more-scroll-translate')[0];
+
+    button.addEventListener('click', event => {
+        console.log('scroll transform');
+    });
+}
+
+
+function transformSensitivity(container) {
+
+}
+
+
+function containerBackground(container) {
+    let button = container.getElementsByClassName('plurid-container-more-container-background')[0];
+
+    button.addEventListener('click', event => {
+        console.log('change container background');
+    });
+}
+
+
+function generalTheme(container) {
+    let button = container.getElementsByClassName('plurid-container-more-general-theme')[0];
+
+    button.addEventListener('click', event => {
+        console.log('change general theme');
+    });
+}
+
+
+function linkTransformNormal(container) {
+    let button = container.getElementsByClassName('plurid-container-more-link-click-transform')[0];
+
+    button.addEventListener('click', event => {
+        console.log('linkTransformNormal');
+    });
+}
+
+
+function parentOpacityAfterClick(container) {
+
+}
+
+
+function generalOpacityAfterDoubleClick(container) {
+
+}
+
+
+function shortcuts(container) {
+
+}
+
+
+function alwaysShowOptions(container) {
+    let button = container.getElementsByClassName('plurid-container-more-always-show-options')[0];
+
+    button.addEventListener('click', event => {
+        console.log('alwaysShowOptions');
+    });
+}
+
+
+function resetDefault(container) {
+
+}
+
