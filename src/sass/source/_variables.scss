@@ -1,3 +1,50 @@
 $perspective: 1000px;
 
 $dark-background: hsl(200, 2%, 12%);
+$plurid-link-color: hsl(200, 2%, 52%);
+
+
+// generic transform
+@mixin transform($transformMixin) {
+    -moz-transform: $transformMixin;
+    -o-transform: $transformMixin;
+    -ms-transform: $transformMixin;
+    -webkit-transform: $transformMixin;
+    transform: $transformMixin;
+}
+
+//transform origin
+@mixin transform-origin ($transformOriginMixin) {
+    -moz-transform-origin: $transformOriginMixin;
+    -o-transform-origin: $transformOriginMixin;
+    -ms-transform-origin: $transformOriginMixin;
+    -webkit-transform-origin: $transformOriginMixin;
+    transform-origin: $transformOriginMixin;
+}
+
+// transform-style
+@mixin transform-style ($transformStyleMixin) {
+    -moz-transform-style: $transformStyleMixin;
+    -o-transform-style: $transformStyleMixin;
+    -ms-transform-style: $transformStyleMixin;
+    -webkit-transform-style: $transformStyleMixin;
+    transform-style: $transformStyleMixin;
+}
+
+@mixin perspective($perspectiveMixin) {
+    -moz-perspective: $perspectiveMixin;
+    -o-perspective: $perspectiveMixin;
+    -ms-perspective: $perspectiveMixin;
+    -webkit-perspective: $perspectiveMixin;
+    perspective: $perspectiveMixin;
+}
+
+
+$boxShadowSheetActive: 0px 0px 0px 1px hsl(200, 2%, 40%);
+$boxShadowSheetTransform: 0px 0px 0px 1px hsl(200, 2%, 100%);
+
+@mixin box-shadow ($boxShadowMixin) {
+    -webkit-box-shadow: $boxShadowMixin;
+    -moz-box-shadow: $boxShadowMixin;
+    box-shadow: $boxShadowMixin;
+}

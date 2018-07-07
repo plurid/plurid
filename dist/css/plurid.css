@@ -1,38 +1,3 @@
-body {
-  color: #d8d9da;
-  text-align: justify; }
-
-a {
-  color: #a4a6a8; }
-
-.content {
-  background-color: #666666;
-  padding: 50px;
-  width: 800px;
-  margin: 0 auto;
-  margin-top: 50px;
-  margin-bottom: 50px; }
-
-:unresolved {
-  display: none; }
-
-.grid {
-  display: inline-grid;
-  grid-template-columns: 1fr 1fr 1fr; }
-
-.grid p {
-  margin: 30px; }
-
-.grid-ads {
-  width: 100%;
-  display: inline-grid;
-  grid-template-columns: 1fr 1fr 1fr; }
-
-.grid-ads h1 {
-  align-self: center;
-  justify-self: center;
-  padding: 100px; }
-
 *,
 *:after,
 *:before {
@@ -51,37 +16,24 @@ html {
 body {
   background-color: #1e1f1f; }
 
-#plurid-root-2 {
-  transform: translateX(1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(-60deg) rotateZ(0deg) scale(1); }
-
-#plurid-root-3 {
-  transform: translateX(-1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(60deg) rotateZ(0deg) scale(1); }
+:unresolved {
+  display: none; }
 
 plurid-branch {
-  position: absolute;
-  transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(90deg) rotateZ(0deg) scale(1); }
+  position: absolute; }
 
 plurid-scion {
-  width: 100%;
-  height: 100%;
   right: -100px;
   position: absolute; }
   plurid-scion plurid-sheet {
-    width: 100vw;
-    height: auto; }
+    width: 100vw; }
 
 plurid-bridge {
-  position: absolute;
-  width: 100px;
-  height: 20px;
   background-color: #333333;
-  opacity: 0.7; }
-
-plurid-insertion {
-  position: absolute;
-  width: 10px;
   height: 20px;
-  background-color: #666666; }
+  position: absolute;
+  opacity: 0.7;
+  width: 100px; }
 
 plurid-container {
   background-color: #1e1f1f;
@@ -90,38 +42,47 @@ plurid-container {
   bottom: 0;
   right: 0;
   left: 0;
-  perspective: 1000px;
-  -webkit-perspective: 1000px; }
-
-plurid-content {
-  position: relative;
-  height: 100%;
-  width: 100%; }
+  -moz-perspective: 1000px;
+  -o-perspective: 1000px;
+  -ms-perspective: 1000px;
+  -webkit-perspective: 1000px;
+  perspective: 1000px; }
 
 plurid-roots {
   position: absolute;
   height: 100%;
-  width: 100%;
+  -moz-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -o-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -ms-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d; }
+  width: 100%; }
 
 plurid-root {
   position: absolute;
-  height: auto;
-  width: 100%;
+  -moz-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -o-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -ms-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d; }
+  width: 100%; }
 
 plurid-sheet {
-  position: absolute;
-  width: 100%;
   background-color: #3e4041;
-  padding: 50px;
-  padding-top: 100px;
-  transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d; }
+  padding: 40px;
+  padding-top: 80px;
+  position: absolute;
+  width: 100%; }
 
 .plurid-sheet-active {
   -webkit-box-shadow: 0px 0px 0px 1px #646768;
@@ -135,20 +96,20 @@ plurid-sheet {
 
 .plurid-sheet-minimize {
   height: 0px;
-  overflow: hidden;
   padding-bottom: 0;
-  padding-top: 60px; }
+  padding-top: 60px;
+  overflow: hidden; }
 
 .plurid-sheet-reduce-height {
   height: 700px;
   overflow: hidden; }
 
 plurid-link {
-  color: #8a8a8a;
+  color: #828587;
   cursor: pointer; }
 
 plurid-link:hover {
-  color: white; }
+  color: #eaebeb; }
 
 plurid-options {
   position: absolute;

@@ -22,12 +22,6 @@ a {
     margin-bottom: 50px;
 }
 
-:unresolved {
-    display: none;
-    // background-color: black;
-    // color: black;
-}
-
 .grid {
     display: inline-grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -47,4 +41,15 @@ a {
     align-self: center;
     justify-self: center;
     padding: 100px;
+}
+
+
+
+#plurid-root-2 {
+    transform: translateX(1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(-60deg) rotateZ(0deg) scale(1);
+}
+
+
+#plurid-root-3 {
+    transform: translateX(-1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(60deg) rotateZ(0deg) scale(1);
 }

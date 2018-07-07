@@ -1,6 +1,3 @@
-@import "../variables";
-
-
 plurid-container {
     background-color: $dark-background;
     position: absolute;
@@ -8,7 +5,5 @@ plurid-container {
     bottom: 0;
     right: 0;
     left: 0;
-    perspective: $perspective;
-    -webkit-perspective: $perspective;
-    // overflow: hidden;
+    @include perspective($perspective);
 }
