@@ -17,7 +17,7 @@ html {
 }
 
 body {
-    background-color: $dark-background;
+    @extend %container-background;
 }
 
 :unresolved {
