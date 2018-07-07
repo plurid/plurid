@@ -1,5 +1,6 @@
 plurid-container {
-    background-color: $dark-background;
+    @extend %container-background;
+
     position: absolute;
     top: 0;
     bottom: 0;
