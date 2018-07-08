@@ -141,9 +141,13 @@ export function contentOptions() {
                                 <span class="plurid-container-button plurid-container-color"></span>
                             </div>
 
-
-                            <div class="plurid-container-options-group-more plurid-container-more-container-background-gradient">
+                            <div class="plurid-container-options-group-more plurid-container-more-shadows">
                                 <p>Shadows (performance intensive)</p>
+                                <input type="checkbox">
+                            </div>
+
+                            <div class="plurid-container-options-group-more plurid-container-more-reflections">
+                                <p>Reflections (performance intensive)</p>
                                 <input type="checkbox">
                             </div>
                         </div>
