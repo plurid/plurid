@@ -9,6 +9,22 @@ plurid-sheet {
 }
 
 
+// Firefox reflection
+// requires masking through SVG
+// #plurid-sheet-1:before {
+//     // background: -moz-linear-gradient(bottom, rgba(248,80,50,1) 0%, rgba(231,56,39,0) 100%), -moz-element(#plurid-sheet-1) no-repeat 0 -900px content-box;
+//     background: -moz-element(#plurid-sheet-1) no-repeat 0 -900px;
+//     content: "";
+//     height: 300px;
+//     left: 0;
+//     bottom: -284px;
+//     position: absolute;
+//     -webkit-transform: scaleY(-1);
+//     transform: scaleY(-1);
+//     width: 100%;
+// }
+
+
 .plurid-sheet-active {
     @include box-shadow($boxShadowSheetActive);
 }
