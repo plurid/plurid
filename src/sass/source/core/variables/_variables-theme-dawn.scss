@@ -1,1 +1,29 @@
-$dawn_background-color: hsl(200, 2%, 82%);
+$dawn_primary-color: hsl(0, 0%, 80%);
+$dawn_secondary-color: hsl(0, 0%, 75%);
+$dawn_tertiary-color: hsl(200, 2%, 70%);
+$dawn_quaternary-color: hsl(200, 2%, 65%);
+// $dawn_quinary-color: hsl(200, 2%, 20%);
+// $dawn_senary-color: hsl(200, 2%, 20%);
+// $dawn_septenary-color: hsl(200, 2%, 20%);
+// $dawn_octonary-color: hsl(200, 2%, 20%);
+// $dawn_nonary-color: hsl(200, 2%, 20%);
+// $dawn_denary-color: hsl(200, 2%, 20%);
+
+$dawn_primary-color-inverted: hsl(200, 2%, 10%);
+$dawn_secondary-color-inverted: hsl(200, 2%, 20%);
+
+
+$dawn_container__background-color: $dawn_primary-color;
+$dawn_container__gradient-outer: $dawn_tertiary-color;
+$dawn_container__gradient-inner: $dawn_quaternary-color;
+
+$dawn_menu__background-color: $dawn_secondary-color;
+
+$dawn_text__color: $dawn_primary-color-inverted;
+$dawn_plurid-link__color: $dawn_secondary-color-inverted;
+
+$dawn_plurid-sheet__background-color: $dawn_primary-color;
+
+
+// $dawn_background-color: hsl(200, 2%, 82%);
+// $dawn_menu__background-color: hsl(200, 2%, 90%);

@@ -16,6 +16,13 @@
     padding: 7px;
 }
 
+.plurid-controls-buttons-svg {
+    @include themify($themes) {
+        fill: themed('textColor');
+    }
+    // fill: hsl(0, 0%, 10%);
+}
+
 .plurid-sheet-control-active,
 .plurid-controls-button:hover {
     background-color: hsl(0, 0%, 70%);
