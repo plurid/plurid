@@ -1,80 +1,89 @@
 $perspective: 1000px;
 
 $dark-theme-background-color: hsl(200, 2%, 12%);
+$dark-theme-menu-background-color: hsl(200, 2%, 15%);
 $light-theme-background-color: hsl(200, 2%, 82%);
 $dark-theme-color: hsl(0, 0%, 90%);
 $plurid-link-color: hsl(200, 2%, 52%);
 
+$plurid-bridge-opacity: 0.5;
+
+$sans-serif-font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+
 // DARK
-// %container-background {
-//     background: $dark-theme-background-color;
-//     background: -moz-radial-gradient(center, ellipse cover, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
-//     background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(55,56,56,1)), color-stop(100%, rgba(13,13,13,1)));
-//     background: -webkit-radial-gradient(center, ellipse cover, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
-//     background: -o-radial-gradient(center, ellipse cover, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
-//     background: -ms-radial-gradient(center, ellipse cover, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
-//     background: radial-gradient(ellipse at center, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
-//     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#373838', endColorstr='#0d0d0d', GradientType=1 );
-// }
+%container-background {
+    background: $dark-theme-background-color;
+
+    // performance issues with radial gradients for some reason
+    // background: -moz-radial-gradient(center, ellipse cover, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
+    // background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(55,56,56,1)), color-stop(100%, rgba(13,13,13,1)));
+    // background: -webkit-radial-gradient(center, ellipse cover, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
+    // background: -o-radial-gradient(center, ellipse cover, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
+    // background: -ms-radial-gradient(center, ellipse cover, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
+    // background: radial-gradient(ellipse at center, rgba(55,56,56,1) 0%, rgba(13,13,13,1) 100%);
+    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#373838', endColorstr='#0d0d0d', GradientType=1 );
+}
 
 
 // LIGHT
-%container-background {
-    background: $light-theme-background-color;
-    background: -moz-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
-    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(255,255,255,1)), color-stop(100%, rgba(181,181,181,1)));
-    background: -webkit-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
-    background: -o-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
-    background: -ms-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
-    background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#b5b5b5', GradientType=1 );
-}
+// %container-background {
+//     background: $light-theme-background-color;
 
-
+//     // performance issues with radial gradients for some reason
+//     background: -moz-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(255,255,255,1)), color-stop(100%, rgba(181,181,181,1)));
+//     background: -webkit-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     background: -o-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     background: -ms-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%, rgba(181,181,181,1) 100%);
+//     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#b5b5b5', GradientType=1 );
+// }
 
 
 // generic transform
-@mixin transform($transformMixin) {
-    -moz-transform: $transformMixin;
-    -o-transform: $transformMixin;
-    -ms-transform: $transformMixin;
-    -webkit-transform: $transformMixin;
-    transform: $transformMixin;
+@mixin transform ($transform-mixin) {
+    -moz-transform: $transform-mixin;
+    -o-transform: $transform-mixin;
+    -ms-transform: $transform-mixin;
+    -webkit-transform: $transform-mixin;
+    transform: $transform-mixin;
 }
 
 //transform origin
-@mixin transform-origin ($transformOriginMixin) {
-    -moz-transform-origin: $transformOriginMixin;
-    -o-transform-origin: $transformOriginMixin;
-    -ms-transform-origin: $transformOriginMixin;
-    -webkit-transform-origin: $transformOriginMixin;
-    transform-origin: $transformOriginMixin;
+@mixin transform-origin ($transform-origin-mixin) {
+    -moz-transform-origin: $transform-origin-mixin;
+    -o-transform-origin: $transform-origin-mixin;
+    -ms-transform-origin: $transform-origin-mixin;
+    -webkit-transform-origin: $transform-origin-mixin;
+    transform-origin: $transform-origin-mixin;
 }
 
 // transform-style
-@mixin transform-style ($transformStyleMixin) {
-    -moz-transform-style: $transformStyleMixin;
-    -o-transform-style: $transformStyleMixin;
-    -ms-transform-style: $transformStyleMixin;
-    -webkit-transform-style: $transformStyleMixin;
-    transform-style: $transformStyleMixin;
+@mixin transform-style ($transform-style-mixin) {
+    -moz-transform-style: $transform-style-mixin;
+    -o-transform-style: $transform-style-mixin;
+    -ms-transform-style: $transform-style-mixin;
+    -webkit-transform-style: $transform-style-mixin;
+    transform-style: $transform-style-mixin;
 }
 
-@mixin perspective($perspectiveMixin) {
-    -moz-perspective: $perspectiveMixin;
-    -o-perspective: $perspectiveMixin;
-    -ms-perspective: $perspectiveMixin;
-    -webkit-perspective: $perspectiveMixin;
-    perspective: $perspectiveMixin;
+@mixin perspective($perspective-mixin) {
+    -moz-perspective: $perspective-mixin;
+    -o-perspective: $perspective-mixin;
+    -ms-perspective: $perspective-mixin;
+    -webkit-perspective: $perspective-mixin;
+    perspective: $perspective-mixin;
 }
 
 
 $boxShadowSheetActive: 0px 0px 0px 1px hsl(200, 2%, 40%);
 $boxShadowSheetTransform: 0px 0px 0px 1px hsl(200, 2%, 100%);
 $boxShadowSheetShadow: 0px 0px 100px 60px hsl(200, 2%, 5%);
+$box-shadow-menu: 0 4px 2px -2px hsl(200, 2%, 5%);
 
-@mixin box-shadow ($boxShadowMixin) {
-    -webkit-box-shadow: $boxShadowMixin;
-    -moz-box-shadow: $boxShadowMixin;
-    box-shadow: $boxShadowMixin;
+@mixin box-shadow ($box-shadow-mixin) {
+    -webkit-box-shadow: $box-shadow-mixin;
+    -moz-box-shadow: $box-shadow-mixin;
+    box-shadow: $box-shadow-mixin;
 }
