@@ -5,6 +5,6 @@ plurid-container {
     right: 0;
     left: 0;
 
-    @include perspective($perspective);
+    @include perspective($general_perspective);
     @extend %container-background;
 }

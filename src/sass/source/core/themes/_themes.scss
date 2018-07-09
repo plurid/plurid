@@ -1,0 +1,30 @@
+$themes: (
+    night: (
+        backgroundColorContainer: hsl(200, 2%, 6%),
+        backgroundColorContainerGradientOuter: rgb(0, 0, 0),
+        backgroundColorContainerGradientInner: rgba(13,13,13,1),
+        textColor: hsl(0, 0%, 90%),
+        pluridLinkColor: hsl(200, 2%, 52%)
+    ),
+    dusk: (
+        backgroundColorContainer: $dusk_background-color,
+        backgroundColorContainerGradientOuter: rgba(55,56,56,1),
+        backgroundColorContainerGradientInner: rgba(13,13,13,1),
+        textColor: hsl(0, 0%, 90%),
+        pluridLinkColor: hsl(200, 2%, 52%)
+    ),
+    dawn: (
+        backgroundColorContainer: hsl(200, 2%, 82%),
+        backgroundColorContainerGradientOuter: rgba(255,255,255,1),
+        backgroundColorContainerGradientInner: rgba(181,181,181,1),
+        textColor: hsl(0, 0%, 90%),
+        pluridLinkColor: hsl(200, 2%, 52%)
+    ),
+    light: (
+        backgroundColorContainer: hsl(0, 0%, 95%),
+        backgroundColorContainerGradientOuter: rgba(255,255,255,1),
+        backgroundColorContainerGradientInner: rgb(240, 240, 240),
+        textColor: hsl(0, 0%, 90%),
+        pluridLinkColor: hsl(200, 2%, 52%)
+    )
+);

@@ -14,9 +14,11 @@ plurid-scion {
 
 
 plurid-bridge {
-    background-color: $dark-theme-background-color;
+    @include themify($themes) {
+        background-color: themed('backgroundColorContainer');
+    }
     height: 20px;
     position: absolute;
-    opacity: $plurid-bridge-opacity;
+    opacity: $general_plurid-bridge__opacity;
     width: 100px;
 }

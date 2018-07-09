@@ -5,6 +5,8 @@
 
 require('./source/state/plurid-scene.js');
 
+require('./source/core/theme');
+
 
 // require Elements
 require('./source/elements/branch.js');
