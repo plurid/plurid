@@ -2,7 +2,7 @@ plurid-controls {
     align-items: center;
 
     @include themify($themes) {
-        background-color: themed('backgroundColorContainer');
+        background-color: themed('backgroundColorMenu');
         color: themed('textColor');
     }
 
@@ -20,7 +20,9 @@ plurid-controls {
 
 
 plurid-controls plurid-link {
-    color: hsl(0, 0%, 90%);
+    @include themify($themes) {
+        color: themed('pluridLinkColor');
+    }
 }
 
 

@@ -1,16 +1,14 @@
-$body-color: hsl(200, 2%, 5%);
-$text-color: hsl(200, 2%, 85%);
-// $text-color: hsl(0, 0%, 90%);
-
-
-body {
-    // background-color: $body-color;
-    color: $text-color;
+p {
+    @include themify($themes) {
+        color: themed('textColor');
+    }
     text-align: justify;
 }
 
 a {
-    color: darken($text-color, 20%);
+    @include themify($themes) {
+        color: lighten(themed('textColor'), 40%);
+    }
 }
 
 .content {
@@ -54,9 +52,3 @@ a {
     transform: translateX(-1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(60deg) rotateZ(0deg) scale(1);
 }
 
-.button {
-    @include themify($themes) {
-        color: themed('textColor');
-        background-color: themed('backgroundColor');
-    }
-}

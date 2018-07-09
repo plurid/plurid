@@ -229,6 +229,17 @@ export function contentControls () {
                                             </div>
                                             <input type="range">
                                         </div>
+                                        <div class="plurid-controls-more-select-color-group">
+                                            <div class="plurid-controls-more-select-color-group-element">
+                                                <div>
+                                                    Transparency
+                                                </div>
+                                                <div>
+                                                    <input type="text"> %
+                                                </div>
+                                            </div>
+                                            <input type="range">
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -269,6 +280,17 @@ export function contentControls () {
                                             <div class="plurid-controls-more-select-color-group-element">
                                                 <div>
                                                     Lightness
+                                                </div>
+                                                <div>
+                                                    <input type="text"> %
+                                                </div>
+                                            </div>
+                                            <input type="range">
+                                        </div>
+                                        <div class="plurid-controls-more-select-color-group">
+                                            <div class="plurid-controls-more-select-color-group-element">
+                                                <div>
+                                                    Transparency
                                                 </div>
                                                 <div>
                                                     <input type="text"> %

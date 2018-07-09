@@ -1,5 +1,8 @@
 .plurid-controls-more-container {
-    background: hsl(200, 2%, 15%);
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenu');
+        // color: themed('textColor');
+    }
     box-shadow: 0 4px 2px -2px hsl(200, 2%, 5%);
     display: none;
     height: 400px;

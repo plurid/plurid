@@ -3,19 +3,18 @@
         background: themed('backgroundColorContainer');
 
         // performance issues with radial gradients for some reason
-        // background: -moz-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientOuter') 0%, themed('backgroundColorContainerGradientInner') 100%);
-        // background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, themed('backgroundColorContainerGradientOuter')), color-stop(100%, themed('backgroundColorContainerGradientInner')));
-        // background: -webkit-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientOuter') 0%, themed('backgroundColorContainerGradientInner') 100%);
-        // background: -o-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientOuter') 0%, themed('backgroundColorContainerGradientInner') 100%);
-        // background: -ms-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientOuter') 0%, themed('backgroundColorContainerGradientInner') 100%);
-        // background: radial-gradient(ellipse at center, themed('backgroundColorContainerGradientOuter') 0%, themed('backgroundColorContainerGradientInner') 100%);
+        background: -moz-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
+        background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, themed('backgroundColorContainerGradientInner')), color-stop(100%, themed('backgroundColorContainerGradientOuter')));
+        background: -webkit-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
+        background: -o-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
+        background: -ms-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
+        background: radial-gradient(ellipse at center, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
     }
 }
 
 
 @mixin transform ($transform-mixin) {
     -moz-transform: $transform-mixin;
-    -o-transform: $transform-mixin;
     -ms-transform: $transform-mixin;
     -webkit-transform: $transform-mixin;
     transform: $transform-mixin;
@@ -24,7 +23,6 @@
 
 @mixin transform-origin ($transform-origin-mixin) {
     -moz-transform-origin: $transform-origin-mixin;
-    -o-transform-origin: $transform-origin-mixin;
     -ms-transform-origin: $transform-origin-mixin;
     -webkit-transform-origin: $transform-origin-mixin;
     transform-origin: $transform-origin-mixin;
@@ -33,7 +31,6 @@
 
 @mixin transform-style ($transform-style-mixin) {
     -moz-transform-style: $transform-style-mixin;
-    -o-transform-style: $transform-style-mixin;
     -ms-transform-style: $transform-style-mixin;
     -webkit-transform-style: $transform-style-mixin;
     transform-style: $transform-style-mixin;
@@ -42,7 +39,6 @@
 
 @mixin perspective($perspective-mixin) {
     -moz-perspective: $perspective-mixin;
-    -o-perspective: $perspective-mixin;
     -ms-perspective: $perspective-mixin;
     -webkit-perspective: $perspective-mixin;
     perspective: $perspective-mixin;

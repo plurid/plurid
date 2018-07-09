@@ -1,14 +1,38 @@
 .plurid-theme-night body, .plurid-theme-night plurid-container {
-  background: #0f0f10; }
+  background: black;
+  background: -moz-radial-gradient(center, ellipse cover, #0a0a0a 0%, black 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #0a0a0a), color-stop(100%, black));
+  background: -webkit-radial-gradient(center, ellipse cover, #0a0a0a 0%, black 100%);
+  background: -o-radial-gradient(center, ellipse cover, #0a0a0a 0%, black 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #0a0a0a 0%, black 100%);
+  background: radial-gradient(ellipse at center, #0a0a0a 0%, black 100%); }
 
 .plurid-theme-dusk body, .plurid-theme-dusk plurid-container {
-  background: #1e1f1f; }
+  background: #1e1f1f;
+  background: -moz-radial-gradient(center, ellipse cover, #323334 0%, #0c0d0d 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #323334), color-stop(100%, #0c0d0d));
+  background: -webkit-radial-gradient(center, ellipse cover, #323334 0%, #0c0d0d 100%);
+  background: -o-radial-gradient(center, ellipse cover, #323334 0%, #0c0d0d 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #323334 0%, #0c0d0d 100%);
+  background: radial-gradient(ellipse at center, #323334 0%, #0c0d0d 100%); }
 
 .plurid-theme-dawn body, .plurid-theme-dawn plurid-container {
-  background: #d0d1d2; }
+  background: #cccccc;
+  background: -moz-radial-gradient(center, ellipse cover, #a4a6a8 0%, #b1b3b4 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #a4a6a8), color-stop(100%, #b1b3b4));
+  background: -webkit-radial-gradient(center, ellipse cover, #a4a6a8 0%, #b1b3b4 100%);
+  background: -o-radial-gradient(center, ellipse cover, #a4a6a8 0%, #b1b3b4 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #a4a6a8 0%, #b1b3b4 100%);
+  background: radial-gradient(ellipse at center, #a4a6a8 0%, #b1b3b4 100%); }
 
 .plurid-theme-light body, .plurid-theme-light plurid-container {
-  background: #f2f2f2; }
+  background: white;
+  background: -moz-radial-gradient(center, ellipse cover, #e5e6e6 0%, #f2f2f3 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #e5e6e6), color-stop(100%, #f2f2f3));
+  background: -webkit-radial-gradient(center, ellipse cover, #e5e6e6 0%, #f2f2f3 100%);
+  background: -o-radial-gradient(center, ellipse cover, #e5e6e6 0%, #f2f2f3 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #e5e6e6 0%, #f2f2f3 100%);
+  background: radial-gradient(ellipse at center, #e5e6e6 0%, #f2f2f3 100%); }
 
 *,
 *:after,
@@ -28,12 +52,28 @@ html {
 :unresolved {
   display: none; }
 
-body {
-  color: #d8d9da;
+p {
   text-align: justify; }
+  .plurid-theme-night p {
+    color: white; }
+  .plurid-theme-dusk p {
+    color: #e5e6e6; }
+  .plurid-theme-dawn p {
+    color: #191a1a; }
+  .plurid-theme-light p {
+    color: #191a1a; }
 
-a {
-  color: #a4a6a8; }
+.plurid-theme-night a {
+  color: white; }
+
+.plurid-theme-dusk a {
+  color: white; }
+
+.plurid-theme-dawn a {
+  color: #7d8082; }
+
+.plurid-theme-light a {
+  color: #7d8082; }
 
 .content {
   background-color: #666666;
@@ -66,18 +106,6 @@ a {
 #plurid-root-3 {
   transform: translateX(-1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(60deg) rotateZ(0deg) scale(1); }
 
-.plurid-theme-night .button {
-  color: #e6e6e6; }
-
-.plurid-theme-dusk .button {
-  color: #e6e6e6; }
-
-.plurid-theme-dawn .button {
-  color: #e6e6e6; }
-
-.plurid-theme-light .button {
-  color: #e6e6e6; }
-
 plurid-branch {
   position: absolute; }
 
@@ -93,13 +121,13 @@ plurid-bridge {
   opacity: 0.5;
   width: 100px; }
   .plurid-theme-night plurid-bridge {
-    background-color: #0f0f10; }
+    background-color: black; }
   .plurid-theme-dusk plurid-bridge {
     background-color: #1e1f1f; }
   .plurid-theme-dawn plurid-bridge {
-    background-color: #d0d1d2; }
+    background-color: #cccccc; }
   .plurid-theme-light plurid-bridge {
-    background-color: #f2f2f2; }
+    background-color: white; }
 
 plurid-container {
   position: absolute;
@@ -108,7 +136,6 @@ plurid-container {
   right: 0;
   left: 0;
   -moz-perspective: 1000px;
-  -o-perspective: 1000px;
   -ms-perspective: 1000px;
   -webkit-perspective: 1000px;
   perspective: 1000px; }
@@ -117,12 +144,10 @@ plurid-roots {
   position: absolute;
   height: 100%;
   -moz-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
-  -o-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   -ms-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   -webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   -moz-transform-style: preserve-3d;
-  -o-transform-style: preserve-3d;
   -ms-transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
@@ -131,24 +156,29 @@ plurid-roots {
 plurid-root {
   position: absolute;
   -moz-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
-  -o-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   -ms-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   -webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   -moz-transform-style: preserve-3d;
-  -o-transform-style: preserve-3d;
   -ms-transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   width: 100%; }
 
 plurid-sheet {
-  background-color: #3e4041;
   padding: 40px;
   padding-top: 80px;
   position: absolute;
   width: 100%;
   -webkit-box-reflect: below 0 linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(30, 30, 30, 0.3) 10%, rgba(60, 60, 60, 0) 30%); }
+  .plurid-theme-night plurid-sheet {
+    background-color: #0f0f10; }
+  .plurid-theme-dusk plurid-sheet {
+    background-color: #1e1f1f; }
+  .plurid-theme-dawn plurid-sheet {
+    background-color: #cccccc; }
+  .plurid-theme-light plurid-sheet {
+    background-color: white; }
 
 .plurid-sheet-active {
   -webkit-box-shadow: 0px 0px 0px 1px #646768;
@@ -184,17 +214,14 @@ plurid-shadow {
   background-color: #0c0d0d;
   opacity: 0.25;
   -moz-transform: translateX(0px) translateY(730px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg);
-  -o-transform: translateX(0px) translateY(730px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg);
   -ms-transform: translateX(0px) translateY(730px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg);
   -webkit-transform: translateX(0px) translateY(730px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg);
   transform: translateX(0px) translateY(730px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg);
   -moz-transform-origin: 100% 100%;
-  -o-transform-origin: 100% 100%;
   -ms-transform-origin: 100% 100%;
   -webkit-transform-origin: 100% 100%;
   transform-origin: 100% 100%;
   -moz-transform-style: preserve-3d;
-  -o-transform-style: preserve-3d;
   -ms-transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
@@ -212,16 +239,15 @@ plurid-options {
   font-family: sans-serif;
   font-size: 12px; }
   .plurid-theme-night plurid-options {
-    color: #e6e6e6; }
+    color: white; }
   .plurid-theme-dusk plurid-options {
-    color: #e6e6e6; }
+    color: #e5e6e6; }
   .plurid-theme-dawn plurid-options {
-    color: #e6e6e6; }
+    color: #191a1a; }
   .plurid-theme-light plurid-options {
-    color: #e6e6e6; }
+    color: #191a1a; }
 
 .plurid-container-options-content {
-  background-color: #252727;
   height: 100%;
   width: 800px;
   margin: 0 auto;
@@ -233,21 +259,37 @@ plurid-options {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 50px 50px 100px;
   box-shadow: 0 4px 2px -2px #0c0d0d; }
+  .plurid-theme-night .plurid-container-options-content {
+    background-color: #0a0a0a; }
+  .plurid-theme-dusk .plurid-container-options-content {
+    background-color: #252727; }
+  .plurid-theme-dawn .plurid-container-options-content {
+    background-color: #bfbfbf; }
+  .plurid-theme-light .plurid-container-options-content {
+    background-color: #f9f9f9; }
 
 @media (max-width: 800px) {
   .plurid-container-options-content {
     width: 400px; } }
 
 .plurid-container-options-more {
-  background-color: #252727;
   bottom: 5px;
   box-shadow: 0 4px 2px -2px #0c0d0d;
   display: none;
   position: absolute;
   transform: translateY(-50px);
   overflow: auto;
+  opacity: 0.9;
   white-space: nowrap;
   width: 800px; }
+  .plurid-theme-night .plurid-container-options-more {
+    background-color: #0a0a0a; }
+  .plurid-theme-dusk .plurid-container-options-more {
+    background-color: #252727; }
+  .plurid-theme-dawn .plurid-container-options-more {
+    background-color: #bfbfbf; }
+  .plurid-theme-light .plurid-container-options-more {
+    background-color: #f9f9f9; }
 
 .plurid-container-options-group-more:hover {
   background-color: #4b4d4e;
@@ -366,20 +408,29 @@ plurid-controls {
   -moz-box-shadow: 0 4px 2px -2px #0c0d0d;
   box-shadow: 0 4px 2px -2px #0c0d0d; }
   .plurid-theme-night plurid-controls {
-    background-color: #0f0f10;
-    color: #e6e6e6; }
+    background-color: #0a0a0a;
+    color: white; }
   .plurid-theme-dusk plurid-controls {
-    background-color: #1e1f1f;
-    color: #e6e6e6; }
+    background-color: #252727;
+    color: #e5e6e6; }
   .plurid-theme-dawn plurid-controls {
-    background-color: #d0d1d2;
-    color: #e6e6e6; }
+    background-color: #bfbfbf;
+    color: #191a1a; }
   .plurid-theme-light plurid-controls {
-    background-color: #f2f2f2;
-    color: #e6e6e6; }
+    background-color: #f9f9f9;
+    color: #191a1a; }
 
-plurid-controls plurid-link {
-  color: #e6e6e6; }
+.plurid-theme-night plurid-controls plurid-link {
+  color: #e5e6e6; }
+
+.plurid-theme-dusk plurid-controls plurid-link {
+  color: #979a9b; }
+
+.plurid-theme-dawn plurid-controls plurid-link {
+  color: #323334; }
+
+.plurid-theme-light plurid-controls plurid-link {
+  color: #323334; }
 
 .plurid-container-controls-content {
   height: 50px;
@@ -555,6 +606,18 @@ plurid-controls plurid-link {
   height: 30px;
   padding: 7px; }
 
+.plurid-theme-night .plurid-controls-buttons-svg {
+  fill: white; }
+
+.plurid-theme-dusk .plurid-controls-buttons-svg {
+  fill: #e5e6e6; }
+
+.plurid-theme-dawn .plurid-controls-buttons-svg {
+  fill: #191a1a; }
+
+.plurid-theme-light .plurid-controls-buttons-svg {
+  fill: #191a1a; }
+
 .plurid-sheet-control-active,
 .plurid-controls-button:hover {
   background-color: #b3b3b3;
@@ -609,7 +672,6 @@ plurid-controls plurid-link {
   color: #707475; }
 
 .plurid-controls-more-container {
-  background: #252727;
   box-shadow: 0 4px 2px -2px #0c0d0d;
   display: none;
   height: 400px;
@@ -618,6 +680,14 @@ plurid-controls plurid-link {
   top: 60px;
   width: 300px;
   z-index: 2; }
+  .plurid-theme-night .plurid-controls-more-container {
+    background-color: #0a0a0a; }
+  .plurid-theme-dusk .plurid-controls-more-container {
+    background-color: #252727; }
+  .plurid-theme-dawn .plurid-controls-more-container {
+    background-color: #bfbfbf; }
+  .plurid-theme-light .plurid-controls-more-container {
+    background-color: #f9f9f9; }
 
 .plurid-controls-more-container ul {
   font-size: 12px;
