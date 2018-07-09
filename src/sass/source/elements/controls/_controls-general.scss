@@ -1,9 +1,13 @@
 plurid-controls {
     align-items: center;
-    background-color: $dark-theme-menu-background-color;
-    color: $dark-theme-color;
+
+    @include themify($themes) {
+        background-color: themed('backgroundColorContainer');
+        color: themed('textColor');
+    }
+
     display: flex;
-    font-family: $sans-serif-font-family;
+    font-family: $general_sans-serif__font-family;
     height: 60px;
     position: absolute;
     top: 0;

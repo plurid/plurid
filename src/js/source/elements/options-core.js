@@ -129,6 +129,9 @@ export function contentOptions() {
                             <div class="plurid-container-options-group-more plurid-container-more-container-background">
                                 <p>Container Background</p>
                                 <span class="plurid-container-button plurid-container-color"></span>
+                                <span class="plurid-container-button plurid-container-color"></span>
+                                <span class="plurid-container-button plurid-container-color"></span>
+                                <span class="plurid-container-button plurid-container-color"></span>
                             </div>
 
                             <div class="plurid-container-options-group-more plurid-container-more-container-background-gradient">
@@ -138,6 +141,9 @@ export function contentOptions() {
 
                             <div class="plurid-container-options-group-more plurid-container-more-general-theme">
                                 <p>General Theme</p>
+                                <span class="plurid-container-button plurid-container-color"></span>
+                                <span class="plurid-container-button plurid-container-color"></span>
+                                <span class="plurid-container-button plurid-container-color"></span>
                                 <span class="plurid-container-button plurid-container-color"></span>
                             </div>
 
@@ -432,7 +438,30 @@ function generalTheme(container) {
     let button = container.getElementsByClassName('plurid-container-more-general-theme')[0];
 
     button.addEventListener('click', event => {
-        console.log('change general theme');
+        let bodyClassList = document.body.classList;
+        console.log(bodyClassList);
+
+        for (const bodyClass of bodyClassList) {
+            if (bodyClass === "plurid-theme-light") {
+                bodyClassList.add('plurid-theme-night');
+                bodyClassList.remove('plurid-theme-light');
+            }
+
+            if (bodyClass === "plurid-theme-night") {
+                bodyClassList.add('plurid-theme-dusk');
+                bodyClassList.remove('plurid-theme-night');
+            }
+
+            if (bodyClass === "plurid-theme-dusk") {
+                bodyClassList.add('plurid-theme-dawn');
+                bodyClassList.remove('plurid-theme-dusk');
+            }
+
+            if (bodyClass === "plurid-theme-dawn") {
+                bodyClassList.add('plurid-theme-light');
+                bodyClassList.remove('plurid-theme-dawn');
+            }
+        }
     });
 }
 
@@ -473,4 +502,3 @@ function alwaysShowOptions(container) {
 function resetDefault(container) {
 
 }
-

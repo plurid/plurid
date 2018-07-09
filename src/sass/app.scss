@@ -1,9 +1,18 @@
+// Core
+@import "./source/core/variables/variables";
+@import "./source/core/themes/theme-engine";
+@import "./source/core/mixins/mixins";
+
+
+// General
+@import "./source/general";
+
+
+// Testing
 @import "./source/general-testing";
 
 
-@import "./source/variables";
-@import "./source/general";
-
+// Elements
 @import "./source/elements/page";
 @import "./source/elements/branch";
 @import "./source/elements/container";

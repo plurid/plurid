@@ -53,3 +53,10 @@ a {
 #plurid-root-3 {
     transform: translateX(-1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(60deg) rotateZ(0deg) scale(1);
 }
+
+.button {
+    @include themify($themes) {
+        color: themed('textColor');
+        background-color: themed('backgroundColor');
+    }
+}
