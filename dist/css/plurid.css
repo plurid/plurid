@@ -8,31 +8,31 @@
   background: radial-gradient(ellipse at center, #0a0a0a 0%, black 100%); }
 
 .plurid-theme-dusk body, .plurid-theme-dusk plurid-container {
-  background: #1e1f1f;
-  background: -moz-radial-gradient(center, ellipse cover, #323334 0%, #0c0d0d 100%);
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #323334), color-stop(100%, #0c0d0d));
-  background: -webkit-radial-gradient(center, ellipse cover, #323334 0%, #0c0d0d 100%);
-  background: -o-radial-gradient(center, ellipse cover, #323334 0%, #0c0d0d 100%);
-  background: -ms-radial-gradient(center, ellipse cover, #323334 0%, #0c0d0d 100%);
-  background: radial-gradient(ellipse at center, #323334 0%, #0c0d0d 100%); }
+  background: #111212;
+  background: -moz-radial-gradient(center, ellipse cover, #252727 0%, #111212 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #252727), color-stop(100%, #111212));
+  background: -webkit-radial-gradient(center, ellipse cover, #252727 0%, #111212 100%);
+  background: -o-radial-gradient(center, ellipse cover, #252727 0%, #111212 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #252727 0%, #111212 100%);
+  background: radial-gradient(ellipse at center, #252727 0%, #111212 100%); }
 
 .plurid-theme-dawn body, .plurid-theme-dawn plurid-container {
   background: #cccccc;
-  background: -moz-radial-gradient(center, ellipse cover, #a4a6a8 0%, #b1b3b4 100%);
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #a4a6a8), color-stop(100%, #b1b3b4));
-  background: -webkit-radial-gradient(center, ellipse cover, #a4a6a8 0%, #b1b3b4 100%);
-  background: -o-radial-gradient(center, ellipse cover, #a4a6a8 0%, #b1b3b4 100%);
-  background: -ms-radial-gradient(center, ellipse cover, #a4a6a8 0%, #b1b3b4 100%);
-  background: radial-gradient(ellipse at center, #a4a6a8 0%, #b1b3b4 100%); }
+  background: -moz-radial-gradient(center, ellipse cover, #b3b3b3 0%, #cccccc 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #b3b3b3), color-stop(100%, #cccccc));
+  background: -webkit-radial-gradient(center, ellipse cover, #b3b3b3 0%, #cccccc 100%);
+  background: -o-radial-gradient(center, ellipse cover, #b3b3b3 0%, #cccccc 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #b3b3b3 0%, #cccccc 100%);
+  background: radial-gradient(ellipse at center, #b3b3b3 0%, #cccccc 100%); }
 
 .plurid-theme-light body, .plurid-theme-light plurid-container {
   background: white;
-  background: -moz-radial-gradient(center, ellipse cover, #e5e6e6 0%, #f2f2f3 100%);
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #e5e6e6), color-stop(100%, #f2f2f3));
-  background: -webkit-radial-gradient(center, ellipse cover, #e5e6e6 0%, #f2f2f3 100%);
-  background: -o-radial-gradient(center, ellipse cover, #e5e6e6 0%, #f2f2f3 100%);
-  background: -ms-radial-gradient(center, ellipse cover, #e5e6e6 0%, #f2f2f3 100%);
-  background: radial-gradient(ellipse at center, #e5e6e6 0%, #f2f2f3 100%); }
+  background: -moz-radial-gradient(center, ellipse cover, #f2f2f2 0%, white 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #f2f2f2), color-stop(100%, white));
+  background: -webkit-radial-gradient(center, ellipse cover, #f2f2f2 0%, white 100%);
+  background: -o-radial-gradient(center, ellipse cover, #f2f2f2 0%, white 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #f2f2f2 0%, white 100%);
+  background: radial-gradient(ellipse at center, #f2f2f2 0%, white 100%); }
 
 *,
 *:after,
@@ -123,7 +123,7 @@ plurid-bridge {
   .plurid-theme-night plurid-bridge {
     background-color: black; }
   .plurid-theme-dusk plurid-bridge {
-    background-color: #1e1f1f; }
+    background-color: #111212; }
   .plurid-theme-dawn plurid-bridge {
     background-color: #cccccc; }
   .plurid-theme-light plurid-bridge {
@@ -174,9 +174,9 @@ plurid-sheet {
   .plurid-theme-night plurid-sheet {
     background-color: #0f0f10; }
   .plurid-theme-dusk plurid-sheet {
-    background-color: #1e1f1f; }
+    background-color: #323334; }
   .plurid-theme-dawn plurid-sheet {
-    background-color: #cccccc; }
+    background-color: #979a9b; }
   .plurid-theme-light plurid-sheet {
     background-color: white; }
 
@@ -264,9 +264,9 @@ plurid-options {
   .plurid-theme-dusk .plurid-container-options-content {
     background-color: #252727; }
   .plurid-theme-dawn .plurid-container-options-content {
-    background-color: #bfbfbf; }
+    background-color: #b3b3b3; }
   .plurid-theme-light .plurid-container-options-content {
-    background-color: #f9f9f9; }
+    background-color: #f2f2f2; }
 
 @media (max-width: 800px) {
   .plurid-container-options-content {
@@ -287,9 +287,9 @@ plurid-options {
   .plurid-theme-dusk .plurid-container-options-more {
     background-color: #252727; }
   .plurid-theme-dawn .plurid-container-options-more {
-    background-color: #bfbfbf; }
+    background-color: #b3b3b3; }
   .plurid-theme-light .plurid-container-options-more {
-    background-color: #f9f9f9; }
+    background-color: #f2f2f2; }
 
 .plurid-container-options-group-more:hover {
   background-color: #4b4d4e;
@@ -414,10 +414,10 @@ plurid-controls {
     background-color: #252727;
     color: #e5e6e6; }
   .plurid-theme-dawn plurid-controls {
-    background-color: #bfbfbf;
+    background-color: #b3b3b3;
     color: #191a1a; }
   .plurid-theme-light plurid-controls {
-    background-color: #f9f9f9;
+    background-color: #f2f2f2;
     color: #191a1a; }
 
 .plurid-theme-night plurid-controls plurid-link {
@@ -620,29 +620,84 @@ plurid-controls {
 
 .plurid-sheet-control-active,
 .plurid-controls-button:hover {
-  background-color: #b3b3b3;
-  border-radius: 15px;
-  color: #1a1a1a; }
-  .plurid-sheet-control-active .plurid-controls-buttons-svg,
+  border-radius: 15px; }
+  .plurid-theme-night .plurid-sheet-control-active, .plurid-theme-night
+  .plurid-controls-button:hover {
+    background-color: #979a9b;
+    color: black; }
+  .plurid-theme-dusk .plurid-sheet-control-active, .plurid-theme-dusk
+  .plurid-controls-button:hover {
+    background-color: #b1b3b4;
+    color: #111212; }
+  .plurid-theme-dawn .plurid-sheet-control-active, .plurid-theme-dawn
+  .plurid-controls-button:hover {
+    background-color: #4b4d4e;
+    color: #cccccc; }
+  .plurid-theme-light .plurid-sheet-control-active, .plurid-theme-light
+  .plurid-controls-button:hover {
+    background-color: #4b4d4e;
+    color: white; }
+  .plurid-theme-night .plurid-sheet-control-active .plurid-controls-buttons-svg, .plurid-theme-night
   .plurid-controls-button:hover .plurid-controls-buttons-svg {
-    fill: #1a1a1a; }
+    fill: black; }
+  .plurid-theme-dusk .plurid-sheet-control-active .plurid-controls-buttons-svg, .plurid-theme-dusk
+  .plurid-controls-button:hover .plurid-controls-buttons-svg {
+    fill: #111212; }
+  .plurid-theme-dawn .plurid-sheet-control-active .plurid-controls-buttons-svg, .plurid-theme-dawn
+  .plurid-controls-button:hover .plurid-controls-buttons-svg {
+    fill: #cccccc; }
+  .plurid-theme-light .plurid-sheet-control-active .plurid-controls-buttons-svg, .plurid-theme-light
+  .plurid-controls-button:hover .plurid-controls-buttons-svg {
+    fill: white; }
 
 .plurid-sheet-controls-disabled,
 .plurid-sheet-controls-disabled:hover {
-  cursor: not-allowed;
-  background-color: #252727;
-  color: #e6e6e6; }
-  .plurid-sheet-controls-disabled .plurid-controls-buttons-svg,
+  cursor: not-allowed; }
+  .plurid-theme-night .plurid-sheet-controls-disabled, .plurid-theme-night
+  .plurid-sheet-controls-disabled:hover {
+    background-color: #0a0a0a;
+    color: white; }
+  .plurid-theme-dusk .plurid-sheet-controls-disabled, .plurid-theme-dusk
+  .plurid-sheet-controls-disabled:hover {
+    background-color: #252727;
+    color: #e5e6e6; }
+  .plurid-theme-dawn .plurid-sheet-controls-disabled, .plurid-theme-dawn
+  .plurid-sheet-controls-disabled:hover {
+    background-color: #b3b3b3;
+    color: #191a1a; }
+  .plurid-theme-light .plurid-sheet-controls-disabled, .plurid-theme-light
+  .plurid-sheet-controls-disabled:hover {
+    background-color: #f2f2f2;
+    color: #191a1a; }
+  .plurid-theme-night .plurid-sheet-controls-disabled .plurid-controls-buttons-svg, .plurid-theme-night
   .plurid-sheet-controls-disabled:hover .plurid-controls-buttons-svg {
-    fill: #4d4d4d; }
+    fill: white; }
+  .plurid-theme-dusk .plurid-sheet-controls-disabled .plurid-controls-buttons-svg, .plurid-theme-dusk
+  .plurid-sheet-controls-disabled:hover .plurid-controls-buttons-svg {
+    fill: #e5e6e6; }
+  .plurid-theme-dawn .plurid-sheet-controls-disabled .plurid-controls-buttons-svg, .plurid-theme-dawn
+  .plurid-sheet-controls-disabled:hover .plurid-controls-buttons-svg {
+    fill: #191a1a; }
+  .plurid-theme-light .plurid-sheet-controls-disabled .plurid-controls-buttons-svg, .plurid-theme-light
+  .plurid-sheet-controls-disabled:hover .plurid-controls-buttons-svg {
+    fill: #191a1a; }
 
 .plurid-controls-cancel:hover,
 .plurid-controls-search:hover {
-  background-color: transparent;
-  border-radius: 0px; }
+  background-color: transparent !important;
+  border-radius: 0px !important; }
 
-.plurid-controls-buttons-svg {
-  fill: #e6e6e6; }
+.plurid-theme-night .plurid-controls-buttons-svg {
+  fill: white; }
+
+.plurid-theme-dusk .plurid-controls-buttons-svg {
+  fill: #e5e6e6; }
+
+.plurid-theme-dawn .plurid-controls-buttons-svg {
+  fill: #191a1a; }
+
+.plurid-theme-light .plurid-controls-buttons-svg {
+  fill: #191a1a; }
 
 .plurid-controls-extend {
   cursor: -webkit-grab;
@@ -685,9 +740,9 @@ plurid-controls {
   .plurid-theme-dusk .plurid-controls-more-container {
     background-color: #252727; }
   .plurid-theme-dawn .plurid-controls-more-container {
-    background-color: #bfbfbf; }
+    background-color: #b3b3b3; }
   .plurid-theme-light .plurid-controls-more-container {
-    background-color: #f9f9f9; }
+    background-color: #f2f2f2; }
 
 .plurid-controls-more-container ul {
   font-size: 12px;
@@ -766,19 +821,26 @@ plurid-controls {
   width: 60%; }
 
 .plurid-controls-url-container input {
-  background-color: #666666;
   border: none;
-  color: #b3b3b3;
-  height: 34px;
-  width: 100%;
   font-size: 14px;
-  padding-left: 38px;
-  padding-right: 38px;
+  height: 34px;
   margin-right: -34px;
-  margin-left: -34px; }
-
-.plurid-controls-url-container input:focus {
-  color: #e6e6e6; }
+  margin-left: -34px;
+  padding-right: 38px;
+  padding-left: 38px;
+  width: 100%; }
+  .plurid-theme-night .plurid-controls-url-container input {
+    background-color: black;
+    color: white; }
+  .plurid-theme-dusk .plurid-controls-url-container input {
+    background-color: #111212;
+    color: #e5e6e6; }
+  .plurid-theme-dawn .plurid-controls-url-container input {
+    background-color: #cccccc;
+    color: #191a1a; }
+  .plurid-theme-light .plurid-controls-url-container input {
+    background-color: white;
+    color: #191a1a; }
 
 .plurid-controls-url-input {
   width: 100%;
