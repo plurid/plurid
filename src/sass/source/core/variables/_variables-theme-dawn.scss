@@ -19,11 +19,13 @@ $dawn_container__gradient-outer: $dawn_primary-color;
 $dawn_container__gradient-inner: $dawn_secondary-color;
 
 $dawn_menu__background-color: $dawn_secondary-color;
+$dawn_menu__box-shadow: $general_box-shadow-menu-size $dawn_quaternary-color;
 $dawn_button-hover_background-color: $dawn_tertiary-color-inverted;
 
 
 $dawn_text__color: $dawn_primary-color-inverted;
-$dawn_inverted_text__color: $dawn_primary-color;
+$dawn_text-secondary__color: $dawn_secondary-color-inverted;
+$dawn_text-inverted__color: $dawn_primary-color;
 $dawn_plurid-link__color: $dawn_secondary-color-inverted;
 
-$dawn_plurid-sheet__background-color: $dawn_tertiary-color;
+$dawn_plurid-sheet__background-color: $dawn_primary-color;

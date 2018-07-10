@@ -1,15 +1,14 @@
 .plurid-controls-more-container {
     @include themify($themes) {
         background-color: themed('backgroundColorMenu');
-        // color: themed('textColor');
+        @include box-shadow(themed('boxShadowMenu'));
     }
-    box-shadow: 0 4px 2px -2px hsl(200, 2%, 5%);
     display: none;
     height: 400px;
     position: absolute;
     right: 0;
-    // overflow: auto;
     top: 60px;
+    // overflow: auto;
     width: 300px;
     z-index: 2;
 }

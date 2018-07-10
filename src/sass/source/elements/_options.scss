@@ -43,7 +43,10 @@ plurid-options {
     white-space: nowrap;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 50px 50px 100px;
-    box-shadow: 0 4px 2px -2px hsl(200, 2%, 5%);
+
+    @include themify($themes) {
+        @include box-shadow(themed('boxShadowMenu'));
+    }
 }
 
 
@@ -57,18 +60,14 @@ plurid-options {
 .plurid-container-options-more {
     @include themify($themes) {
         background-color: themed('backgroundColorMenu');
+        @include box-shadow(themed('boxShadowMenu'));
     }
     bottom: 5px;
-    box-shadow: 0 4px 2px -2px hsl(200, 2%, 5%);
     display: none;
-    // grid-template-columns: 1fr 1fr 1fr 1fr;
     position: absolute;
-    // height: 350px;
     transform: translateY(-50px);
-    // transition: transform 300ms ease-in-out;
-    // transition: all 1s ease;
     overflow: auto;
-    opacity: 0.9;
+    opacity: 0.93;
     white-space: nowrap;
     width: 800px;
 }

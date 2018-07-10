@@ -4,9 +4,7 @@
 
         // performance issues with radial gradients for some reason
         background: -moz-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
-        background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, themed('backgroundColorContainerGradientInner')), color-stop(100%, themed('backgroundColorContainerGradientOuter')));
         background: -webkit-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
-        background: -o-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
         background: -ms-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
         background: radial-gradient(ellipse at center, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
     }
@@ -46,7 +44,16 @@
 
 
 @mixin box-shadow ($box-shadow-mixin) {
-    -webkit-box-shadow: $box-shadow-mixin;
     -moz-box-shadow: $box-shadow-mixin;
+    -ms-box-shadow: $box-shadow-mixin;
+    -webkit-box-shadow: $box-shadow-mixin;
     box-shadow: $box-shadow-mixin;
+}
+
+
+@mixin user-select ($user-select-mixin) {
+    -webkit-user-select: $user-select-mixin;
+    -moz-user-select: $user-select-mixin;
+    -ms-user-select: $user-select-mixin;
+    user-select: $user-select-mixin;
 }

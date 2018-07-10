@@ -321,6 +321,20 @@ export function contentControls () {
                                 </span>
                             </li>
 
+                            <li class="plurid-controls-more-bridge-opacity">
+                                <span class="plurid-controls-more-container-text">
+                                    <span class="plurid-controls-more-bridge-opacity-span-text">
+                                        Bridge Opacity
+                                    </span>
+                                    <span class="plurid-controls-more-bridge-opacity-span-range">
+                                        <input type="range" min="1" max="100" value="90">
+                                    </span>
+                                </span>
+                                <span class="plurid-controls-more-container-shortcut plurid-controls-more-bridge-opacity-input">
+                                    <input type="text" value="90">
+                                </span>
+                            </li>
+
                             <hr>
 
                             <li>

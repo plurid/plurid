@@ -4,8 +4,8 @@
 
 .plurid-controls-url-container input {
     @include themify($themes) {
-        background-color: themed('backgroundColorContainer');
-        color: themed('textColor');
+        background-color: darken(themed('backgroundColorMenu'), 3%);
+        color: themed('textColorSecondary');
     }
     border: none;
     font-size: 14px;
@@ -17,11 +17,11 @@
     width: 100%;
 }
 
-// .plurid-controls-url-container input:focus {
-//     @include themify($themes) {
-//         color: themed('textColor');
-//     }
-// }
+.plurid-controls-url-container input:focus {
+    @include themify($themes) {
+        color: themed('textColor');
+    }
+}
 
 .plurid-controls-url-input {
     width: 100%;
@@ -37,7 +37,9 @@
 }
 
 .plurid-controls-url input::placeholder {
-    color: hsl(0, 0%, 70%);
+    @include themify($themes) {
+        color: themed('textColorSecondary');
+    }
 }
 
 .plurid-controls-url-container {
