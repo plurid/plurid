@@ -19,10 +19,12 @@ $night_container__gradient-outer: $night_primary-color;
 $night_container__gradient-inner: $night_secondary-color;
 
 $night_menu__background-color: $night_secondary-color;
+$night_menu__box-shadow: $general_box-shadow-menu-size $night_quaternary-color;
 $night_button-hover_background-color: $night_tertiary-color-inverted;
 
 $night_text__color: $night_primary-color-inverted;
-$night_inverted_text__color: $night_primary-color;
+$night_text-secondary__color: $night_tertiary-color-inverted;
+$night_text-inverted__color: $night_primary-color;
 $night_plurid-link__color: $night_secondary-color-inverted;
 
 $night_plurid-sheet__background-color: $night_tertiary-color;

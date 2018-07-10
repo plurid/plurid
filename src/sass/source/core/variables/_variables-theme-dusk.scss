@@ -19,11 +19,13 @@ $dusk_container__gradient-outer: $dusk_primary-color;
 $dusk_container__gradient-inner: $dusk_secondary-color;
 
 $dusk_menu__background-color: $dusk_secondary-color;
+$dusk_menu__box-shadow: $general_box-shadow-menu-size $dusk_quaternary-color;
 $dusk_button-hover_background-color: $dusk_tertiary-color-inverted;
 
 
 $dusk_text__color: $dusk_primary-color-inverted;
-$dusk_inverted_text__color: $dusk_primary-color;
+$dusk_text-secondary__color: $dusk_secondary-color-inverted;
+$dusk_text-inverted__color: $dusk_primary-color;
 $dusk_plurid-link__color: $dusk_secondary-color-inverted;
 
 $dusk_plurid-sheet__background-color: $dusk_tertiary-color;
