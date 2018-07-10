@@ -4,7 +4,9 @@ $themes: (
         backgroundColorContainerGradientOuter: $night_container__gradient-outer,
         backgroundColorContainerGradientInner: $night_container__gradient-inner,
         backgroundColorMenu: $night_menu__background-color,
+        backgroundColorMenuButtonHover: $night_button-hover_background-color,
         textColor: $night_text__color,
+        textColorInverted: $night_inverted_text__color,
         pluridLinkColor: $night_plurid-link__color,
         backgroundColorSheet: $night_plurid-sheet__background-color
     ),
@@ -13,23 +15,20 @@ $themes: (
         backgroundColorContainerGradientOuter: $dusk_container__gradient-outer,
         backgroundColorContainerGradientInner: $dusk_container__gradient-inner,
         backgroundColorMenu: $dusk_menu__background-color,
+        backgroundColorMenuButtonHover: $dusk_button-hover_background-color,
         textColor: $dusk_text__color,
+        textColorInverted: $dusk_inverted_text__color,
         pluridLinkColor: $dusk_plurid-link__color,
         backgroundColorSheet: $dusk_plurid-sheet__background-color
     ),
     dawn: (
-        // backgroundColorContainer: $dawn_background-color,
-        // backgroundColorContainerGradientOuter: rgba(181,181,181,1),
-        // backgroundColorContainerGradientInner: rgba(255,255,255,1),
-        // backgroundColorMenu: $dawn_menu__background-color,
-        // textColor: hsl(0, 0%, 90%),
-        // pluridLinkColor: hsl(200, 2%, 52%),
-        // backgroundColorSheet: $dawn_plurid-sheet__background-color
         backgroundColorContainer: $dawn_container__background-color,
         backgroundColorContainerGradientOuter: $dawn_container__gradient-outer,
         backgroundColorContainerGradientInner: $dawn_container__gradient-inner,
         backgroundColorMenu: $dawn_menu__background-color,
+        backgroundColorMenuButtonHover: $dawn_button-hover_background-color,
         textColor: $dawn_text__color,
+        textColorInverted: $dawn_inverted_text__color,
         pluridLinkColor: $dawn_plurid-link__color,
         backgroundColorSheet: $dawn_plurid-sheet__background-color
     ),
@@ -38,7 +37,9 @@ $themes: (
         backgroundColorContainerGradientOuter: $light_container__gradient-outer,
         backgroundColorContainerGradientInner: $light_container__gradient-inner,
         backgroundColorMenu: $light_menu__background-color,
+        backgroundColorMenuButtonHover: $light_button-hover_background-color,
         textColor: $light_text__color,
+        textColorInverted: $light_inverted_text__color,
         pluridLinkColor: $light_plurid-link__color,
         backgroundColorSheet: $light_plurid-sheet__background-color
     )

@@ -1,7 +1,7 @@
-$dusk_primary-color: hsl(200, 2%, 12%);
+$dusk_primary-color: hsl(200, 2%, 7%);
 $dusk_secondary-color: hsl(200, 2%, 15%);
-$dusk_tertiary-color: hsl(200, 2%, 5%);
-$dusk_quaternary-color: hsl(200, 2%, 20%);
+$dusk_tertiary-color: hsl(200, 2%, 20%);
+$dusk_quaternary-color: hsl(200, 2%, 25%);
 // $dusk_quinary-color: hsl(200, 2%, 20%);
 // $dusk_senary-color: hsl(200, 2%, 20%);
 // $dusk_septenary-color: hsl(200, 2%, 20%);
@@ -11,15 +11,19 @@ $dusk_quaternary-color: hsl(200, 2%, 20%);
 
 $dusk_primary-color-inverted: hsl(200, 2%, 90%);
 $dusk_secondary-color-inverted: hsl(200, 2%, 60%);
+$dusk_tertiary-color-inverted: hsl(200, 2%, 70%);
 
 
 $dusk_container__background-color: $dusk_primary-color;
-$dusk_container__gradient-outer: $dusk_tertiary-color;
-$dusk_container__gradient-inner: $dusk_quaternary-color;
+$dusk_container__gradient-outer: $dusk_primary-color;
+$dusk_container__gradient-inner: $dusk_secondary-color;
 
 $dusk_menu__background-color: $dusk_secondary-color;
+$dusk_button-hover_background-color: $dusk_tertiary-color-inverted;
+
 
 $dusk_text__color: $dusk_primary-color-inverted;
+$dusk_inverted_text__color: $dusk_primary-color;
 $dusk_plurid-link__color: $dusk_secondary-color-inverted;
 
-$dusk_plurid-sheet__background-color: $dusk_primary-color;
+$dusk_plurid-sheet__background-color: $dusk_tertiary-color;

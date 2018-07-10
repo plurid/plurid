@@ -3,21 +3,25 @@
 }
 
 .plurid-controls-url-container input {
-    background-color: hsl(0, 0%, 40%);
+    @include themify($themes) {
+        background-color: themed('backgroundColorContainer');
+        color: themed('textColor');
+    }
     border: none;
-    color: hsl(0, 0%, 70%);
-    height: 34px;
-    width: 100%;
     font-size: 14px;
-    padding-left: 38px;
-    padding-right: 38px;
+    height: 34px;
     margin-right: -34px;
     margin-left: -34px;
+    padding-right: 38px;
+    padding-left: 38px;
+    width: 100%;
 }
 
-.plurid-controls-url-container input:focus {
-    color: hsl(0, 0%, 90%);
-}
+// .plurid-controls-url-container input:focus {
+//     @include themify($themes) {
+//         color: themed('textColor');
+//     }
+// }
 
 .plurid-controls-url-input {
     width: 100%;

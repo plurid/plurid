@@ -6,7 +6,7 @@ import { getBranchById,
 (function (global) {
     global.pluridScene = {
         metadata: {
-            theme: 'dawn',
+            theme: 'light',
             activePlurid: '',
             previousActiveSheet: '',
             activeSheet: '',
