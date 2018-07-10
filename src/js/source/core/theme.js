@@ -2,48 +2,33 @@
 // if no theme class currently in use.
 (function() {
     const bodyClassList = document.body.classList;
-    const theme = pluridScene.metadata.theme;
+    let themeSet = false;
 
-    if (theme === "night") {
-        bodyClassList.add('plurid-theme-night');
-        bodyClassList.remove('plurid-theme-dusk');
-        bodyClassList.remove('plurid-theme-dawn');
-        bodyClassList.remove('plurid-theme-light');
-    }
-
-    if (theme === "dusk") {
-        bodyClassList.add('plurid-theme-dusk');
-        bodyClassList.remove('plurid-theme-night');
-        bodyClassList.remove('plurid-theme-dawn');
-        bodyClassList.remove('plurid-theme-light');
-    }
-
-    if (theme === "dawn") {
-        bodyClassList.add('plurid-theme-dawn');
-        bodyClassList.remove('plurid-theme-night');
-        bodyClassList.remove('plurid-theme-dusk');
-        bodyClassList.remove('plurid-theme-light');
-    }
-
-    if (theme === "light") {
-        bodyClassList.add('plurid-theme-light');
-        bodyClassList.remove('plurid-theme-night');
-        bodyClassList.remove('plurid-theme-dusk');
-        bodyClassList.remove('plurid-theme-dawn');
-    }
-
-
-    if (theme !== "night" || theme !== "dusk" || theme !== "dawn" ||  theme !== "light") {
-        let themeSet = false;
-
-        for (const bodyClass of bodyClassList) {
-            if (/plurid-theme/.test(bodyClass)) {
-                themeSet = true;
-            }
+    for (const bodyClass of bodyClassList) {
+        if (/plurid-theme/.test(bodyClass)) {
+            themeSet = true;
         }
+    }
 
-        if (!themeSet) {
-            bodyClassList.add('plurid-theme-dusk');
-        }
+    if (!themeSet) {
+        setDefaultTheme();
     }
 }());
+
+
+function setDefaultTheme() {
+    const bodyClassList = document.body.classList;
+    const defaultTheme = pluridScene.metadata.theme;
+    const currentThemes = [
+        'night',
+        'dusk',
+        'dawn',
+        'light'
+    ];
+
+    currentThemes.map(theme => {
+        defaultTheme === theme ? bodyClassList.add(`plurid-theme-${theme}`) : currentThemes.map(theme => {
+            defaultTheme !== theme ? bodyClassList.remove(`plurid-theme-${theme}`) : '';
+        });
+    });
+}
