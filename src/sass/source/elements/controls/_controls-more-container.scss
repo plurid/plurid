@@ -42,8 +42,10 @@
 }
 
 .plurid-controls-more-container ul li:hover {
-    background-color: hsla(210, 3%, 30%, 0.5);
-    color: hsl(0, 0%, 100%);
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenuButtonHover');
+        color: themed('textColorInverted');
+    }
 }
 
 .plurid-controls-more-container hr {
