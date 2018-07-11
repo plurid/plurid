@@ -1,3 +1,4 @@
+// COLORS
 $light_primary-color: hsl(0, 0%, 100%);
 $light_secondary-color: hsl(0, 0%, 95%);
 $light_tertiary-color: hsl(200, 2%, 90%);
@@ -16,20 +17,33 @@ $light_quaternary-color-inverted: hsl(200, 2%, 30%);
 $light_quinary-color-inverted: hsl(200, 2%, 50%);
 
 
+// CONTAINER
 $light_container__background-color: $light_primary-color;
 $light_container__gradient-outer: $light_primary-color;
 $light_container__gradient-inner: $light_secondary-color;
 
-$light_menu__background-color: $light_secondary-color;
-$light_menu__box-shadow: $general_box-shadow-menu-size $light_quaternary-color;
-$light_button-hover_background-color: $light_quinary-color;
 
+// TEXT
 $light_text__color: $light_primary-color-inverted;
 $light_text-secondary__color: $light_quinary-color-inverted;
 $light_text-tertiary__color: $light_quinary-color;
 $light_text-inverted__color: $light_primary-color;
 $light_plurid-link__color: $light_secondary-color-inverted;
 
+
+// MENU UIs
+$light_menu__background-color: $light_secondary-color;
+$light_menu__box-shadow: $general_box-shadow-menu-size $light_quaternary-color;
+$light_button-hover_background-color: $light_quinary-color;
+
+
+// CONTROLS
+
+
+// OPTIONS
+
+
+// SHEET
 $light_plurid-sheet__background-color: $light_primary-color;
 
 $light_input__box-shadow: $general_box-shadow-input-size $light_text__color;

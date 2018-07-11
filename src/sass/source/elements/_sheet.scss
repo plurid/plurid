@@ -10,7 +10,8 @@ plurid-sheet {
     // backface-visibility: hidden;
 
     // performance issues
-    // -webkit-box-reflect: below 0 linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.3) 10%, rgba(60,60,60,0) 30%);
+    // and z-index issues (?)
+    -webkit-box-reflect: below 0 linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.3) 10%, rgba(60,60,60,0) 30%);
 }
 
 

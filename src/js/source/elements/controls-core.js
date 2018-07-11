@@ -59,7 +59,7 @@ export function contentControls () {
                                 </div>
                                 <input class="plurid-controls-url-input" type="text" tabindex="1" placeholder="Search">
                                 <div class="plurid-controls-button plurid-controls-button-url plurid-controls-cancel" tabindex="1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 875.09 875.82"><defs></defs><title>Close</title><g><g id="Close"><rect class="plurid-controls-buttons-svg" x="415.36" y="-158.88" width="44.45" height="1193.58" transform="translate(-181.48 437.37) rotate(-44.97)"/><rect class="plurid-controls-buttons-svg" x="-160.45" y="415.69" width="1187.63" height="44.45" transform="translate(-182.73 438.11) rotate(-45.32)"/></g></g></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 875.09 875.82"><defs></defs><title>Cancel</title><g><g id="Close"><rect class="plurid-controls-buttons-svg" x="415.36" y="-158.88" width="44.45" height="1193.58" transform="translate(-181.48 437.37) rotate(-44.97)"/><rect class="plurid-controls-buttons-svg" x="-160.45" y="415.69" width="1187.63" height="44.45" transform="translate(-182.73 438.11) rotate(-45.32)"/></g></g></svg>
                                 </div>
                             </div>
                         </div>
@@ -229,17 +229,6 @@ export function contentControls () {
                                             </div>
                                             <input type="range">
                                         </div>
-                                        <div class="plurid-controls-more-select-color-group">
-                                            <div class="plurid-controls-more-select-color-group-element">
-                                                <div>
-                                                    Transparency
-                                                </div>
-                                                <div>
-                                                    <input type="text"> %
-                                                </div>
-                                            </div>
-                                            <input type="range">
-                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -287,20 +276,20 @@ export function contentControls () {
                                             </div>
                                             <input type="range">
                                         </div>
-                                        <div class="plurid-controls-more-select-color-group">
-                                            <div class="plurid-controls-more-select-color-group-element">
-                                                <div>
-                                                    Transparency
-                                                </div>
-                                                <div>
-                                                    <input type="text"> %
-                                                </div>
-                                            </div>
-                                            <input type="range">
-                                        </div>
                                     </div>
                                 </div>
                             </li>
+                            <label class="plurid-controls-more-checkmark-container">
+                                <li>
+                                    <span class="plurid-controls-more-container-text">
+                                        Transparent Sheet
+                                    </span>
+                                    <span class="plurid-controls-more-container-shortcut">
+                                        <input type="checkbox">
+                                        <span class="plurid-controls-more-checkmark"></span>
+                                    </span>
+                                </li>
+                            </label>
                             <li>
                                 Reset Colors
                             </li>
@@ -384,8 +373,11 @@ export function contentControls () {
                             <li>Shortcuts</li>
                             <li>Edit Buttons</li>
                             <li>Reset to Default</li>
-                        </ul>
 
+                            <hr>
+
+                            <li>About Plurid</li>
+                        </ul>
                     </div>
                     `
 
