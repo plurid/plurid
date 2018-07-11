@@ -444,7 +444,6 @@ function generalTheme(container) {
 
     button.addEventListener('click', event => {
         let bodyClassList = document.body.classList;
-        console.log(bodyClassList);
 
         for (const bodyClass of bodyClassList) {
             if (bodyClass === "plurid-theme-light") {

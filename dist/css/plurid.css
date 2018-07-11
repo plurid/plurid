@@ -113,13 +113,13 @@ plurid-bridge {
   opacity: 0.75;
   width: 100px; }
   .plurid-theme-night plurid-bridge {
-    background-color: black; }
+    background-color: #0a0a0a; }
   .plurid-theme-dusk plurid-bridge {
-    background-color: #111212; }
+    background-color: #252727; }
   .plurid-theme-dawn plurid-bridge {
-    background-color: #cccccc; }
+    background-color: #b3b3b3; }
   .plurid-theme-light plurid-bridge {
-    background-color: white; }
+    background-color: #f2f2f2; }
 
 plurid-container {
   position: absolute;
@@ -166,7 +166,7 @@ plurid-sheet {
   padding-top: 80px;
   position: absolute;
   width: 100%;
-  -webkit-box-reflect: below 0 linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(30, 30, 30, 0.3) 10%, rgba(60, 60, 60, 0) 30%); }
+  -webkit-box-reflect: below 0 linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(30, 30, 30, 0.25) 20%, rgba(60, 60, 60, 0) 40%); }
   .plurid-theme-night plurid-sheet {
     background-color: #0f0f10; }
   .plurid-theme-dusk plurid-sheet {
@@ -324,8 +324,28 @@ plurid-options {
     -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
     box-shadow: 0 4px 2px -2px #d8d9da; }
 
-.plurid-container-options-group-more:hover {
-  background-color: #4b4d4e;
+.plurid-theme-night .plurid-container-options-group-more:hover {
+  background-color: #cbcccd; }
+
+.plurid-theme-dusk .plurid-container-options-group-more:hover {
+  background-color: #b1b3b4; }
+
+.plurid-theme-dawn .plurid-container-options-group-more:hover {
+  background-color: #4b4d4e; }
+
+.plurid-theme-light .plurid-container-options-group-more:hover {
+  background-color: #cbcccd; }
+
+.plurid-theme-night .plurid-container-options-group-more:hover p {
+  color: black; }
+
+.plurid-theme-dusk .plurid-container-options-group-more:hover p {
+  color: #111212; }
+
+.plurid-theme-dawn .plurid-container-options-group-more:hover p {
+  color: #cccccc; }
+
+.plurid-theme-light .plurid-container-options-group-more:hover p {
   color: white; }
 
 .plurid-container-options:hover {
@@ -623,35 +643,19 @@ plurid-controls {
 
 .plurid-theme-night .plurid-controls-sheet-history-container ul li:hover {
   background-color: #0a0a0a !important;
-  color: white !important;
-  -moz-box-shadow: 0 4px 2px -2px #141515;
-  -ms-box-shadow: 0 4px 2px -2px #141515;
-  -webkit-box-shadow: 0 4px 2px -2px #141515;
-  box-shadow: 0 4px 2px -2px #141515; }
+  color: white !important; }
 
 .plurid-theme-dusk .plurid-controls-sheet-history-container ul li:hover {
   background-color: #252727 !important;
-  color: #e5e6e6 !important;
-  -moz-box-shadow: 0 4px 2px -2px #3e4041;
-  -ms-box-shadow: 0 4px 2px -2px #3e4041;
-  -webkit-box-shadow: 0 4px 2px -2px #3e4041;
-  box-shadow: 0 4px 2px -2px #3e4041; }
+  color: #e5e6e6 !important; }
 
 .plurid-theme-dawn .plurid-controls-sheet-history-container ul li:hover {
   background-color: #b3b3b3 !important;
-  color: #191a1a !important;
-  -moz-box-shadow: 0 4px 2px -2px #7d8082;
-  -ms-box-shadow: 0 4px 2px -2px #7d8082;
-  -webkit-box-shadow: 0 4px 2px -2px #7d8082;
-  box-shadow: 0 4px 2px -2px #7d8082; }
+  color: #191a1a !important; }
 
 .plurid-theme-light .plurid-controls-sheet-history-container ul li:hover {
   background-color: #f2f2f2 !important;
-  color: black !important;
-  -moz-box-shadow: 0 4px 2px -2px #d8d9da;
-  -ms-box-shadow: 0 4px 2px -2px #d8d9da;
-  -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
-  box-shadow: 0 4px 2px -2px #d8d9da; }
+  color: black !important; }
 
 .plurid-controls-more-back-color,
 .plurid-controls-more-front-color {

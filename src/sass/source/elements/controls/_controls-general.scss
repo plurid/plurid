@@ -166,7 +166,6 @@ plurid-controls plurid-link {
     @include themify($themes) {
         background-color: themed('backgroundColorMenu') !important;
         color: themed('textColor') !important;
-        @include box-shadow(themed('boxShadowMenu'));
     }
 }
 

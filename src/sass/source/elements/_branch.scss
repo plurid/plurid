@@ -15,7 +15,7 @@ plurid-scion {
 
 plurid-bridge {
     @include themify($themes) {
-        background-color: themed('backgroundColorContainer');
+        background-color: themed('backgroundColorMenu');
     }
     height: 20px;
     position: absolute;
