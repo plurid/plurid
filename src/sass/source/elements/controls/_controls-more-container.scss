@@ -57,13 +57,24 @@
 
 
 .plurid-controls-more-container input[type="text"] {
-    background-color: hsl(210, 3%, 10%);
+    @include themify($themes) {
+        background-color: darken(themed('backgroundColorMenu'), 3%);
+        color: themed('textColorSecondary');
+    }
     border: none;
     color: hsl(210, 3%, 70%);
     outline: none;
     padding: 5px;
     text-align: center;
     width: 100%;
+}
+
+.plurid-controls-more-container input[type="text"]:focus {
+    @include themify($themes) {
+        @include box-shadow(themed('boxShadowInput'));
+    }
+    outline: none;
+    border: none;
 }
 
 

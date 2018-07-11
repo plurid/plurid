@@ -183,6 +183,11 @@ export function contentOptions() {
                                 <p>Click on Link Transforms to Normal View</p>
                                 <input type="checkbox">
                             </div>
+
+                            <div class="plurid-container-options-group-more plurid-container-more-link-click-transform">
+                                <p>Responsive Sheet Width</p>
+                                <input type="checkbox">
+                            </div>
                         </div>
 
                         <hr>
