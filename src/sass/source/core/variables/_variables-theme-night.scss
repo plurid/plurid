@@ -12,6 +12,7 @@ $night_quaternary-color: hsl(200, 2%, 8%);
 $night_primary-color-inverted: hsl(200, 2%, 100%);
 $night_secondary-color-inverted: hsl(200, 2%, 90%);
 $night_tertiary-color-inverted: hsl(200, 2%, 60%);
+$night_quaternary-color-inverted: hsl(200, 2%, 30%);
 
 
 $night_container__background-color: $night_primary-color;
@@ -24,7 +25,10 @@ $night_button-hover_background-color: $night_tertiary-color-inverted;
 
 $night_text__color: $night_primary-color-inverted;
 $night_text-secondary__color: $night_tertiary-color-inverted;
+$night_text-tertiary__color: $night_quaternary-color-inverted;
 $night_text-inverted__color: $night_primary-color;
 $night_plurid-link__color: $night_secondary-color-inverted;
 
 $night_plurid-sheet__background-color: $night_tertiary-color;
+
+$night_input__box-shadow: $general_box-shadow-input-size $night_text__color;

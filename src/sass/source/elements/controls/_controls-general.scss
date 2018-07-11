@@ -1,11 +1,11 @@
 plurid-controls {
-    align-items: center;
-
     @include themify($themes) {
-        background-color: themed('backgroundColorMenu');
         color: themed('textColor');
+        background-color: themed('backgroundColorMenu');
+        @include box-shadow(themed('boxShadowMenu'));
     }
 
+    align-items: center;
     display: flex;
     font-family: $general_sans-serif__font-family;
     height: 60px;
@@ -14,10 +14,6 @@ plurid-controls {
     left: 0;
     right: 0;
     width: 100%;
-
-    @include themify($themes) {
-        @include box-shadow(themed('boxShadowMenu'));
-    }
 }
 
 
@@ -29,14 +25,14 @@ plurid-controls plurid-link {
 
 
 .plurid-container-controls-content {
-    height: 50px;
-    display: inline-flex;
     align-items: center;
-    width: 100%;
+    display: inline-flex;
+    height: 50px;
+    font-size: 12px;
+    justify-content: space-between;
     margin-right: 50px;
     margin-left: 50px;
-    justify-content: space-between;
-    font-size: 12px;
+    width: 100%;
 }
 
 

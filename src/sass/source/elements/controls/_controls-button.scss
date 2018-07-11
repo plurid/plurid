@@ -43,12 +43,12 @@
     cursor: not-allowed;
     @include themify($themes) {
         background-color: themed('backgroundColorMenu');
-        color: themed('textColor');
+        color: themed('textColorTertiary');
     }
 
     .plurid-controls-buttons-svg {
         @include themify($themes) {
-            fill: themed('textColor');
+            fill: themed('textColorTertiary');
         }
     }
 }
@@ -58,6 +58,12 @@
 .plurid-controls-search:hover {
     background-color: transparent !important;
     border-radius: 0px !important;
+
+    .plurid-controls-buttons-svg {
+        @include themify($themes) {
+            fill: themed('textColorSecondary');
+        }
+    }
 }
 
 

@@ -29,9 +29,9 @@
 }
 
 .plurid-controls-url input:focus {
-    -webkit-box-shadow: 0px 1px 0px 0px hsl(0, 0%, 70%);
-    -moz-box-shadow: 0px 1px 0px 0px hsl(0, 0%, 70%);
-    box-shadow: 0px 1px 0px 0px hsl(0, 0%, 70%);
+    @include themify($themes) {
+        @include box-shadow(themed('boxShadowInput'));
+    }
     outline: none;
     border: none;
 }

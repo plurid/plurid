@@ -6,8 +6,11 @@
     padding-top: 30px;
     padding-right: 30px;
     max-width: 400px;
-    background-color: hsl(200, 2%, 15%);
-    box-shadow: 0 4px 2px -2px hsl(200, 2%, 5%);
+
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenu');
+        @include box-shadow(themed('boxShadowMenu'));
+    }
     top: 80px;
     left: 50%;
     transform: translateX(-50%);
