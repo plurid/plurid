@@ -73,20 +73,23 @@ plurid-options {
 }
 
 .plurid-container-options-group-more:hover {
-    background-color: hsl(200, 2%, 30%);
-    color: white;
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenuButtonHover');
+    }
+
+    p {
+        @include themify($themes) {
+            color: themed('textColorInverted');
+        }
+    }
 }
-
-
-// .plurid-container-options-more-clicked {
-//     display: block;
-// }
 
 
 .plurid-container-options:hover {
     opacity: 1;
     transition: 150ms ease-in-out;
 }
+
 
 .plurid-container-options-group {
     display: inline-flex;
@@ -95,6 +98,7 @@ plurid-options {
     padding-right: 10px;
     padding-left: 10px;
 }
+
 
 .plurid-container-button {
     margin: 5px;
@@ -117,6 +121,7 @@ plurid-options {
     fill: hsl(0, 0%, 10%);
 }
 
+
 .plurid-container-button:hover {
     background-color: hsl(0, 0%, 70%);
     color: black;
@@ -127,10 +132,12 @@ plurid-options {
     }
 }
 
+
 .plurid-container-button-center-everything,
 .plurid-container-button-add-root {
     font-size: 20px;
 }
+
 
 .plurid-container-color {
     background-color: hsl(0, 0%, 10%);
@@ -142,6 +149,7 @@ plurid-options {
     user-select: none;
     cursor: pointer;
 }
+
 
 .plurid-container-link-expand:hover {
     color: black;
@@ -164,6 +172,7 @@ plurid-options {
     transition:all 1s ease;
 }
 
+
 .plurid-container-options-shortcuts-clicked {
     display: block;
 }
@@ -176,6 +185,7 @@ plurid-options {
     top: 20px;
     left: 525px;
 }
+
 
 .plurid-bridge-close:hover {
     color: hsl(0, 0%, 70%)
@@ -203,7 +213,6 @@ plurid-options {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 }
-
 
 
 .plurid-container-options-more hr {
