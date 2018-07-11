@@ -158,6 +158,10 @@ plurid-root {
   width: 100%; }
 
 plurid-sheet {
+  -moz-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
   padding: 40px;
   padding-top: 80px;
   position: absolute;
