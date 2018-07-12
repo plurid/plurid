@@ -208,13 +208,9 @@ plurid-link:hover {
 plurid-shadow {
   position: absolute;
   width: 100%;
-  height: 400px;
+  height: 500px;
   background-color: #0c0d0d;
   opacity: 0.25;
-  -moz-transform: translateX(0px) translateY(730px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg);
-  -ms-transform: translateX(0px) translateY(730px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg);
-  -webkit-transform: translateX(0px) translateY(730px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg);
-  transform: translateX(0px) translateY(730px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg);
   -moz-transform-origin: 100% 100%;
   -ms-transform-origin: 100% 100%;
   -webkit-transform-origin: 100% 100%;

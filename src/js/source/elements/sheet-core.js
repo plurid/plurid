@@ -98,7 +98,7 @@ function setPluridLinks(pluridLink) {
                                         <plurid-sheet>
                                             <plurid-content>
                                                 ${doc.body.innerHTML}
-                                            </plurid-content>
+                                                </plurid-content>
                                         </plurid-sheet>
                                     </plurid-scion>
                                 `;
@@ -222,6 +222,38 @@ function setPluridLinks(pluridLink) {
 
             let angleRotY = angleBranch ? angleBranch : angleDeg;
             let branchSheet = newBranch.getElementsByTagName('plurid-sheet')[0];
+
+
+            // let pluridShadow = document.createElement('plurid-shadow');
+
+            // lastChild = pluridRoot.lastChild;
+            // insertAfter(pluridShadow, lastChild);
+
+            // pluridShadow.sheet = branchSheet.id;
+            // // console.log('--------');
+            // // console.log(branchSheet.offsetHeight);
+
+            // let computedShadowHeight = 400;
+            // pluridShadow.style.height = computedShadowHeight + "px";
+
+            // let branchSheetHeight = branchSheet.offsetHeight;
+            // let branchSheetWidth = branchSheet.offsetWidth;
+            // // console.log('branchSheetWidth', branchSheetWidth);
+            // pluridShadow.style.width = branchSheetWidth + "px";
+
+            // let ground = pluridScene.metadata.ground;
+            // console.log(ground);
+
+            // if (branchSheetHeight > ground) {
+            //     pluridScene.metadata.ground = branchSheetHeight - computedShadowHeight;
+            //     ground = pluridScene.metadata.ground;
+            // }
+            // pluridShadow.style.transform = `translateX(${right}px) translateY(${top + branchSheetHeight}px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(90deg) scale(1) skew(-30deg)`;
+
+            // let reflectGround = ground - branchSheetHeight + computedShadowHeight;
+            // branchSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%)`;
+
+
 
             let sceneObject = {
                 linkParentId: linkParentId,
