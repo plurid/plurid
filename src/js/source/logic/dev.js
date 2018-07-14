@@ -69,7 +69,6 @@ function setContainer() {
             let html = pluridPage.innerHTML;
             let pluridSheet = document.createElement('plurid-sheet');
             let pluridContent = document.createElement('plurid-content');
-            let pluridShadow = document.createElement('plurid-shadow');
 
             pluridSheet.appendChild(pluridContent);
 
@@ -79,19 +78,10 @@ function setContainer() {
             pluridContent.innerHTML = html;
 
             pluridRoot.appendChild(pluridSheet);
-            pluridRoot.appendChild(pluridShadow);
             pluridRoots.appendChild(pluridRoot);
 
             // console.log('----------');
-            pluridShadow.sheet = pluridSheet.id;
             let sheetHeight = pluridSheet.offsetHeight;
-            // console.log('sheetHeight', sheetHeight);
-
-            // let computedShadowHeight = 500;
-            let computedShadowHeight = sheetHeight * 0.3 < 500 ? sheetHeight * 0.3 : 500;
-            console.log('computedShadowHeight', computedShadowHeight);
-
-            pluridShadow.style.height = computedShadowHeight + "px";
             let ground = pluridScene.metadata.ground;
 
             if (sheetHeight > ground) {
@@ -99,16 +89,15 @@ function setContainer() {
                 ground = pluridScene.metadata.ground;
             }
 
-            // console.log('ground', ground);
-            let groundPosition = ground - computedShadowHeight;
+            let shadows = pluridScene.metadata.shadows;
+            if (shadows === true) {
+                setShadows(pluridRoot, pluridSheet, sheetHeight, ground);
+            }
 
-            pluridShadow.style.transform = `translateX(0px) translateY(${groundPosition}px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg)`;
-            // pluridShadow.style.transform = `translateX(0px) translateY(${ground}px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-30deg)`;
-
-
-            let reflectGround = ground - sheetHeight + 5;
-            // console.log(reflectGround);
-            pluridSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%)`;
+            let reflections = pluridScene.metadata.reflections;
+            if (reflections === true) {
+                setReflections(pluridSheet, sheetHeight, ground);
+            }
         }
 
         for (let i = pluridPages.length - 1; i >= 0; i--) {
@@ -183,8 +172,26 @@ calculateTransformOriginCenters();
 
 
 
-// function getGroundFloor() {
-//     // get the sheet with the lowest translationY
-//     // add that sheet's height to the translationY
+function setShadows(pluridRoot, pluridSheet, sheetHeight, ground) {
+    let pluridShadow = document.createElement('plurid-shadow');
+    pluridRoot.appendChild(pluridShadow);
+    pluridShadow.sheet = pluridSheet.id;
+    // console.log('sheetHeight', sheetHeight);
 
-// }
+    let computedShadowHeight = sheetHeight * 0.3 < 500 ? sheetHeight * 0.3 : 500;
+    // let computedShadowHeight = 500;
+    // console.log('computedShadowHeight', computedShadowHeight);
+
+    pluridShadow.style.height = computedShadowHeight + "px";
+
+    // console.log('ground', ground);
+    let groundPosition = ground - computedShadowHeight;
+
+    pluridShadow.style.transform = `translateX(0px) translateY(${groundPosition}px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg)`;
+}
+
+
+function setReflections(pluridSheet, sheetHeight, ground) {
+    const reflectGround = ground - sheetHeight + 1;
+    pluridSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%)`;
+}
