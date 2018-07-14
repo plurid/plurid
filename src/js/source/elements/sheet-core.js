@@ -1,5 +1,7 @@
 import * as transcore from "../logic/transforms-core";
 import { setId } from "./element-utils/utils";
+import { setShadows } from '../logic/shadows';
+import { setReflections } from '../logic/reflections';
 
 
 /**
@@ -242,7 +244,7 @@ function setPluridLinks(pluridLink) {
             // pluridShadow.style.width = branchSheetWidth + "px";
 
             let ground = pluridScene.metadata.ground;
-            console.log(ground);
+            // console.log(ground);
 
             // if (branchSheetHeight > ground) {
             //     pluridScene.metadata.ground = branchSheetHeight - computedShadowHeight;
@@ -250,14 +252,10 @@ function setPluridLinks(pluridLink) {
             // }
             // pluridShadow.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(90deg) scale(1) skew(0deg)`;
 
-            let reflectGround = ground + computedShadowHeight - branchSheetHeight - top;
-            // let reflectGround = ground;
-            console.log('ground', ground);
-            console.log('branchSheetHeight', branchSheetHeight);
-            console.log('top', top);
-            console.log('reflectGround', reflectGround);
-            branchSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%)`;
-
+            let reflections = pluridScene.metadata.reflections;
+            if (reflections === true) {
+                setReflections(branchSheet, branchSheetHeight, ground, top);
+            }
 
 
             let sceneObject = {

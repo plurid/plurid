@@ -1,4 +1,6 @@
 import { setLink } from '../elements/sheet-core';
+import { setShadows } from './shadows';
+import { setReflections } from './reflections';
 
 
 /**
@@ -169,29 +171,3 @@ function calculateTransformOriginCenters() {
 }
 
 calculateTransformOriginCenters();
-
-
-
-function setShadows(pluridRoot, pluridSheet, sheetHeight, ground) {
-    let pluridShadow = document.createElement('plurid-shadow');
-    pluridRoot.appendChild(pluridShadow);
-    pluridShadow.sheet = pluridSheet.id;
-    // console.log('sheetHeight', sheetHeight);
-
-    let computedShadowHeight = sheetHeight * 0.3 < 500 ? sheetHeight * 0.3 : 500;
-    // let computedShadowHeight = 500;
-    // console.log('computedShadowHeight', computedShadowHeight);
-
-    pluridShadow.style.height = computedShadowHeight + "px";
-
-    // console.log('ground', ground);
-    let groundPosition = ground - computedShadowHeight;
-
-    pluridShadow.style.transform = `translateX(0px) translateY(${groundPosition}px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg)`;
-}
-
-
-function setReflections(pluridSheet, sheetHeight, ground) {
-    const reflectGround = ground - sheetHeight + 1;
-    pluridSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%)`;
-}
