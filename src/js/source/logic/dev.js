@@ -82,41 +82,33 @@ function setContainer() {
             pluridRoot.appendChild(pluridShadow);
             pluridRoots.appendChild(pluridRoot);
 
-            pluridShadow.sheet = pluridSheet.id;
             // console.log('----------');
+            pluridShadow.sheet = pluridSheet.id;
             let sheetHeight = pluridSheet.offsetHeight;
             // console.log('sheetHeight', sheetHeight);
 
-            // issues with specific shadow height
-            // let computedShadowHeight = sheetHeight * 0.3 < 400 ? sheetHeight * 0.3 : 400;
-            let computedShadowHeight = 400;
-            // console.log('computedShadowHeight', computedShadowHeight);
+            // let computedShadowHeight = 500;
+            let computedShadowHeight = sheetHeight * 0.3 < 500 ? sheetHeight * 0.3 : 500;
+            console.log('computedShadowHeight', computedShadowHeight);
 
             pluridShadow.style.height = computedShadowHeight + "px";
-            // pluridShadow.style.height = "200px";
-            // let shadowHeight = parseInt(pluridShadow.style.height);
-            // console.log('shadowHeight', computedShadowHeight);
             let ground = pluridScene.metadata.ground;
-            // console.log('ground 1', ground);
 
             if (sheetHeight > ground) {
-                // console.log('sh', sheetHeight - computedShadowHeight);
-                pluridScene.metadata.ground = sheetHeight - computedShadowHeight;
+                pluridScene.metadata.ground = sheetHeight;
                 ground = pluridScene.metadata.ground;
             }
-            // else {
-            //     ground = ground + computedShadowHeight;
-            // }
 
-            console.log('ground 2', ground);
-            pluridShadow.style.transform = `translateX(0px) translateY(${ground}px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-30deg)`;
+            // console.log('ground', ground);
+            let groundPosition = ground - computedShadowHeight;
+
+            pluridShadow.style.transform = `translateX(0px) translateY(${groundPosition}px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-10deg)`;
+            // pluridShadow.style.transform = `translateX(0px) translateY(${ground}px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(-30deg)`;
 
 
-            let reflectGround = ground - sheetHeight + computedShadowHeight;
+            let reflectGround = ground - sheetHeight + 5;
             // console.log(reflectGround);
-            // -webkit-box-reflect: below 0 linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%);
             pluridSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%)`;
-
         }
 
         for (let i = pluridPages.length - 1; i >= 0; i--) {

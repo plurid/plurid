@@ -233,25 +233,30 @@ function setPluridLinks(pluridLink) {
             // // console.log('--------');
             // // console.log(branchSheet.offsetHeight);
 
-            // let computedShadowHeight = 400;
+            let computedShadowHeight = 500;
             // pluridShadow.style.height = computedShadowHeight + "px";
 
-            // let branchSheetHeight = branchSheet.offsetHeight;
-            // let branchSheetWidth = branchSheet.offsetWidth;
+            let branchSheetHeight = branchSheet.offsetHeight;
+            let branchSheetWidth = branchSheet.offsetWidth;
             // // console.log('branchSheetWidth', branchSheetWidth);
             // pluridShadow.style.width = branchSheetWidth + "px";
 
-            // let ground = pluridScene.metadata.ground;
-            // console.log(ground);
+            let ground = pluridScene.metadata.ground;
+            console.log(ground);
 
             // if (branchSheetHeight > ground) {
             //     pluridScene.metadata.ground = branchSheetHeight - computedShadowHeight;
             //     ground = pluridScene.metadata.ground;
             // }
-            // pluridShadow.style.transform = `translateX(${right}px) translateY(${top + branchSheetHeight}px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(90deg) scale(1) skew(-30deg)`;
+            // pluridShadow.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(90deg) scale(1) skew(0deg)`;
 
-            // let reflectGround = ground - branchSheetHeight + computedShadowHeight;
-            // branchSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%)`;
+            let reflectGround = ground + computedShadowHeight - branchSheetHeight - top;
+            // let reflectGround = ground;
+            console.log('ground', ground);
+            console.log('branchSheetHeight', branchSheetHeight);
+            console.log('top', top);
+            console.log('reflectGround', reflectGround);
+            branchSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%)`;
 
 
 
