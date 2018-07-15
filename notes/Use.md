@@ -181,7 +181,15 @@ or
 
 instead of crisp numbers resolving to pixel values, the value of `position` can be set to dynamically adjust, e.g. `position="screen, -350, 450, 0, 50, 0, 1"`, where `screen` will resolve to the current value of the viewing window in pixels.
 
-Additionally, position can receive a short-hand value, e.g. `position="touchleft, 30"`, indicating that the `<plurid-page>` will be positioned to the left of the previous `<plurid-page>`, in the document order, touching its left margin (with the right margin) and rotated at 30 degrees on the Y axis. The options are `left`, `right`, `touchleft`, and `touchright`
+Additionally, position can receive a short-hand value, e.g. `position="touchleft, 30deg, 0px"`, indicating that the `<plurid-page>` will be positioned to the left of the previous `<plurid-page>`, in the document order, touching its left margin (with the right margin) at a `0px` gap and rotated at 30 degrees on the Y axis. The options are `left`, `right`, `touchleft`, and `touchright`.
+
+A cube (without top and bottom faces) can be formed by 4 `<plurid-page>`s rotated at 90 degrees relative to another.
+
+    <plurid-page position="1">
+    <plurid-page position="touchright, 90deg, 0px">
+    <plurid-page position="touchright, 90deg, 0px">
+    <plurid-page position="touchright, 90deg, 0px">
+
 
 ---
 
