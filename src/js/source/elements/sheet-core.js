@@ -252,9 +252,11 @@ function setPluridLinks(pluridLink) {
             // }
             // pluridShadow.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(90deg) scale(1) skew(0deg)`;
 
+            let reflectionY = transY ? transY : top;
+
             let reflections = pluridScene.metadata.reflections;
             if (reflections === true) {
-                setReflections(branchSheet, branchSheetHeight, ground, top);
+                setReflections(branchSheet, branchSheetHeight, ground, reflectionY);
             }
 
 
