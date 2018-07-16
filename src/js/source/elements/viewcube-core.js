@@ -29,25 +29,68 @@ export function contentViewcube(container) {
             <div class="plurid-viewcube-model-container">
                 <div class="plurid-viewcube-model-transform-container">
                     <div class="plurid-viewcube-model-transform-cube">
-                        <div class="plurid-viewcube-model-transform-front">
-                            <div class="plurid-viewcube-model-transform-text">
-                                Front
+                        <div class="plurid-viewcube-model-transform-face plurid-viewcube-model-transform-front">
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-center"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-right"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-center">
+                                <div class="plurid-viewcube-model-transform-face-text">
+                                    Front
+                                </div>
                             </div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-right"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-center"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-right"></div>
                         </div>
-                        <div class="plurid-viewcube-model-transform-left">
-                            <div class="plurid-viewcube-model-transform-text">
-                                Left
+
+                        <div class="plurid-viewcube-model-transform-face plurid-viewcube-model-transform-left">
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-center"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-right"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-center">
+                                <div class="plurid-viewcube-model-transform-face-text">
+                                    Left
+                                </div>
                             </div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-right"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-center"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-right"></div>
                         </div>
-                        <div class="plurid-viewcube-model-transform-back">
-                            <div class="plurid-viewcube-model-transform-text">
-                                Back
+
+                        <div class="plurid-viewcube-model-transform-face plurid-viewcube-model-transform-back">
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-center"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-right"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-center">
+                                <div class="plurid-viewcube-model-transform-face-text">
+                                    Back
+                                </div>
                             </div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-right"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-center"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-right"></div>
                         </div>
-                        <div class="plurid-viewcube-model-transform-right">
-                            <div class="plurid-viewcube-model-transform-text">
-                                Right
+
+                        <div class="plurid-viewcube-model-transform-face plurid-viewcube-model-transform-right">
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-center"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-top-right"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-center">
+                                <div class="plurid-viewcube-model-transform-face-text">
+                                    Right
+                                </div>
                             </div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-middle-right"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-left"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-center"></div>
+                            <div class="plurid-viewcube-model-transform-face-zone plurid-viewcube-model-transform-bottom-right"></div>
                         </div>
                     </div>
                 </div>

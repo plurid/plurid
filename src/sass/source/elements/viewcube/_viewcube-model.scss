@@ -8,7 +8,7 @@
     height: 50px;
     // @include perspective($general_perspective);
     // perspective: 400px;
-    perspective: 700px;
+    perspective: 400px;
     perspective-origin: 100% 80%;
 }
 
@@ -17,28 +17,13 @@
     height: 50px;
     position: relative;
     // @include transform(translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1));
-    transform: translateX(23px) translateY(16px) rotateY(0deg);
+    transform: translateX(23px) translateY(16px) rotateY(45deg);
     @include transform-style(preserve-3d);
     width: 50px;
     // justify-self: center;
     // align-self: center;
 }
 
-
-.plurid-viewcube-model-transform-front,
-.plurid-viewcube-model-transform-left,
-.plurid-viewcube-model-transform-back,
-.plurid-viewcube-model-transform-right {
-    position: absolute;
-    height: 50px;
-    width: 50px;
-    opacity: 0.8;
-
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenu');
-    }
-    @include box-shadow($boxShadowSheetActive);
-}
 
 .plurid-viewcube-model-transform-front {
     // background-color: crimson;
@@ -60,8 +45,72 @@
     transform: translateX(-25px) rotateY(-90deg);
 }
 
-.plurid-viewcube-model-transform-text {
-    margin-top: 17px;
+
+.plurid-viewcube-model-transform-face {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    opacity: 0.8;
     font-size: 11px;
+
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenu');
+    }
+    @include box-shadow($boxShadowSheetActive);
+
+    display: grid;
+    grid-template-areas: "pluridViewcubeFaceTopLeft         pluridViewcubeFaceTopCenter         pluridViewcubeFaceTopRight"
+                         "pluridViewcubeFaceMiddleLeft      pluridViewcubeFaceMiddleCenter      pluridViewcubeFaceMiddleRight"
+                         "pluridViewcubeFaceBottomLeft      pluridViewcubeFaceBottomCenter      pluridViewcubeFaceBottomRight";
+    grid-template-rows: 10px 30px 10px;
+    grid-template-columns: 10px 30px 10px;
+}
+
+.plurid-viewcube-model-transform-face-zone:hover {
+    cursor: pointer;
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenuButtonHover');
+    }
+}
+
+.plurid-viewcube-model-transform-top-left {
+    grid-area: pluridViewcubeFaceTopLeft;
+}
+
+.plurid-viewcube-model-transform-top-center {
+    grid-area: pluridViewcubeFaceTopCenter;
+}
+
+.plurid-viewcube-model-transform-top-right {
+    grid-area: pluridViewcubeFaceTopRight;
+}
+
+.plurid-viewcube-model-transform-middle-left {
+    grid-area: pluridViewcubeFaceMiddleLeft;
+}
+
+.plurid-viewcube-model-transform-middle-center {
+    grid-area: pluridViewcubeFaceMiddleCenter;
+}
+
+.plurid-viewcube-model-transform-middle-right {
+    grid-area: pluridViewcubeFaceMiddleRight;
+}
+
+.plurid-viewcube-model-transform-bottom-left {
+    grid-area: pluridViewcubeFaceBottomLeft;
+}
+
+.plurid-viewcube-model-transform-bottom-center {
+    grid-area: pluridViewcubeFaceBottomCenter;
+}
+
+.plurid-viewcube-model-transform-bottom-right {
+    grid-area: pluridViewcubeFaceBottomRight;
+}
+
+
+.plurid-viewcube-model-transform-face-text {
+    margin-top: 7px;
     text-align: center;
 }
