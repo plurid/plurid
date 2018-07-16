@@ -1,0 +1,65 @@
+.plurid-viewcube-model-container {
+    // background-color: cadetblue;
+    grid-area: pluridViewcubeModel;
+}
+
+.plurid-viewcube-model-transform-container {
+    width: 50px;
+    height: 50px;
+    // @include perspective($general_perspective);
+    perspective: 400px;
+}
+
+
+.plurid-viewcube-model-transform-cube {
+    height: 50px;
+    position: relative;
+    // @include transform(translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1));
+    transform: translateX(25px) translateY(15px) rotateY(-45deg);
+    @include transform-style(preserve-3d);
+    width: 50px;
+    // justify-self: center;
+    // align-self: center;
+}
+
+
+.plurid-viewcube-model-transform-front,
+.plurid-viewcube-model-transform-left,
+.plurid-viewcube-model-transform-back,
+.plurid-viewcube-model-transform-right {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    opacity: 0.8;
+
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenu');
+    }
+    @include box-shadow($boxShadowSheetTransform);
+}
+
+.plurid-viewcube-model-transform-front {
+    // background-color: crimson;
+    transform: translateZ(25px) rotateY(0deg);
+}
+
+.plurid-viewcube-model-transform-back {
+    // background-color: darkolivegreen;
+    transform: translateZ(-25px) rotateY(-180deg);
+}
+
+.plurid-viewcube-model-transform-right {
+    // background-color: fuchsia;
+    transform: translateX(25px) rotateY(90deg);
+}
+
+.plurid-viewcube-model-transform-left {
+    // background-color: gold;
+    transform: translateX(-25px) rotateY(-90deg);
+}
+
+.plurid-viewcube-model-transform-text {
+    margin-top: 16px;
+    font-size: 13px;
+    text-align: center;
+}

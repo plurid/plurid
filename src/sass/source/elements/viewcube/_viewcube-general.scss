@@ -1,0 +1,25 @@
+plurid-viewcube {
+    position: absolute;
+    right: 25px;
+    bottom: 25px;
+    height: 150px;
+    width: 150px;
+
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenu');
+    // }
+}
+
+.plurid-viewcube-container {
+    display: grid;
+    grid-template-areas: "pluridViewcubeScale           pluridViewcubeScale         pluridViewcubeScale             pluridViewcubeScale"
+                         "pluridViewcubeRotateLeft      pluridViewcubeRotateUp      pluridViewcubeRotateRight       pluridViewcubeTranslateY"
+                         "pluridViewcubeRotateLeft      pluridViewcubeModel         pluridViewcubeRotateRight       pluridViewcubeTranslateY"
+                         "pluridViewcubeRotateLeft      pluridViewcubeRotateDown    pluridViewcubeRotateRight       pluridViewcubeTranslateY"
+                         "pluridViewcubeTranslateX      pluridViewcubeTranslateX    pluridViewcubeTranslateX        pluridViewcubeFitview";
+    grid-template-rows: 20px 15px 80px 15px 20px;
+    grid-template-columns: 15px 100px 15px 20px;
+
+    font-size: 7px;
+    color: white;
+}

@@ -16,7 +16,7 @@ import { getBranchById,
             rootPages: [],
             rootSheets: [],
             shadows: true,
-            theme: 'light',
+            theme: 'dusk',
             transformOrigin: {
                 maxPositiveX: 0,
                 maxNegativeX: 0,

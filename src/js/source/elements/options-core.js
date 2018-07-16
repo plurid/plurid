@@ -199,6 +199,10 @@ export function contentOptions() {
                             <p class="plurid-container-link-expand ">Always Show Options Bar</p>
                             <input type="checkbox">
                         </div>
+                        <div class="plurid-container-options-group-more plurid-container-more-show-viewcube">
+                            <p class="plurid-container-link-expand ">Show Viewcube</p>
+                            <input type="checkbox">
+                        </div>
                         <div class="plurid-container-options-group-more plurid-container-more-reset">
                             <p class="plurid-container-link-expand ">Reset to Default</p>
                         </div>

@@ -1,0 +1,28 @@
+.plurid-viewcube-translate-y-container,
+.plurid-viewcube-translate-x-container {
+    // background-color: darkkhaki;
+    align-self: center;
+    justify-self: center;
+}
+
+.plurid-viewcube-translate-y-container {
+    grid-area: pluridViewcubeTranslateY;
+}
+
+.plurid-viewcube-translate-x-container {
+    grid-area: pluridViewcubeTranslateX;
+}
+
+.plurid-viewcube-translate-y-container input {
+    // writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 15px;
+    height: 100px;
+}
+
+.plurid-viewcube-translate-x-container input {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    width: 95%;
+}
