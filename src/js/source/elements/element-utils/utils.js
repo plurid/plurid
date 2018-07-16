@@ -16,6 +16,7 @@ export let setId = (function () {
     id.anchorNumber = 0;
     id.branchNumber = 0;
     id.shadowNumber = 0;
+    id.viewcubeNumber = 0;
 
     /**
      * Counter, sets id to element, returns id number.
@@ -50,6 +51,8 @@ export let setId = (function () {
                 return id.branchNumber = set(element, type, id.branchNumber);
             case 'shadow':
                 return id.shadowNumber = set(element, type, id.shadowNumber);
+            case 'viewcube':
+                return id.viewcubeNumber = set(element, type, id.viewcubeNumber);
         }
     }
 })();

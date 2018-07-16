@@ -1,7 +1,7 @@
-import { contentOptions } from "./options-core";
 import { setId } from "./element-utils/utils";
 import { renderOptions,
          displayOptions,
+         contentOptions,
          setButtons } from "./options-core";
 
 
