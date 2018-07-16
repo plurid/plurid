@@ -1147,7 +1147,8 @@ plurid-viewcube {
   right: 25px;
   bottom: 25px;
   height: 150px;
-  width: 150px; }
+  width: 150px;
+  font-family: "Lucida Sans Unicode", Geneva, Verdana, sans-serif; }
 
 .plurid-viewcube-container {
   display: grid;
@@ -1158,10 +1159,10 @@ plurid-viewcube {
   color: white; }
 
 .plurid-viewcube-fitview-container {
-  align-self: center;
   color: white;
   font-size: 14px;
   grid-area: pluridViewcubeFitview;
+  align-self: center;
   justify-self: center; }
 
 .plurid-viewcube-model-container {
@@ -1170,12 +1171,13 @@ plurid-viewcube {
 .plurid-viewcube-model-transform-container {
   width: 50px;
   height: 50px;
-  perspective: 400px; }
+  perspective: 700px;
+  perspective-origin: 100% 80%; }
 
 .plurid-viewcube-model-transform-cube {
   height: 50px;
   position: relative;
-  transform: translateX(25px) translateY(15px) rotateY(-45deg);
+  transform: translateX(23px) translateY(16px) rotateY(0deg);
   -moz-transform-style: preserve-3d;
   -ms-transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
@@ -1190,10 +1192,10 @@ plurid-viewcube {
   height: 50px;
   width: 50px;
   opacity: 0.8;
-  -moz-box-shadow: 0px 0px 0px 1px white;
-  -ms-box-shadow: 0px 0px 0px 1px white;
-  -webkit-box-shadow: 0px 0px 0px 1px white;
-  box-shadow: 0px 0px 0px 1px white; }
+  -moz-box-shadow: 0px 0px 0px 1px #646768;
+  -ms-box-shadow: 0px 0px 0px 1px #646768;
+  -webkit-box-shadow: 0px 0px 0px 1px #646768;
+  box-shadow: 0px 0px 0px 1px #646768; }
   .plurid-theme-night .plurid-viewcube-model-transform-front, .plurid-theme-night
   .plurid-viewcube-model-transform-left, .plurid-theme-night
   .plurid-viewcube-model-transform-back, .plurid-theme-night
@@ -1228,8 +1230,8 @@ plurid-viewcube {
   transform: translateX(-25px) rotateY(-90deg); }
 
 .plurid-viewcube-model-transform-text {
-  margin-top: 16px;
-  font-size: 13px;
+  margin-top: 17px;
+  font-size: 11px;
   text-align: center; }
 
 .plurid-viewcube-rotate-left-container,
