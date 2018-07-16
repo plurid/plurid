@@ -402,7 +402,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});\nexports.setReflections = setReflections;\nfunction setReflections(pluridSheet, sheetHeight, ground, top = 0) {\n    const reflectGround = ground + 1 - sheetHeight - top;\n    // console.log('ground', ground);\n    // console.log('sheetHeight', sheetHeight);\n    // console.log('top', top);\n\n    // const reflectGround = ground - sheetHeight + 1;\n\n    pluridSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(30,30,30,0.25) 20%, rgba(60,60,60,0) 40%)`;\n}\n\n//# sourceURL=webpack:///./src/js/source/logic/reflections.js?");
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n    value: true\n});\nexports.setReflections = setReflections;\nfunction setReflections(pluridSheet, sheetHeight, ground, top = 0) {\n    const reflectGround = ground + 1 - sheetHeight - top;\n    // console.log('ground', ground);\n    // console.log('sheetHeight', sheetHeight);\n    // console.log('top', top);\n\n    // const reflectGround = ground - sheetHeight + 1;\n\n    pluridSheet.style.webkitBoxReflect = `below ${reflectGround}px linear-gradient(to top, rgba(0,0,0,0.2) 0%, rgba(30,30,30,0.1) 20%, rgba(60,60,60,0) 40%)`;\n}\n\n//# sourceURL=webpack:///./src/js/source/logic/reflections.js?");
 
 /***/ }),
 
