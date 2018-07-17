@@ -5,11 +5,8 @@ plurid-viewcube {
     height: 150px;
     width: 150px;
     font-family: $general_sans-serif__font-family;
-
-    // @include themify($themes) {
-    //     background-color: themed('backgroundColorMenu');
-    // }
 }
+
 
 .plurid-viewcube-container {
     display: grid;
@@ -25,5 +22,17 @@ plurid-viewcube {
 
     @include themify($themes) {
         color: themed('textColor');
+    }
+}
+
+
+.plurid-viewcube-controls {
+    display: none;
+}
+
+
+.plurid-viewcube-container:hover {
+    .plurid-viewcube-controls {
+        display: block;
     }
 }

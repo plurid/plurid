@@ -1,0 +1,32 @@
+.plurid-viewcube-button {
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    height: 15px;
+    justify-content: center;
+    text-align: center;
+    width: 15px;
+}
+
+.plurid-viewcube-button:hover {
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenuButtonHover');
+        color: themed('textColorInverted');
+    }
+}
+
+.plurid-viewcube-rotate-right-container {
+    padding-left: 1px;
+    padding-top: 2px;
+}
+
+.plurid-viewcube-rotate-down-container {
+    padding-top: 3px;
+}
+
+.plurid-viewcube-fitview-container {
+    height: 20px;
+    padding-bottom: 1px;
+    width: 20px;
+}

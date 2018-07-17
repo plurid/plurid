@@ -11,23 +11,23 @@ export function renderViewcube(container) {
 export function contentViewcube(container) {
     return `
         <div class="plurid-viewcube-container">
-            <div class="plurid-viewcube-scale-container">
+            <div class="plurid-viewcube-controls plurid-viewcube-scale-container">
                 <input type="range">
             </div>
 
-            <div class="plurid-viewcube-rotate-left-container">
+            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-rotate-left-container">
                 &#x25c0;
             </div>
 
-            <div class="plurid-viewcube-rotate-right-container">
+            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-rotate-right-container">
                 &#x25b6;
             </div>
 
-            <div class="plurid-viewcube-rotate-up-container">
+            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-rotate-up-container">
                 &#x25B2;
             </div>
 
-            <div class="plurid-viewcube-rotate-down-container">
+            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-rotate-down-container">
                 &#x25BC;
             </div>
 
@@ -101,15 +101,15 @@ export function contentViewcube(container) {
                 </div>
             </div>
 
-            <div class="plurid-viewcube-translate-y-container">
+            <div class="plurid-viewcube-controls plurid-viewcube-translate-y-container">
                 <input type="range" orient="vertical">
             </div>
 
-            <div class="plurid-viewcube-translate-x-container">
+            <div class="plurid-viewcube-controls plurid-viewcube-translate-x-container">
                 <input type="range">
             </div>
 
-            <div class="plurid-viewcube-fitview-container">
+            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-fitview-container">
                 &#8281;
             </div>
         </div>

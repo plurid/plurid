@@ -1165,6 +1165,12 @@ plurid-viewcube {
   .plurid-theme-light .plurid-viewcube-container {
     color: black; }
 
+.plurid-viewcube-controls {
+  display: none; }
+
+.plurid-viewcube-container:hover .plurid-viewcube-controls {
+  display: block; }
+
 .plurid-viewcube-fitview-container {
   color: white;
   font-size: 14px;
