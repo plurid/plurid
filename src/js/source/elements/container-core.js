@@ -4,6 +4,8 @@ import { rotatePlurid,
          translatePlurid,
          scalePlurid } from "../logic/transforms";
 import { removeActiveSheetShadow } from "./sheet-core";
+import { rotateViewcube } from "./viewcube-core";
+
 
 
 // transform receives the selected plurid
@@ -38,6 +40,7 @@ export function transform(element) {
             event.preventDefault();
 
             rotatePlurid(event, plurid);
+            rotateViewcube(event, plurid);
         }
 
         if(event.altKey) {
