@@ -1155,8 +1155,15 @@ plurid-viewcube {
   grid-template-areas: "pluridViewcubeScale           pluridViewcubeScale         pluridViewcubeScale             pluridViewcubeScale" "pluridViewcubeRotateLeft      pluridViewcubeRotateUp      pluridViewcubeRotateRight       pluridViewcubeTranslateY" "pluridViewcubeRotateLeft      pluridViewcubeModel         pluridViewcubeRotateRight       pluridViewcubeTranslateY" "pluridViewcubeRotateLeft      pluridViewcubeRotateDown    pluridViewcubeRotateRight       pluridViewcubeTranslateY" "pluridViewcubeTranslateX      pluridViewcubeTranslateX    pluridViewcubeTranslateX        pluridViewcubeFitview";
   grid-template-rows: 20px 15px 80px 15px 20px;
   grid-template-columns: 15px 100px 15px 20px;
-  font-size: 7px;
-  color: white; }
+  font-size: 7px; }
+  .plurid-theme-night .plurid-viewcube-container {
+    color: white; }
+  .plurid-theme-dusk .plurid-viewcube-container {
+    color: #e5e6e6; }
+  .plurid-theme-dawn .plurid-viewcube-container {
+    color: #191a1a; }
+  .plurid-theme-light .plurid-viewcube-container {
+    color: black; }
 
 .plurid-viewcube-fitview-container {
   color: white;
@@ -1177,7 +1184,7 @@ plurid-viewcube {
 .plurid-viewcube-model-transform-cube {
   height: 50px;
   position: relative;
-  transform: translateX(23px) translateY(16px) rotateY(45deg);
+  transform: translateX(23px) translateY(16px) rotateY(0deg);
   -moz-transform-style: preserve-3d;
   -ms-transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
@@ -1200,8 +1207,9 @@ plurid-viewcube {
   position: absolute;
   height: 50px;
   width: 50px;
-  opacity: 0.8;
-  font-size: 11px;
+  opacity: 0.9;
+  font-size: 10px;
+  cursor: pointer;
   -moz-box-shadow: 0px 0px 0px 1px #646768;
   -ms-box-shadow: 0px 0px 0px 1px #646768;
   -webkit-box-shadow: 0px 0px 0px 1px #646768;
@@ -1219,16 +1227,21 @@ plurid-viewcube {
   .plurid-theme-light .plurid-viewcube-model-transform-face {
     background-color: #f2f2f2; }
 
-.plurid-viewcube-model-transform-face-zone:hover {
-  cursor: pointer; }
-  .plurid-theme-night .plurid-viewcube-model-transform-face-zone:hover {
-    background-color: #cbcccd; }
-  .plurid-theme-dusk .plurid-viewcube-model-transform-face-zone:hover {
-    background-color: #b1b3b4; }
-  .plurid-theme-dawn .plurid-viewcube-model-transform-face-zone:hover {
-    background-color: #4b4d4e; }
-  .plurid-theme-light .plurid-viewcube-model-transform-face-zone:hover {
-    background-color: #cbcccd; }
+.plurid-theme-night .plurid-viewcube-model-transform-face-zone:hover {
+  color: black;
+  background-color: #cbcccd; }
+
+.plurid-theme-dusk .plurid-viewcube-model-transform-face-zone:hover {
+  color: #111212;
+  background-color: #b1b3b4; }
+
+.plurid-theme-dawn .plurid-viewcube-model-transform-face-zone:hover {
+  color: #cccccc;
+  background-color: #4b4d4e; }
+
+.plurid-theme-light .plurid-viewcube-model-transform-face-zone:hover {
+  color: white;
+  background-color: #cbcccd; }
 
 .plurid-viewcube-model-transform-top-left {
   grid-area: pluridViewcubeFaceTopLeft; }
@@ -1258,7 +1271,7 @@ plurid-viewcube {
   grid-area: pluridViewcubeFaceBottomRight; }
 
 .plurid-viewcube-model-transform-face-text {
-  margin-top: 7px;
+  margin-top: 9px;
   text-align: center; }
 
 .plurid-viewcube-rotate-left-container,

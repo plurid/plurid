@@ -1,7 +1,12 @@
+import { getTransformRotate } from "../logic/transforms-core.js";
+
+
+
 export function renderViewcube(container) {
     const viewcube = document.createElement("plurid-viewcube");
     container.appendChild(viewcube);
 }
+
 
 export function contentViewcube(container) {
     return `
@@ -109,4 +114,19 @@ export function contentViewcube(container) {
             </div>
         </div>
     `;
+}
+
+
+export function rotateViewcube(event, plurid) {
+    let rotateX = getTransformRotate(plurid).rotateX;
+    let rotateY = getTransformRotate(plurid).rotateY;
+    let rotateYdeg = rotateY * 180 / Math.PI;
+
+    let viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
+
+    viewCube.style.transform = `translateX(23px) translateY(16px) rotateY(${rotateYdeg}deg)`;
+
+    console.log(viewCube);
+
+    console.log(rotateYdeg);
 }
