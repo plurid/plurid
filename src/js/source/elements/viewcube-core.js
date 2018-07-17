@@ -15,20 +15,28 @@ export function contentViewcube(container) {
                 <input type="range">
             </div>
 
-            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-rotate-left-container">
-                &#x25c0;
+            <div class="plurid-viewcube-controls plurid-viewcube-rotate-left-container">
+                <div class="plurid-viewcube-button">
+                    &#x25c0;
+                </div>
             </div>
 
-            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-rotate-right-container">
-                &#x25b6;
+            <div class="plurid-viewcube-controls plurid-viewcube-rotate-right-container">
+                <div class="plurid-viewcube-button">
+                    &#x25b6;
+                </div>
             </div>
 
-            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-rotate-up-container">
-                &#x25B2;
+            <div class="plurid-viewcube-controls plurid-viewcube-rotate-up-container">
+                <div class="plurid-viewcube-button">
+                    &#x25B2;
+                </div>
             </div>
 
-            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-rotate-down-container">
-                &#x25BC;
+            <div class="plurid-viewcube-controls plurid-viewcube-rotate-down-container">
+                <div class="plurid-viewcube-button">
+                    &#x25BC;
+                </div>
             </div>
 
             <div class="plurid-viewcube-model-container">
@@ -109,8 +117,10 @@ export function contentViewcube(container) {
                 <input type="range">
             </div>
 
-            <div class="plurid-viewcube-controls plurid-viewcube-button plurid-viewcube-fitview-container">
-                &#8281;
+            <div class="plurid-viewcube-controls plurid-viewcube-fitview-container">
+                <div class="plurid-viewcube-button">
+                    &#8281;
+                </div>
             </div>
         </div>
     `;
@@ -126,7 +136,6 @@ export function rotateViewcube(event, plurid) {
 
     viewCube.style.transform = `translateX(23px) translateY(16px) rotateY(${rotateYdeg}deg)`;
 
-    console.log(viewCube);
-
-    console.log(rotateYdeg);
+    // console.log(viewCube);
+    // console.log(rotateYdeg);
 }
