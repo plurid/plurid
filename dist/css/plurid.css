@@ -1143,12 +1143,15 @@ plurid-options {
   padding: 0; }
 
 plurid-viewcube {
+  bottom: 0;
+  font-family: "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  height: 225px;
   position: absolute;
-  right: 25px;
-  bottom: 25px;
-  height: 150px;
-  width: 150px;
-  font-family: "Lucida Sans Unicode", Geneva, Verdana, sans-serif; }
+  right: 0;
+  width: 225px;
+  padding: 25px;
+  padding-top: 50px;
+  padding-left: 50px; }
 
 .plurid-viewcube-container {
   display: grid;
@@ -1168,15 +1171,16 @@ plurid-viewcube {
 .plurid-viewcube-controls {
   display: none; }
 
-.plurid-viewcube-container:hover .plurid-viewcube-controls {
+plurid-viewcube:hover .plurid-viewcube-controls {
   display: block; }
 
 .plurid-viewcube-fitview-container {
-  color: white;
   font-size: 14px;
   grid-area: pluridViewcubeFitview;
-  align-self: center;
-  justify-self: center; }
+  align-self: center; }
+
+.plurid-viewcube-fitview-container .plurid-viewcube-button {
+  margin-left: 3px; }
 
 .plurid-viewcube-model-container {
   grid-area: pluridViewcubeModel; }
@@ -1278,7 +1282,11 @@ plurid-viewcube {
 
 .plurid-viewcube-model-transform-face-text {
   margin-top: 9px;
-  text-align: center; }
+  text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
 
 .plurid-viewcube-rotate-left-container,
 .plurid-viewcube-rotate-right-container,
@@ -1330,3 +1338,34 @@ plurid-viewcube {
   margin-left: auto;
   margin-right: 2px;
   width: 33px; }
+
+.plurid-viewcube-button {
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  height: 15px;
+  justify-content: center;
+  line-height: 1;
+  text-align: center;
+  width: 15px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+.plurid-theme-night .plurid-viewcube-button:hover {
+  background-color: #cbcccd;
+  color: black; }
+
+.plurid-theme-dusk .plurid-viewcube-button:hover {
+  background-color: #b1b3b4;
+  color: #111212; }
+
+.plurid-theme-dawn .plurid-viewcube-button:hover {
+  background-color: #4b4d4e;
+  color: #cccccc; }
+
+.plurid-theme-light .plurid-viewcube-button:hover {
+  background-color: #cbcccd;
+  color: white; }

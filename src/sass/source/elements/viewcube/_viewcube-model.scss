@@ -7,7 +7,6 @@
     width: 50px;
     height: 50px;
     // @include perspective($general_perspective);
-    // perspective: 400px;
     perspective: 400px;
     perspective-origin: 100% 80%;
 }
@@ -16,32 +15,25 @@
 .plurid-viewcube-model-transform-cube {
     height: 50px;
     position: relative;
-    // @include transform(translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1));
     transform: translateX(23px) translateY(16px) rotateY(0deg);
     @include transform-style(preserve-3d);
     width: 50px;
-    // justify-self: center;
-    // align-self: center;
 }
 
 
 .plurid-viewcube-model-transform-front {
-    // background-color: crimson;
     transform: translateZ(25px) rotateY(0deg);
 }
 
 .plurid-viewcube-model-transform-back {
-    // background-color: darkolivegreen;
     transform: translateZ(-25px) rotateY(-180deg);
 }
 
 .plurid-viewcube-model-transform-right {
-    // background-color: fuchsia;
     transform: translateX(25px) rotateY(90deg);
 }
 
 .plurid-viewcube-model-transform-left {
-    // background-color: gold;
     transform: translateX(-25px) rotateY(-90deg);
 }
 
@@ -114,4 +106,5 @@
 .plurid-viewcube-model-transform-face-text {
     margin-top: 9px;
     text-align: center;
+    @include user-select(none);
 }
