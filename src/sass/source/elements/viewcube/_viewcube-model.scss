@@ -37,6 +37,14 @@
     transform: translateX(-25px) rotateY(-90deg);
 }
 
+.plurid-viewcube-model-transform-top {
+    transform: translateY(-25px) rotateX(90deg);
+}
+
+.plurid-viewcube-model-transform-base {
+    transform: translateY(25px) rotateX(-90deg);
+}
+
 
 .plurid-viewcube-model-transform-face {
     position: absolute;
