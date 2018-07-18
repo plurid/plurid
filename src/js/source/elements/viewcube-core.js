@@ -1,5 +1,5 @@
 import { getTransformRotate } from "../logic/transforms-core.js";
-
+import { capitalize } from "../core/utils";
 
 
 export function renderViewcube(container) {
@@ -191,10 +191,6 @@ export function initViewcubeModelButtons(container) {
     let columns = ['left', 'center', 'right'];
 
     let buttons = {};
-
-    function capitalize(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
 
     faces.map(face => {
         rows.map(row => {
