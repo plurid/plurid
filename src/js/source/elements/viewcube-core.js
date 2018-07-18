@@ -176,28 +176,28 @@ export function rotateViewcube(event, plurid) {
 function setModelZoneButtons(buttons, viewZone) {
 
     const viewZoneSwitch = (_viewZone) => ({
-        'front-middle-center': 'A-0',
+        'front-middle-center': 0,
         'front-top-left': 'A-1',
         'front-top-center': 'A-2',
         'right-top-left': 'A-3',
-        'front-middle-left': 'A-4',
-        'right-middle-left': 'A-5',
+        'front-middle-left': 45,
+        'right-middle-left': 315,
         'front-bottom-left': 'A-6',
         'front-bottom-center': 'A-7',
         'right-bottom-left': 'A-8',
-        'left-middle-center': 'B-0',
+        'left-middle-center': 90,
         'left-top-left': 'B-1',
         'left-top-center': 'B-2',
-        'left-middle-left': 'B-3',
+        'left-middle-left': 135,
         'left-bottom-left': 'B-4',
         'left-bottom-center': 'B-5',
-        'back-middle-center': 'C-0',
+        'back-middle-center': 180,
         'back-top-left': 'C-1',
         'back-top-center': 'C-2',
-        'back-middle-left': 'C-3',
+        'back-middle-left': 225,
         'back-bottom-left': 'C-4',
         'back-bottom-center': 'C-5',
-        'right-middle-center': 'D-0',
+        'right-middle-center': 270,
         'right-top-center': 'D-1',
         'right-bottom-center': 'D-2',
         'top-middle-center': 'E-0',
@@ -205,6 +205,22 @@ function setModelZoneButtons(buttons, viewZone) {
     })[_viewZone];
 
     function position (transform) {
+        transform = transform <= 180 ? transform : transform + 360;
+        let viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
+
+        let rotateY = getTransformRotate(viewCube).rotateY;
+        let rotateYdeg = rotateY * 180 / Math.PI;
+        let angle = rotateYdeg <= 180 ? transform : transform + 360;
+
+        console.log('rotateYdeg', rotateYdeg);
+        console.log('transform', transform);
+        console.log('angle', angle);
+
+        viewCube.style.transition = "transform 300ms";
+        viewCube.style.transform = `translateX(23px) translateY(16px) rotateY(${angle}deg)`;
+        setTimeout(() => {
+            viewCube.style.transition = "";
+        }, 300);
         console.log(transform);
     }
 
