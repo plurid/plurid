@@ -67,12 +67,14 @@
     grid-template-columns: 10px 30px 10px;
 }
 
+.plurid-viewcube-model-transform-face-zone-active,
 .plurid-viewcube-model-transform-face-zone:hover {
     @include themify($themes) {
         color: themed('textColorInverted');
         background-color: themed('backgroundColorMenuButtonHover');
     }
 }
+
 
 .plurid-viewcube-model-transform-top-left {
     grid-area: pluridViewcubeFaceTopLeft;
