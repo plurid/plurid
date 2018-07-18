@@ -173,7 +173,41 @@ export function rotateViewcube(event, plurid) {
 }
 
 
-function setModelZoneButtons(buttons, pair) {
+function setModelZoneButtons(buttons, viewZone) {
+
+    const viewZoneSwitch = (_viewZone) => ({
+        'front-middle-center': 'A-0',
+        'front-top-left': 'A-1',
+        'front-top-center': 'A-2',
+        'right-top-left': 'A-3',
+        'front-middle-left': 'A-4',
+        'right-middle-left': 'A-5',
+        'front-bottom-left': 'A-6',
+        'front-bottom-center': 'A-7',
+        'right-bottom-left': 'A-8',
+        'left-middle-center': 'B-0',
+        'left-top-left': 'B-1',
+        'left-top-center': 'B-2',
+        'left-middle-left': 'B-3',
+        'left-bottom-left': 'B-4',
+        'left-bottom-center': 'B-5',
+        'back-middle-center': 'C-0',
+        'back-top-left': 'C-1',
+        'back-top-center': 'C-2',
+        'back-middle-left': 'C-3',
+        'back-bottom-left': 'C-4',
+        'back-bottom-center': 'C-5',
+        'right-middle-center': 'D-0',
+        'right-top-center': 'D-1',
+        'right-bottom-center': 'D-2',
+        'top-middle-center': 'E-0',
+        'base-middle-center': 'F-0'
+    })[_viewZone];
+
+    function position (transform) {
+        console.log(transform);
+    }
+
     buttons.map(button => {
         button.addEventListener('mouseover', () => {
             buttons.map(button => button.classList.add('plurid-viewcube-model-transform-face-zone-active') );
@@ -183,17 +217,7 @@ function setModelZoneButtons(buttons, pair) {
         });
 
         button.addEventListener('click', () => {
-
-            // switch (pair[0]) {
-            //     case 'front-middle-left':
-            //         console.log('A');
-            //         break;
-
-            //     default:
-            //         console.log('Nothing');
-            //         break;
-            // }
-            console.log(button, '\n', pair);
+            position(viewZoneSwitch(viewZone));
         })
     });
 }
@@ -205,7 +229,7 @@ export function initViewcubeModelButtons(container) {
     let columns = ['left', 'center', 'right'];
 
     let buttons = {};
-    let forPairing = {};
+    let viewZones = {};
 
     faces.map(face => {
         rows.map(row => {
@@ -214,44 +238,44 @@ export function initViewcubeModelButtons(container) {
                 const selectClass = `${face}-${row}-${column}`;
                 const buttonClass = `plurid-viewcube-model-transform-${selectClass}`;
                 buttons[key] = container.getElementsByClassName(buttonClass)[0];
-                forPairing[key] = selectClass;
+                viewZones[key] = selectClass;
             });
         });
     });
 
 
-    // Index of pairs and zoneButtons must remain in a one-to-one correpondence.
-    const pairs = [
-        forPairing.frontMiddleCenter,
-        forPairing.leftMiddleCenter,
-        forPairing.backMiddleCenter,
-        forPairing.rightMiddleCenter,
-        forPairing.topMiddleCenter,
-        forPairing.baseMiddleCenter,
+    // Index of viewZone and zoneButtons must remain in a one-to-one correpondence.
+    const viewZone = [
+        viewZones.frontMiddleCenter,
+        viewZones.leftMiddleCenter,
+        viewZones.backMiddleCenter,
+        viewZones.rightMiddleCenter,
+        viewZones.topMiddleCenter,
+        viewZones.baseMiddleCenter,
 
-        forPairing.frontMiddleLeft,
-        forPairing.leftMiddleLeft,
-        forPairing.backMiddleLeft,
-        forPairing.rightMiddleLeft,
+        viewZones.frontMiddleLeft,
+        viewZones.leftMiddleLeft,
+        viewZones.backMiddleLeft,
+        viewZones.rightMiddleLeft,
 
-        forPairing.frontTopCenter,
-        forPairing.frontBottomCenter,
-        forPairing.leftTopCenter,
-        forPairing.leftBottomCenter,
-        forPairing.backTopCenter,
-        forPairing.backBottomCenter,
-        forPairing.rightTopCenter,
-        forPairing.rightBottomCenter,
+        viewZones.frontTopCenter,
+        viewZones.frontBottomCenter,
+        viewZones.leftTopCenter,
+        viewZones.leftBottomCenter,
+        viewZones.backTopCenter,
+        viewZones.backBottomCenter,
+        viewZones.rightTopCenter,
+        viewZones.rightBottomCenter,
 
-        forPairing.frontTopLeft,
-        forPairing.leftTopLeft,
-        forPairing.backTopLeft,
-        forPairing.rightTopLeft,
+        viewZones.frontTopLeft,
+        viewZones.leftTopLeft,
+        viewZones.backTopLeft,
+        viewZones.rightTopLeft,
 
-        forPairing.frontBottomLeft,
-        forPairing.leftBottomLeft,
-        forPairing.backBottomLeft,
-        forPairing.rightBottomLeft
+        viewZones.frontBottomLeft,
+        viewZones.leftBottomLeft,
+        viewZones.backBottomLeft,
+        viewZones.rightBottomLeft
     ];
 
     const zoneButtons = [
@@ -288,6 +312,6 @@ export function initViewcubeModelButtons(container) {
     ];
 
     zoneButtons.map((buttons, index) => {
-        setModelZoneButtons(buttons, pairs[index]);
+        setModelZoneButtons(buttons, viewZone[index]);
     });
 }
