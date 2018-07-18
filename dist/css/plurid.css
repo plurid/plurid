@@ -1243,19 +1243,23 @@ plurid-viewcube:hover .plurid-viewcube-controls {
   .plurid-theme-light .plurid-viewcube-model-transform-face {
     background-color: #f2f2f2; }
 
-.plurid-theme-night .plurid-viewcube-model-transform-face-zone:hover {
+.plurid-theme-night .plurid-viewcube-model-transform-face-zone-active, .plurid-theme-night
+.plurid-viewcube-model-transform-face-zone:hover {
   color: black;
   background-color: #cbcccd; }
 
-.plurid-theme-dusk .plurid-viewcube-model-transform-face-zone:hover {
+.plurid-theme-dusk .plurid-viewcube-model-transform-face-zone-active, .plurid-theme-dusk
+.plurid-viewcube-model-transform-face-zone:hover {
   color: #111212;
   background-color: #b1b3b4; }
 
-.plurid-theme-dawn .plurid-viewcube-model-transform-face-zone:hover {
+.plurid-theme-dawn .plurid-viewcube-model-transform-face-zone-active, .plurid-theme-dawn
+.plurid-viewcube-model-transform-face-zone:hover {
   color: #cccccc;
   background-color: #4b4d4e; }
 
-.plurid-theme-light .plurid-viewcube-model-transform-face-zone:hover {
+.plurid-theme-light .plurid-viewcube-model-transform-face-zone-active, .plurid-theme-light
+.plurid-viewcube-model-transform-face-zone:hover {
   color: white;
   background-color: #cbcccd; }
 

@@ -1,6 +1,7 @@
 import { setId } from "./element-utils/utils";
 import { renderViewcube,
-         contentViewcube } from './viewcube-core.js';
+         contentViewcube,
+         initViewcubeModelButtons } from './viewcube-core.js';
 
 
 export function initViewcube(container) {
@@ -12,6 +13,7 @@ export function initViewcube(container) {
     // }
 
     renderViewcube(container);
+    initViewcubeModelButtons(container);
 }
 
 
