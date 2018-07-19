@@ -1,5 +1,7 @@
 import { getTransformRotate } from "../logic/transforms-core.js";
 import { capitalize } from "../core/utils";
+import * as transcore from "../logic/transforms-core.js";
+import * as matrix from "../logic/matrix.js";
 
 
 export function renderViewcube(container) {
@@ -176,51 +178,95 @@ export function rotateViewcube(event, plurid) {
 function setModelZoneButtons(buttons, viewZone) {
 
     const viewZoneSwitch = (_viewZone) => ({
-        'front-middle-center': 0,
-        'front-top-left': 'A-1',
-        'front-top-center': 'A-2',
-        'right-top-left': 'A-3',
-        'front-middle-left': 45,
-        'right-middle-left': 315,
-        'front-bottom-left': 'A-6',
-        'front-bottom-center': 'A-7',
-        'right-bottom-left': 'A-8',
-        'left-middle-center': 90,
-        'left-top-left': 'B-1',
-        'left-top-center': 'B-2',
-        'left-middle-left': 135,
-        'left-bottom-left': 'B-4',
-        'left-bottom-center': 'B-5',
-        'back-middle-center': 180,
-        'back-top-left': 'C-1',
-        'back-top-center': 'C-2',
-        'back-middle-left': 225,
-        'back-bottom-left': 'C-4',
-        'back-bottom-center': 'C-5',
-        'right-middle-center': 270,
-        'right-top-center': 'D-1',
-        'right-bottom-center': 'D-2',
-        'top-middle-center': 'E-0',
-        'base-middle-center': 'F-0'
+        'front-middle-center': { rotateX: 0, rotateY: 0 },
+        'front-top-left': { rotateX: -45, rotateY: 45 },
+        'front-top-center': { rotateX: -45, rotateY: 0 },
+        'right-top-left': { rotateX: -45, rotateY: -45 },
+        'front-middle-left': { rotateX: 0, rotateY: 45 },
+        'right-middle-left': { rotateX: 0, rotateY: 315 },
+        'front-bottom-left': { rotateX: 45, rotateY: 45 },
+        'front-bottom-center': { rotateX: 45, rotateY: 0 },
+        'right-bottom-left': { rotateX: 45, rotateY: -45 },
+        'left-middle-center': { rotateX: 0, rotateY: 90.1 },
+        'left-top-left': { rotateX: -45, rotateY: 135 },
+        'left-top-center': { rotateX: -45, rotateY: 90 },
+        'left-middle-left': { rotateX: 0, rotateY: 135 },
+        'left-bottom-left': { rotateX: 45, rotateY: 135 },
+        'left-bottom-center': { rotateX: 45, rotateY: 90 },
+        'back-middle-center': { rotateX: 0, rotateY: 180 },
+        'back-top-left': { rotateX: -45, rotateY: 225 },
+        'back-top-center': { rotateX: -45, rotateY: 180 },
+        'back-middle-left': { rotateX: 0, rotateY: 225 },
+        'back-bottom-left': { rotateX: 45, rotateY: 225 },
+        'back-bottom-center': { rotateX: 45, rotateY: 180 },
+        'right-middle-center': { rotateX: 0, rotateY: 270.1 },
+        'right-top-center': { rotateX: -45, rotateY: 270 },
+        'right-bottom-center': { rotateX: 45, rotateY: 270 },
+        'top-middle-center': { rotateX: -90, rotateY: 0 },
+        'base-middle-center': { rotateX: 90, rotateY: 0 }
     })[_viewZone];
 
     function position (transform) {
-        transform = transform <= 180 ? transform : transform + 360;
+        let pluridRoots = document.getElementsByTagName('plurid-roots')[0];
         let viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
 
-        let rotateY = getTransformRotate(viewCube).rotateY;
-        let rotateYdeg = rotateY * 180 / Math.PI;
-        let angle = rotateYdeg <= 180 ? transform : transform + 360;
+        let rotateX = transform.rotateX;
+        let rotateY = transform.rotateY;
 
-        console.log('rotateYdeg', rotateYdeg);
-        console.log('transform', transform);
-        console.log('angle', angle);
+        let translateX = transcore.getTransformTranslate(pluridRoots).translateX;
+        let translateY = transcore.getTransformTranslate(pluridRoots).translateY;
+        let translateZ = 0;
+        let scale = transcore.getTransformScale(pluridRoots).scale;
+
+        let valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+        let valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+        let valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+        let valscaleMatrix = matrix.scaleMatrix(scale);
+
+        let yPos = transcore.getyPos(null, pluridRoots);
+
+        // transform = transform <= 180 ? transform : transform + 360;
+
+        // let rotateY = getTransformRotate(viewCube).rotateY;
+        // let rotateYdeg = rotateY * 180 / Math.PI;
+        // let angle = (rotateY + transform) <= 180 ? transform : 360 + transform;
+
+        // console.log('rotateYdeg', rotateYdeg);
+        // console.log('transform', transform);
+        // console.log('angle', angle);
+
+        pluridRoots.style.transition = "transform 300ms";
+        transcore.setTransform(pluridRoots, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
 
         viewCube.style.transition = "transform 300ms";
-        viewCube.style.transform = `translateX(23px) translateY(16px) rotateY(${angle}deg)`;
+
+        if (rotateX != 0) {
+            viewCube.style.transform = `translateX(23px) translateY(16px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        } else {
+            viewCube.style.transform = `translateX(23px) translateY(16px) rotateY(${rotateY}deg)`;
+        }
+
         setTimeout(() => {
             viewCube.style.transition = "";
+            pluridRoots.style.transition = "";
         }, 300);
+
+        // function rotateThis(el, nR) {
+        //     rot = rot || 0; // if rot undefined or 0, make 0, else rot
+        //     let aR = rot % 360;
+        //     if ( aR < 0 ) { aR += 360; }
+        //     if ( aR < 180 && (nR > (aR + 180)) ) { rot -= 360; }
+        //     if ( aR >= 180 && (nR <= (aR - 180)) ) { rot += 360; }
+        //     rot += (nR - aR);
+        //     // element.style.transform = ("rotate( " + rot + "deg )");
+        //     el.style.transition = "transform 300ms";
+        //     el.style.transform = `translateX(23px) translateY(16px) rotateY(${rot}deg)`;
+        //     setTimeout(() => {
+        //         el.style.transition = "";
+        //     }, 300);
+        // }
+
+        // rotateThis(viewCube, transform);
         console.log(transform);
     }
 

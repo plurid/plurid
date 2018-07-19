@@ -258,7 +258,7 @@ export function setCursor(mode) {
 }
 
 
-export function getyPos(event, plurid) {
+export function getyPos(event = null, plurid) {
     var yCenter = window.innerHeight / 2;
     var translateY = getTransformTranslate(plurid).translateY;
 
