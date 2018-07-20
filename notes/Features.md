@@ -57,13 +57,15 @@
 
 + button :: reduce height of the current `<plurid-sheet>` plane to the current height of the viewport (toggle between full and reduced height);
 
-+ button :: reload the current `<plurid-sheet>` plane;
-
 + button :: extend the `<plurid-bridge>`;
+
++ button :: reset transform for the current `<plurid-root>`;
+
++ button :: isolate the current `<plurid-sheet>` (toggle);
 
 + button :: close the current `<plurid-sheet>` plane;
 
-+ button :: isolate the current `<plurid-sheet>` (toggle);
++ button :: reload the current `<plurid-sheet>` plane;
 
 + button :: back to the previous URL within the curent `<plurid-branch>`;
 
