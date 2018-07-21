@@ -169,7 +169,7 @@ export function rotateViewcube(event, plurid) {
 
     let viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
 
-    viewCube.style.transform = `translateX(23px) translateY(16px) rotateX(${rotateXdeg}deg) rotateY(${rotateYdeg}deg)`;
+    viewCube.style.transform = `translateX(32px) translateY(23px) rotateX(${rotateXdeg}deg) rotateY(${rotateYdeg}deg)`;
 
     // console.log(viewCube);
     // console.log(rotateYdeg);
@@ -242,9 +242,9 @@ function setModelZoneButtons(buttons, viewZone) {
         viewCube.style.transition = "transform 300ms";
 
         if (rotateX != 0) {
-            viewCube.style.transform = `translateX(23px) translateY(16px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            viewCube.style.transform = `translateX(32px) translateY(23px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         } else {
-            viewCube.style.transform = `translateX(23px) translateY(16px) rotateY(${rotateY}deg)`;
+            viewCube.style.transform = `translateX(32px) translateY(23px) rotateY(${rotateY}deg)`;
         }
 
         setTimeout(() => {
