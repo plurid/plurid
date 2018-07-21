@@ -13,6 +13,73 @@ export function transform(element) {
     // let pluridStack = new Set();
     let plurid = element.children[0];
 
+    let direction = "";
+    let oldX = 0;
+    let oldY = 0;
+
+    function getDirection(event) {
+
+        return (function (event) {
+            // console.log(oldX);
+            // console.log(oldY);
+
+            if (oldX < event.clientX) {
+                direction = "right";
+            } else if (oldX > event.clientX) {
+                direction = "left";
+            }
+
+            // issues with transforms
+            // if (oldY < event.clientY) {
+            //     direction = "down";
+            // } else if (oldY > event.clientY) {
+            //     direction = "up";
+            // }
+
+            oldX = event.clientX;
+            oldY = event.clientY;
+
+            return direction;
+        })(event);
+    }
+
+    function rotatePluridClickThree(event) {
+        if(event.shiftKey) {
+            event.preventDefault();
+            let direction = getDirection(event);
+            rotatePlurid(event, plurid, direction);
+            rotateViewcube(event, plurid);
+        }
+    }
+
+    function translatePluridClickThree(event) {
+        if(event.altKey) {
+            event.preventDefault();
+            let direction = getDirection(event);
+            translatePlurid(event, plurid, direction);
+        }
+    }
+
+    element.addEventListener('mousedown', event => {
+        if (event.which == 2 || event.button == 4 ) {
+            if(event.shiftKey) {
+                event.preventDefault();
+                element.addEventListener('mousemove', rotatePluridClickThree);
+            }
+            if(event.altKey) {
+                event.preventDefault();
+                element.addEventListener('mousemove', translatePluridClickThree);
+            }
+        }
+    });
+
+    element.addEventListener('mouseup', event => {
+        if (event.which == 2 || event.button == 4 ) {
+            element.removeEventListener('mousemove', rotatePluridClickThree);
+            element.removeEventListener('mousemove', translatePluridClickThree);
+        }
+    });
+
     element.addEventListener("click", event => {
         // cross-browsers eventPath
         let eventPath = event.path || (event.composedPath && event.composedPath());
@@ -49,7 +116,7 @@ export function transform(element) {
             translatePlurid(event, plurid);
         }
 
-        if(event.metaKey) {
+        if(event.metaKey || event.ctrlKey) {
             event.preventDefault();
 
             scalePlurid(event, plurid);
