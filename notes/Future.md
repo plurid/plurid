@@ -18,3 +18,5 @@
 + the `<plurid-bridge>` can be extended in a snake-like shape
 
 + shadows projected from the sheets onto the container
+
++ button in controls for transforms gizmo (rotation/translation/scale)
