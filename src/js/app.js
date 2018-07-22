@@ -1,25 +1,26 @@
-require('./source/state/plurid-scene.js');
+import './source/state/plurid-scene';
 
-require('./source/core/theme');
-
-
-// require Elements
-require('./source/elements/branch.js');
-require('./source/elements/container.js');
-require('./source/elements/content.js');
-require('./source/elements/root.js');
-require('./source/elements/sheet.js');
-require('./source/elements/solid.js');
-require('./source/elements/page.js');
-require('./source/elements/link.js');
-require('./source/elements/shadow.js');
+import './source/core/theme';
 
 
-// require Logic
-require('./source/logic/directions.js');
-require('./source/logic/quaternion.js');
-require('./source/logic/gyroscope.js');
+// Elements
+import './source/elements/branch';
+import './source/elements/container';
+import './source/elements/content';
+import './source/elements/root';
+import './source/elements/sheet';
+import './source/elements/solid';
+import './source/elements/page';
+import './source/elements/link';
+import './source/elements/shadow';
 
-require('./source/options/options.js');
 
-require('./source/logic/dev.js');
+// Logic
+import './source/logic/directions';
+import './source/logic/quaternion';
+import './source/logic/gyroscope';
+
+
+import './source/options/options';
+
+import './source/logic/dev';
