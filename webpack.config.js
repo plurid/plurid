@@ -14,7 +14,7 @@ module.exports = {
     entry: './src/js/app.js',
     output: {
         filename: 'plurid.js',
-        path: path.resolve(__dirname, 'dist/js')
+        path: path.resolve(__dirname, 'plurid/js')
     },
     module: {
         rules: [

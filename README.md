@@ -6,9 +6,26 @@ plurid.js
 
 Plurid.js is a MIT-licensed, open source JavaScript framework to view and use web content within a three-dimensional structure.
 
-## Installation
+## Use
 
-  `npm install plurid`
+Place the `plurid` folder at the same level with a `.html` file,
+
+import the `.css` file in the `<head>` of the `.html` document,
+
+    <link rel="stylesheet" href="./plurid/css/plurid.css">
+
+import the `.js` file at the end of the `<body>`, before any other script,
+
+    <script src="./plurid/js/plurid.js"></script>
+
+place the content of the web page in a `<plurid-page>` tag, inside the `<body>`
+
+    <plurid-page>
+        <div>
+            The content of the web page
+        </div>
+    </plurid-page>
+
 
 ## Description
 
