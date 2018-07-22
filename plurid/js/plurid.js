@@ -81,10 +81,22 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/js/app.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./app.js");
 /******/ })
 /************************************************************************/
 /******/ ({
+
+/***/ "./app.js":
+/*!****************!*\
+  !*** ./app.js ***!
+  \****************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\n__webpack_require__(/*! ./src/js/app.js */ \"./src/js/app.js\");\n\n__webpack_require__(/*! ./src/sass/app.scss */ \"./src/sass/app.scss\");\n\n//# sourceURL=webpack:///./app.js?");
+
+/***/ }),
 
 /***/ "./node_modules/webpack/buildin/global.js":
 /*!***********************************!*\
@@ -105,7 +117,7 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\n// require JS files\n// require('./source/legacy/plurid');\n// require('./source/legacy/container-options');\n\n\n__webpack_require__(/*! ./source/state/plurid-scene.js */ \"./src/js/source/state/plurid-scene.js\");\n\n__webpack_require__(/*! ./source/core/theme */ \"./src/js/source/core/theme.js\");\n\n// require Elements\n__webpack_require__(/*! ./source/elements/branch.js */ \"./src/js/source/elements/branch.js\");\n__webpack_require__(/*! ./source/elements/container.js */ \"./src/js/source/elements/container.js\");\n__webpack_require__(/*! ./source/elements/content.js */ \"./src/js/source/elements/content.js\");\n__webpack_require__(/*! ./source/elements/root.js */ \"./src/js/source/elements/root.js\");\n__webpack_require__(/*! ./source/elements/sheet.js */ \"./src/js/source/elements/sheet.js\");\n__webpack_require__(/*! ./source/elements/solid.js */ \"./src/js/source/elements/solid.js\");\n__webpack_require__(/*! ./source/elements/page.js */ \"./src/js/source/elements/page.js\");\n__webpack_require__(/*! ./source/elements/link.js */ \"./src/js/source/elements/link.js\");\n__webpack_require__(/*! ./source/elements/shadow.js */ \"./src/js/source/elements/shadow.js\");\n\n// require Logic\n__webpack_require__(/*! ./source/logic/directions.js */ \"./src/js/source/logic/directions.js\");\n__webpack_require__(/*! ./source/logic/quaternion.js */ \"./src/js/source/logic/quaternion.js\");\n__webpack_require__(/*! ./source/logic/gyroscope.js */ \"./src/js/source/logic/gyroscope.js\");\n\n__webpack_require__(/*! ./source/options/options.js */ \"./src/js/source/options/options.js\");\n\n__webpack_require__(/*! ./source/logic/dev.js */ \"./src/js/source/logic/dev.js\");\n\n// require Sass main file\n__webpack_require__(/*! ../sass/app.scss */ \"./src/sass/app.scss\");\n\n//# sourceURL=webpack:///./src/js/app.js?");
+eval("\n\n__webpack_require__(/*! ./source/state/plurid-scene.js */ \"./src/js/source/state/plurid-scene.js\");\n\n__webpack_require__(/*! ./source/core/theme */ \"./src/js/source/core/theme.js\");\n\n// require Elements\n__webpack_require__(/*! ./source/elements/branch.js */ \"./src/js/source/elements/branch.js\");\n__webpack_require__(/*! ./source/elements/container.js */ \"./src/js/source/elements/container.js\");\n__webpack_require__(/*! ./source/elements/content.js */ \"./src/js/source/elements/content.js\");\n__webpack_require__(/*! ./source/elements/root.js */ \"./src/js/source/elements/root.js\");\n__webpack_require__(/*! ./source/elements/sheet.js */ \"./src/js/source/elements/sheet.js\");\n__webpack_require__(/*! ./source/elements/solid.js */ \"./src/js/source/elements/solid.js\");\n__webpack_require__(/*! ./source/elements/page.js */ \"./src/js/source/elements/page.js\");\n__webpack_require__(/*! ./source/elements/link.js */ \"./src/js/source/elements/link.js\");\n__webpack_require__(/*! ./source/elements/shadow.js */ \"./src/js/source/elements/shadow.js\");\n\n// require Logic\n__webpack_require__(/*! ./source/logic/directions.js */ \"./src/js/source/logic/directions.js\");\n__webpack_require__(/*! ./source/logic/quaternion.js */ \"./src/js/source/logic/quaternion.js\");\n__webpack_require__(/*! ./source/logic/gyroscope.js */ \"./src/js/source/logic/gyroscope.js\");\n\n__webpack_require__(/*! ./source/options/options.js */ \"./src/js/source/options/options.js\");\n\n__webpack_require__(/*! ./source/logic/dev.js */ \"./src/js/source/logic/dev.js\");\n\n//# sourceURL=webpack:///./src/js/app.js?");
 
 /***/ }),
 

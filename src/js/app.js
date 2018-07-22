@@ -1,8 +1,3 @@
-// require JS files
-// require('./source/legacy/plurid');
-// require('./source/legacy/container-options');
-
-
 require('./source/state/plurid-scene.js');
 
 require('./source/core/theme');
@@ -28,7 +23,3 @@ require('./source/logic/gyroscope.js');
 require('./source/options/options.js');
 
 require('./source/logic/dev.js');
-
-
-// require Sass main file
-require('../sass/app.scss');

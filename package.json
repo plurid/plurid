@@ -1,7 +1,8 @@
 {
 	"name": "plurid",
 	"version": "0.1.0",
-	"description": "View the web in three dimensions.",
+    "description": "View and explore the web in three dimensions.",
+    "main": "app.js",
 	"scripts": {
 		"test": "mocha --reporter spec",
 		"cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*",
@@ -14,7 +15,8 @@
 	},
 	"keywords": [
 		"text",
-		"media",
+        "media",
+        "web",
 		"three",
 		"dimensions"
 	],
