@@ -44,15 +44,15 @@ html {
 :unresolved {
   display: none; }
 
-p {
+p, h1 {
   text-align: justify; }
-  .plurid-theme-night p {
+  .plurid-theme-night p, .plurid-theme-night h1 {
     color: white; }
-  .plurid-theme-dusk p {
+  .plurid-theme-dusk p, .plurid-theme-dusk h1 {
     color: #e5e6e6; }
-  .plurid-theme-dawn p {
+  .plurid-theme-dawn p, .plurid-theme-dawn h1 {
     color: #191a1a; }
-  .plurid-theme-light p {
+  .plurid-theme-light p, .plurid-theme-light h1 {
     color: black; }
 
 .plurid-theme-night a {

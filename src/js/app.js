@@ -22,6 +22,8 @@ require('./source/elements/shadow.js');
 
 // require Logic
 require('./source/logic/directions.js');
+require('./source/logic/quaternion.js');
+require('./source/logic/gyroscope.js');
 
 require('./source/options/options.js');
 
