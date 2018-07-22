@@ -4,16 +4,14 @@
 
 
 <p align="center">
-    [![Build Status](https://travis-ci.org/plurid/plurid.js.svg?branch=master)](https://travis-ci.org/plurid/plurid.js)
-    [![Coverage Status](https://coveralls.io/repos/github/plurid/plurid.js/badge.svg?branch=master)](https://coveralls.io/github/plurid/plurid.js?branch=master)
+    <a href="https://travis-ci.org/plurid/plurid.js"><img src="https://travis-ci.org/plurid/plurid.js.svg?branch=master" alt="Build"></a>
+    <a href="https://coveralls.io/github/plurid/plurid.js?branch=master"><img src="https://coveralls.io/repos/github/plurid/plurid.js/badge.svg?branch=master" alt="Coverage"></a>
 </p>
 
 
 <h1 align="center">
     plurid.js
 </h1>
-
----
 
 `plurid.js` is a MIT-licensed, open source JavaScript framework to view and use web content within a three-dimensional structure.
 
