@@ -2,16 +2,18 @@
     <img src="https://raw.githubusercontent.com/plurid/plurid.js/master/docs/identity/plurid-logo.png" height="250px">
 </p>
 
-<div style="text-align:center">
+
+<p align="center">
     [![Build Status](https://travis-ci.org/plurid/plurid.js.svg?branch=master)](https://travis-ci.org/plurid/plurid.js)
     [![Coverage Status](https://coveralls.io/repos/github/plurid/plurid.js/badge.svg?branch=master)](https://coveralls.io/github/plurid/plurid.js?branch=master)
-</div>
+</p>
 
 
-<div style="text-align:center">
-plurid.js
-</div>
-=========
+<h1 align="center">
+    plurid.js
+</h1>
+
+---
 
 `plurid.js` is a MIT-licensed, open source JavaScript framework to view and use web content within a three-dimensional structure.
 
