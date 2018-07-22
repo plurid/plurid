@@ -1,9 +1,6 @@
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/plurid.js/master/docs/identity/plurid-logo.png" height="250px">
-</p>
-
-
-<p align="center">
+    <br />
     <a href="https://travis-ci.org/plurid/plurid.js"><img src="https://travis-ci.org/plurid/plurid.js.svg?branch=master" alt="Build"></a>
     <a href="https://coveralls.io/github/plurid/plurid.js?branch=master"><img src="https://coveralls.io/repos/github/plurid/plurid.js/badge.svg?branch=master" alt="Coverage"></a>
 </p>
