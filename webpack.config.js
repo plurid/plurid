@@ -11,7 +11,7 @@ const path = require('path');
 module.exports = {
     mode: 'development',
     // mode: 'production',
-    entry: './src/js/app.js',
+    entry: './app.js',
     output: {
         filename: 'plurid.js',
         path: path.resolve(__dirname, 'plurid/js')
