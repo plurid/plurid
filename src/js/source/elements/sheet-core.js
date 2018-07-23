@@ -243,18 +243,18 @@ function setPluridLinks(pluridLink) {
             // // console.log('branchSheetWidth', branchSheetWidth);
             // pluridShadow.style.width = branchSheetWidth + "px";
 
-            let ground = pluridScene.metadata.ground;
+            let ground = pluridScene.meta.ground;
             // console.log(ground);
 
             // if (branchSheetHeight > ground) {
-            //     pluridScene.metadata.ground = branchSheetHeight - computedShadowHeight;
-            //     ground = pluridScene.metadata.ground;
+            //     pluridScene.meta.ground = branchSheetHeight - computedShadowHeight;
+            //     ground = pluridScene.meta.ground;
             // }
             // pluridShadow.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(90deg) scale(1) skew(0deg)`;
 
             let reflectionY = transY ? transY : top;
 
-            let reflections = pluridScene.metadata.reflections;
+            let reflections = pluridScene.meta.reflections;
             if (reflections === true) {
                 setReflections(branchSheet, branchSheetHeight, ground, reflectionY);
             }
@@ -395,11 +395,11 @@ export function setPluridRoots(pluridSheet) {
         let sheet = {
             id: pluridSheet.parentElement.id,
             sheetId: pluridSheet.id,
-            metadata: [],
+            meta: [],
             children: []
         };
 
-        pluridScene.metadata.rootSheets.push(pluridSheet.id);
+        pluridScene.meta.rootSheets.push(pluridSheet.id);
         pluridScene.content.push(sheet);
     }
 }
@@ -576,16 +576,16 @@ setActiveSheetListener();
  * Set active sheet logic
  */
 function setActiveSheet(eventPath) {
-    let activeSheet = pluridScene.metadata.activeSheet;
+    let activeSheet = pluridScene.meta.activeSheet;
     let currentSheet = checkSheet(eventPath);
     if (currentSheet) {
         if (currentSheet != activeSheet) {
-            pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
-            pluridScene.metadata.activeSheet = currentSheet;
+            pluridScene.meta.previousActiveSheet = pluridScene.meta.activeSheet;
+            pluridScene.meta.activeSheet = currentSheet;
 
-            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active-transform');
-            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active');
-            addActiveSheetShadow(pluridScene.metadata.activeSheet, 'plurid-sheet-active');
+            removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active-transform');
+            removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active');
+            addActiveSheetShadow(pluridScene.meta.activeSheet, 'plurid-sheet-active');
         }
     }
 }

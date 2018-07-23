@@ -82,12 +82,12 @@ export function transform(container) {
         let currentPluridRoot = checkCurrentPluridRoot(eventPath);
 
         if (eventPath[0].id == container.id || !currentPluridRoot) {
-            pluridScene.metadata.activePlurid = 'plurid-roots-1';
-            pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
-            pluridScene.metadata.activeSheet = "";
+            pluridScene.meta.activePlurid = 'plurid-roots-1';
+            pluridScene.meta.previousActiveSheet = pluridScene.meta.activeSheet;
+            pluridScene.meta.activeSheet = "";
 
-            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active');
-            removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active-transform');
+            removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active');
+            removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active-transform');
         }
 
         plurid = getPlurid(event).root;
@@ -157,9 +157,9 @@ function checkCurrentPluridRoot(eventPath) {
 
 
     function verifyChild(verifyId) {
-        if (verifyId == pluridScene.metadata.activePlurid) {
+        if (verifyId == pluridScene.meta.activePlurid) {
             // console.log(verifyId);
-            // console.log(pluridScene.metadata.activePlurid);
+            // console.log(pluridScene.meta.activePlurid);
             return true;
         }
     }

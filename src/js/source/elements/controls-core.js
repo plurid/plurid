@@ -415,13 +415,13 @@ function setActivePlurid(element) {
 
     pluridSelect.addEventListener("click", (event) => {
         let pluridRoot = getSpecifiedParent(pluridSelect, 'PLURID-ROOT');
-        pluridScene.metadata.activePlurid = pluridRoot.id;
+        pluridScene.meta.activePlurid = pluridRoot.id;
 
-        pluridScene.metadata.previousActiveSheet = pluridScene.metadata.activeSheet;
-        pluridScene.metadata.activeSheet = element.parentElement.id;
+        pluridScene.meta.previousActiveSheet = pluridScene.meta.activeSheet;
+        pluridScene.meta.activeSheet = element.parentElement.id;
 
-        removeActiveSheetShadow(pluridScene.metadata.previousActiveSheet, 'plurid-sheet-active-transform');
-        addActiveSheetShadow(pluridScene.metadata.activeSheet, 'plurid-sheet-active-transform');
+        removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active-transform');
+        addActiveSheetShadow(pluridScene.meta.activeSheet, 'plurid-sheet-active-transform');
     });
 
     // pluridSelect.addEventListener("dblclick", (event) => {
@@ -549,7 +549,7 @@ function closePlurid(element) {
             }
         }
 
-        pluridScene.metadata.activePlurid = 'plurid-roots-1';
+        pluridScene.meta.activePlurid = 'plurid-roots-1';
     });
 }
 
