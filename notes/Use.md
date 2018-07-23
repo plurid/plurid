@@ -50,7 +50,7 @@ place the content of the web page in a `<plurid-page>` tag, inside the `<body>`
     /-- simple-page/index.html
     <html>
         <head>
-            <title>Plurid Page Example</title>
+            <title>Plurid Simple Page</title>
             <link rel="stylesheet" href="./plurid/css/plurid.css">
         </head>
 
@@ -100,6 +100,8 @@ To link to a `plurid-page` in the same document, the linked page must be named
         Content of the linked page
     </plurid-page>
 
+(`<plurid-page>`'s `name` can be PascalCase, camelCase, snake_case, kebab-case, or Train-Case)
+
 and the `<plurid-link>` will be
 
     <plurid-link page="nameOfPage">link</plurid-link>
@@ -121,15 +123,19 @@ therefore, the `<body>` of `index.html` might look like
         <script src="./plurid/js/plurid.js"></script>
     </body>
 
-If the linked, named page has an attribute `open` then the document will load with the initial `<plurid-page>` linking the named `<plurid-page>` and having the link as-if already activated. If the attribute `open` is set to `false` or if not set, then the linked, named page will be viewed only when clicking, and therefore activating, the link.
+If the `<plurid-link>` has an attribute `active` then the document will load the document while linking the named `<plurid-page>` and having the link as-if already clicked. If the attribute `active` is set to `false` or if not set, then the linked, named page will be viewed only when clicking, and therefore activating the link.
 
 If the `<plurid-link>` has the attribute `samepage` then the link will be followed within the current page sheet.
+
+If the `<plurid-link>` has the attribute `newtab` then the link will be opened in a new tab.
+
+A `<plurid-page>` can have the attribute `title` which is displayed in the controls search bar of the `page`'s `<plurid-sheet>`. If `title` is not set, then the search bar has the `name` or the URL of the `page`.
 
 <br>
 
 ### Same Document Multi-Page
 
-A document can have multiple `<plurid-page>`s independent of each other (not linked between them). In such a case the pages will be rendered one near another, based on the order of the document. The gap between pages can be modified from the global JavaScript object `pluridScene` > `pluridscene.metadata.multiPageGap` :: number.
+A document can have multiple `<plurid-page>`s independent of each other (not linked between them). In such a case the pages will be rendered one near another, based on the order of the document. The gap between pages can be modified from the global JavaScript object `pluridScene` > `pluridScene.meta.multiPageGap` :: number.
 
     /-- index.html
     <body>

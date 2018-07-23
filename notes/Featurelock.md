@@ -8,14 +8,20 @@
 
 #### Desktop
 
-shift + scroll left/right (up/down?) - rotate
-shift + arrows left/right (up/down?) - rotate
+shift + scroll up/down/left/right - rotate
+
+shift + arrows up/down/left/right - rotate
+
 
 alt/opt + scroll up/down/left/right - translate
+
 alt/opt + arrows up/down/left/right - translate
 
+
 ctrl/cmd + scroll up/down - scale
+
 ctrl/cmd + arrows up/down - scale
+
 
 
 #### Mobile (under 960px screen width)
@@ -25,6 +31,8 @@ ctrl/cmd + arrows up/down - scale
 `Rotate / Translate / Scale` icons on the `<plurid-options>` bar, always visible.
 
 Holding touch on `Rotate / Translate / Scale` icons reveals control arrows for precise transformations.
+
+Gyroscope icon on the `<plurid-options>` bar. When active, it uses the phone's gyroscope to determine rotation X/Y.
 
 
 ---
@@ -40,13 +48,15 @@ Minimize
 
 Reduce height
 
-Reload
-
 Extend bridge
+
+Reset transforms
+
+Isolate
 
 Close
 
-Isolate
+Reload
 
 Back
 
@@ -114,6 +124,8 @@ Translate
 
 Scale
 
+Gyroscope
+
 Fit into view
 
 Add plurid root
@@ -156,6 +168,8 @@ Shortcuts
 
 Always show options bar
 
+Show viewcube
+
 Reset to default
 
 
@@ -167,3 +181,7 @@ Reset to default
 3D Transform Cube
 
 Vertical and Horizontal Sliders for Easy Space Skimming
+
+Scale Slider
+
+Fit Everything Button

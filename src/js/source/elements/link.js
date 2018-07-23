@@ -16,6 +16,38 @@ class PluridLink extends HTMLElement {
         this.setAttribute('page', newPage);
     }
 
+    get samepage() {
+        switch(this.getAttribute('samepage')) {
+            case "":
+                return true;
+            case "true":
+                return true;
+            case "false":
+                return false;
+            default:
+                return false;
+        }
+    }
+    set samepage(newSamepage) {
+        this.setAttribute('samepage', newSamepage);
+    }
+
+    get active() {
+        switch(this.getAttribute('active')) {
+            case "":
+                return true;
+            case "true":
+                return true;
+            case "false":
+                return false;
+            default:
+                return false;
+        }
+    }
+    set active(newActive) {
+        this.setAttribute('active', newActive);
+    }
+
     getNamedPage(pageName) {
         let pluridPages = document.getElementsByTagName('plurid-page');
 

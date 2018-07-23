@@ -20,3 +20,5 @@
 + shadows projected from the sheets onto the container
 
 + button in controls for transforms gizmo (rotation/translation/scale)
+
++ use phone as remote for transforms and view changes on desktop/laptop (shared sitting)
