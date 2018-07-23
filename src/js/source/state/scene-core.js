@@ -1,3 +1,6 @@
+import { setTheme } from '../core/theme';
+
+
 /**
  * Gets <plurid-branch> based on branch.id
  *
@@ -77,4 +80,16 @@ export function getChildrenBySheetId(sheetId) {
     }
 
     return childrenBranch;
+}
+
+
+
+/**
+ * Set theme
+ *
+ * @param {string} theme
+ */
+export function setNewTheme(theme) {
+    this.meta.theme = theme;
+    setTheme(theme);
 }
