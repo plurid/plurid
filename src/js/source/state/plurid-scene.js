@@ -1,5 +1,7 @@
 import { getBranchById,
-         getChildrenBySheetId } from './scene-core';
+         getChildrenBySheetId,
+         setNewTheme } from './scene-core';
+
 
 
 // set pluridScene as global variable
@@ -18,6 +20,7 @@ import { getBranchById,
             rootSheets: [],
             shadows: true,
             theme: 'dusk',
+            themes: ['night', 'dusk', 'dawn', 'light'],
             transformOrigin: {
                 maxPositiveX: 0,
                 maxNegativeX: 0,
@@ -32,6 +35,7 @@ import { getBranchById,
         },
         content: [],
         getBranchById: getBranchById,
-        getChildrenBySheetId: getChildrenBySheetId
+        getChildrenBySheetId: getChildrenBySheetId,
+        setTheme: setNewTheme
     }
 }).call(this, global)

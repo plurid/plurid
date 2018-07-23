@@ -1,34 +1,36 @@
-// Sets plurid-theme-dark as default theme on body
-// if no theme class currently in use.
+/**
+ * Sets plurid-theme-dusk as default theme on <body>
+ * if no theme class currently in use.
+ */
 (function() {
     const bodyClassList = document.body.classList;
     let themeSet = false;
 
-    for (const bodyClass of bodyClassList) {
+    for (let bodyClass of bodyClassList) {
         if (/plurid-theme/.test(bodyClass)) {
             themeSet = true;
         }
     }
 
     if (!themeSet) {
-        setDefaultTheme();
+        const defaultTheme = 'dusk';
+        setTheme(defaultTheme)
     }
-}());
+})();
 
 
-function setDefaultTheme() {
+export function setTheme(theme) {
     const bodyClassList = document.body.classList;
-    const defaultTheme = pluridScene.meta.theme;
-    const currentThemes = [
+    const possibleThemes = [
         'night',
         'dusk',
         'dawn',
         'light'
     ];
 
-    currentThemes.map(theme => {
-        defaultTheme === theme ? bodyClassList.add(`plurid-theme-${theme}`) : currentThemes.map(theme => {
-            defaultTheme !== theme ? bodyClassList.remove(`plurid-theme-${theme}`) : '';
+    possibleThemes.map(possibleTheme => {
+        theme === possibleTheme ? bodyClassList.add(`plurid-theme-${theme}`) : possibleThemes.map(possibleTheme => {
+            theme !== possibleTheme ? bodyClassList.remove(`plurid-theme-${possibleTheme}`) : '';
         });
     });
 }
