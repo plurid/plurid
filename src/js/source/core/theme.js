@@ -18,7 +18,7 @@
 
 function setDefaultTheme() {
     const bodyClassList = document.body.classList;
-    const defaultTheme = pluridScene.metadata.theme;
+    const defaultTheme = pluridScene.meta.theme;
     const currentThemes = [
         'night',
         'dusk',

@@ -84,19 +84,19 @@ function setContainer() {
 
             // console.log('----------');
             let sheetHeight = pluridSheet.offsetHeight;
-            let ground = pluridScene.metadata.ground;
+            let ground = pluridScene.meta.ground;
 
             if (sheetHeight > ground) {
-                pluridScene.metadata.ground = sheetHeight;
-                ground = pluridScene.metadata.ground;
+                pluridScene.meta.ground = sheetHeight;
+                ground = pluridScene.meta.ground;
             }
 
-            let shadows = pluridScene.metadata.shadows;
+            let shadows = pluridScene.meta.shadows;
             if (shadows === true) {
                 setShadows(pluridRoot, pluridSheet, sheetHeight, ground);
             }
 
-            let reflections = pluridScene.metadata.reflections;
+            let reflections = pluridScene.meta.reflections;
             if (reflections === true) {
                 setReflections(pluridSheet, sheetHeight, ground);
             }
@@ -126,7 +126,7 @@ function setTransformOriginCoordinates() {
     let elementNegativeY = -211;
     let elementPositiveZ = 131;
     let elementNegativeZ = -1231;
-    let transformOrigin = pluridScene.metadata.transformOrigin;
+    let transformOrigin = pluridScene.meta.transformOrigin;
 
     if (elementPositiveX > transformOrigin.maxPositiveX) {
         transformOrigin.maxPositiveX = elementPositiveX;
@@ -157,7 +157,7 @@ setTransformOriginCoordinates();
 
 
 function calculateTransformOriginCenters() {
-    let transformOrigin = pluridScene.metadata.transformOrigin;
+    let transformOrigin = pluridScene.meta.transformOrigin;
     let positiveX = transformOrigin.maxPositiveX;
     let negativeX = transformOrigin.maxNegativeX;
     let positiveY = transformOrigin.maxPositiveY;

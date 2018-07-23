@@ -5,7 +5,7 @@ import { getBranchById,
 // set pluridScene as global variable
 (function (global) {
     global.pluridScene = {
-        metadata: {
+        meta: {
             activePlurid: '',
             activeSheet: '',
             containers: 0,
