@@ -33,20 +33,11 @@ class PluridPage extends HTMLElement {
         this.setAttribute('name', newName);
     }
 
-    get visible() {
-        switch(this.getAttribute('visible')) {
-            case "":
-                return true;
-            case "true":
-                return true;
-            case "false":
-                return false;
-            default:
-                return false;
-        }
+    get title() {
+        return this.getAttribute('title');
     }
-    set visible(newVisible) {
-        this.setAttribute('visible', newVisible);
+    set title(newTitle) {
+        this.setAttribute('title', newTitle);
     }
 }
 

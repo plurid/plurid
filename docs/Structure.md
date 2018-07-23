@@ -94,7 +94,7 @@ Once received, the document is transformed as specified in the `plurid.js` scrip
 A JavaScript object is created to hold the `pluridScene`:
 
     global.pluridScene = {
-        metadata: {
+        meta: {
             containers: 1,
             rootPages: [],
             pages: 0
@@ -103,7 +103,9 @@ A JavaScript object is created to hold the `pluridScene`:
     }
 
 
-Accessing the page `view.plurid.com/jke4axgvs0lz#first-video`
+Accessing the page `view.plurid.com/jke4axgvs0lz$first-video`
+
+The `$` indicates a page-name is following.
 
 
 
