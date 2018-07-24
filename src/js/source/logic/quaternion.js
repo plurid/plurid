@@ -26,6 +26,43 @@
 
 
 
+// let y_45_quat = computeQuaternionFromEulers(0, 0, 45);
+// let rot_mat_y_45 = makeRotationMatrixFromQuaternion(y_45_quat);
+// console.log(rot_mat_y_45);
+
+// let rot_mat_y_45_css = '';
+// for (let el of rot_mat_y_45) {
+//     rot_mat_y_45_css = rot_mat_y_45_css + el + ', '
+// }
+// console.log(rot_mat_y_45_css);
+
+
+
+// let x_45_quat = computeQuaternionFromEulers(0, 45, 0);
+// let rot_mat_x_45 = makeRotationMatrixFromQuaternion(x_45_quat);
+// console.log(rot_mat_x_45);
+
+// let rot_mat_x_45_css = '';
+// for (let el of rot_mat_x_45) {
+//     rot_mat_x_45_css = rot_mat_x_45_css + el + ', '
+// }
+// console.log(rot_mat_x_45_css);
+
+
+// let quat_mul = quaternionMultiply([y_45_quat, x_45_quat]);
+// console.log(quat_mul);
+// let rot_mat_x_y_45 = makeRotationMatrixFromQuaternion(quat_mul);
+// console.log(rot_mat_x_y_45);
+
+// let rot_mat_x_y_45_css = '';
+// for (let el of rot_mat_x_y_45) {
+//     rot_mat_x_y_45_css = rot_mat_x_y_45_css + el + ', '
+// }
+// console.log(rot_mat_x_y_45_css);
+
+
+
+
 function makeQuaternion(x, y, z, w) {
     return  {
         x: x,
