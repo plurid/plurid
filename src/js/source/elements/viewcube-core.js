@@ -181,38 +181,39 @@ function setModelZoneButtons(buttons, viewZone) {
     const viewZoneSwitch = (_viewZone) => ({
         'front-middle-center': { rotateX: 0, rotateY: 0 },
         'front-top-left': { rotateX: -45, rotateY: 45 },
-        'front-top-center': { rotateX: -45, rotateY: 0.1 },
+        'front-top-center': { rotateX: -45, rotateY: 0 },
         'right-top-left': { rotateX: -45, rotateY: -45 },
         'front-middle-left': { rotateX: 0, rotateY: 45 },
         'right-middle-left': { rotateX: 0, rotateY: 315 },
         'front-bottom-left': { rotateX: 45, rotateY: 45 },
-        'front-bottom-center': { rotateX: 45, rotateY: 0.1 },
+        'front-bottom-center': { rotateX: 45, rotateY: 0 },
         'right-bottom-left': { rotateX: 45, rotateY: -45 },
-        'left-middle-center': { rotateX: 0, rotateY: 90.1 },
+        'left-middle-center': { rotateX: 0, rotateY: 90 },
         'left-top-left': { rotateX: -45, rotateY: 135 },
-        'left-top-center': { rotateX: -45, rotateY: 90.1 },
+        'left-top-center': { rotateX: -45, rotateY: 90 },
         'left-middle-left': { rotateX: 0, rotateY: 135 },
         'left-bottom-left': { rotateX: 45, rotateY: 135 },
-        'left-bottom-center': { rotateX: 45, rotateY: 90.1 },
+        'left-bottom-center': { rotateX: 45, rotateY: 90 },
         'back-middle-center': { rotateX: 0, rotateY: 180 },
         'back-top-left': { rotateX: -45, rotateY: 225 },
         'back-top-center': { rotateX: -45, rotateY: 180 },
         'back-middle-left': { rotateX: 0, rotateY: 225 },
         'back-bottom-left': { rotateX: 45, rotateY: 225 },
         'back-bottom-center': { rotateX: 45, rotateY: 180 },
-        'right-middle-center': { rotateX: 0, rotateY: 270.1 },
-        'right-top-center': { rotateX: -45, rotateY: 270.1 },
-        'right-bottom-center': { rotateX: 45, rotateY: 270.1 },
-        'top-middle-center': { rotateX: -90.1, rotateY: 0 },
-        'base-middle-center': { rotateX: 90.1, rotateY: 0 }
+        'right-middle-center': { rotateX: 0, rotateY: 270 },
+        'right-top-center': { rotateX: -45, rotateY: 270 },
+        'right-bottom-center': { rotateX: 45, rotateY: 270 },
+        'top-middle-center': { rotateX: -90, rotateY: 0 },
+        'base-middle-center': { rotateX: 90, rotateY: 0 }
     })[_viewZone];
 
     function position (transform) {
         let pluridRoots = document.getElementsByTagName('plurid-roots')[0];
         let viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
 
-        let rotateX = transform.rotateX;
-        let rotateY = transform.rotateY;
+        let rotationDeviation = 0.06;
+        let rotateX = transform.rotateX + rotationDeviation;
+        let rotateY = transform.rotateY + rotationDeviation;
 
         let translateX = transcore.getTransformTranslate(pluridRoots).translateX;
         let translateY = transcore.getTransformTranslate(pluridRoots).translateY;
