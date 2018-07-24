@@ -111,7 +111,7 @@ function inverseQuaternion(quaternion) {
 }
 
 
-function conjugateQuaternion(quaternion) {
+export function conjugateQuaternion(quaternion) {
     return makeQuaternion(-quaternion.x, -quaternion.y, -quaternion.z, quaternion.w);
 }
 
@@ -172,7 +172,7 @@ export function rotatePointViaQuaternion(pointRotate, quaternion) {
         w: 0
     };
     let rotatedPoint = quaternionMultiply(
-        [quaternion, temporaryQuaternion, inverseQuaternion(quaternion)]
+        [quaternion, temporaryQuaternion, conjugateQuaternion(quaternion)]
     );
 
     return {
