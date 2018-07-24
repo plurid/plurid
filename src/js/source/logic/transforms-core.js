@@ -1,6 +1,7 @@
 import * as matrix from "./matrix.js";
 
 
+
 export function getTransformRotate(element) {
     var values = getRotationMatrix(element);
     // console.log("values Matrix", values);
@@ -211,11 +212,10 @@ export function getScaleMatrix(element) {
 }
 
 
-export function setTransform(element, rotateXMatrix, rotateYMatrix, translateMatrix, scaleMatrix, yPos = 0) {
+export function setTransform(element, rotateMatrix, translateMatrix, scaleMatrix, yPos = 0) {
     let transformMatrix = matrix.multiplyArrayOfMatrices([
         translateMatrix,
-        rotateYMatrix,
-        rotateXMatrix,
+        rotateMatrix,
         scaleMatrix
     ]);
     // console.log("Transform Matrix", transformMatrix);

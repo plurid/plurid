@@ -1,3 +1,25 @@
+import { computeQuaternionFromEulers,
+         quaternionMultiply,
+         makeRotationMatrixFromQuaternion,
+         rotatePointViaQuaternion } from "./quaternion";
+
+
+export function rotateMatrix(xAngle, yAngle, zAngle = 0) {
+    let xQuaternion = computeQuaternionFromEulers(0,        xAngle,          0);
+    let yQuaternion = computeQuaternionFromEulers(0,             0,     yAngle);
+    let zQuaternion = computeQuaternionFromEulers(zAngle,        0,          0);
+
+    let quartenionMultiplication = quaternionMultiply([zQuaternion, yQuaternion, xQuaternion]);
+
+    // let quat = {x: 0, y: 0, z: 0, w: 0};
+    // let rotate = rotatePointViaQuaternion(quartenionMultiplication, quat);
+
+    let rotationMatrix = makeRotationMatrixFromQuaternion(quartenionMultiplication);
+
+    return rotationMatrix;
+}
+
+
 // Matrix Operations for Single Value (De-)Composition
 // Sourced from https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js
 export function rotateXMatrix(a) {
