@@ -2,7 +2,8 @@ import { getPlurid } from "../logic/get-plurid";
 import { stylePlurid as style } from "../logic/style-plurid";
 import { rotatePlurid,
          translatePlurid,
-         scalePlurid } from "../logic/transforms";
+         scalePlurid,
+         rotation} from "../logic/transforms";
 import { removeActiveSheetShadow } from "./sheet-core";
 import { rotateViewcube } from "./viewcube-core";
 
@@ -12,6 +13,11 @@ import { rotateViewcube } from "./viewcube-core";
 export function transform(container) {
     // let pluridStack = new Set();
     let plurid = container.getElementsByTagName('plurid-roots')[0];
+    let transform = {
+        plurid: plurid,
+        container: this
+    };
+
 
     let direction = "";
     let oldX = 0;
@@ -96,11 +102,8 @@ export function transform(container) {
     container.addEventListener('wheel', event => {
         if(event.shiftKey) {
             event.preventDefault();
-
-            rotatePlurid(event, plurid);
-            if (plurid.nodeName == 'PLURID-ROOTS') {
-                rotateViewcube(event, plurid);
-            }
+            transform.event = event;
+            rotation(transform);
         }
 
         if(event.altKey) {

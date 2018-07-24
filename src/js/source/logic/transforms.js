@@ -1,25 +1,42 @@
 import { getPlurid } from "./get-plurid.js";
 import { getDirection } from "./directions.js";
+import { getTransformRotate } from './transforms-core';
+import { rotateViewcube } from '../elements/viewcube-core';
 import * as transcore from "./transforms-core.js";
 import * as matrix from "./matrix.js";
+
 
 
 var rotateX = 0.5;
 var rotateY = 0.5;
 
+
+
+export function rotation(transform) {
+    let event = transform.event;
+    let plurid = transform.plurid;
+    let direction = transform.direction ? transform.direction : getDirection(event);
+    // let rotX = transform.rotateX ? transform.rotateX : rotateX;
+    // let rotY = transform.rotateY ? transform.rotateY : rotateY;
+    // let rotateX = transform.rotateX ? transform.rotateX : getTransformRotate(plurid).rotateX;
+    // let rotateY = transform.rotateY ? transform.rotateY : getTransformRotate(plurid).rotateY;
+
+    // console.log(rotateX);
+    // console.log(rotateY);
+
+    // rotatePlurid(event, plurid, direction, rotX, rotY);
+    rotatePlurid(event, plurid, direction);
+    if (plurid.nodeName == 'PLURID-ROOTS') {
+        rotateViewcube(event, plurid, rotateX, rotateY);
+    }
+}
+
+
+
 export function rotatePlurid(event, plurid, direction = null) {
     // console.log("ROTATE");
     // console.log("Event", event);
     // console.log("----------------------------------")
-
-    // let plurid = getPlurid(event);
-    // console.log("Plurid", plurid);
-
-    if (direction == null) {
-        direction = getDirection(event);
-    }
-    // console.log("Direction", direction);
-
 
     // var rotateX = -1 * transcore.getTransformRotate(plurid).rotateX * 180 / Math.PI;
     // var rotateY = -1 * transcore.getTransformRotate(plurid).rotateY * 180 / Math.PI;
@@ -40,9 +57,9 @@ export function rotatePlurid(event, plurid, direction = null) {
         var angleIncrement = 4.5;
     }
 
-    console.log("----------------------------------")
-    console.log("Rotate X", rotateX);
-    console.log("Rotate Y",rotateY);
+    // console.log("----------------------------------")
+    // console.log("Rotate X", rotateX);
+    // console.log("Rotate Y",rotateY);
     // console.log("Translate X", translateX);
     // console.log("Translate Y", translateY);
     // console.log("Scale", scale);
