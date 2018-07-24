@@ -943,7 +943,7 @@ plurid-options {
 
 .plurid-container-options-content {
   height: 100%;
-  width: 800px;
+  width: 900px;
   margin: 0 auto;
   border-radius: 0px;
   text-align: center;
@@ -951,7 +951,7 @@ plurid-options {
   overflow-y: hidden;
   white-space: nowrap;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 50px 50px 100px; }
+  grid-template-columns: 1fr 1fr 1fr 50px 50px 50px 100px; }
   .plurid-theme-night .plurid-container-options-content {
     background-color: #0a0a0a; }
   .plurid-theme-dusk .plurid-container-options-content {
@@ -993,7 +993,7 @@ plurid-options {
   overflow: auto;
   opacity: 0.93;
   white-space: nowrap;
-  width: 800px; }
+  width: 900px; }
   .plurid-theme-night .plurid-container-options-more {
     background-color: #0a0a0a;
     -moz-box-shadow: 0 4px 2px -2px #141515;
