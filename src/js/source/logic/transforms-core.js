@@ -4,7 +4,7 @@ import * as matrix from "./matrix.js";
 
 export function getTransformRotate(element) {
     var values = getRotationMatrix(element);
-    // console.log("values Matrix", values);
+    console.log("values Matrix", values);
 
     var rotateX,
         rotateY;

@@ -1,22 +1,28 @@
-import { computeQuaternionFromEulers,
+import { quaternionFromAxisAngle,
+         computeQuaternionFromEulers,
          quaternionMultiply,
          makeRotationMatrixFromQuaternion,
          rotatePointViaQuaternion,
-         conjugateQuaternion } from "./quaternion";
+         conjugateQuaternion,
+         inverseQuaternion } from "./quaternion";
+
 
 
 export function rotateMatrix(xAngle, yAngle, zAngle = 0) {
+	// document.getElementById("alpha").innerHTML= zAngle.toFixed(5);
+	// document.getElementById("beta").innerHTML= xAngle.toFixed(5);
+    // document.getElementById("gamma").innerHTML = yAngle.toFixed(5);
+
     let xQuaternion = computeQuaternionFromEulers(0,        xAngle,          0);
-    let xQuaternionPlus = computeQuaternionFromEulers(0,        xAngle + 5,          0);
     let yQuaternion = computeQuaternionFromEulers(0,             0,     yAngle);
     let zQuaternion = computeQuaternionFromEulers(zAngle,        0,          0);
 
-    let quartenionMultiplication = quaternionMultiply([yQuaternion, xQuaternion]);
+    let quartenionMultiplication = quaternionMultiply([yQuaternion, xQuaternion, zQuaternion]);
 
-
-    // let rotateX = rotatePointViaQuaternion(xQuaternionPlus, xQuaternion);
-    // let quat = {x: 0, y: 0, z: 0, w: 0};
-    // let rotate = rotatePointViaQuaternion(quartenionMultiplication, quat);
+    // document.getElementById("x").innerHTML=quartenionMultiplication.x.toFixed(5);
+    // document.getElementById("y").innerHTML=quartenionMultiplication.y.toFixed(5);
+    // document.getElementById("z").innerHTML=quartenionMultiplication.z.toFixed(5);
+    // document.getElementById("w").innerHTML=quartenionMultiplication.w.toFixed(5);
 
     let rotationMatrix = makeRotationMatrixFromQuaternion(quartenionMultiplication);
 
@@ -26,43 +32,43 @@ export function rotateMatrix(xAngle, yAngle, zAngle = 0) {
 
 // Matrix Operations for Single Value (De-)Composition
 // Sourced from https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js
-export function rotateXMatrix(a) {
-    var cos = Math.cos;
-    var sin = Math.sin;
+// export function rotateXMatrix(a) {
+//     var cos = Math.cos;
+//     var sin = Math.sin;
 
-    return [
-         1,       0,        0,     0,
-         0,  cos(a),  -sin(a),     0,
-         0,  sin(a),   cos(a),     0,
-         0,       0,        0,     1
-    ];
-}
-
-
-export function rotateYMatrix(a) {
-    var cos = Math.cos;
-    var sin = Math.sin;
-
-    return [
-         cos(a),   0, sin(a),   0,
-              0,   1,      0,   0,
-        -sin(a),   0, cos(a),   0,
-              0,   0,      0,   1
-    ];
-}
+//     return [
+//          1,       0,        0,     0,
+//          0,  cos(a),  -sin(a),     0,
+//          0,  sin(a),   cos(a),     0,
+//          0,       0,        0,     1
+//     ];
+// }
 
 
-export function rotateZMatrix(a) {
-    var cos = Math.cos;
-    var sin = Math.sin;
+// export function rotateYMatrix(a) {
+//     var cos = Math.cos;
+//     var sin = Math.sin;
 
-    return [
-        cos(a), -sin(a),    0,    0,
-        sin(a),  cos(a),    0,    0,
-             0,       0,    1,    0,
-             0,       0,    0,    1
-    ];
-}
+//     return [
+//          cos(a),   0, sin(a),   0,
+//               0,   1,      0,   0,
+//         -sin(a),   0, cos(a),   0,
+//               0,   0,      0,   1
+//     ];
+// }
+
+
+// export function rotateZMatrix(a) {
+//     var cos = Math.cos;
+//     var sin = Math.sin;
+
+//     return [
+//         cos(a), -sin(a),    0,    0,
+//         sin(a),  cos(a),    0,    0,
+//              0,       0,    1,    0,
+//              0,       0,    0,    1
+//     ];
+// }
 
 
 export function translateMatrix(x, y, z) {
