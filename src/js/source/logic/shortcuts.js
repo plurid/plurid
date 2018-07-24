@@ -1,5 +1,9 @@
 import { closePlurid } from "../elements/controls-core.js";
 import { getPlurid } from "./get-plurid.js";
+import { rotatePlurid,
+         translatePlurid,
+         scalePlurid } from './transforms';
+
 
 
 export function initShortcuts() {
@@ -12,55 +16,76 @@ function shortcuts(event) {
     // let activePluridID = getPlurid.sheet
     // let activePluridElement = document.getElementById(activePluridID);
     let activePluridElement = getPlurid().sheet;
+    let activePlurid = document.getElementById(pluridScene.meta.activePlurid);
 
     let ultimateKey = event.which;
 
 
     // ROTATE
     if(event.shiftKey && ultimateKey == 37) {
-        console.log("Rotate Left");
+        // console.log("Rotate Left");
+        let direction = 'left';
+        rotatePlurid(event, activePlurid, direction);
     }
 
     if(event.shiftKey && ultimateKey == 39) {
-        console.log("Rotate Right");
+        // console.log("Rotate Right");
+        let direction = 'right';
+        rotatePlurid(event, activePlurid, direction);
     }
 
     if(event.shiftKey && ultimateKey == 38) {
-        console.log("Rotate Up");
+        // console.log("Rotate Up");
+        let direction = 'up';
+        rotatePlurid(event, activePlurid, direction);
     }
 
     if(event.shiftKey && ultimateKey == 40) {
-        console.log("Rotate Down");
+        // console.log("Rotate Down");
+        let direction = 'down';
+        rotatePlurid(event, activePlurid, direction);
     }
 
 
 
     // TRANSLATE
     if(event.altKey && ultimateKey == 37) {
-        console.log("Translate Left");
+        // console.log("Translate Left");
+        let direction = 'left';
+        translatePlurid(event, activePlurid, direction);
     }
 
     if(event.altKey && ultimateKey == 39) {
-        console.log("Translate Right");
+        // console.log("Translate Right");
+        let direction = 'right';
+        translatePlurid(event, activePlurid, direction);
     }
 
     if(event.altKey && ultimateKey == 38) {
-        console.log("Translate Up");
+        // console.log("Translate Up");
+        let direction = 'up';
+        translatePlurid(event, activePlurid, direction);
     }
 
     if(event.altKey && ultimateKey == 40) {
-        console.log("Translate Down");
+        // console.log("Translate Down");
+        let direction = 'down';
+        translatePlurid(event, activePlurid, direction);
     }
 
 
 
     // SCALE
     if(event.metaKey && ultimateKey == 38) {
-        console.log("Scale Up");
+        // console.log("Scale Up");
+        let direction = 'up';
+        scalePlurid(event, activePlurid, direction);
     }
 
     if(event.metaKey && ultimateKey == 40) {
-        console.log("Scale Down");
+        // console.log("Scale Down");
+        let direction = 'down';
+        scalePlurid(event, activePlurid, direction);
     }
 
 
