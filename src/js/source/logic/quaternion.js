@@ -106,7 +106,7 @@ export function quaternionFromAxisAngle(x, y, z, angle) {
 }
 
 
-function inverseQuaternion(quaternion) {
+export function inverseQuaternion(quaternion) {
 	return makeQuaternion(quaternion.x, quaternion.y, quaternion.z, -quaternion.w);
 }
 
