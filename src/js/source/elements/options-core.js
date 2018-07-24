@@ -258,7 +258,7 @@ function transformButtons(container) {
         let button = container.getElementsByClassName(`plurid-container-${type}-${direction}`)[0];
 
         button.addEventListener('click', event => {
-            // transformPlurid = pluridScene.metadata.activePlurid ? container.getElementById(pluridScene.metadata.activePlurid) : container.getElementsByTagName("plurid-roots")[0];
+            transformPlurid = pluridScene.meta.activePlurid ? container.querySelector(`#${pluridScene.meta.activePlurid}`) : container.getElementsByTagName("plurid-roots")[0];
 
             if (type === 'rotate') {
                 plurid.rotatePlurid(event, transformPlurid, direction);
@@ -290,7 +290,7 @@ function transformButtons(container) {
 
 
         button.addEventListener("mousedown", function(event) {
-            // transformPlurid = pluridScene.metadata.activePlurid ? container.getElementById(pluridScene.metadata.activePlurid) : container.getElementsByTagName("plurid-roots")[0];
+            transformPlurid = pluridScene.meta.activePlurid ? container.querySelector(`#${pluridScene.meta.activePlurid}`) : container.getElementsByTagName("plurid-roots")[0];
 
             if (type === 'rotate') {
                 timer = setTimeout(rotatePlurid, 35, event, direction);
@@ -308,12 +308,17 @@ function transformButtons(container) {
         });
     }
 
-    // TO DO
-    // get activePlurid for transformPlurid
-    // let transformPlurid = pluridScene.metadata.activePlurid ? container.getElementById(pluridScene.metadata.activePlurid) : container.getElementsByTagName("plurid-roots")[0];
-    let transformPlurid = container.getElementsByTagName("plurid-roots")[0];
+    let transformPlurid = pluridScene.meta.activePlurid ? container.getElementById(pluridScene.meta.activePlurid) : container.getElementsByTagName("plurid-roots")[0];
 
     let transformButtons = [
+        {
+            type: "rotate",
+            direction: "up"
+        },
+        {
+            type: "rotate",
+            direction: "down"
+        },
         {
             type: "rotate",
             direction: "left"
@@ -322,6 +327,7 @@ function transformButtons(container) {
             type: "rotate",
             direction: "right"
         },
+
         {
             type: "translate",
             direction: "up"
@@ -338,6 +344,7 @@ function transformButtons(container) {
             type: "translate",
             direction: "right"
         },
+
         {
             type: "scale",
             direction: "up"

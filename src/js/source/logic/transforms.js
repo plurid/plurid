@@ -43,9 +43,9 @@ export function rotatePlurid(event, plurid, direction = null) {
     console.log("----------------------------------")
     console.log("Rotate X", rotateX);
     console.log("Rotate Y",rotateY);
-    console.log("Translate X", translateX);
-    console.log("Translate Y", translateY);
-    console.log("Scale", scale);
+    // console.log("Translate X", translateX);
+    // console.log("Translate Y", translateY);
+    // console.log("Scale", scale);
 
     plurid.style.transition = "0ms ease-in-out";
 
@@ -139,14 +139,14 @@ export function translatePlurid(event, plurid, direction = null) {
     }
 
     if (direction === "up") {
-        translateY -= linearIncrement;
+        translateY += linearIncrement;
         var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
         transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
     if (direction === "down") {
-        translateY += linearIncrement;
+        translateY -= linearIncrement;
         var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
         transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
