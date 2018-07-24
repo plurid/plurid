@@ -22,72 +22,89 @@ function shortcuts(event) {
 
 
     // ROTATE
+    // Shift + arrow-left
     if(event.shiftKey && ultimateKey == 37) {
         // console.log("Rotate Left");
+        event.preventDefault();
         let direction = 'left';
         rotatePlurid(event, activePlurid, direction);
     }
 
+    // Shift + arrow-right
     if(event.shiftKey && ultimateKey == 39) {
         // console.log("Rotate Right");
+        event.preventDefault();
         let direction = 'right';
         rotatePlurid(event, activePlurid, direction);
     }
 
+    // Shift + arrow-up
     if(event.shiftKey && ultimateKey == 38) {
         // console.log("Rotate Up");
+        event.preventDefault();
         let direction = 'up';
         rotatePlurid(event, activePlurid, direction);
     }
 
+    // Shift + arrow-down
     if(event.shiftKey && ultimateKey == 40) {
         // console.log("Rotate Down");
+        event.preventDefault();
         let direction = 'down';
         rotatePlurid(event, activePlurid, direction);
     }
-
 
 
     // TRANSLATE
+    // Alt/Opt + arrow-left
     if(event.altKey && ultimateKey == 37) {
         // console.log("Translate Left");
+        event.preventDefault();
         let direction = 'left';
         translatePlurid(event, activePlurid, direction);
     }
 
+    // Alt/Opt + arrow-right
     if(event.altKey && ultimateKey == 39) {
         // console.log("Translate Right");
+        event.preventDefault();
         let direction = 'right';
         translatePlurid(event, activePlurid, direction);
     }
 
+    // Alt/Opt + arrow-up
     if(event.altKey && ultimateKey == 38) {
         // console.log("Translate Up");
+        event.preventDefault();
         let direction = 'up';
         translatePlurid(event, activePlurid, direction);
     }
 
+    // Alt/Opt + arrow-down
     if(event.altKey && ultimateKey == 40) {
         // console.log("Translate Down");
+        event.preventDefault();
         let direction = 'down';
         translatePlurid(event, activePlurid, direction);
     }
-
 
 
     // SCALE
-    if(event.metaKey && ultimateKey == 38) {
+    // Cltr/Cmd + arrow-up
+    if((event.metaKey || event.ctrlKey) && ultimateKey == 38) {
         // console.log("Scale Up");
+        event.preventDefault();
         let direction = 'up';
         scalePlurid(event, activePlurid, direction);
     }
 
-    if(event.metaKey && ultimateKey == 40) {
+    // Cltr/Cmd + arrow-down
+    if((event.metaKey || event.ctrlKey) && ultimateKey == 40) {
         // console.log("Scale Down");
+        event.preventDefault();
         let direction = 'down';
         scalePlurid(event, activePlurid, direction);
     }
-
 
 
     // VIEW
