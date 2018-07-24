@@ -181,19 +181,19 @@ function setModelZoneButtons(buttons, viewZone) {
     const viewZoneSwitch = (_viewZone) => ({
         'front-middle-center': { rotateX: 0, rotateY: 0 },
         'front-top-left': { rotateX: -45, rotateY: 45 },
-        'front-top-center': { rotateX: -45, rotateY: 0 },
+        'front-top-center': { rotateX: -45, rotateY: 0.1 },
         'right-top-left': { rotateX: -45, rotateY: -45 },
         'front-middle-left': { rotateX: 0, rotateY: 45 },
         'right-middle-left': { rotateX: 0, rotateY: 315 },
         'front-bottom-left': { rotateX: 45, rotateY: 45 },
-        'front-bottom-center': { rotateX: 45, rotateY: 0 },
+        'front-bottom-center': { rotateX: 45, rotateY: 0.1 },
         'right-bottom-left': { rotateX: 45, rotateY: -45 },
         'left-middle-center': { rotateX: 0, rotateY: 90.1 },
         'left-top-left': { rotateX: -45, rotateY: 135 },
-        'left-top-center': { rotateX: -45, rotateY: 90 },
+        'left-top-center': { rotateX: -45, rotateY: 90.1 },
         'left-middle-left': { rotateX: 0, rotateY: 135 },
         'left-bottom-left': { rotateX: 45, rotateY: 135 },
-        'left-bottom-center': { rotateX: 45, rotateY: 90 },
+        'left-bottom-center': { rotateX: 45, rotateY: 90.1 },
         'back-middle-center': { rotateX: 0, rotateY: 180 },
         'back-top-left': { rotateX: -45, rotateY: 225 },
         'back-top-center': { rotateX: -45, rotateY: 180 },
@@ -201,10 +201,10 @@ function setModelZoneButtons(buttons, viewZone) {
         'back-bottom-left': { rotateX: 45, rotateY: 225 },
         'back-bottom-center': { rotateX: 45, rotateY: 180 },
         'right-middle-center': { rotateX: 0, rotateY: 270.1 },
-        'right-top-center': { rotateX: -45, rotateY: 270 },
-        'right-bottom-center': { rotateX: 45, rotateY: 270 },
-        'top-middle-center': { rotateX: -90, rotateY: 0 },
-        'base-middle-center': { rotateX: 90, rotateY: 0 }
+        'right-top-center': { rotateX: -45, rotateY: 270.1 },
+        'right-bottom-center': { rotateX: 45, rotateY: 270.1 },
+        'top-middle-center': { rotateX: -90.1, rotateY: 0 },
+        'base-middle-center': { rotateX: 90.1, rotateY: 0 }
     })[_viewZone];
 
     function position (transform) {
@@ -219,8 +219,10 @@ function setModelZoneButtons(buttons, viewZone) {
         let translateZ = 0;
         let scale = transcore.getTransformScale(pluridRoots).scale;
 
-        let valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-        let valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+        let valRotationMatrix = matrix.rotateMatrix(-1 * rotateX, -1 * rotateY);
+        // let valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+        // let valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+
         let valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
         let valscaleMatrix = matrix.scaleMatrix(scale);
 
@@ -237,7 +239,7 @@ function setModelZoneButtons(buttons, viewZone) {
         // console.log('angle', angle);
 
         pluridRoots.style.transition = "transform 300ms";
-        transcore.setTransform(pluridRoots, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(pluridRoots, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
 
         viewCube.style.transition = "transform 300ms";
 

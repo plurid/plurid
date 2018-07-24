@@ -116,7 +116,7 @@ function conjugateQuaternion(quaternion) {
 }
 
 
-function quaternionMultiply(quaternionArray) {
+export function quaternionMultiply(quaternionArray) {
     let temporaryQuaternion = quaternionArray[0];
     let copyQuaternion = {
         x: temporaryQuaternion.x,
@@ -164,7 +164,7 @@ function quaternionMultiply(quaternionArray) {
 }
 
 
-function rotatePointViaQuaternion(pointRotate, quaternion) {
+export function rotatePointViaQuaternion(pointRotate, quaternion) {
     var temporaryQuaternion = {
         x: pointRotate[0],
         y: pointRotate[1],
@@ -184,7 +184,7 @@ function rotatePointViaQuaternion(pointRotate, quaternion) {
 }
 
 
-function makeRotationMatrixFromQuaternion(quaternion) {
+export function makeRotationMatrixFromQuaternion(quaternion) {
     let num = quaternion.x * 2;
     let num2 = quaternion.y * 2;
     let num3 = quaternion.z * 2;

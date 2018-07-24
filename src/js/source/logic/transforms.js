@@ -18,69 +18,74 @@ export function rotatePlurid(event, plurid, direction = null) {
     // console.log("Direction", direction);
 
 
-    var rotateX = transcore.getTransformRotate(plurid).rotateX;
-    var rotateY = transcore.getTransformRotate(plurid).rotateY;
+    var rotateX = -1 * transcore.getTransformRotate(plurid).rotateX * 180 / Math.PI;
+    var rotateY = -1 * transcore.getTransformRotate(plurid).rotateY * 180 / Math.PI;
     var translateX = transcore.getTransformTranslate(plurid).translateX;
     var translateY = transcore.getTransformTranslate(plurid).translateY;
     var translateZ = 0;
     var scale = transcore.getTransformScale(plurid).scale;
 
-    var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-    var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    let valRotationMatrix = matrix.rotateMatrix(rotateX, rotateY);
+    // var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    // var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+
     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
     var valscaleMatrix = matrix.scaleMatrix(scale);
 
     var yPos = transcore.getyPos(event, plurid);
 
     if (scale < 0.5) {
-        var angleIncrement = 0.12;
+        var angleIncrement = 5;
     } else {
-        var angleIncrement = 0.12;
+        var angleIncrement = 5;
     }
 
-    // console.log("----------------------------------")
-    // console.log("Rotate X", rotateX);
-    // console.log("Rotate X in Degrees", rotateX*180/Math.PI);
-    // console.log("Rotate Y",rotateY);
-    // console.log("Rotate Y in Degrees",rotateY*180/Math.PI);
-    // console.log("Translate X", translateX);
-    // console.log("Translate Y", translateY);
-    // console.log("Scale", scale);
+    console.log("----------------------------------")
+    console.log("Rotate X", rotateX);
+    console.log("Rotate X in Degrees", rotateX*180/Math.PI);
+    console.log("Rotate Y",rotateY);
+    console.log("Rotate Y in Degrees",rotateY*180/Math.PI);
+    console.log("Translate X", translateX);
+    console.log("Translate Y", translateY);
+    console.log("Scale", scale);
 
     plurid.style.transition = "0ms ease-in-out";
 
     if (direction === "left") {
         rotateY -= angleIncrement;
-        valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+        valRotationMatrix = matrix.rotateMatrix(rotateX, rotateY);
+        // valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
 
         // console.log("valrotationXMatrix", valrotationXMatrix);
         // console.log("valrotationYMatrix", valrotationYMatrix);
         // console.log("valtranslationMatrix", valtranslationMatrix);
         // console.log("valscaleMatrix", valscaleMatrix);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
     if (direction === "right") {
         rotateY += angleIncrement;
-        valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+        valRotationMatrix = matrix.rotateMatrix(rotateX, rotateY);
+        // valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
     if (direction === "up") {
         rotateX += angleIncrement;
-        valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+        valRotationMatrix = matrix.rotateMatrix(rotateX, rotateY);
+        // valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
     if (direction === "down") {
         rotateX -= angleIncrement;
+        valRotationMatrix = matrix.rotateMatrix(rotateX, rotateY);
+        // valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
 
-        valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 }
 
@@ -98,15 +103,17 @@ export function translatePlurid(event, plurid, direction = null) {
     // console.log("Direction", direction);
 
 
-    var rotateX = transcore.getTransformRotate(plurid).rotateX;
-    var rotateY = transcore.getTransformRotate(plurid).rotateY;
+    var rotateX = -1 * transcore.getTransformRotate(plurid).rotateX * 180 / Math.PI;
+    var rotateY = -1 * transcore.getTransformRotate(plurid).rotateY * 180 / Math.PI;
     var translateX = transcore.getTransformTranslate(plurid).translateX;
     var translateY = transcore.getTransformTranslate(plurid).translateY;
     var translateZ = 0;
     var scale = transcore.getTransformScale(plurid).scale;
 
-    var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-    var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    let valRotationMatrix = matrix.rotateMatrix(rotateX, rotateY);
+    // var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    // var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+
     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
     var valscaleMatrix = matrix.scaleMatrix(scale);
 
@@ -135,28 +142,28 @@ export function translatePlurid(event, plurid, direction = null) {
         translateX -= linearIncrement;
         var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
     if (direction === "right") {
         translateX += linearIncrement;
         var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
     if (direction === "up") {
         translateY -= linearIncrement;
         var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
     if (direction === "down") {
         translateY += linearIncrement;
         var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 }
 
@@ -173,15 +180,17 @@ export function scalePlurid(event, plurid, direction = null) {
     }
     // console.log("Direction", direction);
 
-    var rotateX = transcore.getTransformRotate(plurid).rotateX;
-    var rotateY = transcore.getTransformRotate(plurid).rotateY;
+    var rotateX = -1 * transcore.getTransformRotate(plurid).rotateX * 180 / Math.PI;
+    var rotateY = -1 * transcore.getTransformRotate(plurid).rotateY * 180 / Math.PI;
     var translateX = transcore.getTransformTranslate(plurid).translateX;
     var translateY = transcore.getTransformTranslate(plurid).translateY;
     var translateZ = 0;
     var scale = transcore.getTransformScale(plurid).scale;
 
-    var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-    var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+    let valRotationMatrix = matrix.rotateMatrix(rotateX, rotateY);
+    // var valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+    // var valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+
     var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
     var valscaleMatrix = matrix.scaleMatrix(scale);
 
@@ -211,7 +220,7 @@ export function scalePlurid(event, plurid, direction = null) {
 
         var valscaleMatrix = matrix.scaleMatrix(scale);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
     if (direction === "down" || direction === "downleft" || direction === "downright") {
@@ -223,6 +232,6 @@ export function scalePlurid(event, plurid, direction = null) {
 
         var valscaleMatrix = matrix.scaleMatrix(scale);
 
-        transcore.setTransform(plurid, valrotationXMatrix, valrotationYMatrix, valtranslationMatrix, valscaleMatrix, yPos);
+        transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 }
