@@ -34,7 +34,7 @@ plurid-options {
         background-color: themed('backgroundColorMenu');
     }
     height: 100%;
-    width: 800px;
+    width: 900px;
     margin: 0 auto;
     border-radius: 0px;
     text-align: center;
@@ -42,7 +42,7 @@ plurid-options {
     overflow-y: hidden;
     white-space: nowrap;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 50px 50px 100px;
+    grid-template-columns: 1fr 1fr 1fr 50px 50px 50px 100px;
 
     @include themify($themes) {
         @include box-shadow(themed('boxShadowMenu'));
@@ -69,7 +69,7 @@ plurid-options {
     overflow: auto;
     opacity: 0.93;
     white-space: nowrap;
-    width: 800px;
+    width: 900px;
 }
 
 .plurid-container-options-group-more:hover {
