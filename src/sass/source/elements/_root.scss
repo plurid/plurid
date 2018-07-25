@@ -1,7 +1,7 @@
 plurid-roots {
     position: absolute;
     height: 100%;
-    @include transform(translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1));
+    @include transform(translateX(100px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1));
     @include transform-style(preserve-3d);
     width: 100%;
     // transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
@@ -9,6 +9,7 @@ plurid-roots {
 }
 
 plurid-root {
+    // z-index: 1;
     position: absolute;
     @include transform(translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1));
     @include transform-style(preserve-3d);

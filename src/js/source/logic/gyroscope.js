@@ -22,7 +22,7 @@ if (window.DeviceOrientationEvent) {
         console.log(plurid);
 	    document.getElementById("alpha").innerHTML= plurid.id;
 
-        processGyro(event.alpha, event.beta, event.gamma, plurid);
+        // processGyro(event.alpha, event.beta, event.gamma, plurid);
     }, true);
 }
 
@@ -31,6 +31,17 @@ function processGyro(alpha, beta, gamma, plurid) {
 	document.getElementById("alpha").innerHTML= alpha.toFixed(5);
 	document.getElementById("beta").innerHTML= beta.toFixed(5);
     document.getElementById("gamma").innerHTML = gamma.toFixed(5);
+
+    // X
+    beta = -beta;
+    // beta = 0;
+
+    // Y
+    gamma = -gamma;
+    // gamma = 0;
+
+    // Z
+    alpha = 0;
 
     let valRotationMatrix = rotateMatrix(beta, gamma, alpha);
 

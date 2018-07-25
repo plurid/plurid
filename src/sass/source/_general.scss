@@ -10,14 +10,11 @@ html, body {
     height: 100%;
     margin: 0;
     width: 100%;
+    background-color: black;
 }
 
 html {
     overflow: hidden;
-}
-
-body {
-    @extend %container-background;
 }
 
 :unresolved {

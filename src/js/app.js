@@ -13,6 +13,7 @@ import './source/elements/solid';
 import './source/elements/page';
 import './source/elements/link';
 import './source/elements/shadow';
+import './source/elements/space';
 
 
 // Logic

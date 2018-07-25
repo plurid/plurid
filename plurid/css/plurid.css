@@ -1,25 +1,25 @@
-.plurid-theme-night body, .plurid-theme-night plurid-container {
+.plurid-theme-night plurid-container {
   background: black;
   background: -moz-radial-gradient(center, ellipse cover, #0a0a0a 0%, black 100%);
   background: -webkit-radial-gradient(center, ellipse cover, #0a0a0a 0%, black 100%);
   background: -ms-radial-gradient(center, ellipse cover, #0a0a0a 0%, black 100%);
   background: radial-gradient(ellipse at center, #0a0a0a 0%, black 100%); }
 
-.plurid-theme-dusk body, .plurid-theme-dusk plurid-container {
+.plurid-theme-dusk plurid-container {
   background: #111212;
   background: -moz-radial-gradient(center, ellipse cover, #252727 0%, #111212 100%);
   background: -webkit-radial-gradient(center, ellipse cover, #252727 0%, #111212 100%);
   background: -ms-radial-gradient(center, ellipse cover, #252727 0%, #111212 100%);
   background: radial-gradient(ellipse at center, #252727 0%, #111212 100%); }
 
-.plurid-theme-dawn body, .plurid-theme-dawn plurid-container {
+.plurid-theme-dawn plurid-container {
   background: #cccccc;
   background: -moz-radial-gradient(center, ellipse cover, #b3b3b3 0%, #cccccc 100%);
   background: -webkit-radial-gradient(center, ellipse cover, #b3b3b3 0%, #cccccc 100%);
   background: -ms-radial-gradient(center, ellipse cover, #b3b3b3 0%, #cccccc 100%);
   background: radial-gradient(ellipse at center, #b3b3b3 0%, #cccccc 100%); }
 
-.plurid-theme-light body, .plurid-theme-light plurid-container {
+.plurid-theme-light plurid-container {
   background: white;
   background: -moz-radial-gradient(center, ellipse cover, #f2f2f2 0%, white 100%);
   background: -webkit-radial-gradient(center, ellipse cover, #f2f2f2 0%, white 100%);
@@ -36,7 +36,8 @@
 html, body {
   height: 100%;
   margin: 0;
-  width: 100%; }
+  width: 100%;
+  background-color: black; }
 
 html {
   overflow: hidden; }
@@ -74,10 +75,6 @@ p, h1 {
   margin: 0 auto;
   margin-top: 50px;
   margin-bottom: 50px; }
-
-.grid {
-  display: inline-grid;
-  grid-template-columns: 1fr 1fr 1fr; }
 
 .grid p {
   margin: 30px; }
@@ -127,6 +124,7 @@ plurid-container {
   bottom: 0;
   right: 0;
   left: 0;
+  overflow: hidden;
   -moz-perspective: 1000px;
   -ms-perspective: 1000px;
   -webkit-perspective: 1000px;
@@ -135,10 +133,10 @@ plurid-container {
 plurid-roots {
   position: absolute;
   height: 100%;
-  -moz-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
-  -ms-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
-  -webkit-transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
-  transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -moz-transform: translateX(100px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -ms-transform: translateX(100px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  -webkit-transform: translateX(100px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  transform: translateX(100px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
   -moz-transform-style: preserve-3d;
   -ms-transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
@@ -222,6 +220,11 @@ plurid-shadow {
   -ms-box-shadow: 0px 0px 100px 60px #0c0d0d;
   -webkit-box-shadow: 0px 0px 100px 60px #0c0d0d;
   box-shadow: 0px 0px 100px 60px #0c0d0d; }
+
+plurid-space {
+  display: block;
+  perspective: 1000px;
+  perspective-origin: center 300px; }
 
 plurid-controls {
   align-items: center;
@@ -924,14 +927,14 @@ plurid-controls {
   right: 0; }
 
 plurid-options {
-  display: none;
   position: absolute;
   left: 0;
   right: 0;
   bottom: 25px;
   height: 50px;
   font-family: "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  font-size: 12px; }
+  font-size: 12px;
+  /* Two values, one per background */ }
   .plurid-theme-night plurid-options {
     color: white; }
   .plurid-theme-dusk plurid-options {
