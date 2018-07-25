@@ -142,14 +142,14 @@ export function translatePlurid(event, plurid, direction = null) {
     plurid.style.transition = "20ms ease-in-out";
 
     if (direction === "left") {
-        translateX -= linearIncrement;
+        translateX += linearIncrement;
         var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
         transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
     }
 
     if (direction === "right") {
-        translateX += linearIncrement;
+        translateX -= linearIncrement;
         var valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
 
         transcore.setTransform(plurid, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
