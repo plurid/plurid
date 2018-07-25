@@ -8,51 +8,51 @@ export function renderOptions(element) {
 
 
 export function displayOptions(element) {
-    element.addEventListener("mousemove", event => {
-        function pathContains(element, path) {
-            let contains = false;
-            path.map(el => { el.nodeName === element ? contains = true : ''; });
-            return contains;
-        }
+    // element.addEventListener("mousemove", event => {
+    //     function pathContains(element, path) {
+    //         let contains = false;
+    //         path.map(el => { el.nodeName === element ? contains = true : ''; });
+    //         return contains;
+    //     }
 
-        // cross-browsers eventPath
-        let eventPath = event.path || (event.composedPath && event.composedPath());
+    //     // cross-browsers eventPath
+    //     let eventPath = event.path || (event.composedPath && event.composedPath());
 
-        let containsOptions = pathContains('PLURID-OPTIONS', eventPath);
+    //     let containsOptions = pathContains('PLURID-OPTIONS', eventPath);
 
-        let cursorYLocation = event.pageY;
-        let containerHeight = element.clientHeight;
-        let optionsDisplayLimitOn = 80;
-        let optionsDisplayLimitOff = 80;
-        let optionsTag = element.getElementsByTagName("plurid-options")[0];
+    //     let cursorYLocation = event.pageY;
+    //     let containerHeight = element.clientHeight;
+    //     let optionsDisplayLimitOn = 80;
+    //     let optionsDisplayLimitOff = 80;
+    //     let optionsTag = element.getElementsByTagName("plurid-options")[0];
 
-        if (cursorYLocation > (containerHeight - optionsDisplayLimitOn)) {
-            optionsTag.style.display = "block";
-        }
+    //     if (cursorYLocation > (containerHeight - optionsDisplayLimitOn)) {
+    //         optionsTag.style.display = "block";
+    //     }
 
-        if (cursorYLocation < (containerHeight - optionsDisplayLimitOff) && !containsOptions){
-            optionsTag.style.display = "none";
-        }
-    });
+    //     if (cursorYLocation < (containerHeight - optionsDisplayLimitOff) && !containsOptions){
+    //         optionsTag.style.display = "none";
+    //     }
+    // });
 }
 
 
 export function contentOptions() {
     let content = `<div class="plurid-container-options-content">
                     <div class="plurid-container-options-group">
-                        <span class="plurid-container-button plurid-container-rotate-left">&#x25c0;</span>
+                        <span class="plurid-container-button plurid-container-rotate-left">&#x25c0&#xFE0E;</span>
                         <span class="plurid-container-button plurid-container-rotate-up">&#x25B2;</span>
                         <p>Rotation</p>
                         <span class="plurid-container-button plurid-container-rotate-down">&#x25BC;</span>
-                        <span class="plurid-container-button plurid-container-rotate-right">&#x25b6;</span>
+                        <span class="plurid-container-button plurid-container-rotate-right">&#x25b6&#xFE0E;</span>
                     </div>
 
                     <div class="plurid-container-options-group">
-                        <span class="plurid-container-button plurid-container-translate-left">&#x25c0;</span>
+                        <span class="plurid-container-button plurid-container-translate-left">&#x25c0&#xFE0E;</span>
                         <span class="plurid-container-button plurid-container-translate-up">&#x25B2;</span>
                         <p>Translation</p>
                         <span class="plurid-container-button plurid-container-translate-down">&#x25BC;</span>
-                        <span class="plurid-container-button plurid-container-translate-right">&#x25b6;</span>
+                        <span class="plurid-container-button plurid-container-translate-right">&#x25b6&#xFE0E;</span>
                     </div>
 
                     <div class="plurid-container-options-group">

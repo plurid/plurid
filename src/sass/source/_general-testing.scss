@@ -20,10 +20,10 @@ a {
     margin-bottom: 50px;
 }
 
-.grid {
-    display: inline-grid;
-    grid-template-columns: 1fr 1fr 1fr;
-}
+// .grid {
+//     display: inline-grid;
+//     grid-template-columns: 1fr 1fr 1fr;
+// }
 
 .grid p {
     margin: 30px;
@@ -51,4 +51,3 @@ a {
 #plurid-root-3 {
     transform: translateX(-1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(60deg) rotateZ(0deg) scale(1);
 }
-

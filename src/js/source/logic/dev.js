@@ -60,8 +60,14 @@ function setContainer() {
         // console.log(pluridPagesRoots);
 
         let container = document.createElement("plurid-container");
+        let pluridSpace = document.createElement("plurid-space");
+        // let div = document.createElement('div');
+        // div.classList.add('testing');
         let pluridRoots = document.createElement("plurid-roots");
-        container.appendChild(pluridRoots);
+        pluridSpace.appendChild(pluridRoots);
+        container.appendChild(pluridSpace);
+        // div.appendChild(pluridRoots);
+        // container.appendChild(div);
 
         let scripts = document.getElementsByTagName('script');
         body.insertBefore(container, scripts[0]);

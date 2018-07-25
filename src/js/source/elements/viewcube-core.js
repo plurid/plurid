@@ -19,13 +19,13 @@ export function contentViewcube(container) {
 
             <div class="plurid-viewcube-controls plurid-viewcube-rotate-left-container">
                 <div class="plurid-viewcube-button">
-                    &#x25c0;
+                    &#x25c0&#xFE0E;
                 </div>
             </div>
 
             <div class="plurid-viewcube-controls plurid-viewcube-rotate-right-container">
                 <div class="plurid-viewcube-button">
-                    &#x25b6;
+                    &#x25b6&#xFE0E;
                 </div>
             </div>
 
