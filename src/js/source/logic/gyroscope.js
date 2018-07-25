@@ -19,10 +19,7 @@ import { setTransform,
 if (window.DeviceOrientationEvent) {
     window.addEventListener("deviceorientation", event => {
         let plurid = document.getElementById(pluridScene.meta.activePlurid);
-        console.log(plurid);
-	    document.getElementById("alpha").innerHTML= plurid.id;
-
-        // processGyro(event.alpha, event.beta, event.gamma, plurid);
+        processGyro(event.alpha, event.beta, event.gamma, plurid);
     }, true);
 }
 
