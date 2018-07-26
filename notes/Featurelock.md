@@ -8,19 +8,18 @@
 
 #### Desktop
 
-shift + scroll up/down/left/right - rotate
-
-shift + arrows up/down/left/right - rotate
-
-
-alt/opt + scroll up/down/left/right - translate
-
-alt/opt + arrows up/down/left/right - translate
+- [x] shift + scroll up/down/left/right - rotate
+- [x] shift + arrows up/down/left/right - rotate
+- [x] shift + mouse-3 left/right - rotate
 
 
-ctrl/cmd + scroll up/down - scale
+- [x] alt/opt + scroll up/down/left/right - translate
+- [x] alt/opt + arrows up/down/left/right - translate
+- [x] alt/opt + mouse-3 left/right - translate
 
-ctrl/cmd + arrows up/down - scale
+
+- [x] ctrl/cmd + scroll up/down - scale
+- [x] ctrl/cmd + arrows up/down - scale
 
 
 
