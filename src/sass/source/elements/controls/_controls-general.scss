@@ -8,7 +8,7 @@ plurid-controls {
     align-items: center;
     display: flex;
     font-family: $general_sans-serif__font-family;
-    height: 60px;
+    height: 50px;
     position: absolute;
     top: 0;
     left: 0;
@@ -17,11 +17,11 @@ plurid-controls {
 }
 
 
-plurid-controls plurid-link {
-    @include themify($themes) {
-        color: themed('pluridLinkColor');
-    }
-}
+// plurid-controls plurid-link {
+//     @include themify($themes) {
+//         color: themed('pluridLinkColor');
+//     }
+// }
 
 
 .plurid-container-controls-content {

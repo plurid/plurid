@@ -1,0 +1,76 @@
+.plurid-button {
+    align-items: center;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    font-size: 9px;
+    justify-content: center;
+    outline: none;
+    text-align: center;
+    user-select: none;
+}
+
+.plurid-button-active,
+.plurid-button:hover {
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenuButtonHover');
+        color: themed('textColorInverted');
+    }
+    border-radius: 15px;
+
+    .plurid-button-icon-svg {
+        @include themify($themes) {
+            fill: themed('textColorInverted');
+        }
+    }
+}
+
+.plurid-button-disabled,
+.plurid-button-disabled:hover {
+    cursor: not-allowed;
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenu');
+        color: themed('textColorTertiary');
+    }
+
+    .plurid-button-icon-svg {
+        @include themify($themes) {
+            fill: themed('textColorTertiary');
+        }
+    }
+}
+
+
+.plurid-button-icon {
+    // border-radius: 50%;
+    height: 25px;
+    margin: 0 5px;
+    padding: 5px;
+    // width: 25px;
+    width: 30px;
+}
+
+.plurid-button-icon svg {
+    display: flex;
+    justify-content: center;
+    height: 15px;
+    text-align: center;
+    padding: 1px;
+    user-select: none;
+    width: 15px;
+}
+
+.plurid-button-icon-svg {
+    @include themify($themes) {
+        fill: themed('textColor');
+    }
+}
+
+
+// plurid-button
+// plurid-button:hover
+// plurid-button-icon
+// plurid-button-icon:hover
+// plurid-input-range
+// plurid-input-text
+// plurid-input-checkmark

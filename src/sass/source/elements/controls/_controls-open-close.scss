@@ -1,24 +1,17 @@
-// OPEN-CLOSE
 .plurid-controls-open-close {
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
+    align-items: center;
     bottom: 2px;
+    display: flex;
+    height: 5px;
+    justify-content: center;
     left: 0;
+    position: absolute;
     right: 0;
     text-align: center;
 }
 
 .plurid-controls-open-close-character {
-    user-select: none;
-    font-size: 6px;
-    margin: 0 auto;
-    width: 10px;
-    cursor: pointer;
-}
-
-.plurid-controls-open-close-character:hover {
-    background-color: hsl(0, 0%, 70%);
-    border-radius: 24px;
-    color: black;
+    font-size: 4px;
+    height: 5px;
+    width: 100px;
 }

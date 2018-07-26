@@ -1,74 +1,11 @@
-.plurid-controls-button {
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    outline: none;
-    margin: 0 5px;
-    user-select: none;
-}
-
-.plurid-controls-button svg {
-    width: 30px;
-    height: 30px;
-    padding: 7px;
-}
-
-.plurid-controls-buttons-svg {
-    @include themify($themes) {
-        fill: themed('textColor');
-    }
-}
-
-.plurid-sheet-control-active,
-.plurid-controls-button:hover {
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenuButtonHover');
-        color: themed('textColorInverted');
-    }
-    border-radius: 15px;
-
-    .plurid-controls-buttons-svg {
-        @include themify($themes) {
-            fill: themed('textColorInverted');
-        }
-    }
-}
-
-
-.plurid-sheet-controls-disabled,
-.plurid-sheet-controls-disabled:hover {
-    cursor: not-allowed;
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenu');
-        color: themed('textColorTertiary');
-    }
-
-    .plurid-controls-buttons-svg {
-        @include themify($themes) {
-            fill: themed('textColorTertiary');
-        }
-    }
-}
-
-
 .plurid-controls-cancel:hover,
 .plurid-controls-search:hover {
     background-color: transparent !important;
     border-radius: 0px !important;
 
-    .plurid-controls-buttons-svg {
+    .plurid-button-icon-svg {
         @include themify($themes) {
             fill: themed('textColorSecondary');
         }
-    }
-}
-
-
-.plurid-controls-buttons-svg {
-    @include themify($themes) {
-        fill: themed('textColor');
     }
 }
