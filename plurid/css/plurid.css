@@ -112,6 +112,108 @@ plurid-link:hover {
 #plurid-root-3 {
   transform: translateX(-1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(60deg) rotateZ(0deg) scale(1); }
 
+.plurid-button {
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  font-size: 9px;
+  justify-content: center;
+  outline: none;
+  text-align: center;
+  user-select: none; }
+
+.plurid-button-active,
+.plurid-button:hover {
+  border-radius: 15px; }
+  .plurid-theme-night .plurid-button-active, .plurid-theme-night
+  .plurid-button:hover {
+    background-color: #cbcccd;
+    color: black; }
+  .plurid-theme-dusk .plurid-button-active, .plurid-theme-dusk
+  .plurid-button:hover {
+    background-color: #b1b3b4;
+    color: #111212; }
+  .plurid-theme-dawn .plurid-button-active, .plurid-theme-dawn
+  .plurid-button:hover {
+    background-color: #4b4d4e;
+    color: #cccccc; }
+  .plurid-theme-light .plurid-button-active, .plurid-theme-light
+  .plurid-button:hover {
+    background-color: #cbcccd;
+    color: white; }
+  .plurid-theme-night .plurid-button-active .plurid-button-icon-svg, .plurid-theme-night
+  .plurid-button:hover .plurid-button-icon-svg {
+    fill: black; }
+  .plurid-theme-dusk .plurid-button-active .plurid-button-icon-svg, .plurid-theme-dusk
+  .plurid-button:hover .plurid-button-icon-svg {
+    fill: #111212; }
+  .plurid-theme-dawn .plurid-button-active .plurid-button-icon-svg, .plurid-theme-dawn
+  .plurid-button:hover .plurid-button-icon-svg {
+    fill: #cccccc; }
+  .plurid-theme-light .plurid-button-active .plurid-button-icon-svg, .plurid-theme-light
+  .plurid-button:hover .plurid-button-icon-svg {
+    fill: white; }
+
+.plurid-button-disabled,
+.plurid-button-disabled:hover {
+  cursor: not-allowed; }
+  .plurid-theme-night .plurid-button-disabled, .plurid-theme-night
+  .plurid-button-disabled:hover {
+    background-color: #0a0a0a;
+    color: #b1b3b4; }
+  .plurid-theme-dusk .plurid-button-disabled, .plurid-theme-dusk
+  .plurid-button-disabled:hover {
+    background-color: #252727;
+    color: #3e4041; }
+  .plurid-theme-dawn .plurid-button-disabled, .plurid-theme-dawn
+  .plurid-button-disabled:hover {
+    background-color: #b3b3b3;
+    color: #7d8082; }
+  .plurid-theme-light .plurid-button-disabled, .plurid-theme-light
+  .plurid-button-disabled:hover {
+    background-color: #f2f2f2;
+    color: #cbcccd; }
+  .plurid-theme-night .plurid-button-disabled .plurid-button-icon-svg, .plurid-theme-night
+  .plurid-button-disabled:hover .plurid-button-icon-svg {
+    fill: #b1b3b4; }
+  .plurid-theme-dusk .plurid-button-disabled .plurid-button-icon-svg, .plurid-theme-dusk
+  .plurid-button-disabled:hover .plurid-button-icon-svg {
+    fill: #3e4041; }
+  .plurid-theme-dawn .plurid-button-disabled .plurid-button-icon-svg, .plurid-theme-dawn
+  .plurid-button-disabled:hover .plurid-button-icon-svg {
+    fill: #7d8082; }
+  .plurid-theme-light .plurid-button-disabled .plurid-button-icon-svg, .plurid-theme-light
+  .plurid-button-disabled:hover .plurid-button-icon-svg {
+    fill: #cbcccd; }
+
+.plurid-button-icon {
+  height: 25px;
+  margin: 0 5px;
+  padding: 5px;
+  width: 30px; }
+
+.plurid-button-icon svg {
+  display: flex;
+  justify-content: center;
+  height: 15px;
+  text-align: center;
+  padding: 1px;
+  user-select: none;
+  width: 15px; }
+
+.plurid-theme-night .plurid-button-icon-svg {
+  fill: white; }
+
+.plurid-theme-dusk .plurid-button-icon-svg {
+  fill: #e5e6e6; }
+
+.plurid-theme-dawn .plurid-button-icon-svg {
+  fill: #191a1a; }
+
+.plurid-theme-light .plurid-button-icon-svg {
+  fill: black; }
+
 plurid-branch {
   position: absolute; }
 
@@ -247,7 +349,7 @@ plurid-controls {
   align-items: center;
   display: flex;
   font-family: "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  height: 60px;
+  height: 50px;
   position: absolute;
   top: 0;
   left: 0;
@@ -281,18 +383,6 @@ plurid-controls {
     -ms-box-shadow: 0 4px 2px -2px #d8d9da;
     -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
     box-shadow: 0 4px 2px -2px #d8d9da; }
-
-.plurid-theme-night plurid-controls plurid-link {
-  color: #b1b3b4; }
-
-.plurid-theme-dusk plurid-controls plurid-link {
-  color: #979a9b; }
-
-.plurid-theme-dawn plurid-controls plurid-link {
-  color: #7d8082; }
-
-.plurid-theme-light plurid-controls plurid-link {
-  color: #7d8082; }
 
 .plurid-container-controls-content {
   align-items: center;
@@ -525,126 +615,22 @@ plurid-controls {
   display: grid;
   grid-template-columns: 60% 40%; }
 
-.plurid-controls-button {
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  outline: none;
-  margin: 0 5px;
-  user-select: none; }
-
-.plurid-controls-button svg {
-  width: 30px;
-  height: 30px;
-  padding: 7px; }
-
-.plurid-theme-night .plurid-controls-buttons-svg {
-  fill: white; }
-
-.plurid-theme-dusk .plurid-controls-buttons-svg {
-  fill: #e5e6e6; }
-
-.plurid-theme-dawn .plurid-controls-buttons-svg {
-  fill: #191a1a; }
-
-.plurid-theme-light .plurid-controls-buttons-svg {
-  fill: black; }
-
-.plurid-sheet-control-active,
-.plurid-controls-button:hover {
-  border-radius: 15px; }
-  .plurid-theme-night .plurid-sheet-control-active, .plurid-theme-night
-  .plurid-controls-button:hover {
-    background-color: #cbcccd;
-    color: black; }
-  .plurid-theme-dusk .plurid-sheet-control-active, .plurid-theme-dusk
-  .plurid-controls-button:hover {
-    background-color: #b1b3b4;
-    color: #111212; }
-  .plurid-theme-dawn .plurid-sheet-control-active, .plurid-theme-dawn
-  .plurid-controls-button:hover {
-    background-color: #4b4d4e;
-    color: #cccccc; }
-  .plurid-theme-light .plurid-sheet-control-active, .plurid-theme-light
-  .plurid-controls-button:hover {
-    background-color: #cbcccd;
-    color: white; }
-  .plurid-theme-night .plurid-sheet-control-active .plurid-controls-buttons-svg, .plurid-theme-night
-  .plurid-controls-button:hover .plurid-controls-buttons-svg {
-    fill: black; }
-  .plurid-theme-dusk .plurid-sheet-control-active .plurid-controls-buttons-svg, .plurid-theme-dusk
-  .plurid-controls-button:hover .plurid-controls-buttons-svg {
-    fill: #111212; }
-  .plurid-theme-dawn .plurid-sheet-control-active .plurid-controls-buttons-svg, .plurid-theme-dawn
-  .plurid-controls-button:hover .plurid-controls-buttons-svg {
-    fill: #cccccc; }
-  .plurid-theme-light .plurid-sheet-control-active .plurid-controls-buttons-svg, .plurid-theme-light
-  .plurid-controls-button:hover .plurid-controls-buttons-svg {
-    fill: white; }
-
-.plurid-sheet-controls-disabled,
-.plurid-sheet-controls-disabled:hover {
-  cursor: not-allowed; }
-  .plurid-theme-night .plurid-sheet-controls-disabled, .plurid-theme-night
-  .plurid-sheet-controls-disabled:hover {
-    background-color: #0a0a0a;
-    color: #b1b3b4; }
-  .plurid-theme-dusk .plurid-sheet-controls-disabled, .plurid-theme-dusk
-  .plurid-sheet-controls-disabled:hover {
-    background-color: #252727;
-    color: #3e4041; }
-  .plurid-theme-dawn .plurid-sheet-controls-disabled, .plurid-theme-dawn
-  .plurid-sheet-controls-disabled:hover {
-    background-color: #b3b3b3;
-    color: #7d8082; }
-  .plurid-theme-light .plurid-sheet-controls-disabled, .plurid-theme-light
-  .plurid-sheet-controls-disabled:hover {
-    background-color: #f2f2f2;
-    color: #cbcccd; }
-  .plurid-theme-night .plurid-sheet-controls-disabled .plurid-controls-buttons-svg, .plurid-theme-night
-  .plurid-sheet-controls-disabled:hover .plurid-controls-buttons-svg {
-    fill: #b1b3b4; }
-  .plurid-theme-dusk .plurid-sheet-controls-disabled .plurid-controls-buttons-svg, .plurid-theme-dusk
-  .plurid-sheet-controls-disabled:hover .plurid-controls-buttons-svg {
-    fill: #3e4041; }
-  .plurid-theme-dawn .plurid-sheet-controls-disabled .plurid-controls-buttons-svg, .plurid-theme-dawn
-  .plurid-sheet-controls-disabled:hover .plurid-controls-buttons-svg {
-    fill: #7d8082; }
-  .plurid-theme-light .plurid-sheet-controls-disabled .plurid-controls-buttons-svg, .plurid-theme-light
-  .plurid-sheet-controls-disabled:hover .plurid-controls-buttons-svg {
-    fill: #cbcccd; }
-
 .plurid-controls-cancel:hover,
 .plurid-controls-search:hover {
   background-color: transparent !important;
   border-radius: 0px !important; }
-  .plurid-theme-night .plurid-controls-cancel:hover .plurid-controls-buttons-svg, .plurid-theme-night
-  .plurid-controls-search:hover .plurid-controls-buttons-svg {
+  .plurid-theme-night .plurid-controls-cancel:hover .plurid-button-icon-svg, .plurid-theme-night
+  .plurid-controls-search:hover .plurid-button-icon-svg {
     fill: #b1b3b4; }
-  .plurid-theme-dusk .plurid-controls-cancel:hover .plurid-controls-buttons-svg, .plurid-theme-dusk
-  .plurid-controls-search:hover .plurid-controls-buttons-svg {
+  .plurid-theme-dusk .plurid-controls-cancel:hover .plurid-button-icon-svg, .plurid-theme-dusk
+  .plurid-controls-search:hover .plurid-button-icon-svg {
     fill: #cbcccd; }
-  .plurid-theme-dawn .plurid-controls-cancel:hover .plurid-controls-buttons-svg, .plurid-theme-dawn
-  .plurid-controls-search:hover .plurid-controls-buttons-svg {
+  .plurid-theme-dawn .plurid-controls-cancel:hover .plurid-button-icon-svg, .plurid-theme-dawn
+  .plurid-controls-search:hover .plurid-button-icon-svg {
     fill: #323334; }
-  .plurid-theme-light .plurid-controls-cancel:hover .plurid-controls-buttons-svg, .plurid-theme-light
-  .plurid-controls-search:hover .plurid-controls-buttons-svg {
+  .plurid-theme-light .plurid-controls-cancel:hover .plurid-button-icon-svg, .plurid-theme-light
+  .plurid-controls-search:hover .plurid-button-icon-svg {
     fill: #646768; }
-
-.plurid-theme-night .plurid-controls-buttons-svg {
-  fill: white; }
-
-.plurid-theme-dusk .plurid-controls-buttons-svg {
-  fill: #e5e6e6; }
-
-.plurid-theme-dawn .plurid-controls-buttons-svg {
-  fill: #191a1a; }
-
-.plurid-theme-light .plurid-controls-buttons-svg {
-  fill: black; }
 
 .plurid-controls-extend {
   cursor: -webkit-grab;
@@ -828,25 +814,20 @@ plurid-controls {
   align-self: center; }
 
 .plurid-controls-open-close {
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
+  align-items: center;
   bottom: 2px;
+  display: flex;
+  height: 5px;
+  justify-content: center;
   left: 0;
+  position: absolute;
   right: 0;
   text-align: center; }
 
 .plurid-controls-open-close-character {
-  user-select: none;
-  font-size: 6px;
-  margin: 0 auto;
-  width: 10px;
-  cursor: pointer; }
-
-.plurid-controls-open-close-character:hover {
-  background-color: #b3b3b3;
-  border-radius: 24px;
-  color: black; }
+  font-size: 4px;
+  height: 5px;
+  width: 100px; }
 
 .plurid-controls-url {
   width: 60%; }
@@ -854,7 +835,7 @@ plurid-controls {
 .plurid-controls-url-container input {
   border: none;
   font-size: 14px;
-  height: 34px;
+  height: 32px;
   margin-right: -34px;
   margin-left: -34px;
   padding-right: 38px;
@@ -966,7 +947,6 @@ plurid-options {
   width: 900px;
   margin: 0 auto;
   border-radius: 0px;
-  text-align: center;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;

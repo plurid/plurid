@@ -40,62 +40,67 @@ export function displayOptions(element) {
 export function contentOptions() {
     let content = `<div class="plurid-container-options-content">
                     <div class="plurid-container-options-group">
-                        <span class="plurid-container-button plurid-container-rotate-left">&#x25c0&#xFE0E;</span>
-                        <span class="plurid-container-button plurid-container-rotate-up">&#x25B2;</span>
+                        <div class="plurid-button plurid-button-icon plurid-container-rotate-left">
+                            &#x25c0&#xFE0E;
+                        </div>
+
+                        <span class="plurid-button plurid-button-icon plurid-container-rotate-up">&#x25B2;</span>
                         <p>Rotation</p>
-                        <span class="plurid-container-button plurid-container-rotate-down">&#x25BC;</span>
-                        <span class="plurid-container-button plurid-container-rotate-right">&#x25b6&#xFE0E;</span>
+                        <span class="plurid-button plurid-button-icon plurid-container-rotate-down">&#x25BC;</span>
+                        <span class="plurid-button plurid-button-icon plurid-container-rotate-right">&#x25b6&#xFE0E;</span>
                     </div>
 
                     <div class="plurid-container-options-group">
-                        <span class="plurid-container-button plurid-container-translate-left">&#x25c0&#xFE0E;</span>
-                        <span class="plurid-container-button plurid-container-translate-up">&#x25B2;</span>
+                        <span class="plurid-button plurid-button-icon plurid-container-translate-left">&#x25c0&#xFE0E;</span>
+                        <span class="plurid-button plurid-button-icon plurid-container-translate-up">&#x25B2;</span>
                         <p>Translation</p>
-                        <span class="plurid-container-button plurid-container-translate-down">&#x25BC;</span>
-                        <span class="plurid-container-button plurid-container-translate-right">&#x25b6&#xFE0E;</span>
+                        <span class="plurid-button plurid-button-icon plurid-container-translate-down">&#x25BC;</span>
+                        <span class="plurid-button plurid-button-icon plurid-container-translate-right">&#x25b6&#xFE0E;</span>
                     </div>
 
                     <div class="plurid-container-options-group">
-                        <span class="plurid-container-button plurid-container-scale-up">&#x25B2;</span>
+                        <span class="plurid-button plurid-button-icon  plurid-container-scale-up">&#x25B2;</span>
                         <p>Scale</p>
-                        <span class="plurid-container-button plurid-container-scale-down">&#x25BC;</span>
+                        <span class="plurid-button plurid-button-icon  plurid-container-scale-down">&#x25BC;</span>
                     </div>
 
                     <div class="plurid-container-options-group">
-                        <span class="plurid-container-button plurid-container-button-center-everything">
+                        <span class="plurid-button plurid-button-icon plurid-container-button-center-everything">
                             &#8281;
                         </span>
                     </div>
 
                     <div class="plurid-container-options-group">
-                        <span class="plurid-container-button plurid-container-button-add-root">
+                        <span class="plurid-button plurid-button-icon plurid-container-button-add-root">
                             &#10746;
                         </span>
                     </div>
 
                     <div class="plurid-container-options-group">
-                        <span class="plurid-container-button plurid-container-button-gyroscope">
+                        <span class="plurid-button plurid-button-icon plurid-container-button-gyroscope">
                             G
                         </span>
                     </div>
 
                     <div class="plurid-container-options-group">
-                        <span class="plurid-container-button plurid-container-button-more">
+                        <span class="plurid-button plurid-button-icon plurid-container-button-more">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 622.51 130.1"><defs></defs><title>More</title><g id="Layer_2" data-name="Layer 2"><g id="More"><rect class="plurid-controls-buttons-svg" x="20.2" y="20.2" width="89.69" height="89.69"/><path class="plurid-controls-buttons-svg" d="M130.1,130.1H0V0H130.1ZM40.4,89.69H89.69V40.4H40.4Z"/><rect class="plurid-controls-buttons-svg" x="266.21" y="20.2" width="89.69" height="89.69"/><path class="plurid-controls-buttons-svg" d="M376.11,130.1H246V0h130.1Zm-89.7-40.41H335.7V40.4H286.41Z"/><rect class="plurid-controls-buttons-svg" x="512.62" y="20.2" width="89.69" height="89.69"/><path class="plurid-controls-buttons-svg" d="M622.51,130.1H492.42V0H622.51ZM532.82,89.69h49.29V40.4H532.82Z"/></g></g></svg>
                         </span>
                     </div>
 
                     <div class="plurid-container-options-more">
                         <div class="plurid-container-options-more-group-transforms">
-                            <!-- <label class="plurid-container-options-group-more plurid-controls-more-checkmark-container">
-                                <span class="plurid-controls-more-container-text">
-                                    Lock Rotation X
-                                </span>
-                                <span class="plurid-controls-more-container-shortcut">
-                                    <input type="checkbox">
-                                    <span class="plurid-controls-more-checkmark"></span>
-                                </span>
-                            </label> -->
+                            <div class="plurid-button">
+                                <!-- <label class="plurid-container-options-group-more plurid-controls-more-checkmark-container">
+                                    <span class="plurid-controls-more-container-text">
+                                        Lock Rotation X
+                                    </span>
+                                    <span class="plurid-controls-more-container-shortcut">
+                                        <input type="checkbox">
+                                        <span class="plurid-controls-more-checkmark"></span>
+                                    </span>
+                                </label> -->
+                            </div>
 
                             <div class="plurid-container-options-group-more plurid-container-more-lock-rotation-x">
                                 <p>Lock Rotation X</p>
