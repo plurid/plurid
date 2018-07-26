@@ -14,7 +14,8 @@ $light_primary-color-inverted: hsl(200, 2%, 0%);
 $light_secondary-color-inverted: hsl(200, 2%, 10%);
 $light_tertiary-color-inverted: hsl(200, 2%, 20%);
 $light_quaternary-color-inverted: hsl(200, 2%, 30%);
-$light_quinary-color-inverted: hsl(200, 2%, 50%);
+$light_quinary-color-inverted: hsl(200, 2%, 40%);
+$light_senary-color-inverted: hsl(200, 2%, 50%);
 
 
 // CONTAINER
@@ -28,7 +29,8 @@ $light_text__color: $light_primary-color-inverted;
 $light_text-secondary__color: $light_quinary-color-inverted;
 $light_text-tertiary__color: $light_quinary-color;
 $light_text-inverted__color: $light_primary-color;
-$light_plurid-link__color: $light_secondary-color-inverted;
+$light_plurid-link__color: $light_senary-color-inverted;
+$light_plurid-link-hover__color: $light_text__color;
 
 
 // MENU UIs

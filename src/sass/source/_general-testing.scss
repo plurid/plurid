@@ -1,29 +1,11 @@
-p, h1 {
-    @include themify($themes) {
-        color: themed('textColor');
-    }
-    text-align: justify;
-}
-
-a {
-    @include themify($themes) {
-        color: lighten(themed('textColor'), 40%);
-    }
-}
-
-.content {
-    background-color: hsl(0, 0%, 40%);
-    padding: 50px;
-    width: 800px;
-    margin: 0 auto;
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
-// .grid {
-//     display: inline-grid;
-//     grid-template-columns: 1fr 1fr 1fr;
+// html, body {
+//     font-family: $general_sans-serif__font-family;
 // }
+
+.grid {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+}
 
 .grid p {
     margin: 30px;

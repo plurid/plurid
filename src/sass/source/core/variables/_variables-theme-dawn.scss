@@ -13,6 +13,8 @@ $dawn_quaternary-color: hsl(200, 2%, 50%);
 $dawn_primary-color-inverted: hsl(200, 2%, 10%);
 $dawn_secondary-color-inverted: hsl(200, 2%, 20%);
 $dawn_tertiary-color-inverted: hsl(200, 2%, 30%);
+$dawn_quaternary-color-inverted: hsl(200, 2%, 40%);
+$dawn_quinary-color-inverted: hsl(200, 2%, 50%);
 
 
 // CONTAINER
@@ -26,7 +28,8 @@ $dawn_text__color: $dawn_primary-color-inverted;
 $dawn_text-secondary__color: $dawn_secondary-color-inverted;
 $dawn_text-tertiary__color: $dawn_quaternary-color;
 $dawn_text-inverted__color: $dawn_primary-color;
-$dawn_plurid-link__color: $dawn_secondary-color-inverted;
+$dawn_plurid-link__color: $dawn_quinary-color-inverted;
+$dawn_plurid-link-hover__color: $dawn_text__color;
 
 
 // MENU UIs

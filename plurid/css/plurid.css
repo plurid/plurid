@@ -45,36 +45,53 @@ html {
 :unresolved {
   display: none; }
 
-p, h1 {
-  text-align: justify; }
-  .plurid-theme-night p, .plurid-theme-night h1 {
-    color: white; }
-  .plurid-theme-dusk p, .plurid-theme-dusk h1 {
-    color: #e5e6e6; }
-  .plurid-theme-dawn p, .plurid-theme-dawn h1 {
-    color: #191a1a; }
-  .plurid-theme-light p, .plurid-theme-light h1 {
-    color: black; }
-
-.plurid-theme-night a {
+.plurid-theme-night div, .plurid-theme-night p, .plurid-theme-night h1, .plurid-theme-night h2, .plurid-theme-night h3, .plurid-theme-night h4, .plurid-theme-night h5, .plurid-theme-night h6, .plurid-theme-night span {
   color: white; }
 
-.plurid-theme-dusk a {
+.plurid-theme-dusk div, .plurid-theme-dusk p, .plurid-theme-dusk h1, .plurid-theme-dusk h2, .plurid-theme-dusk h3, .plurid-theme-dusk h4, .plurid-theme-dusk h5, .plurid-theme-dusk h6, .plurid-theme-dusk span {
+  color: #e5e6e6; }
+
+.plurid-theme-dawn div, .plurid-theme-dawn p, .plurid-theme-dawn h1, .plurid-theme-dawn h2, .plurid-theme-dawn h3, .plurid-theme-dawn h4, .plurid-theme-dawn h5, .plurid-theme-dawn h6, .plurid-theme-dawn span {
+  color: #191a1a; }
+
+.plurid-theme-light div, .plurid-theme-light p, .plurid-theme-light h1, .plurid-theme-light h2, .plurid-theme-light h3, .plurid-theme-light h4, .plurid-theme-light h5, .plurid-theme-light h6, .plurid-theme-light span {
+  color: black; }
+
+a,
+plurid-link {
+  text-decoration: none; }
+  .plurid-theme-night a, .plurid-theme-night
+  plurid-link {
+    color: #b1b3b4; }
+  .plurid-theme-dusk a, .plurid-theme-dusk
+  plurid-link {
+    color: #979a9b; }
+  .plurid-theme-dawn a, .plurid-theme-dawn
+  plurid-link {
+    color: #7d8082; }
+  .plurid-theme-light a, .plurid-theme-light
+  plurid-link {
+    color: #7d8082; }
+
+.plurid-theme-night a:hover, .plurid-theme-night
+plurid-link:hover {
   color: white; }
 
-.plurid-theme-dawn a {
-  color: #7d8082; }
+.plurid-theme-dusk a:hover, .plurid-theme-dusk
+plurid-link:hover {
+  color: #e5e6e6; }
 
-.plurid-theme-light a {
-  color: #666666; }
+.plurid-theme-dawn a:hover, .plurid-theme-dawn
+plurid-link:hover {
+  color: #191a1a; }
 
-.content {
-  background-color: #666666;
-  padding: 50px;
-  width: 800px;
-  margin: 0 auto;
-  margin-top: 50px;
-  margin-bottom: 50px; }
+.plurid-theme-light a:hover, .plurid-theme-light
+plurid-link:hover {
+  color: black; }
+
+.grid {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr; }
 
 .grid p {
   margin: 30px; }
@@ -266,16 +283,16 @@ plurid-controls {
     box-shadow: 0 4px 2px -2px #d8d9da; }
 
 .plurid-theme-night plurid-controls plurid-link {
-  color: #e5e6e6; }
+  color: #b1b3b4; }
 
 .plurid-theme-dusk plurid-controls plurid-link {
   color: #979a9b; }
 
 .plurid-theme-dawn plurid-controls plurid-link {
-  color: #323334; }
+  color: #7d8082; }
 
 .plurid-theme-light plurid-controls plurid-link {
-  color: #191a1a; }
+  color: #7d8082; }
 
 .plurid-container-controls-content {
   align-items: center;
@@ -609,13 +626,13 @@ plurid-controls {
     fill: #b1b3b4; }
   .plurid-theme-dusk .plurid-controls-cancel:hover .plurid-controls-buttons-svg, .plurid-theme-dusk
   .plurid-controls-search:hover .plurid-controls-buttons-svg {
-    fill: #979a9b; }
+    fill: #cbcccd; }
   .plurid-theme-dawn .plurid-controls-cancel:hover .plurid-controls-buttons-svg, .plurid-theme-dawn
   .plurid-controls-search:hover .plurid-controls-buttons-svg {
     fill: #323334; }
   .plurid-theme-light .plurid-controls-cancel:hover .plurid-controls-buttons-svg, .plurid-theme-light
   .plurid-controls-search:hover .plurid-controls-buttons-svg {
-    fill: #7d8082; }
+    fill: #646768; }
 
 .plurid-theme-night .plurid-controls-buttons-svg {
   fill: white; }
@@ -771,13 +788,13 @@ plurid-controls {
     color: #b1b3b4; }
   .plurid-theme-dusk .plurid-controls-more-container input[type="text"] {
     background-color: #1e1f1f;
-    color: #979a9b; }
+    color: #cbcccd; }
   .plurid-theme-dawn .plurid-controls-more-container input[type="text"] {
     background-color: #ababab;
     color: #323334; }
   .plurid-theme-light .plurid-controls-more-container input[type="text"] {
     background-color: #ebebeb;
-    color: #7d8082; }
+    color: #646768; }
 
 .plurid-controls-more-container input[type="text"]:focus {
   outline: none;
@@ -848,13 +865,13 @@ plurid-controls {
     color: #b1b3b4; }
   .plurid-theme-dusk .plurid-controls-url-container input {
     background-color: #1e1f1f;
-    color: #979a9b; }
+    color: #cbcccd; }
   .plurid-theme-dawn .plurid-controls-url-container input {
     background-color: #ababab;
     color: #323334; }
   .plurid-theme-light .plurid-controls-url-container input {
     background-color: #ebebeb;
-    color: #7d8082; }
+    color: #646768; }
 
 .plurid-theme-night .plurid-controls-url-container input:focus {
   color: white; }
@@ -900,13 +917,13 @@ plurid-controls {
   color: #b1b3b4; }
 
 .plurid-theme-dusk .plurid-controls-url input::placeholder {
-  color: #979a9b; }
+  color: #cbcccd; }
 
 .plurid-theme-dawn .plurid-controls-url input::placeholder {
   color: #323334; }
 
 .plurid-theme-light .plurid-controls-url input::placeholder {
-  color: #7d8082; }
+  color: #646768; }
 
 .plurid-controls-url-container {
   display: inline-flex;
