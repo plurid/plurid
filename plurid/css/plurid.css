@@ -115,6 +115,7 @@ plurid-link:hover {
 .plurid-button {
   align-items: center;
   background-color: transparent;
+  border-radius: 15px;
   cursor: pointer;
   display: flex;
   font-size: 9px;
@@ -123,37 +124,69 @@ plurid-link:hover {
   text-align: center;
   user-select: none; }
 
-.plurid-button-active,
+.plurid-theme-night .plurid-button-active, .plurid-theme-night
 .plurid-button:hover {
-  border-radius: 15px; }
-  .plurid-theme-night .plurid-button-active, .plurid-theme-night
-  .plurid-button:hover {
-    background-color: #cbcccd;
-    color: black; }
-  .plurid-theme-dusk .plurid-button-active, .plurid-theme-dusk
-  .plurid-button:hover {
-    background-color: #b1b3b4;
-    color: #111212; }
-  .plurid-theme-dawn .plurid-button-active, .plurid-theme-dawn
-  .plurid-button:hover {
-    background-color: #4b4d4e;
-    color: #cccccc; }
-  .plurid-theme-light .plurid-button-active, .plurid-theme-light
-  .plurid-button:hover {
-    background-color: #cbcccd;
-    color: white; }
-  .plurid-theme-night .plurid-button-active .plurid-button-icon-svg, .plurid-theme-night
-  .plurid-button:hover .plurid-button-icon-svg {
-    fill: black; }
-  .plurid-theme-dusk .plurid-button-active .plurid-button-icon-svg, .plurid-theme-dusk
-  .plurid-button:hover .plurid-button-icon-svg {
-    fill: #111212; }
-  .plurid-theme-dawn .plurid-button-active .plurid-button-icon-svg, .plurid-theme-dawn
-  .plurid-button:hover .plurid-button-icon-svg {
-    fill: #cccccc; }
-  .plurid-theme-light .plurid-button-active .plurid-button-icon-svg, .plurid-theme-light
-  .plurid-button:hover .plurid-button-icon-svg {
-    fill: white; }
+  background-color: #cbcccd;
+  color: black; }
+
+.plurid-theme-dusk .plurid-button-active, .plurid-theme-dusk
+.plurid-button:hover {
+  background-color: #b1b3b4;
+  color: #111212; }
+
+.plurid-theme-dawn .plurid-button-active, .plurid-theme-dawn
+.plurid-button:hover {
+  background-color: #4b4d4e;
+  color: #cccccc; }
+
+.plurid-theme-light .plurid-button-active, .plurid-theme-light
+.plurid-button:hover {
+  background-color: #cbcccd;
+  color: white; }
+
+.plurid-theme-night .plurid-button-active .plurid-button-icon-svg, .plurid-theme-night
+.plurid-button:hover .plurid-button-icon-svg {
+  fill: black; }
+
+.plurid-theme-dusk .plurid-button-active .plurid-button-icon-svg, .plurid-theme-dusk
+.plurid-button:hover .plurid-button-icon-svg {
+  fill: #111212; }
+
+.plurid-theme-dawn .plurid-button-active .plurid-button-icon-svg, .plurid-theme-dawn
+.plurid-button:hover .plurid-button-icon-svg {
+  fill: #cccccc; }
+
+.plurid-theme-light .plurid-button-active .plurid-button-icon-svg, .plurid-theme-light
+.plurid-button:hover .plurid-button-icon-svg {
+  fill: white; }
+
+.plurid-theme-night .plurid-button-active:not(.plurid-button-disabled), .plurid-theme-night
+.plurid-button:hover:not(.plurid-button-disabled) {
+  -moz-box-shadow: inset 0px 0px 5px 0px white;
+  -ms-box-shadow: inset 0px 0px 5px 0px white;
+  -webkit-box-shadow: inset 0px 0px 5px 0px white;
+  box-shadow: inset 0px 0px 5px 0px white; }
+
+.plurid-theme-dusk .plurid-button-active:not(.plurid-button-disabled), .plurid-theme-dusk
+.plurid-button:hover:not(.plurid-button-disabled) {
+  -moz-box-shadow: inset 0px 0px 5px 0px #3e4041;
+  -ms-box-shadow: inset 0px 0px 5px 0px #3e4041;
+  -webkit-box-shadow: inset 0px 0px 5px 0px #3e4041;
+  box-shadow: inset 0px 0px 5px 0px #3e4041; }
+
+.plurid-theme-dawn .plurid-button-active:not(.plurid-button-disabled), .plurid-theme-dawn
+.plurid-button:hover:not(.plurid-button-disabled) {
+  -moz-box-shadow: inset 0px 0px 5px 0px #191a1a;
+  -ms-box-shadow: inset 0px 0px 5px 0px #191a1a;
+  -webkit-box-shadow: inset 0px 0px 5px 0px #191a1a;
+  box-shadow: inset 0px 0px 5px 0px #191a1a; }
+
+.plurid-theme-light .plurid-button-active:not(.plurid-button-disabled), .plurid-theme-light
+.plurid-button:hover:not(.plurid-button-disabled) {
+  -moz-box-shadow: inset 0px 0px 5px 0px black;
+  -ms-box-shadow: inset 0px 0px 5px 0px black;
+  -webkit-box-shadow: inset 0px 0px 5px 0px black;
+  box-shadow: inset 0px 0px 5px 0px black; }
 
 .plurid-button-disabled,
 .plurid-button-disabled:hover {
@@ -191,6 +224,7 @@ plurid-link:hover {
   height: 25px;
   margin: 0 5px;
   padding: 5px;
+  line-height: 1;
   width: 30px; }
 
 .plurid-button-icon svg {
@@ -358,31 +392,31 @@ plurid-controls {
   .plurid-theme-night plurid-controls {
     color: white;
     background-color: #0a0a0a;
-    -moz-box-shadow: 0 4px 2px -2px #141515;
-    -ms-box-shadow: 0 4px 2px -2px #141515;
-    -webkit-box-shadow: 0 4px 2px -2px #141515;
-    box-shadow: 0 4px 2px -2px #141515; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #141515;
+    -ms-box-shadow: inset 0px -15px 10px -13px #141515;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #141515;
+    box-shadow: inset 0px -15px 10px -13px #141515; }
   .plurid-theme-dusk plurid-controls {
     color: #e5e6e6;
     background-color: #252727;
-    -moz-box-shadow: 0 4px 2px -2px #3e4041;
-    -ms-box-shadow: 0 4px 2px -2px #3e4041;
-    -webkit-box-shadow: 0 4px 2px -2px #3e4041;
-    box-shadow: 0 4px 2px -2px #3e4041; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -ms-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    box-shadow: inset 0px -15px 10px -13px #3e4041; }
   .plurid-theme-dawn plurid-controls {
     color: #191a1a;
     background-color: #b3b3b3;
-    -moz-box-shadow: 0 4px 2px -2px #7d8082;
-    -ms-box-shadow: 0 4px 2px -2px #7d8082;
-    -webkit-box-shadow: 0 4px 2px -2px #7d8082;
-    box-shadow: 0 4px 2px -2px #7d8082; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -ms-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    box-shadow: inset 0px -15px 10px -13px #7d8082; }
   .plurid-theme-light plurid-controls {
     color: black;
     background-color: #f2f2f2;
-    -moz-box-shadow: 0 4px 2px -2px #d8d9da;
-    -ms-box-shadow: 0 4px 2px -2px #d8d9da;
-    -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
-    box-shadow: 0 4px 2px -2px #d8d9da; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -ms-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    box-shadow: inset 0px -15px 10px -13px #d8d9da; }
 
 .plurid-container-controls-content {
   align-items: center;
@@ -501,31 +535,31 @@ plurid-controls {
   .plurid-theme-night .plurid-controls-sheet-history-container {
     background-color: #cbcccd;
     color: black;
-    -moz-box-shadow: 0 4px 2px -2px #141515;
-    -ms-box-shadow: 0 4px 2px -2px #141515;
-    -webkit-box-shadow: 0 4px 2px -2px #141515;
-    box-shadow: 0 4px 2px -2px #141515; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #141515;
+    -ms-box-shadow: inset 0px -15px 10px -13px #141515;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #141515;
+    box-shadow: inset 0px -15px 10px -13px #141515; }
   .plurid-theme-dusk .plurid-controls-sheet-history-container {
     background-color: #b1b3b4;
     color: #111212;
-    -moz-box-shadow: 0 4px 2px -2px #3e4041;
-    -ms-box-shadow: 0 4px 2px -2px #3e4041;
-    -webkit-box-shadow: 0 4px 2px -2px #3e4041;
-    box-shadow: 0 4px 2px -2px #3e4041; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -ms-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    box-shadow: inset 0px -15px 10px -13px #3e4041; }
   .plurid-theme-dawn .plurid-controls-sheet-history-container {
     background-color: #4b4d4e;
     color: #cccccc;
-    -moz-box-shadow: 0 4px 2px -2px #7d8082;
-    -ms-box-shadow: 0 4px 2px -2px #7d8082;
-    -webkit-box-shadow: 0 4px 2px -2px #7d8082;
-    box-shadow: 0 4px 2px -2px #7d8082; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -ms-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    box-shadow: inset 0px -15px 10px -13px #7d8082; }
   .plurid-theme-light .plurid-controls-sheet-history-container {
     background-color: #cbcccd;
     color: white;
-    -moz-box-shadow: 0 4px 2px -2px #d8d9da;
-    -ms-box-shadow: 0 4px 2px -2px #d8d9da;
-    -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
-    box-shadow: 0 4px 2px -2px #d8d9da; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -ms-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    box-shadow: inset 0px -15px 10px -13px #d8d9da; }
 
 .plurid-theme-night .plurid-controls-sheet-history-container ul li:hover {
   background-color: #0a0a0a !important;
@@ -565,34 +599,34 @@ plurid-controls {
   .plurid-controls-more-front-color-container {
     background-color: #cbcccd !important;
     color: !important;
-    -moz-box-shadow: 0 4px 2px -2px #141515;
-    -ms-box-shadow: 0 4px 2px -2px #141515;
-    -webkit-box-shadow: 0 4px 2px -2px #141515;
-    box-shadow: 0 4px 2px -2px #141515; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #141515;
+    -ms-box-shadow: inset 0px -15px 10px -13px #141515;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #141515;
+    box-shadow: inset 0px -15px 10px -13px #141515; }
   .plurid-theme-dusk .plurid-controls-more-back-color-container, .plurid-theme-dusk
   .plurid-controls-more-front-color-container {
     background-color: #b1b3b4 !important;
     color: !important;
-    -moz-box-shadow: 0 4px 2px -2px #3e4041;
-    -ms-box-shadow: 0 4px 2px -2px #3e4041;
-    -webkit-box-shadow: 0 4px 2px -2px #3e4041;
-    box-shadow: 0 4px 2px -2px #3e4041; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -ms-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    box-shadow: inset 0px -15px 10px -13px #3e4041; }
   .plurid-theme-dawn .plurid-controls-more-back-color-container, .plurid-theme-dawn
   .plurid-controls-more-front-color-container {
     background-color: #4b4d4e !important;
     color: !important;
-    -moz-box-shadow: 0 4px 2px -2px #7d8082;
-    -ms-box-shadow: 0 4px 2px -2px #7d8082;
-    -webkit-box-shadow: 0 4px 2px -2px #7d8082;
-    box-shadow: 0 4px 2px -2px #7d8082; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -ms-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    box-shadow: inset 0px -15px 10px -13px #7d8082; }
   .plurid-theme-light .plurid-controls-more-back-color-container, .plurid-theme-light
   .plurid-controls-more-front-color-container {
     background-color: #cbcccd !important;
     color: !important;
-    -moz-box-shadow: 0 4px 2px -2px #d8d9da;
-    -ms-box-shadow: 0 4px 2px -2px #d8d9da;
-    -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
-    box-shadow: 0 4px 2px -2px #d8d9da; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -ms-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    box-shadow: inset 0px -15px 10px -13px #d8d9da; }
 
 .plurid-controls-more-selected-color {
   background-color: #294756;
@@ -649,28 +683,28 @@ plurid-controls {
   font-size: 12px; }
   .plurid-theme-night .plurid-controls-message {
     background-color: #0a0a0a;
-    -moz-box-shadow: 0 4px 2px -2px #141515;
-    -ms-box-shadow: 0 4px 2px -2px #141515;
-    -webkit-box-shadow: 0 4px 2px -2px #141515;
-    box-shadow: 0 4px 2px -2px #141515; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #141515;
+    -ms-box-shadow: inset 0px -15px 10px -13px #141515;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #141515;
+    box-shadow: inset 0px -15px 10px -13px #141515; }
   .plurid-theme-dusk .plurid-controls-message {
     background-color: #252727;
-    -moz-box-shadow: 0 4px 2px -2px #3e4041;
-    -ms-box-shadow: 0 4px 2px -2px #3e4041;
-    -webkit-box-shadow: 0 4px 2px -2px #3e4041;
-    box-shadow: 0 4px 2px -2px #3e4041; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -ms-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    box-shadow: inset 0px -15px 10px -13px #3e4041; }
   .plurid-theme-dawn .plurid-controls-message {
     background-color: #b3b3b3;
-    -moz-box-shadow: 0 4px 2px -2px #7d8082;
-    -ms-box-shadow: 0 4px 2px -2px #7d8082;
-    -webkit-box-shadow: 0 4px 2px -2px #7d8082;
-    box-shadow: 0 4px 2px -2px #7d8082; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -ms-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    box-shadow: inset 0px -15px 10px -13px #7d8082; }
   .plurid-theme-light .plurid-controls-message {
     background-color: #f2f2f2;
-    -moz-box-shadow: 0 4px 2px -2px #d8d9da;
-    -ms-box-shadow: 0 4px 2px -2px #d8d9da;
-    -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
-    box-shadow: 0 4px 2px -2px #d8d9da; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -ms-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    box-shadow: inset 0px -15px 10px -13px #d8d9da; }
 
 .plurid-controls-message-close {
   position: absolute;
@@ -686,33 +720,33 @@ plurid-controls {
   height: 400px;
   position: absolute;
   right: 0;
-  top: 60px;
+  top: 50px;
   width: 300px;
   z-index: 2; }
   .plurid-theme-night .plurid-controls-more-container {
     background-color: #0a0a0a;
-    -moz-box-shadow: 0 4px 2px -2px #141515;
-    -ms-box-shadow: 0 4px 2px -2px #141515;
-    -webkit-box-shadow: 0 4px 2px -2px #141515;
-    box-shadow: 0 4px 2px -2px #141515; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #141515;
+    -ms-box-shadow: inset 0px -15px 10px -13px #141515;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #141515;
+    box-shadow: inset 0px -15px 10px -13px #141515; }
   .plurid-theme-dusk .plurid-controls-more-container {
     background-color: #252727;
-    -moz-box-shadow: 0 4px 2px -2px #3e4041;
-    -ms-box-shadow: 0 4px 2px -2px #3e4041;
-    -webkit-box-shadow: 0 4px 2px -2px #3e4041;
-    box-shadow: 0 4px 2px -2px #3e4041; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -ms-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    box-shadow: inset 0px -15px 10px -13px #3e4041; }
   .plurid-theme-dawn .plurid-controls-more-container {
     background-color: #b3b3b3;
-    -moz-box-shadow: 0 4px 2px -2px #7d8082;
-    -ms-box-shadow: 0 4px 2px -2px #7d8082;
-    -webkit-box-shadow: 0 4px 2px -2px #7d8082;
-    box-shadow: 0 4px 2px -2px #7d8082; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -ms-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    box-shadow: inset 0px -15px 10px -13px #7d8082; }
   .plurid-theme-light .plurid-controls-more-container {
     background-color: #f2f2f2;
-    -moz-box-shadow: 0 4px 2px -2px #d8d9da;
-    -ms-box-shadow: 0 4px 2px -2px #d8d9da;
-    -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
-    box-shadow: 0 4px 2px -2px #d8d9da; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -ms-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    box-shadow: inset 0px -15px 10px -13px #d8d9da; }
 
 .plurid-controls-more-container ul {
   font-size: 12px;
@@ -961,25 +995,25 @@ plurid-options {
   .plurid-theme-light .plurid-container-options-content {
     background-color: #f2f2f2; }
   .plurid-theme-night .plurid-container-options-content {
-    -moz-box-shadow: 0 4px 2px -2px #141515;
-    -ms-box-shadow: 0 4px 2px -2px #141515;
-    -webkit-box-shadow: 0 4px 2px -2px #141515;
-    box-shadow: 0 4px 2px -2px #141515; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #141515;
+    -ms-box-shadow: inset 0px -15px 10px -13px #141515;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #141515;
+    box-shadow: inset 0px -15px 10px -13px #141515; }
   .plurid-theme-dusk .plurid-container-options-content {
-    -moz-box-shadow: 0 4px 2px -2px #3e4041;
-    -ms-box-shadow: 0 4px 2px -2px #3e4041;
-    -webkit-box-shadow: 0 4px 2px -2px #3e4041;
-    box-shadow: 0 4px 2px -2px #3e4041; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -ms-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    box-shadow: inset 0px -15px 10px -13px #3e4041; }
   .plurid-theme-dawn .plurid-container-options-content {
-    -moz-box-shadow: 0 4px 2px -2px #7d8082;
-    -ms-box-shadow: 0 4px 2px -2px #7d8082;
-    -webkit-box-shadow: 0 4px 2px -2px #7d8082;
-    box-shadow: 0 4px 2px -2px #7d8082; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -ms-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    box-shadow: inset 0px -15px 10px -13px #7d8082; }
   .plurid-theme-light .plurid-container-options-content {
-    -moz-box-shadow: 0 4px 2px -2px #d8d9da;
-    -ms-box-shadow: 0 4px 2px -2px #d8d9da;
-    -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
-    box-shadow: 0 4px 2px -2px #d8d9da; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -ms-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    box-shadow: inset 0px -15px 10px -13px #d8d9da; }
 
 @media (max-width: 800px) {
   .plurid-container-options-content {
@@ -988,6 +1022,7 @@ plurid-options {
 .plurid-container-options-more {
   bottom: 5px;
   display: none;
+  height: 500px;
   position: absolute;
   transform: translateY(-50px);
   overflow: auto;
@@ -996,28 +1031,28 @@ plurid-options {
   width: 900px; }
   .plurid-theme-night .plurid-container-options-more {
     background-color: #0a0a0a;
-    -moz-box-shadow: 0 4px 2px -2px #141515;
-    -ms-box-shadow: 0 4px 2px -2px #141515;
-    -webkit-box-shadow: 0 4px 2px -2px #141515;
-    box-shadow: 0 4px 2px -2px #141515; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #141515;
+    -ms-box-shadow: inset 0px -15px 10px -13px #141515;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #141515;
+    box-shadow: inset 0px -15px 10px -13px #141515; }
   .plurid-theme-dusk .plurid-container-options-more {
     background-color: #252727;
-    -moz-box-shadow: 0 4px 2px -2px #3e4041;
-    -ms-box-shadow: 0 4px 2px -2px #3e4041;
-    -webkit-box-shadow: 0 4px 2px -2px #3e4041;
-    box-shadow: 0 4px 2px -2px #3e4041; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -ms-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #3e4041;
+    box-shadow: inset 0px -15px 10px -13px #3e4041; }
   .plurid-theme-dawn .plurid-container-options-more {
     background-color: #b3b3b3;
-    -moz-box-shadow: 0 4px 2px -2px #7d8082;
-    -ms-box-shadow: 0 4px 2px -2px #7d8082;
-    -webkit-box-shadow: 0 4px 2px -2px #7d8082;
-    box-shadow: 0 4px 2px -2px #7d8082; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -ms-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #7d8082;
+    box-shadow: inset 0px -15px 10px -13px #7d8082; }
   .plurid-theme-light .plurid-container-options-more {
     background-color: #f2f2f2;
-    -moz-box-shadow: 0 4px 2px -2px #d8d9da;
-    -ms-box-shadow: 0 4px 2px -2px #d8d9da;
-    -webkit-box-shadow: 0 4px 2px -2px #d8d9da;
-    box-shadow: 0 4px 2px -2px #d8d9da; }
+    -moz-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -ms-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    -webkit-box-shadow: inset 0px -15px 10px -13px #d8d9da;
+    box-shadow: inset 0px -15px 10px -13px #d8d9da; }
 
 .plurid-theme-night .plurid-container-options-group-more:hover {
   background-color: #cbcccd; }

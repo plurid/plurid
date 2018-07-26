@@ -214,6 +214,10 @@ export function contentOptions() {
                             <p class="plurid-container-link-expand ">Show Viewcube</p>
                             <input type="checkbox">
                         </div>
+                        <div class="plurid-container-options-group-more plurid-container-more-carve-design">
+                            <p class="plurid-container-link-expand ">Carve Design</p>
+                            <input type="checkbox">
+                        </div>
                         <div class="plurid-container-options-group-more plurid-container-more-reset">
                             <p class="plurid-container-link-expand ">Reset to Default</p>
                         </div>
