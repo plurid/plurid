@@ -12,6 +12,7 @@ $themes: (
         textColorTertiary: $night_text-tertiary__color,
         textColorInverted: $night_text-inverted__color,
         pluridLinkColor: $night_plurid-link__color,
+        pluridLinkColorHover: $night_plurid-link-hover__color,
         backgroundColorSheet: $night_plurid-sheet__background-color
     ),
     dusk: (
@@ -27,6 +28,7 @@ $themes: (
         textColorTertiary: $dusk_text-tertiary__color,
         textColorInverted: $dusk_text-inverted__color,
         pluridLinkColor: $dusk_plurid-link__color,
+        pluridLinkColorHover: $dusk_plurid-link-hover__color,
         backgroundColorSheet: $dusk_plurid-sheet__background-color
     ),
     dawn: (
@@ -42,6 +44,7 @@ $themes: (
         textColorTertiary: $dawn_text-tertiary__color,
         textColorInverted: $dawn_text-inverted__color,
         pluridLinkColor: $dawn_plurid-link__color,
+        pluridLinkColorHover: $dawn_plurid-link-hover__color,
         backgroundColorSheet: $dawn_plurid-sheet__background-color
     ),
     light: (
@@ -57,6 +60,7 @@ $themes: (
         textColorTertiary: $light_text-tertiary__color,
         textColorInverted: $light_text-inverted__color,
         pluridLinkColor: $light_plurid-link__color,
+        pluridLinkColorHover: $light_plurid-link-hover__color,
         backgroundColorSheet: $light_plurid-sheet__background-color
     )
 );
