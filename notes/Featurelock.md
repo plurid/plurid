@@ -101,6 +101,10 @@ Lock sheet size
 
 Reset sheet size
 
+Controls Position
+
+Controls Follow Translate on Side
+
 Show icon tooltips
 
 Shortcuts
@@ -168,6 +172,8 @@ Shortcuts
 Always show options bar
 
 Show viewcube
+
+Carve Design
 
 Reset to default
 
