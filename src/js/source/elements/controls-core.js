@@ -362,6 +362,42 @@ export function contentControls () {
 
                             <hr>
 
+                            <li>
+                                Controls Position
+                                <form>
+                                    <fieldset>
+                                        <div>
+                                            <input type="radio" name="plurid-controls-follows-translate-side" checked>
+                                            <label>Top</label>
+                                        </div>
+
+                                        <div>
+                                            <input type="radio" name="plurid-controls-follows-translate-side">
+                                            <label>Right</label>
+                                        </div>
+
+                                        <div>
+                                            <input type="radio" name="plurid-controls-follows-translate-side">
+                                            <label>Left</label>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </li>
+
+                            <label class="plurid-controls-more-checkmark-container">
+                                <li>
+                                    <span class="plurid-controls-more-container-text">
+                                        Controls Follow Translate on Side
+                                    </span>
+                                    <span class="plurid-controls-more-container-shortcut">
+                                        <input type="checkbox">
+                                        <span class="plurid-controls-more-checkmark"></span>
+                                    </span>
+                                </li>
+                            </label>
+
+                            <hr>
+
                             <label class="plurid-controls-more-checkmark-container">
                                 <li>
                                     <span class="plurid-controls-more-container-text">

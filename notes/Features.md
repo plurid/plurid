@@ -45,6 +45,12 @@
 
 + more -> list of modifiable shortcuts;
 
++ more -> button :: always show options bar;
+
++ more -> button :: show viewcube;
+
++ more -> button :: Carve Design;
+
 
 
 ### Controls in `<plurid-controls>`
@@ -112,6 +118,10 @@
 + more -> button :: shortcuts;
 
 + more -> button :: edit buttons > while active, the user can drag around the buttons of the controls toolbar to reorder them;
+
++ more -> radio :: Controls position (top / right / left);
+
++ more -> checkmark :: Controls Follow Translate on Side;
 
 + more -> button :: reset to default;
 
