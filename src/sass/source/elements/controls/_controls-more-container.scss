@@ -7,17 +7,18 @@
     height: 400px;
     position: absolute;
     right: 0;
-    top: 50px;
-    // overflow: auto;
+    top: 42px;
+    padding-top: 8px;
+    overflow: auto;
     width: 300px;
-    z-index: 2;
+    // z-index: 2;
 }
 
 .plurid-controls-more-container ul {
     font-size: 12px;
-    margin: 0;
     padding: 0;
     position: relative;
+    margin: 0;
     max-height: 400px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -45,6 +46,7 @@
     @include themify($themes) {
         background-color: themed('backgroundColorMenuButtonHover');
         color: themed('textColorInverted');
+        @include box-shadow(themed('boxShadowButtonCarveDesign'));
     }
 }
 

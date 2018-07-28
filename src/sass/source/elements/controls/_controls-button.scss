@@ -2,10 +2,11 @@
 .plurid-controls-search:hover {
     background-color: transparent !important;
     border-radius: 0px !important;
+    box-shadow: none !important;
 
     .plurid-button-icon-svg {
         @include themify($themes) {
-            fill: themed('textColorSecondary');
+            fill: themed('textColorTertiary');
         }
     }
 }

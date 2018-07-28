@@ -58,11 +58,11 @@ export function contentControls () {
 
                         <div class="plurid-controls-url">
                             <div class="plurid-controls-url-container">
-                                <div class="plurid-button plurid-button-icon plurid-button plurid-button-icon-url plurid-controls-search" tabindex="1">
+                                <div class="plurid-button plurid-button-icon plurid-button-icon-url plurid-controls-search" tabindex="1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 748.89 755.57"><defs></defs><title>Search</title><g><g id="Search"><line class="plurid-button-icon-svg" x1="17.83" y1="738.05" x2="359.83" y2="390.05"/><rect class="plurid-button-icon-svg" x="-55.13" y="539.05" width="487.92" height="50" transform="translate(-345.89 303.51) rotate(-45.51)"/><path class="plurid-button-icon-svg" d="M496.33,50A41.62,41.62,0,0,1,526,62.27L686.62,222.92a42,42,0,0,1,0,59.26L526,442.83a41.87,41.87,0,0,1-59.25,0L306.05,282.18a42,42,0,0,1,0-59.26L466.71,62.27A41.62,41.62,0,0,1,496.33,50m0-50a91.61,91.61,0,0,0-65,26.92L270.7,187.57a91.9,91.9,0,0,0,0,130L431.35,478.19a91.9,91.9,0,0,0,130,0L722,317.54a91.9,91.9,0,0,0,0-130L561.32,26.92A91.62,91.62,0,0,0,496.33,0Z"/></g></g></svg>
                                 </div>
                                 <input class="plurid-controls-url-input" type="text" tabindex="1" placeholder="Search">
-                                <div class="plurid-button plurid-button-icon plurid-button plurid-button-icon-url plurid-controls-cancel" tabindex="1">
+                                <div class="plurid-button plurid-button-icon plurid-button-icon-url plurid-controls-cancel" tabindex="1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 875.09 875.82"><defs></defs><title>Cancel</title><g><g id="Close"><rect class="plurid-button-icon-svg" x="415.36" y="-158.88" width="44.45" height="1193.58" transform="translate(-181.48 437.37) rotate(-44.97)"/><rect class="plurid-button-icon-svg" x="-160.45" y="415.69" width="1187.63" height="44.45" transform="translate(-182.73 438.11) rotate(-45.32)"/></g></g></svg>
                                 </div>
                             </div>

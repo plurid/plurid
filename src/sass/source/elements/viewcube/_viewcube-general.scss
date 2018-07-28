@@ -1,20 +1,14 @@
 plurid-viewcube {
     bottom: 0;
+    // display: none;
     font-family: $general_sans-serif__font-family;
-    height: 240px;
-    padding: 25px;
+    height: 225px;
+    padding: 10px;
     padding-top: 50px;
     padding-left: 50px;
     position: absolute;
     right: 0;
     width: 240px;
-    // display: none;
-
-
-    // -webkit-transform: translate3d(0,0,0);
-    // transform: translate3d(0,0,0);
-    // -webkit-transform: translateZ(10px);
-    // transform: translateZ(10px);
 }
 
 
