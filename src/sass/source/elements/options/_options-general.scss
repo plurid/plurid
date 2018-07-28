@@ -1,72 +1,34 @@
 plurid-options {
-    // display: none;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 25px;
-    height: 50px;
-
     @include themify($themes) {
         color: themed('textColor');
     }
 
-    font-family: $general_sans-serif__font-family;
+    bottom: 10px;
+    // display: none;
+    height: 50px;
     font-size: 12px;
-
-
-    /* Two values, one per background */
-    // background-blend-mode: darken, luminosity;
-    // isolation: isolate;
-    // transform: none !important;
-    // -webkit-transform: translate3d(0,0,0);
-
-    // not the best solution
-    // for -webkit stacking context issues
-    // mix-blend-mode: hard-light;
-    // mix-blend-mode: overlay;
-    // mix-blend-mode: normal;
-    // -webkit-overflow-scrolling: touch;
-    // -webkit-overflow-scrolling: none;
-    // z-index: 999;
-    // transform: translateZ(10px);
-    // -webkit-overflow-scrolling: touch;
-    // -webkit-transform: translateZ(0px);
-    // -webkit-transform: translate3d(0, 0, 20px);
+    font-family: $general_sans-serif__font-family;
+    left: 0;
+    position: absolute;
+    right: 0;
 }
-
-// .plurid-container-options {
-//     color: white;
-//     position: absolute;
-//     bottom: 25px;
-//     height: 50px;
-//     width: 100%;
-//     opacity: 0;
-//     transition: 150ms ease-in-out;
-//     font-family: sans-serif;
-//     font-size: 12px;
-//     transition: 500ms;
-//     transition-delay: 1s;
-// }
 
 
 .plurid-container-options-content {
     @include themify($themes) {
         background-color: themed('backgroundColorMenu');
+        // @include box-shadow(themed('boxShadowMenu'));
     }
-    height: 100%;
-    width: 900px;
-    margin: 0 auto;
     border-radius: 0px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 60px 60px 60px 100px;
+    height: 100%;
+    margin: 0 auto;
     // text-align: center;
     overflow-x: scroll;
     overflow-y: hidden;
-    white-space: nowrap;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 50px 50px 50px 100px;
-
-    @include themify($themes) {
-        @include box-shadow(themed('boxShadowMenu'));
-    }
+    // white-space: nowrap;
+    width: 900px;
 }
 
 
@@ -118,39 +80,6 @@ plurid-options {
     justify-content: center;
     padding-right: 10px;
     padding-left: 10px;
-}
-
-
-.plurid-container-button {
-    margin: 5px;
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
-    min-height: 30px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-}
-
-
-.plurid-container-button svg {
-    width: 30px;
-    height: 30px;
-    padding: 7px;
-    fill: hsl(0, 0%, 10%);
-}
-
-
-.plurid-container-button:hover {
-    background-color: hsl(0, 0%, 70%);
-    color: black;
-    border-radius: 50%;
-
-    .plurid-controls-buttons-svg {
-        fill: hsl(0, 0%, 10%);
-    }
 }
 
 
