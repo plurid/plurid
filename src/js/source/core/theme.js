@@ -13,8 +13,8 @@
     }
 
     if (!themeSet) {
-        const defaultTheme = 'dusk';
-        setTheme(defaultTheme)
+        const defaultTheme = 'night';
+        setTheme(defaultTheme);
     }
 })();
 
