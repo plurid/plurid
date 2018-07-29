@@ -13,7 +13,7 @@
     }
 
     if (!themeSet) {
-        const defaultTheme = 'night';
+        const defaultTheme = 'dusk';
         setTheme(defaultTheme);
     }
 })();

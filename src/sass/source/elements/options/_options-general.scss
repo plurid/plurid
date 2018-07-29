@@ -4,7 +4,6 @@ plurid-options {
     }
 
     bottom: 10px;
-    // display: none;
     height: 50px;
     font-size: 12px;
     font-family: $general_sans-serif__font-family;
@@ -27,10 +26,14 @@ plurid-options {
     // text-align: center;
     overflow-x: scroll;
     overflow-y: hidden;
+    opacity: 0;
     // white-space: nowrap;
     width: 900px;
 }
 
+.plurid-container-options-content:hover {
+    opacity: 1;
+}
 
 @media (max-width: 800px) {
     .plurid-container-options-content {
@@ -44,13 +47,12 @@ plurid-options {
         background-color: themed('backgroundColorMenu');
         @include box-shadow(themed('boxShadowMenu'));
     }
-    bottom: 5px;
+    bottom: 0px;
     display: none;
     height: 500px;
     position: absolute;
     transform: translateY(-50px);
     overflow: auto;
-    opacity: 0.93;
     white-space: nowrap;
     width: 900px;
 }

@@ -1,6 +1,8 @@
-div, p, h1, h2, h3, h4, h5, h6, span {
-    @include themify($themes) {
-        color: themed('textColor');
+plurid-sheet {
+    div, p, h1, h2, h3, h4, h5, h6, span {
+        @include themify($themes) {
+            color: themed('textColor');
+        }
     }
 }
 

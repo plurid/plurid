@@ -74,6 +74,13 @@
     }
 }
 
+.plurid-viewcube-model-transform-face-selected {
+    @include themify($themes) {
+        color: themed('textColorInverted');
+        background-color: themed('backgroundColorMenuButtonHover');
+    }
+}
+
 
 .plurid-viewcube-model-transform-top-left {
     grid-area: pluridViewcubeFaceTopLeft;

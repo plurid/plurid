@@ -3,6 +3,7 @@ plurid-viewcube {
     // display: none;
     font-family: $general_sans-serif__font-family;
     height: 225px;
+    opacity: 0.4;
     padding: 10px;
     padding-top: 50px;
     padding-left: 50px;
@@ -36,6 +37,8 @@ plurid-viewcube {
 
 
 plurid-viewcube:hover {
+    opacity: 1;
+
     .plurid-viewcube-controls {
         display: block;
     }
