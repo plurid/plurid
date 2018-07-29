@@ -56,8 +56,8 @@
 
     @include themify($themes) {
         background-color: themed('backgroundColorMenu');
+        @include box-shadow($boxShadowSheetActive);
     }
-    @include box-shadow($boxShadowSheetActive);
 
     display: grid;
     grid-template-areas: "pluridViewcubeFaceTopLeft         pluridViewcubeFaceTopCenter         pluridViewcubeFaceTopRight"
@@ -69,6 +69,7 @@
 
 .plurid-viewcube-model-transform-face-zone-active {
     @include themify($themes) {
+        @include box-shadow($boxShadowViewcubeSelectedZone);
         color: themed('textColorInverted');
         background-color: themed('backgroundColorMenuButtonHover');
     }
@@ -76,6 +77,7 @@
 
 .plurid-viewcube-model-transform-face-selected {
     @include themify($themes) {
+        @include box-shadow($boxShadowViewcubeSelectedZone);
         color: themed('textColorInverted');
         background-color: themed('backgroundColorMenuButtonHover');
     }
