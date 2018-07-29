@@ -4,14 +4,13 @@
         @include box-shadow(themed('boxShadowMenu'));
     }
     display: none;
-    height: 400px;
+    height: 408px;
     position: absolute;
     right: 0;
     top: 42px;
     padding-top: 8px;
     overflow: auto;
     width: 300px;
-    // z-index: 2;
 }
 
 .plurid-controls-more-container ul {
@@ -19,9 +18,11 @@
     padding: 0;
     position: relative;
     margin: 0;
-    max-height: 400px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    height: 100%;
+    // max-height: 400px;
+    // overflow: auto;
+    // overflow-x: hidden;
+    // overflow-y: auto;
 }
 
 .plurid-controls-more-container ul li {

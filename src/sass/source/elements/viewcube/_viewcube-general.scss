@@ -10,6 +10,9 @@ plurid-viewcube {
     position: absolute;
     right: 0;
     width: 240px;
+
+    // webkit Z bug
+    transform: translate3d(0, 0, 0);
 }
 
 
