@@ -3,15 +3,25 @@ plurid-options {
         color: themed('textColor');
     }
 
-    bottom: 10px;
-    height: 50px;
-    font-size: 12px;
+    bottom: 0px;
     font-family: $general_sans-serif__font-family;
+    font-size: 12px;
+    height: 60px;
     left: 0;
     position: absolute;
     right: 0;
+
+    // webkit Z bug
+    transform: translate3d(0, 0, 0);
 }
 
+.plurid-container-options-container {
+    height: 100%;
+    margin: 0 auto;
+    padding-bottom: 15px;
+    opacity: 0;
+    width: 900px;
+}
 
 .plurid-container-options-content {
     @include themify($themes) {
@@ -22,21 +32,20 @@ plurid-options {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 60px 60px 60px 100px;
     height: 100%;
-    margin: 0 auto;
+    // padding-bottom: 10px;
     // text-align: center;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    opacity: 0;
+    overflow: hidden;
+    // overflow-x: scroll;
+    // overflow-y: hidden;
     // white-space: nowrap;
-    width: 900px;
 }
 
-.plurid-container-options-content:hover {
+.plurid-container-options-container:hover {
     opacity: 1;
 }
 
 @media (max-width: 800px) {
-    .plurid-container-options-content {
+    .plurid-container-options-container {
         width: 400px;
     }
 }
@@ -51,8 +60,9 @@ plurid-options {
     display: none;
     height: 500px;
     position: absolute;
-    transform: translateY(-50px);
-    overflow: auto;
+    transform: translateY(-60px);
+    overflow-x: hidden;
+    overflow-y: auto;
     white-space: nowrap;
     width: 900px;
 }

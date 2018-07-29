@@ -2,7 +2,6 @@
     align-items: center;
     background-color: transparent;
     border-radius: 15px;
-    // border-radius: 2px;
     cursor: pointer;
     display: flex;
     font-size: 9px;
@@ -52,12 +51,10 @@
 
 
 .plurid-button-icon {
-    // border-radius: 50%;
     height: 25px;
     margin: 0 5px;
-    padding: 5px;
-    // width: 25px;
     line-height: 1;
+    padding: 5px;
     width: 30px;
 }
 
@@ -76,12 +73,3 @@
         fill: themed('textColor');
     }
 }
-
-
-// plurid-button
-// plurid-button:hover
-// plurid-button-icon
-// plurid-button-icon:hover
-// plurid-input-range
-// plurid-input-text
-// plurid-input-checkmark
