@@ -45,16 +45,16 @@ html {
 :unresolved {
   display: none; }
 
-.plurid-theme-night div, .plurid-theme-night p, .plurid-theme-night h1, .plurid-theme-night h2, .plurid-theme-night h3, .plurid-theme-night h4, .plurid-theme-night h5, .plurid-theme-night h6, .plurid-theme-night span {
+.plurid-theme-night plurid-sheet div, .plurid-theme-night plurid-sheet p, .plurid-theme-night plurid-sheet h1, .plurid-theme-night plurid-sheet h2, .plurid-theme-night plurid-sheet h3, .plurid-theme-night plurid-sheet h4, .plurid-theme-night plurid-sheet h5, .plurid-theme-night plurid-sheet h6, .plurid-theme-night plurid-sheet span {
   color: white; }
 
-.plurid-theme-dusk div, .plurid-theme-dusk p, .plurid-theme-dusk h1, .plurid-theme-dusk h2, .plurid-theme-dusk h3, .plurid-theme-dusk h4, .plurid-theme-dusk h5, .plurid-theme-dusk h6, .plurid-theme-dusk span {
+.plurid-theme-dusk plurid-sheet div, .plurid-theme-dusk plurid-sheet p, .plurid-theme-dusk plurid-sheet h1, .plurid-theme-dusk plurid-sheet h2, .plurid-theme-dusk plurid-sheet h3, .plurid-theme-dusk plurid-sheet h4, .plurid-theme-dusk plurid-sheet h5, .plurid-theme-dusk plurid-sheet h6, .plurid-theme-dusk plurid-sheet span {
   color: #e5e6e6; }
 
-.plurid-theme-dawn div, .plurid-theme-dawn p, .plurid-theme-dawn h1, .plurid-theme-dawn h2, .plurid-theme-dawn h3, .plurid-theme-dawn h4, .plurid-theme-dawn h5, .plurid-theme-dawn h6, .plurid-theme-dawn span {
+.plurid-theme-dawn plurid-sheet div, .plurid-theme-dawn plurid-sheet p, .plurid-theme-dawn plurid-sheet h1, .plurid-theme-dawn plurid-sheet h2, .plurid-theme-dawn plurid-sheet h3, .plurid-theme-dawn plurid-sheet h4, .plurid-theme-dawn plurid-sheet h5, .plurid-theme-dawn plurid-sheet h6, .plurid-theme-dawn plurid-sheet span {
   color: #191a1a; }
 
-.plurid-theme-light div, .plurid-theme-light p, .plurid-theme-light h1, .plurid-theme-light h2, .plurid-theme-light h3, .plurid-theme-light h4, .plurid-theme-light h5, .plurid-theme-light h6, .plurid-theme-light span {
+.plurid-theme-light plurid-sheet div, .plurid-theme-light plurid-sheet p, .plurid-theme-light plurid-sheet h1, .plurid-theme-light plurid-sheet h2, .plurid-theme-light plurid-sheet h3, .plurid-theme-light plurid-sheet h4, .plurid-theme-light plurid-sheet h5, .plurid-theme-light plurid-sheet h6, .plurid-theme-light plurid-sheet span {
   color: black; }
 
 a,
@@ -1002,6 +1002,7 @@ plurid-options {
   margin: 0 auto;
   overflow-x: scroll;
   overflow-y: hidden;
+  opacity: 0;
   width: 900px; }
   .plurid-theme-night .plurid-container-options-content {
     background-color: #0f0f10; }
@@ -1012,18 +1013,20 @@ plurid-options {
   .plurid-theme-light .plurid-container-options-content {
     background-color: #f2f2f2; }
 
+.plurid-container-options-content:hover {
+  opacity: 1; }
+
 @media (max-width: 800px) {
   .plurid-container-options-content {
     width: 400px; } }
 
 .plurid-container-options-more {
-  bottom: 5px;
+  bottom: 0px;
   display: none;
   height: 500px;
   position: absolute;
   transform: translateY(-50px);
   overflow: auto;
-  opacity: 0.93;
   white-space: nowrap;
   width: 900px; }
   .plurid-theme-night .plurid-container-options-more {
@@ -1153,6 +1156,7 @@ plurid-viewcube {
   bottom: 0;
   font-family: "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   height: 225px;
+  opacity: 0.4;
   padding: 10px;
   padding-top: 50px;
   padding-left: 50px;
@@ -1178,8 +1182,10 @@ plurid-viewcube {
 .plurid-viewcube-controls {
   display: none; }
 
-plurid-viewcube:hover .plurid-viewcube-controls {
-  display: block; }
+plurid-viewcube:hover {
+  opacity: 1; }
+  plurid-viewcube:hover .plurid-viewcube-controls {
+    display: block; }
 
 .plurid-viewcube-fitview-container {
   font-size: 14px;
@@ -1263,6 +1269,22 @@ plurid-viewcube:hover .plurid-viewcube-controls {
   background-color: #7d8082; }
 
 .plurid-theme-light .plurid-viewcube-model-transform-face-zone-active {
+  color: white;
+  background-color: #cbcccd; }
+
+.plurid-theme-night .plurid-viewcube-model-transform-face-selected {
+  color: black;
+  background-color: #646768; }
+
+.plurid-theme-dusk .plurid-viewcube-model-transform-face-selected {
+  color: #111212;
+  background-color: #b1b3b4; }
+
+.plurid-theme-dawn .plurid-viewcube-model-transform-face-selected {
+  color: #cccccc;
+  background-color: #7d8082; }
+
+.plurid-theme-light .plurid-viewcube-model-transform-face-selected {
   color: white;
   background-color: #cbcccd; }
 

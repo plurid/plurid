@@ -166,6 +166,11 @@ export function rotateViewcube(event, plurid, rotateX, rotateY) {
     // let rotateY = getTransformRotate(plurid).rotateY;
     // let rotateXdeg = rotateX * 180 / Math.PI;
     // let rotateYdeg = rotateY * 180 / Math.PI;
+    if (previousButtons) {
+        for (let previousButton of previousButtons) {
+            previousButton.classList.remove('plurid-viewcube-model-transform-face-selected');
+        }
+    }
 
     let viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
 
@@ -269,7 +274,19 @@ function setModelZoneButtons(buttons, viewZone) {
         // }
 
         // rotateThis(viewCube, transform);
-        console.log(transform);
+        // console.log(transform);
+        console.log(previousButtons);
+        if (previousButtons) {
+            for (let previousButton of previousButtons) {
+                previousButton.classList.remove('plurid-viewcube-model-transform-face-selected');
+            }
+        }
+
+        for (let button of buttons) {
+            button.classList.add('plurid-viewcube-model-transform-face-selected');
+        }
+
+        previousButtons = buttons;
     }
 
     buttons.map(button => {
@@ -285,6 +302,8 @@ function setModelZoneButtons(buttons, viewZone) {
         })
     });
 }
+
+let previousButtons;
 
 
 export function initViewcubeModelButtons(container) {
