@@ -6,6 +6,6 @@ plurid-container {
     left: 0;
     overflow: hidden;
 
-    @include perspective($general_perspective);
+    // @include perspective($general_perspective);
     @extend %container-background;
 }

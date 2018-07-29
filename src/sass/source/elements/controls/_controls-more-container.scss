@@ -9,6 +9,8 @@
     right: 0;
     top: 42px;
     padding-top: 8px;
+
+    // bug on MacOS chrome, sets 3d style to flat if overflow auto or scroll
     overflow: auto;
     width: 300px;
 }
