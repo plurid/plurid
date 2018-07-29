@@ -1239,52 +1239,96 @@ plurid-viewcube:hover {
   opacity: 0.9;
   font-size: 10px;
   cursor: pointer;
-  -moz-box-shadow: 0px 0px 0px 1px #646768;
-  -ms-box-shadow: 0px 0px 0px 1px #646768;
-  -webkit-box-shadow: 0px 0px 0px 1px #646768;
-  box-shadow: 0px 0px 0px 1px #646768;
   display: grid;
   grid-template-areas: "pluridViewcubeFaceTopLeft         pluridViewcubeFaceTopCenter         pluridViewcubeFaceTopRight" "pluridViewcubeFaceMiddleLeft      pluridViewcubeFaceMiddleCenter      pluridViewcubeFaceMiddleRight" "pluridViewcubeFaceBottomLeft      pluridViewcubeFaceBottomCenter      pluridViewcubeFaceBottomRight";
   grid-template-rows: 10px 30px 10px;
   grid-template-columns: 10px 30px 10px; }
   .plurid-theme-night .plurid-viewcube-model-transform-face {
-    background-color: #0f0f10; }
+    background-color: #0f0f10;
+    -moz-box-shadow: 0px 0px 0px 1px #646768;
+    -ms-box-shadow: 0px 0px 0px 1px #646768;
+    -webkit-box-shadow: 0px 0px 0px 1px #646768;
+    box-shadow: 0px 0px 0px 1px #646768; }
   .plurid-theme-dusk .plurid-viewcube-model-transform-face {
-    background-color: #252727; }
+    background-color: #252727;
+    -moz-box-shadow: 0px 0px 0px 1px #646768;
+    -ms-box-shadow: 0px 0px 0px 1px #646768;
+    -webkit-box-shadow: 0px 0px 0px 1px #646768;
+    box-shadow: 0px 0px 0px 1px #646768; }
   .plurid-theme-dawn .plurid-viewcube-model-transform-face {
-    background-color: #b3b3b3; }
+    background-color: #b3b3b3;
+    -moz-box-shadow: 0px 0px 0px 1px #646768;
+    -ms-box-shadow: 0px 0px 0px 1px #646768;
+    -webkit-box-shadow: 0px 0px 0px 1px #646768;
+    box-shadow: 0px 0px 0px 1px #646768; }
   .plurid-theme-light .plurid-viewcube-model-transform-face {
-    background-color: #f2f2f2; }
+    background-color: #f2f2f2;
+    -moz-box-shadow: 0px 0px 0px 1px #646768;
+    -ms-box-shadow: 0px 0px 0px 1px #646768;
+    -webkit-box-shadow: 0px 0px 0px 1px #646768;
+    box-shadow: 0px 0px 0px 1px #646768; }
 
 .plurid-theme-night .plurid-viewcube-model-transform-face-zone-active {
+  -moz-box-shadow: inset 0px 0px 0px 1px #646768;
+  -ms-box-shadow: inset 0px 0px 0px 1px #646768;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #646768;
+  box-shadow: inset 0px 0px 0px 1px #646768;
   color: black;
   background-color: #646768; }
 
 .plurid-theme-dusk .plurid-viewcube-model-transform-face-zone-active {
+  -moz-box-shadow: inset 0px 0px 0px 1px #646768;
+  -ms-box-shadow: inset 0px 0px 0px 1px #646768;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #646768;
+  box-shadow: inset 0px 0px 0px 1px #646768;
   color: #111212;
   background-color: #b1b3b4; }
 
 .plurid-theme-dawn .plurid-viewcube-model-transform-face-zone-active {
+  -moz-box-shadow: inset 0px 0px 0px 1px #646768;
+  -ms-box-shadow: inset 0px 0px 0px 1px #646768;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #646768;
+  box-shadow: inset 0px 0px 0px 1px #646768;
   color: #cccccc;
   background-color: #7d8082; }
 
 .plurid-theme-light .plurid-viewcube-model-transform-face-zone-active {
+  -moz-box-shadow: inset 0px 0px 0px 1px #646768;
+  -ms-box-shadow: inset 0px 0px 0px 1px #646768;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #646768;
+  box-shadow: inset 0px 0px 0px 1px #646768;
   color: white;
   background-color: #cbcccd; }
 
 .plurid-theme-night .plurid-viewcube-model-transform-face-selected {
+  -moz-box-shadow: inset 0px 0px 0px 1px #646768;
+  -ms-box-shadow: inset 0px 0px 0px 1px #646768;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #646768;
+  box-shadow: inset 0px 0px 0px 1px #646768;
   color: black;
   background-color: #646768; }
 
 .plurid-theme-dusk .plurid-viewcube-model-transform-face-selected {
+  -moz-box-shadow: inset 0px 0px 0px 1px #646768;
+  -ms-box-shadow: inset 0px 0px 0px 1px #646768;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #646768;
+  box-shadow: inset 0px 0px 0px 1px #646768;
   color: #111212;
   background-color: #b1b3b4; }
 
 .plurid-theme-dawn .plurid-viewcube-model-transform-face-selected {
+  -moz-box-shadow: inset 0px 0px 0px 1px #646768;
+  -ms-box-shadow: inset 0px 0px 0px 1px #646768;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #646768;
+  box-shadow: inset 0px 0px 0px 1px #646768;
   color: #cccccc;
   background-color: #7d8082; }
 
 .plurid-theme-light .plurid-viewcube-model-transform-face-selected {
+  -moz-box-shadow: inset 0px 0px 0px 1px #646768;
+  -ms-box-shadow: inset 0px 0px 0px 1px #646768;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #646768;
+  box-shadow: inset 0px 0px 0px 1px #646768;
   color: white;
   background-color: #cbcccd; }
 
