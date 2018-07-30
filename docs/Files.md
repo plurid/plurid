@@ -4,31 +4,41 @@
     .
     --- src
     |   --- images
-    |       +-- controls
+    |   |   +-- controls
+    |   |--
     |   --- js
-    |       --- source
-    |           +--
-    |           +--
-    |       --- app.js
+    |   |   --- source
+    |   |   |   +-- core
+    |   |   |   +-- elements
+    |   |   |   +-- main
+    |   |   |--
+    |   |   --- app.js // import point for the main .js files in ./source
+    |   |--
     |   --- sass
-    |       --- source
-    |           +--
-    |       --- app.scss
-
-
-
-    boostrap.js
-        // transforms plurid-page into plurid-container, creates the state object
-
-
-    transforms
-        matrix
-        directions
-        transform-core
-        transform
-
-    options
-
-    controls
-
-    state
+    |   |   --- source
+    |   |   |   +-- core
+    |   |   |   |   +-- mixins
+    |   |   |   |   +-- themes
+    |   |   |   |   +-- variables
+    |   |   |   |--
+    |   |   |   +-- elements
+    |   |   |   |   +-- branch
+    |   |   |   |   +-- common
+    |   |   |   |   +-- container
+    |   |   |   |   +-- content
+    |   |   |   |   +-- controls
+    |   |   |   |   +-- link
+    |   |   |   |   +-- options
+    |   |   |   |   +-- page
+    |   |   |   |   +-- root
+    |   |   |   |   +-- shadow
+    |   |   |   |   +-- sheet
+    |   |   |   |   +-- space
+    |   |   |   |   +-- viewcube
+    |   |   |   |--
+    |   |   |   +-- main // import points for the .scss files in ./elements
+    |   |   |--
+    |   |   --- app.scss // import point for the .scss files in ./source/main
+    |   |--
+    |--
+    --- app.js // import point for ./src/js/app.js and ./src/sass/app.scss
