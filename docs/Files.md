@@ -9,8 +9,27 @@
     |   --- js
     |   |   --- source
     |   |   |   +-- core
+    |   |   |   |   +-- common
+    |   |   |   |   +-- logic
+    |   |   |   |   +-- state
+    |   |   |   |   +-- themes
+    |   |   |   |   +-- utils
+    |   |   |   |--
     |   |   |   +-- elements
-    |   |   |   +-- main
+    |   |   |   |   +-- branch
+    |   |   |   |   +-- container
+    |   |   |   |   +-- content
+    |   |   |   |   +-- controls
+    |   |   |   |   +-- link
+    |   |   |   |   +-- options
+    |   |   |   |   +-- page
+    |   |   |   |   +-- root
+    |   |   |   |   +-- shadow
+    |   |   |   |   +-- sheet
+    |   |   |   |   +-- solid
+    |   |   |   |   +-- space
+    |   |   |   |   +-- viewcube
+    |   |   |   +-- main // import points for the relevant .js files
     |   |   |--
     |   |   --- app.js // import point for the main .js files in ./source
     |   |--
@@ -36,7 +55,7 @@
     |   |   |   |   +-- space
     |   |   |   |   +-- viewcube
     |   |   |   |--
-    |   |   |   +-- main // import points for the .scss files in ./elements
+    |   |   |   +-- main // import points for the relevant .scss files
     |   |   |--
     |   |   --- app.scss // import point for the .scss files in ./source/main
     |   |--
