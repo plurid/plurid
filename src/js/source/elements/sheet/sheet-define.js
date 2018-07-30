@@ -3,7 +3,7 @@ import { renderControls } from "../controls/controls-core";
 import { setLink,
          setAnchorTagsId,
          setPluridRoots } from "../sheet/sheet-core";
-import { setId } from "../../core/utils/utils";
+import { setId } from "../../core/utils/complex";
 
 
 

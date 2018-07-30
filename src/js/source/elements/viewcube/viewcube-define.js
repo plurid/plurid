@@ -1,4 +1,4 @@
-import { setId } from "../../core/utils/utils";
+import { setId } from "../../core/utils/complex";
 import { renderViewcube,
          contentViewcube,
          initViewcubeModelButtons } from './viewcube-core';

@@ -3,7 +3,7 @@ import { transform,
 import { initOptions } from "../options/options-define";
 import { initViewcube } from "../viewcube/viewcube-define";
 import { initShortcuts } from "../../core/logic/shortcuts";
-import { setId } from "../../core/utils/utils";
+import { setId } from "../../core/utils/complex";
 
 
 

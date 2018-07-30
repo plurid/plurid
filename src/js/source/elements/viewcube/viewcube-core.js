@@ -1,7 +1,7 @@
 import { getTransformRotate } from "../../core/logic/transforms-core.js";
 import * as transcore from "../../core/logic/transforms-core.js";
 import * as matrix from "../../core/logic/matrix.js";
-import { capitalize } from "../../core/utils/utils";
+import { capitalize } from "../../core/utils/simple";
 
 
 
