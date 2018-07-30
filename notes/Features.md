@@ -73,9 +73,9 @@
 
 + button :: reload the current `<plurid-sheet>` plane;
 
-+ button :: back to the previous URL within the curent `<plurid-branch>`;
++ button :: back to the previous URL within the curent `<plurid-branch>` (`ctrl/cmd + click` creates a new `plurid-sheet` to the left of the current one);
 
-+ button :: forward to the next URL within the curent `<plurid-branch>`;
++ button :: forward to the next URL within the curent `<plurid-branch>` (`ctrl/cmd + click` creates a new `plurid-sheet` to the right of the current one);
 
 + input :: URL of the current `<plurid-branch>` (on the right a search button /enter shortcut/; on the left an X to cancel /esc shortcut/);
 
@@ -93,7 +93,7 @@
 
 + more -> button :: flip the content to the other side (revert content in the case of `<plurid-sheet-double>`, unusable in case of `<plurid-solid>`);
 
-+ more -> button :: sheet history;
++ more -> button :: sheet history (`ctrl/cmd + click` creates a new `plurid-sheet` to the left of the current one);
 
 + more -> checkmark :: opaque back (in case of `<plurid-sheet>`);
 
