@@ -14,9 +14,8 @@
 		"url": "git+https://github.com/plurid/plurid.js.git"
 	},
 	"keywords": [
-		"text",
-		"media",
 		"web",
+		"content",
 		"three",
 		"dimensions"
 	],
