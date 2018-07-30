@@ -35,8 +35,8 @@ module.exports = {
     coverageReporters: [
       "json",
       "html",
+      "lcov",
     //   "text",
-    //   "lcov",
     //   "clover"
     ],
 
