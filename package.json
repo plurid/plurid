@@ -1,8 +1,8 @@
 {
 	"name": "plurid",
 	"version": "0.1.0",
-    "description": "View and explore the web in three dimensions.",
-    "main": "app.js",
+	"description": "View and explore the web in three dimensions.",
+	"main": "app.js",
 	"scripts": {
 		"test": "mocha --reporter spec",
 		"cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*",
@@ -15,8 +15,8 @@
 	},
 	"keywords": [
 		"text",
-        "media",
-        "web",
+		"media",
+		"web",
 		"three",
 		"dimensions"
 	],
@@ -36,12 +36,14 @@
 		"chai": "^4.1.2",
 		"coveralls": "^3.0.0",
 		"css-loader": "^1.0.0",
-		"extract-text-webpack-plugin": "^4.0.0-beta.0",
 		"istanbul": "^0.4.5",
+		"mini-css-extract-plugin": "^0.4.1",
 		"mocha": "^5.2.0",
 		"node-sass": "^4.9.0",
+		"optimize-css-assets-webpack-plugin": "^5.0.0",
 		"sass-loader": "^7.0.3",
 		"style-loader": "^0.21.0",
+		"uglifyjs-webpack-plugin": "^1.2.7",
 		"webpack": "^4.6.0",
 		"webpack-cli": "^3.1.0"
 	},
