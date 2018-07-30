@@ -4,7 +4,7 @@
 	"description": "View and explore the web in three dimensions.",
 	"main": "app.js",
 	"scripts": {
-		"test": "mocha --reporter spec",
+		"test": "mocha \"test/**/*.spec.js\" --reporter spec --require babel-core/register --recursive",
 		"cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*",
 		"build": "webpack",
 		"watch": "webpack --watch"

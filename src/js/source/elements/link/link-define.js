@@ -1,5 +1,5 @@
 import { setLinkContent } from './link-core';
-import { setId } from "../../core/utils/utils";
+import { setId } from "../../core/utils/complex";
 
 
 
