@@ -1,27 +1,24 @@
-import './source/state/plurid-scene';
-
-import './source/core/theme';
+import './source/main/state';
+import './source/main/themes';
 
 
 // Elements
-import './source/elements/branch';
-import './source/elements/container';
-import './source/elements/content';
-import './source/elements/root';
-import './source/elements/sheet';
-import './source/elements/solid';
-import './source/elements/page';
-import './source/elements/link';
-import './source/elements/shadow';
-import './source/elements/space';
+import './source/main/branch';
+import './source/main/container';
+import './source/main/content';
+import './source/main/root';
+import './source/main/sheet';
+import './source/main/solid';
+import './source/main/page';
+import './source/main/link';
+import './source/main/shadow';
+import './source/main/space';
+import './source/main/options';
 
 
 // Logic
-import './source/logic/directions';
-import './source/logic/quaternion';
-import './source/logic/gyroscope';
+import './source/main/logic';
 
 
-import './source/options/options';
 
-import './source/logic/dev';
+import './source/dev';

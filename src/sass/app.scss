@@ -1,32 +1,32 @@
 // Core
-@import "./source/core/variables/variables";
-@import "./source/core/themes/theme-engine";
-@import "./source/core/mixins/mixins";
+@import "./source/main/variables";
+@import "./source/main/themes";
+@import "./source/main/mixins";
 
 
 // General
-@import "./source/general";
+@import "./source/main/general";
 
 // for a custom, integrated first experience
-@import "./source/general-comfort";
+@import "./source/main/general-comfort";
 
 
 // Testing
-@import "./source/general-testing";
+@import "./source/main/general-testing";
 
 
 // Elements
-@import "./source/elements/common";
-@import "./source/elements/page";
-@import "./source/elements/branch";
-@import "./source/elements/container";
-@import "./source/elements/content";
-@import "./source/elements/root";
-@import "./source/elements/sheet";
-@import "./source/elements/link";
-@import "./source/elements/shadow";
-@import "./source/elements/space";
+@import "./source/main/common";
+@import "./source/main/page";
+@import "./source/main/branch";
+@import "./source/main/container";
+@import "./source/main/content";
+@import "./source/main/root";
+@import "./source/main/sheet";
+@import "./source/main/link";
+@import "./source/main/shadow";
+@import "./source/main/space";
 
-@import "./source/elements/controls";
-@import "./source/elements/options";
-@import "./source/elements/viewcube";
+@import "./source/main/controls";
+@import "./source/main/options";
+@import "./source/main/viewcube";
