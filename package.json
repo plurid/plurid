@@ -4,8 +4,6 @@
     "description": "View and explore the web in three dimensions.",
     "main": "app.js",
     "scripts": {
-        "test:mocha": "mocha \"test/**/*.spec.js\" --reporter spec --require babel-core/register --recursive",
-        "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec './test/**/*.spec.js' --require babel-register",
         "build": "webpack",
         "watch": "webpack --watch",
         "test": "jest"
@@ -37,7 +35,6 @@
         "css-loader": "^1.0.0",
         "jest": "^23.4.2",
         "mini-css-extract-plugin": "^0.4.1",
-        "mocha": "^5.2.0",
         "node-sass": "^4.9.0",
         "optimize-css-assets-webpack-plugin": "^5.0.0",
         "sass-loader": "^7.0.3",
