@@ -1,12 +1,14 @@
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
-const extractSass = new ExtractTextPlugin({
+
+const miniCssExtract = new MiniCssExtractPlugin({
     filename: "../css/plurid.css",
     disable: process.env.NODE_ENV === "development"
 });
-
-
 const path = require('path');
+
 
 module.exports = {
     mode: 'development',
@@ -16,31 +18,36 @@ module.exports = {
         filename: 'plurid.js',
         path: path.resolve(__dirname, 'plurid/js')
     },
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                cache: true,
+                parallel: true,
+                sourceMap: true
+            }),
+            new OptimizeCSSAssetsPlugin({})
+        ]
+    },
+    plugins: [
+        miniCssExtract
+    ],
     module: {
         rules: [
             {
                 test: /\.scss$/,
-                use: extractSass.extract({
-                    use: [{
-                        loader: "css-loader"
-                    }, {
-                        loader: "sass-loader"
-                    }],
-                    // use style-loader in development
-                    fallback: "style-loader"
-                })
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'sass-loader',
+                ],
             },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                // loader: "babel-loader"
                 use: {
                     loader: "babel-loader"
                 }
             }
         ]
-    },
-    plugins: [
-        extractSass
-    ]
+    }
 };
