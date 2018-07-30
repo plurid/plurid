@@ -1,50 +1,52 @@
 {
-	"name": "plurid",
-	"version": "0.1.0",
-	"description": "View and explore the web in three dimensions.",
-	"main": "app.js",
-	"scripts": {
-		"test": "mocha \"test/**/*.spec.js\" --reporter spec --require babel-core/register --recursive",
-		"cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec './test/**/*.spec.js' --require babel-register",
-		"build": "webpack",
-		"watch": "webpack --watch"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/plurid/plurid.js.git"
-	},
-	"keywords": [
-		"web",
-		"content",
-		"three",
-		"dimensions"
-	],
-	"author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/plurid/plurid.js/issues"
-	},
-	"homepage": "https://github.com/plurid/plurid.js#readme",
-	"engines": {
-		"node": ">=8.0.0"
-	},
-	"devDependencies": {
-		"babel-core": "^6.26.3",
-		"babel-loader": "^7.1.4",
-		"babel-preset-env": "^1.6.1",
-		"chai": "^4.1.2",
-		"coveralls": "^3.0.0",
-		"css-loader": "^1.0.0",
-		"istanbul": "^0.4.5",
-		"mini-css-extract-plugin": "^0.4.1",
-		"mocha": "^5.2.0",
-		"node-sass": "^4.9.0",
-		"optimize-css-assets-webpack-plugin": "^5.0.0",
-		"sass-loader": "^7.0.3",
-		"style-loader": "^0.21.0",
-		"uglifyjs-webpack-plugin": "^1.2.7",
-		"webpack": "^4.6.0",
-		"webpack-cli": "^3.1.0"
-	},
-	"dependencies": {}
+    "name": "plurid",
+    "version": "0.1.0",
+    "description": "View and explore the web in three dimensions.",
+    "main": "app.js",
+    "scripts": {
+        "test:mocha": "mocha \"test/**/*.spec.js\" --reporter spec --require babel-core/register --recursive",
+        "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec './test/**/*.spec.js' --require babel-register",
+        "build": "webpack",
+        "watch": "webpack --watch",
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/plurid/plurid.js.git"
+    },
+    "keywords": [
+        "web",
+        "content",
+        "three",
+        "dimensions"
+    ],
+    "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/plurid/plurid.js/issues"
+    },
+    "homepage": "https://github.com/plurid/plurid.js#readme",
+    "engines": {
+        "node": ">=8.0.0"
+    },
+    "devDependencies": {
+        "babel-core": "^6.26.3",
+        "babel-loader": "^7.1.4",
+        "babel-preset-env": "^1.6.1",
+        "chai": "^4.1.2",
+        "coveralls": "^3.0.0",
+        "css-loader": "^1.0.0",
+        "istanbul": "^0.4.5",
+        "jest": "^23.4.2",
+        "mini-css-extract-plugin": "^0.4.1",
+        "mocha": "^5.2.0",
+        "node-sass": "^4.9.0",
+        "optimize-css-assets-webpack-plugin": "^5.0.0",
+        "sass-loader": "^7.0.3",
+        "style-loader": "^0.21.0",
+        "uglifyjs-webpack-plugin": "^1.2.7",
+        "webpack": "^4.6.0",
+        "webpack-cli": "^3.1.0"
+    },
+    "dependencies": {}
 }
