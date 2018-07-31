@@ -71,7 +71,10 @@ function setContainer() {
         // container.appendChild(div);
 
         let scripts = document.getElementsByTagName('script');
-        body.insertBefore(container, scripts[0]);
+
+        // body.insertBefore(container, scripts[0]);
+        // cypress error
+        body.appendChild(container);
 
         for (let pluridPage of pluridPagesRoots) {
             let pluridRoot = document.createElement("plurid-root");
