@@ -43,6 +43,8 @@
 
 + more -> checkmark :: use scroll without modifier to translate and use scroll with modifier for normal scroll;
 
++ more -> slider :: transitions speed (0 to 2000 ms, default 500);
+
 + more -> list of modifiable shortcuts;
 
 + more -> button :: always show options bar;
