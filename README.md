@@ -10,7 +10,7 @@
     <a target="_blank" href="https://coveralls.io/github/plurid/plurid?branch=master">
         <img src="https://img.shields.io/coveralls/github/plurid/plurid/master.svg?colorB=1380C3&style=for-the-badge" alt="Coverage Status">
     </a>
-    <a target="_blank" href="https://opensource.org/licenses/MIT">
+    <a target="_blank" href="https://github.com/plurid/plurid/blob/master/LICENSE">
         <img src="https://img.shields.io/badge/license-MIT-blue.svg?colorB=1380C3&style=for-the-badge" alt="License: MIT">
     </a>
 </p>
