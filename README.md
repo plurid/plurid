@@ -7,10 +7,10 @@
 
 
 <h1 align="center">
-    plurid.js
+    plurid
 </h1>
 
-`plurid.js` is a MIT-licensed, open source JavaScript framework to view and use web content within a three-dimensional structure.
+`plurid` is a MIT-licensed, open source JavaScript framework to view and use web content within a three-dimensional structure.
 
 
 ## Use
