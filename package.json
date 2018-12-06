@@ -1,6 +1,6 @@
 {
     "name": "plurid",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "View and explore the web in three dimensions.",
     "main": "app.js",
     "scripts": {
