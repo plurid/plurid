@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid.js/master/docs/identity/plurid-logo.png" height="250px">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/docs/identity/plurid-logo.png" height="250px">
     <br />
     <a target="_blank" href="https://www.npmjs.com/package/plurid">
         <img src="https://img.shields.io/npm/v/plurid.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
@@ -26,6 +26,14 @@
 
 
 
+## Scope
+
+To generate a three-dimensional space within the browser where each page is a plane of content and transform the Internet navigation experience into an exploration.
+
+<img src="https://raw.githubusercontent.com/plurid/plurid/master/docs/images/10-dawn.png" height="600px">
+
+
+
 ## Use
 
 Place the `plurid` folder at the same level with a `.html` file,
@@ -47,13 +55,9 @@ place the content of the web page in a `<plurid-page>` tag, inside the `<body>`
     </plurid-page>
 
 
+
 ## Description
 
 The framework compiled files are in the `plurid` folder. Examples can be found in `test/examples`.
 
 For general design & architecture, features, and more: see `notes`.
-
-
-## License
-
-[MIT](http://opensource.org/licenses/MIT)
