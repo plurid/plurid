@@ -25,6 +25,11 @@
 `plurid` is a MIT-licensed, open source JavaScript framework to view and use web content within a three-dimensional structure.
 
 
++ [Scope](#scope)
++ [Use](#use)
++ [Description](#description)
+
+
 
 ## Scope
 
