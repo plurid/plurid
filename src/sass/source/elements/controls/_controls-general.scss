@@ -38,14 +38,10 @@ plurid-controls {
 
 
 .rotate-button {
-    -webkit-animation: spin 500ms linear 1;
-    -moz-animation: spin 500ms linear 1;
     animation: spin 500ms linear 1;
 }
 
-@-moz-keyframes spin { 100% { -moz-transform: rotate(-360deg); } }
-@-webkit-keyframes spin { 100% { -webkit-transform: rotate(-360deg); } }
-@keyframes spin { 100% { -webkit-transform: rotate(-360deg); transform:rotate(-360deg); } }
+@keyframes spin { 100% { transform:rotate(-360deg); } }
 
 
 
@@ -116,8 +112,6 @@ plurid-controls {
     height: 10px;
     border: solid hsl(0, 0%, 10%);
     border-width: 0 2px 2px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
 
@@ -164,8 +158,10 @@ plurid-controls {
 
 .plurid-controls-sheet-history-container ul li:hover {
     @include themify($themes) {
-        background-color: themed('backgroundColorMenu') !important;
-        color: themed('textColor') !important;
+        background-color: themed('backgroundColorMenu');
+        color: themed('textColor');
+        // background-color: themed('backgroundColorMenu') !important;
+        // color: themed('textColor') !important;
     }
 }
 
@@ -189,8 +185,10 @@ plurid-controls {
     width: 300px;
     height: 240px;
     @include themify($themes) {
-        background-color: themed('backgroundColorMenuButtonHover') !important;
-        color: themed('textColoInverted') !important;
+        background-color: themed('backgroundColorMenuButtonHover');
+        color: themed('textColoInverted');
+        // background-color: themed('backgroundColorMenuButtonHover') !important;
+        // color: themed('textColoInverted') !important;
         @include box-shadow(themed('boxShadowMenu'));
     }
     z-index: 50;

@@ -3,9 +3,6 @@
         background: themed('backgroundColorContainer');
 
         // performance issues with radial gradients for some reason
-        background: -moz-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
-        background: -webkit-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
-        background: -ms-radial-gradient(center, ellipse cover, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
         background: radial-gradient(ellipse at center, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
     }
 }
