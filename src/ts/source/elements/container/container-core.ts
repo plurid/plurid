@@ -15,7 +15,7 @@ import { rotateViewcube } from "../viewcube/viewcube-core";
 export function transform(container) {
     // let pluridStack = new Set();
     let plurid = container.getElementsByTagName('plurid-roots')[0];
-    const transform = {
+    const _transform = {
         plurid,
         container: this,
     };
@@ -26,10 +26,10 @@ export function transform(container) {
     let oldY = 0;
 
     function getDirection(event) {
-        return ( (event) => {
-            if (oldX < event.clientX) {
+        return ( (_event) => {
+            if (oldX < _event.clientX) {
                 direction = "right";
-            } else if (oldX > event.clientX) {
+            } else if (oldX > _event.clientX) {
                 direction = "left";
             }
 
@@ -40,8 +40,8 @@ export function transform(container) {
             //     direction = "up";
             // }
 
-            oldX = event.clientX;
-            oldY = event.clientY;
+            oldX = _event.clientX;
+            oldY = _event.clientY;
 
             return direction;
         })(event);
@@ -50,17 +50,17 @@ export function transform(container) {
     function rotatePluridClickThree(event) {
         if (event.shiftKey) {
             event.preventDefault();
-            const direction = getDirection(event);
-            rotatePlurid(event, plurid, direction);
-            rotateViewcube(event, plurid);
+            const _direction = getDirection(event);
+            rotatePlurid(event, plurid, _direction);
+            // rotateViewcube(event, plurid);
         }
     }
 
     function translatePluridClickThree(event) {
         if (event.altKey) {
             event.preventDefault();
-            const direction = getDirection(event);
-            translatePlurid(event, plurid, direction);
+            const _direction = getDirection(event);
+            translatePlurid(event, plurid, _direction);
         }
     }
 

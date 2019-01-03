@@ -1,5 +1,5 @@
-import { setLinkContent } from './link-core';
 import { setId } from "../../core/utils/complex";
+import { setLinkContent } from './link-core';
 
 
 
@@ -19,7 +19,7 @@ class PluridLink extends HTMLElement {
     }
 
     get samepage() {
-        switch(this.getAttribute('samepage')) {
+        switch (this.getAttribute('samepage')) {
             case "":
                 return true;
             case "true":
@@ -30,12 +30,12 @@ class PluridLink extends HTMLElement {
                 return false;
         }
     }
-    set samepage(newSamepage) {
+    set samepage(newSamepage: any) {
         this.setAttribute('samepage', newSamepage);
     }
 
     get active() {
-        switch(this.getAttribute('active')) {
+        switch (this.getAttribute('active')) {
             case "":
                 return true;
             case "true":
@@ -46,15 +46,15 @@ class PluridLink extends HTMLElement {
                 return false;
         }
     }
-    set active(newActive) {
+    set active(newActive: any) {
         this.setAttribute('active', newActive);
     }
 
-    getNamedPage(pageName) {
-        let pluridPages = document.getElementsByTagName('plurid-page');
+    private getNamedPage(pageName) {
+        const pluridPages = document.getElementsByTagName('plurid-page');
 
-        for (let pluridPage of pluridPages) {
-            if (pluridPage.name == pageName) {
+        for (const pluridPage of pluridPages) {
+            if ((<any> pluridPage).name === pageName) {
                 return pluridPage;
             }
         }
