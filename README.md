@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/docs/identity/plurid-logo.png" height="250px">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/docs/identity/plurid-logo.png" height="250px">
     <br />
     <a target="_blank" href="https://www.npmjs.com/package/plurid">
         <img src="https://img.shields.io/npm/v/plurid.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
@@ -35,7 +35,7 @@
 
 To generate a three-dimensional space within the browser where each page is a plane of content and transform the Internet navigation experience into an exploration.
 
-<img src="https://raw.githubusercontent.com/plurid/plurid/master/docs/images/10-dawn.png" height="600px">
+<img src="https://raw.githubusercontent.com/plurid/plurid/master/about/docs/images/10-dawn.png" height="600px">
 
 
 
