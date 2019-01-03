@@ -17,6 +17,6 @@ html {
     overflow: hidden;
 }
 
-:unresolved {
+:not(:defined) {
     display: none;
 }

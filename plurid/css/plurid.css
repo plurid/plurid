@@ -42,7 +42,7 @@ html, body {
 html {
   overflow: hidden; }
 
-:unresolved {
+:not(:defined) {
   display: none; }
 
 .plurid-theme-night plurid-sheet div, .plurid-theme-night plurid-sheet p, .plurid-theme-night plurid-sheet h1, .plurid-theme-night plurid-sheet h2, .plurid-theme-night plurid-sheet h3, .plurid-theme-night plurid-sheet h4, .plurid-theme-night plurid-sheet h5, .plurid-theme-night plurid-sheet h6, .plurid-theme-night plurid-sheet span {
