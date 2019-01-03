@@ -2,7 +2,7 @@ import { initControls } from "../controls/controls-define";
 import { renderControls } from "../controls/controls-core";
 import { setLink,
          setAnchorTagsId,
-         setPluridRoots } from "../sheet/sheet-core";
+         setPluridRoots } from "./sheet-core";
 import { setId } from "../../core/utils/complex";
 
 
