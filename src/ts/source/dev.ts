@@ -1,6 +1,6 @@
-import { setLink } from './elements/sheet/sheet-core';
-import { setShadows } from './core/logic/shadows';
 import { setReflections } from './core/logic/reflections';
+import { setShadows } from './core/logic/shadows';
+import { setLink } from './elements/sheet/sheet-core';
 
 
 
@@ -8,7 +8,7 @@ import { setReflections } from './core/logic/reflections';
  * Checks document if it contains the HTML tag <plurid-container>.
  *
  * @return {boolean}
- * */
+ */
 function checkForContainers() {
     return !!document.getElementsByTagName('plurid-container')[0];
 }
@@ -22,8 +22,8 @@ function checkForContainers() {
  * @return {boolean}                        True if pluridElement should be a <plurid-root>.
  */
 function checkPluridParent(pluridElement) {
-    if (pluridElement.nodeName != 'HTML') {
-        if (pluridElement.parentElement.nodeName == 'PLURID-PAGE') {
+    if (pluridElement.nodeName !== 'HTML') {
+        if (pluridElement.parentElement.nodeName === 'PLURID-PAGE') {
             // console.log('is NOT a plurid root');
             return false;
         } else {
@@ -46,12 +46,12 @@ function setContainer() {
         const body = document.body;
         // console.log(body);
         // console.log('-----');
-        let pluridPages = document.getElementsByTagName('plurid-page');
-        let pluridPagesRoots = [];
+        const pluridPages = document.getElementsByTagName('plurid-page');
+        const pluridPagesRoots = [];
 
-        let pluridLinks = document.getElementsByTagName('plurid-link');
+        const pluridLinks = document.getElementsByTagName('plurid-link');
 
-        for (let pluridPage of pluridPages) {
+        for (const pluridPage of pluridPages) {
             // console.log(pluridPage.name);
             // console.log(pluridPage.visible);
             if (checkPluridParent(pluridPage)) {
@@ -60,32 +60,32 @@ function setContainer() {
         }
         // console.log(pluridPagesRoots);
 
-        let container = document.createElement("plurid-container");
-        let pluridSpace = document.createElement("plurid-space");
-        // let div = document.createElement('div');
+        const container = document.createElement("plurid-container");
+        const pluridSpace = document.createElement("plurid-space");
+        // const div = document.createElement('div');
         // div.classList.add('testing');
-        let pluridRoots = document.createElement("plurid-roots");
+        const pluridRoots = document.createElement("plurid-roots");
         pluridSpace.appendChild(pluridRoots);
         container.appendChild(pluridSpace);
         // div.appendChild(pluridRoots);
         // container.appendChild(div);
 
-        let scripts = document.getElementsByTagName('script');
+        const scripts = document.getElementsByTagName('script');
 
         // body.insertBefore(container, scripts[0]);
         // cypress error
         body.appendChild(container);
 
-        for (let pluridPage of pluridPagesRoots) {
-            let pluridRoot = document.createElement("plurid-root");
-            let html = pluridPage.innerHTML;
-            let pluridSheet = document.createElement('plurid-sheet');
-            let pluridContent = document.createElement('plurid-content');
+        for (const pluridPage of pluridPagesRoots) {
+            const pluridRoot = document.createElement("plurid-root");
+            const html = pluridPage.innerHTML;
+            const pluridSheet = document.createElement('plurid-sheet');
+            const pluridContent = document.createElement('plurid-content');
 
             pluridSheet.appendChild(pluridContent);
 
             if (pluridPage.visible) {
-                pluridSheet.visible = pluridPage.visible;
+                (<any> pluridSheet).visible = pluridPage.visible;
             }
             pluridContent.innerHTML = html;
 
@@ -93,20 +93,20 @@ function setContainer() {
             pluridRoots.appendChild(pluridRoot);
 
             // console.log('----------');
-            let sheetHeight = pluridSheet.offsetHeight;
-            let ground = pluridScene.meta.ground;
+            const sheetHeight = pluridSheet.offsetHeight;
+            let ground = (<any> window).pluridScene.meta.ground;
 
             if (sheetHeight > ground) {
-                pluridScene.meta.ground = sheetHeight;
-                ground = pluridScene.meta.ground;
+                (<any> window).pluridScene.meta.ground = sheetHeight;
+                ground = (<any> window).pluridScene.meta.ground;
             }
 
-            let shadows = pluridScene.meta.shadows;
+            const shadows = (<any> window).pluridScene.meta.shadows;
             if (shadows === true) {
                 setShadows(pluridRoot, pluridSheet, sheetHeight, ground);
             }
 
-            let reflections = pluridScene.meta.reflections;
+            const reflections = (<any> window).pluridScene.meta.reflections;
             if (reflections === true) {
                 setReflections(pluridSheet, sheetHeight, ground);
             }
@@ -120,23 +120,23 @@ function setContainer() {
         // setLink();
         // console.log(container);
     } else {
-        let containers = document.getElementsByTagName('plurid-container');
+        const containers = document.getElementsByTagName('plurid-container');
 
     }
 }
-setContainer()
+setContainer();
 
 
 
 
 function setTransformOriginCoordinates() {
-    let elementPositiveX = 200;
-    let elementNegativeX = -210;
-    let elementPositiveY = 231;
-    let elementNegativeY = -211;
-    let elementPositiveZ = 131;
-    let elementNegativeZ = -1231;
-    let transformOrigin = pluridScene.meta.transformOrigin;
+    const elementPositiveX = 200;
+    const elementNegativeX = -210;
+    const elementPositiveY = 231;
+    const elementNegativeY = -211;
+    const elementPositiveZ = 131;
+    const elementNegativeZ = -1231;
+    const transformOrigin = (<any> window).pluridScene.meta.transformOrigin;
 
     if (elementPositiveX > transformOrigin.maxPositiveX) {
         transformOrigin.maxPositiveX = elementPositiveX;
@@ -167,17 +167,17 @@ setTransformOriginCoordinates();
 
 
 function calculateTransformOriginCenters() {
-    let transformOrigin = pluridScene.meta.transformOrigin;
-    let positiveX = transformOrigin.maxPositiveX;
-    let negativeX = transformOrigin.maxNegativeX;
-    let positiveY = transformOrigin.maxPositiveY;
-    let negativeY = transformOrigin.maxNegativeY;
-    let positiveZ = transformOrigin.maxPositiveZ;
-    let negativeZ = transformOrigin.maxNegativeZ;
+    const transformOrigin = (<any> window).pluridScene.meta.transformOrigin;
+    const positiveX = transformOrigin.maxPositiveX;
+    const negativeX = transformOrigin.maxNegativeX;
+    const positiveY = transformOrigin.maxPositiveY;
+    const negativeY = transformOrigin.maxNegativeY;
+    const positiveZ = transformOrigin.maxPositiveZ;
+    const negativeZ = transformOrigin.maxNegativeZ;
 
-    transformOrigin.transformOriginX = (positiveX + negativeX)/2;
-    transformOrigin.transformOriginY = (positiveY + negativeY)/2;
-    transformOrigin.transformOriginZ = (positiveZ + negativeZ)/2;
+    transformOrigin.transformOriginX = (positiveX + negativeX) / 2;
+    transformOrigin.transformOriginY = (positiveY + negativeY) / 2;
+    transformOrigin.transformOriginZ = (positiveZ + negativeZ) / 2;
 }
 
 calculateTransformOriginCenters();
