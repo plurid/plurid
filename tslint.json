@@ -3,7 +3,7 @@
     "rules": {
         "max-line-length": {
             "options": [
-                120
+                240
             ]
         },
         "new-parens": true,
@@ -13,6 +13,13 @@
         "no-conditional-assignment": true,
         "no-console": false,
         "no-consecutive-blank-lines": false,
+        "object-literal-sort-keys": false,
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore"
+        ],
         "quotemark": false
     }
 }
