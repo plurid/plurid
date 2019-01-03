@@ -1,4 +1,4 @@
-import { setLink } from "./page-core";
+// import { setLink } from "./page-core";
 
 
 
@@ -7,25 +7,25 @@ class PluridPage extends HTMLElement {
         super();
 
         // Count pages from the html document
-        pluridScene.meta.pages++;
-        let pageNo = pluridScene.meta.pages
+        (<any> window).pluridScene.meta.pages++;
+        const pageNo = (<any> window).pluridScene.meta.pages;
 
         // Set id based on page count
         // e.g. plurid-page-23
-        this.id=`plurid-page-${pageNo}`;
-        let pageId = this.id;
+        this.id = `plurid-page-${pageNo}`;
+        const pageId = this.id;
 
         // Establish if the current plurid-page is a root page
-        let nodeName = this.parentNode.nodeName
-        if (nodeName == 'BODY' || nodeName == 'PLURID-CONTAINER') {
-            pluridScene.meta.rootPages.push(pageId);
+        const nodeName = this.parentNode.nodeName;
+        if (nodeName === 'BODY' || nodeName === 'PLURID-CONTAINER') {
+            (<any> window).pluridScene.meta.rootPages.push(pageId);
         }
     }
 
-    connectedCallback() {
-        // console.log(this);
-        // setLink(this);
-    }
+    // connectedCallback() {
+    //     // console.log(this);
+    //     // setLink(this);
+    // }
 
     get name() {
         return this.getAttribute('name');

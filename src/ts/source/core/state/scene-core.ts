@@ -8,12 +8,12 @@ import { setTheme } from '../themes/theme';
  * @return {Object}
  */
 export function getBranchById(branchId) {
-    for (let rootElement of pluridScene.content) {
-        for (let child of rootElement.children) {
-            if (child.branchId == branchId) {
+    for (const rootElement of (<any> window).pluridScene.content) {
+        for (const child of rootElement.children) {
+            if (child.branchId === branchId) {
                 return child;
-            } else if (child.children != []) {
-                let result = getChild(branchId, child.children);
+            } else if (child.children !== []) {
+                const result = getChild(branchId, child.children);
                 if (result) {
                     return result;
                 }
@@ -30,11 +30,11 @@ export function getBranchById(branchId) {
      * @return {Object}
      */
     function getChild(branchId, children) {
-        for (let child of children) {
-            if (child.branchId == branchId) {
+        for (const child of children) {
+            if (child.branchId === branchId) {
                 return child;
-            } else if (child.children != []) {
-                let result = getChild(branchId, child.children);
+            } else if (child.children !== []) {
+                const result = getChild(branchId, child.children);
                 if (result) {
                     return result;
                 }
@@ -52,10 +52,10 @@ export function getBranchById(branchId) {
  * @return {Array}
  */
 export function getChildrenBySheetId(sheetId) {
-    let childrenBranch = [];
+    const childrenBranch = [];
 
-    for (let rootElement of pluridScene.content) {
-        if (rootElement.sheetId == sheetId) {
+    for (const rootElement of (<any> window).pluridScene.content) {
+        if (rootElement.sheetId === sheetId) {
             pushChildrenOfChildren(childrenBranch, rootElement.children);
         } else {
             checkChildren(sheetId, childrenBranch, rootElement.children);
@@ -63,15 +63,15 @@ export function getChildrenBySheetId(sheetId) {
     }
 
     function pushChildrenOfChildren(childrenBranch, children) {
-        for (let child of children) {
+        for (const child of children) {
             childrenBranch.push(child.branchId);
             pushChildrenOfChildren(childrenBranch, child.children);
         }
     }
 
     function checkChildren(sheetId, childrenBranch, children) {
-        for (let child of children) {
-            if (child.sheetId == sheetId) {
+        for (const child of children) {
+            if (child.sheetId === sheetId) {
                 pushChildrenOfChildren(childrenBranch, child.children);
             } else {
                 checkChildren(sheetId, childrenBranch, child.children);

@@ -1,9 +1,11 @@
 import { getPlurid } from "../../core/logic/get-plurid";
 import { stylePlurid as style } from "../../core/logic/style-plurid";
-import { rotatePlurid,
-         translatePlurid,
-         scalePlurid,
-         rotation} from "../../core/logic/transforms";
+import {
+        rotatePlurid,
+        rotation,
+        scalePlurid,
+        translatePlurid,
+        } from "../../core/logic/transforms";
 import { removeActiveSheetShadow } from "../sheet/sheet-core";
 import { rotateViewcube } from "../viewcube/viewcube-core";
 
@@ -13,9 +15,9 @@ import { rotateViewcube } from "../viewcube/viewcube-core";
 export function transform(container) {
     // let pluridStack = new Set();
     let plurid = container.getElementsByTagName('plurid-roots')[0];
-    let transform = {
-        plurid: plurid,
-        container: this
+    const transform = {
+        plurid,
+        container: this,
     };
 
 
@@ -24,7 +26,7 @@ export function transform(container) {
     let oldY = 0;
 
     function getDirection(event) {
-        return (function (event) {
+        return ( (event) => {
             if (oldX < event.clientX) {
                 direction = "right";
             } else if (oldX > event.clientX) {
@@ -46,73 +48,73 @@ export function transform(container) {
     }
 
     function rotatePluridClickThree(event) {
-        if(event.shiftKey) {
+        if (event.shiftKey) {
             event.preventDefault();
-            let direction = getDirection(event);
+            const direction = getDirection(event);
             rotatePlurid(event, plurid, direction);
             rotateViewcube(event, plurid);
         }
     }
 
     function translatePluridClickThree(event) {
-        if(event.altKey) {
+        if (event.altKey) {
             event.preventDefault();
-            let direction = getDirection(event);
+            const direction = getDirection(event);
             translatePlurid(event, plurid, direction);
         }
     }
 
-    container.addEventListener('mousedown', event => {
-        if (event.which == 2 || event.button == 4 ) {
-            if(event.shiftKey) {
+    container.addEventListener('mousedown', (event) => {
+        if (event.which === 2 || event.button === 4 ) {
+            if (event.shiftKey) {
                 event.preventDefault();
                 container.addEventListener('mousemove', rotatePluridClickThree);
             }
-            if(event.altKey) {
+            if (event.altKey) {
                 event.preventDefault();
                 container.addEventListener('mousemove', translatePluridClickThree);
             }
         }
     });
 
-    container.addEventListener('mouseup', event => {
-        if (event.which == 2 || event.button == 4 ) {
+    container.addEventListener('mouseup', (event) => {
+        if (event.which === 2 || event.button === 4 ) {
             container.removeEventListener('mousemove', rotatePluridClickThree);
             container.removeEventListener('mousemove', translatePluridClickThree);
         }
     });
 
-    container.addEventListener("click", event => {
+    container.addEventListener("click", (event) => {
         // cross-browsers eventPath
-        let eventPath = event.path || (event.composedPath && event.composedPath());
-        let currentPluridRoot = checkCurrentPluridRoot(eventPath);
+        const eventPath = event.path || (event.composedPath && event.composedPath());
+        const currentPluridRoot = checkCurrentPluridRoot(eventPath);
 
-        if (eventPath[0].id == container.id || !currentPluridRoot) {
-            pluridScene.meta.activePlurid = 'plurid-roots-1';
-            pluridScene.meta.previousActiveSheet = pluridScene.meta.activeSheet;
-            pluridScene.meta.activeSheet = "";
+        if (eventPath[0].id === container.id || !currentPluridRoot) {
+            (<any> window).pluridScene.meta.activePlurid = 'plurid-roots-1';
+            (<any> window).pluridScene.meta.previousActiveSheet = (<any> window).pluridScene.meta.activeSheet;
+            (<any> window).pluridScene.meta.activeSheet = "";
 
-            removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active');
-            removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active-transform');
+            removeActiveSheetShadow((<any> window).pluridScene.meta.previousActiveSheet, 'plurid-sheet-active');
+            removeActiveSheetShadow((<any> window).pluridScene.meta.previousActiveSheet, 'plurid-sheet-active-transform');
         }
 
         plurid = getPlurid(event).root;
     });
 
-    container.addEventListener('wheel', event => {
-        if(event.shiftKey) {
+    container.addEventListener('wheel', (event) => {
+        if (event.shiftKey) {
             event.preventDefault();
-            transform.event = event;
+            (<any> transform).event = event;
             rotation(transform);
         }
 
-        if(event.altKey) {
+        if (event.altKey) {
             event.preventDefault();
 
             translatePlurid(event, plurid);
         }
 
-        if(event.metaKey || event.ctrlKey) {
+        if (event.metaKey || event.ctrlKey) {
             event.preventDefault();
 
             scalePlurid(event, plurid);
@@ -126,41 +128,41 @@ function checkCurrentPluridRoot(eventPath) {
 
     let pluridSheet;
     let pluridSheetId = '';
-    let pluridBranch;
-    let pluridBranchId = '';
-    let pluridBranchScene;
+    // let pluridBranch;
+    // let pluridBranchId = '';
+    // let pluridBranchScene;
 
-    for (let eventPathElement of eventPath) {
+    for (const eventPathElement of eventPath) {
         if (eventPathElement.classList) {
             if (eventPathElement.classList.contains('plurid-controls-select')) {
                 return true;
             }
         }
 
-        if (eventPathElement.nodeName == 'PLURID-SHEET') {
+        if (eventPathElement.nodeName === 'PLURID-SHEET') {
             pluridSheet = eventPathElement;
             pluridSheetId = eventPathElement.id;
         }
     }
 
-    for (let pluridSceneContent of pluridScene.content) {
+    for (const pluridSceneContent of (<any> window).pluridScene.content) {
         // console.log(pluridSceneContent.id);
-        for (let child of pluridSceneContent.children) {
-            if (child.sheetId == pluridSheetId) {
+        for (const child of pluridSceneContent.children) {
+            if (child.sheetId === pluridSheetId) {
                 return verifyChild(pluridSceneContent.id);
             } else {
                 return recursiveCheck(child.children, pluridSceneContent.id);
             }
         }
 
-        if (pluridSceneContent.sheetId == pluridSheetId) {
+        if (pluridSceneContent.sheetId === pluridSheetId) {
             return verifyChild(pluridSceneContent.id);
         }
     }
 
 
     function verifyChild(verifyId) {
-        if (verifyId == pluridScene.meta.activePlurid) {
+        if (verifyId === (<any> window).pluridScene.meta.activePlurid) {
             // console.log(verifyId);
             // console.log(pluridScene.meta.activePlurid);
             return true;
@@ -168,8 +170,8 @@ function checkCurrentPluridRoot(eventPath) {
     }
 
     function recursiveCheck(children, verifyId) {
-        for (let child of children) {
-            if (child.sheetId == pluridSheetId) {
+        for (const child of children) {
+            if (child.sheetId === pluridSheetId) {
                 return verifyChild(verifyId);
             } else {
                 return recursiveCheck(child.children, verifyId);

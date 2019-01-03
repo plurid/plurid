@@ -1,13 +1,16 @@
-import { computeQuaternionFromEulers,
-         quaternionFromAxisAngle } from './quaternion';
-import { rotateMatrix,
-         translateMatrix,
-         scaleMatrix } from './matrix';
-import { setTransform,
-         getTransformTranslate,
-         getTransformScale,
-         getyPos } from './transforms-core';
-
+import {
+        rotateMatrix,
+        scaleMatrix,
+        translateMatrix,
+        } from './matrix';
+import {
+        getTransformScale,
+        getTransformTranslate,
+        getyPos,
+        setTransform,
+        } from './transforms-core';
+// import { computeQuaternionFromEulers,
+//          quaternionFromAxisAngle } from './quaternion';
 
 
 // Z - X - Y
@@ -15,18 +18,18 @@ import { setTransform,
 // var gyro = quaternionFromAxisAngle(0, 0, 0, 0);
 
 
-//get orientation info
-if (window.DeviceOrientationEvent) {
-    window.addEventListener("deviceorientation", event => {
-        let plurid = document.getElementById(pluridScene.meta.activePlurid);
+// get orientation info
+if ((<any> window).DeviceOrientationEvent) {
+    window.addEventListener("deviceorientation", (event) => {
+        const plurid = document.getElementById((<any> window).pluridScene.meta.activePlurid);
         processGyro(event.alpha, event.beta, event.gamma, plurid);
     }, true);
 }
 
 
 function processGyro(alpha, beta, gamma, plurid) {
-	document.getElementById("alpha").innerHTML= alpha.toFixed(5);
-	document.getElementById("beta").innerHTML= beta.toFixed(5);
+    document.getElementById("alpha").innerHTML = alpha.toFixed(5);
+    document.getElementById("beta").innerHTML = beta.toFixed(5);
     document.getElementById("gamma").innerHTML = gamma.toFixed(5);
 
     // X
@@ -40,17 +43,17 @@ function processGyro(alpha, beta, gamma, plurid) {
     // Z
     alpha = 0;
 
-    let valRotationMatrix = rotateMatrix(beta, gamma, alpha);
+    const valRotationMatrix = rotateMatrix(beta, gamma, alpha);
 
-    var translateX = getTransformTranslate(plurid).translateX;
-    var translateY = getTransformTranslate(plurid).translateY;
-    var translateZ = 0;
-    var scale = getTransformScale(plurid).scale;
+    const translateX = getTransformTranslate(plurid).translateX;
+    const translateY = getTransformTranslate(plurid).translateY;
+    const translateZ = 0;
+    const scale = getTransformScale(plurid).scale;
 
-    var valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
-    var valScaleMatrix = scaleMatrix(scale);
+    const valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
+    const valScaleMatrix = scaleMatrix(scale);
 
-    var yPos = getyPos(event, plurid);
+    const yPos = getyPos(event, plurid);
 
     setTransform(plurid, valRotationMatrix, valTranslationMatrix, valScaleMatrix, yPos);
 

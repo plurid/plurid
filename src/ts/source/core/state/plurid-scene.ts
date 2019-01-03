@@ -5,7 +5,7 @@ import { getBranchById,
 
 
 // set pluridScene as global variable
-(function (global) {
+((global) => {
     global.pluridScene = {
         meta: {
             activePlurid: '',
@@ -30,12 +30,12 @@ import { getBranchById,
                 maxNegativeZ: 0,
                 transformOriginX: 0,
                 transformOriginY: 0,
-                transformOriginZ: 0
-            }
+                transformOriginZ: 0,
+            },
         },
         content: [],
-        getBranchById: getBranchById,
-        getChildrenBySheetId: getChildrenBySheetId,
-        setTheme: setNewTheme
-    }
-}).call(this, global)
+        getBranchById,
+        getChildrenBySheetId,
+        setTheme: setNewTheme,
+    };
+}).call(this, (<any> global));

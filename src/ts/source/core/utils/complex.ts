@@ -5,8 +5,8 @@
  *
  * @return {function}
  */
-export let setId = (function () {
-    let id = {};
+export let setId = ( () => {
+    const id: any = {};
     id.containerNumber = 0;
     id.rootsNumber = 0;
     id.rootNumber = 0;
@@ -25,14 +25,14 @@ export let setId = (function () {
      * @param {string} type                 String type of the element, e.g. 'link'
      * @return {number}
      */
-    return function (element, type) {
-        const set = function (element, type, idNumber) {
+    return (element, type) => {
+        const set = (element, type, idNumber) => {
             idNumber += 1;
             element.id = `plurid-${type}-${idNumber}`;
             return idNumber;
         };
 
-        switch(type) {
+        switch (type) {
             case 'container':
                 return id.containerNumber = set(element, type, id.containerNumber);
             case 'roots':
@@ -54,5 +54,5 @@ export let setId = (function () {
             case 'viewcube':
                 return id.viewcubeNumber = set(element, type, id.viewcubeNumber);
         }
-    }
+    };
 })();
