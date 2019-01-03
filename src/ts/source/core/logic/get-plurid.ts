@@ -1,9 +1,9 @@
 export function getPlurid() {
-    let selectedPluridRoot = document.getElementById(pluridScene.meta.activePlurid);
-    let selectedPluridSheet = document.getElementById(pluridScene.meta.activeSheet);
+    const selectedPluridRoot = document.getElementById((<any> window).pluridScene.meta.activePlurid);
+    const selectedPluridSheet = document.getElementById((<any> window).pluridScene.meta.activeSheet);
 
     return {
         root: selectedPluridRoot,
-        sheet: selectedPluridSheet
-    }
+        sheet: selectedPluridSheet,
+    };
 }

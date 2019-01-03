@@ -39,7 +39,7 @@ export function displayOptions(element) {
 
 
 export function contentOptions() {
-    let content = ` <div class="plurid-container-options-container">
+    const content = ` <div class="plurid-container-options-container">
                         <div class="plurid-container-options-content">
                             <div class="plurid-container-options-group">
                                 <div class="plurid-button plurid-button-icon plurid-container-rotate-left">
@@ -267,10 +267,10 @@ export function setButtons(container) {
 
 function transformButtons(container) {
     function setTransformButton(transformPlurid, container, type, direction) {
-        let button = container.getElementsByClassName(`plurid-container-${type}-${direction}`)[0];
+        const button = container.getElementsByClassName(`plurid-container-${type}-${direction}`)[0];
 
-        button.addEventListener('click', event => {
-            transformPlurid = pluridScene.meta.activePlurid ? container.querySelector(`#${pluridScene.meta.activePlurid}`) : container.getElementsByTagName("plurid-roots")[0];
+        button.addEventListener('click', (event) => {
+            transformPlurid = (<any> window).pluridScene.meta.activePlurid ? container.querySelector(`#${ (<any> window).pluridScene.meta.activePlurid }`) : container.getElementsByTagName("plurid-roots")[0];
 
             if (type === 'rotate') {
                 plurid.rotatePlurid(event, transformPlurid, direction);
@@ -285,24 +285,24 @@ function transformButtons(container) {
 
         let timer;
 
-        let rotatePlurid = function(event, direction) {
+        const rotatePlurid = (event, direction) => {
             plurid.rotatePlurid(event, transformPlurid, direction);
             timer = setTimeout(rotatePlurid, 35, event, direction);
         }
 
-        let translatePlurid = function(event, direction) {
+        const translatePlurid = (event, direction) => {
             plurid.translatePlurid(event, transformPlurid, direction);
             timer = setTimeout(translatePlurid, 25, event, direction);
         }
 
-        let scalePlurid = function(event, direction) {
+        const scalePlurid = (event, direction) => {
             plurid.scalePlurid(event, transformPlurid, direction);
             timer = setTimeout(scalePlurid, 35, event, direction);
         }
 
 
-        button.addEventListener("mousedown", function(event) {
-            transformPlurid = pluridScene.meta.activePlurid ? container.querySelector(`#${pluridScene.meta.activePlurid}`) : container.getElementsByTagName("plurid-roots")[0];
+        button.addEventListener("mousedown", (event) => {
+            transformPlurid = (<any> window).pluridScene.meta.activePlurid ? container.querySelector(`#${ (<any> window).pluridScene.meta.activePlurid }`) : container.getElementsByTagName("plurid-roots")[0];
 
             if (type === 'rotate') {
                 timer = setTimeout(rotatePlurid, 35, event, direction);
@@ -315,77 +315,77 @@ function transformButtons(container) {
             }
         });
 
-        button.addEventListener("mouseup", function(event) {
+        button.addEventListener("mouseup", (event) => {
             clearTimeout(timer);
         });
     }
 
-    let transformPlurid = pluridScene.meta.activePlurid ? container.getElementById(pluridScene.meta.activePlurid) : container.getElementsByTagName("plurid-roots")[0];
+    const transformPlurid = (<any> window).pluridScene.meta.activePlurid ? container.getElementById((<any> window).pluridScene.meta.activePlurid) : container.getElementsByTagName("plurid-roots")[0];
 
-    let transformButtons = [
+    const transformButtons = [
         {
             type: "rotate",
-            direction: "up"
+            direction: "up",
         },
         {
             type: "rotate",
-            direction: "down"
+            direction: "down",
         },
         {
             type: "rotate",
-            direction: "left"
+            direction: "left",
         },
         {
             type: "rotate",
-            direction: "right"
+            direction: "right",
         },
 
         {
             type: "translate",
-            direction: "up"
+            direction: "up",
         },
         {
             type: "translate",
-            direction: "down"
+            direction: "down",
         },
         {
             type: "translate",
-            direction: "left"
+            direction: "left",
         },
         {
             type: "translate",
-            direction: "right"
+            direction: "right",
         },
 
         {
             type: "scale",
-            direction: "up"
+            direction: "up",
         },
         {
             type: "scale",
-            direction: "down"
+            direction: "down",
         }
     ]
 
-    transformButtons.map(button => {
+    transformButtons.map((button) => {
         setTransformButton(transformPlurid, container, button.type, button.direction);
     });
 }
 
 
 function centerEverything(container) {
-    let centerEverythingButton = container.getElementsByClassName('plurid-container-button-center-everything')[0];
+    const centerEverythingButton = container.getElementsByClassName('plurid-container-button-center-everything')[0];
 
-    centerEverythingButton.addEventListener('click', event => {
+    centerEverythingButton.addEventListener('click', (event) => {
         console.log('center everything');
     });
 }
 
 
 function addAnotherRoot(container) {
-    let addAnotherRootButton = container.getElementsByClassName('plurid-container-button-add-root')[0];
+    const addAnotherRootButton = container.getElementsByClassName('plurid-container-button-add-root')[0];
 
-    addAnotherRootButton.addEventListener('click', event => {
+    addAnotherRootButton.addEventListener('click', (event) => {
         // get extremities of the current pluridScene and add to the right/left
         if (event.shiftKey) {
             console.log('add root left');
@@ -397,12 +397,12 @@ function addAnotherRoot(container) {
 
 
 function moreOptions(container) {
-    let moreButton = container.getElementsByClassName('plurid-container-button-more')[0];
-    let moreContainer = container.getElementsByClassName('plurid-container-options-more')[0];
+    const moreButton = container.getElementsByClassName('plurid-container-button-more')[0];
+    const moreContainer = container.getElementsByClassName('plurid-container-options-more')[0];
 
-    moreButton.addEventListener('click', event => {
-        if (moreContainer.style.display == ""
-        || moreContainer.style.display == "none") {
+    moreButton.addEventListener('click', (event) => {
+        if (moreContainer.style.display === ""
+        || moreContainer.style.display === "none") {
             moreButton.classList.add("plurid-sheet-control-active");
             moreContainer.style.display = "block";
         } else {
@@ -415,64 +415,64 @@ function moreOptions(container) {
 
 function lockTransforms(container) {
     function setLocks(type, axis) {
-        let button = container.getElementsByClassName(`plurid-container-more-lock-${type}-${axis}`)[0];
+        const button = container.getElementsByClassName(`plurid-container-more-lock-${type}-${axis}`)[0];
 
-        button.addEventListener('click', event => {
+        button.addEventListener('click', (event) => {
             console.log('lock', type, axis);
         });
     }
 
-    let locks = [
+    const locks = [
         {
             type: "rotation",
-            axis: "x"
+            axis: "x",
         },
         {
             type: "rotation",
-            axis: "y"
+            axis: "y",
         },
         {
             type: "translation",
-            axis: "x"
+            axis: "x",
         },
         {
             type: "translation",
-            axis: "y"
-        }
+            axis: "y",
+        },
     ];
 
-    locks.map(button => { setLocks(button.type, button.axis) });
+    locks.map((button) => { setLocks(button.type, button.axis); });
 }
 
 
 function scrollTransform(container) {
-    let button = container.getElementsByClassName('plurid-container-more-scroll-translate')[0];
+    const button = container.getElementsByClassName('plurid-container-more-scroll-translate')[0];
 
-    button.addEventListener('click', event => {
+    button.addEventListener('click', (event) => {
         console.log('scroll transform');
     });
 }
 
 
 function transformSensitivity(container) {
-
+    console.log('a');
 }
 
 
 function containerBackground(container) {
-    let button = container.getElementsByClassName('plurid-container-more-container-background')[0];
+    const button = container.getElementsByClassName('plurid-container-more-container-background')[0];
 
-    button.addEventListener('click', event => {
+    button.addEventListener('click', (event) => {
         console.log('change container background');
     });
 }
 
 
 function generalTheme(container) {
-    let button = container.getElementsByClassName('plurid-container-more-general-theme')[0];
+    const button = container.getElementsByClassName('plurid-container-more-general-theme')[0];
 
-    button.addEventListener('click', event => {
-        let bodyClassList = document.body.classList;
+    button.addEventListener('click', (event) => {
+        const bodyClassList = document.body.classList;
 
         for (const bodyClass of bodyClassList) {
             if (bodyClass === "plurid-theme-light") {
@@ -500,38 +500,38 @@ function generalTheme(container) {
 
 
 function linkTransformNormal(container) {
-    let button = container.getElementsByClassName('plurid-container-more-link-click-transform')[0];
+    const button = container.getElementsByClassName('plurid-container-more-link-click-transform')[0];
 
-    button.addEventListener('click', event => {
+    button.addEventListener('click', (event) => {
         console.log('linkTransformNormal');
     });
 }
 
 
 function parentOpacityAfterClick(container) {
-
+    console.log('a');
 }
 
 
 function generalOpacityAfterDoubleClick(container) {
-
+    console.log('a');
 }
 
 
 function shortcuts(container) {
-
+    console.log('a');
 }
 
 
 function alwaysShowOptions(container) {
-    let button = container.getElementsByClassName('plurid-container-more-always-show-options')[0];
+    const button = container.getElementsByClassName('plurid-container-more-always-show-options')[0];
 
-    button.addEventListener('click', event => {
+    button.addEventListener('click', (event) => {
         console.log('alwaysShowOptions');
     });
 }
 
 
 function resetDefault(container) {
-
+    console.log('a');
 }

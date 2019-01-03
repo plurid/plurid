@@ -2,11 +2,11 @@
  * Sets plurid-theme-dusk as default theme on <body>
  * if no theme class currently in use.
  */
-(function() {
+(() => {
     const bodyClassList = document.body.classList;
     let themeSet = false;
 
-    for (let bodyClass of bodyClassList) {
+    for (const bodyClass of bodyClassList) {
         if (/plurid-theme/.test(bodyClass)) {
             themeSet = true;
         }
@@ -25,10 +25,10 @@ export function setTheme(theme) {
         'night',
         'dusk',
         'dawn',
-        'light'
+        'light',
     ];
 
-    possibleThemes.map(possibleTheme => {
+    possibleThemes.map((possibleTheme) => {
         theme === possibleTheme ? bodyClassList.add(`plurid-theme-${theme}`) : possibleThemes.map(possibleTheme => {
             theme !== possibleTheme ? bodyClassList.remove(`plurid-theme-${possibleTheme}`) : '';
         });

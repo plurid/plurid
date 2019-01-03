@@ -24,8 +24,8 @@ function insertAfter(newNode, referenceNode) {
  * @return {boolean}                        True if pluridElement should be a <plurid-root>.
  */
 function checkPluridParent(pluridElement) {
-    if (pluridElement.nodeName != 'HTML') {
-        if (pluridElement.parentElement.nodeName == 'PLURID-PAGE') {
+    if (pluridElement.nodeName !== 'HTML') {
+        if (pluridElement.parentElement.nodeName === 'PLURID-PAGE') {
             // console.log('is NOT a plurid root');
             return false;
         } else {
@@ -47,8 +47,8 @@ function checkPluridParent(pluridElement) {
  * @return {HTMLElement}                    The specified parent element.
  */
 export function getSpecifiedParent(pluridElement, specifiedParent) {
-    if (pluridElement.nodeName != 'HTML') {
-        if (pluridElement.parentElement.nodeName == specifiedParent) {
+    if (pluridElement.nodeName !== 'HTML') {
+        if (pluridElement.parentElement.nodeName === specifiedParent) {
             return pluridElement.parentElement;
         } else {
             return getSpecifiedParent(pluridElement.parentElement, specifiedParent);
@@ -66,8 +66,8 @@ export function getSpecifiedParent(pluridElement, specifiedParent) {
  * @param {Object} sceneObject
  */
 function pushChildren(childrenArray, sceneObject) {
-    for (let child of childrenArray) {
-        if (child.branchId == sceneObject.linkParentId) {
+    for (const child of childrenArray) {
+        if (child.branchId === sceneObject.linkParentId) {
             child.children.push(sceneObject);
         } else {
             pushChildren(child.children, sceneObject);
@@ -86,14 +86,14 @@ function pushChildren(childrenArray, sceneObject) {
  * @param {HTMLElement} pluridLink       plurid HTMLElement.
  */
 function setPluridLinks(pluridLink) {
-    let xhttp = new XMLHttpRequest();
+    const xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(this.responseText, "text/html");
+        if (this.readyState === 4 && this.status === 200) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(this.responseText, "text/html");
 
-            let newBranch = document.createElement("plurid-branch");
+            const newBranch = document.createElement("plurid-branch");
             newBranch.innerHTML = `
                                     <plurid-bridge></plurid-bridge>
 
@@ -105,24 +105,24 @@ function setPluridLinks(pluridLink) {
                                         </plurid-sheet>
                                     </plurid-scion>
                                 `;
-            newBranch.link = pluridLink.id;
+            (<any> newBranch).link = pluridLink.id;
             setId(newBranch, 'branch');
 
 
-            let right = pluridLink.offsetLeft + pluridLink.offsetWidth;
-            let top = pluridLink.offsetTop;
+            const right = pluridLink.offsetLeft + pluridLink.offsetWidth;
+            const top = pluridLink.offsetTop;
             // console.log('pluridLink right -- X', right);
             // console.log('pluridLink top ---- Y', top);
 
-            let pluridRoot = getSpecifiedParent(pluridLink, 'PLURID-ROOT');
-            let pluridSheet = getSpecifiedParent(pluridLink, 'PLURID-SHEET');
-            let pluridBranch = getSpecifiedParent(pluridLink, 'PLURID-BRANCH');
+            const pluridRoot = getSpecifiedParent(pluridLink, 'PLURID-ROOT');
+            const pluridSheet = getSpecifiedParent(pluridLink, 'PLURID-SHEET');
+            const pluridBranch = getSpecifiedParent(pluridLink, 'PLURID-BRANCH');
             // console.log('link', pluridLink);
             // console.log('root', pluridRoot);
             // console.log('sheet', pluridSheet);
             // console.log('branch', pluridBranch);
 
-            let angleDeg = 90;
+            const angleDeg = 90;
             let angleBranch;
             let branchBridge;
             let bridgeWidth;
@@ -130,33 +130,33 @@ function setPluridLinks(pluridLink) {
                 angleBranch = transcore.getTransformRotate(pluridBranch).rotateY;
                 angleBranch = angleBranch * 180 / Math.PI;
                 branchBridge = pluridBranch.children[0];
-                bridgeWidth = parseInt(branchBridge.style.width) || 100;
+                bridgeWidth = parseInt(branchBridge.style.width, 0) || 100;
             }
             // console.log(angleBranch);
 
-            let linkParentId = pluridBranch ? pluridBranch.id : pluridSheet.id;
+            const linkParentId = pluridBranch ? pluridBranch.id : pluridSheet.id;
             // console.log(linkParentId, 'is the parent of', newBranch.id);
-            let parentBranch = pluridScene.getBranchById(linkParentId);
+            const parentBranch = (<any> window).pluridScene.getBranchById(linkParentId);
             // console.log('the parentBranch is ', parentBranch);
 
             // console.log(bridgeWidth);
-            let bridgeLength = bridgeWidth || 100;
+            const bridgeLength = bridgeWidth || 100;
 
             let parentAngleY = parentBranch ? parentBranch.coordinates.angleY : 0;
             // console.log('parentAngleY % 360', parentAngleY % 360)
             parentAngleY = parentAngleY % 360;
             // console.log('parentAngleY', parentAngleY)
 
-            let quadrant = getQuadrant(parentAngleY);
-            let quadrantCoefficients = getQuadrantCoefficients(quadrant);
-            let quadrantCoefX = quadrantCoefficients.X;
-            let quadrantCoefZ = quadrantCoefficients.Z;
+            const quadrant = getQuadrant(parentAngleY);
+            const quadrantCoefficients = getQuadrantCoefficients(quadrant);
+            const quadrantCoefX = quadrantCoefficients.X;
+            const quadrantCoefZ = quadrantCoefficients.Z;
 
             // console.log('parent quadrant', quadrant);
             // console.log('quadrantCoefX', quadrantCoefX);
             // console.log('quadrantCoefZ', quadrantCoefZ);
 
-            let rotXbranch = angleDeg;
+            const rotXbranch = angleDeg;
 
             let prevLinkX;
             let prevLinkY;
@@ -174,8 +174,8 @@ function setPluridLinks(pluridLink) {
             }
 
 
-            let clickTransX = right;
-            let clickTransY = top;
+            const clickTransX = right;
+            const clickTransY = top;
 
             // console.log('prevTransX', prevTransX);
             // console.log('prevTransY', prevTransY);
@@ -184,47 +184,47 @@ function setPluridLinks(pluridLink) {
             // console.log('clickTransY', clickTransY);
 
 
-            let path = generatePath(newBranch.id, linkParentId);
+            const path = generatePath(newBranch.id, linkParentId);
             // console.log('path', path);
 
-            let translationData = {
-                prevLinkX: prevLinkX,
-                prevLinkY: prevLinkY,
-                prevTransX: prevTransX,
-                prevTransY: prevTransY,
-                prevTransZ: prevTransZ,
-                clickTransX: clickTransX,
-                clickTransY: clickTransY,
-                bridgeLength: bridgeLength,
-                quadrant: quadrant,
-                quadrantCoefX: quadrantCoefX,
-                quadrantCoefZ: quadrantCoefZ,
-                rotXbranch: rotXbranch,
-                path: path
-            }
+            const translationData = {
+                prevLinkX,
+                prevLinkY,
+                prevTransX,
+                prevTransY,
+                prevTransZ,
+                clickTransX,
+                clickTransY,
+                bridgeLength,
+                quadrant,
+                quadrantCoefX,
+                quadrantCoefZ,
+                rotXbranch,
+                path,
+            };
 
-            let translations = getTranslations(translationData);
-            let transX = translations.X;
-            let transY = translations.Y;
-            let transZ = translations.Z;
+            const translations = getTranslations(translationData);
+            const transX = translations.X;
+            const transY = translations.Y;
+            const transZ = translations.Z;
             // console.log('transX', transX);
             // console.log('transY', transY);
             // console.log('transZ', transZ);
             // console.log('-----');
 
-            if (angleBranch != undefined) {
+            if (angleBranch !== undefined) {
                 angleBranch = angleBranch + 90;
                 newBranch.style.transform = `translateX(${transX}px) translateY(${transY}px) translateZ(${transZ}px) rotateX(0deg) rotateY(${angleBranch}deg) rotateZ(0deg) scale(1)`;
             } else {
                 newBranch.style.transform = `translateX(${right}px) translateY(${top}px) translateZ(0px) rotateX(0deg) rotateY(${angleDeg}deg) rotateZ(0deg) scale(1)`;
             }
 
-            let lastChild = pluridRoot.lastChild;
+            const lastChild = pluridRoot.lastChild;
 
             insertAfter(newBranch, lastChild);
 
-            let angleRotY = angleBranch ? angleBranch : angleDeg;
-            let branchSheet = newBranch.getElementsByTagName('plurid-sheet')[0];
+            const angleRotY = angleBranch ? angleBranch : angleDeg;
+            const branchSheet = newBranch.getElementsByTagName('plurid-sheet')[0];
 
 
             // let pluridShadow = document.createElement('plurid-shadow');
@@ -236,15 +236,15 @@ function setPluridLinks(pluridLink) {
             // // console.log('--------');
             // // console.log(branchSheet.offsetHeight);
 
-            let computedShadowHeight = 500;
+            const computedShadowHeight = 500;
             // pluridShadow.style.height = computedShadowHeight + "px";
 
-            let branchSheetHeight = branchSheet.offsetHeight;
-            let branchSheetWidth = branchSheet.offsetWidth;
+            const branchSheetHeight = (<any> branchSheet).offsetHeight;
+            const branchSheetWidth = (<any> branchSheet).offsetWidth;
             // // console.log('branchSheetWidth', branchSheetWidth);
             // pluridShadow.style.width = branchSheetWidth + "px";
 
-            let ground = pluridScene.meta.ground;
+            const ground = (<any> window).pluridScene.meta.ground;
             // console.log(ground);
 
             // if (branchSheetHeight > ground) {
@@ -253,38 +253,38 @@ function setPluridLinks(pluridLink) {
             // }
             // pluridShadow.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(90deg) scale(1) skew(0deg)`;
 
-            let reflectionY = transY ? transY : top;
+            const reflectionY = transY ? transY : top;
 
-            let reflections = pluridScene.meta.reflections;
+            const reflections = (<any> window).pluridScene.meta.reflections;
             if (reflections === true) {
                 setReflections(branchSheet, branchSheetHeight, ground, reflectionY);
             }
 
 
-            let sceneObject = {
-                linkParentId: linkParentId,
-                link: newBranch.link,
+            const sceneObject = {
+                linkParentId,
+                link: (<any> newBranch).link,
                 branchId: newBranch.id,
                 sheetId: branchSheet.id,
                 coordinates: {
-                    prevLinkX: prevLinkX,
-                    prevLinkY: prevLinkY,
+                    prevLinkX,
+                    prevLinkY,
                     linkX: right,
                     linkY: top,
-                    prevTransX: prevTransX,
-                    prevTransY: prevTransY,
-                    prevTransZ: prevTransZ,
-                    transX: transX,
-                    transY: transY,
-                    transZ: transZ,
-                    angleY: angleRotY
+                    prevTransX,
+                    prevTransY,
+                    prevTransZ,
+                    transX,
+                    transY,
+                    transZ,
+                    angleY: angleRotY,
                 },
                 children: [],
-                path: path
-            }
+                path,
+            };
 
-            for (let rootScene of pluridScene.content) {
-                if (rootScene.id == pluridRoot.id) {
+            for (const rootScene of (<any> window).pluridScene.content) {
+                if (rootScene.id === pluridRoot.id) {
                     if (sceneObject.linkParentId.includes('branch')) {
                         pushChildren(rootScene.children, sceneObject);
                     } else {
@@ -314,12 +314,12 @@ function setPluridLinks(pluridLink) {
  * adds event listeners on click to generate the plurid structure.
  */
 export function setLink(pluridPage) {
-    let pluridPageId = pluridPage.id;
-    let pageAnchorTags = document.querySelectorAll(`#${pluridPageId} a`);
-    let pagePluridLinks = document.querySelectorAll(`#${pluridPageId} plurid-link`);
+    const pluridPageId = pluridPage.id;
+    const pageAnchorTags = document.querySelectorAll(`#${pluridPageId} a`);
+    const pagePluridLinks = document.querySelectorAll(`#${pluridPageId} plurid-link`);
 
-    for (let anchorTag of pageAnchorTags) {
-        anchorTag.addEventListener('click', event => {
+    for (const anchorTag of pageAnchorTags) {
+        anchorTag.addEventListener('click', (event) => {
             event.preventDefault();
 
             if (!checkBranchExistence(anchorTag.id)) {
@@ -328,11 +328,11 @@ export function setLink(pluridPage) {
                 // TODO
                 // translate into view of the new plurid-branch
                 // console.log('anchorTag already set');
-            };
+            }
         });
     }
 
-    for (let pluridLink of pagePluridLinks) {
+    for (const pluridLink of pagePluridLinks) {
         pluridLink.addEventListener('click', () => {
             if (!checkBranchExistence(pluridLink.id)) {
                 setPluridLinks(pluridLink);
@@ -340,8 +340,8 @@ export function setLink(pluridPage) {
                 // TODO
                 // translate into view of the new plurid-branch
                 // console.log('pluridLink already set');
-            };
-        })
+            }
+        });
     }
 }
 
@@ -355,11 +355,11 @@ export function setLink(pluridPage) {
  * @return {HTMLElement}                    The specified parent element.
  */
 function checkBranchExistence(linkId) {
-    let branches = document.getElementsByTagName('plurid-branch');
+    const branches = document.getElementsByTagName('plurid-branch');
     let count = 0;
 
-    for (let branch of branches) {
-        if (branch.link == linkId) {
+    for (const branch of branches) {
+        if ((<any> branch).link === linkId) {
             count++;
             if (count >= 1) {
                 return true;
@@ -377,9 +377,9 @@ function checkBranchExistence(linkId) {
  * @param {string} sheetId          Id of a <plurid-sheet>
  */
 export function setAnchorTagsId(sheetId) {
-    let pageAnchorTags = document.querySelectorAll(`#${sheetId} a`);
+    const pageAnchorTags = document.querySelectorAll(`#${sheetId} a`);
 
-    for (let anchorTag of pageAnchorTags) {
+    for (const anchorTag of pageAnchorTags) {
         setId(anchorTag, 'anchor');
     }
 }
@@ -392,16 +392,16 @@ export function setAnchorTagsId(sheetId) {
  * @param {HTMLElement} pluridSheet
  */
 export function setPluridRoots(pluridSheet) {
-    if (pluridSheet.parentElement.nodeName == 'PLURID-ROOT') {
-        let sheet = {
+    if (pluridSheet.parentElement.nodeName === 'PLURID-ROOT') {
+        const sheet = {
             id: pluridSheet.parentElement.id,
             sheetId: pluridSheet.id,
             meta: [],
-            children: []
+            children: [],
         };
 
-        pluridScene.meta.rootSheets.push(pluridSheet.id);
-        pluridScene.content.push(sheet);
+        (<any> window).pluridScene.meta.rootSheets.push(pluridSheet.id);
+        (<any> window).pluridScene.content.push(sheet);
     }
 }
 
@@ -461,8 +461,8 @@ function getQuadrantCoefficients(quadrant) {
 
     return {
         X: quadrantCoefficientX,
-        Z: quadrantCoefficientZ
-    }
+        Z: quadrantCoefficientZ,
+    };
 }
 
 
@@ -476,14 +476,14 @@ function getQuadrantCoefficients(quadrant) {
  * @return {Array}
  */
 function generatePath(currentId, linkParentId) {
-    let parent = pluridScene.getBranchById(linkParentId);
+    const parent = (<any> window).pluridScene.getBranchById(linkParentId);
     if (parent) {
-        let path = [];
+        const path = [];
 
-        let parentPath = parent.path;
-        for (let pathElement of parentPath) {
-            let pluridElement = pluridScene.getBranchById(pathElement);
-            if (pluridElement.linkParentId != linkParentId) {
+        const parentPath = parent.path;
+        for (const pathElement of parentPath) {
+            const pluridElement = (<any> window).pluridScene.getBranchById(pathElement);
+            if (pluridElement.linkParentId !== linkParentId) {
                 path.push(pathElement);
             }
         }
@@ -503,33 +503,33 @@ function generatePath(currentId, linkParentId) {
  * @return {Object}
  */
 function getTranslations(translationData) {
-    let prevLinkX = translationData.prevLinkX;
-    let prevLinkY = translationData.prevLinkY;
-    let prevTransX = translationData.prevTransX;
-    let prevTransY = translationData.prevTransY;
-    let prevTransZ = translationData.prevTransZ;
-    let clickTransX = translationData.clickTransX;
-    let clickTransY = translationData.clickTransY;
-    let bridgeLength = translationData.bridgeLength;
-    let quadrant = translationData.quadrant;
-    let quadrantCoefX = translationData.quadrantCoefX;
-    let quadrantCoefZ = translationData.quadrantCoefZ;
-    let rotXbranch = translationData.rotXbranch;
-    let path = translationData.path;
+    const prevLinkX = translationData.prevLinkX;
+    const prevLinkY = translationData.prevLinkY;
+    const prevTransX = translationData.prevTransX;
+    const prevTransY = translationData.prevTransY;
+    const prevTransZ = translationData.prevTransZ;
+    const clickTransX = translationData.clickTransX;
+    const clickTransY = translationData.clickTransY;
+    const bridgeLength = translationData.bridgeLength;
+    const quadrant = translationData.quadrant;
+    const quadrantCoefX = translationData.quadrantCoefX;
+    const quadrantCoefZ = translationData.quadrantCoefZ;
+    const rotXbranch = translationData.rotXbranch;
+    const path = translationData.path;
 
     let penultimateRoot;
     let penultimateRootTransX;
     let penultimateRootTransZ;
     let penultimateRootAngleY;
     let penultimateRootAngleYRad;
-    let penultimate = path.length - 2;
+    const penultimate = path.length - 2;
 
     let transX;
     let transY;
     let transZ;
 
     if (penultimate > 0) {
-        penultimateRoot = pluridScene.getBranchById(path[penultimate]);
+        penultimateRoot = (<any> window).pluridScene.getBranchById(path[penultimate]);
         penultimateRootAngleY = penultimateRoot.coordinates.angleY;
         // console.log(penultimateRootAngleY);
         penultimateRootAngleYRad = penultimateRootAngleY * Math.PI / 180;
@@ -538,7 +538,7 @@ function getTranslations(translationData) {
     }
 
 
-    if (path.length == 2) {
+    if (path.length === 2) {
         transX = quadrantCoefX * (prevLinkX + (clickTransX + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180))
         transZ = quadrantCoefZ * (clickTransX + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
         // console.log('PATH LENGTH', path.length);
@@ -556,7 +556,7 @@ function getTranslations(translationData) {
         X: transX,
         Y: transY,
         Z: transZ,
-    }
+    };
 }
 
 
@@ -564,12 +564,12 @@ function getTranslations(translationData) {
  * Sets eventListener on window to detect active sheet.
  */
 function setActiveSheetListener() {
-    window.addEventListener('click', event => {
+    window.addEventListener('click', (event) => {
         // cross-browsers eventPath
-        let eventPath = event.path || (event.composedPath && event.composedPath());
+        const eventPath = (<any> event).path || (event.composedPath && event.composedPath());
 
         setActiveSheet(eventPath);
-    })
+    });
 }
 setActiveSheetListener();
 
@@ -577,16 +577,16 @@ setActiveSheetListener();
  * Set active sheet logic
  */
 function setActiveSheet(eventPath) {
-    let activeSheet = pluridScene.meta.activeSheet;
-    let currentSheet = checkSheet(eventPath);
+    const activeSheet = (<any> window).pluridScene.meta.activeSheet;
+    const currentSheet = checkSheet(eventPath);
     if (currentSheet) {
-        if (currentSheet != activeSheet) {
-            pluridScene.meta.previousActiveSheet = pluridScene.meta.activeSheet;
-            pluridScene.meta.activeSheet = currentSheet;
+        if (currentSheet !== activeSheet) {
+            (<any> window).pluridScene.meta.previousActiveSheet = (<any> window).pluridScene.meta.activeSheet;
+            (<any> window).pluridScene.meta.activeSheet = currentSheet;
 
-            removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active-transform');
-            removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active');
-            addActiveSheetShadow(pluridScene.meta.activeSheet, 'plurid-sheet-active');
+            removeActiveSheetShadow((<any> window).pluridScene.meta.previousActiveSheet, 'plurid-sheet-active-transform');
+            removeActiveSheetShadow((<any> window).pluridScene.meta.previousActiveSheet, 'plurid-sheet-active');
+            addActiveSheetShadow((<any> window).pluridScene.meta.activeSheet, 'plurid-sheet-active');
         }
     }
 }
@@ -598,8 +598,8 @@ function setActiveSheet(eventPath) {
  * @return {string}
  */
 function checkSheet(path) {
-    for (let pathElement of path) {
-        if (pathElement.nodeName == 'PLURID-SHEET') {
+    for (const pathElement of path) {
+        if (pathElement.nodeName === 'PLURID-SHEET') {
             return pathElement.id;
         }
     }
@@ -611,7 +611,7 @@ function checkSheet(path) {
  * @param {string} sheetId
  */
 export function removeActiveSheetShadow(sheetId, activeSheetClass) {
-    let sheet = document.getElementById(sheetId);
+    const sheet = document.getElementById(sheetId);
 
     if (sheet) {
         sheet.classList.remove(activeSheetClass);
@@ -624,7 +624,7 @@ export function removeActiveSheetShadow(sheetId, activeSheetClass) {
  * @param {string} sheetId
  */
 export function addActiveSheetShadow(sheetId, activeSheetClass) {
-    let sheet = document.getElementById(sheetId);
+    const sheet = document.getElementById(sheetId);
 
     if (sheet) {
         sheet.classList.add(activeSheetClass);
