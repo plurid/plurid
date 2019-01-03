@@ -8,7 +8,7 @@
         "watch": "webpack --watch --env dev",
         "cypress:open": "cypress open",
         "cypress:run": "cypress run",
-        "test": "jest ./app/test/unit/"
+        "test": "jest ./test/unit/"
     },
     "repository": {
         "type": "git",
