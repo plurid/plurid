@@ -37,7 +37,6 @@
         "selector-max-specificity": "1,4,1",
         "selector-max-universal": 1,
         "selector-no-vendor-prefix": true,
-        "selector-pseudo-class-no-unknown": false,
         "selector-pseudo-element-no-unknown": true,
         "string-no-newline": true,
         "value-no-vendor-prefix": true,
