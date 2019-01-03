@@ -1,6 +1,6 @@
-import { getTransformRotate } from "../../core/logic/transforms-core.js";
-import * as transcore from "../../core/logic/transforms-core.js";
-import * as matrix from "../../core/logic/matrix.js";
+import * as matrix from "../../core/logic/matrix";
+import { getTransformRotate } from "../../core/logic/transforms-core";
+import * as transcore from "../../core/logic/transforms-core";
 import { capitalize } from "../../core/utils/simple";
 
 
@@ -168,15 +168,15 @@ export function rotateViewcube(event, plurid, rotateX, rotateY) {
     // let rotateXdeg = rotateX * 180 / Math.PI;
     // let rotateYdeg = rotateY * 180 / Math.PI;
     if (previousButtons) {
-        for (let previousButton of previousButtons) {
+        for (const previousButton of previousButtons) {
             previousButton.classList.remove('plurid-viewcube-model-transform-face-selected');
         }
     }
 
-    let viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
+    const viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
 
     // viewCube.style.transform = `translateX(32px) translateY(23px) rotateX(${rotateXdeg}deg) rotateY(${rotateYdeg}deg)`;
-    viewCube.style.transform = `translateX(32px) translateY(23px) rotateX(${-1 * rotateX}deg) rotateY(${-1 * rotateY}deg)`;
+    (<any> viewCube).style.transform = `translateX(32px) translateY(23px) rotateX(${-1 * rotateX}deg) rotateY(${-1 * rotateY}deg)`;
 }
 
 
@@ -208,55 +208,55 @@ function setModelZoneButtons(buttons, viewZone) {
         'right-top-center': { rotateX: -45, rotateY: 270 },
         'right-bottom-center': { rotateX: 45, rotateY: 270 },
         'top-middle-center': { rotateX: -90, rotateY: 0 },
-        'base-middle-center': { rotateX: 90, rotateY: 0 }
+        'base-middle-center': { rotateX: 90, rotateY: 0 },
     })[_viewZone];
 
-    function position (transform) {
-        let pluridRoots = document.getElementsByTagName('plurid-roots')[0];
-        let viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
+    function position(transform) {
+        const pluridRoots = document.getElementsByTagName('plurid-roots')[0];
+        const viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
 
-        let rotationDeviation = 0.06;
-        let rotateX = transform.rotateX + rotationDeviation;
-        let rotateY = transform.rotateY + rotationDeviation;
+        const rotationDeviation = 0.06;
+        const rotateX = transform.rotateX + rotationDeviation;
+        const rotateY = transform.rotateY + rotationDeviation;
 
-        let translateX = transcore.getTransformTranslate(pluridRoots).translateX;
-        let translateY = transcore.getTransformTranslate(pluridRoots).translateY;
-        let translateZ = 0;
-        let scale = transcore.getTransformScale(pluridRoots).scale;
+        const translateX = transcore.getTransformTranslate(pluridRoots).translateX;
+        const translateY = transcore.getTransformTranslate(pluridRoots).translateY;
+        const translateZ = 0;
+        const scale = transcore.getTransformScale(pluridRoots).scale;
 
-        let valRotationMatrix = matrix.rotateMatrix(-1 * rotateX, -1 * rotateY);
-        // let valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
-        // let valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
+        const valRotationMatrix = matrix.rotateMatrix(-1 * rotateX, -1 * rotateY);
+        // const valrotationXMatrix = matrix.rotateXMatrix(-1 * rotateX);
+        // const valrotationYMatrix = matrix.rotateYMatrix(-1 * rotateY);
 
-        let valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
-        let valscaleMatrix = matrix.scaleMatrix(scale);
+        const valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+        const valscaleMatrix = matrix.scaleMatrix(scale);
 
-        let yPos = transcore.getyPos(null, pluridRoots);
+        const yPos = transcore.getyPos(null, pluridRoots);
 
         // transform = transform <= 180 ? transform : transform + 360;
 
-        // let rotateY = getTransformRotate(viewCube).rotateY;
-        // let rotateYdeg = rotateY * 180 / Math.PI;
-        // let angle = (rotateY + transform) <= 180 ? transform : 360 + transform;
+        // const rotateY = getTransformRotate(viewCube).rotateY;
+        // const rotateYdeg = rotateY * 180 / Math.PI;
+        // const angle = (rotateY + transform) <= 180 ? transform : 360 + transform;
 
         // console.log('rotateYdeg', rotateYdeg);
         // console.log('transform', transform);
         // console.log('angle', angle);
 
-        pluridRoots.style.transition = "transform 300ms";
+        (<any> pluridRoots).style.transition = "transform 300ms";
         transcore.setTransform(pluridRoots, valRotationMatrix, valtranslationMatrix, valscaleMatrix, yPos);
 
-        viewCube.style.transition = "transform 300ms";
+        (<any> viewCube).style.transition = "transform 300ms";
 
-        if (rotateX != 0) {
-            viewCube.style.transform = `translateX(32px) translateY(23px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        if (rotateX !== 0) {
+            (<any> viewCube).style.transform = `translateX(32px) translateY(23px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         } else {
-            viewCube.style.transform = `translateX(32px) translateY(23px) rotateY(${rotateY}deg)`;
+            (<any> viewCube).style.transform = `translateX(32px) translateY(23px) rotateY(${rotateY}deg)`;
         }
 
         setTimeout(() => {
-            viewCube.style.transition = "";
-            pluridRoots.style.transition = "";
+            (<any> viewCube).style.transition = "";
+            (<any> pluridRoots).style.transition = "";
         }, 300);
 
         // function rotateThis(el, nR) {
@@ -278,29 +278,29 @@ function setModelZoneButtons(buttons, viewZone) {
         // console.log(transform);
         console.log(previousButtons);
         if (previousButtons) {
-            for (let previousButton of previousButtons) {
+            for (const previousButton of previousButtons) {
                 previousButton.classList.remove('plurid-viewcube-model-transform-face-selected');
             }
         }
 
-        for (let button of buttons) {
+        for (const button of buttons) {
             button.classList.add('plurid-viewcube-model-transform-face-selected');
         }
 
         previousButtons = buttons;
     }
 
-    buttons.map(button => {
+    buttons.map( (button) => {
         button.addEventListener('mouseover', () => {
-            buttons.map(button => button.classList.add('plurid-viewcube-model-transform-face-zone-active') );
+            buttons.map( (btn) => btn.classList.add('plurid-viewcube-model-transform-face-zone-active') );
         });
         button.addEventListener('mouseout', () => {
-            buttons.map(button => button.classList.remove('plurid-viewcube-model-transform-face-zone-active') );
+            buttons.map( (btn) => btn.classList.remove('plurid-viewcube-model-transform-face-zone-active') );
         });
 
         button.addEventListener('click', () => {
             position(viewZoneSwitch(viewZone));
-        })
+        });
     });
 }
 
@@ -308,16 +308,16 @@ let previousButtons;
 
 
 export function initViewcubeModelButtons(container) {
-    let faces = ['front', 'left', 'back', 'right', 'top', 'base'];
-    let rows = ['top', 'middle', 'bottom'];
-    let columns = ['left', 'center', 'right'];
+    const faces = ['front', 'left', 'back', 'right', 'top', 'base'];
+    const rows = ['top', 'middle', 'bottom'];
+    const columns = ['left', 'center', 'right'];
 
-    let buttons = {};
-    let viewZones = {};
+    const buttons = {};
+    const viewZones = {};
 
-    faces.map(face => {
-        rows.map(row => {
-            columns.map(column => {
+    faces.map((face) => {
+        rows.map((row) => {
+            columns.map((column) => {
                 const key = face + capitalize(row) + capitalize(column);
                 const selectClass = `${face}-${row}-${column}`;
                 const buttonClass = `plurid-viewcube-model-transform-${selectClass}`;
@@ -330,72 +330,72 @@ export function initViewcubeModelButtons(container) {
 
     // Index of viewZone and zoneButtons must remain in a one-to-one correpondence.
     const viewZone = [
-        viewZones.frontMiddleCenter,
-        viewZones.leftMiddleCenter,
-        viewZones.backMiddleCenter,
-        viewZones.rightMiddleCenter,
-        viewZones.topMiddleCenter,
-        viewZones.baseMiddleCenter,
+        (<any> viewZones).frontMiddleCenter,
+        (<any> viewZones).leftMiddleCenter,
+        (<any> viewZones).backMiddleCenter,
+        (<any> viewZones).rightMiddleCenter,
+        (<any> viewZones).topMiddleCenter,
+        (<any> viewZones).baseMiddleCenter,
 
-        viewZones.frontMiddleLeft,
-        viewZones.leftMiddleLeft,
-        viewZones.backMiddleLeft,
-        viewZones.rightMiddleLeft,
+        (<any> viewZones).frontMiddleLeft,
+        (<any> viewZones).leftMiddleLeft,
+        (<any> viewZones).backMiddleLeft,
+        (<any> viewZones).rightMiddleLeft,
 
-        viewZones.frontTopCenter,
-        viewZones.frontBottomCenter,
-        viewZones.leftTopCenter,
-        viewZones.leftBottomCenter,
-        viewZones.backTopCenter,
-        viewZones.backBottomCenter,
-        viewZones.rightTopCenter,
-        viewZones.rightBottomCenter,
+        (<any> viewZones).frontTopCenter,
+        (<any> viewZones).frontBottomCenter,
+        (<any> viewZones).leftTopCenter,
+        (<any> viewZones).leftBottomCenter,
+        (<any> viewZones).backTopCenter,
+        (<any> viewZones).backBottomCenter,
+        (<any> viewZones).rightTopCenter,
+        (<any> viewZones).rightBottomCenter,
 
-        viewZones.frontTopLeft,
-        viewZones.leftTopLeft,
-        viewZones.backTopLeft,
-        viewZones.rightTopLeft,
+        (<any> viewZones).frontTopLeft,
+        (<any> viewZones).leftTopLeft,
+        (<any> viewZones).backTopLeft,
+        (<any> viewZones).rightTopLeft,
 
-        viewZones.frontBottomLeft,
-        viewZones.leftBottomLeft,
-        viewZones.backBottomLeft,
-        viewZones.rightBottomLeft
+        (<any> viewZones).frontBottomLeft,
+        (<any> viewZones).leftBottomLeft,
+        (<any> viewZones).backBottomLeft,
+        (<any> viewZones).rightBottomLeft,
     ];
 
     const zoneButtons = [
-        [buttons.frontMiddleCenter],
-        [buttons.leftMiddleCenter],
-        [buttons.backMiddleCenter],
-        [buttons.rightMiddleCenter],
-        [buttons.topMiddleCenter],
-        [buttons.baseMiddleCenter],
+        [(<any> buttons).frontMiddleCenter],
+        [(<any> buttons).leftMiddleCenter],
+        [(<any> buttons).backMiddleCenter],
+        [(<any> buttons).rightMiddleCenter],
+        [(<any> buttons).topMiddleCenter],
+        [(<any> buttons).baseMiddleCenter],
 
-        [buttons.frontMiddleLeft, buttons.leftMiddleRight],
-        [buttons.leftMiddleLeft, buttons.backMiddleRight],
-        [buttons.backMiddleLeft, buttons.rightMiddleRight],
-        [buttons.rightMiddleLeft, buttons.frontMiddleRight],
+        [(<any> buttons).frontMiddleLeft, (<any> buttons).leftMiddleRight],
+        [(<any> buttons).leftMiddleLeft, (<any> buttons).backMiddleRight],
+        [(<any> buttons).backMiddleLeft, (<any> buttons).rightMiddleRight],
+        [(<any> buttons).rightMiddleLeft, (<any> buttons).frontMiddleRight],
 
-        [buttons.frontTopCenter, buttons.topBottomCenter],
-        [buttons.frontBottomCenter, buttons.baseTopCenter],
-        [buttons.leftTopCenter, buttons.topMiddleLeft],
-        [buttons.leftBottomCenter, buttons.baseMiddleLeft],
-        [buttons.backTopCenter, buttons.topTopCenter],
-        [buttons.backBottomCenter, buttons.baseBottomCenter],
-        [buttons.rightTopCenter, buttons.topMiddleRight],
-        [buttons.rightBottomCenter, buttons.baseMiddleRight],
+        [(<any> buttons).frontTopCenter, (<any> buttons).topBottomCenter],
+        [(<any> buttons).frontBottomCenter, (<any> buttons).baseTopCenter],
+        [(<any> buttons).leftTopCenter, (<any> buttons).topMiddleLeft],
+        [(<any> buttons).leftBottomCenter, (<any> buttons).baseMiddleLeft],
+        [(<any> buttons).backTopCenter, (<any> buttons).topTopCenter],
+        [(<any> buttons).backBottomCenter, (<any> buttons).baseBottomCenter],
+        [(<any> buttons).rightTopCenter, (<any> buttons).topMiddleRight],
+        [(<any> buttons).rightBottomCenter, (<any> buttons).baseMiddleRight],
 
-        [buttons.frontTopLeft, buttons.leftTopRight, buttons.topBottomLeft],
-        [buttons.leftTopLeft, buttons.backTopRight, buttons.topTopLeft],
-        [buttons.backTopLeft, buttons.rightTopRight, buttons.topTopRight],
-        [buttons.rightTopLeft, buttons.frontTopRight, buttons.topBottomRight],
+        [(<any> buttons).frontTopLeft, (<any> buttons).leftTopRight, (<any> buttons).topBottomLeft],
+        [(<any> buttons).leftTopLeft, (<any> buttons).backTopRight, (<any> buttons).topTopLeft],
+        [(<any> buttons).backTopLeft, (<any> buttons).rightTopRight, (<any> buttons).topTopRight],
+        [(<any> buttons).rightTopLeft, (<any> buttons).frontTopRight, (<any> buttons).topBottomRight],
 
-        [buttons.frontBottomLeft, buttons.leftBottomRight, buttons.baseTopLeft],
-        [buttons.leftBottomLeft, buttons.backBottomRight, buttons.baseBottomLeft],
-        [buttons.backBottomLeft, buttons.rightBottomRight, buttons.baseBottomRight],
-        [buttons.rightBottomLeft, buttons.frontBottomRight, buttons.baseTopRight]
+        [(<any> buttons).frontBottomLeft, (<any> buttons).leftBottomRight, (<any> buttons).baseTopLeft],
+        [(<any> buttons).leftBottomLeft, (<any> buttons).backBottomRight, (<any> buttons).baseBottomLeft],
+        [(<any> buttons).backBottomLeft, (<any> buttons).rightBottomRight, (<any> buttons).baseBottomRight],
+        [(<any> buttons).rightBottomLeft, (<any> buttons).frontBottomRight, (<any> buttons).baseTopRight]
     ];
 
-    zoneButtons.map((buttons, index) => {
-        setModelZoneButtons(buttons, viewZone[index]);
+    zoneButtons.map((_buttons, index) => {
+        setModelZoneButtons(_buttons, viewZone[index]);
     });
 }
