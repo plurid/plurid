@@ -33,11 +33,11 @@ module.exports = {
 
     // A list of reporter names that Jest uses when writing coverage reports
     coverageReporters: [
-      "json",
-      "html",
-      "lcov",
-    //   "text",
-    //   "clover"
+        "json",
+        "html",
+        "lcov",
+        //   "text",
+        //   "clover"
     ],
 
     // An object that configures minimum threshold enforcement for coverage results
@@ -56,7 +56,11 @@ module.exports = {
     // globalTeardown: null,
 
     // A set of global variables that need to be available in all test environments
-    // globals: {},
+    "globals": {
+        "ts-jest": {
+          "diagnostics": false
+        }
+    },
 
     // An array of directory names to be searched recursively up from the requiring module's location
     // moduleDirectories: [
@@ -64,12 +68,10 @@ module.exports = {
     // ],
 
     // An array of file extensions your modules use
-    // moduleFileExtensions: [
-    //   "js",
-    //   "json",
-    //   "jsx",
-    //   "node"
-    // ],
+    moduleFileExtensions: [
+        "ts",
+        "js"
+    ],
 
     // A map from regular expressions to module names that allow to stub out resources with a single module
     // moduleNameMapper: {},
@@ -125,7 +127,7 @@ module.exports = {
     // snapshotSerializers: [],
 
     // The test environment that will be used for testing
-    testEnvironment: "node",
+    testEnvironment: "jsdom",
 
     // Options that will be passed to the testEnvironment
     // testEnvironmentOptions: {},
@@ -135,8 +137,8 @@ module.exports = {
 
     // The glob patterns Jest uses to detect test files
     // testMatch: [
-    //   "**/__tests__/**/*.js?(x)",
-    //   "**/?(*.)+(spec|test).js?(x)"
+    //     // "**/test/**/*.ts?(x)",
+    //     "**/?(*.)+(spec).ts"
     // ],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
@@ -146,6 +148,7 @@ module.exports = {
 
     // The regexp pattern Jest uses to detect test files
     // testRegex: "",
+    "testRegex": "\\.spec\\.ts$",
 
     // This option allows the use of a custom results processor
     // testResultsProcessor: null,
@@ -160,7 +163,9 @@ module.exports = {
     // timers: "real",
 
     // A map from regular expressions to paths to transformers
-    // transform: null,
+    transform: {
+        "^.+\\.ts$": "ts-jest"
+    },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
     // transformIgnorePatterns: [
