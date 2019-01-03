@@ -1,19 +1,21 @@
-import { activePlurid } from "../../core/logic/get-plurid";
-import { getSpecifiedParent,
-         removeActiveSheetShadow,
-         addActiveSheetShadow } from "../sheet/sheet-core";
+// import { activePlurid } from "../../core/logic/get-plurid";
+import {
+        addActiveSheetShadow,
+        getSpecifiedParent,
+        removeActiveSheetShadow,
+        } from "../sheet/sheet-core";
 
 
 
 export function renderControls(element, id) {
-    let controls = document.createElement("plurid-controls");
+    const controls = document.createElement("plurid-controls");
     controls.id = `plurid-controls-${id}`;
     element.appendChild(controls);
 }
 
 
-export function contentControls () {
-    let content = `<div class="plurid-container-controls-content">
+export function contentControls() {
+    const content = `<div class="plurid-container-controls-content">
                         <div class="plurid-button plurid-button-icon plurid-controls-select" tabindex="1">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 715.45 731.22"><defs></defs><title>Select</title><g><g id="Select"><path class="plurid-button-icon-svg" d="M354.25,731.22,340.3,363.64,0,316.45,715.45,0ZM181,291.07l207.7,28.81,8.06,212.42L609.53,101.52Z"/></g></g></svg>
                         </div>
@@ -449,17 +451,17 @@ export function setControls(element) {
 
 
 function setActivePlurid(element) {
-    let pluridSelect = element.getElementsByClassName("plurid-controls-select")[0];
+    const pluridSelect = element.getElementsByClassName("plurid-controls-select")[0];
 
     pluridSelect.addEventListener("click", (event) => {
-        let pluridRoot = getSpecifiedParent(pluridSelect, 'PLURID-ROOT');
-        pluridScene.meta.activePlurid = pluridRoot.id;
+        const pluridRoot = getSpecifiedParent(pluridSelect, 'PLURID-ROOT');
+        (<any> window).pluridScene.meta.activePlurid = pluridRoot.id;
 
-        pluridScene.meta.previousActiveSheet = pluridScene.meta.activeSheet;
-        pluridScene.meta.activeSheet = element.parentElement.id;
+        (<any> window).pluridScene.meta.previousActiveSheet = (<any> window).pluridScene.meta.activeSheet;
+        (<any> window).pluridScene.meta.activeSheet = element.parentElement.id;
 
-        removeActiveSheetShadow(pluridScene.meta.previousActiveSheet, 'plurid-sheet-active-transform');
-        addActiveSheetShadow(pluridScene.meta.activeSheet, 'plurid-sheet-active-transform');
+        removeActiveSheetShadow((<any> window).pluridScene.meta.previousActiveSheet, 'plurid-sheet-active-transform');
+        addActiveSheetShadow((<any> window).pluridScene.meta.activeSheet, 'plurid-sheet-active-transform');
     });
 
     // pluridSelect.addEventListener("dblclick", (event) => {
@@ -476,13 +478,13 @@ function setActivePlurid(element) {
 
 
 function goToParent(element) {
-    let pluridParent = element.getElementsByClassName("plurid-controls-parent")[0];
-    let bridge = element.parentElement.parentElement.parentElement.children[0];
-    let scion = element.parentElement.parentElement.parentElement.children[1];
-    let controls = pluridParent.parentElement;
+    const pluridParent = element.getElementsByClassName("plurid-controls-parent")[0];
+    const bridge = element.parentElement.parentElement.parentElement.children[0];
+    const scion = element.parentElement.parentElement.parentElement.children[1];
+    const controls = pluridParent.parentElement;
 
-    if (bridge.nodeName == "PLURID-BRIDGE") {
-        pluridParent.addEventListener('click', event => {
+    if (bridge.nodeName === "PLURID-BRIDGE") {
+        pluridParent.addEventListener('click', (event) => {
             console.log('Plurid Parent');
         });
     } else {
@@ -492,12 +494,12 @@ function goToParent(element) {
 
 
 function minimizeSelectedSheet(element) {
-    let pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
-    let pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
+    const pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
+    const pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
 
-    pluridMinimize.addEventListener('click', event => {
-        let sheet = element.parentElement;
-        let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
+    pluridMinimize.addEventListener('click', (event) => {
+        const sheet = element.parentElement;
+        const sheetChildren = (<any> window).pluridScene.getChildrenBySheetId(sheet.id);
 
         if (pluridReduce.classList.contains("plurid-button-active")) {
             pluridReduce.classList.remove("plurid-button-active");
@@ -511,21 +513,21 @@ function minimizeSelectedSheet(element) {
         sheet.classList.toggle("plurid-sheet-minimize");
         pluridMinimize.classList.toggle("plurid-button-active");
         toggleChildren(sheetChildren);
-    })
+    });
 }
 
 
 function reduceSelectedSheet(element) {
-    let pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
-    let pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
+    const pluridReduce = element.getElementsByClassName("plurid-controls-reduce-height")[0];
+    const pluridMinimize = element.getElementsByClassName("plurid-controls-minimize")[0];
 
 
-    pluridReduce.addEventListener('click', event => {
-        let sheet = element.parentElement;
-        let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
+    pluridReduce.addEventListener('click', (event) => {
+        const sheet = element.parentElement;
+        const sheetChildren = (<any> window).pluridScene.getChildrenBySheetId(sheet.id);
 
-        let sheetHeight = window.getComputedStyle(sheet,null).getPropertyValue("height");
-        sheetHeight = parseInt(sheetHeight);
+        let sheetHeight: string | number = window.getComputedStyle(sheet, null).getPropertyValue("height");
+        sheetHeight = parseInt(sheetHeight, 0);
         if (sheetHeight > 699 && sheetHeight > 60) {
             if (sheet.classList.contains("plurid-sheet-minimize")) {
                 sheet.classList.remove("plurid-sheet-minimize");
@@ -556,8 +558,8 @@ function reduceSelectedSheet(element) {
  * @param {Array} sheetChildren
  */
 function toggleChildren(sheetChildren) {
-    for (let child of sheetChildren) {
-        let branch = document.getElementById(child);
+    for (const child of sheetChildren) {
+        const branch = document.getElementById(child);
         if (branch.style.display === "none") {
             branch.style.display = "block";
         } else {
@@ -568,26 +570,26 @@ function toggleChildren(sheetChildren) {
 
 
 function closePlurid(element) {
-    let pluridParentClose = element.getElementsByClassName("plurid-controls-close")[0];
+    const pluridParentClose = element.getElementsByClassName("plurid-controls-close")[0];
 
-    pluridParentClose.addEventListener("click", event => {
-        let sheet = element.parentElement;
-        let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
+    pluridParentClose.addEventListener("click", (event) => {
+        const sheet = element.parentElement;
+        const sheetChildren = (<any> window).pluridScene.getChildrenBySheetId(sheet.id);
 
-        if (sheet.parentElement.nodeName == "PLURID-ROOT") {
-            let pluridRoot = sheet.parentElement;
+        if (sheet.parentElement.nodeName === "PLURID-ROOT") {
+            const pluridRoot = sheet.parentElement;
             pluridRoot.removeChild(sheet);
             removeChildren(pluridRoot, sheetChildren);
         } else {
-            let pluridRoot = sheet.parentElement.parentElement.parentElement;
-            if (pluridRoot.nodeName == "PLURID-ROOT") {
-                let branch = sheet.parentElement.parentElement;
+            const pluridRoot = sheet.parentElement.parentElement.parentElement;
+            if (pluridRoot.nodeName === "PLURID-ROOT") {
+                const branch = sheet.parentElement.parentElement;
                 pluridRoot.removeChild(branch);
                 removeChildren(pluridRoot, sheetChildren);
             }
         }
 
-        pluridScene.meta.activePlurid = 'plurid-roots-1';
+        (<any> window).pluridScene.meta.activePlurid = 'plurid-roots-1';
     });
 }
 
@@ -600,8 +602,8 @@ function closePlurid(element) {
  */
 function removeChildren(pluridRoot, children) {
     if (children) {
-        for (let child of children) {
-            let branch = document.getElementById(child);
+        for (const child of children) {
+            const branch = document.getElementById(child);
             if (branch) {
                 pluridRoot.removeChild(branch);
             }
@@ -611,16 +613,16 @@ function removeChildren(pluridRoot, children) {
 
 
 function reloadPlurid(element) {
-    let pluridReload = element.getElementsByClassName("plurid-controls-reload")[0];
-    let sheet = element.parentElement;
-    let pluridSearchInput = element.getElementsByClassName("plurid-controls-url-input")[0];
+    const pluridReload = element.getElementsByClassName("plurid-controls-reload")[0];
+    const sheet = element.parentElement;
+    const pluridSearchInput = element.getElementsByClassName("plurid-controls-url-input")[0];
     let url = pluridSearchInput.value;
 
     if (!url) {
         pluridReload.classList.add("plurid-button-disabled");
     }
 
-    pluridReload.addEventListener('click', event => {
+    pluridReload.addEventListener('click', (event) => {
         url = pluridSearchInput.value;
         if (url) {
             pluridReload.classList.add("rotate-button");
@@ -634,12 +636,12 @@ function reloadPlurid(element) {
 
 
 function extendBridge(element) {
-    let bridgeExtend = element.getElementsByClassName("plurid-controls-extend")[0];
-    let bridge = element.parentElement.parentElement.parentElement.children[0];
-    let scion = element.parentElement.parentElement.parentElement.children[1];
-    let controls = bridgeExtend.parentElement;
+    const bridgeExtend = element.getElementsByClassName("plurid-controls-extend")[0];
+    const bridge = element.parentElement.parentElement.parentElement.children[0];
+    const scion = element.parentElement.parentElement.parentElement.children[1];
+    const controls = bridgeExtend.parentElement;
 
-    if (bridge.nodeName == "PLURID-BRIDGE") {
+    if (bridge.nodeName === "PLURID-BRIDGE") {
         bridgeExtend.addEventListener('mousedown', () => {
             document.body.style.cursor = "-webkit-grabbing";
             document.body.style.cursor = "grabbing";
@@ -660,15 +662,15 @@ function extendBridge(element) {
     }
 
     function extend(event) {
-        let width = parseInt(bridge.style.width) || 100;
-        let right = parseInt(scion.style.right) || -100;
+        let width: string | number = parseInt(bridge.style.width, 0) || 100;
+        let right: string | number = parseInt(scion.style.right, 0) || -100;
         // console.log('bridge.style.width', bridge.style.width);
         // console.log('scion.style.right', scion.style.right);
         // console.log(width);
         width = width + event.movementX + "px";
         right = right - event.movementX + "px";
 
-        if (parseInt(bridge.style.width) <= 0) {
+        if (parseInt(bridge.style.width, 0) <= 0) {
             // console.log(parseInt(width));
             // if (parseInt(width) > 0) {
                 bridge.style.width = "100px";
@@ -688,84 +690,84 @@ function extendBridge(element) {
 
 
 function isolatePlurid(element) {
-    let pluridIsolate = element.getElementsByClassName("plurid-controls-isolate")[0];
+    const pluridIsolate = element.getElementsByClassName("plurid-controls-isolate")[0];
 
-    pluridIsolate.addEventListener('click', event => {
+    pluridIsolate.addEventListener('click', (event) => {
         console.log('Plurid Isolate');
     });
 }
 
 
 function backPlurid(element) {
-    let pluridBack = element.getElementsByClassName("plurid-controls-back")[0];
+    const pluridBack = element.getElementsByClassName("plurid-controls-back")[0];
 
-    pluridBack.addEventListener('click', event => {
+    pluridBack.addEventListener('click', (event) => {
         console.log('Plurid Back');
     });
 }
 
 
 function forwardPlurid(element) {
-    let pluridForward = element.getElementsByClassName("plurid-controls-forward")[0];
+    const pluridForward = element.getElementsByClassName("plurid-controls-forward")[0];
 
-    pluridForward.addEventListener('click', event => {
+    pluridForward.addEventListener('click', (event) => {
         console.log('Plurid Forward');
     });
 }
 
 
 function searchPlurid(element) {
-    let pluridSearch = element.getElementsByClassName("plurid-controls-search")[0];
-    let pluridSearchInput = element.getElementsByClassName("plurid-controls-url-input")[0];
-    let pluridCancelSearch = element.getElementsByClassName("plurid-controls-cancel")[0];
-    let sheet = element.parentElement;
+    const pluridSearch = element.getElementsByClassName("plurid-controls-search")[0];
+    const pluridSearchInput = element.getElementsByClassName("plurid-controls-url-input")[0];
+    const pluridCancelSearch = element.getElementsByClassName("plurid-controls-cancel")[0];
+    const sheet = element.parentElement;
 
-    if (sheet.parentElement.nodeName == "PLURID-ROOT") {
-        let pluridRoot = sheet.parentElement;
+    if (sheet.parentElement.nodeName === "PLURID-ROOT") {
+        const pluridRoot = sheet.parentElement;
     } else {
-        let pluridRoot = sheet.parentElement.parentElement.parentElement;
-        if (pluridRoot.nodeName == "PLURID-ROOT") {
-            let branch = sheet.parentElement.parentElement;
+        const pluridRoot = sheet.parentElement.parentElement.parentElement;
+        if (pluridRoot.nodeName === "PLURID-ROOT") {
+            const branch = sheet.parentElement.parentElement;
             setSearchLink(branch.link, pluridSearchInput);
         }
     }
 
-    function setSearchLink(branchLink, pluridSearchInput) {
-        let link = document.getElementById(branchLink);
+    function setSearchLink(branchLink, pluridSearchInpt) {
+        const link = document.getElementById(branchLink);
         let linkHref;
 
-        if (link.nodeName == "A") {
-            linkHref = link.href;
+        if (link.nodeName === "A") {
+            linkHref = (<any> link).href;
         }
 
-        if (link.nodeName == "PLURID-LINK") {
-            linkHref = link.page;
+        if (link.nodeName === "PLURID-LINK") {
+            linkHref = (<any> link).page;
             linkHref = new URL(linkHref, window.location.href).href;
         }
 
-        pluridSearchInput.value = linkHref;
-        let pluridReload = element.getElementsByClassName("plurid-controls-reload")[0];
+        pluridSearchInpt.value = linkHref;
+        const pluridReload = element.getElementsByClassName("plurid-controls-reload")[0];
         pluridReload.classList.remove("plurid-sheet-controls-disabled");
     }
 
 
-    pluridSearch.addEventListener('click', event => {
-        search(pluridSearchInput.value, sheet, element);
+    pluridSearch.addEventListener('click', (event) => {
+        search(pluridSearchInput.value, sheet);
     });
 
-    pluridCancelSearch.addEventListener('click', event => {
+    pluridCancelSearch.addEventListener('click', (event) => {
         clearSearch(pluridSearchInput);
     });
 
-    pluridSearchInput.addEventListener('keydown', event => {
-        if (event.key == "Escape") {
+    pluridSearchInput.addEventListener('keydown', (event) => {
+        if (event.key === "Escape") {
             clearSearch(pluridSearchInput);
         }
 
-        if (event.key == "Enter") {
-            search(pluridSearchInput.value, sheet, element);
+        if (event.key === "Enter") {
+            search(pluridSearchInput.value, sheet);
         }
-    })
+    });
 
     function clearSearch(searchInput) {
         searchInput.value = "";
@@ -774,19 +776,19 @@ function searchPlurid(element) {
 
     function search(url, sheet) {
         if (!url) {
-            let message = "Nothing to search for.";
+            const message = "Nothing to search for.";
             setControlsMessage(element, message);
         } else {
-            let sheetChildren = pluridScene.getChildrenBySheetId(sheet.id);
+            const sheetChildren = (<any> window).pluridScene.getChildrenBySheetId(sheet.id);
 
-            if (sheet.parentElement.nodeName == "PLURID-ROOT") {
-                let pluridRoot = sheet.parentElement;
+            if (sheet.parentElement.nodeName === "PLURID-ROOT") {
+                const pluridRoot = sheet.parentElement;
                 pluridRoot.removeChild(sheet);
                 removeChildren(pluridRoot, sheetChildren);
             } else {
-                let pluridRoot = sheet.parentElement.parentElement.parentElement;
-                if (pluridRoot.nodeName == "PLURID-ROOT") {
-                    let branch = sheet.parentElement.parentElement;
+                const pluridRoot = sheet.parentElement.parentElement.parentElement;
+                if (pluridRoot.nodeName === "PLURID-ROOT") {
+                    const branch = sheet.parentElement.parentElement;
                     removeChildren(pluridRoot, sheetChildren);
                 }
             }
@@ -798,19 +800,19 @@ function searchPlurid(element) {
 
 
 function getPage(url, sheet, element) {
-    let sheetContent = sheet.getElementsByTagName('plurid-content')[0];
-    let xhttp = new XMLHttpRequest();
+    const sheetContent = sheet.getElementsByTagName('plurid-content')[0];
+    const xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(this.responseText, "text/html");
+        if (this.readyState === 4 && this.status === 200) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(this.responseText, "text/html");
 
             sheetContent.innerHTML = doc.body.innerHTML;
         }
 
         if (this.status === 404) {
-            let message = `Page not found.`;
+            const message = `Page not found.`;
             setControlsMessage(element, message);
         }
     };
@@ -823,19 +825,19 @@ function getPage(url, sheet, element) {
 
 
 function extractRoot(element) {
-    let pluridExtract = element.getElementsByClassName("plurid-controls-extract")[0];
+    const pluridExtract = element.getElementsByClassName("plurid-controls-extract")[0];
 
-    pluridExtract.addEventListener('click', event => {
+    pluridExtract.addEventListener('click', (event) => {
         console.log('Plurid Root Extract');
     });
 }
 
 
 function opacityPlurid(element) {
-    let pluridOpacity = element.getElementsByClassName("plurid-controls-opacity")[0];
-    let sheet = element.parentElement;
+    const pluridOpacity = element.getElementsByClassName("plurid-controls-opacity")[0];
+    const sheet = element.parentElement;
 
-    pluridOpacity.addEventListener('click', event => {
+    pluridOpacity.addEventListener('click', (event) => {
         // MAYBE
         // type into the opacity button text
 
@@ -869,12 +871,12 @@ function opacityPlurid(element) {
     });
 
     function setOpacity(event, sheet, pluridOpacity) {
-        let opacity = parseInt(pluridOpacity.innerText);
+        const opacity = parseInt(pluridOpacity.innerText, 0);
 
-        if (opacity == 100) {
+        if (opacity === 100) {
             pluridOpacity.innerText = 70;
             sheet.style.opacity = 0.7;
-        } else if (opacity == 70) {
+        } else if (opacity === 70) {
             pluridOpacity.innerText = 35;
             sheet.style.opacity = .35;
         } else {
@@ -886,13 +888,13 @@ function opacityPlurid(element) {
 
 
 function morePlurid(element) {
-    let pluridMore = element.getElementsByClassName("plurid-controls-more")[0];
-    let pluridMoreContainer = element.getElementsByClassName("plurid-controls-more-container")[0];
-    let sheet = element.parentElement;
+    const pluridMore = element.getElementsByClassName("plurid-controls-more")[0];
+    const pluridMoreContainer = element.getElementsByClassName("plurid-controls-more-container")[0];
+    const sheet = element.parentElement;
 
-    pluridMore.addEventListener('click', event => {
-        if (pluridMoreContainer.style.display == "" ||
-            pluridMoreContainer.style.display == "none") {
+    pluridMore.addEventListener('click', (event) => {
+        if (pluridMoreContainer.style.display === "" ||
+            pluridMoreContainer.style.display === "none") {
             pluridMoreContainer.style.display = "block";
             pluridMore.classList.add("plurid-sheet-control-active");
         } else {
@@ -904,15 +906,15 @@ function morePlurid(element) {
 
 
 function openCloseControls(element) {
-    let pluridControlsContent = element.getElementsByClassName("plurid-container-controls-content")[0];
-    let pluridControlsOpenClose = element.getElementsByClassName("plurid-controls-open-close")[0];
-    let pluridControlsOpenCloseCharacter = element.getElementsByClassName("plurid-controls-open-close-character")[0];
+    const pluridControlsContent = element.getElementsByClassName("plurid-container-controls-content")[0];
+    const pluridControlsOpenClose = element.getElementsByClassName("plurid-controls-open-close")[0];
+    const pluridControlsOpenCloseCharacter = element.getElementsByClassName("plurid-controls-open-close-character")[0];
     let pluridControlsOpenCloseState = 1;
 
-    pluridControlsOpenCloseCharacter.addEventListener("click", event => {
-        let parentPlurid = element.parentElement;
+    pluridControlsOpenCloseCharacter.addEventListener("click", (event) => {
+        const parentPlurid = element.parentElement;
 
-        if (pluridControlsOpenCloseState == 1) {
+        if (pluridControlsOpenCloseState === 1) {
             parentPlurid.style.paddingTop = "50px";
             pluridControlsContent.style.display = "none";
             element.style.height = "11px";
@@ -920,7 +922,7 @@ function openCloseControls(element) {
             pluridControlsOpenCloseCharacter.innerHTML = "&#9661;";
         }
 
-        if (pluridControlsOpenCloseState == 0) {
+        if (pluridControlsOpenCloseState === 0) {
             parentPlurid.style.paddingTop = "80px";
             pluridControlsContent.style.display = "inline-flex";
             pluridControlsOpenClose.style.bottom = "2px";
@@ -934,11 +936,11 @@ function openCloseControls(element) {
 
 
 function setControlsMessageClose(element) {
-    let pluridMessage = element.getElementsByClassName("plurid-controls-message")[0];
-    let pluridMessageClose = element.getElementsByClassName("plurid-controls-message-close")[0];
-    let pluridMessageContent = element.getElementsByClassName("plurid-controls-message-content")[0];
+    const pluridMessage = element.getElementsByClassName("plurid-controls-message")[0];
+    const pluridMessageClose = element.getElementsByClassName("plurid-controls-message-close")[0];
+    const pluridMessageContent = element.getElementsByClassName("plurid-controls-message-content")[0];
 
-    pluridMessageClose.addEventListener("click", event => {
+    pluridMessageClose.addEventListener("click", (event) => {
         pluridMessage.style.display = "none";
         pluridMessageContent.innerHTML = "";
     });
@@ -946,12 +948,12 @@ function setControlsMessageClose(element) {
 
 
 function setControlsMessage(element, message) {
-    let pluridMessage = element.getElementsByClassName("plurid-controls-message")[0];
-    let pluridMessageContent = element.getElementsByClassName("plurid-controls-message-content")[0];
+    const pluridMessage = element.getElementsByClassName("plurid-controls-message")[0];
+    const pluridMessageContent = element.getElementsByClassName("plurid-controls-message-content")[0];
 
     pluridMessageContent.innerHTML = message;
     pluridMessage.style.display = "block";
-    let timeout = 1250;
+    const timeout = 1250;
 
     setTimeout(() => {
         pluridMessage.style.display = "none";

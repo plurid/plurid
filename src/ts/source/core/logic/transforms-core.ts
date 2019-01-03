@@ -1,33 +1,33 @@
-import * as matrix from "./matrix.js";
+import * as matrix from "./matrix";
 
 
 
 export function getTransformRotate(element) {
-    var values = getRotationMatrix(element);
+    const values = getRotationMatrix(element);
     // console.log("values Matrix", values);
 
-    var rotateX,
-        rotateY;
+    let rotateX;
+    let rotateY;
 
-    var pi = Math.PI;
+    const pi = Math.PI;
 
-    if (values.length == 6) {
-        var cosa = parseFloat(values[0]);
-        var sina = parseFloat(values[1]);
+    if (values.length === 6) {
+        const cosa = parseFloat(values[0]);
+        const sina = parseFloat(values[1]);
         // console.log("cos A", cosa);
         // console.log("sin A", sina);
 
-        if (cosa == 1 && sina == 0) {
+        if (cosa === 1 && sina === 0) {
             rotateX = Math.asin(sina);
             rotateY = Math.acos(cosa);
         }
     }
 
-    if (values.length == 16) {
-        var cosaX1 = parseFloat(values[5]);
-        var sinaX2 = parseFloat(values[6]);
-        var sinaX3 = parseFloat(values[9]);
-        var cosaX4 = parseFloat(values[10]);
+    if (values.length === 16) {
+        const cosaX1 = parseFloat(values[5]);
+        const sinaX2 = parseFloat(values[6]);
+        const sinaX3 = parseFloat(values[9]);
+        const cosaX4 = parseFloat(values[10]);
         // console.log("----------------------")
         // console.log("cos A X 1", cosaX1);
         // console.log("cos A X 1", cosaX1 > 0 ? "POSITIVE" : "NEGATIVE");
@@ -54,7 +54,7 @@ export function getTransformRotate(element) {
 
         // // 181-360
         if (sinaX3 > 0) {
-            rotateX = 2*pi - Math.acos(cosaX1);
+            rotateX = 2 * pi - Math.acos(cosaX1);
             // console.log("TWO X");
             // console.log("++++++");
         }
@@ -70,10 +70,10 @@ export function getTransformRotate(element) {
         // console.log("cos A Y", cosaY);
         // console.log("sin A Y", sinaY);
 
-        var cosaY1 = parseFloat(values[0]);
-        var sinaY2 = parseFloat(values[2]);
-        var sinaY3 = parseFloat(values[8]);
-        var cosaY4 = parseFloat(values[10]);
+        const cosaY1 = parseFloat(values[0]);
+        const sinaY2 = parseFloat(values[2]);
+        const sinaY3 = parseFloat(values[8]);
+        const cosaY4 = parseFloat(values[10]);
         // console.log("cos A Y 1", cosaY1);
         // console.log("cos A Y 1", cosaY1 > 0 ? "POSITIVE" : "NEGATIVE");
         // console.log("arccos A Y 1", Math.acos(cosaY1));
@@ -97,78 +97,79 @@ export function getTransformRotate(element) {
         }
 
         if (sinaY2 > 0) {
-            rotateY = 2*pi - Math.acos(cosaY1);
+            rotateY = 2 * pi - Math.acos(cosaY1);
             // console.log("TWO Y");
             // console.log("++++++");
         }
     }
 
     return {
-        rotateX: rotateX,
-        rotateY: rotateY
+        rotateX,
+        rotateY,
     };
 }
 
 
 export function getTransformTranslate(element) {
-    var values = getTranslationMatrix(element);
+    const values = getTranslationMatrix(element);
 
-    var translateX,
-        translateY;
+    let translateX;
+    let translateY;
 
     translateX = parseFloat(values[0]);
     translateY = parseFloat(values[1]);
 
     return {
-        translateX: translateX,
-        translateY: translateY
+        translateX,
+        translateY,
     };
 }
 
 
 export function getTransformScale(element) {
-    var scale = getScaleMatrix(element);
+    const scale = getScaleMatrix(element);
     // console.log(scale);
 
     return {
-        scale: scale
-    }
+        scale,
+    };
 }
 
 
 export function getMatrixValues(element) {
-    var transformValues = window.getComputedStyle(element, null).getPropertyValue("transform");
+    const transformValues = window.getComputedStyle(element, null).getPropertyValue("transform");
     // console.log("transformValues Matrix", transformValues);
 
-    var matrixValues = transformValues.split('(')[1].split(')')[0].split(',');
+    const matrixValues = transformValues.split('(')[1].split(')')[0].split(',');
+    const matrixValuesInt = [];
     // console.log("matrixValues Matrix", matrixValues);
 
-    for (var i = 0; i < matrixValues.length; i++) {
-        matrixValues[i] = parseFloat(matrixValues[i]);
+    for (let i = 0; i < matrixValues.length; i++) {
+        matrixValuesInt[i] = parseFloat(matrixValues[i]);
     }
 
-    return matrixValues;
+    return matrixValuesInt;
 }
 
 
 export function getRotationMatrix(element) {
-    var valuesMatrix = getMatrixValues(element);
+    const valuesMatrix = getMatrixValues(element);
     // console.log("getMatrixValues Matrix", valuesMatrix);
 
-    var scale = getScaleMatrix(element);
+    const scale = getScaleMatrix(element);
     // console.log("getScaleMatrix Matrix", scale);
 
-    if (valuesMatrix.length == 16) {
-        for (var i=0; i < 11; i++) {
+    if (valuesMatrix.length === 16) {
+        for (let i = 0; i < 11; i++) {
             valuesMatrix[i] /= scale;
         }
-    } else if(valuesMatrix.length == 6) {
-        for (var i=0; i < 4; i++) {
+    } else if (valuesMatrix.length === 6) {
+        for (let i = 0; i < 4; i++) {
             valuesMatrix[i] /= scale;
         }
     }
 
-    var rotationMatrix = valuesMatrix;
+    const rotationMatrix = valuesMatrix;
     // console.log("rotationMatrix Matrix", rotationMatrix);
 
 
@@ -177,13 +178,13 @@ export function getRotationMatrix(element) {
 
 
 export function getTranslationMatrix(element) {
-    var valuesMatrix = getMatrixValues(element);
+    const valuesMatrix = getMatrixValues(element);
+    let translationMatrix;
 
-    if (valuesMatrix.length == 16) {
-        var translationMatrix = getMatrixValues(element).slice(12, 15);
-
-    } else if (valuesMatrix.length == 6) {
-        var translationMatrix = getMatrixValues(element).slice(4);
+    if (valuesMatrix.length === 16) {
+        translationMatrix = getMatrixValues(element).slice(12, 15);
+    } else if (valuesMatrix.length === 6) {
+        translationMatrix = getMatrixValues(element).slice(4);
     }
 
     return translationMatrix;
@@ -191,21 +192,25 @@ export function getTranslationMatrix(element) {
 
 
 export function getScaleMatrix(element) {
-    var valuesMatrix = getMatrixValues(element);
-    var temp = 0;
+    const valuesMatrix = getMatrixValues(element);
+    let temp = 0;
+    let scale;
 
-    if (valuesMatrix.length == 16) {
-        var scaleMatrix = getMatrixValues(element).slice(0, 4);
-        var scale = 0;
+    if (valuesMatrix.length === 16) {
+        const scaleMatrix = getMatrixValues(element).slice(0, 4);
+        scale = 0;
 
-        for (var i = 0; i < scaleMatrix.length; i++) {
-            scale += parseFloat(scaleMatrix[i]) * parseFloat(scaleMatrix[i]);
+        // for (let i = 0; i < scaleMatrix.length; i++) {
+        //     scale += parseFloat(scaleMatrix[i]) * parseFloat(scaleMatrix[i]);
+        // }
+        for (const el of scaleMatrix) {
+            scale += parseFloat(el) * parseFloat(el);
         }
 
         scale = parseFloat(Math.sqrt(scale).toPrecision(4));
-    } else if (valuesMatrix.length == 6) {
-        temp = valuesMatrix[0]*valuesMatrix[0] + valuesMatrix[1]*valuesMatrix[1];
-        var scale = parseFloat(Math.sqrt(temp).toPrecision(4));
+    } else if (valuesMatrix.length === 6) {
+        temp = valuesMatrix[0] * valuesMatrix[0] + valuesMatrix[1] * valuesMatrix[1];
+        scale = parseFloat(Math.sqrt(temp).toPrecision(4));
     }
 
     return scale;
@@ -213,10 +218,10 @@ export function getScaleMatrix(element) {
 
 
 export function setTransform(element, rotateMatrix, translateMatrix, scaleMatrix, yPos = 0) {
-    let transformMatrix = matrix.multiplyArrayOfMatrices([
+    const transformMatrix = matrix.multiplyArrayOfMatrices([
         translateMatrix,
         rotateMatrix,
-        scaleMatrix
+        scaleMatrix,
     ]);
     // console.log("Transform Matrix", transformMatrix);
 
@@ -230,19 +235,19 @@ export function setTransform(element, rotateMatrix, translateMatrix, scaleMatrix
     // console.log(element);
 
     // Set the transform
-    let transformOriginRule = "50% " + yPos + "px";
+    const transformOriginRule = "50% " + yPos + "px";
     element.style.transformOrigin = transformOriginRule;
 
 
     // Returns a a matrix3d() CSS string
-    let matrix3dRule = matrix.matrixArrayToCssMatrix(transformMatrix);
+    const matrix3dRule = matrix.matrixArrayToCssMatrix(transformMatrix);
     // console.log("CSS Rule", matrix3dRule);
     element.style.transform = matrix3dRule;
 }
 
 
 export function setCursor(mode) {
-    switch(mode) {
+    switch (mode) {
             case "rotate":
             document.body.style.cursor = "ew-resize";
             break;
@@ -259,10 +264,10 @@ export function setCursor(mode) {
 
 
 export function getyPos(event = null, plurid) {
-    var yCenter = window.innerHeight / 2;
-    var translateY = getTransformTranslate(plurid).translateY;
+    const yCenter = window.innerHeight / 2;
+    const translateY = getTransformTranslate(plurid).translateY;
 
-    var yPos = translateY * -1 + yCenter;
+    const yPos = translateY * -1 + yCenter;
 
     return yPos;
 }
