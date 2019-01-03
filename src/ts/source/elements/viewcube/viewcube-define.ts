@@ -1,7 +1,9 @@
 import { setId } from "../../core/utils/complex";
-import { renderViewcube,
-         contentViewcube,
-         initViewcubeModelButtons } from './viewcube-core';
+import {
+        contentViewcube,
+        initViewcubeModelButtons,
+        renderViewcube,
+        } from './viewcube-core';
 
 
 export function initViewcube(container) {
@@ -9,10 +11,11 @@ export function initViewcube(container) {
     // define only if multiple plurid-containers
 
     // if (container.id == 'plurid-container-1') {
-        customElements.define('plurid-viewcube', PluridViewcube);
+    customElements.define('plurid-viewcube', PluridViewcube);
     // }
 
     renderViewcube(container);
+
     initViewcubeModelButtons(container);
 }
 
@@ -22,9 +25,9 @@ class PluridViewcube extends HTMLElement {
         super();
     }
 
-    connectedCallback() {
+    private connectedCallback() {
         setId(this, 'viewcube');
 
-        this.innerHTML = contentViewcube();
+        this.innerHTML = contentViewcube(this);
     }
 }

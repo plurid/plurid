@@ -4,9 +4,11 @@ import { getBranchById,
 
 
 
+declare var global: any;
+
 // set pluridScene as global variable
-((global) => {
-    global.pluridScene = {
+((_global) => {
+    _global.pluridScene = {
         meta: {
             activePlurid: '',
             activeSheet: '',
