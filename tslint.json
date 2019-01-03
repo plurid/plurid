@@ -8,6 +8,7 @@
         },
         "new-parens": true,
         "no-arg": true,
+        "no-angle-bracket-type-assertion": false,
         "no-bitwise": true,
         "no-conditional-assignment": true,
         "no-console": false,
