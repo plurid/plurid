@@ -63,6 +63,6 @@ place the content of the web page in a `<plurid-page>` tag, inside the `<body>`
 
 ## Description
 
-The framework compiled files are in the `plurid` folder. Examples can be found in `test/examples`.
+The framework compiled files are in the `./pkg/` folder. Examples can be found in `test/examples/`.
 
-For general design & architecture, features, and more: see `notes`.
+For general design & architecture, features, and more: see `./about/notes/`.
