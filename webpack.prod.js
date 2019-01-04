@@ -4,6 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const WebpackShellPlugin = require('webpack-shell-plugin');
 
 
 const cleanWebpack = new CleanWebpackPlugin(
@@ -14,7 +15,9 @@ const miniCssExtract = new MiniCssExtractPlugin(
         filename: `styles.css`
     }
 );
-
+const webpackShell = new WebpackShellPlugin({
+    onBuildEnd:['npm run test:copy']
+});
 
 
 const config = {
@@ -27,6 +30,7 @@ const config = {
     plugins: [
         cleanWebpack,
         miniCssExtract,
+        webpackShell,
     ],
     resolve: {
         extensions: [".ts", ".tsx", ".js"]
