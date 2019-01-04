@@ -13,7 +13,7 @@ export function initShortcuts() {
     });
 }
 
-function shortcuts(event) {
+function shortcuts(event: any) {
     // const activePluridID = getPlurid.sheet
     // const activePluridElement = document.getElementById(activePluridID);
     const activePluridElement = getPlurid().sheet;
@@ -164,12 +164,12 @@ function shortcuts(event) {
 
     // alt/opt + x
     if (event.altKey && ultimateKey === 88) {
-        if (activePluridElement.parentElement.nodeName === "PLURID-ROOT") {
-            activePluridElement.parentElement.style.display = "none";
+        if (activePluridElement!.parentElement!.nodeName === "PLURID-ROOT") {
+            activePluridElement!.parentElement!.style.display = "none";
         }
 
-        if (activePluridElement.parentElement.nodeName === "PLURID-SCION") {
-            activePluridElement.parentElement.parentElement.style.display = "none";
+        if (activePluridElement!.parentElement!.nodeName === "PLURID-SCION") {
+            activePluridElement!.parentElement!.parentElement!.style.display = "none";
         }
 
         // console.log(activePluridElement.parentElement.parentElement.nodeName);

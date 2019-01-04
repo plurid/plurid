@@ -1,4 +1,4 @@
-export function setReflections(pluridSheet, sheetHeight, ground, top = 0) {
+export function setReflections(pluridSheet: any, sheetHeight: any, ground: any, top: any = 0) {
     const reflectGround = ground + 1 - sheetHeight - top;
     // console.log('ground', ground);
     // console.log('sheetHeight', sheetHeight);

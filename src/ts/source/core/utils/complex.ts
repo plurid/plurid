@@ -25,10 +25,10 @@ export let setId = ( () => {
      * @param {string} type                 String type of the element, e.g. 'link'
      * @return {number}
      */
-    return (element, type) => {
-        const set = (element, type, idNumber) => {
+    return (element: any, type: any) => {
+        const set = (_element: any, _type: any, idNumber: any) => {
             idNumber += 1;
-            element.id = `plurid-${type}-${idNumber}`;
+            _element.id = `plurid-${_type}-${idNumber}`;
             return idNumber;
         };
 

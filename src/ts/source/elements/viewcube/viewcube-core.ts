@@ -1,17 +1,17 @@
 import * as matrix from "../../core/logic/matrix";
-import { getTransformRotate } from "../../core/logic/transforms-core";
+// import { getTransformRotate } from "../../core/logic/transforms-core";
 import * as transcore from "../../core/logic/transforms-core";
 import { capitalize } from "../../core/utils/simple";
 
 
 
-export function renderViewcube(container) {
+export function renderViewcube(container: any) {
     const viewcube = document.createElement("plurid-viewcube");
     container.appendChild(viewcube);
 }
 
 
-export function contentViewcube(container) {
+export function contentViewcube(container: any) {
     return `
         <div class="plurid-viewcube-container">
             <div class="plurid-viewcube-controls plurid-viewcube-scale-container">
@@ -162,7 +162,7 @@ export function contentViewcube(container) {
 }
 
 
-export function rotateViewcube(event, plurid, rotateX, rotateY) {
+export function rotateViewcube(event: any, plurid: any, rotateX: any, rotateY: any) {
     // let rotateX = getTransformRotate(plurid).rotateX;
     // let rotateY = getTransformRotate(plurid).rotateY;
     // let rotateXdeg = rotateX * 180 / Math.PI;
@@ -180,9 +180,8 @@ export function rotateViewcube(event, plurid, rotateX, rotateY) {
 }
 
 
-function setModelZoneButtons(buttons, viewZone) {
-
-    const viewZoneSwitch = (_viewZone) => ({
+function setModelZoneButtons(buttons: any, viewZone: any) {
+    const viewZoneSwitch = (_viewZone: any) => (<any> {
         'front-middle-center': { rotateX: 0, rotateY: 0 },
         'front-top-left': { rotateX: -45, rotateY: 45 },
         'front-top-center': { rotateX: -45, rotateY: 0 },
@@ -209,9 +208,9 @@ function setModelZoneButtons(buttons, viewZone) {
         'right-bottom-center': { rotateX: 45, rotateY: 270 },
         'top-middle-center': { rotateX: -90, rotateY: 0 },
         'base-middle-center': { rotateX: 90, rotateY: 0 },
-    })[_viewZone];
+    })[viewZone];
 
-    function position(transform) {
+    function position(transform: any) {
         const pluridRoots = document.getElementsByTagName('plurid-roots')[0];
         const viewCube = document.getElementsByClassName('plurid-viewcube-model-transform-cube')[0];
 
@@ -276,7 +275,7 @@ function setModelZoneButtons(buttons, viewZone) {
 
         // rotateThis(viewCube, transform);
         // console.log(transform);
-        console.log(previousButtons);
+        // console.log(previousButtons);
         if (previousButtons) {
             for (const previousButton of previousButtons) {
                 previousButton.classList.remove('plurid-viewcube-model-transform-face-selected');
@@ -290,12 +289,12 @@ function setModelZoneButtons(buttons, viewZone) {
         previousButtons = buttons;
     }
 
-    buttons.map( (button) => {
+    buttons.map( (button: any) => {
         button.addEventListener('mouseover', () => {
-            buttons.map( (btn) => btn.classList.add('plurid-viewcube-model-transform-face-zone-active') );
+            buttons.map( (btn: any) => btn.classList.add('plurid-viewcube-model-transform-face-zone-active') );
         });
         button.addEventListener('mouseout', () => {
-            buttons.map( (btn) => btn.classList.remove('plurid-viewcube-model-transform-face-zone-active') );
+            buttons.map( (btn: any) => btn.classList.remove('plurid-viewcube-model-transform-face-zone-active') );
         });
 
         button.addEventListener('click', () => {
@@ -304,10 +303,11 @@ function setModelZoneButtons(buttons, viewZone) {
     });
 }
 
-let previousButtons;
+let previousButtons: any;
 
 
-export function initViewcubeModelButtons(container) {
+
+export function initViewcubeModelButtons(container: any) {
     const faces = ['front', 'left', 'back', 'right', 'top', 'base'];
     const rows = ['top', 'middle', 'bottom'];
     const columns = ['left', 'center', 'right'];
@@ -321,8 +321,8 @@ export function initViewcubeModelButtons(container) {
                 const key = face + capitalize(row) + capitalize(column);
                 const selectClass = `${face}-${row}-${column}`;
                 const buttonClass = `plurid-viewcube-model-transform-${selectClass}`;
-                buttons[key] = container.getElementsByClassName(buttonClass)[0];
-                viewZones[key] = selectClass;
+                (<any> buttons)[key] = container.getElementsByClassName(buttonClass)[0];
+                (<any> viewZones)[key] = selectClass;
             });
         });
     });
@@ -392,7 +392,7 @@ export function initViewcubeModelButtons(container) {
         [(<any> buttons).frontBottomLeft, (<any> buttons).leftBottomRight, (<any> buttons).baseTopLeft],
         [(<any> buttons).leftBottomLeft, (<any> buttons).backBottomRight, (<any> buttons).baseBottomLeft],
         [(<any> buttons).backBottomLeft, (<any> buttons).rightBottomRight, (<any> buttons).baseBottomRight],
-        [(<any> buttons).rightBottomLeft, (<any> buttons).frontBottomRight, (<any> buttons).baseTopRight]
+        [(<any> buttons).rightBottomLeft, (<any> buttons).frontBottomRight, (<any> buttons).baseTopRight],
     ];
 
     zoneButtons.map((_buttons, index) => {
