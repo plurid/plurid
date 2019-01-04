@@ -7,7 +7,7 @@ import { setTheme } from '../themes/theme';
  * @param {string} branchId
  * @return {Object}
  */
-export function getBranchById(branchId) {
+export function getBranchById(branchId: string): any {
     for (const rootElement of (<any> window).pluridScene.content) {
         for (const child of rootElement.children) {
             if (child.branchId === branchId) {
@@ -29,12 +29,12 @@ export function getBranchById(branchId) {
      * @param {Array} children
      * @return {Object}
      */
-    function getChild(branchId, children) {
+    function getChild(_branchId: string, children: any[]): any {
         for (const child of children) {
-            if (child.branchId === branchId) {
+            if (child.branchId === _branchId) {
                 return child;
             } else if (child.children !== []) {
-                const result = getChild(branchId, child.children);
+                const result = getChild(_branchId, child.children);
                 if (result) {
                     return result;
                 }
@@ -51,8 +51,8 @@ export function getBranchById(branchId) {
  * @param {string} sheetId
  * @return {Array}
  */
-export function getChildrenBySheetId(sheetId) {
-    const childrenBranch = [];
+export function getChildrenBySheetId(sheetId: string): any {
+    const childrenBranch: any[] = [];
 
     for (const rootElement of (<any> window).pluridScene.content) {
         if (rootElement.sheetId === sheetId) {
@@ -62,19 +62,19 @@ export function getChildrenBySheetId(sheetId) {
         }
     }
 
-    function pushChildrenOfChildren(childrenBranch, children) {
+    function pushChildrenOfChildren(_childrenBranch: any, children: any): any {
         for (const child of children) {
-            childrenBranch.push(child.branchId);
-            pushChildrenOfChildren(childrenBranch, child.children);
+            _childrenBranch.push(child.branchId);
+            pushChildrenOfChildren(_childrenBranch, child.children);
         }
     }
 
-    function checkChildren(sheetId, childrenBranch, children) {
-        for (const child of children) {
-            if (child.sheetId === sheetId) {
-                pushChildrenOfChildren(childrenBranch, child.children);
+    function checkChildren(_sheetId: any, _childrenBranch: any, _children: any): any {
+        for (const child of _children) {
+            if (child.sheetId === _sheetId) {
+                pushChildrenOfChildren(_childrenBranch, child.children);
             } else {
-                checkChildren(sheetId, childrenBranch, child.children);
+                checkChildren(_sheetId, _childrenBranch, child.children);
             }
         }
     }
@@ -89,7 +89,7 @@ export function getChildrenBySheetId(sheetId) {
  *
  * @param {string} theme
  */
-export function setNewTheme(theme) {
-    this.meta.theme = theme;
+export function setNewTheme(theme: string): any {
+    (<any> window).pluridScene.meta.theme = theme;
     setTheme(theme);
 }

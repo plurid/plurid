@@ -7,7 +7,7 @@ import { getBranchById,
 declare var global: any;
 
 // set pluridScene as global variable
-((_global) => {
+((_global: any) => {
     _global.pluridScene = {
         meta: {
             activePlurid: '',
@@ -40,4 +40,4 @@ declare var global: any;
         getChildrenBySheetId,
         setTheme: setNewTheme,
     };
-}).call(this, (<any> global));
+}).call(<any> this, (<any> global));

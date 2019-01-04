@@ -19,7 +19,7 @@
 })();
 
 
-export function setTheme(theme) {
+export function setTheme(theme: any) {
     const bodyClassList = document.body.classList;
     const possibleThemes = [
         'night',

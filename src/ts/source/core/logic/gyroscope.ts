@@ -27,10 +27,10 @@ if ((<any> window).DeviceOrientationEvent) {
 }
 
 
-function processGyro(alpha, beta, gamma, plurid) {
-    document.getElementById("alpha").innerHTML = alpha.toFixed(5);
-    document.getElementById("beta").innerHTML = beta.toFixed(5);
-    document.getElementById("gamma").innerHTML = gamma.toFixed(5);
+function processGyro(alpha: any, beta: any, gamma: any, plurid: any) {
+    document.getElementById("alpha")!.innerHTML = alpha.toFixed(5);
+    document.getElementById("beta")!.innerHTML = beta.toFixed(5);
+    document.getElementById("gamma")!.innerHTML = gamma.toFixed(5);
 
     // X
     beta = -beta;

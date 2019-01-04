@@ -9,7 +9,7 @@ import { setLink } from './elements/sheet/sheet-core';
  *
  * @return {boolean}
  */
-function checkForContainers() {
+function checkForContainers(): boolean {
     return !!document.getElementsByTagName('plurid-container')[0];
 }
 
@@ -21,7 +21,7 @@ function checkForContainers() {
  * @param {object} pluridElement            Given <plurid-page> element.
  * @return {boolean}                        True if pluridElement should be a <plurid-root>.
  */
-function checkPluridParent(pluridElement) {
+function checkPluridParent(pluridElement: any): any {
     if (pluridElement.nodeName !== 'HTML') {
         if (pluridElement.parentElement.nodeName === 'PLURID-PAGE') {
             // console.log('is NOT a plurid root');
@@ -84,8 +84,8 @@ function setContainer() {
 
             pluridSheet.appendChild(pluridContent);
 
-            if (pluridPage.visible) {
-                (<any> pluridSheet).visible = pluridPage.visible;
+            if ((<any> pluridPage).visible) {
+                (<any> pluridSheet).visible = (<any> pluridPage).visible;
             }
             pluridContent.innerHTML = html;
 
@@ -114,7 +114,7 @@ function setContainer() {
 
         for (let i = pluridPages.length - 1; i >= 0; i--) {
             // console.log(pluridPages[i]);
-            pluridPages[i].parentNode.removeChild(pluridPages[i]);
+            pluridPages[i].parentNode!.removeChild(pluridPages[i]);
         }
 
         // setLink();

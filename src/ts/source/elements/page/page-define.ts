@@ -16,7 +16,7 @@ class PluridPage extends HTMLElement {
         const pageId = this.id;
 
         // Establish if the current plurid-page is a root page
-        const nodeName = this.parentNode.nodeName;
+        const nodeName = this.parentNode!.nodeName;
         if (nodeName === 'BODY' || nodeName === 'PLURID-CONTAINER') {
             (<any> window).pluridScene.meta.rootPages.push(pageId);
         }
@@ -30,14 +30,14 @@ class PluridPage extends HTMLElement {
     get name() {
         return this.getAttribute('name');
     }
-    set name(newName) {
+    set name(newName: any) {
         this.setAttribute('name', newName);
     }
 
     get title() {
         return this.getAttribute('title');
     }
-    set title(newTitle) {
+    set title(newTitle: any) {
         this.setAttribute('title', newTitle);
     }
 }
