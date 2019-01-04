@@ -2,7 +2,7 @@ import * as matrix from "./matrix";
 
 
 
-export function getTransformRotate(element: any) {
+export function getTransformRotate(element: Element) {
     const values = getRotationMatrix(element);
     // console.log("values Matrix", values);
 
@@ -110,14 +110,14 @@ export function getTransformRotate(element: any) {
 }
 
 
-export function getTransformTranslate(element: any) {
+export function getTransformTranslate(element: Element) {
     const values = getTranslationMatrix(element);
 
     let translateX: any;
     let translateY: any;
 
-    translateX = parseFloat(values[0]);
-    translateY = parseFloat(values[1]);
+    translateX = parseFloat(<any> values[0]);
+    translateY = parseFloat(<any> values[1]);
 
     return {
         translateX,
@@ -126,7 +126,7 @@ export function getTransformTranslate(element: any) {
 }
 
 
-export function getTransformScale(element: any) {
+export function getTransformScale(element: Element) {
     const scale = getScaleMatrix(element);
     // console.log(scale);
 
@@ -136,7 +136,7 @@ export function getTransformScale(element: any) {
 }
 
 
-export function getMatrixValues(element: any) {
+export function getMatrixValues(element: Element) {
     const transformValues = window.getComputedStyle(element, null).getPropertyValue("transform");
     // console.log("transformValues Matrix", transformValues);
 
@@ -152,7 +152,7 @@ export function getMatrixValues(element: any) {
 }
 
 
-export function getRotationMatrix(element: any) {
+export function getRotationMatrix(element: Element) {
     const valuesMatrix = getMatrixValues(element);
     // console.log("getMatrixValues Matrix", valuesMatrix);
 
@@ -177,7 +177,7 @@ export function getRotationMatrix(element: any) {
 }
 
 
-export function getTranslationMatrix(element: any) {
+export function getTranslationMatrix(element: Element) {
     const valuesMatrix = getMatrixValues(element);
     let translationMatrix: any;
 
@@ -191,7 +191,7 @@ export function getTranslationMatrix(element: any) {
 }
 
 
-export function getScaleMatrix(element: any) {
+export function getScaleMatrix(element: Element) {
     const valuesMatrix = getMatrixValues(element);
     let temp = 0;
     let scale: any;
