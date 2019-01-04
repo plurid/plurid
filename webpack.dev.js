@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
+const WebpackShellPlugin = require('webpack-shell-plugin');
 
 
 const cleanWebpack = new CleanWebpackPlugin(
@@ -22,6 +23,10 @@ const styleLint = new StyleLintPlugin({
     failOnError: false,
     quiet: false,
 });
+const webpackShell = new WebpackShellPlugin({
+    onBuildEnd:['npm run test:copy'],
+    dev: false,
+});
 
 
 const config = {
@@ -35,6 +40,7 @@ const config = {
         cleanWebpack,
         miniCssExtract,
         styleLint,
+        webpackShell,
     ],
     resolve: {
         extensions: [".ts", ".tsx", ".js"]
