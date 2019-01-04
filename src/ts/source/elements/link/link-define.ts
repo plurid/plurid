@@ -14,7 +14,7 @@ class PluridLink extends HTMLElement {
     get page() {
         return this.getAttribute('page');
     }
-    set page(newPage) {
+    set page(newPage: any) {
         this.setAttribute('page', newPage);
     }
 
@@ -50,7 +50,7 @@ class PluridLink extends HTMLElement {
         this.setAttribute('active', newActive);
     }
 
-    private getNamedPage(pageName) {
+    private getNamedPage(pageName: any) {
         const pluridPages = document.getElementsByTagName('plurid-page');
 
         for (const pluridPage of pluridPages) {

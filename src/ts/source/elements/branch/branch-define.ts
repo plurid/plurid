@@ -6,30 +6,10 @@ class PluridBranch extends HTMLElement {
     get link() {
         return this.getAttribute('link');
     }
-    set link(newLink) {
+    set link(newLink: any) {
         this.setAttribute('link', newLink);
     }
 }
 
 
 customElements.define('plurid-branch', PluridBranch);
-
-
-
-class PluridBridge extends HTMLElement {
-    constructor() {
-        super();
-    }
-}
-
-customElements.define('plurid-bridge', PluridBridge);
-
-
-
-class PluridScion extends HTMLElement {
-    constructor() {
-        super();
-    }
-}
-
-customElements.define('plurid-scion', PluridScion);
