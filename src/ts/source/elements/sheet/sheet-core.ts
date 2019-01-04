@@ -1,6 +1,6 @@
-import * as transcore from "../../core/logic/transforms-core";
-import { setShadows } from '../../core/logic/shadows';
 import { setReflections } from '../../core/logic/reflections';
+// import { setShadows } from '../../core/logic/shadows';
+import * as transcore from "../../core/logic/transforms-core";
 import { setId } from "../../core/utils/complex";
 
 
@@ -11,7 +11,7 @@ import { setId } from "../../core/utils/complex";
  * @param {HTMLElement} newNode
  * @param {HTMLElement} referenceNode
  */
-function insertAfter(newNode, referenceNode) {
+function insertAfter(newNode: any, referenceNode: any): any {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
@@ -23,7 +23,7 @@ function insertAfter(newNode, referenceNode) {
  * @param {object} pluridElement            Given <plurid-page> element.
  * @return {boolean}                        True if pluridElement should be a <plurid-root>.
  */
-function checkPluridParent(pluridElement) {
+function checkPluridParent(pluridElement: any): any {
     if (pluridElement.nodeName !== 'HTML') {
         if (pluridElement.parentElement.nodeName === 'PLURID-PAGE') {
             // console.log('is NOT a plurid root');
@@ -46,7 +46,7 @@ function checkPluridParent(pluridElement) {
  * @param {HTMLElement} pluridElement       plurid HTMLElement.
  * @return {HTMLElement}                    The specified parent element.
  */
-export function getSpecifiedParent(pluridElement, specifiedParent) {
+export function getSpecifiedParent(pluridElement: any, specifiedParent: any): any {
     if (pluridElement.nodeName !== 'HTML') {
         if (pluridElement.parentElement.nodeName === specifiedParent) {
             return pluridElement.parentElement;
@@ -65,7 +65,7 @@ export function getSpecifiedParent(pluridElement, specifiedParent) {
  * @param {Array} childrenArray
  * @param {Object} sceneObject
  */
-function pushChildren(childrenArray, sceneObject) {
+function pushChildren(childrenArray: any, sceneObject: any): any {
     for (const child of childrenArray) {
         if (child.branchId === sceneObject.linkParentId) {
             child.children.push(sceneObject);
@@ -85,7 +85,7 @@ function pushChildren(childrenArray, sceneObject) {
  *
  * @param {HTMLElement} pluridLink       plurid HTMLElement.
  */
-function setPluridLinks(pluridLink) {
+function setPluridLinks(pluridLink: any): any {
     const xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
@@ -123,9 +123,9 @@ function setPluridLinks(pluridLink) {
             // console.log('branch', pluridBranch);
 
             const angleDeg = 90;
-            let angleBranch;
-            let branchBridge;
-            let bridgeWidth;
+            let angleBranch: any;
+            let branchBridge: any;
+            let bridgeWidth: any;
             if (pluridBranch) {
                 angleBranch = transcore.getTransformRotate(pluridBranch).rotateY;
                 angleBranch = angleBranch * 180 / Math.PI;
@@ -158,11 +158,11 @@ function setPluridLinks(pluridLink) {
 
             const rotXbranch = angleDeg;
 
-            let prevLinkX;
-            let prevLinkY;
-            let prevTransX;
-            let prevTransY;
-            let prevTransZ;
+            let prevLinkX: any;
+            let prevLinkY: any;
+            let prevTransX: any;
+            let prevTransY: any;
+            let prevTransZ: any;
 
             if (parentBranch) {
                 // console.log('parentBranch', parentBranch);
@@ -313,7 +313,7 @@ function setPluridLinks(pluridLink) {
  * For all the anchorTags <a> and pluridLinks <plurid-link>
  * adds event listeners on click to generate the plurid structure.
  */
-export function setLink(pluridPage) {
+export function setLink(pluridPage: any) {
     const pluridPageId = pluridPage.id;
     const pageAnchorTags = document.querySelectorAll(`#${pluridPageId} a`);
     const pagePluridLinks = document.querySelectorAll(`#${pluridPageId} plurid-link`);
@@ -354,7 +354,7 @@ export function setLink(pluridPage) {
  * @param {HTMLElement} pluridElement       plurid HTMLElement.
  * @return {HTMLElement}                    The specified parent element.
  */
-function checkBranchExistence(linkId) {
+function checkBranchExistence(linkId: any): any {
     const branches = document.getElementsByTagName('plurid-branch');
     let count = 0;
 
@@ -376,7 +376,7 @@ function checkBranchExistence(linkId) {
  *
  * @param {string} sheetId          Id of a <plurid-sheet>
  */
-export function setAnchorTagsId(sheetId) {
+export function setAnchorTagsId(sheetId: any): any {
     const pageAnchorTags = document.querySelectorAll(`#${sheetId} a`);
 
     for (const anchorTag of pageAnchorTags) {
@@ -391,7 +391,7 @@ export function setAnchorTagsId(sheetId) {
  *
  * @param {HTMLElement} pluridSheet
  */
-export function setPluridRoots(pluridSheet) {
+export function setPluridRoots(pluridSheet: any): any {
     if (pluridSheet.parentElement.nodeName === 'PLURID-ROOT') {
         const sheet = {
             id: pluridSheet.parentElement.id,
@@ -412,8 +412,8 @@ export function setPluridRoots(pluridSheet) {
  * @param {number} angle        Angle value between 0 and 360 degrees.
  * @return {string}
  */
-function getQuadrant(angle) {
-    let quadrant;
+function getQuadrant(angle: any): any {
+    let quadrant: any;
 
     if (angle >= 0 && angle <= 90) {
         return quadrant = 'quadrantA';
@@ -436,9 +436,9 @@ function getQuadrant(angle) {
  * @param {string} quadrant
  * @return {object}
  */
-function getQuadrantCoefficients(quadrant) {
-    let quadrantCoefficientX;
-    let quadrantCoefficientZ;
+function getQuadrantCoefficients(quadrant: any): any {
+    let quadrantCoefficientX: any;
+    let quadrantCoefficientZ: any;
 
     switch (quadrant) {
         case 'quadrantA':
@@ -475,7 +475,7 @@ function getQuadrantCoefficients(quadrant) {
  * @param {string} linkParentId
  * @return {Array}
  */
-function generatePath(currentId, linkParentId) {
+function generatePath(currentId: any, linkParentId: any): any {
     const parent = (<any> window).pluridScene.getBranchById(linkParentId);
     if (parent) {
         const path = [];
@@ -502,7 +502,7 @@ function generatePath(currentId, linkParentId) {
  * @param {Object} translationData
  * @return {Object}
  */
-function getTranslations(translationData) {
+function getTranslations(translationData: any): any {
     const prevLinkX = translationData.prevLinkX;
     const prevLinkY = translationData.prevLinkY;
     const prevTransX = translationData.prevTransX;
@@ -517,16 +517,16 @@ function getTranslations(translationData) {
     const rotXbranch = translationData.rotXbranch;
     const path = translationData.path;
 
-    let penultimateRoot;
-    let penultimateRootTransX;
-    let penultimateRootTransZ;
-    let penultimateRootAngleY;
-    let penultimateRootAngleYRad;
+    let penultimateRoot: any;
+    let penultimateRootTransX: any;
+    let penultimateRootTransZ: any;
+    let penultimateRootAngleY: any;
+    let penultimateRootAngleYRad: any;
     const penultimate = path.length - 2;
 
-    let transX;
-    let transY;
-    let transZ;
+    let transX: any;
+    let transY: any;
+    let transZ: any;
 
     if (penultimate > 0) {
         penultimateRoot = (<any> window).pluridScene.getBranchById(path[penultimate]);
@@ -576,7 +576,7 @@ setActiveSheetListener();
 /**
  * Set active sheet logic
  */
-function setActiveSheet(eventPath) {
+function setActiveSheet(eventPath: any) {
     const activeSheet = (<any> window).pluridScene.meta.activeSheet;
     const currentSheet = checkSheet(eventPath);
     if (currentSheet) {
@@ -597,7 +597,7 @@ function setActiveSheet(eventPath) {
  * @param {Array} path
  * @return {string}
  */
-function checkSheet(path) {
+function checkSheet(path: any): any {
     for (const pathElement of path) {
         if (pathElement.nodeName === 'PLURID-SHEET') {
             return pathElement.id;
@@ -610,7 +610,7 @@ function checkSheet(path) {
  *
  * @param {string} sheetId
  */
-export function removeActiveSheetShadow(sheetId, activeSheetClass) {
+export function removeActiveSheetShadow(sheetId: any, activeSheetClass: any): any {
     const sheet = document.getElementById(sheetId);
 
     if (sheet) {
@@ -623,7 +623,7 @@ export function removeActiveSheetShadow(sheetId, activeSheetClass) {
  *
  * @param {string} sheetId
  */
-export function addActiveSheetShadow(sheetId, activeSheetClass) {
+export function addActiveSheetShadow(sheetId: any, activeSheetClass: any): any {
     const sheet = document.getElementById(sheetId);
 
     if (sheet) {

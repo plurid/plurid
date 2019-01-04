@@ -1,8 +1,8 @@
 import { rotateViewcube } from '../../elements/viewcube/viewcube-core';
 import { getDirection } from "./directions";
-import { getPlurid } from "./get-plurid";
+// import { getPlurid } from "./get-plurid";
 import * as matrix from "./matrix";
-import { getTransformRotate } from './transforms-core';
+// import { getTransformRotate } from './transforms-core';
 import * as transcore from "./transforms-core";
 
 
@@ -11,7 +11,7 @@ let rotateX = 0.5;
 let rotateY = 0.5;
 
 
-export function rotation(transform) {
+export function rotation(transform: any) {
     const event = transform.event;
     const plurid = transform.plurid;
     const direction = transform.direction ? transform.direction : getDirection(event);
@@ -32,8 +32,8 @@ export function rotation(transform) {
 
 
 
-export function rotatePlurid(event, plurid, direction = null) {
-    let angleIncrement;
+export function rotatePlurid(event: any, plurid: any, direction: any = null) {
+    let angleIncrement: any;
     // console.log("ROTATE");
     // console.log("Event", event);
     // console.log("----------------------------------")
@@ -96,8 +96,8 @@ export function rotatePlurid(event, plurid, direction = null) {
 }
 
 
-export function translatePlurid(event, plurid, direction = null) {
-    let linearIncrement;
+export function translatePlurid(event: any, plurid: any, direction: any = null) {
+    let linearIncrement: any;
     // console.log("TRANSLATE");
     // console.log("Event", event);
 
@@ -172,7 +172,7 @@ export function translatePlurid(event, plurid, direction = null) {
 }
 
 
-export function scalePlurid(event, plurid, direction = null) {
+export function scalePlurid(event: any, plurid: any, direction: any = null) {
     // console.log("SCALE");
     // console.log("Event", event);
 

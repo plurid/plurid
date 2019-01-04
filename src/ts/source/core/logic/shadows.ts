@@ -1,4 +1,4 @@
-export function setShadows(pluridRoot, pluridSheet, sheetHeight, ground) {
+export function setShadows(pluridRoot: any, pluridSheet: any, sheetHeight: any, ground: any) {
     const pluridShadow = document.createElement('plurid-shadow');
     pluridRoot.appendChild(pluridShadow);
     (<any> pluridShadow).sheet = pluridSheet.id;

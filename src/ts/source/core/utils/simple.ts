@@ -1,9 +1,9 @@
 /**
  * Gets a string and returns it with capitalized first letter.
  *
- * @param {string} string
- * @return {function}
+ * @param {string} str
+ * @return {string}
  */
-export function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+export function capitalize(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }

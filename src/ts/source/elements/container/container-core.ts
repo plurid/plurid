@@ -1,5 +1,5 @@
 import { getPlurid } from "../../core/logic/get-plurid";
-import { stylePlurid as style } from "../../core/logic/style-plurid";
+// import { stylePlurid as style } from "../../core/logic/style-plurid";
 import {
         rotatePlurid,
         rotation,
@@ -7,17 +7,18 @@ import {
         translatePlurid,
         } from "../../core/logic/transforms";
 import { removeActiveSheetShadow } from "../sheet/sheet-core";
-import { rotateViewcube } from "../viewcube/viewcube-core";
+// import { rotateViewcube } from "../viewcube/viewcube-core";
 
 
 
 // transform receives the selected plurid
-export function transform(container) {
+export function transform(container: any) {
     // let pluridStack = new Set();
     let plurid = container.getElementsByTagName('plurid-roots')[0];
+
     const _transform = {
         plurid,
-        container: this,
+        container,
     };
 
 
@@ -25,7 +26,7 @@ export function transform(container) {
     let oldX = 0;
     let oldY = 0;
 
-    function getDirection(event) {
+    function getDirection(event: MouseEvent) {
         return ( (_event) => {
             if (oldX < _event.clientX) {
                 direction = "right";
@@ -47,7 +48,7 @@ export function transform(container) {
         })(event);
     }
 
-    function rotatePluridClickThree(event) {
+    function rotatePluridClickThree(event: any) {
         if (event.shiftKey) {
             event.preventDefault();
             const _direction = getDirection(event);
@@ -56,7 +57,7 @@ export function transform(container) {
         }
     }
 
-    function translatePluridClickThree(event) {
+    function translatePluridClickThree(event: any) {
         if (event.altKey) {
             event.preventDefault();
             const _direction = getDirection(event);
@@ -64,7 +65,7 @@ export function transform(container) {
         }
     }
 
-    container.addEventListener('mousedown', (event) => {
+    container.addEventListener('mousedown', (event: any) => {
         if (event.which === 2 || event.button === 4 ) {
             if (event.shiftKey) {
                 event.preventDefault();
@@ -77,14 +78,14 @@ export function transform(container) {
         }
     });
 
-    container.addEventListener('mouseup', (event) => {
+    container.addEventListener('mouseup', (event: any) => {
         if (event.which === 2 || event.button === 4 ) {
             container.removeEventListener('mousemove', rotatePluridClickThree);
             container.removeEventListener('mousemove', translatePluridClickThree);
         }
     });
 
-    container.addEventListener("click", (event) => {
+    container.addEventListener("click", (event: any) => {
         // cross-browsers eventPath
         const eventPath = event.path || (event.composedPath && event.composedPath());
         const currentPluridRoot = checkCurrentPluridRoot(eventPath);
@@ -101,7 +102,7 @@ export function transform(container) {
         plurid = getPlurid(event).root;
     });
 
-    container.addEventListener('wheel', (event) => {
+    container.addEventListener('wheel', (event: MouseEvent) => {
         if (event.shiftKey) {
             event.preventDefault();
             (<any> transform).event = event;
@@ -123,10 +124,10 @@ export function transform(container) {
 }
 
 
-function checkCurrentPluridRoot(eventPath) {
+function checkCurrentPluridRoot(eventPath: any) {
     // console.log('eventPath', eventPath);
 
-    let pluridSheet;
+    let pluridSheet: any;
     let pluridSheetId = '';
     // let pluridBranch;
     // let pluridBranchId = '';
@@ -161,7 +162,7 @@ function checkCurrentPluridRoot(eventPath) {
     }
 
 
-    function verifyChild(verifyId) {
+    function verifyChild(verifyId: any) {
         if (verifyId === (<any> window).pluridScene.meta.activePlurid) {
             // console.log(verifyId);
             // console.log(pluridScene.meta.activePlurid);
@@ -169,7 +170,7 @@ function checkCurrentPluridRoot(eventPath) {
         }
     }
 
-    function recursiveCheck(children, verifyId) {
+    function recursiveCheck(children: any, verifyId: any): any {
         for (const child of children) {
             if (child.sheetId === pluridSheetId) {
                 return verifyChild(verifyId);

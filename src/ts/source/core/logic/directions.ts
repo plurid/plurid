@@ -1,14 +1,15 @@
 let direction = "";
-let threshold = 0;
-let absThreshold = 10;
+const threshold = 0;
+const absThreshold = 10;
 
-export function getDirection(event) {
+
+export function getDirection(event: any) {
     const wheelDeltaX = event.wheelDeltaX;
     const wheelDeltaY = event.wheelDeltaY;
     // console.log(wheelDeltaX);
     // console.log(wheelDeltaY);
-    const absWheelDeltaX = Math.abs(wheelDeltaX)
-    const absWheelDeltaY = Math.abs(wheelDeltaY)
+    const absWheelDeltaX = Math.abs(wheelDeltaX);
+    const absWheelDeltaY = Math.abs(wheelDeltaY);
 
     if (wheelDeltaX > threshold
         && absWheelDeltaY < absThreshold

@@ -63,7 +63,7 @@
 
 
 
-function makeQuaternion(x, y, z, w) {
+function makeQuaternion(x: any, y: any, z: any, w: any) {
     return  {
         x,
         y,
@@ -74,7 +74,7 @@ function makeQuaternion(x, y, z, w) {
 
 
 // alpha around Z axis, beta around X axis, and gamma around Y axis
-export function computeQuaternionFromEulers(alpha, beta, gamma) {
+export function computeQuaternionFromEulers(alpha: any, beta: any, gamma: any) {
     let x = degToRad(beta); // beta value
     let y = degToRad(gamma); // gamma value
     let z = degToRad(alpha); // alpha value
@@ -95,7 +95,7 @@ export function computeQuaternionFromEulers(alpha, beta, gamma) {
 }
 
 
-export function quaternionFromAxisAngle(x, y, z, angle) {
+export function quaternionFromAxisAngle(x: any, y: any, z: any, angle: any) {
     const q: any = {};
     const halfAngle = angle / 2;
     q.x = x * Math.sin(halfAngle);
@@ -106,17 +106,17 @@ export function quaternionFromAxisAngle(x, y, z, angle) {
 }
 
 
-export function inverseQuaternion(quaternion) {
+export function inverseQuaternion(quaternion: any) {
     return makeQuaternion(quaternion.x, quaternion.y, quaternion.z, -quaternion.w);
 }
 
 
-export function conjugateQuaternion(quaternion) {
+export function conjugateQuaternion(quaternion: any) {
     return makeQuaternion(-quaternion.x, -quaternion.y, -quaternion.z, quaternion.w);
 }
 
 
-export function quaternionMultiply(quaternionArray) {
+export function quaternionMultiply(quaternionArray: any) {
     const temporaryQuaternion = quaternionArray[0];
     const copyQuaternion = {
         x: temporaryQuaternion.x,
@@ -164,7 +164,7 @@ export function quaternionMultiply(quaternionArray) {
 }
 
 
-export function rotatePointViaQuaternion(pointRotate, quaternion) {
+export function rotatePointViaQuaternion(pointRotate: any, quaternion: any) {
     const temporaryQuaternion = {
         x: pointRotate[0],
         y: pointRotate[1],
@@ -184,7 +184,7 @@ export function rotatePointViaQuaternion(pointRotate, quaternion) {
 }
 
 
-export function makeRotationMatrixFromQuaternion(quaternion) {
+export function makeRotationMatrixFromQuaternion(quaternion: any) {
     const num = quaternion.x * 2;
     const num2 = quaternion.y * 2;
     const num3 = quaternion.z * 2;
@@ -207,6 +207,6 @@ export function makeRotationMatrixFromQuaternion(quaternion) {
 }
 
 
-function degToRad(deg) {
+function degToRad(deg: any) {
     return deg * Math.PI / 180;
 }

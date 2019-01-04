@@ -6,7 +6,7 @@ import {
         } from './viewcube-core';
 
 
-export function initViewcube(container) {
+export function initViewcube(container: any) {
     // TO DO
     // define only if multiple plurid-containers
 
