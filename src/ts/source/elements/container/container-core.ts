@@ -14,7 +14,7 @@ import { removeActiveSheetShadow } from "../sheet/sheet-core";
 // transform receives the selected plurid
 export function transform(container: any) {
     // let pluridStack = new Set();
-    let plurid = container.getElementsByTagName('plurid-roots')[0];
+    let plurid: HTMLElement | null = container.getElementsByTagName('plurid-roots')[0];
 
     const _transform = {
         plurid,
@@ -105,8 +105,8 @@ export function transform(container: any) {
     container.addEventListener('wheel', (event: MouseEvent) => {
         if (event.shiftKey) {
             event.preventDefault();
-            (<any> transform).event = event;
-            rotation(transform);
+            (<any> _transform).event = event;
+            rotation(_transform);
         }
 
         if (event.altKey) {

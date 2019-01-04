@@ -471,7 +471,7 @@ function scrollTransform(container: any) {
 
 
 function transformSensitivity(container: any) {
-    console.log('a');
+    // console.log('a');
 }
 
 
@@ -525,17 +525,17 @@ function linkTransformNormal(container: any) {
 
 
 function parentOpacityAfterClick(container: any) {
-    console.log('a');
+    // console.log('a');
 }
 
 
 function generalOpacityAfterDoubleClick(container: any) {
-    console.log('a');
+    // console.log('a');
 }
 
 
 function shortcuts(container: any) {
-    console.log('a');
+    // console.log('a');
 }
 
 
@@ -549,5 +549,5 @@ function alwaysShowOptions(container: any) {
 
 
 function resetDefault(container: any) {
-    console.log('a');
+    // console.log('a');
 }
