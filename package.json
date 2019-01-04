@@ -4,11 +4,12 @@
     "description": "View and explore the web in three dimensions.",
     "main": "./pkg/script.js",
     "scripts": {
-        "build": "webpack -p --env prod --progress --profile --colors",
-        "watch": "webpack --watch --env dev",
+        "build": "webpack -p --env prod --progress --profile --colors && npm run test:copy",
+        "watch": "webpack --watch --env dev && echo test",
         "cypress:open": "cypress open",
         "cypress:run": "cypress run",
-        "test": "jest ./test/unit/"
+        "test": "jest ./test/unit/",
+        "test:copy": "cp -r ./pkg/ ./test/examples/pages/assets/plurid/"
     },
     "repository": {
         "type": "git",
