@@ -23,10 +23,11 @@
     },
     "scripts": {
         "clean": "rm -rf ./dist",
-        "test": "cross-env CI=1 react-scripts-ts test --env=jsdom",
-        "test.watch": "react-scripts-ts test --env=jsdom",
+        "test.jest": "cross-env CI=1 react-scripts-ts test --env=jsdom",
+        "test.jest.watch": "react-scripts-ts test --env=jsdom",
+        "cypress.open": "cypress open",
         "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
-        "build": "yarn clean && yarn test && yarn lint && yarn build.rollup",
+        "build": "yarn clean && yarn test.jest && yarn lint && yarn build.rollup",
         "build.rollup": "rollup -c",
         "start": "rollup -c -w"
     },
@@ -48,6 +49,7 @@
         "babel-core": "^6.26.3",
         "babel-runtime": "^6.26.0",
         "cross-env": "^5.1.4",
+        "cypress": "^3.1.5",
         "enzyme": "^3.9.0",
         "enzyme-adapter-react-16": "^1.10.0",
         "prettier": "^1.16.4",
