@@ -23,3 +23,5 @@ export {
     PluridSpace,
     PluridViewcube,
 };
+
+export default PluridApp;

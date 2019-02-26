@@ -1,10 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-import {
-    PluridApp,
-    PluridPage,
- } from 'plurid-react'
-
+import PluridApp, { PluridPage } from 'plurid-react';
 
 
 export default class App extends Component {
