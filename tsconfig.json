@@ -16,7 +16,8 @@
         "strictNullChecks": true,
         "suppressImplicitAnyIndexErrors": true,
         "noUnusedLocals": true,
-        "noUnusedParameters": true
+        "noUnusedParameters": true,
+        "plugins": [{"name": "typescript-tslint-plugin"}]
     },
     "include": ["src"],
     "exclude": ["node_modules", "build", "dist", "example", "rollup.config.js"]
