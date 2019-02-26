@@ -1,6 +1,3 @@
 import PluridApp from './components/PluridApp';
 
-
-export {
-    PluridApp
-}
+export { PluridApp };
