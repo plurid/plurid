@@ -7,7 +7,7 @@
     <a target="_blank" href="https://travis-ci.org/plurid/plurid-react">
         <img src="https://img.shields.io/travis/plurid/plurid-react.svg?logo=travis&colorB=1380C3&style=for-the-badge" alt="Build Status">
     </a>
-    <a target="_blank" href="https://github.com/plurid/plurid/blob/master/LICENSE">
+    <a target="_blank" href="https://github.com/plurid/plurid-react/blob/master/LICENSE">
         <img src="https://img.shields.io/badge/license-MIT-blue.svg?colorB=1380C3&style=for-the-badge" alt="License: MIT">
     </a>
 </p>
