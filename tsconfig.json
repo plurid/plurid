@@ -19,6 +19,16 @@
         "noUnusedParameters": true,
         "plugins": [{"name": "typescript-tslint-plugin"}]
     },
-    "include": ["src"],
-    "exclude": ["node_modules", "build", "dist", "example", "rollup.config.js"]
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "build",
+        "dist",
+        "impl",
+        "rollup.config.js",
+        "src/**/*.spec.ts",
+        "src/**/*.spec.tsx"
+    ]
 }
