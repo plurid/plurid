@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import PluridContainer from '../Container';
 
 export interface IPluridAppProps {
@@ -6,6 +7,10 @@ export interface IPluridAppProps {
 }
 
 class PluridApp extends Component<IPluridAppProps> {
+    public static propTypes = {
+        theme: PropTypes.string,
+    }
+
     public render() {
         const { children } = this.props;
 
