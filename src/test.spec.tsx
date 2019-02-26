@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { PluridApp } from './index';
+import { PluridApp } from './';
 
 it('renders without crashing', () => {
     shallow(<PluridApp />);
