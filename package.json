@@ -23,11 +23,11 @@
     },
     "scripts": {
         "clean": "rm -rf ./dist",
-        "test.jest": "cross-env CI=1 react-scripts-ts test --env=jsdom",
-        "test.jest.watch": "react-scripts-ts test --env=jsdom",
+        "test": "cross-env CI=1 react-scripts-ts test --env=jsdom",
+        "test.watch": "react-scripts-ts test --env=jsdom",
         "cypress.open": "cypress open",
         "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
-        "build": "yarn clean && yarn test.jest && yarn lint && yarn build.rollup",
+        "build": "yarn clean && yarn test && yarn lint && yarn build.rollup",
         "build.rollup": "rollup -c",
         "start": "rollup -c -w"
     },
