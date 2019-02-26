@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export interface IPluridAppProps {
-    text: string;
+    text?: string;
 }
 
 export default class PluridApp extends React.Component<IPluridAppProps> {
