@@ -12,6 +12,7 @@
         ]
     },
     "rules": {
-        "no-implicit-dependencies": [true, "dev"]
-    },
+        "no-implicit-dependencies": [true, "dev"],
+        "ordered-imports": false
+    }
 }
