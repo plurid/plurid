@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import PluridRoot from "../Root";
+import PluridRoot from '../Root';
 
-const StyledPluridRoots = styled.div`
+import { PluridContext } from '../context';
+
+const StyledPluridRoots: any = styled.div`
     position: absolute;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transform: translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(45deg) rotateZ(0deg) scale(1);
 `;
 
 class PluridRoots extends Component {
@@ -24,9 +25,19 @@ class PluridRoots extends Component {
         });
 
         return (
-            <StyledPluridRoots>
-                {rootChildren}
-            </StyledPluridRoots>
+            <PluridContext.Consumer>
+                {({roots}) => (
+                    <StyledPluridRoots
+                        style={
+                            {
+                                transform: `translateX(200px) translateY(300px) translateZ(0px) rotateX(${roots.rotX}deg) rotateY(${roots.rotY}deg) rotateZ(0deg) scale(1)`
+                            }
+                        }
+                    >
+                        {rootChildren}
+                    </StyledPluridRoots>
+                )}
+            </PluridContext.Consumer>
         );
     }
 }

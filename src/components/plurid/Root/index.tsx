@@ -13,7 +13,7 @@ class PluridRoot extends Component {
         const { children } = this.props;
 
         return (
-            <StyledPluridRoot yPos={Math.round(Math.random()) * 150 }>
+            <StyledPluridRoot yPos={Math.round(Math.random()) * 150 * 0 }>
                 {children}
             </StyledPluridRoot>
         );

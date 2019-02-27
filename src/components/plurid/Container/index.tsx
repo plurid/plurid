@@ -16,12 +16,21 @@ const StyledPluridContainer = styled.div`
     background: radial-gradient(ellipse at center, #252727 0%, #111212 100%);
 `;
 
-class PluridContainer extends Component {
+interface IPluridContainerProps {
+    onWheel: (event: any) => void;
+    onKeyDown: (event: any) => void;
+}
+
+class PluridContainer extends Component<IPluridContainerProps, {}> {
     public render() {
-        const { children } = this.props;
+        const { children, onWheel, onKeyDown } = this.props;
 
         return (
-            <StyledPluridContainer>
+            <StyledPluridContainer
+                onWheel={onWheel}
+                tabIndex={0}
+                onKeyDown={onKeyDown}
+            >
                 <PluridSpace>
                     {children}
                 </PluridSpace>
