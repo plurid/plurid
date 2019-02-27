@@ -8,7 +8,11 @@ export default class App extends Component {
         return (
             <PluridApp>
                 <PluridPage>
-                    Test
+                    Page 1
+                </PluridPage>
+
+                <PluridPage>
+                    Page 2
                 </PluridPage>
             </PluridApp>
         );
