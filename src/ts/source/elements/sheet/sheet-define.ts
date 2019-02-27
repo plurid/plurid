@@ -21,7 +21,10 @@ class PluridSheet extends HTMLElement {
             initControls();
         }
         renderControls(this, sheetIdNumber);
-        setLink(this);
+
+        setTimeout(() => {
+            setLink(this);
+        }, 2000);
         setAnchorTagsId(this.id);
         setPluridRoots(this);
     }
