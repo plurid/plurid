@@ -27,6 +27,8 @@
 
 + [Scope](#scope)
 + [Use](#use)
+    + [Manual](#manual)
+    + [Package Manager](#package-manager)
 + [Description](#description)
 
 
@@ -41,15 +43,17 @@ To generate a three-dimensional space within the browser where each page is a pl
 
 ## Use
 
-Place the `plurid` folder at the same level with a `.html` file,
+### Manual
+
+Place the `pkg` folder at the same level with a `.html` file, rename the folder to `plurid`,
 
 import the `.css` file in the `<head>` of the `.html` document,
 
-    <link rel="stylesheet" href="./plurid/css/plurid.css">
+    <link rel="stylesheet" href="./plurid/styles.css">
 
 import the `.js` file at the end of the `<body>`, before any other script,
 
-    <script src="./plurid/js/plurid.js"></script>
+    <script src="./plurid/script.js"></script>
 
 place the content of the web page in a `<plurid-page>` tag, inside the `<body>`
 
@@ -59,6 +63,15 @@ place the content of the web page in a `<plurid-page>` tag, inside the `<body>`
         </div>
     </plurid-page>
 
+### Package Manager
+
+Run the command
+
+    npm install plurid
+
+or
+
+    yarn install plurid
 
 
 ## Description
