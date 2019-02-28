@@ -25,11 +25,21 @@ export function rotateMatrix(xAngle: any, yAngle: any, zAngle: any = 0) {
 }
 
 export function translateMatrix(x: any, y: any, z: any) {
-    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1];
+    return [
+        1,    0,    0,   0,
+        0,    1,    0,   0,
+        0,    0,    1,   0,
+        x,    y,    z,   1,
+    ];
 }
 
 export function scaleMatrix(s: any) {
-    return [s, 0, 0, 0, 0, s, 0, 0, 0, 0, s, 0, 0, 0, 0, 1];
+    return [
+        s,    0,    0,   0,
+        0,    s,    0,   0,
+        0,    0,    s,   0,
+        0,    0,    0,   1,
+    ];
 }
 
 export function multiplyMatrices(a: any, b: any) {
