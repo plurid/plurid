@@ -12,6 +12,19 @@ const StyledPluridRoots: any = styled.div`
 `;
 
 class PluridRoots extends Component {
+    private roots: any;
+
+    constructor(props: any) {
+        super(props);
+
+        this.roots = React.createRef();
+
+    }
+
+    public componentDidMount() {
+        console.log(window.getComputedStyle(this.roots.current).getPropertyValue("transform"));
+    }
+
     public render() {
         const { children } = this.props;
 
@@ -30,9 +43,11 @@ class PluridRoots extends Component {
                     <StyledPluridRoots
                         style={
                             {
-                                transform: `translateX(200px) translateY(300px) translateZ(0px) rotateX(${roots.rotX}deg) rotateY(${roots.rotY}deg) rotateZ(0deg) scale(1)`
+                                // transform: `translateX(200px) translateY(300px) translateZ(0px) rotateX(${roots.rotX}deg) rotateY(${roots.rotY}deg) rotateZ(0deg) scale(1)`
+                                transform: `${roots.matrix3d}`
                             }
                         }
+                        ref={this.roots}
                     >
                         {rootChildren}
                     </StyledPluridRoots>
