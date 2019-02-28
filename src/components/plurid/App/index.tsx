@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PluridContainer from '../Container';
 import PluridSheet from '../Sheet';
+import { getWheelDirection } from 'plurid-engine';
 
 import { PluridContext } from '../context';
 
@@ -21,8 +22,8 @@ enum DirectionArrow {
 }
 
 const ROTATE_STEP = 4.1;
-const THRESHOLD = 0;
 const ABSTHRESHOLD = 10;
+const THRESHOLD = 0;
 
 class PluridApp extends Component<IPluridAppProps, IPluridAppState> {
     public static propTypes = {
@@ -49,7 +50,7 @@ class PluridApp extends Component<IPluridAppProps, IPluridAppState> {
 
         if (event.shiftKey) {
             // console.log('rotate');
-            const direction = this.getDirection(event);
+            const direction = getWheelDirection(event, ABSTHRESHOLD, THRESHOLD);
             this.rotate(direction);
         }
 
@@ -179,44 +180,6 @@ class PluridApp extends Component<IPluridAppProps, IPluridAppState> {
         const context = {...this.state.context};
         context.roots = roots;
         this.setState({context});
-    }
-
-    private getDirection = (event: any): string => {
-        let direction = 'left';
-        const wheelDeltaX = event.deltaX;
-        const wheelDeltaY = event.deltaY;
-        // console.log('wheelDeltaX', wheelDeltaX);
-        // console.log('wheelDeltaY', wheelDeltaY);
-        const absWheelDeltaX = Math.abs(wheelDeltaX);
-        const absWheelDeltaY = Math.abs(wheelDeltaY);
-        // console.log('absWheelDeltaX', absWheelDeltaX);
-        // console.log('absWheelDeltaY', absWheelDeltaY);
-
-        if (wheelDeltaX > THRESHOLD
-            && absWheelDeltaY < ABSTHRESHOLD
-            && absWheelDeltaX > absWheelDeltaY) {
-            direction = "left";
-        }
-
-        if (wheelDeltaX < THRESHOLD
-            && absWheelDeltaY < ABSTHRESHOLD
-            && absWheelDeltaX > absWheelDeltaY) {
-            direction = "right";
-        }
-
-        if (wheelDeltaY > THRESHOLD
-            && absWheelDeltaX < ABSTHRESHOLD
-            && absWheelDeltaY > absWheelDeltaX) {
-            direction = "up";
-        }
-
-        if (wheelDeltaY < THRESHOLD
-            && absWheelDeltaX < ABSTHRESHOLD
-            && absWheelDeltaY > absWheelDeltaX) {
-            direction = "down";
-        }
-
-        return direction;
     }
 }
 
