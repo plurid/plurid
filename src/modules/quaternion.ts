@@ -1,3 +1,13 @@
+/**
+ * Converts degrees to radians.
+ *
+ * @param deg
+ * @returns radians
+ */
+export const degToRad = (deg: number): number => {
+    return (deg * Math.PI) / 180;
+};
+
 interface Quaternion {
     x: number;
     y: number;
@@ -13,7 +23,7 @@ interface Quaternion {
  * @param w
  * @returns {Quaternion}
  */
-const makeQuaternion = (
+export const makeQuaternion = (
     x: number,
     y: number,
     z: number,
@@ -32,19 +42,35 @@ const makeQuaternion = (
  *
  * @returns {Quaternion}
  */
-const zeroQuaternion = (): Quaternion => {
+export const zeroQuaternion = (): Quaternion => {
     return makeQuaternion(0, 0, 0, 0);
 };
 
 /**
- * Converts degrees to radians.
  *
- * @param deg
- * @returns radians
+ * @param quaternion
  */
-const degToRad = (deg: number): number => {
-    return (deg * Math.PI) / 180;
-};
+export function inverseQuaternion(quaternion: Quaternion): Quaternion {
+    return makeQuaternion(
+        quaternion.x,
+        quaternion.y,
+        quaternion.z,
+        -quaternion.w
+    );
+}
+
+/**
+ *
+ * @param quaternion
+ */
+export function conjugateQuaternion(quaternion: Quaternion): Quaternion {
+    return makeQuaternion(
+        -quaternion.x,
+        -quaternion.y,
+        -quaternion.z,
+        quaternion.w
+    );
+}
 
 /**
  * Generates quaternion based on Euler angles (in degrees).
@@ -98,32 +124,6 @@ export function quaternionFromAxisAngle(
     q.z = z * Math.sin(halfAngle);
     q.w = Math.cos(halfAngle);
     return q;
-}
-
-/**
- *
- * @param quaternion
- */
-export function inverseQuaternion(quaternion: Quaternion): Quaternion {
-    return makeQuaternion(
-        quaternion.x,
-        quaternion.y,
-        quaternion.z,
-        -quaternion.w
-    );
-}
-
-/**
- *
- * @param quaternion
- */
-export function conjugateQuaternion(quaternion: Quaternion): Quaternion {
-    return makeQuaternion(
-        -quaternion.x,
-        -quaternion.y,
-        -quaternion.z,
-        quaternion.w
-    );
 }
 
 /**

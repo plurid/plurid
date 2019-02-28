@@ -8,6 +8,9 @@ import {
     matrixArrayToCssMatrix
 } from './modules/matrix';
 import {
+    makeQuaternion,
+    zeroQuaternion,
+    degToRad,
     computeQuaternionFromEulers,
     quaternionFromAxisAngle,
     inverseQuaternion,
@@ -18,13 +21,19 @@ import {
 } from './modules/quaternion';
 
 export {
+    // getDirection.ts
     getWheelDirection,
+    // matrix.ts
     rotateMatrix,
     translateMatrix,
     scaleMatrix,
     multiplyMatrices,
     multiplyArrayOfMatrices,
     matrixArrayToCssMatrix,
+    // quaternion.ts
+    makeQuaternion,
+    zeroQuaternion,
+    degToRad,
     computeQuaternionFromEulers,
     quaternionFromAxisAngle,
     inverseQuaternion,
