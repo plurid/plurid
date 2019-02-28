@@ -5,7 +5,7 @@ import {
     scaleMatrix,
     multiplyMatrices,
     multiplyArrayOfMatrices,
-    matrixArrayToCssMatrix
+    matrixArrayToCSSMatrix
 } from './modules/matrix';
 import {
     makeQuaternion,
@@ -20,6 +20,8 @@ import {
     makeRotationMatrixFromQuaternion
 } from './modules/quaternion';
 
+
+
 export {
     // getDirection.ts
     getWheelDirection,
@@ -29,7 +31,7 @@ export {
     scaleMatrix,
     multiplyMatrices,
     multiplyArrayOfMatrices,
-    matrixArrayToCssMatrix,
+    matrixArrayToCSSMatrix,
     // quaternion.ts
     makeQuaternion,
     zeroQuaternion,
