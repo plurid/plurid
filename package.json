@@ -25,9 +25,10 @@
         "prebuild": "rimraf dist",
         "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
         "start": "rollup -c rollup.config.ts -w",
-        "test": "jest --coverage",
-        "test:watch": "jest --coverage --watch",
-        "test:prod": "yarn lint && yarn test -- --no-cache",
+        "test": "jest",
+        "test.coverage": "jest --coverage",
+        "test.watch": "jest --coverage --watch",
+        "test.prod": "yarn lint && yarn test -- --no-cache",
         "report-coverage": "cat ./coverage/lcov.info | coveralls",
         "precommit": "lint-staged"
     },
