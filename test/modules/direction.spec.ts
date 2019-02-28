@@ -1,4 +1,4 @@
-import { getWheelDirection } from '../../src/';
+import { getWheelDirection } from '../../src';
 
 describe('getWheelDirection', () => {
     it('returns "left" direction', () => {

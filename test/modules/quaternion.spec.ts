@@ -9,7 +9,9 @@ import {
     quaternionMultiply,
     rotatePointViaQuaternion,
     makeRotationMatrixFromQuaternion
-} from '../../src/';
+} from '../../src';
+
+
 
 describe('degToRad', () => {
     it('converts 90 degrees to radians', () => {
