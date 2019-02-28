@@ -5,6 +5,9 @@ import {
     translateMatrix,
     scaleMatrix,
 } from './matrix';
+import {
+    degToRad
+} from './quaternion';
 
 
 
@@ -185,6 +188,9 @@ export function getTransformRotate(matrix3d: string): RotationValues {
             rotateY = 2 * pi - Math.acos(cosaY1);
         }
     }
+
+    rotateX = degToRad(rotateX);
+    rotateY = degToRad(rotateY);
 
     return {
         rotateX,
