@@ -1,4 +1,4 @@
-export const getDirection = (
+export const getWheelDirection = (
     event: any,
     ABSTHRESHOLD: number = 10,
     THRESHOLD: number = 0
@@ -6,12 +6,12 @@ export const getDirection = (
     let direction = 'left'
     const wheelDeltaX = event.deltaX
     const wheelDeltaY = event.deltaY
-    // console.log('wheelDeltaX', wheelDeltaX);
-    // console.log('wheelDeltaY', wheelDeltaY);
+    // console.log('PluridEngine :: wheelDeltaX', wheelDeltaX);
+    // console.log('PluridEngine :: wheelDeltaY', wheelDeltaY);
     const absWheelDeltaX = Math.abs(wheelDeltaX)
     const absWheelDeltaY = Math.abs(wheelDeltaY)
-    // console.log('absWheelDeltaX', absWheelDeltaX);
-    // console.log('absWheelDeltaY', absWheelDeltaY);
+    // console.log('PluridEngine :: absWheelDeltaX', absWheelDeltaX);
+    // console.log('PluridEngine :: absWheelDeltaY', absWheelDeltaY);
 
     if (
         wheelDeltaX > THRESHOLD &&
@@ -44,6 +44,22 @@ export const getDirection = (
     ) {
         direction = 'down'
     }
+
+    // if (positionX < threshold && positionY < threshold) {
+    //     direction = "upleft";
+    // }
+
+    // if (positionX < threshold && positionY > threshold ) {
+    //     direction = "downleft";
+    // }
+
+    // if (positionX > threshold && positionY > threshold ) {
+    //     direction = "downright";
+    // }
+
+    // if (positionX > threshold && positionY < threshold ) {
+    //     direction = "upright";
+    // }
 
     return direction
 }
