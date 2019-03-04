@@ -13,7 +13,7 @@ const StyledPluridContainer = styled.div`
     overflow: hidden;
     height: 100vh;
     color: white;
-    background: radial-gradient(ellipse at center, #252727 0%, #111212 100%);
+    background: radial-gradient(ellipse at center, rgb(37, 39, 39) 0%, rgb(17, 18, 18) 100%);
 `;
 
 interface IPluridContainerProps {
