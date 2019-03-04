@@ -6,7 +6,7 @@ import {
     scaleMatrix,
 } from './matrix';
 import {
-    degToRad
+    radToDeg
 } from './quaternion';
 
 
@@ -145,13 +145,28 @@ export function setTransform(
 interface RotationValues {
     rotateX: number;
     rotateY: number;
+    rotateZ: number;
 }
 
 export function getTransformRotate(matrix3d: string): RotationValues {
     const pi = Math.PI;
     const values: number[] = getRotationMatrix(matrix3d);
+    // console.log(values);
     let rotateX: number = 0;
     let rotateY: number = 0;
+    let thetaX = 0;
+    let thetaY = 0;
+    let thetaZ = 0;
+
+    let theta1 = 0;
+    let theta2 = 0;
+    let phi1 = 0;
+    let phi2 = 0;
+    let phi = 0;
+    let theta = 0;
+    let psi = 0;
+
+
 
     if (values.length === 6) {
         const cosa = values[0];
@@ -164,38 +179,62 @@ export function getTransformRotate(matrix3d: string): RotationValues {
     }
 
     if (values.length === 16) {
-        const cosaX1 = values[5];
-        const sinaX3 = values[9];
-
-        // 0-180
-        if (sinaX3 <= 0) {
-            rotateX = Math.acos(cosaX1);
+        // RxRzRy
+        if (values[1] < 1) {
+            if (values[1] > -1) {
+                thetaZ = Math.asin(-1 * values[1]);
+                thetaX = Math.atan2(values[9], values[5]);
+                thetaY = Math.atan2(values[2], values[0]);
+            } else {
+                thetaZ = Math.PI / 2;
+                thetaX = -1 * Math.atan2(-1 * values[8], values[10]);
+                thetaY = 0;
+            }
+        } else {
+            thetaZ = -1 * Math.PI / 2;
+            thetaX = -1 * Math.atan2(-1 * values[8], values[10]);
+            thetaY = 0;
         }
 
-        // // 181-360
-        if (sinaX3 > 0) {
-            rotateX = 2 * pi - Math.acos(cosaX1);
-        }
+        // thetaZ = Math.asin(-1 * values[1]);
+        // thetaX = Math.atan2(values[9], values[5]);
+        // thetaY = Math.atan2(values[2], values[0]);
 
-        const cosaY1 = values[0];
-        const sinaY2 = values[2];
+        // console.log('thetaX', thetaX);
+        // console.log('thetaY', thetaY);
+        // console.log('thetaZ', thetaZ);
 
-        if (sinaY2 <= 0) {
-            rotateY = Math.acos(cosaY1);
-        }
-
-        if (sinaY2 > 0) {
-            rotateY = 2 * pi - Math.acos(cosaY1);
-        }
+        // const cosaX1 = values[5];
+        // const sinaX3 = values[9];
+        // // 0-180
+        // if (sinaX3 <= 0) {
+        //     rotateX = Math.acos(cosaX1);
+        // }
+        // // // 181-360
+        // if (sinaX3 > 0) {
+        //     rotateX = 2 * pi - Math.acos(cosaX1);
+        // }
+        // const cosaY1 = values[0];
+        // const sinaY2 = values[2];
+        // if (sinaY2 <= 0) {
+        //     rotateY = Math.acos(cosaY1);
+        // }
+        // if (sinaY2 > 0) {
+        //     rotateY = 2 * pi - Math.acos(cosaY1);
+        // }
     }
 
-    rotateX = degToRad(rotateX);
-    rotateY = degToRad(rotateY);
-
     return {
-        rotateX,
-        rotateY,
+        rotateX: thetaX,
+        rotateY: thetaY,
+        rotateZ: thetaZ,
     };
+
+    // return {
+    //     rotateX,
+    //     rotateY,
+    //     rotateZ: 0,
+    // }
 }
 
 
@@ -230,14 +269,18 @@ export function getTransformScale(matrix3d: string): ScalationValue {
 }
 
 
+// let rotateX = 0;
+// let rotateY = 0;
+
 
 export function rotatePlurid(
     matrix3d: string,
     direction: string = '',
-    angleIncrement: number = 4.5
+    angleIncrement: number = 0.07
 ): string {
     let rotateX = getTransformRotate(matrix3d).rotateX;
     let rotateY = getTransformRotate(matrix3d).rotateY;
+    console.log('ROTATE', radToDeg(rotateX), radToDeg(rotateY));
     const translateX = getTransformTranslate(matrix3d).translateX;
     const translateY = getTransformTranslate(matrix3d).translateY;
     const translateZ = getTransformTranslate(matrix3d).translateZ;
@@ -263,15 +306,15 @@ export function rotatePlurid(
         valRotationMatrix = rotateMatrix(rotateX, rotateY);
     }
 
-    if (direction === "up") {
-        rotateX += angleIncrement;
-        valRotationMatrix = rotateMatrix(rotateX, rotateY);
-    }
+    // if (direction === "up") {
+    //     rotateX += angleIncrement;
+    //     valRotationMatrix = rotateMatrix(rotateX, rotateY);
+    // }
 
-    if (direction === "down") {
-        rotateX -= angleIncrement;
-        valRotationMatrix = rotateMatrix(rotateX, rotateY);
-    }
+    // if (direction === "down") {
+    //     rotateX -= angleIncrement;
+    //     valRotationMatrix = rotateMatrix(rotateX, rotateY);
+    // }
 
     const transformedMatrix3d = setTransform(
         valRotationMatrix,
@@ -346,8 +389,8 @@ export function scalePlurid(
     //     direction = getDirection(event);
     // }
 
-    let rotateX = getTransformRotate(matrix3d).rotateX;
-    let rotateY = getTransformRotate(matrix3d).rotateY;
+    const rotateX = getTransformRotate(matrix3d).rotateX;
+    const rotateY = getTransformRotate(matrix3d).rotateY;
     const translateX = getTransformTranslate(matrix3d).translateX;
     const translateY = getTransformTranslate(matrix3d).translateY;
     const translateZ = getTransformTranslate(matrix3d).translateZ;

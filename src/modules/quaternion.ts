@@ -5,8 +5,24 @@
  * @returns radians
  */
 export const degToRad = (deg: number): number => {
-    return (deg * Math.PI) / 180;
+    // deg * Math.PI / 180
+    // return deg * Math.PI / 180;
+    return deg * 0.01745329252;
 };
+
+/**
+ * Converts radians to degrees.
+ *
+ * @param deg
+ * @returns degrees
+ */
+export const radToDeg = (rad: number): number => {
+    // rad * 180 / Math.PI
+    // return rad * 180 / Math.PI;
+    return rad * 57.2957795131;
+};
+
+
 
 interface Quaternion {
     x: number;
@@ -73,7 +89,7 @@ export function conjugateQuaternion(quaternion: Quaternion): Quaternion {
 }
 
 /**
- * Generates quaternion based on Euler angles (in degrees).
+ * Generates quaternion based on Euler angles (in radians).
  *
  * @param alpha     around Z axis
  * @param beta      around X axis
@@ -85,9 +101,12 @@ export function computeQuaternionFromEulers(
     beta: number,
     gamma: number
 ): Quaternion {
-    const x = degToRad(beta);
-    const y = degToRad(gamma);
-    const z = degToRad(alpha);
+    // const x = degToRad(beta);
+    // const y = degToRad(gamma);
+    // const z = degToRad(alpha);
+    const x = beta;
+    const y = gamma;
+    const z = alpha;
 
     const cX = Math.cos(x / 2);
     const cY = Math.cos(y / 2);
@@ -229,21 +248,9 @@ export function makeRotationMatrixFromQuaternion(quaternion: Quaternion) {
     const num12 = quaternion.w * num3;
 
     return [
-        1 - (num5 + num6),
-        num7 - num12,
-        num8 + num11,
-        0,
-        num7 + num12,
-        1 - (num4 + num6),
-        num9 - num10,
-        0,
-        num8 - num11,
-        num9 + num10,
-        1 - (num4 + num5),
-        0,
-        0,
-        0,
-        0,
-        1
+        1 - (num5 + num6),      num7 - num12,           num8 + num11,           0,
+        num7 + num12,           1 - (num4 + num6),      num9 - num10,           0,
+        num8 - num11,           num9 + num10,           1 - (num4 + num5),      0,
+        0,                      0,                      0,                      1,
     ];
 }

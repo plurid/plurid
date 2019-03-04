@@ -31,6 +31,8 @@ export function rotateMatrix(
     const rotationMatrix = makeRotationMatrixFromQuaternion(
         quartenionMultiplication
     );
+
+    console.log('rotationMatrix', rotationMatrix);
     return rotationMatrix;
 }
 
