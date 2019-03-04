@@ -11,6 +11,8 @@ import {
 
 import { PluridContext } from '../context';
 
+
+
 export interface IPluridAppProps {
     theme?: string;
 }
@@ -26,9 +28,12 @@ enum DirectionArrow {
     Right = "ArrowRight",
 }
 
-const ROTATE_STEP = 4.1;
-const ABSTHRESHOLD = 10;
-const THRESHOLD = 0;
+
+const IDENTITY_MATRIX = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
+// const DIRECTION_ABSTHRESHOLD = 10;
+// const DIRECTION_THRESHOLD = 0;
+const ANGLE_INCREMENT = 0.05;
+
 
 class PluridApp extends Component<IPluridAppProps, IPluridAppState> {
     public static propTypes = {
@@ -43,13 +48,8 @@ class PluridApp extends Component<IPluridAppProps, IPluridAppState> {
         this.state = {
             context: {
                 roots: {
-                    matrix3d: 'matrix3d(0.866025, 0.17101, -0.469846, 0, 0, 0.939693, 0.34202, 0, 0.5, -0.296198, 0.813798, 0, 200, 300, 0, 1)',
-                    rotX: 20,
-                    rotY: 30,
-                    rotZ: 0,
-                    transX: 0,
-                    transY: 0,
-                    transZ: 0,
+                    matrix3d: IDENTITY_MATRIX,
+                    // matrix3d: 'matrix3d(0.866025, 0.17101, -0.469846, 0, 0, 0.939693, 0.34202, 0, 0.5, -0.296198, 0.813798, 0, 200, 300, 0, 1)',
                 }
             }
         }
@@ -69,25 +69,37 @@ class PluridApp extends Component<IPluridAppProps, IPluridAppState> {
         event.preventDefault();
 
         if (event.shiftKey) {
-            console.log('rotate');
+            // console.log('rotate');
+            const deltas = {
+                deltaX: event.deltaX,
+                deltaY: event.deltaY
+            }
             const matrix3d = this.state.context.roots.matrix3d;
-            const direction = getWheelDirection(event, ABSTHRESHOLD, THRESHOLD);
-            const transformedMatrix3d = rotatePlurid(matrix3d, direction);
+            const direction = getWheelDirection(deltas);
+            const transformedMatrix3d = rotatePlurid(matrix3d, direction, ANGLE_INCREMENT);
             this.transformPluridRoots(transformedMatrix3d);
         }
 
         if (event.altKey ) {
-            console.log('translate');
+            // console.log('translate');
+            const deltas = {
+                deltaX: event.deltaX,
+                deltaY: event.deltaY
+            }
             const matrix3d = this.state.context.roots.matrix3d;
-            const direction = getWheelDirection(event, ABSTHRESHOLD, THRESHOLD);
+            const direction = getWheelDirection(deltas);
             const transformedMatrix3d = translatePlurid(matrix3d, direction);
             this.transformPluridRoots(transformedMatrix3d);
         }
 
         if (event.ctrlKey || event.metaKey ) {
-            console.log('scale');
+            // console.log('scale');
+            const deltas = {
+                deltaX: event.deltaX,
+                deltaY: event.deltaY
+            }
             const matrix3d = this.state.context.roots.matrix3d;
-            const direction = getWheelDirection(event, ABSTHRESHOLD, THRESHOLD);
+            const direction = getWheelDirection(deltas);
             const transformedMatrix3d = scalePlurid(matrix3d, direction);
             this.transformPluridRoots(transformedMatrix3d);
         }
@@ -166,6 +178,7 @@ class PluridApp extends Component<IPluridAppProps, IPluridAppState> {
     }
 
     public render() {
+        // console.log(this.state.context.roots.matrix3d);
         const { children } = this.props;
 
         const sheetChildren = React.Children.map(children, child => {
@@ -197,28 +210,6 @@ class PluridApp extends Component<IPluridAppProps, IPluridAppState> {
         context.roots = roots;
         this.setState({context});
     }
-
-    // private rotate = (direction: string) => {
-    //     const roots = {...this.state.context.roots};
-
-    //     if (direction === 'left') {
-    //         roots.rotY = this.state.context.roots.rotY + ROTATE_STEP;
-    //     }
-    //     if (direction === 'right') {
-    //         roots.rotY = this.state.context.roots.rotY - ROTATE_STEP;
-    //     }
-
-    //     if (direction === 'up') {
-    //         roots.rotX = this.state.context.roots.rotX + ROTATE_STEP;
-    //     }
-    //     if (direction === 'down') {
-    //         roots.rotX = this.state.context.roots.rotX - ROTATE_STEP;
-    //     }
-
-    //     const context = {...this.state.context};
-    //     context.roots = roots;
-    //     this.setState({context});
-    // }
 }
 
 export default PluridApp;
