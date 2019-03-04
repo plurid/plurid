@@ -2,34 +2,34 @@ import { getWheelDirection } from '../../src';
 
 describe('getWheelDirection', () => {
     it('returns "left" direction', () => {
-        const event = {
+        const deltas = {
             deltaX: 20,
             deltaY: 0
         };
-        expect(getWheelDirection(event)).toBe('left');
+        expect(getWheelDirection(deltas)).toBe('left');
     });
 
     it('returns "right" direction', () => {
-        const event = {
+        const deltas = {
             deltaX: -20,
             deltaY: 0
         };
-        expect(getWheelDirection(event)).toBe('right');
+        expect(getWheelDirection(deltas)).toBe('right');
     });
 
     it('returns "up" direction', () => {
-        const event = {
+        const deltas = {
             deltaX: 0,
             deltaY: 10
         };
-        expect(getWheelDirection(event)).toBe('up');
+        expect(getWheelDirection(deltas)).toBe('up');
     });
 
     it('returns "down" direction', () => {
-        const event = {
+        const deltas = {
             deltaX: 0,
             deltaY: -10
         };
-        expect(getWheelDirection(event)).toBe('down');
+        expect(getWheelDirection(deltas)).toBe('down');
     });
 });

@@ -16,12 +16,12 @@ import {
 describe('degToRad', () => {
     it('converts 90 degrees to radians', () => {
         const rad = degToRad(90);
-        expect(rad).toEqual(Math.PI / 2);
+        expect(rad).toEqual(1.5707963268);
     });
 
     it('converts 180 degrees to radians', () => {
         const rad = degToRad(180);
-        expect(rad).toEqual(Math.PI);
+        expect(rad).toEqual(3.1415926536);
     });
 });
 
@@ -58,13 +58,24 @@ describe('quaternion generation', () => {
 });
 
 describe('quaternion computation', () => {
-    it('computes a quaternion from euler angles', () => {
+    it('computeQuaternionFromEulers() computes a quaternion from euler angle', () => {
+        const quaternionFromEuler = computeQuaternionFromEulers(Math.PI, 0, 0);
+        const quaternion = makeQuaternion(
+            0,
+            0,
+            0.02741213359213333,
+            0.9996242168594792,
+        );
+        expect(quaternionFromEuler).toEqual(quaternion);
+    });
+
+    it('computeQuaternionFromEulers() computes a quaternion from euler angles', () => {
         const quaternionFromEuler = computeQuaternionFromEulers(20, 20, 20);
         const quaternion = makeQuaternion(
-            0.1387164571097902,
-            0.1981076317236749,
-            0.1981076317236749,
-            0.9498760324550678
+            0.1387164571101101,
+            0.19810763172437085,
+            0.19810763172437085,
+            0.9498760324547307
         );
         expect(quaternionFromEuler).toEqual(quaternion);
     });

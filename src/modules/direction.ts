@@ -1,15 +1,20 @@
+interface Deltas {
+    deltaX: number;
+    deltaY: number;
+}
+
 export const getWheelDirection = (
-    event: any,
+    deltas: Deltas,
     ABSTHRESHOLD: number = 10,
     THRESHOLD: number = 0
 ): string => {
-    let direction = 'left'
-    const wheelDeltaX = event.deltaX
-    const wheelDeltaY = event.deltaY
+    let direction = 'left';
+    const wheelDeltaX = deltas.deltaX;
+    const wheelDeltaY = deltas.deltaY;
     // console.log('PluridEngine :: wheelDeltaX', wheelDeltaX);
     // console.log('PluridEngine :: wheelDeltaY', wheelDeltaY);
-    const absWheelDeltaX = Math.abs(wheelDeltaX)
-    const absWheelDeltaY = Math.abs(wheelDeltaY)
+    const absWheelDeltaX = Math.abs(wheelDeltaX);
+    const absWheelDeltaY = Math.abs(wheelDeltaY);
     // console.log('PluridEngine :: absWheelDeltaX', absWheelDeltaX);
     // console.log('PluridEngine :: absWheelDeltaY', absWheelDeltaY);
 
@@ -18,7 +23,7 @@ export const getWheelDirection = (
         absWheelDeltaY < ABSTHRESHOLD &&
         absWheelDeltaX > absWheelDeltaY
     ) {
-        direction = 'left'
+        direction = 'left';
     }
 
     if (
@@ -26,7 +31,7 @@ export const getWheelDirection = (
         absWheelDeltaY < ABSTHRESHOLD &&
         absWheelDeltaX > absWheelDeltaY
     ) {
-        direction = 'right'
+        direction = 'right';
     }
 
     if (
@@ -34,7 +39,7 @@ export const getWheelDirection = (
         absWheelDeltaX < ABSTHRESHOLD &&
         absWheelDeltaY > absWheelDeltaX
     ) {
-        direction = 'up'
+        direction = 'up';
     }
 
     if (
@@ -42,7 +47,7 @@ export const getWheelDirection = (
         absWheelDeltaX < ABSTHRESHOLD &&
         absWheelDeltaY > absWheelDeltaX
     ) {
-        direction = 'down'
+        direction = 'down';
     }
 
     // if (positionX < threshold && positionY < threshold) {
@@ -61,5 +66,5 @@ export const getWheelDirection = (
     //     direction = "upright";
     // }
 
-    return direction
-}
+    return direction;
+};
