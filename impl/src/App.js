@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Plurid, { PluridPage } from 'plurid-react';
+import Plurid from 'plurid-react';
 
 
 const TestComponent = (<div>test component</div>);
@@ -10,15 +10,17 @@ export default class App extends Component {
         return (
             <Plurid.Router domain="plurid.com">
                 <Plurid.App>
-                    <PluridPage>
+                    <Plurid.Page>
                         Page 1
-                    </PluridPage>
-
-                    <PluridPage>
-                        Page 2
                         <br />
                         <Plurid.Link page="/test">Link</Plurid.Link>
-                    </PluridPage>
+                    </Plurid.Page>
+
+                    {
+                        // <Plurid.Page>
+                        //     Page 2
+                        // </Plurid.Page>
+                    }
                 </Plurid.App>
 
                 <Plurid.Route subdomain="simple-test" page="/simple-test" component={TestComponent} />
