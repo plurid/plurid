@@ -19,7 +19,7 @@ import PluridRoutes from './components/routing/Routes';
 
 
 
-const Plurid = {
+export default {
     // core
     App: PluridApp,
     Page: PluridPage,
@@ -30,8 +30,6 @@ const Plurid = {
     Router: PluridRouter,
     Routes: PluridRoutes,
 }
-
-export default Plurid;
 
 export {
     // core

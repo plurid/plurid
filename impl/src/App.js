@@ -16,6 +16,8 @@ export default class App extends Component {
 
                     <PluridPage>
                         Page 2
+                        <br />
+                        <Plurid.Link page="/test">Link</Plurid.Link>
                     </PluridPage>
                 </Plurid.App>
 
