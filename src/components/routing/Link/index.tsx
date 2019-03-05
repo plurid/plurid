@@ -4,11 +4,12 @@ import styled from 'styled-components';
 
 
 const StyledPluridLink = styled.a`
-    color: white;
+    color: hsl(0, 0%, 80%);
     user-select: none;
     cursor: pointer;
 
     :hover {
+        color: white;
         text-decoration: underline;
     }
 `;
@@ -16,10 +17,17 @@ const StyledPluridLink = styled.a`
 
 export interface IPluridLinkProps {
     page: string;
+    follow?: boolean; // opens the link in the same PluridSheet (default false)
+    newTab?: boolean; // opens the link in a new tab (default false)
 }
 
 
 class PluridLink extends Component<IPluridLinkProps, {}> {
+    public static defaultProps = {
+        follow: false,
+        newTab: false,
+    }
+
     public render() {
         const { children } = this.props;
 
