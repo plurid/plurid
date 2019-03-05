@@ -12,8 +12,9 @@
         ]
     },
     "rules": {
+        "interface-name": false,
+        "no-console": false,
         "no-implicit-dependencies": [true, "dev"],
-        "ordered-imports": false,
-        "no-console": false
+        "ordered-imports": false
     }
 }
