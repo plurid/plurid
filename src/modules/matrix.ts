@@ -32,7 +32,7 @@ export function rotateMatrix(
         quartenionMultiplication
     );
 
-    console.log('rotationMatrix', rotationMatrix);
+    // console.log('rotationMatrix', rotationMatrix);
     return rotationMatrix;
 }
 
@@ -72,7 +72,10 @@ export function scaleMatrix(s: number): Array<number> {
  * @param matrixA
  * @param matrixB
  */
-export function multiplyMatrices(matrixA: Array<number>, matrixB: Array<number>): Array<number> {
+export function multiplyMatrices(
+    matrixA: Array<number>,
+    matrixB: Array<number>
+): Array<number> {
     // https://github.com/toji/gl-matrix/blob/master/src/gl-matrix/mat4.js#L306-L337
     const result = [];
 

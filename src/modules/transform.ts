@@ -151,7 +151,7 @@ interface RotationValues {
 export function getTransformRotate(matrix3d: string): RotationValues {
     const pi = Math.PI;
     const values: number[] = getRotationMatrix(matrix3d);
-    console.log('getRotationMatrix', values);
+    // console.log('getRotationMatrix', values);
     // console.log(values);
     let rotateX: number = 0;
     let rotateY: number = 0;
@@ -305,7 +305,7 @@ export function rotatePlurid(
     let rotateX = transformRotate.rotateX;
     let rotateY = transformRotate.rotateY;
     let rotateZ = transformRotate.rotateZ;
-    console.log('ROTATE', radToDeg(rotateX), radToDeg(rotateY));
+    // console.log('ROTATE', radToDeg(rotateX), radToDeg(rotateY));
 
     const transformTranslate = getTransformTranslate(matrix3d);
     const translateX = transformTranslate.translateX;
