@@ -1,3 +1,4 @@
+// core
 import PluridApp from './components/core/App';
 import PluridContainer from './components/core/Container';
 import PluridContent from './components/core/Content';
@@ -10,6 +11,8 @@ import PluridSheet from './components/core/Sheet';
 import PluridSpace from './components/core/Space';
 import PluridViewcube from './components/core/Viewcube';
 
+// routing
+import PluridLink from './components/routing/Link';
 import PluridRoute from './components/routing/Route';
 import PluridRouter from './components/routing/Router';
 import PluridRoutes from './components/routing/Routes';
@@ -17,11 +20,12 @@ import PluridRoutes from './components/routing/Routes';
 
 
 const Plurid = {
-    // components
+    // core
     App: PluridApp,
     Page: PluridPage,
 
     // routing
+    Link: PluridLink,
     Route: PluridRoute,
     Router: PluridRouter,
     Routes: PluridRoutes,
@@ -30,7 +34,7 @@ const Plurid = {
 export default Plurid;
 
 export {
-    //
+    // core
     PluridApp,
     PluridContainer,
     PluridContent,
@@ -44,6 +48,7 @@ export {
     PluridViewcube,
 
     // routing
+    PluridLink,
     PluridRoute,
     PluridRouter,
     PluridRoutes,
