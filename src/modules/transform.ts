@@ -151,6 +151,7 @@ interface RotationValues {
 export function getTransformRotate(matrix3d: string): RotationValues {
     const pi = Math.PI;
     const values: number[] = getRotationMatrix(matrix3d);
+    console.log('getRotationMatrix', values);
     // console.log(values);
     let rotateX: number = 0;
     let rotateY: number = 0;
@@ -180,25 +181,26 @@ export function getTransformRotate(matrix3d: string): RotationValues {
 
     if (values.length === 16) {
         // RxRzRy
-        if (values[1] < 1) {
-            if (values[1] > -1) {
-                thetaZ = Math.asin(-1 * values[1]);
-                thetaX = Math.atan2(values[9], values[5]);
-                thetaY = Math.atan2(values[2], values[0]);
-            } else {
-                thetaZ = Math.PI / 2;
-                thetaX = -1 * Math.atan2(-1 * values[8], values[10]);
-                thetaY = 0;
-            }
-        } else {
-            thetaZ = -1 * Math.PI / 2;
-            thetaX = -1 * Math.atan2(-1 * values[8], values[10]);
-            thetaY = 0;
-        }
+        // if (values[1] < 1) {
+        //     if (values[1] > -1) {
+        //         thetaZ = Math.asin(-1 * values[1]);
+        //         thetaX = Math.atan2(values[9], values[5]);
+        //         thetaY = Math.atan2(values[2], values[0]);
+        //     } else {
+        //         thetaZ = Math.PI / 2;
+        //         thetaX = -1 * Math.atan2(-1 * values[8], values[10]);
+        //         thetaY = 0;
+        //     }
+        // } else {
+        //     thetaZ = -1 * Math.PI / 2;
+        //     thetaX = -1 * Math.atan2(-1 * values[8], values[10]);
+        //     thetaY = 0;
+        // }
 
-        // thetaZ = Math.asin(-1 * values[1]);
-        // thetaX = Math.atan2(values[9], values[5]);
-        // thetaY = Math.atan2(values[2], values[0]);
+        thetaZ = Math.asin(-1 * values[1]);
+        thetaX = Math.atan2(values[9], values[5]);
+        thetaY = Math.atan2(values[2], values[0]);
+
 
         // console.log('thetaX', thetaX);
         // console.log('thetaY', thetaY);
@@ -222,19 +224,40 @@ export function getTransformRotate(matrix3d: string): RotationValues {
         // if (sinaY2 > 0) {
         //     rotateY = 2 * pi - Math.acos(cosaY1);
         // }
+        const cosaX1 = values[5];
+        const sinaX3 = values[9];
+        // 0-180
+        if (sinaX3 <= 0) {
+            rotateX = Math.acos(cosaX1);
+        }
+        // // 181-360
+        if (sinaX3 > 0) {
+            rotateX = 2 * pi - Math.acos(cosaX1);
+        }
+        const cosaY1 = values[0];
+        const sinaY2 = values[2];
+        if (sinaY2 <= 0) {
+            rotateY = Math.acos(cosaY1);
+        }
+        if (sinaY2 > 0) {
+            rotateY = 2 * pi - Math.acos(cosaY1);
+        }
+
+        rotateX = Math.atan2(values[9], values[5]);
+        rotateY = Math.atan2(values[2], values[0]);
     }
 
-    return {
-        rotateX: thetaX,
-        rotateY: thetaY,
-        rotateZ: thetaZ,
-    };
-
     // return {
-    //     rotateX,
-    //     rotateY,
-    //     rotateZ: 0,
-    // }
+    //     rotateX: thetaX,
+    //     rotateY: thetaY,
+    //     rotateZ: thetaZ,
+    // };
+
+    return {
+        rotateX,
+        rotateY,
+        rotateZ: 0,
+    }
 }
 
 
@@ -278,22 +301,27 @@ export function rotatePlurid(
     direction: string = '',
     angleIncrement: number = 0.07
 ): string {
-    let rotateX = getTransformRotate(matrix3d).rotateX;
-    let rotateY = getTransformRotate(matrix3d).rotateY;
+    const transformRotate = getTransformRotate(matrix3d);
+    let rotateX = transformRotate.rotateX;
+    let rotateY = transformRotate.rotateY;
+    let rotateZ = transformRotate.rotateZ;
     console.log('ROTATE', radToDeg(rotateX), radToDeg(rotateY));
-    const translateX = getTransformTranslate(matrix3d).translateX;
-    const translateY = getTransformTranslate(matrix3d).translateY;
-    const translateZ = getTransformTranslate(matrix3d).translateZ;
+
+    const transformTranslate = getTransformTranslate(matrix3d);
+    const translateX = transformTranslate.translateX;
+    const translateY = transformTranslate.translateY;
+    const translateZ = transformTranslate.translateZ;
+
     const scale = getTransformScale(matrix3d).scale;
 
-    let valRotationMatrix = rotateMatrix(rotateX, rotateY);
+    let valRotationMatrix = rotateMatrix(rotateX, rotateY, rotateZ);
     const valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
     const valScalationMatrix = scaleMatrix(scale);
 
     // if (scale < 0.5) {
-    //     angleIncrement = 4.5;
+    //     angleIncrement = 0.08;
     // } else {
-    //     angleIncrement = 4.5;
+    //     angleIncrement = 0.03;
     // }
 
     if (direction === "left") {
@@ -306,15 +334,17 @@ export function rotatePlurid(
         valRotationMatrix = rotateMatrix(rotateX, rotateY);
     }
 
-    // if (direction === "up") {
-    //     rotateX += angleIncrement;
-    //     valRotationMatrix = rotateMatrix(rotateX, rotateY);
-    // }
+    if (direction === "up") {
+        rotateY -= angleIncrement;
+        // rotateX += angleIncrement;
+        valRotationMatrix = rotateMatrix(rotateX, rotateY);
+    }
 
-    // if (direction === "down") {
-    //     rotateX -= angleIncrement;
-    //     valRotationMatrix = rotateMatrix(rotateX, rotateY);
-    // }
+    if (direction === "down") {
+        rotateY += angleIncrement;
+        // rotateX -= angleIncrement;
+        valRotationMatrix = rotateMatrix(rotateX, rotateY);
+    }
 
     const transformedMatrix3d = setTransform(
         valRotationMatrix,
@@ -330,19 +360,19 @@ export function translatePlurid(
     direction: string = '',
     linearIncrement: number = 50
 ): string {
-    // if (direction == null) {
-    //     direction = getDirection(event);
-    // }
-    // console.log("Direction", direction);
+    const transformRotate = getTransformRotate(matrix3d);
+    const rotateX = transformRotate.rotateX;
+    const rotateY = transformRotate.rotateY;
+    const rotateZ = transformRotate.rotateZ;
 
-    const rotateX = getTransformRotate(matrix3d).rotateX;
-    const rotateY = getTransformRotate(matrix3d).rotateY;
-    let translateX = getTransformTranslate(matrix3d).translateX;
-    let translateY = getTransformTranslate(matrix3d).translateY;
-    let translateZ = getTransformTranslate(matrix3d).translateZ;
+    const transformTranslate = getTransformTranslate(matrix3d);
+    let translateX = transformTranslate.translateX;
+    let translateY = transformTranslate.translateY;
+    let translateZ = transformTranslate.translateZ;
+
     const scale = getTransformScale(matrix3d).scale;
 
-    const valRotationMatrix = rotateMatrix(rotateX, rotateY);
+    const valRotationMatrix = rotateMatrix(rotateX, rotateY, rotateZ);
     let valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
     const valScalationMatrix = scaleMatrix(scale);
 
@@ -384,33 +414,33 @@ export function translatePlurid(
 export function scalePlurid(
     matrix3d: string,
     direction: string = '',
+    scaleIncrement: number = 0.05
 ): string {
-    // if (direction == null) {
-    //     direction = getDirection(event);
-    // }
+    const transformRotate = getTransformRotate(matrix3d);
+    const rotateX = transformRotate.rotateX;
+    const rotateY = transformRotate.rotateY;
+    const rotateZ = transformRotate.rotateZ;
 
-    const rotateX = getTransformRotate(matrix3d).rotateX;
-    const rotateY = getTransformRotate(matrix3d).rotateY;
-    const translateX = getTransformTranslate(matrix3d).translateX;
-    const translateY = getTransformTranslate(matrix3d).translateY;
-    const translateZ = getTransformTranslate(matrix3d).translateZ;
+    const transformTranslate = getTransformTranslate(matrix3d);
+    const translateX = transformTranslate.translateX;
+    const translateY = transformTranslate.translateY;
+    const translateZ = transformTranslate.translateZ;
+
     let scale = getTransformScale(matrix3d).scale;
 
-    const valRotationMatrix = rotateMatrix(rotateX, rotateY);
+    const valRotationMatrix = rotateMatrix(rotateX, rotateY, rotateZ);
     const valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
     let valScalationMatrix = scaleMatrix(scale);
 
-    const scaleIncrement = 0.05;
-
-    if (direction === "up" || direction === "upright" || direction === "upleft") {
-        scale += scaleIncrement;
-        if (scale > 4) { scale = 4; }
+    if (direction === "up") {
+        scale -= scaleIncrement;
+        if (scale < 0.1) { scale = 0.1; }
         valScalationMatrix = scaleMatrix(scale);
     }
 
-    if (direction === "down" || direction === "downleft" || direction === "downright") {
-        scale -= scaleIncrement;
-        if (scale < 0.1) { scale = 0.1; }
+    if (direction === "down") {
+        scale += scaleIncrement;
+        if (scale > 4) { scale = 4; }
         valScalationMatrix = scaleMatrix(scale);
     }
 
