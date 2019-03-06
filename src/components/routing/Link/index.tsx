@@ -16,9 +16,15 @@ const StyledPluridLink = styled.a`
 
 
 export interface IPluridLinkProps {
+    /**
+     * Opens the link in the same PluridSheet. (default false)
+     */
+    follow?: boolean;
+    /**
+     * Opens the link in a new tab. (default false)
+     */
+    newTab?: boolean;
     page: string;
-    follow?: boolean; // opens the link in the same PluridSheet (default false)
-    newTab?: boolean; // opens the link in a new tab (default false)
 }
 
 
@@ -40,7 +46,14 @@ class PluridLink extends Component<IPluridLinkProps, {}> {
 
     private onClick = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
-        console.log('clicked');
+        const { follow, newTab, page } = this.props;
+        const detail = {
+            follow,
+            newTab,
+            page,
+        }
+        const customEvent = new CustomEvent("pluridlinkopen", {detail});
+        window.dispatchEvent(customEvent);
     }
 }
 

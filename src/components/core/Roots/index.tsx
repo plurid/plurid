@@ -22,7 +22,7 @@ class PluridRoots extends Component {
     }
 
     public componentDidMount() {
-        console.log(window.getComputedStyle(this.roots.current).getPropertyValue("transform"));
+        // console.log(window.getComputedStyle(this.roots.current).getPropertyValue("transform"));
     }
 
     public render() {
