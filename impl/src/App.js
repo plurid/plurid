@@ -13,7 +13,9 @@ export default class App extends Component {
                     <Plurid.Page>
                         Page 1
                         <br />
-                        <Plurid.Link page="/test">Link</Plurid.Link>
+                        <Plurid.Link page="/testings1">Link 1</Plurid.Link>
+                        <Plurid.Link follow page="/testings2">Link 2</Plurid.Link>
+                        <Plurid.Link newTab page="/testings3">Link 3</Plurid.Link>
                     </Plurid.Page>
 
                     {
