@@ -176,7 +176,7 @@ export function contentControls() {
                                             </g>
                                         </svg>
                                 </div>
-                                <input class="plurid-controls-url-input" type="text" tabindex="1" placeholder="Search">
+                                <input class="plurid-controls-url-input" type="text" tabindex="1" placeholder="Explore">
                                 <div class="plurid-button plurid-button-icon plurid-button-icon-url plurid-controls-cancel" tabindex="1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 875.09 875.82">
                                         <defs></defs>
