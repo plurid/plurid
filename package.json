@@ -13,7 +13,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/plurid/plurid.js.git"
+        "url": "git+https://github.com/plurid/plurid-html.git"
     },
     "keywords": [
         "web",
@@ -24,9 +24,9 @@
     "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/plurid/plurid.js/issues"
+        "url": "https://github.com/plurid/plurid-html/issues"
     },
-    "homepage": "https://github.com/plurid/plurid.js#readme",
+    "homepage": "https://github.com/plurid/plurid-html#readme",
     "devDependencies": {
         "@babel/core": "^7.2.2",
         "@babel/preset-env": "^7.2.3",
