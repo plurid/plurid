@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 872.67 701"><defs><style>.cls-1{fill:#fff;}</style></defs><title>Reload</title><g id="Layer_2" data-name="Layer 2"><g id="Reload"><polygon class="cls-1" points="794 701 0 701 0 0 775 0 775 50 50 50 50 651 744 651 744 239 794 239 794 701"/><polygon class="cls-1" points="707.31 455.04 660.69 436.96 773.57 145.79 872.67 437.97 825.33 454.03 770.43 292.21 707.31 455.04"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 872.67 701">
+    <defs>
+        <style>.cls-1{fill:#fff;}</style>
+    </defs>
+    <title>Reload</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Reload">
+            <polygon class="cls-1" points="794 701 0 701 0 0 775 0 775 50 50 50 50 651 744 651 744 239 794 239 794 701"/>
+            <polygon class="cls-1" points="707.31 455.04 660.69 436.96 773.57 145.79 872.67 437.97 825.33 454.03 770.43 292.21 707.31 455.04"/>
+        </g>
+    </g>
+</svg>

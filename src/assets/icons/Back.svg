@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 874.8 394.66"><defs><style>.cls-1{fill:#fff;}</style></defs><title>Back</title><g id="Layer_2" data-name="Layer 2"><g id="Back"><rect class="cls-1" x="46.8" y="173.72" width="828" height="45.49"/><polygon class="cls-1" points="202.25 394.66 0 196.38 202.33 0 234.01 32.64 65.15 196.54 234.1 362.18 202.25 394.66"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 874.8 394.66">
+    <defs>
+        <style>.cls-1{fill:#fff;}</style>
+    </defs>
+    <title>Back</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Back">
+            <rect class="cls-1" x="46.8" y="173.72" width="828" height="45.49"/>
+            <polygon class="cls-1" points="202.25 394.66 0 196.38 202.33 0 234.01 32.64 65.15 196.54 234.1 362.18 202.25 394.66"/>
+        </g>
+    </g>
+</svg>
