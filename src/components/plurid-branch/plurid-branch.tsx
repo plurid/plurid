@@ -1,4 +1,4 @@
-import { Component } from '@stencil/core';
+import { Component, Prop } from '@stencil/core';
 
 
 
@@ -8,6 +8,7 @@ import { Component } from '@stencil/core';
     shadow: true
 })
 export class PluridBranch {
+    @Prop() link: string;
 
     render() {
         return (

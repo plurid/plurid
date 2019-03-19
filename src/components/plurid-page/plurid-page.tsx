@@ -1,4 +1,4 @@
-import { Component } from '@stencil/core';
+import { Component, Prop } from '@stencil/core';
 
 
 
@@ -8,6 +8,8 @@ import { Component } from '@stencil/core';
     shadow: true
 })
 export class PluridPage {
+    @Prop() name: string;
+    @Prop() title: string;
 
     render() {
         return (

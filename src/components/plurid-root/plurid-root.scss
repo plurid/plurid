@@ -1,8 +1,6 @@
-plurid-space {
-    display: block;
+plurid-root {
+    position: absolute;
     @include transform(translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1));
     @include transform-style(preserve-3d);
-
-    perspective: 1000px;
-    perspective-origin: center 300px;
+    width: 100%;
 }
