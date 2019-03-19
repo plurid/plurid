@@ -1,75 +1,45 @@
 {
-    "name": "plurid",
+    "name": "plurid-html",
     "version": "0.1.2",
     "description": "View and explore the web in three dimensions.",
-    "main": "./pkg/script.js",
-    "scripts": {
-        "build": "webpack -p --env prod --progress --profile --colors",
-        "watch": "webpack --watch --env dev && echo test",
-        "cypress:open": "cypress open",
-        "cypress:run": "cypress run",
-        "test": "jest ./test/unit/",
-        "test:copy": "cp -r ./pkg/ ./test/examples/pages/assets/plurid/"
-    },
+    "license": "MIT",
+    "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/plurid/plurid-html.git"
     },
+    "bugs": {
+        "url": "https://github.com/plurid/plurid-html/issues"
+    },
+    "homepage": "https://github.com/plurid/plurid-html#readme",
     "keywords": [
         "web",
         "content",
         "three",
         "dimensions"
     ],
-    "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/plurid/plurid-html/issues"
+    "module": "dist/esm/index.js",
+    "main": "dist/index.js",
+    "types": "dist/types/components.d.ts",
+    "collection": "dist/collection/collection-manifest.json",
+    "files": [
+        "dist/"
+    ],
+    "scripts": {
+        "build": "stencil build --docs",
+        "start": "stencil build --dev --watch --serve",
+        "test": "stencil test --spec --e2e",
+        "test.watch": "stencil test --spec --e2e --watchAll"
     },
-    "homepage": "https://github.com/plurid/plurid-html#readme",
+    "dependencies": {},
     "devDependencies": {
-        "@babel/core": "^7.2.2",
-        "@babel/preset-env": "^7.2.3",
-        "@babel/preset-typescript": "^7.1.0",
-        "@polymer/lit-element": "^0.6.1",
-        "@types/jest": "^23.3.10",
-        "@webcomponents/custom-elements": "^1.2.0",
-        "@webcomponents/webcomponentsjs": "^2.1.3",
-        "autoprefixer": "^9.1.5",
-        "awesome-typescript-loader": "^5.2.1",
-        "babel-eslint": "^10.0.1",
-        "babel-jest": "^23.6.0",
-        "babel-loader": "^8.0.4",
-        "babel-plugin-transform-object-rest-spread": "^6.26.0",
-        "babel-plugin-transform-runtime": "^6.23.0",
-        "babel-preset-env": "^1.7.0",
-        "clean-webpack-plugin": "^1.0.0",
-        "css-loader": "^2.1.0",
-        "cypress": "^3.1.0",
-        "eslint": "^5.6.0",
-        "eslint-loader": "^2.1.0",
-        "eslint-plugin-cypress": "^2.0.1",
-        "eslint-plugin-promise": "^4.0.1",
-        "html-loader": "^0.5.5",
-        "jest": "^23.6.0",
-        "mini-css-extract-plugin": "^0.5.0",
-        "node-sass": "^4.11.0",
-        "postcss-loader": "^3.0.0",
-        "redux": "^4.0.0",
-        "redux-thunk": "^2.3.0",
-        "reselect": "^4.0.0",
-        "rxjs": "^6.3.2",
-        "sass-loader": "^7.1.0",
-        "style-loader": "^0.23.1",
-        "stylelint": "^9.9.0",
-        "stylelint-webpack-plugin": "^0.10.5",
-        "ts-jest": "^23.10.5",
-        "ts-node": "^7.0.1",
-        "tslint": "^5.12.0",
-        "typescript": "^3.2.2",
-        "url-loader": "^1.0.1",
-        "webpack": "^4.16.4",
-        "webpack-cli": "^3.2.0",
-        "webpack-shell-plugin": "^0.5.0"
+        "@stencil/core": "~0.16.2",
+        "@stencil/sass": "^0.1.1",
+        "@types/jest": "23.3.14",
+        "@types/puppeteer": "1.12.3",
+        "jest": "23.6.0",
+        "jest-cli": "23.6.0",
+        "puppeteer": "1.8.0",
+        "stencil-inline-svg": "0.0.2"
     }
 }
