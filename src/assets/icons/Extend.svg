@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 866 375.89"><defs><style>.cls-1{fill:#fff;}</style></defs><title>Extend</title><g id="Layer_2" data-name="Layer 2"><g id="Extend"><rect class="cls-1" x="31.02" y="165.42" width="796.17" height="43.32"/><polygon class="cls-1" points="192.59 375.81 0 187 192.67 0 222.84 31.08 62.03 187.16 222.91 344.88 192.59 375.81"/><polygon class="cls-1" points="673.33 375.89 643.16 344.8 803.97 188.73 643.09 31.01 673.41 0.08 866 188.89 673.33 375.89"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 866 375.89">
+    <defs>
+        <style>.cls-1{fill:#fff;}</style>
+    </defs>
+    <title>Extend</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Extend">
+            <rect class="cls-1" x="31.02" y="165.42" width="796.17" height="43.32"/>
+            <polygon class="cls-1" points="192.59 375.81 0 187 192.67 0 222.84 31.08 62.03 187.16 222.91 344.88 192.59 375.81"/>
+            <polygon class="cls-1" points="673.33 375.89 643.16 344.8 803.97 188.73 643.09 31.01 673.41 0.08 866 188.89 673.33 375.89"/>
+        </g>
+    </g>
+</svg>
