@@ -12,6 +12,13 @@ import '@stencil/core';
 
 export namespace Components {
 
+  interface PluridApp {
+    'theme': string;
+  }
+  interface PluridAppAttributes extends StencilHTMLAttributes {
+    'theme'?: string;
+  }
+
   interface PluridBranch {
     'link': string;
   }
@@ -30,19 +37,6 @@ export namespace Components {
 
   interface PluridControls {}
   interface PluridControlsAttributes extends StencilHTMLAttributes {}
-
-  interface PluridLink {
-    'active': boolean;
-    'name': string;
-    'page': string;
-    'samepage': boolean;
-  }
-  interface PluridLinkAttributes extends StencilHTMLAttributes {
-    'active'?: boolean;
-    'name'?: string;
-    'page'?: string;
-    'samepage'?: boolean;
-  }
 
   interface PluridOptions {}
   interface PluridOptionsAttributes extends StencilHTMLAttributes {}
@@ -83,16 +77,41 @@ export namespace Components {
 
   interface PluridViewcube {}
   interface PluridViewcubeAttributes extends StencilHTMLAttributes {}
+
+  interface PluridButton {}
+  interface PluridButtonAttributes extends StencilHTMLAttributes {}
+
+  interface PluridLink {
+    'active': boolean;
+    'name': string;
+    'page': string;
+    'samepage': boolean;
+  }
+  interface PluridLinkAttributes extends StencilHTMLAttributes {
+    'active'?: boolean;
+    'name'?: string;
+    'page'?: string;
+    'samepage'?: boolean;
+  }
+
+  interface PluridRoute {}
+  interface PluridRouteAttributes extends StencilHTMLAttributes {}
+
+  interface PluridRouter {}
+  interface PluridRouterAttributes extends StencilHTMLAttributes {}
+
+  interface PluridRoutes {}
+  interface PluridRoutesAttributes extends StencilHTMLAttributes {}
 }
 
 declare global {
   interface StencilElementInterfaces {
+    'PluridApp': Components.PluridApp;
     'PluridBranch': Components.PluridBranch;
     'PluridBridge': Components.PluridBridge;
     'PluridContainer': Components.PluridContainer;
     'PluridContent': Components.PluridContent;
     'PluridControls': Components.PluridControls;
-    'PluridLink': Components.PluridLink;
     'PluridOptions': Components.PluridOptions;
     'PluridPage': Components.PluridPage;
     'PluridRoot': Components.PluridRoot;
@@ -103,15 +122,20 @@ declare global {
     'PluridSolid': Components.PluridSolid;
     'PluridSpace': Components.PluridSpace;
     'PluridViewcube': Components.PluridViewcube;
+    'PluridButton': Components.PluridButton;
+    'PluridLink': Components.PluridLink;
+    'PluridRoute': Components.PluridRoute;
+    'PluridRouter': Components.PluridRouter;
+    'PluridRoutes': Components.PluridRoutes;
   }
 
   interface StencilIntrinsicElements {
+    'plurid-app': Components.PluridAppAttributes;
     'plurid-branch': Components.PluridBranchAttributes;
     'plurid-bridge': Components.PluridBridgeAttributes;
     'plurid-container': Components.PluridContainerAttributes;
     'plurid-content': Components.PluridContentAttributes;
     'plurid-controls': Components.PluridControlsAttributes;
-    'plurid-link': Components.PluridLinkAttributes;
     'plurid-options': Components.PluridOptionsAttributes;
     'plurid-page': Components.PluridPageAttributes;
     'plurid-root': Components.PluridRootAttributes;
@@ -122,8 +146,19 @@ declare global {
     'plurid-solid': Components.PluridSolidAttributes;
     'plurid-space': Components.PluridSpaceAttributes;
     'plurid-viewcube': Components.PluridViewcubeAttributes;
+    'plurid-button': Components.PluridButtonAttributes;
+    'plurid-link': Components.PluridLinkAttributes;
+    'plurid-route': Components.PluridRouteAttributes;
+    'plurid-router': Components.PluridRouterAttributes;
+    'plurid-routes': Components.PluridRoutesAttributes;
   }
 
+
+  interface HTMLPluridAppElement extends Components.PluridApp, HTMLStencilElement {}
+  var HTMLPluridAppElement: {
+    prototype: HTMLPluridAppElement;
+    new (): HTMLPluridAppElement;
+  };
 
   interface HTMLPluridBranchElement extends Components.PluridBranch, HTMLStencilElement {}
   var HTMLPluridBranchElement: {
@@ -153,12 +188,6 @@ declare global {
   var HTMLPluridControlsElement: {
     prototype: HTMLPluridControlsElement;
     new (): HTMLPluridControlsElement;
-  };
-
-  interface HTMLPluridLinkElement extends Components.PluridLink, HTMLStencilElement {}
-  var HTMLPluridLinkElement: {
-    prototype: HTMLPluridLinkElement;
-    new (): HTMLPluridLinkElement;
   };
 
   interface HTMLPluridOptionsElement extends Components.PluridOptions, HTMLStencilElement {}
@@ -221,13 +250,43 @@ declare global {
     new (): HTMLPluridViewcubeElement;
   };
 
+  interface HTMLPluridButtonElement extends Components.PluridButton, HTMLStencilElement {}
+  var HTMLPluridButtonElement: {
+    prototype: HTMLPluridButtonElement;
+    new (): HTMLPluridButtonElement;
+  };
+
+  interface HTMLPluridLinkElement extends Components.PluridLink, HTMLStencilElement {}
+  var HTMLPluridLinkElement: {
+    prototype: HTMLPluridLinkElement;
+    new (): HTMLPluridLinkElement;
+  };
+
+  interface HTMLPluridRouteElement extends Components.PluridRoute, HTMLStencilElement {}
+  var HTMLPluridRouteElement: {
+    prototype: HTMLPluridRouteElement;
+    new (): HTMLPluridRouteElement;
+  };
+
+  interface HTMLPluridRouterElement extends Components.PluridRouter, HTMLStencilElement {}
+  var HTMLPluridRouterElement: {
+    prototype: HTMLPluridRouterElement;
+    new (): HTMLPluridRouterElement;
+  };
+
+  interface HTMLPluridRoutesElement extends Components.PluridRoutes, HTMLStencilElement {}
+  var HTMLPluridRoutesElement: {
+    prototype: HTMLPluridRoutesElement;
+    new (): HTMLPluridRoutesElement;
+  };
+
   interface HTMLElementTagNameMap {
+    'plurid-app': HTMLPluridAppElement
     'plurid-branch': HTMLPluridBranchElement
     'plurid-bridge': HTMLPluridBridgeElement
     'plurid-container': HTMLPluridContainerElement
     'plurid-content': HTMLPluridContentElement
     'plurid-controls': HTMLPluridControlsElement
-    'plurid-link': HTMLPluridLinkElement
     'plurid-options': HTMLPluridOptionsElement
     'plurid-page': HTMLPluridPageElement
     'plurid-root': HTMLPluridRootElement
@@ -238,15 +297,20 @@ declare global {
     'plurid-solid': HTMLPluridSolidElement
     'plurid-space': HTMLPluridSpaceElement
     'plurid-viewcube': HTMLPluridViewcubeElement
+    'plurid-button': HTMLPluridButtonElement
+    'plurid-link': HTMLPluridLinkElement
+    'plurid-route': HTMLPluridRouteElement
+    'plurid-router': HTMLPluridRouterElement
+    'plurid-routes': HTMLPluridRoutesElement
   }
 
   interface ElementTagNameMap {
+    'plurid-app': HTMLPluridAppElement;
     'plurid-branch': HTMLPluridBranchElement;
     'plurid-bridge': HTMLPluridBridgeElement;
     'plurid-container': HTMLPluridContainerElement;
     'plurid-content': HTMLPluridContentElement;
     'plurid-controls': HTMLPluridControlsElement;
-    'plurid-link': HTMLPluridLinkElement;
     'plurid-options': HTMLPluridOptionsElement;
     'plurid-page': HTMLPluridPageElement;
     'plurid-root': HTMLPluridRootElement;
@@ -257,6 +321,11 @@ declare global {
     'plurid-solid': HTMLPluridSolidElement;
     'plurid-space': HTMLPluridSpaceElement;
     'plurid-viewcube': HTMLPluridViewcubeElement;
+    'plurid-button': HTMLPluridButtonElement;
+    'plurid-link': HTMLPluridLinkElement;
+    'plurid-route': HTMLPluridRouteElement;
+    'plurid-router': HTMLPluridRouterElement;
+    'plurid-routes': HTMLPluridRoutesElement;
   }
 
 
