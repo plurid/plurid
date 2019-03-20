@@ -11,7 +11,7 @@ export class PluridRoot {
 
     render() {
         return (
-            <div>PluridRoot</div>
+            <slot />
         );
     }
 }

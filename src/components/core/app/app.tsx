@@ -12,9 +12,9 @@ export class PluridApp {
 
     render() {
         return (
-            <div>
+            <plurid-container>
                 <slot />
-            </div>
+            </plurid-container>
         );
     }
 }
