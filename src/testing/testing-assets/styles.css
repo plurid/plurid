@@ -16,3 +16,7 @@ body {
     color: hsl(220, 5%, 70%);
     font-size: 20px;
 }
+
+.ul-testing li {
+    margin-bottom: 10px;
+}
