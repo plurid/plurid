@@ -7,9 +7,9 @@
     border-radius: 0px;
     box-shadow: none;
 
-    .plurid-button-icon-svg {
-        @include themify($themes) {
-            fill: themed('textColorTertiary');
-        }
-    }
+    // .plurid-button-icon-svg {
+    //     @include themify($themes) {
+    //         fill: themed('textColorTertiary');
+    //     }
+    // }
 }

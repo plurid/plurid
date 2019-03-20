@@ -1,8 +1,8 @@
 .plurid-controls-more-container {
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenu');
-        @include box-shadow(themed('boxShadowMenu'));
-    }
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenu');
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
     display: none;
     height: 408px;
     position: absolute;
@@ -45,13 +45,13 @@
     margin-bottom: 0;
 }
 
-.plurid-controls-more-container ul li:hover {
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenuButtonHover');
-        color: themed('textColorInverted');
-        @include box-shadow(themed('boxShadowButtonCarveDesign'));
-    }
-}
+// .plurid-controls-more-container ul li:hover {
+//     @include themify($themes) {
+//         background-color: themed('backgroundColorMenuButtonHover');
+//         color: themed('textColorInverted');
+//         @include box-shadow(themed('boxShadowButtonCarveDesign'));
+//     }
+// }
 
 .plurid-controls-more-container hr {
     display: block;
@@ -64,10 +64,10 @@
 
 
 .plurid-controls-more-container input[type="text"] {
-    @include themify($themes) {
-        background-color: darken(themed('backgroundColorMenu'), 3%);
-        color: themed('textColorSecondary');
-    }
+    // @include themify($themes) {
+    //     background-color: darken(themed('backgroundColorMenu'), 3%);
+    //     color: themed('textColorSecondary');
+    // }
     border: none;
     color: hsl(210, 3%, 70%);
     outline: none;
@@ -77,9 +77,9 @@
 }
 
 .plurid-controls-more-container input[type="text"]:focus {
-    @include themify($themes) {
-        @include box-shadow(themed('boxShadowInput'));
-    }
+    // @include themify($themes) {
+    //     @include box-shadow(themed('boxShadowInput'));
+    // }
     outline: none;
     border: none;
 }

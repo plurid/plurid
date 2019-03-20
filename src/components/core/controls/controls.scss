@@ -1,1 +1,13 @@
+@import './controls/controls-button';
+@import './controls/controls-extends';
+@import './controls/controls-general';
+@import './controls/controls-message';
+@import './controls/controls-more-container';
+@import './controls/controls-open-close';
+@import './controls/controls-url';
 
+
+.plurid-controls {
+    position: relative;
+    background-color: red;
+}

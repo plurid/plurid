@@ -1,13 +1,13 @@
 plurid-controls {
-    @include themify($themes) {
-        color: themed('textColor');
-        background-color: themed('backgroundColorMenu');
-        @include box-shadow(themed('boxShadowMenu'));
-    }
+    // @include themify($themes) {
+    //     color: themed('textColor');
+    //     background-color: themed('backgroundColorMenu');
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
 
     align-items: center;
     display: flex;
-    font-family: $general_sans-serif__font-family;
+    // font-family: $general_sans-serif__font-family;
     height: 50px;
     position: absolute;
     top: 0;
@@ -62,7 +62,7 @@ plurid-controls {
     position: relative;
     // margin-bottom: 12px;
     cursor: pointer;
-    @include user-select(none);
+    // @include user-select(none);
 }
 
 /* Hide the browser's default checkbox */
@@ -147,23 +147,23 @@ plurid-controls {
     width: 300px;
     height: 108px;
 
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenuButtonHover');
-        color: themed('textColorInverted');
-        @include box-shadow(themed('boxShadowMenu'));
-    }
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenuButtonHover');
+    //     color: themed('textColorInverted');
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
     z-index: 50;
     overflow: auto;
 }
 
-.plurid-controls-sheet-history-container ul li:hover {
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenu');
-        color: themed('textColor');
-        // background-color: themed('backgroundColorMenu') !important;
-        // color: themed('textColor') !important;
-    }
-}
+// .plurid-controls-sheet-history-container ul li:hover {
+//     @include themify($themes) {
+//         background-color: themed('backgroundColorMenu');
+//         color: themed('textColor');
+//         // background-color: themed('backgroundColorMenu') !important;
+//         // color: themed('textColor') !important;
+//     }
+// }
 
 
 .plurid-controls-more-back-color,
@@ -184,13 +184,13 @@ plurid-controls {
     top: 36px;
     width: 300px;
     height: 240px;
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenuButtonHover');
-        color: themed('textColoInverted');
-        // background-color: themed('backgroundColorMenuButtonHover') !important;
-        // color: themed('textColoInverted') !important;
-        @include box-shadow(themed('boxShadowMenu'));
-    }
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenuButtonHover');
+    //     color: themed('textColoInverted');
+    //     // background-color: themed('backgroundColorMenuButtonHover') !important;
+    //     // color: themed('textColoInverted') !important;
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
     z-index: 50;
     overflow: auto;
 }
