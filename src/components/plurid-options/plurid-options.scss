@@ -1,10 +1,10 @@
 plurid-options {
-    @include themify($themes) {
-        color: themed('textColor');
-    }
+    // @include themify($themes) {
+    //     color: themed('textColor');
+    // }
 
     bottom: 0px;
-    font-family: $general_sans-serif__font-family;
+    // font-family: $general_sans-serif__font-family;
     font-size: 12px;
     height: 60px;
     left: 0;
@@ -24,10 +24,10 @@ plurid-options {
 }
 
 .plurid-container-options-content {
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenu');
-        // @include box-shadow(themed('boxShadowMenu'));
-    }
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenu');
+    //     // @include box-shadow(themed('boxShadowMenu'));
+    // }
     border-radius: 0px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 60px 60px 60px 100px;
@@ -52,10 +52,10 @@ plurid-options {
 
 
 .plurid-container-options-more {
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenu');
-        @include box-shadow(themed('boxShadowMenu'));
-    }
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenu');
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
     bottom: 0px;
     display: none;
     height: 500px;
@@ -67,17 +67,17 @@ plurid-options {
     width: 900px;
 }
 
-.plurid-container-options-group-more:hover {
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenuButtonHover');
-    }
+// .plurid-container-options-group-more:hover {
+//     @include themify($themes) {
+//         background-color: themed('backgroundColorMenuButtonHover');
+//     }
 
-    p {
-        @include themify($themes) {
-            color: themed('textColorInverted');
-        }
-    }
-}
+//     p {
+//         @include themify($themes) {
+//             color: themed('textColorInverted');
+//         }
+//     }
+// }
 
 
 .plurid-container-options:hover {

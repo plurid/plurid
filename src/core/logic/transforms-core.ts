@@ -25,9 +25,9 @@ export function getTransformRotate(element: Element) {
 
     if (values.length === 16) {
         const cosaX1 = parseFloat(<any> values[5]);
-        const sinaX2 = parseFloat(<any> values[6]);
+        // const sinaX2 = parseFloat(<any> values[6]);
         const sinaX3 = parseFloat(<any> values[9]);
-        const cosaX4 = parseFloat(<any> values[10]);
+        // const cosaX4 = parseFloat(<any> values[10]);
         // console.log("----------------------")
         // console.log("cos A X 1", cosaX1);
         // console.log("cos A X 1", cosaX1 > 0 ? "POSITIVE" : "NEGATIVE");
@@ -72,8 +72,8 @@ export function getTransformRotate(element: Element) {
 
         const cosaY1 = parseFloat(<any> values[0]);
         const sinaY2 = parseFloat(<any> values[2]);
-        const sinaY3 = parseFloat(<any> values[8]);
-        const cosaY4 = parseFloat(<any> values[10]);
+        // const sinaY3 = parseFloat(<any> values[8]);
+        // const cosaY4 = parseFloat(<any> values[10]);
         // console.log("cos A Y 1", cosaY1);
         // console.log("cos A Y 1", cosaY1 > 0 ? "POSITIVE" : "NEGATIVE");
         // console.log("arccos A Y 1", Math.acos(cosaY1));
@@ -268,6 +268,7 @@ export function setCursor(mode: any) {
 
 
 export function getyPos(event: Event | null = null, plurid: any) {
+    console.log(event);
     const yCenter = window.innerHeight / 2;
     const translateY = getTransformTranslate(plurid).translateY;
 

@@ -1,9 +1,9 @@
 plurid-bridge {
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenu');
-    }
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenu');
+    // }
     height: 20px;
     position: absolute;
-    opacity: $general_plurid-bridge__opacity;
+    // opacity: $general_plurid-bridge__opacity;
     width: 100px;
 }

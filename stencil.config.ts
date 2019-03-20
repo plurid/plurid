@@ -9,6 +9,7 @@ export const config: Config = {
     copy: [
         { src: 'test-pages' },
     ],
+    // globalStyle: 'src/styles/styles.scss',
     outputTargets:[
         { type: 'dist' },
         { type: 'docs' },
