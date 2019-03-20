@@ -7,7 +7,7 @@ import { inlineSvg } from 'stencil-inline-svg';
 export const config: Config = {
     namespace: 'plurid-html',
     copy: [
-        { src: 'test-pages' },
+        { src: 'testing' },
     ],
     // globalStyle: 'src/styles/styles.scss',
     outputTargets:[

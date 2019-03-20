@@ -12,7 +12,9 @@ export class PluridApp {
 
     render() {
         return (
-            <div>PluridApp</div>
+            <div>
+                <slot />
+            </div>
         );
     }
 }

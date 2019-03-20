@@ -43,11 +43,11 @@ export namespace Components {
 
   interface PluridPage {
     'name': string;
-    'title': string;
+    'pageTitle': string;
   }
   interface PluridPageAttributes extends StencilHTMLAttributes {
     'name'?: string;
-    'title'?: string;
+    'pageTitle'?: string;
   }
 
   interface PluridRoot {}
