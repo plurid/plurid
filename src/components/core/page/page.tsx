@@ -9,11 +9,13 @@ import { Component, Prop } from '@stencil/core';
 })
 export class PluridPage {
     @Prop() name: string;
-    @Prop() title: string;
+    @Prop() pageTitle: string;
 
     render() {
         return (
-            <div>PluridPage</div>
+            <div>
+                <slot />
+            </div>
         );
     }
 }
