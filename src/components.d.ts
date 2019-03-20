@@ -12,8 +12,12 @@ import '@stencil/core';
 
 export namespace Components {
 
-  interface PluridBranch {}
-  interface PluridBranchAttributes extends StencilHTMLAttributes {}
+  interface PluridBranch {
+    'link': string;
+  }
+  interface PluridBranchAttributes extends StencilHTMLAttributes {
+    'link'?: string;
+  }
 
   interface PluridBridge {}
   interface PluridBridgeAttributes extends StencilHTMLAttributes {}
@@ -27,17 +31,46 @@ export namespace Components {
   interface PluridControls {}
   interface PluridControlsAttributes extends StencilHTMLAttributes {}
 
-  interface PluridLink {}
-  interface PluridLinkAttributes extends StencilHTMLAttributes {}
+  interface PluridLink {
+    'active': boolean;
+    'name': string;
+    'page': string;
+    'samepage': boolean;
+  }
+  interface PluridLinkAttributes extends StencilHTMLAttributes {
+    'active'?: boolean;
+    'name'?: string;
+    'page'?: string;
+    'samepage'?: boolean;
+  }
 
   interface PluridOptions {}
   interface PluridOptionsAttributes extends StencilHTMLAttributes {}
 
-  interface PluridPage {}
-  interface PluridPageAttributes extends StencilHTMLAttributes {}
+  interface PluridPage {
+    'name': string;
+    'title': string;
+  }
+  interface PluridPageAttributes extends StencilHTMLAttributes {
+    'name'?: string;
+    'title'?: string;
+  }
 
-  interface PluridShadow {}
-  interface PluridShadowAttributes extends StencilHTMLAttributes {}
+  interface PluridRoot {}
+  interface PluridRootAttributes extends StencilHTMLAttributes {}
+
+  interface PluridRoots {}
+  interface PluridRootsAttributes extends StencilHTMLAttributes {}
+
+  interface PluridScion {}
+  interface PluridScionAttributes extends StencilHTMLAttributes {}
+
+  interface PluridShadow {
+    'sheet': string;
+  }
+  interface PluridShadowAttributes extends StencilHTMLAttributes {
+    'sheet'?: string;
+  }
 
   interface PluridSheet {}
   interface PluridSheetAttributes extends StencilHTMLAttributes {}
@@ -62,6 +95,9 @@ declare global {
     'PluridLink': Components.PluridLink;
     'PluridOptions': Components.PluridOptions;
     'PluridPage': Components.PluridPage;
+    'PluridRoot': Components.PluridRoot;
+    'PluridRoots': Components.PluridRoots;
+    'PluridScion': Components.PluridScion;
     'PluridShadow': Components.PluridShadow;
     'PluridSheet': Components.PluridSheet;
     'PluridSolid': Components.PluridSolid;
@@ -78,6 +114,9 @@ declare global {
     'plurid-link': Components.PluridLinkAttributes;
     'plurid-options': Components.PluridOptionsAttributes;
     'plurid-page': Components.PluridPageAttributes;
+    'plurid-root': Components.PluridRootAttributes;
+    'plurid-roots': Components.PluridRootsAttributes;
+    'plurid-scion': Components.PluridScionAttributes;
     'plurid-shadow': Components.PluridShadowAttributes;
     'plurid-sheet': Components.PluridSheetAttributes;
     'plurid-solid': Components.PluridSolidAttributes;
@@ -134,6 +173,24 @@ declare global {
     new (): HTMLPluridPageElement;
   };
 
+  interface HTMLPluridRootElement extends Components.PluridRoot, HTMLStencilElement {}
+  var HTMLPluridRootElement: {
+    prototype: HTMLPluridRootElement;
+    new (): HTMLPluridRootElement;
+  };
+
+  interface HTMLPluridRootsElement extends Components.PluridRoots, HTMLStencilElement {}
+  var HTMLPluridRootsElement: {
+    prototype: HTMLPluridRootsElement;
+    new (): HTMLPluridRootsElement;
+  };
+
+  interface HTMLPluridScionElement extends Components.PluridScion, HTMLStencilElement {}
+  var HTMLPluridScionElement: {
+    prototype: HTMLPluridScionElement;
+    new (): HTMLPluridScionElement;
+  };
+
   interface HTMLPluridShadowElement extends Components.PluridShadow, HTMLStencilElement {}
   var HTMLPluridShadowElement: {
     prototype: HTMLPluridShadowElement;
@@ -173,6 +230,9 @@ declare global {
     'plurid-link': HTMLPluridLinkElement
     'plurid-options': HTMLPluridOptionsElement
     'plurid-page': HTMLPluridPageElement
+    'plurid-root': HTMLPluridRootElement
+    'plurid-roots': HTMLPluridRootsElement
+    'plurid-scion': HTMLPluridScionElement
     'plurid-shadow': HTMLPluridShadowElement
     'plurid-sheet': HTMLPluridSheetElement
     'plurid-solid': HTMLPluridSolidElement
@@ -189,6 +249,9 @@ declare global {
     'plurid-link': HTMLPluridLinkElement;
     'plurid-options': HTMLPluridOptionsElement;
     'plurid-page': HTMLPluridPageElement;
+    'plurid-root': HTMLPluridRootElement;
+    'plurid-roots': HTMLPluridRootsElement;
+    'plurid-scion': HTMLPluridScionElement;
     'plurid-shadow': HTMLPluridShadowElement;
     'plurid-sheet': HTMLPluridSheetElement;
     'plurid-solid': HTMLPluridSolidElement;

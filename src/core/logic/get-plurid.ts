@@ -1,4 +1,4 @@
-export function getPlurid(event = null) {
+export function getPlurid() {
     const root = document.getElementById((<any> window).pluridScene.meta.activePlurid);
     const sheet = document.getElementById((<any> window).pluridScene.meta.activeSheet);
 

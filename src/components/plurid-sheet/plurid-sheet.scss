@@ -1,8 +1,8 @@
 plurid-sheet {
-    @include themify($themes) {
-        background-color: themed('backgroundColorSheet');
-    }
-    @include transform-style(preserve-3d);
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorSheet');
+    // }
+    // @include transform-style(preserve-3d);
 
     padding: 40px;
     padding-top: 80px;
@@ -31,14 +31,14 @@ plurid-sheet {
 // }
 
 
-.plurid-sheet-active {
-    @include box-shadow($boxShadowSheetActive);
-}
+// .plurid-sheet-active {
+//     @include box-shadow($boxShadowSheetActive);
+// }
 
 
-.plurid-sheet-active-transform {
-    @include box-shadow($boxShadowSheetTransform);
-}
+// .plurid-sheet-active-transform {
+//     @include box-shadow($boxShadowSheetTransform);
+// }
 
 
 .plurid-sheet-minimize {

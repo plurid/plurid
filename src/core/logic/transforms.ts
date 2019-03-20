@@ -1,4 +1,4 @@
-import { rotateViewcube } from '../../elements/viewcube/viewcube-core';
+// import { rotateViewcube } from '../../elements/viewcube/viewcube-core';
 import { getDirection } from "./directions";
 // import { getPlurid } from "./get-plurid";
 import * as matrix from "./matrix";
@@ -25,9 +25,9 @@ export function rotation(transform: any) {
 
     // rotatePlurid(event, plurid, direction, rotX, rotY);
     rotatePlurid(event, plurid, direction);
-    if (plurid.nodeName === 'PLURID-ROOTS') {
-        rotateViewcube(event, plurid, rotateX, rotateY);
-    }
+    // if (plurid.nodeName === 'PLURID-ROOTS') {
+    //     rotateViewcube(event, plurid, rotateX, rotateY);
+    // }
 }
 
 
@@ -46,7 +46,7 @@ export function rotatePlurid(event: any, plurid: any, direction: any = null) {
     const scale = transcore.getTransformScale(plurid).scale;
 
     let valRotationMatrix = matrix.rotateMatrix(rotateX, rotateY);
-    const valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+    const valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
     const valscaleMatrix = matrix.scaleMatrix(scale);
 
     const yPos = transcore.getyPos(event, plurid);
@@ -192,7 +192,7 @@ export function scalePlurid(event: any, plurid: any, direction: any = null) {
     let scale = transcore.getTransformScale(plurid).scale;
 
     const valRotationMatrix = matrix.rotateMatrix(rotateX, rotateY);
-    const valtranslationMatrix = matrix.translateMatrix(translateX, translateY, 0);
+    const valtranslationMatrix = matrix.translateMatrix(translateX, translateY, translateZ);
     let valscaleMatrix = matrix.scaleMatrix(scale);
 
     const yPos = transcore.getyPos(event, plurid);

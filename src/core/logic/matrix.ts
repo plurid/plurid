@@ -1,12 +1,12 @@
 import {
         computeQuaternionFromEulers,
-        conjugateQuaternion,
-        inverseQuaternion,
+        // conjugateQuaternion,
+        // inverseQuaternion,
         makeRotationMatrixFromQuaternion,
-        quaternionFromAxisAngle,
+        // quaternionFromAxisAngle,
         quaternionMultiply,
-        rotatePointViaQuaternion,
-        } from "./quaternion";
+        // rotatePointViaQuaternion,
+} from "./quaternion";
 
 
 

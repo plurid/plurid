@@ -4,9 +4,10 @@
  */
 (() => {
     const bodyClassList = document.body.classList;
+    const bodyClassListArray = Array.from(bodyClassList);
     let themeSet = false;
 
-    for (const bodyClass of bodyClassList) {
+    for (const bodyClass of bodyClassListArray) {
         if (/plurid-theme/.test(bodyClass)) {
             themeSet = true;
         }

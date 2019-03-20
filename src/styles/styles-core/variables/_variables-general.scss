@@ -1,3 +1,9 @@
+@import "./variables-theme-dawn";
+@import "./variables-theme-dusk";
+@import "./variables-theme-light";
+@import "./variables-theme-night";
+
+
 $general_perspective: 1000px;
 $general_plurid-bridge__opacity: 0.75;
 $general_sans-serif__font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
