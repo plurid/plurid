@@ -10,7 +10,9 @@ import { Component } from '@stencil/core';
 export class PluridRoots {
     render() {
         return (
-            <div>PluridRoots</div>
+            <plurid-root>
+                <slot />
+            </plurid-root>
         );
     }
 }

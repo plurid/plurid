@@ -11,7 +11,9 @@ export class PluridSpace {
 
     render() {
         return (
-            <div>PluridSpace</div>
+            <plurid-roots>
+                <slot />
+            </plurid-roots>
         );
     }
 }

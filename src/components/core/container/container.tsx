@@ -11,7 +11,14 @@ export class PluridContainer {
 
     render() {
         return (
-            <div>PluridContainer</div>
+            <div>
+                <plurid-space>
+                    <slot />
+                </plurid-space>
+
+                <plurid-options></plurid-options>
+                <plurid-viewcube></plurid-viewcube>
+            </div>
         );
     }
 }
