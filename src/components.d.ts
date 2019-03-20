@@ -38,6 +38,9 @@ export namespace Components {
   interface PluridControls {}
   interface PluridControlsAttributes extends StencilHTMLAttributes {}
 
+  interface PluridDocument {}
+  interface PluridDocumentAttributes extends StencilHTMLAttributes {}
+
   interface PluridOptions {}
   interface PluridOptionsAttributes extends StencilHTMLAttributes {}
 
@@ -112,6 +115,7 @@ declare global {
     'PluridContainer': Components.PluridContainer;
     'PluridContent': Components.PluridContent;
     'PluridControls': Components.PluridControls;
+    'PluridDocument': Components.PluridDocument;
     'PluridOptions': Components.PluridOptions;
     'PluridPage': Components.PluridPage;
     'PluridRoot': Components.PluridRoot;
@@ -136,6 +140,7 @@ declare global {
     'plurid-container': Components.PluridContainerAttributes;
     'plurid-content': Components.PluridContentAttributes;
     'plurid-controls': Components.PluridControlsAttributes;
+    'plurid-document': Components.PluridDocumentAttributes;
     'plurid-options': Components.PluridOptionsAttributes;
     'plurid-page': Components.PluridPageAttributes;
     'plurid-root': Components.PluridRootAttributes;
@@ -188,6 +193,12 @@ declare global {
   var HTMLPluridControlsElement: {
     prototype: HTMLPluridControlsElement;
     new (): HTMLPluridControlsElement;
+  };
+
+  interface HTMLPluridDocumentElement extends Components.PluridDocument, HTMLStencilElement {}
+  var HTMLPluridDocumentElement: {
+    prototype: HTMLPluridDocumentElement;
+    new (): HTMLPluridDocumentElement;
   };
 
   interface HTMLPluridOptionsElement extends Components.PluridOptions, HTMLStencilElement {}
@@ -287,6 +298,7 @@ declare global {
     'plurid-container': HTMLPluridContainerElement
     'plurid-content': HTMLPluridContentElement
     'plurid-controls': HTMLPluridControlsElement
+    'plurid-document': HTMLPluridDocumentElement
     'plurid-options': HTMLPluridOptionsElement
     'plurid-page': HTMLPluridPageElement
     'plurid-root': HTMLPluridRootElement
@@ -311,6 +323,7 @@ declare global {
     'plurid-container': HTMLPluridContainerElement;
     'plurid-content': HTMLPluridContentElement;
     'plurid-controls': HTMLPluridControlsElement;
+    'plurid-document': HTMLPluridDocumentElement;
     'plurid-options': HTMLPluridOptionsElement;
     'plurid-page': HTMLPluridPageElement;
     'plurid-root': HTMLPluridRootElement;

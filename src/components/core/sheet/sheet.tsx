@@ -8,10 +8,12 @@ import { Component } from '@stencil/core';
     shadow: true
 })
 export class PluridSheet {
-
     render() {
         return (
-            <div>PluridSheet</div>
+            <div>
+                <plurid-controls></plurid-controls>
+                <slot />
+            </div>
         );
     }
 }
