@@ -6,10 +6,10 @@
     padding-right: 30px;
     max-width: 400px;
 
-    @include themify($themes) {
-        background-color: themed('backgroundColorMenu');
-        @include box-shadow(themed('boxShadowMenu'));
-    }
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenu');
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
     top: 80px;
     left: 50%;
     transform: translateX(-50%);

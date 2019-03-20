@@ -22,7 +22,7 @@ export class PluridLink {
 
     render() {
         return (
-            <div>PluridLink {this.linkSymbol()}</div>
+            <div><slot />{this.linkSymbol()}</div>
         );
     }
 }

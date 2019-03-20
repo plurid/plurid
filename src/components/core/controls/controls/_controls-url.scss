@@ -3,10 +3,10 @@
 }
 
 .plurid-controls-url-container input {
-    @include themify($themes) {
-        background-color: darken(themed('backgroundColorMenu'), 3%);
-        color: themed('textColorSecondary');
-    }
+    // @include themify($themes) {
+    //     background-color: darken(themed('backgroundColorMenu'), 3%);
+    //     color: themed('textColorSecondary');
+    // }
     border: none;
     font-size: 14px;
     height: 32px;
@@ -18,9 +18,9 @@
 }
 
 .plurid-controls-url-container input:focus {
-    @include themify($themes) {
-        color: themed('textColor');
-    }
+    // @include themify($themes) {
+    //     color: themed('textColor');
+    // }
 }
 
 .plurid-controls-url-input {
@@ -29,18 +29,18 @@
 }
 
 .plurid-controls-url input:focus {
-    @include themify($themes) {
-        @include box-shadow(themed('boxShadowInput'));
-    }
+    // @include themify($themes) {
+    //     @include box-shadow(themed('boxShadowInput'));
+    // }
     outline: none;
     border: none;
 }
 
-.plurid-controls-url input::placeholder {
-    @include themify($themes) {
-        color: themed('textColorSecondary');
-    }
-}
+// .plurid-controls-url input::placeholder {
+//     @include themify($themes) {
+//         color: themed('textColorSecondary');
+//     }
+// }
 
 .plurid-controls-url-container {
     display: inline-flex;
