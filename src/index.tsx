@@ -3,6 +3,7 @@ import PluridApp from './components/core/App';
 import PluridContainer from './components/core/Container';
 import PluridContent from './components/core/Content';
 import PluridControls from './components/core/Controls';
+import PluridDocument from './components/core/Document';
 import PluridOptions from './components/core/Options';
 import PluridPage from './components/core/Page';
 import PluridRoot from './components/core/Root';
@@ -22,6 +23,7 @@ import PluridRoutes from './components/routing/Routes';
 export default {
     // core
     App: PluridApp,
+    Document: PluridDocument,
     Page: PluridPage,
 
     // routing
@@ -37,6 +39,7 @@ export {
     PluridContainer,
     PluridContent,
     PluridControls,
+    PluridDocument,
     PluridOptions,
     PluridPage,
     PluridRoot,

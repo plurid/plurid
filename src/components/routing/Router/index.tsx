@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import PluridRoutingContext from '../RoutingContext';
+
+
 
 export interface IPluridRouterProps {
     /**
@@ -16,6 +19,12 @@ export interface IPluridRouterProps {
     alwaysOnDomain?: boolean;
 }
 
+export interface IPluridRouterState {
+    routes: DomainRoutes[];
+    domain: string;
+}
+
+
 export type DOMElement = any | JSX.Element;
 
 export interface RouteParams {
@@ -24,6 +33,9 @@ export interface RouteParams {
 
 export interface SubRoute {
     component: DOMElement;
+    domain: string,
+    domainName: string,
+    hostName: string,
     params: RouteParams;
     path: string;
     subDomain: string;
@@ -34,16 +46,88 @@ export interface Route {
     component: DOMElement;
     params: RouteParams;
     path: string;
-    subDomain: string;
     subRoutes?: SubRoute[];
 }
 
-export interface Routes {
-    [key: string]: Route[];
+export interface SubDomainRoutes {
+    routes: Route[];
+    subDomain: string;
 }
 
+export interface DomainRoutes {
+    domain: string;
+    domainName: string;
+    hostName: string;
+    subDomains: SubDomainRoutes[]
+}
 
-class PluridRouter extends Component<IPluridRouterProps, {}> {
+const div = () => (<div>test div</div>);
+
+const domains: DomainRoutes[] = [
+    {
+        domain: 'plurid.com',
+        domainName: 'com',
+        hostName: 'plurid',
+        subDomains: [
+            {
+                routes: [
+                    {
+                        component: div,
+                        params: {},
+                        path: '/post',
+                    },
+                    {
+                        component: div,
+                        params: {},
+                        path: '/post/:id',
+                    },
+                ],
+                subDomain: 'www',
+            },
+            {
+                routes: [
+                    {
+                        component: div,
+                        params: {},
+                        path: '/post',
+                    },
+                    {
+                        component: div,
+                        params: {},
+                        path: '/post/:id',
+                    },
+                ],
+                subDomain: 'denote',
+            },
+        ],
+    },
+    {
+        domain: 'plurid.org',
+        domainName: 'org',
+        hostName: 'plurid',
+        subDomains: [
+            {
+                routes: [
+                    {
+                        component: div,
+                        params: {},
+                        path: '/post',
+                    },
+                    {
+                        component: div,
+                        params: {},
+                        path: '/post/:id',
+                    },
+                ],
+                subDomain: 'www',
+            },
+        ],
+    },
+];
+
+
+
+class PluridRouter extends Component<IPluridRouterProps, IPluridRouterState> {
     public static defaultProps = {
         alwaysOnDomain: true,
     }
@@ -51,75 +135,97 @@ class PluridRouter extends Component<IPluridRouterProps, {}> {
     constructor(props: IPluridRouterProps) {
         super(props);
 
-        const routes = this.routes(this.props.children);
+        const { domain } = this.props;
+        const routes: DomainRoutes[] = [];
+
         this.state = {
+            domain: domain ? domain : '',
             routes,
-        }
+        };
     }
 
     public componentDidMount() {
-        window.addEventListener('pluridlinkopen', this.handlePluridLink);
+        window.addEventListener('pluridlinkopen', this.handlePluridLinkOpen);
     }
 
     public componentWillUnmount() {
-        window.removeEventListener('pluridlinkopen', this.handlePluridLink);
+        window.removeEventListener('pluridlinkopen', this.handlePluridLinkOpen);
     }
 
     public render() {
         const { children } = this.props;
+        const { routes, domain } = this.state;
 
         return (
-            <React.Fragment>
-                {children}
-            </React.Fragment>
+            <PluridRoutingContext.Provider
+                children={children || null}
+                value={{
+                    domain,
+                    registerRoute: this.registerRoute,
+                    routes,
+                }}
+            />
         );
     }
 
-    private handlePluridLink = (event: CustomEvent) => {
+    private registerRoute = (route: Route) => {
+        console.log('registering route', route);
+        // const { routes } = this.state;
+        // const newRoutes: DomainRoutes = domains;
+        // this.setState( {
+        //     routes: newRoutes
+        // });
+    }
+
+    private handlePluridLinkOpen = (event: CustomEvent) => {
         console.log(event.detail);
     }
 
-    private routes(children: React.ReactNode): Routes {
-        console.log(children);
-        const div = (<div>test div</div>);
+    private routes(children: React.ReactNode): DomainRoutes[] {
+        // const www = 'www';
+        // const subDomains: string[] = [];
+        // const routesChildrenWithProps = React.Children.map(children, (child: any) => {
+        //     if (child.type) {
+        //         const name = child.type.displayName;
+        //         if (name) {
+        //             const pluridRouteRegex = /Plurid.Route$/;
+        //             const pluridRouteTest = pluridRouteRegex.test(name);
 
-        const routes: Routes = {
-            test: [
-                {
-                    component: div,
-                    params: {},
-                    path: '/testing',
-                    subDomain: 'test',
-                    subRoutes: [
-                        {
-                            component: div,
-                            params: {},
-                            path: '/the-test',
-                            subDomain: 'test',
-                        },
-                    ],
-                },
-            ],
-            www: [
-                {
-                    component: div,
-                    params: {},
-                    path: '/post',
-                    subDomain: '',
-                },
-                {
-                    component: div,
-                    params: {
-                        id: {
-                        },
-                    },
-                    path: '/post/:id',
-                    subDomain: '',
-                },
-            ],
-        };
+        //             if (pluridRouteTest) {
+        //                 // If the route has a subDomain, use it
+        //                 // else, set it to 'www'.
+        //                 const subDomain = child.props.subDomain;
+        //                 if (subDomain) {
+        //                     subDomains.push(subDomain);
+        //                     return child;
+        //                 } else {
+        //                     subDomains.push(www);
+        //                     const childWithProps = React.cloneElement(child, {
+        //                         subDomain: www,
+        //                     });
+        //                     return childWithProps;
+        //                 }
+        //             }
 
-        return routes;
+        //             const pluridRoutesRegex = /Plurid.Routes$/;
+        //             const pluridRoutesTest = pluridRoutesRegex.test(name);
+
+        //             if (pluridRoutesTest) {
+        //                 const subDomain = child.props.subDomain;
+        //                 if (subDomain) {
+        //                     subDomains.push(subDomain);
+        //                 }
+        //                 console.log(child);
+        //             }
+        //         }
+        //     }
+        // });
+
+        // console.log(children);
+        // console.log(subDomains);
+        // console.log(routesChildrenWithProps);
+
+        return domains;
     }
 }
 

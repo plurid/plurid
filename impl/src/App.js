@@ -3,7 +3,33 @@ import React, { Component } from 'react';
 import Plurid from 'plurid-react';
 
 
-const TestComponent = (<div>test component</div>);
+const TestComponent = () => (<div>test component</div>);
+
+const Routing = () => (
+    <Plurid.Routes>
+        <Plurid.Route page="/default-domain-path" component={TestComponent} />
+
+        <Plurid.Route subDomain="simple-test" page="/simple-test" component={TestComponent} />
+
+        <Plurid.Routes subDomain="test">
+            <Plurid.Route page="/test" component={TestComponent} />
+        </Plurid.Routes>
+
+        <Plurid.Routes subDomain="testing">
+            <Plurid.Route page="/test" component={TestComponent} />
+        </Plurid.Routes>
+
+        <Plurid.Routes domain="plurid.org">
+            <Plurid.Route page="/test" component={TestComponent} />
+            <Plurid.Route subDomain="simple-test" page="/simple-test" component={TestComponent} />
+
+            <Plurid.Routes subDomain="testing">
+                <Plurid.Route page="/test" component={TestComponent} />
+            </Plurid.Routes>
+        </Plurid.Routes>
+    </Plurid.Routes>
+);
+
 
 export default class App extends Component {
     render () {
@@ -19,21 +45,19 @@ export default class App extends Component {
                     </Plurid.Page>
 
                     {
+                        // <Plurid.Document name="/foo">
+                        //     content
+                        // </Plurid.Document>
+                    }
+
+                    {
                         // <Plurid.Page>
                         //     Page 2
                         // </Plurid.Page>
                     }
                 </Plurid.App>
 
-                <Plurid.Route subdomain="simple-test" page="/simple-test" component={TestComponent} />
-
-                <Plurid.Routes subdomain="test">
-                    <Plurid.Route page="/test" component={TestComponent} />
-                </Plurid.Routes>
-
-                <Plurid.Routes subdomain="testing">
-                    <Plurid.Route page="/test" component={TestComponent} />
-                </Plurid.Routes>
+                <Routing />
             </Plurid.Router>
         );
     }
