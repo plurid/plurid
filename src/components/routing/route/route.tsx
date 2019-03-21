@@ -1,4 +1,4 @@
-import { Component } from '@stencil/core';
+import { Component, Prop } from '@stencil/core';
 
 
 
@@ -8,9 +8,13 @@ import { Component } from '@stencil/core';
     shadow: true
 })
 export class PluridRoute {
+    @Prop() page: string;
+
     render() {
+        // console.log('Route to', this.page);
+
         return (
-            <div>PluridRoute</div>
+            <div></div>
         );
     }
 }
