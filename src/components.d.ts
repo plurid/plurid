@@ -99,9 +99,11 @@ export namespace Components {
 
   interface PluridRoute {
     'page': string;
+    'subDomain': string;
   }
   interface PluridRouteAttributes extends StencilHTMLAttributes {
     'page'?: string;
+    'subDomain'?: string;
   }
 
   interface PluridRouter {
@@ -111,8 +113,14 @@ export namespace Components {
     'domain'?: string;
   }
 
-  interface PluridRoutes {}
-  interface PluridRoutesAttributes extends StencilHTMLAttributes {}
+  interface PluridRoutes {
+    'domain': string;
+    'subDomain': string;
+  }
+  interface PluridRoutesAttributes extends StencilHTMLAttributes {
+    'domain'?: string;
+    'subDomain'?: string;
+  }
 }
 
 declare global {
