@@ -10,7 +10,7 @@ import { Component } from '@stencil/core';
 export class PluridRoutes {
     render() {
         return (
-            <div>PluridRoutes</div>
+            <div></div>
         );
     }
 }

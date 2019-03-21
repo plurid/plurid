@@ -97,11 +97,19 @@ export namespace Components {
     'samepage'?: boolean;
   }
 
-  interface PluridRoute {}
-  interface PluridRouteAttributes extends StencilHTMLAttributes {}
+  interface PluridRoute {
+    'page': string;
+  }
+  interface PluridRouteAttributes extends StencilHTMLAttributes {
+    'page'?: string;
+  }
 
-  interface PluridRouter {}
-  interface PluridRouterAttributes extends StencilHTMLAttributes {}
+  interface PluridRouter {
+    'domain': string;
+  }
+  interface PluridRouterAttributes extends StencilHTMLAttributes {
+    'domain'?: string;
+  }
 
   interface PluridRoutes {}
   interface PluridRoutesAttributes extends StencilHTMLAttributes {}

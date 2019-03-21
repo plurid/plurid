@@ -1,4 +1,4 @@
-import { Component } from '@stencil/core';
+import { Component, Prop } from '@stencil/core';
 
 
 
@@ -8,9 +8,11 @@ import { Component } from '@stencil/core';
     shadow: true
 })
 export class PluridRouter {
+    @Prop() domain: string;
+
     render() {
         return (
-            <div>PluridRouter</div>
+            <slot />
         );
     }
 }
