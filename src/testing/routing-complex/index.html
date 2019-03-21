@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+        <link rel="icon" href="../testing-assets/favicon.ico">
+        <title>Plurid Routing Complex</title>
+        <script src="../../build/plurid-html.js"></script>
+        <link rel="stylesheet" href="../testing-assets/styles.css">
+    </head>
+
+    <body>
+        <plurid-router domain="plurid.com">
+            <plurid-app>
+                <plurid-page>
+                    <div>
+                        <h1>
+                            Page 1
+                        </h1>
+                    </div>
+                </plurid-page>
+
+                <plurid-page>
+                    <div>
+                        <h1>
+                            Page 2
+                        </h1>
+                    </div>
+                </plurid-page>
+            </plurid-app>
+
+            <plurid-routes>
+                <!-- https://plurid.com/page-2 -->
+                <plurid-route page="/page-2"></plurid-route>
+
+                <!-- https://testing.plurid.com/page-3 -->
+                <plurid-route sub-domain="testing" page="/page-3"></plurid-route>
+            </plurid-routes>
+
+            <plurid-routes domain="plurid.org">
+                <!-- https://test.plurid.org/test -->
+                <plurid-route sub-domain="test" page="/test" ></plurid-route>
+            </plurid-routes>
+        </plurid-router>
+    </body>
+</html>

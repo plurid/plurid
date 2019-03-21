@@ -17,6 +17,10 @@ body {
     font-size: 20px;
 }
 
+.ul-testing a:hover {
+    color: white;
+}
+
 .ul-testing li {
     margin-bottom: 10px;
 }

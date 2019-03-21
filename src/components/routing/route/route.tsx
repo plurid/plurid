@@ -9,6 +9,7 @@ import { Component, Prop } from '@stencil/core';
 })
 export class PluridRoute {
     @Prop() page: string;
+    @Prop() subDomain: string;
 
     render() {
         // console.log('Route to', this.page);
