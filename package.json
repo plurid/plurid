@@ -4,6 +4,9 @@
     "description": "React implementation of Plurid to view and explore the web in three dimensions.",
     "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
     "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/plurid/plurid-react.git"
