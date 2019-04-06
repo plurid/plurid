@@ -1,9 +1,12 @@
 {
-    "name": "plurid-html",
+    "name": "@plurid/html",
     "version": "0.1.2",
     "description": "View and explore the web in three dimensions.",
     "license": "MIT",
     "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
+    "publishConfig": {
+        "access": "public"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/plurid/plurid-html.git"
