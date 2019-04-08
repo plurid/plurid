@@ -1,0 +1,20 @@
+.plurid-viewcube-button {
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    height: 15px;
+    justify-content: center;
+    line-height: 1;
+    text-align: center;
+    width: 15px;
+    @include user-select(none);
+}
+
+
+.plurid-viewcube-button:hover {
+    @include themify($themes) {
+        background-color: themed('backgroundColorMenuButtonHover');
+        color: themed('textColorInverted');
+    }
+}

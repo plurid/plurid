@@ -1,0 +1,38 @@
+%container-background {
+    @include themify($themes) {
+        background: themed('backgroundColorContainer');
+
+        // performance issues with radial gradients for some reason
+        background: radial-gradient(ellipse at center, themed('backgroundColorContainerGradientInner') 0%, themed('backgroundColorContainerGradientOuter') 100%);
+    }
+}
+
+
+@mixin transform ($transform-mixin) {
+    transform: $transform-mixin;
+}
+
+
+@mixin transform-origin ($transform-origin-mixin) {
+    transform-origin: $transform-origin-mixin;
+}
+
+
+@mixin transform-style ($transform-style-mixin) {
+    transform-style: $transform-style-mixin;
+}
+
+
+@mixin perspective($perspective-mixin) {
+    perspective: $perspective-mixin;
+}
+
+
+@mixin box-shadow ($box-shadow-mixin) {
+    box-shadow: $box-shadow-mixin;
+}
+
+
+@mixin user-select ($user-select-mixin) {
+    user-select: $user-select-mixin;
+}

@@ -1,0 +1,95 @@
+.plurid-controls-more-container {
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenu');
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
+    display: none;
+    height: 408px;
+    position: absolute;
+    right: 0;
+    top: 42px;
+    padding-top: 8px;
+
+    // bug on MacOS chrome, sets 3d style to flat if overflow auto or scroll
+    overflow: auto;
+    width: 300px;
+}
+
+.plurid-controls-more-container ul {
+    font-size: 12px;
+    padding: 0;
+    position: relative;
+    margin: 0;
+    height: 100%;
+    // max-height: 400px;
+    // overflow: auto;
+    // overflow-x: hidden;
+    // overflow-y: auto;
+}
+
+.plurid-controls-more-container ul li {
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 70% 30%;
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 20px;
+    user-select: none;
+}
+
+.plurid-controls-more-container ul li:first-child {
+    margin-top: 0;
+}
+
+.plurid-controls-more-container ul li:last-child {
+    margin-bottom: 0;
+}
+
+// .plurid-controls-more-container ul li:hover {
+//     @include themify($themes) {
+//         background-color: themed('backgroundColorMenuButtonHover');
+//         color: themed('textColorInverted');
+//         @include box-shadow(themed('boxShadowButtonCarveDesign'));
+//     }
+// }
+
+.plurid-controls-more-container hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid hsla(210, 3%, 30%, 0.5);
+    margin: 5px 0;
+    padding: 0;
+}
+
+
+.plurid-controls-more-container input[type="text"] {
+    // @include themify($themes) {
+    //     background-color: darken(themed('backgroundColorMenu'), 3%);
+    //     color: themed('textColorSecondary');
+    // }
+    border: none;
+    color: hsl(210, 3%, 70%);
+    outline: none;
+    padding: 5px;
+    text-align: center;
+    width: 100%;
+}
+
+.plurid-controls-more-container input[type="text"]:focus {
+    // @include themify($themes) {
+    //     @include box-shadow(themed('boxShadowInput'));
+    // }
+    outline: none;
+    border: none;
+}
+
+
+.plurid-controls-more-container-text {
+    align-self: center;
+}
+
+.plurid-controls-more-container-shortcut {
+    justify-self: right;
+    align-self: center;
+}

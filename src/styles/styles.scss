@@ -1,0 +1,15 @@
+// Core
+@import "./styles-core/variables/variables-general";
+@import "./styles-core/themes/theme-engine";
+@import "./styles-core/mixins/mixins-general";
+
+
+// General
+@import "./styles-general/general";
+
+// for a custom, integrated first experience
+@import "./styles-general/general-comfort";
+
+
+// Testing
+@import "./styles-general/general-testing";

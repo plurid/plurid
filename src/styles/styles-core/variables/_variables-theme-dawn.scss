@@ -1,0 +1,51 @@
+// COLORS
+$dawn_primary-color: hsl(0, 0%, 80%);
+$dawn_secondary-color: hsl(0, 0%, 70%);
+$dawn_tertiary-color: hsl(200, 2%, 60%);
+$dawn_quaternary-color: hsl(200, 2%, 50%);
+// $dawn_quinary-color: hsl(200, 2%, 20%);
+// $dawn_senary-color: hsl(200, 2%, 20%);
+// $dawn_septenary-color: hsl(200, 2%, 20%);
+// $dawn_octonary-color: hsl(200, 2%, 20%);
+// $dawn_nonary-color: hsl(200, 2%, 20%);
+// $dawn_denary-color: hsl(200, 2%, 20%);
+
+$dawn_primary-color-inverted: hsl(200, 2%, 10%);
+$dawn_secondary-color-inverted: hsl(200, 2%, 20%);
+$dawn_tertiary-color-inverted: hsl(200, 2%, 30%);
+$dawn_quaternary-color-inverted: hsl(200, 2%, 40%);
+$dawn_quinary-color-inverted: hsl(200, 2%, 50%);
+
+
+// CONTAINER
+$dawn_container__background-color: $dawn_primary-color;
+$dawn_container__gradient-outer: $dawn_primary-color;
+$dawn_container__gradient-inner: $dawn_secondary-color;
+
+
+// TEXT
+$dawn_text__color: $dawn_primary-color-inverted;
+$dawn_text-secondary__color: $dawn_secondary-color-inverted;
+$dawn_text-tertiary__color: $dawn_quaternary-color;
+$dawn_text-inverted__color: $dawn_primary-color;
+$dawn_plurid-link__color: $dawn_quinary-color-inverted;
+$dawn_plurid-link-hover__color: $dawn_text__color;
+
+
+// MENU UIs
+$dawn_menu__background-color: $dawn_secondary-color;
+$dawn_menu__box-shadow: $general_box-shadow-menu-size $dawn_quaternary-color;
+$dawn_button-hover_background-color: $dawn_quinary-color-inverted;
+
+
+// CONTROLS
+
+
+// OPTIONS
+
+
+// SHEET
+$dawn_plurid-sheet__background-color: $dawn_primary-color;
+
+$dawn_input__box-shadow: $general_box-shadow-input-size $dawn_text__color;
+$dawn_button-carve-design__box-shadow: $general_box-shadow-button-carve-design-size $dawn_quaternary-color-inverted;

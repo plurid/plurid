@@ -1,0 +1,50 @@
+// COLORS
+$dusk_primary-color: hsl(200, 2%, 7%);
+$dusk_secondary-color: hsl(200, 2%, 15%);
+$dusk_tertiary-color: hsl(200, 2%, 20%);
+$dusk_quaternary-color: hsl(200, 2%, 25%);
+// $dusk_quinary-color: hsl(200, 2%, 20%);
+// $dusk_senary-color: hsl(200, 2%, 20%);
+// $dusk_septenary-color: hsl(200, 2%, 20%);
+// $dusk_octonary-color: hsl(200, 2%, 20%);
+// $dusk_nonary-color: hsl(200, 2%, 20%);
+// $dusk_denary-color: hsl(200, 2%, 20%);
+
+$dusk_primary-color-inverted: hsl(200, 2%, 90%);
+$dusk_secondary-color-inverted: hsl(200, 2%, 80%);
+$dusk_tertiary-color-inverted: hsl(200, 2%, 70%);
+$dusk_quaternary-color-inverted: hsl(200, 2%, 60%);
+
+
+// CONTAINER
+$dusk_container__background-color: $dusk_primary-color;
+$dusk_container__gradient-outer: $dusk_primary-color;
+$dusk_container__gradient-inner: $dusk_secondary-color;
+
+
+// TEXT
+$dusk_text__color: $dusk_primary-color-inverted;
+$dusk_text-secondary__color: $dusk_secondary-color-inverted;
+$dusk_text-tertiary__color: $dusk_quaternary-color;
+$dusk_text-inverted__color: $dusk_primary-color;
+$dusk_plurid-link__color: $dusk_quaternary-color-inverted;
+$dusk_plurid-link-hover__color: $dusk_text__color;
+
+
+// MENU UIs
+$dusk_menu__background-color: $dusk_secondary-color;
+$dusk_menu__box-shadow: $general_box-shadow-menu-size $dusk_primary-color;
+$dusk_button-hover_background-color: $dusk_tertiary-color-inverted;
+
+
+// CONTROLS
+
+
+// OPTIONS
+
+
+// SHEET
+$dusk_plurid-sheet__background-color: $dusk_tertiary-color;
+
+$dusk_input__box-shadow: $general_box-shadow-input-size $dusk_text__color;
+$dusk_button-carve-design__box-shadow: $general_box-shadow-button-carve-design-size $dusk_primary-color;

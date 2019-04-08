@@ -1,0 +1,23 @@
+.plurid-viewcube-rotate-left-container,
+.plurid-viewcube-rotate-right-container,
+.plurid-viewcube-rotate-up-container,
+.plurid-viewcube-rotate-down-container {
+    align-self: center;
+    justify-self: center;
+}
+
+.plurid-viewcube-rotate-left-container {
+    grid-area: pluridViewcubeRotateLeft;
+}
+
+.plurid-viewcube-rotate-right-container {
+    grid-area: pluridViewcubeRotateRight;
+}
+
+.plurid-viewcube-rotate-up-container {
+    grid-area: pluridViewcubeRotateUp;
+}
+
+.plurid-viewcube-rotate-down-container {
+    grid-area: pluridViewcubeRotateDown;
+}

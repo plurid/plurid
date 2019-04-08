@@ -1,0 +1,44 @@
+html, body {
+    background-color: #253753;
+    color: white;
+    font-size: 16px;
+}
+
+body {
+    padding: 30px;
+}
+
+h1, h2, h3, h4, p {
+    color: white;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-number,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-comment,
+.hljs-section,
+.hljs-title,
+.hljs-attribute,
+pre code,
+.hljs-strong, .hljs-string, .hljs-deletion,
+code {
+    background-color: #385fa1;
+    color: white;
+    font-style: normal;
+}
+
+pre {
+    background-color: #385fa1;
+    border: none;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /* -webkit-box-shadow: 0px 0px 5px 1px rgba(189,130,189,1);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(189,130,189,1);
+    box-shadow: 0px 0px 5px 1px rgba(189,130,189,1); */
+}
+
+hr {
+    margin: 35px 0;
+}

@@ -1,0 +1,42 @@
+// html, body {
+//     font-family: $general_sans-serif__font-family;
+// }
+
+.grid {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.grid p {
+    margin: 30px;
+}
+
+.grid-ads {
+    width: 100%;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.grid-ads h1 {
+    align-self: center;
+    justify-self: center;
+    padding: 100px;
+}
+
+
+
+#plurid-root-2 {
+    transform: translateX(1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(-60deg) rotateZ(0deg) scale(1);
+}
+
+
+#plurid-root-3 {
+    transform: translateX(-1080px) translateY(0px) translateZ(610px) rotateX(0deg) rotateY(60deg) rotateZ(0deg) scale(1);
+}
+
+
+// .scroll-test {
+//     display: inline-block;
+//     height: 100px;
+//     overflow: auto;
+// }

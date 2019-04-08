@@ -1,0 +1,65 @@
+.plurid-controls-url {
+    width: 60%;
+}
+
+.plurid-controls-url-container input {
+    // @include themify($themes) {
+    //     background-color: darken(themed('backgroundColorMenu'), 3%);
+    //     color: themed('textColorSecondary');
+    // }
+    border: none;
+    font-size: 14px;
+    height: 32px;
+    margin-right: -34px;
+    margin-left: -34px;
+    padding-right: 38px;
+    padding-left: 38px;
+    width: 100%;
+}
+
+.plurid-controls-url-container input:focus {
+    // @include themify($themes) {
+    //     color: themed('textColor');
+    // }
+}
+
+.plurid-controls-url-input {
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.plurid-controls-url input:focus {
+    // @include themify($themes) {
+    //     @include box-shadow(themed('boxShadowInput'));
+    // }
+    outline: none;
+    border: none;
+}
+
+// .plurid-controls-url input::placeholder {
+//     @include themify($themes) {
+//         color: themed('textColorSecondary');
+//     }
+// }
+
+.plurid-controls-url-container {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+}
+
+.plurid-controls-button-url {
+    height: 20px;
+}
+
+.plurid-controls-button-url svg {
+    width: 25px;
+    height: 25px;
+    padding: 7px;
+}
+
+.plurid-controls-search {
+    z-index: 999;
+    top: 0;
+    right: 0;
+}
