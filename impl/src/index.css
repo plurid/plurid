@@ -1,0 +1,19 @@
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+    font-kerning: auto;
+    text-rendering: optimizeLegibility;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    width: 100%;
+    background-color: black;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', sans-serif;
+}
+
+html {
+    overflow: hidden;
+}
