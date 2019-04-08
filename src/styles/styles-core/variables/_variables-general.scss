@@ -1,0 +1,26 @@
+@import "./variables-theme-dawn";
+@import "./variables-theme-dusk";
+@import "./variables-theme-light";
+@import "./variables-theme-night";
+
+
+$general_perspective: 1000px;
+$general_plurid-bridge__opacity: 0.75;
+$general_sans-serif__font-family: 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+$general_plurid-link__color: hsl(200, 2%, 52%);
+
+$boxShadowSheetActive: 0px 0px 0px 1px hsl(200, 2%, 40%);
+$boxShadowViewcubeSelectedZone: inset 0px 0px 0px 1px hsl(200, 2%, 40%);
+$boxShadowSheetTransform: 0px 0px 0px 1px hsl(200, 2%, 100%);
+$boxShadowSheetShadow: 0px 0px 100px 60px hsl(200, 2%, 5%);
+
+
+// STANDARD
+// $general_box-shadow-menu-size: 0 4px 2px -2px;
+
+// CARVE DESIGN
+$general_box-shadow-menu-size: inset 0px -15px 10px -13px;
+
+$general_box-shadow-input-size: 0px 1px 0px 0px;
+$general_box-shadow-button-carve-design-size: inset 0px -4px 3px -1px;

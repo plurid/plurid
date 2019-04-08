@@ -1,0 +1,28 @@
+.plurid-controls-message {
+    position: absolute;
+    display: none;
+    padding: 20px;
+    padding-top: 30px;
+    padding-right: 30px;
+    max-width: 400px;
+
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenu');
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+}
+
+.plurid-controls-message-close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.plurid-controls-message-close:hover {
+    color: hsl(200, 2%, 45%);
+}

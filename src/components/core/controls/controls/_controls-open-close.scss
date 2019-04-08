@@ -1,0 +1,19 @@
+.plurid-controls-open-close {
+    align-items: center;
+    bottom: 2px;
+    display: flex;
+    height: 5px;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+}
+
+.plurid-controls-open-close-character {
+    font-size: 4px;
+    height: 5px;
+    width: 100px;
+    // box-shadow: none !important;
+    box-shadow: none;
+}

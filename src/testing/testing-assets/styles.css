@@ -1,0 +1,26 @@
+html, body {
+    background-color: hsl(220, 5%, 20%);
+}
+
+body {
+    color: white;
+}
+
+.ul-testing {
+    margin: 60px;
+    list-style: none;
+    font-family: 'Gill Sans', sans-serif;
+}
+
+.ul-testing a {
+    color: hsl(220, 5%, 70%);
+    font-size: 20px;
+}
+
+.ul-testing a:hover {
+    color: white;
+}
+
+.ul-testing li {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,12 @@
+plurid-shadow {
+    background-color: hsl(200, 2%, 5%);
+    height: 500px;
+    position: absolute;
+    opacity: 0.25;
+    width: 100%;
+
+    // @include transform(translateX(0px) translateY(0px) translateZ(0px) rotateX(90deg) rotateY(0deg) rotateZ(0deg) scale(1) skew(0deg));
+    // @include transform-origin(100% 100%);
+    // @include transform-style(preserve-3d);
+    // @include box-shadow($boxShadowSheetShadow);
+}

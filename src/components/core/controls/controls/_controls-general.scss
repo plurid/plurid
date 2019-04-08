@@ -1,0 +1,222 @@
+plurid-controls {
+    // @include themify($themes) {
+    //     color: themed('textColor');
+    //     background-color: themed('backgroundColorMenu');
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
+
+    align-items: center;
+    display: flex;
+    // font-family: $general_sans-serif__font-family;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+
+// plurid-controls plurid-link {
+//     @include themify($themes) {
+//         color: themed('pluridLinkColor');
+//     }
+// }
+
+
+.plurid-container-controls-content {
+    align-items: center;
+    display: inline-flex;
+    height: 50px;
+    font-size: 12px;
+    justify-content: space-between;
+    margin-right: 50px;
+    margin-left: 50px;
+    width: 100%;
+    overflow: hidden;
+}
+
+
+.rotate-button {
+    animation: spin 500ms linear 1;
+}
+
+@keyframes spin { 100% { transform:rotate(-360deg); } }
+
+
+
+.plurid-controls-more-branch-angle-input input[type="text"] {
+    width: 89%;
+}
+
+.plurid-controls-more-sheet-width-input input[type="text"],
+.plurid-controls-more-sheet-height-input input[type="text"] {
+    width: 77%;
+}
+
+
+
+/* The container */
+.plurid-controls-more-checkmark-container {
+    display: block;
+    position: relative;
+    // margin-bottom: 12px;
+    cursor: pointer;
+    // @include user-select(none);
+}
+
+/* Hide the browser's default checkbox */
+.plurid-controls-more-checkmark-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.plurid-controls-more-checkmark {
+    position: absolute;
+    top: 7.5px;
+    right: 20px;
+    height: 20px;
+    width: 20px;
+    background-color: hsl(210, 3%, 10%);
+}
+
+/* On mouse-over, add a grey background color */
+// .plurid-controls-more-checkmark-container:hover input ~ .plurid-controls-more-checkmark {
+//     background-color: hsl(0, 0%, 40%);
+// }
+
+/* When the checkbox is checked, add a blue background */
+.plurid-controls-more-checkmark-container input:checked ~ .plurid-controls-more-checkmark {
+    background-color: hsl(0, 0%, 70%);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.plurid-controls-more-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.plurid-controls-more-checkmark-container input:checked ~ .plurid-controls-more-checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.plurid-controls-more-checkmark-container .plurid-controls-more-checkmark:after {
+    left: 7px;
+    top: 4px;
+    width: 5px;
+    height: 10px;
+    border: solid hsl(0, 0%, 10%);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+
+.plurid-controls-more-branch-angle input[type="range"] {
+    margin-top: 10px;
+    width: 90%;
+}
+
+.plurid-controls-more-branch-angle-span-text,
+.plurid-controls-more-branch-angle-span-range {
+    display: inline-block;
+}
+
+.plurid-controls-more-branch-angle-span-range {
+    text-align: left;
+    width: 100%;
+}
+
+
+.plurid-controls-more-sheet-history {
+    position: relative;
+}
+
+.plurid-controls-more-sheet-history:hover > .plurid-controls-sheet-history-container {
+    display: block;
+}
+
+.plurid-controls-sheet-history-container {
+    position: absolute;
+    display: none;
+    top: 36px;
+    width: 300px;
+    height: 108px;
+
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenuButtonHover');
+    //     color: themed('textColorInverted');
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
+    z-index: 50;
+    overflow: auto;
+}
+
+// .plurid-controls-sheet-history-container ul li:hover {
+//     @include themify($themes) {
+//         background-color: themed('backgroundColorMenu');
+//         color: themed('textColor');
+//         // background-color: themed('backgroundColorMenu') !important;
+//         // color: themed('textColor') !important;
+//     }
+// }
+
+
+.plurid-controls-more-back-color,
+.plurid-controls-more-front-color {
+    position: relative;
+}
+
+.plurid-controls-more-back-color:hover > .plurid-controls-more-back-color-container,
+.plurid-controls-more-front-color:hover > .plurid-controls-more-front-color-container {
+    display: grid;
+    grid-template-columns: 40% 60%;
+}
+
+.plurid-controls-more-back-color-container,
+.plurid-controls-more-front-color-container {
+    position: absolute;
+    display: none;
+    top: 36px;
+    width: 300px;
+    height: 240px;
+    // @include themify($themes) {
+    //     background-color: themed('backgroundColorMenuButtonHover');
+    //     color: themed('textColoInverted');
+    //     // background-color: themed('backgroundColorMenuButtonHover') !important;
+    //     // color: themed('textColoInverted') !important;
+    //     @include box-shadow(themed('boxShadowMenu'));
+    // }
+    z-index: 50;
+    overflow: auto;
+}
+
+.plurid-controls-more-selected-color {
+    background-color: hsl(200, 35%, 25%);
+    height: 100%;
+    width: 100%;
+}
+
+.plurid-controls-more-select-color {
+    display: grid;
+    grid-template-columns: 100%;
+}
+
+.plurid-controls-more-select-color input[type="text"] {
+    width: 35px;
+}
+
+.plurid-controls-more-select-color-group {
+    display: grid;
+    justify-self: center;
+    align-self: center;
+}
+
+.plurid-controls-more-select-color-group-element {
+    display: grid;
+    grid-template-columns: 60% 40%;
+}
