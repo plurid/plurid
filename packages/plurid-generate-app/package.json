@@ -1,0 +1,30 @@
+{
+    "name": "@plurid/generate-app",
+    "version": "0.1.0",
+    "description": "Generate a Plurid application with one command",
+    "author": "Plurid <code@plurid.com> (https://plurid.com)",
+    "homepage": "https://plurid.com",
+    "license": "MIT",
+    "bin": {
+        "generate-plurid-app": "bin/index.js"
+    },
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "directories": {
+        "lib": "lib"
+    },
+    "files": [
+        "lib"
+    ],
+    "preferGlobal": true,
+    "scripts": {
+        "tsc": "tsc"
+    },
+    "dependencies": {
+        "commander": "^2.20.0",
+        "inquirer": "^6.2.2"
+    },
+    "devDependencies": {
+        "@types/inquirer": "^6.0.0"
+    }
+}
