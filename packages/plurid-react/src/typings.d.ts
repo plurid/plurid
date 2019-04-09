@@ -12,4 +12,4 @@ declare module '*.svg' {
     export { svgComponent as ReactComponent }
 }
 
-declare module 'plurid-engine';
+declare module '@plurid/engine';
