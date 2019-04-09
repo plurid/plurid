@@ -1,17 +1,9 @@
 # dependencies
 node_modules/
 
-# testing
-/coverage
-
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
+# yarn
 yarn-debug.log*
 yarn-error.log*
+
+# macOS
+.DS_Store
