@@ -1,10 +1,10 @@
 {
-    "name": "plurid-engine",
+    "name": "@plurid/engine",
     "version": "0.1.0",
     "description": "Plurid 3D JS/CSS Engine in WASM/AssemblyScript/TypeScript.",
     "main": "dist/plurid-engine.umd.js",
     "module": "dist/plurid-engine.es5.js",
-    "typings": "dist/types/plurid-engine.d.ts",
+    "types": "dist/types/plurid-engine.d.ts",
     "files": [
         "dist"
     ],

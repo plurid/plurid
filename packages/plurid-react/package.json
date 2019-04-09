@@ -34,9 +34,6 @@
         "build.rollup": "rollup -c",
         "start": "rollup -c -w"
     },
-    "dependencies": {
-        "plurid-engine": "link:.."
-    },
     "peerDependencies": {
         "prop-types": ">=15",
         "react": ">=16",

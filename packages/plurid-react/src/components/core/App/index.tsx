@@ -7,7 +7,7 @@ import {
     rotatePlurid,
     translatePlurid,
     scalePlurid,
-} from 'plurid-engine';
+} from '@plurid/engine';
 
 import { PluridContext } from '../context';
 

@@ -1,6 +1,9 @@
 {
-    "name": "root",
+    "name": "plurid",
     "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
     "devDependencies": {
         "@types/node": "^11.13.0",
         "lerna": "^3.13.1",
