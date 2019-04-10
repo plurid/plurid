@@ -1,9 +1,9 @@
 {
-    "name": "@plurid/server",
+    "name": "@plurid/plurid-vue-ssr",
     "version": "0.1.0",
-    "description": "Server for server-side rendering",
+    "description": "Vue implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
     "keywords": [
-        "plurid", "web", "3D", "html", "server", "server-side rendering"
+        "plurid", "vue", "web", "3D", "html", "server-side rendering"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",
@@ -18,11 +18,11 @@
     "publishConfig": {
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/react/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-vue-ssr/README.md",
     "files": [
-        "dist"
+        "dist/"
     ],
-    "main": "lib/plurid-server.js",
+    "main": "lib/plurid-vue-ssr.js",
     "scripts": {
         "test": "echo \"Error: run tests from root\" && exit 1"
     }

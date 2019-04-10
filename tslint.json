@@ -11,6 +11,7 @@
         "ordered-imports": false,
         "no-shadowed-variable": false,
         "no-implicit-dependencies": false,
+        "no-var-requires": false,
         "quotemark": [
             true,
             "single",

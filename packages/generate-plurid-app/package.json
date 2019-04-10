@@ -1,5 +1,5 @@
 {
-    "name": "@plurid/generate-app",
+    "name": "@plurid/generate-plurid-app",
     "version": "0.1.0",
     "description": "Generate a Plurid application with one command",
     "keywords": [
@@ -15,7 +15,7 @@
         "email": "feedback@plurid.com",
         "url": "https://github.com/plurid/plurid/issues"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/generate-app/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/generate-plurid-app/README.md",
     "publishConfig": {
         "access": "public"
     },

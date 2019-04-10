@@ -1,5 +1,5 @@
 {
-    "name": "@plurid/react-ssr",
+    "name": "@plurid/plurid-react-ssr",
     "version": "0.1.0",
     "description": "React implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
     "keywords": [
@@ -18,7 +18,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/react-ssr/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-react-ssr/README.md",
     "main": "build/server/index.js",
     "scripts": {
         "build": "webpack --mode production",

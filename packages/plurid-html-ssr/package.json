@@ -1,9 +1,9 @@
 {
-    "name": "@plurid/vue",
-    "version": "0.1.1",
-    "description": "Vue implementation of Plurid to view and explore the web in three dimensions",
+    "name": "@plurid/plurid-html-ssr",
+    "version": "0.1.0",
+    "description": "View and explore the web in three dimensions with server-side rendering.",
     "keywords": [
-        "plurid", "vue", "web", "3D", "html"
+        "plurid", "web", "3D", "html", "server-side rendering"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",
@@ -18,11 +18,11 @@
     "publishConfig": {
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/vue/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/html-ssr/README.md",
     "files": [
         "dist/"
     ],
-    "main": "dist/plurid-vue.js",
+    "main": "dist/plurid-html-ssr.js",
     "scripts": {
         "test": "echo \"Error: run tests from root\" && exit 1"
     }
