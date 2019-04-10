@@ -1,26 +1,24 @@
 {
     "name": "@plurid/html",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "View and explore the web in three dimensions.",
+    "keywords": [
+        "plurid", "web", "3D", "html"
+    ],
+    "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",
-    "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/plurid"
+    },
+    "bugs": {
+        "email": "feedback@plurid.com",
+        "url": "https://github.com/plurid/plurid/issues"
+    },
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/html/README.md",
     "publishConfig": {
         "access": "public"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/plurid/plurid-html.git"
-    },
-    "bugs": {
-        "url": "https://github.com/plurid/plurid-html/issues"
-    },
-    "homepage": "https://github.com/plurid/plurid-html#readme",
-    "keywords": [
-        "web",
-        "content",
-        "three",
-        "dimensions"
-    ],
     "module": "dist/esm/index.js",
     "main": "dist/index.js",
     "types": "dist/types/components.d.ts",
