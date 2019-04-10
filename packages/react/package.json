@@ -1,25 +1,30 @@
 {
     "name": "@plurid/react",
-    "version": "0.1.0",
-    "description": "React implementation of Plurid to view and explore the web in three dimensions.",
-    "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
+    "version": "0.1.1",
+    "description": "React implementation of Plurid to view and explore the web in three dimensions",
+    "keywords": [
+        "plurid", "react", "web", "3D", "html"
+    ],
+    "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/plurid"
+    },
+    "bugs": {
+        "email": "feedback@plurid.com",
+        "url": "https://github.com/plurid/plurid/issues"
+    },
     "publishConfig": {
         "access": "public"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/plurid/plurid-react.git"
-    },
-    "bugs": {
-        "url": "https://github.com/plurid/plurid-react/issues"
-    },
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/react/README.md",
+    "files": [
+        "dist/"
+    ],
     "main": "dist/index.js",
     "module": "dist/index.es.js",
     "jsnext:main": "dist/index.es.js",
-    "files": [
-        "dist"
-    ],
     "engines": {
         "node": ">=8",
         "npm": ">=5"
@@ -46,12 +51,9 @@
         "@types/enzyme-adapter-react-16": "^1.0.5",
         "babel-runtime": "^6.26.0",
         "cross-env": "^5.2.0",
-        "cypress": "^3.1.5",
         "enzyme": "^3.9.0",
         "enzyme-adapter-react-16": "^1.10.0",
         "prop-types": "^15.7.2",
-        "react": "^16.8.3",
-        "react-dom": "^16.8.3",
         "react-scripts-ts": "^3.1.0",
         "react-test-renderer": "^16.8.3",
         "rollup": "^1.4.1",

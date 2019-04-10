@@ -2,19 +2,30 @@
     "name": "@plurid/generate-app",
     "version": "0.1.0",
     "description": "Generate a Plurid application with one command",
-    "author": "Plurid <code@plurid.com> (https://plurid.com)",
-    "homepage": "https://plurid.com",
+    "keywords": [
+        "plurid", "generate", "application", "3D", "html"
+    ],
+    "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/plurid"
+    },
+    "bugs": {
+        "email": "feedback@plurid.com",
+        "url": "https://github.com/plurid/plurid/issues"
+    },
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/generate-app/README.md",
+    "publishConfig": {
+        "access": "public"
+    },
     "bin": {
-        "generate-plurid-app": "bin/index.js"
+        "generate-plurid-app": "dist/bin/index.js"
     },
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
-    "directories": {
-        "lib": "lib"
-    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "files": [
-        "lib"
+        "dist/"
     ],
     "preferGlobal": true,
     "scripts": {
