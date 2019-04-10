@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-html",
-    "version": "0.1.3",
+    "version": "0.1.0",
     "description": "View and explore the web in three dimensions.",
     "keywords": [
         "plurid", "web", "3D", "html"
