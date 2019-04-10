@@ -1,5 +1,5 @@
 import {
-    getWheelDirection
+    getWheelDirection,
 } from './modules/direction';
 
 import {
@@ -8,7 +8,7 @@ import {
     scaleMatrix,
     multiplyMatrices,
     multiplyArrayOfMatrices,
-    matrixArrayToCSSMatrix
+    matrixArrayToCSSMatrix,
 } from './modules/matrix';
 
 import {
@@ -21,7 +21,7 @@ import {
     conjugateQuaternion,
     quaternionMultiply,
     rotatePointViaQuaternion,
-    makeRotationMatrixFromQuaternion
+    makeRotationMatrixFromQuaternion,
 } from './modules/quaternion';
 
 import {

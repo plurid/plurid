@@ -6,7 +6,7 @@ interface Deltas {
 export const getWheelDirection = (
     deltas: Deltas,
     ABSTHRESHOLD: number = 10,
-    THRESHOLD: number = 0
+    THRESHOLD: number = 0,
 ): string => {
     let direction = 'left';
     const wheelDeltaX = deltas.deltaX;

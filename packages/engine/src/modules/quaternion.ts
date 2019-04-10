@@ -43,13 +43,13 @@ export const makeQuaternion = (
     x: number,
     y: number,
     z: number,
-    w: number
+    w: number,
 ): Quaternion => {
     return {
         x,
         y,
         z,
-        w
+        w,
     };
 };
 
@@ -71,7 +71,7 @@ export function inverseQuaternion(quaternion: Quaternion): Quaternion {
         quaternion.x,
         quaternion.y,
         quaternion.z,
-        -quaternion.w
+        -quaternion.w,
     );
 }
 
@@ -84,7 +84,7 @@ export function conjugateQuaternion(quaternion: Quaternion): Quaternion {
         -quaternion.x,
         -quaternion.y,
         -quaternion.z,
-        quaternion.w
+        quaternion.w,
     );
 }
 
@@ -99,7 +99,7 @@ export function conjugateQuaternion(quaternion: Quaternion): Quaternion {
 export function computeQuaternionFromEulers(
     alpha: number,
     beta: number,
-    gamma: number
+    gamma: number,
 ): Quaternion {
     // const x = degToRad(beta);
     // const y = degToRad(gamma);
@@ -134,7 +134,7 @@ export function quaternionFromAxisAngle(
     x: number,
     y: number,
     z: number,
-    angle: number
+    angle: number,
 ): Quaternion {
     const q: Quaternion = zeroQuaternion();
     const halfAngle = angle / 2;
@@ -155,7 +155,7 @@ export function quaternionMultiply(quaternionArray: Quaternion[]): Quaternion {
         x: temporaryQuaternion.x,
         y: temporaryQuaternion.y,
         z: temporaryQuaternion.z,
-        w: temporaryQuaternion.w
+        w: temporaryQuaternion.w,
     };
 
     for (let i = 1; i < quaternionArray.length; i++) {
@@ -164,7 +164,7 @@ export function quaternionMultiply(quaternionArray: Quaternion[]): Quaternion {
             x: secondaryTemporaryQuaternion.x,
             y: secondaryTemporaryQuaternion.y,
             z: secondaryTemporaryQuaternion.z,
-            w: secondaryTemporaryQuaternion.w
+            w: secondaryTemporaryQuaternion.w,
         };
 
         const w =
@@ -207,25 +207,25 @@ export function quaternionMultiply(quaternionArray: Quaternion[]): Quaternion {
  */
 export function rotatePointViaQuaternion(
     pointRotate: any,
-    quaternion: Quaternion
+    quaternion: Quaternion,
 ): Quaternion {
     const temporaryQuaternion: Quaternion = {
         x: pointRotate[0],
         y: pointRotate[1],
         z: pointRotate[2],
-        w: 0
+        w: 0,
     };
     const rotatedPoint = quaternionMultiply([
         quaternion,
         temporaryQuaternion,
-        conjugateQuaternion(quaternion)
+        conjugateQuaternion(quaternion),
     ]);
 
     return {
         x: rotatedPoint.x,
         y: rotatedPoint.y,
         z: rotatedPoint.z,
-        w: rotatedPoint.w
+        w: rotatedPoint.w,
     };
 }
 

@@ -5,9 +5,7 @@ import {
     translateMatrix,
     scaleMatrix,
 } from './matrix';
-import {
-    radToDeg
-} from './quaternion';
+import { radToDeg } from './quaternion';
 
 
 
@@ -17,12 +15,12 @@ import {
  * @param matrix3d      CSS string obtained from
  *                      window
  *                          .getComputedStyle(element)
- *                          .getPropertyValue("transform").
+ *                          .getPropertyValue('transform').
  * @returns             Numbers array.
  */
 export function getMatrixValues(matrix3d: string): number[] {
     const matrixValues = matrix3d.split('(')[1].split(')')[0].split(',');
-    const matrixValuesInt = [];
+    const matrixValuesInt = [] as number[];
     for (let i = 0; i < matrixValues.length; i++) {
         matrixValuesInt[i] = parseFloat(matrixValues[i]);
     }
@@ -159,13 +157,13 @@ export function getTransformRotate(matrix3d: string): RotationValues {
     let thetaY = 0;
     let thetaZ = 0;
 
-    let theta1 = 0;
-    let theta2 = 0;
-    let phi1 = 0;
-    let phi2 = 0;
-    let phi = 0;
-    let theta = 0;
-    let psi = 0;
+    // let theta1 = 0;
+    // let theta2 = 0;
+    // let phi1 = 0;
+    // let phi2 = 0;
+    // let phi = 0;
+    // let theta = 0;
+    // let psi = 0;
 
 
 
@@ -257,7 +255,7 @@ export function getTransformRotate(matrix3d: string): RotationValues {
         rotateX,
         rotateY,
         rotateZ: 0,
-    }
+    };
 }
 
 
@@ -269,14 +267,14 @@ interface TranslationValues {
 
 export function getTransformTranslate(matrix3d: string): TranslationValues {
     const values: number[] = getTranslationMatrix(matrix3d);
-    let translateX = values[0];
-    let translateY = values[1];
-    let translateZ = values[2];
+    const translateX = values[0];
+    const translateY = values[1];
+    const translateZ = values[2];
 
     return {
         translateX,
         translateY,
-        translateZ
+        translateZ,
     };
 }
 
@@ -299,12 +297,12 @@ export function getTransformScale(matrix3d: string): ScalationValue {
 export function rotatePlurid(
     matrix3d: string,
     direction: string = '',
-    angleIncrement: number = 0.07
+    angleIncrement: number = 0.07,
 ): string {
     const transformRotate = getTransformRotate(matrix3d);
-    let rotateX = transformRotate.rotateX;
+    const rotateX = transformRotate.rotateX;
     let rotateY = transformRotate.rotateY;
-    let rotateZ = transformRotate.rotateZ;
+    const rotateZ = transformRotate.rotateZ;
     // console.log('ROTATE', radToDeg(rotateX), radToDeg(rotateY));
 
     const transformTranslate = getTransformTranslate(matrix3d);
@@ -324,23 +322,23 @@ export function rotatePlurid(
     //     angleIncrement = 0.03;
     // }
 
-    if (direction === "left") {
+    if (direction === 'left') {
         rotateY -= angleIncrement;
         valRotationMatrix = rotateMatrix(rotateX, rotateY);
     }
 
-    if (direction === "right") {
+    if (direction === 'right') {
         rotateY += angleIncrement;
         valRotationMatrix = rotateMatrix(rotateX, rotateY);
     }
 
-    if (direction === "up") {
+    if (direction === 'up') {
         rotateY -= angleIncrement;
         // rotateX += angleIncrement;
         valRotationMatrix = rotateMatrix(rotateX, rotateY);
     }
 
-    if (direction === "down") {
+    if (direction === 'down') {
         rotateY += angleIncrement;
         // rotateX -= angleIncrement;
         valRotationMatrix = rotateMatrix(rotateX, rotateY);
@@ -349,7 +347,7 @@ export function rotatePlurid(
     const transformedMatrix3d = setTransform(
         valRotationMatrix,
         valTranslationMatrix,
-        valScalationMatrix
+        valScalationMatrix,
     );
     return transformedMatrix3d;
 }
@@ -358,7 +356,7 @@ export function rotatePlurid(
 export function translatePlurid(
     matrix3d: string,
     direction: string = '',
-    linearIncrement: number = 50
+    linearIncrement: number = 50,
 ): string {
     const transformRotate = getTransformRotate(matrix3d);
     const rotateX = transformRotate.rotateX;
@@ -368,7 +366,7 @@ export function translatePlurid(
     const transformTranslate = getTransformTranslate(matrix3d);
     let translateX = transformTranslate.translateX;
     let translateY = transformTranslate.translateY;
-    let translateZ = transformTranslate.translateZ;
+    const translateZ = transformTranslate.translateZ;
 
     const scale = getTransformScale(matrix3d).scale;
 
@@ -376,28 +374,24 @@ export function translatePlurid(
     let valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
     const valScalationMatrix = scaleMatrix(scale);
 
-    if (scale < 0.5) {
-        linearIncrement = 50;
-    } else {
-        linearIncrement = 30;
-    }
+    scale < 0.5 ? linearIncrement = 50 : linearIncrement = 30;
 
-    if (direction === "left") {
+    if (direction === 'left') {
         translateX += linearIncrement;
         valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
     }
 
-    if (direction === "right") {
+    if (direction === 'right') {
         translateX -= linearIncrement;
         valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
     }
 
-    if (direction === "up") {
+    if (direction === 'up') {
         translateY += linearIncrement;
         valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
     }
 
-    if (direction === "down") {
+    if (direction === 'down') {
         translateY -= linearIncrement;
         valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
     }
@@ -405,7 +399,7 @@ export function translatePlurid(
     const transformedMatrix3d = setTransform(
         valRotationMatrix,
         valTranslationMatrix,
-        valScalationMatrix
+        valScalationMatrix,
     );
     return transformedMatrix3d;
 }
@@ -414,7 +408,7 @@ export function translatePlurid(
 export function scalePlurid(
     matrix3d: string,
     direction: string = '',
-    scaleIncrement: number = 0.05
+    scaleIncrement: number = 0.05,
 ): string {
     const transformRotate = getTransformRotate(matrix3d);
     const rotateX = transformRotate.rotateX;
@@ -432,13 +426,13 @@ export function scalePlurid(
     const valTranslationMatrix = translateMatrix(translateX, translateY, translateZ);
     let valScalationMatrix = scaleMatrix(scale);
 
-    if (direction === "up") {
+    if (direction === 'up') {
         scale -= scaleIncrement;
         if (scale < 0.1) { scale = 0.1; }
         valScalationMatrix = scaleMatrix(scale);
     }
 
-    if (direction === "down") {
+    if (direction === 'down') {
         scale += scaleIncrement;
         if (scale > 4) { scale = 4; }
         valScalationMatrix = scaleMatrix(scale);
@@ -447,7 +441,7 @@ export function scalePlurid(
     const transformedMatrix3d = setTransform(
         valRotationMatrix,
         valTranslationMatrix,
-        valScalationMatrix
+        valScalationMatrix,
     );
     return transformedMatrix3d;
 }

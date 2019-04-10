@@ -1,7 +1,5 @@
 import { performance } from 'perf_hooks';
-import {
-    computeQuaternionFromEulers
-} from '../../src/';
+import { computeQuaternionFromEulers } from '../../src';
 
 
 
@@ -21,4 +19,4 @@ for (let i = 0; i < 1000; i++) {
 
 const t1 = performance.now();
 
-console.log("Call to computeQuaternionFromEulers() took " + (t1 - t0) + " milliseconds.")
+console.log('Call to computeQuaternionFromEulers() took ' + (t1 - t0) + ' milliseconds.');
