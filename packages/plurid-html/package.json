@@ -1,5 +1,5 @@
 {
-    "name": "@plurid/html",
+    "name": "@plurid/plurid-html",
     "version": "0.1.3",
     "description": "View and explore the web in three dimensions.",
     "keywords": [
@@ -15,7 +15,7 @@
         "email": "feedback@plurid.com",
         "url": "https://github.com/plurid/plurid/issues"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/html/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-html/README.md",
     "publishConfig": {
         "access": "public"
     },

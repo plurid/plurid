@@ -1,5 +1,5 @@
 {
-    "name": "@plurid/react",
+    "name": "@plurid/plurid-react",
     "version": "0.1.1",
     "description": "React implementation of Plurid to view and explore the web in three dimensions",
     "keywords": [
@@ -18,7 +18,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/react/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-react/README.md",
     "files": [
         "dist/"
     ],

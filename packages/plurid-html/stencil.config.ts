@@ -10,13 +10,13 @@ export const config: Config = {
         { src: 'testing' },
     ],
     // globalStyle: 'src/styles/styles.scss',
-    outputTargets:[
+    outputTargets: [
         { type: 'dist' },
         { type: 'docs' },
         {
             type: 'www',
-            serviceWorker: null
-        }
+            serviceWorker: null,
+        },
     ],
     plugins: [
         sass(),

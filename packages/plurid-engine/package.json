@@ -1,5 +1,5 @@
 {
-    "name": "@plurid/engine",
+    "name": "@plurid/plurid-engine",
     "version": "0.1.0",
     "description": "Plurid 3D JS/CSS Engine",
     "keywords": [
@@ -15,7 +15,7 @@
         "email": "feedback@plurid.com",
         "url": "https://github.com/plurid/plurid/issues"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/engine/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-engine/README.md",
     "publishConfig": {
         "access": "public"
     },
