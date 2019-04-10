@@ -4,7 +4,7 @@ import {
     // inverseQuaternion,
     makeRotationMatrixFromQuaternion,
     // quaternionFromAxisAngle,
-    quaternionMultiply
+    quaternionMultiply,
     // rotatePointViaQuaternion,
 } from './quaternion';
 
@@ -17,8 +17,8 @@ import {
  * @param zAngle
  */
 export function rotateMatrix(
-    xAngle: number, yAngle: number, zAngle: number = 0
-): Array<number> {
+    xAngle: number, yAngle: number, zAngle: number = 0,
+): number[] {
     const xQuaternion = computeQuaternionFromEulers(0,       xAngle,        0);
     const yQuaternion = computeQuaternionFromEulers(0,            0,   yAngle);
     const zQuaternion = computeQuaternionFromEulers(zAngle,       0,        0);
@@ -26,10 +26,10 @@ export function rotateMatrix(
     const quartenionMultiplication = quaternionMultiply([
         yQuaternion,
         xQuaternion,
-        zQuaternion
+        zQuaternion,
     ]);
     const rotationMatrix = makeRotationMatrixFromQuaternion(
-        quartenionMultiplication
+        quartenionMultiplication,
     );
 
     // console.log('rotationMatrix', rotationMatrix);
@@ -43,12 +43,12 @@ export function rotateMatrix(
  * @param y
  * @param z
  */
-export function translateMatrix(x: number, y: number, z: number): Array<number> {
+export function translateMatrix(x: number, y: number, z: number): number[] {
     return [
         1,    0,    0,   0,
         0,    1,    0,   0,
         0,    0,    1,   0,
-        x,    y,    z,   1
+        x,    y,    z,   1,
     ];
 }
 
@@ -57,12 +57,12 @@ export function translateMatrix(x: number, y: number, z: number): Array<number> 
  *
  * @param s
  */
-export function scaleMatrix(s: number): Array<number> {
+export function scaleMatrix(s: number): number[] {
     return [
         s,    0,    0,   0,
         0,    s,    0,   0,
         0,    0,    s,   0,
-        0,    0,    0,   1
+        0,    0,    0,   1,
     ];
 }
 
@@ -73,11 +73,11 @@ export function scaleMatrix(s: number): Array<number> {
  * @param matrixB
  */
 export function multiplyMatrices(
-    matrixA: Array<number>,
-    matrixB: Array<number>
-): Array<number> {
+    matrixA: number[],
+    matrixB: number[],
+): number[] {
     // https://github.com/toji/gl-matrix/blob/master/src/gl-matrix/mat4.js#L306-L337
-    const result = [];
+    const result = [] as number[];
 
     const a00 = matrixA[0];
     const a01 = matrixA[1];
@@ -141,7 +141,7 @@ export function multiplyMatrices(
  *
  * @param matrices
  */
-export function multiplyArrayOfMatrices(matrices: Array<Array<number>>): Array<number> {
+export function multiplyArrayOfMatrices(matrices: number[][]): number[] {
     let inputMatrix = matrices[0];
 
     for (let i = 1; i < matrices.length; i++) {
@@ -152,6 +152,6 @@ export function multiplyArrayOfMatrices(matrices: Array<Array<number>>): Array<n
 }
 
 // Create the matrix3d style property from a matrix array
-export function matrixArrayToCSSMatrix(array: Array<number>): string {
+export function matrixArrayToCSSMatrix(array: number[]): string {
     return 'matrix3d(' + array.join(',') + ')';
 }

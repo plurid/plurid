@@ -6,6 +6,7 @@
     ],
     "scripts": {
         "commit": "git-cz",
+        "test": "jest",
         "fix": "yarn lint.ts --fix",
         "lint": "run-p -c lint.*",
         "lint.css": "stylelint 'packages/**/*.ts{,x}'",

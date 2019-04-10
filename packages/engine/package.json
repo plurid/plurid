@@ -19,12 +19,12 @@
     "publishConfig": {
         "access": "public"
     },
-    "main": "dist/plurid-engine.umd.js",
-    "module": "dist/plurid-engine.es5.js",
-    "types": "dist/types/plurid-engine.d.ts",
     "files": [
         "dist"
     ],
+    "main": "dist/plurid-engine.umd.js",
+    "module": "dist/plurid-engine.es5.js",
+    "types": "dist/types/plurid-engine.d.ts",
     "scripts": {
         "lint": "tslint --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
         "prebuild": "rimraf dist",
