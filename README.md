@@ -1,8 +1,9 @@
 # Plurid
 
-Transform web documents into a 3D structure to explore
+Transform web documents into a 3D explorable structure
 
-Packages
+
+## Packages
 
 @plurid/engine - utilities
 
@@ -16,7 +17,9 @@ Packages
 
 @plurid/react-ssr - React implementation with Server-Side Rendering
 
-@plurid/server - server
+@plurid/server - server for server-side rendering and application serving
+
+@plurid/state - state management for a plurid application
 
 @plurid/vue - Vue implementation
 
