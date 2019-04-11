@@ -3,7 +3,11 @@
     "version": "0.1.0",
     "description": "Generate a Plurid application with one command",
     "keywords": [
-        "plurid", "generate", "application", "3D", "html"
+        "plurid",
+        "generate",
+        "application",
+        "3D",
+        "html"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",

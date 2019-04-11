@@ -3,7 +3,11 @@
     "version": "0.1.0",
     "description": "Vue implementation of Plurid to view and explore the web in three dimensions",
     "keywords": [
-        "plurid", "vue", "web", "3D", "html"
+        "plurid",
+        "vue",
+        "web",
+        "3D",
+        "html"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",

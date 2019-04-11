@@ -3,7 +3,9 @@
     "version": "0.1.0",
     "description": "Plurid 3D JS/CSS Engine",
     "keywords": [
-        "plurid", "3D", "engine"
+        "plurid",
+        "3D",
+        "engine"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",

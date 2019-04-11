@@ -3,7 +3,12 @@
     "version": "0.1.0",
     "description": "Server for server-side rendering",
     "keywords": [
-        "plurid", "web", "3D", "html", "server", "server-side rendering"
+        "plurid",
+        "web",
+        "3D",
+        "html",
+        "server",
+        "server-side rendering"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",
