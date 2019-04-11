@@ -3,7 +3,10 @@
     "version": "0.1.0",
     "description": "View and explore the web in three dimensions.",
     "keywords": [
-        "plurid", "web", "3D", "html"
+        "plurid",
+        "web",
+        "3D",
+        "html"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",

@@ -3,7 +3,12 @@
     "version": "0.1.0",
     "description": "Vue implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
     "keywords": [
-        "plurid", "vue", "web", "3D", "html", "server-side rendering"
+        "plurid",
+        "vue",
+        "web",
+        "3D",
+        "html",
+        "server-side rendering"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",

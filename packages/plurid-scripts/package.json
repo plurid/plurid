@@ -3,7 +3,11 @@
     "version": "0.1.0",
     "description": "Scripts for building/developing plurid applications",
     "keywords": [
-        "plurid", "web", "3D", "html", "scripts"
+        "plurid",
+        "web",
+        "3D",
+        "html",
+        "scripts"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",

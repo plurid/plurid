@@ -3,7 +3,11 @@
     "version": "0.1.0",
     "description": "React implementation of Plurid to view and explore the web in three dimensions",
     "keywords": [
-        "plurid", "react", "web", "3D", "html"
+        "plurid",
+        "react",
+        "web",
+        "3D",
+        "html"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",

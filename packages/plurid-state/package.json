@@ -3,7 +3,11 @@
     "version": "0.1.0",
     "description": "State management of plurid application",
     "keywords": [
-        "plurid", "web", "3D", "html", "state"
+        "plurid",
+        "web",
+        "3D",
+        "html",
+        "state"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",
