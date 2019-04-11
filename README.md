@@ -38,26 +38,61 @@ npx @plurid/generate-plurid-app
 
 ## Packages
 
-@plurid/generate-plurid-app - create plurid application with one command
+[@plurid/generate-plurid-app][generate-plurid-app] - create `plurid'` application with one command
 
-@plurid/plurid-engine - 3D utility functions
+[generate-plurid-app]: https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app
 
-@plurid/plurid-html - HTML Custom Elements implementation
 
-@plurid/plurid-html-ssr - HTML Custom Elements implementation with Server-Side Rendering
+[@plurid/plurid-engine][plurid-engine] - 3D utility functions
 
-@plurid/plurid-react - React implementation
+[plurid-engine]: https://github.com/plurid/plurid/tree/master/packages/plurid-engine
 
-@plurid/plurid-react-ssr - React implementation with Server-Side Rendering
 
-@plurid/plurid-renderer - rendering engine
+[@plurid/plurid-html][plurid-html] - HTML Custom Elements implementation
 
-@plurid/plurid-scripts - build/development utility functions
+[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid-html
 
-@plurid/plurid-server - server for server-side rendering and application serving
 
-@plurid/plurid-state - state management for a plurid application
+[@plurid/plurid-html-ssr][plurid-html-ssr] - HTML Custom Elements implementation with Server-Side Rendering
 
-@plurid/plurid-vue - Vue implementation
+[plurid-html-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-ssr
 
-@plurid/plurid-vue-ssr - Vue implementation with Server-Side Rendering
+
+[@plurid/plurid-react][plurid-react] - React implementation
+
+[plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid-react
+
+
+[@plurid/plurid-react-ssr][plurid-react-ssr] - React implementation with Server-Side Rendering
+
+[plurid-react-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-ssr
+
+
+[@plurid/plurid-renderer][plurid-renderer] - rendering engine
+
+[plurid-renderer]: https://github.com/plurid/plurid/tree/master/packages/plurid-renderer
+
+
+[@plurid/plurid-scripts][plurid-scripts] - build/development utility functions
+
+[plurid-scripts]: https://github.com/plurid/plurid/tree/master/packages/plurid-scripts
+
+
+[@plurid/plurid-server][plurid-server] - server for server-side rendering and application serving
+
+[plurid-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-server
+
+
+[@plurid/plurid-state][plurid-state] - state management for a plurid application
+
+[plurid-state]: https://github.com/plurid/plurid/tree/master/packages/plurid-state
+
+
+[@plurid/plurid-vue][plurid-vue] - Vue implementation
+
+[plurid-vue]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue
+
+
+[@plurid/plurid-vue-ssr][plurid-vue-ssr] - Vue implementation with Server-Side Rendering
+
+[plurid-vue-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue-ssr
