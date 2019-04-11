@@ -38,9 +38,9 @@ npx @plurid/generate-plurid-app
 
 ## Packages
 
-@plurid/plurid-engine - utilities
-
 @plurid/generate-plurid-app - create plurid application with one command
+
+@plurid/plurid-engine - 3D utility functions
 
 @plurid/plurid-html - HTML Custom Elements implementation
 
@@ -49,6 +49,10 @@ npx @plurid/generate-plurid-app
 @plurid/plurid-react - React implementation
 
 @plurid/plurid-react-ssr - React implementation with Server-Side Rendering
+
+@plurid/plurid-renderer - rendering engine
+
+@plurid/plurid-scripts - build/development utility functions
 
 @plurid/plurid-server - server for server-side rendering and application serving
 
