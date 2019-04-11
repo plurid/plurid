@@ -1,5 +1,5 @@
 {
-    "name": "@plurid/react-impl",
+    "name": "@plurid/plurid-react-default",
     "version": "0.0.0",
     "description": "React implementation of Plurid to view and explore the web in three dimensions.",
     "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",

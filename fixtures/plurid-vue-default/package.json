@@ -1,0 +1,12 @@
+{
+    "name": "@plurid/plurid-vue-default",
+    "version": "0.0.0",
+    "description": "Vue implementation of Plurid to view and explore the web in three dimensions.",
+    "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
+    "license": "MIT",
+    "private": true,
+    "dependencies": {
+    },
+    "scripts": {
+    }
+}
