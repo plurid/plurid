@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/docs/identity/plurid-logo.png" height="250px">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-p-logo.png" height="250px">
     <br />
     <a target="_blank" href="https://www.npmjs.com/package/plurid-react">
         <img src="https://img.shields.io/npm/v/plurid-react.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">

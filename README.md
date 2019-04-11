@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/p-plurid-black-1000x1000.png" height="250px">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-p-logo.png" height="250px">
     <br />
     <a target="_blank" href="https://github.com/plurid/plurid/blob/master/LICENSE">
         <img src="https://img.shields.io/badge/license-MIT-blue.svg?colorB=1380C3&style=for-the-badge" alt="License: MIT">
@@ -55,7 +55,7 @@ npx @plurid/generate-plurid-app
 
 [@plurid/plurid-html-ssr][plurid-html-ssr] - HTML Custom Elements implementation with Server-Side Rendering
 
-[plurid-html-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-ssr
+[plurid-html-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-html-ssr
 
 
 [@plurid/plurid-react][plurid-react] - React implementation
