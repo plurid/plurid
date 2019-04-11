@@ -1,1 +1,1 @@
-# `@plurid/plurid-scripts`
+# `plurid-renderer`
