@@ -1,5 +1,10 @@
-To develop
+## To develop
 
 
 
-To publish
+
+## To publish
+
+```
+lerna publish
+```
