@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import PluridContainer from '../Container';
 import PluridSheet from '../Sheet';
 import {
@@ -7,7 +6,7 @@ import {
     rotatePlurid,
     translatePlurid,
     scalePlurid,
-} from '@plurid/engine';
+} from '@plurid/plurid-engine';
 
 import { PluridContext } from '../context';
 
@@ -36,10 +35,6 @@ const ANGLE_INCREMENT = 0.05;
 
 
 class PluridApp extends Component<IPluridAppProps, IPluridAppState> {
-    public static propTypes = {
-        theme: PropTypes.string,
-    }
-
     public static contextType = PluridContext;
 
     constructor(props: any) {
