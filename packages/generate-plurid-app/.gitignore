@@ -4,11 +4,21 @@ node_modules
 # builds
 build
 dist
+coverage
+dist
+docs
+compiled
 .rpt2_cache
+.awcache
 
 # misc
 .DS_Store
 .env
+.nyc_output
+.DS_Store
+*.log
+.vscode
+.idea
 
 npm-debug.log*
 yarn-debug.log*
