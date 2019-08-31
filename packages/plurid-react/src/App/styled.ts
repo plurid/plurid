@@ -2,6 +2,6 @@ import styled from 'styled-components';
 
 
 
-export const StyledPagesView = styled.div`
+export const StyledPluridApp = styled.div`
     height: 100%;
 `;
