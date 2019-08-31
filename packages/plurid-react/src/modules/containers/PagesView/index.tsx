@@ -24,6 +24,15 @@ const PagesView: React.FC<PagesViewProperties> = (properties) => {
     return (
         <StyledPagesView>
             pages view
+
+            {pages.map(page => {
+                const Element = page.component.element;
+                return (
+                    <Element
+                        key={page.path}
+                    />
+                );
+            })}
         </StyledPagesView>
     );
 }
