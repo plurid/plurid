@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledErrorPage = styled.div`
+export const StyledErrorView = styled.div`
     position: absolute;
     top: 50%;
     left: 50%;
