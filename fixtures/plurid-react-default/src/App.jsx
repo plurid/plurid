@@ -16,58 +16,58 @@ const App = () => {
         },
     }
 
-    const document1Pages = [
-        {
-            path: '/document-1/:page',
-            component: {
-                element: Page1,
-                properties: {
-                    page: 'path:page'
-                },
-            },
-            location: 'root',
-        },
-        {
-            path: '/document-1/page-1',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            location: 'root',
-        },
-        {
-            path: '/document-1/page-2',
-            component: {
-                element: Page2,
-                properties: {},
-            },
-            location: 'left',
-        },
-    ];
+    // const document1Pages = [
+    //     {
+    //         path: '/document-1/:page',
+    //         component: {
+    //             element: Page1,
+    //             properties: {
+    //                 page: 'path:page'
+    //             },
+    //         },
+    //         location: 'root',
+    //     },
+    //     {
+    //         path: '/document-1/page-1',
+    //         component: {
+    //             element: Page1,
+    //             properties: {},
+    //         },
+    //         location: 'root',
+    //     },
+    //     {
+    //         path: '/document-1/page-2',
+    //         component: {
+    //             element: Page2,
+    //             properties: {},
+    //         },
+    //         location: 'left',
+    //     },
+    // ];
 
-    const document2Pages = [
-        {
-            path: '/document-2/page-1',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            location: 'root',
-        },
-        {
-            path: '/document-2/page-2',
-            component: {
-                element: Page2,
-                properties: {},
-            },
-            location: 'left',
-        },
-    ];
+    // const document2Pages = [
+    //     {
+    //         path: '/document-2/page-1',
+    //         component: {
+    //             element: Page1,
+    //             properties: {},
+    //         },
+    //         location: 'root',
+    //     },
+    //     {
+    //         path: '/document-2/page-2',
+    //         component: {
+    //             element: Page2,
+    //             properties: {},
+    //         },
+    //         location: 'left',
+    //     },
+    // ];
 
-    const appDocuments = [
-        document1Pages,
-        document2Pages,
-    ];
+    // const appDocuments = [
+    //     document1Pages,
+    //     document2Pages,
+    // ];
 
 
     const appPages = [

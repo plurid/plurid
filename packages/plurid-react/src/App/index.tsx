@@ -6,7 +6,9 @@ import {
     PluridAppProperties,
 } from '../modules/data/interfaces';
 
-import ErrorPage from '../modules/components/ErrorPage';
+import PagesView from '../modules/containers/PagesView';
+import DocumentsView from '../modules/containers/DocumentsView';
+import ErrorView from '../modules/containers/ErrorView';
 
 
 
@@ -18,27 +20,27 @@ const PluridApp: React.FC<PluridAppProperties> = (properties) => {
     } = properties;
 
     console.log(configuration);
-    console.log(pages);
-    console.log(documents);
 
     if (pages && !documents) {
         return (
-            <div>
-                plurid app pages
-            </div>
+            <PagesView
+                pages={pages}
+            />
         );
     }
 
     if (documents && !pages) {
         return (
-            <div>
-                plurid app documents
-            </div>
+            <DocumentsView
+                documents={documents}
+            />
         );
     }
 
     return (
-        <ErrorPage error="the plurid' application must be either documents-based or pages-based" />
+        <ErrorView
+            error="the plurid' application must be either documents-based or pages-based"
+        />
     );
 }
 
