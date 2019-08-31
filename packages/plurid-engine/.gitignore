@@ -4,12 +4,13 @@ node_modules
 # builds
 build
 dist
-.rpt2_cache
 coverage
-.nyc_output
-*.log
-.vscode
 compiled
+docs
+.rpt2_cache
+.nyc_output
+.vscode
+.awcache
 
 # misc
 .DS_Store
@@ -17,7 +18,7 @@ compiled
 
 yarn-debug.log*
 yarn-error.log*
+*.log
 
 # os
 .DS_Store
-docs
