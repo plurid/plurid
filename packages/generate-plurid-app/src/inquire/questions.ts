@@ -6,27 +6,34 @@ const values = {
     language: [
         'TypeScript',
         'JavaScript',
-        new inquirer.Separator(),
+        new inquirer.Separator('---- pick one ----'),
     ],
     ui: [
         'HTML Custom Elements',
         'React',
         // 'Vue',
-        new inquirer.Separator(),
+        new inquirer.Separator('---- pick one ----'),
     ],
     type: [
         'Server-Side Rendered',
         'Client-Only',
-        new inquirer.Separator(),
+        new inquirer.Separator('---- pick one ----'),
     ],
 };
 
 
-export const questions = [
+interface Question {
+    type: string;
+    name: string;
+    message: string;
+    choices?: any[];
+}
+
+export const questions: Question[] = [
     {
         type: 'input',
         name: 'app',
-        message: 'Enter the app directory where the application will be generated:'
+        message: 'Enter the directory path where the application will be generated:'
     },
     {
         type: 'list',
@@ -47,11 +54,3 @@ export const questions = [
         choices: values.type
     },
 ];
-
-
-// interface Question {
-//     type: any;
-//     name: any;
-//     message: any;
-//     choice: any;
-// }
