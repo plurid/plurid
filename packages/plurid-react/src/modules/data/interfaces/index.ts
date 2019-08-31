@@ -11,7 +11,7 @@ export interface PluridDocument {
 
 
 export interface PluridComponent {
-    element: JSX.Element,
+    element: () => JSX.Element,
     properties?: PluridComponentProperties;
 }
 
