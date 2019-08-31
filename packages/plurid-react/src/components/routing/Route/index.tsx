@@ -20,7 +20,7 @@ class PluridRoute extends Component<IPluridRouteProps, {}> {
 
         return (
             <PluridRoutingContext.Consumer>
-                {context => {
+                {(context: any) => {
                     const route = {
                         component,
                         params: {},
