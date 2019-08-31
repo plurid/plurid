@@ -9,18 +9,23 @@ import Page2 from './containers/Page2';
 
 const App = () => {
 
-    const appOptions = {
+    const appConfiguration = {
         alterURL: false,
         pluridPlane: {
             showControls: true,
         },
     }
 
-    // const aRoutes = [];
-    // const bRoutes = [];
-    // const combineRoutes = [ ...aRoutes, ...bRoutes ];
+    const aPages = [];
+    const bPages = [];
+    // const combinedPages = [ ...aPages, ...bPages ];
 
-    const appRoutes = [
+    const appDocuments = [
+        aPages,
+        bPages,
+    ];
+
+    const appPages = [
         {
             path: '/',
             component: {
@@ -42,8 +47,9 @@ const App = () => {
     return (
         <div>
             <PluridApp
-                options={appOptions}
-                routes={appRoutes}
+                configuration={appConfiguration}
+                pages={appPages}
+                documents={appDocuments}
             />
         </div>
     )
