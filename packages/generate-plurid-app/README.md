@@ -1,12 +1,12 @@
 # `generate-plurid-app`
 
-Generate a plurid application with one command
+Generate a plurid' application with one command (and 3 choices)
 
 
 ## Usage
 
 ```
-npx generate-plurid-app my-app
+npx @plurid/generate-plurid-app
 ```
 
 Based on:
