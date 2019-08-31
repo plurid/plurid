@@ -16,14 +16,59 @@ const App = () => {
         },
     }
 
-    const aPages = [];
-    const bPages = [];
-    // const combinedPages = [ ...aPages, ...bPages ];
+    const document1Pages = [
+        {
+            path: '/document-1/:page',
+            component: {
+                element: Page1,
+                properties: {
+                    page: 'path:page'
+                },
+            },
+            location: 'root',
+        },
+        {
+            path: '/document-1/page-1',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            location: 'root',
+        },
+        {
+            path: '/document-1/page-2',
+            component: {
+                element: Page2,
+                properties: {},
+            },
+            location: 'left',
+        },
+    ];
+
+    const document2Pages = [
+        {
+            path: '/document-2/page-1',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            location: 'root',
+        },
+        {
+            path: '/document-2/page-2',
+            component: {
+                element: Page2,
+                properties: {},
+            },
+            location: 'left',
+        },
+    ];
 
     const appDocuments = [
-        aPages,
-        bPages,
+        document1Pages,
+        document2Pages,
     ];
+
 
     const appPages = [
         {
@@ -35,7 +80,7 @@ const App = () => {
             location: 'root',
         },
         {
-            path: '/page2',
+            path: '/page-2',
             component: {
                 element: Page2,
                 properties: {},
@@ -45,14 +90,12 @@ const App = () => {
     ];
 
     return (
-        <div>
-            <PluridApp
-                configuration={appConfiguration}
-                pages={appPages}
-                documents={appDocuments}
-            />
-        </div>
-    )
+        <PluridApp
+            configuration={appConfiguration}
+            pages={appPages}
+            documents={appDocuments}
+        />
+    );
 }
 
 
