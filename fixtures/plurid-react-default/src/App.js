@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-import Plurid from '@plurid/react';
+import Plurid from '@plurid/plurid-react';
+
 
 
 const TestComponent = () => (<div>test component</div>);
