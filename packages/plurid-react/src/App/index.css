@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+    font-kerning: auto;
+    text-rendering: optimizeLegibility;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    color: white;
+    font-family: Ubuntu, -apple-system, BlinkMacSystemFont, Roboto,
+        'Open Sans', 'Helvetica Neue', 'Lucida Sans', sans-serif;
+}
+
+html {
+    overflow: hidden;
+}
