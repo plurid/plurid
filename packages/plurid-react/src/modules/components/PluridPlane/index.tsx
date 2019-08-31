@@ -4,19 +4,29 @@ import {
     StyledPluridPlane,
 } from './styled';
 
+import {
+    PluridPage,
+} from '../../data/interfaces';
+
 
 
 interface PluridPlaneProperties {
+    page: PluridPage,
     [key: string]: any;
 }
 
 const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
     const {
+        page,
+        children,
     } = properties;
 
     return (
         <StyledPluridPlane>
-            plurid plane
+            {page.path}
+            <br />
+            {children}
+            <br />
         </StyledPluridPlane>
     );
 }

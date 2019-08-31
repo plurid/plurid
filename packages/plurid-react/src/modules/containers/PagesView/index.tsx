@@ -8,6 +8,8 @@ import {
     PluridPage,
 } from '../../data/interfaces';
 
+import PluridSpace from '../../components/PluridSpace';
+
 
 
 interface PagesViewProperties {
@@ -19,20 +21,11 @@ const PagesView: React.FC<PagesViewProperties> = (properties) => {
         pages,
     } = properties;
 
-    console.log(pages);
-
     return (
         <StyledPagesView>
-            pages view
-
-            {pages.map(page => {
-                const Element = page.component.element;
-                return (
-                    <Element
-                        key={page.path}
-                    />
-                );
-            })}
+            <PluridSpace
+                pages={pages}
+            />
         </StyledPagesView>
     );
 }

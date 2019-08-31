@@ -4,19 +4,36 @@ import {
     StyledPluridSpace,
 } from './styled';
 
+import {
+    PluridPage,
+} from '../../data/interfaces';
+
+import PluridPlane from '../PluridPlane';
+
 
 
 interface PluridSpaceProperties {
-    [key: string]: any;
+    pages: PluridPage[];
 }
 
 const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
     const {
+        pages,
     } = properties;
 
     return (
         <StyledPluridSpace>
-            plurid space
+            {pages.map(page => {
+                const Page = page.component.element;
+                return (
+                    <PluridPlane
+                        key={page.path}
+                        page={page}
+                    >
+                        <Page />
+                    </PluridPlane>
+                );
+            })}
         </StyledPluridSpace>
     );
 }
