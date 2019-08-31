@@ -5,13 +5,15 @@ import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 
-const pkg = require('./package.json.js');
+
+
+const pkg = require('./package.json');
+
 const libraryName = 'plurid-engine';
 
 
-
 export default {
-    input: 'src/index.ts',
+    input: `src/index.ts`,
     output: [
         { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
         { file: pkg.module, format: 'es', sourcemap: true },
@@ -36,4 +38,4 @@ export default {
         // Resolve source maps to the original source
         sourceMaps(),
     ],
-};
+}
