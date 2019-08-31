@@ -4,6 +4,8 @@ import {
     StyledPluridPlane,
 } from './styled';
 
+import PlaneControls from './components/PlaneControls';
+
 import {
     PluridPage,
 } from '../../data/interfaces';
@@ -23,7 +25,9 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
 
     return (
         <StyledPluridPlane>
-            {page.path}
+            <PlaneControls
+                page={page}
+            />
             <br />
             {children}
             <br />
