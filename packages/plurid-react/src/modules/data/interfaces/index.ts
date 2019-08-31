@@ -5,6 +5,7 @@ export interface PluridPage {
 }
 
 export interface PluridDocument {
+    name: string;
     pages: PluridPage[];
 }
 
@@ -25,4 +26,20 @@ export interface PluridAppConfiguration {
     pluridPlane: {
         showControls: boolean;
     },
+}
+
+
+
+export interface PluridAppProperties {
+    pages?: PluridPage[],
+    documents?: PluridDocument[],
+    configuration?: PluridAppConfiguration,
+}
+
+
+export interface PluridLinkProperties {
+    // the name of the document, if not specified defaults to the current one
+    document?: string;
+    // the page path
+    page: string;
 }
