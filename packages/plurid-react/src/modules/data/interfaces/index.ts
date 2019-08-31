@@ -17,6 +17,9 @@ export interface PluridComponent {
 
 
 export interface PluridComponentProperties {
+    // if the property value starts with 'path:'
+    // then the actual value must be obtained from the path of the page
+    // specified after the /:, e.g. path: 'foo/:bar', properties: { bar: 'path:bar' }
     [key: string]: any;
 }
 

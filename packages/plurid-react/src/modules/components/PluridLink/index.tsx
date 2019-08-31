@@ -6,11 +6,15 @@ import {
 
 
 
-const PluridLink: React.FC<PluridLinkProperties> = () => {
+const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
+    const {
+        children,
+    } = properties;
+
     return (
-        <div>
-            plurid link
-        </div>
+        <a>
+            {children}
+        </a>
     );
 }
 
