@@ -1,6 +1,10 @@
 import React from 'react';
 
 import {
+    StyledPluridLink,
+} from './styled';
+
+import {
     PluridLinkProperties,
 } from '../../data/interfaces';
 
@@ -12,9 +16,9 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
     } = properties;
 
     return (
-        <a>
+        <StyledPluridLink>
             {children}
-        </a>
+        </StyledPluridLink>
     );
 }
 
