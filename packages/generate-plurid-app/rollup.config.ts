@@ -1,6 +1,4 @@
 import resolve from 'rollup-plugin-node-resolve';
-// import builtins from 'rollup-plugin-node-builtins';
-// import globals from 'rollup-plugin-node-globals';
 import external from 'rollup-plugin-peer-deps-external';
 import commonjs from 'rollup-plugin-commonjs';
 import sourceMaps from 'rollup-plugin-sourcemaps';
@@ -15,6 +13,8 @@ const pkg = require('./package.json');
 const libraryName = 'generate-plurid-app';
 
 const globals = {
+    'commander': 'program',
+    'inquirer': 'inquirer',
 };
 
 
@@ -62,9 +62,6 @@ export default {
 
         // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
         commonjs(),
-
-        // globals(),
-        // builtins(),
 
         // Resolve source maps to the original source
         sourceMaps(),
