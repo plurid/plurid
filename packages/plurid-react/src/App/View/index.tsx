@@ -1,6 +1,6 @@
 import React, {
     // useState,
-    // useEffect,
+    useEffect,
     // useCallback,
 } from 'react';
 import { AnyAction } from 'redux';
@@ -43,12 +43,19 @@ type ViewProperties = ViewStateProperties & ViewDispatchProperties & ViewOwnProp
 const View: React.FC<ViewProperties> = (properties) => {
     const {
         appProperties,
+        setConfiguration,
     } = properties;
 
     const {
+        configuration,
         pages,
-        documents
-    } = appProperties
+        documents,
+    } = appProperties;
+
+
+    useEffect(() => {
+        setConfiguration(configuration);
+    }, [configuration]);
 
     const viewContainer = handleView(pages, documents);
 
