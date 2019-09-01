@@ -41,6 +41,7 @@ interface ViewDispatchProperties {
     setConfiguration: typeof actions.configuration.setConfiguration;
     setPages: typeof actions.data.setPages;
     setDocuments: typeof actions.data.setDocuments;
+    setViewSize: typeof actions.data.setViewSize;
 }
 
 type ViewProperties = ViewStateProperties & ViewDispatchProperties & ViewOwnProperties;
@@ -51,6 +52,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         setConfiguration,
         setPages,
         setDocuments,
+        setViewSize,
     } = properties;
 
     const {
@@ -62,8 +64,10 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     useEffect(() => {
         const handleResize = debounce(() => {
-            console.log(window.innerHeight);
-            console.log(window.innerWidth);
+            setViewSize({
+                height: window.innerHeight,
+                width: window.innerWidth,
+            });
         }, 1500);
 
         window.addEventListener('resize', handleResize);
@@ -127,6 +131,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     setConfiguration: (configuration: any) => dispatch(actions.configuration.setConfiguration(configuration)),
     setPages: (pages: any) => dispatch(actions.data.setPages(pages)),
     setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
+    setViewSize: (viewSize: any) => dispatch(actions.data.setViewSize(viewSize)),
 });
 
 
