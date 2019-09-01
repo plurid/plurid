@@ -25,6 +25,7 @@ import { debounce } from '../../modules/services/utilities/debounce';
 import { AppState } from '../../modules/services/state/store';
 // import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
+import { ViewSize } from '../../modules/services/state/types/data';
 
 // import themes from '@plurid/apps.utilities.themes';
 
@@ -131,7 +132,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     setConfiguration: (configuration: any) => dispatch(actions.configuration.setConfiguration(configuration)),
     setPages: (pages: any) => dispatch(actions.data.setPages(pages)),
     setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
-    setViewSize: (viewSize: any) => dispatch(actions.data.setViewSize(viewSize)),
+    setViewSize: (viewSize: ViewSize) => dispatch(actions.data.setViewSize(viewSize)),
 });
 
 
