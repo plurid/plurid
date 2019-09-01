@@ -65,8 +65,14 @@ const App = () => {
     // ];
 
     // const appDocuments = [
-    //     document1Pages,
-    //     document2Pages,
+    //     {
+    //         name: 'document-1',
+    //         pages: document1Pages,
+    //     },
+    //     {
+    //         name: 'document-2',
+    //         pages: document2Pages,
+    //     },
     // ];
 
 
@@ -77,6 +83,7 @@ const App = () => {
                 element: Page1,
                 properties: {},
             },
+            root: true,
             location: 'root',
         },
         {
@@ -85,7 +92,16 @@ const App = () => {
                 element: Page2,
                 properties: {},
             },
+            root: true,
             location: 'left',
+        },
+        {
+            path: '/page-2-link',
+            component: {
+                element: Page2,
+                properties: {},
+            },
+            // location: 'left',
         },
     ];
 

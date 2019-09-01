@@ -4,6 +4,6 @@ import {
 
 
 
-export const actions = {
+export default {
     setConfiguration,
 };
