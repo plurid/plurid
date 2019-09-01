@@ -17,17 +17,13 @@ const handleView = (
 ): JSX.Element => {
     if (pages && !documents) {
         return (
-            <PagesView
-                pages={pages}
-            />
+            <PagesView />
         );
     }
 
     if (documents && !pages) {
         return (
-            <DocumentsView
-                documents={documents}
-            />
+            <DocumentsView />
         );
     }
 
