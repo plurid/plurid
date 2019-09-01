@@ -6,6 +6,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import url from 'rollup-plugin-url';
 import svgr from '@svgr/rollup';
 import replace from 'rollup-plugin-replace';
+import babel from 'rollup-plugin-babel';
 
 import pkg from './package.json';
 
@@ -42,6 +43,7 @@ export default {
             rollupCommonJSResolveHack: true,
             clean: true
         }),
-        commonjs()
-    ]
+        commonjs(),
+        babel(),
+    ],
 }
