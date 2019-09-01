@@ -1,13 +1,13 @@
 import React from 'react';
 
-import PagesView from '../modules/containers/PagesView';
-import DocumentsView from '../modules/containers/DocumentsView';
-import ErrorView from '../modules/containers/ErrorView';
+import PagesView from '../../modules/containers/PagesView';
+import DocumentsView from '../../modules/containers/DocumentsView';
+import ErrorView from '../../modules/containers/ErrorView';
 
 import {
     PluridPage,
     PluridDocument,
-} from '../modules/data/interfaces';
+} from '../../modules/data/interfaces';
 
 
 
