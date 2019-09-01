@@ -20,6 +20,8 @@ import {
 
 import Context from './context';
 
+import { debounce } from '../../modules/services/utilities/debounce';
+
 import { AppState } from '../../modules/services/state/store';
 // import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
@@ -56,6 +58,20 @@ const View: React.FC<ViewProperties> = (properties) => {
         pages,
         documents,
     } = appProperties;
+
+
+    useEffect(() => {
+        const handleResize = debounce(() => {
+            console.log(window.innerHeight);
+            console.log(window.innerWidth);
+        }, 1500);
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        }
+    });
 
     useEffect(() => {
         setConfiguration(configuration);
