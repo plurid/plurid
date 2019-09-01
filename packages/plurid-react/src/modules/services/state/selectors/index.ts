@@ -1,10 +1,9 @@
-import themesSelectors from './themes';
+import themes from './themes';
+import data from './data';
 
 
 
-const selectors = {
-    themes: themesSelectors,
+export default {
+    themes,
+    data,
 };
-
-
-export default selectors;
