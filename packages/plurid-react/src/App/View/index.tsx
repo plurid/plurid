@@ -52,9 +52,10 @@ const View: React.FC<ViewProperties> = (properties) => {
         documents,
     } = appProperties;
 
-
     useEffect(() => {
         setConfiguration(configuration);
+        // setPages
+        // setDocuments
     }, [configuration]);
 
     const viewContainer = handleView(pages, documents);
