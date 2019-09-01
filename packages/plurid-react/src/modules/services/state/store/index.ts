@@ -8,8 +8,6 @@ import storeDevelopment, {
 } from './store.development';
 
 
-console.log('environment', environment);
-
 
 export type AppState = AppStateProduction | AppStateDeveloment;
 
