@@ -5,7 +5,7 @@ import {
 
 
 
-export const actions = {
+export default {
     setGeneralTheme,
     setInteractionTheme,
 };

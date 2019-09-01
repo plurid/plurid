@@ -1,12 +1,11 @@
-import { actions as configurationActions } from './configuration';
-import { actions as themesActions } from './themes';
+import configuration from './configuration';
+import data from './data';
+import themes from './themes';
 
 
 
-const actions = {
-    configuration: configurationActions,
-    themes: themesActions,
+export default {
+    configuration,
+    data,
+    themes,
 };
-
-
-export default actions;
