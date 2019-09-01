@@ -1,6 +1,7 @@
 import {
     SET_PAGES,
     SET_DOCUMENTS,
+    SET_VIEW_SIZE,
     DataState,
     DataActionsType,
 } from './types';
@@ -10,6 +11,10 @@ import {
 const initialState: DataState = {
     pages: [],
     documents: [],
+    viewSize: {
+        height: window.innerHeight,
+        width: window.innerWidth,
+    },
 }
 
 const pagesReducer = (
@@ -21,6 +26,8 @@ const pagesReducer = (
             return { ...state, pages: action.payload };
         case SET_DOCUMENTS:
             return { ...state, documents: action.payload };
+        case SET_VIEW_SIZE:
+            return { ...state, viewSize: action.payload };
         default:
             return state;
     }
