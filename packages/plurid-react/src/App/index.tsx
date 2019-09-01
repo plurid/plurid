@@ -4,13 +4,20 @@ import {
     StyledPluridApp,
 } from './styled';
 
+import { Provider as ReduxProvider } from 'react-redux';
+
 import handleView from './view';
 
 import {
     PluridAppProperties,
 } from '../modules/data/interfaces';
 
+import store from '../modules/services/state/store';
 
+
+
+const initialState = {};
+const initializedStore = store(initialState);
 
 const PluridApp: React.FC<PluridAppProperties> = (properties) => {
     const {
@@ -25,7 +32,11 @@ const PluridApp: React.FC<PluridAppProperties> = (properties) => {
 
     return (
         <StyledPluridApp>
-            {view}
+            <ReduxProvider
+                store={initializedStore}
+            >
+                {view}
+            </ReduxProvider>
         </StyledPluridApp>
     );
 }
