@@ -38,12 +38,14 @@ export default {
         }),
         url(),
         svgr(),
+        babel({
+            exclude: "node_modules/**"
+        }),
         resolve(),
         typescript({
             rollupCommonJSResolveHack: true,
-            clean: true
+            clean: true,
         }),
         commonjs(),
-        babel(),
     ],
 }
