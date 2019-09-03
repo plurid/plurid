@@ -46,7 +46,9 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
     } = properties;
 
     return (
-        <StyledPluridPlane>
+        <StyledPluridPlane
+            data-plurid-plane={page.path}
+        >
             <PlaneControls
                 page={page}
             />
