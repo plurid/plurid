@@ -25,6 +25,7 @@ export interface PluridComponentProperties {
 
 
 export interface PluridAppConfiguration {
+    perspective?: number;
     theme?: string;
     alterURL?: boolean;
     pluridPlane?: {
