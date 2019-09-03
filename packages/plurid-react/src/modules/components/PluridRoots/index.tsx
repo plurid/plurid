@@ -70,6 +70,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                     rotateX(${spaceRotationX}deg)
                     rotateY(${spaceRotationY}deg)
                 `,
+                // transformOrigin: `${viewSize.width/2}px ${spaceTranslationY}px ${spaceTranslationX}px`,
             }}
         >
             {pages.map((page: any) => {
