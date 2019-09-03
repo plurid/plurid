@@ -43,7 +43,7 @@ export interface PluridAppProperties {
 }
 
 
-export interface PluridLinkProperties {
+export interface PluridLinkOwnProperties {
     // the name of the document, if not specified defaults to the current one
     document?: string;
     // the page path
