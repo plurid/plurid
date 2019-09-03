@@ -12,11 +12,22 @@ import {
 
 const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
     const {
+        page,
         children,
     } = properties;
 
+
+    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault();
+        console.log(page);
+
+        // add the page as branch to the current root
+    }
+
     return (
-        <StyledPluridLink>
+        <StyledPluridLink
+            onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
+        >
             {children}
         </StyledPluridLink>
     );

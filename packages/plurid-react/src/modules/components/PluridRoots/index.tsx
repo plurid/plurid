@@ -15,10 +15,12 @@ import Context from '../../../App/View/context';
 //     PluridPage,
 // } from '../../data/interfaces';
 
-import PluridPlane from '../PluridPlane';
+import PluridRoot from '../PluridRoot';
+// import PluridPlane from '../PluridPlane';
 
 import { AppState } from '../../services/state/store';
 import { ViewSize } from '../../services/state/types/data';
+import { TreePage } from '../../services/state/types/space';
 import selectors from '../../services/state/selectors';
 import actions from '../../services/state/actions';
 
@@ -34,6 +36,7 @@ interface PluridRootsStateProperties {
     spaceRotationY: number;
     spaceTranslationX: number;
     spaceTranslationY: number;
+    tree: TreePage[];
 }
 
 interface PluridRootsDispatchProperties {
@@ -52,6 +55,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         spaceRotationY,
         spaceTranslationX,
         spaceTranslationY,
+        tree,
     } = properties;
 
     const {
@@ -73,7 +77,16 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 // transformOrigin: `${viewSize.width/2}px ${spaceTranslationY}px ${spaceTranslationX}px`,
             }}
         >
-            {pages.map((page: any) => {
+            {tree.map(page => {
+                return (
+                    <PluridRoot
+                        key={page.path}
+                        path={page.path}
+                    />
+                );
+            })}
+
+            {/* {pages.map((page: any) => {
                 const Page = page.component.element;
                 return (
                     <PluridPlane
@@ -83,7 +96,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                         <Page />
                     </PluridPlane>
                 );
-            })}
+            })} */}
         </StyledPluridRoots>
     );
 }
@@ -96,6 +109,7 @@ const mapStateToProps = (state: AppState): PluridRootsStateProperties => ({
     spaceRotationY: selectors.space.getRotationY(state),
     spaceTranslationX: selectors.space.getTranslationX(state),
     spaceTranslationY: selectors.space.getTranslationY(state),
+    tree: selectors.space.getTree(state),
 });
 
 

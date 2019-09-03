@@ -77,15 +77,15 @@ const App = () => {
 
 
     const appPages = [
-        {
-            path: '/',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            root: true,
-            location: 'root',
-        },
+        // {
+        //     path: '/',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        //     location: 'root',
+        // },
         {
             path: '/page-2',
             component: {
@@ -101,7 +101,13 @@ const App = () => {
                 element: Page2,
                 properties: {},
             },
-            // location: 'left',
+        },
+        {
+            path: '/page-1',
+            component: {
+                element: Page1,
+                properties: {},
+            },
         },
     ];
 

@@ -21,6 +21,10 @@ import {
     ScaleUpAction,
     SCALE_DOWN,
     ScaleDownAction,
+
+    SET_TREE,
+    SetTreeAction,
+    TreePage,
 } from './types'
 
 
@@ -84,5 +88,13 @@ export const scaleUp = (): ScaleUpAction => {
 export const scaleDown = (): ScaleDownAction => {
     return {
         type: SCALE_DOWN,
+    };
+}
+
+
+export const setTree = (payload: TreePage[]): SetTreeAction => {
+    return {
+        type: SET_TREE,
+        payload,
     };
 }
