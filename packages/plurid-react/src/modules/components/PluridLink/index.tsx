@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+    useRef,
+} from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -11,9 +13,13 @@ import {
     PluridLinkOwnProperties,
 } from '../../data/interfaces';
 
+import {
+    getPluridPlaneByData,
+} from '../../services/logic/plane';
+
 import { AppState } from '../../services/state/store';
-import selectors from '../../services/state/selectors';
-import actions from '../../services/state/actions';
+// import selectors from '../../services/state/selectors';
+// import actions from '../../services/state/actions';
 
 
 
@@ -28,6 +34,8 @@ type PluridLinkProperties = PluridLinkOwnProperties
     & PluridLinkDispatchProperties;
 
 const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
+    const element: React.RefObject<HTMLAnchorElement> = useRef(null);
+
     const {
         page,
         children,
@@ -37,12 +45,16 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
         event.preventDefault();
         console.log(page);
 
+        const pluridPlane = getPluridPlaneByData(element.current!);
+        console.log('pluridPlane', pluridPlane);
+
         // add the page as branch to the current root
     }
 
     return (
         <StyledPluridLink
             onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
+            ref={element}
         >
             {children}
         </StyledPluridLink>
