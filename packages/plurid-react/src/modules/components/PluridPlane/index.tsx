@@ -8,6 +8,7 @@ import {
 } from './styled';
 
 import PlaneControls from './components/PlaneControls';
+import PlaneContent from './components/PlaneContent';
 
 import {
     PluridPage,
@@ -16,7 +17,7 @@ import {
 import { AppState } from '../../services/state/store';
 import { ViewSize } from '../../services/state/types/data';
 import selectors from '../../services/state/selectors';
-import actions from '../../services/state/actions';
+// import actions from '../../services/state/actions';
 
 
 
@@ -42,21 +43,17 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
     const {
         page,
         children,
-        viewSize,
-        spaceScale,
     } = properties;
 
     return (
-        <StyledPluridPlane
-            viewSize={viewSize}
-            spaceScale={spaceScale}
-        >
+        <StyledPluridPlane>
             <PlaneControls
                 page={page}
             />
-            <br />
-            {children}
-            <br />
+
+            <PlaneContent>
+                {children}
+            </PlaneContent>
         </StyledPluridPlane>
     );
 }
