@@ -11,6 +11,8 @@ import {
 
 import actions from '../../state/actions';
 
+import { getWheelDirection } from '@plurid/plurid-engine';
+
 
 
 export const handleGlobalShortcuts = (
@@ -37,10 +39,10 @@ const handleGlobalShortcut = (dispatch: ThunkDispatch<{}, {}, AnyAction>, shortc
 
 export const handleGlobalWheel = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-    event: MouseEvent,
+    event: WheelEvent,
 ) => {
-    console.log(document.activeElement);
-    console.log(event);
+    // console.log(document.activeElement);
+    // console.log(event);
 
     if (event.shiftKey
         || event.metaKey
@@ -48,5 +50,22 @@ export const handleGlobalWheel = (
         || event.ctrlKey
     ) {
         event.preventDefault();
+    }
+
+    if (event.metaKey || event.ctrlKey) {
+        const deltas = {
+            deltaX: event.deltaX,
+            deltaY: event.deltaY,
+        }
+        const direction = getWheelDirection(deltas);
+        console.log(direction);
+
+        if (direction === 'down') {
+            dispatch(actions.space.scaleUp());
+        }
+
+        if (direction === 'up') {
+            dispatch(actions.space.scaleDown());
+        }
     }
 }

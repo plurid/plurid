@@ -80,7 +80,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     }, [dispatch]);
     useGlobalKeyDown((shortcutsCallback));
 
-    const wheelCallback = useCallback((event: MouseEvent) => {
+    const wheelCallback = useCallback((event: WheelEvent) => {
         handleGlobalWheel(dispatch, event);
     }, [dispatch]);
     useGlobalWheel(wheelCallback);
