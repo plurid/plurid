@@ -22,7 +22,8 @@ import selectors from '../../services/state/selectors';
 
 
 interface PluridPlaneOwnProperties {
-    page: PluridPage,
+    planeId: string;
+    page: PluridPage;
     [key: string]: any;
 }
 
@@ -41,13 +42,14 @@ type PluridPlaneProperties = PluridPlaneOwnProperties
 
 const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
     const {
+        planeId,
         page,
         children,
     } = properties;
 
     return (
         <StyledPluridPlane
-            data-plurid-plane={page.path}
+            data-plurid-plane={planeId}
         >
             <PlaneControls
                 page={page}

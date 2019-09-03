@@ -54,6 +54,7 @@ export interface ScaleDownAction {
 export const SET_TREE = 'SET_TREE';
 
 export interface TreePage {
+    planeId: string;
     path: string;
     children?: TreePage[];
 }

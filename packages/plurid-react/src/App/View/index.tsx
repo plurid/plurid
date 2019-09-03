@@ -21,6 +21,7 @@ import {
 import Context from './context';
 
 import { debounce } from '../../modules/services/utilities/debounce';
+import uuid from '../../modules/services/utilities/uuid';
 
 import {
     useGlobalKeyDown,
@@ -112,7 +113,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         // console.log(pages);
 
         const _pages = pages && pages.map(page => {
-            const _page = { ...page };
+            const id = uuid();
+            const _page = { ...page, id };
             delete _page.component;
             return _page;
         }) || [];
@@ -131,8 +133,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         setDocuments(_documents);
 
         // compute space tree based on pages
-        if (pages) {
-            computeSpaceTree(dispatch, pages);
+        if (_pages) {
+            computeSpaceTree(dispatch, _pages);
         }
     }, [configuration, dispatch]);
 

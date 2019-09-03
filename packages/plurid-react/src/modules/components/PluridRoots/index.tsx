@@ -1,6 +1,4 @@
-import React, {
-    useContext,
-} from 'react';
+import React from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -9,20 +7,13 @@ import {
     StyledPluridRoots,
 } from './styled';
 
-import Context from '../../../App/View/context';
-
-// import {
-//     PluridPage,
-// } from '../../data/interfaces';
-
 import PluridRoot from '../PluridRoot';
-// import PluridPlane from '../PluridPlane';
 
 import { AppState } from '../../services/state/store';
 import { ViewSize } from '../../services/state/types/data';
 import { TreePage } from '../../services/state/types/space';
 import selectors from '../../services/state/selectors';
-import actions from '../../services/state/actions';
+// import actions from '../../services/state/actions';
 
 
 
@@ -45,9 +36,6 @@ interface PluridRootsDispatchProperties {
 type PluridRootsProperties = PluridRootsStateProperties & PluridRootsDispatchProperties & PluridRootsOwnProperties;
 
 const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
-    const context: any = useContext(Context);
-    // console.log(context);
-
     const {
         viewSize,
         spaceScale,
@@ -57,10 +45,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         spaceTranslationY,
         tree,
     } = properties;
-
-    const {
-        pages,
-    } = context;
 
     return (
         <StyledPluridRoots
@@ -81,22 +65,10 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 return (
                     <PluridRoot
                         key={page.path}
-                        path={page.path}
+                        page={page}
                     />
                 );
             })}
-
-            {/* {pages.map((page: any) => {
-                const Page = page.component.element;
-                return (
-                    <PluridPlane
-                        key={page.path}
-                        page={page}
-                    >
-                        <Page />
-                    </PluridPlane>
-                );
-            })} */}
         </StyledPluridRoots>
     );
 }
