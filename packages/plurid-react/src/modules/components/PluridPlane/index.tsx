@@ -1,4 +1,7 @@
 import React from 'react';
+import { AnyAction } from 'redux';
+import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import {
     StyledPluridPlane,
@@ -10,21 +13,41 @@ import {
     PluridPage,
 } from '../../data/interfaces';
 
+import { AppState } from '../../services/state/store';
+import { ViewSize } from '../../services/state/types/data';
+import selectors from '../../services/state/selectors';
+import actions from '../../services/state/actions';
 
 
-interface PluridPlaneProperties {
+
+interface PluridPlaneOwnProperties {
     page: PluridPage,
     [key: string]: any;
 }
+
+interface PluridPlaneStateProperties {
+    viewSize: ViewSize;
+}
+
+interface PluridPlaneDispatchProperties {
+
+}
+
+type PluridPlaneProperties = PluridPlaneOwnProperties
+    & PluridPlaneStateProperties
+    & PluridPlaneDispatchProperties;
 
 const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
     const {
         page,
         children,
+        viewSize,
     } = properties;
 
     return (
-        <StyledPluridPlane>
+        <StyledPluridPlane
+            viewSize={viewSize}
+        >
             <PlaneControls
                 page={page}
             />
@@ -36,4 +59,13 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
 }
 
 
-export default PluridPlane;
+const mapStateToProps = (state: AppState): PluridPlaneStateProperties => ({
+    viewSize: selectors.data.getViewSize(state),
+});
+
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridPlaneDispatchProperties => ({
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(PluridPlane);

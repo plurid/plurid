@@ -19,8 +19,8 @@ export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: KeyboardEvent,
 ) => {
-    console.log(event);
-    console.log(event.key);
+    // console.log(event);
+    // console.log(event.key);
     // const useShortcuts = shortcuts || defaultShortcuts;
     // useShortcuts.forEach((shortcut: any) => {
     //     if (event.key === shortcut.key && mount) {
@@ -57,7 +57,7 @@ export const handleGlobalWheel = (
         deltaY: event.deltaY,
     }
     const direction = getWheelDirection(deltas);
-    console.log(direction);
+    // console.log(direction);
 
     if (event.shiftKey) {
         if (direction === 'left') {
@@ -66,6 +66,24 @@ export const handleGlobalWheel = (
 
         if (direction === 'right') {
             dispatch(actions.space.rotateRight());
+        }
+    }
+
+    if (event.altKey) {
+        if (direction === 'up') {
+            dispatch(actions.space.translateDown());
+        }
+
+        if (direction === 'down') {
+            dispatch(actions.space.translateUp());
+        }
+
+        if (direction === 'left') {
+            dispatch(actions.space.translateRight());
+        }
+
+        if (direction === 'right') {
+            dispatch(actions.space.translateLeft());
         }
     }
 

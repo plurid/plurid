@@ -105,14 +105,14 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         // to store the pages and documents in context
         // and to keep in redux only the paths and the rest of the metadata
-        console.log(pages);
+        // console.log(pages);
 
         const _pages = pages && pages.map(page => {
             const _page = { ...page };
             delete _page.component;
             return _page;
         }) || [];
-        console.log(_pages);
+        // console.log(_pages);
         setPages(_pages);
 
         const _documents = documents && documents.map(document => {
