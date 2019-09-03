@@ -30,7 +30,10 @@ export interface PluridRootsOwnProperties {
 interface PluridRootsStateProperties {
     viewSize: ViewSize;
     spaceScale: number;
+    spaceRotationX: number;
     spaceRotationY: number;
+    spaceTranslationX: number;
+    spaceTranslationY: number;
 }
 
 interface PluridRootsDispatchProperties {
@@ -45,10 +48,11 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     const {
         viewSize,
         spaceScale,
+        spaceRotationX,
         spaceRotationY,
+        spaceTranslationX,
+        spaceTranslationY,
     } = properties;
-
-    console.log(spaceScale);
 
     const {
         pages,
@@ -59,7 +63,13 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
             style={{
                 width: viewSize.width + 'px',
                 height: viewSize.height + 'px',
-                transform: `rotateY(${spaceRotationY}deg) scale(${spaceScale})`,
+                transform: `
+                    translateX(${spaceTranslationX}px)
+                    translateY(${spaceTranslationY}px)
+                    rotateX(${spaceRotationX}deg)
+                    rotateY(${spaceRotationY}deg)
+                    scale(${spaceScale})
+                `,
             }}
         >
             {pages.map((page: any) => {
@@ -81,7 +91,10 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
 const mapStateToProps = (state: AppState): PluridRootsStateProperties => ({
     viewSize: selectors.data.getViewSize(state),
     spaceScale: selectors.space.getScale(state),
+    spaceRotationX: selectors.space.getRotationX(state),
     spaceRotationY: selectors.space.getRotationY(state),
+    spaceTranslationX: selectors.space.getTranslationX(state),
+    spaceTranslationY: selectors.space.getTranslationY(state),
 });
 
 
