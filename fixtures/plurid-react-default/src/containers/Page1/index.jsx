@@ -8,6 +8,8 @@ const Page1 = () => {
     return (
         <div>
             page 1
+
+            <input />
         </div>
     );
 }
