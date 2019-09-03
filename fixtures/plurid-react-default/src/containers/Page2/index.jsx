@@ -1,17 +1,13 @@
 import React from 'react';
 
 import { PluridLink } from '@plurid/plurid-react';
-// import components
 
 
 
 const Page2 = () => {
     return (
-        <div>
-            page 2
-
-            <PluridLink page="/page-1">link to page 1</PluridLink>
-
+        <div style={{height: 400}}>
+            page 2 <PluridLink page="/page-1">link to page 1</PluridLink>
         </div>
     );
 }
