@@ -1,4 +1,12 @@
 import {
+    rotateUp,
+    rotateDown,
+    rotateLeft,
+    rotateRight,
+    translateUp,
+    translateDown,
+    translateLeft,
+    translateRight,
     scaleUp,
     scaleDown,
 } from '../modules/space/actions';
@@ -6,6 +14,14 @@ import {
 
 
 export default {
+    rotateUp,
+    rotateDown,
+    rotateLeft,
+    rotateRight,
+    translateUp,
+    translateDown,
+    translateLeft,
+    translateRight,
     scaleUp,
     scaleDown,
 };
