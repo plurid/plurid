@@ -1,7 +1,7 @@
 import React, {
     // useState,
     useEffect,
-    // useCallback,
+    useCallback,
 } from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
@@ -22,12 +22,23 @@ import Context from './context';
 
 import { debounce } from '../../modules/services/utilities/debounce';
 
+import {
+    useGlobalKeyDown,
+    useGlobalWheel,
+} from '../../modules/services/hooks';
+
+import {
+    handleGlobalShortcuts,
+    handleGlobalWheel,
+} from '../../modules/services/logic/shortcuts';
+
 import { AppState } from '../../modules/services/state/store';
 // import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
 import { ViewSize } from '../../modules/services/state/types/data';
 
 // import themes from '@plurid/apps.utilities.themes';
+
 
 
 
@@ -39,6 +50,7 @@ interface ViewStateProperties {
 }
 
 interface ViewDispatchProperties {
+    dispatch: ThunkDispatch<{}, {}, AnyAction>;
     setConfiguration: typeof actions.configuration.setConfiguration;
     setPages: typeof actions.data.setPages;
     setDocuments: typeof actions.data.setDocuments;
@@ -54,6 +66,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         setPages,
         setDocuments,
         setViewSize,
+        dispatch,
     } = properties;
 
     const {
@@ -62,6 +75,15 @@ const View: React.FC<ViewProperties> = (properties) => {
         documents,
     } = appProperties;
 
+    const shortcutsCallback = useCallback((event: KeyboardEvent) => {
+        handleGlobalShortcuts(dispatch, event);
+    }, [dispatch]);
+    useGlobalKeyDown((shortcutsCallback));
+
+    const wheelCallback = useCallback((event: MouseEvent) => {
+        handleGlobalWheel(dispatch, event);
+    }, [dispatch]);
+    useGlobalWheel(wheelCallback);
 
     useEffect(() => {
         const handleResize = debounce(() => {
@@ -129,6 +151,7 @@ const mapStateToProps = (state: AppState): ViewStateProperties => ({
 
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDispatchProperties => ({
+    dispatch,
     setConfiguration: (configuration: any) => dispatch(actions.configuration.setConfiguration(configuration)),
     setPages: (pages: any) => dispatch(actions.data.setPages(pages)),
     setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
