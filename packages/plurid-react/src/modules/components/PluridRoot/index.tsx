@@ -13,39 +13,35 @@ import PluridPlane from '../PluridPlane';
 
 
 interface PluridRootProperties {
-    path: string;
+    page: any;
 }
 
 const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const context: any = useContext(Context);
 
     const {
-        path,
+        page,
     } = properties;
 
     const {
         pages,
     } = context;
 
-    const page = pages.find((_page: any) => _page.path === path);
+    const _page = pages.find((_page: any) => _page.path === page.path);
     // console.log(page);
 
-    if (page) {
-        const Page = page.component.element;
+    if (_page) {
+        const Page = _page.component.element;
         return (
             <StyledPluridRoot>
                 <PluridPlane
-                    page={page}
+                    page={_page}
+                    planeId={page.planeId}
                 >
                     <Page />
                 </PluridPlane>
             </StyledPluridRoot>
         );
-        // return (
-        //     <div>
-        //         {page.path}
-        //     </div>
-        // );
     }
 
     return (

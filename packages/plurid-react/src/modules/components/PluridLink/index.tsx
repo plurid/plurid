@@ -1,5 +1,6 @@
 import React, {
     useRef,
+    useCallback,
 } from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
@@ -41,15 +42,15 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
         children,
     } = properties;
 
-    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const handleClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
         console.log(page);
 
-        const pluridPlane = getPluridPlaneByData(element.current!);
-        console.log('pluridPlane', pluridPlane);
+        const pluridPlane = getPluridPlaneByData(element.current);
+        console.log('pluridPlane:', pluridPlane);
 
         // add the page as branch to the current root
-    }
+    }, [element.current]);
 
     return (
         <StyledPluridLink

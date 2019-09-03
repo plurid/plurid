@@ -1,4 +1,5 @@
 export interface PluridPage {
+    id: string;
     path: string;
     component: PluridComponent;
     location: string;

@@ -4,6 +4,8 @@ import {
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import uuid from '../../utilities/uuid';
+
 import { TreePage } from '../../state/types/space';
 
 import actions from '../../state/actions';
@@ -12,7 +14,7 @@ import actions from '../../state/actions';
 
 export const computeSpaceTree = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-    pages: PluridPage[]
+    pages: PluridPage[],
 ) => {
     const tree: TreePage[] = [];
 
@@ -20,6 +22,7 @@ export const computeSpaceTree = (
         if (page.root) {
             const treePage = {
                 path: page.path,
+                planeId: uuid(),
             };
             tree.push(treePage);
         }
