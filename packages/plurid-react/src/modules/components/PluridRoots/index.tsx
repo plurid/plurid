@@ -64,11 +64,11 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 width: viewSize.width + 'px',
                 height: viewSize.height + 'px',
                 transform: `
+                    scale(${spaceScale})
                     translateX(${spaceTranslationX}px)
                     translateY(${spaceTranslationY}px)
                     rotateX(${spaceRotationX}deg)
                     rotateY(${spaceRotationY}deg)
-                    scale(${spaceScale})
                 `,
             }}
         >

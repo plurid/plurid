@@ -27,6 +27,7 @@ interface PluridPlaneOwnProperties {
 
 interface PluridPlaneStateProperties {
     viewSize: ViewSize;
+    spaceScale: number;
 }
 
 interface PluridPlaneDispatchProperties {
@@ -42,11 +43,13 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
         page,
         children,
         viewSize,
+        spaceScale,
     } = properties;
 
     return (
         <StyledPluridPlane
             viewSize={viewSize}
+            spaceScale={spaceScale}
         >
             <PlaneControls
                 page={page}
@@ -61,6 +64,7 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
 
 const mapStateToProps = (state: AppState): PluridPlaneStateProperties => ({
     viewSize: selectors.data.getViewSize(state),
+    spaceScale: selectors.space.getScale(state),
 });
 
 
