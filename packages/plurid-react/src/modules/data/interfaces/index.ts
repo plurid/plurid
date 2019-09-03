@@ -2,6 +2,7 @@ export interface PluridPage {
     path: string;
     component: PluridComponent;
     location: string;
+    root: boolean;
 }
 
 export interface PluridDocument {

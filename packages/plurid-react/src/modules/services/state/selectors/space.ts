@@ -1,18 +1,24 @@
 import { AppState } from '../store';
 
+import { TreePage } from '../types/space';
 
 
-const getScale = (state: AppState): number => state.space.scale;
+
 const getRotationX = (state: AppState): number => state.space.rotationX;
 const getRotationY = (state: AppState): number => state.space.rotationY;
 const getTranslationX = (state: AppState): number => state.space.translationX;
 const getTranslationY = (state: AppState): number => state.space.translationY;
+const getTranslationZ = (state: AppState): number => state.space.translationZ;
+const getScale = (state: AppState): number => state.space.scale;
+const getTree = (state: AppState): TreePage[] => state.space.tree;
 
 
 export default {
-    getScale,
     getRotationX,
     getRotationY,
     getTranslationX,
     getTranslationY,
+    getTranslationZ,
+    getScale,
+    getTree,
 };

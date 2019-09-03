@@ -11,12 +11,17 @@ import {
     ROTATE_DOWN,
     ROTATE_LEFT,
     ROTATE_RIGHT,
+
     TRANSLATE_UP,
     TRANSLATE_DOWN,
     TRANSLATE_LEFT,
     TRANSLATE_RIGHT,
+
     SCALE_DOWN,
     SCALE_UP,
+
+    SET_TREE,
+
     SpaceState,
     SpaceActionsType,
 } from './types';
@@ -30,6 +35,7 @@ const initialState: SpaceState = {
     translationX: 0,
     translationY: 0,
     translationZ: 0,
+    tree: [],
 }
 
 const spaceReducer = (
@@ -92,6 +98,10 @@ const spaceReducer = (
                     ? computedScale
                     : SCALE_LOWER_LIMIT;
                 return { ...state, scale };
+            }
+        case SET_TREE:
+            {
+                return { ...state, tree: action.payload };
             }
         default:
             return state;

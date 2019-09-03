@@ -32,6 +32,10 @@ import {
     handleGlobalWheel,
 } from '../../modules/services/logic/shortcuts';
 
+import {
+    computeSpaceTree,
+} from '../../modules/services/logic/space';
+
 import { AppState } from '../../modules/services/state/store';
 // import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
@@ -125,7 +129,12 @@ const View: React.FC<ViewProperties> = (properties) => {
         }) || [];
         // console.log(_documents);
         setDocuments(_documents);
-    }, [configuration]);
+
+        // compute space tree based on pages
+        if (pages) {
+            computeSpaceTree(dispatch, pages);
+        }
+    }, [configuration, dispatch]);
 
     const viewContainer = handleView(pages, documents);
 

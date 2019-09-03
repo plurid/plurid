@@ -51,6 +51,19 @@ export interface ScaleDownAction {
 }
 
 
+export const SET_TREE = 'SET_TREE';
+
+export interface TreePage {
+    path: string;
+    children?: TreePage[];
+}
+
+export interface SetTreeAction {
+    type: typeof SET_TREE;
+    payload: TreePage[];
+}
+
+
 export interface SpaceState {
     scale: number;
     rotationX: number;
@@ -58,6 +71,7 @@ export interface SpaceState {
     translationX: number;
     translationY: number;
     translationZ: number;
+    tree: TreePage[];
 }
 
 
@@ -70,4 +84,5 @@ export type SpaceActionsType = RotateUpAction
     | TranslateLeftAction
     | TranslateRightAction
     | ScaleUpAction
-    | ScaleDownAction;
+    | ScaleDownAction
+    | SetTreeAction;
