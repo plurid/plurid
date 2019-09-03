@@ -52,14 +52,24 @@ export const handleGlobalWheel = (
         event.preventDefault();
     }
 
-    if (event.metaKey || event.ctrlKey) {
-        const deltas = {
-            deltaX: event.deltaX,
-            deltaY: event.deltaY,
-        }
-        const direction = getWheelDirection(deltas);
-        console.log(direction);
+    const deltas = {
+        deltaX: event.deltaX,
+        deltaY: event.deltaY,
+    }
+    const direction = getWheelDirection(deltas);
+    console.log(direction);
 
+    if (event.shiftKey) {
+        if (direction === 'left') {
+            dispatch(actions.space.rotateLeft());
+        }
+
+        if (direction === 'right') {
+            dispatch(actions.space.rotateRight());
+        }
+    }
+
+    if (event.metaKey || event.ctrlKey) {
         if (direction === 'down') {
             dispatch(actions.space.scaleUp());
         }
