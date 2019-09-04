@@ -1,12 +1,13 @@
 import {
     getTreePageByPlaneID,
+    updateTreePage,
 } from './';
 
+import {
+    TreePage,
+} from '../../../data/interfaces';
 
-// to parse this kind of tree and determine that there are
-// two roots which need to be placed one near another
-// the first root has a child which has a child
-// to determine the locations of the children
+
 
 const location = {
     translateX: 0,
@@ -124,5 +125,107 @@ describe('getTreePageByPlaneID', () => {
         if (page) {
             expect(page.path).toBe(path);
         }
+    });
+});
+
+
+
+describe('updateTreePage', () => {
+    it('updates the tree page on the first child', () => {
+        const tree: TreePage[] = [
+            {
+                planeID: 'aaa',
+                path: '/aaa',
+                location,
+                children: [],
+            },
+            {
+                planeID: 'ccc',
+                path: '/ccc',
+                location,
+                children: [],
+            },
+        ];
+        const updatedPage: TreePage = {
+            planeID: 'aaa',
+            path: '/aaa',
+            location,
+            children: [
+                {
+                    planeID: 'bbb',
+                    path: '/aaa/bbb',
+                    location,
+                    children: [],
+                }
+            ],
+        }
+        const updatedTree: TreePage[] = [
+            updatedPage,
+            {
+                planeID: 'ccc',
+                path: '/ccc',
+                location,
+                children: [],
+            },
+        ];
+
+        const result = updateTreePage(tree, updatedPage);
+        expect(result).toMatchObject(updatedTree);
+    });
+
+    it('updates the tree page on the second child', () => {
+        const tree: TreePage[] = [
+            {
+                planeID: 'aaa',
+                path: '/aaa',
+                location,
+                children: [
+                    {
+                        planeID: 'bbb',
+                        path: '/aaa/bbb',
+                        location,
+                        children: [],
+                    }
+                ],
+            },
+            {
+                planeID: 'ddd',
+                path: '/ddd',
+                location,
+                children: [],
+            },
+        ];
+        const updatedPage: TreePage = {
+            planeID: 'bbb',
+            path: '/aaa/bbb',
+            location,
+            children: [
+                {
+                    planeID: 'ccc',
+                    path: '/aaa/bbb/ccc',
+                    location,
+                    children: [],
+                }
+            ],
+        }
+        const updatedTree: TreePage[] = [
+            {
+                planeID: 'aaa',
+                path: '/aaa',
+                location,
+                children: [
+                    updatedPage,
+                ],
+            },
+            {
+                planeID: 'ddd',
+                path: '/ddd',
+                location,
+                children: [],
+            },
+        ];
+
+        const result = updateTreePage(tree, updatedPage);
+        expect(result).toMatchObject(updatedTree);
     });
 });
