@@ -110,19 +110,53 @@ export const updateTreePage = (
 }
 
 
+interface LocationCoordinates {
+    x: number;
+    y: number;
+    z: number;
+}
+
 export const computePluridPlaneLocation = (
+    tree: TreePage[],
     linkCoordinates: any,
-) => {
+    parent: any,
+): LocationCoordinates => {
+    // let path = ['a', 'b'];
+    let x = 0;
+    let y = 0;
+    let z = 0;
+
+    const bridgeLength = 100;
+
+    let prevLinkX = linkCoordinates.x;
+    let rotXbranch = 90;
+    let prevTransX = parent.location.translateX;
+    let prevTransY = parent.location.translateY;
+    let prevTransZ = parent.location.translateZ;
+    let penultimateRootAngleYRad = parent.location.rotateY * Math.PI / 180;
+
+    // if (path.length === 2) {
+        // x = prevLinkX + (linkCoordinates.x + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180);
+        // z = -1 * (linkCoordinates.x + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+    // }
+
+    // if (path.length > 2) {
+        // x = prevTransX + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+        // z = prevTransZ - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    // }
+
+    x = linkCoordinates.x
+    z = -1 * bridgeLength;
+
+    y = prevTransY + linkCoordinates.y;
+
+    console.log('x y z', x, y, z);
 
     return {
-        // x: 0,
-        // y: 0,
-        // z: 0,
-        // translateX(-208px) translateY(34px) translateZ(-363px) rotateX(0deg) rotateY(90.1deg)
-        x: -208,
-        y: 34,
-        z: -363,
-    }
+        x,
+        y,
+        z,
+    };
 }
 
 
@@ -138,10 +172,15 @@ export const updateTreeWithNewPage = (
     linkCoordinates: any,
 ): UpdatedTreeWithNewPage => {
     const treePage = getTreePageByPlaneID(tree, treePagePlaneID);
+
+    console.log(tree);
+    console.log(linkCoordinates);
     console.log('tree page parent', treePage);
 
     const location = computePluridPlaneLocation(
+        tree,
         linkCoordinates,
+        treePage,
     );
 
     if (treePage) {
