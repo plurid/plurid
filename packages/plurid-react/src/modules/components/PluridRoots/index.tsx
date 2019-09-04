@@ -49,8 +49,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         tree,
     } = properties;
 
-    console.log('tree', tree);
-
     return (
         <StyledPluridRoots
             style={{
