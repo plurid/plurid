@@ -68,16 +68,12 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
 
 
     const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
-        // get the x and y of the plurid link with respect to the plurid plane
-        console.log(element.current!.getBoundingClientRect());
-
         const x = element.current!.offsetLeft + element.current!.offsetWidth;
         const y = element.current!.offsetTop;
-        console.log('link coords:', x, y);
 
         return {
-            x: 0,
-            y: 0,
+            x,
+            y,
         };
     }
 
@@ -86,7 +82,6 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
             const parentPlaneID = getPluridPlaneIDByData(element.current);
 
             const linkCoordinates = getPluridLinkCoordinates();
-            console.log(linkCoordinates);
 
             const {
                 pluridPlaneID,

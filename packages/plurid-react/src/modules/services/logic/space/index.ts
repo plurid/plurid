@@ -110,6 +110,22 @@ export const updateTreePage = (
 }
 
 
+export const computePluridPlaneLocation = (
+    linkCoordinates: any,
+) => {
+
+    return {
+        // x: 0,
+        // y: 0,
+        // z: 0,
+        // translateX(-208px) translateY(34px) translateZ(-363px) rotateX(0deg) rotateY(90.1deg)
+        x: -208,
+        y: 34,
+        z: -363,
+    }
+}
+
+
 interface UpdatedTreeWithNewPage {
     pluridPlaneID: string;
     updatedTree: TreePage[];
@@ -124,16 +140,19 @@ export const updateTreeWithNewPage = (
     const treePage = getTreePageByPlaneID(tree, treePagePlaneID);
     console.log('tree page parent', treePage);
 
+    const location = computePluridPlaneLocation(
+        linkCoordinates,
+    );
+
     if (treePage) {
         const planeID = uuid();
         const newTreePage = {
             path: pagePath,
             planeID,
             location: {
-                // translateX(-208px) translateY(34px) translateZ(-363px) rotateX(0deg) rotateY(90.1deg)
-                translateX: -208,
-                translateY: 34,
-                translateZ: -363,
+                translateX: location.x,
+                translateY: location.y,
+                translateZ: location.z,
                 rotateX: 0,
                 rotateY: treePage.location.rotateY + PLANE_DEFAULT_ANGLE,
             },
