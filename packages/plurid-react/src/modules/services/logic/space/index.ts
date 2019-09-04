@@ -73,5 +73,11 @@ export const recomputeSpaceTreeLocations = (
 export const getTreePageByPlaneID = (
     tree: TreePage[], planeID: string
 ): TreePage | null => {
+    for (let page of tree) {
+        if (page.planeId === planeID) {
+            return page;
+        }
+    }
+
     return null;
 }

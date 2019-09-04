@@ -51,6 +51,9 @@ describe('getTreePageByPlaneID', () => {
         const planeID = 'aaa';
         const page = getTreePageByPlaneID(tree, planeID);
         const path = '/aaa';
-        expect(page.path).toBe(path);
+
+        if (page) {
+            expect(page.path).toBe(path);
+        }
     });
 });
