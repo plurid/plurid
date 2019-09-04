@@ -91,3 +91,67 @@ export const getTreePageByPlaneID = (
 
     return _page;
 }
+
+
+export const updateTreePage = (
+    tree: TreePage[],
+    updatedPage: TreePage,
+) => {
+    const updatedTree = tree.map(page => {
+        if (page.planeID === updatedPage.planeID) {
+            return updatedPage;
+        }
+
+        if (page.children) {
+            const pageTree = updateTreePage(page.children, updatedPage);
+            page.children = pageTree;
+            return page;
+        }
+
+        return page;
+    });
+
+    return updatedTree;
+}
+
+
+export const updateTreeWithNewBranchToTreePage = (
+    tree: TreePage[],
+    treePagePlaneID: string,
+    pagePath: string,
+): TreePage[] => {
+    console.log('treePagePlaneID', treePagePlaneID);
+    console.log('pagePath', pagePath);
+
+    // when clicking on a PluridLink
+    // it calls this function
+    // which adds under the children of the tree page
+    // another child
+    // returns an updated tree
+
+    const newTreePage = {
+        path: pagePath,
+        planeID: uuid(),
+        location: {
+            translateX: 0,
+            translateY: 0,
+            translateZ: 0,
+            rotateX: 0,
+            rotateY: 0,
+        },
+    };
+
+    const treePage = getTreePageByPlaneID(tree, treePagePlaneID);
+
+    if (treePage) {
+        if (treePage.children) {
+            treePage.children.push(newTreePage);
+        } else {
+            treePage.children = [newTreePage];
+        }
+        const updatedTree = updateTreePage(tree, treePage);
+        return updatedTree;
+    }
+
+    return tree;
+}

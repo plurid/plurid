@@ -1,4 +1,4 @@
-export const getPluridPlaneByData = (element: HTMLElement | null): any => {
+export const getPluridPlaneIDByData = (element: HTMLElement | null): any => {
     if (!element) {
         return '';
     }
@@ -8,5 +8,5 @@ export const getPluridPlaneByData = (element: HTMLElement | null): any => {
         return parent.dataset.pluridPlane;
     }
 
-    return getPluridPlaneByData(parent);
+    return getPluridPlaneIDByData(parent);
 }
