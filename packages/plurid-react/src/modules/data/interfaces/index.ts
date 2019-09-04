@@ -71,7 +71,7 @@ export interface TreePageLocation {
 }
 
 export interface TreePage {
-    planeId: string;
+    planeID: string;
     path: string;
     location: TreePageLocation;
     children?: TreePage[];
