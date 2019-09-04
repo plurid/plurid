@@ -46,6 +46,11 @@ type PluridLinkProperties = PluridLinkOwnProperties
     & PluridLinkStateProperties
     & PluridLinkDispatchProperties;
 
+interface PluridLinkCoordinates {
+    x: number;
+    y: number;
+}
+
 const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
     const [showLink, setShowLink] = useState(false);
     const [pluridPlaneID, setPluridPlaneID] = useState('');
@@ -61,9 +66,24 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
         setTree,
     } = properties;
 
+
+    const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
+        // get the x and y of the plurid link with respect to the plurid plane
+        console.log(element.current!.getBoundingClientRect());
+
+        return {
+            x: 0,
+            y: 0,
+        };
+    }
+
     const handleShowPluridPlane = () => {
         if (!showLink) {
             const parentPlaneID = getPluridPlaneIDByData(element.current);
+
+            const linkCoordinates = getPluridLinkCoordinates();
+            console.log(linkCoordinates);
+
             const {
                 pluridPlaneID,
                 updatedTree,
@@ -71,6 +91,7 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
                 tree,
                 parentPlaneID,
                 page,
+                linkCoordinates,
             );
 
             if (pluridPlaneID) {
@@ -90,8 +111,6 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
         event.preventDefault();
 
         handleShowPluridPlane();
-
-        console.log(element.current!.getBoundingClientRect());
     }, [element.current, tree]);
 
     return (

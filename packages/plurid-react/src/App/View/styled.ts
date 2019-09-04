@@ -4,8 +4,6 @@ import styled, { createGlobalStyle } from 'styled-components';
 
 
 export const GlobalStyle = createGlobalStyle`
-    @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
-
     *,
     *:after,
     *:before {

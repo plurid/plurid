@@ -1,11 +1,12 @@
 import React, {
-    // useState,
     useEffect,
     useCallback,
 } from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
+
+import './index.css';
 
 import {
     StyledView,
