@@ -130,9 +130,10 @@ export const updateTreeWithNewPage = (
             path: pagePath,
             planeID,
             location: {
-                translateX: 0,
-                translateY: 0,
-                translateZ: 0,
+                // translateX(-208px) translateY(34px) translateZ(-363px) rotateX(0deg) rotateY(90.1deg)
+                translateX: -208,
+                translateY: 34,
+                translateZ: -363,
                 rotateX: 0,
                 rotateY: treePage.location.rotateY + PLANE_DEFAULT_ANGLE,
             },
