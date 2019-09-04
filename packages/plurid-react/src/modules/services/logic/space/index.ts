@@ -137,7 +137,7 @@ export const updateTreeWithNewBranchToTreePage = (
             translateY: 0,
             translateZ: 0,
             rotateX: 0,
-            rotateY: 0,
+            rotateY: 90,
         },
     };
 
