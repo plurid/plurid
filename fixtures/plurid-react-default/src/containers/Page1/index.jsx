@@ -1,6 +1,6 @@
 import React from 'react';
 
-// import components
+import { PluridLink } from '@plurid/plurid-react';
 
 
 
@@ -10,6 +10,10 @@ const Page1 = () => {
             page 1
 
             <input />
+
+            <div>
+                <PluridLink page="/page-2">link to page 2</PluridLink>
+            </div>
         </div>
     );
 }

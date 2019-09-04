@@ -51,6 +51,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                 </PluridPlane>
 
                 {page.children && page.children.map(child => {
+                    // TODO: render the children and the children of the children
+
                     const _page = pages.find((_page: any) => _page.path === child.path);
 
                     if (_page) {

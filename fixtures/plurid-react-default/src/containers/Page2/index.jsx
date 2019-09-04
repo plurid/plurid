@@ -8,6 +8,14 @@ const Page2 = () => {
     return (
         <div style={{height: 400}}>
             page 2 <PluridLink page="/page-1">link to page 1</PluridLink>
+
+            <div style={{ marginLeft: 200, marginTop: 100}}>
+                <PluridLink page="/page-1">link to page 1</PluridLink>
+            </div>
+
+            <div style={{ marginLeft: 450, marginTop: 150}}>
+                <PluridLink page="/page-1">link to page 1</PluridLink>
+            </div>
         </div>
     );
 }
