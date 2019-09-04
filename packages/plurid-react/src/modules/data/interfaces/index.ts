@@ -57,3 +57,22 @@ export interface PluridAppContext {
     pages: PluridPage[];
     documents: PluridDocument[];
 }
+
+
+
+
+
+export interface TreePageLocation {
+    translateX: number;
+    translateY: number;
+    translateZ: number;
+    rotateX: number;
+    rotateY: number;
+}
+
+export interface TreePage {
+    planeId: string;
+    path: string;
+    location: TreePageLocation;
+    children?: TreePage[];
+}

@@ -1,4 +1,8 @@
 import {
+    TreePage,
+} from '../../../../data/interfaces';
+
+import {
     ROTATE_UP,
     RotateUpAction,
     ROTATE_DOWN,
@@ -24,7 +28,6 @@ import {
 
     SET_TREE,
     SetTreeAction,
-    TreePage,
 } from './types'
 
 

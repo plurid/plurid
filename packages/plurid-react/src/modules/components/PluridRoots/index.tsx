@@ -9,9 +9,12 @@ import {
 
 import PluridRoot from '../PluridRoot';
 
+import {
+    TreePage,
+} from '../../data/interfaces';
+
 import { AppState } from '../../services/state/store';
 import { ViewSize } from '../../services/state/types/data';
-import { TreePage } from '../../services/state/types/space';
 import selectors from '../../services/state/selectors';
 // import actions from '../../services/state/actions';
 
