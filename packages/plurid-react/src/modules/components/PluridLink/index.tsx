@@ -1,4 +1,5 @@
 import React, {
+    useState,
     useRef,
     useCallback,
 } from 'react';
@@ -45,6 +46,8 @@ type PluridLinkProperties = PluridLinkOwnProperties
     & PluridLinkDispatchProperties;
 
 const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
+    const [showLink, setShowLink] = useState(false);
+
     const element: React.RefObject<HTMLAnchorElement> = useRef(null);
 
     const {
@@ -58,13 +61,16 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
 
     const handleClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
-        const parentPlaneID = getPluridPlaneIDByData(element.current);
-        const updatedTree = updateTreeWithNewBranchToTreePage(
-            tree,
-            parentPlaneID,
-            page,
-        );
-        setTree(updatedTree);
+        if (!showLink) {
+            const parentPlaneID = getPluridPlaneIDByData(element.current);
+            const updatedTree = updateTreeWithNewBranchToTreePage(
+                tree,
+                parentPlaneID,
+                page,
+            );
+            setTree(updatedTree);
+            setShowLink(true);
+        }
     }, [element.current, tree]);
 
     return (

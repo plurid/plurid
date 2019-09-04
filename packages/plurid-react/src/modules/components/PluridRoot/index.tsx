@@ -37,6 +37,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     } = page;
 
     const _page = pages.find((_page: any) => _page.path === page.path);
+
     // console.log(page);
 
     if (_page) {
@@ -56,9 +57,34 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                 <PluridPlane
                     page={_page}
                     planeID={page.planeID}
+                    location={location}
                 >
                     <Page />
                 </PluridPlane>
+
+                {page.children && page.children.map(child => {
+                    // console.log('child', child);
+                    const _page = pages.find((_page: any) => _page.path === child.path);
+                    // console.log('child _page', _page);
+
+                    if (_page) {
+                        const Page = _page.component.element;
+                        return (
+                            <PluridPlane
+                                key={child.planeID}
+                                page={_page}
+                                planeID={child.planeID}
+                                location={child.location}
+                            >
+                                <Page />
+                            </PluridPlane>
+                        );
+                    }
+
+                    return (
+                        <div></div>
+                    );
+                })}
             </StyledPluridRoot>
         );
     }
