@@ -10,14 +10,20 @@ import Context from '../../../App/View/context';
 
 import PluridPlane from '../PluridPlane';
 
+import { TreePage } from '../../services/state/types/space';
+
+import {
+    PluridAppContext,
+} from '../../data/interfaces';
+
 
 
 interface PluridRootProperties {
-    page: any;
+    page: TreePage;
 }
 
 const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
-    const context: any = useContext(Context);
+    const context: PluridAppContext = useContext(Context);
 
     const {
         page,

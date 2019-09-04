@@ -1,8 +1,17 @@
 import React from 'react';
 
+import {
+    PluridAppContext,
+} from '../../modules/data/interfaces';
 
 
-const Context = React.createContext({});
+
+const defaultContext: PluridAppContext = {
+    pages: [],
+    documents: [],
+}
+
+const Context = React.createContext(defaultContext);
 
 
 export default Context;

@@ -50,3 +50,10 @@ export interface PluridLinkOwnProperties {
     // the page path
     page: string;
 }
+
+
+
+export interface PluridAppContext {
+    pages: PluridPage[];
+    documents: PluridDocument[];
+}

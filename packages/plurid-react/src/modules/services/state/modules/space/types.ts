@@ -65,6 +65,36 @@ export interface SetTreeAction {
 }
 
 
+// to parse this kind of tree and determine that there are
+// two roots which need to be placed one near another
+// the first root has a child which has a child
+// to determine the locations of the children
+const tree = [
+    {
+        planeId: 'aaa',
+        path: '/aaaa',
+        children: [
+            {
+                planeId: 'bbbb',
+                path: '/aaaa/bbb',
+                children: [
+                    {
+                        planeId: 'cccc',
+                        path: '/aaaa/bbb/ccc',
+                        children: [],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        planeId: 'dddd',
+        path: '/dddd',
+        children: [],
+    },
+]
+
+
 export interface SpaceState {
     scale: number;
     rotationX: number;
