@@ -10,6 +10,7 @@ import {
 
 import {
     ROOTS_GAP,
+    PLANE_DEFAULT_ANGLE,
 } from '../../../data/constants/space';
 
 
@@ -34,18 +35,12 @@ export const computeSpaceTree = (
                     translateZ: 0,
                     rotateX: 0,
                     rotateY: 0,
-                    // translateX: Math.random() * 1000,
-                    // translateY: Math.random() * 200,
-                    // translateZ: Math.random() * 100,
-                    // rotateX: 0,
-                    // rotateY: Math.random() * 80,
                 },
             };
             tree.push(treePage);
         }
     });
 
-    console.log(tree);
     return tree;
 }
 
@@ -124,21 +119,24 @@ export const updateTreeWithNewPage = (
     tree: TreePage[],
     treePagePlaneID: string,
     pagePath: string,
+    linkCoordinates: any,
 ): UpdatedTreeWithNewPage => {
-    const planeID = uuid();
-    const newTreePage = {
-        path: pagePath,
-        planeID,
-        location: {
-            translateX: 0,
-            translateY: 0,
-            translateZ: 0,
-            rotateX: 0,
-            rotateY: 90.1,
-        },
-    };
     const treePage = getTreePageByPlaneID(tree, treePagePlaneID);
+    console.log('tree page parent', treePage);
+
     if (treePage) {
+        const planeID = uuid();
+        const newTreePage = {
+            path: pagePath,
+            planeID,
+            location: {
+                translateX: 0,
+                translateY: 0,
+                translateZ: 0,
+                rotateX: 0,
+                rotateY: treePage.location.rotateY + PLANE_DEFAULT_ANGLE,
+            },
+        };
         if (treePage.children) {
             treePage.children.push(newTreePage);
         } else {
