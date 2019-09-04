@@ -20,7 +20,8 @@ import {
 } from '../../services/logic/plane';
 
 import {
-    updateTreeWithNewBranchToTreePage,
+    updateTreeWithNewPage,
+    removePageFromTree,
 } from '../../services/logic/space';
 
 import {
@@ -47,6 +48,7 @@ type PluridLinkProperties = PluridLinkOwnProperties
 
 const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
     const [showLink, setShowLink] = useState(false);
+    const [pluridPlaneID, setPluridPlaneID] = useState('');
 
     const element: React.RefObject<HTMLAnchorElement> = useRef(null);
 
@@ -63,13 +65,30 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
         event.preventDefault();
         if (!showLink) {
             const parentPlaneID = getPluridPlaneIDByData(element.current);
-            const updatedTree = updateTreeWithNewBranchToTreePage(
+            const updatedTree = updateTreeWithNewPage(
                 tree,
                 parentPlaneID,
                 page,
             );
+
+            if (Array.isArray(updatedTree)) {
+                setTree(updatedTree);
+                setShowLink(true);
+            } else {
+                const {
+                    tree,
+                    pluridPlaneID,
+                } = updatedTree;
+
+                setTree(tree);
+                setShowLink(true);
+                setPluridPlaneID(pluridPlaneID);
+            }
+        } else {
+            const updatedTree = removePageFromTree(tree, pluridPlaneID);
             setTree(updatedTree);
-            setShowLink(true);
+            setShowLink(false);
+            setPluridPlaneID('');
         }
     }, [element.current, tree]);
 

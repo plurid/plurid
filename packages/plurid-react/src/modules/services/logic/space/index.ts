@@ -115,11 +115,16 @@ export const updateTreePage = (
 }
 
 
-export const updateTreeWithNewBranchToTreePage = (
+interface UpdatedTreeWithNewPage {
+    pluridPlaneID: string;
+    tree: TreePage[];
+}
+
+export const updateTreeWithNewPage = (
     tree: TreePage[],
     treePagePlaneID: string,
     pagePath: string,
-): TreePage[] => {
+): UpdatedTreeWithNewPage | TreePage[] => {
     console.log('treePagePlaneID', treePagePlaneID);
     console.log('pagePath', pagePath);
 
@@ -129,20 +134,21 @@ export const updateTreeWithNewBranchToTreePage = (
     // another child
     // returns an updated tree
 
+    const planeID = uuid();
+
     const newTreePage = {
         path: pagePath,
-        planeID: uuid(),
+        planeID,
         location: {
             translateX: 0,
             translateY: 0,
             translateZ: 0,
             rotateX: 0,
-            rotateY: 90,
+            rotateY: 90.1,
         },
     };
 
     const treePage = getTreePageByPlaneID(tree, treePagePlaneID);
-
     if (treePage) {
         if (treePage.children) {
             treePage.children.push(newTreePage);
@@ -150,8 +156,34 @@ export const updateTreeWithNewBranchToTreePage = (
             treePage.children = [newTreePage];
         }
         const updatedTree = updateTreePage(tree, treePage);
-        return updatedTree;
+        return {
+            pluridPlaneID: planeID,
+            tree: updatedTree,
+        }
     }
 
     return tree;
+}
+
+
+
+export const removePageFromTree = (
+    tree: TreePage[],
+    pluridPlaneID: string,
+): TreePage[] => {
+    const updatedTree = tree.filter(page => {
+        if (page.planeID === pluridPlaneID) {
+            return false;
+        }
+
+        if (page.children) {
+            const pageTree = removePageFromTree(page.children, pluridPlaneID);
+            page.children = pageTree;
+            return page;
+        }
+
+        return page;
+    });
+
+    return updatedTree;
 }
