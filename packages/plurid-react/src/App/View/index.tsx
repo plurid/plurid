@@ -16,6 +16,7 @@ import handleView from './logic';
 
 import {
     PluridAppProperties,
+    TreePage,
 } from '../../modules/data/interfaces';
 
 import Context from './context';
@@ -35,10 +36,11 @@ import {
 
 import {
     computeSpaceTree,
+    recomputeSpaceTreeLocations,
 } from '../../modules/services/logic/space';
 
 import { AppState } from '../../modules/services/state/store';
-// import selectors from '../../modules/services/state/selectors';
+import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
 import { ViewSize } from '../../modules/services/state/types/data';
 
@@ -52,6 +54,7 @@ export interface ViewOwnProperties {
 }
 
 interface ViewStateProperties {
+    tree: TreePage[];
 }
 
 interface ViewDispatchProperties {
@@ -67,6 +70,9 @@ type ViewProperties = ViewStateProperties & ViewDispatchProperties & ViewOwnProp
 const View: React.FC<ViewProperties> = (properties) => {
     const {
         appProperties,
+
+        tree,
+
         setConfiguration,
         setPages,
         setDocuments,
@@ -96,14 +102,16 @@ const View: React.FC<ViewProperties> = (properties) => {
                 height: window.innerHeight,
                 width: window.innerWidth,
             });
-        }, 1500);
+
+            recomputeSpaceTreeLocations(dispatch, tree);
+        }, 1000);
 
         window.addEventListener('resize', handleResize);
 
         return () => {
             window.removeEventListener('resize', handleResize);
         }
-    });
+    }, [dispatch, tree]);
 
     useEffect(() => {
         setConfiguration(configuration);
@@ -158,6 +166,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
 
 const mapStateToProps = (state: AppState): ViewStateProperties => ({
+    tree: selectors.space.getTree(state),
 });
 
 

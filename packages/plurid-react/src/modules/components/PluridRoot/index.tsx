@@ -10,9 +10,8 @@ import Context from '../../../App/View/context';
 
 import PluridPlane from '../PluridPlane';
 
-import { TreePage } from '../../services/state/types/space';
-
 import {
+    TreePage,
     PluridAppContext,
 } from '../../data/interfaces';
 
@@ -33,13 +32,27 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         pages,
     } = context;
 
+    const {
+        location,
+    } = page;
+
     const _page = pages.find((_page: any) => _page.path === page.path);
     // console.log(page);
 
     if (_page) {
         const Page = _page.component.element;
         return (
-            <StyledPluridRoot>
+            <StyledPluridRoot
+                style={{
+                    transform: `
+                        translateX(${location.translateX}px)
+                        translateY(${location.translateY}px)
+                        translateZ(${location.translateZ}px)
+                        rotateX(${location.rotateX}deg)
+                        rotateY(${location.rotateY}deg)
+                    `,
+                }}
+            >
                 <PluridPlane
                     page={_page}
                     planeId={page.planeId}

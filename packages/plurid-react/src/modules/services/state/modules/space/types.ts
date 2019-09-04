@@ -1,3 +1,9 @@
+import {
+    TreePage,
+} from '../../../../data/interfaces';
+
+
+
 export const ROTATE_UP = 'ROTATE_UP';
 export interface RotateUpAction {
     type: typeof ROTATE_UP;
@@ -53,11 +59,6 @@ export interface ScaleDownAction {
 
 export const SET_TREE = 'SET_TREE';
 
-export interface TreePage {
-    planeId: string;
-    path: string;
-    children?: TreePage[];
-}
 
 export interface SetTreeAction {
     type: typeof SET_TREE;

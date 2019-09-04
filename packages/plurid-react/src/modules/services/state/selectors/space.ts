@@ -1,6 +1,8 @@
 import { AppState } from '../store';
 
-import { TreePage } from '../types/space';
+import {
+    TreePage,
+} from '../../../data/interfaces';
 
 
 
