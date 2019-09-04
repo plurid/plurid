@@ -150,7 +150,7 @@ export const computePluridPlaneLocation = (
 
     y = prevTransY + linkCoordinates.y;
 
-    console.log('x y z', x, y, z);
+    // console.log('x y z', x, y, z);
 
     return {
         x,
@@ -172,11 +172,9 @@ export const updateTreeWithNewPage = (
     linkCoordinates: any,
 ): UpdatedTreeWithNewPage => {
     const treePage = getTreePageByPlaneID(tree, treePagePlaneID);
+    // console.log('tree page parent', treePage);
 
-    console.log(tree);
-    console.log(linkCoordinates);
-    console.log('tree page parent', treePage);
-
+    // console.log(linkCoordinates);
     const location = computePluridPlaneLocation(
         tree,
         linkCoordinates,
