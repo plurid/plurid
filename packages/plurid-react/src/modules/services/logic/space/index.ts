@@ -145,7 +145,7 @@ export const computePluridPlaneLocation = (
         // z = prevTransZ - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
     // }
 
-    x = linkCoordinates.x
+    x = prevTransX + linkCoordinates.x
     z = -1 * bridgeLength;
 
     y = prevTransY + linkCoordinates.y;
