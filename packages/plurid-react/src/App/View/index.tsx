@@ -104,7 +104,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             });
 
             recomputeSpaceTreeLocations(dispatch, tree);
-        }, 1000);
+        }, 700);
 
         window.addEventListener('resize', handleResize);
 

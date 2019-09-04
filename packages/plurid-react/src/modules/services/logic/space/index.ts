@@ -60,6 +60,18 @@ export const recomputeSpaceTreeLocations = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     tree: TreePage[],
 ) => {
+    const updatedTree: TreePage[] = [];
     console.log(tree);
 
+    tree.forEach((page, index) => {
+        const _page = { ...page };
+
+        const translateX = index === 0
+            ? 0
+            : window.innerWidth * index + ROOTS_GAP;
+        _page.location.translateX = translateX;
+        updatedTree.push(_page);
+    });
+
+    dispatch(actions.space.setTree(updatedTree));
 }
