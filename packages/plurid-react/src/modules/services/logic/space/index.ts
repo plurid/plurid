@@ -117,25 +117,15 @@ export const updateTreePage = (
 
 interface UpdatedTreeWithNewPage {
     pluridPlaneID: string;
-    tree: TreePage[];
+    updatedTree: TreePage[];
 }
 
 export const updateTreeWithNewPage = (
     tree: TreePage[],
     treePagePlaneID: string,
     pagePath: string,
-): UpdatedTreeWithNewPage | TreePage[] => {
-    console.log('treePagePlaneID', treePagePlaneID);
-    console.log('pagePath', pagePath);
-
-    // when clicking on a PluridLink
-    // it calls this function
-    // which adds under the children of the tree page
-    // another child
-    // returns an updated tree
-
+): UpdatedTreeWithNewPage => {
     const planeID = uuid();
-
     const newTreePage = {
         path: pagePath,
         planeID,
@@ -147,7 +137,6 @@ export const updateTreeWithNewPage = (
             rotateY: 90.1,
         },
     };
-
     const treePage = getTreePageByPlaneID(tree, treePagePlaneID);
     if (treePage) {
         if (treePage.children) {
@@ -158,13 +147,15 @@ export const updateTreeWithNewPage = (
         const updatedTree = updateTreePage(tree, treePage);
         return {
             pluridPlaneID: planeID,
-            tree: updatedTree,
+            updatedTree,
         }
     }
 
-    return tree;
+    return {
+        pluridPlaneID: '',
+        updatedTree: tree,
+    };
 }
-
 
 
 export const removePageFromTree = (
