@@ -11,4 +11,6 @@ export const StyledPluridPlane: any = styled.div`
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 34px auto;
+
+    transform-origin: 0 0 0;
 `;
