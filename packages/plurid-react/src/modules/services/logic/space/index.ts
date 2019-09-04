@@ -1,8 +1,6 @@
 import {
     PluridPage,
 } from '../../../data/interfaces';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 
 import uuid from '../../utilities/uuid';
 
@@ -14,14 +12,11 @@ import {
     ROOTS_GAP,
 } from '../../../data/constants/space';
 
-import actions from '../../state/actions';
-
 
 
 export const computeSpaceTree = (
-    dispatch: ThunkDispatch<{}, {}, AnyAction>,
     pages: PluridPage[],
-) => {
+): TreePage[] => {
     const tree: TreePage[] = [];
 
     pages.forEach((page, index) => {
@@ -51,15 +46,13 @@ export const computeSpaceTree = (
     });
 
     console.log(tree);
-    dispatch(actions.space.setTree(tree));
+    return tree;
 }
 
 
-
 export const recomputeSpaceTreeLocations = (
-    dispatch: ThunkDispatch<{}, {}, AnyAction>,
     tree: TreePage[],
-) => {
+): TreePage[] => {
     const updatedTree: TreePage[] = [];
     console.log(tree);
 
@@ -73,5 +66,12 @@ export const recomputeSpaceTreeLocations = (
         updatedTree.push(_page);
     });
 
-    dispatch(actions.space.setTree(updatedTree));
+    return updatedTree;
+}
+
+
+export const getTreePageByPlaneID = (
+    tree: TreePage[], planeID: string
+): TreePage | null => {
+    return null;
 }
