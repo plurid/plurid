@@ -63,6 +63,7 @@ interface ViewDispatchProperties {
     setPages: typeof actions.data.setPages;
     setDocuments: typeof actions.data.setDocuments;
     setViewSize: typeof actions.data.setViewSize;
+    setTree: typeof actions.space.setTree;
 }
 
 type ViewProperties = ViewStateProperties & ViewDispatchProperties & ViewOwnProperties;
@@ -73,11 +74,12 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         tree,
 
+        dispatch,
         setConfiguration,
         setPages,
         setDocuments,
         setViewSize,
-        dispatch,
+        setTree,
     } = properties;
 
     const {
@@ -103,7 +105,8 @@ const View: React.FC<ViewProperties> = (properties) => {
                 width: window.innerWidth,
             });
 
-            recomputeSpaceTreeLocations(dispatch, tree);
+            const recomputedTree = recomputeSpaceTreeLocations(tree);
+            setTree(recomputedTree);
         }, 150);
 
         window.addEventListener('resize', handleResize);
@@ -111,7 +114,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         return () => {
             window.removeEventListener('resize', handleResize);
         }
-    }, [dispatch, tree]);
+    }, [tree]);
 
     useEffect(() => {
         setConfiguration(configuration);
@@ -140,11 +143,11 @@ const View: React.FC<ViewProperties> = (properties) => {
         // console.log(_documents);
         setDocuments(_documents);
 
-        // compute space tree based on pages
         if (_pages) {
-            computeSpaceTree(dispatch, _pages);
+            const computedTree = computeSpaceTree(_pages);
+            setTree(computedTree);
         }
-    }, [configuration, dispatch]);
+    }, [configuration]);
 
     const viewContainer = handleView(pages, documents);
 
@@ -176,6 +179,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     setPages: (pages: any) => dispatch(actions.data.setPages(pages)),
     setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
     setViewSize: (viewSize: ViewSize) => dispatch(actions.data.setViewSize(viewSize)),
+    setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
 });
 
 
