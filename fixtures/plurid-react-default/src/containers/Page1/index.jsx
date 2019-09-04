@@ -6,7 +6,7 @@ import React from 'react';
 
 const Page1 = () => {
     return (
-        <div>
+        <div style={{height: 300}}>
             page 1
 
             <input />
