@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "React implementation of Plurid to view and explore the web in three dimensions",
     "keywords": [
         "plurid",
@@ -38,7 +38,7 @@
         "test": "cross-env CI=1 react-scripts-ts test --env=jsdom",
         "test.watch": "react-scripts-ts test --env=jsdom",
         "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
-        "build": "yarn clean && yarn test && yarn lint && yarn build.prod",
+        "build": "yarn clean && yarn build.prod",
         "build.prod": "yarn clean && rollup -c --environment MODE_ENV:production",
         "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local"
