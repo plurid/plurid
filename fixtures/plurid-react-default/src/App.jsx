@@ -84,7 +84,6 @@ const App = () => {
         //         properties: {},
         //     },
         //     root: true,
-        //     location: 'root',
         // },
         {
             path: '/page-2',
@@ -93,7 +92,6 @@ const App = () => {
                 properties: {},
             },
             root: true,
-            location: 'left',
         },
         {
             path: '/page-2-link',

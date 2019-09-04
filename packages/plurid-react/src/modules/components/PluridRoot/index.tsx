@@ -38,6 +38,13 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
 
     const _page = pages.find((_page: any) => _page.path === page.path);
 
+    const rootLocation = {
+        translateX: 0,
+        translateY: 0,
+        translateZ: 0,
+        rotateX: 0,
+        rotateY: 0,
+    }
     // console.log(page);
 
     if (_page) {
@@ -57,7 +64,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                 <PluridPlane
                     page={_page}
                     planeID={page.planeID}
-                    location={location}
+                    location={rootLocation}
                 >
                     <Page />
                 </PluridPlane>
