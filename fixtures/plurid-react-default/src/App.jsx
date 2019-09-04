@@ -94,13 +94,6 @@ const App = () => {
             root: true,
         },
         {
-            path: '/page-2-link',
-            component: {
-                element: Page2,
-                properties: {},
-            },
-        },
-        {
             path: '/page-1',
             component: {
                 element: Page1,

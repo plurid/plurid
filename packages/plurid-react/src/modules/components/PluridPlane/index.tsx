@@ -7,6 +7,7 @@ import {
     StyledPluridPlane,
 } from './styled';
 
+import PlaneBridge from './components/PlaneBridge';
 import PlaneControls from './components/PlaneControls';
 import PlaneContent from './components/PlaneContent';
 
@@ -61,6 +62,10 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
                 `,
             }}
         >
+            {!page.root && (
+                <PlaneBridge />
+            )}
+
             <PlaneControls
                 page={page}
             />
