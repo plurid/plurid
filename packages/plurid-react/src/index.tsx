@@ -5,7 +5,7 @@ import PluridLink from './modules/components/PluridLink';
 
 
 export {
-    PluridLink
+    PluridLink,
 };
 
 export default PluridApp;
