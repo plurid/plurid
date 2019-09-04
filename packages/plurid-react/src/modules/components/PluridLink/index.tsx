@@ -99,7 +99,7 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
                 setPluridPlaneID(pluridPlaneID);
             }
         } else {
-            // instead of removing the plane page, just hide it
+            // TODO instead of removing the plane page, just hide it
             const updatedTree = removePageFromTree(tree, pluridPlaneID);
             setTree(updatedTree);
             setShowLink(false);

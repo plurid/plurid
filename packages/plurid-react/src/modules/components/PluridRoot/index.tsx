@@ -95,9 +95,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         );
     }
 
-    return (
-        <div></div>
-    );
+    return (<></>);
 }
 
 
