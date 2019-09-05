@@ -3,9 +3,15 @@ import styled from 'styled-components';
 
 
 export const StyledPluridPlane: any = styled.div`
+    background-color: ${(props: any) => {
+        return props.theme.backgroundColorPrimary;
+    }};
+    box-shadow: 0 2px 2px 0 ${(props: any) => {
+        return props.theme.shadow;
+    }};
+
     position: absolute;
     height: auto;
-    background-color: hsla(220, 10%, 40%, 0.4);
     width: 100%;
 
     display: grid;

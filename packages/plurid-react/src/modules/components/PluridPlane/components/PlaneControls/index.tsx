@@ -5,6 +5,8 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { Theme } from '@plurid/apps.utilities.themes';
+
 import {
     StyledPlaneControls,
 } from './styled';
@@ -14,7 +16,6 @@ import {
 } from '../../../../data/interfaces';
 
 import { AppState } from '../../../../services/state/store';
-import { ViewSize } from '../../../../services/state/types/data';
 import selectors from '../../../../services/state/selectors';
 // import actions from '../../../../services/state/actions';
 
@@ -27,10 +28,10 @@ interface PlaneControlsOwnProperties {
 
 interface PlaneControlsStateProperties {
     configuration: PluridAppConfiguration;
+    generalTheme: Theme;
 }
 
 interface PlaneControlsDispatchProperties {
-
 }
 
 type PlaneControlsProperties = PlaneControlsOwnProperties
@@ -42,6 +43,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
         page,
 
         configuration,
+        generalTheme,
     } = properties;
 
     let basePath = '';
@@ -60,8 +62,9 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
     }
 
     return (
-        <StyledPlaneControls>
-
+        <StyledPlaneControls
+            theme={generalTheme}
+        >
             <div>
                 <input
                     type="text"
@@ -69,7 +72,6 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
                     onChange={onPathInput}
                 />
             </div>
-
         </StyledPlaneControls>
     );
 }
@@ -77,6 +79,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
 
 const mapStateToProps = (state: AppState): PlaneControlsStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
+    generalTheme: selectors.themes.getGeneralTheme(state),
 });
 
 

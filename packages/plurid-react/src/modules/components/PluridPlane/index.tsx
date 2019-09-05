@@ -3,6 +3,8 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { Theme } from '@plurid/apps.utilities.themes';
+
 import {
     StyledPluridPlane,
 } from './styled';
@@ -33,6 +35,8 @@ interface PluridPlaneOwnProperties {
 interface PluridPlaneStateProperties {
     viewSize: ViewSize;
     spaceScale: number;
+    generalTheme: Theme;
+    interactionTheme: Theme;
 }
 
 interface PluridPlaneDispatchProperties {
@@ -48,12 +52,15 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
         planeID,
         page,
         treePage,
-        children,
         location,
+        children,
+
+        generalTheme,
     } = properties;
 
     return (
         <StyledPluridPlane
+            theme={generalTheme}
             data-plurid-plane={planeID}
             style={{
                 transform: `
@@ -84,6 +91,8 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
 const mapStateToProps = (state: AppState): PluridPlaneStateProperties => ({
     viewSize: selectors.data.getViewSize(state),
     spaceScale: selectors.space.getScale(state),
+    generalTheme: selectors.themes.getGeneralTheme(state),
+    interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 
 

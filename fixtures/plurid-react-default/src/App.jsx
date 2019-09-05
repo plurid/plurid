@@ -11,7 +11,7 @@ const App = () => {
 
     const appConfiguration = {
         alterURL: false,
-        theme: 'depict',
+        theme: 'deview',
         planes: {
             domainURL: true,
             width: 50,
