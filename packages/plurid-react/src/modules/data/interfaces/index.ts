@@ -31,6 +31,7 @@ export interface PluridAppConfiguration {
     theme?: string;
     alterURL?: boolean;
     planes?: {
+        domainURL?: boolean;
         width?: number;
         showControls?: boolean;
     };
