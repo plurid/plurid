@@ -47,7 +47,10 @@ import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
 import { ViewSize } from '../../modules/services/state/types/data';
 
-import themes, { Theme } from '@plurid/apps.utilities.themes';
+import themes, {
+    Theme,
+    THEME_NAMES,
+} from '@plurid/apps.utilities.themes';
 
 
 
@@ -158,16 +161,20 @@ const View: React.FC<ViewProperties> = (properties) => {
                 } = configuration.theme;
 
                 if (general) {
-                    // check if the general theme is a typeof theme names
-                    setGeneralTheme(themes[general]);
+                    if (Object.keys(THEME_NAMES).includes(general)) {
+                        setGeneralTheme(themes[general]);
+                    }
                 }
 
                 if (interaction) {
-                    // check if the interaction theme is a typeof theme names
-                    setInteractionTheme(themes[interaction]);
+                    if (Object.keys(THEME_NAMES).includes(interaction)) {
+                        setInteractionTheme(themes[interaction]);
+                    }
                 }
             } else {
-                setGeneralTheme(themes[configuration.theme]);
+                if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
+                    setGeneralTheme(themes[configuration.theme]);
+                }
             }
         }
     }
