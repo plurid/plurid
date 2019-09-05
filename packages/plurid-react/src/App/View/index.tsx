@@ -46,8 +46,7 @@ import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
 import { ViewSize } from '../../modules/services/state/types/data';
 
-// import themes from '@plurid/apps.utilities.themes';
-
+import themes, { Theme } from '@plurid/apps.utilities.themes';
 
 
 
@@ -57,6 +56,8 @@ export interface ViewOwnProperties {
 
 interface ViewStateProperties {
     tree: TreePage[];
+    generalTheme: Theme;
+    interactionTheme: Theme;
 }
 
 interface ViewDispatchProperties {
@@ -155,7 +156,6 @@ const View: React.FC<ViewProperties> = (properties) => {
                     translationZ: 0,
                     scale: 1,
                 };
-                console.log(spaceLocation);
                 setSpaceLocation(spaceLocation);
             }
         }
@@ -182,6 +182,8 @@ const View: React.FC<ViewProperties> = (properties) => {
 
 const mapStateToProps = (state: AppState): ViewStateProperties => ({
     tree: selectors.space.getTree(state),
+    generalTheme: selectors.themes.getGeneralTheme(state),
+    interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 
 
