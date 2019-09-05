@@ -223,6 +223,13 @@ export const computePluridPlaneLocation = (
         z = (prevTransZ - bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
     }
 
+    if (path.length === 9) {
+        console.log('path length 9 is as 5');
+
+        x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+        z = -1 * ( (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength) );
+    }
+
     y = prevTransY + linkCoordinates.y;
 
     console.log('x y z', x, y, z);
