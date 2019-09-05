@@ -91,4 +91,5 @@ export interface TreePage {
     path: string;
     location: TreePageLocation;
     children?: TreePage[];
+    show: boolean;
 }

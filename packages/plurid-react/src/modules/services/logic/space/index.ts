@@ -66,6 +66,7 @@ export const computeSpaceTree = (
                 rotateX: 0,
                 rotateY: 0,
             },
+            show: true,
         };
         tree.push(treePage);
     });
@@ -326,6 +327,7 @@ export const updateTreeWithNewPage = (
                 rotateX: 0,
                 rotateY: treePageParent.location.rotateY + PLANE_DEFAULT_ANGLE,
             },
+            show: true,
         };
         if (treePageParent.children) {
             treePageParent.children.push(newTreePage);
@@ -336,7 +338,7 @@ export const updateTreeWithNewPage = (
         return {
             pluridPlaneID: planeID,
             updatedTree,
-        }
+        };
     }
 
     return {
@@ -363,6 +365,31 @@ export const removePageFromTree = (
 
         return page;
     });
+
+    return updatedTree;
+}
+
+
+export const togglePageFromTree = (
+    tree: TreePage[],
+    pluridPlaneID: string,
+) => {
+    const updatedTree: TreePage[] = [];
+
+    for (const page of tree) {
+        if (page.planeID === pluridPlaneID) {
+            const _page = { ...page };
+            _page.show = !_page.show;
+            updatedTree.push(_page);
+            break;
+        }
+
+        if (page.children) {
+            const pageTree = togglePageFromTree(page.children, pluridPlaneID);
+            page.children = [ ...pageTree ];
+            updatedTree.push(page);
+        }
+    }
 
     return updatedTree;
 }

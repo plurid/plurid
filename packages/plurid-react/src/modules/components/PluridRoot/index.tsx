@@ -47,7 +47,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                 const _page = pages.find((_page: any) => _page.path === child.path);
 
                 let plane = (<></>);
-                if (_page) {
+                if (_page && child.show) {
                     const Page = _page.component.element;
                     plane = (
                         <PluridPlane
@@ -64,7 +64,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     setChildrenPlanes(planes => [...planes, plane]);
                 }
 
-                if (child.children) {
+                if (child.children && child.show) {
                     computeChildrenPlanes(child);
                 }
             });
