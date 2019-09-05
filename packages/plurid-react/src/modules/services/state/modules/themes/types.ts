@@ -1,8 +1,12 @@
+import { Theme } from '@plurid/apps.utilities.themes';
+
+
+
 export const SET_GENERAL_THEME = 'SET_GENERAL_THEME';
 
 export interface SetGeneralThemeAction {
     type: typeof SET_GENERAL_THEME;
-    payload: any;
+    payload: Theme;
 }
 
 
@@ -10,5 +14,14 @@ export const SET_INTERACTION_THEME = 'SET_INTERACTION_THEME';
 
 export interface SetInteractionThemeAction {
     type: typeof SET_INTERACTION_THEME;
-    payload: any;
+    payload: Theme;
 }
+
+
+export interface ThemesState {
+    general: Theme;
+    interaction: Theme;
+}
+
+export type ThemesActionsType = SetGeneralThemeAction
+    | SetInteractionThemeAction;
