@@ -7,6 +7,8 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { Theme } from '@plurid/apps.utilities.themes';
+
 import {
     StyledPluridLink,
 } from './styled';
@@ -39,6 +41,7 @@ import actions from '../../services/state/actions';
 
 interface PluridLinkStateProperties {
     tree: TreePage[],
+    generalTheme: Theme,
 }
 
 interface PluridLinkDispatchProperties {
@@ -65,6 +68,7 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
         page,
 
         tree,
+        generalTheme,
 
         setTree,
     } = properties;
@@ -116,6 +120,7 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
 
     return (
         <StyledPluridLink
+            theme={generalTheme}
             onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
             ref={element}
         >
@@ -127,6 +132,7 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
 
 const mapStateToProps = (state: AppState): PluridLinkStateProperties => ({
     tree: selectors.space.getTree(state),
+    generalTheme: selectors.themes.getGeneralTheme(state),
 });
 
 
