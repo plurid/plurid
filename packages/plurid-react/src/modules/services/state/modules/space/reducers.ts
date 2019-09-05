@@ -7,6 +7,8 @@ import {
 } from '../../../../data/constants/space';
 
 import {
+    SET_SPACE_LOCATION,
+
     ROTATE_UP,
     ROTATE_DOWN,
     ROTATE_LEFT,
@@ -43,6 +45,10 @@ const spaceReducer = (
     action: SpaceActionsType,
 ): SpaceState => {
     switch(action.type) {
+        case SET_SPACE_LOCATION:
+            {
+                return { ...state, ...action.payload };
+            }
         case ROTATE_UP:
             {
                 const rotationX = (state.rotationX + ROTATION_STEP) % 360;

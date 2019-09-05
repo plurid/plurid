@@ -1,4 +1,6 @@
 import {
+    setSpaceLocation,
+
     rotateUp,
     rotateDown,
     rotateLeft,
@@ -18,6 +20,8 @@ import {
 
 
 export default {
+    setSpaceLocation,
+
     rotateUp,
     rotateDown,
     rotateLeft,

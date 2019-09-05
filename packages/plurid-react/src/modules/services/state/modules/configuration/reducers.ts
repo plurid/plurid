@@ -10,7 +10,8 @@ const initialState: ConfigurationState = {
     perspective: 1000,
     theme: 'plurid',
     alterURL: false,
-    pluridPlane: {
+    planes: {
+        width: 100,
         showControls: true,
     },
 }

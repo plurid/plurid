@@ -37,6 +37,7 @@ import {
 
 import {
     computeSpaceTree,
+    computeCameraLocationX,
     recomputeSpaceTreeLocations,
 } from '../../modules/services/logic/space';
 
@@ -65,6 +66,7 @@ interface ViewDispatchProperties {
     setDocuments: typeof actions.data.setDocuments;
     setViewSize: typeof actions.data.setViewSize;
     setTree: typeof actions.space.setTree;
+    setSpaceLocation: typeof actions.space.setSpaceLocation;
 }
 
 type ViewProperties = ViewStateProperties & ViewDispatchProperties & ViewOwnProperties;
@@ -81,6 +83,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         setDocuments,
         setViewSize,
         setTree,
+        setSpaceLocation,
     } = properties;
 
     const {
@@ -120,17 +123,12 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         setConfiguration(configuration);
 
-        // to store the pages and documents in context
-        // and to keep in redux only the paths and the rest of the metadata
-        // console.log(pages);
-
         const _pages = pages && pages.map(page => {
             const id = uuid();
             const _page = { ...page, id };
             delete _page.component;
             return _page;
         }) || [];
-        // console.log(_pages);
         setPages(_pages);
 
         const _documents = documents && documents.map(document => {
@@ -141,12 +139,25 @@ const View: React.FC<ViewProperties> = (properties) => {
             });
             return { ...document, pages: _documentPages};
         }) || [];
-        // console.log(_documents);
         setDocuments(_documents);
 
         if (_pages) {
-            const computedTree = computeSpaceTree(_pages);
+            const computedTree = computeSpaceTree(_pages, configuration);
             setTree(computedTree);
+
+            if (configuration && configuration.roots) {
+                const cameraLocationX = computeCameraLocationX(configuration);
+                const spaceLocation = {
+                    rotationX: 0,
+                    rotationY: 0,
+                    translationX: cameraLocationX,
+                    translationY: 0,
+                    translationZ: 0,
+                    scale: 1,
+                };
+                console.log(spaceLocation);
+                setSpaceLocation(spaceLocation);
+            }
         }
     }, [configuration]);
 
@@ -181,6 +192,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
     setViewSize: (viewSize: ViewSize) => dispatch(actions.data.setViewSize(viewSize)),
     setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
+    setSpaceLocation: (spaceLocation: any) => dispatch(actions.space.setSpaceLocation(spaceLocation)),
 });
 
 
