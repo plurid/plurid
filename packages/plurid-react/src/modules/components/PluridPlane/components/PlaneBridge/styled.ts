@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export const StyledPlaneBridge = styled.div`
     background-color: ${(props: any) => {
-        return props.theme.backgroundColorTertiary;
+        return props.theme.backgroundColorSecondary;
     }};
 
     position: absolute;
