@@ -11,6 +11,7 @@ const initialState: ConfigurationState = {
     theme: 'plurid',
     alterURL: false,
     planes: {
+        domainURL: true,
         width: 100,
         showControls: true,
     },
