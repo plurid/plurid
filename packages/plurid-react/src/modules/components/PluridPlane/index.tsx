@@ -13,6 +13,7 @@ import PlaneContent from './components/PlaneContent';
 
 import {
     PluridPage,
+    TreePage,
 } from '../../data/interfaces';
 
 import { AppState } from '../../services/state/store';
@@ -25,6 +26,7 @@ import selectors from '../../services/state/selectors';
 interface PluridPlaneOwnProperties {
     planeID: string;
     page: PluridPage;
+    treePage: TreePage;
     location: any;
 }
 
@@ -45,6 +47,7 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
     const {
         planeID,
         page,
+        treePage,
         children,
         location,
     } = properties;
@@ -62,7 +65,7 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
                 `,
             }}
         >
-            {!page.root && (
+            {treePage.parentPlaneID && (
                 <PlaneBridge />
             )}
 
