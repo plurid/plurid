@@ -9,6 +9,9 @@ import { Theme } from '@plurid/apps.utilities.themes';
 
 import {
     StyledPlaneControls,
+    StyledPlaneControlsLeft,
+    StyledPlaneControlsCenter,
+    StyledPlaneControlsRight,
 } from './styled';
 
 import {
@@ -69,19 +72,20 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
         <StyledPlaneControls
             theme={generalTheme}
         >
-            <div
-                style={{
-                    width: 400,
-                    height: 28,
-                }}
-            >
+            <StyledPlaneControlsLeft>
+            </StyledPlaneControlsLeft>
+
+            <StyledPlaneControlsCenter>
                 <Styles.InputText
                     theme={interactionTheme}
                     type="text"
                     value={path}
                     onChange={onPathInput}
                 />
-            </div>
+            </StyledPlaneControlsCenter>
+
+            <StyledPlaneControlsRight>
+            </StyledPlaneControlsRight>
         </StyledPlaneControls>
     );
 }
