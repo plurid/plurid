@@ -78,7 +78,7 @@ const App = () => {
 
     const appPages = [
         // {
-        //     path: '/',
+        //     path: '/page-1',
         //     component: {
         //         element: Page1,
         //         properties: {},
@@ -93,13 +93,14 @@ const App = () => {
             },
             root: true,
         },
-        {
-            path: '/page-1',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-        },
+        // {
+        //     path: '/page-3',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
     ];
 
     return (
