@@ -24,7 +24,7 @@ export const computeSpaceTree = (
         if (page.root) {
             const translateX = index === 0
                 ? 0
-                : window.innerWidth * index + ROOTS_GAP;
+                : window.innerWidth * index + ROOTS_GAP * index;
 
             const treePage = {
                 path: page.path,
