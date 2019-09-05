@@ -26,9 +26,15 @@ export interface PluridComponentProperties {
 }
 
 
+export interface PluridAppTheme {
+    general?: string;
+    interaction?: string;
+}
+
+
 export interface PluridAppConfiguration {
     perspective?: number;
-    theme?: string;
+    theme?: string | PluridAppTheme;
     alterURL?: boolean;
     planes?: {
         domainURL?: boolean;

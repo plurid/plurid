@@ -18,6 +18,7 @@ import handleView from './logic';
 import {
     PluridAppProperties,
     TreePage,
+    PluridAppConfiguration,
 } from '../../modules/data/interfaces';
 
 import Context from './context';
@@ -68,6 +69,9 @@ interface ViewDispatchProperties {
     setViewSize: typeof actions.data.setViewSize;
     setTree: typeof actions.space.setTree;
     setSpaceLocation: typeof actions.space.setSpaceLocation;
+
+    setGeneralTheme: typeof actions.themes.setGeneralTheme;
+    setInteractionTheme: typeof actions.themes.setInteractionTheme;
 }
 
 type ViewProperties = ViewStateProperties & ViewDispatchProperties & ViewOwnProperties;
@@ -85,6 +89,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         setViewSize,
         setTree,
         setSpaceLocation,
+        setGeneralTheme,
+        setInteractionTheme,
     } = properties;
 
     const {
@@ -121,8 +127,36 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }, [tree]);
 
-    useEffect(() => {
+    const handleConfiguration = (configuration: PluridAppConfiguration) => {
         setConfiguration(configuration);
+
+        if (configuration.theme) {
+            if (typeof configuration.theme === 'object') {
+                const {
+                    general,
+                    interaction,
+                } = configuration.theme;
+
+                if (general) {
+                    // check if the general theme is a typeof theme names
+                    setGeneralTheme(themes[general]);
+                }
+
+                if (interaction) {
+                    // check if the interaction theme is a typeof theme names
+                    setInteractionTheme(themes[interaction]);
+                }
+            } else {
+                setGeneralTheme(themes[configuration.theme]);
+            }
+        }
+
+    }
+
+    useEffect(() => {
+        if (configuration) {
+            handleConfiguration(configuration);
+        }
 
         const _pages = pages && pages.map(page => {
             const id = uuid();
@@ -161,6 +195,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }, [configuration]);
 
+
     const viewContainer = handleView(pages, documents);
 
     return (
@@ -189,12 +224,15 @@ const mapStateToProps = (state: AppState): ViewStateProperties => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDispatchProperties => ({
     dispatch,
-    setConfiguration: (configuration: any) => dispatch(actions.configuration.setConfiguration(configuration)),
+    setConfiguration: (configuration: PluridAppConfiguration) => dispatch(actions.configuration.setConfiguration(configuration)),
     setPages: (pages: any) => dispatch(actions.data.setPages(pages)),
     setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
     setViewSize: (viewSize: ViewSize) => dispatch(actions.data.setViewSize(viewSize)),
     setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
     setSpaceLocation: (spaceLocation: any) => dispatch(actions.space.setSpaceLocation(spaceLocation)),
+
+    setGeneralTheme: (theme: Theme) => dispatch(actions.themes.setGeneralTheme(theme)),
+    setInteractionTheme: (theme: Theme) => dispatch(actions.themes.setInteractionTheme(theme)),
 });
 
 
