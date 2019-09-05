@@ -21,7 +21,10 @@ import {
 
 import {
     updateTreeWithNewPage,
-    removePageFromTree,
+    // removePageFromTree,
+    // hidePageFromTree,
+    // showPageFromTree,
+    togglePageFromTree,
 } from '../../services/logic/space';
 
 import {
@@ -78,7 +81,7 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
     }
 
     const handleShowPluridPlane = () => {
-        if (!showLink) {
+        if (!showLink && !pluridPlaneID) {
             const parentPlaneID = getPluridPlaneIDByData(element.current);
 
             const linkCoordinates = getPluridLinkCoordinates();
@@ -99,11 +102,9 @@ const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
                 setPluridPlaneID(pluridPlaneID);
             }
         } else {
-            // TODO instead of removing the plane page, just hide it
-            const updatedTree = removePageFromTree(tree, pluridPlaneID);
+            const updatedTree = togglePageFromTree(tree, pluridPlaneID);
             setTree(updatedTree);
-            setShowLink(false);
-            setPluridPlaneID('');
+            setShowLink(show => !show);
         }
     }
 
