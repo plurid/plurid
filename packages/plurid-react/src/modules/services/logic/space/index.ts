@@ -110,6 +110,36 @@ export const updateTreePage = (
 }
 
 
+export const computePath = (
+    tree: TreePage[],
+    planeID: string,
+): TreePage[] => {
+    let path: TreePage[] = [];
+    const page = getTreePageByPlaneID(tree, planeID);
+
+    if (page) {
+        path.push( { ...page} );
+
+        let parentID = page.parentPlaneID;
+        if (!parentID) {
+            return path;
+        }
+
+        while (parentID) {
+            const parentPage = getTreePageByPlaneID(tree, parentID);
+            if (parentPage) {
+                const page = { ...parentPage };
+                page.children = [];
+                path.push(page);
+                parentID = parentPage.parentPlaneID;
+            }
+        }
+    }
+
+    return path.reverse();
+}
+
+
 interface LocationCoordinates {
     x: number;
     y: number;
@@ -119,9 +149,12 @@ interface LocationCoordinates {
 export const computePluridPlaneLocation = (
     tree: TreePage[],
     linkCoordinates: any,
-    parent: any,
+    treePageParent: TreePage,
+    treePageParentPlaneID: string,
 ): LocationCoordinates => {
-    // let path = ['a', 'b'];
+    // console.log(tree);
+
+    const path = computePath(tree, treePageParentPlaneID);
     let x = 0;
     let y = 0;
     let z = 0;
@@ -130,27 +163,30 @@ export const computePluridPlaneLocation = (
 
     let prevLinkX = linkCoordinates.x;
     let rotXbranch = 90;
-    let prevTransX = parent.location.translateX;
-    let prevTransY = parent.location.translateY;
-    let prevTransZ = parent.location.translateZ;
-    let penultimateRootAngleYRad = parent.location.rotateY * Math.PI / 180;
+    let prevTransX = treePageParent.location.translateX;
+    let prevTransY = treePageParent.location.translateY;
+    let prevTransZ = treePageParent.location.translateZ;
+    let penultimateRootAngleYRad = treePageParent.location.rotateY * Math.PI / 180;
 
-    // if (path.length === 2) {
-        // x = prevLinkX + (linkCoordinates.x + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180);
-        // z = -1 * (linkCoordinates.x + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
-    // }
 
-    // if (path.length > 2) {
-        // x = prevTransX + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-        // z = prevTransZ - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-    // }
+    if (path.length < 2) {
+        x = prevTransX + linkCoordinates.x
+        z = -1 * bridgeLength;
+    }
 
-    x = prevTransX + linkCoordinates.x
-    z = -1 * bridgeLength;
+    if (path.length === 2) {
+        x = prevLinkX + (linkCoordinates.x + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180);
+        z = -1 * (linkCoordinates.x + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+    }
+
+    if (path.length > 2) {
+        x = prevTransX + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+        z = prevTransZ - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    }
 
     y = prevTransY + linkCoordinates.y;
 
-    // console.log('x y z', x, y, z);
+    console.log('x y z', x, y, z);
 
     return {
         x,
@@ -167,39 +203,40 @@ interface UpdatedTreeWithNewPage {
 
 export const updateTreeWithNewPage = (
     tree: TreePage[],
-    treePagePlaneID: string,
+    treePageParentPlaneID: string,
     pagePath: string,
     linkCoordinates: any,
 ): UpdatedTreeWithNewPage => {
-    const treePage = getTreePageByPlaneID(tree, treePagePlaneID);
-    // console.log('tree page parent', treePage);
+    const treePageParent = getTreePageByPlaneID(tree, treePageParentPlaneID);
+    // console.log('tree page parent', treePageParent);
 
-    // console.log(linkCoordinates);
-    const location = computePluridPlaneLocation(
-        tree,
-        linkCoordinates,
-        treePage,
-    );
+    if (treePageParent) {
+        const location = computePluridPlaneLocation(
+            tree,
+            linkCoordinates,
+            treePageParent,
+            treePageParentPlaneID,
+        );
 
-    if (treePage) {
         const planeID = uuid();
-        const newTreePage = {
+        const newTreePage: TreePage = {
             path: pagePath,
             planeID,
+            parentPlaneID: treePageParentPlaneID,
             location: {
                 translateX: location.x,
                 translateY: location.y,
                 translateZ: location.z,
                 rotateX: 0,
-                rotateY: treePage.location.rotateY + PLANE_DEFAULT_ANGLE,
+                rotateY: treePageParent.location.rotateY + PLANE_DEFAULT_ANGLE,
             },
         };
-        if (treePage.children) {
-            treePage.children.push(newTreePage);
+        if (treePageParent.children) {
+            treePageParent.children.push(newTreePage);
         } else {
-            treePage.children = [newTreePage];
+            treePageParent.children = [newTreePage];
         }
-        const updatedTree = updateTreePage(tree, treePage);
+        const updatedTree = updateTreePage(tree, treePageParent);
         return {
             pluridPlaneID: planeID,
             updatedTree,
