@@ -2,12 +2,16 @@ import styled from 'styled-components';
 
 
 
-export const StyledPluridLink = styled.a`
+export const StyledPluridLink: any = styled.a`
     cursor: pointer;
-    color: #ccc;
+    color: ${(props: any) => {
+        return props.theme.colorSecondary;
+    }};
 
     :hover {
-        color: white;
+        color: ${(props: any) => {
+            return props.theme.colorPrimary;
+        }};
     }
 
     ::after{

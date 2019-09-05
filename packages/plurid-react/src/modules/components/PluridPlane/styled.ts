@@ -9,6 +9,9 @@ export const StyledPluridPlane: any = styled.div`
     box-shadow: 0 2px 2px 0 ${(props: any) => {
         return props.theme.shadow;
     }};
+    color: ${(props: any) => {
+        return props.theme.colorPrimary;
+    }};
 
     position: absolute;
     height: auto;
