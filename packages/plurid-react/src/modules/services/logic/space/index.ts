@@ -161,7 +161,7 @@ export const computePluridPlaneLocation = (
 
     const bridgeLength = 100;
 
-    let prevLinkX = linkCoordinates.x;
+    let prevLinkX = treePageParent.location.translateX;
     let rotXbranch = 90;
     let prevTransX = treePageParent.location.translateX;
     let prevTransY = treePageParent.location.translateY;
@@ -170,18 +170,57 @@ export const computePluridPlaneLocation = (
 
 
     if (path.length < 2) {
+        console.log('path length under 2');
         x = prevTransX + linkCoordinates.x
         z = -1 * bridgeLength;
     }
 
     if (path.length === 2) {
-        x = prevLinkX + (linkCoordinates.x + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180);
+        console.log('path length 2');
+        x = (prevLinkX - bridgeLength) + (linkCoordinates.x + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180);
         z = -1 * (linkCoordinates.x + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
     }
 
-    if (path.length > 2) {
-        x = prevTransX + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-        z = prevTransZ - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    if (path.length === 3) {
+        console.log('path length 3');
+
+        x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+        z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    }
+
+    if (path.length === 4) {
+        console.log('path length 4');
+
+        x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+        z = (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    }
+
+    if (path.length === 5) {
+        console.log('path length 5');
+
+        x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+        z = -1 * ( (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength) );
+    }
+
+    if (path.length === 6) {
+        console.log('path length 6');
+
+        x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+        z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    }
+
+    if (path.length === 7) {
+        console.log('path length 7');
+
+        x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+        z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    }
+
+    if (path.length === 8) {
+        console.log('path length 8');
+
+        x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+        z = (prevTransZ - bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
     }
 
     y = prevTransY + linkCoordinates.y;
