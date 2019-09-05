@@ -2,7 +2,6 @@ import styled, { createGlobalStyle } from 'styled-components';
 
 
 
-
 export const GlobalStyle = createGlobalStyle`
     *,
     *:after,
@@ -26,7 +25,6 @@ export const GlobalStyle = createGlobalStyle`
         overflow: hidden;
     }
 `;
-
 
 
 export const StyledView = styled.div`
