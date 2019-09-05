@@ -20,11 +20,16 @@ export const computeSpaceTree = (
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
-    pages.forEach((page, index) => {
+    let rootsIndex = 0;
+    pages.forEach(page => {
         if (page.root) {
-            const translateX = index === 0
-                ? 0
-                : window.innerWidth * index + ROOTS_GAP * index;
+            let translateX = 0;
+            if (rootsIndex !== 0) {
+                translateX = window.innerWidth * rootsIndex + ROOTS_GAP * rootsIndex;
+                rootsIndex += 1;
+            } else {
+                rootsIndex += 1;
+            }
 
             const treePage = {
                 path: page.path,
