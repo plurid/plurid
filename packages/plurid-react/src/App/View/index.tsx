@@ -57,16 +57,17 @@ export interface ViewOwnProperties {
 
 interface ViewStateProperties {
     tree: TreePage[];
-    generalTheme: Theme;
-    interactionTheme: Theme;
 }
 
 interface ViewDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
+
     setConfiguration: typeof actions.configuration.setConfiguration;
+
     setPages: typeof actions.data.setPages;
     setDocuments: typeof actions.data.setDocuments;
     setViewSize: typeof actions.data.setViewSize;
+
     setTree: typeof actions.space.setTree;
     setSpaceLocation: typeof actions.space.setSpaceLocation;
 
@@ -74,7 +75,9 @@ interface ViewDispatchProperties {
     setInteractionTheme: typeof actions.themes.setInteractionTheme;
 }
 
-type ViewProperties = ViewStateProperties & ViewDispatchProperties & ViewOwnProperties;
+type ViewProperties = ViewOwnProperties
+    & ViewStateProperties
+    & ViewDispatchProperties;
 
 const View: React.FC<ViewProperties> = (properties) => {
     const {
@@ -83,12 +86,16 @@ const View: React.FC<ViewProperties> = (properties) => {
         tree,
 
         dispatch,
+
         setConfiguration,
+
         setPages,
         setDocuments,
         setViewSize,
+
         setTree,
         setSpaceLocation,
+
         setGeneralTheme,
         setInteractionTheme,
     } = properties;
@@ -130,6 +137,19 @@ const View: React.FC<ViewProperties> = (properties) => {
     const handleConfiguration = (configuration: PluridAppConfiguration) => {
         setConfiguration(configuration);
 
+        if (configuration.roots) {
+            const cameraLocationX = computeCameraLocationX(configuration);
+            const spaceLocation = {
+                rotationX: 0,
+                rotationY: 0,
+                translationX: cameraLocationX,
+                translationY: 0,
+                translationZ: 0,
+                scale: 1,
+            };
+            setSpaceLocation(spaceLocation);
+        }
+
         if (configuration.theme) {
             if (typeof configuration.theme === 'object') {
                 const {
@@ -150,7 +170,6 @@ const View: React.FC<ViewProperties> = (properties) => {
                 setGeneralTheme(themes[configuration.theme]);
             }
         }
-
     }
 
     useEffect(() => {
@@ -179,22 +198,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         if (_pages) {
             const computedTree = computeSpaceTree(_pages, configuration);
             setTree(computedTree);
-
-            if (configuration && configuration.roots) {
-                const cameraLocationX = computeCameraLocationX(configuration);
-                const spaceLocation = {
-                    rotationX: 0,
-                    rotationY: 0,
-                    translationX: cameraLocationX,
-                    translationY: 0,
-                    translationZ: 0,
-                    scale: 1,
-                };
-                setSpaceLocation(spaceLocation);
-            }
         }
     }, [configuration]);
-
 
     const viewContainer = handleView(pages, documents);
 
@@ -217,17 +222,18 @@ const View: React.FC<ViewProperties> = (properties) => {
 
 const mapStateToProps = (state: AppState): ViewStateProperties => ({
     tree: selectors.space.getTree(state),
-    generalTheme: selectors.themes.getGeneralTheme(state),
-    interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDispatchProperties => ({
     dispatch,
+
     setConfiguration: (configuration: PluridAppConfiguration) => dispatch(actions.configuration.setConfiguration(configuration)),
+
     setPages: (pages: any) => dispatch(actions.data.setPages(pages)),
     setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
     setViewSize: (viewSize: ViewSize) => dispatch(actions.data.setViewSize(viewSize)),
+
     setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
     setSpaceLocation: (spaceLocation: any) => dispatch(actions.space.setSpaceLocation(spaceLocation)),
 

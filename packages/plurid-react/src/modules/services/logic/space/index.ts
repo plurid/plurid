@@ -77,7 +77,6 @@ export const computeSpaceTree = (
 /**
  * Based on the specified camera, compute the X translation
  *
- * @param tree
  * @param configuration
  */
 export const computeCameraLocationX = (
