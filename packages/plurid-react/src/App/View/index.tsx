@@ -174,6 +174,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             } else {
                 if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
                     setGeneralTheme(themes[configuration.theme]);
+                    setInteractionTheme(themes[configuration.theme]);
                 }
             }
         }

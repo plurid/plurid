@@ -15,6 +15,8 @@ import {
     PluridAppConfiguration,
 } from '../../../../data/interfaces';
 
+import Styles from '../../../../services/styles';
+
 import { AppState } from '../../../../services/state/store';
 import selectors from '../../../../services/state/selectors';
 // import actions from '../../../../services/state/actions';
@@ -29,6 +31,7 @@ interface PlaneControlsOwnProperties {
 interface PlaneControlsStateProperties {
     configuration: PluridAppConfiguration;
     generalTheme: Theme;
+    interactionTheme: Theme;
 }
 
 interface PlaneControlsDispatchProperties {
@@ -44,6 +47,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
 
         configuration,
         generalTheme,
+        interactionTheme,
     } = properties;
 
     let basePath = '';
@@ -65,8 +69,14 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
         <StyledPlaneControls
             theme={generalTheme}
         >
-            <div>
-                <input
+            <div
+                style={{
+                    width: 400,
+                    height: 28,
+                }}
+            >
+                <Styles.InputText
+                    theme={interactionTheme}
                     type="text"
                     value={path}
                     onChange={onPathInput}
@@ -80,6 +90,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
 const mapStateToProps = (state: AppState): PlaneControlsStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
+    interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 
 
