@@ -3,6 +3,10 @@ import {
 } from '../../../../data/interfaces';
 
 import {
+    SET_SPACE_LOCATION,
+    SetSpaceLocationAction,
+    SpaceLocation,
+
     ROTATE_UP,
     RotateUpAction,
     ROTATE_DOWN,
@@ -30,6 +34,14 @@ import {
     SetTreeAction,
 } from './types'
 
+
+
+export const setSpaceLocation = (payload: SpaceLocation): SetSpaceLocationAction => {
+    return {
+        type: SET_SPACE_LOCATION,
+        payload,
+    };
+}
 
 
 export const rotateUp = (): RotateUpAction => {

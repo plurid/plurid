@@ -30,11 +30,21 @@ export interface PluridAppConfiguration {
     perspective?: number;
     theme?: string;
     alterURL?: boolean;
-    pluridPlane?: {
+    planes?: {
+        width?: number;
         showControls?: boolean;
-    },
+    };
+    roots?: {
+        layout?: string[];
+        camera?: string;
+    };
+    [key: string]: any;
 }
 
+
+export interface PluridAppConfigurationLayout {
+    // TODO handle a 3D layout
+}
 
 
 export interface PluridAppProperties {
@@ -57,8 +67,6 @@ export interface PluridAppContext {
     pages: PluridPage[];
     documents: PluridDocument[];
 }
-
-
 
 
 

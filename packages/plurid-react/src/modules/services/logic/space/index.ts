@@ -6,6 +6,7 @@ import uuid from '../../utilities/uuid';
 
 import {
     TreePage,
+    PluridAppConfiguration,
 } from '../../../data/interfaces';
 
 import {
@@ -15,38 +16,82 @@ import {
 
 
 
+/**
+ * Compute translateX based on configuration layout if it exists
+ * or based on the index of the root.
+ *
+ * @param configuration
+ * @param root
+ * @param index
+ */
+export const computeRootLocationX = (
+    configuration: PluridAppConfiguration | undefined,
+    root: PluridPage,
+    index: number,
+) => {
+    let translateX = 0;
+    if (configuration && configuration.roots) {
+        if (configuration.roots.layout) {
+            const layoutIndex = configuration.roots.layout.indexOf(root.path);
+            translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
+        }
+    } else {
+        translateX = index === 0
+            ? 0
+            : window.innerWidth * index + ROOTS_GAP * index;
+    }
+
+    return translateX;
+}
+
+
 export const computeSpaceTree = (
     pages: PluridPage[],
+    configuration: PluridAppConfiguration | undefined,
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
-    let rootsIndex = 0;
-    pages.forEach(page => {
-        if (page.root) {
-            let translateX = 0;
-            if (rootsIndex !== 0) {
-                translateX = window.innerWidth * rootsIndex + ROOTS_GAP * rootsIndex;
-                rootsIndex += 1;
-            } else {
-                rootsIndex += 1;
-            }
+    const roots = pages.filter(page => page.root);
 
-            const treePage = {
-                path: page.path,
-                planeID: uuid(),
-                location: {
-                    translateX,
-                    translateY: 0,
-                    translateZ: 0,
-                    rotateX: 0,
-                    rotateY: 0,
-                },
-            };
-            tree.push(treePage);
-        }
+    roots.forEach((root, index) => {
+        const translateX = computeRootLocationX(configuration, root, index);
+
+        const treePage = {
+            path: root.path,
+            planeID: uuid(),
+            location: {
+                translateX,
+                translateY: 0,
+                translateZ: 0,
+                rotateX: 0,
+                rotateY: 0,
+            },
+        };
+        tree.push(treePage);
     });
 
     return tree;
+}
+
+
+/**
+ * Based on the specified camera, compute the X translation
+ *
+ * @param tree
+ * @param configuration
+ */
+export const computeCameraLocationX = (
+    configuration: PluridAppConfiguration,
+) => {
+    let translateX = 0;
+
+    if (configuration.roots && configuration.roots.layout) {
+        const layoutIndex = configuration.roots.layout.indexOf(configuration.roots.camera || '');
+        translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
+    }
+
+    // account for camera space inversion
+    return -1 * translateX;
 }
 
 
@@ -71,7 +116,8 @@ export const recomputeSpaceTreeLocations = (
 
 
 export const getTreePageByPlaneID = (
-    tree: TreePage[], planeID: string
+    tree: TreePage[],
+    planeID: string
 ): TreePage | null => {
     let _page = null;
 

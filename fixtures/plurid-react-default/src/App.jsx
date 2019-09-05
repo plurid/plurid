@@ -11,10 +11,17 @@ const App = () => {
 
     const appConfiguration = {
         alterURL: false,
-        pluridPlane: {
+        planes: {
+            width: 50,
             showControls: true,
         },
-    }
+        roots: {
+            layout: [
+                '/page-2', '/page-1', '/page-3'
+            ],
+            camera: '/page-1',
+        },
+    };
 
     // const document1Pages = [
     //     {
@@ -77,21 +84,21 @@ const App = () => {
 
 
     const appPages = [
-        // {
-        //     path: '/page-1',
-        //     component: {
-        //         element: Page1,
-        //         properties: {},
-        //     },
-        //     root: true,
-        // },
         {
             path: '/page-1',
             component: {
                 element: Page1,
                 properties: {},
             },
+            root: true,
         },
+        // {
+        //     path: '/page-1',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        // },
         {
             path: '/page-2',
             component: {
@@ -100,14 +107,14 @@ const App = () => {
             },
             root: true,
         },
-        // {
-        //     path: '/page-3',
-        //     component: {
-        //         element: Page1,
-        //         properties: {},
-        //     },
-        //     root: true,
-        // },
+        {
+            path: '/page-3',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            root: true,
+        },
     ];
 
     return (
