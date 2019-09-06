@@ -12,6 +12,12 @@ export const StyledPluridPlane: any = styled.div`
     color: ${(props: any) => {
         return props.theme.colorPrimary;
     }};
+    opacity: ${(props: any) => {
+        if (!props.show) {
+            return '0';
+        }
+        return '1';
+    }};
 
     position: absolute;
     height: auto;
