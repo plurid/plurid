@@ -6,8 +6,8 @@ export const StyledPluridPlane: any = styled.div`
     background-color: ${(props: any) => {
         return props.theme.backgroundColorPrimary;
     }};
-    box-shadow: 0 2px 2px 0 ${(props: any) => {
-        return props.theme.shadow;
+    box-shadow: ${(props: any) => {
+        return props.theme.boxShadowUmbra;
     }};
     color: ${(props: any) => {
         return props.theme.colorPrimary;
