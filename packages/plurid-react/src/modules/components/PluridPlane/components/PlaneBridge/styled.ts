@@ -10,6 +10,6 @@ export const StyledPlaneBridge = styled.div`
     position: absolute;
     top: 0;
     left: -100px;
-    height: 34px;
+    height: 30px;
     width: 100px;
 `;
