@@ -59,6 +59,7 @@ export interface ViewOwnProperties {
 }
 
 interface ViewStateProperties {
+    spaceLoading: boolean;
     tree: TreePage[];
 }
 
@@ -71,8 +72,9 @@ interface ViewDispatchProperties {
     setDocuments: typeof actions.data.setDocuments;
     setViewSize: typeof actions.data.setViewSize;
 
-    setTree: typeof actions.space.setTree;
+    setSpaceLoading: typeof actions.space.setSpaceLoading;
     setSpaceLocation: typeof actions.space.setSpaceLocation;
+    setTree: typeof actions.space.setTree;
 
     setGeneralTheme: typeof actions.themes.setGeneralTheme;
     setInteractionTheme: typeof actions.themes.setInteractionTheme;
@@ -86,6 +88,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     const {
         appProperties,
 
+        spaceLoading,
         tree,
 
         dispatch,
@@ -96,8 +99,9 @@ const View: React.FC<ViewProperties> = (properties) => {
         setDocuments,
         setViewSize,
 
-        setTree,
+        setSpaceLoading,
         setSpaceLocation,
+        setTree,
 
         setGeneralTheme,
         setInteractionTheme,
@@ -207,28 +211,35 @@ const View: React.FC<ViewProperties> = (properties) => {
             const computedTree = computeSpaceTree(_pages, configuration);
             setTree(computedTree);
         }
+
+        setSpaceLoading(false);
     }, [configuration]);
 
     const viewContainer = handleView(pages, documents);
 
     return (
         <StyledView>
-            <GlobalStyle />
+            {!spaceLoading && (
+                <>
+                    <GlobalStyle />
 
-            <Context.Provider
-                value={{
-                    pages: pages || [],
-                    documents: documents || [],
-                }}
-            >
-                {viewContainer}
-            </Context.Provider>
+                    <Context.Provider
+                        value={{
+                            pages: pages || [],
+                            documents: documents || [],
+                        }}
+                    >
+                                {viewContainer}
+                    </Context.Provider>
+                </>
+            )}
         </StyledView>
     );
 }
 
 
 const mapStateToProps = (state: AppState): ViewStateProperties => ({
+    spaceLoading: selectors.space.getLoading(state),
     tree: selectors.space.getTree(state),
 });
 
@@ -242,8 +253,9 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
     setViewSize: (viewSize: ViewSize) => dispatch(actions.data.setViewSize(viewSize)),
 
-    setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
+    setSpaceLoading: (loading: boolean) => dispatch(actions.space.setSpaceLoading(loading)),
     setSpaceLocation: (spaceLocation: any) => dispatch(actions.space.setSpaceLocation(spaceLocation)),
+    setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
 
     setGeneralTheme: (theme: Theme) => dispatch(actions.themes.setGeneralTheme(theme)),
     setInteractionTheme: (theme: Theme) => dispatch(actions.themes.setInteractionTheme(theme)),

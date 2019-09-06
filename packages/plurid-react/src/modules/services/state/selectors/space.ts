@@ -6,6 +6,7 @@ import {
 
 
 
+const getLoading = (state: AppState): boolean => state.space.loading;
 const getRotationX = (state: AppState): number => state.space.rotationX;
 const getRotationY = (state: AppState): number => state.space.rotationY;
 const getTranslationX = (state: AppState): number => state.space.translationX;
@@ -16,6 +17,8 @@ const getTree = (state: AppState): TreePage[] => state.space.tree;
 
 
 export default {
+    getLoading,
+
     getRotationX,
     getRotationY,
     getTranslationX,

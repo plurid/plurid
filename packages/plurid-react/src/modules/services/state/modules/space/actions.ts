@@ -3,6 +3,8 @@ import {
 } from '../../../../data/interfaces';
 
 import {
+    SET_SPACE_LOADING,
+    SetSpaceLoadingAction,
     SET_SPACE_LOCATION,
     SetSpaceLocationAction,
     SpaceLocation,
@@ -35,6 +37,13 @@ import {
 } from './types'
 
 
+
+export const setSpaceLoading = (payload: boolean): SetSpaceLoadingAction => {
+    return {
+        type: SET_SPACE_LOADING,
+        payload,
+    };
+}
 
 export const setSpaceLocation = (payload: SpaceLocation): SetSpaceLocationAction => {
     return {

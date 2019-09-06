@@ -1,4 +1,5 @@
 import {
+    setSpaceLoading,
     setSpaceLocation,
 
     rotateUp,
@@ -20,6 +21,7 @@ import {
 
 
 export default {
+    setSpaceLoading,
     setSpaceLocation,
 
     rotateUp,
