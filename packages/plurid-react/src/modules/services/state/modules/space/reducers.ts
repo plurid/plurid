@@ -7,6 +7,7 @@ import {
 } from '../../../../data/constants/space';
 
 import {
+    SET_SPACE_LOADING,
     SET_SPACE_LOCATION,
 
     ROTATE_UP,
@@ -31,6 +32,7 @@ import {
 
 
 const initialState: SpaceState = {
+    loading: true,
     scale: 1,
     rotationX: 0,
     rotationY: 0,
@@ -45,6 +47,10 @@ const spaceReducer = (
     action: SpaceActionsType,
 ): SpaceState => {
     switch(action.type) {
+        case SET_SPACE_LOADING:
+            {
+                return { ...state, loading: action.payload };
+            }
         case SET_SPACE_LOCATION:
             {
                 return { ...state, ...action.payload };

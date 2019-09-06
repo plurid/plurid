@@ -4,6 +4,14 @@ import {
 
 
 
+
+export const SET_SPACE_LOADING = 'SET_SPACE_LOADING';
+export interface SetSpaceLoadingAction {
+    type: typeof SET_SPACE_LOADING;
+    payload: boolean;
+}
+
+
 export const SET_SPACE_LOCATION = 'SET_SPACE_LOCATION';
 export interface SpaceLocation {
     rotationX: number;
@@ -81,6 +89,7 @@ export interface SetTreeAction {
 
 
 export interface SpaceState {
+    loading: boolean;
     scale: number;
     rotationX: number;
     rotationY: number;
@@ -91,7 +100,8 @@ export interface SpaceState {
 }
 
 
-export type SpaceActionsType = SetSpaceLocationAction
+export type SpaceActionsType = SetSpaceLoadingAction
+    | SetSpaceLocationAction
     | RotateUpAction
     | RotateDownAction
     | RotateLeftAction
