@@ -4,10 +4,10 @@ import styled from 'styled-components';
 
 export const StyledInputText: any = styled.input`
     background-color: ${(props: any) => {
-        return props.theme.backgroundColorPrimary;
+        return props.theme.backgroundColorPrimaryAlpha;
     }};
     color: ${(props: any) => {
-        return props.theme.colorPrimary;
+        return props.theme.colorSecondary;
     }};
 
     box-shadow: inset 0px 1px 2px black;
@@ -19,7 +19,7 @@ export const StyledInputText: any = styled.input`
     font-size: 14px;
     outline: none;
     border: none;
-    transition: box-shadow 300ms linear;
+    transition: 300ms ease-in-out;
     font-size: 0.8rem;
 
     ::placeholder {
@@ -29,6 +29,12 @@ export const StyledInputText: any = styled.input`
     }
 
     :focus {
+        background-color: ${(props: any) => {
+            return props.theme.backgroundColorPrimary;
+        }};
+        color: ${(props: any) => {
+            return props.theme.colorPrimary;
+        }};
         box-shadow: inset 0px 3px 3px black;
     }
 `;

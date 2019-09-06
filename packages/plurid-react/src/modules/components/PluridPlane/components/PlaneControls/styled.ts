@@ -27,7 +27,7 @@ export const StyledPlaneControlsLeft = styled.div`
 
 export const StyledPlaneControlsCenter = styled.div`
     width: 100%;
-    height: 28px;
+    height: 38px;
 `;
 
 
