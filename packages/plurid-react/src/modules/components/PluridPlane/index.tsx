@@ -61,6 +61,7 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
     return (
         <StyledPluridPlane
             theme={generalTheme}
+            show={treePage.show}
             data-plurid-plane={planeID}
             style={{
                 transform: `

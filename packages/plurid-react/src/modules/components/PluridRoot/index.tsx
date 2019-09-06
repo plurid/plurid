@@ -47,7 +47,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                 const _page = pages.find((_page: any) => _page.path === child.path);
 
                 let plane = (<></>);
-                if (_page && child.show) {
+                if (_page) {
+                    // instead of forcing show here to pass it as prop
+                    // and change the opacity
                     const Page = _page.component.element;
                     plane = (
                         <PluridPlane
@@ -64,7 +66,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     setChildrenPlanes(planes => [...planes, plane]);
                 }
 
-                if (child.children && child.show) {
+                if (child.children) {
                     computeChildrenPlanes(child);
                 }
             });
