@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export const StyledPlaneControls = styled.div`
     background-color: ${(props: any) => {
-        return props.theme.backgroundColorSecondary;
+        return props.theme.backgroundColorDark;
     }};
 
     width: 100%;

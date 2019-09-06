@@ -884,10 +884,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@plurid/apps.utilities.themes@^0.1.10":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.10.tgz#3108f335fa8ad67fa1a113985a38af0ebb47f75a"
-  integrity sha512-XjTZRE1rF3mTFG8G7TwjwpNlg64fsgpDScRpZrJVE4RaszelYE+1k1jGdCuBcgev5QjeP73DAvsboTfA8rPMPw==
+"@plurid/apps.utilities.themes@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.11.tgz#9edf2bb5c364004c9c6127a295b71911c3c416ca"
+  integrity sha512-v6t3XOj1zPzvPK51WhBdcBYhlJNZSKt7JVzliE8QXnhDEUljZb2RKWzMuImm3xroYjU+9EqxEIXud8Megbf76w==
 
 "@plurid/plurid-engine@^0.1.0":
   version "0.1.0"
