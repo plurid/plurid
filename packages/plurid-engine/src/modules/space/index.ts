@@ -44,6 +44,13 @@ export const computeRootLocationX = (
 }
 
 
+/**
+ * Compute the space based on the layout.
+ * If there is no configuration.space.layout, it uses the default '2 COLUMNS' layout.
+ *
+ * @param pages
+ * @param configuration
+ */
 export const computeSpaceTree = (
     pages: PluridPage[],
     configuration: PluridConfiguration | undefined,
@@ -51,50 +58,122 @@ export const computeSpaceTree = (
     const tree: TreePage[] = [];
 
     const roots = pages.filter(page => page.root);
+    if (roots.length === 0) {
+        return tree;
+    }
 
-    // to compute the space based on the layout here
-    // if no configuration.space.layout to use the default COLUMNS, 2
+    if (!configuration
+        || !configuration.space
+        || !configuration.space.layout
+    ) {
+        const columnLayoutTree = computeColumnLayout(roots);
+        return columnLayoutTree;
+        // roots.forEach((root, index) => {
+        //     const translateX = computeRootLocationX(configuration, root, index);
+
+        //     const treePage = {
+        //         path: root.path,
+        //         planeID: uuid(),
+        //         location: {
+        //             translateX,
+        //             translateY: 0,
+        //             translateZ: 0,
+        //             rotateX: 0,
+        //             rotateY: 0,
+        //         },
+        //         show: true,
+        //     };
+        //     tree.push(treePage);
+        // });
+
+        // return tree;
+    }
+
+    switch(configuration.space.layout.type) {
+        case 'COLUMNS':
+            const {
+                columns,
+            } = configuration.space.layout;
+            const columnLayoutTree = computeColumnLayout(roots, columns);
+            return columnLayoutTree;
+        case 'FACE_TO_FACE':
+            const {
+                halfAngle,
+                middleSpace,
+                middleVideos,
+            } = configuration.space.layout;
+            const faceToFaceLayoutTree = computeFaceToFaceLayout(
+                roots,
+                halfAngle,
+                middleSpace,
+                middleVideos,
+            );
+            return faceToFaceLayoutTree;
+        case 'SHEAVES':
+            const {
+                depth,
+                offsetX,
+                offsetY,
+            } = configuration.space.layout;
+            const sheavesLayoutTree = computeSheavesLayout(
+                roots,
+                depth,
+                offsetX,
+                offsetY,
+            );
+            return sheavesLayoutTree;
+        default:
+            return tree;
+    }
+}
 
 
-    roots.forEach((root, index) => {
-        const translateX = computeRootLocationX(configuration, root, index);
-
-        const treePage = {
-            path: root.path,
-            planeID: uuid(),
-            location: {
-                translateX,
-                translateY: 0,
-                translateZ: 0,
-                rotateX: 0,
-                rotateY: 0,
-            },
-            show: true,
-        };
-        tree.push(treePage);
-    });
+export const computeColumnLayout = (
+    roots: PluridPage[],
+    columns: number = 2,
+    columnsGap: number = ROOTS_GAP,
+    rowsGap: number = ROOTS_GAP,
+): TreePage[] => {
+    const tree: TreePage[] = [];
 
     return tree;
 }
 
 
+export const computeFaceToFaceLayout = (
+    roots: PluridPage[],
+    halfAngle: number = 0,
+    middleSpace: number = 0.5,
+    middleVideos: number = 0,
+): TreePage[] => {
+    const tree: TreePage[] = [];
+
+    return tree;
+}
+
+
+export const computeSheavesLayout = (
+    roots: PluridPage[],
+    depth: number = 0.3,
+    offsetX: number = 0,
+    offsetY: number = 0,
+): TreePage[] => {
+    const tree: TreePage[] = [];
+
+    return tree;
+}
+
+
+
 export const computeSpaceLocation = (
     configuration: PluridConfiguration,
 ): SpaceLocation => {
-    if (configuration.space && configuration.space.layout) {
-        const {
-            layout,
-        } = configuration.space;
+    // if (configuration.space && configuration.space.layout) {
+    //     const {
+    //         layout,
+    //     } = configuration.space;
 
-        switch (layout.type) {
-            case 'COLUMNS':
-                break;
-            case 'FACE_TO_FACE':
-                break;
-            case 'SHEAVES':
-                break;
-        }
-    }
+    // }
 
     const cameraLocationX = computeCameraLocationX(configuration);
     const spaceLocation = {
