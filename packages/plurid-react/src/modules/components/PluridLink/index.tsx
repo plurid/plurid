@@ -28,7 +28,7 @@ import {
     // hidePageFromTree,
     // showPageFromTree,
     togglePageFromTree,
-} from '../../services/logic/space';
+} from '@plurid/plurid-engine';
 
 import { AppState } from '../../services/state/store';
 import selectors from '../../services/state/selectors';
