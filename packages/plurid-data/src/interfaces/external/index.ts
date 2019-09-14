@@ -110,7 +110,7 @@ export interface PluridConfigurationTheme {
 
 
 export interface PluridConfigurationSpace {
-    layout: string[] | LayoutColumns | LayoutFaceToFace | LayoutSheaves;
+    layout?: LayoutColumns | LayoutFaceToFace | LayoutSheaves;
 
     /**
      * Path to the root or integer indicating the index order.
@@ -124,7 +124,12 @@ export interface PluridConfigurationSpace {
 }
 
 
-export interface LayoutColumns {
+interface Layout {
+    type: 'COLUMNS' | 'FACE_TO_FACE' | 'SHEAVES';
+}
+
+
+export interface LayoutColumns extends Layout {
     type: 'COLUMNS',
 
     /**
@@ -136,7 +141,7 @@ export interface LayoutColumns {
 }
 
 
-export interface LayoutFaceToFace {
+export interface LayoutFaceToFace extends Layout {
     type: 'FACE_TO_FACE',
 
     /**
@@ -158,7 +163,7 @@ export interface LayoutFaceToFace {
 }
 
 
-export interface LayoutSheaves {
+export interface LayoutSheaves extends Layout {
     type: 'SHEAVES',
 
     /**
