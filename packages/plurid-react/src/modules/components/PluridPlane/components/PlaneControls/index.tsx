@@ -15,8 +15,8 @@ import {
 } from './styled';
 
 import {
-    PluridAppConfiguration,
-} from '../../../../data/interfaces';
+    PluridConfiguration,
+} from '@plurid/plurid-data';
 
 import Styles from '../../../../services/styles';
 
@@ -32,7 +32,7 @@ interface PlaneControlsOwnProperties {
 }
 
 interface PlaneControlsStateProperties {
-    configuration: PluridAppConfiguration;
+    configuration: PluridConfiguration;
     generalTheme: Theme;
     interactionTheme: Theme;
 }

@@ -1,15 +1,15 @@
 import {
-    PluridAppConfiguration,
-} from '../../../../data/interfaces';
+    PluridConfiguration,
+} from '@plurid/plurid-data';
 
 import {
     SetConfigurationAction,
     SET_CONFIGURATION,
-} from './types'
+} from './types';
 
 
 
-export const setConfiguration = (payload: PluridAppConfiguration): SetConfigurationAction => {
+export const setConfiguration = (payload: PluridConfiguration): SetConfigurationAction => {
     return {
         type: SET_CONFIGURATION,
         payload,

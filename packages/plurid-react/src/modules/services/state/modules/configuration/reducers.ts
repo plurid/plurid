@@ -13,7 +13,7 @@ const initialState: ConfigurationState = {
     planes: {
         domainURL: true,
         width: 100,
-        showControls: true,
+        controls: true,
     },
 }
 

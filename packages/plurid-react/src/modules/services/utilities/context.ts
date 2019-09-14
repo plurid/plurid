@@ -1,12 +1,12 @@
 import React from 'react';
 
 import {
-    PluridAppContext,
-} from '../../modules/data/interfaces';
+    PluridContext,
+} from '@plurid/plurid-data';
 
 
 
-const defaultContext: PluridAppContext = {
+const defaultContext: PluridContext = {
     pages: [],
     documents: [],
 }

@@ -1,19 +1,14 @@
 import {
     PluridPage,
-} from '../../../data/interfaces';
-
-import uuid from '../../utilities/uuid';
-
-import {
+    PluridConfiguration,
     TreePage,
-    PluridAppConfiguration,
     SpaceLocation,
-} from '../../../data/interfaces';
 
-import {
     ROOTS_GAP,
     PLANE_DEFAULT_ANGLE,
-} from '../../../data/constants/space';
+} from '@plurid/plurid-data';
+
+import uuid from '../../utilities/uuid';
 
 
 
@@ -26,7 +21,7 @@ import {
  * @param index
  */
 export const computeRootLocationX = (
-    configuration: PluridAppConfiguration | undefined,
+    configuration: PluridConfiguration | undefined,
     root: PluridPage,
     index: number,
 ) => {
@@ -48,7 +43,7 @@ export const computeRootLocationX = (
 
 export const computeSpaceTree = (
     pages: PluridPage[],
-    configuration: PluridAppConfiguration | undefined,
+    configuration: PluridConfiguration | undefined,
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
@@ -77,7 +72,7 @@ export const computeSpaceTree = (
 
 
 export const computeSpaceLocation = (
-    configuration: PluridAppConfiguration,
+    configuration: PluridConfiguration,
 ): SpaceLocation => {
     const cameraLocationX = computeCameraLocationX(configuration);
     const spaceLocation = {
@@ -99,7 +94,7 @@ export const computeSpaceLocation = (
  * @param configuration
  */
 export const computeCameraLocationX = (
-    configuration: PluridAppConfiguration,
+    configuration: PluridConfiguration,
 ) => {
     let translateX = 0;
 
