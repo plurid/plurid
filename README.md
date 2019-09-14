@@ -15,7 +15,7 @@
 Transform web documents into a 3D explorable structure
 
 
-The monorepository contains packages implementing the `plurid'` technology to create a 3D browser view based on the [plurid-specification](https://github.com/plurid/plurid-spec).
+The monorepository contains packages implementing the `plurid'` technology to create a 3D browser view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-spec).
 
 
 <p align="center">
