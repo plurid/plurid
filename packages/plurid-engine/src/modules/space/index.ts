@@ -68,25 +68,6 @@ export const computeSpaceTree = (
     ) {
         const columnLayoutTree = computeColumnLayout(roots);
         return columnLayoutTree;
-        // roots.forEach((root, index) => {
-        //     const translateX = computeRootLocationX(configuration, root, index);
-
-        //     const treePage = {
-        //         path: root.path,
-        //         planeID: uuid(),
-        //         location: {
-        //             translateX,
-        //             translateY: 0,
-        //             translateZ: 0,
-        //             rotateX: 0,
-        //             rotateY: 0,
-        //         },
-        //         show: true,
-        //     };
-        //     tree.push(treePage);
-        // });
-
-        // return tree;
     }
 
     switch(configuration.space.layout.type) {
@@ -168,10 +149,33 @@ export const computeColumnLayout = (
 export const computeFaceToFaceLayout = (
     roots: PluridPage[],
     halfAngle: number = 0,
-    middleSpace: number = 0.5,
+    middleSpace: number = 1,
     middleVideos: number = 0,
 ): TreePage[] => {
     const tree: TreePage[] = [];
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    for (const [index, root] of roots.entries()) {
+        const translateX = 0;
+        const translateY = 0;
+
+        const treePage: TreePage = {
+            path: root.path,
+            planeID: uuid(),
+            location: {
+                translateX,
+                translateY,
+                translateZ: 0,
+                rotateX: 0,
+                rotateY: 0,
+            },
+            show: true,
+        };
+
+        tree.push(treePage);
+    }
 
     return tree;
 }
@@ -184,6 +188,29 @@ export const computeSheavesLayout = (
     offsetY: number = 0,
 ): TreePage[] => {
     const tree: TreePage[] = [];
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    for (const [index, root] of roots.entries()) {
+        const translateX = 0;
+        const translateY = 0;
+
+        const treePage: TreePage = {
+            path: root.path,
+            planeID: uuid(),
+            location: {
+                translateX,
+                translateY,
+                translateZ: 0,
+                rotateX: 0,
+                rotateY: 0,
+            },
+            show: true,
+        };
+
+        tree.push(treePage);
+    }
 
     return tree;
 }
