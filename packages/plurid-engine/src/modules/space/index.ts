@@ -3,6 +3,7 @@ import {
     PluridConfiguration,
     TreePage,
     SpaceLocation,
+    LocationCoordinates,
 
     ROOTS_GAP,
     PLANE_DEFAULT_ANGLE,
@@ -208,12 +209,6 @@ export const computePath = (
     return path.reverse();
 }
 
-
-interface LocationCoordinates {
-    x: number;
-    y: number;
-    z: number;
-}
 
 export const computePluridPlaneLocation = (
     tree: TreePage[],
