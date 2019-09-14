@@ -1,18 +1,17 @@
 import {
-    PluridAppConfiguration,
-} from '../../../../data/interfaces';
+    PluridConfiguration,
+} from '@plurid/plurid-data';
 
 
 
 export const SET_CONFIGURATION = 'SET_CONFIGURATION';
-
 export interface SetConfigurationAction {
     type: typeof SET_CONFIGURATION;
-    payload: PluridAppConfiguration;
+    payload: PluridConfiguration;
 }
 
 
-export interface ConfigurationState extends PluridAppConfiguration {
+export interface ConfigurationState extends PluridConfiguration {
 }
 
 

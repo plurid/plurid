@@ -7,7 +7,7 @@ import ErrorView from '../../modules/containers/ErrorView';
 import {
     PluridPage,
     PluridDocument,
-} from '../../modules/data/interfaces';
+} from '@plurid/plurid-data';
 
 
 

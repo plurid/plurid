@@ -8,6 +8,8 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import {
     PluridApp as PluridAppProperties,
+    PluridConfiguration as PluridAppConfiguration,
+    TreePage,
 } from '@plurid/plurid-data';
 
 import './index.css';
@@ -19,12 +21,7 @@ import {
 
 import handleView from './logic';
 
-import {
-    TreePage,
-    PluridAppConfiguration,
-} from '../../modules/data/interfaces';
-
-import Context from './context';
+import Context from '../../modules/services/utilities/context';
 
 import { debounce } from '../../modules/services/utilities/debounce';
 import uuid from '../../modules/services/utilities/uuid';

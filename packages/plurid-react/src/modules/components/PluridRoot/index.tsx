@@ -8,14 +8,15 @@ import {
     StyledPluridRoot,
 } from './styled';
 
-import Context from '../../../App/View/context';
+import Context from '../../services/utilities/context';
 
 import PluridPlane from '../PluridPlane';
 
 import {
     TreePage,
-    PluridAppContext,
-} from '../../data/interfaces';
+    PluridContext
+} from '@plurid/plurid-data';
+
 
 
 
@@ -25,7 +26,7 @@ interface PluridRootProperties {
 
 const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const [childrenPlanes, setChildrenPlanes] = useState([] as JSX.Element[]);
-    const context: PluridAppContext = useContext(Context);
+    const context: PluridContext = useContext(Context);
 
     const {
         page,
