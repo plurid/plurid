@@ -47,7 +47,7 @@ import {
     computeSpaceTree,
     computeSpaceLocation,
     recomputeSpaceTreeLocations,
-} from '../../modules/services/logic/space';
+} from '@plurid/plurid-engine';
 
 import { AppState } from '../../modules/services/state/store';
 import { ViewSize } from '../../modules/services/state/types/data';
