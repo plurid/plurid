@@ -29,9 +29,9 @@ export const computeRootLocationX = (
     index: number,
 ) => {
     let translateX = 0;
-    if (configuration && configuration.roots) {
-        if (Array.isArray(configuration.roots.layout)) {
-            const layoutIndex = configuration.roots.layout.indexOf(root.path);
+    if (configuration && configuration.space) {
+        if (Array.isArray(configuration.space.layout)) {
+            const layoutIndex = configuration.space.layout.indexOf(root.path);
             translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
         }
     } else {
@@ -101,11 +101,11 @@ export const computeCameraLocationX = (
 ) => {
     let translateX = 0;
 
-    if (configuration.roots
-        && Array.isArray(configuration.roots.layout)
-        && typeof configuration.roots.camera === 'string'
+    if (configuration.space
+        && Array.isArray(configuration.space.layout)
+        && typeof configuration.space.camera === 'string'
     ) {
-        const layoutIndex = configuration.roots.layout.indexOf(configuration.roots.camera || '');
+        const layoutIndex = configuration.space.layout.indexOf(configuration.space.camera || '');
         translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
     }
 
