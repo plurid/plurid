@@ -6,7 +6,7 @@ import {
     // quaternionFromAxisAngle,
     quaternionMultiply,
     // rotatePointViaQuaternion,
-} from './quaternion';
+} from '../quaternion';
 
 
 

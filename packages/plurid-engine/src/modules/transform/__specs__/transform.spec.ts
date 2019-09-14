@@ -4,11 +4,11 @@ import {
     getTranslationMatrix,
     getScalationValue,
     getTransformRotate,
-} from '../../src';
+} from '../';
 
 
 
-describe('transformations', () => {
+xdescribe('transformations', () => {
     it('getMatrixValues() - gets matrix array numbers from the matrix3d CSS string', () => {
         const matrix3d = 'matrix3d(0.866025, 0.17101, -0.469846, 0, 0, 0.939693, 0.34202, 0, 0.5, -0.296198, 0.813798, 0, 200, 300, 0, 1)';
         const matrixValues = getMatrixValues(matrix3d);

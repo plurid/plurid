@@ -4,7 +4,7 @@ import {
     rotateMatrix,
     translateMatrix,
     scaleMatrix,
-} from './matrix';
+} from '../matrix';
 // import { radToDeg } from './quaternion';
 
 

@@ -52,6 +52,10 @@ export const computeSpaceTree = (
 
     const roots = pages.filter(page => page.root);
 
+    // to compute the space based on the layout here
+    // if no configuration.space.layout to use the default COLUMNS, 2
+
+
     roots.forEach((root, index) => {
         const translateX = computeRootLocationX(configuration, root, index);
 

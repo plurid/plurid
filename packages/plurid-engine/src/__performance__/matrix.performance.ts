@@ -1,5 +1,5 @@
 import { performance } from 'perf_hooks';
-import { multiplyMatrices } from '../../src/';
+import { multiplyMatrices } from '../';
 
 
 
