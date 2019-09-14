@@ -146,7 +146,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     const handleConfiguration = (configuration: PluridAppConfiguration) => {
         setConfiguration(configuration);
 
-        if (configuration.roots) {
+        if (configuration.space) {
             const spaceLocation = computeSpaceLocation(configuration);
             setSpaceLocation(spaceLocation);
         }

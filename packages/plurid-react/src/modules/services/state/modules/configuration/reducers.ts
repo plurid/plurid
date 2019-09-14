@@ -7,14 +7,20 @@ import {
 
 
 const initialState: ConfigurationState = {
-    perspective: 1000,
     theme: 'plurid',
-    alterURL: false,
-    planes: {
-        domainURL: true,
-        width: 100,
-        controls: true,
-    },
+    micro: false,
+    toolbar: true,
+    planeControls: true,
+    viewcube: true,
+    planeDomainURL: true,
+    planeWidth: 1,
+    space: {
+        layout: {
+            type: 'COLUMNS',
+            columns: 2,
+        },
+        perspective: 1000,
+    }
 }
 
 const configurationReducer = (

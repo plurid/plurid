@@ -55,10 +55,8 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
 
     let basePath = '';
     if (configuration) {
-        if (configuration.planes) {
-            if (configuration.planes.domainURL) {
-                basePath = window.location.hostname;
-            }
+        if (configuration.planeDomainURL) {
+            basePath = window.location.hostname;
         }
     }
 
