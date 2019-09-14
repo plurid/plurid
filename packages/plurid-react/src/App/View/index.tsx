@@ -12,6 +12,16 @@ import {
     TreePage,
 } from '@plurid/plurid-data';
 
+import {
+    debounce,
+    uuidv4 as uuid,
+} from '@plurid/apps.utilities.functions';
+
+import themes, {
+    Theme,
+    THEME_NAMES,
+} from '@plurid/apps.utilities.themes';
+
 import './index.css';
 
 import {
@@ -22,9 +32,6 @@ import {
 import handleView from './logic';
 
 import Context from '../../modules/services/utilities/context';
-
-import { debounce } from '../../modules/services/utilities/debounce';
-import uuid from '../../modules/services/utilities/uuid';
 
 import {
     useGlobalKeyDown,
@@ -43,14 +50,9 @@ import {
 } from '../../modules/services/logic/space';
 
 import { AppState } from '../../modules/services/state/store';
+import { ViewSize } from '../../modules/services/state/types/data';
 import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
-import { ViewSize } from '../../modules/services/state/types/data';
-
-import themes, {
-    Theme,
-    THEME_NAMES,
-} from '@plurid/apps.utilities.themes';
 
 
 
