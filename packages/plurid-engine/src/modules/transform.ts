@@ -195,9 +195,9 @@ export function getTransformRotate(matrix3d: string): RotationValues {
         //     thetaY = 0;
         // }
 
-        thetaZ = Math.asin(-1 * values[1]);
-        thetaX = Math.atan2(values[9], values[5]);
-        thetaY = Math.atan2(values[2], values[0]);
+        // thetaZ = Math.asin(-1 * values[1]);
+        // thetaX = Math.atan2(values[9], values[5]);
+        // thetaY = Math.atan2(values[2], values[0]);
 
 
         // console.log('thetaX', thetaX);
