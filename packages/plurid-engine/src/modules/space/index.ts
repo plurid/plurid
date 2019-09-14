@@ -136,6 +136,31 @@ export const computeColumnLayout = (
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    for (const [index, root] of roots.entries()) {
+        const rowIndex = Math.floor(index / columns);
+        const columnIndex = index % columns;
+        const translateX = columnIndex * (width + columnsGap);
+        const translateY = rowIndex * (height + rowsGap);
+
+        const treePage: TreePage = {
+            path: root.path,
+            planeID: uuid(),
+            location: {
+                translateX,
+                translateY,
+                translateZ: 0,
+                rotateX: 0,
+                rotateY: 0,
+            },
+            show: true,
+        };
+
+        tree.push(treePage);
+    }
+
     return tree;
 }
 
