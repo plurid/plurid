@@ -287,6 +287,16 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@plurid/apps.utilities.functions@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.functions/-/apps.utilities.functions-0.1.2.tgz#6a2959519bd288d602dff9b9607a01aa54e7e326"
+  integrity sha512-Q+XAQLCU0gXr2BcJquSyic0EQ9UjPX+iOGdn8+gsD5XhqF94S0oHNCZMSCjQOfKNCoO2fCAO3E/xU5fuPXzg6g==
+
+"@plurid/plurid-data@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.1.tgz#33aaef9eb551b645f430acad2af8ee2c23f52d57"
+  integrity sha512-DbVO8zChUKs8mK/M3Y7tbQ6YalR4cNrHvyZX05K7y4teF+ObU/SSLZK/BpGNNmJxckrThVjanQkvZDhKYNOBYg==
+
 "@types/babel__core@^7.1.0":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.3.tgz#e441ea7df63cd080dfcd02ab199e6d16a735fc30"
