@@ -889,6 +889,11 @@
   resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.11.tgz#9edf2bb5c364004c9c6127a295b71911c3c416ca"
   integrity sha512-v6t3XOj1zPzvPK51WhBdcBYhlJNZSKt7JVzliE8QXnhDEUljZb2RKWzMuImm3xroYjU+9EqxEIXud8Megbf76w==
 
+"@plurid/plurid-data@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.0.tgz#7106e757ec2ff3c56f4e539f56d2410b61b178a3"
+  integrity sha512-sFg+NJU/umKsiM8I//g/RtrtLyjM60skx9li1jL4nl9Uwolm5fKjJL6sAcFtsKUv4lNf/N5MS5ufb2AZ1kLyQg==
+
 "@plurid/plurid-engine@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.0.tgz#4856d8253bc61f9c24dec1f1751a3db2123cc2d3"
