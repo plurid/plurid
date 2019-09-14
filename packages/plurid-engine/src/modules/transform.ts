@@ -5,7 +5,7 @@ import {
     translateMatrix,
     scaleMatrix,
 } from './matrix';
-import { radToDeg } from './quaternion';
+// import { radToDeg } from './quaternion';
 
 
 
@@ -153,9 +153,9 @@ export function getTransformRotate(matrix3d: string): RotationValues {
     // console.log(values);
     let rotateX: number = 0;
     let rotateY: number = 0;
-    let thetaX = 0;
-    let thetaY = 0;
-    let thetaZ = 0;
+    // let thetaX = 0;
+    // let thetaY = 0;
+    // let thetaZ = 0;
 
     // let theta1 = 0;
     // let theta2 = 0;
