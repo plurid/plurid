@@ -1,7 +1,7 @@
 import {
     PluridPage,
     PluridDocument,
-} from '../';
+} from '../external';
 
 
 
