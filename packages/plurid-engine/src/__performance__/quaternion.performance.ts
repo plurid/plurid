@@ -1,5 +1,5 @@
 import { performance } from 'perf_hooks';
-import { computeQuaternionFromEulers } from '../../src';
+import { computeQuaternionFromEulers } from '../';
 
 
 

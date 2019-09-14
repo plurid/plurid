@@ -1,6 +1,6 @@
-import { getWheelDirection } from '../../src';
+import { getWheelDirection } from '../';
 
-describe('getWheelDirection', () => {
+xdescribe('getWheelDirection', () => {
     it('returns "left" direction', () => {
         const deltas = {
             deltaX: 20,

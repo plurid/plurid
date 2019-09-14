@@ -35,7 +35,7 @@ export interface PluridPage {
     /**
      * If true, the page will be considered for the initial layout.
      */
-    root: boolean;
+    root?: boolean;
 
     /**
      * By default, the order the pages are shown in is based on their index in the pages[].

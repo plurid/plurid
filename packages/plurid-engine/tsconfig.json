@@ -7,6 +7,7 @@
         "strict": true,
         "sourceMap": true,
         "declaration": true,
+        "jsx": "react",
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
