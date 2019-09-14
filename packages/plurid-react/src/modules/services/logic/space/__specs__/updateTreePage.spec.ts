@@ -4,7 +4,7 @@ import {
 
 import {
     TreePage,
-} from '../../../../data/interfaces';
+} from '@plurid/plurid-data';
 
 
 
@@ -24,12 +24,14 @@ describe('updateTreePage', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                show: true,
                 children: [],
             },
             {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                show: true,
                 children: [],
             },
         ];
@@ -37,11 +39,13 @@ describe('updateTreePage', () => {
             planeID: 'aaa',
             path: '/aaa',
             location,
+            show: true,
             children: [
                 {
                     planeID: 'bbb',
                     path: '/aaa/bbb',
                     location,
+                    show: true,
                     children: [],
                 }
             ],
@@ -52,6 +56,7 @@ describe('updateTreePage', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                show: true,
                 children: [],
             },
         ];
@@ -66,11 +71,13 @@ describe('updateTreePage', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                show: true,
                 children: [
                     {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        show: true,
                         children: [],
                     }
                 ],
@@ -79,6 +86,7 @@ describe('updateTreePage', () => {
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
+                show: true,
                 children: [],
             },
         ];
@@ -86,11 +94,13 @@ describe('updateTreePage', () => {
             planeID: 'bbb',
             path: '/aaa/bbb',
             location,
+            show: true,
             children: [
                 {
                     planeID: 'ccc',
                     path: '/aaa/bbb/ccc',
                     location,
+                    show: true,
                     children: [],
                 }
             ],
@@ -100,6 +110,7 @@ describe('updateTreePage', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                show: true,
                 children: [
                     updatedPage,
                 ],
@@ -108,6 +119,7 @@ describe('updateTreePage', () => {
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
+                show: true,
                 children: [],
             },
         ];

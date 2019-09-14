@@ -4,7 +4,7 @@ import {
 
 import {
     TreePage,
-} from '../../../../data/interfaces';
+} from '@plurid/plurid-data';
 
 
 
@@ -21,16 +21,19 @@ const tree: TreePage[] = [
         planeID: 'aaa',
         path: '/aaa',
         location,
+        show: true,
         children: [
             {
                 planeID: 'bbb',
                 path: '/aaa/bbb',
                 location,
+                show: true,
                 children: [
                     {
                         planeID: 'ccc',
                         path: '/aaa/bbb/ccc',
                         location,
+                        show: true,
                         children: [],
                     },
                 ],
@@ -41,17 +44,20 @@ const tree: TreePage[] = [
         planeID: 'ddd',
         path: '/ddd',
         location,
+        show: true,
         children: [],
     },
     {
         planeID: 'eee',
         path: '/eee',
         location,
+        show: true,
         children: [
             {
                 planeID: 'fff',
                 path: '/eee/fff',
                 location,
+                show: true,
                 children: [],
             },
         ],
