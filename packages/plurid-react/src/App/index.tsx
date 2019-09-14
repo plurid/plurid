@@ -15,10 +15,6 @@ const initialState = {};
 const initializedStore = store(initialState);
 
 const PluridApp: React.FC<PluridAppProperties> = (properties) => {
-    const {
-
-    } = properties;
-
     return (
         <StyledPluridApp>
             <Root

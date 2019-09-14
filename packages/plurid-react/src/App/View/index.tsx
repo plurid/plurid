@@ -6,6 +6,10 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import {
+    PluridApp as PluridAppProperties,
+} from '@plurid/plurid-data';
+
 import './index.css';
 
 import {
@@ -16,7 +20,6 @@ import {
 import handleView from './logic';
 
 import {
-    PluridAppProperties,
     TreePage,
     PluridAppConfiguration,
 } from '../../modules/data/interfaces';
@@ -39,7 +42,6 @@ import {
 import {
     computeSpaceTree,
     computeSpaceLocation,
-    computeCameraLocationX,
     recomputeSpaceTreeLocations,
 } from '../../modules/services/logic/space';
 
