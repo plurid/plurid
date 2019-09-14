@@ -1,7 +1,7 @@
 import {
     TreePage,
+    SpaceLocation,
 } from '../../../../data/interfaces';
-
 
 
 
@@ -13,14 +13,6 @@ export interface SetSpaceLoadingAction {
 
 
 export const SET_SPACE_LOCATION = 'SET_SPACE_LOCATION';
-export interface SpaceLocation {
-    rotationX: number;
-    rotationY: number;
-    translationX: number;
-    translationY: number;
-    translationZ: number;
-    scale: number;
-}
 export interface SetSpaceLocationAction {
     type: typeof SET_SPACE_LOCATION;
     payload: SpaceLocation;

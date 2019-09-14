@@ -38,6 +38,7 @@ import {
 
 import {
     computeSpaceTree,
+    computeSpaceLocation,
     computeCameraLocationX,
     recomputeSpaceTreeLocations,
 } from '../../modules/services/logic/space';
@@ -145,15 +146,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         setConfiguration(configuration);
 
         if (configuration.roots) {
-            const cameraLocationX = computeCameraLocationX(configuration);
-            const spaceLocation = {
-                rotationX: 0,
-                rotationY: 0,
-                translationX: cameraLocationX,
-                translationY: 0,
-                translationZ: 0,
-                scale: 1,
-            };
+            const spaceLocation = computeSpaceLocation(configuration);
             setSpaceLocation(spaceLocation);
         }
 
@@ -229,7 +222,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                             documents: documents || [],
                         }}
                     >
-                                {viewContainer}
+                        {viewContainer}
                     </Context.Provider>
                 </>
             )}

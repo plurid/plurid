@@ -1,5 +1,6 @@
 import {
     TreePage,
+    SpaceLocation,
 } from '../../../../data/interfaces';
 
 import {
@@ -7,7 +8,6 @@ import {
     SetSpaceLoadingAction,
     SET_SPACE_LOCATION,
     SetSpaceLocationAction,
-    SpaceLocation,
 
     ROTATE_UP,
     RotateUpAction,
