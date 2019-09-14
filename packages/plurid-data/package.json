@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-data",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Plurid Constants, Interfaces, Enumerations",
     "keywords": [
         "plurid",
@@ -35,7 +35,7 @@
     },
     "scripts": {
         "clean": "rm -rf ./dist",
-        "lint": "eslint ./src/index.ts",
+        "lint": "eslint ./src --ext .ts,.tsx",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
         "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
         "build.prod": "rollup -c --environment MODE_ENV:production",
