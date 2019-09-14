@@ -7,6 +7,7 @@ import uuid from '../../utilities/uuid';
 import {
     TreePage,
     PluridAppConfiguration,
+    SpaceLocation,
 } from '../../../data/interfaces';
 
 import {
@@ -31,7 +32,7 @@ export const computeRootLocationX = (
 ) => {
     let translateX = 0;
     if (configuration && configuration.roots) {
-        if (configuration.roots.layout) {
+        if (Array.isArray(configuration.roots.layout)) {
             const layoutIndex = configuration.roots.layout.indexOf(root.path);
             translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
         }
@@ -75,6 +76,23 @@ export const computeSpaceTree = (
 }
 
 
+export const computeSpaceLocation = (
+    configuration: PluridAppConfiguration,
+): SpaceLocation => {
+    const cameraLocationX = computeCameraLocationX(configuration);
+    const spaceLocation = {
+        rotationX: 0,
+        rotationY: 0,
+        translationX: cameraLocationX,
+        translationY: 0,
+        translationZ: 0,
+        scale: 1,
+    };
+
+    return spaceLocation;
+}
+
+
 /**
  * Based on the specified camera, compute the X translation
  *
@@ -85,7 +103,10 @@ export const computeCameraLocationX = (
 ) => {
     let translateX = 0;
 
-    if (configuration.roots && configuration.roots.layout) {
+    if (configuration.roots
+        && Array.isArray(configuration.roots.layout)
+        && typeof configuration.roots.camera === 'string'
+    ) {
         const layoutIndex = configuration.roots.layout.indexOf(configuration.roots.camera || '');
         translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
     }

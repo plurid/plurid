@@ -41,11 +41,26 @@ export interface PluridAppConfiguration {
         width?: number;
         showControls?: boolean;
     };
-    roots?: {
-        layout?: string[];
-        camera?: string;
-    };
+    roots?: PluridAppConfigurationRoots;
     [key: string]: any;
+}
+
+
+export interface PluridAppConfigurationRoots {
+    layout: string[] | LayoutColumnBased | LayoutFaceToFace;
+    camera: string | number;
+}
+
+export interface LayoutColumnBased {
+    type: 'column-based',
+    columns: number;
+}
+
+export interface LayoutFaceToFace {
+    type: 'face-to-face',
+    halfAngle: number;
+    middleSpace: number;
+    middleVideos: number;
 }
 
 
@@ -69,12 +84,10 @@ export interface PluridLinkOwnProperties {
 }
 
 
-
 export interface PluridAppContext {
     pages: PluridPage[];
     documents: PluridDocument[];
 }
-
 
 
 export interface TreePageLocation {
@@ -92,4 +105,14 @@ export interface TreePage {
     location: TreePageLocation;
     children?: TreePage[];
     show: boolean;
+}
+
+
+export interface SpaceLocation {
+    rotationX: number;
+    rotationY: number;
+    translationX: number;
+    translationY: number;
+    translationZ: number;
+    scale: number;
 }
