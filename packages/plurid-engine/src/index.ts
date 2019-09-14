@@ -37,11 +37,27 @@ import {
     scalePlurid,
 } from './modules/transform';
 
+import {
+    computeRootLocationX,
+    computeSpaceTree,
+    computeSpaceLocation,
+    computeCameraLocationX,
+    recomputeSpaceTreeLocations,
+    getTreePageByPlaneID,
+    updateTreePage,
+    computePath,
+    computePluridPlaneLocation,
+    updateTreeWithNewPage,
+    removePageFromTree,
+    togglePageFromTree,
+} from './modules/space';
+
 
 
 export {
     // getDirection.ts
     getWheelDirection,
+
 
     // matrix.ts
     rotateMatrix,
@@ -50,6 +66,7 @@ export {
     multiplyMatrices,
     multiplyArrayOfMatrices,
     matrixArrayToCSSMatrix,
+
 
     // quaternion.ts
     makeQuaternion,
@@ -63,6 +80,7 @@ export {
     rotatePointViaQuaternion,
     makeRotationMatrixFromQuaternion,
 
+
     // transformations.ts
     getMatrixValues,
     getRotationMatrix,
@@ -74,4 +92,19 @@ export {
     rotatePlurid,
     translatePlurid,
     scalePlurid,
+
+
+    // space.ts
+    computeRootLocationX,
+    computeSpaceTree,
+    computeSpaceLocation,
+    computeCameraLocationX,
+    recomputeSpaceTreeLocations,
+    getTreePageByPlaneID,
+    updateTreePage,
+    computePath,
+    computePluridPlaneLocation,
+    updateTreeWithNewPage,
+    removePageFromTree,
+    togglePageFromTree,
 };
