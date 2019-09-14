@@ -28,17 +28,19 @@ import {
     PluridDocument,
     PluridConfiguration,
     PluridConfigurationTheme,
-    PluridConfigurationRoots,
+    PluridConfigurationSpace,
     LayoutColumns,
     LayoutFaceToFace,
+    LayoutSheaves,
 } from './interfaces/external';
 
 import {
     PluridLink,
     PluridContext,
-    TreePageLocation,
     TreePage,
+    TreePageLocation,
     SpaceLocation,
+    LocationCoordinates,
 } from './interfaces/internal';
 
 
@@ -71,9 +73,10 @@ export {
     PluridDocument,
     PluridConfiguration,
     PluridConfigurationTheme,
-    PluridConfigurationRoots,
+    PluridConfigurationSpace,
     LayoutColumns,
     LayoutFaceToFace,
+    LayoutSheaves,
 
     // internal
     PluridLink,
@@ -81,4 +84,5 @@ export {
     TreePageLocation,
     TreePage,
     SpaceLocation,
+    LocationCoordinates,
 };

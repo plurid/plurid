@@ -19,15 +19,6 @@ export interface PluridContext {
 }
 
 
-export interface TreePageLocation {
-    translateX: number;
-    translateY: number;
-    translateZ: number;
-    rotateX: number;
-    rotateY: number;
-}
-
-
 export interface TreePage {
     planeID: string;
     parentPlaneID?: string;
@@ -38,6 +29,15 @@ export interface TreePage {
 }
 
 
+export interface TreePageLocation {
+    translateX: number;
+    translateY: number;
+    translateZ: number;
+    rotateX: number;
+    rotateY: number;
+}
+
+
 export interface SpaceLocation {
     translationX: number;
     translationY: number;
@@ -45,4 +45,11 @@ export interface SpaceLocation {
     rotationX: number;
     rotationY: number;
     scale: number;
+}
+
+
+export interface LocationCoordinates {
+    x: number;
+    y: number;
+    z: number;
 }
