@@ -22,7 +22,6 @@ import {
 } from './enumerations';
 
 import {
-    // external
     PluridApp,
     PluridPage,
     PluridComponentReact,
@@ -32,14 +31,15 @@ import {
     PluridConfigurationRoots,
     LayoutColumns,
     LayoutFaceToFace,
+} from './interfaces/external';
 
-    // internal
+import {
     PluridLink,
     PluridContext,
     TreePageLocation,
     TreePage,
     SpaceLocation,
-} from './interfaces';
+} from './interfaces/internal';
 
 
 
