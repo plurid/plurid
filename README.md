@@ -42,9 +42,19 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/generate-plurid-app.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/generate-plurid-app][generate-plurid-app] - create `plurid'` application with one command
+[@plurid/generate-plurid-app][generate-plurid-app] • create a `plurid'` application with one command
 
 [generate-plurid-app]: https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app
+
+
+
+<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-data">
+    <img src="https://img.shields.io/npm/v/@plurid/plurid-data.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
+</a>
+
+[@plurid/plurid-data][plurid-data] • constants, interfaces, enumerations
+
+[plurid-data]: https://github.com/plurid/plurid/tree/master/packages/plurid-data
 
 
 
@@ -52,7 +62,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-engine.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-engine][plurid-engine] - 3D utility functions
+[@plurid/plurid-engine][plurid-engine] • 3D utility functions
 
 [plurid-engine]: https://github.com/plurid/plurid/tree/master/packages/plurid-engine
 
@@ -62,7 +72,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-html.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-html][plurid-html] - HTML Custom Elements implementation
+[@plurid/plurid-html][plurid-html] • HTML Custom Elements implementation
 
 [plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid-html
 
@@ -72,7 +82,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-html-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-html-ssr][plurid-html-ssr] - HTML Custom Elements implementation with Server-Side Rendering
+[@plurid/plurid-html-ssr][plurid-html-ssr] • HTML Custom Elements implementation with Server-Side Rendering
 
 [plurid-html-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-html-ssr
 
@@ -82,7 +92,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-react.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-react][plurid-react] - React implementation
+[@plurid/plurid-react][plurid-react] • React implementation
 
 [plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid-react
 
@@ -92,7 +102,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-react-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-react-ssr][plurid-react-ssr] - React implementation with Server-Side Rendering
+[@plurid/plurid-react-ssr][plurid-react-ssr] • React implementation with Server-Side Rendering
 
 [plurid-react-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-ssr
 
@@ -102,7 +112,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-renderer.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-renderer][plurid-renderer] - rendering engine
+[@plurid/plurid-renderer][plurid-renderer] • rendering engine
 
 [plurid-renderer]: https://github.com/plurid/plurid/tree/master/packages/plurid-renderer
 
@@ -112,7 +122,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-scripts.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-scripts][plurid-scripts] - build/development utility functions
+[@plurid/plurid-scripts][plurid-scripts] • build/development utility functions
 
 [plurid-scripts]: https://github.com/plurid/plurid/tree/master/packages/plurid-scripts
 
@@ -122,7 +132,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-server][plurid-server] - server for server-side rendering and application serving
+[@plurid/plurid-server][plurid-server] • server for server-side rendering and application serving
 
 [plurid-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-server
 
@@ -132,7 +142,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-state.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-state][plurid-state] - state management for a plurid application
+[@plurid/plurid-state][plurid-state] • state management for a plurid application
 
 [plurid-state]: https://github.com/plurid/plurid/tree/master/packages/plurid-state
 
@@ -142,7 +152,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-vue.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-vue][plurid-vue] - Vue implementation
+[@plurid/plurid-vue][plurid-vue] • Vue implementation
 
 [plurid-vue]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue
 
@@ -152,6 +162,6 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/plurid-vue-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-vue-ssr][plurid-vue-ssr] - Vue implementation with Server-Side Rendering
+[@plurid/plurid-vue-ssr][plurid-vue-ssr] • Vue implementation with Server-Side Rendering
 
 [plurid-vue-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue-ssr
