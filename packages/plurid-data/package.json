@@ -35,7 +35,7 @@
     },
     "scripts": {
         "clean": "rm -rf ./dist",
-        "build.prod": "yarn clean && rollup -c --environment MODE_ENV:production",
+        "build": "yarn clean && rollup -c --environment MODE_ENV:production",
         "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
         "prepublishOnly": "yarn build"
