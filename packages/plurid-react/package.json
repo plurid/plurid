@@ -53,6 +53,7 @@
     },
     "dependencies": {
         "@plurid/apps.utilities.themes": "^0.1.11",
+        "@plurid/plurid-data": "^0.1.0",
         "@plurid/plurid-engine": "^0.1.0"
     },
     "devDependencies": {
