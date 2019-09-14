@@ -14,8 +14,9 @@ import {
 } from './styled';
 
 import {
-    PluridLinkOwnProperties,
-} from '../../data/interfaces';
+    PluridLink as PluridLinkOwnProperties,
+    TreePage,
+} from '@plurid/plurid-data';
 
 import {
     getPluridPlaneIDByData,
@@ -28,10 +29,6 @@ import {
     // showPageFromTree,
     togglePageFromTree,
 } from '../../services/logic/space';
-
-import {
-    TreePage,
-} from '../../data/interfaces';
 
 import { AppState } from '../../services/state/store';
 import selectors from '../../services/state/selectors';

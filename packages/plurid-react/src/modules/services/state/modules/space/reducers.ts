@@ -4,7 +4,7 @@ import {
     SCALE_STEP,
     SCALE_LOWER_LIMIT,
     SCALE_UPPER_LIMIT,
-} from '../../../../data/constants/space';
+} from '@plurid/plurid-data';
 
 import {
     SET_SPACE_LOADING,

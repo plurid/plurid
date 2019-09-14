@@ -1,13 +1,10 @@
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    defaultShortcuts,
-} from '../../../data/constants/shortcuts';
-
-import {
-    SHORTCUTS,
-} from '../../../data/enumerations';
+// import {
+//     defaultShortcuts,
+//     SHORTCUTS,
+// } from '@plurid/plurid-data';
 
 import actions from '../../state/actions';
 

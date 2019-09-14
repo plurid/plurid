@@ -16,7 +16,7 @@ import PlaneContent from './components/PlaneContent';
 import {
     PluridPage,
     TreePage,
-} from '../../data/interfaces';
+} from '@plurid/plurid-data';
 
 import { AppState } from '../../services/state/store';
 import { ViewSize } from '../../services/state/types/data';
