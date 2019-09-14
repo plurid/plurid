@@ -77,6 +77,23 @@ export const computeSpaceTree = (
 export const computeSpaceLocation = (
     configuration: PluridConfiguration,
 ): SpaceLocation => {
+    if (configuration.space && configuration.space.layout) {
+        const {
+            layout,
+        } = configuration.space;
+
+        if (!Array.isArray(layout) && layout.type) {
+            switch (layout.type) {
+                case 'COLUMNS':
+                    break;
+                case 'FACE_TO_FACE':
+                    break;
+                case 'SHEAVES':
+                    break;
+            }
+        }
+    }
+
     const cameraLocationX = computeCameraLocationX(configuration);
     const spaceLocation = {
         rotationX: 0,
