@@ -1,7 +1,7 @@
 import {
     TreePage,
     SpaceLocation,
-} from '../../../../data/interfaces';
+} from '@plurid/plurid-data';
 
 import {
     SET_SPACE_LOADING,

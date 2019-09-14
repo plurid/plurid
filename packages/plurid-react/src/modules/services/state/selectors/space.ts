@@ -2,7 +2,7 @@ import { AppState } from '../store';
 
 import {
     TreePage,
-} from '../../../data/interfaces';
+} from '@plurid/plurid-data';
 
 
 
