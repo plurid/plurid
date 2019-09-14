@@ -82,15 +82,13 @@ export const computeSpaceLocation = (
             layout,
         } = configuration.space;
 
-        if (!Array.isArray(layout) && layout.type) {
-            switch (layout.type) {
-                case 'COLUMNS':
-                    break;
-                case 'FACE_TO_FACE':
-                    break;
-                case 'SHEAVES':
-                    break;
-            }
+        switch (layout.type) {
+            case 'COLUMNS':
+                break;
+            case 'FACE_TO_FACE':
+                break;
+            case 'SHEAVES':
+                break;
         }
     }
 
