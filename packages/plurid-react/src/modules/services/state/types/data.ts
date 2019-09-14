@@ -4,4 +4,4 @@ import {
 
 
 
-export interface ViewSize extends _ViewSize {};
+export interface ViewSize extends _ViewSize {}
