@@ -10,13 +10,19 @@ import Page2 from './containers/Page2';
 const App = () => {
 
     const appConfiguration = {
-        alterURL: false,
+        // alterURL: false,
         theme: 'deview',
-        planes: {
-            domainURL: true,
-            width: 50,
-            showControls: true,
+        space: {
+            layout: {
+                type: 'COLUMNS',
+                columns: 4,
+            },
         },
+        // planes: {
+        //     domainURL: true,
+        //     width: 50,
+        //     showControls: true,
+        // },
         // roots: {
         //     layout: [
         //         '/page-2', '/page-1', '/page-3'
@@ -86,25 +92,42 @@ const App = () => {
 
 
     const appPages = [
-        // {
-        //     path: '/page-1',
-        //     component: {
-        //         element: Page1,
-        //         properties: {},
-        //     },
-        //     root: true,
-        // },
         {
             path: '/page-1',
             component: {
                 element: Page1,
                 properties: {},
             },
+            root: true,
         },
         {
             path: '/page-2',
             component: {
                 element: Page2,
+                properties: {},
+            },
+            root: true,
+        },
+        {
+            path: '/page-3',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            root: true,
+        },
+        {
+            path: '/page-4',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            root: true,
+        },
+        {
+            path: '/page-5',
+            component: {
+                element: Page1,
                 properties: {},
             },
             root: true,
