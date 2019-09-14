@@ -4,7 +4,7 @@ import {
 
 import {
     TreePage,
-} from '../../../../data/interfaces';
+} from '@plurid/plurid-data';
 
 
 
@@ -17,13 +17,14 @@ const location = {
 };
 
 
-describe.only('computePath', () => {
+describe('computePath', () => {
     it('computes the path on the first child', () => {
         const targetPage = {
             planeID: 'aaa',
             path: '/aaa',
             location,
             children: [],
+            show: true,
         };
         const tree: TreePage[] = [
             targetPage,
@@ -32,6 +33,7 @@ describe.only('computePath', () => {
                 path: '/bbb',
                 location,
                 children: [],
+                show: true,
             },
         ];
         const planeID = 'aaa';
@@ -47,12 +49,14 @@ describe.only('computePath', () => {
                 path: '/aaa',
                 location,
                 children: [],
+                show: true,
             },
             {
                 planeID: 'bbb',
                 path: '/bbb',
                 location,
                 children: [],
+                show: true,
             },
         ];
         const planeID = 'ccc';
@@ -66,6 +70,7 @@ describe.only('computePath', () => {
             planeID: 'aaa',
             path: '/aaa',
             location,
+            show: true,
             children: [],
         };
         const targetPage_2 = {
@@ -73,6 +78,7 @@ describe.only('computePath', () => {
             parentPlaneID: 'aaa',
             path: '/aaa/bbb',
             location,
+            show: true,
             children: [],
         };
         const tree: TreePage[] = [
@@ -80,12 +86,14 @@ describe.only('computePath', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                show: true,
                 children: [
                     {
                         planeID: 'bbb',
                         parentPlaneID: 'aaa',
                         path: '/aaa/bbb',
                         location,
+                        show: true,
                         children: [],
                     }
                 ],
@@ -94,6 +102,7 @@ describe.only('computePath', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                show: true,
                 children: [],
             },
         ];
