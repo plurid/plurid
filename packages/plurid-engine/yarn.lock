@@ -292,10 +292,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.functions/-/apps.utilities.functions-0.1.2.tgz#6a2959519bd288d602dff9b9607a01aa54e7e326"
   integrity sha512-Q+XAQLCU0gXr2BcJquSyic0EQ9UjPX+iOGdn8+gsD5XhqF94S0oHNCZMSCjQOfKNCoO2fCAO3E/xU5fuPXzg6g==
 
-"@plurid/plurid-data@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.5.tgz#7709eae0952a0d9b23350014f0844a99a3f81374"
-  integrity sha512-N+ZDFdqSlM4wTlmLUp9v+EG5qyqqPJHK07ldbhmejWf2Nxi8qM9mzNGX7uYISZGOUSBol+WB0hQl+mEZ5e3aQQ==
+"@plurid/plurid-data@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.6.tgz#531b344f8c47334952e1f66016e936e860e44ea6"
+  integrity sha512-EYorguGJYOg0Qzj4Gjm9OqBB5sjS1nl3/43zGrwxmjFIX/MHoyJ1R3oUAjQczn23W/6Hg85jrf70k4k1PTVvGg==
 
 "@types/babel__core@^7.1.0":
   version "7.1.3"

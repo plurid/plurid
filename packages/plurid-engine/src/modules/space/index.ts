@@ -109,6 +109,8 @@ export const computeSpaceTree = (
                 offsetY,
             );
             return sheavesLayoutTree;
+        case 'META':
+            return tree;
         default:
             return tree;
     }
