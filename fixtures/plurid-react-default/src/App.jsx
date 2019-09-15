@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PluridApp from '@plurid/plurid-react';
+import PluridApp, { PluridConfiguration } from '@plurid/plurid-react';
 
 import Page1 from './containers/Page1';
 import Page2 from './containers/Page2';
@@ -9,13 +9,12 @@ import Page2 from './containers/Page2';
 
 const App = () => {
 
-    const appConfiguration = {
+    const appConfiguration: PluridConfiguration = {
         // alterURL: false,
         theme: 'deview',
         space: {
             layout: {
                 type: 'COLUMNS',
-                columns: 1,
             },
         },
         // planes: {
