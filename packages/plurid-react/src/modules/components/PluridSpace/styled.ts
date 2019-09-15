@@ -5,6 +5,7 @@ import styled from 'styled-components';
 export const StyledPluridSpace: any = styled.div`
     position: relative;
     height: 100%;
+    overflow: hidden;
     perspective: 2000px;
     background: radial-gradient(ellipse at center, ${(props: any) => {
         if (props.theme.type === 'dark') {

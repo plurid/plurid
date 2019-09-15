@@ -142,11 +142,15 @@ const App = () => {
     ];
 
     return (
-        <PluridApp
-            configuration={appConfiguration}
-            pages={appPages}
-            // documents={appDocuments}
-        />
+        <div
+            style={{height: 600}}
+        >
+            <PluridApp
+                configuration={appConfiguration}
+                pages={appPages}
+                // documents={appDocuments}
+            />
+        </div>
     );
 }
 

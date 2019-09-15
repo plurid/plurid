@@ -37,6 +37,7 @@ interface PluridPlaneStateProperties {
     spaceScale: number;
     generalTheme: Theme;
     interactionTheme: Theme;
+    planeWidth: number;
 }
 
 interface PluridPlaneDispatchProperties {
@@ -94,6 +95,7 @@ const mapStateToProps = (state: AppState): PluridPlaneStateProperties => ({
     spaceScale: selectors.space.getScale(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
+    planeWidth: selectors.configuration.getConfiguration(state).planeWidth,
 });
 
 
