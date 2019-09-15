@@ -97,7 +97,6 @@ describe('computeColumnLayout', () => {
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });
-        console.log(result);
 
         expect(resultWithEmptyIDs).toStrictEqual(locatedTree);
     });
@@ -220,7 +219,6 @@ describe('computeColumnLayout', () => {
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });
-        console.log(result);
 
         expect(resultWithEmptyIDs).toStrictEqual(locatedTree);
     });

@@ -160,6 +160,14 @@ export const computeZigZagLayout = (
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
+    const singleColumnedRoots = computeColumnLayout(roots, 1);
+
+    for (const [index, root] of singleColumnedRoots.entries()) {
+        const value = index % 2 === 0 ? 1 : -1;
+        root.location.rotateY = value * angle;
+        tree.push({ ...root });
+    }
+
     return tree;
 }
 
