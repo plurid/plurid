@@ -11,7 +11,7 @@ export interface PluridApp {
      */
     documents?: PluridDocument[],
 
-    configuration?: PluridConfiguration,
+    configuration?: Partial<PluridConfiguration>,
 }
 
 
@@ -69,30 +69,30 @@ export interface PluridDocument {
 
 
 export interface PluridConfiguration {
-    theme?: string | PluridConfigurationTheme;
+    theme: string | PluridConfigurationTheme;
 
     /**
      * If true, renders the application without toolbar, viewcube, plane controls.
      */
-    micro?: boolean;
+    micro: boolean;
 
-    toolbar?: boolean;
-    viewcube?: boolean;
-    planeControls?: boolean;
+    toolbar: boolean;
+    viewcube: boolean;
+    planeControls: boolean;
 
     /**
      * If true, renders the page path in the controls as a domain URL.
      */
-    planeDomainURL?: boolean;
+    planeDomainURL: boolean;
 
     /**
      * Value between `0.00` and `x.00` (floating numbers) or between `0` and `x00` (integers).
      *
      * The value is based on the current width of the screen and cannot be negative.
      */
-    planeWidth?: number;
+    planeWidth: number;
 
-    space?: PluridConfigurationSpace;
+    space: Partial<PluridConfigurationSpace>;
 
     // Future:
     // To change the browser URL depending on the active plane/plane in sight.
@@ -110,17 +110,17 @@ export interface PluridConfigurationTheme {
 
 
 export interface PluridConfigurationSpace {
-    layout?: LayoutColumns | LayoutZigZag | LayoutFaceToFace | LayoutSheaves | LayoutMeta;
+    layout: LayoutColumns | LayoutZigZag | LayoutFaceToFace | LayoutSheaves | LayoutMeta;
 
     /**
      * Path to the root or integer indicating the index order.
      */
-    camera?: string | number;
+    camera: string | number;
 
     /**
      * Perspective value. Recommended 1300-2000.
      */
-    perspective?: number;
+    perspective: number;
 }
 
 
