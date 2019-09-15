@@ -77,6 +77,12 @@ export const computeSpaceTree = (
             } = configuration.space.layout;
             const columnLayoutTree = computeColumnLayout(roots, columns);
             return columnLayoutTree;
+        case 'ZIG_ZAG':
+            const {
+                angle,
+            } = configuration.space.layout;
+            const zigzagLayoutTree = computeZigZagLayout(roots, angle);
+            return zigzagLayoutTree;
         case 'FACE_TO_FACE':
             const {
                 halfAngle,
@@ -141,6 +147,16 @@ export const computeColumnLayout = (
 
         tree.push(treePage);
     }
+
+    return tree;
+}
+
+
+export const computeZigZagLayout = (
+    roots: PluridPage[],
+    angle: number = 45,
+): TreePage[] => {
+    const tree: TreePage[] = [];
 
     return tree;
 }
