@@ -1,16 +1,27 @@
 import {
     IPluridPubSub,
+    Subscription,
 } from '../../interfaces';
 
 
 
 class PluridPubSub implements IPluridPubSub {
-    publish(topic: string, data: any) {
+    private subscriptions: Subscription[] = [];
 
+    public subscribe(topic: string, callback: any) {
+        const subscription = {
+            topic,
+            callback
+        }
+        this.subscriptions.push(subscription);
     }
 
-    subscribe(topic: string, callback: any) {
-
+    public publish(topic: string, data: any) {
+        this.subscriptions.map(subscription => {
+            if (topic === subscription.topic) {
+                subscription.callback(data);
+            }
+        });
     }
 }
 

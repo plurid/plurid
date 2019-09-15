@@ -1,4 +1,10 @@
 export interface IPluridPubSub {
-    publish: (topic: string, data: any) => any;
-    subscribe: (topic: string, callback: any) => any;
+    publish: (topic: string, data: any) => void;
+    subscribe: (topic: string, callback: (data: any) => void) => void;
+}
+
+
+export interface Subscription {
+    topic: string;
+    callback: (data: any) => void;
 }
