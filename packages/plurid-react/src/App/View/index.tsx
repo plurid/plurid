@@ -68,7 +68,6 @@ export interface ViewOwnProperties {
 interface ViewStateProperties {
     spaceLoading: boolean;
     tree: TreePage[];
-    rotationY: number;
 }
 
 interface ViewDispatchProperties {
@@ -101,7 +100,6 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         spaceLoading,
         tree,
-        rotationY,
 
         dispatch,
 
@@ -193,9 +191,16 @@ const View: React.FC<ViewProperties> = (properties) => {
     }
 
     const handlePubSub = (pubsub: PluridPubSub) => {
-        pubsub.subscribe(TOPICS.SPACE_INCREASE_ROTATE_Y, (data: any) => {
+        pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
             const {
-                value
+                value,
+            } = data;
+            rotateXWith(value);
+        });
+
+        pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
+            const {
+                value,
             } = data;
             rotateYWith(value);
         });
@@ -262,8 +267,6 @@ const View: React.FC<ViewProperties> = (properties) => {
 const mapStateToProps = (state: AppState): ViewStateProperties => ({
     spaceLoading: selectors.space.getLoading(state),
     tree: selectors.space.getTree(state),
-
-    rotationY: selectors.space.getRotationY(state),
 });
 
 
