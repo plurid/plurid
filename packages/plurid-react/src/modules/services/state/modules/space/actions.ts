@@ -13,10 +13,14 @@ import {
     RotateUpAction,
     ROTATE_DOWN,
     RotateDownAction,
+    ROTATE_X,
+    RotateXAction,
     ROTATE_LEFT,
     RotateLeftAction,
     ROTATE_RIGHT,
     RotateRightAction,
+    ROTATE_Y,
+    RotateYAction,
 
     TRANSLATE_UP,
     TranslateUpAction,
@@ -65,6 +69,13 @@ export const rotateDown = (): RotateDownAction => {
     };
 }
 
+export const rotateX = (payload: number): RotateXAction => {
+    return {
+        type: ROTATE_X,
+        payload,
+    };
+}
+
 export const rotateLeft = (): RotateLeftAction => {
     return {
         type: ROTATE_LEFT,
@@ -74,6 +85,13 @@ export const rotateLeft = (): RotateLeftAction => {
 export const rotateRight = (): RotateRightAction => {
     return {
         type: ROTATE_RIGHT,
+    };
+}
+
+export const rotateY = (payload: number): RotateYAction => {
+    return {
+        type: ROTATE_Y,
+        payload,
     };
 }
 
