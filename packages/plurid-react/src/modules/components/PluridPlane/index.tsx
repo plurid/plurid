@@ -57,6 +57,7 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
         children,
 
         generalTheme,
+        planeWidth,
     } = properties;
 
     return (
@@ -65,6 +66,7 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
             show={treePage.show}
             data-plurid-plane={planeID}
             style={{
+                width: planeWidth * window.innerWidth,
                 transform: `
                     translateX(${location.translateX}px)
                     translateY(${location.translateY}px)

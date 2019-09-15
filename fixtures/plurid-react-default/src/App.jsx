@@ -143,7 +143,7 @@ const App = () => {
 
     return (
         <div
-            style={{height: 600}}
+            style={{height: '100%'}}
         >
             <PluridApp
                 configuration={appConfiguration}
