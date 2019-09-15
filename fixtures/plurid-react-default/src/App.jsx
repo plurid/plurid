@@ -2,24 +2,21 @@ import React from 'react';
 
 import PluridApp, {
     PluridConfiguration,
-    // PluridPubSub,
+    PluridPubSub,
+    TOPICS,
 } from '@plurid/plurid-react';
 
 import Page1 from './containers/Page1';
 import Page2 from './containers/Page2';
 
+const pluridPubSub = new PluridPubSub();
 
 
 const App = () => {
-    // const pluridPubSub = new PluridPubSub();
 
-    // pluridPubSub.publish('space.increase.rotateY', { value: 1 });
-    // pluridPubSub.subscribe('space.increase.rotateY', (data) => {
-    //     const {
-    //         value
-    //     } = data;
-    //     // increase the rotateY with value
-    // });
+    // setInterval(() => {
+    //     pluridPubSub.publish(TOPICS.SPACE_INCREASE_ROTATE_Y, { value: 1 });
+    // }, 300);
 
     const appConfiguration: PluridConfiguration = {
         // alterURL: false,
@@ -161,7 +158,7 @@ const App = () => {
                 configuration={appConfiguration}
                 pages={appPages}
                 // documents={appDocuments}
-                // pubSub={pluridPubSub}
+                pubsub={pluridPubSub}
             />
         </div>
     );

@@ -13,6 +13,10 @@ import {
     defaultConfiguration,
 } from '@plurid/plurid-data';
 
+import PluridPubSub, {
+    TOPICS,
+} from '@plurid/plurid-pubsub'
+
 import {
     debounce,
     uuidv4 as uuid,
@@ -64,6 +68,7 @@ export interface ViewOwnProperties {
 interface ViewStateProperties {
     spaceLoading: boolean;
     tree: TreePage[];
+    rotationY: number;
 }
 
 interface ViewDispatchProperties {
@@ -81,6 +86,8 @@ interface ViewDispatchProperties {
 
     setGeneralTheme: typeof actions.themes.setGeneralTheme;
     setInteractionTheme: typeof actions.themes.setInteractionTheme;
+
+    rotateY: typeof actions.space.rotateY;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -93,6 +100,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         spaceLoading,
         tree,
+        rotationY,
 
         dispatch,
 
@@ -108,12 +116,15 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         setGeneralTheme,
         setInteractionTheme,
+
+        rotateY,
     } = properties;
 
     const {
         configuration,
         pages,
         documents,
+        pubsub,
     } = appProperties;
 
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
@@ -179,10 +190,27 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }
 
+    const handlePubSub = (pubsub: PluridPubSub) => {
+        console.log('pubsub');
+        pubsub.subscribe(TOPICS.SPACE_INCREASE_ROTATE_Y, (data: any) => {
+            const {
+                value
+            } = data;
+
+            const updatedValue = rotationY + value;
+            console.log('pubsub action', updatedValue);
+            rotateY(updatedValue);
+        });
+    }
+
     useEffect(() => {
         const mergedConfiguration = { ...defaultConfiguration, ...configuration };
 
         handleConfiguration(mergedConfiguration);
+
+        if (pubsub) {
+            handlePubSub(pubsub);
+        }
 
         const _pages = pages && pages.map(page => {
             const id = uuid();
@@ -208,7 +236,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
 
         setSpaceLoading(false);
-    }, [configuration]);
+    }, [configuration, pubsub]);
 
     const viewContainer = handleView(pages, documents);
 
@@ -236,6 +264,8 @@ const View: React.FC<ViewProperties> = (properties) => {
 const mapStateToProps = (state: AppState): ViewStateProperties => ({
     spaceLoading: selectors.space.getLoading(state),
     tree: selectors.space.getTree(state),
+
+    rotationY: selectors.space.getRotationY(state),
 });
 
 
@@ -254,6 +284,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
 
     setGeneralTheme: (theme: Theme) => dispatch(actions.themes.setGeneralTheme(theme)),
     setInteractionTheme: (theme: Theme) => dispatch(actions.themes.setInteractionTheme(theme)),
+
+    rotateY: (value: number) => dispatch(actions.space.rotateY(value)),
 });
 
 

@@ -34,9 +34,21 @@ export interface RotateLeftAction {
     type: typeof ROTATE_LEFT;
 }
 
+export const ROTATE_X = 'ROTATE_X';
+export interface RotateXAction {
+    type: typeof ROTATE_X;
+    payload: number;
+}
+
 export const ROTATE_RIGHT = 'ROTATE_RIGHT';
 export interface RotateRightAction {
     type: typeof ROTATE_RIGHT;
+}
+
+export const ROTATE_Y = 'ROTATE_Y';
+export interface RotateYAction {
+    type: typeof ROTATE_Y;
+    payload: number;
 }
 
 
@@ -96,8 +108,10 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | SetSpaceLocationAction
     | RotateUpAction
     | RotateDownAction
+    | RotateXAction
     | RotateLeftAction
     | RotateRightAction
+    | RotateYAction
     | TranslateUpAction
     | TranslateDownAction
     | TranslateLeftAction

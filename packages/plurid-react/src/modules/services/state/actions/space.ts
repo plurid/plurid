@@ -4,8 +4,10 @@ import {
 
     rotateUp,
     rotateDown,
+    rotateX,
     rotateLeft,
     rotateRight,
+    rotateY,
 
     translateUp,
     translateDown,
@@ -26,8 +28,10 @@ export default {
 
     rotateUp,
     rotateDown,
+    rotateX,
     rotateLeft,
     rotateRight,
+    rotateY,
 
     translateUp,
     translateDown,
