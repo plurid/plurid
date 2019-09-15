@@ -88,6 +88,7 @@ interface ViewDispatchProperties {
     setInteractionTheme: typeof actions.themes.setInteractionTheme;
 
     rotateY: typeof actions.space.rotateY;
+    rotateLeft: typeof actions.space.rotateLeft;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -118,6 +119,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         setInteractionTheme,
 
         rotateY,
+        rotateLeft,
     } = properties;
 
     const {
@@ -197,9 +199,10 @@ const View: React.FC<ViewProperties> = (properties) => {
                 value
             } = data;
 
-            const updatedValue = rotationY + value;
-            console.log('pubsub action', updatedValue);
-            rotateY(updatedValue);
+            // const updatedValue = rotationY + value;
+            // console.log('pubsub action', updatedValue);
+            // rotateY(updatedValue);
+            rotateLeft();
         });
     }
 
@@ -286,6 +289,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     setInteractionTheme: (theme: Theme) => dispatch(actions.themes.setInteractionTheme(theme)),
 
     rotateY: (value: number) => dispatch(actions.space.rotateY(value)),
+    rotateLeft: () => dispatch(actions.space.rotateLeft()),
 });
 
 

@@ -16,7 +16,7 @@ const App = () => {
 
     // setInterval(() => {
     //     pluridPubSub.publish(TOPICS.SPACE_INCREASE_ROTATE_Y, { value: 1 });
-    // }, 300);
+    // }, 50);
 
     const appConfiguration: PluridConfiguration = {
         // alterURL: false,
