@@ -972,15 +972,15 @@
   resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.11.tgz#9edf2bb5c364004c9c6127a295b71911c3c416ca"
   integrity sha512-v6t3XOj1zPzvPK51WhBdcBYhlJNZSKt7JVzliE8QXnhDEUljZb2RKWzMuImm3xroYjU+9EqxEIXud8Megbf76w==
 
-"@plurid/plurid-data@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.3.tgz#a39baebed02f9565ba1fa0e600777c77573f8110"
-  integrity sha512-QocaEu8kJi3q5dfONbxtYozR3cBfd5e/tALltoTtFoazCM2nrukP+IL0jJqTZcnDju+gog1QcowfSy2qXgcAjw==
+"@plurid/plurid-data@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.6.tgz#531b344f8c47334952e1f66016e936e860e44ea6"
+  integrity sha512-EYorguGJYOg0Qzj4Gjm9OqBB5sjS1nl3/43zGrwxmjFIX/MHoyJ1R3oUAjQczn23W/6Hg85jrf70k4k1PTVvGg==
 
-"@plurid/plurid-engine@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.3.tgz#67dfeffbf54cec5388061c7a0b41130b9d5d1b7d"
-  integrity sha512-g628BDe+jcUhaf33bQGHslCKcj2aUCKWOcLgikmPghpR78HgIonISrCROA9ELNFs+IBZaNts/mdLNqPUx9nMbw==
+"@plurid/plurid-engine@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.4.tgz#aca5dc80a5a36ba6a5ce90fe6991591d72c17551"
+  integrity sha512-gBRkSiVxsgHUFb34QZ9g1wpE32wcXkgf2TmKpzcxRVRy9+ndBIF/1sPXFXyQlKDDiHTn2mUGoWtxsJQYkSoE4A==
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
@@ -1200,7 +1200,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.7.4.tgz#64db61e0359eb5a8d99b55e05c729f130a678b04"
   integrity sha512-W0+n1Y+gK/8G2P/piTkBBN38Qc5Q1ZSO6B5H3QmPCUewaiXOo2GCAWZ4ElZCcNhjJuBSUSLGFUJnmlCn5+nxOQ==
 
-"@types/node@^12.7.4":
+"@types/node@^12.7.5":
   version "12.7.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.7.5.tgz#e19436e7f8e9b4601005d73673b6dc4784ffcc2f"
   integrity sha512-9fq4jZVhPNW8r+UYKnxF1e2HkDWOWKM5bC2/7c9wPV835I0aOrVbS/Hw/pWPk2uKrNXQqg9Z959Kz+IYDd5p3w==
@@ -5920,13 +5920,13 @@ rollup-pluginutils@2.8.1, rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.6.0, 
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^1.21.2:
-  version "1.21.2"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.21.2.tgz#eaabd07d0bd309587ad8bebf731fca6fcb96f4d0"
-  integrity sha512-sCAHlcQ/PExU5t/kRwkEWHdhGmQrZ2IgdQzbjPVNfhWbKHMMZGYqkASVTpQqRPLtQKg15xzEscc+BnIK/TE7/Q==
+rollup@^1.21.3:
+  version "1.21.3"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.21.3.tgz#2d957e04b230b06a85b8c617bf594f92c37c4d5d"
+  integrity sha512-43CgeUtHhfiqBOUd0uJo5NEOg2FuheF3SqGN8BqgvnqB4xM2TbfPdudeSdllDcMKpagHb//qtpaAADBurT4GzA==
   dependencies:
     "@types/estree" "0.0.39"
-    "@types/node" "^12.7.4"
+    "@types/node" "^12.7.5"
     acorn "^7.0.0"
 
 rst-selector-parser@^2.2.3:
