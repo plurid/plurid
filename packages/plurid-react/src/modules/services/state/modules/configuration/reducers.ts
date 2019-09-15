@@ -1,4 +1,8 @@
 import {
+    defaultConfiguration,
+} from '@plurid/plurid-data';
+
+import {
     SET_CONFIGURATION,
     ConfigurationState,
     ConfigurationActionsType,
@@ -7,20 +11,7 @@ import {
 
 
 const initialState: ConfigurationState = {
-    theme: 'plurid',
-    micro: false,
-    toolbar: true,
-    planeControls: true,
-    viewcube: true,
-    planeDomainURL: true,
-    planeWidth: 1,
-    space: {
-        layout: {
-            type: 'COLUMNS',
-            columns: 2,
-        },
-        perspective: 1000,
-    }
+    ...defaultConfiguration,
 }
 
 const configurationReducer = (

@@ -16,6 +16,7 @@ import {
     shortcutsNames,
     defaultShortcuts,
 } from './constants/shortcuts';
+import defaultConfiguration from './constants/configuration';
 
 import {
     SHORTCUTS,
@@ -59,6 +60,7 @@ export {
 
     shortcutsNames,
     defaultShortcuts,
+    defaultConfiguration,
 
 
     // enumerations
