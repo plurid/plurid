@@ -972,10 +972,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.11.tgz#9edf2bb5c364004c9c6127a295b71911c3c416ca"
   integrity sha512-v6t3XOj1zPzvPK51WhBdcBYhlJNZSKt7JVzliE8QXnhDEUljZb2RKWzMuImm3xroYjU+9EqxEIXud8Megbf76w==
 
-"@plurid/plurid-data@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.6.tgz#531b344f8c47334952e1f66016e936e860e44ea6"
-  integrity sha512-EYorguGJYOg0Qzj4Gjm9OqBB5sjS1nl3/43zGrwxmjFIX/MHoyJ1R3oUAjQczn23W/6Hg85jrf70k4k1PTVvGg==
+"@plurid/plurid-data@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.7.tgz#e902b92a2b3986e77b3ed76289f4deea76eb45f0"
+  integrity sha512-BaYsRmDMiI5dI2FvihsmetJof3hslBmzioDUL0VB2XsWol8yItgNXLhd6kxegZojIH5OYNABBhpk0LkchXR/eQ==
 
 "@plurid/plurid-engine@^0.1.4":
   version "0.1.4"
