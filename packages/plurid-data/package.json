@@ -42,7 +42,11 @@
         "build": "yarn clean && yarn lint && yarn build.prod",
         "prepublishOnly": "yarn build"
     },
+    "peerDependencies": {
+        "@plurid/plurid-pubsub": "*"
+    },
     "devDependencies": {
+        "@plurid/plurid-pubsub": "^0.1.0",
         "@types/react": "^16.9.2",
         "@typescript-eslint/eslint-plugin": "^2.2.0",
         "@typescript-eslint/parser": "^2.2.0",
