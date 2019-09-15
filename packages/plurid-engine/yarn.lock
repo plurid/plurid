@@ -297,6 +297,11 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.8.tgz#c10f1f8ef5161b2790110534510696edecc703c1"
   integrity sha512-frUw9L8OaX7Ulx5KDV74kFd0TFvgMXhwVTVTWkozQnqo9lGsEB38ztzRJ5G4B3oSFEc/yjT+QpsxY5fVbyzs8A==
 
+"@plurid/plurid-pubsub@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.0.tgz#b4fe8433078a1913038381000048e9947860cf44"
+  integrity sha512-oQBz5OGYEukPI2sqNaH4/Tou9SedTKc98SPv+AWsR5wBuEY/gsj6HP3ir3jxSAZL3z/syPj0lvs1KNBsOx34Fw==
+
 "@types/babel__core@^7.1.0":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.3.tgz#e441ea7df63cd080dfcd02ab199e6d16a735fc30"
