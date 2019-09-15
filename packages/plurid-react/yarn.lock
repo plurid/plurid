@@ -982,6 +982,11 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.5.tgz#cb41d3a03137de361fbcdea660ceebb61f5ac853"
   integrity sha512-T3u8D0vODJqDGMvCSVo17+1rPqexORVfKRD0x22hQf+sAAolGY/5tr9VSnPEC7C+0PCHbQIhSAsVWcx9TR4l7Q==
 
+"@plurid/plurid-pubsub@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.0.tgz#b4fe8433078a1913038381000048e9947860cf44"
+  integrity sha512-oQBz5OGYEukPI2sqNaH4/Tou9SedTKc98SPv+AWsR5wBuEY/gsj6HP3ir3jxSAZL3z/syPj0lvs1KNBsOx34Fw==
+
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz#dadcb6218503532d6884b210e7f3c502caaa44b1"
