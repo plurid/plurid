@@ -54,8 +54,8 @@
     "dependencies": {
         "@plurid/apps.utilities.functions": "^0.1.2",
         "@plurid/apps.utilities.themes": "^0.1.11",
-        "@plurid/plurid-data": "^0.1.7",
-        "@plurid/plurid-engine": "^0.1.4"
+        "@plurid/plurid-data": "^0.1.8",
+        "@plurid/plurid-engine": "^0.1.5"
     },
     "devDependencies": {
         "@babel/core": "^7.6.0",
