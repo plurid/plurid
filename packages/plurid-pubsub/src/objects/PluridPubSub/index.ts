@@ -11,8 +11,8 @@ class PluridPubSub implements IPluridPubSub {
     public subscribe(topic: string, callback: any) {
         const subscription = {
             topic,
-            callback
-        }
+            callback,
+        };
         this.subscriptions.push(subscription);
     }
 
@@ -22,6 +22,21 @@ class PluridPubSub implements IPluridPubSub {
                 subscription.callback(data);
             }
         });
+    }
+
+    public unsubscribe(topic: string) {
+        let unsubscribed = false;
+
+        this.subscriptions = this.subscriptions.filter(subscription => {
+            if (topic === subscription.topic) {
+                unsubscribed = true;
+                return false;
+            }
+
+            return subscription;
+        });
+
+        return unsubscribed;
     }
 }
 
