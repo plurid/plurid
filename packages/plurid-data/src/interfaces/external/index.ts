@@ -110,7 +110,7 @@ export interface PluridConfigurationTheme {
 
 
 export interface PluridConfigurationSpace {
-    layout?: LayoutColumns | LayoutFaceToFace | LayoutSheaves;
+    layout?: LayoutColumns | LayoutZigZag | LayoutFaceToFace | LayoutSheaves | LayoutMeta;
 
     /**
      * Path to the root or integer indicating the index order.
@@ -125,7 +125,7 @@ export interface PluridConfigurationSpace {
 
 
 interface Layout {
-    type: 'META' | 'COLUMNS' | 'FACE_TO_FACE' | 'SHEAVES' | 'ZIG_ZAG';
+    type: 'COLUMNS' | 'FACE_TO_FACE' | 'SHEAVES' | 'ZIG_ZAG' | 'META';
 }
 
 
