@@ -125,12 +125,24 @@ export interface PluridConfigurationSpace {
 
 
 interface Layout {
-    type: 'COLUMNS' | 'FACE_TO_FACE' | 'SHEAVES';
+    type: 'META' | 'COLUMNS' | 'FACE_TO_FACE' | 'SHEAVES' | 'ZIG_ZAG';
+}
+
+
+export interface LayoutMeta extends Layout {
+    type: 'META';
+    layouts: LayoutMetaLayout[];
+}
+
+export interface LayoutMetaLayout {
+    size?: number;
+    pages?: string[];
+    layout: LayoutColumns | LayoutFaceToFace | LayoutZigZag | LayoutSheaves;
 }
 
 
 export interface LayoutColumns extends Layout {
-    type: 'COLUMNS',
+    type: 'COLUMNS';
 
     /**
      * Integer value indicating the number of columns.
@@ -142,7 +154,7 @@ export interface LayoutColumns extends Layout {
 
 
 export interface LayoutFaceToFace extends Layout {
-    type: 'FACE_TO_FACE',
+    type: 'FACE_TO_FACE';
 
     /**
      * Value between `0.00` and `360.00` and can be negative.
@@ -162,9 +174,18 @@ export interface LayoutFaceToFace extends Layout {
     middleVideos?: number;
 }
 
+export interface LayoutZigZag extends Layout {
+    type: 'ZIG_ZAG';
+
+    /**
+     * Value between `0.00` and `360.00` and can be negative.
+     */
+    angle?: number;
+}
+
 
 export interface LayoutSheaves extends Layout {
-    type: 'SHEAVES',
+    type: 'SHEAVES';
 
     /**
      * Value between `0.00` and `x.00` (floating numbers) or between `0` and `x00` (integers).
