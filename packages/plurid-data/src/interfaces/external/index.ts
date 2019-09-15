@@ -1,4 +1,4 @@
-// import { PluridPubSub } from '@plurid/plurid-pubsub';
+import PluridPubSub from '@plurid/plurid-pubsub';
 
 
 
@@ -17,7 +17,7 @@ export interface PluridApp {
 
     configuration?: Partial<PluridConfiguration>,
 
-    // pubsub: PluridPubSub,
+    pubsub?: PluridPubSub,
 }
 
 
