@@ -88,6 +88,16 @@ npx @plurid/generate-plurid-app
 
 
 
+<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-pubsub">
+    <img src="https://img.shields.io/npm/v/@plurid/plurid-pubsub.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
+</a>
+
+[@plurid/plurid-pubsub][plurid-pubsub] • Publish/Subscribe message bus
+
+[plurid-pubsub]: https://github.com/plurid/plurid/tree/master/packages/plurid-pubsub
+
+
+
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-react.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
