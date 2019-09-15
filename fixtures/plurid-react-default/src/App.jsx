@@ -1,6 +1,9 @@
 import React from 'react';
 
-import PluridApp, { PluridConfiguration } from '@plurid/plurid-react';
+import PluridApp, {
+    PluridConfiguration,
+    // PluridPubSub,
+} from '@plurid/plurid-react';
 
 import Page1 from './containers/Page1';
 import Page2 from './containers/Page2';
@@ -8,6 +11,15 @@ import Page2 from './containers/Page2';
 
 
 const App = () => {
+    // const pluridPubSub = new PluridPubSub();
+
+    // pluridPubSub.publish('space.increase.rotateY', { value: 1 });
+    // pluridPubSub.subscribe('space.increase.rotateY', (data) => {
+    //     const {
+    //         value
+    //     } = data;
+    //     // increase the rotateY with value
+    // });
 
     const appConfiguration: PluridConfiguration = {
         // alterURL: false,
@@ -149,6 +161,7 @@ const App = () => {
                 configuration={appConfiguration}
                 pages={appPages}
                 // documents={appDocuments}
+                // pubSub={pluridPubSub}
             />
         </div>
     );

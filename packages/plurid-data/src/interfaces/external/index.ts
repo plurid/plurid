@@ -1,3 +1,7 @@
+// import { PluridPubSub } from '@plurid/plurid-pubsub';
+
+
+
 export interface PluridApp {
     /**
      * A `PluridApp` must be either pages or documents based.
@@ -12,6 +16,8 @@ export interface PluridApp {
     documents?: PluridDocument[],
 
     configuration?: Partial<PluridConfiguration>,
+
+    // pubsub: PluridPubSub,
 }
 
 
