@@ -40,6 +40,12 @@ export interface RotateXAction {
     payload: number;
 }
 
+export const ROTATE_X_WITH = 'ROTATE_X_WITH';
+export interface RotateXWithAction {
+    type: typeof ROTATE_X_WITH;
+    payload: number;
+}
+
 export const ROTATE_RIGHT = 'ROTATE_RIGHT';
 export interface RotateRightAction {
     type: typeof ROTATE_RIGHT;
@@ -48,6 +54,12 @@ export interface RotateRightAction {
 export const ROTATE_Y = 'ROTATE_Y';
 export interface RotateYAction {
     type: typeof ROTATE_Y;
+    payload: number;
+}
+
+export const ROTATE_Y_WITH = 'ROTATE_Y_WITH';
+export interface RotateYWithAction {
+    type: typeof ROTATE_Y_WITH;
     payload: number;
 }
 
@@ -109,9 +121,11 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | RotateUpAction
     | RotateDownAction
     | RotateXAction
+    | RotateXWithAction
     | RotateLeftAction
     | RotateRightAction
     | RotateYAction
+    | RotateYWithAction
     | TranslateUpAction
     | TranslateDownAction
     | TranslateLeftAction
