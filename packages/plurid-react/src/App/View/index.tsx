@@ -87,8 +87,8 @@ interface ViewDispatchProperties {
     setGeneralTheme: typeof actions.themes.setGeneralTheme;
     setInteractionTheme: typeof actions.themes.setInteractionTheme;
 
-    rotateY: typeof actions.space.rotateY;
-    rotateLeft: typeof actions.space.rotateLeft;
+    rotateXWith: typeof actions.space.rotateXWith;
+    rotateYWith: typeof actions.space.rotateYWith;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -118,8 +118,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         setGeneralTheme,
         setInteractionTheme,
 
-        rotateY,
-        rotateLeft,
+        rotateXWith,
+        rotateYWith,
     } = properties;
 
     const {
@@ -193,16 +193,11 @@ const View: React.FC<ViewProperties> = (properties) => {
     }
 
     const handlePubSub = (pubsub: PluridPubSub) => {
-        console.log('pubsub');
         pubsub.subscribe(TOPICS.SPACE_INCREASE_ROTATE_Y, (data: any) => {
             const {
                 value
             } = data;
-
-            // const updatedValue = rotationY + value;
-            // console.log('pubsub action', updatedValue);
-            // rotateY(updatedValue);
-            rotateLeft();
+            rotateYWith(value);
         });
     }
 
@@ -288,8 +283,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     setGeneralTheme: (theme: Theme) => dispatch(actions.themes.setGeneralTheme(theme)),
     setInteractionTheme: (theme: Theme) => dispatch(actions.themes.setInteractionTheme(theme)),
 
-    rotateY: (value: number) => dispatch(actions.space.rotateY(value)),
-    rotateLeft: () => dispatch(actions.space.rotateLeft()),
+    rotateXWith: (value: number) => dispatch(actions.space.rotateXWith(value)),
+    rotateYWith: (value: number) => dispatch(actions.space.rotateYWith(value)),
 });
 
 

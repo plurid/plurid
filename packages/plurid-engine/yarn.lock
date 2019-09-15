@@ -297,10 +297,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.9.tgz#4f8046c41870a655e68644387d71ea9b420a0fde"
   integrity sha512-nWlwnwlyQC8tfDPEmabL4dw+HvMXkJMhPdDY++1S2TQIsV2ECutakCERgJ38RZUEBTdc7afFteP8LbmOiWHu1A==
 
-"@plurid/plurid-pubsub@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.0.tgz#b4fe8433078a1913038381000048e9947860cf44"
-  integrity sha512-oQBz5OGYEukPI2sqNaH4/Tou9SedTKc98SPv+AWsR5wBuEY/gsj6HP3ir3jxSAZL3z/syPj0lvs1KNBsOx34Fw==
+"@plurid/plurid-pubsub@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.1.tgz#6248fa35904dec2bf00204f9db1491948fc0116c"
+  integrity sha512-MlNqKoTkl3R0I0KeriX3JTDpT5NinZNcNv86jQOtJ0hG9wFG5kuD8Y/ej5/KPRYrj0mUvVeBjgMnRPbZ3fB5/w==
 
 "@types/babel__core@^7.1.0":
   version "7.1.3"

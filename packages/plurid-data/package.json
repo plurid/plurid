@@ -46,12 +46,12 @@
         "@plurid/plurid-pubsub": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-pubsub": "^0.1.0",
+        "@plurid/plurid-pubsub": "^0.1.1",
         "@types/react": "^16.9.2",
         "@typescript-eslint/eslint-plugin": "^2.2.0",
         "@typescript-eslint/parser": "^2.2.0",
         "eslint": "^6.4.0",
-        "rollup": "^1.21.2",
+        "rollup": "^1.21.3",
         "rollup-plugin-typescript2": "^0.24.2",
         "typescript": "^3.6.3"
     }

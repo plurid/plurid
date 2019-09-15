@@ -13,9 +13,11 @@ import {
     ROTATE_UP,
     ROTATE_DOWN,
     ROTATE_X,
+    ROTATE_X_WITH,
     ROTATE_LEFT,
     ROTATE_RIGHT,
     ROTATE_Y,
+    ROTATE_Y_WITH,
 
     TRANSLATE_UP,
     TRANSLATE_DOWN,
@@ -71,6 +73,11 @@ const spaceReducer = (
             {
                 return { ...state, rotationX: action.payload };
             }
+        case ROTATE_X_WITH:
+            {
+                const rotationX = state.rotationX + action.payload;
+                return { ...state, rotationX };
+            }
         case ROTATE_LEFT:
             {
                 const rotationY = (state.rotationY + ROTATION_STEP) % 360;
@@ -84,6 +91,11 @@ const spaceReducer = (
         case ROTATE_Y:
             {
                 return { ...state, rotationY: action.payload };
+            }
+        case ROTATE_Y_WITH:
+            {
+                const rotationY = state.rotationY + action.payload;
+                return { ...state, rotationY };
             }
         case TRANSLATE_UP:
             {
