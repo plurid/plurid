@@ -53,7 +53,7 @@ export const computeRootLocationX = (
  */
 export const computeSpaceTree = (
     pages: PluridPage[],
-    configuration: PluridConfiguration | undefined,
+    configuration?: PluridConfiguration,
 ): TreePage[] => {
     const tree: TreePage[] = [];
 

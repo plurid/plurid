@@ -8,6 +8,7 @@ import {
     PluridPage,
     PluridConfiguration,
     TreePage,
+    defaultConfiguration,
 } from '@plurid/plurid-data';
 
 
@@ -56,7 +57,6 @@ describe('computeSpaceTree', () => {
             },
         ];
         // console.log(pluridPages);
-        const configuration: PluridConfiguration = {};
         const locatedTree: TreePage[] = [
             {
                 location: {
@@ -95,7 +95,7 @@ describe('computeSpaceTree', () => {
                 show: true,
             },
         ];
-        const result = computeSpaceTree(pluridPages, configuration);
+        const result = computeSpaceTree(pluridPages);
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });
@@ -139,6 +139,7 @@ describe('computeSpaceTree', () => {
         ];
         // console.log(pluridPages);
         const configuration: PluridConfiguration = {
+            ...defaultConfiguration,
             space: {
                 layout: {
                     type: 'COLUMNS',
