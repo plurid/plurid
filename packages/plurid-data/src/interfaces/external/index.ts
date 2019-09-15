@@ -33,7 +33,7 @@ export interface PluridPage {
     path: string;
 
     /**
-     * If true, the page will be considered for the initial layout.
+     * If true, the page will be rendered on the initial layout.
      */
     root?: boolean;
 
@@ -92,7 +92,7 @@ export interface PluridConfiguration {
      */
     planeWidth: number;
 
-    space: Partial<PluridConfigurationSpace>;
+    space: PluridConfigurationSpace;
 
     // Future:
     // To change the browser URL depending on the active plane/plane in sight.
@@ -115,12 +115,12 @@ export interface PluridConfigurationSpace {
     /**
      * Path to the root or integer indicating the index order.
      */
-    camera: string | number;
+    camera?: string | number;
 
     /**
-     * Perspective value. Recommended 1300-2000.
+     * Perspective value. Recommended between 1300 and 2000.
      */
-    perspective: number;
+    perspective?: number;
 }
 
 

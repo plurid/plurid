@@ -10,6 +10,7 @@ import {
     PluridApp as PluridAppProperties,
     PluridConfiguration as PluridAppConfiguration,
     TreePage,
+    defaultConfiguration,
 } from '@plurid/plurid-data';
 
 import {
@@ -179,9 +180,9 @@ const View: React.FC<ViewProperties> = (properties) => {
     }
 
     useEffect(() => {
-        if (configuration) {
-            handleConfiguration(configuration);
-        }
+        const mergedConfiguration = { ...defaultConfiguration, ...configuration };
+
+        handleConfiguration(mergedConfiguration);
 
         const _pages = pages && pages.map(page => {
             const id = uuid();
@@ -202,7 +203,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         setDocuments(_documents);
 
         if (_pages) {
-            const computedTree = computeSpaceTree(_pages, configuration);
+            const computedTree = computeSpaceTree(_pages, mergedConfiguration);
             setTree(computedTree);
         }
 
