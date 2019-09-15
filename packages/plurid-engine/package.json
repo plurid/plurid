@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
         "plurid",
@@ -76,7 +76,7 @@
     },
     "devDependencies": {
         "@plurid/apps.utilities.functions": "^0.1.2",
-        "@plurid/plurid-data": "^0.1.6",
+        "@plurid/plurid-data": "^0.1.8",
         "@types/jest": "^24.0.18",
         "@types/node": "^12.7.5",
         "@types/react": "^16.9.2",
