@@ -54,16 +54,18 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     return (
         <StyledPluridRoots
             style={{
-                width: viewSize.width * planeWith + 'px',
-                height: window.innerWidth + 'px',
+                width: window.innerWidth + 'px',
+                height: window.innerHeight + 'px',
+                // width: viewSize.width + 'px',
+                // height: viewSize.height + 'px',
                 transform: `
+                    scale(${spaceScale})
                     translateX(${spaceTranslationX}px)
                     translateY(${spaceTranslationY}px)
                     rotateX(${spaceRotationX}deg)
                     rotateY(${spaceRotationY}deg)
-                    scale(${spaceScale})
                 `,
-                transformOrigin: `${viewSize.width * planeWith/2}px ${spaceTranslationY}px`,
+                // transformOrigin: `${viewSize.width * planeWith/2}px ${spaceTranslationY}px`,
             }}
         >
             {tree.map(page => {
