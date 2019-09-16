@@ -972,15 +972,15 @@
   resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.12.tgz#e72de08cd9bcdf14f5b899eda73cbf4bfa060cd7"
   integrity sha512-zniDlgxefvqKkuNeOVQM6KUlvQVhUYtijR2SaO4jt+gM9jylGU0CAwMIX57G8k8hnv7XBRwgDRKy8aIju3RciQ==
 
-"@plurid/plurid-data@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.11.tgz#18d16adf0d2794403abee34c5e3862941bddf075"
-  integrity sha512-HKiBoNtYEQiwbmIORydOIPLlEzEizvk4SxpF2iCi/v2OuU4WKbcXMdLMLJ/cT29/WJmURhh9jerQ0RsGLdyWBQ==
+"@plurid/plurid-data@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.12.tgz#5723816ca83961aee6be9bb844cab5f3a3ae18a8"
+  integrity sha512-AqBYwnaymFsqSp5YmAUun0xRqH/274lQrGHPCup8xWVkVkL+YHCnbtx4v3jyMH1b7KOlNm4aFMWBC/bDNUxMXA==
 
-"@plurid/plurid-engine@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.7.tgz#e20f097c7714c8e42b70c879b6d2254817298a04"
-  integrity sha512-CMa7zb60vmUV0PL4PHwZ3KJN2NA194wRPdMTNPv6gDaU6MdjQbD4dWQKIfm9TndX2zIcI9IcPjGn7eg0Ej5Dog==
+"@plurid/plurid-engine@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.8.tgz#642812810f821ff3a5170c1306c60f0b88a9e869"
+  integrity sha512-g1GXohLmph7va3ITgVtmED5PebU52/wn3iClVfaoyMzJBBhCiBhfPwWjx3PJHTnUvMaTlPb3LiMcA8XLRVCPwA==
 
 "@plurid/plurid-pubsub@^0.1.1":
   version "0.1.1"
