@@ -127,6 +127,11 @@ export interface PluridConfigurationSpace {
      * Perspective value. Recommended between 1300 and 2000.
      */
     perspective?: number;
+
+    /**
+     * Make the background of the Plurid Space transparent.
+     */
+    transparent?: boolean;
 }
 
 
