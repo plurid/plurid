@@ -1,6 +1,7 @@
 import React, {
     useEffect,
     useCallback,
+    useRef,
 } from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
@@ -95,6 +96,8 @@ type ViewProperties = ViewOwnProperties
     & ViewDispatchProperties;
 
 const View: React.FC<ViewProperties> = (properties) => {
+    const viewElement = useRef<HTMLDivElement>(null);
+
     const {
         appProperties,
 
@@ -138,6 +141,11 @@ const View: React.FC<ViewProperties> = (properties) => {
     useGlobalWheel(wheelCallback);
 
     useEffect(() => {
+        if (viewElement && viewElement.current) {
+            console.log(viewElement.current.offsetWidth);
+            console.log(viewElement.current.offsetHeight);
+        }
+
         const handleResize = debounce(() => {
             setViewSize({
                 height: window.innerHeight,
@@ -244,7 +252,9 @@ const View: React.FC<ViewProperties> = (properties) => {
     const viewContainer = handleView(pages, documents);
 
     return (
-        <StyledView>
+        <StyledView
+            ref={viewElement}
+        >
             {!spaceLoading && (
                 <>
                     <GlobalStyle />
