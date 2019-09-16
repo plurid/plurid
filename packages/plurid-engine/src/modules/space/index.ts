@@ -294,7 +294,7 @@ export const recomputeSpaceTreeLocations = (
     tree: TreePage[],
 ): TreePage[] => {
     const updatedTree: TreePage[] = [];
-    console.log(tree);
+    // console.log(tree);
 
     tree.forEach((page, index) => {
         const _page = { ...page };
