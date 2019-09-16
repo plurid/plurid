@@ -292,10 +292,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.functions/-/apps.utilities.functions-0.1.2.tgz#6a2959519bd288d602dff9b9607a01aa54e7e326"
   integrity sha512-Q+XAQLCU0gXr2BcJquSyic0EQ9UjPX+iOGdn8+gsD5XhqF94S0oHNCZMSCjQOfKNCoO2fCAO3E/xU5fuPXzg6g==
 
-"@plurid/plurid-data@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.9.tgz#4f8046c41870a655e68644387d71ea9b420a0fde"
-  integrity sha512-nWlwnwlyQC8tfDPEmabL4dw+HvMXkJMhPdDY++1S2TQIsV2ECutakCERgJ38RZUEBTdc7afFteP8LbmOiWHu1A==
+"@plurid/plurid-data@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.12.tgz#5723816ca83961aee6be9bb844cab5f3a3ae18a8"
+  integrity sha512-AqBYwnaymFsqSp5YmAUun0xRqH/274lQrGHPCup8xWVkVkL+YHCnbtx4v3jyMH1b7KOlNm4aFMWBC/bDNUxMXA==
 
 "@plurid/plurid-pubsub@^0.1.1":
   version "0.1.1"
@@ -3659,10 +3659,10 @@ rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.5.0, rollup-pluginutils@^2.8.1:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^1.21.3:
-  version "1.21.3"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.21.3.tgz#2d957e04b230b06a85b8c617bf594f92c37c4d5d"
-  integrity sha512-43CgeUtHhfiqBOUd0uJo5NEOg2FuheF3SqGN8BqgvnqB4xM2TbfPdudeSdllDcMKpagHb//qtpaAADBurT4GzA==
+rollup@^1.21.4:
+  version "1.21.4"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.21.4.tgz#00a41a30f90095db890301b226cbe2918e4cf54d"
+  integrity sha512-Pl512XVCmVzgcBz5h/3Li4oTaoDcmpuFZ+kdhS/wLreALz//WuDAMfomD3QEYl84NkDu6Z6wV9twlcREb4qQsw==
   dependencies:
     "@types/estree" "0.0.39"
     "@types/node" "^12.7.5"
@@ -4200,10 +4200,10 @@ ts-jest@^24.1.0:
     semver "^5.5"
     yargs-parser "10.x"
 
-ts-node@^8.3.0:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.3.0.tgz#e4059618411371924a1fb5f3b125915f324efb57"
-  integrity sha512-dyNS/RqyVTDcmNM4NIBAeDMpsAdaQ+ojdf0GOLqE6nwJOgzEkdRNzJywhDfwnuvB10oa6NLVG1rUJQCpRN7qoQ==
+ts-node@^8.4.1:
+  version "8.4.1"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.4.1.tgz#270b0dba16e8723c9fa4f9b4775d3810fd994b4f"
+  integrity sha512-5LpRN+mTiCs7lI5EtbXmF/HfMeCjzt7DH9CZwtkr6SywStrNQC723wG+aOWFiLNn7zT3kD/RnFqi3ZUfr4l5Qw==
   dependencies:
     arg "^4.1.0"
     diff "^4.0.1"
