@@ -23,6 +23,8 @@ import {
     TRANSLATE_DOWN,
     TRANSLATE_LEFT,
     TRANSLATE_RIGHT,
+    TRANSLATE_X_WITH,
+    TRANSLATE_Y_WITH,
 
     SCALE_DOWN,
     SCALE_UP,
@@ -116,6 +118,16 @@ const spaceReducer = (
             {
                 const translationX = state.translationX + TRANSLATION_STEP;
                 return { ...state, translationX };
+            }
+        case TRANSLATE_X_WITH:
+            {
+                const translationX = state.translationX + action.payload;
+                return { ...state, translationX };
+            }
+        case TRANSLATE_Y_WITH:
+            {
+                const translationY = state.translationY + action.payload;
+                return { ...state, translationY };
             }
         case SCALE_UP:
             {

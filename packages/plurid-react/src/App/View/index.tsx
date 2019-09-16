@@ -69,6 +69,7 @@ export interface ViewOwnProperties {
 interface ViewStateProperties {
     spaceLoading: boolean;
     tree: TreePage[];
+    viewSize: ViewSize,
 }
 
 interface ViewDispatchProperties {
@@ -89,6 +90,8 @@ interface ViewDispatchProperties {
 
     rotateXWith: typeof actions.space.rotateXWith;
     rotateYWith: typeof actions.space.rotateYWith;
+    translateXWith: typeof actions.space.translateXWith;
+    translateYWith: typeof actions.space.translateYWith;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -103,6 +106,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         spaceLoading,
         tree,
+        viewSize,
 
         dispatch,
 
@@ -121,6 +125,8 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         rotateXWith,
         rotateYWith,
+        translateXWith,
+        translateYWith,
     } = properties;
 
     const {
@@ -165,6 +171,16 @@ const View: React.FC<ViewProperties> = (properties) => {
         if (configuration.space) {
             const spaceLocation = computeSpaceLocation(configuration);
             setSpaceLocation(spaceLocation);
+        }
+
+        if (configuration.space.center && !configuration.space.camera) {
+            const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.planeWidth;
+            translateXWith(x);
+
+            // to get plane height;
+            const planeHeight = 300;
+            const y = window.innerHeight / 2 - planeHeight/2;
+            translateYWith(y);
         }
 
         if (configuration.theme) {
@@ -280,6 +296,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 const mapStateToProps = (state: AppState): ViewStateProperties => ({
     spaceLoading: selectors.space.getLoading(state),
     tree: selectors.space.getTree(state),
+    viewSize: selectors.data.getViewSize(state),
 });
 
 
@@ -301,6 +318,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
 
     rotateXWith: (value: number) => dispatch(actions.space.rotateXWith(value)),
     rotateYWith: (value: number) => dispatch(actions.space.rotateYWith(value)),
+    translateXWith: (value: number) => dispatch(actions.space.translateXWith(value)),
+    translateYWith: (value: number) => dispatch(actions.space.translateYWith(value)),
 });
 
 
