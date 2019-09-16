@@ -111,30 +111,30 @@ const App = () => {
             },
             root: true,
         },
-        {
-            path: '/page-2',
-            component: {
-                element: Page2,
-                properties: {},
-            },
-            root: true,
-        },
-        {
-            path: '/page-3',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            root: true,
-        },
-        {
-            path: '/page-4',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            root: true,
-        },
+        // {
+        //     path: '/page-2',
+        //     component: {
+        //         element: Page2,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
+        // {
+        //     path: '/page-3',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
+        // {
+        //     path: '/page-4',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
         // {
         //     path: '/page-5',
         //     component: {
