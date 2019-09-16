@@ -20,13 +20,13 @@ const App = () => {
 
     const appConfiguration: PluridConfiguration = {
         // alterURL: false,
-        theme: 'deview',
+        theme: 'plurid',
         space: {
             layout: {
                 type: 'COLUMNS',
             },
         },
-        planeWidth: 0.5,
+        // planeWidth: 0.5,
         planeControls: false,
         // planes: {
         //     domainURL: true,
@@ -154,8 +154,8 @@ const App = () => {
 
     return (
         <div
-            // style={{height: '100%', width: '100%'}}
-            style={{height: '500px', width: '400px'}}
+            style={{height: '100%', width: '100%'}}
+            // style={{height: '500px', width: '400px'}}
         >
             <PluridApp
                 configuration={appConfiguration}

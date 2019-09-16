@@ -2,8 +2,11 @@ import styled from 'styled-components';
 
 
 
-export const StyledPlaneBridge = styled.div`
+export const StyledPlaneBridge: any = styled.div`
     background-color: ${(props: any) => {
+        if (!props.planeControls) {
+            return props.theme.backgroundColorPrimary;
+        }
         return props.theme.backgroundColorDark;
     }};
 
@@ -12,4 +15,5 @@ export const StyledPlaneBridge = styled.div`
     left: -100px;
     height: 30px;
     width: 100px;
+    opacity: 0.5;
 `;
