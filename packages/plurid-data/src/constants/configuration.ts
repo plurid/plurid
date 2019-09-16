@@ -18,6 +18,7 @@ const defaultConfiguration: PluridConfiguration = {
             columns: 2,
         },
         perspective: 1000,
+        transparent: false,
     }
 }
 
