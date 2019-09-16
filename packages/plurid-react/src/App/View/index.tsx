@@ -141,19 +141,15 @@ const View: React.FC<ViewProperties> = (properties) => {
     useGlobalWheel(wheelCallback);
 
     useEffect(() => {
-        if (viewElement && viewElement.current) {
-            console.log(viewElement.current.offsetWidth);
-            console.log(viewElement.current.offsetHeight);
-        }
-
         const handleResize = debounce(() => {
-            setViewSize({
-                height: window.innerHeight,
-                width: window.innerWidth,
-            });
-
-            const recomputedTree = recomputeSpaceTreeLocations(tree);
-            setTree(recomputedTree);
+            if (viewElement && viewElement.current) {
+                setViewSize({
+                    height: viewElement.current.offsetHeight,
+                    width: viewElement.current.offsetWidth,
+                });
+                const recomputedTree = recomputeSpaceTreeLocations(tree);
+                setTree(recomputedTree);
+            }
         }, 150);
 
         window.addEventListener('resize', handleResize);
@@ -240,6 +236,13 @@ const View: React.FC<ViewProperties> = (properties) => {
             return { ...document, pages: _documentPages};
         }) || [];
         setDocuments(_documents);
+
+        if (viewElement && viewElement.current) {
+            setViewSize({
+                height: viewElement.current.offsetHeight,
+                width: viewElement.current.offsetWidth,
+            });
+        }
 
         if (_pages) {
             const computedTree = computeSpaceTree(_pages, mergedConfiguration);

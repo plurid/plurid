@@ -154,6 +154,7 @@ const App = () => {
 
     return (
         <div
+            // style={{height: '100%', width: '100%'}}
             style={{height: '500px', width: '400px'}}
         >
             <PluridApp
