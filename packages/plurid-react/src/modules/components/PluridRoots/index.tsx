@@ -25,6 +25,7 @@ export interface PluridRootsOwnProperties {
 
 interface PluridRootsStateProperties {
     viewSize: ViewSize;
+    planeWith: number;
     spaceScale: number;
     spaceRotationX: number;
     spaceRotationY: number;
@@ -41,6 +42,7 @@ type PluridRootsProperties = PluridRootsStateProperties & PluridRootsDispatchPro
 const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     const {
         viewSize,
+        planeWith,
         spaceScale,
         spaceRotationX,
         spaceRotationY,
@@ -52,15 +54,16 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     return (
         <StyledPluridRoots
             style={{
-                width: viewSize.width + 'px',
-                height: viewSize.height + 'px',
+                width: viewSize.width * planeWith + 'px',
+                height: window.innerWidth + 'px',
                 transform: `
-                    scale(${spaceScale})
                     translateX(${spaceTranslationX}px)
                     translateY(${spaceTranslationY}px)
                     rotateX(${spaceRotationX}deg)
                     rotateY(${spaceRotationY}deg)
+                    scale(${spaceScale})
                 `,
+                transformOrigin: `${viewSize.width * planeWith/2}px ${spaceTranslationY}px`,
             }}
         >
             {tree.map(page => {
@@ -78,6 +81,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
 
 const mapStateToProps = (state: AppState): PluridRootsStateProperties => ({
     viewSize: selectors.data.getViewSize(state),
+    planeWith: selectors.configuration.getConfiguration(state).planeWidth,
     spaceScale: selectors.space.getScale(state),
     spaceRotationX: selectors.space.getRotationX(state),
     spaceRotationY: selectors.space.getRotationY(state),
