@@ -3,7 +3,7 @@ import React from 'react';
 import PluridApp, {
     PluridConfiguration,
     PluridPubSub,
-    TOPICS,
+    // TOPICS,
 } from '@plurid/plurid-react';
 
 import Page1 from './containers/Page1';
@@ -26,6 +26,7 @@ const App = () => {
                 type: 'COLUMNS',
             },
         },
+        planeControls: false,
         // planes: {
         //     domainURL: true,
         //     width: 50,

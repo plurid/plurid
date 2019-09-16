@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {
+    useState,
+    useEffect,
+} from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -37,6 +40,7 @@ interface PluridPlaneStateProperties {
     spaceScale: number;
     generalTheme: Theme;
     interactionTheme: Theme;
+    planeControls: boolean;
     planeWidth: number;
 }
 
@@ -57,12 +61,14 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
         children,
 
         generalTheme,
+        planeControls,
         planeWidth,
     } = properties;
 
     return (
         <StyledPluridPlane
             theme={generalTheme}
+            planeControls={planeControls}
             show={treePage.show}
             data-plurid-plane={planeID}
             style={{
@@ -80,9 +86,11 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
                 <PlaneBridge />
             )}
 
-            <PlaneControls
-                page={page}
-            />
+            {planeControls && (
+                <PlaneControls
+                    page={page}
+                />
+            )}
 
             <PlaneContent>
                 {children}
@@ -97,6 +105,7 @@ const mapStateToProps = (state: AppState): PluridPlaneStateProperties => ({
     spaceScale: selectors.space.getScale(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
+    planeControls: selectors.configuration.getConfiguration(state).planeControls,
     planeWidth: selectors.configuration.getConfiguration(state).planeWidth,
 });
 

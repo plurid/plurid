@@ -22,6 +22,7 @@ interface PluridSpaceOwnProperties {
 
 interface PluridSpaceStateProperties {
     generalTheme: Theme;
+    transparent: boolean | undefined;
 }
 
 interface PluridSpaceDispatchProperties {
@@ -34,11 +35,13 @@ type PluridSpaceProperties = PluridSpaceOwnProperties
 const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
     const {
         generalTheme,
+        transparent,
     } = properties;
 
     return (
         <StyledPluridSpace
             theme={generalTheme}
+            transparent={transparent}
         >
             <PluridRoots />
         </StyledPluridSpace>
@@ -48,6 +51,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
 
 const mapStateToProps = (state: AppState): PluridSpaceStateProperties => ({
     generalTheme: selectors.themes.getGeneralTheme(state),
+    transparent: selectors.configuration.getConfiguration(state).space.transparent,
 });
 
 
