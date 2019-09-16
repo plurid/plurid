@@ -25,7 +25,12 @@ export const StyledPluridPlane: any = styled.div`
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 56px auto;
+    grid-template-rows: ${(props: any) => {
+        if (props.planeControls) {
+            return '56px auto';
+        }
+        return 'auto';
+    }};
 
     transform-origin: 0 0 0;
 `;
