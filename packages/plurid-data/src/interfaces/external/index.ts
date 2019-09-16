@@ -116,7 +116,7 @@ export interface PluridConfigurationTheme {
 
 
 export interface PluridConfigurationSpace {
-    layout: LayoutColumns | LayoutZigZag | LayoutFaceToFace | LayoutSheaves | LayoutMeta;
+    layout?: LayoutColumns | LayoutZigZag | LayoutFaceToFace | LayoutSheaves | LayoutMeta;
 
     /**
      * Path to the root or integer indicating the index order.
@@ -132,6 +132,12 @@ export interface PluridConfigurationSpace {
      * Make the background of the Plurid Space transparent.
      */
     transparent?: boolean;
+
+    /**
+     * If true, centers the camera on the first Plurid Root Page,
+     * or, if camera is set, on the Root indicated by the camera.
+     */
+    center?: boolean;
 }
 
 
