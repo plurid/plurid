@@ -84,6 +84,18 @@ export interface TranslateRightAction {
     type: typeof TRANSLATE_RIGHT;
 }
 
+export const TRANSLATE_X_WITH = 'TRANSLATE_X_WITH';
+export interface TranslateXWithAction {
+    type: typeof TRANSLATE_X_WITH;
+    payload: number;
+}
+
+export const TRANSLATE_Y_WITH = 'TRANSLATE_Y_WITH';
+export interface TranslateYWithAction {
+    type: typeof TRANSLATE_Y_WITH;
+    payload: number;
+}
+
 
 export const SCALE_UP = 'SCALE_UP';
 export interface ScaleUpAction {
@@ -130,6 +142,8 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | TranslateDownAction
     | TranslateLeftAction
     | TranslateRightAction
+    | TranslateXWithAction
+    | TranslateYWithAction
     | ScaleUpAction
     | ScaleDownAction
     | SetTreeAction;

@@ -25,8 +25,9 @@ const App = () => {
             layout: {
                 type: 'COLUMNS',
             },
+            center: true,
         },
-        // planeWidth: 0.5,
+        planeWidth: 0.5,
         planeControls: false,
         // planes: {
         //     domainURL: true,

@@ -34,6 +34,10 @@ import {
     TranslateLeftAction,
     TRANSLATE_RIGHT,
     TranslateRightAction,
+    TRANSLATE_X_WITH,
+    TranslateXWithAction,
+    TRANSLATE_Y_WITH,
+    TranslateYWithAction,
 
     SCALE_UP,
     ScaleUpAction,
@@ -137,6 +141,21 @@ export const translateRight = (): TranslateRightAction => {
         type: TRANSLATE_RIGHT,
     };
 }
+
+export const translateXWith = (payload: number): TranslateXWithAction => {
+    return {
+        type: TRANSLATE_X_WITH,
+        payload,
+    };
+}
+
+export const translateYWith = (payload: number): TranslateYWithAction => {
+    return {
+        type: TRANSLATE_Y_WITH,
+        payload,
+    };
+}
+
 
 
 export const scaleUp = (): ScaleUpAction => {
