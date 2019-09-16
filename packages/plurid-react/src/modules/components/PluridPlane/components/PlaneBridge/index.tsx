@@ -20,6 +20,7 @@ interface PlaneBridgeOwnProperties {
 
 interface PlaneBridgeStateProperties {
     generalTheme: Theme;
+    planeControls: boolean;
 }
 
 interface PlaneBridgeDispatchProperties {
@@ -32,11 +33,13 @@ type PlaneBridgeProperties = PlaneBridgeOwnProperties
 const PlaneBridge: React.FC<PlaneBridgeProperties> = (properties) => {
     const {
         generalTheme,
+        planeControls,
     } = properties;
 
     return (
         <StyledPlaneBridge
             theme={generalTheme}
+            planeControls={planeControls}
         />
     );
 }
@@ -44,6 +47,7 @@ const PlaneBridge: React.FC<PlaneBridgeProperties> = (properties) => {
 
 const mapStateToProps = (state: AppState): PlaneBridgeStateProperties => ({
     generalTheme: selectors.themes.getGeneralTheme(state),
+    planeControls: selectors.configuration.getConfiguration(state).planeControls,
 });
 
 
