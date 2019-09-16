@@ -967,10 +967,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.functions/-/apps.utilities.functions-0.1.2.tgz#6a2959519bd288d602dff9b9607a01aa54e7e326"
   integrity sha512-Q+XAQLCU0gXr2BcJquSyic0EQ9UjPX+iOGdn8+gsD5XhqF94S0oHNCZMSCjQOfKNCoO2fCAO3E/xU5fuPXzg6g==
 
-"@plurid/apps.utilities.themes@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.11.tgz#9edf2bb5c364004c9c6127a295b71911c3c416ca"
-  integrity sha512-v6t3XOj1zPzvPK51WhBdcBYhlJNZSKt7JVzliE8QXnhDEUljZb2RKWzMuImm3xroYjU+9EqxEIXud8Megbf76w==
+"@plurid/apps.utilities.themes@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.12.tgz#e72de08cd9bcdf14f5b899eda73cbf4bfa060cd7"
+  integrity sha512-zniDlgxefvqKkuNeOVQM6KUlvQVhUYtijR2SaO4jt+gM9jylGU0CAwMIX57G8k8hnv7XBRwgDRKy8aIju3RciQ==
 
 "@plurid/plurid-data@^0.1.11":
   version "0.1.11"
