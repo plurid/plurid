@@ -26,6 +26,7 @@ const App = () => {
                 type: 'COLUMNS',
             },
         },
+        planeWidth: 0.5,
         planeControls: false,
         // planes: {
         //     domainURL: true,
@@ -153,7 +154,7 @@ const App = () => {
 
     return (
         <div
-            style={{height: '100%'}}
+            style={{height: '500px', width: '400px'}}
         >
             <PluridApp
                 configuration={appConfiguration}
