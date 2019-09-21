@@ -1,10 +1,9 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.1.0",
-    "description": "Plurid 3D JS/CSS Engine",
+    "version": "0.1.8",
+    "description": "Plurid Engine and Utility Functions",
     "keywords": [
         "plurid",
-        "3D",
         "engine"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
@@ -26,16 +25,84 @@
     ],
     "main": "dist/plurid-engine.umd.js",
     "module": "dist/plurid-engine.es5.js",
-    "types": "dist/types/plurid-engine.d.ts",
+    "typings": "dist/types/index.d.ts",
+    "engines": {
+        "node": ">=8.0.0"
+    },
     "scripts": {
-        "lint": "tslint --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+        "lint": "eslint ./src --ext .ts",
+        "report-coverage": "cat ./coverage/lcov.info | coveralls",
         "prebuild": "rimraf dist",
-        "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+        "spec": "jest --coverage",
+        "spec.watch": "jest --coverage --watch",
+        "spec.prod": "npm run lint && npm run spec -- --no-cache",
         "start": "rollup -c rollup.config.ts -w",
-        "test": "jest",
-        "test.coverage": "jest --coverage",
-        "test.watch": "jest --coverage --watch",
-        "test.prod": "yarn lint && yarn test --no-cache",
-        "report-coverage": "cat ./coverage/lcov.info | coveralls"
+        "build.removeSpecs": "rm -rf `find ./dist/ -type d -name __specs__`",
+        "build.dev": "tsc --module commonjs && rollup -c rollup.config.ts && yarn build.removeSpecs",
+        "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src && yarn build.removeSpecs",
+        "prepublishOnly": "yarn build"
+    },
+    "jest": {
+        "transform": {
+            ".(ts|tsx)": "ts-jest"
+        },
+        "testEnvironment": "node",
+        "testRegex": "(/__specs__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js"
+        ],
+        "coveragePathIgnorePatterns": [
+            "/node_modules/",
+            "/dist/",
+            "/test/"
+        ],
+        "coverageThreshold": {
+            "global": {
+                "branches": 90,
+                "functions": 95,
+                "lines": 95,
+                "statements": 95
+            }
+        },
+        "collectCoverageFrom": [
+            "src/*.{js,ts}"
+        ]
+    },
+    "peerDependencies": {
+        "@plurid/apps.utilities.functions": "*",
+        "@plurid/plurid-data": "*"
+    },
+    "devDependencies": {
+        "@plurid/apps.utilities.functions": "^0.1.2",
+        "@plurid/plurid-data": "^0.1.12",
+        "@plurid/plurid-pubsub": "^0.1.1",
+        "@types/jest": "^24.0.18",
+        "@types/node": "^12.7.5",
+        "@types/react": "^16.9.2",
+        "@typescript-eslint/eslint-plugin": "^2.2.0",
+        "@typescript-eslint/parser": "^2.2.0",
+        "colors": "^1.3.3",
+        "coveralls": "^3.0.6",
+        "eslint": "^6.4.0",
+        "jest": "^24.9.0",
+        "jest-config": "^24.9.0",
+        "lodash.camelcase": "^4.3.0",
+        "prompt": "^1.0.0",
+        "react": "^16.9.0",
+        "replace-in-file": "^4.1.3",
+        "rimraf": "^3.0.0",
+        "rollup": "^1.21.4",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-json": "^4.0.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-sourcemaps": "^0.4.2",
+        "rollup-plugin-typescript2": "^0.24.2",
+        "shelljs": "^0.8.3",
+        "ts-jest": "^24.1.0",
+        "ts-node": "^8.4.1",
+        "typedoc": "^0.15.0",
+        "typescript": "^3.6.3"
     }
 }
