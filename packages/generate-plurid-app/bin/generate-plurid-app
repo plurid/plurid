@@ -1,0 +1,3 @@
+#!/usr/bin/env node
+
+require('../dist/generate-plurid-app.umd.js');

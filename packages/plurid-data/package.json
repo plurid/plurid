@@ -1,0 +1,58 @@
+{
+    "name": "@plurid/plurid-data",
+    "version": "0.1.12",
+    "description": "Plurid Constants, Interfaces, Enumerations",
+    "keywords": [
+        "plurid",
+        "data",
+        "constants",
+        "interfaces",
+        "enumerations"
+    ],
+    "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/plurid"
+    },
+    "bugs": {
+        "email": "feedback@plurid.com",
+        "url": "https://github.com/plurid/plurid/issues"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-data/README.md",
+    "files": [
+        "dist/"
+    ],
+    "main": "dist/index.js",
+    "module": "dist/index.es.js",
+    "jsnext:main": "dist/index.es.js",
+    "engines": {
+        "node": ">=8",
+        "npm": ">=6"
+    },
+    "scripts": {
+        "clean": "rm -rf ./dist",
+        "lint": "eslint ./src --ext .ts,.tsx",
+        "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
+        "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
+        "build.prod": "rollup -c --environment MODE_ENV:production",
+        "build": "yarn clean && yarn lint && yarn build.prod",
+        "prepublishOnly": "yarn build"
+    },
+    "peerDependencies": {
+        "@plurid/plurid-pubsub": "*"
+    },
+    "devDependencies": {
+        "@plurid/plurid-pubsub": "^0.1.1",
+        "@types/react": "^16.9.2",
+        "@typescript-eslint/eslint-plugin": "^2.2.0",
+        "@typescript-eslint/parser": "^2.2.0",
+        "eslint": "^6.4.0",
+        "rollup": "^1.21.3",
+        "rollup-plugin-typescript2": "^0.24.2",
+        "typescript": "^3.6.3"
+    }
+}
