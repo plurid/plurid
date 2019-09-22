@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1568657822947" clover="3.2.0">
-  <project timestamp="1568657822947" name="All files">
-    <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="0" coveredelements="0" complexity="0" loc="0" ncloc="0" packages="1" files="1" classes="1"/>
-    <file name="typings.d.ts" path="/Users/Cavel/Caveljan/i/theings/sauft/plurid/technologies/plurid/packages/plurid-react/src/typings.d.ts">
-      <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-    </file>
-  </project>
-</coverage>
