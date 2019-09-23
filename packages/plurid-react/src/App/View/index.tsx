@@ -69,7 +69,8 @@ export interface ViewOwnProperties {
 interface ViewStateProperties {
     spaceLoading: boolean;
     tree: TreePage[];
-    viewSize: ViewSize,
+    viewSize: ViewSize;
+    transform: any;
 }
 
 interface ViewDispatchProperties {
@@ -108,6 +109,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         spaceLoading,
         tree,
         viewSize,
+        transform,
 
         dispatch,
 
@@ -230,6 +232,8 @@ const View: React.FC<ViewProperties> = (properties) => {
             } = data;
             rotateYWith(value);
         });
+
+        pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
     }
 
     useEffect(() => {
@@ -303,6 +307,7 @@ const mapStateToProps = (state: AppState): ViewStateProperties => ({
     spaceLoading: selectors.space.getLoading(state),
     tree: selectors.space.getTree(state),
     viewSize: selectors.data.getViewSize(state),
+    transform: selectors.space.getTransform(state),
 });
 
 
