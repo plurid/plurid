@@ -11,8 +11,15 @@ export interface SetConfigurationAction {
 }
 
 
+export const SET_MICRO = 'SET_MICRO';
+export interface SetMicroAction {
+    type: typeof SET_MICRO;
+}
+
+
 export interface ConfigurationState extends PluridConfiguration {
 }
 
 
-export type ConfigurationActionsType = SetConfigurationAction;
+export type ConfigurationActionsType = SetConfigurationAction
+    | SetMicroAction;

@@ -4,6 +4,7 @@ import {
 
 import {
     SET_CONFIGURATION,
+    SET_MICRO,
     ConfigurationState,
     ConfigurationActionsType,
 } from './types';
@@ -21,6 +22,13 @@ const configurationReducer = (
     switch(action.type) {
         case SET_CONFIGURATION:
             return { ...state, ...action.payload };
+        case SET_MICRO:
+            return {
+                ...state,
+                toolbar: false,
+                planeControls: false,
+                viewcube: false,
+            };
         default:
             return state;
     }

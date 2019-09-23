@@ -25,6 +25,7 @@ interface PluridSpaceOwnProperties {
 interface PluridSpaceStateProperties {
     generalTheme: Theme;
     transparent: boolean | undefined;
+    showToolbar: boolean | undefined;
 }
 
 interface PluridSpaceDispatchProperties {
@@ -38,6 +39,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
     const {
         generalTheme,
         transparent,
+        showToolbar,
     } = properties;
 
     return (
@@ -47,7 +49,9 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
         >
             <PluridRoots />
 
-            <ToolbarGeneral />
+            {showToolbar && (
+                <ToolbarGeneral />
+            )}
         </StyledPluridSpace>
     );
 }
@@ -56,6 +60,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
 const mapStateToProps = (state: AppState): PluridSpaceStateProperties => ({
     generalTheme: selectors.themes.getGeneralTheme(state),
     transparent: selectors.configuration.getConfiguration(state).space.transparent,
+    showToolbar: selectors.configuration.getConfiguration(state).toolbar,
 });
 
 
