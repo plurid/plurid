@@ -8,6 +8,11 @@ import { ThunkDispatch } from 'redux-thunk';
 import {
     StyledToolbar,
     StyledToolbarButtons,
+    StyledToolbarRotate,
+    StyledToolbarTranslate,
+    StyledToolbarScale,
+    StyledToolbarTransformButton,
+    StyledToolbarTransformText,
 } from './styled';
 
 import ToolbarButton from '../Button';
@@ -49,17 +54,83 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             <StyledToolbarButtons
                 theme={theme}
             >
-                <div>
-                    rotate
-                </div>
+                <StyledToolbarRotate>
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ◀
+                    </StyledToolbarTransformButton>
 
-                <div>
-                    translate
-                </div>
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ▲
+                    </StyledToolbarTransformButton>
 
-                <div>
-                    scale
-                </div>
+                    <StyledToolbarTransformText>
+                        rotate
+                    </StyledToolbarTransformText>
+
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ▼
+                    </StyledToolbarTransformButton>
+
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ▶
+                    </StyledToolbarTransformButton>
+                </StyledToolbarRotate>
+
+                <StyledToolbarScale>
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ▲
+                    </StyledToolbarTransformButton>
+
+                    <StyledToolbarTransformText>
+                        scale
+                    </StyledToolbarTransformText>
+
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ▼
+                    </StyledToolbarTransformButton>
+                </StyledToolbarScale>
+
+                <StyledToolbarTranslate>
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ◀
+                    </StyledToolbarTransformButton>
+
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ▲
+                    </StyledToolbarTransformButton>
+
+                    <StyledToolbarTransformText>
+                        translate
+                    </StyledToolbarTransformText>
+
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ▼
+                    </StyledToolbarTransformButton>
+
+                    <StyledToolbarTransformButton
+                        theme={theme}
+                    >
+                        ▶
+                    </StyledToolbarTransformButton>
+                </StyledToolbarTranslate>
             </StyledToolbarButtons>
         </StyledToolbar>
     );
