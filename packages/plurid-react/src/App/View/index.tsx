@@ -218,7 +218,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }
 
-    const handlePubSub = (pubsub: PluridPubSub) => {
+    const handlePubSubSubscribe = (pubsub: PluridPubSub) => {
         pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
             const {
                 value,
@@ -232,7 +232,9 @@ const View: React.FC<ViewProperties> = (properties) => {
             } = data;
             rotateYWith(value);
         });
+    }
 
+    const handlePubSubPublish = (pubsub: PluridPubSub) => {
         pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
     }
 
@@ -242,7 +244,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         handleConfiguration(mergedConfiguration);
 
         if (pubsub) {
-            handlePubSub(pubsub);
+            handlePubSubSubscribe(pubsub);
         }
 
         const _pages = pages && pages.map(page => {
@@ -276,7 +278,18 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
 
         setSpaceLoading(false);
-    }, [configuration, pubsub]);
+    }, [
+        configuration,
+        pubsub,
+    ]);
+
+    useEffect(() => {
+        if (pubsub) {
+            handlePubSubPublish(pubsub);
+        }
+    }, [
+        transform,
+    ]);
 
     const viewContainer = handleView(pages, documents);
 

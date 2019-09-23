@@ -12,6 +12,7 @@ import Page2 from './containers/Page2';
 const pluridPubSub = new PluridPubSub();
 
 
+
 const App = () => {
 
     // setInterval(() => {
@@ -101,6 +102,11 @@ const App = () => {
     //     },
     // ];
 
+    // useEffect(() => {
+        // pluridPubSub.subscribe(TOPICS.SPACE_TRANSFORM, (data: any) => {
+        //     console.log(data);
+        // });
+    // }, []);
 
     const appPages = [
         {
