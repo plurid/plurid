@@ -1214,10 +1214,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.functions/-/apps.utilities.functions-0.1.2.tgz#6a2959519bd288d602dff9b9607a01aa54e7e326"
   integrity sha512-Q+XAQLCU0gXr2BcJquSyic0EQ9UjPX+iOGdn8+gsD5XhqF94S0oHNCZMSCjQOfKNCoO2fCAO3E/xU5fuPXzg6g==
 
-"@plurid/apps.utilities.themes@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.12.tgz#e72de08cd9bcdf14f5b899eda73cbf4bfa060cd7"
-  integrity sha512-zniDlgxefvqKkuNeOVQM6KUlvQVhUYtijR2SaO4jt+gM9jylGU0CAwMIX57G8k8hnv7XBRwgDRKy8aIju3RciQ==
+"@plurid/apps.utilities.themes@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.13.tgz#5ea789c233685e415c899c6060fb1adbf50d301c"
+  integrity sha512-6h5Q4hMULTZ111Kazq+0i+ndm8lJP/MTVclmJFEUsb1WJwv0BglulcFWSfJNoaibpPxz9RcfZj/h/8pF0Yna9g==
 
 "@plurid/plurid-data@^0.1.12":
   version "0.1.12"
@@ -1234,13 +1234,13 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.1.tgz#6248fa35904dec2bf00204f9db1491948fc0116c"
   integrity sha512-MlNqKoTkl3R0I0KeriX3JTDpT5NinZNcNv86jQOtJ0hG9wFG5kuD8Y/ej5/KPRYrj0mUvVeBjgMnRPbZ3fB5/w==
 
-"@plurid/plurid-react@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.12.tgz#bdaeb746c2165b8a537bc9cb4af9169e56e7969f"
-  integrity sha512-0x6EFOKuUYFz8muQ9mcHpNyQoNon6nwrAZK1BY/Tu4v/y60B9CGRAkLM2lc7nNuSNoymhngSkbnPUfDigNs9Kw==
+"@plurid/plurid-react@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.13.tgz#36a74709409f2572f412ec25d6a2d6dfe7b837eb"
+  integrity sha512-dDIuGt8Sk9pNSvd81wDuldjrneT8SNTU5PvhyQzbRcyInLbtLvpvVhj03GKc65xawMIBjrME572M5zKvCo67xw==
   dependencies:
     "@plurid/apps.utilities.functions" "^0.1.2"
-    "@plurid/apps.utilities.themes" "^0.1.12"
+    "@plurid/apps.utilities.themes" "^0.1.13"
     "@plurid/plurid-data" "^0.1.12"
     "@plurid/plurid-engine" "^0.1.8"
     "@plurid/plurid-pubsub" "^0.1.1"
