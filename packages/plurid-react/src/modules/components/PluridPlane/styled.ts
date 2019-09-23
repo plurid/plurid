@@ -22,6 +22,7 @@ export const StyledPluridPlane: any = styled.div`
     position: absolute;
     height: auto;
     width: 100%;
+    font-size: 0.9rem;
 
     display: grid;
     grid-template-columns: 1fr;
