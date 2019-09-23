@@ -12,8 +12,8 @@ const initialState: DataState = {
     pages: [],
     documents: [],
     viewSize: {
-        height: window.innerHeight,
-        width: window.innerWidth,
+        height: window ? window.innerHeight : 800,
+        width: window ? window.innerWidth : 1440,
     },
 }
 
