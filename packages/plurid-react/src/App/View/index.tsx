@@ -76,6 +76,7 @@ interface ViewDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
     setConfiguration: typeof actions.configuration.setConfiguration;
+    setMicro: typeof actions.configuration.setMicro;
 
     setPages: typeof actions.data.setPages;
     setDocuments: typeof actions.data.setDocuments;
@@ -111,6 +112,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         dispatch,
 
         setConfiguration,
+        setMicro,
 
         setPages,
         setDocuments,
@@ -167,6 +169,10 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     const handleConfiguration = (configuration: PluridAppConfiguration) => {
         setConfiguration(configuration);
+
+        if (configuration.micro) {
+            setMicro();
+        }
 
         if (configuration.space) {
             const spaceLocation = computeSpaceLocation(configuration);
@@ -304,6 +310,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     dispatch,
 
     setConfiguration: (configuration: PluridAppConfiguration) => dispatch(actions.configuration.setConfiguration(configuration)),
+    setMicro: () => dispatch(actions.configuration.setMicro()),
 
     setPages: (pages: any) => dispatch(actions.data.setPages(pages)),
     setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
