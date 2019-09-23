@@ -14,6 +14,16 @@ const getTranslationY = (state: AppState): number => state.space.translationY;
 const getTranslationZ = (state: AppState): number => state.space.translationZ;
 const getScale = (state: AppState): number => state.space.scale;
 const getTree = (state: AppState): TreePage[] => state.space.tree;
+const getTransform = (state: AppState) => {
+    return {
+        rotationX: state.space.rotationX,
+        rotationY: state.space.rotationY,
+        translationX: state.space.translationX,
+        translationY: state.space.translationY,
+        translationZ: state.space.translationZ,
+        scale: state.space.scale,
+    }
+}
 
 
 export default {
@@ -25,5 +35,7 @@ export default {
     getTranslationY,
     getTranslationZ,
     getScale,
+    getTransform,
+
     getTree,
 };
