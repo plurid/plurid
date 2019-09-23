@@ -49,11 +49,17 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             <StyledToolbarButtons
                 theme={theme}
             >
-                rotate
+                <div>
+                    rotate
+                </div>
 
-                translate
+                <div>
+                    translate
+                </div>
 
-                scale
+                <div>
+                    scale
+                </div>
             </StyledToolbarButtons>
         </StyledToolbar>
     );

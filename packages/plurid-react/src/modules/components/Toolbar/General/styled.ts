@@ -4,15 +4,14 @@ import styled from 'styled-components';
 
 export const StyledToolbar = styled.div`
     position: absolute;
-    top: 0;
     left: 0;
-    bottom: 0;
-    width: 60px;
+    right: 0;
+    bottom: 15px;
+    height: 45px;
 `;
 
 
 export const StyledToolbarButtons: any = styled.div`
-    /* background: transparent; */
     background-color: ${(props: any) => {
         return props.theme.backgroundColorSecondary;
     }};
@@ -21,18 +20,16 @@ export const StyledToolbarButtons: any = styled.div`
     }};
 
     display: grid;
-    place-content: center;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
-    border-radius: 15px;
-    margin: 0 15px;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-radius: 22.5px;
+    margin: 0 auto;
     font-size: 12px;
     opacity: 1;
-    width: 30px;
-    height: auto;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    width: 300px;
+    height: 100%;
+
     transition: opacity 300ms ease-in-out;
     z-index: 9999;
     user-select: none;
