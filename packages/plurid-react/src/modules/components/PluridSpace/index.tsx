@@ -11,6 +11,8 @@ import {
 
 import PluridRoots from '../PluridRoots';
 
+import ToolbarGeneral from '../Toolbar/General';
+
 import { AppState } from '../../services/state/store';
 import selectors from '../../services/state/selectors';
 // import actions from '../../services/state/actions';
@@ -44,6 +46,8 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
             transparent={transparent}
         >
             <PluridRoots />
+
+            <ToolbarGeneral />
         </StyledPluridSpace>
     );
 }
