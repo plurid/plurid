@@ -21,7 +21,7 @@ import { Theme } from '@plurid/apps.utilities.themes';
 
 import { AppState } from '../../../services/state/store';
 import selectors from '../../../services/state/selectors';
-// import actions from '../../services/state/actions';
+import actions from '../../../services/state/actions';
 
 
 
@@ -32,7 +32,19 @@ interface ToolbarStateProperties {
     theme: Theme;
 }
 
-interface ToolbarDispatchProperties{
+interface ToolbarDispatchProperties {
+    rotateUp: typeof actions.space.rotateUp;
+    rotateDown: typeof actions.space.rotateDown;
+    rotateLeft: typeof actions.space.rotateLeft;
+    rotateRight: typeof actions.space.rotateRight;
+
+    scaleUp: typeof actions.space.scaleUp;
+    scaleDown: typeof actions.space.scaleDown;
+
+    translateUp: typeof actions.space.translateUp;
+    translateDown: typeof actions.space.translateDown;
+    translateLeft: typeof actions.space.translateLeft;
+    translateRight: typeof actions.space.translateRight;
 }
 
 type ToolbarProperties = ToolbarOwnProperties
@@ -44,6 +56,19 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     const {
         theme,
+
+        rotateUp,
+        rotateDown,
+        rotateLeft,
+        rotateRight,
+
+        scaleUp,
+        scaleDown,
+
+        translateUp,
+        translateDown,
+        translateLeft,
+        translateRight,
     } = properties;
 
     return (
@@ -57,12 +82,14 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 <StyledToolbarRotate>
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={rotateRight}
                     >
                         ◀
                     </StyledToolbarTransformButton>
 
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={rotateUp}
                     >
                         ▲
                     </StyledToolbarTransformButton>
@@ -73,12 +100,14 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={rotateDown}
                     >
                         ▼
                     </StyledToolbarTransformButton>
 
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={rotateLeft}
                     >
                         ▶
                     </StyledToolbarTransformButton>
@@ -87,6 +116,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 <StyledToolbarScale>
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={scaleUp}
                     >
                         ▲
                     </StyledToolbarTransformButton>
@@ -97,6 +127,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={scaleDown}
                     >
                         ▼
                     </StyledToolbarTransformButton>
@@ -105,12 +136,14 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 <StyledToolbarTranslate>
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={translateLeft}
                     >
                         ◀
                     </StyledToolbarTransformButton>
 
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={translateUp}
                     >
                         ▲
                     </StyledToolbarTransformButton>
@@ -121,12 +154,14 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={translateDown}
                     >
                         ▼
                     </StyledToolbarTransformButton>
 
                     <StyledToolbarTransformButton
                         theme={theme}
+                        onClick={translateRight}
                     >
                         ▶
                     </StyledToolbarTransformButton>
@@ -143,6 +178,18 @@ const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
 
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ToolbarDispatchProperties => ({
+    rotateUp: () => dispatch(actions.space.rotateUp()),
+    rotateDown: () => dispatch(actions.space.rotateDown()),
+    rotateLeft: () => dispatch(actions.space.rotateLeft()),
+    rotateRight: () => dispatch(actions.space.rotateRight()),
+
+    scaleUp: () => dispatch(actions.space.scaleUp()),
+    scaleDown: () => dispatch(actions.space.scaleDown()),
+
+    translateUp: () => dispatch(actions.space.translateUp()),
+    translateDown: () => dispatch(actions.space.translateDown()),
+    translateLeft: () => dispatch(actions.space.translateLeft()),
+    translateRight: () => dispatch(actions.space.translateRight()),
 });
 
 
