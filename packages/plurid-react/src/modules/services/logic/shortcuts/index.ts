@@ -16,21 +16,47 @@ export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: KeyboardEvent,
 ) => {
-    // console.log(event);
-    // console.log(event.key);
-    // const useShortcuts = shortcuts || defaultShortcuts;
-    // useShortcuts.forEach((shortcut: any) => {
-    //     if (event.key === shortcut.key && mount) {
-    //         handleGlobalShortcut(dispatch, shortcut.type);
-    //     }
-    // });
-}
+    if (event.key === 'ArrowRight') {
+        if (event.shiftKey) {
+            dispatch(actions.space.rotateLeft());
+        }
+        if (event.altKey) {
+            dispatch(actions.space.translateRight());
+        }
+    }
 
+    if (event.key === 'ArrowLeft') {
+        if (event.shiftKey) {
+            dispatch(actions.space.rotateRight());
+        }
+        if (event.altKey) {
+            dispatch(actions.space.translateLeft());
+        }
+    }
 
-const handleGlobalShortcut = (dispatch: ThunkDispatch<{}, {}, AnyAction>, shortcutType: any) => {
-    // switch(shortcutType) {
+    if (event.key === 'ArrowUp') {
+        if (event.shiftKey) {
+            dispatch(actions.space.rotateUp());
+        }
+        if (event.altKey) {
+            dispatch(actions.space.translateUp());
+        }
+        if (event.metaKey || event.ctrlKey) {
+            dispatch(actions.space.scaleUp());
+        }
+    }
 
-    // }
+    if (event.key === 'ArrowDown') {
+        if (event.shiftKey) {
+            dispatch(actions.space.rotateDown());
+        }
+        if (event.altKey) {
+            dispatch(actions.space.translateDown());
+        }
+        if (event.metaKey || event.ctrlKey) {
+            dispatch(actions.space.scaleDown());
+        }
+    }
 }
 
 
@@ -38,9 +64,6 @@ export const handleGlobalWheel = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: WheelEvent,
 ) => {
-    // console.log(document.activeElement);
-    // console.log(event);
-
     if (event.shiftKey
         || event.metaKey
         || event.altKey
