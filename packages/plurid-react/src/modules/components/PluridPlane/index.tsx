@@ -74,7 +74,7 @@ const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
             show={treePage.show}
             data-plurid-plane={planeID}
             style={{
-                width: planeWidth * viewSize.width,
+                width: planeWidth * viewSize.width || 500,
                 transform: `
                     translateX(${location.translateX}px)
                     translateY(${location.translateY}px)
