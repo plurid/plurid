@@ -71,11 +71,11 @@
         ]
     },
     "peerDependencies": {
-        "@plurid/apps.utilities.functions": "*",
+        "@plurid/utilities.functions": "*",
         "@plurid/plurid-data": "*"
     },
     "devDependencies": {
-        "@plurid/apps.utilities.functions": "^0.1.2",
+        "@plurid/utilities.functions": "^0.1.0",
         "@plurid/plurid-data": "^0.1.12",
         "@plurid/plurid-pubsub": "^0.1.1",
         "@types/jest": "^24.0.18",
