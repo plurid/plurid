@@ -11,7 +11,7 @@ import {
 
 import {
     uuidv4 as uuid,
-} from '@plurid/apps.utilities.functions';
+} from '@plurid/utilities.functions';
 
 
 

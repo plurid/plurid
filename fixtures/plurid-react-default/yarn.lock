@@ -1209,16 +1209,6 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@plurid/apps.utilities.functions@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.functions/-/apps.utilities.functions-0.1.2.tgz#6a2959519bd288d602dff9b9607a01aa54e7e326"
-  integrity sha512-Q+XAQLCU0gXr2BcJquSyic0EQ9UjPX+iOGdn8+gsD5XhqF94S0oHNCZMSCjQOfKNCoO2fCAO3E/xU5fuPXzg6g==
-
-"@plurid/apps.utilities.themes@^0.1.15":
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/@plurid/apps.utilities.themes/-/apps.utilities.themes-0.1.15.tgz#aac86c90dab6e5dd3a6416d91703bfba62dd770f"
-  integrity sha512-Ytt58JEIiova7zRo9jVwNBceU+LD1ZkZ/dT5nYeFhUVlH46yz/0YOfgHH11hrRkMZ/NAv2slqs93gLUEOT5Ixw==
-
 "@plurid/plurid-data@^0.1.12":
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.12.tgz#5723816ca83961aee6be9bb844cab5f3a3ae18a8"
@@ -1234,16 +1224,26 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.1.tgz#6248fa35904dec2bf00204f9db1491948fc0116c"
   integrity sha512-MlNqKoTkl3R0I0KeriX3JTDpT5NinZNcNv86jQOtJ0hG9wFG5kuD8Y/ej5/KPRYrj0mUvVeBjgMnRPbZ3fB5/w==
 
-"@plurid/plurid-react@^0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.14.tgz#9c4ee59d70e0a18a8308dc812201ee60627fbc3d"
-  integrity sha512-dN1mlyuG66Doe1k0jv2j71LsjmYfNubIKghho0IfunjX/zTMvxNwl0E3QhMzhIUZD41eL5YCv/s6BP6lwL7lXA==
+"@plurid/plurid-react@^0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.19.tgz#622210cc7593c308e964a7dacdce7dd277cbdc2e"
+  integrity sha512-rVksdurVjPHe3TfuyPwQy2S5K2s2BnxRBn1lLf5aqrwIyYFcE+O92QXnyPdU6+HhdCz43qyrB4ouQeqZTUC/Aw==
   dependencies:
-    "@plurid/apps.utilities.functions" "^0.1.2"
-    "@plurid/apps.utilities.themes" "^0.1.15"
     "@plurid/plurid-data" "^0.1.12"
     "@plurid/plurid-engine" "^0.1.8"
     "@plurid/plurid-pubsub" "^0.1.1"
+    "@plurid/utilities.functions" "^0.1.0"
+    "@plurid/utilities.themes" "^0.1.2"
+
+"@plurid/utilities.functions@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@plurid/utilities.functions/-/utilities.functions-0.1.0.tgz#eefb3312f753a9418e4b9b78366f0748974d5a4a"
+  integrity sha512-rFq9pPYozTE9PUUUsKGx5rej4lXnmBd0ivzLB4ymM0NagEDNker4lxWYZNT8jJiht5lPV9JTvBWGr1FGR1pcuA==
+
+"@plurid/utilities.themes@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@plurid/utilities.themes/-/utilities.themes-0.1.2.tgz#6ab76a71514d03c7a6c3b77f166596b0ba23eb3b"
+  integrity sha512-QNqTXFm6QXkKjqLgm+3gZRnIEH2oyhkAp9Q2AqxNhY3KVcSWA1BJVWR4eUgQKH2zu4ji4VMkQAUsVYbAo6p1yA==
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
