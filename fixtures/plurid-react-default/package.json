@@ -1,36 +1,36 @@
 {
-  "name": "@plurid/plurid-react-default",
-  "version": "0.0.0",
-  "description": "React implementation of Plurid to view and explore the web in three dimensions.",
-  "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
-  "license": "MIT",
-  "private": true,
-  "dependencies": {
-    "@plurid/plurid-react": "^0.1.19",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-redux": "^7.1.1",
-    "react-scripts": "^3.1.2",
-    "redux": "^4.0.4",
-    "redux-thunk": "^2.3.0",
-    "styled-components": "^4.4.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "@plurid/plurid-react-default",
+    "version": "0.0.0",
+    "description": "React implementation of Plurid to view and explore the web in three dimensions.",
+    "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
+    "license": "MIT",
+    "private": true,
+    "dependencies": {
+        "@plurid/plurid-react": "^0.1.20",
+        "react": "^16.9.0",
+        "react-dom": "^16.9.0",
+        "react-redux": "^7.1.1",
+        "react-scripts": "^3.1.2",
+        "redux": "^4.0.4",
+        "redux-thunk": "^2.3.0",
+        "styled-components": "^4.4.0"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test --env=jsdom",
+        "eject": "react-scripts eject"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
 }

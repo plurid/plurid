@@ -27,6 +27,14 @@ export default {
             sourcemap: true
         }
     ],
+    // external: [
+    //     '@plurid/plurid-pubsub',
+    //     '@plurid/plurid-engine',
+    //     '@plurid/plurid-data',
+    //     '@plurid/utilities.functions',
+    //     '@plurid/utilities.themes',
+    //     'redux-devtools-extension',
+    // ],
     plugins: [
         replace({
             'process.env.MODE_ENV': JSON.stringify(process.env.MODE_ENV),
@@ -39,7 +47,9 @@ export default {
         babel({
             exclude: "node_modules/**"
         }),
-        resolve(),
+        resolve({
+            modulesOnly: true,
+        }),
         typescript({
             rollupCommonJSResolveHack: true,
             clean: true,
