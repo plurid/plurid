@@ -1,4 +1,4 @@
-import { Theme } from '@plurid/apps.utilities.themes';
+import { Theme } from '@plurid/utilities.themes';
 
 import {
     SET_GENERAL_THEME,

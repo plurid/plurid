@@ -6,7 +6,7 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { Theme } from '@plurid/apps.utilities.themes';
+import { Theme } from '@plurid/utilities.themes';
 
 import {
     StyledPluridPlane,
@@ -52,7 +52,9 @@ type PluridPlaneProperties = PluridPlaneOwnProperties
     & PluridPlaneStateProperties
     & PluridPlaneDispatchProperties;
 
-const PluridPlane: React.FC<PluridPlaneProperties> = (properties) => {
+type PluridPlanePropertiesWithChildren = React.PropsWithChildren<PluridPlaneProperties>;
+
+const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) => {
     const {
         planeID,
         page,

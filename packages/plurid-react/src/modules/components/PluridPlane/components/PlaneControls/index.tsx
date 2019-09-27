@@ -5,7 +5,7 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { Theme } from '@plurid/apps.utilities.themes';
+import { Theme } from '@plurid/utilities.themes';
 
 import {
     StyledPlaneControls,
