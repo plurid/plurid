@@ -4,7 +4,6 @@ import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 import resolve from 'rollup-plugin-node-resolve';
 import url from 'rollup-plugin-url';
-import svgr from '@svgr/rollup';
 import replace from 'rollup-plugin-replace';
 import babel from 'rollup-plugin-babel';
 
@@ -21,12 +20,12 @@ export default {
             exports: 'named',
             sourcemap: true
         },
-        // {
-        //     file: pkg.module,
-        //     format: 'es',
-        //     exports: 'named',
-        //     sourcemap: true
-        // }
+        {
+            file: pkg.module,
+            format: 'es',
+            exports: 'named',
+            sourcemap: true
+        }
     ],
     plugins: [
         replace({
@@ -37,7 +36,6 @@ export default {
             modules: true
         }),
         url(),
-        svgr(),
         babel({
             exclude: "node_modules/**"
         }),
