@@ -12,6 +12,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "downlevelIteration": true,
+        "resolveJsonModule": true,
         "declarationDir": "dist/types",
         "outDir": "dist/lib",
         "typeRoots": [
@@ -20,5 +21,8 @@
     },
     "include": [
         "src"
+    ],
+    "exclude": [
+        "src/**/*.spec.ts"
     ]
 }
