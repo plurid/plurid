@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
         "plurid",
@@ -25,7 +25,7 @@
     ],
     "main": "dist/plurid-engine.umd.js",
     "module": "dist/plurid-engine.es5.js",
-    "typings": "dist/types/index.d.ts",
+    "typings": "dist/index.d.ts",
     "engines": {
         "node": ">=8.0.0"
     },
