@@ -37,7 +37,7 @@
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
         "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
         "build.prod": "yarn clean && rollup -c --environment MODE_ENV:production",
-        "build": "yarn clean && yarn lint && yarn spec && yarn build.prod",
+        "build": "yarn clean && yarn lint && yarn spec && yarn typedoc && yarn build.prod",
         "prepublishOnly": "yarn build"
     },
     "peerDependencies": {
