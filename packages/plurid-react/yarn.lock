@@ -5005,6 +5005,11 @@ rollup-plugin-commonjs@^10.1.0:
     resolve "^1.11.0"
     rollup-pluginutils "^2.8.1"
 
+rollup-plugin-es-module-interop@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-es-module-interop/-/rollup-plugin-es-module-interop-2.0.0.tgz#7f06909ed8bd7afb3e42fb60f9dcf1e8c0ebcd70"
+  integrity sha512-fupEATAJTtUzEy7TwtNucFPCF6n1HNx5DIn5TYN7r8d8KG8lcVAmpG8WLWiiB9WzV/Vqc9/yuIGUhmXruJMUyQ==
+
 rollup-plugin-node-resolve@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-5.2.0.tgz#730f93d10ed202473b1fb54a5997a7db8c6d8523"

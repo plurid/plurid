@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react",
-    "version": "0.1.20",
+    "version": "0.1.21",
     "description": "React implementation of Plurid to view and explore the web in three dimensions",
     "keywords": [
         "plurid",
@@ -50,14 +50,15 @@
         "react-redux": ">=7",
         "redux": ">=4",
         "redux-thunk": ">=2",
+        "redux-devtools-extension": ">=2",
         "styled-components": ">=4"
     },
     "dependencies": {
-        "@plurid/utilities.functions": "^0.1.0",
-        "@plurid/utilities.themes": "^0.1.2",
         "@plurid/plurid-data": "^0.1.12",
         "@plurid/plurid-engine": "^0.1.10",
-        "@plurid/plurid-pubsub": "^0.1.1"
+        "@plurid/plurid-pubsub": "^0.1.1",
+        "@plurid/utilities.functions": "^0.1.0",
+        "@plurid/utilities.themes": "^0.1.2"
     },
     "devDependencies": {
         "@babel/core": "^7.6.2",
