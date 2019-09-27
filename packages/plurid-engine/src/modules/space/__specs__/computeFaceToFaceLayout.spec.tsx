@@ -11,7 +11,7 @@ import {
 
 
 
-describe('computeColumnLayout', () => {
+xdescribe('computeColumnLayout', () => {
     // handle crypto for jest - https://stackoverflow.com/a/52612372
     const crypto = require('crypto');
     Object.defineProperty(global, 'crypto', {

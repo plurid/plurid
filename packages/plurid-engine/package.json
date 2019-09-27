@@ -16,7 +16,7 @@
         "email": "feedback@plurid.com",
         "url": "https://github.com/plurid/plurid/issues"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-engine/README.md",
+    "homepage": "https://github.com/plurid/plurid/tree/master/packages/plurid-engine",
     "publishConfig": {
         "access": "public"
     },
