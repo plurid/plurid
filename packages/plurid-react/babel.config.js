@@ -1,7 +1,6 @@
 module.exports = function (api) {
     api.cache(true);
 
-    // const presets = [ ... ];
     const plugins = [
         [
             "babel-plugin-styled-components",
@@ -12,7 +11,6 @@ module.exports = function (api) {
     ];
 
     return {
-        // presets,
         plugins
     };
 }
