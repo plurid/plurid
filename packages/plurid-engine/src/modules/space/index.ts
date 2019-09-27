@@ -72,45 +72,55 @@ export const computeSpaceTree = (
 
     switch(configuration.space.layout.type) {
         case 'COLUMNS':
-            const {
-                columns,
-            } = configuration.space.layout;
-            const columnLayoutTree = computeColumnLayout(roots, columns);
-            return columnLayoutTree;
+            {
+                const {
+                    columns,
+                } = configuration.space.layout;
+                const columnLayoutTree = computeColumnLayout(roots, columns);
+                return columnLayoutTree;
+            }
         case 'ZIG_ZAG':
-            const {
-                angle,
-            } = configuration.space.layout;
-            const zigzagLayoutTree = computeZigZagLayout(roots, angle);
-            return zigzagLayoutTree;
+            {
+                const {
+                    angle,
+                } = configuration.space.layout;
+                const zigzagLayoutTree = computeZigZagLayout(roots, angle);
+                return zigzagLayoutTree;
+            }
         case 'FACE_TO_FACE':
-            const {
-                halfAngle,
-                middleSpace,
-                middleVideos,
-            } = configuration.space.layout;
-            const faceToFaceLayoutTree = computeFaceToFaceLayout(
-                roots,
-                halfAngle,
-                middleSpace,
-                middleVideos,
-            );
-            return faceToFaceLayoutTree;
+            {
+                const {
+                    halfAngle,
+                    middleSpace,
+                    middleVideos,
+                } = configuration.space.layout;
+                const faceToFaceLayoutTree = computeFaceToFaceLayout(
+                    roots,
+                    halfAngle,
+                    middleSpace,
+                    middleVideos,
+                );
+                return faceToFaceLayoutTree;
+            }
         case 'SHEAVES':
-            const {
-                depth,
-                offsetX,
-                offsetY,
-            } = configuration.space.layout;
-            const sheavesLayoutTree = computeSheavesLayout(
-                roots,
-                depth,
-                offsetX,
-                offsetY,
-            );
-            return sheavesLayoutTree;
+            {
+                const {
+                    depth,
+                    offsetX,
+                    offsetY,
+                } = configuration.space.layout;
+                const sheavesLayoutTree = computeSheavesLayout(
+                    roots,
+                    depth,
+                    offsetX,
+                    offsetY,
+                );
+                return sheavesLayoutTree;
+            }
         case 'META':
-            return tree;
+            {
+                return tree;
+            }
         default:
             return tree;
     }
