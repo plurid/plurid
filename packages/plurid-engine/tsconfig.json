@@ -24,6 +24,7 @@
     ],
     "exclude": [
         "src/**/*.performance.ts",
-        "src/**/*.spec.tsx?"
+        "src/**/*.spec.ts",
+        "src/**/*.spec.tsx"
     ]
 }
