@@ -1129,10 +1129,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.1.tgz#6248fa35904dec2bf00204f9db1491948fc0116c"
   integrity sha512-MlNqKoTkl3R0I0KeriX3JTDpT5NinZNcNv86jQOtJ0hG9wFG5kuD8Y/ej5/KPRYrj0mUvVeBjgMnRPbZ3fB5/w==
 
-"@plurid/plurid-react@^0.1.21":
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.21.tgz#5c1a16d5b1d08ac3b0ff2a1c2e4c0d206ef0e152"
-  integrity sha512-CClXAs88ll+w5x27ciACPQ7R0rAqiGYRSmR3YrhYCqoums8Fv0n3U9bJTOZQXErwRm9Cg+wTF4X6tTxDE4OEWg==
+"@plurid/plurid-react@^0.1.22":
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.22.tgz#248c4fb454bde8b665160fcd31b89e9ff17d53a1"
+  integrity sha512-xr6xRfNbtYMsR36NA7Ku9UfFkcAwEmJUGUMPJ62WdAMinXw0W/QJYBedlb5PgDEFFg5o6uFwyRJfS7hRyXXprg==
   dependencies:
     "@plurid/plurid-data" "^0.1.12"
     "@plurid/plurid-engine" "^0.1.10"
