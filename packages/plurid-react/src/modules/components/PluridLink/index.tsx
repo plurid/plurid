@@ -54,7 +54,7 @@ interface PluridLinkCoordinates {
     y: number;
 }
 
-const PluridLink: React.FC<PluridLinkProperties> = (properties) => {
+const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (properties) => {
     const [showLink, setShowLink] = useState(false);
     const [pluridPlaneID, setPluridPlaneID] = useState('');
 
