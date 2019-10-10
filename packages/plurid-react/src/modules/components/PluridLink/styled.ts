@@ -14,7 +14,12 @@ export const StyledPluridLink: any = styled.a`
         }};
     }
 
-    ::after{
-        content: "'"
+    ::after {
+        content: ${(props: any) => {
+            if (!props.devisible) {
+                return props.suffix;
+            }
+            return '';
+        }};
     }
 `;
