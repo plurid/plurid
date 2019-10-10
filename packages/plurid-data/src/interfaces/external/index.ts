@@ -75,7 +75,7 @@ export interface PluridLink {
 
 
 export interface PluridComponentReact {
-    element: React.FunctionComponent<any> | React.Component<any, any, any> | JSX.Element,
+    element: () => JSX.Element,
     properties?: PluridComponentProperties;
 }
 
