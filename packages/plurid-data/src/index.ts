@@ -27,6 +27,7 @@ import {
     PluridPage,
     PluridComponentReact,
     PluridDocument,
+    PluridLink,
     PluridConfiguration,
     PluridConfigurationTheme,
     PluridConfigurationSpace,
@@ -36,7 +37,6 @@ import {
 } from './interfaces/external';
 
 import {
-    PluridLink,
     PluridContext,
     TreePage,
     TreePageLocation,
@@ -73,6 +73,7 @@ export {
     PluridPage,
     PluridComponentReact,
     PluridDocument,
+    PluridLink,
     PluridConfiguration,
     PluridConfigurationTheme,
     PluridConfigurationSpace,
@@ -81,7 +82,6 @@ export {
     LayoutSheaves,
 
     // internal
-    PluridLink,
     PluridContext,
     TreePageLocation,
     TreePage,

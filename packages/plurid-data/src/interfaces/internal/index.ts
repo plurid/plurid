@@ -5,14 +5,6 @@ import {
 
 
 
-export interface PluridLink {
-    // the name of the document, if not specified defaults to the current one
-    document?: string;
-    // the page path
-    page: string;
-}
-
-
 export interface PluridContext {
     pages: PluridPage[];
     documents: PluridDocument[];

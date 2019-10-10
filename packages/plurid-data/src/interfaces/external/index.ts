@@ -51,8 +51,31 @@ export interface PluridPage {
 }
 
 
+export interface PluridLink {
+    /**
+     * The name of the document. If not specified defaults to the current one.
+     */
+    document?: string;
+
+    /**
+     * The path string of the page.
+     */
+    page: string;
+
+    /**
+     * Format the link as an achor element. Default `false`.
+     */
+    devisible?: boolean;
+
+    /**
+     * String character to be added inline after the PluridLink content. Default `'`.
+     */
+    suffix?: string;
+}
+
+
 export interface PluridComponentReact {
-    element: () => JSX.Element,
+    element: React.FunctionComponent<any> | React.Component<any, any, any> | JSX.Element,
     properties?: PluridComponentProperties;
 }
 
@@ -97,6 +120,11 @@ export interface PluridConfiguration {
      * The value is based on the current width of the screen and cannot be negative.
      */
     planeWidth: number;
+
+    /**
+     * Value between `0.00` and `1.00` (floating numbers). Default `1.00`.
+     */
+    planeOpacity: number;
 
     space: PluridConfigurationSpace;
 
