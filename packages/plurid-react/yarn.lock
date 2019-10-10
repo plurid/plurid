@@ -383,10 +383,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@plurid/plurid-data@^0.1.13":
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.13.tgz#fcdac1d2c84955a3a99b97b9d11e9c736c1fb186"
-  integrity sha512-SiPIVBS8nOvRuyv/uRF69FrcI16Uz1FMeXX63MaEh/2D9/51gvWRuBVNUONv1tuty36AwJPkA968UHSiZNVHHg==
+"@plurid/plurid-data@^0.1.14":
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.14.tgz#a37bc3be5657d1a6637827886803d13a723b8b2e"
+  integrity sha512-QNEjryaDzObPxFtWmbOqZKjfWEg9UolrH1ZKntkZ0pM3rkEqtFBPb2efbC/o3F2ePpvSw9JVSxCDriXRaakaVA==
 
 "@plurid/plurid-engine@^0.1.10":
   version "0.1.10"
