@@ -74,7 +74,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         setTree,
     } = properties;
 
-    const [suffix, setSuffix] = useState('\'');
+    const [suffix, setSuffix] = useState("'");
     const [devisible, setDevisible] = useState(false);
 
     useEffect(() => {
