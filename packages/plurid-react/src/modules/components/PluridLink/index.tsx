@@ -2,6 +2,7 @@ import React, {
     useState,
     useRef,
     useCallback,
+    useEffect,
 } from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
@@ -63,6 +64,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
     const {
         children,
         page,
+        // document,
+        devisible: _devisible,
+        suffix: _suffix,
 
         tree,
         generalTheme,
@@ -70,6 +74,21 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         setTree,
     } = properties;
 
+    const [suffix, setSuffix] = useState('\'');
+    const [devisible, setDevisible] = useState(false);
+
+    useEffect(() => {
+        if (_suffix !== undefined) {
+            setSuffix(_suffix);
+        }
+
+        if (_devisible !== undefined) {
+            setDevisible(_devisible);
+        }
+    }, [
+        _suffix,
+        _devisible,
+    ]);
 
     const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
         const x = element.current!.offsetLeft + element.current!.offsetWidth;
@@ -120,6 +139,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
             theme={generalTheme}
             onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
             ref={element}
+            suffix={suffix}
+            devisible={devisible}
         >
             {children}
         </StyledPluridLink>
