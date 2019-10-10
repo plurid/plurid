@@ -11,6 +11,7 @@ const defaultConfiguration: PluridConfiguration = {
     planeControls: true,
     viewcube: true,
     planeDomainURL: true,
+    planeOpacity: 1,
     planeWidth: 1,
     space: {
         layout: {
