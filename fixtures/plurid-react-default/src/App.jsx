@@ -112,27 +112,35 @@ const App = () => {
         {
             path: '/page-1',
             component: {
-                element: Page1,
+                element: () => (<Page1 />),
                 properties: {},
             },
             root: true,
         },
-        {
-            path: '/page-2',
-            component: {
-                element: Page2,
-                properties: {},
-            },
-            root: true,
-        },
-        {
-            path: '/page-3',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            root: true,
-        },
+        // {
+        //     path: '/page-1',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
+        // {
+        //     path: '/page-2',
+        //     component: {
+        //         element: Page2,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
+        // {
+        //     path: '/page-3',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
         // {
         //     path: '/page-4',
         //     component: {
