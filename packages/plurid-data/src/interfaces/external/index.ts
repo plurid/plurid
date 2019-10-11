@@ -71,6 +71,11 @@ export interface PluridLink {
      * String character to be added inline after the PluridLink content. Default `'`.
      */
     suffix?: string;
+
+    /**
+     * Execute function at click (onClick Event).
+     */
+    atClick?: (event?: MouseEvent | React.MouseEvent) => void;
 }
 
 
