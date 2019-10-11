@@ -75,7 +75,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     }
 
     useEffect(() => {
-        // TODO: explore for optiptimizations
+        // TODO: explore for optimizations
         // check if the plane is already in the array
         // or get a better dependency than the JSON stringification
         setChildrenPlanes([]);
