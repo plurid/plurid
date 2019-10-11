@@ -76,7 +76,7 @@
         "cross-env": "^6.0.3",
         "dotenv-cli": "^2.0.1",
         "enzyme": "^3.10.0",
-        "enzyme-adapter-react-16": "^1.15.0",
+        "enzyme-adapter-react-16": "^1.15.1",
         "eslint": "^6.5.1",
         "jest": "^24.9.0",
         "jest-config": "^24.9.0",
