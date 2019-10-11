@@ -15,7 +15,6 @@ const Page1 = () => {
                 <PluridLink page="/page-2">link to page 2</PluridLink>
             </div>
 
-
             <div style={{ marginLeft: 250, marginTop: 70}}>
                 <PluridLink page="/page-2">link to page 2</PluridLink>
             </div>

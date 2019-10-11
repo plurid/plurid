@@ -15,11 +15,14 @@ export const StyledPluridLink: any = styled.a`
     }
 
     ::after {
-        content: ${(props: any) => {
+        content: "${(props: any) => {
             if (!props.devisible) {
-                return props.suffix;
+                if (props.suffix) {
+                    return props.suffix;
+                }
+                return "'";
             }
             return '';
-        }};
+        }}";
     }
 `;
