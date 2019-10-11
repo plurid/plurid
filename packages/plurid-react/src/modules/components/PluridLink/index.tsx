@@ -32,6 +32,7 @@ import {
 } from '@plurid/plurid-engine';
 
 import { AppState } from '../../services/state/store';
+import StateContext from '../../services/state/context';
 import selectors from '../../services/state/selectors';
 import actions from '../../services/state/actions';
 
@@ -169,4 +170,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridL
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PluridLink);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {
+        context: StateContext,
+    },
+)(PluridLink);

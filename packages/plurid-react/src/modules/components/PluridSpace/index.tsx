@@ -14,6 +14,7 @@ import PluridRoots from '../PluridRoots';
 import ToolbarGeneral from '../Toolbar/General';
 
 import { AppState } from '../../services/state/store';
+import StateContext from '../../services/state/context';
 import selectors from '../../services/state/selectors';
 // import actions from '../../services/state/actions';
 
@@ -68,4 +69,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridS
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PluridSpace);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {
+        context: StateContext,
+    },
+)(PluridSpace);

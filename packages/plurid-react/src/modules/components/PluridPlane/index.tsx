@@ -23,6 +23,7 @@ import {
 } from '@plurid/plurid-data';
 
 import { AppState } from '../../services/state/store';
+import StateContext from '../../services/state/context';
 import { ViewSize } from '../../services/state/types/data';
 import selectors from '../../services/state/selectors';
 // import actions from '../../services/state/actions';
@@ -122,4 +123,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridP
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PluridPlane);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {
+        context: StateContext,
+    },
+)(PluridPlane);

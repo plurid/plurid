@@ -21,6 +21,7 @@ import {
 import Styles from '../../../../services/styles';
 
 import { AppState } from '../../../../services/state/store';
+import StateContext from '../../../../services/state/context';
 import selectors from '../../../../services/state/selectors';
 // import actions from '../../../../services/state/actions';
 
@@ -100,4 +101,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PlaneCo
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaneControls);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {
+        context: StateContext,
+    },
+)(PlaneControls);
