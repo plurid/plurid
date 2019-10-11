@@ -67,6 +67,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         // document,
         devisible: _devisible,
         suffix: _suffix,
+        atClick,
 
         tree,
         generalTheme,
@@ -133,14 +134,21 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
     const handleClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
 
+        if (atClick !== undefined) {
+            atClick(event);
+        }
+
         handleShowPluridPlane();
-    }, [element.current, tree]);
+    }, [
+        element.current,
+        tree,
+    ]);
 
     return (
         <StyledPluridLink
-            theme={generalTheme}
-            onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
             ref={element}
+            onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
+            theme={generalTheme}
             suffix={suffix}
             devisible={devisible}
         >
