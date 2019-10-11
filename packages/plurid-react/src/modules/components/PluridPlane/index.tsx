@@ -19,6 +19,7 @@ import PlaneContent from './components/PlaneContent';
 import {
     PluridPage,
     TreePage,
+    PluridConfiguration,
 } from '@plurid/plurid-data';
 
 import { AppState } from '../../services/state/store';
@@ -40,12 +41,10 @@ interface PluridPlaneStateProperties {
     spaceScale: number;
     generalTheme: Theme;
     interactionTheme: Theme;
-    planeControls: boolean;
-    planeWidth: number;
+    configuration: PluridConfiguration;
 }
 
 interface PluridPlaneDispatchProperties {
-
 }
 
 type PluridPlaneProperties = PluridPlaneOwnProperties
@@ -65,14 +64,20 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
         viewSize,
 
         generalTheme,
+        configuration,
+    } = properties;
+
+    const {
         planeControls,
         planeWidth,
-    } = properties;
+        planeOpacity,
+    } = configuration;
 
     return (
         <StyledPluridPlane
             theme={generalTheme}
             planeControls={planeControls}
+            planeOpacity={planeOpacity}
             show={treePage.show}
             data-plurid-plane={planeID}
             style={{
@@ -109,8 +114,7 @@ const mapStateToProps = (state: AppState): PluridPlaneStateProperties => ({
     spaceScale: selectors.space.getScale(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
-    planeControls: selectors.configuration.getConfiguration(state).planeControls,
-    planeWidth: selectors.configuration.getConfiguration(state).planeWidth,
+    configuration: selectors.configuration.getConfiguration(state),
 });
 
 
