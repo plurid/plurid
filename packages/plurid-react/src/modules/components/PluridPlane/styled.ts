@@ -4,9 +4,15 @@ import styled from 'styled-components';
 
 export const StyledPluridPlane: any = styled.div`
     background-color: ${(props: any) => {
+        if (props.planeOpacity === 0) {
+            return 'transparent';
+        }
         return props.theme.backgroundColorPrimary;
     }};
     box-shadow: ${(props: any) => {
+        if (props.planeOpacity === 0) {
+            return 'none';
+        }
         return props.theme.boxShadowUmbra;
     }};
     color: ${(props: any) => {

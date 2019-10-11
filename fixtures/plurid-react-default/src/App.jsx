@@ -30,6 +30,7 @@ const App = () => {
         },
         planeWidth: 0.5,
         planeControls: false,
+        planeOpacity: 0,
         // planes: {
         //     domainURL: true,
         //     width: 50,

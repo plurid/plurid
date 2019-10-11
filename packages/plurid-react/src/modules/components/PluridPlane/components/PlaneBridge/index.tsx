@@ -9,6 +9,10 @@ import {
     StyledPlaneBridge,
 } from './styled';
 
+import {
+    PluridConfiguration,
+} from '@plurid/plurid-data';
+
 import { AppState } from '../../../../services/state/store';
 import selectors from '../../../../services/state/selectors';
 // import actions from '../../../../services/state/actions';
@@ -21,6 +25,7 @@ interface PlaneBridgeOwnProperties {
 interface PlaneBridgeStateProperties {
     generalTheme: Theme;
     planeControls: boolean;
+    configuration: PluridConfiguration;
 }
 
 interface PlaneBridgeDispatchProperties {
@@ -34,12 +39,18 @@ const PlaneBridge: React.FC<PlaneBridgeProperties> = (properties) => {
     const {
         generalTheme,
         planeControls,
+        configuration,
     } = properties;
+
+    const {
+        planeOpacity,
+    } = configuration;
 
     return (
         <StyledPlaneBridge
             theme={generalTheme}
             planeControls={planeControls}
+            planeOpacity={planeOpacity}
         />
     );
 }
@@ -48,6 +59,7 @@ const PlaneBridge: React.FC<PlaneBridgeProperties> = (properties) => {
 const mapStateToProps = (state: AppState): PlaneBridgeStateProperties => ({
     generalTheme: selectors.themes.getGeneralTheme(state),
     planeControls: selectors.configuration.getConfiguration(state).planeControls,
+    configuration: selectors.configuration.getConfiguration(state),
 });
 
 
