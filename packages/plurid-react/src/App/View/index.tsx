@@ -59,6 +59,7 @@ import { AppState } from '../../modules/services/state/store';
 import { ViewSize } from '../../modules/services/state/types/data';
 import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
+import StateContext from '../../modules/services/state/context';
 
 
 
@@ -348,4 +349,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(View);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {
+        context: StateContext,
+    },
+)(View);

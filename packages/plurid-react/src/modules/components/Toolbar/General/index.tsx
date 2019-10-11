@@ -15,11 +15,12 @@ import {
     StyledToolbarTransformText,
 } from './styled';
 
-import ToolbarButton from '../Button';
+// import ToolbarButton from '../Button';
 
 import { Theme } from '@plurid/utilities.themes';
 
 import { AppState } from '../../../services/state/store';
+import StateContext from '../../../services/state/context';
 import selectors from '../../../services/state/selectors';
 import actions from '../../../services/state/actions';
 
@@ -193,4 +194,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): Toolbar
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {
+        context: StateContext,
+    },
+)(Toolbar);
