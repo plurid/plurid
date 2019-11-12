@@ -291,15 +291,15 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.12.tgz#5723816ca83961aee6be9bb844cab5f3a3ae18a8"
   integrity sha512-AqBYwnaymFsqSp5YmAUun0xRqH/274lQrGHPCup8xWVkVkL+YHCnbtx4v3jyMH1b7KOlNm4aFMWBC/bDNUxMXA==
 
+"@plurid/plurid-functions@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.1.tgz#d558a71b108a02a601f9ab4488dbf22392c862d5"
+  integrity sha512-bkGCzD9rDdRSZCGdcQTSauUpW1JUy/ZDSTJZkgasu5SLcc1i4G6pWfYkQ7PT68E5HRogXTSkSfY1lUe7LVs4cQ==
+
 "@plurid/plurid-pubsub@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.1.tgz#6248fa35904dec2bf00204f9db1491948fc0116c"
   integrity sha512-MlNqKoTkl3R0I0KeriX3JTDpT5NinZNcNv86jQOtJ0hG9wFG5kuD8Y/ej5/KPRYrj0mUvVeBjgMnRPbZ3fB5/w==
-
-"@plurid/utilities.functions@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@plurid/utilities.functions/-/utilities.functions-0.1.0.tgz#eefb3312f753a9418e4b9b78366f0748974d5a4a"
-  integrity sha512-rFq9pPYozTE9PUUUsKGx5rej4lXnmBd0ivzLB4ymM0NagEDNker4lxWYZNT8jJiht5lPV9JTvBWGr1FGR1pcuA==
 
 "@types/babel__core@^7.1.0":
   version "7.1.3"

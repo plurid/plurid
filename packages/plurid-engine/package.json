@@ -42,12 +42,12 @@
     },
     "peerDependencies": {
         "@plurid/plurid-data": "*",
-        "@plurid/utilities.functions": "*"
+        "@plurid/plurid-functions": "*"
     },
     "devDependencies": {
         "@plurid/plurid-data": "^0.1.12",
+        "@plurid/plurid-functions": "^0.1.1",
         "@plurid/plurid-pubsub": "^0.1.1",
-        "@plurid/utilities.functions": "^0.1.0",
         "@types/jest": "^24.0.18",
         "@types/lodash.camelcase": "^4.3.6",
         "@types/node": "^12.7.8",
