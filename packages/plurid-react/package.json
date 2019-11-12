@@ -49,16 +49,16 @@
         "react-dom": ">=16",
         "react-redux": ">=7",
         "redux": ">=4",
-        "redux-thunk": ">=2",
         "redux-devtools-extension": ">=2",
+        "redux-thunk": ">=2",
         "styled-components": ">=4"
     },
     "dependencies": {
         "@plurid/plurid-data": "^0.1.16",
         "@plurid/plurid-engine": "^0.1.10",
+        "@plurid/plurid-functions": "^0.1.1",
         "@plurid/plurid-pubsub": "^0.1.1",
-        "@plurid/utilities.functions": "^0.1.0",
-        "@plurid/utilities.themes": "^0.1.2"
+        "@plurid/plurid-themes": "^0.1.0"
     },
     "devDependencies": {
         "@babel/core": "^7.6.4",
