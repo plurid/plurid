@@ -17,7 +17,7 @@ import {
 
 // import ToolbarButton from '../Button';
 
-import { Theme } from '@plurid/utilities.themes';
+import { Theme } from '@plurid/plurid-themes';
 
 import { AppState } from '../../../services/state/store';
 import StateContext from '../../../services/state/context';

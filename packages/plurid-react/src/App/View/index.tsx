@@ -21,12 +21,12 @@ import PluridPubSub, {
 import {
     debounce,
     uuidv4 as uuid,
-} from '@plurid/utilities.functions';
+} from '@plurid/plurid-functions';
 
 import themes, {
     Theme,
     THEME_NAMES,
-} from '@plurid/utilities.themes';
+} from '@plurid/plurid-themes';
 
 import './index.css';
 
