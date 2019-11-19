@@ -15,7 +15,9 @@ export const useElementEvent = (
     callback: any,
 ) => {
     useEffect(() => {
-        element.addEventListener(event, callback, { passive: false });
+        if (element) {
+            element.addEventListener(event, callback, { passive: false });
+        }
         return () => element.removeEventListener(event, callback);
     }, [event, callback]);
 }
@@ -24,9 +26,9 @@ export const useGlobalKeyDown = (
     callback: any,
     element?: any,
 ) => {
-    if (!element) {
-        return useWindowEvent('keydown', callback);
-    }
+    // if (!element) {
+    //     return useWindowEvent('keydown', callback);
+    // }
 
     return useElementEvent(
         'keydown',
@@ -39,9 +41,9 @@ export const useGlobalWheel = (
     callback: any,
     element?: any,
 ) => {
-    if (!element) {
-        return useWindowEvent('wheel', callback);
-    }
+    // if (!element) {
+    //     return useWindowEvent('wheel', callback);
+    // }
 
     return useElementEvent(
         'wheel',

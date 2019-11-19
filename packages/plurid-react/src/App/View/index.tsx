@@ -1,5 +1,6 @@
 import React, {
     useEffect,
+    useState,
     useCallback,
     useRef,
 } from 'react';
@@ -141,15 +142,51 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub,
     } = appProperties;
 
-    const shortcutsCallback = useCallback((event: KeyboardEvent) => {
-        handleGlobalShortcuts(dispatch, event);
-    }, [dispatch]);
-    useGlobalKeyDown(shortcutsCallback, viewElement.current);
 
-    const wheelCallback = useCallback((event: WheelEvent) => {
-        handleGlobalWheel(dispatch, event);
-    }, [dispatch]);
-    useGlobalWheel(wheelCallback, viewElement.current);
+    const [eventListenersSet, setEventListenersSet] = useState(false);
+
+    useEffect(() => {
+        if (viewElement.current) {
+            if (!eventListenersSet) {
+                viewElement.current.addEventListener('keydown', (event) => {
+                    console.log(event);
+                });
+                setEventListenersSet(true);
+            }
+
+            // remove event listeners;
+        }
+    }, [
+        viewElement.current,
+    ]);
+
+    // console.log(viewElement.current);
+    // const shortcutsCallback = useCallback((event: KeyboardEvent) => {
+    //     handleGlobalShortcuts(
+    //         dispatch,
+    //         event,
+    //     );
+    // }, [
+    //     dispatch,
+    // ]);
+    // useGlobalKeyDown(
+    //     shortcutsCallback,
+    //     viewElement.current,
+    // );
+
+    // const wheelCallback = useCallback((event: WheelEvent) => {
+    //     handleGlobalWheel(
+    //         dispatch,
+    //         event,
+    //     );
+    // }, [
+    //     dispatch,
+    // ]);
+    // useGlobalWheel(
+    //     wheelCallback,
+    //     viewElement.current,
+    // );
+
 
     useEffect(() => {
         const handleResize = debounce(() => {
@@ -296,10 +333,12 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     // console.log('rendered PluridView');
     console.log(transform);
+    console.log(viewElement.current);
 
     return (
         <StyledView
             ref={viewElement}
+            tabIndex={0}
         >
             {!spaceLoading && (
                 <>
