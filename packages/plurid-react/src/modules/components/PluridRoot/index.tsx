@@ -34,7 +34,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
 
     const {
         pages,
-        pagesContext: PagesContext,
+        pageContext: PageContext,
+        pageContextValue,
     } = context;
 
     const {
@@ -55,7 +56,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     const Page = _page.component.element;
                     const properties = _page.component.properties || {};
 
-                    if (!PagesContext) {
+                    if (!PageContext) {
                         plane = (
                             <PluridPlane
                                 key={child.planeID}
@@ -71,7 +72,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                         );
                     }
 
-                    if (PagesContext) {
+                    if (PageContext) {
                         plane = (
                             <PluridPlane
                                 key={child.planeID}
@@ -80,13 +81,13 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                                 planeID={child.planeID}
                                 location={child.location}
                             >
-                                <PagesContext.Provider
-                                    value={{}}
+                                <PageContext.Provider
+                                    value={pageContextValue}
                                 >
                                     <Page
                                         {...properties}
                                     />
-                                </PagesContext.Provider>
+                                </PageContext.Provider>
                             </PluridPlane>
                         );
                     }
