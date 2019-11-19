@@ -34,6 +34,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
 
     const {
         pages,
+        pagesContext: PagesContext,
     } = context;
 
     const {
@@ -53,19 +54,42 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     // and change the opacity
                     const Page = _page.component.element;
                     const properties = _page.component.properties || {};
-                    plane = (
-                        <PluridPlane
-                            key={child.planeID}
-                            page={_page}
-                            treePage={child}
-                            planeID={child.planeID}
-                            location={child.location}
-                        >
-                            <Page
-                                {...properties}
-                            />
-                        </PluridPlane>
-                    );
+
+                    if (!PagesContext) {
+                        plane = (
+                            <PluridPlane
+                                key={child.planeID}
+                                page={_page}
+                                treePage={child}
+                                planeID={child.planeID}
+                                location={child.location}
+                            >
+                                <Page
+                                    {...properties}
+                                />
+                            </PluridPlane>
+                        );
+                    }
+
+                    if (PagesContext) {
+                        plane = (
+                            <PluridPlane
+                                key={child.planeID}
+                                page={_page}
+                                treePage={child}
+                                planeID={child.planeID}
+                                location={child.location}
+                            >
+                                <PagesContext.Provider
+                                    value={{}}
+                                >
+                                    <Page
+                                        {...properties}
+                                    />
+                                </PagesContext.Provider>
+                            </PluridPlane>
+                        );
+                    }
 
                     setChildrenPlanes(planes => [...planes, plane]);
                 }
