@@ -40,10 +40,10 @@ import handleView from './logic';
 
 import Context from '../../modules/services/utilities/context';
 
-import {
-    useGlobalKeyDown,
-    useGlobalWheel,
-} from '../../modules/services/hooks';
+// import {
+//     useGlobalKeyDown,
+//     useGlobalWheel,
+// } from '../../modules/services/hooks';
 
 import {
     handleGlobalShortcuts,
