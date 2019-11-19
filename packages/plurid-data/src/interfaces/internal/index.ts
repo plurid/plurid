@@ -1,6 +1,6 @@
 import {
     PluridPage,
-    PluridPagesContext,
+    PluridPageContext,
     PluridDocument,
 } from '../external';
 
@@ -8,7 +8,8 @@ import {
 
 export interface PluridContext {
     pages: PluridPage[];
-    pagesContext?: PluridPagesContext<any>;
+    pageContext?: PluridPageContext<any>,
+    pageContextValue?: any,
     documents: PluridDocument[];
 }
 

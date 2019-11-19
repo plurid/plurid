@@ -9,7 +9,8 @@ export interface PluridApp {
      * A `PluridApp` must be either pages or documents based.
      */
     pages?: PluridPage[],
-    pagesContext?: PluridPagesContext<any>,
+    pageContext?: PluridPageContext<any>,
+    pageContextValue?: any,
 
     /**
      * A `PluridApp` must be either pages or documents based.
@@ -53,7 +54,7 @@ export interface PluridPage {
     ordinal?: number;
 }
 
-export type PluridPagesContext<T> = React.Context<T>;
+export type PluridPageContext<T> = React.Context<T>;
 
 
 export interface PluridLink {
