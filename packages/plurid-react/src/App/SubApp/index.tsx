@@ -12,7 +12,8 @@ import {
     PluridApp as PluridAppProperties,
 } from '@plurid/plurid-data';
 
-import PluridApp from '../';
+import SubAppRoot from './SubAppRoot';
+
 import reducer from '../../modules/services/state/reducers';
 
 
@@ -27,9 +28,11 @@ class PluridSubApp extends Component {
 
     render() {
         return (
-            <ReduxProvider store={this.store}>
-                <PluridApp
-                    {...this.props}
+            <ReduxProvider
+                store={this.store}
+            >
+                <SubAppRoot
+                    appProperties={{...this.props}}
                 />
             </ReduxProvider>
         );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PluridApp, {
+import {
     PluridSubApp,
     PluridConfiguration,
     PluridPubSub,
@@ -176,7 +176,7 @@ const App = () => {
         <div
             style={{
                 height: '100%',
-                width: '100%',
+                // width: '100%',
                 width: '700px',
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr'
