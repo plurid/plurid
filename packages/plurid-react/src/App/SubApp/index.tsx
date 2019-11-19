@@ -19,7 +19,7 @@ import StateContext from '../../modules/services/state/context';
 
 
 
-class PluridSubApp extends Component {
+class PluridSubApp extends Component<PluridAppProperties, {}> {
     private store: any;
 
     constructor(props: PluridAppProperties) {
