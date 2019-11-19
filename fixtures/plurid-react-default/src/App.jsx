@@ -162,7 +162,7 @@ const App = () => {
 
     const appPages2 = [
         {
-            path: '/page-2',
+            path: '/page-1',
             component: {
                 element: Page2,
                 properties: {},
@@ -176,6 +176,7 @@ const App = () => {
             style={{
                 height: '100%',
                 width: '100%',
+                width: '700px',
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr'
             }}
@@ -184,7 +185,7 @@ const App = () => {
             <div
                 style={{
                     position: 'relative',
-                    width: '500px',
+                    width: '300px',
                     height: '800px',
                 }}
             >
@@ -199,7 +200,7 @@ const App = () => {
             <div
                 style={{
                     position: 'relative',
-                    width: '500px',
+                    width: '300px',
                     height: '800px',
                 }}
             >

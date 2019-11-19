@@ -52,7 +52,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         tree,
     } = properties;
 
-    console.log(spaceRotationY);
+    console.log('!!!!!!', spaceRotationY);
 
     return (
         <StyledPluridRoots
