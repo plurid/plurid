@@ -86,6 +86,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     }, [JSON.stringify(page)]);
 
     if (_page) {
+        // console.log('rerender PluridRoot');
         const Page = _page.component.element;
         const properties = _page.component.properties || {};
         return (
