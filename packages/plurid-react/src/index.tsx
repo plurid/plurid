@@ -10,19 +10,23 @@ import PluridLink from './modules/components/PluridLink';
 
 import PluridApp from './App';
 
+import PluridSubApp from './App/SubApp';
 
 
 export {
-    // interfaces
+    /** SubApp */
+    PluridSubApp,
+
+    /** Interfaces */
     PluridPage,
     PluridDocument,
     PluridConfiguration,
 
-    // pubsub
+    /** PubSub */
     PluridPubSub,
     TOPICS,
 
-    // components
+    /** Components */
     PluridLink,
 };
 
