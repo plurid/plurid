@@ -420,61 +420,61 @@ export const computePluridPlaneLocation = (
 
 
     if (path.length < 2) {
-        console.log('path length under 2');
+        // console.log('path length under 2');
         x = prevTransX + linkCoordinates.x
         z = -1 * bridgeLength;
     }
 
     if (path.length === 2) {
-        console.log('path length 2');
+        // console.log('path length 2');
         x = (prevLinkX - bridgeLength) + (linkCoordinates.x + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180);
         z = -1 * (linkCoordinates.x + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
     }
 
     if (path.length === 3) {
-        console.log('path length 3');
+        // console.log('path length 3');
 
         x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
         z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
     }
 
     if (path.length === 4) {
-        console.log('path length 4');
+        // console.log('path length 4');
 
         x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
         z = (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
     }
 
     if (path.length === 5) {
-        console.log('path length 5');
+        // console.log('path length 5');
 
         x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
         z = -1 * ( (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength) );
     }
 
     if (path.length === 6) {
-        console.log('path length 6');
+        // console.log('path length 6');
 
         x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
         z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
     }
 
     if (path.length === 7) {
-        console.log('path length 7');
+        // console.log('path length 7');
 
         x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
         z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
     }
 
     if (path.length === 8) {
-        console.log('path length 8');
+        // console.log('path length 8');
 
         x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
         z = (prevTransZ - bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
     }
 
     if (path.length === 9) {
-        console.log('path length 9 is as 5');
+        // console.log('path length 9 is as 5');
 
         x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
         z = -1 * ( (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength) );
@@ -482,7 +482,7 @@ export const computePluridPlaneLocation = (
 
     y = prevTransY + linkCoordinates.y;
 
-    console.log('x y z', x, y, z);
+    // console.log('x y z', x, y, z);
 
     return {
         x,
