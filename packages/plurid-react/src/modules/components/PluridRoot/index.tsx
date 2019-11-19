@@ -115,6 +115,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         const Page = _page.component.element;
         const properties = _page.component.properties || {};
 
+        console.log(PageContext);
+        console.log('pageContextValue', pageContextValue);
+
         if (!PageContext) {
             return (
                 <StyledPluridRoot>
@@ -143,7 +146,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                         planeID={page.planeID}
                         location={location}
                     >
-
                         <PageContext.Provider
                             value={pageContextValue}
                         >

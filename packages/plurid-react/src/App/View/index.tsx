@@ -308,6 +308,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                         value={{
                             pages: pages || [],
                             pageContext: appProperties.pageContext,
+                            pageContextValue: appProperties.pageContextValue,
                             documents: documents || [],
                         }}
                     >
