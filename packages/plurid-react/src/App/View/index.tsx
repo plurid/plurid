@@ -294,7 +294,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     const viewContainer = handleView(pages, documents);
 
-    console.log('rendered PluridView');
+    // console.log('rendered PluridView');
 
     return (
         <StyledView
