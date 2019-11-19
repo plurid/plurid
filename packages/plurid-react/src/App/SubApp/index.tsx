@@ -15,6 +15,7 @@ import {
 import SubAppRoot from './SubAppRoot';
 
 import reducer from '../../modules/services/state/reducers';
+import StateContext from '../../modules/services/state/context';
 
 
 
@@ -30,6 +31,7 @@ class PluridSubApp extends Component {
         return (
             <ReduxProvider
                 store={this.store}
+                context={StateContext}
             >
                 <SubAppRoot
                     appProperties={{...this.props}}
