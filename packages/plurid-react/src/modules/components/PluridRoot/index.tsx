@@ -61,8 +61,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                             planeID={child.planeID}
                             location={child.location}
                         >
-                            <Page {
-                                ...properties}
+                            <Page
+                                {...properties}
                             />
                         </PluridPlane>
                     );
