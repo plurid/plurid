@@ -52,6 +52,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     // instead of forcing show here to pass it as prop
                     // and change the opacity
                     const Page = _page.component.element;
+                    const properties = _page.component.properties || {};
                     plane = (
                         <PluridPlane
                             key={child.planeID}
@@ -60,7 +61,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                             planeID={child.planeID}
                             location={child.location}
                         >
-                            <Page />
+                            <Page {
+                                ...properties}
+                            />
                         </PluridPlane>
                     );
 
