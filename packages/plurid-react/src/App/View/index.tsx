@@ -144,12 +144,12 @@ const View: React.FC<ViewProperties> = (properties) => {
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         handleGlobalShortcuts(dispatch, event);
     }, [dispatch]);
-    useGlobalKeyDown((shortcutsCallback));
+    useGlobalKeyDown(shortcutsCallback, viewElement.current);
 
     const wheelCallback = useCallback((event: WheelEvent) => {
         handleGlobalWheel(dispatch, event);
     }, [dispatch]);
-    useGlobalWheel(wheelCallback);
+    useGlobalWheel(wheelCallback, viewElement.current);
 
     useEffect(() => {
         const handleResize = debounce(() => {

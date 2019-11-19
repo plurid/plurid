@@ -31,6 +31,7 @@ const Root: React.FC<RootProperties> = (properties) => {
             <ReduxProvider
                 store={store}
                 context={StateContext}
+                // context={React.createContext<any>({})}
             >
                 <View
                     appProperties={appProperties}

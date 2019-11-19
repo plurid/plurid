@@ -9,11 +9,43 @@ export const useWindowEvent = (event: any, callback: any) => {
     }, [event, callback]);
 };
 
-
-export const useGlobalKeyDown = (callback: any) => {
-    return useWindowEvent('keydown', callback);
+export const useElementEvent = (
+    event: any,
+    element: any,
+    callback: any,
+) => {
+    useEffect(() => {
+        element.addEventListener(event, callback, { passive: false });
+        return () => element.removeEventListener(event, callback);
+    }, [event, callback]);
 }
 
-export const useGlobalWheel = (callback: any) => {
-    return useWindowEvent('wheel', callback);
+export const useGlobalKeyDown = (
+    callback: any,
+    element?: any,
+) => {
+    if (!element) {
+        return useWindowEvent('keydown', callback);
+    }
+
+    return useElementEvent(
+        'keydown',
+        element,
+        callback,
+    );
+}
+
+export const useGlobalWheel = (
+    callback: any,
+    element?: any,
+) => {
+    if (!element) {
+        return useWindowEvent('wheel', callback);
+    }
+
+    return useElementEvent(
+        'wheel',
+        element,
+        callback,
+    );
 }
