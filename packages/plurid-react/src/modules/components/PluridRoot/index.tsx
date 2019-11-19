@@ -114,22 +114,49 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         // console.log('rerender PluridRoot');
         const Page = _page.component.element;
         const properties = _page.component.properties || {};
-        return (
-            <StyledPluridRoot>
-                <PluridPlane
-                    page={_page}
-                    treePage={page}
-                    planeID={page.planeID}
-                    location={location}
-                >
-                    <Page
-                        {...properties}
-                    />
-                </PluridPlane>
 
-                {childrenPlanes}
-            </StyledPluridRoot>
-        );
+        if (!PageContext) {
+            return (
+                <StyledPluridRoot>
+                    <PluridPlane
+                        page={_page}
+                        treePage={page}
+                        planeID={page.planeID}
+                        location={location}
+                    >
+                        <Page
+                            {...properties}
+                        />
+                    </PluridPlane>
+
+                    {childrenPlanes}
+                </StyledPluridRoot>
+            );
+        }
+
+        if (PageContext) {
+            return (
+                <StyledPluridRoot>
+                    <PluridPlane
+                        page={_page}
+                        treePage={page}
+                        planeID={page.planeID}
+                        location={location}
+                    >
+
+                        <PageContext.Provider
+                            value={pageContextValue}
+                        >
+                            <Page
+                                {...properties}
+                            />
+                        </PageContext.Provider>
+                    </PluridPlane>
+
+                    {childrenPlanes}
+                </StyledPluridRoot>
+            );
+        }
     }
 
     return (<></>);
