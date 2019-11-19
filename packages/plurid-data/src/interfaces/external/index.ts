@@ -1,3 +1,5 @@
+import React from 'react';
+
 import PluridPubSub from '@plurid/plurid-pubsub';
 
 
@@ -7,6 +9,7 @@ export interface PluridApp {
      * A `PluridApp` must be either pages or documents based.
      */
     pages?: PluridPage[],
+    pagesContext?: PluridPagesContext<any>,
 
     /**
      * A `PluridApp` must be either pages or documents based.
@@ -49,6 +52,8 @@ export interface PluridPage {
      */
     ordinal?: number;
 }
+
+export type PluridPagesContext<T> = React.Context<T>;
 
 
 export interface PluridLink {
