@@ -15,7 +15,7 @@ const initialState = {};
 const initializedStore = store(initialState);
 
 const PluridApp: React.FC<PluridAppProperties> = (properties) => {
-    console.log('rendered PluridApp');
+    // console.log('rendered PluridApp');
 
     return (
         <StyledPluridApp>
