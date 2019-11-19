@@ -25,6 +25,7 @@ import {
 import {
     PluridApp,
     PluridPage,
+    PluridPagesContext,
     PluridComponentReact,
     PluridDocument,
     PluridLink,
@@ -71,6 +72,7 @@ export {
     // external
     PluridApp,
     PluridPage,
+    PluridPagesContext,
     PluridComponentReact,
     PluridDocument,
     PluridLink,
