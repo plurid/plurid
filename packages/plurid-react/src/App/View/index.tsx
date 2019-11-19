@@ -142,51 +142,44 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub,
     } = appProperties;
 
-
     const [eventListenersSet, setEventListenersSet] = useState(false);
+
+    const shortcutsCallback = useCallback((event: KeyboardEvent) => {
+        handleGlobalShortcuts(
+            dispatch,
+            event,
+        );
+    }, [
+        dispatch,
+    ]);
+
+    const wheelCallback = useCallback((event: WheelEvent) => {
+        handleGlobalWheel(
+            dispatch,
+            event,
+        );
+    }, [
+        dispatch,
+    ]);
 
     useEffect(() => {
         if (viewElement.current) {
             if (!eventListenersSet) {
-                viewElement.current.addEventListener('keydown', (event) => {
-                    console.log(event);
-                });
+                viewElement.current.addEventListener('wheel', wheelCallback, {passive: false});
+                viewElement.current.addEventListener('keydown', shortcutsCallback, {passive: false});
                 setEventListenersSet(true);
             }
-
-            // remove event listeners;
         }
+
+        // return () => {
+        //     if (viewElement.current) {
+        //         viewElement.current.removeEventListener('wheel', wheelCallback);
+        //         viewElement.current.removeEventListener('keydown', shortcutsCallback);
+        //     }
+        // }
     }, [
         viewElement.current,
     ]);
-
-    // console.log(viewElement.current);
-    // const shortcutsCallback = useCallback((event: KeyboardEvent) => {
-    //     handleGlobalShortcuts(
-    //         dispatch,
-    //         event,
-    //     );
-    // }, [
-    //     dispatch,
-    // ]);
-    // useGlobalKeyDown(
-    //     shortcutsCallback,
-    //     viewElement.current,
-    // );
-
-    // const wheelCallback = useCallback((event: WheelEvent) => {
-    //     handleGlobalWheel(
-    //         dispatch,
-    //         event,
-    //     );
-    // }, [
-    //     dispatch,
-    // ]);
-    // useGlobalWheel(
-    //     wheelCallback,
-    //     viewElement.current,
-    // );
-
 
     useEffect(() => {
         const handleResize = debounce(() => {
@@ -330,10 +323,6 @@ const View: React.FC<ViewProperties> = (properties) => {
     ]);
 
     const viewContainer = handleView(pages, documents);
-
-    // console.log('rendered PluridView');
-    console.log(transform);
-    console.log(viewElement.current);
 
     return (
         <StyledView
