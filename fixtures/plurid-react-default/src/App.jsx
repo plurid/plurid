@@ -1,6 +1,7 @@
 import React from 'react';
 
 import PluridApp, {
+    PluridSubApp,
     PluridConfiguration,
     PluridPubSub,
     // TOPICS,
@@ -189,7 +190,7 @@ const App = () => {
                     height: '800px',
                 }}
             >
-                <PluridApp
+                <PluridSubApp
                     configuration={appConfiguration}
                     pages={appPages}
                     // documents={appDocuments}
@@ -204,7 +205,7 @@ const App = () => {
                     height: '800px',
                 }}
             >
-                <PluridApp
+                <PluridSubApp
                     configuration={appConfiguration}
                     pages={appPages2}
                     // documents={appDocuments}
