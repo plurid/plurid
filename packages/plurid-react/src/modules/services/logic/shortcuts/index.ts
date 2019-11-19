@@ -16,8 +16,6 @@ export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: KeyboardEvent,
 ) => {
-    console.log(event);
-
     if (event.key === 'ArrowRight') {
         if (event.shiftKey) {
             dispatch(actions.space.rotateLeft());
