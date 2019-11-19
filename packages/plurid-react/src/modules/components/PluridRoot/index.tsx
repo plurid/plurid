@@ -87,6 +87,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
 
     if (_page) {
         const Page = _page.component.element;
+        const properties = _page.component.properties || {};
         return (
             <StyledPluridRoot>
                 <PluridPlane
@@ -95,7 +96,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     planeID={page.planeID}
                     location={location}
                 >
-                    <Page />
+                    <Page
+                        {...properties}
+                    />
                 </PluridPlane>
 
                 {childrenPlanes}
