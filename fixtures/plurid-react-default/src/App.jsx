@@ -160,17 +160,56 @@ const App = () => {
         // },
     ];
 
+    const appPages2 = [
+        {
+            path: '/page-2',
+            component: {
+                element: Page2,
+                properties: {},
+            },
+            root: true,
+        },
+    ];
+
     return (
         <div
-            style={{height: '100%', width: '100%'}}
+            style={{
+                height: '100%',
+                width: '100%',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr'
+            }}
             // style={{height: '500px', width: '400px'}}
         >
-            <PluridApp
-                configuration={appConfiguration}
-                pages={appPages}
-                // documents={appDocuments}
-                pubsub={pluridPubSub}
-            />
+            <div
+                style={{
+                    position: 'relative',
+                    width: '500px',
+                    height: '800px',
+                }}
+            >
+                <PluridApp
+                    configuration={appConfiguration}
+                    pages={appPages}
+                    // documents={appDocuments}
+                    pubsub={pluridPubSub}
+                />
+            </div>
+
+            <div
+                style={{
+                    position: 'relative',
+                    width: '500px',
+                    height: '800px',
+                }}
+            >
+                <PluridApp
+                    configuration={appConfiguration}
+                    pages={appPages2}
+                    // documents={appDocuments}
+                    // pubsub={pluridPubSub}
+                />
+            </div>
         </div>
     );
 }
