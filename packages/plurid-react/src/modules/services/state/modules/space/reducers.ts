@@ -52,6 +52,7 @@ const spaceReducer = (
     state: SpaceState = initialState,
     action: SpaceActionsType,
 ): SpaceState => {
+    console.log('reducer state', state);
     switch(action.type) {
         case SET_SPACE_LOADING:
             {
