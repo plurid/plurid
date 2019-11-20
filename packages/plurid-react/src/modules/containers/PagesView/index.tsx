@@ -11,7 +11,7 @@ import PluridSpace from '../../components/PluridSpace';
 interface PagesViewProperties {
 }
 
-const PagesView: React.FC<PagesViewProperties> = (properties) => {
+const PagesView: React.FC<PagesViewProperties> = () => {
     return (
         <StyledPagesView>
             <PluridSpace />

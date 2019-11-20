@@ -29,6 +29,12 @@ import themes, {
     THEME_NAMES,
 } from '@plurid/plurid-themes';
 
+import {
+    computeSpaceTree,
+    computeSpaceLocation,
+    recomputeSpaceTreeLocations,
+} from '@plurid/plurid-engine';
+
 import './index.css';
 
 import {
@@ -40,21 +46,10 @@ import handleView from './logic';
 
 import Context from '../../modules/services/utilities/context';
 
-// import {
-//     useGlobalKeyDown,
-//     useGlobalWheel,
-// } from '../../modules/services/hooks';
-
 import {
     handleGlobalShortcuts,
     handleGlobalWheel,
 } from '../../modules/services/logic/shortcuts';
-
-import {
-    computeSpaceTree,
-    computeSpaceLocation,
-    recomputeSpaceTreeLocations,
-} from '@plurid/plurid-engine';
 
 import { AppState } from '../../modules/services/state/store';
 import { ViewSize } from '../../modules/services/state/types/data';
@@ -231,7 +226,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
     }
 
-    /** Keydown and Wheel Listeners */
+    /** Keydown, Wheel Listeners */
     useEffect(() => {
         if (viewElement.current) {
             if (!eventListenersSet) {

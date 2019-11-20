@@ -13,7 +13,7 @@ import {
 interface DocumentsViewProperties {
 }
 
-const DocumentsView: React.FC<DocumentsViewProperties> = (properties) => {
+const DocumentsView: React.FC<DocumentsViewProperties> = () => {
     return (
         <StyledDocumentsView>
             documents view
