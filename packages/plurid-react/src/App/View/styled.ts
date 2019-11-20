@@ -30,4 +30,5 @@ export const GlobalStyle = createGlobalStyle`
 export const StyledView = styled.div`
     height: 100%;
     width: 100%;
+    position: relative;
 `;
