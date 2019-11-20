@@ -6,12 +6,12 @@ import {
     PluridApp as PluridAppProperties,
 } from '@plurid/plurid-data';
 
-import { StyledRoot } from './styled';
-
-import { AppState } from '../../modules/services/state/store';
-import StateContext from '../../modules/services/state/context';
-
 import View from '../View';
+
+import {
+    AppState,
+} from '../../modules/services/state/store';
+import StateContext from '../../modules/services/state/context';
 
 
 
@@ -27,17 +27,14 @@ const Root: React.FC<RootProperties> = (properties) => {
     } = properties;
 
     return (
-        <StyledRoot>
-            <ReduxProvider
-                store={store}
-                context={StateContext}
-                // context={React.createContext<any>({})}
-            >
-                <View
-                    appProperties={appProperties}
-                />
-            </ReduxProvider>
-        </StyledRoot>
+        <ReduxProvider
+            store={store}
+            context={StateContext}
+        >
+            <View
+                appProperties={appProperties}
+            />
+        </ReduxProvider>
     );
 }
 

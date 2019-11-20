@@ -56,41 +56,31 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     const Page = _page.component.element;
                     const properties = _page.component.properties || {};
 
-                    if (!PageContext) {
-                        plane = (
-                            <PluridPlane
-                                key={child.planeID}
-                                page={_page}
-                                treePage={child}
-                                planeID={child.planeID}
-                                location={child.location}
-                            >
-                                <Page
-                                    {...properties}
-                                />
-                            </PluridPlane>
-                        );
-                    }
-
-                    if (PageContext) {
-                        plane = (
-                            <PluridPlane
-                                key={child.planeID}
-                                page={_page}
-                                treePage={child}
-                                planeID={child.planeID}
-                                location={child.location}
-                            >
-                                <PageContext.Provider
-                                    value={pageContextValue}
-                                >
+                    plane = (
+                        <PluridPlane
+                            key={child.planeID}
+                            page={_page}
+                            treePage={child}
+                            planeID={child.planeID}
+                            location={child.location}
+                        >
+                            {!PageContext
+                                ? (
                                     <Page
                                         {...properties}
                                     />
-                                </PageContext.Provider>
-                            </PluridPlane>
-                        );
-                    }
+                                ) : (
+                                    <PageContext.Provider
+                                        value={pageContextValue}
+                                    >
+                                        <Page
+                                            {...properties}
+                                        />
+                                    </PageContext.Provider>
+                                )
+                            }
+                        </PluridPlane>
+                    );
 
                     setChildrenPlanes(planes => [...planes, plane]);
                 }
@@ -116,49 +106,36 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         const properties = _page.component.properties || {};
 
         // console.log(PageContext);
-        // console.log('pageContextValue', pageContextValue);
+        console.log('pageContextValue', pageContextValue);
 
-        if (!PageContext) {
-            return (
-                <StyledPluridRoot>
-                    <PluridPlane
-                        page={_page}
-                        treePage={page}
-                        planeID={page.planeID}
-                        location={location}
-                    >
-                        <Page
-                            {...properties}
-                        />
-                    </PluridPlane>
-
-                    {childrenPlanes}
-                </StyledPluridRoot>
-            );
-        }
-
-        if (PageContext) {
-            return (
-                <StyledPluridRoot>
-                    <PluridPlane
-                        page={_page}
-                        treePage={page}
-                        planeID={page.planeID}
-                        location={location}
-                    >
-                        <PageContext.Provider
-                            value={pageContextValue}
-                        >
+        return (
+            <StyledPluridRoot>
+                <PluridPlane
+                    page={_page}
+                    treePage={page}
+                    planeID={page.planeID}
+                    location={location}
+                >
+                    {!PageContext
+                        ? (
                             <Page
                                 {...properties}
                             />
-                        </PageContext.Provider>
-                    </PluridPlane>
+                        ) : (
+                            <PageContext.Provider
+                                value={pageContextValue}
+                            >
+                                <Page
+                                    {...properties}
+                                />
+                            </PageContext.Provider>
+                        )
+                    }
+                </PluridPlane>
 
-                    {childrenPlanes}
-                </StyledPluridRoot>
-            );
-        }
+                {childrenPlanes}
+            </StyledPluridRoot>
+        );
     }
 
     return (<></>);
