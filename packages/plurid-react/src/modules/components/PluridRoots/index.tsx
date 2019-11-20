@@ -56,10 +56,10 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     return (
         <StyledPluridRoots
             style={{
-                // width: window.innerWidth + 'px',
-                // height: window.innerHeight + 'px',
-                width: viewSize.width + 'px',
-                height: viewSize.height + 'px',
+                width: window.innerWidth + 'px',
+                height: window.innerHeight + 'px',
+                // width: viewSize.width + 'px',
+                // height: viewSize.height + 'px',
                 transform: `
                     scale(${spaceScale})
                     translateX(${spaceTranslationX}px)
