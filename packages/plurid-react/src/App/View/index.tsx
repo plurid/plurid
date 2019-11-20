@@ -162,44 +162,6 @@ const View: React.FC<ViewProperties> = (properties) => {
         dispatch,
     ]);
 
-    useEffect(() => {
-        if (viewElement.current) {
-            if (!eventListenersSet) {
-                viewElement.current.addEventListener('wheel', wheelCallback, {passive: false});
-                viewElement.current.addEventListener('keydown', shortcutsCallback, {passive: false});
-                setEventListenersSet(true);
-            }
-        }
-
-        // return () => {
-        //     if (viewElement.current) {
-        //         viewElement.current.removeEventListener('wheel', wheelCallback);
-        //         viewElement.current.removeEventListener('keydown', shortcutsCallback);
-        //     }
-        // }
-    }, [
-        viewElement.current,
-    ]);
-
-    useEffect(() => {
-        const handleResize = debounce(() => {
-            if (viewElement && viewElement.current) {
-                setViewSize({
-                    height: viewElement.current.offsetHeight,
-                    width: viewElement.current.offsetWidth,
-                });
-                const recomputedTree = recomputeSpaceTreeLocations(tree);
-                setTree(recomputedTree);
-            }
-        }, 150);
-
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        }
-    }, [tree]);
-
     const handleConfiguration = (configuration: PluridAppConfiguration) => {
         setConfiguration(configuration);
 
@@ -269,14 +231,56 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
     }
 
+    /** Keydown and Wheel Listeners */
+    useEffect(() => {
+        if (viewElement.current) {
+            if (!eventListenersSet) {
+                viewElement.current.addEventListener(
+                    'keydown',
+                    shortcutsCallback,
+                    {
+                        passive: false,
+                    },
+                );
+                viewElement.current.addEventListener(
+                    'wheel',
+                    wheelCallback,
+                    {
+                        passive: false,
+                    },
+                );
+                setEventListenersSet(true);
+            }
+        }
+    }, [
+        viewElement.current,
+    ]);
+
+    /** Resize Listener */
+    useEffect(() => {
+        const handleResize = debounce(() => {
+            if (viewElement && viewElement.current) {
+                setViewSize({
+                    height: viewElement.current.offsetHeight,
+                    width: viewElement.current.offsetWidth,
+                });
+                const recomputedTree = recomputeSpaceTreeLocations(tree);
+                setTree(recomputedTree);
+            }
+        }, 150);
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        }
+    }, [tree]);
+
+    /** Configuration, Pages, Documents */
     useEffect(() => {
         const mergedConfiguration = { ...defaultConfiguration, ...configuration };
 
         handleConfiguration(mergedConfiguration);
-
-        if (pubsub) {
-            handlePubSubSubscribe(pubsub);
-        }
 
         const _pages = pages && pages.map(page => {
             const id = uuid();
@@ -314,6 +318,16 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub,
     ]);
 
+    /** PubSub Subscription */
+    useEffect(() => {
+        if (pubsub) {
+            handlePubSubSubscribe(pubsub);
+        }
+    }, [
+        pubsub,
+    ])
+
+    /** PubSub Publish */
     useEffect(() => {
         if (pubsub) {
             handlePubSubPublish(pubsub);
