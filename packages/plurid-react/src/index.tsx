@@ -4,19 +4,19 @@ import {
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
-import PluridPubSub, { TOPICS } from '@plurid/plurid-pubsub';
-
-import PluridLink from './modules/components/PluridLink';
+import PluridPubSub, {
+    TOPICS,
+} from '@plurid/plurid-pubsub';
 
 import PluridApp from './App';
 
 import PluridSubApp from './App/SubApp';
 
+import PluridLink from './modules/components/PluridLink';
+
+
 
 export {
-    /** SubApp */
-    PluridSubApp,
-
     /** Interfaces */
     PluridPage,
     PluridDocument,
@@ -25,6 +25,9 @@ export {
     /** PubSub */
     PluridPubSub,
     TOPICS,
+
+    /** SubApp */
+    PluridSubApp,
 
     /** Components */
     PluridLink,
