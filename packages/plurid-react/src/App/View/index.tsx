@@ -68,6 +68,7 @@ interface ViewStateProperties {
     tree: TreePage[];
     viewSize: ViewSize;
     transform: any;
+    space: any;
 }
 
 interface ViewDispatchProperties {
@@ -101,13 +102,17 @@ const View: React.FC<ViewProperties> = (properties) => {
     const viewElement = useRef<HTMLDivElement>(null);
 
     const {
+        /** own */
         appProperties,
 
+        /** state */
         spaceLoading,
         tree,
         viewSize,
         transform,
+        space,
 
+        /** dispatch */
         dispatch,
 
         setConfiguration,
@@ -137,6 +142,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub,
     } = appProperties;
 
+    console.log('space from View', space);
+
     const [eventListenersSet, setEventListenersSet] = useState(false);
 
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
@@ -164,20 +171,20 @@ const View: React.FC<ViewProperties> = (properties) => {
             setMicro();
         }
 
-        if (configuration.space) {
-            const spaceLocation = computeSpaceLocation(configuration);
-            setSpaceLocation(spaceLocation);
-        }
+        // if (configuration.space) {
+        //     const spaceLocation = computeSpaceLocation(configuration);
+        //     setSpaceLocation(spaceLocation);
+        // }
 
-        if (configuration.space.center && !configuration.space.camera) {
-            const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.planeWidth;
-            translateXWith(x);
+        // if (configuration.space.center && !configuration.space.camera) {
+        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.planeWidth;
+        //     translateXWith(x);
 
-            // to get plane height;
-            const planeHeight = 300;
-            const y = window.innerHeight / 2 - planeHeight/2;
-            translateYWith(y);
-        }
+        //     // to get plane height;
+        //     const planeHeight = 300;
+        //     const y = window.innerHeight / 2 - planeHeight/2;
+        //     translateYWith(y);
+        // }
 
         if (configuration.theme) {
             if (typeof configuration.theme === 'object') {
@@ -269,7 +276,9 @@ const View: React.FC<ViewProperties> = (properties) => {
         return () => {
             window.removeEventListener('resize', handleResize);
         }
-    }, [tree]);
+    }, [
+        tree,
+    ]);
 
     /** Configuration, Pages, Documents */
     useEffect(() => {
@@ -310,7 +319,6 @@ const View: React.FC<ViewProperties> = (properties) => {
         setSpaceLoading(false);
     }, [
         configuration,
-        pubsub,
     ]);
 
     /** PubSub Subscription */
@@ -364,6 +372,7 @@ const mapStateToProps = (state: AppState): ViewStateProperties => ({
     tree: selectors.space.getTree(state),
     viewSize: selectors.data.getViewSize(state),
     transform: selectors.space.getTransform(state),
+    space: state.space,
 });
 
 

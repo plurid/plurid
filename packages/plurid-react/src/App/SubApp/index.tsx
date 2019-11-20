@@ -30,6 +30,7 @@ class PluridSubApp extends Component<PluridAppProperties, {}> {
 
     render() {
         console.log('rendered PluridSubApp');
+        console.log(this.store.getState());
 
         return (
             <ReduxProvider

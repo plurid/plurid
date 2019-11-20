@@ -27,6 +27,7 @@ interface PluridSpaceStateProperties {
     generalTheme: Theme;
     transparent: boolean | undefined;
     showToolbar: boolean | undefined;
+    space: any;
 }
 
 interface PluridSpaceDispatchProperties {
@@ -41,7 +42,10 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
         generalTheme,
         transparent,
         showToolbar,
+        space,
     } = properties;
+
+    console.log('space', space);
 
     return (
         <StyledPluridSpace
@@ -58,14 +62,19 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
 }
 
 
-const mapStateToProps = (state: AppState): PluridSpaceStateProperties => ({
+const mapStateToProps = (
+    state: AppState,
+): PluridSpaceStateProperties => ({
     generalTheme: selectors.themes.getGeneralTheme(state),
     transparent: selectors.configuration.getConfiguration(state).space.transparent,
     showToolbar: selectors.configuration.getConfiguration(state).toolbar,
+    space: state.space,
 });
 
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridSpaceDispatchProperties => ({
+const mapDispatchToProps = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): PluridSpaceDispatchProperties => ({
 });
 
 

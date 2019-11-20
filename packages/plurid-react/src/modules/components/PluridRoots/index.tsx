@@ -33,6 +33,7 @@ interface PluridRootsStateProperties {
     spaceTranslationX: number;
     spaceTranslationY: number;
     tree: TreePage[];
+    transform: any;
 }
 
 interface PluridRootsDispatchProperties {
@@ -50,9 +51,11 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         spaceTranslationX,
         spaceTranslationY,
         tree,
+        transform,
     } = properties;
 
-    console.log('spaceRotationY', spaceRotationY);
+    // console.log('transform', transform);
+    // console.log('spaceRotationY', spaceRotationY);
 
     return (
         <StyledPluridRoots
@@ -92,6 +95,7 @@ const mapStateToProps = (state: AppState): PluridRootsStateProperties => ({
     spaceRotationY: selectors.space.getRotationY(state),
     spaceTranslationX: selectors.space.getTranslationX(state),
     spaceTranslationY: selectors.space.getTranslationY(state),
+    transform: selectors.space.getTransform(state),
     tree: selectors.space.getTree(state),
 });
 
