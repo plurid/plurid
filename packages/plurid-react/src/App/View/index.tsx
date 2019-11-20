@@ -68,7 +68,6 @@ interface ViewStateProperties {
     tree: TreePage[];
     viewSize: ViewSize;
     transform: any;
-    space: any;
 }
 
 interface ViewDispatchProperties {
@@ -110,7 +109,6 @@ const View: React.FC<ViewProperties> = (properties) => {
         tree,
         viewSize,
         transform,
-        space,
 
         /** dispatch */
         dispatch,
@@ -141,8 +139,6 @@ const View: React.FC<ViewProperties> = (properties) => {
         documents,
         pubsub,
     } = appProperties;
-
-    console.log('space from View', space);
 
     const [eventListenersSet, setEventListenersSet] = useState(false);
 
@@ -372,7 +368,6 @@ const mapStateToProps = (state: AppState): ViewStateProperties => ({
     tree: selectors.space.getTree(state),
     viewSize: selectors.data.getViewSize(state),
     transform: selectors.space.getTransform(state),
-    space: state.space,
 });
 
 

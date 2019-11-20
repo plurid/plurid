@@ -25,13 +25,9 @@ class PluridSubApp extends Component<PluridAppProperties, {}> {
     constructor(props: PluridAppProperties) {
         super(props);
         this.store = createStore(reducer);
-        console.log('plurid app constructor run');
     }
 
     render() {
-        console.log('rendered PluridSubApp');
-        console.log(this.store.getState());
-
         return (
             <ReduxProvider
                 store={this.store}
