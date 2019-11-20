@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyledPluridApp } from './styled';
+import {
+    StyledPluridApp,
+} from './styled';
 
 import {
     PluridApp as PluridAppProperties,
@@ -15,8 +17,6 @@ const initialState = {};
 const initializedStore = store(initialState);
 
 const PluridApp: React.FC<PluridAppProperties> = (properties) => {
-    // console.log('rendered PluridApp');
-
     return (
         <StyledPluridApp>
             <Root

@@ -15,8 +15,7 @@ import StateContext from '../../../modules/services/state/context';
 
 
 interface SubAppRootOwnProperties {
-    appProperties: any;
-    // appProperties: PluridAppProperties;
+    appProperties: PluridAppProperties;
 }
 
 interface SubAppRootStateProperties {
