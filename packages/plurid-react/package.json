@@ -24,18 +24,18 @@
     },
     "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-react/README.md",
     "files": [
-        "dist/"
+        "distribution/"
     ],
-    "main": "dist/index.js",
-    "module": "dist/index.es.js",
-    "types": "dist/index.d.ts",
-    "jsnext:main": "dist/index.es.js",
+    "main": "distribution/index.js",
+    "module": "distribution/index.es.js",
+    "types": "distribution/index.d.ts",
+    "jsnext:main": "distribution/index.es.js",
     "engines": {
         "node": ">=8",
         "npm": ">=6"
     },
     "scripts": {
-        "clean": "rm -rf ./dist",
+        "clean": "rm -rf ./distribution",
         "spec": "jest",
         "lint": "eslint ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
