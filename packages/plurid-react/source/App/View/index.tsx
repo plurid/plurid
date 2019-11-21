@@ -141,6 +141,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     } = appProperties;
 
     const [eventListenersSet, setEventListenersSet] = useState(false);
+    const [initialized, setInitialized] = useState(false);
 
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         handleGlobalShortcuts(
@@ -167,20 +168,20 @@ const View: React.FC<ViewProperties> = (properties) => {
             setMicro();
         }
 
-        // if (configuration.space) {
-        //     const spaceLocation = computeSpaceLocation(configuration);
-        //     setSpaceLocation(spaceLocation);
-        // }
+        if (configuration.space) {
+            const spaceLocation = computeSpaceLocation(configuration);
+            setSpaceLocation(spaceLocation);
+        }
 
-        // if (configuration.space.center && !configuration.space.camera) {
-        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.planeWidth;
-        //     translateXWith(x);
+        if (configuration.space.center && !configuration.space.camera) {
+            const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.planeWidth;
+            translateXWith(x);
 
-        //     // to get plane height;
-        //     const planeHeight = 300;
-        //     const y = window.innerHeight / 2 - planeHeight/2;
-        //     translateYWith(y);
-        // }
+            // to get plane height;
+            const planeHeight = 300;
+            const y = window.innerHeight / 2 - planeHeight/2;
+            translateYWith(y);
+        }
 
         if (configuration.theme) {
             if (typeof configuration.theme === 'object') {
@@ -280,7 +281,10 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         const mergedConfiguration = { ...defaultConfiguration, ...configuration };
 
-        handleConfiguration(mergedConfiguration);
+        if (!initialized) {
+            handleConfiguration(mergedConfiguration);
+            setInitialized(true);
+        }
 
         const _pages = pages && pages.map(page => {
             const id = uuid();
