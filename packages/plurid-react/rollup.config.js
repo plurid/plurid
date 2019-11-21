@@ -12,7 +12,7 @@ import pkg from './package.json';
 
 
 export default {
-    input: 'src/index.tsx',
+    input: 'source/index.tsx',
     output: [
         {
             file: pkg.main,
