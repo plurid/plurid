@@ -174,7 +174,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
 
 const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
-    theme: selectors.themes.getGeneralTheme(state),
+    theme: selectors.themes.getInteractionTheme(state),
 });
 
 
