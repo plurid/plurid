@@ -22,6 +22,10 @@ import {
     scaleDown,
 
     setTree,
+
+    toggleRotationLocked,
+    toggleTranslationLocked,
+    toggleScaleLocked,
 } from '../modules/space/actions';
 
 
@@ -50,4 +54,8 @@ export default {
     scaleDown,
 
     setTree,
+
+    toggleRotationLocked,
+    toggleTranslationLocked,
+    toggleScaleLocked,
 };

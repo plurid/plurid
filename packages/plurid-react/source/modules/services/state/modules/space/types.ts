@@ -116,6 +116,27 @@ export interface SetTreeAction {
 }
 
 
+export const TOGGLE_ROTATION_LOCKED = 'TOGGLE_ROTATION_LOCKED';
+
+export interface ToggleRotationLockedAction {
+    type: typeof TOGGLE_ROTATION_LOCKED;
+}
+
+
+export const TOGGLE_TRANSLATION_LOCKED = 'TOGGLE_TRANSLATION_LOCKED';
+
+export interface ToggleTranslationLockedAction {
+    type: typeof TOGGLE_TRANSLATION_LOCKED;
+}
+
+
+export const TOGGLE_SCALE_LOCKED = 'TOGGLE_SCALE_LOCKED';
+
+export interface ToggleScaleLockedAction {
+    type: typeof TOGGLE_SCALE_LOCKED;
+}
+
+
 export interface SpaceState {
     loading: boolean;
     scale: number;
@@ -125,6 +146,9 @@ export interface SpaceState {
     translationY: number;
     translationZ: number;
     tree: TreePage[];
+    rotationLocked: boolean;
+    translationLocked: boolean;
+    scaleLocked: boolean;
 }
 
 
@@ -146,4 +170,7 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | TranslateYWithAction
     | ScaleUpAction
     | ScaleDownAction
-    | SetTreeAction;
+    | SetTreeAction
+    | ToggleRotationLockedAction
+    | ToggleScaleLockedAction
+    | ToggleTranslationLockedAction;

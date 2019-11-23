@@ -31,6 +31,10 @@ import {
 
     SET_TREE,
 
+    TOGGLE_ROTATION_LOCKED,
+    TOGGLE_TRANSLATION_LOCKED,
+    TOGGLE_SCALE_LOCKED,
+
     SpaceState,
     SpaceActionsType,
 } from './types';
@@ -46,6 +50,9 @@ const initialState: SpaceState = {
     translationY: 0,
     translationZ: 0,
     tree: [],
+    rotationLocked: false,
+    translationLocked: false,
+    scaleLocked: false,
 }
 
 const spaceReducer = (
@@ -149,8 +156,46 @@ const spaceReducer = (
             {
                 return { ...state, tree: action.payload };
             }
+        case TOGGLE_ROTATION_LOCKED:
+            {
+                const updatedState = {
+                    ...state,
+                    rotationLocked: !state.rotationLocked,
+                    translationLocked: false,
+                    scaleLocked: false,
+                };
+                return {
+                    ...updatedState,
+                };
+            }
+        case TOGGLE_TRANSLATION_LOCKED:
+            {
+                const updatedState = {
+                    ...state,
+                    rotationLocked: false,
+                    translationLocked: !state.translationLocked,
+                    scaleLocked: false,
+                };
+                return {
+                    ...updatedState,
+                };
+            }
+        case TOGGLE_SCALE_LOCKED:
+            {
+                const updatedState = {
+                    ...state,
+                    rotationLocked: false,
+                    translationLocked: false,
+                    scaleLocked: !state.scaleLocked,
+                };
+                return {
+                    ...updatedState,
+                };
+            }
         default:
-            return state;
+            return {
+                ...state,
+            };
     }
 }
 
