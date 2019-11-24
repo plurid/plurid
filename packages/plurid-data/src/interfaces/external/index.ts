@@ -27,6 +27,11 @@ export interface PluridApp {
 
 export interface PluridPage {
     /**
+     * Optional, application-wide unique identifier.
+     */
+    id?: string;
+
+    /**
      * Custom HTML, React, Vue, or Angular component to be rendered in the PluridPlane.
      */
     component: PluridComponentReact;
