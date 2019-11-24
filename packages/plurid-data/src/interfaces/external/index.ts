@@ -147,7 +147,7 @@ export interface PluridConfiguration {
     /**
      * Triggered when the pathbar from the controls has an onChange event
      */
-    pathChange?: (value: string) => void;
+    pathChange?: (event: any, pageID: string) => void;
 
     // Future:
     // To change the browser URL depending on the active plane/plane in sight.
