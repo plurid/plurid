@@ -65,6 +65,10 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
 
     const onPathInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPath(event.target.value);
+
+        if (configuration.pathChange) {
+            configuration.pathChange(event.target.value);
+        }
     }
 
     return (
