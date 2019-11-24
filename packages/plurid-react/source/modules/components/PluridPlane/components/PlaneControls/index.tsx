@@ -15,6 +15,7 @@ import {
 } from './styled';
 
 import {
+    PluridPage,
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
@@ -28,7 +29,7 @@ import selectors from '../../../../services/state/selectors';
 
 
 interface PlaneControlsOwnProperties {
-    page: any;
+    page: PluridPage;
     [key: string]: any;
 }
 
@@ -67,7 +68,8 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
         setPath(event.target.value);
 
         if (configuration.pathChange) {
-            configuration.pathChange(event.target.value);
+            const id = page.id || page.path;
+            configuration.pathChange(event, id);
         }
     }
 
