@@ -424,10 +424,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@plurid/plurid-data@^0.1.32":
-  version "0.1.32"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.32.tgz#4dee4bb978f0ce077365250ca4d12928f4da21ad"
-  integrity sha512-vctUkwTkoox/4tPlCQkJwhlW2x2pyRcfYXw4BcG/k+nwVhHuhOWwI5iVwX+cLOHh3veA0o0Q+JDyecQSgWjXlA==
+"@plurid/plurid-data@^0.1.33":
+  version "0.1.33"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.33.tgz#6181af116177075efbfb84211431db70575f7d2a"
+  integrity sha512-tFQ3VQnZKCY+fJu6/OjvyKuhxKyfEC5D03AbjytfxZ8kudEg2m4CQMWQ6N6g0mPHz5XWuOcmC5lyMVq8aAHqlQ==
 
 "@plurid/plurid-engine@^0.1.12":
   version "0.1.12"

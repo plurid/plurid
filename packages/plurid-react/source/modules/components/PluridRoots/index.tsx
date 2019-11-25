@@ -16,7 +16,7 @@ import {
     Tree,
     TreePage,
     Indexed,
-    PluridDocument,
+    PluridInternalStateDocument,
 } from '@plurid/plurid-data';
 
 import { AppState } from '../../services/state/store';
@@ -39,7 +39,7 @@ interface PluridRootsStateProperties {
     spaceTranslationX: number;
     spaceTranslationY: number;
     tree: Tree;
-    documents: Indexed<PluridDocument>;
+    documents: Indexed<PluridInternalStateDocument>;
     activeDocumentID: string;
 }
 
