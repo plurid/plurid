@@ -312,6 +312,17 @@ const View: React.FC<ViewProperties> = (properties) => {
             });
         }
 
+        const tree = {};
+        _pages.map(page => {
+            const treePage = {
+                ...page,
+            }
+            tree[treePage.id] = treePage;
+        });
+        console.log(_pages);
+        console.log(tree);
+        // setTree(tree);
+
         // if (_pages) {
         //     const computedTree = computeSpaceTree(_pages, mergedConfiguration);
         //     setTree(computedTree);
