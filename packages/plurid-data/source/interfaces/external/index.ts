@@ -123,7 +123,7 @@ export interface PluridDocument {
      */
     name: string;
 
-    pages: PluridPage[];
+    pages: PluridPage[] | PluridPagesIndex;
 
     /**
      * By default, the order the documents are shown in is based on their index in the `documents[]`.
@@ -131,6 +131,11 @@ export interface PluridDocument {
      * If not unique, the documents with equal `ordinal` will be ordered by index.
      */
     ordinal?: number;
+}
+
+
+export interface PluridPagesIndex {
+    [key: string]: PluridPage;
 }
 
 
