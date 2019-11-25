@@ -15,7 +15,8 @@ import {
     TreePage,
     PluridContext,
     PluridDocument,
-    PluridPagesIndex,
+    PluridPage,
+    Indexed,
     defaultConfiguration,
 } from '@plurid/plurid-data';
 
@@ -81,7 +82,7 @@ interface ViewDispatchProperties {
     setMicro: typeof actions.configuration.setMicro;
 
     setPages: typeof actions.data.setPages;
-    setDocuments: typeof actions.data.setDocuments;
+    dispatchSetDocuments: typeof actions.data.setDocuments;
     setViewSize: typeof actions.data.setViewSize;
 
     setSpaceLoading: typeof actions.space.setSpaceLoading;
@@ -95,6 +96,8 @@ interface ViewDispatchProperties {
     rotateYWith: typeof actions.space.rotateYWith;
     translateXWith: typeof actions.space.translateXWith;
     translateYWith: typeof actions.space.translateYWith;
+
+    dispatchSetActiveDocument: typeof actions.space.setActiveDocument;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -121,7 +124,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         setMicro,
 
         setPages,
-        setDocuments,
+        dispatchSetDocuments,
         setViewSize,
 
         setSpaceLoading,
@@ -135,6 +138,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         rotateYWith,
         translateXWith,
         translateYWith,
+
+        dispatchSetActiveDocument,
     } = properties;
 
     const {
@@ -285,12 +290,17 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         if (!documents && pages) {
             // create a document and add pages to it
-            const documentPages: PluridPagesIndex = {};
+            const documentPages: Indexed<PluridPage> = {};
             pages.map(page => {
                 const id = page.id || uuid();
-                const _page = { ...page, id };
+                const _page = {
+                    ...page,
+                    id,
+                };
                 delete _page.component;
-                documentPages[id] = { ..._page };
+                documentPages[id] = {
+                    ..._page,
+                };
             });
 
             const document: PluridDocument = {
@@ -303,10 +313,8 @@ const View: React.FC<ViewProperties> = (properties) => {
                 default: document,
             };
 
-            // setdocuments
-            // setactivedocument
-
-            // setPages(_pages);
+            dispatchSetDocuments(documents);
+            dispatchSetActiveDocument('default');
         }
 
         if (documents) {
@@ -418,7 +426,9 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     setMicro: () => dispatch(actions.configuration.setMicro()),
 
     setPages: (pages: any) => dispatch(actions.data.setPages(pages)),
-    setDocuments: (documents: any) => dispatch(actions.data.setDocuments(documents)),
+    dispatchSetDocuments: (documents: any) => dispatch(
+        actions.data.setDocuments(documents)
+    ),
     setViewSize: (viewSize: ViewSize) => dispatch(actions.data.setViewSize(viewSize)),
 
     setSpaceLoading: (loading: boolean) => dispatch(actions.space.setSpaceLoading(loading)),
@@ -432,6 +442,10 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
     rotateYWith: (value: number) => dispatch(actions.space.rotateYWith(value)),
     translateXWith: (value: number) => dispatch(actions.space.translateXWith(value)),
     translateYWith: (value: number) => dispatch(actions.space.translateYWith(value)),
+
+    dispatchSetActiveDocument: (activeDocument: string) => dispatch(
+        actions.space.setActiveDocument(activeDocument)
+    ),
 });
 
 

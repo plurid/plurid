@@ -1,4 +1,10 @@
 import {
+    Indexed,
+    PluridPage,
+    PluridDocument,
+} from '@plurid/plurid-data';
+
+import {
     SET_PAGES,
     SetPagesAction,
     SET_DOCUMENTS,
@@ -10,7 +16,7 @@ import {
 
 
 
-export const setPages = (payload: any): SetPagesAction => {
+export const setPages = (payload: Indexed<PluridPage>): SetPagesAction => {
     return {
         type: SET_PAGES,
         payload,
@@ -18,7 +24,7 @@ export const setPages = (payload: any): SetPagesAction => {
 }
 
 
-export const setDocuments = (payload: any): SetDocumentsAction => {
+export const setDocuments = (payload: Indexed<PluridDocument>): SetDocumentsAction => {
     return {
         type: SET_DOCUMENTS,
         payload,
