@@ -16,7 +16,7 @@ import {
 
 import {
     PluridLink as PluridLinkOwnProperties,
-    Tree,
+    TreePage,
 } from '@plurid/plurid-data';
 
 import {
@@ -39,7 +39,7 @@ import actions from '../../services/state/actions';
 
 
 interface PluridLinkStateProperties {
-    tree: Tree,
+    tree: TreePage[],
     generalTheme: Theme,
 }
 
@@ -166,7 +166,7 @@ const mapStateToProps = (state: AppState): PluridLinkStateProperties => ({
 
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridLinkDispatchProperties => ({
-    setTree: (tree: Tree) => dispatch(actions.space.setTree(tree)),
+    setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
 });
 
 
