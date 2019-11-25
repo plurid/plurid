@@ -15,6 +15,7 @@ import {
     TreePage,
     PluridContext,
     PluridDocument,
+    PluridPagesIndex,
     defaultConfiguration,
 } from '@plurid/plurid-data';
 
@@ -284,7 +285,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         if (!documents && pages) {
             // create a document and add pages to it
-            const documentPages = {};
+            const documentPages: PluridPagesIndex = {};
             pages.map(page => {
                 const id = page.id || uuid();
                 const _page = { ...page, id };
@@ -292,15 +293,15 @@ const View: React.FC<ViewProperties> = (properties) => {
                 documentPages[id] = { ..._page };
             });
 
-            // const document: PluridDocument = {
-            //     id: 'default',
-            //     name: 'default',
-            //     pages: documentPages,
-            // };
+            const document: PluridDocument = {
+                id: 'default',
+                name: 'default',
+                pages: documentPages,
+            };
 
-            // const documents = {
-            //     default: document,
-            // };
+            const documents = {
+                default: document,
+            };
 
             // setdocuments
             // setactivedocument
@@ -313,23 +314,23 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
 
 
+        // const _documents = documents && documents.map(document => {
+        //     const _documentPages = document.pages.map(documentPage => {
+        //         const _page = { ...documentPage };
+        //         delete _page.component;
+        //         return _page;
+        //     });
+        //     return { ...document, pages: _documentPages};
+        // }) || [];
+        // setDocuments(_documents);
 
-        const _documents = documents && documents.map(document => {
-            const _documentPages = document.pages.map(documentPage => {
-                const _page = { ...documentPage };
-                delete _page.component;
-                return _page;
-            });
-            return { ...document, pages: _documentPages};
-        }) || [];
-        setDocuments(_documents);
+        // if (viewElement && viewElement.current) {
+        //     setViewSize({
+        //         height: viewElement.current.offsetHeight,
+        //         width: viewElement.current.offsetWidth,
+        //     });
+        // }
 
-        if (viewElement && viewElement.current) {
-            setViewSize({
-                height: viewElement.current.offsetHeight,
-                width: viewElement.current.offsetWidth,
-            });
-        }
 
         // if (_pages) {
         //     const computedTree = computeSpaceTree(_pages, mergedConfiguration);
