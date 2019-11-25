@@ -24,6 +24,7 @@ const getTransform = (state: AppState) => {
         scale: state.space.scale,
     }
 }
+const getActiveDocumentID = (state: AppState) => state.space.activeDocumentID;
 
 
 export default {
@@ -38,4 +39,6 @@ export default {
     getTransform,
 
     getTree,
+
+    getActiveDocumentID,
 };

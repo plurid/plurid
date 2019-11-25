@@ -137,6 +137,14 @@ export interface ToggleScaleLockedAction {
 }
 
 
+export const SET_ACTIVE_DOCUMENT = 'SET_ACTIVE_DOCUMENT';
+
+export interface SetActiveDocumentAction {
+    type: typeof SET_ACTIVE_DOCUMENT;
+    payload: string;
+}
+
+
 export interface SpaceState {
     loading: boolean;
     scale: number;
@@ -149,6 +157,7 @@ export interface SpaceState {
     rotationLocked: boolean;
     translationLocked: boolean;
     scaleLocked: boolean;
+    activeDocumentID: string;
 }
 
 
@@ -173,4 +182,5 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | SetTreeAction
     | ToggleRotationLockedAction
     | ToggleScaleLockedAction
-    | ToggleTranslationLockedAction;
+    | ToggleTranslationLockedAction
+    | SetActiveDocumentAction;
