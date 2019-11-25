@@ -384,10 +384,12 @@ const View: React.FC<ViewProperties> = (properties) => {
     const viewContainer = handleView(pages, documents);
 
     const pluridContext: PluridContext = {
-        pages: pages || [],
+        pages: {},
+        // pages: pages || [],
         pageContext: appProperties.pageContext,
         pageContextValue: appProperties.pageContextValue,
-        documents: documents || [],
+        // documents: documents || [],
+        documents: {},
     };
 
     return (
