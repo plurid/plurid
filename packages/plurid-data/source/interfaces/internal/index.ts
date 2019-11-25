@@ -28,7 +28,7 @@ export interface PluridInternalDocument {
 
 export interface PluridInternalStateDocument extends PluridInternalDocument {
     ordinal: number;
-    pages: Indexed<PluridInternalPage>;
+    pages: Indexed<PluridInternalStatePage>;
 }
 
 export interface PluridInternalContextDocument extends PluridInternalDocument {
