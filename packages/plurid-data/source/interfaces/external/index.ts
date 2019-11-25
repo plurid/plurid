@@ -9,7 +9,15 @@ export interface PluridApp {
      * A `PluridApp` must be either pages or documents based.
      */
     pages?: PluridPage[],
+
+    /**
+     * Optional context for the page to have access to.
+     */
     pageContext?: PluridPageContext<any>,
+
+    /**
+     * Optional context initial value.
+     */
     pageContextValue?: any,
 
     /**
@@ -53,8 +61,9 @@ export interface PluridPage {
     root?: boolean;
 
     /**
-     * By default, the order the pages are shown in is based on their index in the pages[].
-     * The ordinal can be used to overrule the default order. Does not have to be unique.
+     * By default, the order the pages are shown in is based on their index in the `pages[]`.
+     * The ordinal can be used to overrule the default order.
+     * If not unique, the pages with equal `ordinal` will be ordered by index.
      */
     ordinal?: number;
 }
@@ -74,12 +83,14 @@ export interface PluridLink {
     page: string;
 
     /**
-     * Format the link as an achor element. Default `false`.
+     * Format the link as a simple anchor element. Default `false`.
      */
     devisible?: boolean;
 
     /**
-     * String character to be added inline after the PluridLink content. Default `'`.
+     * String character to be added inline after the PluridLink content. The default is `'`.
+     *
+     * If `devisible` the suffix is disabled.
      */
     suffix?: string;
 
