@@ -67,9 +67,16 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
     const onPathInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPath(event.target.value);
 
-        if (configuration.pathChange) {
+        if (configuration.pathbarOnChange) {
             const id = page.id || page.path;
-            configuration.pathChange(event, id);
+            configuration.pathbarOnChange(event, id);
+        }
+    }
+
+    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (configuration.pathbarOnKeyDown) {
+            const id = page.id || page.path;
+            configuration.pathbarOnKeyDown(event, id);
         }
     }
 
@@ -86,6 +93,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
                     type="text"
                     value={path}
                     onChange={onPathInput}
+                    onKeyDown={handleOnKeyDown}
                 />
             </StyledPlaneControlsCenter>
 
