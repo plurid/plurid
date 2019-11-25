@@ -17,7 +17,9 @@ import {
     PluridDocument,
     PluridPage,
     Indexed,
+    PluridInternalStatePage,
     PluridInternalStateDocument,
+    PluridInternalContextPage,
     PluridInternalContextDocument,
     defaultConfiguration,
 } from '@plurid/plurid-data';
@@ -298,28 +300,36 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         if (!documents && pages) {
             // create a document and add pages to it
-            const documentPages: Indexed<PluridPage> = {};
-            const contextPages = {};
+            const documentPages: Indexed<PluridInternalStatePage> = {};
+            const contextPages: Indexed<PluridInternalContextPage> = {};
 
             pages.map(page => {
                 const id = page.id || uuid();
-                const _page = {
+
+                const contextPage = {
                     ...page,
                     id,
                 };
                 contextPages[id] = {
-                    ..._page,
+                    ...contextPage,
                 };
-                delete _page.component;
+
+                const documentPage: PluridInternalStatePage = {
+                    root: page.root || false,
+                    ordinal: page.ordinal || 0,
+                    id: page.id || uuid(),
+                    path: page.path,
+                };
                 documentPages[id] = {
-                    ..._page,
+                    ...documentPage,
                 };
             });
 
-            const document: PluridDocument = {
+            const document: PluridInternalStateDocument = {
                 id: 'default',
                 name: 'default',
                 pages: documentPages,
+                ordinal: 0,
             };
 
             const documents = {
