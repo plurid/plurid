@@ -105,14 +105,20 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
 
     // const pluridPage = pages.find(pluridPage => pluridPage.path === page.path);
     const activeDocument = documents['default'];
+    console.log('activeDocument', activeDocument);
     const activePages = activeDocument.pages;
+    console.log('activePages', activePages);
 
     const pluridPage = activePages[page.planeID];
+    console.log('pluridPage', pluridPage);
+
     if (!pluridPage) {
         return (<></>);
     }
 
     const Page = pluridPage.component.element;
+    console.log(Page);
+
     const pageProperties = pluridPage.component.properties || {};
 
     return (
