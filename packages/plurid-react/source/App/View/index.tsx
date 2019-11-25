@@ -17,6 +17,8 @@ import {
     PluridDocument,
     PluridPage,
     Indexed,
+    PluridInternalStateDocument,
+    PluridInternalContextDocument,
     defaultConfiguration,
 } from '@plurid/plurid-data';
 
@@ -73,7 +75,7 @@ interface ViewStateProperties {
     tree: Tree;
     viewSize: ViewSize;
     transform: any;
-    dataDocuments: Indexed<PluridDocument>;
+    dataDocuments: Indexed<PluridInternalStateDocument>;
     activeDocumentID: string;
 }
 
@@ -156,7 +158,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     const [eventListenersSet, setEventListenersSet] = useState(false);
     const [initialized, setInitialized] = useState(false);
 
-    const [contextDocuments, setContextDocuments] = useState<Indexed<PluridDocument>>({});
+    const [contextDocuments, setContextDocuments] = useState<Indexed<PluridInternalContextDocument>>({});
 
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         handleGlobalShortcuts(
@@ -403,11 +405,8 @@ const View: React.FC<ViewProperties> = (properties) => {
     const viewContainer = handleView(pages, documents);
 
     const pluridContext: PluridContext = {
-        pages: {},
-        // pages: pages || [],
         pageContext: appProperties.pageContext,
         pageContextValue: appProperties.pageContextValue,
-        // documents: documents || [],
         documents: contextDocuments,
     };
 
