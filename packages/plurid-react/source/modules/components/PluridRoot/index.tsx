@@ -109,7 +109,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const activePages = activeDocument.pages;
     console.log('activePages', activePages);
 
-    const pluridPage = activePages[page.planeID];
+    const pluridPage = activePages[page.id];
     console.log('pluridPage', pluridPage);
 
     if (!pluridPage) {

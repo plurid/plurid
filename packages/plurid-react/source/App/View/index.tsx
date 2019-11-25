@@ -319,7 +319,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 const documentPage: PluridInternalStatePage = {
                     root: page.root || false,
                     ordinal: page.ordinal || 0,
-                    id: page.id || uuid(),
+                    id,
                     path: page.path,
                 };
                 documentPages[id] = {
@@ -413,6 +413,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             for (const pageID in pages) {
                 const contextPage = contextPages[pageID];
                 const treePage: TreePage = {
+                    id: contextPage.id,
                     planeID: uuid(),
                     path: contextPage.path,
                     location: {
