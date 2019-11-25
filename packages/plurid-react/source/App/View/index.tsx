@@ -14,6 +14,7 @@ import {
     Tree,
     TreePage,
     PluridContext,
+    PluridDocument,
     defaultConfiguration,
 } from '@plurid/plurid-data';
 
@@ -290,10 +291,16 @@ const View: React.FC<ViewProperties> = (properties) => {
                 return _page;
             }) || [];
 
-            const document = {
-                id: '',
+            const document: PluridDocument = {
+                id: 'default',
+                name: 'default',
                 pages: _pages,
             };
+
+            const documents = [document];
+
+            // setdocuments
+            // setactivedocument
 
             // const tree = {};
             // _pages.map(page => {

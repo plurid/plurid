@@ -26,6 +26,8 @@ import {
     toggleRotationLocked,
     toggleTranslationLocked,
     toggleScaleLocked,
+
+    setActiveDocument,
 } from '../modules/space/actions';
 
 
@@ -58,4 +60,6 @@ export default {
     toggleRotationLocked,
     toggleTranslationLocked,
     toggleScaleLocked,
+
+    setActiveDocument,
 };

@@ -35,6 +35,8 @@ import {
     TOGGLE_TRANSLATION_LOCKED,
     TOGGLE_SCALE_LOCKED,
 
+    SET_ACTIVE_DOCUMENT,
+
     SpaceState,
     SpaceActionsType,
 } from './types';
@@ -53,6 +55,7 @@ const initialState: SpaceState = {
     rotationLocked: false,
     translationLocked: false,
     scaleLocked: false,
+    activeDocumentID: '',
 }
 
 const spaceReducer = (
@@ -217,39 +220,37 @@ const spaceReducer = (
             }
         case TOGGLE_ROTATION_LOCKED:
             {
-                const updatedState = {
+                return {
                     ...state,
                     rotationLocked: !state.rotationLocked,
                     translationLocked: false,
                     scaleLocked: false,
                 };
-                return {
-                    ...updatedState,
-                };
             }
         case TOGGLE_TRANSLATION_LOCKED:
             {
-                const updatedState = {
+                return {
                     ...state,
                     rotationLocked: false,
                     translationLocked: !state.translationLocked,
                     scaleLocked: false,
                 };
-                return {
-                    ...updatedState,
-                };
             }
         case TOGGLE_SCALE_LOCKED:
             {
-                const updatedState = {
+                return {
                     ...state,
                     rotationLocked: false,
                     translationLocked: false,
                     scaleLocked: !state.scaleLocked,
                 };
+            }
+        case SET_ACTIVE_DOCUMENT:
+            {
                 return {
-                    ...updatedState,
-                };
+                    ...state,
+                    activeDocumentID: action.payload,
+                }
             }
         default:
             return {

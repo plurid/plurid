@@ -53,6 +53,9 @@ import {
     ToggleTranslationLockedAction,
     TOGGLE_SCALE_LOCKED,
     ToggleScaleLockedAction,
+
+    SET_ACTIVE_DOCUMENT,
+    SetActiveDocumentAction,
 } from './types'
 
 
@@ -203,5 +206,13 @@ export const toggleTranslationLocked = (): ToggleTranslationLockedAction => {
 export const toggleScaleLocked = (): ToggleScaleLockedAction => {
     return {
         type: TOGGLE_SCALE_LOCKED,
+    };
+}
+
+
+export const setActiveDocument = (documentID: string): SetActiveDocumentAction => {
+    return {
+        type: SET_ACTIVE_DOCUMENT,
+        payload: documentID,
     };
 }
