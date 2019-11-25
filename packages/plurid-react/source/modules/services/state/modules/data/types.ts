@@ -1,8 +1,15 @@
+import {
+    PluridPage,
+    PluridDocument,
+} from '@plurid/plurid-data';
+
+
+
 export const SET_PAGES = 'SET_PAGES';
 
 export interface SetPagesAction {
     type: typeof SET_PAGES;
-    payload: any;
+    payload: PluridPage[];
 }
 
 
@@ -10,7 +17,7 @@ export const SET_DOCUMENTS = 'SET_DOCUMENTS';
 
 export interface SetDocumentsAction {
     type: typeof SET_DOCUMENTS;
-    payload: any;
+    payload: PluridDocument[];
 }
 
 
