@@ -284,36 +284,28 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         if (!documents && pages) {
             // create a document and add pages to it
-            const _pages = pages.map(page => {
+            const documentPages = {};
+            pages.map(page => {
                 const id = page.id || uuid();
                 const _page = { ...page, id };
                 delete _page.component;
-                return _page;
-            }) || [];
+                documentPages[id] = { ..._page };
+            });
 
-            const document: PluridDocument = {
-                id: 'default',
-                name: 'default',
-                pages: _pages,
-            };
+            // const document: PluridDocument = {
+            //     id: 'default',
+            //     name: 'default',
+            //     pages: documentPages,
+            // };
 
-            const documents = [document];
+            // const documents = {
+            //     default: document,
+            // };
 
             // setdocuments
             // setactivedocument
 
-            // const tree = {};
-            // _pages.map(page => {
-            //     const treePage = {
-            //         ...page,
-            //     }
-            //     tree[treePage.id] = treePage;
-            // });
-            // console.log(_pages);
-            // console.log(tree);
-            // // setTree(tree);
-
-            setPages(_pages);
+            // setPages(_pages);
         }
 
         if (documents) {
