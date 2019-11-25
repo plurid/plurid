@@ -7,8 +7,8 @@ import {
 
 
 const defaultContext: PluridContext = {
-    pages: [],
-    documents: [],
+    pages: {},
+    documents: {},
 }
 
 const Context = React.createContext(defaultContext);
