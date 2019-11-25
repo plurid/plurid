@@ -1,6 +1,6 @@
 import React, {
-    useState,
-    useEffect,
+    // useState,
+    // useEffect,
 } from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
@@ -50,55 +50,55 @@ type PluridRootsProperties = PluridRootsStateProperties & PluridRootsDispatchPro
 const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     const {
         /** state */
-        viewSize,
-        planeWidth,
+        // viewSize,
+        // planeWidth,
         spaceScale,
         spaceRotationX,
         spaceRotationY,
         spaceTranslationX,
         spaceTranslationY,
         tree,
-        documents,
-        activeDocumentID,
+        // documents,
+        // activeDocumentID,
     } = properties;
 
-    const activeDocument = documents[activeDocumentID];
-    const {
-        pages,
-    } = activeDocument;
-    // console.log(pages);
+    // const activeDocument = documents[activeDocumentID];
+    // const {
+    //     pages,
+    // } = activeDocument;
+    // // console.log(pages);
 
-    // traverse tree and push the roots into
-    const [roots, setRoots] = useState<TreePage[]>([]);
+    // // traverse tree and push the roots into
+    // const [roots, setRoots] = useState<TreePage[]>([]);
 
-    useEffect(() => {
-        const roots: TreePage[] = [];
+    // useEffect(() => {
+    //     const roots: TreePage[] = [];
 
-        if (!Array.isArray(pages)) {
-            for (const pageID in pages) {
-                const pluridPage = pages[pageID];
-                if (pluridPage.root) {
-                    const page: TreePage = {
-                        planeID: pluridPage.id || '',
-                        location: {
-                            rotateX: 0,
-                            rotateY: 0,
-                            translateX: 0,
-                            translateY: 0,
-                            translateZ: 0,
-                        },
-                        path: pluridPage.path,
-                        show: true,
-                    };
-                    roots.push(page);
-                }
-            }
-        }
+    //     if (!Array.isArray(pages)) {
+    //         for (const pageID in pages) {
+    //             const pluridPage = pages[pageID];
+    //             if (pluridPage.root) {
+    //                 const page: TreePage = {
+    //                     planeID: pluridPage.id || '',
+    //                     location: {
+    //                         rotateX: 0,
+    //                         rotateY: 0,
+    //                         translateX: 0,
+    //                         translateY: 0,
+    //                         translateZ: 0,
+    //                     },
+    //                     path: pluridPage.path,
+    //                     show: true,
+    //                 };
+    //                 roots.push(page);
+    //             }
+    //         }
+    //     }
 
-        setRoots(roots);
-    }, [
-        tree,
-    ]);
+    //     setRoots(roots);
+    // }, [
+    //     tree,
+    // ]);
 
     return (
         <StyledPluridRoots
@@ -117,7 +117,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 // transformOrigin: `${viewSize.width * planeWidth/2}px ${spaceTranslationY}px`,
             }}
         >
-            {roots.map(page => {
+            {tree.map(page => {
                 return (
                     <PluridRoot
                         key={page.path}

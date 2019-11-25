@@ -73,6 +73,7 @@ export interface ViewOwnProperties {
 }
 
 interface ViewStateProperties {
+    configuration: any;
     spaceLoading: boolean;
     tree: TreePage[];
     viewSize: ViewSize;
@@ -118,6 +119,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         appProperties,
 
         /** state */
+        configuration: stateConfiguration,
         spaceLoading,
         tree,
         viewSize,
@@ -348,29 +350,24 @@ const View: React.FC<ViewProperties> = (properties) => {
 
             dispatchSetDocuments(documents);
             dispatchSetActiveDocument('default');
-
-            // if (_pages) {
-            //     const computedTree = computeSpaceTree(_pages, mergedConfiguration);
-            //     setTree(computedTree);
-            // }
         }
 
         if (documents) {
             // create multiple documents
         }
 
-        // if (viewElement && viewElement.current) {
-        //     setViewSize({
-        //         height: viewElement.current.offsetHeight,
-        //         width: viewElement.current.offsetWidth,
-        //     });
-        // }
+        if (viewElement && viewElement.current) {
+            setViewSize({
+                height: viewElement.current.offsetHeight,
+                width: viewElement.current.offsetWidth,
+            });
+        }
     }, [
         pages,
         documents,
     ]);
 
-    /** Configuration, Pages, Documents */
+    /** Configuration */
     useEffect(() => {
         const mergedConfiguration = { ...defaultConfiguration, ...configuration };
 
@@ -406,12 +403,54 @@ const View: React.FC<ViewProperties> = (properties) => {
         if (activeDocumentID) {
             const activeDocument = dataDocuments[activeDocumentID];
             const pages = activeDocument.pages;
-
             console.log('pages', pages);
+
+            const activeContextDocument = contextDocuments[activeDocumentID];
+            const contextPages = activeContextDocument.pages;
+            console.log('contextPages', contextPages);
+
+            const treePages: TreePage[] = [];
+            for (const pageID in pages) {
+                const contextPage = contextPages[pageID];
+                const treePage: TreePage = {
+                    planeID: uuid(),
+                    path: contextPage.path,
+                    location: {
+                        translateX: 0,
+                        translateY: 0,
+                        translateZ: 0,
+                        rotateX: 0,
+                        rotateY: 0,
+                    },
+                    show: true,
+                };
+                treePages.push(treePage);
+            }
+            setTree(treePages);
+
+
+            // const pluridPages: PluridPage[] = [];
+            // for (const pageID in pages) {
+            //     const contextPage = contextPages[pageID];
+            //     const pluridPage: PluridPage = {
+            //         path: contextPage.path,
+            //         component: contextPage.component,
+            //     };
+            //     pluridPages.push(pluridPage);
+            // }
+            // console.log('pluridPages', pluridPages);
+            // setTree(pluridPages);
+
+            // const computedTree = computeSpaceTree(pluridPages, stateConfiguration);
+            // console.log('computedTree', computedTree);
+            // setTree(computedTree);
+            // setTree(pluridPages);
         }
     }, [
+        stateConfiguration,
         activeDocumentID,
         dataDocuments,
+        contextDocuments,
     ]);
 
     const viewContainer = handleView(pages, documents);
@@ -444,6 +483,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
 
 const mapStateToProps = (state: AppState): ViewStateProperties => ({
+    configuration: selectors.configuration.getConfiguration(state),
     spaceLoading: selectors.space.getLoading(state),
     tree: selectors.space.getTree(state),
     viewSize: selectors.data.getViewSize(state),
