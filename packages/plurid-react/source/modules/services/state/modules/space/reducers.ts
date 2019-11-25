@@ -51,7 +51,7 @@ const initialState: SpaceState = {
     translationX: 0,
     translationY: 0,
     translationZ: 0,
-    tree: {},
+    tree: [],
     rotationLocked: false,
     translationLocked: false,
     scaleLocked: false,
@@ -213,9 +213,9 @@ const spaceReducer = (
             {
                 return {
                     ...state,
-                    tree: {
+                    tree: [
                         ...action.payload,
-                    },
+                    ],
                 };
             }
         case TOGGLE_ROTATION_LOCKED:

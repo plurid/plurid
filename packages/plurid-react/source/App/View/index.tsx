@@ -74,7 +74,7 @@ export interface ViewOwnProperties {
 
 interface ViewStateProperties {
     spaceLoading: boolean;
-    tree: Tree;
+    tree: TreePage[];
     viewSize: ViewSize;
     transform: any;
     dataDocuments: Indexed<PluridInternalStateDocument>;
@@ -405,11 +405,10 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         if (activeDocumentID) {
             const activeDocument = dataDocuments[activeDocumentID];
-            console.log('activeDocument', activeDocument);
             const pages = activeDocument.pages;
-            console.log(pages);
+
+            console.log('pages', pages);
         }
-        // compute tree
     }, [
         activeDocumentID,
         dataDocuments,
@@ -468,7 +467,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
 
     setSpaceLoading: (loading: boolean) => dispatch(actions.space.setSpaceLoading(loading)),
     setSpaceLocation: (spaceLocation: any) => dispatch(actions.space.setSpaceLocation(spaceLocation)),
-    setTree: (tree: Tree) => dispatch(actions.space.setTree(tree)),
+    setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
 
     setGeneralTheme: (theme: Theme) => dispatch(actions.themes.setGeneralTheme(theme)),
     setInteractionTheme: (theme: Theme) => dispatch(actions.themes.setInteractionTheme(theme)),

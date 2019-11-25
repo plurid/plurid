@@ -13,7 +13,6 @@ import {
 import PluridRoot from '../PluridRoot';
 
 import {
-    Tree,
     TreePage,
     Indexed,
     PluridInternalStateDocument,
@@ -38,7 +37,7 @@ interface PluridRootsStateProperties {
     spaceRotationY: number;
     spaceTranslationX: number;
     spaceTranslationY: number;
-    tree: Tree;
+    tree: TreePage[];
     documents: Indexed<PluridInternalStateDocument>;
     activeDocumentID: string;
 }
@@ -67,7 +66,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     const {
         pages,
     } = activeDocument;
-    console.log(pages);
+    // console.log(pages);
 
     // traverse tree and push the roots into
     const [roots, setRoots] = useState<TreePage[]>([]);
