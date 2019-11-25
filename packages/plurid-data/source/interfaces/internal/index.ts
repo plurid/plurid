@@ -49,6 +49,7 @@ export interface Tree {
 
 
 export interface TreePage {
+    id: string;
     planeID: string;
     parentPlaneID?: string;
     path: string;
