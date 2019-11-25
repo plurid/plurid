@@ -15,6 +15,8 @@ import PluridRoot from '../PluridRoot';
 import {
     Tree,
     TreePage,
+    Indexed,
+    PluridDocument,
 } from '@plurid/plurid-data';
 
 import { AppState } from '../../services/state/store';
@@ -37,6 +39,8 @@ interface PluridRootsStateProperties {
     spaceTranslationX: number;
     spaceTranslationY: number;
     tree: Tree;
+    documents: Indexed<PluridDocument>;
+    activeDocumentID: string;
 }
 
 interface PluridRootsDispatchProperties {
@@ -55,7 +59,15 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         spaceTranslationX,
         spaceTranslationY,
         tree,
+        documents,
+        activeDocumentID,
     } = properties;
+
+    // get the active document id
+    // get the pages
+    //
+    const activeDocument = documents[activeDocumentID];
+    console.log(activeDocument);
 
     // traverse tree and push the roots into
     const [roots, setRoots] = useState<TreePage[]>([]);
@@ -114,6 +126,8 @@ const mapStateToProps = (state: AppState): PluridRootsStateProperties => ({
     spaceTranslationX: selectors.space.getTranslationX(state),
     spaceTranslationY: selectors.space.getTranslationY(state),
     tree: selectors.space.getTree(state),
+    documents: selectors.data.getDocuments(state),
+    activeDocumentID: selectors.space.getActiveDocumentID(state),
 });
 
 

@@ -152,6 +152,8 @@ const View: React.FC<ViewProperties> = (properties) => {
     const [eventListenersSet, setEventListenersSet] = useState(false);
     const [initialized, setInitialized] = useState(false);
 
+    const [contextDocuments, setContextDocuments] = useState({});
+
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         handleGlobalShortcuts(
             dispatch,
@@ -291,11 +293,16 @@ const View: React.FC<ViewProperties> = (properties) => {
         if (!documents && pages) {
             // create a document and add pages to it
             const documentPages: Indexed<PluridPage> = {};
+            const contextPages = {};
+
             pages.map(page => {
                 const id = page.id || uuid();
                 const _page = {
                     ...page,
                     id,
+                };
+                contextPages[id] = {
+                    ..._page,
                 };
                 delete _page.component;
                 documentPages[id] = {
@@ -312,6 +319,16 @@ const View: React.FC<ViewProperties> = (properties) => {
             const documents = {
                 default: document,
             };
+
+            const contextDocument = {
+                id: 'default',
+                name: 'default',
+                pages: contextPages,
+            };
+            const contextDocuments = {
+                default: contextDocument,
+            }
+            setContextDocuments(contextDocuments);
 
             dispatchSetDocuments(documents);
             dispatchSetActiveDocument('default');
@@ -389,7 +406,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         pageContext: appProperties.pageContext,
         pageContextValue: appProperties.pageContextValue,
         // documents: documents || [],
-        documents: {},
+        documents: contextDocuments,
     };
 
     return (
