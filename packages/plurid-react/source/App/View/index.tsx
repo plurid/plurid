@@ -73,6 +73,8 @@ interface ViewStateProperties {
     tree: Tree;
     viewSize: ViewSize;
     transform: any;
+    dataDocuments: Indexed<PluridDocument>;
+    activeDocumentID: string;
 }
 
 interface ViewDispatchProperties {
@@ -116,6 +118,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         tree,
         viewSize,
         transform,
+        dataDocuments,
+        activeDocumentID,
 
         /** dispatch */
         dispatch,
@@ -386,6 +390,16 @@ const View: React.FC<ViewProperties> = (properties) => {
         transform,
     ]);
 
+    useEffect(() => {
+        const activeDocument = dataDocuments[activeDocumentID];
+        const pages = activeDocument.pages;
+
+        // compute tree
+    }, [
+        activeDocumentID,
+        dataDocuments,
+    ]);
+
     const viewContainer = handleView(pages, documents);
 
     const pluridContext: PluridContext = {
@@ -423,6 +437,8 @@ const mapStateToProps = (state: AppState): ViewStateProperties => ({
     tree: selectors.space.getTree(state),
     viewSize: selectors.data.getViewSize(state),
     transform: selectors.space.getTransform(state),
+    dataDocuments: selectors.data.getDocuments(state),
+    activeDocumentID: selectors.space.getActiveDocumentID(state),
 });
 
 
