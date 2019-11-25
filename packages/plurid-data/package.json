@@ -24,18 +24,18 @@
     },
     "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-data/README.md",
     "files": [
-        "dist/"
+        "distribution/"
     ],
-    "main": "dist/index.js",
-    "module": "dist/index.es.js",
-    "jsnext:main": "dist/index.es.js",
+    "main": "distribution/index.js",
+    "module": "distribution/index.es.js",
+    "jsnext:main": "distribution/index.es.js",
     "engines": {
         "node": ">=8",
         "npm": ">=6"
     },
     "scripts": {
-        "clean": "rm -rf ./dist",
-        "lint": "eslint ./src --ext .ts,.tsx",
+        "clean": "rm -rf ./distribution",
+        "lint": "eslint ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
         "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
         "build.prod": "rollup -c --environment MODE_ENV:production",
@@ -50,8 +50,8 @@
         "@types/react": "^16.9.13",
         "@typescript-eslint/eslint-plugin": "^2.8.0",
         "@typescript-eslint/parser": "^2.8.0",
-        "eslint": "^6.7.0",
-        "rollup": "^1.27.4",
+        "eslint": "^6.7.1",
+        "rollup": "^1.27.5",
         "rollup-plugin-typescript2": "^0.25.2",
         "typescript": "^3.7.2"
     }
