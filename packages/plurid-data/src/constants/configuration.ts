@@ -4,7 +4,7 @@ import {
 
 
 
-const defaultConfiguration: PluridConfiguration = {
+export const defaultConfiguration: PluridConfiguration = {
     theme: 'plurid',
     micro: false,
     toolbar: true,
@@ -23,6 +23,3 @@ const defaultConfiguration: PluridConfiguration = {
         center: true,
     },
 }
-
-
-export default defaultConfiguration;
