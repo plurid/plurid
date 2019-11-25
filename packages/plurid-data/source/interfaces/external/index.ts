@@ -156,9 +156,14 @@ export interface PluridConfiguration {
     space: PluridConfigurationSpace;
 
     /**
-     * Triggered when the pathbar from the controls has an onChange event
+     * Executed when the pathbar from the controls has an `onChange` event.
      */
-    pathChange?: (event: any, pageID: string) => void;
+    pathbarOnChange?: (event: any, pageID: string) => void;
+
+    /**
+     * Executed when the pathbar from the controls has an `keyDown` event.
+     */
+    pathbarOnKeyDown?: (event: any, pageID: string) => void;
 
     // Future:
     // To change the browser URL depending on the active plane/plane in sight.
