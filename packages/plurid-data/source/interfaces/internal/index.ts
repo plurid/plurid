@@ -1,17 +1,45 @@
 import {
-    PluridPage,
     PluridPageContext,
-    PluridDocument,
     Indexed,
+    PluridComponentReact,
 } from '../external';
 
 
 
+export interface PluridInternalPage {
+    id: string;
+    path: string;
+}
+
+export interface PluridInternalStatePage extends PluridInternalPage {
+    root: boolean;
+    ordinal: number;
+}
+
+export interface PluridInternalContextPage extends PluridInternalPage {
+    component: PluridComponentReact;
+}
+
+
+export interface PluridInternalDocument {
+    id: string;
+    name: string;
+}
+
+export interface PluridInternalStateDocument extends PluridInternalDocument {
+    ordinal: number;
+    pages: Indexed<PluridInternalPage>;
+}
+
+export interface PluridInternalContextDocument extends PluridInternalDocument {
+    pages: Indexed<PluridInternalContextPage>;
+}
+
+
 export interface PluridContext {
-    pages: Indexed<PluridPage>;
     pageContext?: PluridPageContext<any>,
     pageContextValue?: any,
-    documents: Indexed<PluridDocument>;
+    documents: Indexed<PluridInternalContextDocument>;
 }
 
 
