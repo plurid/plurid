@@ -1,4 +1,5 @@
 import {
+    Tree,
     TreePage,
     SpaceLocation,
 } from '@plurid/plurid-data';
