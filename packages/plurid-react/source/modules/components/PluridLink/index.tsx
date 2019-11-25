@@ -16,7 +16,7 @@ import {
 
 import {
     PluridLink as PluridLinkOwnProperties,
-    TreePage,
+    Tree,
 } from '@plurid/plurid-data';
 
 import {
@@ -39,7 +39,7 @@ import actions from '../../services/state/actions';
 
 
 interface PluridLinkStateProperties {
-    tree: TreePage[],
+    tree: Tree,
     generalTheme: Theme,
 }
 
@@ -105,31 +105,31 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
     }
 
     const handleShowPluridPlane = () => {
-        if (!showLink && !pluridPlaneID) {
-            const parentPlaneID = getPluridPlaneIDByData(element.current);
+        // if (!showLink && !pluridPlaneID) {
+        //     const parentPlaneID = getPluridPlaneIDByData(element.current);
 
-            const linkCoordinates = getPluridLinkCoordinates();
+        //     const linkCoordinates = getPluridLinkCoordinates();
 
-            const {
-                pluridPlaneID,
-                updatedTree,
-            } = updateTreeWithNewPage(
-                tree,
-                parentPlaneID,
-                page,
-                linkCoordinates,
-            );
+        //     const {
+        //         pluridPlaneID,
+        //         updatedTree,
+        //     } = updateTreeWithNewPage(
+        //         tree,
+        //         parentPlaneID,
+        //         page,
+        //         linkCoordinates,
+        //     );
 
-            if (pluridPlaneID) {
-                setTree(updatedTree);
-                setShowLink(true);
-                setPluridPlaneID(pluridPlaneID);
-            }
-        } else {
-            const updatedTree = togglePageFromTree(tree, pluridPlaneID);
-            setTree(updatedTree);
-            setShowLink(show => !show);
-        }
+        //     if (pluridPlaneID) {
+        //         setTree(updatedTree);
+        //         setShowLink(true);
+        //         setPluridPlaneID(pluridPlaneID);
+        //     }
+        // } else {
+        //     const updatedTree = togglePageFromTree(tree, pluridPlaneID);
+        //     setTree(updatedTree);
+        //     setShowLink(show => !show);
+        // }
     }
 
     const handleClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -166,7 +166,7 @@ const mapStateToProps = (state: AppState): PluridLinkStateProperties => ({
 
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridLinkDispatchProperties => ({
-    setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
+    setTree: (tree: Tree) => dispatch(actions.space.setTree(tree)),
 });
 
 

@@ -1,7 +1,7 @@
 import { AppState } from '../store';
 
 import {
-    TreePage,
+    Tree,
 } from '@plurid/plurid-data';
 
 
@@ -13,7 +13,7 @@ const getTranslationX = (state: AppState): number => state.space.translationX;
 const getTranslationY = (state: AppState): number => state.space.translationY;
 const getTranslationZ = (state: AppState): number => state.space.translationZ;
 const getScale = (state: AppState): number => state.space.scale;
-const getTree = (state: AppState): TreePage[] => state.space.tree;
+const getTree = (state: AppState): Tree => state.space.tree;
 const getTransform = (state: AppState) => {
     return {
         rotationX: state.space.rotationX,
