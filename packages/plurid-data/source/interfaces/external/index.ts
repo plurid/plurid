@@ -113,12 +113,22 @@ export interface PluridComponentProperties {
 
 
 export interface PluridDocument {
+    /**
+     * Optional, application-wide unique identifier.
+     */
+    id?: string;
+
+    /**
+     * Does not have to be unique.
+     */
     name: string;
+
     pages: PluridPage[];
 
     /**
-     * By default, the order the documents are shown in is based on their index in the documents[].
-     * The ordinal can be used to overrule the default order. Does not have to be unique.
+     * By default, the order the documents are shown in is based on their index in the `documents[]`.
+     * The ordinal can be used to overrule the default order.
+     * If not unique, the documents with equal `ordinal` will be ordered by index.
      */
     ordinal?: number;
 }
