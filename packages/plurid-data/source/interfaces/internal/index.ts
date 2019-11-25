@@ -2,15 +2,16 @@ import {
     PluridPage,
     PluridPageContext,
     PluridDocument,
+    Indexed,
 } from '../external';
 
 
 
 export interface PluridContext {
-    pages: PluridPage[];
+    pages: Indexed<PluridPage>;
     pageContext?: PluridPageContext<any>,
     pageContextValue?: any,
-    documents: PluridDocument[];
+    documents: Indexed<PluridDocument>;
 }
 
 
