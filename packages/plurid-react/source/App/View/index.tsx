@@ -11,6 +11,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import {
     PluridApp as PluridAppProperties,
     PluridConfiguration as PluridAppConfiguration,
+    Tree,
     TreePage,
     defaultConfiguration,
 } from '@plurid/plurid-data';
@@ -65,7 +66,7 @@ export interface ViewOwnProperties {
 
 interface ViewStateProperties {
     spaceLoading: boolean;
-    tree: TreePage[];
+    tree: Tree;
     viewSize: ViewSize;
     transform: any;
 }
@@ -256,26 +257,26 @@ const View: React.FC<ViewProperties> = (properties) => {
     ]);
 
     /** Resize Listener */
-    useEffect(() => {
-        const handleResize = debounce(() => {
-            if (viewElement && viewElement.current) {
-                setViewSize({
-                    height: viewElement.current.offsetHeight,
-                    width: viewElement.current.offsetWidth,
-                });
-                const recomputedTree = recomputeSpaceTreeLocations(tree);
-                setTree(recomputedTree);
-            }
-        }, 150);
+    // useEffect(() => {
+    //     const handleResize = debounce(() => {
+    //         if (viewElement && viewElement.current) {
+    //             setViewSize({
+    //                 height: viewElement.current.offsetHeight,
+    //                 width: viewElement.current.offsetWidth,
+    //             });
+    //             const recomputedTree = recomputeSpaceTreeLocations(tree);
+    //             setTree(recomputedTree);
+    //         }
+    //     }, 150);
 
-        window.addEventListener('resize', handleResize);
+    //     window.addEventListener('resize', handleResize);
 
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        }
-    }, [
-        tree,
-    ]);
+    //     return () => {
+    //         window.removeEventListener('resize', handleResize);
+    //     }
+    // }, [
+    //     tree,
+    // ]);
 
     /** Configuration, Pages, Documents */
     useEffect(() => {
@@ -311,10 +312,10 @@ const View: React.FC<ViewProperties> = (properties) => {
             });
         }
 
-        if (_pages) {
-            const computedTree = computeSpaceTree(_pages, mergedConfiguration);
-            setTree(computedTree);
-        }
+        // if (_pages) {
+        //     const computedTree = computeSpaceTree(_pages, mergedConfiguration);
+        //     setTree(computedTree);
+        // }
 
         setSpaceLoading(false);
     }, [
@@ -387,7 +388,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
 
     setSpaceLoading: (loading: boolean) => dispatch(actions.space.setSpaceLoading(loading)),
     setSpaceLocation: (spaceLocation: any) => dispatch(actions.space.setSpaceLocation(spaceLocation)),
-    setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
+    setTree: (tree: Tree) => dispatch(actions.space.setTree(tree)),
 
     setGeneralTheme: (theme: Theme) => dispatch(actions.themes.setGeneralTheme(theme)),
     setInteractionTheme: (theme: Theme) => dispatch(actions.themes.setInteractionTheme(theme)),

@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {
+    useState,
+    useEffect,
+} from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -10,6 +13,7 @@ import {
 import PluridRoot from '../PluridRoot';
 
 import {
+    Tree,
     TreePage,
 } from '@plurid/plurid-data';
 
@@ -32,7 +36,7 @@ interface PluridRootsStateProperties {
     spaceRotationY: number;
     spaceTranslationX: number;
     spaceTranslationY: number;
-    tree: TreePage[];
+    tree: Tree;
 }
 
 interface PluridRootsDispatchProperties {
@@ -53,6 +57,24 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         tree,
     } = properties;
 
+    // traverse tree and push the roots into
+    const [roots, setRoots] = useState<TreePage[]>([]);
+
+    useEffect(() => {
+        const roots: TreePage[] = [];
+
+        for (const pageID in tree) {
+            const page = tree[pageID];
+            if (page) {
+                roots.push(page);
+            }
+        }
+
+        setRoots(roots);
+    }, [
+        tree,
+    ]);
+
     return (
         <StyledPluridRoots
             style={{
@@ -70,7 +92,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 // transformOrigin: `${viewSize.width * planeWidth/2}px ${spaceTranslationY}px`,
             }}
         >
-            {tree.map(page => {
+            {roots.map(page => {
                 return (
                     <PluridRoot
                         key={page.path}

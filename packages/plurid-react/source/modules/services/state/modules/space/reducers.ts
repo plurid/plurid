@@ -49,7 +49,7 @@ const initialState: SpaceState = {
     translationX: 0,
     translationY: 0,
     translationZ: 0,
-    tree: [],
+    tree: {},
     rotationLocked: false,
     translationLocked: false,
     scaleLocked: false,
@@ -62,79 +62,127 @@ const spaceReducer = (
     switch(action.type) {
         case SET_SPACE_LOADING:
             {
-                return { ...state, loading: action.payload };
+                return {
+                    ...state,
+                    loading: action.payload,
+                };
             }
         case SET_SPACE_LOCATION:
             {
-                return { ...state, ...action.payload };
+                return {
+                    ...state,
+                    ...action.payload,
+                };
             }
         case ROTATE_UP:
             {
                 const rotationX = (state.rotationX + ROTATION_STEP) % 360;
-                return { ...state, rotationX };
+                return {
+                    ...state,
+                    rotationX,
+                };
             }
         case ROTATE_DOWN:
             {
                 const rotationX = (state.rotationX - ROTATION_STEP) % 360;
-                return { ...state, rotationX };
+                return {
+                    ...state,
+                    rotationX,
+                };
             }
         case ROTATE_X:
             {
-                return { ...state, rotationX: action.payload };
+                return {
+                    ...state,
+                    rotationX: action.payload,
+                };
             }
         case ROTATE_X_WITH:
             {
                 const rotationX = state.rotationX + action.payload;
-                return { ...state, rotationX };
+                return {
+                    ...state,
+                    rotationX,
+                };
             }
         case ROTATE_LEFT:
             {
                 const rotationY = (state.rotationY + ROTATION_STEP) % 360;
-                return { ...state, rotationY };
+                return {
+                    ...state,
+                    rotationY,
+                };
             }
         case ROTATE_RIGHT:
             {
                 const rotationY = (state.rotationY - ROTATION_STEP) % 360;
-                return { ...state, rotationY };
+                return {
+                    ...state,
+                    rotationY,
+                };
             }
         case ROTATE_Y:
             {
-                return { ...state, rotationY: action.payload };
+                return {
+                    ...state,
+                    rotationY: action.payload,
+                };
             }
         case ROTATE_Y_WITH:
             {
                 const rotationY = state.rotationY + action.payload;
-                return { ...state, rotationY };
+                return {
+                    ...state,
+                    rotationY,
+                };
             }
         case TRANSLATE_UP:
             {
                 const translationY = state.translationY - TRANSLATION_STEP;
-                return { ...state, translationY };
+                return {
+                    ...state,
+                    translationY,
+                };
             }
         case TRANSLATE_DOWN:
             {
                 const translationY = state.translationY + TRANSLATION_STEP;
-                return { ...state, translationY };
+                return {
+                    ...state,
+                    translationY,
+                };
             }
         case TRANSLATE_LEFT:
             {
                 const translationX = state.translationX - TRANSLATION_STEP;
-                return { ...state, translationX };
+                return {
+                    ...state,
+                    translationX,
+                };
             }
         case TRANSLATE_RIGHT:
             {
                 const translationX = state.translationX + TRANSLATION_STEP;
-                return { ...state, translationX };
+                return {
+                    ...state,
+                    translationX,
+                };
             }
         case TRANSLATE_X_WITH:
             {
                 const translationX = state.translationX + action.payload;
-                return { ...state, translationX };
+                return {
+                    ...state,
+                    translationX,
+                };
             }
         case TRANSLATE_Y_WITH:
             {
                 const translationY = state.translationY + action.payload;
-                return { ...state, translationY };
+                return {
+                    ...state,
+                    translationY,
+                };
             }
         case SCALE_UP:
             {
@@ -142,7 +190,10 @@ const spaceReducer = (
                 const scale = computedScale < SCALE_UPPER_LIMIT
                     ? computedScale
                     : SCALE_UPPER_LIMIT;
-                return { ...state, scale };
+                return {
+                    ...state,
+                    scale,
+                };
             }
         case SCALE_DOWN:
             {
@@ -150,11 +201,19 @@ const spaceReducer = (
                 const scale = computedScale > SCALE_LOWER_LIMIT
                     ? computedScale
                     : SCALE_LOWER_LIMIT;
-                return { ...state, scale };
+                return {
+                    ...state,
+                    scale,
+                };
             }
         case SET_TREE:
             {
-                return { ...state, tree: action.payload };
+                return {
+                    ...state,
+                    tree: {
+                        ...action.payload,
+                    },
+                };
             }
         case TOGGLE_ROTATION_LOCKED:
             {

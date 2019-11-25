@@ -1,5 +1,5 @@
 import {
-    TreePage,
+    Tree,
     SpaceLocation,
 } from '@plurid/plurid-data';
 
@@ -178,7 +178,7 @@ export const scaleDown = (): ScaleDownAction => {
 }
 
 
-export const setTree = (payload: TreePage[]): SetTreeAction => {
+export const setTree = (payload: Tree): SetTreeAction => {
     return {
         type: SET_TREE,
         payload,

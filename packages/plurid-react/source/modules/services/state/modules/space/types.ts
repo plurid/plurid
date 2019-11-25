@@ -1,6 +1,5 @@
 import {
     Tree,
-    TreePage,
     SpaceLocation,
 } from '@plurid/plurid-data';
 
@@ -113,7 +112,7 @@ export const SET_TREE = 'SET_TREE';
 
 export interface SetTreeAction {
     type: typeof SET_TREE;
-    payload: TreePage[];
+    payload: Tree;
 }
 
 
@@ -146,7 +145,7 @@ export interface SpaceState {
     translationX: number;
     translationY: number;
     translationZ: number;
-    tree: TreePage[];
+    tree: Tree;
     rotationLocked: boolean;
     translationLocked: boolean;
     scaleLocked: boolean;
