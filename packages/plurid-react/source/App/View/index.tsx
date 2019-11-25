@@ -403,9 +403,12 @@ const View: React.FC<ViewProperties> = (properties) => {
     ]);
 
     useEffect(() => {
-        const activeDocument = dataDocuments[activeDocumentID];
-        const pages = activeDocument.pages;
-
+        if (activeDocumentID) {
+            const activeDocument = dataDocuments[activeDocumentID];
+            console.log('activeDocument', activeDocument);
+            const pages = activeDocument.pages;
+            console.log(pages);
+        }
         // compute tree
     }, [
         activeDocumentID,

@@ -25,10 +25,9 @@ interface PluridRootProperties {
 
 const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const context: PluridContext = useContext(Context);
-    console.log(context);
+    // console.log(context);
 
     const {
-        pages,
         pageContext: PageContext,
         pageContextValue,
         documents,
@@ -45,52 +44,52 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const [childrenPlanes, setChildrenPlanes] = useState<JSX.Element[]>([]);
 
     const computeChildrenPlanes = (page: TreePage) => {
-        if (page.children) {
-            page.children.map(child => {
-                const _page = pages[page.path];
-                // const _page = pages.find((_page: any) => _page.path === child.path);
+        // if (page.children) {
+        //     page.children.map(child => {
+        //         const _page = pages[page.path];
+        //         // const _page = pages.find((_page: any) => _page.path === child.path);
 
-                let plane = (<></>);
-                if (_page) {
-                    // instead of forcing show here to pass it as prop
-                    // and change the opacity
-                    const Page = _page.component.element;
-                    const properties = _page.component.properties || {};
+        //         let plane = (<></>);
+        //         if (_page) {
+        //             // instead of forcing show here to pass it as prop
+        //             // and change the opacity
+        //             const Page = _page.component.element;
+        //             const properties = _page.component.properties || {};
 
-                    plane = (
-                        <PluridPlane
-                            key={child.planeID}
-                            page={_page}
-                            treePage={child}
-                            planeID={child.planeID}
-                            location={child.location}
-                        >
-                            {!PageContext
-                                ? (
-                                    <Page
-                                        {...properties}
-                                    />
-                                ) : (
-                                    <PageContext.Provider
-                                        value={pageContextValue}
-                                    >
-                                        <Page
-                                            {...properties}
-                                        />
-                                    </PageContext.Provider>
-                                )
-                            }
-                        </PluridPlane>
-                    );
+        //             plane = (
+        //                 <PluridPlane
+        //                     key={child.planeID}
+        //                     page={_page}
+        //                     treePage={child}
+        //                     planeID={child.planeID}
+        //                     location={child.location}
+        //                 >
+        //                     {!PageContext
+        //                         ? (
+        //                             <Page
+        //                                 {...properties}
+        //                             />
+        //                         ) : (
+        //                             <PageContext.Provider
+        //                                 value={pageContextValue}
+        //                             >
+        //                                 <Page
+        //                                     {...properties}
+        //                                 />
+        //                             </PageContext.Provider>
+        //                         )
+        //                     }
+        //                 </PluridPlane>
+        //             );
 
-                    setChildrenPlanes(planes => [...planes, plane]);
-                }
+        //             setChildrenPlanes(planes => [...planes, plane]);
+        //         }
 
-                if (child.children) {
-                    computeChildrenPlanes(child);
-                }
-            });
-        }
+        //         if (child.children) {
+        //             computeChildrenPlanes(child);
+        //         }
+        //     });
+        // }
     }
 
     /** Compute children planes */
