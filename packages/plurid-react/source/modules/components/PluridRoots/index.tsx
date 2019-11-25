@@ -63,11 +63,11 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         activeDocumentID,
     } = properties;
 
-    // get the active document id
-    // get the pages
-    //
     const activeDocument = documents[activeDocumentID];
-    console.log(activeDocument);
+    const {
+        pages,
+    } = activeDocument;
+    console.log(pages);
 
     // traverse tree and push the roots into
     const [roots, setRoots] = useState<TreePage[]>([]);
@@ -75,10 +75,24 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     useEffect(() => {
         const roots: TreePage[] = [];
 
-        for (const pageID in tree) {
-            const page = tree[pageID];
-            if (page) {
-                roots.push(page);
+        if (!Array.isArray(pages)) {
+            for (const pageID in pages) {
+                const pluridPage = pages[pageID];
+                if (pluridPage.root) {
+                    const page: TreePage = {
+                        planeID: pluridPage.id || '',
+                        location: {
+                            rotateX: 0,
+                            rotateY: 0,
+                            translateX: 0,
+                            translateY: 0,
+                            translateZ: 0,
+                        },
+                        path: pluridPage.path,
+                        show: true,
+                    };
+                    roots.push(page);
+                }
             }
         }
 

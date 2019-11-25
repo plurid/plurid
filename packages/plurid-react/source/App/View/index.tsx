@@ -152,7 +152,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     const [eventListenersSet, setEventListenersSet] = useState(false);
     const [initialized, setInitialized] = useState(false);
 
-    const [contextDocuments, setContextDocuments] = useState({});
+    const [contextDocuments, setContextDocuments] = useState<Indexed<PluridDocument>>({});
 
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         handleGlobalShortcuts(
@@ -332,34 +332,22 @@ const View: React.FC<ViewProperties> = (properties) => {
 
             dispatchSetDocuments(documents);
             dispatchSetActiveDocument('default');
+
+            // if (_pages) {
+            //     const computedTree = computeSpaceTree(_pages, mergedConfiguration);
+            //     setTree(computedTree);
+            // }
         }
 
         if (documents) {
             // create multiple documents
         }
 
-
-        // const _documents = documents && documents.map(document => {
-        //     const _documentPages = document.pages.map(documentPage => {
-        //         const _page = { ...documentPage };
-        //         delete _page.component;
-        //         return _page;
-        //     });
-        //     return { ...document, pages: _documentPages};
-        // }) || [];
-        // setDocuments(_documents);
-
         // if (viewElement && viewElement.current) {
         //     setViewSize({
         //         height: viewElement.current.offsetHeight,
         //         width: viewElement.current.offsetWidth,
         //     });
-        // }
-
-
-        // if (_pages) {
-        //     const computedTree = computeSpaceTree(_pages, mergedConfiguration);
-        //     setTree(computedTree);
         // }
     }, [
         pages,

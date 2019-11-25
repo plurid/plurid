@@ -25,11 +25,13 @@ interface PluridRootProperties {
 
 const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const context: PluridContext = useContext(Context);
+    console.log(context);
 
     const {
         pages,
         pageContext: PageContext,
         pageContextValue,
+        documents,
     } = context;
 
     const {
@@ -103,7 +105,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     ]);
 
     // const pluridPage = pages.find(pluridPage => pluridPage.path === page.path);
-    const pluridPage = pages[page.path];
+    const activeDocument = documents['default'];
+    const activePages = activeDocument.pages;
+
+    const pluridPage = activePages[page.planeID];
     if (!pluridPage) {
         return (<></>);
     }
