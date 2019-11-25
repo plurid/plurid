@@ -7,7 +7,6 @@ import {
 
 
 const defaultContext: PluridContext = {
-    pages: {},
     documents: {},
 }
 
