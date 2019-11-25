@@ -14,6 +14,11 @@ export interface PluridContext {
 }
 
 
+export interface Tree {
+    [key: string]: TreePage;
+}
+
+
 export interface TreePage {
     planeID: string;
     parentPlaneID?: string;
