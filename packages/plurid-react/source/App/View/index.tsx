@@ -13,6 +13,7 @@ import {
     PluridConfiguration as PluridAppConfiguration,
     Tree,
     TreePage,
+    PluridContext,
     defaultConfiguration,
 } from '@plurid/plurid-data';
 
@@ -278,22 +279,41 @@ const View: React.FC<ViewProperties> = (properties) => {
     //     tree,
     // ]);
 
-    /** Configuration, Pages, Documents */
+    /** Pages, Documents */
     useEffect(() => {
-        const mergedConfiguration = { ...defaultConfiguration, ...configuration };
+        if (!documents && pages) {
+            // create a document and add pages to it
+            const _pages = pages.map(page => {
+                const id = page.id || uuid();
+                const _page = { ...page, id };
+                delete _page.component;
+                return _page;
+            }) || [];
 
-        if (!initialized) {
-            handleConfiguration(mergedConfiguration);
-            setInitialized(true);
+            const document = {
+                id: '',
+                pages: _pages,
+            };
+
+            // const tree = {};
+            // _pages.map(page => {
+            //     const treePage = {
+            //         ...page,
+            //     }
+            //     tree[treePage.id] = treePage;
+            // });
+            // console.log(_pages);
+            // console.log(tree);
+            // // setTree(tree);
+
+            setPages(_pages);
         }
 
-        const _pages = pages && pages.map(page => {
-            const id = uuid();
-            const _page = { ...page, id };
-            delete _page.component;
-            return _page;
-        }) || [];
-        setPages(_pages);
+        if (documents) {
+            // create multiple documents
+        }
+
+
 
         const _documents = documents && documents.map(document => {
             const _documentPages = document.pages.map(documentPage => {
@@ -312,21 +332,23 @@ const View: React.FC<ViewProperties> = (properties) => {
             });
         }
 
-        const tree = {};
-        _pages.map(page => {
-            const treePage = {
-                ...page,
-            }
-            tree[treePage.id] = treePage;
-        });
-        console.log(_pages);
-        console.log(tree);
-        // setTree(tree);
-
         // if (_pages) {
         //     const computedTree = computeSpaceTree(_pages, mergedConfiguration);
         //     setTree(computedTree);
         // }
+    }, [
+        pages,
+        documents,
+    ]);
+
+    /** Configuration, Pages, Documents */
+    useEffect(() => {
+        const mergedConfiguration = { ...defaultConfiguration, ...configuration };
+
+        if (!initialized) {
+            handleConfiguration(mergedConfiguration);
+            setInitialized(true);
+        }
 
         setSpaceLoading(false);
     }, [
@@ -353,6 +375,13 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     const viewContainer = handleView(pages, documents);
 
+    const pluridContext: PluridContext = {
+        pages: pages || [],
+        pageContext: appProperties.pageContext,
+        pageContextValue: appProperties.pageContextValue,
+        documents: documents || [],
+    };
+
     return (
         <StyledView
             ref={viewElement}
@@ -363,12 +392,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                     <GlobalStyle />
 
                     <Context.Provider
-                        value={{
-                            pages: pages || [],
-                            pageContext: appProperties.pageContext,
-                            pageContextValue: appProperties.pageContextValue,
-                            documents: documents || [],
-                        }}
+                        value={pluridContext}
                     >
                         {viewContainer}
                     </Context.Provider>
