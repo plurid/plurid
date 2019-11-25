@@ -1,6 +1,7 @@
 import {
     PluridPage,
     PluridConfiguration,
+    Tree,
     TreePage,
     SpaceLocation,
     LocationCoordinates,
@@ -54,8 +55,8 @@ export const computeRootLocationX = (
 export const computeSpaceTree = (
     pages: PluridPage[],
     configuration?: PluridConfiguration,
-): TreePage[] => {
-    const tree: TreePage[] = [];
+): Tree => {
+    const tree: Tree = {};
 
     const roots = pages.filter(page => page.root);
     if (roots.length === 0) {
@@ -67,60 +68,61 @@ export const computeSpaceTree = (
         || !configuration.space.layout
     ) {
         const columnLayoutTree = computeColumnLayout(roots);
-        return columnLayoutTree;
+        // return columnLayoutTree;
+        return tree;
     }
 
     switch(configuration.space.layout.type) {
-        case 'COLUMNS':
-            {
-                const {
-                    columns,
-                } = configuration.space.layout;
-                const columnLayoutTree = computeColumnLayout(roots, columns);
-                return columnLayoutTree;
-            }
-        case 'ZIG_ZAG':
-            {
-                const {
-                    angle,
-                } = configuration.space.layout;
-                const zigzagLayoutTree = computeZigZagLayout(roots, angle);
-                return zigzagLayoutTree;
-            }
-        case 'FACE_TO_FACE':
-            {
-                const {
-                    halfAngle,
-                    middleSpace,
-                    middleVideos,
-                } = configuration.space.layout;
-                const faceToFaceLayoutTree = computeFaceToFaceLayout(
-                    roots,
-                    halfAngle,
-                    middleSpace,
-                    middleVideos,
-                );
-                return faceToFaceLayoutTree;
-            }
-        case 'SHEAVES':
-            {
-                const {
-                    depth,
-                    offsetX,
-                    offsetY,
-                } = configuration.space.layout;
-                const sheavesLayoutTree = computeSheavesLayout(
-                    roots,
-                    depth,
-                    offsetX,
-                    offsetY,
-                );
-                return sheavesLayoutTree;
-            }
-        case 'META':
-            {
-                return tree;
-            }
+    //     case 'COLUMNS':
+    //         {
+    //             const {
+    //                 columns,
+    //             } = configuration.space.layout;
+    //             const columnLayoutTree = computeColumnLayout(roots, columns);
+    //             return columnLayoutTree;
+    //         }
+    //     case 'ZIG_ZAG':
+    //         {
+    //             const {
+    //                 angle,
+    //             } = configuration.space.layout;
+    //             const zigzagLayoutTree = computeZigZagLayout(roots, angle);
+    //             return zigzagLayoutTree;
+    //         }
+    //     case 'FACE_TO_FACE':
+    //         {
+    //             const {
+    //                 halfAngle,
+    //                 middleSpace,
+    //                 middleVideos,
+    //             } = configuration.space.layout;
+    //             const faceToFaceLayoutTree = computeFaceToFaceLayout(
+    //                 roots,
+    //                 halfAngle,
+    //                 middleSpace,
+    //                 middleVideos,
+    //             );
+    //             return faceToFaceLayoutTree;
+    //         }
+    //     case 'SHEAVES':
+    //         {
+    //             const {
+    //                 depth,
+    //                 offsetX,
+    //                 offsetY,
+    //             } = configuration.space.layout;
+    //             const sheavesLayoutTree = computeSheavesLayout(
+    //                 roots,
+    //                 depth,
+    //                 offsetX,
+    //                 offsetY,
+    //             );
+    //             return sheavesLayoutTree;
+    //         }
+    //     case 'META':
+    //         {
+    //             return tree;
+    //         }
         default:
             return tree;
     }
@@ -301,20 +303,20 @@ export const computeCameraLocationX = (
 
 
 export const recomputeSpaceTreeLocations = (
-    tree: TreePage[],
+    tree: Tree,
 ): TreePage[] => {
     const updatedTree: TreePage[] = [];
     // console.log(tree);
 
-    tree.forEach((page, index) => {
-        const _page = { ...page };
+    // tree.forEach((page, index) => {
+    //     const _page = { ...page };
 
-        const translateX = index === 0
-            ? 0
-            : window.innerWidth * index + ROOTS_GAP;
-        _page.location.translateX = translateX;
-        updatedTree.push(_page);
-    });
+    //     const translateX = index === 0
+    //         ? 0
+    //         : window.innerWidth * index + ROOTS_GAP;
+    //     _page.location.translateX = translateX;
+    //     updatedTree.push(_page);
+    // });
 
     return updatedTree;
 }
