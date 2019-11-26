@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-data",
-    "version": "0.1.35",
+    "version": "0.1.36",
     "description": "Plurid Constants, Interfaces, Enumerations",
     "keywords": [
         "plurid",
@@ -46,7 +46,7 @@
         "@plurid/plurid-pubsub": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-pubsub": "^0.1.1",
+        "@plurid/plurid-pubsub": "^0.1.2",
         "@types/react": "^16.9.13",
         "@typescript-eslint/eslint-plugin": "^2.9.0",
         "@typescript-eslint/parser": "^2.9.0",
