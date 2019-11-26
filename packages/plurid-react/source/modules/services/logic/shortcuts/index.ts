@@ -1,14 +1,16 @@
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-// import {
-//     defaultShortcuts,
-//     SHORTCUTS,
-// } from '@plurid/plurid-data';
+import {
+    defaultShortcuts,
+    SHORTCUTS,
+} from '@plurid/plurid-data';
 
 import actions from '../../state/actions';
 
-import { getWheelDirection } from '@plurid/plurid-engine';
+import {
+    getWheelDirection,
+} from '@plurid/plurid-engine';
 
 
 
