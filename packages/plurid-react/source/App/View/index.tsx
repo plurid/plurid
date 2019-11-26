@@ -80,6 +80,10 @@ interface ViewStateProperties {
     transform: any;
     dataDocuments: Indexed<PluridInternalStateDocument>;
     activeDocumentID: string;
+
+    rotationLocked: boolean;
+    translationLocked: boolean;
+    scaleLocked: boolean;
 }
 
 interface ViewDispatchProperties {
@@ -125,6 +129,11 @@ const View: React.FC<ViewProperties> = (properties) => {
         transform,
         dataDocuments,
         activeDocumentID,
+
+        rotationLocked,
+        translationLocked,
+        scaleLocked,
+
 
         /** dispatch */
         dispatch,
@@ -172,12 +181,23 @@ const View: React.FC<ViewProperties> = (properties) => {
     ]);
 
     const wheelCallback = useCallback((event: WheelEvent) => {
+        const locks = {
+            rotation: rotationLocked,
+            translation: translationLocked,
+            scale: scaleLocked,
+        };
+        console.log(locks);
+
         handleGlobalWheel(
             dispatch,
             event,
+            locks,
         );
     }, [
         dispatch,
+        rotationLocked,
+        translationLocked,
+        scaleLocked,
     ]);
 
     const handleConfiguration = (configuration: PluridAppConfiguration) => {
@@ -485,6 +505,10 @@ const mapStateToProps = (state: AppState): ViewStateProperties => ({
     transform: selectors.space.getTransform(state),
     dataDocuments: selectors.data.getDocuments(state),
     activeDocumentID: selectors.space.getActiveDocumentID(state),
+
+    rotationLocked: selectors.space.getRotationLocked(state),
+    translationLocked: selectors.space.getTranslationLocked(state),
+    scaleLocked: selectors.space.getScaleLocked(state),
 });
 
 
