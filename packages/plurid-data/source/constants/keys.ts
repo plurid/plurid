@@ -1,4 +1,11 @@
-export const KEY_MODIFIERS: any = {
+interface KeyModifiers {
+    SHIFT: string;
+    ALT: string;
+    CTRL: string;
+    META: string;
+}
+
+export const keyModifiers: KeyModifiers = {
     SHIFT: '⇧',
     ALT: '⌥',
     CTRL: '⌃',
