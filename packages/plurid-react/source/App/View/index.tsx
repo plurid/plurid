@@ -281,10 +281,10 @@ const View: React.FC<ViewProperties> = (properties) => {
                 const width = viewElement.current.offsetWidth;
                 const height = viewElement.current.offsetHeight;
                 console.log(width, height);
-                // setViewSize({
-                //     width,
-                //     height,
-                // });
+                setViewSize({
+                    width,
+                    height,
+                });
 
                 // const recomputedTree = recomputeSpaceTreeLocations(tree);
                 // setTree(recomputedTree);
@@ -303,7 +303,6 @@ const View: React.FC<ViewProperties> = (properties) => {
     /** Pages, Documents */
     useEffect(() => {
         if (!documents && pages) {
-            // create a document and add pages to it
             const documentPages: Indexed<PluridInternalStatePage> = {};
             const contextPages: Indexed<PluridInternalContextPage> = {};
 
@@ -367,14 +366,15 @@ const View: React.FC<ViewProperties> = (properties) => {
         if (viewElement && viewElement.current) {
             const width = viewElement.current.offsetWidth;
             const height = viewElement.current.offsetHeight;
-            console.log(width, height);
-            // setViewSize({
-            //     height: viewElement.current.offsetHeight,
-            //     width: viewElement.current.offsetWidth,
-            // });
+            if (width && height) {
+                setViewSize({
+                    height: viewElement.current.offsetHeight,
+                    width: viewElement.current.offsetWidth,
+                });
+            }
         }
     }, [
-        viewElement,
+        viewElement.current,
     ]);
 
     /** Configuration */

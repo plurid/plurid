@@ -13,9 +13,11 @@ const Page2 = () => {
                 <PluridLink page="/page-1">link to page 1</PluridLink>
             </div>
 
-            <div style={{ marginLeft: 450, marginTop: 150}}>
-                <PluridLink page="/page-1">link to page 1</PluridLink>
-            </div>
+            {
+                // <div style={{ marginLeft: 450, marginTop: 150}}>
+                //     <PluridLink page="/page-1">link to page 1</PluridLink>
+                // </div>
+            }
         </div>
     );
 }
