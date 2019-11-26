@@ -31,13 +31,15 @@
     },
     "scripts": {
         "clean": "rm -rf ./distribution",
+        "clean.specs": "find ./distribution -type d -name \"__specs__\" -prune -exec rm -rf {} +",
+        "clean.performance": "find ./distribution -type d -name \"__performance__\" -prune -exec rm -rf {} +",
         "spec": "jest",
         "lint": "eslint ./source --ext .ts",
-        "typedoc": "typedoc --out docs --target es6 --theme minimal --mode file src",
+        "typedoc": "typedoc --out documentation --target es6 --theme minimal --mode file source",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
         "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
         "build.prod": "yarn clean && rollup -c --environment MODE_ENV:production",
-        "build": "yarn clean && yarn lint && yarn spec && yarn typedoc && yarn build.prod",
+        "build": "yarn clean && yarn lint && yarn spec && yarn typedoc && yarn build.prod && yarn clean.specs && yarn clean.performance",
         "prepublishOnly": "yarn build"
     },
     "peerDependencies": {
