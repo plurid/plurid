@@ -434,25 +434,8 @@ const View: React.FC<ViewProperties> = (properties) => {
                 treePages.push(treePage);
             }
 
-            setTree(treePages);
-
-
-            // const pluridPages: PluridPage[] = [];
-            // for (const pageID in pages) {
-            //     const contextPage = contextPages[pageID];
-            //     const pluridPage: PluridPage = {
-            //         path: contextPage.path,
-            //         component: contextPage.component,
-            //     };
-            //     pluridPages.push(pluridPage);
-            // }
-            // console.log('pluridPages', pluridPages);
-            // setTree(pluridPages);
-
-            // const computedTree = computeSpaceTree(pluridPages, stateConfiguration);
-            // console.log('computedTree', computedTree);
-            // setTree(computedTree);
-            // setTree(pluridPages);
+            const computedTree = computeSpaceTree(treePages, stateConfiguration);
+            setTree(computedTree);
         }
     }, [
         stateConfiguration,
