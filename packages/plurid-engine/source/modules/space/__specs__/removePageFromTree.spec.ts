@@ -49,7 +49,7 @@ describe('removePageFromTree', () => {
 
         const updatedTree: TreePage[] = [
             {
-                pageID: '4',
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
@@ -57,7 +57,7 @@ describe('removePageFromTree', () => {
                 children: [],
             },
             {
-                pageID: '5',
+                pageID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
@@ -127,7 +127,7 @@ describe('removePageFromTree', () => {
                 ],
             },
             {
-                pageID: '3',
+                pageID: '4',
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
