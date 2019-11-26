@@ -1,11 +1,8 @@
-import React from 'react';
-
 import {
     computeSpaceTree,
 } from '../';
 
 import {
-    PluridPage,
     PluridConfiguration,
     TreePage,
     defaultConfiguration,
@@ -14,7 +11,7 @@ import {
 
 
 describe('computeSpaceTree', () => {
-    // handle crypto for jest - https://stackoverflow.com/a/52612372
+    /** handle crypto for jest - https://stackoverflow.com/a/52612372 */
     const crypto = require('crypto');
     Object.defineProperty(global, 'crypto', {
         value: {
@@ -23,42 +20,14 @@ describe('computeSpaceTree', () => {
     });
 
     it('computes the default spaceTree', () => {
-        // set window for jest
         (global as any).window = {
             innerWidth: 1200,
             innerHeight: 300,
         };
-        // console.log(window);
 
-        const pluridPages: PluridPage[] = [
+        const treePages: TreePage[] = [
             {
-                component: {
-                    element: () => (<></>),
-                    properties: {},
-                },
-                path: '/page-1',
-                root: true,
-            },
-            {
-                component: {
-                    element: () => (<></>),
-                    properties: {},
-                },
-                path: '/page-2',
-                root: true,
-            },
-            {
-                component: {
-                    element: () => (<></>),
-                    properties: {},
-                },
-                path: '/page-3',
-                root: true,
-            },
-        ];
-        // console.log(pluridPages);
-        const locatedTree: TreePage[] = [
-            {
+                pageID: '1',
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -71,6 +40,49 @@ describe('computeSpaceTree', () => {
                 show: true,
             },
             {
+                pageID: '2',
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 0,
+                    translateZ: 0,
+                },
+                path: '/page-2',
+                planeID: '',
+                show: true,
+            },
+            {
+                pageID: '3',
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 0,
+                    translateZ: 0,
+                },
+                path: '/page-3',
+                planeID: '',
+                show: true,
+            },
+        ];
+
+        const locatedTree: TreePage[] = [
+            {
+                pageID: '1',
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 0,
+                    translateZ: 0,
+                },
+                path: '/page-1',
+                planeID: '',
+                show: true,
+            },
+            {
+                pageID: '2',
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -83,6 +95,7 @@ describe('computeSpaceTree', () => {
                 show: true,
             },
             {
+                pageID: '3',
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -95,7 +108,8 @@ describe('computeSpaceTree', () => {
                 show: true,
             },
         ];
-        const result = computeSpaceTree(pluridPages);
+
+        const result = computeSpaceTree(treePages);
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });
@@ -104,40 +118,11 @@ describe('computeSpaceTree', () => {
     });
 
     it('computes the spaceTree of 1 columns', () => {
-        // set window for jest
         (global as any).window = {
             innerWidth: 1200,
             innerHeight: 300,
         };
-        // console.log(window);
 
-        const pluridPages: PluridPage[] = [
-            {
-                component: {
-                    element: () => (<></>),
-                    properties: {},
-                },
-                path: '/page-1',
-                root: true,
-            },
-            {
-                component: {
-                    element: () => (<></>),
-                    properties: {},
-                },
-                path: '/page-2',
-                root: true,
-            },
-            {
-                component: {
-                    element: () => (<></>),
-                    properties: {},
-                },
-                path: '/page-3',
-                root: true,
-            },
-        ];
-        // console.log(pluridPages);
         const configuration: PluridConfiguration = {
             ...defaultConfiguration,
             space: {
@@ -147,8 +132,10 @@ describe('computeSpaceTree', () => {
                 },
             }
         };
-        const locatedTree: TreePage[] = [
+
+        const treePages: TreePage[] = [
             {
+                pageID: '1',
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -161,6 +148,7 @@ describe('computeSpaceTree', () => {
                 show: true,
             },
             {
+                pageID: '2',
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -173,6 +161,7 @@ describe('computeSpaceTree', () => {
                 show: true,
             },
             {
+                pageID: '3',
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -185,7 +174,50 @@ describe('computeSpaceTree', () => {
                 show: true,
             },
         ];
-        const result = computeSpaceTree(pluridPages, configuration);
+
+        const locatedTree: TreePage[] = [
+            {
+                pageID: '1',
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 0,
+                    translateZ: 0,
+                },
+                path: '/page-1',
+                planeID: '',
+                show: true,
+            },
+            {
+                pageID: '2',
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 350,
+                    translateZ: 0,
+                },
+                path: '/page-2',
+                planeID: '',
+                show: true,
+            },
+            {
+                pageID: '3',
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 700,
+                    translateZ: 0,
+                },
+                path: '/page-3',
+                planeID: '',
+                show: true,
+            },
+        ];
+
+        const result = computeSpaceTree(treePages, configuration);
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });

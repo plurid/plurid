@@ -18,18 +18,21 @@ const location = {
 
 const tree: TreePage[] = [
     {
+        pageID: '1',
         planeID: 'aaa',
         path: '/aaa',
         location,
         show: true,
         children: [
             {
+                pageID: '2',
                 planeID: 'bbb',
                 path: '/aaa/bbb',
                 location,
                 show: true,
                 children: [
                     {
+                        pageID: '3',
                         planeID: 'ccc',
                         path: '/aaa/bbb/ccc',
                         location,
@@ -41,6 +44,7 @@ const tree: TreePage[] = [
         ],
     },
     {
+        pageID: '4',
         planeID: 'ddd',
         path: '/ddd',
         location,
@@ -48,12 +52,14 @@ const tree: TreePage[] = [
         children: [],
     },
     {
+        pageID: '5',
         planeID: 'eee',
         path: '/eee',
         location,
         show: true,
         children: [
             {
+                pageID: '6',
                 planeID: 'fff',
                 path: '/eee/fff',
                 location,

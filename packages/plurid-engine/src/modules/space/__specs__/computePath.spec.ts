@@ -20,6 +20,7 @@ const location = {
 describe('computePath', () => {
     it('computes the path on the first child', () => {
         const targetPage = {
+            pageID: '1',
             planeID: 'aaa',
             path: '/aaa',
             location,
@@ -29,6 +30,7 @@ describe('computePath', () => {
         const tree: TreePage[] = [
             targetPage,
             {
+                pageID: '2',
                 planeID: 'bbb',
                 path: '/bbb',
                 location,
@@ -45,6 +47,7 @@ describe('computePath', () => {
     it('computes the path on the first child - without finding any', () => {
         const tree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
@@ -52,6 +55,7 @@ describe('computePath', () => {
                 show: true,
             },
             {
+                pageID: '2',
                 planeID: 'bbb',
                 path: '/bbb',
                 location,
@@ -67,6 +71,7 @@ describe('computePath', () => {
 
     it('computes the path on the second child', () => {
         const targetPage_1 = {
+            pageID: '1',
             planeID: 'aaa',
             path: '/aaa',
             location,
@@ -74,6 +79,7 @@ describe('computePath', () => {
             children: [],
         };
         const targetPage_2 = {
+            pageID: '2',
             planeID: 'bbb',
             parentPlaneID: 'aaa',
             path: '/aaa/bbb',
@@ -83,12 +89,14 @@ describe('computePath', () => {
         };
         const tree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
                 show: true,
                 children: [
                     {
+                        pageID: '2',
                         planeID: 'bbb',
                         parentPlaneID: 'aaa',
                         path: '/aaa/bbb',
@@ -99,6 +107,7 @@ describe('computePath', () => {
                 ],
             },
             {
+                pageID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
                 location,

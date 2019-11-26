@@ -21,12 +21,14 @@ describe('removePageFromTree', () => {
     it('removes the tree page on the first child', () => {
         const tree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
                 show: true,
                 children: [
                     {
+                        pageID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
@@ -36,6 +38,7 @@ describe('removePageFromTree', () => {
                 ],
             },
             {
+                pageID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
@@ -43,8 +46,10 @@ describe('removePageFromTree', () => {
                 children: [],
             },
         ];
+
         const updatedTree: TreePage[] = [
             {
+                pageID: '4',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
@@ -52,6 +57,7 @@ describe('removePageFromTree', () => {
                 children: [],
             },
             {
+                pageID: '5',
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
@@ -68,18 +74,21 @@ describe('removePageFromTree', () => {
     it('removes the tree page on the second child', () => {
         const tree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
                 show: true,
                 children: [
                     {
+                        pageID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
                         show: true,
                         children: [
                             {
+                                pageID: '3',
                                 planeID: 'ccc',
                                 path: '/aaa/bbb/ccc',
                                 location,
@@ -91,6 +100,7 @@ describe('removePageFromTree', () => {
                 ],
             },
             {
+                pageID: '4',
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
@@ -100,12 +110,14 @@ describe('removePageFromTree', () => {
         ];
         const updatedTree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
                 show: true,
                 children: [
                     {
+                        pageID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
@@ -115,6 +127,7 @@ describe('removePageFromTree', () => {
                 ],
             },
             {
+                pageID: '3',
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
@@ -131,18 +144,21 @@ describe('removePageFromTree', () => {
     it('removes the tree page on the second root', () => {
         const tree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
                 show: true,
                 children: [
                     {
+                        pageID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
                         show: true,
                         children: [
                             {
+                                pageID: '3',
                                 planeID: 'ccc',
                                 path: '/aaa/bbb/ccc',
                                 location,
@@ -154,6 +170,7 @@ describe('removePageFromTree', () => {
                 ],
             },
             {
+                pageID: '4',
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
@@ -163,18 +180,21 @@ describe('removePageFromTree', () => {
         ];
         const updatedTree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
                 show: true,
                 children: [
                     {
+                        pageID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
                         show: true,
                         children: [
                             {
+                                pageID: '3',
                                 planeID: 'ccc',
                                 path: '/aaa/bbb/ccc',
                                 location,

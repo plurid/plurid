@@ -21,6 +21,7 @@ describe('updateTreePage', () => {
     it('updates the tree page on the first child', () => {
         const tree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
@@ -28,6 +29,7 @@ describe('updateTreePage', () => {
                 children: [],
             },
             {
+                pageID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
@@ -36,12 +38,14 @@ describe('updateTreePage', () => {
             },
         ];
         const updatedPage: TreePage = {
+            pageID: '1',
             planeID: 'aaa',
             path: '/aaa',
             location,
             show: true,
             children: [
                 {
+                    pageID: '2',
                     planeID: 'bbb',
                     path: '/aaa/bbb',
                     location,
@@ -53,6 +57,7 @@ describe('updateTreePage', () => {
         const updatedTree: TreePage[] = [
             updatedPage,
             {
+                pageID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
@@ -68,12 +73,14 @@ describe('updateTreePage', () => {
     it('updates the tree page on the second child', () => {
         const tree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
                 show: true,
                 children: [
                     {
+                        pageID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
@@ -83,6 +90,7 @@ describe('updateTreePage', () => {
                 ],
             },
             {
+                pageID: '3',
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
@@ -91,12 +99,14 @@ describe('updateTreePage', () => {
             },
         ];
         const updatedPage: TreePage = {
+            pageID: '2',
             planeID: 'bbb',
             path: '/aaa/bbb',
             location,
             show: true,
             children: [
                 {
+                    pageID: '4',
                     planeID: 'ccc',
                     path: '/aaa/bbb/ccc',
                     location,
@@ -107,6 +117,7 @@ describe('updateTreePage', () => {
         }
         const updatedTree: TreePage[] = [
             {
+                pageID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
@@ -116,6 +127,7 @@ describe('updateTreePage', () => {
                 ],
             },
             {
+                pageID: '3',
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
