@@ -79,7 +79,6 @@ export const StyledToolbarTransformButton: any = styled.div`
 export const StyledToolbarTransformText: any = styled.div`
     margin: 0 7px;
 
-    /* width: 60px; */
     height: 45px;
 
     padding: 0 7px;
@@ -87,7 +86,8 @@ export const StyledToolbarTransformText: any = styled.div`
     display: grid;
     align-items: center;
     justify-content: center;
-    /* place-content: center; */
+    cursor: pointer;
+    user-select: none;
 
     background-color: ${(props: any) => {
         if (props.active) {
@@ -106,8 +106,8 @@ export const StyledToolbarTransformText: any = styled.div`
 
 export const StyledIcon = styled.div`
     svg {
-        height: 20px;
-        width: 20px;
+        height: 15px;
+        width: 15px;
         fill: white;
     }
 `;
