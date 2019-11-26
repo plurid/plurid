@@ -1,7 +1,6 @@
 import {
     PluridPage,
     PluridConfiguration,
-    Tree,
     TreePage,
     SpaceLocation,
     LocationCoordinates,
@@ -53,19 +52,14 @@ export const computeRootLocationX = (
  * @param configuration
  */
 export const computeSpaceTree = (
-    pages: PluridPage[],
+    pages: TreePage[],
     configuration?: PluridConfiguration,
 ): TreePage[] => {
-    const roots = pages.filter(page => page.root);
-    if (roots.length === 0) {
-        return [];
-    }
-
     if (!configuration
         || !configuration.space
         || !configuration.space.layout
     ) {
-        const columnLayoutTree = computeColumnLayout(roots);
+        const columnLayoutTree = computeColumnLayout(pages);
         return columnLayoutTree;
     }
 
@@ -75,7 +69,7 @@ export const computeSpaceTree = (
                 const {
                     columns,
                 } = configuration.space.layout;
-                const columnLayoutTree = computeColumnLayout(roots, columns);
+                const columnLayoutTree = computeColumnLayout(pages, columns);
                 return columnLayoutTree;
             }
         case 'ZIG_ZAG':
@@ -83,7 +77,7 @@ export const computeSpaceTree = (
                 const {
                     angle,
                 } = configuration.space.layout;
-                const zigzagLayoutTree = computeZigZagLayout(roots, angle);
+                const zigzagLayoutTree = computeZigZagLayout(pages, angle);
                 return zigzagLayoutTree;
             }
         case 'FACE_TO_FACE':
@@ -94,7 +88,7 @@ export const computeSpaceTree = (
                     middleVideos,
                 } = configuration.space.layout;
                 const faceToFaceLayoutTree = computeFaceToFaceLayout(
-                    roots,
+                    pages,
                     halfAngle,
                     middleSpace,
                     middleVideos,
@@ -109,7 +103,7 @@ export const computeSpaceTree = (
                     offsetY,
                 } = configuration.space.layout;
                 const sheavesLayoutTree = computeSheavesLayout(
-                    roots,
+                    pages,
                     depth,
                     offsetX,
                     offsetY,
@@ -127,7 +121,7 @@ export const computeSpaceTree = (
 
 
 export const computeColumnLayout = (
-    roots: PluridPage[],
+    roots: TreePage[],
     columns: number = 2,
     columnsGap: number = ROOTS_GAP,
     rowsGap: number = ROOTS_GAP,
@@ -144,6 +138,7 @@ export const computeColumnLayout = (
         const translateY = rowIndex * (height + rowsGap);
 
         const treePage: TreePage = {
+            pageID: root.pageID,
             path: root.path,
             planeID: uuid(),
             location: {
@@ -164,7 +159,7 @@ export const computeColumnLayout = (
 
 
 export const computeZigZagLayout = (
-    roots: PluridPage[],
+    roots: TreePage[],
     angle: number = 45,
 ): TreePage[] => {
     const tree: TreePage[] = [];
@@ -182,7 +177,7 @@ export const computeZigZagLayout = (
 
 
 export const computeFaceToFaceLayout = (
-    roots: PluridPage[],
+    roots: TreePage[],
     halfAngle: number = 0,
     middleSpace: number = 1,
     middleVideos: number = 0,
@@ -197,6 +192,7 @@ export const computeFaceToFaceLayout = (
         const translateY = 0;
 
         const treePage: TreePage = {
+            pageID: root.pageID,
             path: root.path,
             planeID: uuid(),
             location: {
@@ -217,7 +213,7 @@ export const computeFaceToFaceLayout = (
 
 
 export const computeSheavesLayout = (
-    roots: PluridPage[],
+    roots: TreePage[],
     depth: number = 0.3,
     offsetX: number = 0,
     offsetY: number = 0,
@@ -232,6 +228,7 @@ export const computeSheavesLayout = (
         const translateY = 0;
 
         const treePage: TreePage = {
+            pageID: root.pageID,
             path: root.path,
             planeID: uuid(),
             location: {
@@ -300,7 +297,7 @@ export const computeCameraLocationX = (
 
 
 export const recomputeSpaceTreeLocations = (
-    tree: Tree,
+    tree: TreePage[],
 ): TreePage[] => {
     const updatedTree: TreePage[] = [];
     // console.log(tree);
@@ -515,6 +512,7 @@ export const updateTreeWithNewPage = (
 
         const planeID = uuid();
         const newTreePage: TreePage = {
+            pageID: '',
             path: pagePath,
             planeID,
             parentPlaneID: treePageParentPlaneID,
