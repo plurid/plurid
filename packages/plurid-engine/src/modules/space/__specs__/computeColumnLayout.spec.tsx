@@ -57,6 +57,7 @@ describe('computeColumnLayout', () => {
         // console.log(pluridPages);
         const locatedTree: TreePage[] = [
             {
+                pageID: '1',
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -69,6 +70,7 @@ describe('computeColumnLayout', () => {
                 show: true,
             },
             {
+                pageID: '2',
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -81,6 +83,7 @@ describe('computeColumnLayout', () => {
                 show: true,
             },
             {
+                pageID: '3',
                 location: {
                     rotateX: 0,
                     rotateY: 0,
