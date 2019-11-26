@@ -570,7 +570,7 @@ export const removePageFromTree = (
 export const togglePageFromTree = (
     tree: TreePage[],
     pluridPlaneID: string,
-) => {
+): TreePage[] => {
     const updatedTree: TreePage[] = [];
 
     for (const page of tree) {
