@@ -1,17 +1,8 @@
 import {
     Indexed,
-    PluridInternalStatePage,
     PluridInternalStateDocument,
 } from '@plurid/plurid-data';
 
-
-
-export const SET_PAGES = 'SET_PAGES';
-
-export interface SetPagesAction {
-    type: typeof SET_PAGES;
-    payload: Indexed<PluridInternalStatePage>;
-}
 
 
 export const SET_DOCUMENTS = 'SET_DOCUMENTS';
@@ -36,12 +27,10 @@ export interface SetViewSizeAction {
 
 
 export interface DataState {
-    pages: Indexed<PluridInternalStatePage>;
     documents: Indexed<PluridInternalStateDocument>;
     viewSize: ViewSize;
 }
 
 
-export type DataActionsType = SetPagesAction
-    | SetDocumentsAction
+export type DataActionsType = SetDocumentsAction
     | SetViewSizeAction;
