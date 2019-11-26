@@ -60,14 +60,24 @@ export const handleGlobalShortcuts = (
 }
 
 
+interface Locks {
+    rotation: boolean;
+    translation: boolean;
+    scale: boolean;
+}
+
 export const handleGlobalWheel = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: WheelEvent,
+    locks: Locks,
 ) => {
     if (event.shiftKey
         || event.metaKey
         || event.altKey
         || event.ctrlKey
+        || locks.rotation
+        || locks.translation
+        || locks.scale
     ) {
         event.preventDefault();
     }
@@ -79,6 +89,16 @@ export const handleGlobalWheel = (
     const direction = getWheelDirection(deltas);
     // console.log(direction);
 
+    if (locks.rotation) {
+        if (direction === 'left') {
+            dispatch(actions.space.rotateLeft());
+        }
+
+        if (direction === 'right') {
+            dispatch(actions.space.rotateRight());
+        }
+    }
+
     if (event.shiftKey) {
         if (direction === 'left') {
             dispatch(actions.space.rotateLeft());
@@ -86,6 +106,24 @@ export const handleGlobalWheel = (
 
         if (direction === 'right') {
             dispatch(actions.space.rotateRight());
+        }
+    }
+
+    if (locks.translation) {
+        if (direction === 'up') {
+            dispatch(actions.space.translateDown());
+        }
+
+        if (direction === 'down') {
+            dispatch(actions.space.translateUp());
+        }
+
+        if (direction === 'left') {
+            dispatch(actions.space.translateRight());
+        }
+
+        if (direction === 'right') {
+            dispatch(actions.space.translateLeft());
         }
     }
 
@@ -104,6 +142,16 @@ export const handleGlobalWheel = (
 
         if (direction === 'right') {
             dispatch(actions.space.translateLeft());
+        }
+    }
+
+    if (locks.scale) {
+        if (direction === 'down') {
+            dispatch(actions.space.scaleUp());
+        }
+
+        if (direction === 'up') {
+            dispatch(actions.space.scaleDown());
         }
     }
 
