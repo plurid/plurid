@@ -78,4 +78,27 @@ export const StyledToolbarTransformButton: any = styled.div`
 
 export const StyledToolbarTransformText: any = styled.div`
     margin: 0 7px;
+
+    /* width: 60px; */
+    height: 45px;
+
+    padding: 0 7px;
+
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    /* place-content: center; */
+
+    background-color: ${(props: any) => {
+        if (props.active) {
+            return props.theme.backgroundColorTertiary;
+        }
+        return 'transparent';
+    }};
+
+    :hover {
+        background: ${(props: any) => {
+            return props.theme.backgroundColorTertiary;
+        }};
+    }
 `;

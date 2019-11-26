@@ -31,6 +31,10 @@ interface ToolbarOwnProperties {
 
 interface ToolbarStateProperties {
     theme: Theme;
+
+    rotationLocked: boolean;
+    translationLocked: boolean;
+    scaleLocked: boolean;
 }
 
 interface ToolbarDispatchProperties {
@@ -46,6 +50,10 @@ interface ToolbarDispatchProperties {
     translateDown: typeof actions.space.translateDown;
     translateLeft: typeof actions.space.translateLeft;
     translateRight: typeof actions.space.translateRight;
+
+    dispatchToggleRotationLocked: typeof actions.space.toggleRotationLocked;
+    dispatchToggleTranslationLocked: typeof actions.space.toggleTranslationLocked;
+    dispatchToggleScaleLocked: typeof actions.space.toggleScaleLocked;
 }
 
 type ToolbarProperties = ToolbarOwnProperties
@@ -56,8 +64,15 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     const [mouseIn, setMouseIn] = useState(false);
 
     const {
+        /** state */
         theme,
 
+        rotationLocked,
+        translationLocked,
+        scaleLocked,
+
+
+        /** dispatch */
         rotateUp,
         rotateDown,
         rotateLeft,
@@ -70,7 +85,25 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         translateDown,
         translateLeft,
         translateRight,
+
+        dispatchToggleRotationLocked,
+        dispatchToggleTranslationLocked,
+        dispatchToggleScaleLocked,
     } = properties;
+
+    const toggleTransform = (type: string) => {
+        switch (type) {
+            case 'rotate':
+                dispatchToggleRotationLocked();
+                break;
+            case 'translate':
+                dispatchToggleTranslationLocked();
+                break;
+            case 'scale':
+                    dispatchToggleScaleLocked();
+                break;
+        }
+    }
 
     return (
         <StyledToolbar
@@ -95,7 +128,11 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         ▲
                     </StyledToolbarTransformButton>
 
-                    <StyledToolbarTransformText>
+                    <StyledToolbarTransformText
+                        theme={theme}
+                        onClick={() => toggleTransform('rotate')}
+                        active={rotationLocked}
+                    >
                         rotate
                     </StyledToolbarTransformText>
 
@@ -122,7 +159,11 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         ▲
                     </StyledToolbarTransformButton>
 
-                    <StyledToolbarTransformText>
+                    <StyledToolbarTransformText
+                        theme={theme}
+                        onClick={() => toggleTransform('scale')}
+                        active={scaleLocked}
+                    >
                         scale
                     </StyledToolbarTransformText>
 
@@ -149,7 +190,11 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         ▲
                     </StyledToolbarTransformButton>
 
-                    <StyledToolbarTransformText>
+                    <StyledToolbarTransformText
+                        theme={theme}
+                        onClick={() => toggleTransform('translate')}
+                        active={translationLocked}
+                    >
                         translate
                     </StyledToolbarTransformText>
 
@@ -175,6 +220,10 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
 const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
     theme: selectors.themes.getInteractionTheme(state),
+
+    rotationLocked: selectors.space.getRotationLocked(state),
+    translationLocked: selectors.space.getTranslationLocked(state),
+    scaleLocked: selectors.space.getScaleLocked(state),
 });
 
 
@@ -191,6 +240,16 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): Toolbar
     translateDown: () => dispatch(actions.space.translateDown()),
     translateLeft: () => dispatch(actions.space.translateLeft()),
     translateRight: () => dispatch(actions.space.translateRight()),
+
+    dispatchToggleRotationLocked: () => dispatch(
+        actions.space.toggleRotationLocked()
+    ),
+    dispatchToggleTranslationLocked: () => dispatch(
+        actions.space.toggleTranslationLocked()
+    ),
+    dispatchToggleScaleLocked: () => dispatch(
+        actions.space.toggleScaleLocked()
+    ),
 });
 
 
