@@ -74,6 +74,8 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
         planeOpacity,
     } = configuration;
 
+    const width = planeWidth * viewSize.width || 500;
+
     return (
         <StyledPluridPlane
             theme={generalTheme}
@@ -82,7 +84,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
             show={treePage.show}
             data-plurid-plane={planeID}
             style={{
-                width: planeWidth * viewSize.width || 500,
+                width,
                 transform: `
                     translateX(${location.translateX}px)
                     translateY(${location.translateY}px)

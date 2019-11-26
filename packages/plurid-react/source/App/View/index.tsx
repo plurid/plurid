@@ -278,12 +278,16 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         const handleResize = debounce(() => {
             if (viewElement && viewElement.current) {
-                setViewSize({
-                    height: viewElement.current.offsetHeight,
-                    width: viewElement.current.offsetWidth,
-                });
-            //     const recomputedTree = recomputeSpaceTreeLocations(tree);
-            //     setTree(recomputedTree);
+                const width = viewElement.current.offsetWidth;
+                const height = viewElement.current.offsetHeight;
+                console.log(width, height);
+                // setViewSize({
+                //     width,
+                //     height,
+                // });
+
+                // const recomputedTree = recomputeSpaceTreeLocations(tree);
+                // setTree(recomputedTree);
             }
         }, 150);
 
@@ -361,10 +365,13 @@ const View: React.FC<ViewProperties> = (properties) => {
     /** View Size */
     useEffect(() => {
         if (viewElement && viewElement.current) {
-            setViewSize({
-                height: viewElement.current.offsetHeight,
-                width: viewElement.current.offsetWidth,
-            });
+            const width = viewElement.current.offsetWidth;
+            const height = viewElement.current.offsetHeight;
+            console.log(width, height);
+            // setViewSize({
+            //     height: viewElement.current.offsetHeight,
+            //     width: viewElement.current.offsetWidth,
+            // });
         }
     }, [
         viewElement,
