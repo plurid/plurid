@@ -1,5 +1,4 @@
 import {
-    setPages,
     setDocuments,
     setViewSize,
 } from '../modules/data/actions';
@@ -7,7 +6,6 @@ import {
 
 
 export default {
-    setPages,
     setDocuments,
     setViewSize,
 };
