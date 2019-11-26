@@ -166,7 +166,6 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub,
     } = appProperties;
 
-    const [eventListenersSet, setEventListenersSet] = useState(false);
     const [initialized, setInitialized] = useState(false);
 
     const [contextDocuments, setContextDocuments] = useState<Indexed<PluridInternalContextDocument>>({});
@@ -272,23 +271,20 @@ const View: React.FC<ViewProperties> = (properties) => {
     /** Keydown, Wheel Listeners */
     useEffect(() => {
         if (viewElement.current) {
-            // if (!eventListenersSet) {
-                viewElement.current.addEventListener(
-                    'keydown',
-                    shortcutsCallback,
-                    {
-                        passive: false,
-                    },
-                );
-                viewElement.current.addEventListener(
-                    'wheel',
-                    wheelCallback,
-                    {
-                        passive: false,
-                    },
-                );
-                // setEventListenersSet(true);
-            // }
+            viewElement.current.addEventListener(
+                'keydown',
+                shortcutsCallback,
+                {
+                    passive: false,
+                },
+            );
+            viewElement.current.addEventListener(
+                'wheel',
+                wheelCallback,
+                {
+                    passive: false,
+                },
+            );
         }
 
         return () => {
