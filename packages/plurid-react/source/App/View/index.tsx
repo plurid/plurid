@@ -355,7 +355,13 @@ const View: React.FC<ViewProperties> = (properties) => {
         if (documents) {
             // create multiple documents
         }
+    }, [
+        pages,
+        documents,
+    ]);
 
+    /** View Size */
+    useEffect(() => {
         if (viewElement && viewElement.current) {
             setViewSize({
                 height: viewElement.current.offsetHeight,
@@ -363,8 +369,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             });
         }
     }, [
-        pages,
-        documents,
+        viewElement,
     ]);
 
     /** Configuration */
@@ -399,6 +404,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         transform,
     ]);
 
+    /** Handle Tree */
     useEffect(() => {
         if (activeDocumentID) {
             const activeDocument = dataDocuments[activeDocumentID];

@@ -105,31 +105,31 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
     }
 
     const handleShowPluridPlane = () => {
-        // if (!showLink && !pluridPlaneID) {
-        //     const parentPlaneID = getPluridPlaneIDByData(element.current);
+        if (!showLink && !pluridPlaneID) {
+            const parentPlaneID = getPluridPlaneIDByData(element.current);
 
-        //     const linkCoordinates = getPluridLinkCoordinates();
+            const linkCoordinates = getPluridLinkCoordinates();
 
-        //     const {
-        //         pluridPlaneID,
-        //         updatedTree,
-        //     } = updateTreeWithNewPage(
-        //         tree,
-        //         parentPlaneID,
-        //         page,
-        //         linkCoordinates,
-        //     );
+            const {
+                pluridPlaneID,
+                updatedTree,
+            } = updateTreeWithNewPage(
+                tree,
+                parentPlaneID,
+                page,
+                linkCoordinates,
+            );
 
-        //     if (pluridPlaneID) {
-        //         setTree(updatedTree);
-        //         setShowLink(true);
-        //         setPluridPlaneID(pluridPlaneID);
-        //     }
-        // } else {
-        //     const updatedTree = togglePageFromTree(tree, pluridPlaneID);
-        //     setTree(updatedTree);
-        //     setShowLink(show => !show);
-        // }
+            if (pluridPlaneID) {
+                setTree(updatedTree);
+                setShowLink(true);
+                setPluridPlaneID(pluridPlaneID);
+            }
+        } else {
+            const updatedTree = togglePageFromTree(tree, pluridPlaneID);
+            setTree(updatedTree);
+            setShowLink(show => !show);
+        }
     }
 
     const handleClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
