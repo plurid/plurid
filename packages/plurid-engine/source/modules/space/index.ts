@@ -574,14 +574,16 @@ export const togglePageFromTree = (
     const updatedTree: TreePage[] = [];
 
     for (const page of tree) {
+        let toggled = false;
+
         if (page.planeID === pluridPlaneID) {
             const _page = { ...page };
             _page.show = !_page.show;
             updatedTree.push(_page);
-            break;
+            toggled = true;
         }
 
-        if (page.children) {
+        if (page.children && !toggled) {
             const pageTree = togglePageFromTree(page.children, pluridPlaneID);
             page.children = [ ...pageTree ];
             updatedTree.push(page);
