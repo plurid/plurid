@@ -497,6 +497,7 @@ export const updateTreeWithNewPage = (
     tree: TreePage[],
     treePageParentPlaneID: string,
     pagePath: string,
+    pageID: string,
     linkCoordinates: any,
 ): UpdatedTreeWithNewPage => {
     const treePageParent = getTreePageByPlaneID(tree, treePageParentPlaneID);
@@ -512,7 +513,7 @@ export const updateTreeWithNewPage = (
 
         const planeID = uuid();
         const newTreePage: TreePage = {
-            pageID: '',
+            pageID,
             path: pagePath,
             planeID,
             parentPlaneID: treePageParentPlaneID,
