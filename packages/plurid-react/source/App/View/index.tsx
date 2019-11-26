@@ -73,12 +73,12 @@ export interface ViewOwnProperties {
 }
 
 interface ViewStateProperties {
-    configuration: any;
-    spaceLoading: boolean;
-    tree: TreePage[];
-    viewSize: ViewSize;
-    transform: any;
+    configuration: PluridAppConfiguration;
     dataDocuments: Indexed<PluridInternalStateDocument>;
+    viewSize: ViewSize;
+    spaceLoading: boolean;
+    transform: any;
+    tree: TreePage[];
     activeDocumentID: string;
 
     rotationLocked: boolean;
@@ -89,18 +89,18 @@ interface ViewStateProperties {
 interface ViewDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
-    setConfiguration: typeof actions.configuration.setConfiguration;
-    setMicro: typeof actions.configuration.setMicro;
+    dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
+    dispatchSetMicro: typeof actions.configuration.setMicro;
 
     dispatchSetDocuments: typeof actions.data.setDocuments;
-    setViewSize: typeof actions.data.setViewSize;
+    dispatchSetViewSize: typeof actions.data.setViewSize;
 
-    setSpaceLoading: typeof actions.space.setSpaceLoading;
-    setSpaceLocation: typeof actions.space.setSpaceLocation;
-    setTree: typeof actions.space.setTree;
+    dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
+    dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
+    dispatchSetTree: typeof actions.space.setTree;
 
-    setGeneralTheme: typeof actions.themes.setGeneralTheme;
-    setInteractionTheme: typeof actions.themes.setInteractionTheme;
+    dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
+    dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
 
     rotateXWith: typeof actions.space.rotateXWith;
     rotateYWith: typeof actions.space.rotateYWith;
@@ -138,18 +138,18 @@ const View: React.FC<ViewProperties> = (properties) => {
         /** dispatch */
         dispatch,
 
-        setConfiguration,
-        setMicro,
+        dispatchSetConfiguration,
+        dispatchSetMicro,
 
         dispatchSetDocuments,
-        setViewSize,
+        dispatchSetViewSize,
 
-        setSpaceLoading,
-        setSpaceLocation,
-        setTree,
+        dispatchSetSpaceLoading,
+        dispatchSetSpaceLocation,
+        dispatchSetTree,
 
-        setGeneralTheme,
-        setInteractionTheme,
+        dispatchSetGeneralTheme,
+        dispatchSetInteractionTheme,
 
         rotateXWith,
         rotateYWith,
@@ -200,15 +200,15 @@ const View: React.FC<ViewProperties> = (properties) => {
     ]);
 
     const handleConfiguration = (configuration: PluridAppConfiguration) => {
-        setConfiguration(configuration);
+        dispatchSetConfiguration(configuration);
 
         if (configuration.micro) {
-            setMicro();
+            dispatchSetMicro();
         }
 
         if (configuration.space) {
             const spaceLocation = computeSpaceLocation(configuration);
-            setSpaceLocation(spaceLocation);
+            dispatchSetSpaceLocation(spaceLocation);
         }
 
         if (configuration.space.center && !configuration.space.camera) {
@@ -230,19 +230,19 @@ const View: React.FC<ViewProperties> = (properties) => {
 
                 if (general) {
                     if (Object.keys(THEME_NAMES).includes(general)) {
-                        setGeneralTheme(themes[general]);
+                        dispatchSetGeneralTheme(themes[general]);
                     }
                 }
 
                 if (interaction) {
                     if (Object.keys(THEME_NAMES).includes(interaction)) {
-                        setInteractionTheme(themes[interaction]);
+                        dispatchSetInteractionTheme(themes[interaction]);
                     }
                 }
             } else {
                 if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
-                    setGeneralTheme(themes[configuration.theme]);
-                    setInteractionTheme(themes[configuration.theme]);
+                    dispatchSetGeneralTheme(themes[configuration.theme]);
+                    dispatchSetInteractionTheme(themes[configuration.theme]);
                 }
             }
         }
@@ -312,13 +312,13 @@ const View: React.FC<ViewProperties> = (properties) => {
             if (viewElement && viewElement.current) {
                 const width = viewElement.current.offsetWidth;
                 const height = viewElement.current.offsetHeight;
-                setViewSize({
+                dispatchSetViewSize({
                     width,
                     height,
                 });
 
                 const recomputedTree = recomputeSpaceTreeLocations(tree);
-                setTree(recomputedTree);
+                dispatchSetTree(recomputedTree);
             }
         }, 150);
 
@@ -398,7 +398,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             const width = viewElement.current.offsetWidth;
             const height = viewElement.current.offsetHeight;
             if (width && height) {
-                setViewSize({
+                dispatchSetViewSize({
                     height: viewElement.current.offsetHeight,
                     width: viewElement.current.offsetWidth,
                 });
@@ -417,7 +417,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             setInitialized(true);
         }
 
-        setSpaceLoading(false);
+        dispatchSetSpaceLoading(false);
     }, [
         configuration,
     ]);
@@ -471,7 +471,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             }
 
             const computedTree = computeSpaceTree(treePages, stateConfiguration);
-            setTree(computedTree);
+            dispatchSetTree(computedTree);
         }
     }, [
         stateConfiguration,
@@ -509,14 +509,16 @@ const View: React.FC<ViewProperties> = (properties) => {
 }
 
 
-const mapStateToProps = (state: AppState): ViewStateProperties => ({
+const mapStateToProperties = (
+    state: AppState,
+): ViewStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
-    spaceLoading: selectors.space.getLoading(state),
-    tree: selectors.space.getTree(state),
+    dataDocuments: selectors.data.getDocuments(state),
     viewSize: selectors.data.getViewSize(state),
     transform: selectors.space.getTransform(state),
-    dataDocuments: selectors.data.getDocuments(state),
+    tree: selectors.space.getTree(state),
     activeDocumentID: selectors.space.getActiveDocumentID(state),
+    spaceLoading: selectors.space.getLoading(state),
 
     rotationLocked: selectors.space.getRotationLocked(state),
     translationLocked: selectors.space.getTranslationLocked(state),
@@ -524,28 +526,54 @@ const mapStateToProps = (state: AppState): ViewStateProperties => ({
 });
 
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDispatchProperties => ({
+const mapDispatchToProperties = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): ViewDispatchProperties => ({
     dispatch,
 
-    setConfiguration: (configuration: PluridAppConfiguration) => dispatch(actions.configuration.setConfiguration(configuration)),
-    setMicro: () => dispatch(actions.configuration.setMicro()),
+    dispatchSetConfiguration: (configuration: PluridAppConfiguration) => dispatch(
+        actions.configuration.setConfiguration(configuration)
+    ),
+    dispatchSetMicro: () => dispatch(
+        actions.configuration.setMicro()
+    ),
 
     dispatchSetDocuments: (documents: any) => dispatch(
         actions.data.setDocuments(documents)
     ),
-    setViewSize: (viewSize: ViewSize) => dispatch(actions.data.setViewSize(viewSize)),
+    dispatchSetViewSize: (viewSize: ViewSize) => dispatch(
+        actions.data.setViewSize(viewSize)
+    ),
 
-    setSpaceLoading: (loading: boolean) => dispatch(actions.space.setSpaceLoading(loading)),
-    setSpaceLocation: (spaceLocation: any) => dispatch(actions.space.setSpaceLocation(spaceLocation)),
-    setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
+    dispatchSetSpaceLoading: (loading: boolean) => dispatch(
+        actions.space.setSpaceLoading(loading)
+    ),
+    dispatchSetSpaceLocation: (spaceLocation: any) => dispatch(
+        actions.space.setSpaceLocation(spaceLocation)
+    ),
+    dispatchSetTree: (tree: TreePage[]) => dispatch(
+        actions.space.setTree(tree)
+    ),
 
-    setGeneralTheme: (theme: Theme) => dispatch(actions.themes.setGeneralTheme(theme)),
-    setInteractionTheme: (theme: Theme) => dispatch(actions.themes.setInteractionTheme(theme)),
+    dispatchSetGeneralTheme: (theme: Theme) => dispatch(
+        actions.themes.setGeneralTheme(theme)
+    ),
+    dispatchSetInteractionTheme: (theme: Theme) => dispatch(
+        actions.themes.setInteractionTheme(theme)
+    ),
 
-    rotateXWith: (value: number) => dispatch(actions.space.rotateXWith(value)),
-    rotateYWith: (value: number) => dispatch(actions.space.rotateYWith(value)),
-    translateXWith: (value: number) => dispatch(actions.space.translateXWith(value)),
-    translateYWith: (value: number) => dispatch(actions.space.translateYWith(value)),
+    rotateXWith: (value: number) => dispatch(
+        actions.space.rotateXWith(value)
+    ),
+    rotateYWith: (value: number) => dispatch(
+        actions.space.rotateYWith(value)
+    ),
+    translateXWith: (value: number) => dispatch(
+        actions.space.translateXWith(value)
+    ),
+    translateYWith: (value: number) => dispatch(
+        actions.space.translateYWith(value)
+    ),
 
     dispatchSetActiveDocument: (activeDocument: string) => dispatch(
         actions.space.setActiveDocument(activeDocument)
@@ -554,8 +582,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ViewDis
 
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,
