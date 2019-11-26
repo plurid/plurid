@@ -112,6 +112,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     }
 
     const showIcons = true;
+    const showTransformButtons = false;
 
     return (
         <StyledToolbar
@@ -121,20 +122,26 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             <StyledToolbarButtons
                 theme={theme}
             >
-                <StyledToolbarRotate>
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={rotateRight}
-                    >
-                        ◀
-                    </StyledToolbarTransformButton>
+                <StyledToolbarRotate
+                    showTransformButtons={showTransformButtons}
+                >
+                    {showTransformButtons && (
+                        <>
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={rotateRight}
+                            >
+                                ◀
+                            </StyledToolbarTransformButton>
 
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={rotateUp}
-                    >
-                        ▲
-                    </StyledToolbarTransformButton>
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={rotateUp}
+                            >
+                                ▲
+                            </StyledToolbarTransformButton>
+                        </>
+                    )}
 
                     <StyledToolbarTransformText
                         theme={theme}
@@ -152,28 +159,36 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         }
                     </StyledToolbarTransformText>
 
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={rotateDown}
-                    >
-                        ▼
-                    </StyledToolbarTransformButton>
+                    {showTransformButtons && (
+                        <>
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={rotateDown}
+                            >
+                                ▼
+                            </StyledToolbarTransformButton>
 
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={rotateLeft}
-                    >
-                        ▶
-                    </StyledToolbarTransformButton>
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={rotateLeft}
+                            >
+                                ▶
+                            </StyledToolbarTransformButton>
+                        </>
+                    )}
                 </StyledToolbarRotate>
 
-                <StyledToolbarScale>
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={scaleUp}
-                    >
-                        ▲
-                    </StyledToolbarTransformButton>
+                <StyledToolbarScale
+                    showTransformButtons={showTransformButtons}
+                >
+                    {showTransformButtons && (
+                        <StyledToolbarTransformButton
+                            theme={theme}
+                            onClick={scaleUp}
+                        >
+                            ▲
+                        </StyledToolbarTransformButton>
+                    )}
 
                     <StyledToolbarTransformText
                         theme={theme}
@@ -191,28 +206,36 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         }
                     </StyledToolbarTransformText>
 
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={scaleDown}
-                    >
-                        ▼
-                    </StyledToolbarTransformButton>
+                    {showTransformButtons && (
+                        <StyledToolbarTransformButton
+                            theme={theme}
+                            onClick={scaleDown}
+                        >
+                            ▼
+                        </StyledToolbarTransformButton>
+                    )}
                 </StyledToolbarScale>
 
-                <StyledToolbarTranslate>
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={translateLeft}
-                    >
-                        ◀
-                    </StyledToolbarTransformButton>
+                <StyledToolbarTranslate
+                    showTransformButtons={showTransformButtons}
+                >
+                    {showTransformButtons && (
+                        <>
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={translateLeft}
+                            >
+                                ◀
+                            </StyledToolbarTransformButton>
 
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={translateUp}
-                    >
-                        ▲
-                    </StyledToolbarTransformButton>
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={translateUp}
+                            >
+                                ▲
+                            </StyledToolbarTransformButton>
+                        </>
+                    )}
 
                     <StyledToolbarTransformText
                         theme={theme}
@@ -230,19 +253,23 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         }
                     </StyledToolbarTransformText>
 
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={translateDown}
-                    >
-                        ▼
-                    </StyledToolbarTransformButton>
+                    {showTransformButtons && (
+                        <>
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={translateDown}
+                            >
+                                ▼
+                            </StyledToolbarTransformButton>
 
-                    <StyledToolbarTransformButton
-                        theme={theme}
-                        onClick={translateRight}
-                    >
-                        ▶
-                    </StyledToolbarTransformButton>
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={translateRight}
+                            >
+                                ▶
+                            </StyledToolbarTransformButton>
+                        </>
+                    )}
                 </StyledToolbarTranslate>
             </StyledToolbarButtons>
         </StyledToolbar>
