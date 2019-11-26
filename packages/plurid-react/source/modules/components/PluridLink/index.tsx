@@ -17,6 +17,8 @@ import {
 import {
     PluridLink as PluridLinkOwnProperties,
     TreePage,
+    Indexed,
+    PluridInternalStateDocument,
 } from '@plurid/plurid-data';
 
 import {
@@ -39,12 +41,14 @@ import actions from '../../services/state/actions';
 
 
 interface PluridLinkStateProperties {
-    tree: TreePage[],
-    generalTheme: Theme,
+    tree: TreePage[];
+    generalTheme: Theme;
+    activeDocumentID: string;
+    documents: Indexed<PluridInternalStateDocument>;
 }
 
 interface PluridLinkDispatchProperties {
-    setTree: typeof actions.space.setTree,
+    setTree: typeof actions.space.setTree;
 }
 
 type PluridLinkProperties = PluridLinkOwnProperties
@@ -63,16 +67,21 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
     const element: React.RefObject<HTMLAnchorElement> = useRef(null);
 
     const {
+        /** own */
         children,
-        page,
-        // document,
+        page: pagePath,
+        document,
         devisible: _devisible,
         suffix: _suffix,
         atClick,
 
+        /** state */
         tree,
         generalTheme,
+        activeDocumentID,
+        documents,
 
+        /** dispatch */
         setTree,
     } = properties;
 
@@ -110,13 +119,26 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
             const linkCoordinates = getPluridLinkCoordinates();
 
+            // based on pagePath and document (if exists)
+            // get the pageID and pass it to update
+            const searchDocumentID = document ? document : activeDocumentID;
+            const activeDocument = documents[searchDocumentID];
+            const activePages = activeDocument.pages;
+            let pageID = '';
+            for (let [key, page] of Object.entries(activePages)) {
+                if (page.path === pagePath) {
+                    pageID = page.id;
+                }
+            };
+            console.log(pageID);
+
             const {
                 pluridPlaneID,
                 updatedTree,
             } = updateTreeWithNewPage(
                 tree,
                 parentPlaneID,
-                page,
+                pagePath,
                 linkCoordinates,
             );
 
@@ -159,9 +181,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 }
 
 
-const mapStateToProps = (state: AppState): PluridLinkStateProperties => ({
+const mapStateToProps = (
+    state: AppState,
+): PluridLinkStateProperties => ({
     tree: selectors.space.getTree(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
+    activeDocumentID: selectors.space.getActiveDocumentID(state),
+    documents: selectors.data.getDocuments(state),
 });
 
 
