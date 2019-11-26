@@ -27,8 +27,17 @@ export const StyledToolbarButtons: any = styled.div`
     margin: 0 auto;
     font-size: 12px;
     opacity: 1;
-    width: 500px;
     height: 100%;
+    width: ${(props: any) => {
+        if (
+            props.showIcons
+            && !props.showTransformButtons
+        ) {
+            return '200px';
+        }
+
+        return '500px';
+    }};
 
     transition: opacity 300ms ease-in-out;
     z-index: 9999;
@@ -41,7 +50,7 @@ export const StyledToolbarRotate: any = styled.div`
     align-items: center;
     justify-items: center;
     grid-template-columns: ${(props: any) => {
-        if (props.showTransformButtons) {
+        if (!props.showTransformButtons) {
             return '1fr';
         }
 
@@ -54,7 +63,7 @@ export const StyledToolbarTranslate: any = styled.div`
     align-items: center;
     justify-items: center;
     grid-template-columns: ${(props: any) => {
-        if (props.showTransformButtons) {
+        if (!props.showTransformButtons) {
             return '1fr';
         }
 
@@ -67,7 +76,7 @@ export const StyledToolbarScale: any = styled.div`
     align-items: center;
     justify-items: center;
     grid-template-columns: ${(props: any) => {
-        if (props.showTransformButtons) {
+        if (!props.showTransformButtons) {
             return '1fr';
         }
 

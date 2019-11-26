@@ -121,6 +121,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         >
             <StyledToolbarButtons
                 theme={theme}
+                showIcons={showIcons}
+                showTransformButtons={showTransformButtons}
             >
                 <StyledToolbarRotate
                     showTransformButtons={showTransformButtons}
