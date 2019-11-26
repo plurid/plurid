@@ -13,7 +13,7 @@ import {
 
 const handleView = (
     pages: PluridPage[] | undefined,
-    documents: PluridDocument[] | undefined
+    documents: PluridDocument[] | undefined,
 ): JSX.Element => {
     if (pages && !documents) {
         return (
