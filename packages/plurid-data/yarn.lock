@@ -18,10 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@plurid/plurid-pubsub@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.1.tgz#6248fa35904dec2bf00204f9db1491948fc0116c"
-  integrity sha512-MlNqKoTkl3R0I0KeriX3JTDpT5NinZNcNv86jQOtJ0hG9wFG5kuD8Y/ej5/KPRYrj0mUvVeBjgMnRPbZ3fB5/w==
+"@plurid/plurid-pubsub@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.2.tgz#1303517bdcb7f8d6160e9bf24f99859ba146c01c"
+  integrity sha512-vDDlyBi9kKTHf4XvAQ7GTFw9wSOg6tuZ4yBvTyYgRmcdOtcqbdtR5tcEja9grqnUWHUbLJ49qQRw9wWjiUI3pA==
 
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
