@@ -277,26 +277,26 @@ const View: React.FC<ViewProperties> = (properties) => {
     ]);
 
     /** Resize Listener */
-    // useEffect(() => {
-    //     const handleResize = debounce(() => {
-    //         if (viewElement && viewElement.current) {
-    //             setViewSize({
-    //                 height: viewElement.current.offsetHeight,
-    //                 width: viewElement.current.offsetWidth,
-    //             });
-    //             const recomputedTree = recomputeSpaceTreeLocations(tree);
-    //             setTree(recomputedTree);
-    //         }
-    //     }, 150);
+    useEffect(() => {
+        const handleResize = debounce(() => {
+            if (viewElement && viewElement.current) {
+                setViewSize({
+                    height: viewElement.current.offsetHeight,
+                    width: viewElement.current.offsetWidth,
+                });
+            //     const recomputedTree = recomputeSpaceTreeLocations(tree);
+            //     setTree(recomputedTree);
+            }
+        }, 150);
 
-    //     window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', handleResize);
 
-    //     return () => {
-    //         window.removeEventListener('resize', handleResize);
-    //     }
-    // }, [
-    //     tree,
-    // ]);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        }
+    }, [
+        tree,
+    ]);
 
     /** Pages, Documents */
     useEffect(() => {

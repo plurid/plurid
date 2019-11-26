@@ -1,7 +1,4 @@
-import React, {
-    // useState,
-    // useEffect,
-} from 'react';
+import React from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -14,8 +11,6 @@ import PluridRoot from '../PluridRoot';
 
 import {
     TreePage,
-    Indexed,
-    PluridInternalStateDocument,
 } from '@plurid/plurid-data';
 
 import { AppState } from '../../services/state/store';
@@ -38,14 +33,14 @@ interface PluridRootsStateProperties {
     spaceTranslationX: number;
     spaceTranslationY: number;
     tree: TreePage[];
-    documents: Indexed<PluridInternalStateDocument>;
-    activeDocumentID: string;
 }
 
 interface PluridRootsDispatchProperties {
 }
 
-type PluridRootsProperties = PluridRootsStateProperties & PluridRootsDispatchProperties & PluridRootsOwnProperties;
+type PluridRootsProperties = PluridRootsOwnProperties
+    & PluridRootsStateProperties
+    & PluridRootsDispatchProperties;
 
 const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     const {
@@ -58,47 +53,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         spaceTranslationX,
         spaceTranslationY,
         tree,
-        // documents,
-        // activeDocumentID,
     } = properties;
-
-    // const activeDocument = documents[activeDocumentID];
-    // const {
-    //     pages,
-    // } = activeDocument;
-    // // console.log(pages);
-
-    // // traverse tree and push the roots into
-    // const [roots, setRoots] = useState<TreePage[]>([]);
-
-    // useEffect(() => {
-    //     const roots: TreePage[] = [];
-
-    //     if (!Array.isArray(pages)) {
-    //         for (const pageID in pages) {
-    //             const pluridPage = pages[pageID];
-    //             if (pluridPage.root) {
-    //                 const page: TreePage = {
-    //                     planeID: pluridPage.id || '',
-    //                     location: {
-    //                         rotateX: 0,
-    //                         rotateY: 0,
-    //                         translateX: 0,
-    //                         translateY: 0,
-    //                         translateZ: 0,
-    //                     },
-    //                     path: pluridPage.path,
-    //                     show: true,
-    //                 };
-    //                 roots.push(page);
-    //             }
-    //         }
-    //     }
-
-    //     setRoots(roots);
-    // }, [
-    //     tree,
-    // ]);
 
     return (
         <StyledPluridRoots
@@ -130,7 +85,9 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
 }
 
 
-const mapStateToProps = (state: AppState): PluridRootsStateProperties => ({
+const mapStateToProps = (
+    state: AppState,
+): PluridRootsStateProperties => ({
     viewSize: selectors.data.getViewSize(state),
     planeWidth: selectors.configuration.getConfiguration(state).planeWidth,
     spaceScale: selectors.space.getScale(state),
@@ -139,13 +96,11 @@ const mapStateToProps = (state: AppState): PluridRootsStateProperties => ({
     spaceTranslationX: selectors.space.getTranslationX(state),
     spaceTranslationY: selectors.space.getTranslationY(state),
     tree: selectors.space.getTree(state),
-    documents: selectors.data.getDocuments(state),
-    activeDocumentID: selectors.space.getActiveDocumentID(state),
 });
 
 
 const mapDispatchToProps = (
-    dispatch: ThunkDispatch<{}, {}, AnyAction>
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridRootsDispatchProperties => ({
 });
 

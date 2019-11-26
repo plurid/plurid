@@ -50,7 +50,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                 // const _page = pages.find((_page: any) => _page.path === child.path);
 
                 let plane = (<></>);
-                if (_page) {
+                if (_page && child.show) {
                     // instead of forcing show here to pass it as prop
                     // and change the opacity
                     const Page = _page.component.element;
