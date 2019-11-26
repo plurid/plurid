@@ -15,6 +15,7 @@ import {
     StyledToolbarTransformText,
 
     StyledIcon,
+    StyledMoreMenu,
 } from './styled';
 
 // import ToolbarButton from '../Button';
@@ -69,6 +70,7 @@ type ToolbarProperties = ToolbarOwnProperties
 
 const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     const [mouseIn, setMouseIn] = useState(false);
+    const [showMoreMenu, setShowMoreMenu] = useState(false);
 
     const {
         /** state */
@@ -281,12 +283,26 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     )}
                 </StyledToolbarTranslate>
 
-                <div>
+                <StyledToolbarTransformText
+                    theme={theme}
+                    onClick={() => setShowMoreMenu(show => !show)}
+                    active={showMoreMenu}
+                    showIcons={showIcons}
+                    showTransformButtons={showTransformButtons}
+                >
                     <StyledIcon>
                         {MoreIcon}
                     </StyledIcon>
-                </div>
+                </StyledToolbarTransformText>
             </StyledToolbarButtons>
+
+            {showMoreMenu && (
+                <StyledMoreMenu
+                    theme={theme}
+                >
+
+                </StyledMoreMenu>
+            )}
         </StyledToolbar>
     );
 }
