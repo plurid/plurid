@@ -434,8 +434,6 @@ const View: React.FC<ViewProperties> = (properties) => {
                 treePages.push(treePage);
             }
 
-            // const a = recomputeSpaceTreeLocations(tree);
-
             setTree(treePages);
 
 
