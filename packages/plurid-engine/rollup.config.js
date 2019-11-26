@@ -9,7 +9,7 @@ const pkg = require('./package.json');
 const libraryName = 'plurid-engine';
 const globals = {
     '@plurid/plurid-data': 'pluridData',
-    '@plurid/utilities.functions': 'utilitiesFunctions',
+    '@plurid/plurid-functions': 'pluridFunctions',
 };
 
 export default {
@@ -31,7 +31,7 @@ export default {
     ],
     external: [
         '@plurid/plurid-data',
-        '@plurid/utilities.functions',
+        '@plurid/plurid-functions',
     ],
     watch: {
         include: 'source/**',
