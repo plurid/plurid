@@ -186,7 +186,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             translation: translationLocked,
             scale: scaleLocked,
         };
-        console.log(locks);
+        // console.log(locks);
 
         handleGlobalWheel(
             dispatch,
@@ -272,7 +272,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     /** Keydown, Wheel Listeners */
     useEffect(() => {
         if (viewElement.current) {
-            if (!eventListenersSet) {
+            // if (!eventListenersSet) {
                 viewElement.current.addEventListener(
                     'keydown',
                     shortcutsCallback,
@@ -287,11 +287,27 @@ const View: React.FC<ViewProperties> = (properties) => {
                         passive: false,
                     },
                 );
-                setEventListenersSet(true);
+                // setEventListenersSet(true);
+            // }
+        }
+
+        return () => {
+            if (viewElement.current) {
+                viewElement.current.removeEventListener(
+                    'keydown',
+                    shortcutsCallback,
+                );
+                viewElement.current.removeEventListener(
+                    'wheel',
+                    wheelCallback,
+                );
             }
         }
     }, [
         viewElement.current,
+        rotationLocked,
+        translationLocked,
+        scaleLocked,
     ]);
 
     /** Resize Listener */
