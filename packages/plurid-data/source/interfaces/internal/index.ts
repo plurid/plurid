@@ -43,13 +43,8 @@ export interface PluridContext {
 }
 
 
-export interface Tree {
-    [key: string]: TreePage;
-}
-
-
 export interface TreePage {
-    id: string;
+    pageID: string;
     planeID: string;
     parentPlaneID?: string;
     path: string;
