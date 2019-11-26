@@ -18,11 +18,21 @@ export const StyledToolbarButtons: any = styled.div`
     box-shadow: ${(props: any) => {
         return props.theme.boxShadowUmbra;
     }};
+    grid-template-columns: ${(props: any) => {
+        if (
+            props.showIcons
+            && !props.showTransformButtons
+        ) {
+            return 'repeat(4, 40px)';
+        }
+
+        return '1fr 0.5fr 1fr 40px';
+    }};
 
     display: grid;
     align-items: center;
+    justify-content: center;
     justify-items: center;
-    grid-template-columns: 1fr 0.5fr 1fr;
     border-radius: 22.5px;
     margin: 0 auto;
     font-size: 12px;
@@ -104,24 +114,39 @@ export const StyledToolbarTransformButton: any = styled.div`
 
 
 export const StyledToolbarTransformText: any = styled.div`
-    margin: 0 7px;
+    margin: ${(props: any) => {
+        if (
+            props.showIcons
+            && !props.showTransformButtons
+        ) {
+            return '0';
+        }
 
-    height: 45px;
+        return '0 7px';
+    }};
+    padding: ${(props: any) => {
+        if (
+            props.showIcons
+            && !props.showTransformButtons
+        ) {
+            return '0';
+        }
 
-    padding: 0 7px;
-
-    display: grid;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    user-select: none;
-
+        return '0 7px';
+    }};
     background-color: ${(props: any) => {
         if (props.active) {
             return props.theme.backgroundColorTertiary;
         }
         return 'transparent';
     }};
+
+    height: 45px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
 
     :hover {
         background: ${(props: any) => {
@@ -132,6 +157,10 @@ export const StyledToolbarTransformText: any = styled.div`
 
 
 export const StyledIcon = styled.div`
+    width: 40px;
+    display: grid;
+    place-content: center;
+
     svg {
         height: 15px;
         width: 15px;

@@ -24,6 +24,7 @@ import { Theme } from '@plurid/plurid-themes';
 import RotateIcon from '../../../assets/icons/rotate-icon';
 import TranslateIcon from '../../../assets/icons/translate-icon';
 import ScaleIcon from '../../../assets/icons/scale-icon';
+import MoreIcon from '../../../assets/icons/more-icon';
 
 import { AppState } from '../../../services/state/store';
 import StateContext from '../../../services/state/context';
@@ -149,6 +150,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         theme={theme}
                         onClick={() => toggleTransform('rotate')}
                         active={rotationLocked}
+                        showIcons={showIcons}
+                        showTransformButtons={showTransformButtons}
                     >
                         {showIcons
                             ? (
@@ -196,6 +199,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         theme={theme}
                         onClick={() => toggleTransform('scale')}
                         active={scaleLocked}
+                        showIcons={showIcons}
+                        showTransformButtons={showTransformButtons}
                     >
                         {showIcons
                             ? (
@@ -243,6 +248,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         theme={theme}
                         onClick={() => toggleTransform('translate')}
                         active={translationLocked}
+                        showIcons={showIcons}
+                        showTransformButtons={showTransformButtons}
                     >
                         {showIcons
                             ? (
@@ -273,6 +280,12 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         </>
                     )}
                 </StyledToolbarTranslate>
+
+                <div>
+                    <StyledIcon>
+                        {MoreIcon}
+                    </StyledIcon>
+                </div>
             </StyledToolbarButtons>
         </StyledToolbar>
     );
