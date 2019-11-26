@@ -62,8 +62,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         // activeDocumentID,
     } = properties;
 
-    console.log('tree', tree);
-
     // const activeDocument = documents[activeDocumentID];
     // const {
     //     pages,
