@@ -111,6 +111,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         }
     }
 
+    const showIcons = true;
+
     return (
         <StyledToolbar
             onMouseEnter={() => setMouseIn(true)}
@@ -139,10 +141,15 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         onClick={() => toggleTransform('rotate')}
                         active={rotationLocked}
                     >
-                        <StyledIcon>
-                            {RotateIcon}
-                        </StyledIcon>
-                        {/* rotate */}
+                        {showIcons
+                            ? (
+                                <StyledIcon>
+                                    {RotateIcon}
+                                </StyledIcon>
+                            ) : (
+                                <>rotate</>
+                            )
+                        }
                     </StyledToolbarTransformText>
 
                     <StyledToolbarTransformButton
@@ -173,7 +180,15 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         onClick={() => toggleTransform('scale')}
                         active={scaleLocked}
                     >
-                        scale
+                        {showIcons
+                            ? (
+                                <StyledIcon>
+                                    {ScaleIcon}
+                                </StyledIcon>
+                            ) : (
+                                <>scale</>
+                            )
+                        }
                     </StyledToolbarTransformText>
 
                     <StyledToolbarTransformButton
@@ -204,7 +219,15 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         onClick={() => toggleTransform('translate')}
                         active={translationLocked}
                     >
-                        translate
+                        {showIcons
+                            ? (
+                                <StyledIcon>
+                                    {TranslateIcon}
+                                </StyledIcon>
+                            ) : (
+                                <>translate</>
+                            )
+                        }
                     </StyledToolbarTransformText>
 
                     <StyledToolbarTransformButton
