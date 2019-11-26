@@ -429,10 +429,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.35.tgz#d9857d4858e35a4c2d25700ed95ae898c15c3209"
   integrity sha512-bB9H2PhqoaI80aUVz8+yL+IRQi7Rv0bW+13Aysew6C6iLx0PHDOs6JXOXotPRVng+1w0j3IXP39+a9/fY2wQgw==
 
-"@plurid/plurid-engine@^0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.14.tgz#dad1836dee2b6859ce4b7d50540fe3100d374361"
-  integrity sha512-cWNLBq9Bchr42eFb/Xl5B1HPg1D8XlpevG/n90tasCNIpNp3DGYXL3OptaXcDUEGc6auF3nvkmOi+6GuhNk2Lg==
+"@plurid/plurid-engine@^0.1.15":
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.15.tgz#3413d4fe3fbf83e85120c0cfea370479e0cf9822"
+  integrity sha512-ZM01LvBJiuIu5pR3eYIGFdzM//ZRp9FVhkFu+1NgftviNVHNsjJiMS69470kKpB6xE6bpgRX1CLLyDIUoDyDbQ==
 
 "@plurid/plurid-functions@^0.1.1":
   version "0.1.1"
