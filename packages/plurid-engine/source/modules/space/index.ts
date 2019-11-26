@@ -581,11 +581,11 @@ export const togglePageFromTree = (
             _page.show = !_page.show;
             updatedTree.push(_page);
             toggled = true;
-        }
-
-        if (page.children && !toggled) {
+        } else if (page.children && !toggled) {
             const pageTree = togglePageFromTree(page.children, pluridPlaneID);
             page.children = [ ...pageTree ];
+            updatedTree.push(page);
+        } else {
             updatedTree.push(page);
         }
     }
