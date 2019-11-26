@@ -6,7 +6,7 @@ build
 distribution
 coverage
 compiled
-docs
+documentation
 .rpt2_cache
 .nyc_output
 .vscode
