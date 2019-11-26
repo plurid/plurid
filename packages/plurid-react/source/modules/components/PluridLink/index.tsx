@@ -122,7 +122,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
                 if (page.path === pagePath) {
                     pageID = page.id;
                 }
-            };
+            }
 
             const {
                 pluridPlaneID,
