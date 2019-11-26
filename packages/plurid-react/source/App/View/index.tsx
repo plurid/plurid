@@ -280,14 +280,13 @@ const View: React.FC<ViewProperties> = (properties) => {
             if (viewElement && viewElement.current) {
                 const width = viewElement.current.offsetWidth;
                 const height = viewElement.current.offsetHeight;
-                console.log(width, height);
                 setViewSize({
                     width,
                     height,
                 });
 
-                // const recomputedTree = recomputeSpaceTreeLocations(tree);
-                // setTree(recomputedTree);
+                const recomputedTree = recomputeSpaceTreeLocations(tree);
+                setTree(recomputedTree);
             }
         }, 150);
 
