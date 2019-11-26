@@ -13,11 +13,17 @@ import {
     StyledToolbarScale,
     StyledToolbarTransformButton,
     StyledToolbarTransformText,
+
+    StyledIcon,
 } from './styled';
 
 // import ToolbarButton from '../Button';
 
 import { Theme } from '@plurid/plurid-themes';
+
+import RotateIcon from '../../../assets/icons/rotate-icon';
+import TranslateIcon from '../../../assets/icons/translate-icon';
+import ScaleIcon from '../../../assets/icons/scale-icon';
 
 import { AppState } from '../../../services/state/store';
 import StateContext from '../../../services/state/context';
@@ -133,7 +139,10 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         onClick={() => toggleTransform('rotate')}
                         active={rotationLocked}
                     >
-                        rotate
+                        <StyledIcon>
+                            {RotateIcon}
+                        </StyledIcon>
+                        {/* rotate */}
                     </StyledToolbarTransformText>
 
                     <StyledToolbarTransformButton

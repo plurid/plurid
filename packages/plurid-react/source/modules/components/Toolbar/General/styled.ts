@@ -102,3 +102,12 @@ export const StyledToolbarTransformText: any = styled.div`
         }};
     }
 `;
+
+
+export const StyledIcon = styled.div`
+    svg {
+        height: 20px;
+        width: 20px;
+        fill: white;
+    }
+`;
