@@ -300,17 +300,16 @@ export const recomputeSpaceTreeLocations = (
     tree: TreePage[],
 ): TreePage[] => {
     const updatedTree: TreePage[] = [];
-    // console.log(tree);
 
-    // tree.forEach((page, index) => {
-    //     const _page = { ...page };
+    tree.forEach((page, index) => {
+        const _page = { ...page };
 
-    //     const translateX = index === 0
-    //         ? 0
-    //         : window.innerWidth * index + ROOTS_GAP;
-    //     _page.location.translateX = translateX;
-    //     updatedTree.push(_page);
-    // });
+        const translateX = index === 0
+            ? 0
+            : window.innerWidth * index + ROOTS_GAP;
+        _page.location.translateX = translateX;
+        updatedTree.push(_page);
+    });
 
     return updatedTree;
 }
