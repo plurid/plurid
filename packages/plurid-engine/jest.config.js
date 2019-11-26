@@ -11,12 +11,12 @@ module.exports = {
     ],
     testPathIgnorePatterns: [
         '/node_modules/',
-        '/dist/',
+        '/distribution/',
     ],
     collectCoverage: true,
     coveragePathIgnorePatterns: [
         '/node_modules/',
-        '/dist/'
+        '/distribution/'
     ],
     coverageThreshold: {
         // global: {
@@ -33,6 +33,6 @@ module.exports = {
         }
     },
     collectCoverageFrom: [
-        'src/*.{js,ts}'
+        'source/*.{js,ts}'
     ]
 }

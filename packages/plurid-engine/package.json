@@ -21,18 +21,18 @@
         "access": "public"
     },
     "files": [
-        "dist"
+        "distribution"
     ],
-    "main": "dist/plurid-engine.umd.js",
-    "module": "dist/plurid-engine.es5.js",
-    "typings": "dist/index.d.ts",
+    "main": "distribution/plurid-engine.umd.js",
+    "module": "distribution/plurid-engine.es5.js",
+    "typings": "distribution/index.d.ts",
     "engines": {
         "node": ">=8.0.0"
     },
     "scripts": {
-        "clean": "rm -rf ./dist",
+        "clean": "rm -rf ./distribution",
         "spec": "jest",
-        "lint": "eslint ./src --ext .ts",
+        "lint": "eslint ./source --ext .ts",
         "typedoc": "typedoc --out docs --target es6 --theme minimal --mode file src",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
         "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",

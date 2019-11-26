@@ -13,7 +13,7 @@ const globals = {
 };
 
 export default {
-    input: 'src/index.ts',
+    input: 'source/index.ts',
     output: [
         {
             file: pkg.main,
@@ -34,7 +34,7 @@ export default {
         '@plurid/utilities.functions',
     ],
     watch: {
-        include: 'src/**',
+        include: 'source/**',
     },
     plugins: [
         typescript({
