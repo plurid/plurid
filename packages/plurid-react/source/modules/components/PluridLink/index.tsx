@@ -27,9 +27,6 @@ import {
 
 import {
     updateTreeWithNewPage,
-    // removePageFromTree,
-    // hidePageFromTree,
-    // showPageFromTree,
     togglePageFromTree,
 } from '@plurid/plurid-engine';
 
@@ -85,8 +82,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         setTree,
     } = properties;
 
-    // console.log(_devisible, _suffix);
-
     const [suffix, setSuffix] = useState("'");
     const [devisible, setDevisible] = useState(false);
 
@@ -119,18 +114,15 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
             const linkCoordinates = getPluridLinkCoordinates();
 
-            // based on pagePath and document (if exists)
-            // get the pageID and pass it to update
             const searchDocumentID = document ? document : activeDocumentID;
             const activeDocument = documents[searchDocumentID];
             const activePages = activeDocument.pages;
             let pageID = '';
-            for (let [key, page] of Object.entries(activePages)) {
+            for (let [_, page] of Object.entries(activePages)) {
                 if (page.path === pagePath) {
                     pageID = page.id;
                 }
             };
-            console.log(pageID);
 
             const {
                 pluridPlaneID,
@@ -142,8 +134,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
                 pageID,
                 linkCoordinates,
             );
-            console.log('pluridPlaneID', pluridPlaneID);
-            console.log(updatedTree);
 
             if (pluridPlaneID) {
                 setTree(updatedTree);
@@ -152,9 +142,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
             }
         } else {
             const updatedTree = togglePageFromTree(tree, pluridPlaneID);
-            console.log('tree', tree);
-            console.log('pluridPlaneID', pluridPlaneID);
-            console.log('updatedTree', updatedTree);
             setTree(updatedTree);
             setShowLink(show => !show);
         }
