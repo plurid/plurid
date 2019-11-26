@@ -55,12 +55,10 @@ export const computeRootLocationX = (
 export const computeSpaceTree = (
     pages: PluridPage[],
     configuration?: PluridConfiguration,
-): Tree => {
-    const tree: Tree = {};
-
+): TreePage[] => {
     const roots = pages.filter(page => page.root);
     if (roots.length === 0) {
-        return tree;
+        return [];
     }
 
     if (!configuration
@@ -68,63 +66,62 @@ export const computeSpaceTree = (
         || !configuration.space.layout
     ) {
         const columnLayoutTree = computeColumnLayout(roots);
-        // return columnLayoutTree;
-        return tree;
+        return columnLayoutTree;
     }
 
     switch(configuration.space.layout.type) {
-    //     case 'COLUMNS':
-    //         {
-    //             const {
-    //                 columns,
-    //             } = configuration.space.layout;
-    //             const columnLayoutTree = computeColumnLayout(roots, columns);
-    //             return columnLayoutTree;
-    //         }
-    //     case 'ZIG_ZAG':
-    //         {
-    //             const {
-    //                 angle,
-    //             } = configuration.space.layout;
-    //             const zigzagLayoutTree = computeZigZagLayout(roots, angle);
-    //             return zigzagLayoutTree;
-    //         }
-    //     case 'FACE_TO_FACE':
-    //         {
-    //             const {
-    //                 halfAngle,
-    //                 middleSpace,
-    //                 middleVideos,
-    //             } = configuration.space.layout;
-    //             const faceToFaceLayoutTree = computeFaceToFaceLayout(
-    //                 roots,
-    //                 halfAngle,
-    //                 middleSpace,
-    //                 middleVideos,
-    //             );
-    //             return faceToFaceLayoutTree;
-    //         }
-    //     case 'SHEAVES':
-    //         {
-    //             const {
-    //                 depth,
-    //                 offsetX,
-    //                 offsetY,
-    //             } = configuration.space.layout;
-    //             const sheavesLayoutTree = computeSheavesLayout(
-    //                 roots,
-    //                 depth,
-    //                 offsetX,
-    //                 offsetY,
-    //             );
-    //             return sheavesLayoutTree;
-    //         }
-    //     case 'META':
-    //         {
-    //             return tree;
-    //         }
+        case 'COLUMNS':
+            {
+                const {
+                    columns,
+                } = configuration.space.layout;
+                const columnLayoutTree = computeColumnLayout(roots, columns);
+                return columnLayoutTree;
+            }
+        case 'ZIG_ZAG':
+            {
+                const {
+                    angle,
+                } = configuration.space.layout;
+                const zigzagLayoutTree = computeZigZagLayout(roots, angle);
+                return zigzagLayoutTree;
+            }
+        case 'FACE_TO_FACE':
+            {
+                const {
+                    halfAngle,
+                    middleSpace,
+                    middleVideos,
+                } = configuration.space.layout;
+                const faceToFaceLayoutTree = computeFaceToFaceLayout(
+                    roots,
+                    halfAngle,
+                    middleSpace,
+                    middleVideos,
+                );
+                return faceToFaceLayoutTree;
+            }
+        case 'SHEAVES':
+            {
+                const {
+                    depth,
+                    offsetX,
+                    offsetY,
+                } = configuration.space.layout;
+                const sheavesLayoutTree = computeSheavesLayout(
+                    roots,
+                    depth,
+                    offsetX,
+                    offsetY,
+                );
+                return sheavesLayoutTree;
+            }
+        case 'META':
+            {
+                return [];
+            }
         default:
-            return tree;
+            return [];
     }
 }
 
@@ -349,7 +346,7 @@ export const getTreePageByPlaneID = (
 export const updateTreePage = (
     tree: TreePage[],
     updatedPage: TreePage,
-) => {
+): TreePage[] => {
     const updatedTree = tree.map(page => {
         if (page.planeID === updatedPage.planeID) {
             return updatedPage;
