@@ -9,19 +9,19 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
+    /** constants */
+    defaultConfiguration,
+
+    /** interfaces */
     PluridApp as PluridAppProperties,
     PluridConfiguration as PluridAppConfiguration,
-    Tree,
-    TreePage,
-    PluridContext,
-    PluridDocument,
-    PluridPage,
     Indexed,
+    PluridContext,
+    TreePage,
     PluridInternalStatePage,
     PluridInternalStateDocument,
     PluridInternalContextPage,
     PluridInternalContextDocument,
-    defaultConfiguration,
 } from '@plurid/plurid-data';
 
 import PluridPubSub, {
@@ -403,17 +403,17 @@ const View: React.FC<ViewProperties> = (properties) => {
         if (activeDocumentID) {
             const activeDocument = dataDocuments[activeDocumentID];
             const pages = activeDocument.pages;
-            console.log('pages', pages);
+            // console.log('pages', pages);
 
             const activeContextDocument = contextDocuments[activeDocumentID];
             const contextPages = activeContextDocument.pages;
-            console.log('contextPages', contextPages);
+            // console.log('contextPages', contextPages);
 
             const treePages: TreePage[] = [];
             for (const pageID in pages) {
                 const contextPage = contextPages[pageID];
                 const treePage: TreePage = {
-                    id: contextPage.id,
+                    pageID: contextPage.id,
                     planeID: uuid(),
                     path: contextPage.path,
                     location: {
