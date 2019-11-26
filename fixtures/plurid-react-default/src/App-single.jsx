@@ -12,14 +12,14 @@ import Page2 from './containers/Page2';
 const App = () => {
     const appConfiguration: PluridConfiguration = {
         theme: 'plurid',
-        space: {
-            layout: {
-                type: 'COLUMNS',
-            },
-            center: true,
-        },
-        planeWidth: 0.5,
-        planeControls: false,
+        // space: {
+        //     layout: {
+        //         type: 'COLUMNS',
+        //     },
+        //     center: true,
+        // },
+        // planeWidth: 0.5,
+        // planeControls: false,
         // planeOpacity: 0,
     };
 
