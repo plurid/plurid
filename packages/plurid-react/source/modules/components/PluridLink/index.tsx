@@ -142,6 +142,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
                 pageID,
                 linkCoordinates,
             );
+            console.log('pluridPlaneID', pluridPlaneID);
+            console.log(updatedTree);
 
             if (pluridPlaneID) {
                 setTree(updatedTree);
