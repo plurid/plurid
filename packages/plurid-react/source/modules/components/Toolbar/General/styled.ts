@@ -27,7 +27,8 @@ export const StyledToolbarButtons: any = styled.div`
             return 'repeat(4, 40px)';
         }
 
-        return '160px 100px 160px 40px';
+        return '200px 200px 200px 70px';
+        // return '160px 100px 160px 40px';
         // return '1fr 0.5fr 1fr 40px';
     }};
 
@@ -48,7 +49,8 @@ export const StyledToolbarButtons: any = styled.div`
             return '200px';
         }
 
-        return '500px';
+        return '700px';
+        // return '500px';
     }};
 
     transition: opacity 300ms ease-in-out;
@@ -66,7 +68,7 @@ export const StyledToolbarRotate: any = styled.div`
             return '1fr';
         }
 
-        return '30px 30px 1fr 30px 30px';
+        return '30px 30px 60px 30px 30px';
         // return '0.5fr 0.5fr 1fr 0.5fr 0.5fr';
     }};
 `;
@@ -80,7 +82,7 @@ export const StyledToolbarTranslate: any = styled.div`
             return '1fr';
         }
 
-        return '30px 30px 1fr 30px 30px';
+        return '30px 30px 60px 30px 30px';
         // return '0.5fr 0.5fr 1fr 0.5fr 0.5fr';
     }};
 `;
@@ -94,7 +96,7 @@ export const StyledToolbarScale: any = styled.div`
             return '1fr';
         }
 
-        return '30px 1fr 30px';
+        return '30px 60px 30px';
         // return '0.5fr 1fr 0.5fr';
     }};
 `;
