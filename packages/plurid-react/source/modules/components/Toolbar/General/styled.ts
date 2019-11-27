@@ -32,8 +32,6 @@ export const StyledToolbarButtons: any = styled.div`
         }
 
         return '200px 200px 200px 70px';
-        // return '160px 100px 160px 40px';
-        // return '1fr 0.5fr 1fr 40px';
     }};
     width: ${(props: any) => {
         if (
@@ -48,7 +46,6 @@ export const StyledToolbarButtons: any = styled.div`
         }
 
         return '700px';
-        // return '500px';
     }};
 
     display: grid;
