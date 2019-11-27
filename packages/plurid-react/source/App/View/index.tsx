@@ -108,6 +108,8 @@ interface ViewDispatchProperties {
     rotateYWith: typeof actions.space.rotateYWith;
     translateXWith: typeof actions.space.translateXWith;
     translateYWith: typeof actions.space.translateYWith;
+    scaleUpWith: typeof actions.space.scaleUpWith;
+    scaleDownWith: typeof actions.space.scaleDownWith;
 
     dispatchSetActiveDocument: typeof actions.space.setActiveDocument;
 }
@@ -158,6 +160,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         rotateYWith,
         translateXWith,
         translateYWith,
+        scaleUpWith,
+        scaleDownWith,
 
         dispatchSetActiveDocument,
     } = properties;
@@ -319,7 +323,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 }
 
                 if (scaleLocked) {
-
+                    scaleUpWith(distance / 10);
                 }
                 break;
             case 16:
@@ -333,7 +337,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 }
 
                 if (scaleLocked) {
-
+                    scaleDownWith(distance / 10);
                 }
                 break;
         }
@@ -666,6 +670,12 @@ const mapDispatchToProperties = (
     ),
     translateYWith: (value: number) => dispatch(
         actions.space.translateYWith(value)
+    ),
+    scaleUpWith: (value: number) => dispatch(
+        actions.space.scaleUpWith(value)
+    ),
+    scaleDownWith: (value: number) => dispatch(
+        actions.space.scaleDownWith(value)
     ),
 
     dispatchSetActiveDocument: (activeDocument: string) => dispatch(
