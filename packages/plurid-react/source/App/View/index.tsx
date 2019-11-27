@@ -323,7 +323,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 }
 
                 if (scaleLocked) {
-                    scaleUpWith(distance / 10);
+                    scaleUpWith(velocity);
                 }
                 break;
             case 16:
@@ -337,7 +337,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 }
 
                 if (scaleLocked) {
-                    scaleDownWith(distance / 10);
+                    scaleDownWith(velocity);
                 }
                 break;
         }
