@@ -61,7 +61,9 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     } = toolbar;
 
     return (
-        <StyledMoreMenu>
+        <StyledMoreMenu
+            theme={theme}
+        >
             <div>
                 always show icons
 
@@ -69,6 +71,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     theme={theme}
                     checked={alwaysShowIcons}
                     atChange={() => {}}
+                    level={2}
                 />
             </div>
 
@@ -79,6 +82,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     theme={theme}
                     checked={alwaysShowTransformButtons}
                     atChange={() => {}}
+                    level={2}
                 />
             </div>
         </StyledMoreMenu>
