@@ -27,7 +27,8 @@ export const StyledToolbarButtons: any = styled.div`
             return 'repeat(4, 40px)';
         }
 
-        return '1fr 0.5fr 1fr 40px';
+        return '160px 100px 160px 40px';
+        // return '1fr 0.5fr 1fr 40px';
     }};
 
     display: grid;
@@ -65,7 +66,8 @@ export const StyledToolbarRotate: any = styled.div`
             return '1fr';
         }
 
-        return '0.5fr 0.5fr 1fr 0.5fr 0.5fr';
+        return '30px 30px 1fr 30px 30px';
+        // return '0.5fr 0.5fr 1fr 0.5fr 0.5fr';
     }};
 `;
 
@@ -78,7 +80,8 @@ export const StyledToolbarTranslate: any = styled.div`
             return '1fr';
         }
 
-        return '0.5fr 0.5fr 1fr 0.5fr 0.5fr';
+        return '30px 30px 1fr 30px 30px';
+        // return '0.5fr 0.5fr 1fr 0.5fr 0.5fr';
     }};
 `;
 
@@ -91,7 +94,8 @@ export const StyledToolbarScale: any = styled.div`
             return '1fr';
         }
 
-        return '0.5fr 1fr 0.5fr';
+        return '30px 1fr 30px';
+        // return '0.5fr 1fr 0.5fr';
     }};
 `;
 
@@ -115,7 +119,7 @@ export const StyledToolbarTransformButton: any = styled.div`
 
 
 export const StyledToolbarTransformText: any = styled.div`
-    margin: ${(props: any) => {
+    /* margin: ${(props: any) => {
         if (
             props.showIcons
             && !props.showTransformButtons
@@ -124,7 +128,7 @@ export const StyledToolbarTransformText: any = styled.div`
         }
 
         return '0 7px';
-    }};
+    }}; */
     padding: ${(props: any) => {
         if (
             props.showIcons

@@ -159,6 +159,14 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         viewSize.width,
     ]);
 
+    useEffect(() => {
+        setShowIcons(alwaysShowIcons);
+        setShowTransformButtons(alwaysShowTransformButtons);
+    }, [
+        alwaysShowIcons,
+        alwaysShowTransformButtons,
+    ]);
+
     return (
         <StyledToolbar
             onMouseEnter={() => setMouseIn(true)}
