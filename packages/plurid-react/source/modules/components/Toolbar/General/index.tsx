@@ -300,7 +300,13 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 <StyledMoreMenu
                     theme={theme}
                 >
+                    <div>
+                        always show icons
+                    </div>
 
+                    <div>
+                        always show transform buttons
+                    </div>
                 </StyledMoreMenu>
             )}
         </StyledToolbar>
