@@ -17,6 +17,7 @@ import {
 
 import {
     StyledMoreMenu,
+    StyledMoreMenuItem,
 } from './styled';
 
 import { AppState } from '../../../../../services/state/store';
@@ -64,8 +65,10 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         <StyledMoreMenu
             theme={theme}
         >
-            <div>
-                always show icons
+            <StyledMoreMenuItem>
+                <div>
+                    always show icons
+                </div>
 
                 <PluridSwitch
                     theme={theme}
@@ -73,10 +76,12 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     atChange={() => {}}
                     level={2}
                 />
-            </div>
+            </StyledMoreMenuItem>
 
-            <div>
-                always show transform buttons
+            <StyledMoreMenuItem>
+                <div>
+                    always show transform buttons
+                </div>
 
                 <PluridSwitch
                     theme={theme}
@@ -84,7 +89,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     atChange={() => {}}
                     level={2}
                 />
-            </div>
+            </StyledMoreMenuItem>
         </StyledMoreMenu>
     );
 }

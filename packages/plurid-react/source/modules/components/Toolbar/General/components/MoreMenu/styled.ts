@@ -10,6 +10,8 @@ export const StyledMoreMenu = styled.div`
     left: 50%;
     transform: translateX(-50%);
     border-radius: 22.5px;
+    padding: 22px;
+    font-size: 0.8rem;
 
     background-color: ${(props: any) => {
         return props.theme.backgroundColorSecondary;
@@ -17,4 +19,12 @@ export const StyledMoreMenu = styled.div`
     box-shadow: ${(props: any) => {
         return props.theme.boxShadowUmbra;
     }};
+`;
+
+
+export const StyledMoreMenuItem = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 `;
