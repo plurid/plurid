@@ -27,9 +27,28 @@ export const StyledToolbarButtons: any = styled.div`
             return 'repeat(4, 40px)';
         }
 
+        if (!props.showTransformButtons) {
+            return 'repeat(4, 70px)';
+        }
+
         return '200px 200px 200px 70px';
         // return '160px 100px 160px 40px';
         // return '1fr 0.5fr 1fr 40px';
+    }};
+    width: ${(props: any) => {
+        if (
+            props.showIcons
+            && !props.showTransformButtons
+        ) {
+            return '200px';
+        }
+
+        if (!props.showTransformButtons) {
+            return '320px';
+        }
+
+        return '700px';
+        // return '500px';
     }};
 
     display: grid;
@@ -41,18 +60,6 @@ export const StyledToolbarButtons: any = styled.div`
     font-size: 12px;
     opacity: 1;
     height: 100%;
-    width: ${(props: any) => {
-        if (
-            props.showIcons
-            && !props.showTransformButtons
-        ) {
-            return '200px';
-        }
-
-        return '700px';
-        // return '500px';
-    }};
-
     transition: opacity 300ms ease-in-out;
     z-index: 9999;
     user-select: none;
