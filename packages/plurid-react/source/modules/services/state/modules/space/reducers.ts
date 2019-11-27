@@ -224,7 +224,7 @@ const spaceReducer = (
             }
         case SCALE_UP_WITH:
             {
-                const computedScale = state.scale + action.payload;
+                const computedScale = state.scale + Math.abs(action.payload);
                 const scale = computedScale < SCALE_UPPER_LIMIT
                     ? computedScale
                     : SCALE_UPPER_LIMIT;
@@ -236,7 +236,7 @@ const spaceReducer = (
             }
         case SCALE_DOWN_WITH:
             {
-                const computedScale = state.scale + action.payload;
+                const computedScale = state.scale - Math.abs(action.payload);
                 const scale = computedScale > SCALE_LOWER_LIMIT
                     ? computedScale
                     : SCALE_LOWER_LIMIT;
