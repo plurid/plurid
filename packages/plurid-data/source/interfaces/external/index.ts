@@ -186,6 +186,8 @@ export interface PluridConfiguration {
 
     // To listen for the URL change and transition the camera/open plurids.
     // routeURL?: boolean;
+
+    ui: PluridConfigurationUI;
 }
 
 
@@ -304,4 +306,15 @@ export interface LayoutSheaves extends Layout {
      * The value is based on the current height of the screen and can be negative.
      */
     offsetY?: number;
+}
+
+
+export interface PluridConfigurationUI {
+    toolbar: PluridConfigurationUIToolbar;
+}
+
+
+export interface PluridConfigurationUIToolbar {
+    alwaysShowIcons: boolean;
+    alwaysShowTransformButtons: boolean;
 }
