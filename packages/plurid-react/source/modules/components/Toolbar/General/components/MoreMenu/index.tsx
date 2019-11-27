@@ -23,7 +23,7 @@ import {
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
 import selectors from '../../../../../services/state/selectors';
-// import actions from '../../../../../services/state/actions';
+import actions from '../../../../../services/state/actions';
 
 
 
@@ -36,6 +36,8 @@ interface MoreMenuStateProperties {
 }
 
 interface MoreMenuDispatchProperties {
+    dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
+    dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
 }
 
 type MoreMenuProperties = MoreMenuOwnProperties
@@ -44,8 +46,13 @@ type MoreMenuProperties = MoreMenuOwnProperties
 
 const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     const {
+        /** state */
         theme,
         configuration,
+
+        /** dispatch */
+        dispatchToggleUIToolbarAlwaysShowIconsAction,
+        dispatchToggleUIToolbarAlwaysTransformButtonsAction,
     } = properties;
 
     const {
@@ -73,7 +80,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                 <PluridSwitch
                     theme={theme}
                     checked={alwaysShowIcons}
-                    atChange={() => {}}
+                    atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
                     level={2}
                 />
             </StyledMoreMenuItem>
@@ -86,7 +93,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                 <PluridSwitch
                     theme={theme}
                     checked={alwaysShowTransformButtons}
-                    atChange={() => {}}
+                    atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
                     level={2}
                 />
             </StyledMoreMenuItem>
@@ -106,7 +113,12 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): MoreMenuDispatchProperties => ({
-
+    dispatchToggleUIToolbarAlwaysShowIconsAction: () => dispatch(
+        actions.configuration.toggleUIToolbarAlwaysShowIconsAction()
+    ),
+    dispatchToggleUIToolbarAlwaysTransformButtonsAction: () => dispatch(
+        actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction()
+    ),
 });
 
 
