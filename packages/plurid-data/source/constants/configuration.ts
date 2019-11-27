@@ -22,4 +22,10 @@ export const defaultConfiguration: PluridConfiguration = {
         transparent: false,
         center: true,
     },
+    ui: {
+        toolbar: {
+            alwaysShowIcons: false,
+            alwaysShowTransformButtons: false,
+        },
+    },
 }
