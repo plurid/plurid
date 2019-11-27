@@ -27,6 +27,7 @@ export interface PluridRootsOwnProperties {
 interface PluridRootsStateProperties {
     viewSize: ViewSize;
     planeWidth: number;
+    animatedTransform: boolean;
     spaceScale: number;
     spaceRotationX: number;
     spaceRotationY: number;
@@ -47,6 +48,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         /** state */
         // viewSize,
         // planeWidth,
+        animatedTransform,
         spaceScale,
         spaceRotationX,
         spaceRotationY,
@@ -69,6 +71,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                     rotateX(${spaceRotationX}deg)
                     rotateY(${spaceRotationY}deg)
                 `,
+                transition: animatedTransform ? 'transform 450ms ease-in-out' : 'initial',
                 // transformOrigin: `${viewSize.width * planeWidth/2}px ${spaceTranslationY}px`,
             }}
         >
@@ -90,6 +93,7 @@ const mapStateToProps = (
 ): PluridRootsStateProperties => ({
     viewSize: selectors.data.getViewSize(state),
     planeWidth: selectors.configuration.getConfiguration(state).planeWidth,
+    animatedTransform: selectors.space.getAnimatedTransform(state),
     spaceScale: selectors.space.getScale(state),
     spaceRotationX: selectors.space.getRotationX(state),
     spaceRotationY: selectors.space.getRotationY(state),

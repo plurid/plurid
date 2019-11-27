@@ -12,6 +12,13 @@ export interface SetSpaceLoadingAction {
 }
 
 
+export const SET_ANIMATED_TRANSFORM = 'SET_ANIMATED_TRANSFORM';
+export interface SetAnimatedTransformAction {
+    type: typeof SET_ANIMATED_TRANSFORM;
+    payload: boolean;
+}
+
+
 export const SET_SPACE_LOCATION = 'SET_SPACE_LOCATION';
 export interface SetSpaceLocationAction {
     type: typeof SET_SPACE_LOCATION;
@@ -147,6 +154,7 @@ export interface SetActiveDocumentAction {
 
 export interface SpaceState {
     loading: boolean;
+    animatedTransform: boolean;
     scale: number;
     rotationX: number;
     rotationY: number;
@@ -162,6 +170,7 @@ export interface SpaceState {
 
 
 export type SpaceActionsType = SetSpaceLoadingAction
+    | SetAnimatedTransformAction
     | SetSpaceLocationAction
     | RotateUpAction
     | RotateDownAction

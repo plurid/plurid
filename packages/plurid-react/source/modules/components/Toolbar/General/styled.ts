@@ -8,6 +8,7 @@ export const StyledToolbar = styled.div`
     right: 0;
     bottom: 15px;
     height: 45px;
+    z-index: 9999;
 `;
 
 

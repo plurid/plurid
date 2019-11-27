@@ -1,5 +1,8 @@
 import {
     setSpaceLoading,
+
+    setAnimatedTransform,
+
     setSpaceLocation,
 
     rotateUp,
@@ -34,6 +37,9 @@ import {
 
 export default {
     setSpaceLoading,
+
+    setAnimatedTransform,
+
     setSpaceLocation,
 
     rotateUp,
