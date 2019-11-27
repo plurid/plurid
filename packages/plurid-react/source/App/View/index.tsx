@@ -8,6 +8,8 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import Hammer from 'hammerjs';
+
 import {
     /** constants */
     defaultConfiguration,
@@ -268,6 +270,36 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
     }
 
+    const handleSwipe = (
+        event: HammerInput,
+    ) => {
+        const {
+            velocity,
+            direction,
+        } = event;
+
+        console.log(velocity);
+
+        switch (direction) {
+            case 2:
+                rotateYWith(velocity * 30);
+                console.log('right');
+                break;
+            case 4:
+                rotateYWith(velocity * 30);
+                console.log('left');
+                break;
+            case 8:
+                console.log('up');
+                break;
+            case 16:
+                console.log('down');
+                break;
+        }
+
+        console.log(event);
+    }
+
     /** Keydown, Wheel Listeners */
     useEffect(() => {
         if (viewElement.current) {
@@ -478,6 +510,18 @@ const View: React.FC<ViewProperties> = (properties) => {
         activeDocumentID,
         dataDocuments,
         contextDocuments,
+    ]);
+
+    /** Touch */
+    useEffect(() => {
+        if (viewElement.current) {
+            const touch = new Hammer(viewElement.current);
+            touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+
+            touch.on('swipe', (event) => handleSwipe(event));
+        }
+    }, [
+        viewElement.current,
     ]);
 
     const viewContainer = handleView(pages, documents);
