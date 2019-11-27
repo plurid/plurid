@@ -87,7 +87,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
             <StyledMoreMenuItem>
                 <div>
-                    show transform buttons
+                    show transform arrows
                 </div>
 
                 <PluridSwitch

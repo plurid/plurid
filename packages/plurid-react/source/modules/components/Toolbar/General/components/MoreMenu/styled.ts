@@ -6,7 +6,7 @@ export const StyledMoreMenu = styled.div`
     position: absolute;
     bottom: 55px;
     height: 250px;
-    width: 300px;
+    width: 320px;
     left: 50%;
     transform: translateX(-50%);
     border-radius: 22.5px;
