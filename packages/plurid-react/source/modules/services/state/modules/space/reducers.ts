@@ -8,6 +8,9 @@ import {
 
 import {
     SET_SPACE_LOADING,
+
+    SET_ANIMATED_TRANSFORM,
+
     SET_SPACE_LOCATION,
 
     ROTATE_UP,
@@ -45,6 +48,7 @@ import {
 
 const initialState: SpaceState = {
     loading: true,
+    animatedTransform: false,
     scale: 1,
     rotationX: 0,
     rotationY: 0,
@@ -68,6 +72,13 @@ const spaceReducer = (
                 return {
                     ...state,
                     loading: action.payload,
+                };
+            }
+        case SET_ANIMATED_TRANSFORM:
+            {
+                return {
+                    ...state,
+                    animatedTransform: action.payload,
                 };
             }
         case SET_SPACE_LOCATION:

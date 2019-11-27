@@ -82,7 +82,6 @@ interface ViewStateProperties {
     transform: any;
     tree: TreePage[];
     activeDocumentID: string;
-
     rotationLocked: boolean;
     translationLocked: boolean;
     scaleLocked: boolean;
@@ -98,6 +97,7 @@ interface ViewDispatchProperties {
     dispatchSetViewSize: typeof actions.data.setViewSize;
 
     dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
+    dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
     dispatchSetTree: typeof actions.space.setTree;
 
@@ -147,6 +147,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         dispatchSetViewSize,
 
         dispatchSetSpaceLoading,
+        dispatchSetAnimatedTransform,
         dispatchSetSpaceLocation,
         dispatchSetTree,
 
@@ -201,7 +202,9 @@ const View: React.FC<ViewProperties> = (properties) => {
         scaleLocked,
     ]);
 
-    const handleConfiguration = (configuration: PluridAppConfiguration) => {
+    const handleConfiguration = (
+        configuration: PluridAppConfiguration,
+    ) => {
         dispatchSetConfiguration(configuration);
 
         if (configuration.micro) {
@@ -250,7 +253,9 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }
 
-    const handlePubSubSubscribe = (pubsub: PluridPubSub) => {
+    const handlePubSubSubscribe = (
+        pubsub: PluridPubSub,
+    ) => {
         pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
             const {
                 value,
@@ -266,7 +271,9 @@ const View: React.FC<ViewProperties> = (properties) => {
         });
     }
 
-    const handlePubSubPublish = (pubsub: PluridPubSub) => {
+    const handlePubSubPublish = (
+        pubsub: PluridPubSub,
+    ) => {
         pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
     }
 
@@ -275,29 +282,64 @@ const View: React.FC<ViewProperties> = (properties) => {
     ) => {
         const {
             velocity,
+            distance,
             direction,
         } = event;
 
-        console.log(velocity);
-
+        dispatchSetAnimatedTransform(true);
         switch (direction) {
             case 2:
-                rotateYWith(velocity * 30);
-                console.log('right');
+                /** right */
+                if (rotationLocked) {
+                    rotateYWith(velocity * 30);
+                }
+
+                if (translationLocked) {
+                    translateXWith(-1 * distance);
+                }
                 break;
             case 4:
-                rotateYWith(velocity * 30);
-                console.log('left');
+                /** left */
+                if (rotationLocked) {
+                    rotateYWith(velocity * 30);
+                }
+
+                if (translationLocked) {
+                    translateXWith(distance);
+                }
                 break;
             case 8:
-                console.log('up');
+                /** top */
+                if (rotationLocked) {
+                    rotateXWith(velocity * 30);
+                }
+
+                if (translationLocked) {
+                    translateYWith(-1 * distance);
+                }
+
+                if (scaleLocked) {
+
+                }
                 break;
             case 16:
-                console.log('down');
+                /** down */
+                if (rotationLocked) {
+                    rotateXWith(velocity * 30);
+                }
+
+                if (translationLocked) {
+                    translateYWith(distance);
+                }
+
+                if (scaleLocked) {
+
+                }
                 break;
         }
-
-        console.log(event);
+        setTimeout(() => {
+            dispatchSetAnimatedTransform(false);
+        }, 450);
     }
 
     /** Keydown, Wheel Listeners */
@@ -514,14 +556,19 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     /** Touch */
     useEffect(() => {
-        if (viewElement.current) {
-            const touch = new Hammer(viewElement.current);
-            touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+        const touch = new Hammer((viewElement as any).current);
+        touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
-            touch.on('swipe', (event) => handleSwipe(event));
+        touch.on('swipe', handleSwipe);
+
+        return () => {
+            touch.off('swipe', handleSwipe);
         }
     }, [
         viewElement.current,
+        rotationLocked,
+        translationLocked,
+        scaleLocked,
     ]);
 
     const viewContainer = handleView(pages, documents);
@@ -563,7 +610,6 @@ const mapStateToProperties = (
     tree: selectors.space.getTree(state),
     activeDocumentID: selectors.space.getActiveDocumentID(state),
     spaceLoading: selectors.space.getLoading(state),
-
     rotationLocked: selectors.space.getRotationLocked(state),
     translationLocked: selectors.space.getTranslationLocked(state),
     scaleLocked: selectors.space.getScaleLocked(state),
@@ -591,6 +637,9 @@ const mapDispatchToProperties = (
 
     dispatchSetSpaceLoading: (loading: boolean) => dispatch(
         actions.space.setSpaceLoading(loading)
+    ),
+    dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
+        actions.space.setAnimatedTransform(animated)
     ),
     dispatchSetSpaceLocation: (spaceLocation: any) => dispatch(
         actions.space.setSpaceLocation(spaceLocation)

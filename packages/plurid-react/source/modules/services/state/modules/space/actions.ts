@@ -6,6 +6,10 @@ import {
 import {
     SET_SPACE_LOADING,
     SetSpaceLoadingAction,
+
+    SET_ANIMATED_TRANSFORM,
+    SetAnimatedTransformAction,
+
     SET_SPACE_LOCATION,
     SetSpaceLocationAction,
 
@@ -66,6 +70,15 @@ export const setSpaceLoading = (payload: boolean): SetSpaceLoadingAction => {
         payload,
     };
 }
+
+
+export const setAnimatedTransform = (payload: boolean): SetAnimatedTransformAction => {
+    return {
+        type: SET_ANIMATED_TRANSFORM,
+        payload,
+    };
+}
+
 
 export const setSpaceLocation = (payload: SpaceLocation): SetSpaceLocationAction => {
     return {
