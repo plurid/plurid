@@ -1,6 +1,9 @@
 import {
     setConfiguration,
     setMicro,
+
+    toggleUIToolbarAlwaysShowIconsAction,
+    toggleUIToolbarAlwaysTransformButtonsAction,
 } from '../modules/configuration/actions';
 
 
@@ -8,4 +11,7 @@ import {
 export default {
     setConfiguration,
     setMicro,
+
+    toggleUIToolbarAlwaysShowIconsAction,
+    toggleUIToolbarAlwaysTransformButtonsAction,
 };
