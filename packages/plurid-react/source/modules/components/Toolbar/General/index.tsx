@@ -72,6 +72,9 @@ interface ToolbarDispatchProperties {
     dispatchToggleRotationLocked: typeof actions.space.toggleRotationLocked;
     dispatchToggleTranslationLocked: typeof actions.space.toggleTranslationLocked;
     dispatchToggleScaleLocked: typeof actions.space.toggleScaleLocked;
+
+    dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
+    dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
 }
 
 type ToolbarProperties = ToolbarOwnProperties
@@ -105,6 +108,9 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         dispatchToggleRotationLocked,
         dispatchToggleTranslationLocked,
         dispatchToggleScaleLocked,
+
+        dispatchToggleUIToolbarAlwaysShowIconsAction,
+        dispatchToggleUIToolbarAlwaysTransformButtonsAction,
     } = properties;
 
     const {
@@ -142,16 +148,20 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     useEffect(() => {
         if (viewSize.width < 750) {
+            // dispatchToggleUIToolbarAlwaysTransformButtonsAction();
+            // dispatchToggleUIToolbarAlwaysShowIconsAction();
             setShowIcons(true);
             setShowTransformButtons(false);
         }
 
         if (viewSize.width > 750) {
             if (!alwaysShowIcons) {
+                // dispatchToggleUIToolbarAlwaysShowIconsAction();
                 setShowIcons(false);
             }
 
-            if (!showTransformButtons) {
+            if (!alwaysShowTransformButtons) {
+                // dispatchToggleUIToolbarAlwaysTransformButtonsAction();
                 setShowTransformButtons(true);
             }
         }
@@ -386,6 +396,13 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): Toolbar
     ),
     dispatchToggleScaleLocked: () => dispatch(
         actions.space.toggleScaleLocked()
+    ),
+
+    dispatchToggleUIToolbarAlwaysShowIconsAction: () => dispatch(
+        actions.configuration.toggleUIToolbarAlwaysShowIconsAction()
+    ),
+    dispatchToggleUIToolbarAlwaysTransformButtonsAction: () => dispatch(
+        actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction()
     ),
 });
 
