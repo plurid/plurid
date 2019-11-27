@@ -1,9 +1,14 @@
 import React, {
     useState,
+    useEffect,
 } from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
+
+import {
+    PluridConfiguration,
+} from '@plurid/plurid-data';
 
 import {
     StyledToolbar,
@@ -31,6 +36,9 @@ import { AppState } from '../../../services/state/store';
 import StateContext from '../../../services/state/context';
 import selectors from '../../../services/state/selectors';
 import actions from '../../../services/state/actions';
+import {
+    ViewSize,
+} from '../../../services/state/modules/data/types'
 
 
 
@@ -39,7 +47,8 @@ interface ToolbarOwnProperties {
 
 interface ToolbarStateProperties {
     theme: Theme;
-
+    configuration: PluridConfiguration;
+    viewSize: ViewSize;
     rotationLocked: boolean;
     translationLocked: boolean;
     scaleLocked: boolean;
@@ -69,17 +78,14 @@ type ToolbarProperties = ToolbarOwnProperties
     & ToolbarDispatchProperties;
 
 const Toolbar: React.FC<ToolbarProperties> = (properties) => {
-    const [mouseIn, setMouseIn] = useState(false);
-    const [showMoreMenu, setShowMoreMenu] = useState(false);
-
     const {
         /** state */
         theme,
-
+        configuration,
         rotationLocked,
         translationLocked,
         scaleLocked,
-
+        viewSize,
 
         /** dispatch */
         rotateUp,
@@ -100,6 +106,25 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         dispatchToggleScaleLocked,
     } = properties;
 
+    const {
+        ui,
+    } = configuration;
+
+    const {
+        toolbar,
+    } = ui;
+
+    const {
+        alwaysShowIcons,
+        alwaysShowTransformButtons,
+    } = toolbar;
+
+    const [mouseIn, setMouseIn] = useState(false);
+    const [showMoreMenu, setShowMoreMenu] = useState(false);
+
+    const [showIcons, setShowIcons] = useState(alwaysShowIcons);
+    const [showTransformButtons, setShowTransformButtons] = useState(alwaysShowTransformButtons);
+
     const toggleTransform = (type: string) => {
         switch (type) {
             case 'rotate':
@@ -114,8 +139,14 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         }
     }
 
-    const showIcons = true;
-    const showTransformButtons = false;
+    useEffect(() => {
+        if (viewSize.width < 550) {
+            setShowIcons(true);
+            setShowTransformButtons(false);
+        }
+    }, [
+        viewSize.width,
+    ]);
 
     return (
         <StyledToolbar
@@ -315,8 +346,9 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
 
 const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
+    configuration: selectors.configuration.getConfiguration(state),
     theme: selectors.themes.getInteractionTheme(state),
-
+    viewSize: selectors.data.getViewSize(state),
     rotationLocked: selectors.space.getRotationLocked(state),
     translationLocked: selectors.space.getTranslationLocked(state),
     scaleLocked: selectors.space.getScaleLocked(state),
