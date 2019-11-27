@@ -7,6 +7,10 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
+    Theme,
+} from '@plurid/plurid-themes';
+
+import {
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
@@ -23,9 +27,7 @@ import {
     StyledMoreMenu,
 } from './styled';
 
-// import ToolbarButton from '../Button';
-
-import { Theme } from '@plurid/plurid-themes';
+import MoreMenu from './components/MoreMenu';
 
 import RotateIcon from '../../../assets/icons/rotate-icon';
 import TranslateIcon from '../../../assets/icons/translate-icon';
@@ -341,13 +343,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 <StyledMoreMenu
                     theme={theme}
                 >
-                    <div>
-                        always show icons
-                    </div>
 
-                    <div>
-                        always show transform buttons
-                    </div>
                 </StyledMoreMenu>
             )}
         </StyledToolbar>

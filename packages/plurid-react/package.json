@@ -59,6 +59,7 @@
         "@plurid/plurid-functions": "^0.1.1",
         "@plurid/plurid-pubsub": "^0.1.2",
         "@plurid/plurid-themes": "^0.1.0",
+        "@plurid/plurid-ui-react": "^0.1.29",
         "hammerjs": "^2.0.8"
     },
     "devDependencies": {
