@@ -144,6 +144,16 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             setShowIcons(true);
             setShowTransformButtons(false);
         }
+
+        if (viewSize.width > 550) {
+            if (!alwaysShowIcons) {
+                setShowIcons(false);
+            }
+
+            if (!showTransformButtons) {
+                setShowTransformButtons(true);
+            }
+        }
     }, [
         viewSize.width,
     ]);
