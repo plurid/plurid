@@ -291,7 +291,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             case 2:
                 /** right */
                 if (rotationLocked) {
-                    rotateYWith(velocity * 30);
+                    rotateYWith(velocity * 60);
                 }
 
                 if (translationLocked) {
@@ -301,7 +301,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             case 4:
                 /** left */
                 if (rotationLocked) {
-                    rotateYWith(velocity * 30);
+                    rotateYWith(velocity * 60);
                 }
 
                 if (translationLocked) {
@@ -311,7 +311,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             case 8:
                 /** top */
                 if (rotationLocked) {
-                    rotateXWith(velocity * 30);
+                    rotateXWith(velocity * 60);
                 }
 
                 if (translationLocked) {
@@ -325,7 +325,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             case 16:
                 /** down */
                 if (rotationLocked) {
-                    rotateXWith(velocity * 30);
+                    rotateXWith(velocity * 60);
                 }
 
                 if (translationLocked) {
