@@ -115,8 +115,20 @@ export interface ScaleDownAction {
 }
 
 
-export const SET_TREE = 'SET_TREE';
+export const SCALE_UP_WITH = 'SCALE_UP_WITH';
+export interface ScaleUpWithAction {
+    type: typeof SCALE_UP_WITH;
+    payload: number;
+}
 
+export const SCALE_DOWN_WITH = 'SCALE_DOWN_WITH';
+export interface ScaleDownWithAction {
+    type: typeof SCALE_DOWN_WITH;
+    payload: number;
+}
+
+
+export const SET_TREE = 'SET_TREE';
 export interface SetTreeAction {
     type: typeof SET_TREE;
     payload: TreePage[];
@@ -124,28 +136,24 @@ export interface SetTreeAction {
 
 
 export const TOGGLE_ROTATION_LOCKED = 'TOGGLE_ROTATION_LOCKED';
-
 export interface ToggleRotationLockedAction {
     type: typeof TOGGLE_ROTATION_LOCKED;
 }
 
 
 export const TOGGLE_TRANSLATION_LOCKED = 'TOGGLE_TRANSLATION_LOCKED';
-
 export interface ToggleTranslationLockedAction {
     type: typeof TOGGLE_TRANSLATION_LOCKED;
 }
 
 
 export const TOGGLE_SCALE_LOCKED = 'TOGGLE_SCALE_LOCKED';
-
 export interface ToggleScaleLockedAction {
     type: typeof TOGGLE_SCALE_LOCKED;
 }
 
 
 export const SET_ACTIVE_DOCUMENT = 'SET_ACTIVE_DOCUMENT';
-
 export interface SetActiveDocumentAction {
     type: typeof SET_ACTIVE_DOCUMENT;
     payload: string;
@@ -188,6 +196,8 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | TranslateYWithAction
     | ScaleUpAction
     | ScaleDownAction
+    | ScaleUpWithAction
+    | ScaleDownWithAction
     | SetTreeAction
     | ToggleRotationLockedAction
     | ToggleScaleLockedAction

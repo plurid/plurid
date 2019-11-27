@@ -47,6 +47,10 @@ import {
     ScaleUpAction,
     SCALE_DOWN,
     ScaleDownAction,
+    SCALE_UP_WITH,
+    ScaleUpWithAction,
+    SCALE_DOWN_WITH,
+    ScaleDownWithAction,
 
     SET_TREE,
     SetTreeAction,
@@ -180,7 +184,6 @@ export const translateYWith = (payload: number): TranslateYWithAction => {
 }
 
 
-
 export const scaleUp = (): ScaleUpAction => {
     return {
         type: SCALE_UP,
@@ -190,6 +193,21 @@ export const scaleUp = (): ScaleUpAction => {
 export const scaleDown = (): ScaleDownAction => {
     return {
         type: SCALE_DOWN,
+    };
+}
+
+
+export const scaleUpWith = (value: number): ScaleUpWithAction => {
+    return {
+        type: SCALE_UP_WITH,
+        payload: value,
+    };
+}
+
+export const scaleDownWith = (value: number): ScaleDownWithAction => {
+    return {
+        type: SCALE_DOWN_WITH,
+        payload: value,
     };
 }
 

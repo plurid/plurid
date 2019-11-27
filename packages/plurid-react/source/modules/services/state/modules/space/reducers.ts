@@ -31,6 +31,8 @@ import {
 
     SCALE_DOWN,
     SCALE_UP,
+    SCALE_UP_WITH,
+    SCALE_DOWN_WITH,
 
     SET_TREE,
 
@@ -215,6 +217,22 @@ const spaceReducer = (
                 const scale = computedScale > SCALE_LOWER_LIMIT
                     ? computedScale
                     : SCALE_LOWER_LIMIT;
+                return {
+                    ...state,
+                    scale,
+                };
+            }
+        case SCALE_UP_WITH:
+            {
+                const scale = state.scale + action.payload;
+                return {
+                    ...state,
+                    scale,
+                };
+            }
+        case SCALE_DOWN_WITH:
+            {
+                const scale = state.scale + action.payload;
                 return {
                     ...state,
                     scale,

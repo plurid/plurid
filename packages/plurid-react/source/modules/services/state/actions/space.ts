@@ -23,6 +23,8 @@ import {
 
     scaleUp,
     scaleDown,
+    scaleUpWith,
+    scaleDownWith,
 
     setTree,
 
@@ -60,6 +62,8 @@ export default {
 
     scaleUp,
     scaleDown,
+    scaleUpWith,
+    scaleDownWith,
 
     setTree,
 
