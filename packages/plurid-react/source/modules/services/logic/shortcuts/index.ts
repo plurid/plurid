@@ -18,15 +18,29 @@ export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: KeyboardEvent,
 ) => {
-    if (event.code === 'KeyR') {
+    const noModifiers = !event.shiftKey
+        && !event.altKey
+        && !event.ctrlKey
+        && !event.metaKey;
+
+    if (
+        event.code === 'KeyR'
+        && noModifiers
+    ) {
         dispatch(actions.space.toggleRotationLocked());
     }
 
-    if (event.code === 'KeyT') {
+    if (
+        event.code === 'KeyT'
+        && noModifiers
+    ) {
         dispatch(actions.space.toggleTranslationLocked());
     }
 
-    if (event.code === 'KeyS') {
+    if (
+        event.code === 'KeyS'
+        && noModifiers
+    ) {
         dispatch(actions.space.toggleScaleLocked());
     }
 
