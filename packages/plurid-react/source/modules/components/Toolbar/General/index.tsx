@@ -24,7 +24,6 @@ import {
     StyledToolbarTransformText,
 
     StyledIcon,
-    StyledMoreMenu,
 } from './styled';
 
 import MoreMenu from './components/MoreMenu';
@@ -340,11 +339,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             </StyledToolbarButtons>
 
             {showMoreMenu && (
-                <StyledMoreMenu
-                    theme={theme}
-                >
-
-                </StyledMoreMenu>
+                <MoreMenu />
             )}
         </StyledToolbar>
     );
