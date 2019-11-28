@@ -178,7 +178,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
         if (!mouseIn) {
             moreMenuTimeout.current = setTimeout(() => {
-                // setShowMoreMenu(false);
+                setShowMoreMenu(false);
             }, 400);
         }
     }, [
