@@ -37,6 +37,7 @@ interface MoreMenuStateProperties {
 }
 
 interface MoreMenuDispatchProperties {
+    dispatchToggleUIToolbarHideAction: typeof actions.configuration.toggleUIToolbarHideAction;
     dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
     dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
 }
@@ -52,6 +53,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         configuration,
 
         /** dispatch */
+        dispatchToggleUIToolbarHideAction,
         dispatchToggleUIToolbarAlwaysShowIconsAction,
         dispatchToggleUIToolbarAlwaysTransformButtonsAction,
     } = properties;
@@ -65,6 +67,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     } = ui;
 
     const {
+        hide,
         alwaysShowIcons,
         alwaysShowTransformButtons,
     } = toolbar;
@@ -113,8 +116,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                 <PluridSwitch
                     theme={theme}
-                    checked={alwaysShowTransformButtons}
-                    atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
+                    checked={hide}
+                    atChange={() => dispatchToggleUIToolbarHideAction()}
                     level={2}
                 />
             </StyledMoreMenuItem>
@@ -134,6 +137,9 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): MoreMenuDispatchProperties => ({
+    dispatchToggleUIToolbarHideAction: () => dispatch(
+        actions.configuration.toggleUIToolbarHideAction()
+    ),
     dispatchToggleUIToolbarAlwaysShowIconsAction: () => dispatch(
         actions.configuration.toggleUIToolbarAlwaysShowIconsAction()
     ),

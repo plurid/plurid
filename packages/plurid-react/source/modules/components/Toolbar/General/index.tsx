@@ -116,6 +116,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     } = ui;
 
     const {
+        hide,
         alwaysShowIcons,
         alwaysShowTransformButtons,
     } = toolbar;
@@ -166,11 +167,21 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         alwaysShowTransformButtons,
     ]);
 
+    /** Hide More Menu at Mouse Out */
+    useEffect(() => {
+        if (!mouseIn) {
+            setShowMoreMenu(false);
+        }
+    }, [
+        mouseIn,
+    ]);
+
     return (
         <StyledToolbar
             onMouseEnter={() => setMouseIn(true)}
             onMouseLeave={() => setMouseIn(false)}
             mouseIn={mouseIn}
+            hideToolbar={hide}
         >
             <StyledToolbarButtons
                 theme={theme}

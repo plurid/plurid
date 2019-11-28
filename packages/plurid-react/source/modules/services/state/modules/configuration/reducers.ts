@@ -6,6 +6,7 @@ import {
     SET_CONFIGURATION,
     SET_MICRO,
 
+    TOGGLE_UI_TOOLBAR_HIDE,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS,
 
@@ -33,38 +34,61 @@ const configurationReducer = (
                 planeControls: false,
                 viewcube: false,
             };
+        case TOGGLE_UI_TOOLBAR_HIDE:
+            {
+                const {
+                    hide,
+                } = state.ui.toolbar;
+
+                return {
+                    ...state,
+                    ui: {
+                        ...state.ui,
+                        toolbar: {
+                            ...state.ui.toolbar,
+                            hide: !hide,
+                        },
+                    },
+                };
+            }
         case TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS:
-            const {
-                alwaysShowIcons,
-            } = state.ui.toolbar;
+            {
+                const {
+                    alwaysShowIcons,
+                } = state.ui.toolbar;
 
-            return {
-                ...state,
-                ui: {
-                    ...state.ui,
-                    toolbar: {
-                        ...state.ui.toolbar,
-                        alwaysShowIcons: !alwaysShowIcons,
+                return {
+                    ...state,
+                    ui: {
+                        ...state.ui,
+                        toolbar: {
+                            ...state.ui.toolbar,
+                            alwaysShowIcons: !alwaysShowIcons,
+                        },
                     },
-                },
-            };
+                };
+            }
         case TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS:
-            const {
-                alwaysShowTransformButtons,
-            } = state.ui.toolbar;
+            {
+                const {
+                    alwaysShowTransformButtons,
+                } = state.ui.toolbar;
 
+                return {
+                    ...state,
+                    ui: {
+                        ...state.ui,
+                        toolbar: {
+                            ...state.ui.toolbar,
+                            alwaysShowTransformButtons: !alwaysShowTransformButtons,
+                        },
+                    },
+                };
+            }
+        default:
             return {
                 ...state,
-                ui: {
-                    ...state.ui,
-                    toolbar: {
-                        ...state.ui.toolbar,
-                        alwaysShowTransformButtons: !alwaysShowTransformButtons,
-                    },
-                },
             };
-        default:
-            return state;
     }
 }
 

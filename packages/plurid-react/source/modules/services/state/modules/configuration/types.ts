@@ -17,6 +17,12 @@ export interface SetMicroAction {
 }
 
 
+export const TOGGLE_UI_TOOLBAR_HIDE = 'TOGGLE_UI_TOOLBAR_HIDE';
+export interface ToggleUIToolbarHideAction {
+    type: typeof TOGGLE_UI_TOOLBAR_HIDE;
+}
+
+
 export const TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS = 'TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS';
 export interface ToggleUIToolbarAlwaysShowIconsAction {
     type: typeof TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS;
@@ -35,5 +41,6 @@ export interface ConfigurationState extends PluridConfiguration {
 
 export type ConfigurationActionsType = SetConfigurationAction
     | SetMicroAction
+    | ToggleUIToolbarHideAction
     | ToggleUIToolbarAlwaysShowIconsAction
     | ToggleUIToolbarAlwaysTransformButtonsAction;
