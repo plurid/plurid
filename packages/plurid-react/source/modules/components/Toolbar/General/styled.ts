@@ -13,7 +13,7 @@ export const StyledToolbar: any = styled.div`
     position: absolute;
     left: 0;
     right: 0;
-    height: 65px;
+    height: 75px;
     z-index: 9999;
     transition: bottom 300ms ease-in-out;
 `;
@@ -61,6 +61,7 @@ export const StyledToolbarButtons: any = styled.div`
     justify-items: center;
     border-radius: 22.5px;
     margin: 0 auto;
+    margin-top: 10px;
     font-size: 12px;
     opacity: 1;
     height: 45px;
