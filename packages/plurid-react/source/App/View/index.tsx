@@ -560,6 +560,14 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     /** Touch */
     useEffect(() => {
+        /**
+         * Remove Hammerjs default css properties to add them only when in Lock Mode.
+         * https://stackoverflow.com/a/37896547
+         */
+        delete Hammer.defaults.cssProps.userSelect;
+        delete Hammer.defaults.cssProps.userDrag;
+        delete Hammer.defaults.cssProps.tapHighlightColor;
+
         const touch = new Hammer((viewElement as any).current);
         touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
@@ -587,6 +595,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         <StyledView
             ref={viewElement}
             tabIndex={0}
+            lockMode={rotationLocked || scaleLocked || translationLocked}
         >
             {!spaceLoading && (
                 <>

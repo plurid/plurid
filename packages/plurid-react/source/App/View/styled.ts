@@ -27,8 +27,27 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 
-export const StyledView = styled.div`
+export const StyledView: any = styled.div`
     height: 100%;
     width: 100%;
     position: relative;
+
+    user-select: ${(props: any) => {
+        if (props.lockMode) {
+            return 'none';
+        }
+        return 'initial';
+    }};
+    -webkit-user-drag: ${(props: any) => {
+        if (props.lockMode) {
+            return 'none';
+        }
+        return 'initial';
+    }};
+    -webkit-tap-highlight-color: ${(props: any) => {
+        if (props.lockMode) {
+            return 'rgba(0, 0, 0, 0)';
+        }
+        return 'initial';
+    }};
 `;
