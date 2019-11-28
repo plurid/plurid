@@ -1,4 +1,5 @@
 import React, {
+    useRef,
     useState,
     useEffect,
 } from 'react';
@@ -79,6 +80,8 @@ type ToolbarProperties = ToolbarOwnProperties
     & ToolbarDispatchProperties;
 
 const Toolbar: React.FC<ToolbarProperties> = (properties) => {
+    const moreMenuTimeout = useRef<null | number>(null);
+
     const {
         /** state */
         theme,
@@ -169,8 +172,14 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     /** Hide More Menu at Mouse Out */
     useEffect(() => {
+        if (mouseIn && moreMenuTimeout.current) {
+            clearTimeout(moreMenuTimeout.current);
+        }
+
         if (!mouseIn) {
-            setShowMoreMenu(false);
+            moreMenuTimeout.current = setTimeout(() => {
+                setShowMoreMenu(false);
+            }, 400);
         }
     }, [
         mouseIn,
@@ -350,6 +359,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     active={showMoreMenu}
                     showIcons={showIcons}
                     showTransformButtons={showTransformButtons}
+                    button={true}
                 >
                     <StyledIcon>
                         {MoreIcon}

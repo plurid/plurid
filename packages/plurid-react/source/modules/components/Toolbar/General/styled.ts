@@ -148,6 +148,10 @@ export const StyledToolbarTransformText: any = styled.div`
         return '0 7px';
     }}; */
     padding: ${(props: any) => {
+        if (props.button) {
+            return '0';
+        }
+
         if (
             props.showIcons
             && !props.showTransformButtons
