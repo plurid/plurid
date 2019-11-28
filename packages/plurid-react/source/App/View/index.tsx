@@ -279,6 +279,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub: PluridPubSub,
     ) => {
         pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
+
+        pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
     }
 
     const handleSwipe = (
@@ -515,6 +517,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             handlePubSubPublish(pubsub);
         }
     }, [
+        stateConfiguration,
         transform,
     ]);
 
