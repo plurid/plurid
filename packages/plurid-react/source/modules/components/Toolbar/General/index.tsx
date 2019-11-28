@@ -150,10 +150,10 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     useEffect(() => {
         if (viewSize.width < 750) {
-            if (!alwaysShowIcons) {
-                setShowIcons(true);
-                // dispatchToggleUIToolbarAlwaysShowIconsAction();
-            }
+            // if (!alwaysShowIcons) {
+            //     setShowIcons(true);
+            //     // dispatchToggleUIToolbarAlwaysShowIconsAction();
+            // }
 
             if (alwaysShowTransformButtons) {
                 setShowTransformButtons(false);
@@ -162,7 +162,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         }
 
         if (viewSize.width > 750) {
-            setShowIcons(alwaysShowIcons);
+            // setShowIcons(alwaysShowIcons);
             setShowTransformButtons(alwaysShowTransformButtons);
         }
     }, [
