@@ -424,10 +424,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@plurid/plurid-data@^0.1.37":
-  version "0.1.37"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.37.tgz#557b56f016d02148715ba9b7ec94279e755bbd1f"
-  integrity sha512-ALChPFTqkekXMaEcgbhR6ksHAzCfWMniSDXVctCEEjo+8KxUJ/Zs0IYup5pYOuCRtlYFifgSh45ojQqfWWcKhA==
+"@plurid/plurid-data@^0.1.38":
+  version "0.1.38"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.38.tgz#fa25aa47c34b0e5353bd3615e59d8c284b3ac0db"
+  integrity sha512-UiltSCEcb8B30qzn7Hn3P9YyIz4uwLRB93prLbh8uQxdaAHdQwCVutOs00vixQzR+AP2qTZNAgst10A03p0LYQ==
 
 "@plurid/plurid-engine@^0.1.19":
   version "0.1.19"
@@ -5982,10 +5982,10 @@ ts-jest@^24.2.0:
     semver "^5.5"
     yargs-parser "10.x"
 
-ts-node@^8.5.2:
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.5.2.tgz#434f6c893bafe501a30b32ac94ee36809ba2adce"
-  integrity sha512-W1DK/a6BGoV/D4x/SXXm6TSQx6q3blECUzd5TN+j56YEMX3yPVMpHsICLedUw3DvGF3aTQ8hfdR9AKMaHjIi+A==
+ts-node@^8.5.3:
+  version "8.5.3"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.5.3.tgz#f0bcacbfda8a70188f3a5c561b2dab546cb0abbb"
+  integrity sha512-B4dYs62o9ioIilzh7Npby5grYvw3lLwttTSIzf7QObf1FWUCzt+ELtyZJd+xYgxJ/n3A5nQJ2oG6VaZgwMMcjA==
   dependencies:
     arg "^4.1.0"
     diff "^4.0.1"
