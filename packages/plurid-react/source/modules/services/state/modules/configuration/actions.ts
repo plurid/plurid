@@ -8,6 +8,8 @@ import {
     SetMicroAction,
     SET_MICRO,
 
+    TOGGLE_UI_TOOLBAR_HIDE,
+    ToggleUIToolbarHideAction,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
     ToggleUIToolbarAlwaysShowIconsAction,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS,
@@ -27,6 +29,13 @@ export const setConfiguration = (payload: PluridConfiguration): SetConfiguration
 export const setMicro = (): SetMicroAction => {
     return {
         type: SET_MICRO,
+    };
+}
+
+
+export const toggleUIToolbarHideAction = (): ToggleUIToolbarHideAction => {
+    return {
+        type: TOGGLE_UI_TOOLBAR_HIDE,
     };
 }
 

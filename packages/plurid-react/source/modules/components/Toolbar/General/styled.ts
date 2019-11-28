@@ -4,6 +4,10 @@ import styled from 'styled-components';
 
 export const StyledToolbar: any = styled.div`
     bottom: ${(props: any) => {
+        if (!props.hideToolbar) {
+            return '-5px';
+        }
+
         if (props.mouseIn) {
             return '-5px';
         }
