@@ -2,13 +2,20 @@ import styled from 'styled-components';
 
 
 
-export const StyledToolbar = styled.div`
+export const StyledToolbar: any = styled.div`
+    bottom: ${(props: any) => {
+        if (props.mouseIn) {
+            return '-5px';
+        }
+        return '-55px';
+    }};
+
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 15px;
-    height: 45px;
+    height: 65px;
     z-index: 9999;
+    transition: bottom 300ms ease-in-out;
 `;
 
 
@@ -56,7 +63,7 @@ export const StyledToolbarButtons: any = styled.div`
     margin: 0 auto;
     font-size: 12px;
     opacity: 1;
-    height: 100%;
+    height: 45px;
     transition: opacity 300ms ease-in-out;
     z-index: 9999;
     user-select: none;

@@ -170,6 +170,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         <StyledToolbar
             onMouseEnter={() => setMouseIn(true)}
             onMouseLeave={() => setMouseIn(false)}
+            mouseIn={mouseIn}
         >
             <StyledToolbarButtons
                 theme={theme}

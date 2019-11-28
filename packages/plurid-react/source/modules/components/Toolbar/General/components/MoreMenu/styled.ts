@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export const StyledMoreMenu = styled.div`
     position: absolute;
-    bottom: 55px;
+    bottom: 75px;
     height: 250px;
     width: 320px;
     left: 50%;
