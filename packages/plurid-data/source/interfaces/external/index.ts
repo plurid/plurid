@@ -315,6 +315,7 @@ export interface PluridConfigurationUI {
 
 
 export interface PluridConfigurationUIToolbar {
+    hide: boolean;
     alwaysShowIcons: boolean;
     alwaysShowTransformButtons: boolean;
 }
