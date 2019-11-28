@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {
+    useState,
+    useEffect,
+} from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -71,6 +74,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     } = properties;
 
     const {
+        theme: selectedTheme,
         ui,
     } = configuration;
 
@@ -84,6 +88,9 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         alwaysShowTransformButtons,
     } = toolbar;
 
+    const [generalThemeName, setGeneralThemeName] = useState(typeof selectedTheme === 'object' ? selectedTheme.general : selectedTheme);
+    const [interactionThemeName, setInteractionThemeName] = useState(typeof selectedTheme === 'object' ? selectedTheme.interaction : selectedTheme);
+
     const setGeneralTheme = (selectedTheme: any) => {
         dispatchSetGeneralTheme(themes[selectedTheme]);
         dispatchSetConfigurationThemeGeneralAction(selectedTheme);
@@ -93,6 +100,18 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchSetInteractionTheme(themes[selectedTheme]);
         dispatchSetConfigurationThemeInteractionAction(selectedTheme);
     }
+
+    useEffect(() => {
+        if (typeof selectedTheme === 'object') {
+            setGeneralThemeName(selectedTheme.general);
+            setInteractionThemeName(selectedTheme.interaction);
+        } else {
+            setGeneralThemeName(selectedTheme);
+            setInteractionThemeName(selectedTheme);
+        }
+    }, [
+        selectedTheme,
+    ]);
 
     return (
         <StyledMoreMenu
@@ -112,7 +131,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridDropdown
                         selectables={Object.keys(themes)}
-                        selected="plurid"
+                        selected={generalThemeName}
                         atSelect={(selection) => setGeneralTheme(selection)}
                         theme={theme}
                         heightItems={4}
@@ -124,7 +143,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridDropdown
                         selectables={Object.keys(themes)}
-                        selected="plurid"
+                        selected={interactionThemeName}
                         atSelect={(selection) => setInteractionTheme(selection)}
                         theme={theme}
                         heightItems={4}
