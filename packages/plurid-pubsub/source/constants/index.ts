@@ -1,4 +1,7 @@
 export const TOPICS = {
+    CONFIGURATION: 'configuration',
+
+
     SPACE_ROTATE_UP: 'space.rotateUp',
     SPACE_ROTATE_DOWN: 'space.rotateDown',
     SPACE_ROTATE_LEFT: 'space.rotateLeft',
