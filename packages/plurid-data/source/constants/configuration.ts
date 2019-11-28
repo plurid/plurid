@@ -5,7 +5,10 @@ import {
 
 
 export const defaultConfiguration: PluridConfiguration = {
-    theme: 'plurid',
+    theme: {
+        general: 'plurid',
+        interaction: 'plurid',
+    },
     micro: false,
     toolbar: true,
     planeControls: true,
