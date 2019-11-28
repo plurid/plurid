@@ -8,6 +8,11 @@ import {
     SetMicroAction,
     SET_MICRO,
 
+    SET_CONFIGURATION_THEME_GENERAL,
+    SetConfigurationThemeGeneralAction,
+    SET_CONFIGURATION_THEME_INTERACTION,
+    SetConfigurationThemeInteractionAction,
+
     TOGGLE_UI_TOOLBAR_HIDE,
     ToggleUIToolbarHideAction,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
@@ -29,6 +34,26 @@ export const setConfiguration = (payload: PluridConfiguration): SetConfiguration
 export const setMicro = (): SetMicroAction => {
     return {
         type: SET_MICRO,
+    };
+}
+
+
+export const setConfigurationThemeGeneralAction = (
+    payload: string,
+): SetConfigurationThemeGeneralAction => {
+    return {
+        type: SET_CONFIGURATION_THEME_GENERAL,
+        payload,
+    };
+}
+
+
+export const setConfigurationThemeInteractionAction = (
+    payload: string,
+): SetConfigurationThemeInteractionAction => {
+    return {
+        type: SET_CONFIGURATION_THEME_INTERACTION,
+        payload,
     };
 }
 

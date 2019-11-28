@@ -490,7 +490,75 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     /** Configuration */
     useEffect(() => {
-        const mergedConfiguration = { ...defaultConfiguration, ...configuration };
+        const mergedConfiguration: PluridAppConfiguration = {
+            theme: {
+                general: configuration && typeof configuration.theme === 'string'
+                    ? configuration.theme
+                    : configuration && typeof configuration.theme === 'object'
+                        ? configuration.theme.general
+                        : typeof defaultConfiguration.theme === 'object'
+                            ? defaultConfiguration.theme.general
+                            : 'plurid',
+                interaction: configuration && typeof configuration.theme === 'string'
+                    ? configuration.theme
+                    : configuration && typeof configuration.theme === 'object'
+                        ? configuration.theme.general
+                        : typeof defaultConfiguration.theme === 'object'
+                            ? defaultConfiguration.theme.general
+                            : 'plurid',
+            },
+            micro: configuration && configuration.micro
+                ? configuration.micro
+                : defaultConfiguration.micro,
+            toolbar: configuration && configuration.toolbar
+                ? configuration.toolbar
+                : defaultConfiguration.toolbar,
+            viewcube: configuration && configuration.viewcube
+                ? configuration.viewcube
+                : defaultConfiguration.viewcube,
+            planeControls: configuration && configuration.planeControls
+                ? configuration.planeControls
+                : defaultConfiguration.planeControls,
+            planeDomainURL: configuration && configuration.planeDomainURL
+                ? configuration.planeDomainURL
+                : defaultConfiguration.planeDomainURL,
+            planeWidth: configuration && configuration.planeWidth
+                ? configuration.planeWidth
+                : defaultConfiguration.planeWidth,
+            planeOpacity: configuration && configuration.planeOpacity
+                ? configuration.planeOpacity
+                : defaultConfiguration.planeOpacity,
+            space: {
+                layout: configuration && configuration.space && configuration.space.layout
+                    ? configuration.space.layout
+                    : defaultConfiguration.space.layout,
+                camera: configuration && configuration.space && configuration.space.camera
+                    ? configuration.space.camera
+                    : defaultConfiguration.space.camera,
+                perspective: configuration && configuration.space && configuration.space.perspective
+                    ? configuration.space.perspective
+                    : defaultConfiguration.space.perspective,
+                transparent: configuration && configuration.space && configuration.space.transparent
+                    ? configuration.space.transparent
+                    : defaultConfiguration.space.transparent,
+                center: configuration && configuration.space && configuration.space.center
+                    ? configuration.space.center
+                    : defaultConfiguration.space.center,
+            },
+            ui: {
+                toolbar: {
+                    hide: configuration && configuration.ui && configuration.ui.toolbar && configuration.ui.toolbar.hide
+                        ? configuration.ui.toolbar.hide
+                        : defaultConfiguration.ui.toolbar.hide,
+                    alwaysShowIcons: configuration && configuration.ui && configuration.ui.toolbar && configuration.ui.toolbar.alwaysShowIcons
+                        ? configuration.ui.toolbar.alwaysShowIcons
+                        : defaultConfiguration.ui.toolbar.alwaysShowIcons,
+                    alwaysShowTransformButtons: configuration && configuration.ui && configuration.ui.toolbar && configuration.ui.toolbar.alwaysShowTransformButtons
+                        ? configuration.ui.toolbar.alwaysShowTransformButtons
+                        : defaultConfiguration.ui.toolbar.alwaysShowTransformButtons,
+                }
+            },
+        };
 
         if (!initialized) {
             handleConfiguration(mergedConfiguration);

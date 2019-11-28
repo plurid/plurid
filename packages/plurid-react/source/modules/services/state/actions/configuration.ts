@@ -2,6 +2,9 @@ import {
     setConfiguration,
     setMicro,
 
+    setConfigurationThemeGeneralAction,
+    setConfigurationThemeInteractionAction,
+
     toggleUIToolbarHideAction,
     toggleUIToolbarAlwaysShowIconsAction,
     toggleUIToolbarAlwaysTransformButtonsAction,
@@ -12,6 +15,9 @@ import {
 export default {
     setConfiguration,
     setMicro,
+
+    setConfigurationThemeGeneralAction,
+    setConfigurationThemeInteractionAction,
 
     toggleUIToolbarHideAction,
     toggleUIToolbarAlwaysShowIconsAction,
