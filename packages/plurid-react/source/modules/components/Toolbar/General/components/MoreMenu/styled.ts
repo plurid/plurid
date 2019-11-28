@@ -32,8 +32,15 @@ export const StyledMoreMenuItem = styled.div`
 
 
 export const StyledMoreMenuScroll = styled.div`
-    overflow: scroll;
     height: 210px;
+    overflow: scroll;
+
+    /* Hide Scrollbar */
+    scrollbar-width: none; /* Firefox 64 */
+    -ms-overflow-style: none; /* Internet Explorer 11 */
+    ::-webkit-scrollbar { /** WebKit */
+        display: none;
+    }
 
     h5::first-child {
         margin-top: 0;
