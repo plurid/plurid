@@ -39,6 +39,9 @@ interface MoreMenuStateProperties {
 }
 
 interface MoreMenuDispatchProperties {
+    dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
+    dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
+
     dispatchToggleUIToolbarHideAction: typeof actions.configuration.toggleUIToolbarHideAction;
     dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
     dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
@@ -55,6 +58,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         configuration,
 
         /** dispatch */
+        dispatchSetGeneralTheme,
+        dispatchSetInteractionTheme,
         dispatchToggleUIToolbarHideAction,
         dispatchToggleUIToolbarAlwaysShowIconsAction,
         dispatchToggleUIToolbarAlwaysTransformButtonsAction,
@@ -73,6 +78,14 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         alwaysShowIcons,
         alwaysShowTransformButtons,
     } = toolbar;
+
+    const setGeneralTheme = (selectedTheme: any) => {
+        dispatchSetGeneralTheme(themes[selectedTheme])
+    }
+
+    const setInteractionTheme = (selectedTheme: any) => {
+        dispatchSetInteractionTheme(themes[selectedTheme])
+    }
 
     return (
         <StyledMoreMenu
@@ -93,8 +106,9 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridDropdown
                         selectables={Object.keys(themes)}
                         selected="plurid"
-                        atSelect={() => {}}
+                        atSelect={(selection) => setGeneralTheme(selection)}
                         theme={theme}
+                        heightItems={4}
                     />
                 </StyledMoreMenuItem>
 
@@ -104,8 +118,9 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridDropdown
                         selectables={Object.keys(themes)}
                         selected="plurid"
-                        atSelect={() => {}}
+                        atSelect={(selection) => setInteractionTheme(selection)}
                         theme={theme}
+                        heightItems={4}
                     />
                 </StyledMoreMenuItem>
 
@@ -177,6 +192,12 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): MoreMenuDispatchProperties => ({
+    dispatchSetGeneralTheme: (theme: Theme) => dispatch(
+        actions.themes.setGeneralTheme(theme)
+    ),
+    dispatchSetInteractionTheme: (theme: Theme) => dispatch(
+        actions.themes.setInteractionTheme(theme)
+    ),
     dispatchToggleUIToolbarHideAction: () => dispatch(
         actions.configuration.toggleUIToolbarHideAction()
     ),

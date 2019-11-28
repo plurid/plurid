@@ -34,6 +34,7 @@ export const StyledMoreMenuItem = styled.div`
 export const StyledMoreMenuScroll = styled.div`
     height: 210px;
     overflow: scroll;
+    padding: 0 5px;
 
     /* Hide Scrollbar */
     scrollbar-width: none; /* Firefox 64 */
