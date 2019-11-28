@@ -132,7 +132,9 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     const [showIcons, setShowIcons] = useState(alwaysShowIcons);
     const [showTransformButtons, setShowTransformButtons] = useState(alwaysShowTransformButtons);
 
-    const toggleTransform = (type: string) => {
+    const toggleTransform = (
+        type: string,
+    ) => {
         switch (type) {
             case 'rotate':
                 dispatchToggleRotationLocked();
@@ -148,22 +150,20 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     useEffect(() => {
         if (viewSize.width < 750) {
-            // dispatchToggleUIToolbarAlwaysTransformButtonsAction();
-            // dispatchToggleUIToolbarAlwaysShowIconsAction();
-            setShowIcons(true);
-            setShowTransformButtons(false);
+            if (!alwaysShowIcons) {
+                setShowIcons(true);
+                // dispatchToggleUIToolbarAlwaysShowIconsAction();
+            }
+
+            if (alwaysShowTransformButtons) {
+                setShowTransformButtons(false);
+                // dispatchToggleUIToolbarAlwaysTransformButtonsAction();
+            }
         }
 
         if (viewSize.width > 750) {
-            if (!alwaysShowIcons) {
-                // dispatchToggleUIToolbarAlwaysShowIconsAction();
-                setShowIcons(false);
-            }
-
-            if (!alwaysShowTransformButtons) {
-                // dispatchToggleUIToolbarAlwaysTransformButtonsAction();
-                setShowTransformButtons(true);
-            }
+            setShowIcons(alwaysShowIcons);
+            setShowTransformButtons(alwaysShowTransformButtons);
         }
     }, [
         viewSize.width,
