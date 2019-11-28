@@ -12,6 +12,7 @@ export const StyledMoreMenu = styled.div`
     border-radius: 22.5px;
     padding: 22px;
     font-size: 0.8rem;
+    overflow: hidden;
 
     background-color: ${(props: any) => {
         return props.theme.backgroundColorSecondary;
@@ -27,4 +28,14 @@ export const StyledMoreMenuItem = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+`;
+
+
+export const StyledMoreMenuScroll = styled.div`
+    overflow: scroll;
+    height: 210px;
+
+    h5::first-child {
+        margin-top: 0;
+    }
 `;

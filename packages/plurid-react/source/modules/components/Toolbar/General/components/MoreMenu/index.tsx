@@ -3,7 +3,7 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import {
+import themes, {
     Theme,
 } from '@plurid/plurid-themes';
 
@@ -13,12 +13,14 @@ import {
 
 import {
     PluridHeading,
+    PluridDropdown,
     PluridSwitch,
 } from '@plurid/plurid-ui-react';
 
 import {
     StyledMoreMenu,
     StyledMoreMenuItem,
+    StyledMoreMenuScroll,
 } from './styled';
 
 import { AppState } from '../../../../../services/state/store';
@@ -76,54 +78,89 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         <StyledMoreMenu
             theme={theme}
         >
-            <PluridHeading
-                theme={theme}
-                type="h5"
-            >
-                toolbar
-            </PluridHeading>
-
-            <StyledMoreMenuItem>
-                <div>
-                    show transform icons
-                </div>
-
-                <PluridSwitch
+            <StyledMoreMenuScroll>
+                {/* THEMES */}
+                <PluridHeading
                     theme={theme}
-                    checked={alwaysShowIcons}
-                    atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
-                    exclusive={true}
-                    level={2}
-                />
-            </StyledMoreMenuItem>
+                    type="h5"
+                >
+                    themes
+                </PluridHeading>
 
-            <StyledMoreMenuItem>
-                <div>
-                    show transform arrows
-                </div>
+                <StyledMoreMenuItem>
+                    general theme
 
-                <PluridSwitch
+                    <PluridDropdown
+                        selectables={Object.keys(themes)}
+                        selected="plurid"
+                        atSelect={() => {}}
+                        theme={theme}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    interaction theme
+
+                    <PluridDropdown
+                        selectables={Object.keys(themes)}
+                        selected="plurid"
+                        atSelect={() => {}}
+                        theme={theme}
+                    />
+                </StyledMoreMenuItem>
+
+
+
+                {/* TOOLBAR */}
+                <PluridHeading
                     theme={theme}
-                    checked={alwaysShowTransformButtons}
-                    atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
-                    exclusive={true}
-                    level={2}
-                />
-            </StyledMoreMenuItem>
+                    type="h5"
+                >
+                    toolbar
+                </PluridHeading>
 
-            <StyledMoreMenuItem>
-                <div>
-                    hide toolbar
-                </div>
+                <StyledMoreMenuItem>
+                    <div>
+                        show transform icons
+                    </div>
 
-                <PluridSwitch
-                    theme={theme}
-                    checked={hide}
-                    atChange={() => dispatchToggleUIToolbarHideAction()}
-                    exclusive={true}
-                    level={2}
-                />
-            </StyledMoreMenuItem>
+                    <PluridSwitch
+                        theme={theme}
+                        checked={alwaysShowIcons}
+                        atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        show transform arrows
+                    </div>
+
+                    <PluridSwitch
+                        theme={theme}
+                        checked={alwaysShowTransformButtons}
+                        atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        hide toolbar
+                    </div>
+
+                    <PluridSwitch
+                        theme={theme}
+                        checked={hide}
+                        atChange={() => dispatchToggleUIToolbarHideAction()}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+            </StyledMoreMenuScroll>
         </StyledMoreMenu>
     );
 }
