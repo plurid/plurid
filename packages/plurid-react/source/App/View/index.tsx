@@ -523,11 +523,9 @@ const View: React.FC<ViewProperties> = (properties) => {
         if (activeDocumentID) {
             const activeDocument = dataDocuments[activeDocumentID];
             const pages = activeDocument.pages;
-            // console.log('pages', pages);
 
             const activeContextDocument = contextDocuments[activeDocumentID];
             const contextPages = activeContextDocument.pages;
-            // console.log('contextPages', contextPages);
 
             const treePages: TreePage[] = [];
             for (const pageID in pages) {
@@ -552,7 +550,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             dispatchSetTree(computedTree);
         }
     }, [
-        stateConfiguration,
+        // stateConfiguration,
         activeDocumentID,
         dataDocuments,
         contextDocuments,
