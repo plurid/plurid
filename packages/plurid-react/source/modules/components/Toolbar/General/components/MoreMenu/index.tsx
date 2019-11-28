@@ -12,6 +12,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
+    PluridHeading,
     PluridSwitch,
 } from '@plurid/plurid-ui-react';
 
@@ -72,6 +73,13 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         <StyledMoreMenu
             theme={theme}
         >
+            <PluridHeading
+                theme={theme}
+                type="h5"
+            >
+                toolbar
+            </PluridHeading>
+
             <StyledMoreMenuItem>
                 <div>
                     show transform icons
@@ -88,6 +96,19 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
             <StyledMoreMenuItem>
                 <div>
                     show transform arrows
+                </div>
+
+                <PluridSwitch
+                    theme={theme}
+                    checked={alwaysShowTransformButtons}
+                    atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
+                    level={2}
+                />
+            </StyledMoreMenuItem>
+
+            <StyledMoreMenuItem>
+                <div>
+                    hide toolbar
                 </div>
 
                 <PluridSwitch
