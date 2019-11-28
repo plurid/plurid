@@ -24,6 +24,7 @@ export const defaultConfiguration: PluridConfiguration = {
     },
     ui: {
         toolbar: {
+            hide: false,
             alwaysShowIcons: false,
             alwaysShowTransformButtons: false,
         },
