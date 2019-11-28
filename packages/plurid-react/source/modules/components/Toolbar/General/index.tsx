@@ -72,9 +72,6 @@ interface ToolbarDispatchProperties {
     dispatchToggleRotationLocked: typeof actions.space.toggleRotationLocked;
     dispatchToggleTranslationLocked: typeof actions.space.toggleTranslationLocked;
     dispatchToggleScaleLocked: typeof actions.space.toggleScaleLocked;
-
-    dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
-    dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
 }
 
 type ToolbarProperties = ToolbarOwnProperties
@@ -108,9 +105,6 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         dispatchToggleRotationLocked,
         dispatchToggleTranslationLocked,
         dispatchToggleScaleLocked,
-
-        dispatchToggleUIToolbarAlwaysShowIconsAction,
-        dispatchToggleUIToolbarAlwaysTransformButtonsAction,
     } = properties;
 
     const {
@@ -148,27 +142,22 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         }
     }
 
+    /** ViewSize Update */
     useEffect(() => {
         if (viewSize.width < 750) {
-            // if (!alwaysShowIcons) {
-            //     setShowIcons(true);
-            //     // dispatchToggleUIToolbarAlwaysShowIconsAction();
-            // }
-
             if (alwaysShowTransformButtons) {
                 setShowTransformButtons(false);
-                // dispatchToggleUIToolbarAlwaysTransformButtonsAction();
             }
         }
 
         if (viewSize.width > 750) {
-            // setShowIcons(alwaysShowIcons);
             setShowTransformButtons(alwaysShowTransformButtons);
         }
     }, [
         viewSize.width,
     ]);
 
+    /** Local State Update */
     useEffect(() => {
         setShowIcons(alwaysShowIcons);
         setShowTransformButtons(alwaysShowTransformButtons);
@@ -396,13 +385,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): Toolbar
     ),
     dispatchToggleScaleLocked: () => dispatch(
         actions.space.toggleScaleLocked()
-    ),
-
-    dispatchToggleUIToolbarAlwaysShowIconsAction: () => dispatch(
-        actions.configuration.toggleUIToolbarAlwaysShowIconsAction()
-    ),
-    dispatchToggleUIToolbarAlwaysTransformButtonsAction: () => dispatch(
-        actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction()
     ),
 });
 
