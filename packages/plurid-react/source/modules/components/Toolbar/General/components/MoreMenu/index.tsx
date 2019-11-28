@@ -92,6 +92,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     theme={theme}
                     checked={alwaysShowIcons}
                     atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
+                    exclusive={true}
                     level={2}
                 />
             </StyledMoreMenuItem>
@@ -105,6 +106,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     theme={theme}
                     checked={alwaysShowTransformButtons}
                     atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
+                    exclusive={true}
                     level={2}
                 />
             </StyledMoreMenuItem>
@@ -118,6 +120,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     theme={theme}
                     checked={hide}
                     atChange={() => dispatchToggleUIToolbarHideAction()}
+                    exclusive={true}
                     level={2}
                 />
             </StyledMoreMenuItem>
