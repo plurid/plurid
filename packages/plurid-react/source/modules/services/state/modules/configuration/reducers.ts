@@ -6,6 +6,9 @@ import {
     SET_CONFIGURATION,
     SET_MICRO,
 
+    SET_CONFIGURATION_THEME_GENERAL,
+    SET_CONFIGURATION_THEME_INTERACTION,
+
     TOGGLE_UI_TOOLBAR_HIDE,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS,
@@ -37,6 +40,34 @@ const configurationReducer = (
                 planeControls: false,
                 viewcube: false,
             };
+        case SET_CONFIGURATION_THEME_GENERAL:
+            {
+                const updatedTheme = {
+                    general: action.payload,
+                    interaction: typeof state.theme === 'object'
+                        ? state.theme.interaction
+                        : 'plurid',
+                }
+
+                return {
+                    ...state,
+                    theme: updatedTheme,
+                };
+            }
+        case SET_CONFIGURATION_THEME_INTERACTION:
+            {
+                const updatedTheme = {
+                    general: typeof state.theme === 'object'
+                        ? state.theme.general
+                        : 'plurid',
+                    interaction: action.payload,
+                }
+
+                return {
+                    ...state,
+                    theme: updatedTheme,
+                };
+            }
         case TOGGLE_UI_TOOLBAR_HIDE:
             {
                 const {

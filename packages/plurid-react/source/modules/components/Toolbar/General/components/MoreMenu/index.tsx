@@ -42,6 +42,9 @@ interface MoreMenuDispatchProperties {
     dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
     dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
 
+    dispatchSetConfigurationThemeGeneralAction: typeof actions.configuration.setConfigurationThemeGeneralAction;
+    dispatchSetConfigurationThemeInteractionAction: typeof actions.configuration.setConfigurationThemeInteractionAction;
+
     dispatchToggleUIToolbarHideAction: typeof actions.configuration.toggleUIToolbarHideAction;
     dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
     dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
@@ -58,6 +61,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         configuration,
 
         /** dispatch */
+        dispatchSetConfigurationThemeGeneralAction,
+        dispatchSetConfigurationThemeInteractionAction,
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
         dispatchToggleUIToolbarHideAction,
@@ -80,11 +85,13 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     } = toolbar;
 
     const setGeneralTheme = (selectedTheme: any) => {
-        dispatchSetGeneralTheme(themes[selectedTheme])
+        dispatchSetGeneralTheme(themes[selectedTheme]);
+        dispatchSetConfigurationThemeGeneralAction(selectedTheme);
     }
 
     const setInteractionTheme = (selectedTheme: any) => {
-        dispatchSetInteractionTheme(themes[selectedTheme])
+        dispatchSetInteractionTheme(themes[selectedTheme]);
+        dispatchSetConfigurationThemeInteractionAction(selectedTheme);
     }
 
     return (
@@ -192,6 +199,13 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): MoreMenuDispatchProperties => ({
+    dispatchSetConfigurationThemeGeneralAction: (theme: string) => dispatch(
+        actions.configuration.setConfigurationThemeGeneralAction(theme)
+    ),
+    dispatchSetConfigurationThemeInteractionAction: (theme: string) => dispatch(
+        actions.configuration.setConfigurationThemeInteractionAction(theme)
+    ),
+
     dispatchSetGeneralTheme: (theme: Theme) => dispatch(
         actions.themes.setGeneralTheme(theme)
     ),
