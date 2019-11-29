@@ -29,6 +29,7 @@ import {
 
 import MoreMenu from './components/MoreMenu';
 
+import FirstPersonIcon from '../../../assets/icons/first-person-icon';
 import RotateIcon from '../../../assets/icons/rotate-icon';
 import TranslateIcon from '../../../assets/icons/translate-icon';
 import ScaleIcon from '../../../assets/icons/scale-icon';
@@ -197,6 +198,20 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 showIcons={showIcons}
                 showTransformButtons={showTransformButtons}
             >
+                <StyledToolbarTransformText
+                    theme={theme}
+                    onClick={() => setShowMoreMenu(show => !show)}
+                    active={showMoreMenu}
+                    showIcons={showIcons}
+                    showTransformButtons={showTransformButtons}
+                    button={true}
+                >
+                    <StyledIcon>
+                        {FirstPersonIcon}
+                    </StyledIcon>
+                </StyledToolbarTransformText>
+
+
                 <StyledToolbarRotate
                     showTransformButtons={showTransformButtons}
                 >
@@ -255,6 +270,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     )}
                 </StyledToolbarRotate>
 
+
                 <StyledToolbarScale
                     showTransformButtons={showTransformButtons}
                 >
@@ -294,6 +310,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         </StyledToolbarTransformButton>
                     )}
                 </StyledToolbarScale>
+
 
                 <StyledToolbarTranslate
                     showTransformButtons={showTransformButtons}
@@ -352,6 +369,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         </>
                     )}
                 </StyledToolbarTranslate>
+
 
                 <StyledToolbarTransformText
                     theme={theme}
