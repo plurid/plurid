@@ -270,6 +270,11 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     return (
                         <StyledMoreMenuItem
                             key={name}
+                            afterline={
+                                type === 'TURN_DOWN'
+                                || type === 'TOGGLE_ROTATE'
+                                || type === 'TOGGLE_TRANSLATE'
+                            }
                         >
                             <div>
                                 {name}
