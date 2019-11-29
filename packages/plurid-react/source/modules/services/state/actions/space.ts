@@ -5,6 +5,18 @@ import {
 
     setSpaceLocation,
 
+    viewCameraMoveForward,
+    viewCameraMoveBackward,
+    viewCameraMoveLeft,
+    viewCameraMoveRight,
+    viewCameraMoveUp,
+    viewCameraMoveDown,
+
+    viewCameraTurnUp,
+    viewCameraTurnDown,
+    viewCameraTurnLeft,
+    viewCameraTurnRight,
+
     rotateUp,
     rotateDown,
     rotateX,
@@ -43,6 +55,18 @@ export default {
     setAnimatedTransform,
 
     setSpaceLocation,
+
+    viewCameraMoveForward,
+    viewCameraMoveBackward,
+    viewCameraMoveLeft,
+    viewCameraMoveRight,
+    viewCameraMoveUp,
+    viewCameraMoveDown,
+
+    viewCameraTurnUp,
+    viewCameraTurnDown,
+    viewCameraTurnLeft,
+    viewCameraTurnRight,
 
     rotateUp,
     rotateDown,
