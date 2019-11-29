@@ -192,7 +192,6 @@ const View: React.FC<ViewProperties> = (properties) => {
             translation: translationLocked,
             scale: scaleLocked,
         };
-        // console.log(locks);
 
         handleGlobalWheel(
             dispatch,

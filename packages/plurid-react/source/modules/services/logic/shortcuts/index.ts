@@ -115,7 +115,6 @@ export const handleGlobalWheel = (
         deltaY: event.deltaY,
     }
     const direction = getWheelDirection(deltas);
-    // console.log(direction);
 
     if (locks.rotation) {
         if (direction === 'left') {
@@ -128,6 +127,14 @@ export const handleGlobalWheel = (
     }
 
     if (event.shiftKey) {
+        if (direction === 'up') {
+            dispatch(actions.space.rotateUp());
+        }
+
+        if (direction === 'down') {
+            dispatch(actions.space.rotateDown());
+        }
+
         if (direction === 'left') {
             dispatch(actions.space.rotateLeft());
         }
