@@ -239,6 +239,14 @@ export interface SpaceState {
     scaleLocked: boolean;
     activeDocumentID: string;
     firstPerson: boolean;
+    camera: Coordinates;
+}
+
+
+export interface Coordinates {
+    x: number;
+    y: number;
+    z: number;
 }
 
 

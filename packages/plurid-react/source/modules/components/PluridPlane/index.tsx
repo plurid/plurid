@@ -76,6 +76,8 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
 
     const width = planeWidth * viewSize.width || 500;
 
+    // based on camera location and world position compute transform matrix
+
     return (
         <StyledPluridPlane
             theme={generalTheme}
