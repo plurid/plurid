@@ -25,13 +25,20 @@ export const handleGlobalShortcuts = (
         && !event.metaKey;
 
 
+    if (
+        event.code === 'KeyF'
+        && noModifiers
+    ) {
+        return dispatch(actions.space.toggleFirstPerson());
+    }
+
     if (firstPerson) {
         if (
             event.code === 'KeyW'
             && noModifiers
         ) {
             console.log('move forward');
-            dispatch(actions.space.viewCameraMoveForward());
+            return dispatch(actions.space.viewCameraMoveForward());
         }
 
         if (
@@ -39,8 +46,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
         ) {
             console.log('move backward');
-            dispatch(actions.space.viewCameraMoveBackward());
-            return;
+            return dispatch(actions.space.viewCameraMoveBackward());
         }
 
 
@@ -49,7 +55,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
         ) {
             console.log('move left');
-            dispatch(actions.space.viewCameraMoveLeft());
+            return dispatch(actions.space.viewCameraMoveLeft());
         }
 
         if (
@@ -57,7 +63,7 @@ export const handleGlobalShortcuts = (
             && event.shiftKey
         ) {
             console.log('turn left');
-            dispatch(actions.space.viewCameraTurnLeft());
+            return dispatch(actions.space.viewCameraTurnLeft());
         }
 
 
@@ -66,7 +72,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
         ) {
             console.log('move right');
-            dispatch(actions.space.viewCameraMoveRight());
+            return dispatch(actions.space.viewCameraMoveRight());
         }
 
         if (
@@ -74,7 +80,7 @@ export const handleGlobalShortcuts = (
             && event.shiftKey
         ) {
             console.log('turn right');
-            dispatch(actions.space.viewCameraTurnRight());
+            return dispatch(actions.space.viewCameraTurnRight());
         }
 
 
@@ -83,7 +89,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
         ) {
             console.log('turn up');
-            dispatch(actions.space.viewCameraTurnUp());
+            return dispatch(actions.space.viewCameraTurnUp());
         }
 
         if (
@@ -91,7 +97,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
         ) {
             console.log('turn down');
-            dispatch(actions.space.viewCameraTurnDown());
+            return dispatch(actions.space.viewCameraTurnDown());
         }
 
 
@@ -100,7 +106,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
         ) {
             console.log('move up');
-            dispatch(actions.space.viewCameraMoveUp());
+            return dispatch(actions.space.viewCameraMoveUp());
         }
 
         if (
@@ -108,7 +114,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
         ) {
             console.log('move down');
-            dispatch(actions.space.viewCameraMoveDown());
+            return dispatch(actions.space.viewCameraMoveDown());
         }
     }
 
@@ -117,65 +123,67 @@ export const handleGlobalShortcuts = (
         event.code === 'KeyR'
         && noModifiers
     ) {
-        dispatch(actions.space.toggleRotationLocked());
+        return dispatch(actions.space.toggleRotationLocked());
     }
 
     if (
         event.code === 'KeyT'
         && noModifiers
     ) {
-        dispatch(actions.space.toggleTranslationLocked());
+        return dispatch(actions.space.toggleTranslationLocked());
     }
 
     if (
         event.code === 'KeyS'
         && noModifiers
     ) {
-        dispatch(actions.space.toggleScaleLocked());
+        return dispatch(actions.space.toggleScaleLocked());
     }
 
 
     if (event.key === 'ArrowRight') {
         if (event.shiftKey) {
-            dispatch(actions.space.rotateLeft());
+            return dispatch(actions.space.rotateLeft());
         }
         if (event.altKey) {
-            dispatch(actions.space.translateRight());
+            return dispatch(actions.space.translateRight());
         }
     }
 
     if (event.key === 'ArrowLeft') {
         if (event.shiftKey) {
-            dispatch(actions.space.rotateRight());
+            return dispatch(actions.space.rotateRight());
         }
         if (event.altKey) {
-            dispatch(actions.space.translateLeft());
+            return dispatch(actions.space.translateLeft());
         }
     }
 
     if (event.key === 'ArrowUp') {
         if (event.shiftKey) {
-            dispatch(actions.space.rotateUp());
+            return dispatch(actions.space.rotateUp());
         }
         if (event.altKey) {
-            dispatch(actions.space.translateUp());
+            return dispatch(actions.space.translateUp());
         }
         if (event.metaKey || event.ctrlKey) {
-            dispatch(actions.space.scaleUp());
+            return dispatch(actions.space.scaleUp());
         }
     }
 
     if (event.key === 'ArrowDown') {
         if (event.shiftKey) {
-            dispatch(actions.space.rotateDown());
+            return dispatch(actions.space.rotateDown());
         }
         if (event.altKey) {
-            dispatch(actions.space.translateDown());
+            return dispatch(actions.space.translateDown());
         }
         if (event.metaKey || event.ctrlKey) {
-            dispatch(actions.space.scaleDown());
+            return dispatch(actions.space.scaleDown());
         }
     }
+
+    return;
 }
 
 
