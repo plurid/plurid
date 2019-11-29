@@ -1,7 +1,23 @@
-import React from 'react';
+import React, {
+    // useState,
+    // useEffect,
+} from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
+
+import {
+    TreePage,
+} from '@plurid/plurid-data';
+
+// import {
+//     rotateMatrix,
+//     translateMatrix,
+//     scaleMatrix,
+//     multiplyArrayOfMatrices,
+//     matrixArrayToCSSMatrix,
+// } from '@plurid/plurid-engine';
+
 
 import {
     StyledPluridRoots,
@@ -9,9 +25,6 @@ import {
 
 import PluridRoot from '../PluridRoot';
 
-import {
-    TreePage,
-} from '@plurid/plurid-data';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
@@ -57,6 +70,31 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         tree,
     } = properties;
 
+    // const [cssMatrix, setCssMatrix] = useState('');
+
+    // useEffect(() => {
+    //     console.log(spaceRotationY);
+    //     const rotationMatrix = rotateMatrix(spaceRotationX, spaceRotationY, 0);
+    //     const translationMatrix = translateMatrix(spaceTranslationX, spaceTranslationY, 0);
+    //     const scalationMatrix = scaleMatrix(spaceScale);
+
+    //     const multiplicationMatrix = multiplyArrayOfMatrices([
+    //         translationMatrix,
+    //         rotationMatrix,
+    //         scalationMatrix,
+    //     ]);
+
+    //     const cssMatrix = matrixArrayToCSSMatrix(multiplicationMatrix);
+    //     setCssMatrix(cssMatrix);
+    //     console.log(cssMatrix);
+    // }, [
+    //     spaceScale,
+    //     spaceRotationX,
+    //     spaceRotationY,
+    //     spaceTranslationX,
+    //     spaceTranslationY,
+    // ]);
+
     return (
         <StyledPluridRoots
             style={{
@@ -64,6 +102,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 height: window.innerHeight + 'px',
                 // width: viewSize.width + 'px',
                 // height: viewSize.height + 'px',
+                // transform: cssMatrix,
                 transform: `
                     scale(${spaceScale})
                     translateX(${spaceTranslationX}px)
