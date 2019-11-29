@@ -239,6 +239,17 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         level={2}
                     />
                 </StyledMoreMenuItem>
+
+
+                {/* SHORTCUTS */}
+                <PluridHeading
+                    theme={theme}
+                    type="h5"
+                >
+                    shortcuts
+                </PluridHeading>
+
+
             </StyledMoreMenuScroll>
         </StyledMoreMenu>
     );
