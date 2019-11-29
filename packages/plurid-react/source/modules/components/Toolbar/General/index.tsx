@@ -156,13 +156,13 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     /** ViewSize Update */
     useEffect(() => {
-        if (viewSize.width < 750) {
+        if (viewSize.width < 800) {
             if (alwaysShowTransformButtons) {
                 setShowTransformButtons(false);
             }
         }
 
-        if (viewSize.width > 750) {
+        if (viewSize.width > 800) {
             setShowTransformButtons(alwaysShowTransformButtons);
         }
     }, [
