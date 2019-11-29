@@ -35,28 +35,28 @@ export const StyledToolbarButtons: any = styled.div`
             props.showIcons
             && !props.showTransformButtons
         ) {
-            return 'repeat(4, 40px)';
+            return 'repeat(5, 40px)';
         }
 
         if (!props.showTransformButtons) {
-            return 'repeat(4, 70px)';
+            return 'repeat(5, 70px)';
         }
 
-        return '200px 200px 200px 70px';
+        return '70px 200px 200px 200px 70px';
     }};
     width: ${(props: any) => {
         if (
             props.showIcons
             && !props.showTransformButtons
         ) {
-            return '200px';
+            return '260px';
         }
 
         if (!props.showTransformButtons) {
-            return '320px';
+            return '380px';
         }
 
-        return '700px';
+        return '770px';
     }};
 
     display: grid;
