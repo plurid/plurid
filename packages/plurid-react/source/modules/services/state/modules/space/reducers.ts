@@ -107,6 +107,9 @@ const spaceReducer = (
             {
                 return {
                     ...state,
+                    rotationLocked: false,
+                    translationLocked: false,
+                    scaleLocked: false,
                     firstPerson: !state.firstPerson,
                 };
             }
