@@ -131,6 +131,7 @@ export const handleGlobalShortcuts = (
         dispatch(actions.space.toggleScaleLocked());
     }
 
+
     if (event.key === 'ArrowRight') {
         if (event.shiftKey) {
             dispatch(actions.space.rotateLeft());
