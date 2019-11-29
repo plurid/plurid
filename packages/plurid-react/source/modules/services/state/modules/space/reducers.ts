@@ -153,7 +153,7 @@ const spaceReducer = (
             }
         case VIEW_CAMERA_MOVE_UP:
             {
-                const translationY = state.translationY - TRANSLATION_STEP * 3;
+                const translationY = state.translationY + TRANSLATION_STEP * 3;
                 return {
                     ...state,
                     translationY,
@@ -161,7 +161,7 @@ const spaceReducer = (
             }
         case VIEW_CAMERA_MOVE_DOWN:
             {
-                const translationY = state.translationY + TRANSLATION_STEP * 3;
+                const translationY = state.translationY - TRANSLATION_STEP * 3;
                 return {
                     ...state,
                     translationY,
@@ -171,7 +171,7 @@ const spaceReducer = (
 
         case VIEW_CAMERA_TURN_UP:
             {
-                const rotationX = (state.rotationX - ROTATION_STEP) % 360;
+                const rotationX = (state.rotationX + ROTATION_STEP) % 360;
                 return {
                     ...state,
                     rotationX,
@@ -179,7 +179,7 @@ const spaceReducer = (
             }
         case VIEW_CAMERA_TURN_DOWN:
             {
-                const rotationX = (state.rotationX + ROTATION_STEP) % 360;
+                const rotationX = (state.rotationX - ROTATION_STEP) % 360;
                 return {
                     ...state,
                     rotationX,
