@@ -31,6 +31,8 @@ const getRotationLocked = (state: AppState) => state.space.rotationLocked;
 const getTranslationLocked = (state: AppState) => state.space.translationLocked;
 const getScaleLocked = (state: AppState) => state.space.scaleLocked;
 
+const getFirstPerson = (state: AppState) => state.space.firstPerson;
+
 
 export default {
     getLoading,
@@ -52,4 +54,6 @@ export default {
     getRotationLocked,
     getTranslationLocked,
     getScaleLocked,
+
+    getFirstPerson,
 };

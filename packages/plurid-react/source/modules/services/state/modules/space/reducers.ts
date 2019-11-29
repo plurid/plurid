@@ -11,6 +11,8 @@ import {
 
     SET_ANIMATED_TRANSFORM,
 
+    TOGGLE_FIRST_PERSON,
+
     SET_SPACE_LOCATION,
 
     VIEW_CAMERA_MOVE_FORWARD,
@@ -74,6 +76,7 @@ const initialState: SpaceState = {
     translationLocked: false,
     scaleLocked: false,
     activeDocumentID: '',
+    firstPerson: false,
 }
 
 const spaceReducer = (
@@ -93,6 +96,13 @@ const spaceReducer = (
                 return {
                     ...state,
                     animatedTransform: action.payload,
+                };
+            }
+        case TOGGLE_FIRST_PERSON:
+            {
+                return {
+                    ...state,
+                    firstPerson: !state.firstPerson,
                 };
             }
         case SET_SPACE_LOCATION:

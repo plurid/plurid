@@ -52,12 +52,15 @@ interface ToolbarStateProperties {
     theme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
+    firstPerson: boolean;
     rotationLocked: boolean;
     translationLocked: boolean;
     scaleLocked: boolean;
 }
 
 interface ToolbarDispatchProperties {
+    dispatchToggleFirstPerson: typeof actions.space.toggleFirstPerson;
+
     rotateUp: typeof actions.space.rotateUp;
     rotateDown: typeof actions.space.rotateDown;
     rotateLeft: typeof actions.space.rotateLeft;
@@ -87,12 +90,16 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         /** state */
         theme,
         configuration,
+        firstPerson,
         rotationLocked,
         translationLocked,
         scaleLocked,
         viewSize,
 
+
         /** dispatch */
+        dispatchToggleFirstPerson,
+
         rotateUp,
         rotateDown,
         rotateLeft,
@@ -200,10 +207,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             >
                 <StyledToolbarTransformText
                     theme={theme}
-                    onClick={() => setShowMoreMenu(show => !show)}
-                    active={showMoreMenu}
-                    showIcons={showIcons}
-                    showTransformButtons={showTransformButtons}
+                    onClick={() => dispatchToggleFirstPerson()}
+                    active={firstPerson}
                     button={true}
                 >
                     <StyledIcon>
@@ -375,8 +380,6 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     theme={theme}
                     onClick={() => setShowMoreMenu(show => !show)}
                     active={showMoreMenu}
-                    showIcons={showIcons}
-                    showTransformButtons={showTransformButtons}
                     button={true}
                 >
                     <StyledIcon>
@@ -397,6 +400,7 @@ const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     theme: selectors.themes.getInteractionTheme(state),
     viewSize: selectors.data.getViewSize(state),
+    firstPerson: selectors.space.getFirstPerson(state),
     rotationLocked: selectors.space.getRotationLocked(state),
     translationLocked: selectors.space.getTranslationLocked(state),
     scaleLocked: selectors.space.getScaleLocked(state),
@@ -404,6 +408,8 @@ const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
 
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ToolbarDispatchProperties => ({
+    dispatchToggleFirstPerson: () => dispatch(actions.space.toggleFirstPerson()),
+
     rotateUp: () => dispatch(actions.space.rotateUp()),
     rotateDown: () => dispatch(actions.space.rotateDown()),
     rotateLeft: () => dispatch(actions.space.rotateLeft()),

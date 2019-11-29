@@ -5,6 +5,7 @@ import {
 
 
 
+
 export const SET_SPACE_LOADING = 'SET_SPACE_LOADING';
 export interface SetSpaceLoadingAction {
     type: typeof SET_SPACE_LOADING;
@@ -16,6 +17,12 @@ export const SET_ANIMATED_TRANSFORM = 'SET_ANIMATED_TRANSFORM';
 export interface SetAnimatedTransformAction {
     type: typeof SET_ANIMATED_TRANSFORM;
     payload: boolean;
+}
+
+
+export const TOGGLE_FIRST_PERSON = 'TOGGLE_FIRST_PERSON';
+export interface ToggleFirstPersonAction {
+    type: typeof TOGGLE_FIRST_PERSON;
 }
 
 
@@ -231,11 +238,13 @@ export interface SpaceState {
     translationLocked: boolean;
     scaleLocked: boolean;
     activeDocumentID: string;
+    firstPerson: boolean;
 }
 
 
 export type SpaceActionsType = SetSpaceLoadingAction
     | SetAnimatedTransformAction
+    | ToggleFirstPersonAction
     | SetSpaceLocationAction
     | ViewCameraMoveForwardAction
     | ViewCameraMoveBackwardAction
