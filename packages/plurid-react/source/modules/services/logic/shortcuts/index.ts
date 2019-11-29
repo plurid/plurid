@@ -1,10 +1,10 @@
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    defaultShortcuts,
-    SHORTCUTS,
-} from '@plurid/plurid-data';
+// import {
+//     defaultShortcuts,
+//     SHORTCUTS,
+// } from '@plurid/plurid-data';
 
 import actions from '../../state/actions';
 
@@ -17,6 +17,7 @@ import {
 export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: KeyboardEvent,
+    firstPerson: boolean,
 ) => {
     const noModifiers = !event.shiftKey
         && !event.altKey
@@ -24,89 +25,91 @@ export const handleGlobalShortcuts = (
         && !event.metaKey;
 
 
+    if (firstPerson) {
+        if (
+            event.code === 'KeyW'
+            && noModifiers
+        ) {
+            console.log('move forward');
+            dispatch(actions.space.viewCameraMoveForward());
+        }
 
-    if (
-        event.code === 'KeyW'
-        && noModifiers
-    ) {
-        console.log('move forward');
-        dispatch(actions.space.viewCameraMoveForward());
-    }
-
-    if (
-        event.code === 'KeyS'
-        && noModifiers
-    ) {
-        console.log('move backward');
-        dispatch(actions.space.viewCameraMoveBackward());
-    }
-
-
-    if (
-        event.code === 'KeyA'
-        && noModifiers
-    ) {
-        console.log('move left');
-        dispatch(actions.space.viewCameraMoveLeft());
-    }
-
-    if (
-        event.code === 'KeyA'
-        && event.shiftKey
-    ) {
-        console.log('turn left');
-        dispatch(actions.space.viewCameraTurnLeft());
-    }
+        if (
+            event.code === 'KeyS'
+            && noModifiers
+        ) {
+            console.log('move backward');
+            dispatch(actions.space.viewCameraMoveBackward());
+            return;
+        }
 
 
-    if (
-        event.code === 'KeyD'
-        && noModifiers
-    ) {
-        console.log('move right');
-        dispatch(actions.space.viewCameraMoveRight());
-    }
+        if (
+            event.code === 'KeyA'
+            && noModifiers
+        ) {
+            console.log('move left');
+            dispatch(actions.space.viewCameraMoveLeft());
+        }
 
-    if (
-        event.code === 'KeyD'
-        && event.shiftKey
-    ) {
-        console.log('turn right');
-        dispatch(actions.space.viewCameraTurnRight());
-    }
-
-
-    if (
-        event.code === 'KeyQ'
-        && noModifiers
-    ) {
-        console.log('turn up');
-        dispatch(actions.space.viewCameraTurnUp());
-    }
-
-    if (
-        event.code === 'KeyZ'
-        && noModifiers
-    ) {
-        console.log('turn down');
-        dispatch(actions.space.viewCameraTurnDown());
-    }
+        if (
+            event.code === 'KeyA'
+            && event.shiftKey
+        ) {
+            console.log('turn left');
+            dispatch(actions.space.viewCameraTurnLeft());
+        }
 
 
-    if (
-        event.code === 'KeyE'
-        && noModifiers
-    ) {
-        console.log('move up');
-        dispatch(actions.space.viewCameraMoveUp());
-    }
+        if (
+            event.code === 'KeyD'
+            && noModifiers
+        ) {
+            console.log('move right');
+            dispatch(actions.space.viewCameraMoveRight());
+        }
 
-    if (
-        event.code === 'KeyC'
-        && noModifiers
-    ) {
-        console.log('move down');
-        dispatch(actions.space.viewCameraMoveDown());
+        if (
+            event.code === 'KeyD'
+            && event.shiftKey
+        ) {
+            console.log('turn right');
+            dispatch(actions.space.viewCameraTurnRight());
+        }
+
+
+        if (
+            event.code === 'KeyQ'
+            && noModifiers
+        ) {
+            console.log('turn up');
+            dispatch(actions.space.viewCameraTurnUp());
+        }
+
+        if (
+            event.code === 'KeyZ'
+            && noModifiers
+        ) {
+            console.log('turn down');
+            dispatch(actions.space.viewCameraTurnDown());
+        }
+
+
+        if (
+            event.code === 'KeyE'
+            && noModifiers
+        ) {
+            console.log('move up');
+            dispatch(actions.space.viewCameraMoveUp());
+        }
+
+        if (
+            event.code === 'KeyC'
+            && noModifiers
+        ) {
+            console.log('move down');
+            dispatch(actions.space.viewCameraMoveDown());
+        }
     }
 
 
