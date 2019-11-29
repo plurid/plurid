@@ -256,27 +256,26 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                 {defaultShortcuts.map(shortcut => {
                     const {
                         type,
+                    } = shortcut;
+                    const shortcutData = shortcutsNames[type];
+                    const {
+                        name,
                         key,
                         modifier,
-                    } = shortcut;
-                    const name = shortcutsNames[type].name;
-                    const modifierString = modifier
-                        ? keyModifiers[modifier]
-                        : '';
-                    console.log(name, key, modifierString);
+                    } = shortcutData;
+                    const modifierString = modifier + '+' || '';
+                    // console.log(name, key, modifierString);
 
                     return (
                         <StyledMoreMenuItem
-                            key={Math.random() + ''}
+                            key={name}
                         >
                             <div>
-                                {/* foo */}
                                 {name}
                             </div>
 
                             <div>
-                                {/* boo */}
-                                {modifierString}{key}
+                                {modifierString} {key}
                             </div>
                         </StyledMoreMenuItem>
                     );
