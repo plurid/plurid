@@ -70,7 +70,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         spaceTranslationX,
         spaceTranslationY,
         spaceTranslationZ,
-        firstPerson,
+        // firstPerson,
         tree,
     } = properties;
 
@@ -117,8 +117,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 `,
                 transition: animatedTransform
                     ? 'transform 450ms ease-in-out'
-                    : firstPerson
-                        ? 'transform 100ms linear'
+                    // : firstPerson
+                    //     ? 'transform 100ms linear'
                         : 'initial',
                 // transformOrigin: `${viewSize.width * planeWidth/2}px ${spaceTranslationY}px`,
             }}
