@@ -23,11 +23,35 @@ export const StyledMoreMenu = styled.div`
 `;
 
 
-export const StyledMoreMenuItem = styled.div`
+export const StyledMoreMenuItem: any = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    position: relative;
+
+    margin-bottom: ${(props: any) => {
+        if (props.afterline) {
+            return '30px';
+        }
+        return '10px';
+    }};
+
+    ${(props: any) => {
+        if (props.afterline) {
+            return `
+                ::after {
+                    position: absolute;
+                    content: '';
+                    left: 0;
+                    right: 0;
+                    bottom: -15px;
+                    height: 1px;
+                    background-color: white;
+                }
+            `;
+        }
+        return '';
+    }};
 `;
 
 
