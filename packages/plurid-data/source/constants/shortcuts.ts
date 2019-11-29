@@ -6,6 +6,40 @@ import {
 
 
 export const shortcutsNames: any = {
+    TOGGLE_FIRST_PERSON: {
+        name: 'toggle first person',
+    },
+    MOVE_FORWARD: {
+        name: 'move forward',
+    },
+    MOVE_BACKWARD: {
+        name: 'move backward',
+    },
+    MOVE_LEFT: {
+        name: 'move left',
+    },
+    MOVE_RIGHT: {
+        name: 'move right',
+    },
+    MOVE_UP: {
+        name: 'move up',
+    },
+    MOVE_DOWN: {
+        name: 'move down',
+    },
+    TURN_LEFT: {
+        name: 'turn left',
+    },
+    TURN_RIGHT: {
+        name: 'turn right',
+    },
+    TURN_UP: {
+        name: 'turn up',
+    },
+    TURN_DOWN: {
+        name: 'turn down',
+    },
+
     ROTATE_UP: {
         name: 'rotate up',
     },
@@ -51,6 +85,53 @@ export const shortcutsNames: any = {
 
 
 export const defaultShortcuts = [
+    {
+        type: SHORTCUTS.TOGGLE_FIRST_PERSON,
+        key: 'f',
+    },
+    {
+        type: SHORTCUTS.MOVE_FORWARD,
+        key: 'w',
+    },
+    {
+        type: SHORTCUTS.MOVE_BACKWARD,
+        key: 's',
+    },
+    {
+        type: SHORTCUTS.MOVE_LEFT,
+        key: 'a',
+    },
+    {
+        type: SHORTCUTS.MOVE_RIGHT,
+        key: 'd',
+    },
+    {
+        type: SHORTCUTS.MOVE_UP,
+        key: 'e',
+    },
+    {
+        type: SHORTCUTS.MOVE_DOWN,
+        key: 'c',
+    },
+    {
+        type: SHORTCUTS.TURN_LEFT,
+        key: 'a',
+        modifier: KEY_MODIFIERS.SHIFT,
+    },
+    {
+        type: SHORTCUTS.TURN_RIGHT,
+        key: 'd',
+        modifier: KEY_MODIFIERS.SHIFT,
+    },
+    {
+        type: SHORTCUTS.TURN_UP,
+        key: 'q',
+    },
+    {
+        type: SHORTCUTS.TURN_DOWN,
+        key: 'z',
+    },
+
     {
         type: SHORTCUTS.ROTATE_UP,
         key: 'ArrowUp',
