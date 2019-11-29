@@ -10,6 +10,9 @@ import {
     SET_ANIMATED_TRANSFORM,
     SetAnimatedTransformAction,
 
+    TOGGLE_FIRST_PERSON,
+    ToggleFirstPersonAction,
+
     SET_SPACE_LOCATION,
     SetSpaceLocationAction,
 
@@ -102,6 +105,13 @@ export const setAnimatedTransform = (payload: boolean): SetAnimatedTransformActi
     return {
         type: SET_ANIMATED_TRANSFORM,
         payload,
+    };
+}
+
+
+export const toggleFirstPerson = (): ToggleFirstPersonAction => {
+    return {
+        type: TOGGLE_FIRST_PERSON,
     };
 }
 

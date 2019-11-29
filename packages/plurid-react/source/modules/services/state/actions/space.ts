@@ -3,6 +3,8 @@ import {
 
     setAnimatedTransform,
 
+    toggleFirstPerson,
+
     setSpaceLocation,
 
     viewCameraMoveForward,
@@ -53,6 +55,8 @@ export default {
     setSpaceLoading,
 
     setAnimatedTransform,
+
+    toggleFirstPerson,
 
     setSpaceLocation,
 
