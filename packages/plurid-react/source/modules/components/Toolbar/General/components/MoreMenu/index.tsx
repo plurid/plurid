@@ -263,8 +263,9 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         key,
                         modifier,
                     } = shortcutData;
-                    const modifierString = modifier + '+' || '';
-                    // console.log(name, key, modifierString);
+                    const modifierString = modifier
+                        ? modifier + '+'
+                        : '';
 
                     return (
                         <StyledMoreMenuItem
