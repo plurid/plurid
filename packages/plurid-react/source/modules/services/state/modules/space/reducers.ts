@@ -121,38 +121,50 @@ const spaceReducer = (
 
         case VIEW_CAMERA_MOVE_FORWARD:
             {
+                const translationZ = state.translationZ + TRANSLATION_STEP;
                 return {
                     ...state,
+                    translationZ,
                 };
             }
         case VIEW_CAMERA_MOVE_BACKWARD:
             {
+                const translationZ = state.translationZ - TRANSLATION_STEP;
                 return {
                     ...state,
+                    translationZ,
                 };
             }
         case VIEW_CAMERA_MOVE_LEFT:
             {
+                const translationX = state.translationX + TRANSLATION_STEP;
                 return {
                     ...state,
+                    translationX,
                 };
             }
         case VIEW_CAMERA_MOVE_RIGHT:
             {
+                const translationX = state.translationX - TRANSLATION_STEP;
                 return {
                     ...state,
+                    translationX,
                 };
             }
         case VIEW_CAMERA_MOVE_UP:
             {
+                const translationY = state.translationY - TRANSLATION_STEP;
                 return {
                     ...state,
+                    translationY,
                 };
             }
         case VIEW_CAMERA_MOVE_DOWN:
             {
+                const translationY = state.translationY + TRANSLATION_STEP;
                 return {
                     ...state,
+                    translationY,
                 };
             }
 

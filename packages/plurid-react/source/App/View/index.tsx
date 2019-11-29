@@ -223,15 +223,15 @@ const View: React.FC<ViewProperties> = (properties) => {
             dispatchSetSpaceLocation(spaceLocation);
         }
 
-        if (configuration.space.center && !configuration.space.camera) {
-            const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.planeWidth;
-            translateXWith(x);
+        // if (configuration.space.center && !configuration.space.camera) {
+        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.planeWidth;
+        //     translateXWith(x);
 
-            // to get plane height;
-            const planeHeight = 300;
-            const y = window.innerHeight / 2 - planeHeight/2;
-            translateYWith(y);
-        }
+        //     // to get plane height;
+        //     const planeHeight = 300;
+        //     const y = window.innerHeight / 2 - planeHeight/2;
+        //     translateYWith(y);
+        // }
 
         if (configuration.theme) {
             if (typeof configuration.theme === 'object') {
