@@ -77,6 +77,11 @@ const initialState: SpaceState = {
     scaleLocked: false,
     activeDocumentID: '',
     firstPerson: false,
+    camera: {
+        x: 0,
+        y: 0,
+        z: 0,
+    },
 }
 
 const spaceReducer = (
