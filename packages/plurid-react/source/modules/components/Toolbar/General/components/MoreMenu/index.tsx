@@ -146,7 +146,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         selected={interactionThemeName}
                         atSelect={(selection) => setInteractionTheme(selection)}
                         theme={theme}
-                        heightItems={4}
+                        heightItems={3}
                     />
                 </StyledMoreMenuItem>
 
