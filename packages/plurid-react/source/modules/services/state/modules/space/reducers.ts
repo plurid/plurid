@@ -378,6 +378,7 @@ const spaceReducer = (
                     rotationLocked: !state.rotationLocked,
                     translationLocked: false,
                     scaleLocked: false,
+                    firstPerson: false,
                 };
             }
         case TOGGLE_TRANSLATION_LOCKED:
@@ -387,6 +388,7 @@ const spaceReducer = (
                     rotationLocked: false,
                     translationLocked: !state.translationLocked,
                     scaleLocked: false,
+                    firstPerson: false,
                 };
             }
         case TOGGLE_SCALE_LOCKED:
@@ -396,6 +398,7 @@ const spaceReducer = (
                     rotationLocked: false,
                     translationLocked: false,
                     scaleLocked: !state.scaleLocked,
+                    firstPerson: false,
                 };
             }
         case SET_ACTIVE_DOCUMENT:
