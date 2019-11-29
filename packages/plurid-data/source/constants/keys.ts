@@ -3,6 +3,7 @@ interface KeyModifiers {
     ALT: string;
     CTRL: string;
     META: string;
+    CTRLMETA: string;
 }
 
 export const keyModifiers: KeyModifiers = {
@@ -10,4 +11,5 @@ export const keyModifiers: KeyModifiers = {
     ALT: '⌥',
     CTRL: '⌃',
     META: '⌘',
+    CTRLMETA: '⌃/⌘',
 };
