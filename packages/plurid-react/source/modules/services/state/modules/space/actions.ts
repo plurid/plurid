@@ -13,6 +13,28 @@ import {
     SET_SPACE_LOCATION,
     SetSpaceLocationAction,
 
+    VIEW_CAMERA_MOVE_FORWARD,
+    ViewCameraMoveForwardAction,
+    VIEW_CAMERA_MOVE_BACKWARD,
+    ViewCameraMoveBackwardAction,
+    VIEW_CAMERA_MOVE_LEFT,
+    ViewCameraMoveLeftAction,
+    VIEW_CAMERA_MOVE_RIGHT,
+    ViewCameraMoveRightAction,
+    VIEW_CAMERA_MOVE_UP,
+    ViewCameraMoveUpAction,
+    VIEW_CAMERA_MOVE_DOWN,
+    ViewCameraMoveDownAction,
+
+    VIEW_CAMERA_TURN_UP,
+    ViewCameraTurnUpAction,
+    VIEW_CAMERA_TURN_DOWN,
+    ViewCameraTurnDownAction,
+    VIEW_CAMERA_TURN_LEFT,
+    ViewCameraTurnLeftAction,
+    VIEW_CAMERA_TURN_RIGHT,
+    ViewCameraTurnRightAction,
+
     ROTATE_UP,
     RotateUpAction,
     ROTATE_DOWN,
@@ -90,6 +112,70 @@ export const setSpaceLocation = (payload: SpaceLocation): SetSpaceLocationAction
         payload,
     };
 }
+
+
+
+export const viewCameraMoveForward = (): ViewCameraMoveForwardAction => {
+    return {
+        type: VIEW_CAMERA_MOVE_FORWARD,
+    };
+}
+
+export const viewCameraMoveBackward = (): ViewCameraMoveBackwardAction => {
+    return {
+        type: VIEW_CAMERA_MOVE_BACKWARD,
+    };
+}
+
+export const viewCameraMoveLeft = (): ViewCameraMoveLeftAction => {
+    return {
+        type: VIEW_CAMERA_MOVE_LEFT,
+    };
+}
+
+export const viewCameraMoveRight = (): ViewCameraMoveRightAction => {
+    return {
+        type: VIEW_CAMERA_MOVE_RIGHT,
+    };
+}
+
+export const viewCameraMoveUp = (): ViewCameraMoveUpAction => {
+    return {
+        type: VIEW_CAMERA_MOVE_UP,
+    };
+}
+
+export const viewCameraMoveDown = (): ViewCameraMoveDownAction => {
+    return {
+        type: VIEW_CAMERA_MOVE_DOWN,
+    };
+}
+
+
+export const viewCameraTurnUp = (): ViewCameraTurnUpAction => {
+    return {
+        type: VIEW_CAMERA_TURN_UP,
+    };
+}
+
+export const viewCameraTurnDown = (): ViewCameraTurnDownAction => {
+    return {
+        type: VIEW_CAMERA_TURN_DOWN,
+    };
+}
+
+export const viewCameraTurnLeft = (): ViewCameraTurnLeftAction => {
+    return {
+        type: VIEW_CAMERA_TURN_LEFT,
+    };
+}
+
+export const viewCameraTurnRight = (): ViewCameraTurnRightAction => {
+    return {
+        type: VIEW_CAMERA_TURN_RIGHT,
+    };
+}
+
 
 
 export const rotateUp = (): RotateUpAction => {

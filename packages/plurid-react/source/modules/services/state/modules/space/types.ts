@@ -26,6 +26,63 @@ export interface SetSpaceLocationAction {
 }
 
 
+
+export const VIEW_CAMERA_MOVE_FORWARD = 'VIEW_CAMERA_MOVE_FORWARD';
+export interface ViewCameraMoveForwardAction {
+    type: typeof VIEW_CAMERA_MOVE_FORWARD;
+}
+
+export const VIEW_CAMERA_MOVE_BACKWARD = 'VIEW_CAMERA_MOVE_BACKWARD';
+export interface ViewCameraMoveBackwardAction {
+    type: typeof VIEW_CAMERA_MOVE_BACKWARD;
+}
+
+
+export const VIEW_CAMERA_MOVE_LEFT = 'VIEW_CAMERA_MOVE_LEFT';
+export interface ViewCameraMoveLeftAction {
+    type: typeof VIEW_CAMERA_MOVE_LEFT;
+}
+
+export const VIEW_CAMERA_MOVE_RIGHT = 'VIEW_CAMERA_MOVE_RIGHT';
+export interface ViewCameraMoveRightAction {
+    type: typeof VIEW_CAMERA_MOVE_RIGHT;
+}
+
+
+export const VIEW_CAMERA_MOVE_UP = 'VIEW_CAMERA_MOVE_UP';
+export interface ViewCameraMoveUpAction {
+    type: typeof VIEW_CAMERA_MOVE_UP;
+}
+
+export const VIEW_CAMERA_MOVE_DOWN = 'VIEW_CAMERA_MOVE_DOWN';
+export interface ViewCameraMoveDownAction {
+    type: typeof VIEW_CAMERA_MOVE_DOWN;
+}
+
+
+export const VIEW_CAMERA_TURN_UP = 'VIEW_CAMERA_TURN_UP';
+export interface ViewCameraTurnUpAction {
+    type: typeof VIEW_CAMERA_TURN_UP;
+}
+
+export const VIEW_CAMERA_TURN_DOWN = 'VIEW_CAMERA_TURN_DOWN';
+export interface ViewCameraTurnDownAction {
+    type: typeof VIEW_CAMERA_TURN_DOWN;
+}
+
+
+export const VIEW_CAMERA_TURN_LEFT = 'VIEW_CAMERA_TURN_LEFT';
+export interface ViewCameraTurnLeftAction {
+    type: typeof VIEW_CAMERA_TURN_LEFT;
+}
+
+export const VIEW_CAMERA_TURN_RIGHT = 'VIEW_CAMERA_TURN_RIGHT';
+export interface ViewCameraTurnRightAction {
+    type: typeof VIEW_CAMERA_TURN_RIGHT;
+}
+
+
+
 export const ROTATE_UP = 'ROTATE_UP';
 export interface RotateUpAction {
     type: typeof ROTATE_UP;
@@ -180,6 +237,16 @@ export interface SpaceState {
 export type SpaceActionsType = SetSpaceLoadingAction
     | SetAnimatedTransformAction
     | SetSpaceLocationAction
+    | ViewCameraMoveForwardAction
+    | ViewCameraMoveBackwardAction
+    | ViewCameraMoveLeftAction
+    | ViewCameraMoveRightAction
+    | ViewCameraMoveUpAction
+    | ViewCameraMoveDownAction
+    | ViewCameraTurnLeftAction
+    | ViewCameraTurnRightAction
+    | ViewCameraTurnUpAction
+    | ViewCameraTurnDownAction
     | RotateUpAction
     | RotateDownAction
     | RotateXAction

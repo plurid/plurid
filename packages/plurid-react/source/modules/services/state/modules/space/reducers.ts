@@ -13,6 +13,18 @@ import {
 
     SET_SPACE_LOCATION,
 
+    VIEW_CAMERA_MOVE_FORWARD,
+    VIEW_CAMERA_MOVE_BACKWARD,
+    VIEW_CAMERA_MOVE_LEFT,
+    VIEW_CAMERA_MOVE_RIGHT,
+    VIEW_CAMERA_MOVE_UP,
+    VIEW_CAMERA_MOVE_DOWN,
+
+    VIEW_CAMERA_TURN_UP,
+    VIEW_CAMERA_TURN_DOWN,
+    VIEW_CAMERA_TURN_LEFT,
+    VIEW_CAMERA_TURN_RIGHT,
+
     ROTATE_UP,
     ROTATE_DOWN,
     ROTATE_X,
@@ -90,6 +102,72 @@ const spaceReducer = (
                     ...action.payload,
                 };
             }
+
+
+        case VIEW_CAMERA_MOVE_FORWARD:
+            {
+                return {
+                    ...state,
+                };
+            }
+        case VIEW_CAMERA_MOVE_BACKWARD:
+            {
+                return {
+                    ...state,
+                };
+            }
+        case VIEW_CAMERA_MOVE_LEFT:
+            {
+                return {
+                    ...state,
+                };
+            }
+        case VIEW_CAMERA_MOVE_RIGHT:
+            {
+                return {
+                    ...state,
+                };
+            }
+        case VIEW_CAMERA_MOVE_UP:
+            {
+                return {
+                    ...state,
+                };
+            }
+        case VIEW_CAMERA_MOVE_DOWN:
+            {
+                return {
+                    ...state,
+                };
+            }
+
+
+        case VIEW_CAMERA_TURN_UP:
+            {
+                return {
+                    ...state,
+                };
+            }
+        case VIEW_CAMERA_TURN_DOWN:
+            {
+                return {
+                    ...state,
+                };
+            }
+        case VIEW_CAMERA_TURN_LEFT:
+            {
+                return {
+                    ...state,
+                };
+            }
+        case VIEW_CAMERA_TURN_RIGHT:
+            {
+                return {
+                    ...state,
+                };
+            }
+
+
         case ROTATE_UP:
             {
                 const rotationX = (state.rotationX + ROTATION_STEP) % 360;
