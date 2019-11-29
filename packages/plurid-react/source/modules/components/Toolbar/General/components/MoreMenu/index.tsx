@@ -11,6 +11,10 @@ import themes, {
 } from '@plurid/plurid-themes';
 
 import {
+    defaultShortcuts,
+    keyModifiers,
+    shortcutsNames,
+
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
@@ -249,7 +253,34 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     shortcuts
                 </PluridHeading>
 
+                {defaultShortcuts.map(shortcut => {
+                    const {
+                        type,
+                        key,
+                        modifier,
+                    } = shortcut;
+                    const name = shortcutsNames[type].name;
+                    const modifierString = modifier
+                        ? keyModifiers[modifier]
+                        : '';
+                    console.log(name, key, modifierString);
 
+                    return (
+                        <StyledMoreMenuItem
+                            key={Math.random() + ''}
+                        >
+                            <div>
+                                {/* foo */}
+                                {name}
+                            </div>
+
+                            <div>
+                                {/* boo */}
+                                {modifierString}{key}
+                            </div>
+                        </StyledMoreMenuItem>
+                    );
+                })}
             </StyledMoreMenuScroll>
         </StyledMoreMenu>
     );
