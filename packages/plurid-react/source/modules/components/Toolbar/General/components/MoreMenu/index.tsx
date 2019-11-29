@@ -118,6 +118,44 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
             theme={theme}
         >
             <StyledMoreMenuScroll>
+                {/* LOCKS */}
+                {/* <PluridHeading
+                    theme={theme}
+                    type="h5"
+                >
+                    locks
+                </PluridHeading>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        lock rotation X
+                    </div>
+
+                    <PluridSwitch
+                        theme={theme}
+                        checked={alwaysShowIcons}
+                        atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        lock scale
+                    </div>
+
+                    <PluridSwitch
+                        theme={theme}
+                        checked={alwaysShowIcons}
+                        atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem> */}
+
+
+
                 {/* THEMES */}
                 <PluridHeading
                     theme={theme}
