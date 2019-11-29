@@ -85,6 +85,7 @@ interface ViewStateProperties {
     rotationLocked: boolean;
     translationLocked: boolean;
     scaleLocked: boolean;
+    firstPerson: boolean;
 }
 
 interface ViewDispatchProperties {
@@ -137,6 +138,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         rotationLocked,
         translationLocked,
         scaleLocked,
+        firstPerson,
 
 
         /** dispatch */
@@ -181,8 +183,10 @@ const View: React.FC<ViewProperties> = (properties) => {
         handleGlobalShortcuts(
             dispatch,
             event,
+            firstPerson,
         );
     }, [
+        firstPerson,
         dispatch,
     ]);
 
@@ -383,6 +387,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         rotationLocked,
         translationLocked,
         scaleLocked,
+        firstPerson,
     ]);
 
     /** Resize Listener */
@@ -694,6 +699,7 @@ const mapStateToProperties = (
     rotationLocked: selectors.space.getRotationLocked(state),
     translationLocked: selectors.space.getTranslationLocked(state),
     scaleLocked: selectors.space.getScaleLocked(state),
+    firstPerson: selectors.space.getFirstPerson(state),
 });
 
 
