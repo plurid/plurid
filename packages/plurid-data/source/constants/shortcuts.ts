@@ -3,83 +3,123 @@ import {
     KEY_MODIFIERS,
 } from '../enumerations';
 
+import {
+    keyModifiers,
+} from './keys';
+
 
 
 export const shortcutsNames: any = {
     TOGGLE_FIRST_PERSON: {
         name: 'toggle first person',
+        key: 'f',
     },
     MOVE_FORWARD: {
         name: 'move forward',
+        key: 'w',
     },
     MOVE_BACKWARD: {
         name: 'move backward',
+        key: 's',
     },
     MOVE_LEFT: {
         name: 'move left',
+        key: 'a',
     },
     MOVE_RIGHT: {
         name: 'move right',
+        key: 'd',
     },
     MOVE_UP: {
         name: 'move up',
+        key: 'e',
     },
     MOVE_DOWN: {
         name: 'move down',
+        key: 'c',
     },
     TURN_LEFT: {
         name: 'turn left',
+        key: 'a',
+        modifier: keyModifiers.SHIFT,
     },
     TURN_RIGHT: {
         name: 'turn right',
+        key: 'd',
+        modifier: keyModifiers.SHIFT,
     },
     TURN_UP: {
         name: 'turn up',
+        key: 'q',
     },
     TURN_DOWN: {
         name: 'turn down',
+        key: 'z',
     },
 
     ROTATE_UP: {
         name: 'rotate up',
+        key: '↑ or scroll up',
+        modifier: keyModifiers.SHIFT,
     },
     ROTATE_DOWN: {
         name: 'rotate down',
+        key: '↓ or scroll down',
+        modifier: keyModifiers.SHIFT,
     },
     ROTATE_LEFT: {
         name: 'rotate left',
+        key: '← or scroll left',
+        modifier: keyModifiers.SHIFT,
     },
     ROTATE_RIGHT: {
-        name: 'rotate left',
+        name: 'rotate right',
+        key: '→ or scroll right',
+        modifier: keyModifiers.SHIFT,
     },
     TOGGLE_ROTATE: {
         name: 'toggle rotate',
+        key: 'r',
     },
 
     TRANSLATE_UP: {
         name: 'translate up',
+        key: '↑ or scroll up',
+        modifier: keyModifiers.ALT,
     },
     TRANSLATE_DOWN: {
         name: 'translate down',
+        key: '↓ or scroll down',
+        modifier: keyModifiers.ALT,
     },
     TRANSLATE_LEFT: {
         name: 'translate left',
+        key: '← or scroll left',
+        modifier: keyModifiers.ALT,
     },
     TRANSLATE_RIGHT: {
-        name: 'translate left',
+        name: 'translate right',
+        key: '→ or scroll right',
+        modifier: keyModifiers.ALT,
     },
     TOGGLE_TRANSLATE: {
         name: 'toggle translate',
+        key: 't',
     },
 
     SCALE_UP: {
         name: 'scale up',
+        key: '↑ or scroll up',
+        modifier: keyModifiers.CTRLMETA,
     },
     SCALE_DOWN: {
         name: 'scale down',
+        key: '↓ or scroll down',
+        modifier: keyModifiers.CTRLMETA,
     },
     TOGGLE_SCALE: {
         name: 'toggle scale',
+        key: 's',
     },
 };
 
