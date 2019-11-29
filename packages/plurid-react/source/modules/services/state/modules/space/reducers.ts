@@ -121,7 +121,7 @@ const spaceReducer = (
 
         case VIEW_CAMERA_MOVE_FORWARD:
             {
-                const translationZ = state.translationZ + TRANSLATION_STEP * 3;
+                const translationZ = state.translationZ + TRANSLATION_STEP * 6;
                 return {
                     ...state,
                     translationZ,
@@ -129,7 +129,7 @@ const spaceReducer = (
             }
         case VIEW_CAMERA_MOVE_BACKWARD:
             {
-                const translationZ = state.translationZ - TRANSLATION_STEP * 3;
+                const translationZ = state.translationZ - TRANSLATION_STEP * 6;
                 return {
                     ...state,
                     translationZ,
