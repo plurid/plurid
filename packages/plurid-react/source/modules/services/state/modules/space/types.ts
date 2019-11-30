@@ -224,6 +224,20 @@ export interface SetActiveDocumentAction {
 }
 
 
+export const TOGGLE_SHOW_TRANSFORM_ORIGIN = 'TOGGLE_SHOW_TRANSFORM_ORIGIN';
+export interface ToggleShowTransformOriginAction {
+    type: typeof TOGGLE_SHOW_TRANSFORM_ORIGIN;
+}
+
+
+export const SET_TRANSFORM_ORIGIN_SIZE = 'SET_TRANSFORM_ORIGIN_SIZE';
+export interface SetTransformOriginSizeAction {
+    type: typeof SET_TRANSFORM_ORIGIN_SIZE;
+    payload: 'small' | 'normal' | 'large';
+}
+
+
+
 export interface SpaceState {
     loading: boolean;
     animatedTransform: boolean;
@@ -240,6 +254,8 @@ export interface SpaceState {
     activeDocumentID: string;
     firstPerson: boolean;
     camera: Coordinates;
+    showTransformOrigin: boolean;
+    transformOriginSize: 'small' | 'normal' | 'large';
 }
 
 
@@ -286,4 +302,6 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | ToggleRotationLockedAction
     | ToggleScaleLockedAction
     | ToggleTranslationLockedAction
-    | SetActiveDocumentAction;
+    | SetActiveDocumentAction
+    | ToggleShowTransformOriginAction
+    | SetTransformOriginSizeAction;
