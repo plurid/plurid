@@ -1,6 +1,8 @@
 import {
     TreePage,
     SpaceLocation,
+
+    SIZES,
 } from '@plurid/plurid-data';
 
 import {
@@ -350,7 +352,7 @@ export const setActiveDocument = (documentID: string): SetActiveDocumentAction =
 }
 
 
-export const setTransformOriginSize = (size: any): SetTransformOriginSizeAction => {
+export const setTransformOriginSize = (size: keyof typeof SIZES): SetTransformOriginSizeAction => {
     return {
         type: SET_TRANSFORM_ORIGIN_SIZE,
         payload: size,

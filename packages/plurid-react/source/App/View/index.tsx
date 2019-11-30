@@ -14,6 +14,9 @@ import {
     /** constants */
     defaultConfiguration,
 
+    /** enumerations */
+    SIZES,
+
     /** interfaces */
     PluridApp as PluridAppProperties,
     PluridConfiguration as PluridAppConfiguration,
@@ -113,6 +116,9 @@ interface ViewDispatchProperties {
     scaleDownWith: typeof actions.space.scaleDownWith;
 
     dispatchSetActiveDocument: typeof actions.space.setActiveDocument;
+
+    dispatchToggleShowTransformOrigin: typeof actions.space.toggleShowTransformOrigin;
+    dispatchSetTransformOriginSize: typeof actions.space.setTransformOriginSize;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -166,6 +172,9 @@ const View: React.FC<ViewProperties> = (properties) => {
         scaleDownWith,
 
         dispatchSetActiveDocument,
+
+        // dispatchToggleShowTransformOrigin,
+        dispatchSetTransformOriginSize,
     } = properties;
 
     const {
@@ -221,6 +230,14 @@ const View: React.FC<ViewProperties> = (properties) => {
         if (configuration.space) {
             const spaceLocation = computeSpaceLocation(configuration);
             dispatchSetSpaceLocation(spaceLocation);
+
+            if (configuration.space.showTransformOrigin) {
+                // dispatchToggleShowTransformOrigin();
+            }
+
+            if (configuration.space.transformOriginSize) {
+                dispatchSetTransformOriginSize(configuration.space.transformOriginSize);
+            }
         }
 
         // if (configuration.space.center && !configuration.space.camera) {
@@ -548,6 +565,12 @@ const View: React.FC<ViewProperties> = (properties) => {
                 center: configuration && configuration.space && configuration.space.center
                     ? configuration.space.center
                     : defaultConfiguration.space.center,
+                showTransformOrigin: configuration && configuration.space && configuration.space.showTransformOrigin
+                    ? configuration.space.showTransformOrigin
+                    : defaultConfiguration.space.showTransformOrigin,
+                transformOriginSize: configuration && configuration.space && configuration.space.transformOriginSize
+                    ? configuration.space.transformOriginSize
+                    : defaultConfiguration.space.transformOriginSize,
             },
             ui: {
                 toolbar: {
@@ -763,6 +786,13 @@ const mapDispatchToProperties = (
 
     dispatchSetActiveDocument: (activeDocument: string) => dispatch(
         actions.space.setActiveDocument(activeDocument)
+    ),
+
+    dispatchToggleShowTransformOrigin: () => dispatch(
+        actions.space.toggleShowTransformOrigin()
+    ),
+    dispatchSetTransformOriginSize: (size: keyof typeof SIZES) => dispatch(
+        actions.space.setTransformOriginSize(size)
     ),
 });
 

@@ -1,8 +1,9 @@
 import {
     TreePage,
     SpaceLocation,
-} from '@plurid/plurid-data';
 
+    SIZES,
+} from '@plurid/plurid-data';
 
 
 
@@ -233,7 +234,7 @@ export interface ToggleShowTransformOriginAction {
 export const SET_TRANSFORM_ORIGIN_SIZE = 'SET_TRANSFORM_ORIGIN_SIZE';
 export interface SetTransformOriginSizeAction {
     type: typeof SET_TRANSFORM_ORIGIN_SIZE;
-    payload: 'small' | 'normal' | 'large';
+    payload: keyof typeof SIZES;
 }
 
 
@@ -255,7 +256,7 @@ export interface SpaceState {
     firstPerson: boolean;
     camera: Coordinates;
     showTransformOrigin: boolean;
-    transformOriginSize: 'small' | 'normal' | 'large';
+    transformOriginSize: keyof typeof SIZES;
 }
 
 
