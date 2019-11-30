@@ -132,8 +132,8 @@ const spaceReducer = (
 
         case VIEW_CAMERA_MOVE_FORWARD:
             {
-                const translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(state.rotationY));
-                const translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(state.rotationY));
+                const translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
+                const translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
                 return {
                     ...state,
                     translationX,
@@ -142,8 +142,8 @@ const spaceReducer = (
             }
         case VIEW_CAMERA_MOVE_BACKWARD:
             {
-                const translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(state.rotationY));
-                const translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(state.rotationY));
+                const translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
+                const translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
                 return {
                     ...state,
                     translationX,
