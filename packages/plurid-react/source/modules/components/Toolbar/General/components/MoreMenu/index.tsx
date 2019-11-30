@@ -232,7 +232,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridDropdown
                         selectables={['small', 'normal', 'large']}
                         selected={transformOriginSize}
-                        atSelect={(selection) => dispatchSetTransformOriginSize(selection)}
+                        atSelect={(selection: any) => dispatchSetTransformOriginSize(selection)}
                         heightItems={3}
                         theme={interactionTheme}
                     />
