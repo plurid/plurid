@@ -15,6 +15,8 @@ import {
     // keyModifiers,
     shortcutsNames,
 
+    SIZES,
+
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
@@ -376,7 +378,7 @@ const mapDispatchToProps = (
     dispatchToggleShowTransformOrigin: () => dispatch(
         actions.space.toggleShowTransformOrigin()
     ),
-    dispatchSetTransformOriginSize: (size: any) => dispatch(
+    dispatchSetTransformOriginSize: (size: keyof typeof SIZES) => dispatch(
         actions.space.setTransformOriginSize(size)
     ),
 });
