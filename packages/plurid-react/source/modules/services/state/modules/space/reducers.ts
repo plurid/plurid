@@ -304,7 +304,6 @@ const spaceReducer = (
             {
                 const translationX = state.translationX - TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
                 const translationZ = state.translationZ - TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
-                // const translationX = state.translationX - TRANSLATION_STEP;
                 return {
                     ...state,
                     translationX,
@@ -315,7 +314,6 @@ const spaceReducer = (
             {
                 const translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
                 const translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
-                // const translationX = state.translationX + TRANSLATION_STEP;
                 return {
                     ...state,
                     translationX,

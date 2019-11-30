@@ -17,4 +17,7 @@ export const StyledTransformOrigin = styled.div`
     width: 15px;
     z-index: 999;
     border-radius: 100px;
+    user-select: none;
+    pointer-events: none;
+    touch-action: none;
 `;
