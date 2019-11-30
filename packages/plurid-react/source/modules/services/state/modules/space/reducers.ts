@@ -62,6 +62,14 @@ import {
 
 
 
+const toDegrees = (angle: number) => {
+    return angle * (180 / Math.PI);
+}
+
+const toRadians = (angle: number) => {
+    return angle * (Math.PI / 180);
+}
+
 const initialState: SpaceState = {
     loading: true,
     animatedTransform: false,
@@ -124,34 +132,42 @@ const spaceReducer = (
 
         case VIEW_CAMERA_MOVE_FORWARD:
             {
-                const translationZ = state.translationZ + TRANSLATION_STEP * 6;
+                const translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(state.rotationY));
+                const translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(state.rotationY));
                 return {
                     ...state,
+                    translationX,
                     translationZ,
                 };
             }
         case VIEW_CAMERA_MOVE_BACKWARD:
             {
-                const translationZ = state.translationZ - TRANSLATION_STEP * 6;
+                const translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(state.rotationY));
+                const translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(state.rotationY));
                 return {
                     ...state,
+                    translationX,
                     translationZ,
                 };
             }
         case VIEW_CAMERA_MOVE_LEFT:
             {
-                const translationX = state.translationX + TRANSLATION_STEP * 3;
+                const translationX = state.translationX + TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
+                const translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
                 return {
                     ...state,
                     translationX,
+                    translationZ,
                 };
             }
         case VIEW_CAMERA_MOVE_RIGHT:
             {
-                const translationX = state.translationX - TRANSLATION_STEP * 3;
+                const translationX = state.translationX - TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
+                const translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
                 return {
                     ...state,
                     translationX,
+                    translationZ,
                 };
             }
         case VIEW_CAMERA_MOVE_UP:

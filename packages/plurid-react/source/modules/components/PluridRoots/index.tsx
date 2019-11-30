@@ -7,6 +7,10 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
+    Theme,
+} from '@plurid/plurid-themes';
+
+import {
     TreePage,
 } from '@plurid/plurid-data';
 
@@ -21,7 +25,7 @@ import {
 
 import {
     StyledPluridRoots,
-    // StyledTransformOrigin,
+    StyledTransformOrigin,
 } from './styled';
 
 import PluridRoot from '../PluridRoot';
@@ -39,6 +43,8 @@ export interface PluridRootsOwnProperties {
 }
 
 interface PluridRootsStateProperties {
+    interactionTheme: Theme;
+
     viewSize: ViewSize;
     planeWidth: number;
     animatedTransform: boolean;
@@ -62,6 +68,7 @@ type PluridRootsProperties = PluridRootsOwnProperties
 const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     const {
         /** state */
+        interactionTheme,
         // viewSize,
         // planeWidth,
         animatedTransform,
@@ -137,7 +144,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 // `,
             }}
         >
-            {/* <StyledTransformOrigin
+            <StyledTransformOrigin
+                theme={interactionTheme}
                 style={{
                     transform: `
                         translateX(${transformOriginX}px)
@@ -145,7 +153,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                         translateZ(${transformOriginZ}px)
                     `
                 }}
-            /> */}
+            />
 
             {tree.map(page => {
                 return (
@@ -163,6 +171,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): PluridRootsStateProperties => ({
+    interactionTheme: selectors.themes.getGeneralTheme(state),
+
     viewSize: selectors.data.getViewSize(state),
     planeWidth: selectors.configuration.getConfiguration(state).planeWidth,
     animatedTransform: selectors.space.getAnimatedTransform(state),

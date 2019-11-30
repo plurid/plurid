@@ -8,9 +8,13 @@ export const StyledPluridRoots = styled.div`
 
 
 export const StyledTransformOrigin = styled.div`
+    background-color: ${(props: any) => {
+        return props.theme.backgroundColorPrimaryAlpha;
+    }};
+
     position: absolute;
-    height: 20px;
-    width: 20px;
-    background: red;
+    height: 15px;
+    width: 15px;
     z-index: 999;
+    border-radius: 7.5px;
 `;
