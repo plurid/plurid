@@ -151,7 +151,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                         rotateY(${-spaceRotationY}deg)
                         translateX(${transformOriginX}px)
                         translateY(${transformOriginY}px)
-                        translateZ(${transformOriginZ}px)
+                        translateZ(${transformOriginZ + 5}px)
                     `,
                     transformOrigin: `
                         ${transformOriginX}px
