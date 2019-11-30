@@ -124,12 +124,12 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 height: window.innerHeight + 'px',
                 // transform: cssMatrix,
                 transform: `
-                    rotateX(${spaceRotationX}deg)
-                    rotateY(${spaceRotationY}deg)
                     translateX(${spaceTranslationX}px)
                     translateY(${spaceTranslationY}px)
                     translateZ(${spaceTranslationZ}px)
                     scale(${spaceScale})
+                    rotateX(${spaceRotationX}deg)
+                    rotateY(${spaceRotationY}deg)
                 `,
                 transition: animatedTransform
                     ? 'transform 450ms ease-in-out'
