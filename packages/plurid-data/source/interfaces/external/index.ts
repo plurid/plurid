@@ -2,6 +2,10 @@ import React from 'react';
 
 import PluridPubSub from '@plurid/plurid-pubsub';
 
+import {
+    SIZES,
+} from '../../enumerations';
+
 
 
 export interface PluridApp {
@@ -220,6 +224,9 @@ export interface PluridConfigurationSpace {
      * or, if camera is set, on the Root indicated by the camera.
      */
     center?: boolean;
+
+    showTransformOrigin?: boolean;
+    transformOriginSize?: keyof typeof SIZES;
 }
 
 
