@@ -21,6 +21,7 @@ import {
 
 import {
     StyledPluridRoots,
+    // StyledTransformOrigin,
 } from './styled';
 
 import PluridRoot from '../PluridRoot';
@@ -99,6 +100,10 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     //     spaceTranslationY,
     // ]);
 
+    const transformOriginX = spaceTranslationX * -1 + window.innerWidth/2;
+    const transformOriginY = spaceTranslationY * -1 + window.innerHeight/2;
+    const transformOriginZ = spaceTranslationZ * -1;
+
     return (
         <StyledPluridRoots
             style={{
@@ -120,9 +125,28 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                     // : firstPerson
                     //     ? 'transform 100ms linear'
                         : 'initial',
-                // transformOrigin: `${viewSize.width * planeWidth/2}px ${spaceTranslationY}px`,
+                transformOrigin: `
+                    ${transformOriginX}px
+                    ${transformOriginY}px
+                    ${transformOriginZ}px
+                `,
+                // transformOrigin: `
+                //     ${spaceTranslationX * -1 + window.innerWidth/2}px
+                //     ${spaceTranslationY * - 1 + window.innerHeight/2}px
+                //     ${spaceTranslationZ * -1}px
+                // `,
             }}
         >
+            {/* <StyledTransformOrigin
+                style={{
+                    transform: `
+                        translateX(${transformOriginX}px)
+                        translateY(${transformOriginY}px)
+                        translateZ(${transformOriginZ}px)
+                    `
+                }}
+            /> */}
+
             {tree.map(page => {
                 return (
                     <PluridRoot
