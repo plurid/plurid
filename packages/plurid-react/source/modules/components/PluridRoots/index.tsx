@@ -148,10 +148,16 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 theme={interactionTheme}
                 style={{
                     transform: `
+                        rotateY(${-spaceRotationY}deg)
                         translateX(${transformOriginX}px)
                         translateY(${transformOriginY}px)
                         translateZ(${transformOriginZ}px)
-                    `
+                    `,
+                    transformOrigin: `
+                        ${transformOriginX}px
+                        ${transformOriginY}px
+                        ${transformOriginZ}px
+                    `,
                 }}
             />
 
@@ -171,7 +177,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): PluridRootsStateProperties => ({
-    interactionTheme: selectors.themes.getGeneralTheme(state),
+    interactionTheme: selectors.themes.getInteractionTheme(state),
 
     viewSize: selectors.data.getViewSize(state),
     planeWidth: selectors.configuration.getConfiguration(state).planeWidth,
