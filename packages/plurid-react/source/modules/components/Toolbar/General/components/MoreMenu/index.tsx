@@ -12,7 +12,7 @@ import themes, {
 
 import {
     defaultShortcuts,
-    keyModifiers,
+    // keyModifiers,
     shortcutsNames,
 
     PluridConfiguration,
@@ -43,6 +43,8 @@ interface MoreMenuOwnProperties {
 interface MoreMenuStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
+    showTransformOrigin: boolean;
+    transformOriginSize: any;
 }
 
 interface MoreMenuDispatchProperties {
@@ -55,6 +57,9 @@ interface MoreMenuDispatchProperties {
     dispatchToggleUIToolbarHideAction: typeof actions.configuration.toggleUIToolbarHideAction;
     dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
     dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
+
+    dispatchToggleShowTransformOrigin: typeof actions.space.toggleShowTransformOrigin;
+    dispatchSetTransformOriginSize: typeof actions.space.setTransformOriginSize;
 }
 
 type MoreMenuProperties = MoreMenuOwnProperties
@@ -66,6 +71,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         /** state */
         interactionTheme,
         configuration,
+        showTransformOrigin,
+        transformOriginSize,
 
         /** dispatch */
         dispatchSetConfigurationThemeGeneralAction,
@@ -75,6 +82,9 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchToggleUIToolbarHideAction,
         dispatchToggleUIToolbarAlwaysShowIconsAction,
         dispatchToggleUIToolbarAlwaysTransformButtonsAction,
+
+        dispatchToggleShowTransformOrigin,
+        dispatchSetTransformOriginSize,
     } = properties;
 
     const {
@@ -206,8 +216,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     show transform origin
 
                     <PluridSwitch
-                        checked={alwaysShowIcons}
-                        atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
+                        checked={showTransformOrigin}
+                        atChange={() => dispatchToggleShowTransformOrigin()}
                         exclusive={true}
                         level={2}
                         theme={interactionTheme}
@@ -218,9 +228,9 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     transform origin size
 
                     <PluridDropdown
-                        selectables={Object.keys(themes)}
-                        selected={interactionThemeName}
-                        atSelect={(selection) => setInteractionTheme(selection)}
+                        selectables={['small', 'normal', 'large']}
+                        selected={transformOriginSize}
+                        atSelect={(selection) => dispatchSetTransformOriginSize(selection)}
                         heightItems={3}
                         theme={interactionTheme}
                     />
@@ -331,6 +341,9 @@ const mapStateToProps = (
 ): MoreMenuStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
+
+    showTransformOrigin: selectors.space.getShowTransformOrigin(state),
+    transformOriginSize: selectors.space.getTransformOriginSize(state),
 });
 
 
@@ -358,6 +371,13 @@ const mapDispatchToProps = (
     ),
     dispatchToggleUIToolbarAlwaysTransformButtonsAction: () => dispatch(
         actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction()
+    ),
+
+    dispatchToggleShowTransformOrigin: () => dispatch(
+        actions.space.toggleShowTransformOrigin()
+    ),
+    dispatchSetTransformOriginSize: (size: any) => dispatch(
+        actions.space.setTransformOriginSize(size)
     ),
 });
 
