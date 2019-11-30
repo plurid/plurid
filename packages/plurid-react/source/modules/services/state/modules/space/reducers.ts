@@ -56,6 +56,9 @@ import {
 
     SET_ACTIVE_DOCUMENT,
 
+    SET_TRANSFORM_ORIGIN_SIZE,
+    TOGGLE_SHOW_TRANSFORM_ORIGIN,
+
     SpaceState,
     SpaceActionsType,
 } from './types';
@@ -90,7 +93,9 @@ const initialState: SpaceState = {
         y: 0,
         z: 0,
     },
-}
+    showTransformOrigin: true,
+    transformOriginSize: 'normal',
+};
 
 const spaceReducer = (
     state: SpaceState = initialState,
@@ -426,7 +431,21 @@ const spaceReducer = (
                 return {
                     ...state,
                     activeDocumentID: action.payload,
-                }
+                };
+            }
+        case SET_TRANSFORM_ORIGIN_SIZE:
+            {
+                return {
+                    ...state,
+                    transformOriginSize: action.payload,
+                };
+            }
+        case TOGGLE_SHOW_TRANSFORM_ORIGIN:
+            {
+                return {
+                    ...state,
+                    showTransformOrigin: !state.showTransformOrigin,
+                };
             }
         default:
             return {

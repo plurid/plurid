@@ -33,6 +33,9 @@ const getScaleLocked = (state: AppState) => state.space.scaleLocked;
 
 const getFirstPerson = (state: AppState) => state.space.firstPerson;
 
+const getShowTransformOrigin = (state: AppState) => state.space.showTransformOrigin;
+const getTransformOriginSize = (state: AppState) => state.space.transformOriginSize;
+
 
 export default {
     getLoading,
@@ -56,4 +59,7 @@ export default {
     getScaleLocked,
 
     getFirstPerson,
+
+    getShowTransformOrigin,
+    getTransformOriginSize,
 };

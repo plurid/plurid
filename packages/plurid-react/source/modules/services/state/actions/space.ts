@@ -47,6 +47,9 @@ import {
     toggleScaleLocked,
 
     setActiveDocument,
+
+    setTransformOriginSize,
+    toggleShowTransformOrigin,
 } from '../modules/space/actions';
 
 
@@ -100,4 +103,7 @@ export default {
     toggleScaleLocked,
 
     setActiveDocument,
+
+    setTransformOriginSize,
+    toggleShowTransformOrigin,
 };

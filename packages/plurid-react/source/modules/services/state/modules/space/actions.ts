@@ -89,6 +89,11 @@ import {
 
     SET_ACTIVE_DOCUMENT,
     SetActiveDocumentAction,
+
+    SET_TRANSFORM_ORIGIN_SIZE,
+    SetTransformOriginSizeAction,
+    TOGGLE_SHOW_TRANSFORM_ORIGIN,
+    ToggleShowTransformOriginAction,
 } from './types'
 
 
@@ -341,5 +346,20 @@ export const setActiveDocument = (documentID: string): SetActiveDocumentAction =
     return {
         type: SET_ACTIVE_DOCUMENT,
         payload: documentID,
+    };
+}
+
+
+export const setTransformOriginSize = (size: any): SetTransformOriginSizeAction => {
+    return {
+        type: SET_TRANSFORM_ORIGIN_SIZE,
+        payload: size,
+    };
+}
+
+
+export const toggleShowTransformOrigin = (): ToggleShowTransformOriginAction => {
+    return {
+        type: TOGGLE_SHOW_TRANSFORM_ORIGIN,
     };
 }
