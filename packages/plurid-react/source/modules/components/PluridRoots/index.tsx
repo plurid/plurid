@@ -122,16 +122,14 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
             style={{
                 width: window.innerWidth + 'px',
                 height: window.innerHeight + 'px',
-                // width: viewSize.width + 'px',
-                // height: viewSize.height + 'px',
                 // transform: cssMatrix,
                 transform: `
-                    scale(${spaceScale})
+                    rotateX(${spaceRotationX}deg)
+                    rotateY(${spaceRotationY}deg)
                     translateX(${spaceTranslationX}px)
                     translateY(${spaceTranslationY}px)
                     translateZ(${spaceTranslationZ}px)
-                    rotateX(${spaceRotationX}deg)
-                    rotateY(${spaceRotationY}deg)
+                    scale(${spaceScale})
                 `,
                 transition: animatedTransform
                     ? 'transform 450ms ease-in-out'
@@ -143,11 +141,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                     ${transformOriginY}px
                     ${transformOriginZ}px
                 `,
-                // transformOrigin: `
-                //     ${spaceTranslationX * -1 + window.innerWidth/2}px
-                //     ${spaceTranslationY * - 1 + window.innerHeight/2}px
-                //     ${spaceTranslationZ * -1}px
-                // `,
             }}
         >
             {showTransformOrigin && (
@@ -159,7 +152,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                             rotateY(${-spaceRotationY}deg)
                             translateX(${transformOriginX}px)
                             translateY(${transformOriginY}px)
-                            translateZ(${transformOriginZ + 5}px)
+                            translateZ(${(transformOriginZ + 5)}px)
                         `,
                         transformOrigin: `
                             ${transformOriginX}px
