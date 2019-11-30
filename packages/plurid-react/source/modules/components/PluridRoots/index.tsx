@@ -56,6 +56,9 @@ interface PluridRootsStateProperties {
     spaceTranslationZ: number;
     firstPerson: boolean;
     tree: TreePage[];
+
+    showTransformOrigin: boolean;
+    transformOriginSize: any;
 }
 
 interface PluridRootsDispatchProperties {
@@ -80,6 +83,9 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         spaceTranslationZ,
         // firstPerson,
         tree,
+
+        showTransformOrigin,
+        transformOriginSize,
     } = properties;
 
     // const [cssMatrix, setCssMatrix] = useState('');
@@ -144,22 +150,25 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 // `,
             }}
         >
-            <StyledTransformOrigin
-                theme={interactionTheme}
-                style={{
-                    transform: `
-                        rotateY(${-spaceRotationY}deg)
-                        translateX(${transformOriginX}px)
-                        translateY(${transformOriginY}px)
-                        translateZ(${transformOriginZ + 5}px)
-                    `,
-                    transformOrigin: `
-                        ${transformOriginX}px
-                        ${transformOriginY}px
-                        ${transformOriginZ}px
-                    `,
-                }}
-            />
+            {showTransformOrigin && (
+                <StyledTransformOrigin
+                    theme={interactionTheme}
+                    transformOriginSize={transformOriginSize}
+                    style={{
+                        transform: `
+                            rotateY(${-spaceRotationY}deg)
+                            translateX(${transformOriginX}px)
+                            translateY(${transformOriginY}px)
+                            translateZ(${transformOriginZ + 5}px)
+                        `,
+                        transformOrigin: `
+                            ${transformOriginX}px
+                            ${transformOriginY}px
+                            ${transformOriginZ}px
+                        `,
+                    }}
+                />
+            )}
 
             {tree.map(page => {
                 return (
@@ -190,6 +199,9 @@ const mapStateToProps = (
     spaceTranslationZ: selectors.space.getTranslationZ(state),
     firstPerson: selectors.space.getFirstPerson(state),
     tree: selectors.space.getTree(state),
+
+    showTransformOrigin: selectors.space.getShowTransformOrigin(state),
+    transformOriginSize: selectors.space.getTransformOriginSize(state),
 });
 
 
