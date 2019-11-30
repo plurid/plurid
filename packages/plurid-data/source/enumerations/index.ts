@@ -36,3 +36,11 @@ export enum KEY_MODIFIERS {
     META = 'META',
     METACTRL = 'METACTRL',
 }
+
+
+
+export enum SIZES {
+    small = 'small',
+    normal = 'normal',
+    large = 'large',
+}
