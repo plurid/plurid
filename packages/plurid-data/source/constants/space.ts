@@ -1,4 +1,4 @@
-export const ROTATION_STEP = 3;
+export const ROTATION_STEP = 3.01;
 
 export const TRANSLATION_STEP = 25;
 
