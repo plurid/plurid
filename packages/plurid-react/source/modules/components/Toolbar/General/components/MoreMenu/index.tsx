@@ -41,7 +41,7 @@ interface MoreMenuOwnProperties {
 }
 
 interface MoreMenuStateProperties {
-    theme: Theme;
+    interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
@@ -64,7 +64,7 @@ type MoreMenuProperties = MoreMenuOwnProperties
 const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     const {
         /** state */
-        theme,
+        interactionTheme,
         configuration,
 
         /** dispatch */
@@ -119,7 +119,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
     return (
         <StyledMoreMenu
-            theme={theme}
+            theme={interactionTheme}
         >
             <StyledMoreMenuScroll>
                 {/* LOCKS */}
@@ -162,7 +162,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                 {/* THEMES */}
                 <PluridHeading
-                    theme={theme}
+                    theme={interactionTheme}
                     type="h5"
                 >
                     themes
@@ -175,7 +175,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         selectables={Object.keys(themes)}
                         selected={generalThemeName}
                         atSelect={(selection) => setGeneralTheme(selection)}
-                        theme={theme}
+                        theme={interactionTheme}
                         heightItems={4}
                     />
                 </StyledMoreMenuItem>
@@ -187,8 +187,42 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         selectables={Object.keys(themes)}
                         selected={interactionThemeName}
                         atSelect={(selection) => setInteractionTheme(selection)}
-                        theme={theme}
+                        theme={interactionTheme}
                         heightItems={3}
+                    />
+                </StyledMoreMenuItem>
+
+
+
+                {/* SPACE */}
+                <PluridHeading
+                    theme={interactionTheme}
+                    type="h5"
+                >
+                    space
+                </PluridHeading>
+
+                <StyledMoreMenuItem>
+                    show transform origin
+
+                    <PluridSwitch
+                        checked={alwaysShowIcons}
+                        atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
+                        exclusive={true}
+                        level={2}
+                        theme={interactionTheme}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    transform origin size
+
+                    <PluridDropdown
+                        selectables={Object.keys(themes)}
+                        selected={interactionThemeName}
+                        atSelect={(selection) => setInteractionTheme(selection)}
+                        heightItems={3}
+                        theme={interactionTheme}
                     />
                 </StyledMoreMenuItem>
 
@@ -196,7 +230,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                 {/* TOOLBAR */}
                 <PluridHeading
-                    theme={theme}
+                    theme={interactionTheme}
                     type="h5"
                 >
                     toolbar
@@ -208,7 +242,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     </div>
 
                     <PluridSwitch
-                        theme={theme}
+                        theme={interactionTheme}
                         checked={alwaysShowIcons}
                         atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
                         exclusive={true}
@@ -222,7 +256,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     </div>
 
                     <PluridSwitch
-                        theme={theme}
+                        theme={interactionTheme}
                         checked={alwaysShowTransformButtons}
                         atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
                         exclusive={true}
@@ -236,7 +270,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     </div>
 
                     <PluridSwitch
-                        theme={theme}
+                        theme={interactionTheme}
                         checked={hide}
                         atChange={() => dispatchToggleUIToolbarHideAction()}
                         exclusive={true}
@@ -247,7 +281,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                 {/* SHORTCUTS */}
                 <PluridHeading
-                    theme={theme}
+                    theme={interactionTheme}
                     type="h5"
                 >
                     shortcuts
@@ -295,7 +329,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): MoreMenuStateProperties => ({
-    theme: selectors.themes.getInteractionTheme(state),
+    interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });
 
