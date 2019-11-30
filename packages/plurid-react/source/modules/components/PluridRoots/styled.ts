@@ -13,8 +13,8 @@ export const StyledTransformOrigin = styled.div`
     }};
 
     position: absolute;
-    height: 5px;
-    width: 5px;
+    height: 15px;
+    width: 15px;
     z-index: 999;
     border-radius: 100px;
 `;
