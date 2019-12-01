@@ -21,7 +21,7 @@ const App = () => {
         },
         // planeWidth: 0.5,
         // planeControls: false,
-        // planeOpacity: 0,
+        planeOpacity: 0,
     };
 
     const appPages = [
@@ -47,7 +47,7 @@ const App = () => {
                 element: Page1,
                 properties: {},
             },
-            root: true,
+            // root: true,
         },
     ];
 
