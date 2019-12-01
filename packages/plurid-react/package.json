@@ -22,14 +22,13 @@
     "publishConfig": {
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-react/README.md",
+    "homepage": "https://github.com/plurid/plurid/tree/master/packages/plurid-react",
     "files": [
         "distribution/"
     ],
     "main": "distribution/index.js",
     "module": "distribution/index.es.js",
     "types": "distribution/index.d.ts",
-    "jsnext:main": "distribution/index.es.js",
     "engines": {
         "node": ">=8",
         "npm": ">=6"
