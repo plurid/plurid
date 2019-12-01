@@ -546,7 +546,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             planeWidth: configuration && configuration.planeWidth
                 ? configuration.planeWidth
                 : defaultConfiguration.planeWidth,
-            planeOpacity: configuration && configuration.planeOpacity
+            planeOpacity: configuration && typeof configuration.planeOpacity === 'number'
                 ? configuration.planeOpacity
                 : defaultConfiguration.planeOpacity,
             space: {
@@ -627,6 +627,8 @@ const View: React.FC<ViewProperties> = (properties) => {
 
             const treePages: TreePage[] = [];
             for (const pageID in pages) {
+                const docPage = pages[pageID]
+
                 const contextPage = contextPages[pageID];
                 const treePage: TreePage = {
                     pageID: contextPage.id,
@@ -639,9 +641,12 @@ const View: React.FC<ViewProperties> = (properties) => {
                         rotateX: 0,
                         rotateY: 0,
                     },
-                    show: true,
+                    show: docPage.root,
                 };
-                treePages.push(treePage);
+
+                if (docPage.root) {
+                    treePages.push(treePage);
+                }
             }
 
             const computedTree = computeSpaceTree(treePages, stateConfiguration);
