@@ -37,11 +37,13 @@
         "clean": "rm -rf ./distribution",
         "spec": "jest",
         "lint": "eslint ./source --ext .ts,.tsx",
-        "minify": "minify ./distribution/index.js --out-file index.min.js",
+        "minify": "yarn minify.cjs && yarn minify.es",
+        "minify.cjs": "minify ./distribution/index.js --out-file ./distribution/index.min.js",
+        "minify.es": "minify ./distribution/index.es.js --out-file ./distribution/index.es.min.js",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
-        "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
-        "build.prod": "yarn clean && rollup -c --environment MODE_ENV:production",
-        "build": "yarn clean && yarn lint && yarn spec && yarn build.prod",
+        "build.development": "yarn clean && rollup -c --environment MODE_ENV:local",
+        "build.production": "yarn clean && rollup -c --environment MODE_ENV:production",
+        "build": "yarn clean && yarn lint && yarn spec && yarn build.production && yarn minify",
         "prepublishOnly": "yarn build"
     },
     "peerDependencies": {
