@@ -37,7 +37,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyW'
             && noModifiers
         ) {
-            console.log('move forward');
             return dispatch(actions.space.viewCameraMoveForward());
         }
 
@@ -45,7 +44,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyS'
             && noModifiers
         ) {
-            console.log('move backward');
             return dispatch(actions.space.viewCameraMoveBackward());
         }
 
@@ -54,7 +52,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyA'
             && noModifiers
         ) {
-            console.log('move left');
             return dispatch(actions.space.viewCameraMoveLeft());
         }
 
@@ -62,7 +59,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyA'
             && event.shiftKey
         ) {
-            console.log('turn left');
             return dispatch(actions.space.viewCameraTurnLeft());
         }
 
@@ -71,7 +67,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyD'
             && noModifiers
         ) {
-            console.log('move right');
             return dispatch(actions.space.viewCameraMoveRight());
         }
 
@@ -79,7 +74,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyD'
             && event.shiftKey
         ) {
-            console.log('turn right');
             return dispatch(actions.space.viewCameraTurnRight());
         }
 
@@ -88,7 +82,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyQ'
             && noModifiers
         ) {
-            console.log('turn up');
             return dispatch(actions.space.viewCameraTurnUp());
         }
 
@@ -96,7 +89,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyZ'
             && noModifiers
         ) {
-            console.log('turn down');
             return dispatch(actions.space.viewCameraTurnDown());
         }
 
@@ -105,7 +97,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyE'
             && noModifiers
         ) {
-            console.log('move up');
             return dispatch(actions.space.viewCameraMoveUp());
         }
 
@@ -113,7 +104,6 @@ export const handleGlobalShortcuts = (
             event.code === 'KeyC'
             && noModifiers
         ) {
-            console.log('move down');
             return dispatch(actions.space.viewCameraMoveDown());
         }
     }
