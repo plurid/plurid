@@ -40,7 +40,7 @@ export default {
             exclude: "node_modules/**"
         }),
         resolve({
-            // modulesOnly: true,
+            modulesOnly: true,
         }),
         typescript({
             rollupCommonJSResolveHack: true,
