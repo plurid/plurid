@@ -33,5 +33,8 @@ export const defaultConfiguration: PluridConfiguration = {
             alwaysShowIcons: false,
             alwaysShowTransformButtons: false,
         },
+        viewcube: {
+            transparent: true,
+        }
     },
 }
