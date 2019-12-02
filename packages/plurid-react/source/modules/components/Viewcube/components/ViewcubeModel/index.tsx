@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+    useState,
+} from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -15,7 +17,6 @@ import { AppState } from '../../../../services/state/store';
 import StateContext from '../../../../services/state/context';
 import selectors from '../../../../services/state/selectors';
 // import actions from '../../../../services/state/actions';
-
 
 
 
@@ -44,6 +45,8 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
 
         /** dispatch */
     } = properties;
+
+    const [hoveredFace, setHoveredFace] = useState('');
 
     return (
         <StyledViewcubeModel>
