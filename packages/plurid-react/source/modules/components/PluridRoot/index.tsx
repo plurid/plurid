@@ -46,8 +46,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const computeChildrenPlanes = (page: TreePage) => {
         if (page.children) {
             page.children.map(child => {
-                const _page = activePages[page.pageID];
-                // const _page = pages.find((_page: any) => _page.path === child.path);
+                const _page = activePages[child.pageID];
 
                 let plane = (<></>);
                 if (_page && child.show) {
@@ -103,7 +102,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         JSON.stringify(page),
     ]);
 
-    // const pluridPage = pages.find(pluridPage => pluridPage.path === page.path);
     const activeDocument = documents['default'];
     // console.log('activeDocument', activeDocument);
     const activePages = activeDocument.pages;
