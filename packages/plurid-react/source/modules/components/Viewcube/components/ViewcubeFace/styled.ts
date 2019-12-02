@@ -41,12 +41,23 @@ export const StyledViewcubeFaceZone: any = styled.div`
     place-content: center;
 
     grid-area: ${(props:any) => `pluridViewcubeFace${props.type}`};
-    background: ${(props: any) => {
+    color: ${(props: any) => {
+        if (props.hovered) {
+            return props.theme.colorPrimary;
+        }
+        return props.theme.colorSecondary;
+    }};
+    background-color: ${(props: any) => {
         if (props.hovered) {
             return props.theme.backgroundColorTertiary;
         }
-
         return props.theme.backgroundColorSecondary;
+    }};
+    border: 1px solid ${(props: any) => {
+        if (props.hovered) {
+            return props.theme.colorTertiary;
+        }
+        return 'transparent';
     }};
 
     :hover {
