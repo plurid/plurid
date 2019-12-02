@@ -11,6 +11,9 @@ import {
     SET_CONFIGURATION_PLANE_CONTROLS,
     SetConfigurationPlaneControlsAction,
 
+    SET_CONFIGURATION_PLANE_OPACITY,
+    SetConfigurationPlaneOpacityAction,
+
     SET_CONFIGURATION_THEME_GENERAL,
     SetConfigurationThemeGeneralAction,
     SET_CONFIGURATION_THEME_INTERACTION,
@@ -52,6 +55,16 @@ export const setConfigurationPlaneControls = (
     return {
         type: SET_CONFIGURATION_PLANE_CONTROLS,
         payload: planeControls,
+    };
+}
+
+
+export const setConfigurationPlaneOpacity = (
+    value: number,
+): SetConfigurationPlaneOpacityAction => {
+    return {
+        type: SET_CONFIGURATION_PLANE_OPACITY,
+        payload: value,
     };
 }
 

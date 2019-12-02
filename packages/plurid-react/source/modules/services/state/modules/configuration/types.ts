@@ -24,6 +24,13 @@ export interface SetConfigurationPlaneControlsAction {
 }
 
 
+export const SET_CONFIGURATION_PLANE_OPACITY = 'SET_CONFIGURATION_PLANE_OPACITY';
+export interface SetConfigurationPlaneOpacityAction {
+    type: typeof SET_CONFIGURATION_PLANE_OPACITY;
+    payload: number;
+}
+
+
 export const SET_CONFIGURATION_THEME_GENERAL = 'SET_CONFIGURATION_THEME_GENERAL';
 export interface SetConfigurationThemeGeneralAction {
     type: typeof SET_CONFIGURATION_THEME_GENERAL;
@@ -77,6 +84,7 @@ export interface ConfigurationState extends PluridConfiguration {
 export type ConfigurationActionsType = SetConfigurationAction
     | SetMicroAction
     | SetConfigurationPlaneControlsAction
+    | SetConfigurationPlaneOpacityAction
     | SetConfigurationThemeGeneralAction
     | SetConfigurationThemeInteractionAction
     | ToggleConfigurationViewcubeHideAction

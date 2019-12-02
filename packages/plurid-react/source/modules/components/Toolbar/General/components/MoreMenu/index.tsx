@@ -23,6 +23,7 @@ import {
     PluridHeading,
     PluridDropdown,
     PluridSwitch,
+    PluridSlider,
 } from '@plurid/plurid-ui-react';
 
 import {
@@ -55,6 +56,8 @@ interface MoreMenuDispatchProperties {
     dispatchSetConfigurationThemeGeneralAction: typeof actions.configuration.setConfigurationThemeGeneralAction;
     dispatchSetConfigurationThemeInteractionAction: typeof actions.configuration.setConfigurationThemeInteractionAction;
 
+    dispatchSetConfigurationPlaneOpacity: typeof actions.configuration.setConfigurationPlaneOpacity;
+
     dispatchToggleConfigurationViewcubeHide: typeof actions.configuration.toggleConfigurationViewcubeHide;
     dispatchToggleConfigurationUIViewcubeTransparent: typeof actions.configuration.toggleConfigurationUIViewcubeTransparent;
 
@@ -81,8 +84,11 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         /** dispatch */
         dispatchSetConfigurationThemeGeneralAction,
         dispatchSetConfigurationThemeInteractionAction,
+
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
+
+        dispatchSetConfigurationPlaneOpacity,
 
         dispatchToggleConfigurationViewcubeHide,
         dispatchToggleConfigurationUIViewcubeTransparent,
@@ -99,6 +105,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         theme: selectedTheme,
         ui,
         viewcube: showViewcube,
+        planeOpacity,
     } = configuration;
 
     const {
@@ -242,6 +249,22 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         selected={transformOriginSize}
                         atSelect={(selection: any) => dispatchSetTransformOriginSize(selection)}
                         heightItems={3}
+                        theme={interactionTheme}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    plane opacity
+
+                    <PluridSlider
+                        value={planeOpacity}
+                        max={1}
+                        min={0}
+                        step={0.1}
+                        defaultValue={100}
+                        atChange={(value: number) => dispatchSetConfigurationPlaneOpacity(value)}
+                        thumbSize="small"
+                        level={2}
                         theme={interactionTheme}
                     />
                 </StyledMoreMenuItem>
@@ -413,6 +436,10 @@ const mapDispatchToProps = (
     ),
     dispatchSetInteractionTheme: (theme: Theme) => dispatch(
         actions.themes.setInteractionTheme(theme)
+    ),
+
+    dispatchSetConfigurationPlaneOpacity: (value: number) => dispatch(
+        actions.configuration.setConfigurationPlaneOpacity(value)
     ),
 
     dispatchToggleConfigurationViewcubeHide: (toggle: boolean) => dispatch(

@@ -6,6 +6,7 @@ import {
     SET_CONFIGURATION,
     SET_MICRO,
     SET_CONFIGURATION_PLANE_CONTROLS,
+    SET_CONFIGURATION_PLANE_OPACITY,
 
     SET_CONFIGURATION_THEME_GENERAL,
     SET_CONFIGURATION_THEME_INTERACTION,
@@ -48,6 +49,11 @@ const configurationReducer = (
             return {
                 ...state,
                 planeControls: action.payload,
+            };
+        case SET_CONFIGURATION_PLANE_OPACITY:
+            return {
+                ...state,
+                planeOpacity: action.payload,
             };
         case SET_CONFIGURATION_THEME_GENERAL:
             {
