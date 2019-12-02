@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
+    PluridConfiguration,
+} from '@plurid/plurid-data';
+
+import {
     Theme,
 } from '@plurid/plurid-themes';
 
@@ -28,6 +32,7 @@ interface ViewcubeOwnProperties {
 }
 
 interface ViewcubeStateProperties {
+    configuration: PluridConfiguration;
     interactionTheme: Theme;
 }
 
@@ -44,6 +49,7 @@ type ViewcubeProperties = ViewcubeOwnProperties
 const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
     const {
         /** state */
+        configuration,
         interactionTheme,
 
         /** dispatch */
@@ -51,6 +57,10 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
         dispatchRotateYWith,
         dispatchSetAnimatedTransform,
     } = properties;
+
+    const {
+        viewcube,
+    } = configuration.ui;
 
     const [mouseOver, setMouseOver] = useState(false);
 
@@ -77,6 +87,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
             onMouseMove={() => !mouseOver ? setMouseOver(true) : null}
+            transparent={viewcube.transparent}
         >
             <ViewcubeModel
                 mouseOver={mouseOver}
@@ -148,6 +159,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
 const mapStateToProperties = (
     state: AppState,
 ): ViewcubeStateProperties => ({
+    configuration: selectors.configuration.getConfiguration(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 

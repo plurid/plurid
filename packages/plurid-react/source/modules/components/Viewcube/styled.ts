@@ -6,7 +6,6 @@ export const StyledViewcube: any = styled.div`
     position: absolute;
     bottom: 0;
     right: 0;
-    opacity: 0.4;
     position: absolute;
     user-select: none;
     transition: opacity 300ms ease-in-out;
@@ -19,6 +18,13 @@ export const StyledViewcube: any = styled.div`
                          "pluridViewcubeTranslateX      pluridViewcubeTranslateX    pluridViewcubeTranslateX        pluridViewcubeFitview";
     grid-template-rows: 20px 15px 95px 15px 20px;
     grid-template-columns: 15px 115px 15px 20px;
+
+    opacity: ${(props: any) => {
+        if (props.transparent) {
+            return '0.4';
+        }
+        return '1';
+    }};
 
     :hover {
         opacity: 1;
