@@ -3,7 +3,13 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { Theme } from '@plurid/plurid-themes';
+import {
+    Theme,
+} from '@plurid/plurid-themes';
+
+import {
+    PluridConfiguration,
+} from '@plurid/plurid-data';
 
 import {
     StyledPluridSpace,
@@ -25,9 +31,8 @@ interface PluridSpaceOwnProperties {
 }
 
 interface PluridSpaceStateProperties {
+    configuration: PluridConfiguration,
     generalTheme: Theme;
-    transparent: boolean | undefined;
-    showToolbar: boolean | undefined;
 }
 
 interface PluridSpaceDispatchProperties {
@@ -40,10 +45,19 @@ type PluridSpaceProperties = PluridSpaceOwnProperties
 const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
     const {
         /** state */
+        configuration,
         generalTheme,
-        transparent,
-        showToolbar,
     } = properties;
+
+    const {
+        toolbar,
+        viewcube,
+        space,
+    } = configuration;
+
+    const {
+        transparent,
+    } = space;
 
     return (
         <StyledPluridSpace
@@ -52,11 +66,13 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
         >
             <PluridRoots />
 
-            {showToolbar && (
+            {toolbar && (
                 <ToolbarGeneral />
             )}
 
-            <Viewcube />
+            {viewcube && (
+                <Viewcube />
+            )}
         </StyledPluridSpace>
     );
 }
@@ -65,9 +81,8 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): PluridSpaceStateProperties => ({
+    configuration: selectors.configuration.getConfiguration(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
-    transparent: selectors.configuration.getConfiguration(state).space.transparent,
-    showToolbar: selectors.configuration.getConfiguration(state).toolbar,
 });
 
 
