@@ -38,6 +38,13 @@ export interface SetConfigurationThemeInteractionAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_VIEWCUBE_HIDE = 'TOGGLE_CONFIGURATION_VIEWCUBE_HIDE';
+export interface ToggleConfigurationViewcubeHideAction {
+    type: typeof TOGGLE_CONFIGURATION_VIEWCUBE_HIDE;
+    payload: boolean;
+}
+
+
 export const TOGGLE_UI_TOOLBAR_HIDE = 'TOGGLE_UI_TOOLBAR_HIDE';
 export interface ToggleUIToolbarHideAction {
     type: typeof TOGGLE_UI_TOOLBAR_HIDE;
@@ -65,6 +72,7 @@ export type ConfigurationActionsType = SetConfigurationAction
     | SetConfigurationPlaneControlsAction
     | SetConfigurationThemeGeneralAction
     | SetConfigurationThemeInteractionAction
+    | ToggleConfigurationViewcubeHideAction
     | ToggleUIToolbarHideAction
     | ToggleUIToolbarAlwaysShowIconsAction
     | ToggleUIToolbarAlwaysTransformButtonsAction;
