@@ -98,6 +98,7 @@ interface ViewDispatchProperties {
 
     dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
     dispatchSetMicro: typeof actions.configuration.setMicro;
+    dispatchSetConfigurationPlaneControls: typeof actions.configuration.setConfigurationPlaneControls;
 
     dispatchSetDocuments: typeof actions.data.setDocuments;
     dispatchSetViewSize: typeof actions.data.setViewSize;
@@ -156,6 +157,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         dispatchSetConfiguration,
         dispatchSetMicro,
+        dispatchSetConfigurationPlaneControls,
 
         dispatchSetDocuments,
         dispatchSetViewSize,
@@ -229,6 +231,12 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         if (configuration.micro) {
             dispatchSetMicro();
+        }
+
+        if (configuration.planeControls) {
+            dispatchSetConfigurationPlaneControls(true);
+        } else {
+            dispatchSetConfigurationPlaneControls(false);
         }
 
         if (configuration.space) {
@@ -827,6 +835,9 @@ const mapDispatchToProperties = (
     ),
     dispatchSetMicro: () => dispatch(
         actions.configuration.setMicro()
+    ),
+    dispatchSetConfigurationPlaneControls: (value: boolean) => dispatch(
+        actions.configuration.setConfigurationPlaneControls(value)
     ),
 
     dispatchSetDocuments: (documents: any) => dispatch(

@@ -19,6 +19,7 @@ const App = () => {
             },
             center: true,
         },
+        micro: true,
         // planeWidth: 0.5,
         // planeControls: false,
         // planeOpacity: 0,

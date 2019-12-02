@@ -5,6 +5,7 @@ import {
 import {
     SET_CONFIGURATION,
     SET_MICRO,
+    SET_CONFIGURATION_PLANE_CONTROLS,
 
     SET_CONFIGURATION_THEME_GENERAL,
     SET_CONFIGURATION_THEME_INTERACTION,
@@ -39,6 +40,11 @@ const configurationReducer = (
                 toolbar: false,
                 planeControls: false,
                 viewcube: false,
+            };
+        case SET_CONFIGURATION_PLANE_CONTROLS:
+            return {
+                ...state,
+                planeControls: action.payload,
             };
         case SET_CONFIGURATION_THEME_GENERAL:
             {
