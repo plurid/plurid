@@ -669,6 +669,11 @@ const View: React.FC<ViewProperties> = (properties) => {
                         ? configuration.ui.toolbar.alwaysShowTransformButtons
                         : defaultConfiguration.ui.toolbar.alwaysShowTransformButtons,
                 },
+                viewcube: {
+                    transparent: configuration && configuration.ui && configuration.ui.viewcube && typeof configuration.ui.viewcube.transparent === 'boolean'
+                        ? configuration.ui.viewcube.transparent
+                        : defaultConfiguration.ui.viewcube.transparent,
+                },
             },
         };
 

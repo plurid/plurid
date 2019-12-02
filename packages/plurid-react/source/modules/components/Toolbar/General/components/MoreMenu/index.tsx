@@ -94,11 +94,12 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     const {
         theme: selectedTheme,
         ui,
-        viewcube,
+        viewcube: showViewcube,
     } = configuration;
 
     const {
         toolbar,
+        viewcube,
     } = ui;
 
     const {
@@ -310,7 +311,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={hide}
+                        checked={viewcube.transparent}
                         atChange={() => dispatchToggleUIToolbarHideAction()}
                         exclusive={true}
                         level={2}
@@ -324,8 +325,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={viewcube}
-                        atChange={() => dispatchToggleConfigurationViewcubeHide(!viewcube)}
+                        checked={showViewcube}
+                        atChange={() => dispatchToggleConfigurationViewcubeHide(!showViewcube)}
                         exclusive={true}
                         level={2}
                     />
