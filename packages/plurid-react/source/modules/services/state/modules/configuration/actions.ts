@@ -18,6 +18,9 @@ import {
 
     TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
     ToggleConfigurationViewcubeHideAction,
+    TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT,
+    ToggleConfigurationUIViewcubeTransparentAction,
+
     TOGGLE_UI_TOOLBAR_HIDE,
     ToggleUIToolbarHideAction,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
@@ -78,6 +81,16 @@ export const toggleConfigurationViewcubeHide = (
 ): ToggleConfigurationViewcubeHideAction => {
     return {
         type: TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
+        payload: toggle,
+    };
+}
+
+
+export const toggleConfigurationUIViewcubeTransparent = (
+    toggle: boolean,
+): ToggleConfigurationUIViewcubeTransparentAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT,
         payload: toggle,
     };
 }

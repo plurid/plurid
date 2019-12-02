@@ -11,6 +11,8 @@ import {
     SET_CONFIGURATION_THEME_INTERACTION,
 
     TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
+    TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT,
+
     TOGGLE_UI_TOOLBAR_HIDE,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS,
@@ -80,6 +82,19 @@ const configurationReducer = (
                 return {
                     ...state,
                     viewcube: action.payload,
+                };
+            }
+        case TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT:
+            {
+                return {
+                    ...state,
+                    ui: {
+                        ...state.ui,
+                        viewcube: {
+                            ...state.ui.viewcube,
+                            transparent: action.payload,
+                        },
+                    },
                 };
             }
         case TOGGLE_UI_TOOLBAR_HIDE:

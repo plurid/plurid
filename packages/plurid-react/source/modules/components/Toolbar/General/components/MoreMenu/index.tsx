@@ -56,6 +56,8 @@ interface MoreMenuDispatchProperties {
     dispatchSetConfigurationThemeInteractionAction: typeof actions.configuration.setConfigurationThemeInteractionAction;
 
     dispatchToggleConfigurationViewcubeHide: typeof actions.configuration.toggleConfigurationViewcubeHide;
+    dispatchToggleConfigurationUIViewcubeTransparent: typeof actions.configuration.toggleConfigurationUIViewcubeTransparent;
+
     dispatchToggleUIToolbarHideAction: typeof actions.configuration.toggleUIToolbarHideAction;
     dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
     dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
@@ -83,6 +85,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchSetInteractionTheme,
 
         dispatchToggleConfigurationViewcubeHide,
+        dispatchToggleConfigurationUIViewcubeTransparent,
+
         dispatchToggleUIToolbarHideAction,
         dispatchToggleUIToolbarAlwaysShowIconsAction,
         dispatchToggleUIToolbarAlwaysTransformButtonsAction,
@@ -312,7 +316,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridSwitch
                         theme={interactionTheme}
                         checked={viewcube.transparent}
-                        atChange={() => dispatchToggleUIToolbarHideAction()}
+                        atChange={() => dispatchToggleConfigurationUIViewcubeTransparent(!viewcube.transparent)}
                         exclusive={true}
                         level={2}
                     />
@@ -414,6 +418,10 @@ const mapDispatchToProps = (
     dispatchToggleConfigurationViewcubeHide: (toggle: boolean) => dispatch(
         actions.configuration.toggleConfigurationViewcubeHide(toggle)
     ),
+    dispatchToggleConfigurationUIViewcubeTransparent: (toggle: boolean) => dispatch(
+        actions.configuration.toggleConfigurationUIViewcubeTransparent(toggle)
+    ),
+
     dispatchToggleUIToolbarHideAction: () => dispatch(
         actions.configuration.toggleUIToolbarHideAction()
     ),
