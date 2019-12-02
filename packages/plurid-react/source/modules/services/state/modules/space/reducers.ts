@@ -40,6 +40,8 @@ import {
     TRANSLATE_DOWN,
     TRANSLATE_LEFT,
     TRANSLATE_RIGHT,
+    TRANSLATE_IN,
+    TRANSLATE_OUT,
     TRANSLATE_X_WITH,
     TRANSLATE_Y_WITH,
 
@@ -319,6 +321,26 @@ const spaceReducer = (
             {
                 const translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
                 const translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
+                return {
+                    ...state,
+                    translationX,
+                    translationZ,
+                };
+            }
+        case TRANSLATE_IN:
+            {
+                const translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
+                const translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
+                return {
+                    ...state,
+                    translationX,
+                    translationZ,
+                };
+            }
+        case TRANSLATE_OUT:
+            {
+                const translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
+                const translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
                 return {
                     ...state,
                     translationX,

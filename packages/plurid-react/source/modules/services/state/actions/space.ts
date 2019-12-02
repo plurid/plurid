@@ -32,6 +32,8 @@ import {
     translateDown,
     translateLeft,
     translateRight,
+    translateIn,
+    translateOut,
     translateXWith,
     translateYWith,
 
@@ -88,6 +90,8 @@ export default {
     translateDown,
     translateLeft,
     translateRight,
+    translateIn,
+    translateOut,
     translateXWith,
     translateYWith,
 

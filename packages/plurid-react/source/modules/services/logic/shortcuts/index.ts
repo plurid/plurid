@@ -215,7 +215,7 @@ export const handleGlobalWheel = (
         }
     }
 
-    if (event.shiftKey) {
+    if (event.shiftKey && !event.altKey) {
         if (direction === 'up') {
             dispatch(actions.space.rotateUp());
         }
@@ -251,7 +251,17 @@ export const handleGlobalWheel = (
         }
     }
 
-    if (event.altKey) {
+    if (event.altKey && event.shiftKey) {
+        if (direction === 'up') {
+            dispatch(actions.space.translateIn());
+        }
+
+        if (direction === 'down') {
+            dispatch(actions.space.translateOut());
+        }
+    }
+
+    if (event.altKey && !event.shiftKey) {
         if (direction === 'up') {
             dispatch(actions.space.translateDown());
         }

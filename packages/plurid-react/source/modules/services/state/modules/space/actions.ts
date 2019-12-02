@@ -65,6 +65,10 @@ import {
     TranslateLeftAction,
     TRANSLATE_RIGHT,
     TranslateRightAction,
+    TRANSLATE_IN,
+    TranslateInAction,
+    TRANSLATE_OUT,
+    TranslateOutAction,
     TRANSLATE_X_WITH,
     TranslateXWithAction,
     TRANSLATE_Y_WITH,
@@ -271,6 +275,20 @@ export const translateRight = (): TranslateRightAction => {
         type: TRANSLATE_RIGHT,
     };
 }
+
+
+export const translateIn = (): TranslateInAction => {
+    return {
+        type: TRANSLATE_IN,
+    };
+}
+
+export const translateOut = (): TranslateOutAction => {
+    return {
+        type: TRANSLATE_OUT,
+    };
+}
+
 
 export const translateXWith = (payload: number): TranslateXWithAction => {
     return {
