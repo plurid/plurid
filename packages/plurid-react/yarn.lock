@@ -424,10 +424,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@plurid/plurid-data@^0.1.43":
-  version "0.1.43"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.43.tgz#3372ed636e29506eab212832179bb697be7fa10a"
-  integrity sha512-uB0CcHb54xCvmA1bzkHo50WTxmP/NmtdfVRJ4ktYFRaLCVJ1mYrUP+xJOdUK8tccdfoX8DrjV2TSa1nPc7zSzg==
+"@plurid/plurid-data@^0.1.44":
+  version "0.1.44"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.44.tgz#9b21f3e3313a5c98abbb22dad9d93a70d17f481e"
+  integrity sha512-e1l4S5ReM6CU0uAwNj0ozjaQ6HpPjS1LwpldzyzEFdzFH/cNVrfgvngFDs0XWTA6FNncFR0Y2pNR6Dqdf07Wmw==
 
 "@plurid/plurid-engine@^0.1.19":
   version "0.1.19"
@@ -5508,10 +5508,10 @@ rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.6.0, rollup-pluginutils@^2.8.1,
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^1.27.6:
-  version "1.27.6"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.27.6.tgz#287f255af0c76c30a60df67900e5dd8379f3147e"
-  integrity sha512-/NA1sjU92K9KZHiPdrHMzykFABcjeDaxS8xh19hYj8FKbtGNEahbXkdYatlk75dZF0oRXwzA9KIjHedcxcnYng==
+rollup@^1.27.8:
+  version "1.27.8"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.27.8.tgz#94288a957af9f4c2380b73a17494d87705997d0f"
+  integrity sha512-EVoEV5rAWl+5clnGznt1KY8PeVkzVQh/R0d2s3gHEkN7gfoyC4JmvIVuCtPbYE8NM5Ep/g+nAmvKXBjzaqTsHA==
   dependencies:
     "@types/estree" "*"
     "@types/node" "*"
