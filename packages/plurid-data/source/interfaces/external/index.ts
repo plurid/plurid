@@ -318,6 +318,7 @@ export interface LayoutSheaves extends Layout {
 
 export interface PluridConfigurationUI {
     toolbar: PluridConfigurationUIToolbar;
+    viewcube: PluridConfigurationUIViewcube;
 }
 
 
@@ -325,4 +326,9 @@ export interface PluridConfigurationUIToolbar {
     hide: boolean;
     alwaysShowIcons: boolean;
     alwaysShowTransformButtons: boolean;
+}
+
+
+export interface PluridConfigurationUIViewcube {
+    transparent: boolean;
 }
