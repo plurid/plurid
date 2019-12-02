@@ -644,13 +644,13 @@ const View: React.FC<ViewProperties> = (properties) => {
                 perspective: configuration && configuration.space && configuration.space.perspective
                     ? configuration.space.perspective
                     : defaultConfiguration.space.perspective,
-                transparent: configuration && configuration.space && configuration.space.transparent
+                transparent: configuration && configuration.space && typeof configuration.space.transparent === 'boolean'
                     ? configuration.space.transparent
                     : defaultConfiguration.space.transparent,
-                center: configuration && configuration.space && configuration.space.center
+                center: configuration && configuration.space && typeof configuration.space.center === 'boolean'
                     ? configuration.space.center
                     : defaultConfiguration.space.center,
-                showTransformOrigin: configuration && configuration.space && configuration.space.showTransformOrigin
+                showTransformOrigin: configuration && configuration.space && typeof configuration.space.showTransformOrigin === 'boolean'
                     ? configuration.space.showTransformOrigin
                     : defaultConfiguration.space.showTransformOrigin,
                 transformOriginSize: configuration && configuration.space && configuration.space.transformOriginSize
@@ -659,16 +659,16 @@ const View: React.FC<ViewProperties> = (properties) => {
             },
             ui: {
                 toolbar: {
-                    hide: configuration && configuration.ui && configuration.ui.toolbar && configuration.ui.toolbar.hide
+                    hide: configuration && configuration.ui && configuration.ui.toolbar && typeof configuration.ui.toolbar.hide === 'boolean'
                         ? configuration.ui.toolbar.hide
                         : defaultConfiguration.ui.toolbar.hide,
-                    alwaysShowIcons: configuration && configuration.ui && configuration.ui.toolbar && configuration.ui.toolbar.alwaysShowIcons
+                    alwaysShowIcons: configuration && configuration.ui && configuration.ui.toolbar && typeof configuration.ui.toolbar.alwaysShowIcons === 'boolean'
                         ? configuration.ui.toolbar.alwaysShowIcons
                         : defaultConfiguration.ui.toolbar.alwaysShowIcons,
-                    alwaysShowTransformButtons: configuration && configuration.ui && configuration.ui.toolbar && configuration.ui.toolbar.alwaysShowTransformButtons
+                    alwaysShowTransformButtons: configuration && configuration.ui && configuration.ui.toolbar && typeof configuration.ui.toolbar.alwaysShowTransformButtons === 'boolean'
                         ? configuration.ui.toolbar.alwaysShowTransformButtons
                         : defaultConfiguration.ui.toolbar.alwaysShowTransformButtons,
-                }
+                },
             },
         };
 
