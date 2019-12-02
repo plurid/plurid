@@ -7,6 +7,8 @@ import {
     setConfigurationThemeInteractionAction,
 
     toggleConfigurationViewcubeHide,
+    toggleConfigurationUIViewcubeTransparent,
+
     toggleUIToolbarHideAction,
     toggleUIToolbarAlwaysShowIconsAction,
     toggleUIToolbarAlwaysTransformButtonsAction,
@@ -23,6 +25,8 @@ export default {
     setConfigurationThemeInteractionAction,
 
     toggleConfigurationViewcubeHide,
+    toggleConfigurationUIViewcubeTransparent,
+
     toggleUIToolbarHideAction,
     toggleUIToolbarAlwaysShowIconsAction,
     toggleUIToolbarAlwaysTransformButtonsAction,
