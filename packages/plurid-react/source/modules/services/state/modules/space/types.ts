@@ -146,6 +146,7 @@ export interface TranslateDownAction {
     type: typeof TRANSLATE_DOWN;
 }
 
+
 export const TRANSLATE_LEFT = 'TRANSLATE_LEFT';
 export interface TranslateLeftAction {
     type: typeof TRANSLATE_LEFT;
@@ -155,6 +156,18 @@ export const TRANSLATE_RIGHT = 'TRANSLATE_RIGHT';
 export interface TranslateRightAction {
     type: typeof TRANSLATE_RIGHT;
 }
+
+
+export const TRANSLATE_IN = 'TRANSLATE_IN';
+export interface TranslateInAction {
+    type: typeof TRANSLATE_IN;
+}
+
+export const TRANSLATE_OUT = 'TRANSLATE_OUT';
+export interface TranslateOutAction {
+    type: typeof TRANSLATE_OUT;
+}
+
 
 export const TRANSLATE_X_WITH = 'TRANSLATE_X_WITH';
 export interface TranslateXWithAction {
@@ -293,6 +306,8 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | TranslateDownAction
     | TranslateLeftAction
     | TranslateRightAction
+    | TranslateInAction
+    | TranslateOutAction
     | TranslateXWithAction
     | TranslateYWithAction
     | ScaleUpAction
