@@ -12,7 +12,6 @@ import themes, {
 
 import {
     defaultShortcuts,
-    // keyModifiers,
     shortcutsNames,
 
     SIZES,
@@ -309,9 +308,11 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         key,
                         modifier,
                     } = shortcutData;
-                    const modifierString = modifier
-                        ? modifier + ' +'
-                        : '';
+                    const modifierString = Array.isArray(modifier)
+                        ? modifier.reduce((total, element) => total + element + ' +')
+                        : typeof modifier === 'string'
+                            ? modifier + ' +'
+                            : '';
 
                     return (
                         <StyledMoreMenuItem
