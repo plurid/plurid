@@ -309,8 +309,8 @@ const spaceReducer = (
             }
         case TRANSLATE_LEFT:
             {
-                const translationX = state.translationX - TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
-                const translationZ = state.translationZ - TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
+                const translationX = state.translationX - TRANSLATION_STEP * Math.cos(toRadians(-state.rotationY));
+                const translationZ = state.translationZ - TRANSLATION_STEP * Math.sin(toRadians(-state.rotationY));
                 return {
                     ...state,
                     translationX,
@@ -319,8 +319,8 @@ const spaceReducer = (
             }
         case TRANSLATE_RIGHT:
             {
-                const translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
-                const translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
+                const translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(-state.rotationY));
+                const translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(-state.rotationY));
                 return {
                     ...state,
                     translationX,
