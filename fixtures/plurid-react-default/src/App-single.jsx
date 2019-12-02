@@ -19,11 +19,13 @@ const App = () => {
             },
             center: true,
             // transparent: true,
+            showTransformOrigin: false,
         },
         // micro: true,
         // planeWidth: 0.5,
+        toolbar: false,
         planeControls: false,
-        planeOpacity: 0,
+        // planeOpacity: 0,
     };
 
     const appPages = [
