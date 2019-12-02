@@ -18,15 +18,16 @@ export const StyledViewcube: any = styled.div`
 
     /* height: 160px;
     width: 160px; */
-    height: 225px;
-    width: 240px;
+    /* height: 225px;
+    width: 240px; */
+    /* padding: 10px;
+    padding-top: 50px;
+    padding-left: 50px; */
 
     opacity: 0.4;
-    padding: 10px;
-    padding-top: 50px;
-    padding-left: 50px;
     position: absolute;
     user-select: none;
+    transition: opacity 300ms ease-in-out;
 
     :hover {
         opacity: 1;

@@ -84,7 +84,6 @@ const zoneClickTransforms = {
     topBottomCenter: { rotateX: -45, rotateY: 0 },
     topBottomRight: { rotateX: -45, rotateY: -45 },
 
-
     baseTopLeft: { rotateX: -45, rotateY: 225 },
     baseTopCenter: { rotateX: -45, rotateY: 180.1 },
     baseTopRight: { rotateX: -45, rotateY: 135 },
