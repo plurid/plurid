@@ -115,16 +115,16 @@ const faceTransform = {
     C4: { rotateX: 45, rotateY: 270.1 },
     C5: { rotateX: 45, rotateY: 225 },
 
-    A6: { rotateX: -45, rotateY: 180.1 },
+    A6: { rotateX: -45, rotateY: 180 },
     A7: { rotateX: -45, rotateY: 135 },
     B6: { rotateX: 0, rotateY: 180.1 },
     B7: { rotateX: 0, rotateY: 135 },
     C6: { rotateX: 45, rotateY: 180.1 },
     C7: { rotateX: 45, rotateY: 135 },
 
-    A8: { rotateX: -45, rotateY: 270.1 },
-    B8: { rotateX: 0, rotateY: 270.1 },
-    C8: { rotateX: 45, rotateY: 270.1 },
+    A8: { rotateX: -45, rotateY: 90.1 },
+    B8: { rotateX: 0, rotateY: 90.1 },
+    C8: { rotateX: 45, rotateY: 90.1 },
 
     D1: { rotateX: -90.1, rotateY: 0 },
 
