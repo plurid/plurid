@@ -24,3 +24,20 @@ export const StyledViewcube: any = styled.div`
         opacity: 1;
     }
 `;
+
+
+export const StyledViewcubeArrow: any = styled.div`
+    display: grid;
+    place-content: center;
+    user-select: none;
+    font-size: 0.8rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.5rem;
+
+    :hover {
+        background-color: ${(props: any) => {
+            return props.theme.backgroundColorTertiary;
+        }};
+    }
+`;
