@@ -32,8 +32,9 @@ interface ViewcubeStateProperties {
 }
 
 interface ViewcubeDispatchProperties {
-    rotateXWith: typeof actions.space.rotateXWith;
-    rotateYWith: typeof actions.space.rotateYWith;
+    dispatchRotateXWith: typeof actions.space.rotateXWith;
+    dispatchRotateYWith: typeof actions.space.rotateYWith;
+    dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
 }
 
 type ViewcubeProperties = ViewcubeOwnProperties
@@ -46,11 +47,30 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
         interactionTheme,
 
         /** dispatch */
-        rotateXWith,
-        rotateYWith
+        dispatchRotateXWith,
+        dispatchRotateYWith,
+        dispatchSetAnimatedTransform,
     } = properties;
 
     const [mouseOver, setMouseOver] = useState(false);
+
+    const animatedRotate = (
+        type: string,
+        value: number,
+    ) => {
+        dispatchSetAnimatedTransform(true);
+        switch (type) {
+            case 'rotateX':
+                dispatchRotateXWith(value);
+                break;
+            case 'rotateY':
+                dispatchRotateYWith(value);
+                break;
+        }
+        setTimeout(() => {
+            dispatchSetAnimatedTransform(false);
+        }, 450);
+    }
 
     return (
         <StyledViewcube
@@ -69,7 +89,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     >
                         <StyledViewcubeArrowIcon
                             theme={interactionTheme}
-                            onClick={() => rotateXWith(90)}
+                            onClick={() => animatedRotate('rotateX', 90.1)}
                         >
                             ▲
                         </StyledViewcubeArrowIcon>
@@ -83,7 +103,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     >
                         <StyledViewcubeArrowIcon
                             theme={interactionTheme}
-                            onClick={() => rotateXWith(-90)}
+                            onClick={() => animatedRotate('rotateX', -90.1)}
                         >
                             ▼
                         </StyledViewcubeArrowIcon>
@@ -97,7 +117,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     >
                         <StyledViewcubeArrowIcon
                             theme={interactionTheme}
-                            onClick={() => rotateYWith(90)}
+                            onClick={() => animatedRotate('rotateY', 90.1)}
                         >
                             ◀
                         </StyledViewcubeArrowIcon>
@@ -111,7 +131,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     >
                         <StyledViewcubeArrowIcon
                             theme={interactionTheme}
-                            onClick={() => rotateYWith(-90)}
+                            onClick={() => animatedRotate('rotateY', -90.1)}
                         >
                             ▶
                         </StyledViewcubeArrowIcon>
@@ -133,11 +153,14 @@ const mapStateToProperties = (
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): ViewcubeDispatchProperties => ({
-    rotateXWith: (value: number) => dispatch(
+    dispatchRotateXWith: (value: number) => dispatch(
         actions.space.rotateXWith(value)
     ),
-    rotateYWith: (value: number) => dispatch(
+    dispatchRotateYWith: (value: number) => dispatch(
         actions.space.rotateYWith(value)
+    ),
+    dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
+        actions.space.setAnimatedTransform(animated)
     ),
 });
 

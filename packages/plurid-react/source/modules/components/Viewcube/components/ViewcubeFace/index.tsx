@@ -239,8 +239,8 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
         const faceType = `${face}${type}`;
         const zoneCode = zoneCodes[faceType];
         const transform = faceTransform[zoneCode];
-        console.log(zoneCode);
-        console.log(transform);
+        // console.log(zoneCode);
+        // console.log(transform);
 
         dispatchSetAnimatedTransform(true);
         dispatchRotateX(transform.rotateX);
