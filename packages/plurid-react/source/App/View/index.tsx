@@ -21,6 +21,8 @@ import {
     PluridApp as PluridAppProperties,
     PluridConfiguration as PluridAppConfiguration,
     Indexed,
+    PluridDocument,
+    PluridPage,
     PluridContext,
     TreePage,
     PluridInternalStatePage,
@@ -128,6 +130,8 @@ type ViewProperties = ViewOwnProperties
 const View: React.FC<ViewProperties> = (properties) => {
     const viewElement = useRef<HTMLDivElement>(null);
 
+    const contextDocumentsRef = useRef<Indexed<PluridInternalContextDocument>>({});
+
     const {
         /** own */
         appProperties,
@@ -186,7 +190,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     const [initialized, setInitialized] = useState(false);
 
-    const [contextDocuments, setContextDocuments] = useState<Indexed<PluridInternalContextDocument>>({});
+    // const [contextDocuments, setContextDocuments] = useState<Indexed<PluridInternalContextDocument>>({});
 
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         handleGlobalShortcuts(
@@ -368,6 +372,78 @@ const View: React.FC<ViewProperties> = (properties) => {
         }, 450);
     }
 
+    const generatePluridContext = (
+        documents: PluridDocument[] | undefined,
+        pages: PluridPage[] | undefined,
+    ): PluridContext => {
+        const documentPages: Indexed<PluridInternalStatePage> = {};
+        const contextPages: Indexed<PluridInternalContextPage> = {};
+
+        if (!documents && pages) {
+            pages.map(page => {
+                const id = page.id || uuid();
+
+                const contextPage = {
+                    ...page,
+                    id,
+                };
+                contextPages[id] = {
+                    ...contextPage,
+                };
+
+                const documentPage: PluridInternalStatePage = {
+                    root: page.root || false,
+                    ordinal: page.ordinal || 0,
+                    id,
+                    path: page.path,
+                };
+                documentPages[id] = {
+                    ...documentPage,
+                };
+            });
+
+            const document: PluridInternalStateDocument = {
+                id: 'default',
+                name: 'default',
+                pages: documentPages,
+                ordinal: 0,
+            };
+
+            const documents = {
+                default: document,
+            };
+
+            const contextDocument = {
+                id: 'default',
+                name: 'default',
+                pages: contextPages,
+            };
+            const contextDocuments = {
+                default: contextDocument,
+            }
+            // setContextDocuments(contextDocuments);
+            contextDocumentsRef.current = {...contextDocuments};
+
+            dispatchSetDocuments(documents);
+            dispatchSetActiveDocument('default');
+
+            const pluridContext: PluridContext = {
+                pageContext: appProperties.pageContext,
+                pageContextValue: appProperties.pageContextValue,
+                documents: contextDocuments,
+            };
+            return pluridContext;
+        }
+
+        contextDocumentsRef.current = {};
+        const pluridContext: PluridContext = {
+            pageContext: appProperties.pageContext,
+            pageContextValue: appProperties.pageContextValue,
+            documents: {},
+        };
+        return pluridContext;
+    }
+
     /** Keydown, Wheel Listeners */
     useEffect(() => {
         if (viewElement.current) {
@@ -479,7 +555,8 @@ const View: React.FC<ViewProperties> = (properties) => {
             const contextDocuments = {
                 default: contextDocument,
             }
-            setContextDocuments(contextDocuments);
+            // setContextDocuments(contextDocuments);
+            contextDocumentsRef.current = {...contextDocuments};
 
             dispatchSetDocuments(documents);
             dispatchSetActiveDocument('default');
@@ -620,9 +697,10 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         if (activeDocumentID) {
             const activeDocument = dataDocuments[activeDocumentID];
+            console.log('activeDocument', activeDocument);
             const pages = activeDocument.pages;
 
-            const activeContextDocument = contextDocuments[activeDocumentID];
+            const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
             const contextPages = activeContextDocument.pages;
 
             const treePages: TreePage[] = [];
@@ -656,7 +734,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         // stateConfiguration,
         activeDocumentID,
         dataDocuments,
-        contextDocuments,
+        contextDocumentsRef.current,
     ]);
 
     /** Touch */
@@ -686,11 +764,19 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     const viewContainer = handleView(pages, documents);
 
+    // const pluridContext = generatePluridContext(
+    //     documents,
+    //     pages,
+    // );
+    // console.log('appProperties', appProperties);
+
+    // console.log('contextDocumentsRef.current', contextDocumentsRef.current);
     const pluridContext: PluridContext = {
         pageContext: appProperties.pageContext,
         pageContextValue: appProperties.pageContextValue,
-        documents: contextDocuments,
+        documents: contextDocumentsRef.current,
     };
+    console.log('pluridContext', pluridContext);
 
     return (
         <StyledView
