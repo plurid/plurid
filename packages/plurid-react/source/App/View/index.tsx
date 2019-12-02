@@ -229,9 +229,9 @@ const View: React.FC<ViewProperties> = (properties) => {
     ) => {
         dispatchSetConfiguration(configuration);
 
-        if (configuration.micro) {
-            dispatchSetMicro();
-        }
+        // if (configuration.micro) {
+        //     dispatchSetMicro();
+        // }
 
         if (configuration.planeControls) {
             dispatchSetConfigurationPlaneControls(true);
@@ -613,22 +613,22 @@ const View: React.FC<ViewProperties> = (properties) => {
                             ? defaultConfiguration.theme.general
                             : 'plurid',
             },
-            micro: configuration && configuration.micro
+            micro: configuration && typeof configuration.micro === 'boolean'
                 ? configuration.micro
                 : defaultConfiguration.micro,
-            toolbar: configuration && configuration.toolbar
+            toolbar: configuration && typeof configuration.toolbar === 'boolean'
                 ? configuration.toolbar
                 : defaultConfiguration.toolbar,
-            viewcube: configuration && configuration.viewcube
+            viewcube: configuration && typeof configuration.viewcube === 'boolean'
                 ? configuration.viewcube
                 : defaultConfiguration.viewcube,
-            planeControls: configuration && configuration.planeControls
+            planeControls: configuration && typeof configuration.planeControls === 'boolean'
                 ? configuration.planeControls
                 : defaultConfiguration.planeControls,
             planeDomainURL: configuration && configuration.planeDomainURL
                 ? configuration.planeDomainURL
                 : defaultConfiguration.planeDomainURL,
-            planeWidth: configuration && configuration.planeWidth
+            planeWidth: configuration && typeof configuration.planeWidth === 'number'
                 ? configuration.planeWidth
                 : defaultConfiguration.planeWidth,
             planeOpacity: configuration && typeof configuration.planeOpacity === 'number'
