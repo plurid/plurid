@@ -12,6 +12,7 @@ import {
 import PluridRoots from '../PluridRoots';
 
 import ToolbarGeneral from '../Toolbar/General';
+import Viewcube from '../Viewcube';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
@@ -54,6 +55,8 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
             {showToolbar && (
                 <ToolbarGeneral />
             )}
+
+            <Viewcube />
         </StyledPluridSpace>
     );
 }
