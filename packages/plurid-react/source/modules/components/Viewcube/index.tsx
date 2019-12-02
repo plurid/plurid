@@ -61,6 +61,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                                 rotateX(${spaceRotationX}deg)
                                 rotateY(${spaceRotationY}deg)
                             `,
+                            transition: 'transform 450ms ease-in-out',
                         }}
                     >
                         <ViewcubeFace

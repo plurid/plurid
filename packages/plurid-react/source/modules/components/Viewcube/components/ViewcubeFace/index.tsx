@@ -34,32 +34,66 @@ const faceTypes = {
 };
 
 const zoneClickTransforms = {
-    frontMiddleCenter: { rotateX: 0, rotateY: 0 },
     frontTopLeft: { rotateX: -45, rotateY: 45 },
     frontTopCenter: { rotateX: -45, rotateY: 0 },
-    rightTopLeft: { rotateX: -45, rotateY: -45 },
+    frontTopRight: { rotateX: -45, rotateY: -45 },
     frontMiddleLeft: { rotateX: 0, rotateY: 45 },
-    rightMiddleLeft: { rotateX: 0, rotateY: 315 },
+    frontMiddleCenter: { rotateX: 0, rotateY: 0 },
+    frontMiddleRight: { rotateX: 0, rotateY: -45 },
     frontBottomLeft: { rotateX: 45, rotateY: 45 },
     frontBottomCenter: { rotateX: 45, rotateY: 0 },
+    frontBottomRight: { rotateX: 45, rotateY: -45 },
+
+    rightTopLeft: { rotateX: -45, rotateY: -45 },
+    rightTopCenter: { rotateX: -45, rotateY: 270.1 },
+    rightTopRight: { rotateX: -45, rotateY: 225 },
+    rightMiddleLeft: { rotateX: 0, rotateY: 315 },
+    rightMiddleCenter: { rotateX: 0, rotateY: 270.1 },
+    rightMiddleRight: { rotateX: 0, rotateY: 225 },
     rightBottomLeft: { rotateX: 45, rotateY: -45 },
-    leftMiddleCenter: { rotateX: 0, rotateY: 90.1 },
+    rightBottomCenter: { rotateX: 45, rotateY: 270.1 },
+    rightBottomRight: { rotateX: 45, rotateY: 225 },
+
     leftTopLeft: { rotateX: -45, rotateY: 135 },
     leftTopCenter: { rotateX: -45, rotateY: 90.1 },
+    leftTopRight: { rotateX: -45, rotateY: 45 },
     leftMiddleLeft: { rotateX: 0, rotateY: 135 },
+    leftMiddleCenter: { rotateX: 0, rotateY: 90.1 },
+    leftMiddleRight: { rotateX: 0, rotateY: 45 },
     leftBottomLeft: { rotateX: 45, rotateY: 135 },
     leftBottomCenter: { rotateX: 45, rotateY: 90.1 },
-    backMiddleCenter: { rotateX: 0, rotateY: 180.1 },
+    leftBottomRight: { rotateX: 45, rotateY: 45 },
+
     backTopLeft: { rotateX: -45, rotateY: 225 },
     backTopCenter: { rotateX: -45, rotateY: 180.1 },
+    backTopRight: { rotateX: -45, rotateY: 135 },
     backMiddleLeft: { rotateX: 0, rotateY: 225 },
+    backMiddleCenter: { rotateX: 0, rotateY: 180.1 },
+    backMiddleRight: { rotateX: 0, rotateY: 135 },
     backBottomLeft: { rotateX: 45, rotateY: 225 },
     backBottomCenter: { rotateX: 45, rotateY: 180.1 },
-    rightMiddleCenter: { rotateX: 0, rotateY: 270.1 },
-    rightTopCenter: { rotateX: -45, rotateY: 270.1 },
-    rightBottomCenter: { rotateX: 45, rotateY: 270.1 },
+    backBottomRight: { rotateX: 45, rotateY: 135 },
+
+    topTopLeft: { rotateX: -45, rotateY: 225 },
+    topTopCenter: { rotateX: -45, rotateY: 180.1 },
+    topTopRight: { rotateX: -45, rotateY: 135 },
+    topMiddleLeft: { rotateX: -45, rotateY: 90.1 },
     topMiddleCenter: { rotateX: -90.1, rotateY: 0 },
+    topMiddleRight: { rotateX: -45, rotateY: 270.1 },
+    topBottomLeft: { rotateX: 45, rotateY: 225 },
+    topBottomCenter: { rotateX: -45, rotateY: 0 },
+    topBottomRight: { rotateX: -45, rotateY: -45 },
+
+
+    baseTopLeft: { rotateX: -45, rotateY: 225 },
+    baseTopCenter: { rotateX: -45, rotateY: 180.1 },
+    baseTopRight: { rotateX: -45, rotateY: 135 },
+    baseMiddleLeft: { rotateX: 0, rotateY: 225 },
     baseMiddleCenter: { rotateX: 90.1, rotateY: 0 },
+    baseMiddleRight: { rotateX: 0, rotateY: 225 },
+    baseBottomLeft: { rotateX: 45, rotateY: 135 },
+    baseBottomCenter: { rotateX: 45, rotateY: 180.1 },
+    baseBottomRight: { rotateX: 45, rotateY: 135 },
 };
 
 
@@ -101,7 +135,6 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
         type: string,
     ) => {
         const transform = zoneClickTransforms[`${face}${type}`];
-        console.log(transform);
 
         dispatchSetAnimatedTransform(true);
         dispatchRotateX(transform.rotateX);
