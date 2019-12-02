@@ -89,7 +89,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     >
                         <StyledViewcubeArrowIcon
                             theme={interactionTheme}
-                            onClick={() => animatedRotate('rotateX', 90.1)}
+                            onClick={() => animatedRotate('rotateX', -90.1)}
                         >
                             ▲
                         </StyledViewcubeArrowIcon>
@@ -103,7 +103,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     >
                         <StyledViewcubeArrowIcon
                             theme={interactionTheme}
-                            onClick={() => animatedRotate('rotateX', -90.1)}
+                            onClick={() => animatedRotate('rotateX', 90.1)}
                         >
                             ▼
                         </StyledViewcubeArrowIcon>
