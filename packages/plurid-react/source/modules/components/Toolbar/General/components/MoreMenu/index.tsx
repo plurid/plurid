@@ -309,7 +309,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         modifier,
                     } = shortcutData;
                     const modifierString = Array.isArray(modifier)
-                        ? modifier.reduce((total, element) => total + element + ' +')
+                        ? modifier.reduce((total, element) => total + ' + ' + element) + ' +'
                         : typeof modifier === 'string'
                             ? modifier + ' +'
                             : '';
