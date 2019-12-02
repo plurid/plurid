@@ -29,11 +29,17 @@ export const StyledViewcube: any = styled.div`
 export const StyledViewcubeArrow: any = styled.div`
     display: grid;
     place-content: center;
+`;
+
+
+export const StyledViewcubeArrowIcon: any = styled.div`
     user-select: none;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     width: 1rem;
     height: 1rem;
     border-radius: 0.5rem;
+    display: grid;
+    place-content: center;
 
     :hover {
         background-color: ${(props: any) => {
