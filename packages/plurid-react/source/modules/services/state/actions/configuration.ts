@@ -2,6 +2,7 @@ import {
     setConfiguration,
     setMicro,
     setConfigurationPlaneControls,
+    setConfigurationPlaneOpacity,
 
     setConfigurationThemeGeneralAction,
     setConfigurationThemeInteractionAction,
@@ -20,6 +21,7 @@ export default {
     setConfiguration,
     setMicro,
     setConfigurationPlaneControls,
+    setConfigurationPlaneOpacity,
 
     setConfigurationThemeGeneralAction,
     setConfigurationThemeInteractionAction,
