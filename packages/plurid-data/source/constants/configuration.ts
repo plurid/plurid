@@ -24,6 +24,8 @@ export const defaultConfiguration: PluridConfiguration = {
         perspective: 1000,
         transparent: false,
         center: true,
+        showTransformOrigin: true,
+        transformOriginSize: 'normal',
     },
     ui: {
         toolbar: {
