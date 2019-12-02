@@ -42,7 +42,6 @@ const configurationReducer = (
                 viewcube: false,
             };
         case SET_CONFIGURATION_PLANE_CONTROLS:
-            console.log(action.payload);
             return {
                 ...state,
                 planeControls: action.payload,

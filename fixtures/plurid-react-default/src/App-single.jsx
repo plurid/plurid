@@ -18,11 +18,12 @@ const App = () => {
                 // columns: 1,
             },
             center: true,
+            // transparent: true,
         },
-        micro: true,
+        // micro: true,
         // planeWidth: 0.5,
-        // planeControls: false,
-        // planeOpacity: 0,
+        planeControls: false,
+        planeOpacity: 0,
     };
 
     const appPages = [
