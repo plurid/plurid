@@ -21,7 +21,7 @@ const App = () => {
         },
         // planeWidth: 0.5,
         // planeControls: false,
-        planeOpacity: 0,
+        // planeOpacity: 0,
     };
 
     const appPages = [
@@ -39,7 +39,7 @@ const App = () => {
                 element: Page2,
                 properties: {},
             },
-            root: true,
+            // root: true,
         },
         {
             path: '/page-3',
