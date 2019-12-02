@@ -35,11 +35,12 @@ export const StyledViewcubeArrow: any = styled.div`
 export const StyledViewcubeArrowIcon: any = styled.div`
     user-select: none;
     font-size: 0.6rem;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 0.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 0.6rem;
     display: grid;
     place-content: center;
+    cursor: pointer;
 
     :hover {
         background-color: ${(props: any) => {
