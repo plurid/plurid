@@ -784,7 +784,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         pageContextValue: appProperties.pageContextValue,
         documents: contextDocumentsRef.current,
     };
-    console.log('pluridContext', pluridContext);
+    // console.log('pluridContext', pluridContext);
 
     return (
         <StyledView

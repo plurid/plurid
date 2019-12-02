@@ -15,7 +15,7 @@ import {
 import { AppState } from '../../../../services/state/store';
 import StateContext from '../../../../services/state/context';
 import selectors from '../../../../services/state/selectors';
-// import actions from '../../../../services/state/actions';
+import actions from '../../../../services/state/actions';
 
 
 
@@ -33,6 +33,36 @@ const faceTypes = {
     bottomRight: 'BottomRight',
 };
 
+const zoneClickTransforms = {
+    frontMiddleCenter: { rotateX: 0, rotateY: 0 },
+    frontTopLeft: { rotateX: -45, rotateY: 45 },
+    frontTopCenter: { rotateX: -45, rotateY: 0 },
+    rightTopLeft: { rotateX: -45, rotateY: -45 },
+    frontMiddleLeft: { rotateX: 0, rotateY: 45 },
+    rightMiddleLeft: { rotateX: 0, rotateY: 315 },
+    frontBottomLeft: { rotateX: 45, rotateY: 45 },
+    frontBottomCenter: { rotateX: 45, rotateY: 0 },
+    rightBottomLeft: { rotateX: 45, rotateY: -45 },
+    leftMiddleCenter: { rotateX: 0, rotateY: 90 },
+    leftTopLeft: { rotateX: -45, rotateY: 135 },
+    leftTopCenter: { rotateX: -45, rotateY: 90.01 },
+    leftMiddleLeft: { rotateX: 0, rotateY: 135 },
+    leftBottomLeft: { rotateX: 45, rotateY: 135 },
+    leftBottomCenter: { rotateX: 45, rotateY: 90.01 },
+    backMiddleCenter: { rotateX: 0, rotateY: 180.01 },
+    backTopLeft: { rotateX: -45, rotateY: 225 },
+    backTopCenter: { rotateX: -45, rotateY: 180.01 },
+    backMiddleLeft: { rotateX: 0, rotateY: 225 },
+    backBottomLeft: { rotateX: 45, rotateY: 225 },
+    backBottomCenter: { rotateX: 45, rotateY: 180.01 },
+    rightMiddleCenter: { rotateX: 0, rotateY: 270.01 },
+    rightTopCenter: { rotateX: -45, rotateY: 270.01 },
+    rightBottomCenter: { rotateX: 45, rotateY: 270.01 },
+    topMiddleCenter: { rotateX: -90, rotateY: 0 },
+    baseMiddleCenter: { rotateX: 90, rotateY: 0 },
+};
+
+
 interface ViewcubeFaceOwnProperties {
     face: string;
 }
@@ -43,6 +73,9 @@ interface ViewcubeFaceStateProperties {
 }
 
 interface ViewcubeFaceDispatchProperties {
+    dispatchRotateX: typeof actions.space.rotateX;
+    dispatchRotateY: typeof actions.space.rotateY;
+    dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
 }
 
 type ViewcubeFaceProperties = ViewcubeFaceOwnProperties
@@ -57,12 +90,26 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
         /** state */
         generalTheme,
         interactionTheme,
+
+        /** dispatch */
+        dispatchRotateX,
+        dispatchRotateY,
+        dispatchSetAnimatedTransform,
     } = properties;
 
     const handleClick = (
         type: string
     ) => {
+        console.log(type);
+        const transform = zoneClickTransforms[`${face}${type}`];
+        console.log(transform);
 
+        dispatchSetAnimatedTransform(true);
+        dispatchRotateX(transform.rotateX);
+        dispatchRotateY(transform.rotateY);
+        setTimeout(() => {
+            dispatchSetAnimatedTransform(false);
+        }, 450);
     }
 
     return (
@@ -137,6 +184,15 @@ const mapStateToProperties = (
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): ViewcubeFaceDispatchProperties => ({
+    dispatchRotateX: (angleX: number) => dispatch(
+        actions.space.rotateX(angleX),
+    ),
+    dispatchRotateY: (angleY: number) => dispatch(
+        actions.space.rotateY(angleY),
+    ),
+    dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
+        actions.space.setAnimatedTransform(animated)
+    ),
 });
 
 
