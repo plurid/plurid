@@ -102,6 +102,16 @@ export const shortcutsNames: any = {
         key: '→ or scroll right',
         modifier: keyModifiers.ALT,
     },
+    TRANSLATE_IN: {
+        name: 'translate in',
+        key: '↑ or scroll up',
+        modifier: [keyModifiers.SHIFT, keyModifiers.ALT],
+    },
+    TRANSLATE_OUT: {
+        name: 'translate out',
+        key: '↓ or scroll down',
+        modifier: [keyModifiers.SHIFT, keyModifiers.ALT],
+    },
     TOGGLE_TRANSLATE: {
         name: 'toggle translate',
         key: 't',
@@ -216,6 +226,16 @@ export const defaultShortcuts = [
         type: SHORTCUTS.TRANSLATE_RIGHT,
         key: 'ArrowRight',
         modifier: KEY_MODIFIERS.ALT
+    },
+    {
+        type: SHORTCUTS.TRANSLATE_IN,
+        key: 'ArrowUp',
+        modifier: [KEY_MODIFIERS.SHIFT, KEY_MODIFIERS.ALT],
+    },
+    {
+        type: SHORTCUTS.TRANSLATE_OUT,
+        key: 'ArrowDown',
+        modifier: [KEY_MODIFIERS.SHIFT, KEY_MODIFIERS.ALT],
     },
     {
         type: SHORTCUTS.TOGGLE_TRANSLATE,
