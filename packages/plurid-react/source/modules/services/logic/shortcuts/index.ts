@@ -1,11 +1,6 @@
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-// import {
-//     defaultShortcuts,
-//     SHORTCUTS,
-// } from '@plurid/plurid-data';
-
 import actions from '../../state/actions';
 
 import {
@@ -150,10 +145,13 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.key === 'ArrowUp') {
-        if (event.shiftKey) {
+        if (event.shiftKey && event.altKey) {
+            return dispatch(actions.space.translateIn());
+        }
+        if (event.shiftKey && !event.altKey) {
             return dispatch(actions.space.rotateUp());
         }
-        if (event.altKey) {
+        if (event.altKey && !event.shiftKey) {
             return dispatch(actions.space.translateUp());
         }
         if (event.metaKey || event.ctrlKey) {
@@ -162,10 +160,13 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.key === 'ArrowDown') {
-        if (event.shiftKey) {
+        if (event.shiftKey && event.altKey) {
+            return dispatch(actions.space.translateOut());
+        }
+        if (event.shiftKey && !event.altKey) {
             return dispatch(actions.space.rotateDown());
         }
-        if (event.altKey) {
+        if (event.altKey && !event.shiftKey) {
             return dispatch(actions.space.translateDown());
         }
         if (event.metaKey || event.ctrlKey) {
