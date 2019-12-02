@@ -173,7 +173,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         dispatchSetActiveDocument,
 
-        // dispatchToggleShowTransformOrigin,
+        dispatchToggleShowTransformOrigin,
         dispatchSetTransformOriginSize,
     } = properties;
 
@@ -231,8 +231,8 @@ const View: React.FC<ViewProperties> = (properties) => {
             const spaceLocation = computeSpaceLocation(configuration);
             dispatchSetSpaceLocation(spaceLocation);
 
-            if (configuration.space.showTransformOrigin) {
-                // dispatchToggleShowTransformOrigin();
+            if (!configuration.space.showTransformOrigin) {
+                dispatchToggleShowTransformOrigin();
             }
 
             if (configuration.space.transformOriginSize) {
