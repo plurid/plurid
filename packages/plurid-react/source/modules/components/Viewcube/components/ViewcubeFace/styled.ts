@@ -42,6 +42,10 @@ export const StyledViewcubeFaceZone: any = styled.div`
 
     grid-area: ${(props:any) => `pluridViewcubeFace${props.type}`};
     background: ${(props: any) => {
+        if (props.hovered) {
+            return props.theme.backgroundColorTertiary;
+        }
+
         return props.theme.backgroundColorSecondary;
     }};
 
