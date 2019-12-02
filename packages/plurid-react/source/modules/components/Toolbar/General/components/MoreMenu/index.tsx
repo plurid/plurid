@@ -55,6 +55,7 @@ interface MoreMenuDispatchProperties {
     dispatchSetConfigurationThemeGeneralAction: typeof actions.configuration.setConfigurationThemeGeneralAction;
     dispatchSetConfigurationThemeInteractionAction: typeof actions.configuration.setConfigurationThemeInteractionAction;
 
+    dispatchToggleConfigurationViewcubeHide: typeof actions.configuration.toggleConfigurationViewcubeHide;
     dispatchToggleUIToolbarHideAction: typeof actions.configuration.toggleUIToolbarHideAction;
     dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
     dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
@@ -80,6 +81,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchSetConfigurationThemeInteractionAction,
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
+
+        dispatchToggleConfigurationViewcubeHide,
         dispatchToggleUIToolbarHideAction,
         dispatchToggleUIToolbarAlwaysShowIconsAction,
         dispatchToggleUIToolbarAlwaysTransformButtonsAction,
@@ -91,6 +94,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     const {
         theme: selectedTheme,
         ui,
+        viewcube,
     } = configuration;
 
     const {
@@ -290,6 +294,45 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                 </StyledMoreMenuItem>
 
 
+
+                {/* VIEWCUBE */}
+                <PluridHeading
+                    theme={interactionTheme}
+                    type="h5"
+                >
+                    viewcube
+                </PluridHeading>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        inactive transparency
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={hide}
+                        atChange={() => dispatchToggleUIToolbarHideAction()}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        hide viewcube
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={viewcube}
+                        atChange={() => dispatchToggleConfigurationViewcubeHide(!viewcube)}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+
+
                 {/* SHORTCUTS */}
                 <PluridHeading
                     theme={interactionTheme}
@@ -365,6 +408,10 @@ const mapDispatchToProps = (
     ),
     dispatchSetInteractionTheme: (theme: Theme) => dispatch(
         actions.themes.setInteractionTheme(theme)
+    ),
+
+    dispatchToggleConfigurationViewcubeHide: (toggle: boolean) => dispatch(
+        actions.configuration.toggleConfigurationViewcubeHide(toggle)
     ),
     dispatchToggleUIToolbarHideAction: () => dispatch(
         actions.configuration.toggleUIToolbarHideAction()

@@ -16,6 +16,8 @@ import {
     SET_CONFIGURATION_THEME_INTERACTION,
     SetConfigurationThemeInteractionAction,
 
+    TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
+    ToggleConfigurationViewcubeHideAction,
     TOGGLE_UI_TOOLBAR_HIDE,
     ToggleUIToolbarHideAction,
     TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
@@ -67,6 +69,16 @@ export const setConfigurationThemeInteractionAction = (
     return {
         type: SET_CONFIGURATION_THEME_INTERACTION,
         payload,
+    };
+}
+
+
+export const toggleConfigurationViewcubeHide = (
+    toggle: boolean,
+): ToggleConfigurationViewcubeHideAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
+        payload: toggle,
     };
 }
 
