@@ -43,23 +43,23 @@ const zoneClickTransforms = {
     frontBottomLeft: { rotateX: 45, rotateY: 45 },
     frontBottomCenter: { rotateX: 45, rotateY: 0 },
     rightBottomLeft: { rotateX: 45, rotateY: -45 },
-    leftMiddleCenter: { rotateX: 0, rotateY: 90 },
+    leftMiddleCenter: { rotateX: 0, rotateY: 90.1 },
     leftTopLeft: { rotateX: -45, rotateY: 135 },
-    leftTopCenter: { rotateX: -45, rotateY: 90.01 },
+    leftTopCenter: { rotateX: -45, rotateY: 90.1 },
     leftMiddleLeft: { rotateX: 0, rotateY: 135 },
     leftBottomLeft: { rotateX: 45, rotateY: 135 },
-    leftBottomCenter: { rotateX: 45, rotateY: 90.01 },
-    backMiddleCenter: { rotateX: 0, rotateY: 180.01 },
+    leftBottomCenter: { rotateX: 45, rotateY: 90.1 },
+    backMiddleCenter: { rotateX: 0, rotateY: 180.1 },
     backTopLeft: { rotateX: -45, rotateY: 225 },
-    backTopCenter: { rotateX: -45, rotateY: 180.01 },
+    backTopCenter: { rotateX: -45, rotateY: 180.1 },
     backMiddleLeft: { rotateX: 0, rotateY: 225 },
     backBottomLeft: { rotateX: 45, rotateY: 225 },
-    backBottomCenter: { rotateX: 45, rotateY: 180.01 },
-    rightMiddleCenter: { rotateX: 0, rotateY: 270.01 },
-    rightTopCenter: { rotateX: -45, rotateY: 270.01 },
-    rightBottomCenter: { rotateX: 45, rotateY: 270.01 },
-    topMiddleCenter: { rotateX: -90, rotateY: 0 },
-    baseMiddleCenter: { rotateX: 90, rotateY: 0 },
+    backBottomCenter: { rotateX: 45, rotateY: 180.1 },
+    rightMiddleCenter: { rotateX: 0, rotateY: 270.1 },
+    rightTopCenter: { rotateX: -45, rotateY: 270.1 },
+    rightBottomCenter: { rotateX: 45, rotateY: 270.1 },
+    topMiddleCenter: { rotateX: -90.1, rotateY: 0 },
+    baseMiddleCenter: { rotateX: 90.1, rotateY: 0 },
 };
 
 
@@ -98,9 +98,8 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
     } = properties;
 
     const handleClick = (
-        type: string
+        type: string,
     ) => {
-        console.log(type);
         const transform = zoneClickTransforms[`${face}${type}`];
         console.log(transform);
 
