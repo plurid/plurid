@@ -57,7 +57,7 @@ export const StyledViewcubeFaceZone: any = styled.div`
         if (props.hovered) {
             return props.theme.colorTertiary;
         }
-        return 'transparent';
+        return props.theme.backgroundColorSecondary;
     }};
 
     :hover {
