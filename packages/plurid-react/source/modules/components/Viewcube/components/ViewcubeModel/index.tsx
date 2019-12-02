@@ -1,5 +1,6 @@
 import React, {
     useState,
+    useEffect,
 } from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
@@ -46,7 +47,13 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
         /** dispatch */
     } = properties;
 
-    const [hoveredFace, setHoveredFace] = useState('');
+    const [hoveredZone, setHoveredZone] = useState('');
+
+    useEffect(() => {
+        console.log(hoveredZone);
+    }, [
+        hoveredZone,
+    ]);
 
     return (
         <StyledViewcubeModel>
@@ -64,21 +71,33 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                 >
                     <ViewcubeFace
                         face="front"
+                        hoveredZone={hoveredZone}
+                        setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="back"
+                        hoveredZone={hoveredZone}
+                        setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="left"
+                        hoveredZone={hoveredZone}
+                        setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="right"
+                        hoveredZone={hoveredZone}
+                        setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="top"
+                        hoveredZone={hoveredZone}
+                        setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="base"
+                        hoveredZone={hoveredZone}
+                        setHoveredZone={setHoveredZone}
                     />
                 </StyledViewcubeModelCube>
             </StyleViewcubeModelContainer>
