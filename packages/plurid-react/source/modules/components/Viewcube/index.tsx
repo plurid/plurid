@@ -12,6 +12,7 @@ import {
 import {
     StyledViewcube,
     StyledViewcubeArrow,
+    StyledViewcubeArrowIcon,
 } from './styled';
 
 import ViewcubeModel from './components/ViewcubeModel';
@@ -54,12 +55,15 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
             {mouseOver && (
                 <>
                     <StyledViewcubeArrow
-                        theme={interactionTheme}
                         style={{
                             gridArea: 'pluridViewcubeRotateUp',
                         }}
                     >
-                        ▲
+                        <StyledViewcubeArrowIcon
+                            theme={interactionTheme}
+                        >
+                            ▲
+                        </StyledViewcubeArrowIcon>
                     </StyledViewcubeArrow>
 
                     <StyledViewcubeArrow
@@ -68,7 +72,11 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                             gridArea: 'pluridViewcubeRotateDown',
                         }}
                     >
-                        ▼
+                        <StyledViewcubeArrowIcon
+                            theme={interactionTheme}
+                        >
+                            ▼
+                        </StyledViewcubeArrowIcon>
                     </StyledViewcubeArrow>
 
                     <StyledViewcubeArrow
@@ -77,7 +85,11 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                             gridArea: 'pluridViewcubeRotateLeft',
                         }}
                     >
-                        ◀
+                        <StyledViewcubeArrowIcon
+                            theme={interactionTheme}
+                        >
+                            ◀
+                        </StyledViewcubeArrowIcon>
                     </StyledViewcubeArrow>
 
                     <StyledViewcubeArrow
@@ -86,7 +98,11 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                             gridArea: 'pluridViewcubeRotateRight',
                         }}
                     >
-                        ▶
+                        <StyledViewcubeArrowIcon
+                            theme={interactionTheme}
+                        >
+                            ▶
+                        </StyledViewcubeArrowIcon>
                     </StyledViewcubeArrow>
                 </>
             )}
