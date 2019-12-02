@@ -1,6 +1,7 @@
 import {
     setConfiguration,
     setMicro,
+    setConfigurationPlaneControls,
 
     setConfigurationThemeGeneralAction,
     setConfigurationThemeInteractionAction,
@@ -15,6 +16,7 @@ import {
 export default {
     setConfiguration,
     setMicro,
+    setConfigurationPlaneControls,
 
     setConfigurationThemeGeneralAction,
     setConfigurationThemeInteractionAction,

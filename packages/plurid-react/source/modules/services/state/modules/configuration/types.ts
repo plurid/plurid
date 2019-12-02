@@ -17,6 +17,13 @@ export interface SetMicroAction {
 }
 
 
+export const SET_CONFIGURATION_PLANE_CONTROLS = 'SET_CONFIGURATION_PLANE_CONTROLS';
+export interface SetConfigurationPlaneControlsAction {
+    type: typeof SET_CONFIGURATION_PLANE_CONTROLS;
+    payload: boolean;
+}
+
+
 export const SET_CONFIGURATION_THEME_GENERAL = 'SET_CONFIGURATION_THEME_GENERAL';
 export interface SetConfigurationThemeGeneralAction {
     type: typeof SET_CONFIGURATION_THEME_GENERAL;
@@ -55,6 +62,7 @@ export interface ConfigurationState extends PluridConfiguration {
 
 export type ConfigurationActionsType = SetConfigurationAction
     | SetMicroAction
+    | SetConfigurationPlaneControlsAction
     | SetConfigurationThemeGeneralAction
     | SetConfigurationThemeInteractionAction
     | ToggleUIToolbarHideAction
