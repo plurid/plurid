@@ -48,12 +48,22 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
     } = properties;
 
     const [hoveredZone, setHoveredZone] = useState('');
+    const [animateable, setAnimateable] = useState(false);
 
     useEffect(() => {
         console.log(hoveredZone);
     }, [
         hoveredZone,
     ]);
+
+    const handleMouseEnter = () => {
+        setAnimateable(true);
+    }
+
+    const handleMouseLeave = () => {
+        setHoveredZone('');
+        setAnimateable(false);
+    }
 
     return (
         <StyledViewcubeModel>
@@ -66,8 +76,10 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                             rotateX(${spaceRotationX}deg)
                             rotateY(${spaceRotationY}deg)
                         `,
-                        transition: 'transform 450ms ease-in-out',
+                        transition: animateable ? 'transform 450ms ease-in-out' : '',
                     }}
+                    onMouseEnter={() => handleMouseEnter()}
+                    onMouseLeave={() => handleMouseLeave()}
                 >
                     <ViewcubeFace
                         face="front"
