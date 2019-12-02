@@ -22,6 +22,7 @@ import selectors from '../../../../services/state/selectors';
 
 
 interface ViewcubeModelOwnProperties {
+    mouseOver: boolean;
 }
 
 interface ViewcubeModelStateProperties {
@@ -39,6 +40,7 @@ type ViewcubeModelProperties = ViewcubeModelOwnProperties
 const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
     const {
         /** own */
+        mouseOver,
 
         /** state */
         spaceRotationX,
@@ -48,21 +50,15 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
     } = properties;
 
     const [hoveredZone, setHoveredZone] = useState('');
-    const [animateable, setAnimateable] = useState(false);
 
-    useEffect(() => {
-        console.log(hoveredZone);
-    }, [
-        hoveredZone,
-    ]);
-
-    const handleMouseEnter = () => {
-        setAnimateable(true);
-    }
+    // useEffect(() => {
+    //     console.log(hoveredZone);
+    // }, [
+    //     hoveredZone,
+    // ]);
 
     const handleMouseLeave = () => {
         setHoveredZone('');
-        setAnimateable(false);
     }
 
     return (
@@ -76,9 +72,8 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                             rotateX(${spaceRotationX}deg)
                             rotateY(${spaceRotationY}deg)
                         `,
-                        transition: animateable ? 'transform 450ms ease-in-out' : '',
+                        transition: mouseOver ? 'transform 450ms ease-in-out' : '',
                     }}
-                    onMouseEnter={() => handleMouseEnter()}
                     onMouseLeave={() => handleMouseLeave()}
                 >
                     <ViewcubeFace
