@@ -333,12 +333,12 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                 <StyledMoreMenuItem>
                     <div>
-                        inactive transparency
+                        always opaque
                     </div>
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={viewcube.transparent}
+                        checked={!viewcube.transparent}
                         atChange={() => dispatchToggleConfigurationUIViewcubeTransparent(!viewcube.transparent)}
                         exclusive={true}
                         level={2}
@@ -352,7 +352,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={showViewcube}
+                        checked={!showViewcube}
                         atChange={() => dispatchToggleConfigurationViewcubeHide(!showViewcube)}
                         exclusive={true}
                         level={2}
