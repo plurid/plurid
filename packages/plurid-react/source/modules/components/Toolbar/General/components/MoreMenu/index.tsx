@@ -309,7 +309,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                 <StyledMoreMenuItem>
                     <div>
-                        hide toolbar
+                        conceal toolbar
                     </div>
 
                     <PluridSwitch
