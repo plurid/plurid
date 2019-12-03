@@ -230,10 +230,10 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                 </PluridHeading>
 
                 <StyledMoreMenuItem>
-                    show transform origin
+                    hide transform origin
 
                     <PluridSwitch
-                        checked={showTransformOrigin}
+                        checked={!showTransformOrigin}
                         atChange={() => dispatchToggleShowTransformOrigin()}
                         exclusive={true}
                         level={2}
@@ -340,6 +340,20 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         theme={interactionTheme}
                         checked={!viewcube.transparent}
                         atChange={() => dispatchToggleConfigurationUIViewcubeTransparent(!viewcube.transparent)}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        conceal viewcube
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={hide}
+                        atChange={() => dispatchToggleUIToolbarHideAction()}
                         exclusive={true}
                         level={2}
                     />
