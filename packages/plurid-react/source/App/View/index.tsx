@@ -791,6 +791,8 @@ const View: React.FC<ViewProperties> = (properties) => {
     };
     // console.log('pluridContext', pluridContext);
 
+    console.log('Rendered Plurid View');
+
     return (
         <StyledView
             ref={viewElement}

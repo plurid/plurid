@@ -14,11 +14,15 @@ export const handleGlobalShortcuts = (
     event: KeyboardEvent,
     firstPerson: boolean,
 ) => {
+    const inputOnPath = verifyPathforInputElement((event as any).path);
+    if (inputOnPath) {
+        return;
+    }
+
     const noModifiers = !event.shiftKey
         && !event.altKey
         && !event.ctrlKey
         && !event.metaKey;
-
 
     if (
         event.code === 'KeyF'
@@ -299,4 +303,26 @@ export const handleGlobalWheel = (
             dispatch(actions.space.scaleDown());
         }
     }
+}
+
+
+
+const verifyPathforInputElement = (
+    path: any[],
+) => {
+    let input = false;
+
+    path.some(element => {
+        if (
+            element.tagName === 'INPUT'
+            || element.tagName === 'TEXTAREA'
+            || element.contentEditable === 'true'
+        ) {
+            input = true;
+            return true;
+        }
+        return false;
+    })
+
+    return input;
 }
