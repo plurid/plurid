@@ -23,6 +23,15 @@ export const GlobalStyle = createGlobalStyle`
 
     html {
         overflow: hidden;
+
+        /*
+         * HACK
+         * Prevents Chrome from going backward/forward in page history on wheel event.
+         *
+         * TODO
+         * Apply it dinamically.
+         */
+        overscroll-behavior-x: contain;
     }
 `;
 
