@@ -710,7 +710,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         if (activeDocumentID) {
             const activeDocument = dataDocuments[activeDocumentID];
-            console.log('activeDocument', activeDocument);
+            // console.log('activeDocument', activeDocument);
             const pages = activeDocument.pages;
 
             const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
@@ -791,7 +791,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     };
     // console.log('pluridContext', pluridContext);
 
-    console.log('Rendered Plurid View');
+    // console.log('Rendered Plurid View');
 
     return (
         <StyledView
