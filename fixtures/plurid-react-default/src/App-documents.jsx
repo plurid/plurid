@@ -12,12 +12,19 @@ import Page2 from './containers/Page2';
 
 const appPagesDocument1: PluridPage[] = [
     {
+        path: '/page-2',
+        component: {
+            element: Page2,
+            properties: {},
+        },
+        root: true,
+    },
+    {
         path: '/page-1',
         component: {
             element: Page1,
             properties: {},
         },
-        root: true,
     },
 ];
 
