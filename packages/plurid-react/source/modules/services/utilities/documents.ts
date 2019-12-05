@@ -65,16 +65,24 @@ export const createInternalContextDocument = (
 }
 
 
+/**
+ * Get the documentID if any of the `documents` is active.
+ *
+ * If no document is active, returns the id of the first document.
+ *
+ * @param documents
+ */
 export const findActiveDocument = (
     documents: PluridInternalStateDocument[]
 ) => {
     let activeDocumentID = documents[0].id;
 
-    documents.map(document => {
+    for (let document of documents) {
         if (document.active) {
             activeDocumentID = document.id;
+            break;
         }
-    });
+    }
 
     return activeDocumentID;
 }
