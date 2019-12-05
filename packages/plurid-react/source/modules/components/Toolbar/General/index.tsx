@@ -53,6 +53,8 @@ enum MENUS {
     MORE,
 }
 
+const VIEW_SIZE_WIDTH_LIMIT = 800;
+
 interface ToolbarOwnProperties {
 }
 
@@ -167,13 +169,13 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     /** ViewSize Update */
     useEffect(() => {
-        if (viewSize.width < 800) {
+        if (viewSize.width < VIEW_SIZE_WIDTH_LIMIT) {
             if (alwaysShowTransformButtons) {
                 setShowTransformButtons(false);
             }
         }
 
-        if (viewSize.width > 800) {
+        if (viewSize.width > VIEW_SIZE_WIDTH_LIMIT) {
             setShowTransformButtons(alwaysShowTransformButtons);
         }
     }, [

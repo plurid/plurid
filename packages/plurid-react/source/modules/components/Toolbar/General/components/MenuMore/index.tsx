@@ -36,6 +36,9 @@ import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
 import selectors from '../../../../../services/state/selectors';
 import actions from '../../../../../services/state/actions';
+import {
+    ViewSize,
+} from '../../../../../services/state/modules/data/types'
 
 
 
@@ -45,6 +48,7 @@ interface MoreMenuOwnProperties {
 interface MoreMenuStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
+    viewSize: ViewSize;
     showTransformOrigin: boolean;
     transformOriginSize: any;
 }
@@ -80,6 +84,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         configuration,
         showTransformOrigin,
         transformOriginSize,
+        viewSize,
 
         /** dispatch */
         dispatchSetConfigurationThemeGeneralAction,
@@ -119,6 +124,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         alwaysShowTransformButtons,
     } = toolbar;
 
+    const [viewSizeSmall, setViewSizeSmall] = useState(false);
+
     const [generalThemeName, setGeneralThemeName] = useState(typeof selectedTheme === 'object' ? selectedTheme.general : selectedTheme);
     const [interactionThemeName, setInteractionThemeName] = useState(typeof selectedTheme === 'object' ? selectedTheme.interaction : selectedTheme);
 
@@ -142,6 +149,16 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         }
     }, [
         selectedTheme,
+    ]);
+
+    useEffect(() => {
+        if (viewSize.width < 800) {
+            setViewSizeSmall(true);
+        } else {
+            setViewSizeSmall(false);
+        }
+    }, [
+        viewSize.width,
     ]);
 
     return (
@@ -293,19 +310,21 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     />
                 </StyledMoreMenuItem>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        show transform arrows
-                    </div>
+                {viewSizeSmall && (
+                    <StyledMoreMenuItem>
+                        <div>
+                            show transform arrows
+                        </div>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={alwaysShowTransformButtons}
-                        atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                        <PluridSwitch
+                            theme={interactionTheme}
+                            checked={alwaysShowTransformButtons}
+                            atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
+                            exclusive={true}
+                            level={2}
+                        />
+                    </StyledMoreMenuItem>
+                )}
 
                 <StyledMoreMenuItem>
                     <div>
@@ -429,6 +448,7 @@ const mapStateToProps = (
 ): MoreMenuStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
+    viewSize: selectors.data.getViewSize(state),
 
     showTransformOrigin: selectors.space.getShowTransformOrigin(state),
     transformOriginSize: selectors.space.getTransformOriginSize(state),
