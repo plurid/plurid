@@ -39,25 +39,34 @@ export interface PluridApp {
 
 export interface PluridPage {
     /**
-     * Optional, application-wide unique identifier.
-     */
-    id?: string;
-
-    /**
      * Custom HTML, React, Vue, or Angular component to be rendered in the PluridPlane.
      */
     component: PluridComponentReact;
 
     /**
-     * Path to the page, e.g. `/page-1`.
+     * Path to the page, e.g. `/page-1`. By convention, it starts with an '/'.
+     *
+     * If IDs not provided, the paths of all the pages within document must be unique.
      *
      * The path can have parameters, e.g. `/page/:id`.
      *
      * The parameter, in the example `id`,
      * will be passed in the property `parameters` to the component,
      * e.g. `componentProperties.parameters.id`.
+     *
+     * The path can be used by the `PluridLink`.
      */
     path: string;
+
+    /**
+     * Optional, application or document-wide unique identifier (if multiple documents).
+     *
+     * If provided to one page, all the pages must have IDs.
+     *
+     * Once provided, the pages can have similar paths,
+     * but the `PluridLink`s must be ID-based to ensure correct linking.
+     */
+    id?: string;
 
     /**
      * If true, the page will be rendered on the initial layout.
@@ -72,6 +81,7 @@ export interface PluridPage {
     ordinal?: number;
 }
 
+
 export type PluridPageContext<T> = React.Context<T>;
 
 
@@ -82,7 +92,9 @@ export interface PluridLink {
     document?: string;
 
     /**
-     * The path string of the page.
+     * The path of the page.
+     *
+     * If IDs are provided to the pages, the id of the page.
      */
     page: string;
 
@@ -116,6 +128,11 @@ export interface PluridComponentProperties {
 }
 
 
+export interface PluridComponentParameters {
+    [key: string]: string;
+}
+
+
 export interface PluridDocument {
     /**
      * Optional, application-wide unique identifier.
@@ -123,7 +140,7 @@ export interface PluridDocument {
     id?: string;
 
     /**
-     * Does not have to be unique.
+     * Must be unique if IDs not provided.
      */
     name: string;
 
