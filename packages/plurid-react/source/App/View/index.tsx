@@ -71,8 +71,9 @@ import {
 } from '../../modules/services/utilities/indexed';
 
 import {
-    createInternalContextDocument,
     createInternalStateDocument,
+    createInternalContextDocument,
+    findActiveDocument,
 } from '../../modules/services/utilities/documents';
 
 import {
@@ -428,6 +429,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 name: 'default',
                 pages: documentPages,
                 ordinal: 0,
+                active: true,
             };
 
             const documents = {
@@ -567,6 +569,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 name: 'default',
                 pages: documentPages,
                 ordinal: 0,
+                active: true,
             };
 
             const documents = {
@@ -607,7 +610,8 @@ const View: React.FC<ViewProperties> = (properties) => {
             contextDocumentsRef.current = {...indexedContextDocuments};
             dispatchSetDocuments(indexedStateDocuments);
 
-            dispatchSetActiveDocument(stateDocuments[0].id);
+            const activeDocumentID = findActiveDocument(stateDocuments);
+            dispatchSetActiveDocument(activeDocumentID);
 
             console.log('documents', documents);
             console.log('stateDocuments', stateDocuments);
