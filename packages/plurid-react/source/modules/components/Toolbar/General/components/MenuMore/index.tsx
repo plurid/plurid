@@ -310,7 +310,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     />
                 </StyledMoreMenuItem>
 
-                {viewSizeSmall && (
+                {!viewSizeSmall && (
                     <StyledMoreMenuItem>
                         <div>
                             show transform arrows
