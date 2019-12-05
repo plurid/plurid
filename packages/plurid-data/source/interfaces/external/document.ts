@@ -23,4 +23,11 @@ export interface PluridDocument {
      * If not unique, the documents with equal `ordinal` will be ordered by index.
      */
     ordinal?: number;
+
+    /**
+     * Set the document as active. By default the first document is active.
+     *
+     * Only one document can be active at a time.
+     */
+    active?: boolean;
 }
