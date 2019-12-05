@@ -33,6 +33,7 @@ import FirstPersonIcon from '../../../assets/icons/first-person-icon';
 import RotateIcon from '../../../assets/icons/rotate-icon';
 import TranslateIcon from '../../../assets/icons/translate-icon';
 import ScaleIcon from '../../../assets/icons/scale-icon';
+import DocumentsIcon from '../../../assets/icons/documents-icon';
 import MoreIcon from '../../../assets/icons/more-icon';
 
 import { AppState } from '../../../services/state/store';
@@ -56,6 +57,7 @@ interface ToolbarStateProperties {
     rotationLocked: boolean;
     translationLocked: boolean;
     scaleLocked: boolean;
+    documents: any;
 }
 
 interface ToolbarDispatchProperties {
@@ -95,7 +97,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         translationLocked,
         scaleLocked,
         viewSize,
-
+        documents,
 
         /** dispatch */
         dispatchToggleFirstPerson,
@@ -375,6 +377,18 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     )}
                 </StyledToolbarTranslate>
 
+                {Object.keys(documents).length > 1 && (
+                    <StyledToolbarTransformText
+                        theme={theme}
+                        onClick={() => setShowMoreMenu(show => !show)}
+                        active={showMoreMenu}
+                        button={true}
+                    >
+                        <StyledIcon>
+                            {DocumentsIcon}
+                        </StyledIcon>
+                    </StyledToolbarTransformText>
+                )}
 
                 <StyledToolbarTransformText
                     theme={theme}
@@ -404,6 +418,7 @@ const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
     rotationLocked: selectors.space.getRotationLocked(state),
     translationLocked: selectors.space.getTranslationLocked(state),
     scaleLocked: selectors.space.getScaleLocked(state),
+    documents: selectors.data.getDocuments(state),
 });
 
 
