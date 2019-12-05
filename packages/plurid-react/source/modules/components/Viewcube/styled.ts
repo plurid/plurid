@@ -64,8 +64,8 @@ export const StyledFitView: any = styled.div`
     user-select: none;
 
     svg {
-        height: 0.9rem;
-        width: 0.9rem;
+        height: 0.8rem;
+        width: 0.8rem;
         fill: white;
     }
 `;
