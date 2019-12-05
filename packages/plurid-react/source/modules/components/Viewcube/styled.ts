@@ -60,10 +60,12 @@ export const StyledFitView: any = styled.div`
     grid-area: pluridViewcubeFitview;
     display: grid;
     place-content: center;
+    cursor: pointer;
+    user-select: none;
 
     svg {
-        height: 1.2rem;
-        width: 1.2rem;
+        height: 1rem;
+        width: 1rem;
         fill: white;
     }
 `;
