@@ -2,6 +2,14 @@ import {
     SIZES,
 } from '../../enumerations';
 
+import {
+    LayoutColumns,
+    LayoutZigZag,
+    LayoutFaceToFace,
+    LayoutSheaves,
+    LayoutMeta,
+} from './layout';
+
 
 
 export interface PluridConfiguration {
@@ -89,7 +97,6 @@ export interface PluridConfigurationSpace {
     showTransformOrigin?: boolean;
     transformOriginSize?: keyof typeof SIZES;
 }
-
 
 
 
