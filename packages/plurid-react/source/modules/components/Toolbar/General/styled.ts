@@ -14,6 +14,7 @@ export const StyledToolbar: any = styled.div`
         return '-55px';
     }};
 
+    display: grid;
     position: absolute;
     left: 0;
     right: 0;
@@ -35,16 +36,18 @@ export const StyledToolbarButtons: any = styled.div`
             props.showIcons
             && !props.showTransformButtons
         ) {
-            return 'repeat(5, 40px)';
+            // return 'repeat(5, 40px)';
+            return 'repeat(6, minmax(min-content, 40px))';
         }
 
         if (!props.showTransformButtons) {
-            return 'repeat(5, 70px)';
+            return 'repeat(6, minmax(min-content, 40px))';
+            // return 'repeat(5, 70px)';
         }
 
-        return '70px 200px 200px 200px 70px';
+        return '70px 200px 200px 200px 70px 70px';
     }};
-    width: ${(props: any) => {
+    /* width: ${(props: any) => {
         if (
             props.showIcons
             && !props.showTransformButtons
@@ -57,7 +60,7 @@ export const StyledToolbarButtons: any = styled.div`
         }
 
         return '770px';
-    }};
+    }}; */
 
     display: grid;
     align-items: center;
@@ -66,6 +69,7 @@ export const StyledToolbarButtons: any = styled.div`
     border-radius: 22.5px;
     margin: 0 auto;
     margin-top: 10px;
+    padding: 0 22.5px;
     font-size: 12px;
     opacity: 1;
     height: 45px;
@@ -169,6 +173,7 @@ export const StyledToolbarTransformText: any = styled.div`
     }};
 
     height: 45px;
+    /* min-width: 70px; */
     display: grid;
     align-items: center;
     justify-content: center;
