@@ -29,7 +29,7 @@ const handleView = (
 
     return (
         <ErrorView
-            error="the plurid' application must be either documents-based or pages-based"
+            error="the plurid' application must be either documents or pages-based"
         />
     );
 }

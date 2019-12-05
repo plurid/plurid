@@ -592,8 +592,8 @@ const View: React.FC<ViewProperties> = (properties) => {
             });
 
             console.log('documents', documents);
-            console.log('documents', stateDocuments);
-            console.log('documents', contextDocuments);
+            console.log('stateDocuments', stateDocuments);
+            console.log('contextDocuments', contextDocuments);
         }
     }, [
         pages,

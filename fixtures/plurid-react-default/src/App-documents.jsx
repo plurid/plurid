@@ -79,12 +79,10 @@ const App = () => {
     ];
 
     return (
-        <div>
-            <PluridApp
-                configuration={appConfiguration}
-                documents={documents}
-            />
-        </div>
+        <PluridApp
+            configuration={appConfiguration}
+            // documents={documents}
+        />
     );
 }
 
