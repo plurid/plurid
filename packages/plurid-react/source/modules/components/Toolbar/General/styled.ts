@@ -19,7 +19,7 @@ export const StyledToolbar: any = styled.div`
     left: 0;
     right: 0;
     height: 75px;
-    z-index: 9998;
+    z-index: 9999;
     transition: bottom 300ms ease-in-out;
 `;
 
