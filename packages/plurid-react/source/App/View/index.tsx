@@ -67,6 +67,10 @@ import {
 } from '../../modules/services/utilities/identified';
 
 import {
+    createIndexed,
+} from '../../modules/services/utilities/indexed';
+
+import {
     createInternalContextDocument,
     createInternalStateDocument,
 } from '../../modules/services/utilities/documents';
@@ -596,6 +600,14 @@ const View: React.FC<ViewProperties> = (properties) => {
                 const contextDocument = createInternalContextDocument(document);
                 return contextDocument;
             });
+
+            const indexedStateDocuments = createIndexed(stateDocuments);
+            const indexedContextDocuments = createIndexed(contextDocuments);
+
+            contextDocumentsRef.current = {...indexedContextDocuments};
+            dispatchSetDocuments(indexedStateDocuments);
+
+            dispatchSetActiveDocument(stateDocuments[0].id);
 
             console.log('documents', documents);
             console.log('stateDocuments', stateDocuments);
