@@ -5,6 +5,9 @@ import styled from 'styled-components';
 export const StyledViewcube: any = styled.div`
     position: absolute;
     bottom: 0;
+    @media (max-width: 800px) {
+        top: 0;
+    }
     right: 0;
     position: absolute;
     user-select: none;
