@@ -11,6 +11,11 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
+    Indexed,
+    PluridInternalStateDocument,
+} from '@plurid/plurid-data';
+
+import {
     StyledMoreMenu,
     // StyledMoreMenuItem,
     StyledMoreMenuScroll,
@@ -19,7 +24,7 @@ import {
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
 import selectors from '../../../../../services/state/selectors';
-// import actions from '../../../../../services/state/actions';
+import actions from '../../../../../services/state/actions';
 
 
 
@@ -28,9 +33,11 @@ interface MoreMenuOwnProperties {
 
 interface MoreMenuStateProperties {
     interactionTheme: Theme;
+    documents: Indexed<PluridInternalStateDocument>;
 }
 
 interface MoreMenuDispatchProperties {
+    dispatchSetActiveDocument: typeof actions.space.setActiveDocument;
 }
 
 type MoreMenuProperties = MoreMenuOwnProperties
@@ -41,8 +48,10 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     const {
         /** state */
         interactionTheme,
+        documents,
 
         /** dispatch */
+        dispatchSetActiveDocument,
     } = properties;
 
     return (
@@ -50,7 +59,22 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
             theme={interactionTheme}
         >
             <StyledMoreMenuScroll>
-                documents
+                <ul>
+                    {
+                        Object.keys(documents).map(documentID => {
+                            const document = documents[documentID];
+
+                            return (
+                                <li
+                                    key={documentID}
+                                    onClick={() => dispatchSetActiveDocument(documentID)}
+                                >
+                                    {document.name}
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
             </StyledMoreMenuScroll>
         </StyledMoreMenu>
     );
@@ -61,12 +85,16 @@ const mapStateToProps = (
     state: AppState,
 ): MoreMenuStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
+    documents: selectors.data.getDocuments(state),
 });
 
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): MoreMenuDispatchProperties => ({
+    dispatchSetActiveDocument: (documentID: string) => dispatch(
+        actions.space.setActiveDocument(documentID)
+    )
 });
 
 
