@@ -63,6 +63,10 @@ import handleView from './logic';
 import Context from '../../modules/services/utilities/context';
 
 import {
+    identifyDocuments,
+} from '../../modules/services/utilities/identified';
+
+import {
     createInternalContextDocument,
     createInternalStateDocument,
 } from '../../modules/services/utilities/documents';
@@ -582,11 +586,13 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
 
         if (documents) {
-            const stateDocuments = documents.map(document => {
+            const identifiedDocuments = identifyDocuments(documents);
+
+            const stateDocuments = identifiedDocuments.map(document => {
                 const stateDocument = createInternalStateDocument(document);
                 return stateDocument;
             });
-            const contextDocuments = documents.map(document => {
+            const contextDocuments = identifiedDocuments.map(document => {
                 const contextDocument = createInternalContextDocument(document);
                 return contextDocument;
             });

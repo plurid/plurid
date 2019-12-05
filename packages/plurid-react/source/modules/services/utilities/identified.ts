@@ -7,6 +7,7 @@ import {
     PluridDocument,
 
     Identified,
+    IdentifiedPluridDocument,
 } from '@plurid/plurid-data';
 
 
@@ -27,9 +28,9 @@ export const identifyPages = (
 
 export const identifyDocuments = (
     documents: PluridDocument[],
-): Identified<PluridDocument>[] => {
+): IdentifiedPluridDocument[] => {
     const identifiedDocuments = documents.map(document => {
-        const updatedDocument: Identified<PluridDocument> = {
+        const updatedDocument: IdentifiedPluridDocument = {
             ...document,
             pages: identifyPages(document.pages),
             id: document.id || uuid(),
