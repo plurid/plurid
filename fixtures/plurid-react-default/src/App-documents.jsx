@@ -8,6 +8,7 @@ import PluridApp, {
 
 import Page1 from './containers/Page1';
 import Page2 from './containers/Page2';
+import Page3 from './containers/Page3';
 
 
 const appPagesDocument1: PluridPage[] = [
@@ -25,6 +26,14 @@ const appPagesDocument1: PluridPage[] = [
             element: Page1,
             properties: {},
         },
+    },
+    {
+        path: '/page-3',
+        component: {
+            element: Page3,
+            properties: {},
+        },
+        root: true,
     },
 ];
 
@@ -50,6 +59,13 @@ const appPagesDocument2: PluridPage[] = [
             properties: {},
         },
         root: true,
+    },
+    {
+        path: '/page-3',
+        component: {
+            element: Page3,
+            properties: {},
+        },
     },
 ];
 
