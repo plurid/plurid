@@ -27,7 +27,8 @@ import {
     StyledIcon,
 } from './styled';
 
-import MoreMenu from './components/MoreMenu';
+import MenuDocuments from './components/MenuDocuments';
+import MenuMore from './components/MenuMore';
 
 import FirstPersonIcon from '../../../assets/icons/first-person-icon';
 import RotateIcon from '../../../assets/icons/rotate-icon';
@@ -45,6 +46,12 @@ import {
 } from '../../../services/state/modules/data/types'
 
 
+
+enum MENUS {
+    NONE,
+    DOCUMENTS,
+    MORE,
+}
 
 interface ToolbarOwnProperties {
 }
@@ -136,6 +143,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     const [mouseIn, setMouseIn] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [showMenu, setShowMenu] = useState(MENUS.NONE);
 
     const [showIcons, setShowIcons] = useState(alwaysShowIcons);
     const [showTransformButtons, setShowTransformButtons] = useState(alwaysShowTransformButtons);
@@ -380,8 +388,11 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 {Object.keys(documents).length > 1 && (
                     <StyledToolbarTransformText
                         theme={theme}
-                        onClick={() => setShowMoreMenu(show => !show)}
-                        active={showMoreMenu}
+                        onClick={() => showMenu === MENUS.DOCUMENTS
+                            ? setShowMenu(MENUS.NONE)
+                            : setShowMenu(MENUS.DOCUMENTS)
+                        }
+                        active={showMenu === MENUS.DOCUMENTS}
                         button={true}
                     >
                         <StyledIcon>
@@ -392,8 +403,11 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
                 <StyledToolbarTransformText
                     theme={theme}
-                    onClick={() => setShowMoreMenu(show => !show)}
-                    active={showMoreMenu}
+                    onClick={() => showMenu === MENUS.MORE
+                        ? setShowMenu(MENUS.NONE)
+                        : setShowMenu(MENUS.MORE)
+                    }
+                    active={showMenu === MENUS.MORE}
                     button={true}
                 >
                     <StyledIcon>
@@ -402,8 +416,12 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 </StyledToolbarTransformText>
             </StyledToolbarButtons>
 
-            {showMoreMenu && (
-                <MoreMenu />
+            {showMenu === MENUS.DOCUMENTS && (
+                <MenuDocuments />
+            )}
+
+            {showMenu === MENUS.MORE && (
+                <MenuMore />
             )}
         </StyledToolbar>
     );
