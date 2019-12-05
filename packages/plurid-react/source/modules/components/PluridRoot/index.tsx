@@ -3,6 +3,9 @@ import React, {
     useContext,
     useEffect,
 } from 'react';
+import { AnyAction } from 'redux';
+import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import {
     StyledPluridRoot,
@@ -17,11 +20,28 @@ import {
     PluridContext
 } from '@plurid/plurid-data';
 
+import { AppState } from '../../services/state/store';
+import StateContext from '../../services/state/context';
+import { ViewSize } from '../../services/state/types/data';
+import selectors from '../../services/state/selectors';
+// import actions from '../../services/state/actions';
 
 
-interface PluridRootProperties {
+
+export interface PluridRootOwnProperties {
     page: TreePage;
 }
+
+interface PluridRootStateProperties {
+    activeDocumentID: string;
+}
+
+interface PluridRootDispatchProperties {
+}
+
+type PluridRootProperties = PluridRootOwnProperties
+    & PluridRootStateProperties
+    & PluridRootDispatchProperties;
 
 const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const context: PluridContext = useContext(Context);
@@ -34,7 +54,11 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     } = context;
 
     const {
+        /** own */
         page,
+
+        /** state */
+        activeDocumentID,
     } = properties;
 
     const {
@@ -102,7 +126,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         JSON.stringify(page),
     ]);
 
-    const activeDocument = documents['default'];
+    const activeDocument = documents[activeDocumentID];
     // console.log('activeDocument', activeDocument);
     const activePages = activeDocument.pages;
     // console.log('activePages', activePages);
@@ -150,4 +174,24 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
 }
 
 
-export default PluridRoot;
+const mapStateToProps = (
+    state: AppState,
+): PluridRootStateProperties => ({
+    activeDocumentID: selectors.space.getActiveDocumentID(state),
+});
+
+
+const mapDispatchToProps = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): PluridRootDispatchProperties => ({
+});
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {
+        context: StateContext,
+    },
+)(PluridRoot);
