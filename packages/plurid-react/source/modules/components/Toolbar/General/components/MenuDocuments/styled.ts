@@ -5,7 +5,7 @@ import styled from 'styled-components';
 export const StyledMoreMenu = styled.div`
     position: absolute;
     bottom: 75px;
-    height: 250px;
+    max-height: 250px;
     width: 380px;
     left: 50%;
     transform: translateX(-50%);
@@ -20,6 +20,16 @@ export const StyledMoreMenu = styled.div`
     box-shadow: ${(props: any) => {
         return props.theme.boxShadowUmbra;
     }};
+
+    ul {
+        padding: 0;
+        list-style: none;
+    }
+
+    ul li {
+        padding: 10px 20px;
+        border-radius: 100px;
+    }
 `;
 
 
@@ -56,7 +66,7 @@ export const StyledMoreMenuItem: any = styled.div`
 
 
 export const StyledMoreMenuScroll = styled.div`
-    height: 210px;
+    max-height: 210px;
     overflow: scroll;
     padding: 0 5px;
 
@@ -69,5 +79,34 @@ export const StyledMoreMenuScroll = styled.div`
 
     h5::first-child {
         margin-top: 0;
+    }
+`;
+
+
+export const StyledMenuDocumentsItemList: any = styled.li`
+    cursor: ${(props: any) => {
+        if (props.active) {
+            return 'initial';
+        }
+        return 'pointer';
+    }};
+    background-color: ${(props: any) => {
+        if (props.active) {
+            return props.theme.backgroundColorTertiary;
+        }
+    }};
+    box-shadow: ${(props: any) => {
+        if (props.active) {
+            return props.theme.boxShadowUmbra;
+        }
+    }};
+
+    :hover {
+        background-color: ${(props: any) => {
+            return props.theme.backgroundColorTertiary;
+        }};
+        box-shadow: ${(props: any) => {
+            return props.theme.boxShadowUmbra;
+        }};
     }
 `;

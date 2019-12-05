@@ -19,6 +19,7 @@ import {
     StyledMoreMenu,
     // StyledMoreMenuItem,
     StyledMoreMenuScroll,
+    StyledMenuDocumentsItemList,
 } from './styled';
 
 import { AppState } from '../../../../../services/state/store';
@@ -34,6 +35,7 @@ interface MoreMenuOwnProperties {
 interface MoreMenuStateProperties {
     interactionTheme: Theme;
     documents: Indexed<PluridInternalStateDocument>;
+    activeDocumentID: string;
 }
 
 interface MoreMenuDispatchProperties {
@@ -49,6 +51,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         /** state */
         interactionTheme,
         documents,
+        activeDocumentID,
 
         /** dispatch */
         dispatchSetActiveDocument,
@@ -63,14 +66,17 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     {
                         Object.keys(documents).map(documentID => {
                             const document = documents[documentID];
+                            const active = documentID === activeDocumentID;
 
                             return (
-                                <li
+                                <StyledMenuDocumentsItemList
                                     key={documentID}
-                                    onClick={() => dispatchSetActiveDocument(documentID)}
+                                    theme={interactionTheme}
+                                    onClick={() => !active ? dispatchSetActiveDocument(documentID) : null}
+                                    active={active}
                                 >
                                     {document.name}
-                                </li>
+                                </StyledMenuDocumentsItemList>
                             )
                         })
                     }
@@ -86,6 +92,7 @@ const mapStateToProps = (
 ): MoreMenuStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
     documents: selectors.data.getDocuments(state),
+    activeDocumentID: selectors.space.getActiveDocumentID(state),
 });
 
 
