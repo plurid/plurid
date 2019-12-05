@@ -215,6 +215,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 theme={theme}
                 showIcons={showIcons}
                 showTransformButtons={showTransformButtons}
+                documentsBased={documentsBased}
             >
                 <StyledToolbarTransformText
                     theme={theme}
