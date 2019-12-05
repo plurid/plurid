@@ -93,7 +93,7 @@ type ToolbarProperties = ToolbarOwnProperties
     & ToolbarDispatchProperties;
 
 const Toolbar: React.FC<ToolbarProperties> = (properties) => {
-    const moreMenuTimeout = useRef<null | number>(null);
+    const menuTimeout = useRef<null | number>(null);
 
     const {
         /** state */
@@ -141,8 +141,9 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         alwaysShowTransformButtons,
     } = toolbar;
 
+    const documentsBased = Object.keys(documents).length > 1;
+
     const [mouseIn, setMouseIn] = useState(false);
-    const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [showMenu, setShowMenu] = useState(MENUS.NONE);
 
     const [showIcons, setShowIcons] = useState(alwaysShowIcons);
@@ -188,15 +189,15 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         alwaysShowTransformButtons,
     ]);
 
-    /** Hide More Menu at Mouse Out */
+    /** Hide Menu at Mouse Out */
     useEffect(() => {
-        if (mouseIn && moreMenuTimeout.current) {
-            clearTimeout(moreMenuTimeout.current);
+        if (mouseIn && menuTimeout.current) {
+            clearTimeout(menuTimeout.current);
         }
 
         if (!mouseIn) {
-            moreMenuTimeout.current = setTimeout(() => {
-                setShowMoreMenu(false);
+            menuTimeout.current = setTimeout(() => {
+                setShowMenu(MENUS.NONE);
             }, 400);
         }
     }, [
@@ -385,7 +386,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     )}
                 </StyledToolbarTranslate>
 
-                {Object.keys(documents).length > 1 && (
+                {documentsBased && (
                     <StyledToolbarTransformText
                         theme={theme}
                         onClick={() => showMenu === MENUS.DOCUMENTS
