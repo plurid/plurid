@@ -1,9 +1,13 @@
 import {
     PluridPageContext,
-    Indexed,
     PluridComponentReact,
 } from '../external';
 
+
+
+export interface Indexed<T> {
+    [key: string]: T;
+}
 
 
 export interface PluridInternalPage {
