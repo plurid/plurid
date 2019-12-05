@@ -17,9 +17,12 @@ import {
     StyledViewcube,
     StyledViewcubeArrow,
     StyledViewcubeArrowIcon,
+    StyledFitView,
 } from './styled';
 
 import ViewcubeModel from './components/ViewcubeModel';
+
+import GlobalIcon from '../../assets/icons/global-icon';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
@@ -149,8 +152,14 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                             ▶
                         </StyledViewcubeArrowIcon>
                     </StyledViewcubeArrow>
+
                 </>
             )}
+
+
+            <StyledFitView>
+                {GlobalIcon}
+            </StyledFitView>
         </StyledViewcube>
     );
 }
