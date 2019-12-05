@@ -258,6 +258,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         active={rotationLocked}
                         showIcons={showIcons}
                         showTransformButtons={showTransformButtons}
+                        button={!showIcons}
                     >
                         {showIcons
                             ? (
@@ -308,6 +309,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         active={scaleLocked}
                         showIcons={showIcons}
                         showTransformButtons={showTransformButtons}
+                        button={!showIcons}
                     >
                         {showIcons
                             ? (
@@ -358,6 +360,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         active={translationLocked}
                         showIcons={showIcons}
                         showTransformButtons={showTransformButtons}
+                        button={!showIcons}
                     >
                         {showIcons
                             ? (
