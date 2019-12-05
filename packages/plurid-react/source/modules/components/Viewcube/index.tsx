@@ -43,6 +43,7 @@ interface ViewcubeDispatchProperties {
     dispatchRotateXWith: typeof actions.space.rotateXWith;
     dispatchRotateYWith: typeof actions.space.rotateYWith;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
+    dispatchSpaceResetTransform: typeof actions.space.spaceResetTransform;
 }
 
 type ViewcubeProperties = ViewcubeOwnProperties
@@ -59,6 +60,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
         dispatchRotateXWith,
         dispatchRotateYWith,
         dispatchSetAnimatedTransform,
+        dispatchSpaceResetTransform,
     } = properties;
 
     const {
@@ -153,13 +155,13 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                         </StyledViewcubeArrowIcon>
                     </StyledViewcubeArrow>
 
+                    <StyledFitView
+                        onClick={() => dispatchSpaceResetTransform()}
+                    >
+                        {GlobalIcon}
+                    </StyledFitView>
                 </>
             )}
-
-
-            <StyledFitView>
-                {GlobalIcon}
-            </StyledFitView>
         </StyledViewcube>
     );
 }
@@ -184,6 +186,9 @@ const mapDispatchToProperties = (
     ),
     dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
         actions.space.setAnimatedTransform(animated)
+    ),
+    dispatchSpaceResetTransform: () => dispatch(
+        actions.space.spaceResetTransform()
     ),
 });
 

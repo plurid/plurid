@@ -100,6 +100,9 @@ import {
     SetTransformOriginSizeAction,
     TOGGLE_SHOW_TRANSFORM_ORIGIN,
     ToggleShowTransformOriginAction,
+
+    SPACE_RESET_TRANSFORM,
+    SpaceResetTransformAction,
 } from './types'
 
 
@@ -381,5 +384,12 @@ export const setTransformOriginSize = (size: keyof typeof SIZES): SetTransformOr
 export const toggleShowTransformOrigin = (): ToggleShowTransformOriginAction => {
     return {
         type: TOGGLE_SHOW_TRANSFORM_ORIGIN,
+    };
+}
+
+
+export const spaceResetTransform = (): SpaceResetTransformAction => {
+    return {
+        type: SPACE_RESET_TRANSFORM,
     };
 }
