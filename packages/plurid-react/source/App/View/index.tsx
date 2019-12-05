@@ -63,6 +63,11 @@ import handleView from './logic';
 import Context from '../../modules/services/utilities/context';
 
 import {
+    createInternalContextDocument,
+    createInternalStateDocument,
+} from '../../modules/services/utilities/documents';
+
+import {
     handleGlobalShortcuts,
     handleGlobalWheel,
 } from '../../modules/services/logic/shortcuts';
@@ -577,8 +582,18 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
 
         if (documents) {
-            console.log(documents);
-            // create multiple documents
+            const stateDocuments = documents.map(document => {
+                const stateDocument = createInternalStateDocument(document);
+                return stateDocument;
+            });
+            const contextDocuments = documents.map(document => {
+                const contextDocument = createInternalContextDocument(document);
+                return contextDocument;
+            });
+
+            console.log('documents', documents);
+            console.log('documents', stateDocuments);
+            console.log('documents', contextDocuments);
         }
     }, [
         pages,
