@@ -212,6 +212,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             onMouseLeave={() => setMouseIn(false)}
             mouseIn={mouseIn}
             hideToolbar={hide}
+            showMenu={showMenu}
         >
             <StyledToolbarButtons
                 theme={theme}
