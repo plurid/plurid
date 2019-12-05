@@ -81,7 +81,7 @@ const App = () => {
     return (
         <PluridApp
             configuration={appConfiguration}
-            // documents={documents}
+            documents={documents}
         />
     );
 }
