@@ -25,11 +25,6 @@ export const StyledMoreMenu = styled.div`
         padding: 0;
         list-style: none;
     }
-
-    ul li {
-        padding: 10px 20px;
-        border-radius: 100px;
-    }
 `;
 
 
@@ -84,6 +79,10 @@ export const StyledMoreMenuScroll = styled.div`
 
 
 export const StyledMenuDocumentsItemList: any = styled.li`
+    margin: 10px 0;
+    padding: 10px 20px;
+    border-radius: 100px;
+
     cursor: ${(props: any) => {
         if (props.active) {
             return 'initial';
@@ -94,11 +93,13 @@ export const StyledMenuDocumentsItemList: any = styled.li`
         if (props.active) {
             return props.theme.backgroundColorTertiary;
         }
+        return '';
     }};
     box-shadow: ${(props: any) => {
         if (props.active) {
-            return props.theme.boxShadowUmbra;
+            return 'inset 0px -1px 6px 0px ' + props.theme.boxShadowUmbraColor;
         }
+        return '';
     }};
 
     :hover {
@@ -106,6 +107,10 @@ export const StyledMenuDocumentsItemList: any = styled.li`
             return props.theme.backgroundColorTertiary;
         }};
         box-shadow: ${(props: any) => {
+            if (props.active) {
+                return 'inset 0px -1px 6px 0px ' + props.theme.boxShadowUmbraColor;
+            }
+
             return props.theme.boxShadowUmbra;
         }};
     }
