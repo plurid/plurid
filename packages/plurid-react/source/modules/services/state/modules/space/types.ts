@@ -251,6 +251,12 @@ export interface SetTransformOriginSizeAction {
 }
 
 
+export const SPACE_RESET_TRANSFORM = 'SPACE_RESET_TRANSFORM';
+export interface SpaceResetTransformAction {
+    type: typeof SPACE_RESET_TRANSFORM;
+}
+
+
 
 export interface SpaceState {
     loading: boolean;
@@ -320,4 +326,5 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | ToggleTranslationLockedAction
     | SetActiveDocumentAction
     | ToggleShowTransformOriginAction
-    | SetTransformOriginSizeAction;
+    | SetTransformOriginSizeAction
+    | SpaceResetTransformAction;

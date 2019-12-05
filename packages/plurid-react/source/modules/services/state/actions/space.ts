@@ -52,6 +52,8 @@ import {
 
     setTransformOriginSize,
     toggleShowTransformOrigin,
+
+    spaceResetTransform,
 } from '../modules/space/actions';
 
 
@@ -110,4 +112,6 @@ export default {
 
     setTransformOriginSize,
     toggleShowTransformOrigin,
+
+    spaceResetTransform,
 };

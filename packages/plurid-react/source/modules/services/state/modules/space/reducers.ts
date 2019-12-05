@@ -61,6 +61,8 @@ import {
     SET_TRANSFORM_ORIGIN_SIZE,
     TOGGLE_SHOW_TRANSFORM_ORIGIN,
 
+    SPACE_RESET_TRANSFORM,
+
     SpaceState,
     SpaceActionsType,
 } from './types';
@@ -467,6 +469,18 @@ const spaceReducer = (
                 return {
                     ...state,
                     showTransformOrigin: !state.showTransformOrigin,
+                };
+            }
+        case SPACE_RESET_TRANSFORM:
+            {
+                return {
+                    ...state,
+                    scale: 1,
+                    rotationX: 0,
+                    rotationY: 0,
+                    translationX: 0,
+                    translationY: 0,
+                    translationZ: 0,
                 };
             }
         default:
