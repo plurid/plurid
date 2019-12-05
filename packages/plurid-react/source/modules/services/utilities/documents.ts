@@ -3,7 +3,6 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    PluridPage,
     PluridDocument,
 
     PluridInternalStateDocument,
@@ -18,22 +17,6 @@ import {
 import {
     createIndexed,
 } from './indexed';
-
-
-
-/**
- * from PluridDocument create PluridInternalDocument
- */
-const createDefaultDocument = (
-    pages: PluridPage[],
-): PluridDocument => {
-    const defaultDocument: PluridDocument = {
-        name: 'default',
-        pages: [...pages],
-    };
-
-    return defaultDocument;
-}
 
 
 
