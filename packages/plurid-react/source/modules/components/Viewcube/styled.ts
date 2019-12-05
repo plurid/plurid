@@ -11,11 +11,11 @@ export const StyledViewcube: any = styled.div`
     transition: opacity 300ms ease-in-out;
     z-index: 9998;
     display: grid;
-    grid-template-areas: "pluridViewcubeScale           pluridViewcubeScale         pluridViewcubeScale             pluridViewcubeScale"
-                         "pluridViewcubeRotateLeft      pluridViewcubeRotateUp      pluridViewcubeRotateRight       pluridViewcubeTranslateY"
-                         "pluridViewcubeRotateLeft      pluridViewcubeModel         pluridViewcubeRotateRight       pluridViewcubeTranslateY"
-                         "pluridViewcubeRotateLeft      pluridViewcubeRotateDown    pluridViewcubeRotateRight       pluridViewcubeTranslateY"
-                         "pluridViewcubeTranslateX      pluridViewcubeTranslateX    pluridViewcubeTranslateX        pluridViewcubeFitview";
+    grid-template-areas: "pluridViewcubeScale           pluridViewcubeScale         pluridViewcubeScale          pluridViewcubeScale"
+                         "pluridViewcubeEmptyOne        pluridViewcubeRotateUp      pluridViewcubeEmptyTwo       pluridViewcubeTranslateY"
+                         "pluridViewcubeRotateLeft      pluridViewcubeModel         pluridViewcubeRotateRight    pluridViewcubeTranslateY"
+                         "pluridViewcubeEmptyThree      pluridViewcubeRotateDown    pluridViewcubeFitview        pluridViewcubeTranslateY"
+                         "pluridViewcubeTranslateX      pluridViewcubeTranslateX    pluridViewcubeTranslateX     pluridViewcubeTranslateX";
     grid-template-rows: 20px 15px 95px 15px 20px;
     grid-template-columns: 15px 115px 15px 20px;
 
@@ -52,5 +52,18 @@ export const StyledViewcubeArrowIcon: any = styled.div`
         background-color: ${(props: any) => {
             return props.theme.backgroundColorTertiary;
         }};
+    }
+`;
+
+
+export const StyledFitView: any = styled.div`
+    grid-area: pluridViewcubeFitview;
+    display: grid;
+    place-content: center;
+
+    svg {
+        height: 1.2rem;
+        width: 1.2rem;
+        fill: white;
     }
 `;
