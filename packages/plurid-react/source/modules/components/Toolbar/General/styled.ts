@@ -13,6 +13,12 @@ export const StyledToolbar: any = styled.div`
         }
         return '-55px';
     }};
+    pointer-events: ${(props: any) => {
+        if (props.showMenu) {
+            return 'all';
+        }
+        return 'none';
+    }};
 
     display: grid;
     position: absolute;
@@ -25,6 +31,8 @@ export const StyledToolbar: any = styled.div`
 
 
 export const StyledToolbarButtons: any = styled.div`
+    pointer-events: all;
+
     background-color: ${(props: any) => {
         return props.theme.backgroundColorSecondary;
     }};
