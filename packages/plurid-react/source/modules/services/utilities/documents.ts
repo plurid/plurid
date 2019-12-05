@@ -37,6 +37,7 @@ export const createInternalStateDocument = (
         pages: indexedStatePages,
         id: document.id || uuid(),
         ordinal: document.ordinal || 0,
+        active: document.active || false,
     }
 
     return stateDocument;
@@ -61,4 +62,19 @@ export const createInternalContextDocument = (
     }
 
     return contextDocument;
+}
+
+
+export const findActiveDocument = (
+    documents: PluridInternalStateDocument[]
+) => {
+    let activeDocumentID = documents[0].id;
+
+    documents.map(document => {
+        if (document.active) {
+            activeDocumentID = document.id;
+        }
+    });
+
+    return activeDocumentID;
 }
