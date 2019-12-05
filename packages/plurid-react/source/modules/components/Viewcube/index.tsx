@@ -87,6 +87,14 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
         }, 450);
     }
 
+    const animatedReset = () => {
+        dispatchSetAnimatedTransform(true);
+        dispatchSpaceResetTransform();
+        setTimeout(() => {
+            dispatchSetAnimatedTransform(false);
+        }, 450);
+    }
+
     return (
         <StyledViewcube
             onMouseEnter={() => setMouseOver(true)}
@@ -156,7 +164,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     </StyledViewcubeArrow>
 
                     <StyledFitView
-                        onClick={() => dispatchSpaceResetTransform()}
+                        onClick={() => animatedReset()}
                     >
                         {GlobalIcon}
                     </StyledFitView>
