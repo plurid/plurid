@@ -141,7 +141,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         configuration: stateConfiguration,
         spaceLoading,
         tree,
-        viewSize,
+        // viewSize,
         transform,
         dataDocuments,
         activeDocumentID,
@@ -577,6 +577,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
 
         if (documents) {
+            console.log(documents);
             // create multiple documents
         }
     }, [
