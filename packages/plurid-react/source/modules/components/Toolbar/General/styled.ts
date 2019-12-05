@@ -47,15 +47,15 @@ export const StyledToolbarButtons: any = styled.div`
             if (props.documentsBased) {
                 return 'repeat(6, minmax(min-content, 40px))';
             } else {
-                return 'repeat(5, minmax(min-content, 40px)))';
+                return 'repeat(5, minmax(min-content, 40px))';
             }
         }
 
         if (props.documentsBased) {
-            return '70px 200px 200px 200px 70px 70px';
+            return '40px 200px 200px 200px 40px 40px';
         }
 
-        return '70px 200px 200px 200px 70px';
+        return '40px 200px 200px 200px 40px';
     }};
 
     display: grid;
