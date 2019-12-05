@@ -36,31 +36,27 @@ export const StyledToolbarButtons: any = styled.div`
             props.showIcons
             && !props.showTransformButtons
         ) {
-            // return 'repeat(5, 40px)';
-            return 'repeat(6, minmax(min-content, 40px))';
+            if (props.documentsBased) {
+                return 'repeat(6, minmax(min-content, 40px))';
+            } else {
+                return 'repeat(5, minmax(min-content, 40px))';
+            }
         }
 
         if (!props.showTransformButtons) {
-            return 'repeat(6, minmax(min-content, 40px))';
-            // return 'repeat(5, 70px)';
+            if (props.documentsBased) {
+                return 'repeat(6, minmax(min-content, 40px))';
+            } else {
+                return 'repeat(5, minmax(min-content, 40px)))';
+            }
         }
 
-        return '70px 200px 200px 200px 70px 70px';
+        if (props.documentsBased) {
+            return '70px 200px 200px 200px 70px 70px';
+        }
+
+        return '70px 200px 200px 200px 70px';
     }};
-    /* width: ${(props: any) => {
-        if (
-            props.showIcons
-            && !props.showTransformButtons
-        ) {
-            return '260px';
-        }
-
-        if (!props.showTransformButtons) {
-            return '380px';
-        }
-
-        return '770px';
-    }}; */
 
     display: grid;
     align-items: center;
