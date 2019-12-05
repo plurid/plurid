@@ -1,6 +1,9 @@
 import {
     PluridPageContext,
     PluridComponentReact,
+
+    PluridDocument,
+    PluridPage,
 } from '../external';
 
 
@@ -28,6 +31,11 @@ export interface PluridInternalStatePage extends PluridInternalPage {
 
 export interface PluridInternalContextPage extends PluridInternalPage {
     component: PluridComponentReact;
+}
+
+
+export interface IdentifiedPluridDocument extends Identified<PluridDocument> {
+    pages: Identified<PluridPage>[]
 }
 
 
