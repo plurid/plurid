@@ -15,6 +15,10 @@ import {
     createInternalContextPage,
 } from './pages';
 
+import {
+    createIndexed,
+} from './indexed';
+
 
 
 /**
@@ -36,17 +40,18 @@ const createDefaultDocument = (
 /**
  * from PluridDocument create PluridInternalStateDocument
  */
-const createInternalStateDocument = (
+export const createInternalStateDocument = (
     document: PluridDocument,
 ): PluridInternalStateDocument => {
     const statePages = document.pages.map(page => {
         const internalStatePage = createInternalStatePage(page);
         return internalStatePage;
     });
+    const indexedStatePages = createIndexed(statePages);
 
     const stateDocument: PluridInternalStateDocument = {
         name: document.name,
-        pages: statePages,
+        pages: indexedStatePages,
         id: document.id || uuid(),
         ordinal: document.ordinal || 0,
     }
@@ -57,17 +62,18 @@ const createInternalStateDocument = (
 /**
  * from PluridDocument create PluridInternalStateDocument
  */
-const createInternalContextDocument = (
+export const createInternalContextDocument = (
     document: PluridDocument,
 ): PluridInternalContextDocument => {
     const contextPages = document.pages.map(page => {
-        const internalStatePage = createInternalStatePage(page);
-        return internalStatePage;
+        const internalContextPage = createInternalContextPage(page);
+        return internalContextPage;
     });
+    const indexedContextPages = createIndexed(contextPages);
 
     const contextDocument: PluridInternalContextDocument = {
         name: document.name,
-        pages: contextPages,
+        pages: indexedContextPages,
         id: document.id || uuid(),
     }
 
