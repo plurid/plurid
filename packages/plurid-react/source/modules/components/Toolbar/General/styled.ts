@@ -137,16 +137,6 @@ export const StyledToolbarTransformButton: any = styled.div`
 
 
 export const StyledToolbarTransformText: any = styled.div`
-    /* margin: ${(props: any) => {
-        if (
-            props.showIcons
-            && !props.showTransformButtons
-        ) {
-            return '0';
-        }
-
-        return '0 7px';
-    }}; */
     padding: ${(props: any) => {
         if (props.button) {
             return '0';
@@ -167,9 +157,15 @@ export const StyledToolbarTransformText: any = styled.div`
         }
         return 'transparent';
     }};
+    min-width: ${(props: any) => {
+        if (props.button) {
+            return '40px';
+        }
+
+        return '70px';
+    }};
 
     height: 45px;
-    /* min-width: 70px; */
     display: grid;
     align-items: center;
     justify-content: center;
