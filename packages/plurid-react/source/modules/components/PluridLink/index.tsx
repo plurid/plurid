@@ -119,14 +119,27 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
             // instead to look into activeDocuments.paths
             // and see if something from pagePath matches
+            const {
+                paths,
+            } = activeDocument;
 
-            const activePages = activeDocument.pages;
             let pageID = '';
-            for (let [_, page] of Object.entries(activePages)) {
-                if (page.path === pagePath) {
-                    pageID = page.id;
+            for (const pathValue of Object.values(paths)) {
+                const re = new RegExp(pathValue.regex);
+                const match = pagePath.match(re);
+
+                if (match) {
+                    console.log('pathValue aa', pagePath, pathValue);
+                    pageID = pathValue.pageID;
                 }
             }
+
+            // const activePages = activeDocument.pages;
+            // for (let [_, page] of Object.entries(activePages)) {
+            //     if (page.path === pagePath) {
+            //         pageID = page.id;
+            //     }
+            // }
 
             const {
                 pluridPlaneID,
