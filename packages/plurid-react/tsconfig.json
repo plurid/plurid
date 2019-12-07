@@ -23,6 +23,7 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "esModuleInterop": true,
+        "downlevelIteration": true,
         "typeRoots": [
             "node_modules/@types"
         ]
