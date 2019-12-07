@@ -1,12 +1,11 @@
 import {
     Indexed,
-    PluridInternalStateDocument,
+    PluridInternalStatePage,
 } from '@plurid/plurid-data';
 
 
 
 interface Path {
-    document: string;
     address: string;
     regex: string;
     parameters?: Parameter[];
@@ -18,23 +17,33 @@ interface Parameter {
 }
 
 export const registerPaths = (
-    indexedDocuments: Indexed<PluridInternalStateDocument>,
-) => {
-    const paths = [];
+    pages: PluridInternalStatePage[],
+): Path[] => {
+    const paths: Path[] = [];
 
-    for (let document of Object.values(indexedDocuments)) {
-        for (let page of Object.values(document.pages)) {
-            const handledPath = handlePath(page.path);
-
-            const path: Path = {
-                document: document.id,
-                address: page.path,
-                regex: handledPath.regex,
-                parameters: handledPath.parameters,
-            };
-            paths.push(path);
-        }
+    for (const page of pages) {
+        const handledPath = handlePath(page.path);
+        const path: Path = {
+            address: page.path,
+            regex: handledPath.regex,
+            parameters: handledPath.parameters,
+        };
+        paths.push(path);
     }
+
+    // for (let document of Object.values(indexedDocuments)) {
+    //     for (let page of Object.values(document.pages)) {
+    //         const handledPath = handlePath(page.path);
+
+    //         const path: Path = {
+    //             document: document.id,
+    //             address: page.path,
+    //             regex: handledPath.regex,
+    //             parameters: handledPath.parameters,
+    //         };
+    //         paths.push(path);
+    //     }
+    // }
 
     return paths;
 }

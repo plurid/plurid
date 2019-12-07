@@ -18,6 +18,10 @@ import {
     createIndexed,
 } from './indexed';
 
+import {
+    registerPaths,
+} from './paths';
+
 
 
 /**
@@ -31,6 +35,9 @@ export const createInternalStateDocument = (
         return internalStatePage;
     });
     const indexedStatePages = createIndexed(statePages);
+
+    const paths = registerPaths(statePages);
+    console.log(paths);
 
     const stateDocument: PluridInternalStateDocument = {
         name: document.name,
