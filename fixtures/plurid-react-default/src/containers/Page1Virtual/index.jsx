@@ -2,22 +2,9 @@ import React from 'react';
 
 import {
     PluridLink,
+    PluridVirtualList,
 } from '@plurid/plurid-react';
 
-
-const data = [];
-const renderData = () => {
-    for (let i = 0; i < 100; i++) {
-        data.push(
-            <div
-                key={i}
-            >
-                row {i}
-            </div>
-        )
-    }
-}
-renderData();
 
 
 const Page1 = () => {
@@ -27,15 +14,9 @@ const Page1 = () => {
                 <PluridLink page="/page-2/soo/loo">link to page 2</PluridLink>
             </div>
 
-            {data.map((element, index) => {
-                return (
-                    <div
-                        key={index}
-                    >
-                        {element}
-                    </div>
-                );
-            })}
+            <PluridVirtualList
+                items={data}
+            />
         </div>
     );
 }
