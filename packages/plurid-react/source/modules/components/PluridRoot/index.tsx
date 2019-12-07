@@ -78,6 +78,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     // and change the opacity
                     const Page = _page.component.element;
                     const properties = _page.component.properties || {};
+                    const pluridProperties = {
+                        parameters: child.parameters,
+                    };
+                    properties['plurid'] = pluridProperties;
 
                     plane = (
                         <PluridPlane
@@ -142,6 +146,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     // console.log(Page);
 
     const pageProperties = pluridPage.component.properties || {};
+    const pluridProperties = {
+        parameters: page.parameters,
+    };
+    pageProperties['plurid'] = pluridProperties;
 
     return (
         <StyledPluridRoot>

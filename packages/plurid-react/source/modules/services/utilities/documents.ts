@@ -38,7 +38,6 @@ export const createInternalStateDocument = (
 
     const paths = registerPaths(statePages);
     const indexedPaths = createIndexed(paths);
-    console.log(paths);
 
     const stateDocument: PluridInternalStateDocument = {
         name: document.name,
