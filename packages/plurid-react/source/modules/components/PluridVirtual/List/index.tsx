@@ -22,7 +22,7 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
                             {element}
                         </div>
                     );
-                })}>
+                })}
             </>
         );
     }
