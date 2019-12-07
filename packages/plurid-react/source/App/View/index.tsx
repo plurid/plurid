@@ -538,8 +538,8 @@ const View: React.FC<ViewProperties> = (properties) => {
             const documentPages: Indexed<PluridInternalStatePage> = {};
             const contextPages: Indexed<PluridInternalContextPage> = {};
 
-            console.log('pages', pages);
-            console.log('dataDocuments', dataDocuments);
+            // console.log('pages', pages);
+            // console.log('dataDocuments', dataDocuments);
 
             pages.map(page => {
                 // check if dataDocuments doesn't already have the page
@@ -614,12 +614,6 @@ const View: React.FC<ViewProperties> = (properties) => {
 
             const activeDocumentID = findActiveDocument(stateDocuments);
             dispatchSetActiveDocument(activeDocumentID);
-
-            // const paths = registerPaths(indexedStateDocuments);
-            // console.log('paths', paths);
-            // console.log('documents', documents);
-            // console.log('stateDocuments', stateDocuments);
-            // console.log('contextDocuments', contextDocuments);
         }
     }, [
         pages,
