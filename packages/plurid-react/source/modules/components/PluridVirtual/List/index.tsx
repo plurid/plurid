@@ -82,10 +82,15 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
     const rows = useRef<any[]>([]);
     const heights = useRef<number[]>(Array(end - start).fill(0));
 
+    const setHeight = (
+        value: number,
+        index: number,
+    ) => {
+        heights.current[index] = value;
+    }
+
     const renderRows = () => {
         rows.current = [];
-        // heights.current= Array(end - start).fill(0);
-        console.log('foo', heights.current);
 
         for (let i = start; i <= end; i++) {
             let item = items[i];
@@ -102,13 +107,6 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
         return rows.current;
     }
 
-    const setHeight = (
-        value: number,
-        index: number,
-    ) => {
-        heights.current[index] = value;
-    }
-
     useEffect(() => {
         if (heights.current) {
             const elementHeight = sumTo(heights.current, heights.current.length);
@@ -118,15 +116,14 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
         heights.current,
     ]);
 
-    console.log(rows.current);
-    console.log(heights.current);
+    // console.log(rows.current);
+    // console.log(heights.current);
 
     return (
         <div
             style={{
                 height: elementHeight,
             }}
-            onClick={() => console.log(rows.current)}
         >
             {renderRows()}
         </div>
