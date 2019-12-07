@@ -429,10 +429,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@plurid/plurid-data@^0.1.52":
-  version "0.1.52"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.52.tgz#4eba331520934ae6e824f6f8f42ba6a882638d9f"
-  integrity sha512-h2QIiyN0cCwEm1GJz611t7CofhJOMEVfoMrlvw9Wjk3i09nfjMen6x5gmqu9vQZiPZd2s2vNHadDKzkAfY9O4Q==
+"@plurid/plurid-data@^0.1.53":
+  version "0.1.53"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.53.tgz#c0ce1eb0d1540a25981ab350a1741ac120286292"
+  integrity sha512-LP3EBHxPjHLyiGLZArJU2sCfGB2jTrq8KR4oZ6yoaJHegGEJfQchvtY4muRgFtXhDB+7Af5Han717z4uq8pZ5g==
 
 "@plurid/plurid-engine@^0.1.19":
   version "0.1.19"
@@ -506,10 +506,18 @@
   dependencies:
     "@types/enzyme" "*"
 
-"@types/enzyme@*", "@types/enzyme@^3.10.3":
+"@types/enzyme@*":
   version "3.10.3"
   resolved "https://registry.yarnpkg.com/@types/enzyme/-/enzyme-3.10.3.tgz#02b6c5ac7d0472005944a652e79045e2f6c66804"
   integrity sha512-f/Kcb84sZOSZiBPCkr4He9/cpuSLcKRyQaEE20Q30Prx0Dn6wcyMAWI0yofL6yvd9Ht9G7EVkQeRqK0n5w8ILw==
+  dependencies:
+    "@types/cheerio" "*"
+    "@types/react" "*"
+
+"@types/enzyme@^3.10.4":
+  version "3.10.4"
+  resolved "https://registry.yarnpkg.com/@types/enzyme/-/enzyme-3.10.4.tgz#dd4961042381a7c0f6637ce25fec3f773ce489dd"
+  integrity sha512-P5XpxcIt9KK8QUH4al4ttfJfIHg6xmN9ZjyUzRSzAsmDYwRXLI05ng/flZOPXrEXmp8ZYiN8/tEXYK5KSOQk3w==
   dependencies:
     "@types/cheerio" "*"
     "@types/react" "*"
