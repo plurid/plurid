@@ -20,6 +20,7 @@ export const registerPaths = (
         const handledPath = handlePath(page.path);
         const path: PagePath = {
             id: uuid(),
+            pageID: page.id,
             address: page.path,
             regex: handledPath.regex,
             parameters: handledPath.parameters,
