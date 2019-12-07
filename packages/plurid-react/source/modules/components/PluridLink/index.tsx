@@ -116,6 +116,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
             const searchDocumentID = document ? document : activeDocumentID;
             const activeDocument = documents[searchDocumentID];
+
+            // instead to look into activeDocuments.paths
+            // and see if something from pagePath matches
+
             const activePages = activeDocument.pages;
             let pageID = '';
             for (let [_, page] of Object.entries(activePages)) {
