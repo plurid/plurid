@@ -2,8 +2,9 @@ export interface TreePage {
     pageID: string;
     planeID: string;
     parentPlaneID?: string;
-    path: PathParameter;
-    parameters: any;
+    path: string;
+    parameters?: PathParameter;
+    query?: PathQuery;
     location: TreePageLocation;
     children?: TreePage[];
     show: boolean;
@@ -11,6 +12,11 @@ export interface TreePage {
 
 
 export interface PathParameter {
+    [key: string]: string;
+}
+
+
+export interface PathQuery {
     [key: string]: string;
 }
 
