@@ -614,7 +614,7 @@ export const extractParameters = (
         return {};
     }
 
-    const re = /\/([^\/]+)/g;
+    const re = /\/([^/]+)/g;
     const match = pagePath.match(re);
     if (!match) {
         return {};
