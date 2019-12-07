@@ -526,6 +526,7 @@ export const updateTreeWithNewPage = (
         const newTreePage: TreePage = {
             pageID,
             path: pagePath,
+            parameters: {},
             planeID,
             parentPlaneID: treePageParentPlaneID,
             location: {
