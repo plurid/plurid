@@ -48,13 +48,12 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
 
     const _generalHeight = generalHeight || 100;
 
+    const rows = useRef<any[]>([]);
+    const heights = useRef<number[]>(Array(items.length).fill(0));
+
     const [start, setStart] = useState(0);
     const [end, setEnd] = useState(Math.floor(2000 / _generalHeight));
-
     const [elementHeight, setElementHeight] = useState(0);
-
-    const rows = useRef<any[]>([]);
-    const heights = useRef<number[]>(Array(end - start).fill(0));
 
     const setHeight = (
         value: number,
@@ -65,6 +64,7 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
 
     const renderRows = () => {
         rows.current = [];
+        // console.log('RENDERED');
 
         for (let i = start; i <= end; i++) {
             let item = items[i];
@@ -92,6 +92,10 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
 
     useEffect(() => {
         console.log('translated on y');
+
+        // compute which elements are in view based on the plurid location
+        // also to take into consideration the scale
+
     }, [
         translationY,
     ]);
