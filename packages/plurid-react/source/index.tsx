@@ -14,6 +14,7 @@ import PluridSubApp from './App/SubApp';
 
 import PluridLink from './modules/components/PluridLink';
 
+import PluridVirtualList from './modules/components/PluridVirtual/List';
 
 
 export {
@@ -31,6 +32,7 @@ export {
 
     /** Components */
     PluridLink,
+    PluridVirtualList,
 };
 
 

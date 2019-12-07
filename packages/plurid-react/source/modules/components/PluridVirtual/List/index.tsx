@@ -2,7 +2,11 @@ import React from 'react';
 
 
 
-const PluridVirtualList: React.FC<any> = () => {
+interface PluridVirtualListOwnProperties {
+
+}
+
+const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = () => {
 
     const renderRows = () => {
         return (
