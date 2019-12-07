@@ -53,10 +53,14 @@ export type PluridPageContext<T> = React.Context<T>;
 
 
 export interface PluridComponentReact {
-    element: () => JSX.Element,
+    element: (properties: ReactComponentWithPluridProperties) => JSX.Element,
     properties?: PluridComponentProperties;
 }
 
+export interface ReactComponentWithPluridProperties {
+    plurid: any;
+    [key: string]: any;
+}
 
 export interface PluridComponentProperties {
     [key: string]: any;
