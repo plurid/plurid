@@ -38,6 +38,7 @@ export interface PluridInternalContextDocument extends PluridInternalDocument {
 
 
 export interface PagePath {
+    id: string;
     address: string;
     regex: string;
     parameters?: PageParameter[];
