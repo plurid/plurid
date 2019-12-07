@@ -428,6 +428,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 id: 'default',
                 name: 'default',
                 pages: documentPages,
+                paths: {},
                 ordinal: 0,
                 active: true,
             };
@@ -568,6 +569,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 id: 'default',
                 name: 'default',
                 pages: documentPages,
+                paths: {},
                 ordinal: 0,
                 active: true,
             };

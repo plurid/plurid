@@ -1,29 +1,20 @@
 import {
-    Indexed,
     PluridInternalStatePage,
+
+    PagePath,
+    PageParameter,
 } from '@plurid/plurid-data';
 
 
 
-interface Path {
-    address: string;
-    regex: string;
-    parameters?: Parameter[];
-}
-
-interface Parameter {
-    name: string;
-    index: number;
-}
-
 export const registerPaths = (
     pages: PluridInternalStatePage[],
-): Path[] => {
-    const paths: Path[] = [];
+): PagePath[] => {
+    const paths: PagePath[] = [];
 
     for (const page of pages) {
         const handledPath = handlePath(page.path);
-        const path: Path = {
+        const path: PagePath = {
             address: page.path,
             regex: handledPath.regex,
             parameters: handledPath.parameters,
@@ -51,7 +42,7 @@ export const registerPaths = (
 
 interface PathHandler {
     regex: string;
-    parameters?: Parameter[];
+    parameters?: PageParameter[];
 }
 
 const handlePath = (
@@ -68,7 +59,7 @@ const handlePath = (
 
     const composedRegex = composePathRegex(match);
 
-    const parameters: Parameter[] = [];
+    const parameters: PageParameter[] = [];
 
     for (const [index, subpath] of match.entries()) {
         if (
