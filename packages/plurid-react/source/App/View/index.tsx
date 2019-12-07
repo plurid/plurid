@@ -63,6 +63,7 @@ import handleView from './logic';
 import Context from '../../modules/services/utilities/context';
 
 import {
+    identifyPages,
     identifyDocuments,
 } from '../../modules/services/utilities/identified';
 
@@ -75,6 +76,11 @@ import {
     createInternalContextDocument,
     findActiveDocument,
 } from '../../modules/services/utilities/documents';
+
+import {
+    createInternalStatePage,
+    createInternalContextPage,
+} from '../../modules/services/utilities/pages';
 
 import {
     handleGlobalShortcuts,
@@ -535,40 +541,25 @@ const View: React.FC<ViewProperties> = (properties) => {
     /** Pages, Documents */
     useEffect(() => {
         if (!documents && pages) {
-            const documentPages: Indexed<PluridInternalStatePage> = {};
-            const contextPages: Indexed<PluridInternalContextPage> = {};
+            const identifiedPages = identifyPages(pages);
 
-            // console.log('pages', pages);
-            // console.log('dataDocuments', dataDocuments);
-
-            pages.map(page => {
-                // check if dataDocuments doesn't already have the page
-
-                const id = page.id || uuid();
-
-                const contextPage = {
-                    ...page,
-                    id,
-                };
-                contextPages[id] = {
-                    ...contextPage,
-                };
-
-                const documentPage: PluridInternalStatePage = {
-                    root: page.root || false,
-                    ordinal: page.ordinal || 0,
-                    id,
-                    path: page.path,
-                };
-                documentPages[id] = {
-                    ...documentPage,
-                };
+            const statePages = identifiedPages.map(page => {
+                const statePage = createInternalStatePage(page);
+                return statePage;
             });
+
+            const contextPages = identifiedPages.map(page => {
+                const contextPage = createInternalContextPage(page);
+                return contextPage;
+            });
+
+            const indexedStatePages = createIndexed(statePages);
+            const indexedContextPages = createIndexed(contextPages);
 
             const document: PluridInternalStateDocument = {
                 id: 'default',
                 name: 'default',
-                pages: documentPages,
+                pages: indexedStatePages,
                 paths: {},
                 ordinal: 0,
                 active: true,
@@ -581,16 +572,13 @@ const View: React.FC<ViewProperties> = (properties) => {
             const contextDocument = {
                 id: 'default',
                 name: 'default',
-                pages: contextPages,
+                pages: indexedContextPages,
             };
-            const contextDocuments = {
+            contextDocumentsRef.current = {
                 default: contextDocument,
-            }
-            // setContextDocuments(contextDocuments);
-            contextDocumentsRef.current = {...contextDocuments};
-            console.log(contextDocumentsRef.current);
-
+            };
             dispatchSetDocuments(documents);
+
             dispatchSetActiveDocument('default');
         }
 
