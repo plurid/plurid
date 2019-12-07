@@ -54,7 +54,7 @@ interface PathHandler {
 const handlePath = (
     path: string,
 ): PathHandler => {
-    const re = /\/([^\/]+)/g;
+    const re = /\/([^/]+)/g;
     const match = path.match(re);
 
     if (!match) {
