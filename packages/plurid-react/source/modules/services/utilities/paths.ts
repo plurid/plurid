@@ -1,4 +1,8 @@
 import {
+    uuidv4 as uuid,
+} from '@plurid/plurid-functions';
+
+import {
     PluridInternalStatePage,
 
     PagePath,
@@ -15,6 +19,7 @@ export const registerPaths = (
     for (const page of pages) {
         const handledPath = handlePath(page.path);
         const path: PagePath = {
+            id: uuid(),
             address: page.path,
             regex: handledPath.regex,
             parameters: handledPath.parameters,
