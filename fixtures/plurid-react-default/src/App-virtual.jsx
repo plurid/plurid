@@ -4,7 +4,7 @@ import PluridApp, {
     PluridConfiguration,
 } from '@plurid/plurid-react';
 
-import Page1 from './containers/Page1';
+import Page1Virtual from './containers/Page1Virtual';
 import Page2 from './containers/Page2';
 
 
@@ -33,7 +33,7 @@ const App = () => {
         {
             path: '/page-1',
             component: {
-                element: Page1,
+                element: Page1Virtual,
                 properties: {},
             },
             root: true,
@@ -42,14 +42,6 @@ const App = () => {
             path: '/page-2',
             component: {
                 element: Page2,
-                properties: {},
-            },
-            // root: true,
-        },
-        {
-            path: '/page-3',
-            component: {
-                element: Page1,
                 properties: {},
             },
             // root: true,
