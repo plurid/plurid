@@ -13,7 +13,7 @@ import Page3 from './containers/Page3';
 
 const appPagesDocument1: PluridPage[] = [
     {
-        path: '/page-2',
+        path: '/page-2/:foo/:boo',
         component: {
             element: Page2,
             properties: {},
