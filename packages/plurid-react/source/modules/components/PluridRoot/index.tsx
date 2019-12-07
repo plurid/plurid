@@ -81,7 +81,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     const pluridProperties = {
                         parameters: child.parameters,
                     };
-                    properties['plurid'] = pluridProperties;
+                    // properties['plurid'] = pluridProperties;
 
                     plane = (
                         <PluridPlane
@@ -94,6 +94,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                             {!PageContext
                                 ? (
                                     <Page
+                                        plurid={pluridProperties}
                                         {...properties}
                                     />
                                 ) : (
@@ -101,6 +102,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                                         value={pageContextValue}
                                     >
                                         <Page
+                                            plurid={pluridProperties}
                                             {...properties}
                                         />
                                     </PageContext.Provider>
@@ -149,7 +151,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const pluridProperties = {
         parameters: page.parameters,
     };
-    pageProperties['plurid'] = pluridProperties;
+    // pageProperties['plurid'] = pluridProperties;
 
     return (
         <StyledPluridRoot>
@@ -162,6 +164,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                 {!PageContext
                     ? (
                         <Page
+                            plurid={pluridProperties}
                             {...pageProperties}
                         />
                     ) : (
@@ -169,6 +172,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                             value={pageContextValue}
                         >
                             <Page
+                                plurid={pluridProperties}
                                 {...pageProperties}
                             />
                         </PageContext.Provider>
