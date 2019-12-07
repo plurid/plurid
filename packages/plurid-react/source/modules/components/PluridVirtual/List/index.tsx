@@ -10,7 +10,14 @@ const sumTo = (
     values: number[],
     index: number,
 ) => {
-    const _values = values.slice(0, index === 0 ? 1 : index);
+    if (index === 0 ) {
+        return 0;
+    }
+
+    const _values = values.slice(
+        0,
+        index,
+    );
     return _values.reduce((total, val) => total + val);
 }
 
@@ -19,7 +26,7 @@ interface VirtualListItemOwnProperties {
     top: number;
     index: number;
     element: JSX.Element;
-    setHeight: any;
+    setHeight(value: number, index: number): void;
 }
 
 const VirtualListItem: React.FC<VirtualListItemOwnProperties> = (properties) => {
@@ -70,6 +77,8 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
     const [start, setStart] = useState(0);
     const [end, setEnd] = useState(Math.floor(1200 / _generalHeight));
 
+    const [elementHeight, setElementHeight] = useState(0);
+
     const rows = useRef<any[]>([]);
     const heights = useRef<number[]>(Array(end - start).fill(0));
 
@@ -85,7 +94,6 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
                     key={i + Math.random()}
                     index={i}
                     top={sumTo(heights.current, i)}
-                    // top={20}
                     element={item}
                     setHeight={setHeight}
                 />
@@ -101,13 +109,22 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
         heights.current[index] = value;
     }
 
+    useEffect(() => {
+        if (heights.current) {
+            const elementHeight = sumTo(heights.current, heights.current.length);
+            setElementHeight(elementHeight)
+        }
+    }, [
+        heights.current,
+    ]);
+
     console.log(rows.current);
     console.log(heights.current);
 
     return (
         <div
             style={{
-                height: sumTo(heights.current, heights.current.length),
+                height: elementHeight,
             }}
             onClick={() => console.log(rows.current)}
         >
