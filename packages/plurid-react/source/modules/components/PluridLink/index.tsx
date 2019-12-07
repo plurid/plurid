@@ -37,6 +37,8 @@ import actions from '../../services/state/actions';
 
 
 
+const DEFAULT_SUFIX = "'";
+
 interface PluridLinkStateProperties {
     tree: TreePage[];
     generalTheme: Theme;
@@ -82,7 +84,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         setTree,
     } = properties;
 
-    const [suffix, setSuffix] = useState("'");
+    const [suffix, setSuffix] = useState(DEFAULT_SUFIX);
     const [devisible, setDevisible] = useState(false);
 
     useEffect(() => {
@@ -117,8 +119,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
             const searchDocumentID = document ? document : activeDocumentID;
             const activeDocument = documents[searchDocumentID];
 
-            // instead to look into activeDocuments.paths
-            // and see if something from pagePath matches
             const {
                 paths,
             } = activeDocument;
@@ -129,17 +129,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
                 const match = pagePath.match(re);
 
                 if (match) {
-                    console.log('pathValue aa', pagePath, pathValue);
                     pageID = pathValue.pageID;
                 }
             }
-
-            // const activePages = activeDocument.pages;
-            // for (let [_, page] of Object.entries(activePages)) {
-            //     if (page.path === pagePath) {
-            //         pageID = page.id;
-            //     }
-            // }
 
             const {
                 pluridPlaneID,
