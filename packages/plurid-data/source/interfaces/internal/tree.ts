@@ -2,10 +2,16 @@ export interface TreePage {
     pageID: string;
     planeID: string;
     parentPlaneID?: string;
-    path: string;
+    path: PathParameter;
+    parameters: any;
     location: TreePageLocation;
     children?: TreePage[];
     show: boolean;
+}
+
+
+export interface PathParameter {
+    [key: string]: string;
 }
 
 
