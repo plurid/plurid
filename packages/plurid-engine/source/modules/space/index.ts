@@ -499,7 +499,6 @@ export const updateTreeWithNewPage = (
     tree: TreePage[],
     treePageParentPlaneID: string,
     pagePath: string,
-    pageAddress: string,
     pageID: string,
     linkCoordinates: any,
     parameters?: PageParameter[],
@@ -626,29 +625,11 @@ export const extractParameters = (
     for (const [index, matched] of match.entries()) {
         for (const definedParameters of parameters) {
             if (definedParameters.index === index) {
-                extractedParameters[definedParameters.name] = matched;
+                const cleanedParameter = matched.slice(1,);
+                extractedParameters[definedParameters.name] = cleanedParameter;
             }
         }
     }
 
     return extractedParameters;
-}
-
-
-export const computePagePath = (
-    pageAddress: string,
-    pagePath: string,
-    parameters?: PageParameter[],
-) => {
-    if (!parameters) {
-        return pageAddress;
-    }
-
-    let path = pageAddress;
-
-    for (const parameter of parameters) {
-        path = path.replace(`/:${parameter}`, '/asd');
-    }
-
-    return path;
 }
