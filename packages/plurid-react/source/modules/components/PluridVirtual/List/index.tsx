@@ -26,6 +26,7 @@ interface PluridVirtualListOwnProperties {
 }
 
 interface PluridVirtualListStateProperties {
+    translationY: number,
 }
 
 interface PluridVirtualListDispatchProperties {
@@ -37,8 +38,12 @@ type PluridVirtualListProperties = PluridVirtualListOwnProperties
 
 const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) => {
     const {
+        /** own */
         items,
         generalHeight,
+
+        /** state */
+        translationY,
     } = properties;
 
     const _generalHeight = generalHeight || 100;
@@ -85,6 +90,12 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
         heights.current,
     ]);
 
+    useEffect(() => {
+        console.log('translated on y');
+    }, [
+        translationY,
+    ]);
+
     // console.log(rows.current);
     // console.log(heights.current);
 
@@ -103,8 +114,7 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
 const mapStateToProps = (
     state: AppState,
 ): PluridVirtualListStateProperties => ({
-    configuration: selectors.configuration.getConfiguration(state),
-    generalTheme: selectors.themes.getGeneralTheme(state),
+    translationY: selectors.space.getTranslationY(state),
 });
 
 
