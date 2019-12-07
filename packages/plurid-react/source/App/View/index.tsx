@@ -83,6 +83,10 @@ import {
 } from '../../modules/services/utilities/pages';
 
 import {
+    registerPaths,
+} from '../../modules/services/utilities/paths';
+
+import {
     handleGlobalShortcuts,
     handleGlobalWheel,
 } from '../../modules/services/logic/shortcuts';
@@ -556,11 +560,14 @@ const View: React.FC<ViewProperties> = (properties) => {
             const indexedStatePages = createIndexed(statePages);
             const indexedContextPages = createIndexed(contextPages);
 
+            const paths = registerPaths(statePages);
+            const indexedPaths = createIndexed(paths);
+
             const document: PluridInternalStateDocument = {
                 id: 'default',
                 name: 'default',
                 pages: indexedStatePages,
-                paths: {},
+                paths: indexedPaths,
                 ordinal: 0,
                 active: true,
             };
