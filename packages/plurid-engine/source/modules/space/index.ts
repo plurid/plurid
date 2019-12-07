@@ -6,6 +6,7 @@ import {
     LocationCoordinates,
 
     PageParameter,
+    PathParameter,
 
     ROOTS_GAP,
     PLANE_DEFAULT_ANGLE,
@@ -516,17 +517,16 @@ export const updateTreeWithNewPage = (
             treePageParentPlaneID,
         );
 
-        // const computedPagePath = computePagePath(
-        //     pageAddress,
-        //     pagePath,
-        //     parameters,
-        // );
+        const extractedParameters = extractParameters(
+            pagePath,
+            parameters
+        );
 
         const planeID = uuid();
         const newTreePage: TreePage = {
             pageID,
             path: pagePath,
-            parameters: {},
+            parameters: extractedParameters,
             planeID,
             parentPlaneID: treePageParentPlaneID,
             location: {
@@ -605,6 +605,34 @@ export const togglePageFromTree = (
     return updatedTree;
 }
 
+
+
+export const extractParameters = (
+    pagePath: string,
+    parameters?: PageParameter[],
+) => {
+    if (!parameters) {
+        return {};
+    }
+
+    const re = /\/([^\/]+)/g;
+    const match = pagePath.match(re);
+    if (!match) {
+        return {};
+    }
+
+    const extractedParameters: PathParameter = {};
+
+    for (const [index, matched] of match.entries()) {
+        for (const definedParameters of parameters) {
+            if (definedParameters.index === index) {
+                extractedParameters[definedParameters.name] = matched;
+            }
+        }
+    }
+
+    return extractedParameters;
+}
 
 
 export const computePagePath = (
