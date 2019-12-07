@@ -16,6 +16,7 @@ import {
 
 import {
     PluridPage,
+    TreePage,
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
@@ -30,7 +31,7 @@ import selectors from '../../../../services/state/selectors';
 
 interface PlaneControlsOwnProperties {
     page: PluridPage;
-    [key: string]: any;
+    treePage: TreePage;
 }
 
 interface PlaneControlsStateProperties {
@@ -48,8 +49,11 @@ type PlaneControlsProperties = PlaneControlsOwnProperties
 
 const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
     const {
+        /** own */
         page,
+        treePage,
 
+        /** state */
         configuration,
         generalTheme,
         interactionTheme,
@@ -62,7 +66,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
         }
     }
 
-    const [path, setPath] = useState(basePath + page.path);
+    const [path, setPath] = useState(basePath + treePage.path);
 
     const onPathInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPath(event.target.value);

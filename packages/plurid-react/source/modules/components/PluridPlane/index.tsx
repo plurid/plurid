@@ -103,6 +103,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
             {planeControls && (
                 <PlaneControls
                     page={page}
+                    treePage={treePage}
                 />
             )}
 
