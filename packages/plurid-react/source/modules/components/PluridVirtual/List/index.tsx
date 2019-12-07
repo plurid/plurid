@@ -72,10 +72,10 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
         generalHeight,
     } = properties;
 
-    const _generalHeight = generalHeight || 50;
+    const _generalHeight = generalHeight || 100;
 
     const [start, setStart] = useState(0);
-    const [end, setEnd] = useState(Math.floor(1200 / _generalHeight));
+    const [end, setEnd] = useState(Math.floor(2000 / _generalHeight));
 
     const [elementHeight, setElementHeight] = useState(0);
 
