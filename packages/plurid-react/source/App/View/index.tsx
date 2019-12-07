@@ -77,6 +77,10 @@ import {
 } from '../../modules/services/utilities/documents';
 
 import {
+    registerPaths,
+} from '../../modules/services/utilities/paths';
+
+import {
     handleGlobalShortcuts,
     handleGlobalWheel,
 } from '../../modules/services/logic/shortcuts';
@@ -613,9 +617,11 @@ const View: React.FC<ViewProperties> = (properties) => {
             const activeDocumentID = findActiveDocument(stateDocuments);
             dispatchSetActiveDocument(activeDocumentID);
 
-            console.log('documents', documents);
-            console.log('stateDocuments', stateDocuments);
-            console.log('contextDocuments', contextDocuments);
+            const paths = registerPaths(indexedStateDocuments);
+            console.log('paths', paths);
+            // console.log('documents', documents);
+            // console.log('stateDocuments', stateDocuments);
+            // console.log('contextDocuments', contextDocuments);
         }
     }, [
         pages,
