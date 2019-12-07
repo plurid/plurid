@@ -123,31 +123,35 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
                 paths,
             } = activeDocument;
 
-            let pageID = '';
+            let pathData = null;
             for (const pathValue of Object.values(paths)) {
                 const re = new RegExp(pathValue.regex);
                 const match = pagePath.match(re);
 
                 if (match) {
-                    pageID = pathValue.pageID;
+                    pathData = {...pathValue};
+                    break;
                 }
             }
 
-            const {
-                pluridPlaneID,
-                updatedTree,
-            } = updateTreeWithNewPage(
-                tree,
-                parentPlaneID,
-                pagePath,
-                pageID,
-                linkCoordinates,
-            );
+            if (pathData) {
+                const {
+                    pluridPlaneID,
+                    updatedTree,
+                } = updateTreeWithNewPage(
+                    tree,
+                    parentPlaneID,
+                    pagePath,
+                    pathData.pageID,
+                    linkCoordinates,
+                    // pathData.parameters,
+                );
 
-            if (pluridPlaneID) {
-                setTree(updatedTree);
-                setShowLink(true);
-                setPluridPlaneID(pluridPlaneID);
+                if (pluridPlaneID) {
+                    setTree(updatedTree);
+                    setShowLink(true);
+                    setPluridPlaneID(pluridPlaneID);
+                }
             }
         } else {
             const updatedTree = togglePageFromTree(tree, pluridPlaneID);
