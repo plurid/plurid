@@ -3,62 +3,21 @@ import React, {
     useEffect,
     useState,
 } from 'react';
+import { AnyAction } from 'redux';
+import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
+import {
+    sumTo,
+} from '../../../services/utilities/math';
 
+import PluridVirtualListItem from './components/ListItem';
 
-const sumTo = (
-    values: number[],
-    index: number,
-) => {
-    if (index === 0 ) {
-        return 0;
-    }
+import { AppState } from '../../../services/state/store';
+import StateContext from '../../../services/state/context';
+import selectors from '../../../services/state/selectors';
+// import actions from '../../../services/state/actions';
 
-    const _values = values.slice(
-        0,
-        index,
-    );
-    return _values.reduce((total, val) => total + val);
-}
-
-
-interface VirtualListItemOwnProperties {
-    top: number;
-    index: number;
-    element: JSX.Element;
-    setHeight(value: number, index: number): void;
-}
-
-const VirtualListItem: React.FC<VirtualListItemOwnProperties> = (properties) => {
-    const {
-        top,
-        index,
-        element,
-        setHeight,
-    } = properties;
-
-    const el = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (el.current) {
-            setHeight(el.current.offsetHeight, index);
-        }
-    }, [
-        el.current,
-    ])
-
-    return (
-        <div
-            ref={el}
-            style={{
-                position: 'absolute',
-                top: top + 'px',
-            }}
-        >
-            {element}
-        </div>
-    );
-}
 
 
 interface PluridVirtualListOwnProperties {
@@ -66,7 +25,17 @@ interface PluridVirtualListOwnProperties {
     generalHeight?: number;
 }
 
-const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties) => {
+interface PluridVirtualListStateProperties {
+}
+
+interface PluridVirtualListDispatchProperties {
+}
+
+type PluridVirtualListProperties = PluridVirtualListOwnProperties
+    & PluridVirtualListStateProperties
+    & PluridVirtualListDispatchProperties;
+
+const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) => {
     const {
         items,
         generalHeight,
@@ -95,7 +64,7 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
         for (let i = start; i <= end; i++) {
             let item = items[i];
             rows.current.push(
-                <VirtualListItem
+                <PluridVirtualListItem
                     key={i + Math.random()}
                     index={i}
                     top={sumTo(heights.current, i)}
@@ -131,4 +100,25 @@ const PluridVirtualList: React.FC<PluridVirtualListOwnProperties> = (properties)
 }
 
 
-export default PluridVirtualList;
+const mapStateToProps = (
+    state: AppState,
+): PluridVirtualListStateProperties => ({
+    configuration: selectors.configuration.getConfiguration(state),
+    generalTheme: selectors.themes.getGeneralTheme(state),
+});
+
+
+const mapDispatchToProps = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): PluridVirtualListDispatchProperties => ({
+});
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {
+        context: StateContext,
+    },
+)(PluridVirtualList);
