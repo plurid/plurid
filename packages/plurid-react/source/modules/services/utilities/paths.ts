@@ -8,7 +8,12 @@ import {
 interface Path {
     document: string;
     address: string;
-    parameters?: string[];
+    parameters?: Parameter[];
+}
+
+interface Parameter {
+    name: string;
+    index: number;
 }
 
 export const registerPaths = (
@@ -35,32 +40,29 @@ export const registerPaths = (
 
 const checkPathForParameters = (
     path: string,
-): string[] | undefined => {
-    const splitPath = path.split('');
+): Parameter[] | undefined => {
+    const re = /\/([^\/]+)/g;
+    const match = path.match(re);
 
-    let settingParamater = false;
-    let parameter = '';
-    let parameters: string[] = [];
-    for (const [index, char] of splitPath.entries()) {
-        if (char === ':') {
-            if (splitPath[index - 1] && splitPath[index - 1] === '/') {
-                settingParamater = true;
-                continue;
+    if (!match) {
+        return undefined;
+    }
+
+    const parameters: Parameter[] = [];
+
+    for (const [index, subpath] of match.entries()) {
+        if (
+            subpath[0] === '/'
+            && subpath[1] === ':'
+        ) {
+            const name = subpath.slice(2,);
+            const parameter = {
+                name,
+                index,
             }
-        }
-
-        if (settingParamater && char !== '/') {
-            parameter += char;
-            continue;
-        }
-
-        if (settingParamater && char === '/') {
             parameters.push(parameter);
-        }
-
-        if (char === '/') {
-            settingParamater = false;
-            parameter = '';
+            console.log(subpath);
+            console.log(parameter);
         }
     }
 
@@ -69,4 +71,34 @@ const checkPathForParameters = (
     }
 
     return undefined;
+
+
+    /** PARSING VERSION */
+    // const splitPath = path.split('');
+
+    // let settingParamater = false;
+    // let parameter = '';
+    // let parameters: string[] = [];
+    // for (const [index, char] of splitPath.entries()) {
+    //     if (char === ':') {
+    //         if (splitPath[index - 1] && splitPath[index - 1] === '/') {
+    //             settingParamater = true;
+    //             continue;
+    //         }
+    //     }
+
+    //     if (settingParamater && char !== '/') {
+    //         parameter += char;
+    //     }
+
+    //     if (settingParamater
+    //         && (char === '/' || typeof splitPath[index + 1] === 'undefined')) {
+    //         parameters.push(parameter);
+    //     }
+
+    //     if (char === '/') {
+    //         settingParamater = false;
+    //         parameter = '';
+    //     }
+    // }
 }
