@@ -8,6 +8,7 @@ import {
 interface Path {
     document: string;
     address: string;
+    regex: string;
     parameters?: Parameter[];
 }
 
@@ -23,12 +24,13 @@ export const registerPaths = (
 
     for (let document of Object.values(indexedDocuments)) {
         for (let page of Object.values(document.pages)) {
-            const parameters = checkPathForParameters(page.path);
+            const handledPath = handlePath(page.path);
 
             const path: Path = {
                 document: document.id,
                 address: page.path,
-                parameters,
+                regex: handledPath.regex,
+                parameters: handledPath.parameters,
             };
             paths.push(path);
         }
@@ -38,22 +40,30 @@ export const registerPaths = (
 }
 
 
-const checkPathForParameters = (
+interface PathHandler {
+    regex: string;
+    parameters?: Parameter[];
+}
+
+const handlePath = (
     path: string,
-): Parameter[] | undefined => {
+): PathHandler => {
     const re = /\/([^\/]+)/g;
     const match = path.match(re);
 
     if (!match) {
-        return undefined;
+        return {
+            regex: path,
+        };
     }
+
+    const composedRegex = composePathRegex(match);
 
     const parameters: Parameter[] = [];
 
     for (const [index, subpath] of match.entries()) {
         if (
-            subpath[0] === '/'
-            && subpath[1] === ':'
+            subpathIsParameter(subpath)
         ) {
             const name = subpath.slice(2,);
             const parameter = {
@@ -61,16 +71,13 @@ const checkPathForParameters = (
                 index,
             }
             parameters.push(parameter);
-            console.log(subpath);
-            console.log(parameter);
         }
     }
 
-    if (parameters.length > 0) {
-        return parameters;
-    }
-
-    return undefined;
+    return {
+        regex: composedRegex,
+        parameters: parameters.length > 0 ? parameters : undefined,
+    };
 
 
     /** PARSING VERSION */
@@ -101,4 +108,26 @@ const checkPathForParameters = (
     //         parameter = '';
     //     }
     // }
+}
+
+
+export const composePathRegex = (
+    match: RegExpMatchArray,
+) => {
+    let reString = '';
+
+    for (const matched of match) {
+        if (!subpathIsParameter(matched)) {
+            reString += matched.replace('/', '\\/');
+        } else {
+            reString += '\\/([^\\/]+)';
+        }
+    }
+
+    return reString;
+}
+
+
+export const subpathIsParameter = (subpath: string) => {
+    return subpath[0] === '/' && subpath[1] === ':';
 }
