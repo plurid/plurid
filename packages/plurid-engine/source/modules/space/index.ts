@@ -499,6 +499,8 @@ export const updateTreeWithNewPage = (
     pageID: string,
     linkCoordinates: any,
 ): UpdatedTreeWithNewPage => {
+    // to receive parameters and composePath from pagePath and parameters
+
     const treePageParent = getTreePageByPlaneID(tree, treePageParentPlaneID);
     // console.log('tree page parent', treePageParent);
 
