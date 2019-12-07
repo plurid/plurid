@@ -5,6 +5,8 @@ import {
     SpaceLocation,
     LocationCoordinates,
 
+    PageParameter,
+
     ROOTS_GAP,
     PLANE_DEFAULT_ANGLE,
 } from '@plurid/plurid-data';
@@ -496,8 +498,10 @@ export const updateTreeWithNewPage = (
     tree: TreePage[],
     treePageParentPlaneID: string,
     pagePath: string,
+    pageAddress: string,
     pageID: string,
     linkCoordinates: any,
+    parameters?: PageParameter[],
 ): UpdatedTreeWithNewPage => {
     // to receive parameters and composePath from pagePath and parameters
 
@@ -511,6 +515,12 @@ export const updateTreeWithNewPage = (
             treePageParent,
             treePageParentPlaneID,
         );
+
+        // const computedPagePath = computePagePath(
+        //     pageAddress,
+        //     pagePath,
+        //     parameters,
+        // );
 
         const planeID = uuid();
         const newTreePage: TreePage = {
@@ -592,4 +602,24 @@ export const togglePageFromTree = (
     }
 
     return updatedTree;
+}
+
+
+
+export const computePagePath = (
+    pageAddress: string,
+    pagePath: string,
+    parameters?: PageParameter[],
+) => {
+    if (!parameters) {
+        return pageAddress;
+    }
+
+    let path = pageAddress;
+
+    for (const parameter of parameters) {
+        path = path.replace(`/:${parameter}`, '/asd');
+    }
+
+    return path;
 }
