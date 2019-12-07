@@ -22,11 +22,11 @@ const Page1 = () => {
             <input />
 
             <div>
-                <PluridLink page="/page-2">link to page 2</PluridLink>
+                <PluridLink page="/page-2/soo/loo">link to page 2</PluridLink>
             </div>
 
             <div style={{ marginLeft: 250, marginTop: 70}}>
-                <PluridLink page="/page-2">link to page 2</PluridLink>
+                <PluridLink page="/page-3">link to page 3</PluridLink>
             </div>
 
             {
