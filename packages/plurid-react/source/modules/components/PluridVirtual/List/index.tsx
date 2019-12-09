@@ -60,11 +60,11 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
     const listElement = useRef<HTMLDivElement>(null);
 
     const rows = useRef<any[]>([]);
-    const heights = useRef<number[]>(Array(items.length).fill(0));
+    const heights = useRef<number[]>(Array(items.length).fill(_generalHeight));
 
     const [start, setStart] = useState(0);
-    const [end, setEnd] = useState(Math.floor(2000 / _generalHeight));
-    const [elementHeight, setElementHeight] = useState(10000);
+    const [end, setEnd] = useState(Math.floor(1000 / _generalHeight));
+    const [elementHeight, setElementHeight] = useState(_generalHeight * (end - start));
 
     const [resizing, setResizing] = useState(false);
 
