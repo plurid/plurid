@@ -77,7 +77,6 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
 
     const renderRows = () => {
         rows.current = [];
-        // console.log('RENDERED', start, end);
 
         for (let i = start; i <= end; i++) {
             let item = items[i];
@@ -123,13 +122,6 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
             } else {
                 setStart(0);
                 setEnd(10);
-
-                // if (
-                //     sum > translationY + viewSize.height
-                //     && sum < translationY + viewSize.height + 400
-                // ) {
-                //     setEnd(index);
-                // }
             }
         }
     }, [
@@ -149,8 +141,6 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
     }, [
         viewSize,
     ]);
-
-    console.log(heights.current);
 
     return (
         <div
