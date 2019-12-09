@@ -14,7 +14,7 @@ const renderData = () => {
             <div
                 key={i}
                 style={{
-                    background: i % 2 == 0 ? 'slateblue' : 'slategray',
+                    background: i % 2 === 0 ? 'slateblue' : 'slategray',
                     padding: '2rem',
                 }}
             >
