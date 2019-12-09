@@ -22,7 +22,7 @@ const App = () => {
             // showTransformOrigin: false,
         },
         // micro: true,
-        // planeWidth: 0.5,
+        planeWidth: 0.5,
         // viewcube: false,
         // toolbar: false,
         // planeControls: false,
