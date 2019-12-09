@@ -72,13 +72,12 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
         value: number,
         index: number,
     ) => {
-        console.log('set height for', value, index);
         heights.current[index] = value;
     }
 
     const renderRows = () => {
         rows.current = [];
-        console.log('RENDERED', start, end);
+        // console.log('RENDERED', start, end);
 
         for (let i = start; i <= end; i++) {
             let item = items[i];
@@ -110,15 +109,27 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
         let sum = 0;
         for (let [index, value] of heights.current.entries()) {
             sum += value;
-            if (sum < Math.abs(translationY)) {
-                setStart(index);
-            }
+            if (translationY < 0) {
+                if (sum < Math.abs(translationY)) {
+                    setStart(index);
+                }
 
-            if (
-                sum > Math.abs(translationY) + viewSize.height
-                && sum < Math.abs(translationY) + viewSize.height + 400
-            ) {
-                setEnd(index);
+                if (
+                    sum > Math.abs(translationY) + viewSize.height
+                    && sum < Math.abs(translationY) + viewSize.height + 400
+                ) {
+                    setEnd(index);
+                }
+            } else {
+                setStart(0);
+                setEnd(10);
+
+                // if (
+                //     sum > translationY + viewSize.height
+                //     && sum < translationY + viewSize.height + 400
+                // ) {
+                //     setEnd(index);
+                // }
             }
         }
     }, [
@@ -130,14 +141,16 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
         setResizing(true);
 
         setTimeout(() => {
-            // const elementHeight = sumTo(heights.current, heights.current.length);
-            // setElementHeight(elementHeight);
+            const elementHeight = sumTo(heights.current, heights.current.length);
+            setElementHeight(elementHeight);
 
             setResizing(false);
         }, 400);
     }, [
         viewSize,
     ]);
+
+    console.log(heights.current);
 
     return (
         <div
