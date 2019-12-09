@@ -8,6 +8,10 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
+    PluridSpinner,
+} from '@plurid/plurid-ui-react';
+
+import {
     sumTo,
 } from '../../../services/utilities/math';
 
@@ -149,7 +153,8 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
         >
             {resizing && (
                 <>
-                    resizing
+                    <PluridSpinner
+                    />
                 </>
             )}
             {!resizing && (
