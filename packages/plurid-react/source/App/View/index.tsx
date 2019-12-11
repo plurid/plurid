@@ -336,6 +336,12 @@ const View: React.FC<ViewProperties> = (properties) => {
             direction,
         } = event;
 
+        if (
+            !(rotationLocked || translationLocked || scaleLocked)
+        ) {
+            return;
+        }
+
         dispatchSetAnimatedTransform(true);
         switch (direction) {
             case 2:
@@ -400,6 +406,12 @@ const View: React.FC<ViewProperties> = (properties) => {
             distance,
             direction,
         } = event;
+
+        if (
+            !(rotationLocked || translationLocked || scaleLocked)
+        ) {
+            return;
+        }
 
         switch (direction) {
             case 2:
