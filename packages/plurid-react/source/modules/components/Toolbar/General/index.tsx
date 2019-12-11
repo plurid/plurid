@@ -130,26 +130,24 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     } = properties;
 
     const {
-        ui,
-    } = configuration;
-
-    const {
         toolbar,
-    } = ui;
+    } = configuration.elements;
 
     const {
-        hide,
-        alwaysShowIcons,
-        alwaysShowTransformButtons,
+        // hide,
+        transformIcons,
+        transformButtons,
     } = toolbar;
+
+    const showToolbar = true;
 
     const documentsBased = Object.keys(documents).length > 1;
 
     const [mouseIn, setMouseIn] = useState(false);
     const [showMenu, setShowMenu] = useState(MENUS.NONE);
 
-    const [showIcons, setShowIcons] = useState(alwaysShowIcons);
-    const [showTransformButtons, setShowTransformButtons] = useState(alwaysShowTransformButtons);
+    const [showIcons, setShowIcons] = useState(transformIcons);
+    const [showTransformButtons, setShowTransformButtons] = useState(transformButtons);
 
     const toggleTransform = (
         type: string,
@@ -170,13 +168,13 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     /** ViewSize Update */
     useEffect(() => {
         if (viewSize.width < VIEW_SIZE_WIDTH_LIMIT) {
-            if (alwaysShowTransformButtons) {
+            if (transformButtons) {
                 setShowTransformButtons(false);
             }
         }
 
         if (viewSize.width > VIEW_SIZE_WIDTH_LIMIT) {
-            setShowTransformButtons(alwaysShowTransformButtons);
+            setShowTransformButtons(transformButtons);
         }
     }, [
         viewSize.width,
@@ -184,11 +182,11 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     /** Local State Update */
     useEffect(() => {
-        setShowIcons(alwaysShowIcons);
-        setShowTransformButtons(alwaysShowTransformButtons);
+        setShowIcons(transformIcons);
+        setShowTransformButtons(transformButtons);
     }, [
-        alwaysShowIcons,
-        alwaysShowTransformButtons,
+        transformIcons,
+        transformButtons,
     ]);
 
     /** Hide Menu at Mouse Out */
@@ -211,7 +209,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             onMouseEnter={() => setMouseIn(true)}
             onMouseLeave={() => setMouseIn(false)}
             mouseIn={mouseIn}
-            hideToolbar={hide}
+            hideToolbar={!showToolbar}
             showMenu={showMenu}
         >
             <StyledToolbarButtons
