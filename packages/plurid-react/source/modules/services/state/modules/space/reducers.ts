@@ -98,7 +98,7 @@ const initialState: SpaceState = {
         z: 0,
     },
     showTransformOrigin: true,
-    transformOriginSize: 'normal',
+    transformOriginSize: 'NORMAL',
 };
 
 const spaceReducer = (
