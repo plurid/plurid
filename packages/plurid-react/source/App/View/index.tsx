@@ -12,23 +12,17 @@ import Hammer from 'hammerjs';
 
 import {
     /** constants */
-    defaultConfiguration,
 
     /** enumerations */
-    SIZES,
     TRANSFORM_TOUCHES,
 
     /** interfaces */
     PluridApp as PluridAppProperties,
     PluridConfiguration as PluridAppConfiguration,
     Indexed,
-    // PluridDocument,
-    // PluridPage,
     PluridContext,
     TreePage,
-    // PluridInternalStatePage,
     PluridInternalStateDocument,
-    // PluridInternalContextPage,
     PluridInternalContextDocument,
 } from '@plurid/plurid-data';
 
@@ -125,7 +119,6 @@ interface ViewDispatchProperties {
 
     dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
     dispatchSetMicro: typeof actions.configuration.setMicro;
-    dispatchSetConfigurationPlaneControls: typeof actions.configuration.setConfigurationPlaneControls;
 
     dispatchSetDocuments: typeof actions.data.setDocuments;
     dispatchSetViewSize: typeof actions.data.setViewSize;
@@ -146,9 +139,6 @@ interface ViewDispatchProperties {
     scaleDownWith: typeof actions.space.scaleDownWith;
 
     dispatchSetActiveDocument: typeof actions.space.setActiveDocument;
-
-    dispatchToggleShowTransformOrigin: typeof actions.space.toggleShowTransformOrigin;
-    dispatchSetTransformOriginSize: typeof actions.space.setTransformOriginSize;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -184,7 +174,6 @@ const View: React.FC<ViewProperties> = (properties) => {
 
         dispatchSetConfiguration,
         dispatchSetMicro,
-        dispatchSetConfigurationPlaneControls,
 
         dispatchSetDocuments,
         dispatchSetViewSize,
@@ -205,9 +194,6 @@ const View: React.FC<ViewProperties> = (properties) => {
         scaleDownWith,
 
         dispatchSetActiveDocument,
-
-        dispatchToggleShowTransformOrigin,
-        dispatchSetTransformOriginSize,
     } = properties;
 
     const {
@@ -337,6 +323,8 @@ const View: React.FC<ViewProperties> = (properties) => {
             direction,
         } = event;
 
+        console.log('handleSwipe');
+
         if (
             !(rotationLocked || translationLocked || scaleLocked)
         ) {
@@ -408,6 +396,8 @@ const View: React.FC<ViewProperties> = (properties) => {
             direction,
         } = event;
 
+        console.log('handlePan');
+
         if (
             !(rotationLocked || translationLocked || scaleLocked)
         ) {
@@ -418,7 +408,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             case 2:
                 /** right */
                 if (rotationLocked) {
-                    rotateYWith(velocity * 60);
+                    rotateYWith(velocity * 20);
                 }
 
                 if (translationLocked) {
@@ -428,7 +418,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             case 4:
                 /** left */
                 if (rotationLocked) {
-                    rotateYWith(velocity * 60);
+                    rotateYWith(velocity * 20);
                 }
 
                 if (translationLocked) {
@@ -438,7 +428,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             case 8:
                 /** top */
                 if (rotationLocked) {
-                    rotateXWith(velocity * 60);
+                    rotateXWith(velocity * 20);
                 }
 
                 if (translationLocked) {
@@ -452,7 +442,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             case 16:
                 /** down */
                 if (rotationLocked) {
-                    rotateXWith(velocity * 60);
+                    rotateXWith(velocity * 20);
                 }
 
                 if (translationLocked) {
@@ -702,6 +692,8 @@ const View: React.FC<ViewProperties> = (properties) => {
             transformTouch,
         } = stateConfiguration.space;
 
+        console.log('transformTouch', transformTouch);
+
         /**
          * Remove Hammerjs default css properties to add them only when in Lock Mode.
          * https://stackoverflow.com/a/37896547
@@ -709,6 +701,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         delete Hammer.defaults.cssProps.userSelect;
         delete Hammer.defaults.cssProps.userDrag;
         delete Hammer.defaults.cssProps.tapHighlightColor;
+
         const touch = new Hammer((viewElement as any).current);
         touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
         touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
@@ -720,15 +713,18 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
 
         return () => {
-            touch.off('swipe', handleSwipe);
-            touch.off('pan', handlePan);
+            if (transformTouch === TRANSFORM_TOUCHES.SWIPE) {
+                touch.off('swipe', handleSwipe);
+            } else {
+                touch.off('pan', handlePan);
+            }
         }
     }, [
         viewElement.current,
         rotationLocked,
         translationLocked,
         scaleLocked,
-        stateConfiguration,
+        // stateConfiguration,
     ]);
 
     const viewContainer = handleView(pages, documents);
@@ -792,9 +788,6 @@ const mapDispatchToProperties = (
     dispatchSetMicro: () => dispatch(
         actions.configuration.setMicro()
     ),
-    dispatchSetConfigurationPlaneControls: (value: boolean) => dispatch(
-        actions.configuration.setConfigurationPlaneControls(value)
-    ),
 
     dispatchSetDocuments: (documents: any) => dispatch(
         actions.data.setDocuments(documents)
@@ -844,13 +837,6 @@ const mapDispatchToProperties = (
 
     dispatchSetActiveDocument: (activeDocument: string) => dispatch(
         actions.space.setActiveDocument(activeDocument)
-    ),
-
-    dispatchToggleShowTransformOrigin: () => dispatch(
-        actions.space.toggleShowTransformOrigin()
-    ),
-    dispatchSetTransformOriginSize: (size: keyof typeof SIZES) => dispatch(
-        actions.space.setTransformOriginSize(size)
     ),
 });
 
