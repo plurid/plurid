@@ -37,6 +37,11 @@ const mergeConfiguration = (
         elements: {
             ...defaultConfiguration.elements,
             toolbar: {
+                show: configuration.elements
+                    && configuration.elements.toolbar
+                    && typeof configuration.elements.toolbar.show === 'boolean'
+                        ? configuration.elements.toolbar.show
+                        : defaultConfiguration.elements.toolbar.show,
                 opaque: configuration.elements
                     && configuration.elements.toolbar
                     && typeof configuration.elements.toolbar.opaque === 'boolean'

@@ -134,12 +134,10 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     } = configuration.elements;
 
     const {
-        // hide,
+        show: showToolbar,
         transformIcons,
         transformButtons,
     } = toolbar;
-
-    const showToolbar = true;
 
     const documentsBased = Object.keys(documents).length > 1;
 

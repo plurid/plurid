@@ -109,11 +109,6 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     const selectedTheme = configuration.theme;
 
     const {
-        // theme: selectedTheme,
-        // ui,
-        // viewcube: showViewcube,
-        // planeOpacity,
-
         viewcube,
         toolbar,
         plane,
@@ -121,23 +116,12 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
     const showViewcube = viewcube.show;
     const planeOpacity = plane.opacity;
-    const showToolbar = true;
 
     const {
+        show: showToolbar,
         transformIcons,
         transformButtons,
     } = toolbar;
-
-    // const {
-    //     toolbar,
-    //     viewcube,
-    // } = ui;
-
-    // const {
-    //     hide,
-    //     transformIcons,
-    //     transformButtons,
-    // } = toolbar;
 
     const [viewSizeSmall, setViewSizeSmall] = useState(false);
 
