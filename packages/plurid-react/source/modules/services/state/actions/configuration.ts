@@ -1,6 +1,6 @@
 import {
     setConfiguration,
-    setMicro,
+    setConfigurationMicro,
     setConfigurationPlaneControls,
     setConfigurationPlaneOpacity,
 
@@ -19,7 +19,7 @@ import {
 
 export default {
     setConfiguration,
-    setMicro,
+    setConfigurationMicro,
     setConfigurationPlaneControls,
     setConfigurationPlaneOpacity,
 
