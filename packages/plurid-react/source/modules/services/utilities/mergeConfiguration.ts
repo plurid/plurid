@@ -149,7 +149,54 @@ const mergeConfiguration = (
                     && typeof configuration.space.transformOrigin.size === 'string'
                         ? configuration.space.transformOrigin.size
                         : defaultConfiguration.space.transformOrigin.size,
-            }
+            },
+            transformLocks: {
+                rotationX: configuration.space
+                    && configuration.space.transformLocks
+                    && typeof configuration.space.transformLocks.rotationX === 'boolean'
+                        ? configuration.space.transformLocks.rotationX
+                        : defaultConfiguration.space.transformLocks.rotationX,
+                rotationY: configuration.space
+                    && configuration.space.transformLocks
+                    && typeof configuration.space.transformLocks.rotationY === 'boolean'
+                        ? configuration.space.transformLocks.rotationY
+                        : defaultConfiguration.space.transformLocks.rotationY,
+                translationX: configuration.space
+                    && configuration.space.transformLocks
+                    && typeof configuration.space.transformLocks.translationX === 'boolean'
+                        ? configuration.space.transformLocks.translationX
+                        : defaultConfiguration.space.transformLocks.translationX,
+                translationY: configuration.space
+                    && configuration.space.transformLocks
+                    && typeof configuration.space.transformLocks.translationY === 'boolean'
+                        ? configuration.space.transformLocks.translationY
+                        : defaultConfiguration.space.transformLocks.translationY,
+                translationZ: configuration.space
+                    && configuration.space.transformLocks
+                    && typeof configuration.space.transformLocks.translationZ === 'boolean'
+                        ? configuration.space.transformLocks.translationZ
+                        : defaultConfiguration.space.transformLocks.translationZ,
+                scale: configuration.space
+                    && configuration.space.transformLocks
+                    && typeof configuration.space.transformLocks.scale === 'boolean'
+                        ? configuration.space.transformLocks.scale
+                        : defaultConfiguration.space.transformLocks.scale,
+            },
+            transformMode: configuration.space
+                && configuration.space.transformMode
+                && typeof configuration.space.transformMode === 'string'
+                    ? configuration.space.transformMode
+                    : defaultConfiguration.space.transformMode,
+            transformTouch: configuration.space
+                && configuration.space.transformTouch
+                && typeof configuration.space.transformTouch === 'string'
+                    ? configuration.space.transformTouch
+                    : defaultConfiguration.space.transformTouch,
+            firstPerson: configuration.space
+                && configuration.space.firstPerson
+                && typeof configuration.space.firstPerson === 'boolean'
+                    ? configuration.space.firstPerson
+                    : defaultConfiguration.space.firstPerson,
         },
     };
 
