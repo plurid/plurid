@@ -64,9 +64,16 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
     } = properties;
 
     const {
+        elements,
+    } = configuration;
+
+    const {
         viewcube,
-    } = configuration.elements;
-    const opaqueViewcube = viewcube.opaque;
+    } = elements;
+
+    const {
+        opaque: opaqueViewcube,
+    } = viewcube;
 
     const [mouseOver, setMouseOver] = useState(false);
 
