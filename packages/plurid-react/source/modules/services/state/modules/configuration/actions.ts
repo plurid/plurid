@@ -1,5 +1,7 @@
 import {
     PluridConfiguration,
+
+    SIZES,
 } from '@plurid/plurid-data';
 
 import {
@@ -30,6 +32,11 @@ import {
     ToggleConfigurationToolbarTransformIconsAction,
     TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
     ToggleConfigurationToolbarTransformButtonsAction,
+
+    TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
+    ToggleConfigurationSpaceShowTransformOriginAction,
+    SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
+    SetConfigurationSpaceTransformOriginSizeAction,
 } from './types';
 
 
@@ -126,5 +133,22 @@ export const toggleConfigurationToolbarTransformIcons = (): ToggleConfigurationT
 export const toggleConfigurationToolbarTransformButtons = (): ToggleConfigurationToolbarTransformButtonsAction => {
     return {
         type: TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
+    };
+}
+
+
+export const toggleConfigurationSpaceShowTransformOrigin = (): ToggleConfigurationSpaceShowTransformOriginAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
+    };
+}
+
+
+export const setConfigurationSpaceTransformOriginSize = (
+    size: keyof typeof SIZES,
+): SetConfigurationSpaceTransformOriginSizeAction => {
+    return {
+        type: SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
+        payload: size,
     };
 }

@@ -1,5 +1,7 @@
 import {
     PluridConfiguration,
+
+    SIZES,
 } from '@plurid/plurid-data';
 
 
@@ -77,6 +79,20 @@ export interface ToggleConfigurationToolbarTransformButtonsAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN = 'TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN';
+export interface ToggleConfigurationSpaceShowTransformOriginAction {
+    type: typeof TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN;
+}
+
+
+export const SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE = 'SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE';
+export interface SetConfigurationSpaceTransformOriginSizeAction {
+    type: typeof SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE;
+    payload: keyof typeof SIZES;
+}
+
+
+
 export interface ConfigurationState extends PluridConfiguration {
 }
 
@@ -91,4 +107,6 @@ export type ConfigurationActionsType = SetConfigurationAction
     | ToggleConfigurationViewcubeOpaqueAction
     | ToggleConfigurationToolbarConcealAction
     | ToggleConfigurationToolbarTransformIconsAction
-    | ToggleConfigurationToolbarTransformButtonsAction;
+    | ToggleConfigurationToolbarTransformButtonsAction
+    | ToggleConfigurationSpaceShowTransformOriginAction
+    | SetConfigurationSpaceTransformOriginSizeAction;

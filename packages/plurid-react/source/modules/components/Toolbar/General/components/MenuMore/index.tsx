@@ -69,8 +69,8 @@ interface MoreMenuDispatchProperties {
     dispatchToggleConfigurationToolbarTransformIcons: typeof actions.configuration.toggleConfigurationToolbarTransformIcons;
     dispatchToggleConfigurationToolbarTransformButtons: typeof actions.configuration.toggleConfigurationToolbarTransformButtons;
 
-    dispatchToggleShowTransformOrigin: typeof actions.space.toggleShowTransformOrigin;
-    dispatchSetTransformOriginSize: typeof actions.space.setTransformOriginSize;
+    dispatchToggleConfigurationSpaceShowTransformOrigin: typeof actions.configuration.toggleConfigurationSpaceShowTransformOrigin;
+    dispatchSetConfigurationSpaceTransformOriginSize: typeof actions.configuration.setConfigurationSpaceTransformOriginSize;
 }
 
 type MoreMenuProperties = MoreMenuOwnProperties
@@ -102,8 +102,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchToggleConfigurationToolbarTransformIcons,
         dispatchToggleConfigurationToolbarTransformButtons,
 
-        dispatchToggleShowTransformOrigin,
-        dispatchSetTransformOriginSize,
+        dispatchToggleConfigurationSpaceShowTransformOrigin,
+        dispatchSetConfigurationSpaceTransformOriginSize,
     } = properties;
 
     const selectedTheme = configuration.theme;
@@ -250,7 +250,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         checked={!showTransformOrigin}
-                        atChange={() => dispatchToggleShowTransformOrigin()}
+                        atChange={() => dispatchToggleConfigurationSpaceShowTransformOrigin()}
                         exclusive={true}
                         level={2}
                         theme={interactionTheme}
@@ -263,7 +263,16 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridDropdown
                         selectables={['small', 'normal', 'large']}
                         selected={transformOriginSize}
-                        atSelect={(selection: any) => dispatchSetTransformOriginSize(selection)}
+                        atSelect={(selection: any) => {
+                            const selected = selection.toUpperCase();
+                            if (
+                                selected === SIZES.SMALL
+                                || selected === SIZES.NORMAL
+                                || selected === SIZES.LARGE
+                            ) {
+                                dispatchSetConfigurationSpaceTransformOriginSize(selected);
+                            }
+                        }}
                         heightItems={3}
                         theme={interactionTheme}
                     />
@@ -506,11 +515,11 @@ const mapDispatchToProps = (
         actions.configuration.toggleConfigurationToolbarTransformButtons()
     ),
 
-    dispatchToggleShowTransformOrigin: () => dispatch(
-        actions.space.toggleShowTransformOrigin()
+    dispatchToggleConfigurationSpaceShowTransformOrigin: () => dispatch(
+        actions.configuration.toggleConfigurationSpaceShowTransformOrigin()
     ),
-    dispatchSetTransformOriginSize: (size: keyof typeof SIZES) => dispatch(
-        actions.space.setTransformOriginSize(size)
+    dispatchSetConfigurationSpaceTransformOriginSize: (size: keyof typeof SIZES) => dispatch(
+        actions.configuration.setConfigurationSpaceTransformOriginSize(size)
     ),
 });
 
