@@ -8,11 +8,11 @@ import {
     setConfigurationThemeInteractionAction,
 
     toggleConfigurationViewcubeHide,
-    toggleConfigurationUIViewcubeTransparent,
+    toggleConfigurationViewcubeOpaque,
 
-    toggleUIToolbarHideAction,
-    toggleUIToolbarAlwaysShowIconsAction,
-    toggleUIToolbarAlwaysTransformButtonsAction,
+    toggleConfigurationToolbarConceal,
+    toggleConfigurationToolbarTransformIcons,
+    toggleConfigurationToolbarTransformButtons,
 } from '../modules/configuration/actions';
 
 
@@ -27,9 +27,9 @@ export default {
     setConfigurationThemeInteractionAction,
 
     toggleConfigurationViewcubeHide,
-    toggleConfigurationUIViewcubeTransparent,
+    toggleConfigurationViewcubeOpaque,
 
-    toggleUIToolbarHideAction,
-    toggleUIToolbarAlwaysShowIconsAction,
-    toggleUIToolbarAlwaysTransformButtonsAction,
+    toggleConfigurationToolbarConceal,
+    toggleConfigurationToolbarTransformIcons,
+    toggleConfigurationToolbarTransformButtons,
 };

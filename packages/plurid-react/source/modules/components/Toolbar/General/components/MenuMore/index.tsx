@@ -63,11 +63,11 @@ interface MoreMenuDispatchProperties {
     dispatchSetConfigurationPlaneOpacity: typeof actions.configuration.setConfigurationPlaneOpacity;
 
     dispatchToggleConfigurationViewcubeHide: typeof actions.configuration.toggleConfigurationViewcubeHide;
-    dispatchToggleConfigurationUIViewcubeTransparent: typeof actions.configuration.toggleConfigurationUIViewcubeTransparent;
+    dispatchToggleConfigurationViewcubeOpaque: typeof actions.configuration.toggleConfigurationViewcubeOpaque;
 
-    dispatchToggleUIToolbarHideAction: typeof actions.configuration.toggleUIToolbarHideAction;
-    dispatchToggleUIToolbarAlwaysShowIconsAction: typeof actions.configuration.toggleUIToolbarAlwaysShowIconsAction;
-    dispatchToggleUIToolbarAlwaysTransformButtonsAction: typeof actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction;
+    dispatchToggleConfigurationToolbarConceal: typeof actions.configuration.toggleConfigurationToolbarConceal;
+    dispatchToggleConfigurationToolbarTransformIcons: typeof actions.configuration.toggleConfigurationToolbarTransformIcons;
+    dispatchToggleConfigurationToolbarTransformButtons: typeof actions.configuration.toggleConfigurationToolbarTransformButtons;
 
     dispatchToggleShowTransformOrigin: typeof actions.space.toggleShowTransformOrigin;
     dispatchSetTransformOriginSize: typeof actions.space.setTransformOriginSize;
@@ -96,11 +96,11 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchSetConfigurationPlaneOpacity,
 
         dispatchToggleConfigurationViewcubeHide,
-        dispatchToggleConfigurationUIViewcubeTransparent,
+        dispatchToggleConfigurationViewcubeOpaque,
 
-        dispatchToggleUIToolbarHideAction,
-        dispatchToggleUIToolbarAlwaysShowIconsAction,
-        dispatchToggleUIToolbarAlwaysTransformButtonsAction,
+        dispatchToggleConfigurationToolbarConceal,
+        dispatchToggleConfigurationToolbarTransformIcons,
+        dispatchToggleConfigurationToolbarTransformButtons,
 
         dispatchToggleShowTransformOrigin,
         dispatchSetTransformOriginSize,
@@ -303,7 +303,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridSwitch
                         theme={interactionTheme}
                         checked={viewcube.opaque}
-                        atChange={() => dispatchToggleConfigurationUIViewcubeTransparent(viewcube.opaque)}
+                        atChange={() => dispatchToggleConfigurationViewcubeOpaque(viewcube.opaque)}
                         exclusive={true}
                         level={2}
                     />
@@ -317,7 +317,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridSwitch
                         theme={interactionTheme}
                         checked={transformIcons}
-                        atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
+                        atChange={() => dispatchToggleConfigurationToolbarTransformIcons()}
                         exclusive={true}
                         level={2}
                     />
@@ -332,7 +332,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         <PluridSwitch
                             theme={interactionTheme}
                             checked={transformButtons}
-                            atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
+                            atChange={() => dispatchToggleConfigurationToolbarTransformButtons()}
                             exclusive={true}
                             level={2}
                         />
@@ -347,7 +347,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridSwitch
                         theme={interactionTheme}
                         checked={showToolbar}
-                        atChange={() => dispatchToggleUIToolbarHideAction()}
+                        atChange={() => dispatchToggleConfigurationToolbarConceal()}
                         exclusive={true}
                         level={2}
                     />
@@ -371,7 +371,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridSwitch
                         theme={interactionTheme}
                         checked={viewcube.opaque}
-                        atChange={() => dispatchToggleConfigurationUIViewcubeTransparent(viewcube.opaque)}
+                        atChange={() => dispatchToggleConfigurationViewcubeOpaque(viewcube.opaque)}
                         exclusive={true}
                         level={2}
                     />
@@ -385,7 +385,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     <PluridSwitch
                         theme={interactionTheme}
                         checked={showToolbar}
-                        atChange={() => dispatchToggleUIToolbarHideAction()}
+                        atChange={() => dispatchToggleConfigurationToolbarConceal()}
                         exclusive={true}
                         level={2}
                     />
@@ -492,18 +492,18 @@ const mapDispatchToProps = (
     dispatchToggleConfigurationViewcubeHide: (toggle: boolean) => dispatch(
         actions.configuration.toggleConfigurationViewcubeHide(toggle)
     ),
-    dispatchToggleConfigurationUIViewcubeTransparent: (toggle: boolean) => dispatch(
-        actions.configuration.toggleConfigurationUIViewcubeTransparent(toggle)
+    dispatchToggleConfigurationViewcubeOpaque: (toggle: boolean) => dispatch(
+        actions.configuration.toggleConfigurationViewcubeOpaque(toggle)
     ),
 
-    dispatchToggleUIToolbarHideAction: () => dispatch(
-        actions.configuration.toggleUIToolbarHideAction()
+    dispatchToggleConfigurationToolbarConceal: () => dispatch(
+        actions.configuration.toggleConfigurationToolbarConceal()
     ),
-    dispatchToggleUIToolbarAlwaysShowIconsAction: () => dispatch(
-        actions.configuration.toggleUIToolbarAlwaysShowIconsAction()
+    dispatchToggleConfigurationToolbarTransformIcons: () => dispatch(
+        actions.configuration.toggleConfigurationToolbarTransformIcons()
     ),
-    dispatchToggleUIToolbarAlwaysTransformButtonsAction: () => dispatch(
-        actions.configuration.toggleUIToolbarAlwaysTransformButtonsAction()
+    dispatchToggleConfigurationToolbarTransformButtons: () => dispatch(
+        actions.configuration.toggleConfigurationToolbarTransformButtons()
     ),
 
     dispatchToggleShowTransformOrigin: () => dispatch(
