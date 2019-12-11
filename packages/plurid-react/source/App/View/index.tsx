@@ -392,6 +392,67 @@ const View: React.FC<ViewProperties> = (properties) => {
         }, 450);
     }
 
+    const handlePan = (
+        event: HammerInput,
+    ) => {
+        const {
+            velocity,
+            distance,
+            direction,
+        } = event;
+
+        switch (direction) {
+            case 2:
+                /** right */
+                if (rotationLocked) {
+                    rotateYWith(velocity * 60);
+                }
+
+                if (translationLocked) {
+                    translateXWith(-1 * distance);
+                }
+                break;
+            case 4:
+                /** left */
+                if (rotationLocked) {
+                    rotateYWith(velocity * 60);
+                }
+
+                if (translationLocked) {
+                    translateXWith(distance);
+                }
+                break;
+            case 8:
+                /** top */
+                if (rotationLocked) {
+                    rotateXWith(velocity * 60);
+                }
+
+                if (translationLocked) {
+                    translateYWith(-1 * distance);
+                }
+
+                if (scaleLocked) {
+                    scaleUpWith(velocity);
+                }
+                break;
+            case 16:
+                /** down */
+                if (rotationLocked) {
+                    rotateXWith(velocity * 60);
+                }
+
+                if (translationLocked) {
+                    translateYWith(distance);
+                }
+
+                if (scaleLocked) {
+                    scaleDownWith(velocity);
+                }
+                break;
+        }
+    }
+
     /** Keydown, Wheel Listeners */
     useEffect(() => {
         if (viewElement.current) {
@@ -633,6 +694,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         delete Hammer.defaults.cssProps.tapHighlightColor;
 
         const touch = new Hammer((viewElement as any).current);
+
         touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
         touch.on('swipe', handleSwipe);
@@ -640,6 +702,14 @@ const View: React.FC<ViewProperties> = (properties) => {
         return () => {
             touch.off('swipe', handleSwipe);
         }
+
+        // touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+
+        // touch.on('pan', handleSwipe);
+
+        // return () => {
+        //     touch.off('pan', handleSwipe);
+        // }
     }, [
         viewElement.current,
         rotationLocked,
