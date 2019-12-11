@@ -11,19 +11,20 @@ import Page2 from './containers/Page2';
 
 const App = () => {
     const appConfiguration: PluridConfiguration = {
+        // micro: true,
         theme: 'plurid',
         space: {
             layout: {
                 type: 'COLUMNS',
                 // columns: 1,
             },
-            transformOrigin: {
-                shwo: false,
-            },
+            // transformOrigin: {
+            //     show: false,
+            //     size: 'large',
+            // },
             // center: true,
-            // transparent: true,
+            // opaque: false,
         },
-        // micro: true,
         // elements: {
         //     toolbar: {
         //         show: false,
