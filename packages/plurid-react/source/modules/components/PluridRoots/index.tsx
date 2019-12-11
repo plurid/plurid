@@ -83,6 +83,12 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     const transformOriginY = spaceTranslationY * -1 + window.innerHeight/2;
     const transformOriginZ = spaceTranslationZ * -1;
 
+    const transformOriginSizeDifference = transformOriginSize === 'small'
+        ? 2.5
+        : transformOriginSize === 'normal'
+            ? 5
+            : 7.5;
+
     return (
         <StyledPluridRoots
             style={{
@@ -115,12 +121,12 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                     style={{
                         transform: `
                             rotateY(${-spaceRotationY}deg)
-                            translateX(${transformOriginX}px)
+                            translateX(${transformOriginX - transformOriginSizeDifference}px)
                             translateY(${transformOriginY}px)
                             translateZ(${(transformOriginZ + 5)}px)
                         `,
                         transformOrigin: `
-                            ${transformOriginX}px
+                            ${transformOriginX - transformOriginSizeDifference}px
                             ${transformOriginY}px
                             ${transformOriginZ}px
                         `,
