@@ -94,6 +94,7 @@ export interface PluridConfigurationElements {
 
 
 export interface PluridConfigurationElementsToolbar {
+    show: boolean;
     opaque: boolean;
     conceal: boolean;
     transformIcons: boolean;

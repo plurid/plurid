@@ -12,6 +12,7 @@ export const defaultConfiguration: PluridConfiguration = {
     },
     elements: {
         toolbar: {
+            show: true,
             opaque: false,
             conceal: false,
             transformIcons: false,
