@@ -17,11 +17,13 @@ const App = () => {
                 type: 'COLUMNS',
                 // columns: 1,
             },
+            transformOrigin: {
+                shwo: false,
+            },
             // center: true,
             // transparent: true,
-            // showTransformOrigin: false,
         },
-        micro: true,
+        // micro: true,
         // elements: {
         //     toolbar: {
         //         show: false,
