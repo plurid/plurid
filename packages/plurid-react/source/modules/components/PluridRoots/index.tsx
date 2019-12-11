@@ -10,6 +10,7 @@ import {
 import {
     TreePage,
     PluridConfiguration,
+    SIZES,
 } from '@plurid/plurid-data';
 
 import {
@@ -83,9 +84,9 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     const transformOriginY = spaceTranslationY * -1 + window.innerHeight/2;
     const transformOriginZ = spaceTranslationZ * -1;
 
-    const transformOriginSizeDifference = transformOriginSize === 'small'
+    const transformOriginSizeDifference = transformOriginSize === SIZES.SMALL
         ? 2.5
-        : transformOriginSize === 'normal'
+        : transformOriginSize === SIZES.NORMAL
             ? 5
             : 7.5;
 
