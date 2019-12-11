@@ -21,15 +21,15 @@ import {
 
     TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
     ToggleConfigurationViewcubeHideAction,
-    TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT,
-    ToggleConfigurationUIViewcubeTransparentAction,
+    TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
+    ToggleConfigurationViewcubeOpaqueAction,
 
-    TOGGLE_UI_TOOLBAR_HIDE,
-    ToggleUIToolbarHideAction,
-    TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
-    ToggleUIToolbarAlwaysShowIconsAction,
-    TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS,
-    ToggleUIToolbarAlwaysTransformButtonsAction
+    TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL,
+    ToggleConfigurationToolbarConcealAction,
+    TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
+    ToggleConfigurationToolbarTransformIconsAction,
+    TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
+    ToggleConfigurationToolbarTransformButtonsAction,
 } from './types';
 
 
@@ -99,32 +99,32 @@ export const toggleConfigurationViewcubeHide = (
 }
 
 
-export const toggleConfigurationUIViewcubeTransparent = (
+export const toggleConfigurationViewcubeOpaque = (
     toggle: boolean,
-): ToggleConfigurationUIViewcubeTransparentAction => {
+): ToggleConfigurationViewcubeOpaqueAction => {
     return {
-        type: TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT,
+        type: TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
         payload: toggle,
     };
 }
 
 
-export const toggleUIToolbarHideAction = (): ToggleUIToolbarHideAction => {
+export const toggleConfigurationToolbarConceal = (): ToggleConfigurationToolbarConcealAction => {
     return {
-        type: TOGGLE_UI_TOOLBAR_HIDE,
+        type: TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL,
     };
 }
 
 
-export const toggleUIToolbarAlwaysShowIconsAction = (): ToggleUIToolbarAlwaysShowIconsAction => {
+export const toggleConfigurationToolbarTransformIcons = (): ToggleConfigurationToolbarTransformIconsAction => {
     return {
-        type: TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
+        type: TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
     };
 }
 
 
-export const toggleUIToolbarAlwaysTransformButtonsAction = (): ToggleUIToolbarAlwaysTransformButtonsAction => {
+export const toggleConfigurationToolbarTransformButtons = (): ToggleConfigurationToolbarTransformButtonsAction => {
     return {
-        type: TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS,
+        type: TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
     };
 }

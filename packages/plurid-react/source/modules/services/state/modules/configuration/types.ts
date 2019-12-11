@@ -52,28 +52,28 @@ export interface ToggleConfigurationViewcubeHideAction {
 }
 
 
-export const TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT = 'TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT';
-export interface ToggleConfigurationUIViewcubeTransparentAction {
-    type: typeof TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT;
+export const TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE = 'TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE';
+export interface ToggleConfigurationViewcubeOpaqueAction {
+    type: typeof TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE;
     payload: boolean;
 }
 
 
-export const TOGGLE_UI_TOOLBAR_HIDE = 'TOGGLE_UI_TOOLBAR_HIDE';
-export interface ToggleUIToolbarHideAction {
-    type: typeof TOGGLE_UI_TOOLBAR_HIDE;
+export const TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL = 'TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL';
+export interface ToggleConfigurationToolbarConcealAction {
+    type: typeof TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL;
 }
 
 
-export const TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS = 'TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS';
-export interface ToggleUIToolbarAlwaysShowIconsAction {
-    type: typeof TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS;
+export const TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS = 'TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS';
+export interface ToggleConfigurationToolbarTransformIconsAction {
+    type: typeof TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS;
 }
 
 
-export const TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS = 'TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS';
-export interface ToggleUIToolbarAlwaysTransformButtonsAction {
-    type: typeof TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS;
+export const TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS = 'TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS';
+export interface ToggleConfigurationToolbarTransformButtonsAction {
+    type: typeof TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS;
 }
 
 
@@ -88,7 +88,7 @@ export type ConfigurationActionsType = SetConfigurationAction
     | SetConfigurationThemeGeneralAction
     | SetConfigurationThemeInteractionAction
     | ToggleConfigurationViewcubeHideAction
-    | ToggleConfigurationUIViewcubeTransparentAction
-    | ToggleUIToolbarHideAction
-    | ToggleUIToolbarAlwaysShowIconsAction
-    | ToggleUIToolbarAlwaysTransformButtonsAction;
+    | ToggleConfigurationViewcubeOpaqueAction
+    | ToggleConfigurationToolbarConcealAction
+    | ToggleConfigurationToolbarTransformIconsAction
+    | ToggleConfigurationToolbarTransformButtonsAction;

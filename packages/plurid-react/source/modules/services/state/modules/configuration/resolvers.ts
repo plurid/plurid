@@ -6,6 +6,8 @@ import {
     SetConfigurationPlaneOpacityAction,
     SetConfigurationThemeGeneralAction,
     SetConfigurationThemeInteractionAction,
+    ToggleConfigurationViewcubeHideAction,
+    ToggleConfigurationViewcubeOpaqueAction,
 } from './types';
 
 
@@ -110,5 +112,94 @@ export const setConfigurationThemeInteraction = (
     return {
         ...newState,
         theme: updatedTheme,
+    };
+}
+
+
+export const toggleConfigurationViewcubeHide = (
+    state: ConfigurationState,
+    action: ToggleConfigurationViewcubeHideAction,
+): ConfigurationState => {
+    const newState = {
+        ...state,
+    };
+
+    newState.elements.viewcube.show = action.payload;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const toggleConfigurationViewcubeOpaque = (
+    state: ConfigurationState,
+    action: ToggleConfigurationViewcubeOpaqueAction,
+): ConfigurationState => {
+    const newState = {
+        ...state,
+    };
+
+    newState.elements.viewcube.opaque = action.payload;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const toggleConfigurationToolbarConceal = (
+    state: ConfigurationState,
+): ConfigurationState => {
+    const {
+        conceal,
+    } = state.elements.toolbar;
+
+    const newState = {
+        ...state,
+    };
+
+    newState.elements.toolbar.conceal = !conceal;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const toggleConfigurationToolbarTransformIcons = (
+    state: ConfigurationState,
+): ConfigurationState => {
+    const {
+        transformIcons,
+    } = state.elements.toolbar;
+
+    const newState = {
+        ...state,
+    };
+
+    newState.elements.toolbar.transformIcons = !transformIcons;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const toggleConfigurationToolbarTransformButtons = (
+    state: ConfigurationState,
+): ConfigurationState => {
+    const {
+        transformButtons,
+    } = state.elements.toolbar;
+
+    const newState = {
+        ...state,
+    };
+
+    newState.elements.toolbar.transformButtons = !transformButtons;
+
+    return {
+        ...newState,
     };
 }

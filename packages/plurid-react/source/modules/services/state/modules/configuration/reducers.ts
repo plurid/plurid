@@ -12,11 +12,11 @@ import {
     SET_CONFIGURATION_THEME_INTERACTION,
 
     TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
-    TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT,
+    TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
 
-    TOGGLE_UI_TOOLBAR_HIDE,
-    TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS,
-    TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS,
+    TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL,
+    TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
+    TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
 
     ConfigurationState,
     ConfigurationActionsType,
@@ -29,6 +29,13 @@ import {
     setConfigurationPlaneOpacity,
     setConfigurationThemeGeneral,
     setConfigurationThemeInteraction,
+
+    toggleConfigurationViewcubeHide,
+    toggleConfigurationViewcubeOpaque,
+
+    toggleConfigurationToolbarConceal,
+    toggleConfigurationToolbarTransformIcons,
+    toggleConfigurationToolbarTransformButtons,
 } from './resolvers';
 
 
@@ -55,47 +62,15 @@ const configurationReducer = (
         case SET_CONFIGURATION_THEME_INTERACTION:
             return setConfigurationThemeInteraction(state, action);
         case TOGGLE_CONFIGURATION_VIEWCUBE_HIDE:
-            {
-                const updatedState = {...state};
-                updatedState.elements.viewcube.show = action.payload;
-                return {...updatedState};
-            }
-        case TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT:
-            {
-                const updatedState = {...state};
-                updatedState.elements.viewcube.opaque = action.payload;
-                return {...updatedState};
-            }
-        case TOGGLE_UI_TOOLBAR_HIDE:
-            {
-                const {
-                    conceal,
-                } = state.elements.toolbar;
-
-                const updatedState = {...state};
-                updatedState.elements.toolbar.conceal = !conceal;
-                return {...updatedState};
-            }
-        case TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS:
-            {
-                const {
-                    transformIcons,
-                } = state.elements.toolbar;
-
-                const updatedState = {...state};
-                updatedState.elements.toolbar.transformIcons = !transformIcons;
-                return {...updatedState};
-            }
-        case TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS:
-            {
-                const {
-                    transformButtons,
-                } = state.elements.toolbar;
-
-                const updatedState = {...state};
-                updatedState.elements.toolbar.transformButtons = !transformButtons;
-                return {...updatedState};
-            }
+            return toggleConfigurationViewcubeHide(state, action);
+        case TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE:
+            return toggleConfigurationViewcubeOpaque(state, action);
+        case TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL:
+            return toggleConfigurationToolbarConceal(state);
+        case TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS:
+            return toggleConfigurationToolbarTransformIcons(state);
+        case TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS:
+            return toggleConfigurationToolbarTransformButtons(state);
         default:
             return {
                 ...state,
