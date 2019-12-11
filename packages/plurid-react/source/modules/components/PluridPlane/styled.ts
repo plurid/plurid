@@ -1,10 +1,18 @@
 import styled from 'styled-components';
 
+import {
+    decomposeColor,
+} from '@plurid/plurid-themes';
 
 
 export const StyledPluridPlane: any = styled.div`
     background-color: ${(props: any) => {
-        if (props.planeOpacity === 0) {
+        if (props.planeOpacity !== 1) {
+            const decomposedColor = decomposeColor(props.theme.backgroundColorPrimary);
+            if (decomposedColor) {
+                const color = `hsla(${decomposedColor.hue}, ${decomposedColor.saturation}%, ${decomposedColor.lightness}%, ${props.planeOpacity})`;
+                return color;
+            }
             return 'transparent';
         }
         return props.theme.backgroundColorPrimary;
