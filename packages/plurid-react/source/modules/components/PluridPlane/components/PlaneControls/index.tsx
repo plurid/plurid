@@ -59,9 +59,13 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
         interactionTheme,
     } = properties;
 
+    const {
+        pathbar,
+    } = configuration.elements.plane.controls;
+
     let basePath = '';
     if (configuration) {
-        if (configuration.planeDomainURL) {
+        if (pathbar.domainURL) {
             basePath = window.location.hostname;
         }
     }
@@ -71,16 +75,16 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
     const onPathInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPath(event.target.value);
 
-        if (configuration.pathbarOnChange) {
+        if (pathbar.onChange) {
             const id = page.id || page.path;
-            configuration.pathbarOnChange(event, id);
+            pathbar.onChange(event, id);
         }
     }
 
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (configuration.pathbarOnKeyDown) {
+        if (pathbar.onKeyDown) {
             const id = page.id || page.path;
-            configuration.pathbarOnKeyDown(event, id);
+            pathbar.onKeyDown(event, id);
         }
     }
 

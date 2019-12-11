@@ -25,7 +25,6 @@ interface PlaneBridgeOwnProperties {
 
 interface PlaneBridgeStateProperties {
     generalTheme: Theme;
-    planeControls: boolean;
     configuration: PluridConfiguration;
 }
 
@@ -39,32 +38,35 @@ type PlaneBridgeProperties = PlaneBridgeOwnProperties
 const PlaneBridge: React.FC<PlaneBridgeProperties> = (properties) => {
     const {
         generalTheme,
-        planeControls,
         configuration,
     } = properties;
 
     const {
-        planeOpacity,
-    } = configuration;
+        controls,
+        opacity,
+    } = configuration.elements.plane;
 
     return (
         <StyledPlaneBridge
             theme={generalTheme}
-            planeControls={planeControls}
-            planeOpacity={planeOpacity}
+            planeControls={controls.show}
+            planeOpacity={opacity}
         />
     );
 }
 
 
-const mapStateToProps = (state: AppState): PlaneBridgeStateProperties => ({
+const mapStateToProps = (
+    state: AppState,
+): PlaneBridgeStateProperties => ({
     generalTheme: selectors.themes.getGeneralTheme(state),
-    planeControls: selectors.configuration.getConfiguration(state).planeControls,
     configuration: selectors.configuration.getConfiguration(state),
 });
 
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PlaneBridgeDispatchProperties => ({
+const mapDispatchToProps = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): PlaneBridgeDispatchProperties => ({
 });
 
 

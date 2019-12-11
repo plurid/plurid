@@ -66,10 +66,12 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
     } = properties;
 
     const {
-        planeControls,
-        planeWidth,
-        planeOpacity,
-    } = configuration;
+        controls,
+        width: planeWidth,
+        opacity: planeOpacity,
+    } = configuration.elements.plane;
+
+    const showPlaneControls = controls.show;
 
     const width = planeWidth * viewSize.width || 500;
 
@@ -78,7 +80,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
     return (
         <StyledPluridPlane
             theme={generalTheme}
-            planeControls={planeControls}
+            planeControls={showPlaneControls}
             planeOpacity={planeOpacity}
             show={treePage.show}
             data-plurid-plane={planeID}
@@ -97,7 +99,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
                 <PlaneBridge />
             )}
 
-            {planeControls && (
+            {showPlaneControls && (
                 <PlaneControls
                     page={page}
                     treePage={treePage}
