@@ -11,6 +11,10 @@ import {
     PluridConfiguration
 } from './configuration';
 
+import {
+    RecursivePartial,
+} from '../helpers';
+
 
 
 export interface PluridApp {
@@ -36,7 +40,7 @@ export interface PluridApp {
      */
     documents?: PluridDocument[],
 
-    configuration?: Partial<PluridConfiguration>,
+    configuration?: RecursivePartial<PluridConfiguration>,
 
     pubsub?: PluridPubSub,
 }
