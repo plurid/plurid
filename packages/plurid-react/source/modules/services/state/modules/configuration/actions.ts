@@ -5,8 +5,8 @@ import {
 import {
     SetConfigurationAction,
     SET_CONFIGURATION,
-    SetMicroAction,
-    SET_MICRO,
+    SetConfigurationMicroAction,
+    SET_CONFIGURATION_MICRO,
 
     SET_CONFIGURATION_PLANE_CONTROLS,
     SetConfigurationPlaneControlsAction,
@@ -42,9 +42,9 @@ export const setConfiguration = (payload: PluridConfiguration): SetConfiguration
 }
 
 
-export const setMicro = (): SetMicroAction => {
+export const setConfigurationMicro = (): SetConfigurationMicroAction => {
     return {
-        type: SET_MICRO,
+        type: SET_CONFIGURATION_MICRO,
     };
 }
 

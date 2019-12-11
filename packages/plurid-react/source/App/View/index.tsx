@@ -118,7 +118,7 @@ interface ViewDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
     dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
-    dispatchSetMicro: typeof actions.configuration.setMicro;
+    dispatchSetConfigurationMicro: typeof actions.configuration.setConfigurationMicro;
 
     dispatchSetDocuments: typeof actions.data.setDocuments;
     dispatchSetViewSize: typeof actions.data.setViewSize;
@@ -173,7 +173,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         dispatch,
 
         dispatchSetConfiguration,
-        dispatchSetMicro,
+        dispatchSetConfigurationMicro,
 
         dispatchSetDocuments,
         dispatchSetViewSize,
@@ -243,7 +243,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         dispatchSetConfiguration(configuration);
 
         if (configuration.micro) {
-            dispatchSetMicro();
+            dispatchSetConfigurationMicro();
         }
 
         if (configuration.space) {
@@ -784,8 +784,8 @@ const mapDispatchToProperties = (
     dispatchSetConfiguration: (configuration: PluridAppConfiguration) => dispatch(
         actions.configuration.setConfiguration(configuration)
     ),
-    dispatchSetMicro: () => dispatch(
-        actions.configuration.setMicro()
+    dispatchSetConfigurationMicro: () => dispatch(
+        actions.configuration.setConfigurationMicro()
     ),
 
     dispatchSetDocuments: (documents: any) => dispatch(

@@ -11,9 +11,9 @@ export interface SetConfigurationAction {
 }
 
 
-export const SET_MICRO = 'SET_MICRO';
-export interface SetMicroAction {
-    type: typeof SET_MICRO;
+export const SET_CONFIGURATION_MICRO = 'SET_CONFIGURATION_MICRO';
+export interface SetConfigurationMicroAction {
+    type: typeof SET_CONFIGURATION_MICRO;
 }
 
 
@@ -82,7 +82,7 @@ export interface ConfigurationState extends PluridConfiguration {
 
 
 export type ConfigurationActionsType = SetConfigurationAction
-    | SetMicroAction
+    | SetConfigurationMicroAction
     | SetConfigurationPlaneControlsAction
     | SetConfigurationPlaneOpacityAction
     | SetConfigurationThemeGeneralAction

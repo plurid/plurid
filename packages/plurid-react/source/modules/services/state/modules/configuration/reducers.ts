@@ -4,7 +4,7 @@ import {
 
 import {
     SET_CONFIGURATION,
-    SET_MICRO,
+    SET_CONFIGURATION_MICRO,
     SET_CONFIGURATION_PLANE_CONTROLS,
     SET_CONFIGURATION_PLANE_OPACITY,
 
@@ -22,6 +22,15 @@ import {
     ConfigurationActionsType,
 } from './types';
 
+import {
+    setConfiguration,
+    setConfigurationMicro,
+    setConfigurationPlaneControls,
+    setConfigurationPlaneOpacity,
+    setConfigurationThemeGeneral,
+    setConfigurationThemeInteraction,
+} from './resolvers';
+
 
 
 const initialState: ConfigurationState = {
@@ -34,58 +43,17 @@ const configurationReducer = (
 ): ConfigurationState => {
     switch(action.type) {
         case SET_CONFIGURATION:
-            return {
-                ...state,
-                ...action.payload,
-            };
-        case SET_MICRO:
-            {
-                const updatedState = {...state};
-                updatedState.elements.toolbar.show = false;
-                updatedState.elements.plane.controls.show = false;
-                updatedState.elements.viewcube.show = false;
-                return {...updatedState};
-            }
+            return setConfiguration(state, action);
+        case SET_CONFIGURATION_MICRO:
+            return setConfigurationMicro(state);
         case SET_CONFIGURATION_PLANE_CONTROLS:
-            {
-                const updatedState = {...state};
-                updatedState.elements.plane.controls.show = action.payload;
-                return {...updatedState};
-            }
+            return setConfigurationPlaneControls(state, action);
         case SET_CONFIGURATION_PLANE_OPACITY:
-            {
-                const updatedState = {...state};
-                updatedState.elements.plane.opacity = action.payload;
-                return {...updatedState};
-            }
+            return setConfigurationPlaneOpacity(state, action);
         case SET_CONFIGURATION_THEME_GENERAL:
-            {
-                const updatedTheme = {
-                    general: action.payload,
-                    interaction: typeof state.theme === 'object'
-                        ? state.theme.interaction
-                        : 'plurid',
-                }
-
-                return {
-                    ...state,
-                    theme: updatedTheme,
-                };
-            }
+            return setConfigurationThemeGeneral(state, action);
         case SET_CONFIGURATION_THEME_INTERACTION:
-            {
-                const updatedTheme = {
-                    general: typeof state.theme === 'object'
-                        ? state.theme.general
-                        : 'plurid',
-                    interaction: action.payload,
-                }
-
-                return {
-                    ...state,
-                    theme: updatedTheme,
-                };
-            }
+            return setConfigurationThemeInteraction(state, action);
         case TOGGLE_CONFIGURATION_VIEWCUBE_HIDE:
             {
                 const updatedState = {...state};
