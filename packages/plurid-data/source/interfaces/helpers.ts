@@ -8,3 +8,8 @@ export interface WithID {
 }
 
 export type Identified<T> = T & WithID;
+
+
+export type RecursivePartial<T> = {
+    [P in keyof T]?: RecursivePartial<T[P]>;
+};

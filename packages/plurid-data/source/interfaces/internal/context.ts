@@ -4,7 +4,7 @@ import {
 
 import {
     Indexed,
-} from './helpers';
+} from '../helpers';
 
 import {
     PluridInternalContextDocument,

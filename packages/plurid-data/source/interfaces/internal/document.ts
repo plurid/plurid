@@ -6,7 +6,7 @@ import {
 import {
     Identified,
     Indexed,
-} from './helpers';
+} from '../helpers';
 
 import {
     PluridInternalStatePage,
