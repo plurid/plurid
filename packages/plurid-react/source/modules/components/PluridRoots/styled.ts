@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 
+import {
+    SIZES,
+} from '@plurid/plurid-data';
 
 
 export const StyledPluridRoots = styled.div`
@@ -13,11 +16,11 @@ export const StyledTransformOrigin: any = styled.div`
     }};
     height: ${(props: any) => {
         switch (props.transformOriginSize) {
-            case 'small':
+            case SIZES.SMALL:
                 return '5px';
-            case 'normal':
+            case SIZES.NORMAL:
                 return '10px';
-            case 'large':
+            case SIZES.LARGE:
                 return '15px';
             default:
                 return '10px';
@@ -25,11 +28,11 @@ export const StyledTransformOrigin: any = styled.div`
     }};
     width: ${(props: any) => {
         switch (props.transformOriginSize) {
-            case 'small':
+            case SIZES.SMALL:
                 return '5px';
-            case 'normal':
+            case SIZES.NORMAL:
                 return '10px';
-            case 'large':
+            case SIZES.LARGE:
                 return '15px';
             default:
                 return '10px';

@@ -49,8 +49,6 @@ interface MoreMenuStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
-    showTransformOrigin: boolean;
-    transformOriginSize: any;
 }
 
 interface MoreMenuDispatchProperties {
@@ -82,8 +80,6 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         /** state */
         interactionTheme,
         configuration,
-        showTransformOrigin,
-        transformOriginSize,
         viewSize,
 
         /** dispatch */
@@ -116,6 +112,15 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
     const showViewcube = viewcube.show;
     const planeOpacity = plane.opacity;
+
+    const {
+        transformOrigin,
+    } = configuration.space;
+
+    const {
+        show: showTransformOrigin,
+        size: transformOriginSize,
+    } = transformOrigin;
 
     const {
         show: showToolbar,
@@ -262,7 +267,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridDropdown
                         selectables={['small', 'normal', 'large']}
-                        selected={transformOriginSize}
+                        selected={transformOriginSize.toLowerCase()}
                         atSelect={(selection: any) => {
                             const selected = selection.toUpperCase();
                             if (
@@ -471,9 +476,6 @@ const mapStateToProps = (
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
     viewSize: selectors.data.getViewSize(state),
-
-    showTransformOrigin: selectors.space.getShowTransformOrigin(state),
-    transformOriginSize: selectors.space.getTransformOriginSize(state),
 });
 
 
