@@ -1,7 +1,4 @@
-import React, {
-    // useState,
-    // useEffect,
-} from 'react';
+import React from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
