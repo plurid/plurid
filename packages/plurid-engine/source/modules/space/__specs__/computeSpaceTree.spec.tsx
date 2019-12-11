@@ -4,6 +4,7 @@ import {
 
 import {
     PluridConfiguration,
+    RecursivePartial,
     TreePage,
     defaultConfiguration,
 } from '@plurid/plurid-data';
@@ -126,6 +127,7 @@ describe('computeSpaceTree', () => {
         const configuration: PluridConfiguration = {
             ...defaultConfiguration,
             space: {
+                ...defaultConfiguration.space,
                 layout: {
                     type: 'COLUMNS',
                     columns: 1,
