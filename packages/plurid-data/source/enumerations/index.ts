@@ -41,8 +41,31 @@ export enum KEY_MODIFIERS {
 
 
 
+export enum LAYOUT_TYPES {
+    COLUMNS = 'COLUMNS',
+    FACE_TO_FACE = 'FACE_TO_FACE',
+    ZIG_ZAG = 'ZIG_ZAG',
+    SHEAVES = 'SHEAVES',
+    META = 'META',
+}
+
+
 export enum SIZES {
-    small = 'small',
-    normal = 'normal',
-    large = 'large',
+    SMALL = 'SMALL',
+    NORMAL = 'NORMAL',
+    LARGE = 'LARGE',
+}
+
+
+export enum TRANSFORM_MODES {
+    ROTATION = 'ROTATION',
+    SCALE = 'SCALE',
+    TRANSLATION = 'TRANSLATION',
+    ALL = 'ALL',
+}
+
+
+export enum TRANSFORM_TOUCHES {
+    SWIPE = 'SWIPE',
+    PAN = 'PAN',
 }

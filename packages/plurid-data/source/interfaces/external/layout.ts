@@ -1,12 +1,16 @@
+import {
+    LAYOUT_TYPES,
+} from '../../enumerations';
+
 
 
 interface Layout {
-    type: 'COLUMNS' | 'FACE_TO_FACE' | 'SHEAVES' | 'ZIG_ZAG' | 'META';
+    type: keyof typeof LAYOUT_TYPES;
 }
 
 
 export interface LayoutMeta extends Layout {
-    type: 'META';
+    type: LAYOUT_TYPES.META;
     layouts: LayoutMetaLayout[];
 }
 
@@ -18,7 +22,7 @@ export interface LayoutMetaLayout {
 
 
 export interface LayoutColumns extends Layout {
-    type: 'COLUMNS';
+    type: LAYOUT_TYPES.COLUMNS;
 
     /**
      * Integer value indicating the number of columns.
@@ -30,7 +34,7 @@ export interface LayoutColumns extends Layout {
 
 
 export interface LayoutFaceToFace extends Layout {
-    type: 'FACE_TO_FACE';
+    type: LAYOUT_TYPES.FACE_TO_FACE;
 
     /**
      * Value between `0.00` and `360.00` and can be negative.
@@ -51,7 +55,7 @@ export interface LayoutFaceToFace extends Layout {
 }
 
 export interface LayoutZigZag extends Layout {
-    type: 'ZIG_ZAG';
+    type: LAYOUT_TYPES.ZIG_ZAG;
 
     /**
      * Value between `0.00` and `360.00` and can be negative.
@@ -61,7 +65,7 @@ export interface LayoutZigZag extends Layout {
 
 
 export interface LayoutSheaves extends Layout {
-    type: 'SHEAVES';
+    type: LAYOUT_TYPES.SHEAVES;
 
     /**
      * Value between `0.00` and `x.00` (floating numbers) or between `0` and `x00` (integers).

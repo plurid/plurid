@@ -1,5 +1,7 @@
 import {
     SIZES,
+    TRANSFORM_MODES,
+    TRANSFORM_TOUCHES,
 } from '../../enumerations';
 
 import {
@@ -66,6 +68,16 @@ export interface PluridConfigurationSpace {
 
     transformOrigin: PluridConfigurationSpaceTransformOrigin;
 
+    transformLocks: PluridConfigurationSpaceTransformLocks;
+
+    /**
+     * Allow only one type of transformation, or all of them.
+     */
+    transformMode: keyof typeof TRANSFORM_MODES;
+
+    transformTouch: keyof typeof TRANSFORM_TOUCHES;
+
+    firstPerson: boolean;
 
     // FUTURE:
     /**
@@ -83,6 +95,16 @@ export interface PluridConfigurationSpace {
 export interface PluridConfigurationSpaceTransformOrigin {
     show: boolean;
     size: keyof typeof SIZES;
+}
+
+
+export interface PluridConfigurationSpaceTransformLocks {
+    rotationX: boolean;
+    rotationY: boolean;
+    translationY: boolean;
+    translationX: boolean;
+    translationZ: boolean;
+    scale: boolean;
 }
 
 
