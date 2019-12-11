@@ -259,23 +259,23 @@ const View: React.FC<ViewProperties> = (properties) => {
         //     dispatchSetMicro();
         // }
 
-        if (configuration.elements.plane.controls.show) {
-            dispatchSetConfigurationPlaneControls(true);
-        } else {
-            dispatchSetConfigurationPlaneControls(false);
-        }
+        // if (configuration.elements.plane.controls.show) {
+        //     dispatchSetConfigurationPlaneControls(true);
+        // } else {
+        //     dispatchSetConfigurationPlaneControls(false);
+        // }
 
         if (configuration.space) {
             const spaceLocation = computeSpaceLocation(configuration);
             dispatchSetSpaceLocation(spaceLocation);
 
-            if (!configuration.space.transformOrigin.show) {
-                dispatchToggleShowTransformOrigin();
-            }
+            // if (!configuration.space.transformOrigin.show) {
+            //     dispatchToggleShowTransformOrigin();
+            // }
 
-            if (configuration.space.transformOrigin.size) {
-                dispatchSetTransformOriginSize(configuration.space.transformOrigin.size);
-            }
+            // if (configuration.space.transformOrigin.size) {
+            //     dispatchSetTransformOriginSize(configuration.space.transformOrigin.size);
+            // }
         }
 
         // if (configuration.space.center && !configuration.space.camera) {

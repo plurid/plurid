@@ -41,19 +41,49 @@ const configurationReducer = (
         case SET_MICRO:
             return {
                 ...state,
-                toolbar: false,
-                planeControls: false,
-                viewcube: false,
+                elements: {
+                    ...state.elements,
+                    toolbar: {
+                        ...state.elements.toolbar,
+                        // show: false,
+                    },
+                    plane: {
+                        ...state.elements.plane,
+                        controls: {
+                            ...state.elements.plane.controls,
+                            show: false,
+                        },
+                    },
+                    viewcube: {
+                        ...state.elements.viewcube,
+                        show: false,
+                    }
+                },
             };
         case SET_CONFIGURATION_PLANE_CONTROLS:
             return {
                 ...state,
-                planeControls: action.payload,
+                elements: {
+                    ...state.elements,
+                    plane: {
+                        ...state.elements.plane,
+                        controls: {
+                            ...state.elements.plane.controls,
+                            show: action.payload,
+                        },
+                    },
+                },
             };
         case SET_CONFIGURATION_PLANE_OPACITY:
             return {
                 ...state,
-                planeOpacity: action.payload,
+                elements: {
+                    ...state.elements,
+                    plane: {
+                        ...state.elements.plane,
+                        opacity: action.payload,
+                    },
+                },
             };
         case SET_CONFIGURATION_THEME_GENERAL:
             {
@@ -87,18 +117,24 @@ const configurationReducer = (
             {
                 return {
                     ...state,
-                    viewcube: action.payload,
+                    elements: {
+                        ...state.elements,
+                        viewcube: {
+                            ...state.elements.viewcube,
+                            show: action.payload,
+                        },
+                    },
                 };
             }
         case TOGGLE_CONFIGURATION_UI_VIEWCUBE_TRANSPARENT:
             {
                 return {
                     ...state,
-                    ui: {
-                        ...state.ui,
+                    elements: {
+                        ...state.elements,
                         viewcube: {
-                            ...state.ui.viewcube,
-                            transparent: action.payload,
+                            ...state.elements.viewcube,
+                            opaque: action.payload,
                         },
                     },
                 };
@@ -106,33 +142,33 @@ const configurationReducer = (
         case TOGGLE_UI_TOOLBAR_HIDE:
             {
                 const {
-                    hide,
-                } = state.ui.toolbar;
+                    conceal,
+                } = state.elements.toolbar;
 
                 return {
                     ...state,
-                    ui: {
-                        ...state.ui,
+                    elements: {
+                        ...state.elements,
                         toolbar: {
-                            ...state.ui.toolbar,
-                            hide: !hide,
-                        },
-                    },
+                            ...state.elements.toolbar,
+                            conceal: !conceal,
+                        }
+                    }
                 };
             }
         case TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_ICONS:
             {
                 const {
-                    alwaysShowIcons,
-                } = state.ui.toolbar;
+                    transformIcons,
+                } = state.elements.toolbar;
 
                 return {
                     ...state,
-                    ui: {
-                        ...state.ui,
+                    elements: {
+                        ...state.elements,
                         toolbar: {
-                            ...state.ui.toolbar,
-                            alwaysShowIcons: !alwaysShowIcons,
+                            ...state.elements.toolbar,
+                            transformIcons: !transformIcons,
                         },
                     },
                 };
@@ -140,16 +176,16 @@ const configurationReducer = (
         case TOGGLE_UI_TOOLBAR_ALWAYS_SHOW_TRANSFORM_BUTTONS:
             {
                 const {
-                    alwaysShowTransformButtons,
-                } = state.ui.toolbar;
+                    transformButtons,
+                } = state.elements.toolbar;
 
                 return {
                     ...state,
-                    ui: {
-                        ...state.ui,
+                    elements: {
+                        ...state.elements,
                         toolbar: {
-                            ...state.ui.toolbar,
-                            alwaysShowTransformButtons: !alwaysShowTransformButtons,
+                            ...state.elements.toolbar,
+                            transformButtons: !transformButtons,
                         },
                     },
                 };
