@@ -1,6 +1,13 @@
 import {
     PluridConfiguration,
-} from '../';
+} from '../interfaces';
+
+import {
+    LAYOUT_TYPES,
+    SIZES,
+    TRANSFORM_MODES,
+    TRANSFORM_TOUCHES,
+} from '../enumerations'
 
 
 
@@ -37,7 +44,7 @@ export const defaultConfiguration: PluridConfiguration = {
     },
     space: {
         layout: {
-            type: 'COLUMNS',
+            type: LAYOUT_TYPES.COLUMNS,
             columns: 2,
         },
         perspective: 2000,
@@ -45,7 +52,18 @@ export const defaultConfiguration: PluridConfiguration = {
         center: false,
         transformOrigin: {
             show: true,
-            size: 'normal',
+            size: SIZES.NORMAL,
         },
+        transformLocks: {
+            rotationX: true,
+            rotationY: true,
+            translationY: true,
+            translationX: true,
+            translationZ: true,
+            scale: true,
+        },
+        transformMode: TRANSFORM_MODES.ALL,
+        transformTouch: TRANSFORM_TOUCHES.PAN,
+        firstPerson: false,
     },
 };
