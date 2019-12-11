@@ -701,6 +701,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         delete Hammer.defaults.cssProps.userSelect;
         delete Hammer.defaults.cssProps.userDrag;
         delete Hammer.defaults.cssProps.tapHighlightColor;
+        delete Hammer.defaults.cssProps.touchSelect;
 
         const touch = new Hammer((viewElement as any).current);
         touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });

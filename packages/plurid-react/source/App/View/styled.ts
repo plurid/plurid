@@ -47,6 +47,12 @@ export const StyledView: any = styled.div`
         }
         return 'initial';
     }};
+    touch-action: ${(props: any) => {
+        if (props.lockMode) {
+            return 'none !important';
+        }
+        return 'initial !important';
+    }};
     -webkit-user-drag: ${(props: any) => {
         if (props.lockMode) {
             return 'none';
