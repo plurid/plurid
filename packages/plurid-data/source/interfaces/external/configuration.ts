@@ -19,8 +19,8 @@ export interface PluridConfiguration {
     micro: boolean;
 
     /**
-     * A theme name, `string`, based on plurid themes, https://meta.plurid.com/themes, or
-     * specific theme names for `general` and `interaction` elements.
+     * A theme name, `string`, based on plurid themes, https://meta.plurid.com/themes,
+     * or specific theme names for `general` and `interaction` elements.
      */
     theme: string | PluridConfigurationTheme;
 
@@ -53,7 +53,6 @@ export interface PluridConfigurationSpace {
      */
     opaque: boolean;
 
-
     /**
      * ID of the `Plurid Root` on which to point the camera at.
      */
@@ -66,6 +65,18 @@ export interface PluridConfigurationSpace {
     center: boolean;
 
     transformOrigin: PluridConfigurationSpaceTransformOrigin;
+
+
+    // FUTURE:
+    /**
+     * Change the browser URL depending on the active plane/plane in sight.
+     */
+    // alterURL?: boolean;
+
+    /**
+     * Listen for the URL change and transition the camera/open plurids.
+     */
+    // routeURL?: boolean;
 }
 
 
@@ -94,6 +105,11 @@ export interface PluridConfigurationElementsViewcube {
     show: boolean;
     opaque: boolean;
     conceal: boolean;
+
+    /**
+     * Show the rotation arrow buttons, and the other buttons for translation, scale, and fit view.
+     */
+    buttons: boolean;
 }
 
 
@@ -106,7 +122,9 @@ export interface PluridConfigurationElementsPlane {
     width: number;
 
     /**
-     * Value between `0.00` and `1.00` (floating numbers). Default `1.00`.
+     * Value between `0.00` and `1.00` (floating numbers).
+     *
+     * Default `1.00`.
      */
     opacity: number;
 
@@ -127,7 +145,7 @@ export interface PluridConfigurationElementsPlaneControlsPathbar {
     domainURL: boolean;
 
     /**
-     * Executed when the pathbar from the controls has an `onChange` event.
+     * Executed when the pathbar from the controls has an `change` event.
      */
     onChange?: (event: any, pageID: string) => void;
 
@@ -135,11 +153,4 @@ export interface PluridConfigurationElementsPlaneControlsPathbar {
      * Executed when the pathbar from the controls has an `keyDown` event.
      */
     onKeyDown?: (event: any, pageID: string) => void;
-
-    // Future:
-    // To change the browser URL depending on the active plane/plane in sight.
-    // alterURL?: boolean;
-
-    // To listen for the URL change and transition the camera/open plurids.
-    // routeURL?: boolean;
 }
