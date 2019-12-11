@@ -323,8 +323,6 @@ const View: React.FC<ViewProperties> = (properties) => {
             direction,
         } = event;
 
-        console.log('handleSwipe');
-
         if (
             !(rotationLocked || translationLocked || scaleLocked)
         ) {
@@ -396,8 +394,6 @@ const View: React.FC<ViewProperties> = (properties) => {
             direction,
         } = event;
 
-        console.log('handlePan');
-
         if (
             !(rotationLocked || translationLocked || scaleLocked)
         ) {
@@ -412,7 +408,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 }
 
                 if (translationLocked) {
-                    translateXWith(-1 * distance);
+                    translateXWith(-1 * (distance / 2));
                 }
                 break;
             case 4:
@@ -422,7 +418,7 @@ const View: React.FC<ViewProperties> = (properties) => {
                 }
 
                 if (translationLocked) {
-                    translateXWith(distance);
+                    translateXWith(distance / 2);
                 }
                 break;
             case 8:
@@ -432,11 +428,11 @@ const View: React.FC<ViewProperties> = (properties) => {
                 }
 
                 if (translationLocked) {
-                    translateYWith(-1 * distance);
+                    translateYWith(-1 * (distance / 2));
                 }
 
                 if (scaleLocked) {
-                    scaleUpWith(velocity);
+                    scaleUpWith(velocity / 2);
                 }
                 break;
             case 16:
@@ -446,11 +442,11 @@ const View: React.FC<ViewProperties> = (properties) => {
                 }
 
                 if (translationLocked) {
-                    translateYWith(distance);
+                    translateYWith(distance / 2);
                 }
 
                 if (scaleLocked) {
-                    scaleDownWith(velocity);
+                    scaleDownWith(velocity / 2);
                 }
                 break;
         }
@@ -692,8 +688,6 @@ const View: React.FC<ViewProperties> = (properties) => {
             transformTouch,
         } = stateConfiguration.space;
 
-        console.log('transformTouch', transformTouch);
-
         /**
          * Remove Hammerjs default css properties to add them only when in Lock Mode.
          * https://stackoverflow.com/a/37896547
@@ -725,7 +719,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         rotationLocked,
         translationLocked,
         scaleLocked,
-        // stateConfiguration,
+        stateConfiguration.space.transformTouch,
     ]);
 
     const viewContainer = handleView(pages, documents);
