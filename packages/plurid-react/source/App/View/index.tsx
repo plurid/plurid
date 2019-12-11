@@ -400,53 +400,57 @@ const View: React.FC<ViewProperties> = (properties) => {
             return;
         }
 
+        const rotationVelocity = velocity * 20;
+        const translationVelocity = distance / 4;
+        const scaleVelocity = velocity / 2;
+
         switch (direction) {
             case 2:
                 /** right */
                 if (rotationLocked) {
-                    rotateYWith(velocity * 20);
+                    rotateYWith(rotationVelocity);
                 }
 
                 if (translationLocked) {
-                    translateXWith(-1 * (distance / 2));
+                    translateXWith(-1 * translationVelocity);
                 }
                 break;
             case 4:
                 /** left */
                 if (rotationLocked) {
-                    rotateYWith(velocity * 20);
+                    rotateYWith(rotationVelocity);
                 }
 
                 if (translationLocked) {
-                    translateXWith(distance / 2);
+                    translateXWith(translationVelocity);
                 }
                 break;
             case 8:
                 /** top */
                 if (rotationLocked) {
-                    rotateXWith(velocity * 20);
+                    rotateXWith(rotationVelocity);
                 }
 
                 if (translationLocked) {
-                    translateYWith(-1 * (distance / 2));
+                    translateYWith(-1 * translationVelocity);
                 }
 
                 if (scaleLocked) {
-                    scaleUpWith(velocity / 2);
+                    scaleUpWith(scaleVelocity);
                 }
                 break;
             case 16:
                 /** down */
                 if (rotationLocked) {
-                    rotateXWith(velocity * 20);
+                    rotateXWith(rotationVelocity);
                 }
 
                 if (translationLocked) {
-                    translateYWith(distance / 2);
+                    translateYWith(translationVelocity);
                 }
 
                 if (scaleLocked) {
-                    scaleDownWith(velocity / 2);
+                    scaleDownWith(scaleVelocity);
                 }
                 break;
         }
