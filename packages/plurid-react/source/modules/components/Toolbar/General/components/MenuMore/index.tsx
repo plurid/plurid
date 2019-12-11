@@ -106,23 +106,38 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchSetTransformOriginSize,
     } = properties;
 
-    const {
-        theme: selectedTheme,
-        ui,
-        viewcube: showViewcube,
-        planeOpacity,
-    } = configuration;
+    const selectedTheme = configuration.theme;
 
     const {
-        toolbar,
+        // theme: selectedTheme,
+        // ui,
+        // viewcube: showViewcube,
+        // planeOpacity,
+
         viewcube,
-    } = ui;
+        toolbar,
+        plane,
+    } = configuration.elements;
+
+    const showViewcube = viewcube.show;
+    const planeOpacity = plane.opacity;
+    const showToolbar = true;
 
     const {
-        hide,
-        alwaysShowIcons,
-        alwaysShowTransformButtons,
+        transformIcons,
+        transformButtons,
     } = toolbar;
+
+    // const {
+    //     toolbar,
+    //     viewcube,
+    // } = ui;
+
+    // const {
+    //     hide,
+    //     transformIcons,
+    //     transformButtons,
+    // } = toolbar;
 
     const [viewSizeSmall, setViewSizeSmall] = useState(false);
 
@@ -181,7 +196,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={theme}
-                        checked={alwaysShowIcons}
+                        checked={transformIcons}
                         atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
                         exclusive={true}
                         level={2}
@@ -195,7 +210,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={theme}
-                        checked={alwaysShowIcons}
+                        checked={transformIcons}
                         atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
                         exclusive={true}
                         level={2}
@@ -303,8 +318,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={!viewcube.transparent}
-                        atChange={() => dispatchToggleConfigurationUIViewcubeTransparent(!viewcube.transparent)}
+                        checked={viewcube.opaque}
+                        atChange={() => dispatchToggleConfigurationUIViewcubeTransparent(viewcube.opaque)}
                         exclusive={true}
                         level={2}
                     />
@@ -317,7 +332,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={alwaysShowIcons}
+                        checked={transformIcons}
                         atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
                         exclusive={true}
                         level={2}
@@ -332,7 +347,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                         <PluridSwitch
                             theme={interactionTheme}
-                            checked={alwaysShowTransformButtons}
+                            checked={transformButtons}
                             atChange={() => dispatchToggleUIToolbarAlwaysTransformButtonsAction()}
                             exclusive={true}
                             level={2}
@@ -347,7 +362,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={hide}
+                        checked={showToolbar}
                         atChange={() => dispatchToggleUIToolbarHideAction()}
                         exclusive={true}
                         level={2}
@@ -371,8 +386,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={!viewcube.transparent}
-                        atChange={() => dispatchToggleConfigurationUIViewcubeTransparent(!viewcube.transparent)}
+                        checked={viewcube.opaque}
+                        atChange={() => dispatchToggleConfigurationUIViewcubeTransparent(viewcube.opaque)}
                         exclusive={true}
                         level={2}
                     />
@@ -385,7 +400,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={hide}
+                        checked={showToolbar}
                         atChange={() => dispatchToggleUIToolbarHideAction()}
                         exclusive={true}
                         level={2}
