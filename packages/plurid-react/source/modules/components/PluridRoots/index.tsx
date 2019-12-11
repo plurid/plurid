@@ -182,7 +182,7 @@ const mapStateToProps = (
     interactionTheme: selectors.themes.getInteractionTheme(state),
 
     viewSize: selectors.data.getViewSize(state),
-    planeWidth: selectors.configuration.getConfiguration(state).planeWidth,
+    planeWidth: selectors.configuration.getConfiguration(state).elements.plane.width,
     animatedTransform: selectors.space.getAnimatedTransform(state),
     spaceScale: selectors.space.getScale(state),
     spaceRotationX: selectors.space.getRotationX(state),
