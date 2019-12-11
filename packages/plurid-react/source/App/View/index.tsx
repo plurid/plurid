@@ -21,13 +21,13 @@ import {
     PluridApp as PluridAppProperties,
     PluridConfiguration as PluridAppConfiguration,
     Indexed,
-    PluridDocument,
-    PluridPage,
+    // PluridDocument,
+    // PluridPage,
     PluridContext,
     TreePage,
-    PluridInternalStatePage,
+    // PluridInternalStatePage,
     PluridInternalStateDocument,
-    PluridInternalContextPage,
+    // PluridInternalContextPage,
     PluridInternalContextDocument,
 } from '@plurid/plurid-data';
 
@@ -85,6 +85,8 @@ import {
 import {
     registerPaths,
 } from '../../modules/services/utilities/paths';
+
+import mergeConfiguration from '../../modules/services/utilities/mergeConfiguration';
 
 import {
     handleGlobalShortcuts,
@@ -257,7 +259,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         //     dispatchSetMicro();
         // }
 
-        if (configuration.planeControls) {
+        if (configuration.elements.plane.controls.show) {
             dispatchSetConfigurationPlaneControls(true);
         } else {
             dispatchSetConfigurationPlaneControls(false);
@@ -267,12 +269,12 @@ const View: React.FC<ViewProperties> = (properties) => {
             const spaceLocation = computeSpaceLocation(configuration);
             dispatchSetSpaceLocation(spaceLocation);
 
-            if (!configuration.space.showTransformOrigin) {
+            if (!configuration.space.transformOrigin.show) {
                 dispatchToggleShowTransformOrigin();
             }
 
-            if (configuration.space.transformOriginSize) {
-                dispatchSetTransformOriginSize(configuration.space.transformOriginSize);
+            if (configuration.space.transformOrigin.size) {
+                dispatchSetTransformOriginSize(configuration.space.transformOrigin.size);
             }
         }
 
@@ -402,80 +404,6 @@ const View: React.FC<ViewProperties> = (properties) => {
         setTimeout(() => {
             dispatchSetAnimatedTransform(false);
         }, 450);
-    }
-
-    const generatePluridContext = (
-        documents: PluridDocument[] | undefined,
-        pages: PluridPage[] | undefined,
-    ): PluridContext => {
-        const documentPages: Indexed<PluridInternalStatePage> = {};
-        const contextPages: Indexed<PluridInternalContextPage> = {};
-
-        if (!documents && pages) {
-            pages.map(page => {
-                const id = page.id || uuid();
-
-                const contextPage = {
-                    ...page,
-                    id,
-                };
-                contextPages[id] = {
-                    ...contextPage,
-                };
-
-                const documentPage: PluridInternalStatePage = {
-                    root: page.root || false,
-                    ordinal: page.ordinal || 0,
-                    id,
-                    path: page.path,
-                };
-                documentPages[id] = {
-                    ...documentPage,
-                };
-            });
-
-            const document: PluridInternalStateDocument = {
-                id: 'default',
-                name: 'default',
-                pages: documentPages,
-                paths: {},
-                ordinal: 0,
-                active: true,
-            };
-
-            const documents = {
-                default: document,
-            };
-
-            const contextDocument = {
-                id: 'default',
-                name: 'default',
-                pages: contextPages,
-            };
-            const contextDocuments = {
-                default: contextDocument,
-            }
-            // setContextDocuments(contextDocuments);
-            contextDocumentsRef.current = {...contextDocuments};
-
-            dispatchSetDocuments(documents);
-            dispatchSetActiveDocument('default');
-
-            const pluridContext: PluridContext = {
-                pageContext: appProperties.pageContext,
-                pageContextValue: appProperties.pageContextValue,
-                documents: contextDocuments,
-            };
-            return pluridContext;
-        }
-
-        contextDocumentsRef.current = {};
-        const pluridContext: PluridContext = {
-            pageContext: appProperties.pageContext,
-            pageContextValue: appProperties.pageContextValue,
-            documents: {},
-        };
-        return pluridContext;
     }
 
     /** Keydown, Wheel Listeners */
@@ -633,86 +561,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     /** Configuration */
     useEffect(() => {
-        const mergedConfiguration: PluridAppConfiguration = {
-            theme: {
-                general: configuration && typeof configuration.theme === 'string'
-                    ? configuration.theme
-                    : configuration && typeof configuration.theme === 'object'
-                        ? configuration.theme.general
-                        : typeof defaultConfiguration.theme === 'object'
-                            ? defaultConfiguration.theme.general
-                            : 'plurid',
-                interaction: configuration && typeof configuration.theme === 'string'
-                    ? configuration.theme
-                    : configuration && typeof configuration.theme === 'object'
-                        ? configuration.theme.general
-                        : typeof defaultConfiguration.theme === 'object'
-                            ? defaultConfiguration.theme.general
-                            : 'plurid',
-            },
-            micro: configuration && typeof configuration.micro === 'boolean'
-                ? configuration.micro
-                : defaultConfiguration.micro,
-            toolbar: configuration && typeof configuration.toolbar === 'boolean'
-                ? configuration.toolbar
-                : defaultConfiguration.toolbar,
-            viewcube: configuration && typeof configuration.viewcube === 'boolean'
-                ? configuration.viewcube
-                : defaultConfiguration.viewcube,
-            planeControls: configuration && typeof configuration.planeControls === 'boolean'
-                ? configuration.planeControls
-                : defaultConfiguration.planeControls,
-            planeDomainURL: configuration && configuration.planeDomainURL
-                ? configuration.planeDomainURL
-                : defaultConfiguration.planeDomainURL,
-            planeWidth: configuration && typeof configuration.planeWidth === 'number'
-                ? configuration.planeWidth
-                : defaultConfiguration.planeWidth,
-            planeOpacity: configuration && typeof configuration.planeOpacity === 'number'
-                ? configuration.planeOpacity
-                : defaultConfiguration.planeOpacity,
-            space: {
-                layout: configuration && configuration.space && configuration.space.layout
-                    ? configuration.space.layout
-                    : defaultConfiguration.space.layout,
-                camera: configuration && configuration.space && configuration.space.camera
-                    ? configuration.space.camera
-                    : defaultConfiguration.space.camera,
-                perspective: configuration && configuration.space && configuration.space.perspective
-                    ? configuration.space.perspective
-                    : defaultConfiguration.space.perspective,
-                transparent: configuration && configuration.space && typeof configuration.space.transparent === 'boolean'
-                    ? configuration.space.transparent
-                    : defaultConfiguration.space.transparent,
-                center: configuration && configuration.space && typeof configuration.space.center === 'boolean'
-                    ? configuration.space.center
-                    : defaultConfiguration.space.center,
-                showTransformOrigin: configuration && configuration.space && typeof configuration.space.showTransformOrigin === 'boolean'
-                    ? configuration.space.showTransformOrigin
-                    : defaultConfiguration.space.showTransformOrigin,
-                transformOriginSize: configuration && configuration.space && configuration.space.transformOriginSize
-                    ? configuration.space.transformOriginSize
-                    : defaultConfiguration.space.transformOriginSize,
-            },
-            ui: {
-                toolbar: {
-                    hide: configuration && configuration.ui && configuration.ui.toolbar && typeof configuration.ui.toolbar.hide === 'boolean'
-                        ? configuration.ui.toolbar.hide
-                        : defaultConfiguration.ui.toolbar.hide,
-                    alwaysShowIcons: configuration && configuration.ui && configuration.ui.toolbar && typeof configuration.ui.toolbar.alwaysShowIcons === 'boolean'
-                        ? configuration.ui.toolbar.alwaysShowIcons
-                        : defaultConfiguration.ui.toolbar.alwaysShowIcons,
-                    alwaysShowTransformButtons: configuration && configuration.ui && configuration.ui.toolbar && typeof configuration.ui.toolbar.alwaysShowTransformButtons === 'boolean'
-                        ? configuration.ui.toolbar.alwaysShowTransformButtons
-                        : defaultConfiguration.ui.toolbar.alwaysShowTransformButtons,
-                },
-                viewcube: {
-                    transparent: configuration && configuration.ui && configuration.ui.viewcube && typeof configuration.ui.viewcube.transparent === 'boolean'
-                        ? configuration.ui.viewcube.transparent
-                        : defaultConfiguration.ui.viewcube.transparent,
-                },
-            },
-        };
+        const mergedConfiguration = mergeConfiguration(configuration);
 
         if (!initialized) {
             handleConfiguration(mergedConfiguration);
@@ -814,13 +663,6 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     const viewContainer = handleView(pages, documents);
 
-    // const pluridContext = generatePluridContext(
-    //     documents,
-    //     pages,
-    // );
-    // console.log('appProperties', appProperties);
-
-    // console.log('contextDocumentsRef.current', contextDocumentsRef.current);
     const pluridContext: PluridContext = {
         pageContext: appProperties.pageContext,
         pageContextValue: appProperties.pageContextValue,
