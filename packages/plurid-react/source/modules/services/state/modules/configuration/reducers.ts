@@ -45,7 +45,7 @@ const configurationReducer = (
                     ...state.elements,
                     toolbar: {
                         ...state.elements.toolbar,
-                        // show: false,
+                        show: false,
                     },
                     plane: {
                         ...state.elements.plane,

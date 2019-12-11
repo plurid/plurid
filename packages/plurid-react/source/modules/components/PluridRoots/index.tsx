@@ -1,7 +1,4 @@
-import React, {
-    // useState,
-    // useEffect,
-} from 'react';
+import React from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -12,16 +9,8 @@ import {
 
 import {
     TreePage,
+    PluridConfiguration,
 } from '@plurid/plurid-data';
-
-// import {
-//     rotateMatrix,
-//     translateMatrix,
-//     scaleMatrix,
-//     multiplyArrayOfMatrices,
-//     matrixArrayToCSSMatrix,
-// } from '@plurid/plurid-engine';
-
 
 import {
     StyledPluridRoots,
@@ -30,10 +19,8 @@ import {
 
 import PluridRoot from '../PluridRoot';
 
-
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
-import { ViewSize } from '../../services/state/types/data';
 import selectors from '../../services/state/selectors';
 // import actions from '../../services/state/actions';
 
@@ -43,10 +30,8 @@ export interface PluridRootsOwnProperties {
 }
 
 interface PluridRootsStateProperties {
+    configuration: PluridConfiguration;
     interactionTheme: Theme;
-
-    viewSize: ViewSize;
-    planeWidth: number;
     animatedTransform: boolean;
     spaceScale: number;
     spaceRotationX: number;
@@ -56,9 +41,6 @@ interface PluridRootsStateProperties {
     spaceTranslationZ: number;
     firstPerson: boolean;
     tree: TreePage[];
-
-    showTransformOrigin: boolean;
-    transformOriginSize: any;
 }
 
 interface PluridRootsDispatchProperties {
@@ -71,9 +53,8 @@ type PluridRootsProperties = PluridRootsOwnProperties
 const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
     const {
         /** state */
+        configuration,
         interactionTheme,
-        // viewSize,
-        // planeWidth,
         animatedTransform,
         spaceScale,
         spaceRotationX,
@@ -83,35 +64,20 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         spaceTranslationZ,
         // firstPerson,
         tree,
-
-        showTransformOrigin,
-        transformOriginSize,
     } = properties;
 
-    // const [cssMatrix, setCssMatrix] = useState('');
+    const {
+        space,
+    } = configuration;
 
-    // useEffect(() => {
-    //     console.log(spaceRotationY);
-    //     const rotationMatrix = rotateMatrix(spaceRotationX, spaceRotationY, 0);
-    //     const translationMatrix = translateMatrix(spaceTranslationX, spaceTranslationY, 0);
-    //     const scalationMatrix = scaleMatrix(spaceScale);
+    const {
+        transformOrigin,
+    } = space;
 
-    //     const multiplicationMatrix = multiplyArrayOfMatrices([
-    //         translationMatrix,
-    //         rotationMatrix,
-    //         scalationMatrix,
-    //     ]);
-
-    //     const cssMatrix = matrixArrayToCSSMatrix(multiplicationMatrix);
-    //     setCssMatrix(cssMatrix);
-    //     console.log(cssMatrix);
-    // }, [
-    //     spaceScale,
-    //     spaceRotationX,
-    //     spaceRotationY,
-    //     spaceTranslationX,
-    //     spaceTranslationY,
-    // ]);
+    const {
+        show: showTransformOrigin,
+        size: transformOriginSize,
+    } = transformOrigin;
 
     const transformOriginX = spaceTranslationX * -1 + window.innerWidth/2;
     const transformOriginY = spaceTranslationY * -1 + window.innerHeight/2;
@@ -122,7 +88,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
             style={{
                 width: window.innerWidth + 'px',
                 height: window.innerHeight + 'px',
-                // transform: cssMatrix,
                 transform: `
                     translateX(${spaceTranslationX}px)
                     translateY(${spaceTranslationY}px)
@@ -179,10 +144,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): PluridRootsStateProperties => ({
+    configuration: selectors.configuration.getConfiguration(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
-
-    viewSize: selectors.data.getViewSize(state),
-    planeWidth: selectors.configuration.getConfiguration(state).elements.plane.width,
     animatedTransform: selectors.space.getAnimatedTransform(state),
     spaceScale: selectors.space.getScale(state),
     spaceRotationX: selectors.space.getRotationX(state),
@@ -192,9 +155,6 @@ const mapStateToProps = (
     spaceTranslationZ: selectors.space.getTranslationZ(state),
     firstPerson: selectors.space.getFirstPerson(state),
     tree: selectors.space.getTree(state),
-
-    showTransformOrigin: selectors.space.getShowTransformOrigin(state),
-    transformOriginSize: selectors.space.getTransformOriginSize(state),
 });
 
 
