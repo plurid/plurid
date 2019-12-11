@@ -21,12 +21,22 @@ const App = () => {
             // transparent: true,
             // showTransformOrigin: false,
         },
-        // micro: true,
-        // planeWidth: 0.5,
-        // viewcube: false,
-        // toolbar: false,
-        // planeControls: false,
-        // planeOpacity: 0,
+        micro: true,
+        // elements: {
+        //     toolbar: {
+        //         show: false,
+        //     },
+        //     viewcube: {
+        //         show: false,
+        //     },
+        //     plane: {
+        //         width: 0.5,
+        //         opacity: 0,
+        //         controls: {
+        //             show: false,
+        //         },
+        //     },
+        // },
     };
 
     const appPages = [

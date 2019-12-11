@@ -49,14 +49,24 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
         generalTheme,
     } = properties;
 
-    const transparentSpace = configuration.space.opaque;
-    const showToolbar = true;
-    const showViewcube = configuration.elements.viewcube.show;
+    const {
+        elements,
+        space,
+    } = configuration;
+
+    const {
+        toolbar,
+        viewcube,
+    } = elements;
+
+    const opaqueSpace = space.opaque;
+    const showToolbar = toolbar.show;
+    const showViewcube = viewcube.show;
 
     return (
         <StyledPluridSpace
             theme={generalTheme}
-            transparent={!transparentSpace}
+            opaque={opaqueSpace}
         >
             <PluridRoots />
 
