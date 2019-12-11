@@ -56,7 +56,7 @@ export interface PluridConfigurationSpace {
     /**
      * ID of the `Plurid Root` on which to point the camera at.
      */
-    camera: string;
+    camera?: string;
 
     /**
      * Centers the camera on the first `Plurid Root Page`,
