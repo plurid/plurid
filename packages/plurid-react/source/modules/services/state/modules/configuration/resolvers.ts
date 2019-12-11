@@ -6,8 +6,11 @@ import {
     SetConfigurationPlaneOpacityAction,
     SetConfigurationThemeGeneralAction,
     SetConfigurationThemeInteractionAction,
+
     ToggleConfigurationViewcubeHideAction,
     ToggleConfigurationViewcubeOpaqueAction,
+
+    SetConfigurationSpaceTransformOriginSizeAction,
 } from './types';
 
 
@@ -198,6 +201,41 @@ export const toggleConfigurationToolbarTransformButtons = (
     };
 
     newState.elements.toolbar.transformButtons = !transformButtons;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const toggleConfigurationShowTransformOrigin = (
+    state: ConfigurationState,
+): ConfigurationState => {
+    const {
+        show,
+    } = state.space.transformOrigin;
+
+    const newState = {
+        ...state,
+    };
+
+    newState.space.transformOrigin.show = !show;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const setConfigurationSpaceTransformOriginSize = (
+    state: ConfigurationState,
+    action: SetConfigurationSpaceTransformOriginSizeAction,
+): ConfigurationState => {
+    const newState = {
+        ...state,
+    };
+
+    newState.space.transformOrigin.size = action.payload;
 
     return {
         ...newState,

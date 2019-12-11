@@ -13,6 +13,9 @@ import {
     toggleConfigurationToolbarConceal,
     toggleConfigurationToolbarTransformIcons,
     toggleConfigurationToolbarTransformButtons,
+
+    toggleConfigurationSpaceShowTransformOrigin,
+    setConfigurationSpaceTransformOriginSize,
 } from '../modules/configuration/actions';
 
 
@@ -32,4 +35,7 @@ export default {
     toggleConfigurationToolbarConceal,
     toggleConfigurationToolbarTransformIcons,
     toggleConfigurationToolbarTransformButtons,
+
+    toggleConfigurationSpaceShowTransformOrigin,
+    setConfigurationSpaceTransformOriginSize,
 };

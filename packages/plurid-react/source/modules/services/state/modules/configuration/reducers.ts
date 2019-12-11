@@ -18,6 +18,9 @@ import {
     TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
     TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
 
+    TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
+    SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
+
     ConfigurationState,
     ConfigurationActionsType,
 } from './types';
@@ -36,6 +39,9 @@ import {
     toggleConfigurationToolbarConceal,
     toggleConfigurationToolbarTransformIcons,
     toggleConfigurationToolbarTransformButtons,
+
+    toggleConfigurationShowTransformOrigin,
+    setConfigurationSpaceTransformOriginSize,
 } from './resolvers';
 
 
@@ -71,6 +77,10 @@ const configurationReducer = (
             return toggleConfigurationToolbarTransformIcons(state);
         case TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS:
             return toggleConfigurationToolbarTransformButtons(state);
+        case TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN:
+            return toggleConfigurationShowTransformOrigin(state);
+        case SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE:
+            return setConfigurationSpaceTransformOriginSize(state, action);
         default:
             return {
                 ...state,
