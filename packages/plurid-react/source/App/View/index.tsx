@@ -16,6 +16,7 @@ import {
 
     /** enumerations */
     SIZES,
+    TRANSFORM_TOUCHES,
 
     /** interfaces */
     PluridApp as PluridAppProperties,
@@ -697,6 +698,10 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     /** Touch */
     useEffect(() => {
+        const {
+            transformTouch,
+        } = stateConfiguration.space;
+
         /**
          * Remove Hammerjs default css properties to add them only when in Lock Mode.
          * https://stackoverflow.com/a/37896547
@@ -704,29 +709,26 @@ const View: React.FC<ViewProperties> = (properties) => {
         delete Hammer.defaults.cssProps.userSelect;
         delete Hammer.defaults.cssProps.userDrag;
         delete Hammer.defaults.cssProps.tapHighlightColor;
-
         const touch = new Hammer((viewElement as any).current);
-
         touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+        touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
-        touch.on('swipe', handleSwipe);
+        if (transformTouch === TRANSFORM_TOUCHES.SWIPE) {
+            touch.on('swipe', handleSwipe);
+        } else {
+            touch.on('pan', handlePan);
+        }
 
         return () => {
             touch.off('swipe', handleSwipe);
+            touch.off('pan', handlePan);
         }
-
-        // touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-
-        // touch.on('pan', handleSwipe);
-
-        // return () => {
-        //     touch.off('pan', handleSwipe);
-        // }
     }, [
         viewElement.current,
         rotationLocked,
         translationLocked,
         scaleLocked,
+        stateConfiguration,
     ]);
 
     const viewContainer = handleView(pages, documents);
