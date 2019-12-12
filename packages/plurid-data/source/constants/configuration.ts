@@ -24,6 +24,7 @@ export const defaultConfiguration: PluridConfiguration = {
             conceal: false,
             transformIcons: false,
             transformButtons: false,
+            toggledDrawers: [],
         },
         viewcube: {
             show: true,
