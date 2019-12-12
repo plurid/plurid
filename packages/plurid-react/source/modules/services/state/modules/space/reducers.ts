@@ -7,6 +7,10 @@ import {
 } from '@plurid/plurid-data';
 
 import {
+    toRadians,
+} from '../../../utilities/geometry';
+
+import {
     SET_SPACE_LOADING,
 
     SET_ANIMATED_TRANSFORM,
@@ -52,14 +56,7 @@ import {
 
     SET_TREE,
 
-    TOGGLE_ROTATION_LOCKED,
-    TOGGLE_TRANSLATION_LOCKED,
-    TOGGLE_SCALE_LOCKED,
-
     SET_ACTIVE_DOCUMENT,
-
-    SET_TRANSFORM_ORIGIN_SIZE,
-    TOGGLE_SHOW_TRANSFORM_ORIGIN,
 
     SPACE_RESET_TRANSFORM,
 
@@ -68,14 +65,6 @@ import {
 } from './types';
 
 
-
-const toDegrees = (angle: number) => {
-    return angle * (180 / Math.PI);
-}
-
-const toRadians = (angle: number) => {
-    return angle * (Math.PI / 180);
-}
 
 const initialState: SpaceState = {
     loading: true,
@@ -87,9 +76,6 @@ const initialState: SpaceState = {
     translationY: 0,
     translationZ: 0,
     tree: [],
-    rotationLocked: false,
-    translationLocked: false,
-    scaleLocked: false,
     activeDocumentID: '',
     firstPerson: false,
     camera: {
@@ -97,8 +83,6 @@ const initialState: SpaceState = {
         y: 0,
         z: 0,
     },
-    showTransformOrigin: true,
-    transformOriginSize: 'NORMAL',
 };
 
 const spaceReducer = (
@@ -124,9 +108,6 @@ const spaceReducer = (
             {
                 return {
                     ...state,
-                    rotationLocked: false,
-                    translationLocked: false,
-                    scaleLocked: false,
                     firstPerson: !state.firstPerson,
                 };
             }
@@ -420,55 +401,11 @@ const spaceReducer = (
                     ],
                 };
             }
-        case TOGGLE_ROTATION_LOCKED:
-            {
-                return {
-                    ...state,
-                    rotationLocked: !state.rotationLocked,
-                    translationLocked: false,
-                    scaleLocked: false,
-                    firstPerson: false,
-                };
-            }
-        case TOGGLE_TRANSLATION_LOCKED:
-            {
-                return {
-                    ...state,
-                    rotationLocked: false,
-                    translationLocked: !state.translationLocked,
-                    scaleLocked: false,
-                    firstPerson: false,
-                };
-            }
-        case TOGGLE_SCALE_LOCKED:
-            {
-                return {
-                    ...state,
-                    rotationLocked: false,
-                    translationLocked: false,
-                    scaleLocked: !state.scaleLocked,
-                    firstPerson: false,
-                };
-            }
         case SET_ACTIVE_DOCUMENT:
             {
                 return {
                     ...state,
                     activeDocumentID: action.payload,
-                };
-            }
-        case SET_TRANSFORM_ORIGIN_SIZE:
-            {
-                return {
-                    ...state,
-                    transformOriginSize: action.payload,
-                };
-            }
-        case TOGGLE_SHOW_TRANSFORM_ORIGIN:
-            {
-                return {
-                    ...state,
-                    showTransformOrigin: !state.showTransformOrigin,
                 };
             }
         case SPACE_RESET_TRANSFORM:
