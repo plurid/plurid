@@ -19,6 +19,7 @@ export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: KeyboardEvent,
     firstPerson: boolean,
+    locks: PluridConfigurationSpaceTransformLocks,
 ) => {
     const inputOnPath = verifyPathforInputElement((event as any).path);
     if (inputOnPath) {
@@ -41,6 +42,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyW'
             && noModifiers
+            && locks.translationZ
         ) {
             return dispatch(actions.space.viewCameraMoveForward());
         }
@@ -48,6 +50,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyS'
             && noModifiers
+            && locks.translationZ
         ) {
             return dispatch(actions.space.viewCameraMoveBackward());
         }
@@ -56,6 +59,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyA'
             && noModifiers
+            && locks.translationX
         ) {
             return dispatch(actions.space.viewCameraMoveLeft());
         }
@@ -63,6 +67,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyA'
             && event.shiftKey
+            && locks.rotationY
         ) {
             return dispatch(actions.space.viewCameraTurnLeft());
         }
@@ -71,6 +76,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyD'
             && noModifiers
+            && locks.translationX
         ) {
             return dispatch(actions.space.viewCameraMoveRight());
         }
@@ -78,6 +84,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyD'
             && event.shiftKey
+            && locks.rotationY
         ) {
             return dispatch(actions.space.viewCameraTurnRight());
         }
@@ -86,6 +93,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyQ'
             && noModifiers
+            && locks.rotationX
         ) {
             return dispatch(actions.space.viewCameraTurnUp());
         }
@@ -93,6 +101,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyZ'
             && noModifiers
+            && locks.rotationX
         ) {
             return dispatch(actions.space.viewCameraTurnDown());
         }
@@ -101,6 +110,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyE'
             && noModifiers
+            && locks.translationY
         ) {
             return dispatch(actions.space.viewCameraMoveUp());
         }
@@ -108,6 +118,7 @@ export const handleGlobalShortcuts = (
         if (
             event.code === 'KeyC'
             && noModifiers
+            && locks.translationY
         ) {
             return dispatch(actions.space.viewCameraMoveDown());
         }
@@ -149,49 +160,49 @@ export const handleGlobalShortcuts = (
 
 
     if (event.key === 'ArrowRight') {
-        if (event.shiftKey) {
+        if (event.shiftKey && locks.rotationY) {
             return dispatch(actions.space.rotateLeft());
         }
-        if (event.altKey) {
+        if (event.altKey && locks.translationX) {
             return dispatch(actions.space.translateRight());
         }
     }
 
     if (event.key === 'ArrowLeft') {
-        if (event.shiftKey) {
+        if (event.shiftKey && locks.rotationY) {
             return dispatch(actions.space.rotateRight());
         }
-        if (event.altKey) {
+        if (event.altKey && locks.translationX) {
             return dispatch(actions.space.translateLeft());
         }
     }
 
     if (event.key === 'ArrowUp') {
-        if (event.shiftKey && event.altKey) {
+        if (event.shiftKey && event.altKey && locks.translationZ) {
             return dispatch(actions.space.translateIn());
         }
-        if (event.shiftKey && !event.altKey) {
+        if (event.shiftKey && !event.altKey && locks.rotationX) {
             return dispatch(actions.space.rotateUp());
         }
-        if (event.altKey && !event.shiftKey) {
+        if (event.altKey && !event.shiftKey && locks.translationY) {
             return dispatch(actions.space.translateUp());
         }
-        if (event.metaKey || event.ctrlKey) {
+        if (event.metaKey || event.ctrlKey && locks.scale) {
             return dispatch(actions.space.scaleUp());
         }
     }
 
     if (event.key === 'ArrowDown') {
-        if (event.shiftKey && event.altKey) {
+        if (event.shiftKey && event.altKey && locks.translationZ) {
             return dispatch(actions.space.translateOut());
         }
-        if (event.shiftKey && !event.altKey) {
+        if (event.shiftKey && !event.altKey && locks.rotationX) {
             return dispatch(actions.space.rotateDown());
         }
-        if (event.altKey && !event.shiftKey) {
+        if (event.altKey && !event.shiftKey && locks.translationY) {
             return dispatch(actions.space.translateDown());
         }
-        if (event.metaKey || event.ctrlKey) {
+        if (event.metaKey || event.ctrlKey && locks.scale) {
             return dispatch(actions.space.scaleDown());
         }
     }

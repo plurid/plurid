@@ -200,13 +200,19 @@ const View: React.FC<ViewProperties> = (properties) => {
     // const [contextDocuments, setContextDocuments] = useState<Indexed<PluridInternalContextDocument>>({});
 
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
+        const {
+            transformLocks,
+        } = stateConfiguration.space;
+
         handleGlobalShortcuts(
             dispatch,
             event,
             stateConfiguration.space.firstPerson,
+            transformLocks,
         );
     }, [
         stateConfiguration.space.firstPerson,
+        stateConfiguration.space.transformLocks,
         dispatch,
     ]);
 
