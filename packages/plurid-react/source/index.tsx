@@ -5,7 +5,7 @@ import {
 
     RecursivePartial,
 
-    LAYOUT_TYPES,
+    LAYOUT_TYPES as SPACE_LAYOUT,
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
@@ -32,7 +32,7 @@ export {
     RecursivePartial,
 
     /** Enumerations */
-    LAYOUT_TYPES,
+    SPACE_LAYOUT,
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
