@@ -13,6 +13,7 @@ import {
 
     TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
     TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
+    TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL,
 
     TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL,
     TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
@@ -43,6 +44,7 @@ import {
 
     toggleConfigurationViewcubeHide,
     toggleConfigurationViewcubeOpaque,
+    toggleConfigurationViewcubeConceal,
 
     toggleConfigurationToolbarConceal,
     toggleConfigurationToolbarTransformIcons,
@@ -87,6 +89,8 @@ const configurationReducer = (
             return toggleConfigurationViewcubeHide(state, action);
         case TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE:
             return toggleConfigurationViewcubeOpaque(state, action);
+        case TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL:
+            return toggleConfigurationViewcubeConceal(state);
         case TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL:
             return toggleConfigurationToolbarConceal(state);
         case TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS:

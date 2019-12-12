@@ -37,6 +37,7 @@ interface MenuMoreViewcubeStateProperties {
 interface MenuMoreViewcubeDispatchProperties {
     dispatchToggleConfigurationViewcubeHide: typeof actions.configuration.toggleConfigurationViewcubeHide;
     dispatchToggleConfigurationViewcubeOpaque: typeof actions.configuration.toggleConfigurationViewcubeOpaque;
+    dispatchToggleConfigurationViewcubeConceal: typeof actions.configuration.toggleConfigurationViewcubeConceal;
 }
 
 type MenuMoreViewcubeProperties = MenuMoreViewcubeOwnProperties
@@ -52,6 +53,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
         /** dispatch */
         dispatchToggleConfigurationViewcubeHide,
         dispatchToggleConfigurationViewcubeOpaque,
+        dispatchToggleConfigurationViewcubeConceal,
     } = properties;
 
     const {
@@ -61,6 +63,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
     const {
         show,
         opaque,
+        conceal,
     } = viewcube;
 
     return (
@@ -105,8 +108,8 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
 
                         <PluridSwitch
                             theme={interactionTheme}
-                            checked={false}
-                            atChange={() => {}}
+                            checked={conceal}
+                            atChange={() => dispatchToggleConfigurationViewcubeConceal()}
                             exclusive={true}
                             level={2}
                         />
@@ -134,6 +137,9 @@ const mapDispatchToProps = (
     ),
     dispatchToggleConfigurationViewcubeOpaque: (toggle: boolean) => dispatch(
         actions.configuration.toggleConfigurationViewcubeOpaque(toggle)
+    ),
+    dispatchToggleConfigurationViewcubeConceal: () => dispatch(
+        actions.configuration.toggleConfigurationViewcubeConceal()
     ),
 });
 

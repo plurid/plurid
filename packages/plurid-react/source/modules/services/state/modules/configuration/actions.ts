@@ -28,6 +28,8 @@ import {
     ToggleConfigurationViewcubeHideAction,
     TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
     ToggleConfigurationViewcubeOpaqueAction,
+    TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL,
+    ToggleConfigurationViewcubeConcealAction,
 
     TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL,
     ToggleConfigurationToolbarConcealAction,
@@ -128,6 +130,13 @@ export const toggleConfigurationViewcubeOpaque = (
     return {
         type: TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
         payload: toggle,
+    };
+}
+
+
+export const toggleConfigurationViewcubeConceal = (): ToggleConfigurationViewcubeConcealAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL,
     };
 }
 

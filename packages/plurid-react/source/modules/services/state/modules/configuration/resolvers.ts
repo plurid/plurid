@@ -160,6 +160,25 @@ export const toggleConfigurationViewcubeOpaque = (
 }
 
 
+export const toggleConfigurationViewcubeConceal = (
+    state: ConfigurationState,
+): ConfigurationState => {
+    const {
+        conceal,
+    } = state.elements.viewcube;
+
+    const newState = {
+        ...state,
+    };
+
+    newState.elements.viewcube.conceal = !conceal;
+
+    return {
+        ...newState,
+    };
+}
+
+
 export const toggleConfigurationToolbarConceal = (
     state: ConfigurationState,
 ): ConfigurationState => {
