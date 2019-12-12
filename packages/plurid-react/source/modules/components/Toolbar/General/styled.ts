@@ -30,9 +30,15 @@ export const StyledToolbar: any = styled.div`
 `;
 
 
-export const StyledToolbarButtons: any = styled.div`
-    pointer-events: all;
+export const StyledToolbarButtonsContainer: any = styled.div`
+    z-index: 9999;
+    user-select: none;
+    height: 65px;
+    display: grid;
+`;
 
+
+export const StyledToolbarButtons: any = styled.div`
     background-color: ${(props: any) => {
         return props.theme.backgroundColorSecondary;
     }};
@@ -66,6 +72,7 @@ export const StyledToolbarButtons: any = styled.div`
         return '40px 200px 200px 200px 40px';
     }};
 
+    pointer-events: all;
     display: grid;
     align-items: center;
     justify-content: center;
@@ -78,8 +85,6 @@ export const StyledToolbarButtons: any = styled.div`
     opacity: 1;
     height: 45px;
     transition: opacity 300ms ease-in-out;
-    z-index: 9999;
-    user-select: none;
 `;
 
 

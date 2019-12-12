@@ -19,6 +19,7 @@ import {
 
 import {
     StyledToolbar,
+    StyledToolbarButtonsContainer,
     StyledToolbarButtons,
     StyledToolbarRotate,
     StyledToolbarTranslate,
@@ -129,8 +130,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     } = configuration.elements;
 
     const {
-        show: showToolbar,
         conceal,
+        opaque,
         transformIcons,
         transformButtons,
     } = toolbar;
@@ -196,215 +197,218 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             hideToolbar={conceal}
             showMenu={showMenu}
         >
-            <StyledToolbarButtons
-                theme={theme}
-                showIcons={showIcons}
-                showTransformButtons={showTransformButtons}
-                documentsBased={documentsBased}
-            >
-                <StyledToolbarTransformText
+            <StyledToolbarButtonsContainer>
+                <StyledToolbarButtons
                     theme={theme}
-                    onClick={() => dispatchToggleConfigurationSpaceFirstPerson()}
-                    active={firstPerson}
-                    button={true}
-                >
-                    <StyledIcon>
-                        {FirstPersonIcon}
-                    </StyledIcon>
-                </StyledToolbarTransformText>
-
-
-                <StyledToolbarRotate
+                    showIcons={showIcons}
                     showTransformButtons={showTransformButtons}
+                    documentsBased={documentsBased}
+                    opaque={opaque}
                 >
-                    {showTransformButtons && (
-                        <>
-                            <StyledToolbarTransformButton
-                                theme={theme}
-                                onClick={rotateRight}
-                            >
-                                ◀
-                            </StyledToolbarTransformButton>
-
-                            <StyledToolbarTransformButton
-                                theme={theme}
-                                onClick={rotateUp}
-                            >
-                                ▲
-                            </StyledToolbarTransformButton>
-                        </>
-                    )}
-
                     <StyledToolbarTransformText
                         theme={theme}
-                        onClick={() => toggleTransform(TRANSFORM_MODES.ROTATION)}
-                        active={transformMode === TRANSFORM_MODES.ROTATION}
-                        showIcons={showIcons}
-                        showTransformButtons={showTransformButtons}
-                        button={showIcons}
-                    >
-                        {showIcons
-                            ? (
-                                <StyledIcon>
-                                    {RotateIcon}
-                                </StyledIcon>
-                            ) : (
-                                <>rotate</>
-                            )
-                        }
-                    </StyledToolbarTransformText>
-
-                    {showTransformButtons && (
-                        <>
-                            <StyledToolbarTransformButton
-                                theme={theme}
-                                onClick={rotateDown}
-                            >
-                                ▼
-                            </StyledToolbarTransformButton>
-
-                            <StyledToolbarTransformButton
-                                theme={theme}
-                                onClick={rotateLeft}
-                            >
-                                ▶
-                            </StyledToolbarTransformButton>
-                        </>
-                    )}
-                </StyledToolbarRotate>
-
-
-                <StyledToolbarScale
-                    showTransformButtons={showTransformButtons}
-                >
-                    {showTransformButtons && (
-                        <StyledToolbarTransformButton
-                            theme={theme}
-                            onClick={scaleUp}
-                        >
-                            ▲
-                        </StyledToolbarTransformButton>
-                    )}
-
-                    <StyledToolbarTransformText
-                        theme={theme}
-                        onClick={() => toggleTransform(TRANSFORM_MODES.SCALE)}
-                        active={transformMode === TRANSFORM_MODES.SCALE}
-                        showIcons={showIcons}
-                        showTransformButtons={showTransformButtons}
-                        button={showIcons}
-                    >
-                        {showIcons
-                            ? (
-                                <StyledIcon>
-                                    {ScaleIcon}
-                                </StyledIcon>
-                            ) : (
-                                <>scale</>
-                            )
-                        }
-                    </StyledToolbarTransformText>
-
-                    {showTransformButtons && (
-                        <StyledToolbarTransformButton
-                            theme={theme}
-                            onClick={scaleDown}
-                        >
-                            ▼
-                        </StyledToolbarTransformButton>
-                    )}
-                </StyledToolbarScale>
-
-
-                <StyledToolbarTranslate
-                    showTransformButtons={showTransformButtons}
-                >
-                    {showTransformButtons && (
-                        <>
-                            <StyledToolbarTransformButton
-                                theme={theme}
-                                onClick={translateLeft}
-                            >
-                                ◀
-                            </StyledToolbarTransformButton>
-
-                            <StyledToolbarTransformButton
-                                theme={theme}
-                                onClick={translateUp}
-                            >
-                                ▲
-                            </StyledToolbarTransformButton>
-                        </>
-                    )}
-
-                    <StyledToolbarTransformText
-                        theme={theme}
-                        onClick={() => toggleTransform(TRANSFORM_MODES.TRANSLATION)}
-                        active={transformMode === TRANSFORM_MODES.TRANSLATION}
-                        showIcons={showIcons}
-                        showTransformButtons={showTransformButtons}
-                        button={showIcons}
-                    >
-                        {showIcons
-                            ? (
-                                <StyledIcon>
-                                    {TranslateIcon}
-                                </StyledIcon>
-                            ) : (
-                                <>translate</>
-                            )
-                        }
-                    </StyledToolbarTransformText>
-
-                    {showTransformButtons && (
-                        <>
-                            <StyledToolbarTransformButton
-                                theme={theme}
-                                onClick={translateDown}
-                            >
-                                ▼
-                            </StyledToolbarTransformButton>
-
-                            <StyledToolbarTransformButton
-                                theme={theme}
-                                onClick={translateRight}
-                            >
-                                ▶
-                            </StyledToolbarTransformButton>
-                        </>
-                    )}
-                </StyledToolbarTranslate>
-
-                {documentsBased && (
-                    <StyledToolbarTransformText
-                        theme={theme}
-                        onClick={() => showMenu === MENUS.DOCUMENTS
-                            ? setShowMenu(MENUS.NONE)
-                            : setShowMenu(MENUS.DOCUMENTS)
-                        }
-                        active={showMenu === MENUS.DOCUMENTS}
+                        onClick={() => dispatchToggleConfigurationSpaceFirstPerson()}
+                        active={firstPerson}
                         button={true}
                     >
                         <StyledIcon>
-                            {DocumentsIcon}
+                            {FirstPersonIcon}
                         </StyledIcon>
                     </StyledToolbarTransformText>
-                )}
 
-                <StyledToolbarTransformText
-                    theme={theme}
-                    onClick={() => showMenu === MENUS.MORE
-                        ? setShowMenu(MENUS.NONE)
-                        : setShowMenu(MENUS.MORE)
-                    }
-                    active={showMenu === MENUS.MORE}
-                    button={true}
-                >
-                    <StyledIcon>
-                        {MoreIcon}
-                    </StyledIcon>
-                </StyledToolbarTransformText>
-            </StyledToolbarButtons>
+
+                    <StyledToolbarRotate
+                        showTransformButtons={showTransformButtons}
+                    >
+                        {showTransformButtons && (
+                            <>
+                                <StyledToolbarTransformButton
+                                    theme={theme}
+                                    onClick={rotateRight}
+                                >
+                                    ◀
+                                </StyledToolbarTransformButton>
+
+                                <StyledToolbarTransformButton
+                                    theme={theme}
+                                    onClick={rotateUp}
+                                >
+                                    ▲
+                                </StyledToolbarTransformButton>
+                            </>
+                        )}
+
+                        <StyledToolbarTransformText
+                            theme={theme}
+                            onClick={() => toggleTransform(TRANSFORM_MODES.ROTATION)}
+                            active={transformMode === TRANSFORM_MODES.ROTATION}
+                            showIcons={showIcons}
+                            showTransformButtons={showTransformButtons}
+                            button={showIcons}
+                        >
+                            {showIcons
+                                ? (
+                                    <StyledIcon>
+                                        {RotateIcon}
+                                    </StyledIcon>
+                                ) : (
+                                    <>rotate</>
+                                )
+                            }
+                        </StyledToolbarTransformText>
+
+                        {showTransformButtons && (
+                            <>
+                                <StyledToolbarTransformButton
+                                    theme={theme}
+                                    onClick={rotateDown}
+                                >
+                                    ▼
+                                </StyledToolbarTransformButton>
+
+                                <StyledToolbarTransformButton
+                                    theme={theme}
+                                    onClick={rotateLeft}
+                                >
+                                    ▶
+                                </StyledToolbarTransformButton>
+                            </>
+                        )}
+                    </StyledToolbarRotate>
+
+
+                    <StyledToolbarScale
+                        showTransformButtons={showTransformButtons}
+                    >
+                        {showTransformButtons && (
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={scaleUp}
+                            >
+                                ▲
+                            </StyledToolbarTransformButton>
+                        )}
+
+                        <StyledToolbarTransformText
+                            theme={theme}
+                            onClick={() => toggleTransform(TRANSFORM_MODES.SCALE)}
+                            active={transformMode === TRANSFORM_MODES.SCALE}
+                            showIcons={showIcons}
+                            showTransformButtons={showTransformButtons}
+                            button={showIcons}
+                        >
+                            {showIcons
+                                ? (
+                                    <StyledIcon>
+                                        {ScaleIcon}
+                                    </StyledIcon>
+                                ) : (
+                                    <>scale</>
+                                )
+                            }
+                        </StyledToolbarTransformText>
+
+                        {showTransformButtons && (
+                            <StyledToolbarTransformButton
+                                theme={theme}
+                                onClick={scaleDown}
+                            >
+                                ▼
+                            </StyledToolbarTransformButton>
+                        )}
+                    </StyledToolbarScale>
+
+
+                    <StyledToolbarTranslate
+                        showTransformButtons={showTransformButtons}
+                    >
+                        {showTransformButtons && (
+                            <>
+                                <StyledToolbarTransformButton
+                                    theme={theme}
+                                    onClick={translateLeft}
+                                >
+                                    ◀
+                                </StyledToolbarTransformButton>
+
+                                <StyledToolbarTransformButton
+                                    theme={theme}
+                                    onClick={translateUp}
+                                >
+                                    ▲
+                                </StyledToolbarTransformButton>
+                            </>
+                        )}
+
+                        <StyledToolbarTransformText
+                            theme={theme}
+                            onClick={() => toggleTransform(TRANSFORM_MODES.TRANSLATION)}
+                            active={transformMode === TRANSFORM_MODES.TRANSLATION}
+                            showIcons={showIcons}
+                            showTransformButtons={showTransformButtons}
+                            button={showIcons}
+                        >
+                            {showIcons
+                                ? (
+                                    <StyledIcon>
+                                        {TranslateIcon}
+                                    </StyledIcon>
+                                ) : (
+                                    <>translate</>
+                                )
+                            }
+                        </StyledToolbarTransformText>
+
+                        {showTransformButtons && (
+                            <>
+                                <StyledToolbarTransformButton
+                                    theme={theme}
+                                    onClick={translateDown}
+                                >
+                                    ▼
+                                </StyledToolbarTransformButton>
+
+                                <StyledToolbarTransformButton
+                                    theme={theme}
+                                    onClick={translateRight}
+                                >
+                                    ▶
+                                </StyledToolbarTransformButton>
+                            </>
+                        )}
+                    </StyledToolbarTranslate>
+
+                    {documentsBased && (
+                        <StyledToolbarTransformText
+                            theme={theme}
+                            onClick={() => showMenu === MENUS.DOCUMENTS
+                                ? setShowMenu(MENUS.NONE)
+                                : setShowMenu(MENUS.DOCUMENTS)
+                            }
+                            active={showMenu === MENUS.DOCUMENTS}
+                            button={true}
+                        >
+                            <StyledIcon>
+                                {DocumentsIcon}
+                            </StyledIcon>
+                        </StyledToolbarTransformText>
+                    )}
+
+                    <StyledToolbarTransformText
+                        theme={theme}
+                        onClick={() => showMenu === MENUS.MORE
+                            ? setShowMenu(MENUS.NONE)
+                            : setShowMenu(MENUS.MORE)
+                        }
+                        active={showMenu === MENUS.MORE}
+                        button={true}
+                    >
+                        <StyledIcon>
+                            {MoreIcon}
+                        </StyledIcon>
+                    </StyledToolbarTransformText>
+                </StyledToolbarButtons>
+            </StyledToolbarButtonsContainer>
 
             {showMenu === MENUS.DOCUMENTS && (
                 <MenuDocuments />
