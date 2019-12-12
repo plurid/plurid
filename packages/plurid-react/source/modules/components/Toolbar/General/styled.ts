@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export const StyledToolbar: any = styled.div`
     bottom: ${(props: any) => {
-        if (!props.hideToolbar) {
+        if (!props.conceal) {
             return '-5px';
         }
 
@@ -33,7 +33,7 @@ export const StyledToolbar: any = styled.div`
 export const StyledToolbarButtonsContainer: any = styled.div`
     z-index: 9999;
     user-select: none;
-    height: 65px;
+    height: 75px;
     display: grid;
 `;
 
