@@ -22,24 +22,24 @@ const App = () => {
             //     show: false,
             //     size: 'large',
             // },
-            // center: true,
+            center: true,
             // opaque: false,
         },
-        // elements: {
+        elements: {
         //     toolbar: {
         //         show: false,
         //     },
         //     viewcube: {
         //         show: false,
         //     },
-        //     plane: {
-        //         width: 0.5,
+            plane: {
+                width: 0.5,
         //         opacity: 0,
         //         controls: {
         //             show: false,
         //         },
-        //     },
-        // },
+            },
+        },
     };
 
     const appPages = [
