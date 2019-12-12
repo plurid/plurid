@@ -147,6 +147,10 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     const toggleTransform = (
         TYPE: keyof typeof TRANSFORM_MODES,
     ) => {
+        if (showMenu !== MENUS.NONE) {
+            setShowMenu(MENUS.NONE);
+        }
+
         dispatchSetConfigurationSpaceTransformMode(TYPE);
     }
 
