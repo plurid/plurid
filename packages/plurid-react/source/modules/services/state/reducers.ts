@@ -5,6 +5,7 @@ import configuration from './modules/configuration/reducers';
 import shortcuts from './modules/shortcuts/reducers';
 import space from './modules/space/reducers';
 import themes from './modules/themes/reducers';
+import ui from './modules/ui/reducers';
 
 
 
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     shortcuts,
     space,
     themes,
+    ui,
 });
 
 
