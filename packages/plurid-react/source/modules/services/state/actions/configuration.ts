@@ -16,6 +16,9 @@ import {
 
     toggleConfigurationSpaceShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
+
+    setConfigurationSpaceTransformMode,
+    setConfigurationSpaceTransformTouch,
 } from '../modules/configuration/actions';
 
 
@@ -38,4 +41,7 @@ export default {
 
     toggleConfigurationSpaceShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
+
+    setConfigurationSpaceTransformMode,
+    setConfigurationSpaceTransformTouch,
 };
