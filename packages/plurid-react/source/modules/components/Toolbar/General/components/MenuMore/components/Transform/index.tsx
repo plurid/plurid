@@ -38,6 +38,7 @@ interface MenuMoreTransformStateProperties {
 
 interface MenuMoreTransformDispatchProperties {
     dispatchSetConfigurationSpaceTransformTouch: typeof actions.configuration.setConfigurationSpaceTransformTouch;
+    dispatchSetConfigurationSpaceTransformLocks: typeof actions.configuration.setConfigurationSpaceTransformLocks;
 }
 
 type MenuMoreTransformProperties = MenuMoreTransformOwnProperties
@@ -52,9 +53,13 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
         /** dispatch */
         dispatchSetConfigurationSpaceTransformTouch,
+        dispatchSetConfigurationSpaceTransformLocks,
     } = properties;
 
-    const transformTouch = configuration.space.transformTouch;
+    const {
+        transformLocks,
+        transformTouch,
+    } = configuration.space;
 
     return (
         <>
@@ -65,8 +70,8 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={false}
-                    atChange={() => {}}
+                    checked={transformLocks.rotationX}
+                    atChange={() => dispatchSetConfigurationSpaceTransformLocks('rotationX')}
                     exclusive={true}
                     level={2}
                 />
@@ -79,8 +84,8 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={false}
-                    atChange={() => {}}
+                    checked={transformLocks.rotationY}
+                    atChange={() => dispatchSetConfigurationSpaceTransformLocks('rotationY')}
                     exclusive={true}
                     level={2}
                 />
@@ -93,8 +98,8 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={false}
-                    atChange={() => {}}
+                    checked={transformLocks.translationX}
+                    atChange={() => dispatchSetConfigurationSpaceTransformLocks('translationX')}
                     exclusive={true}
                     level={2}
                 />
@@ -107,8 +112,8 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={false}
-                    atChange={() => {}}
+                    checked={transformLocks.translationY}
+                    atChange={() => dispatchSetConfigurationSpaceTransformLocks('translationY')}
                     exclusive={true}
                     level={2}
                 />
@@ -121,8 +126,8 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={false}
-                    atChange={() => {}}
+                    checked={transformLocks.translationZ}
+                    atChange={() => dispatchSetConfigurationSpaceTransformLocks('translationZ')}
                     exclusive={true}
                     level={2}
                 />
@@ -135,8 +140,8 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={false}
-                    atChange={() => {}}
+                    checked={transformLocks.scale}
+                    atChange={() => dispatchSetConfigurationSpaceTransformLocks('scale')}
                     exclusive={true}
                     level={2}
                 />
@@ -144,7 +149,10 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    touch transform: {transformTouch === TRANSFORM_TOUCHES.PAN ? 'pan' : 'swipe'}
+                    touch transform: {transformTouch === TRANSFORM_TOUCHES.PAN
+                        ? 'pan'
+                        : 'swipe'
+                    }
                 </div>
 
                 <PluridSwitch
@@ -177,6 +185,11 @@ const mapDispatchToProps = (
         touch: keyof typeof TRANSFORM_TOUCHES,
     ) => dispatch(
         actions.configuration.setConfigurationSpaceTransformTouch(touch)
+    ),
+    dispatchSetConfigurationSpaceTransformLocks: (
+        lock: string,
+    ) => dispatch(
+        actions.configuration.setConfigurationSpaceTransformLocks(lock)
     ),
 });
 
