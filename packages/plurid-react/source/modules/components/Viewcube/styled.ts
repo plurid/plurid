@@ -5,7 +5,12 @@ import styled from 'styled-components';
 export const StyledViewcube: any = styled.div`
     position: absolute;
     @media (max-width: 800px) {
-        top: 0;
+        top: ${(props: any) => {
+            if (props.conceal && !props.mouseOver) {
+                return '-90px';
+            }
+            return '0';
+        }};
     }
     bottom: ${(props: any) => {
         if (props.conceal && !props.mouseOver) {
