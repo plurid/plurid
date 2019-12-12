@@ -13,6 +13,8 @@ import {
 
 import {
     PluridConfiguration,
+
+    TRANSFORM_MODES,
 } from '@plurid/plurid-data';
 
 import {
@@ -63,9 +65,9 @@ interface ToolbarStateProperties {
     configuration: PluridConfiguration;
     viewSize: ViewSize;
     firstPerson: boolean;
-    rotationLocked: boolean;
-    translationLocked: boolean;
-    scaleLocked: boolean;
+    // rotationLocked: boolean;
+    // translationLocked: boolean;
+    // scaleLocked: boolean;
     documents: any;
 }
 
@@ -85,9 +87,7 @@ interface ToolbarDispatchProperties {
     translateLeft: typeof actions.space.translateLeft;
     translateRight: typeof actions.space.translateRight;
 
-    dispatchToggleRotationLocked: typeof actions.space.toggleRotationLocked;
-    dispatchToggleTranslationLocked: typeof actions.space.toggleTranslationLocked;
-    dispatchToggleScaleLocked: typeof actions.space.toggleScaleLocked;
+    dispatchSetConfigurationSpaceTransformMode: typeof actions.configuration.setConfigurationSpaceTransformMode;
 }
 
 type ToolbarProperties = ToolbarOwnProperties
@@ -102,9 +102,9 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         theme,
         configuration,
         firstPerson,
-        rotationLocked,
-        translationLocked,
-        scaleLocked,
+        // rotationLocked,
+        // translationLocked,
+        // scaleLocked,
         viewSize,
         documents,
 
@@ -124,10 +124,10 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         translateLeft,
         translateRight,
 
-        dispatchToggleRotationLocked,
-        dispatchToggleTranslationLocked,
-        dispatchToggleScaleLocked,
+        dispatchSetConfigurationSpaceTransformMode,
     } = properties;
+
+    const transformMode = configuration.space.transformMode;
 
     const {
         toolbar,
@@ -148,18 +148,12 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     const [showTransformButtons, setShowTransformButtons] = useState(transformButtons);
 
     const toggleTransform = (
-        type: string,
+        TYPE: keyof typeof TRANSFORM_MODES,
     ) => {
-        switch (type) {
-            case 'rotate':
-                dispatchToggleRotationLocked();
-                break;
-            case 'translate':
-                dispatchToggleTranslationLocked();
-                break;
-            case 'scale':
-                    dispatchToggleScaleLocked();
-                break;
+        if (transformMode !== TYPE) {
+            dispatchSetConfigurationSpaceTransformMode(TYPE);
+        } else {
+            dispatchSetConfigurationSpaceTransformMode(TRANSFORM_MODES.ALL);
         }
     }
 
@@ -251,8 +245,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
                     <StyledToolbarTransformText
                         theme={theme}
-                        onClick={() => toggleTransform('rotate')}
-                        active={rotationLocked}
+                        onClick={() => toggleTransform(TRANSFORM_MODES.ROTATION)}
+                        active={transformMode === TRANSFORM_MODES.ROTATION}
                         showIcons={showIcons}
                         showTransformButtons={showTransformButtons}
                         button={showIcons}
@@ -302,8 +296,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
                     <StyledToolbarTransformText
                         theme={theme}
-                        onClick={() => toggleTransform('scale')}
-                        active={scaleLocked}
+                        onClick={() => toggleTransform(TRANSFORM_MODES.SCALE)}
+                        active={transformMode === TRANSFORM_MODES.SCALE}
                         showIcons={showIcons}
                         showTransformButtons={showTransformButtons}
                         button={showIcons}
@@ -353,8 +347,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
                     <StyledToolbarTransformText
                         theme={theme}
-                        onClick={() => toggleTransform('translate')}
-                        active={translationLocked}
+                        onClick={() => toggleTransform(TRANSFORM_MODES.TRANSLATION)}
+                        active={transformMode === TRANSFORM_MODES.TRANSLATION}
                         showIcons={showIcons}
                         showTransformButtons={showTransformButtons}
                         button={showIcons}
@@ -437,9 +431,9 @@ const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
     theme: selectors.themes.getInteractionTheme(state),
     viewSize: selectors.data.getViewSize(state),
     firstPerson: selectors.space.getFirstPerson(state),
-    rotationLocked: selectors.space.getRotationLocked(state),
-    translationLocked: selectors.space.getTranslationLocked(state),
-    scaleLocked: selectors.space.getScaleLocked(state),
+    // rotationLocked: selectors.space.getRotationLocked(state),
+    // translationLocked: selectors.space.getTranslationLocked(state),
+    // scaleLocked: selectors.space.getScaleLocked(state),
     documents: selectors.data.getDocuments(state),
 });
 
@@ -460,14 +454,10 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): Toolbar
     translateLeft: () => dispatch(actions.space.translateLeft()),
     translateRight: () => dispatch(actions.space.translateRight()),
 
-    dispatchToggleRotationLocked: () => dispatch(
-        actions.space.toggleRotationLocked()
-    ),
-    dispatchToggleTranslationLocked: () => dispatch(
-        actions.space.toggleTranslationLocked()
-    ),
-    dispatchToggleScaleLocked: () => dispatch(
-        actions.space.toggleScaleLocked()
+    dispatchSetConfigurationSpaceTransformMode: (
+        mode: keyof typeof TRANSFORM_MODES,
+    ) => dispatch(
+        actions.configuration.setConfigurationSpaceTransformMode(mode)
     ),
 });
 

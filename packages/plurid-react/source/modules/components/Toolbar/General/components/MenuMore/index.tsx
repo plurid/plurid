@@ -15,6 +15,7 @@ import {
     shortcutsNames,
 
     SIZES,
+    TRANSFORM_TOUCHES,
 
     PluridConfiguration,
 } from '@plurid/plurid-data';
@@ -69,6 +70,8 @@ interface MoreMenuDispatchProperties {
 
     dispatchToggleConfigurationSpaceShowTransformOrigin: typeof actions.configuration.toggleConfigurationSpaceShowTransformOrigin;
     dispatchSetConfigurationSpaceTransformOriginSize: typeof actions.configuration.setConfigurationSpaceTransformOriginSize;
+
+    dispatchSetConfigurationSpaceTransformTouch: typeof actions.configuration.setConfigurationSpaceTransformTouch;
 }
 
 type MoreMenuProperties = MoreMenuOwnProperties
@@ -100,9 +103,13 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
         dispatchToggleConfigurationSpaceShowTransformOrigin,
         dispatchSetConfigurationSpaceTransformOriginSize,
+
+        dispatchSetConfigurationSpaceTransformTouch,
     } = properties;
 
     const selectedTheme = configuration.theme;
+
+    const transformTouch = configuration.space.transformTouch;
 
     const {
         viewcube,
@@ -170,44 +177,6 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
             theme={interactionTheme}
         >
             <StyledMoreMenuScroll>
-                {/* LOCKS */}
-                {/* <PluridHeading
-                    theme={theme}
-                    type="h5"
-                >
-                    locks
-                </PluridHeading>
-
-                <StyledMoreMenuItem>
-                    <div>
-                        lock rotation X
-                    </div>
-
-                    <PluridSwitch
-                        theme={theme}
-                        checked={transformIcons}
-                        atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
-
-                <StyledMoreMenuItem>
-                    <div>
-                        lock scale
-                    </div>
-
-                    <PluridSwitch
-                        theme={theme}
-                        checked={transformIcons}
-                        atChange={() => dispatchToggleUIToolbarAlwaysShowIconsAction()}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem> */}
-
-
-
                 {/* THEMES */}
                 <PluridHeading
                     theme={interactionTheme}
@@ -237,6 +206,117 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         atSelect={(selection) => setInteractionTheme(selection)}
                         theme={interactionTheme}
                         heightItems={3}
+                    />
+                </StyledMoreMenuItem>
+
+
+
+                {/* TRANSFORM */}
+                <PluridHeading
+                    theme={interactionTheme}
+                    type="h5"
+                >
+                    transform
+                </PluridHeading>
+
+
+                <StyledMoreMenuItem>
+                    <div>
+                        lock rotation X
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={transformIcons}
+                        atChange={() => {}}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        lock rotation Y
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={transformIcons}
+                        atChange={() => {}}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        lock translation X
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={transformIcons}
+                        atChange={() => {}}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        lock translation Y
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={transformIcons}
+                        atChange={() => {}}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        lock translation Z
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={transformIcons}
+                        atChange={() => {}}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        lock scale
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={transformIcons}
+                        atChange={() => {}}
+                        exclusive={true}
+                        level={2}
+                    />
+                </StyledMoreMenuItem>
+
+                <StyledMoreMenuItem>
+                    <div>
+                        touch transform: ${transformTouch === TRANSFORM_TOUCHES.SWIPE ? 'swipe' : 'pan'}
+                    </div>
+
+                    <PluridSwitch
+                        theme={interactionTheme}
+                        checked={transformTouch === TRANSFORM_TOUCHES.SWIPE}
+                        atChange={() => transformTouch === TRANSFORM_TOUCHES.SWIPE
+                            ? dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.SWIPE)
+                            : dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.PAN)
+                        }
+                        level={2}
                     />
                 </StyledMoreMenuItem>
 
@@ -522,6 +602,12 @@ const mapDispatchToProps = (
     ),
     dispatchSetConfigurationSpaceTransformOriginSize: (size: keyof typeof SIZES) => dispatch(
         actions.configuration.setConfigurationSpaceTransformOriginSize(size)
+    ),
+
+    dispatchSetConfigurationSpaceTransformTouch: (
+        touch: keyof typeof TRANSFORM_TOUCHES,
+    ) => dispatch(
+        actions.configuration.setConfigurationSpaceTransformTouch(touch)
     ),
 });
 
