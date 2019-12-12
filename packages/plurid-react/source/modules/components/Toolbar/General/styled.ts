@@ -80,11 +80,21 @@ export const StyledToolbarButtons: any = styled.div`
     border-radius: 22.5px;
     margin: 0 auto;
     margin-top: 10px;
+    margin-bottom: 20px;
     padding: 0 22.5px;
     font-size: 12px;
     opacity: 1;
     height: 45px;
     transition: opacity 300ms ease-in-out;
+
+    :after {
+        content: '';
+        position: absolute;
+        top: 55px;
+        left: 0;
+        right: 0;
+        height: 20px;
+    }
 `;
 
 
