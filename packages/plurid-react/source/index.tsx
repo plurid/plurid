@@ -2,6 +2,8 @@ import {
     PluridPage,
     PluridDocument,
     PluridConfiguration,
+
+    RecursivePartial,
 } from '@plurid/plurid-data';
 
 import PluridPubSub, {
@@ -22,6 +24,7 @@ export {
     PluridPage,
     PluridDocument,
     PluridConfiguration,
+    RecursivePartial,
 
     /** PubSub */
     PluridPubSub,
