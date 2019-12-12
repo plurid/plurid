@@ -416,8 +416,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
 
         const rotationVelocity = velocity * 20;
-        const translationVelocity = distance / 4;
-        const scaleVelocity = velocity / 2;
+        const translationVelocity = distance / 5;
+        const scaleVelocity = velocity / 4;
 
         switch (direction) {
             case 2:
