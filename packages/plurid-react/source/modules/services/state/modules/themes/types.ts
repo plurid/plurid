@@ -18,6 +18,7 @@ export interface SetInteractionThemeAction {
 }
 
 
+
 export interface ThemesState {
     general: Theme;
     interaction: Theme;

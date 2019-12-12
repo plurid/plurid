@@ -1,4 +1,6 @@
-import { Theme } from '@plurid/plurid-themes';
+import {
+    Theme,
+} from '@plurid/plurid-themes';
 
 import {
     SET_GENERAL_THEME,
@@ -9,7 +11,9 @@ import {
 
 
 
-export const setGeneralTheme = (theme: Theme): SetGeneralThemeAction => {
+export const setGeneralTheme = (
+    theme: Theme,
+): SetGeneralThemeAction => {
     return {
         type: SET_GENERAL_THEME,
         payload: theme,
@@ -17,7 +21,9 @@ export const setGeneralTheme = (theme: Theme): SetGeneralThemeAction => {
 }
 
 
-export const setInteractionTheme = (theme: Theme): SetInteractionThemeAction => {
+export const setInteractionTheme = (
+    theme: Theme,
+): SetInteractionThemeAction => {
     return {
         type: SET_INTERACTION_THEME,
         payload: theme,

@@ -10,3 +10,13 @@ export const UNSET_GLOBAL_SHORTCUTS = 'UNSET_GLOBAL_SHORTCUTS';
 export interface UnsetGlobalShortcutsAction {
     type: typeof UNSET_GLOBAL_SHORTCUTS;
 }
+
+
+
+export interface ShortcutsState {
+    global: boolean;
+}
+
+
+export type ShortcutsActions = SetGlobalShortcutsAction
+    | UnsetGlobalShortcutsAction;

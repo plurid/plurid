@@ -21,11 +21,23 @@ const themesReducer = (
 ): ThemesState => {
     switch(action.type) {
         case SET_GENERAL_THEME:
-            return { ...state, general: { ...action.payload } };
+            return {
+                ...state,
+                general: {
+                    ...action.payload,
+                },
+            };
         case SET_INTERACTION_THEME:
-            return { ...state, interaction: { ...action.payload } };
+            return {
+                ...state,
+                interaction: {
+                    ...action.payload,
+                },
+            };
         default:
-            return state;
+            return {
+                ...state,
+            };
     }
 }
 
