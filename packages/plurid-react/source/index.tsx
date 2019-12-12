@@ -4,6 +4,11 @@ import {
     PluridConfiguration,
 
     RecursivePartial,
+
+    LAYOUT_TYPES,
+    SIZES,
+    TRANSFORM_MODES,
+    TRANSFORM_TOUCHES,
 } from '@plurid/plurid-data';
 
 import PluridPubSub, {
@@ -25,6 +30,12 @@ export {
     PluridDocument,
     PluridConfiguration,
     RecursivePartial,
+
+    /** Enumerations */
+    LAYOUT_TYPES,
+    SIZES,
+    TRANSFORM_MODES,
+    TRANSFORM_TOUCHES,
 
     /** PubSub */
     PluridPubSub,
