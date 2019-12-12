@@ -6,7 +6,6 @@ import {
 
 
 export const SET_DOCUMENTS = 'SET_DOCUMENTS';
-
 export interface SetDocumentsAction {
     type: typeof SET_DOCUMENTS;
     payload: Indexed<PluridInternalStateDocument>;
@@ -14,16 +13,15 @@ export interface SetDocumentsAction {
 
 
 export const SET_VIEW_SIZE = 'SET_VIEW_SIZE';
-
 export interface ViewSize {
     width: number;
     height: number;
 }
-
 export interface SetViewSizeAction {
     type: typeof SET_VIEW_SIZE;
     payload: ViewSize;
 }
+
 
 
 export interface DataState {

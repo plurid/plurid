@@ -1,8 +1,6 @@
 import {
     TreePage,
     SpaceLocation,
-
-    SIZES,
 } from '@plurid/plurid-data';
 
 import {
