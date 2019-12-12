@@ -94,6 +94,13 @@ export interface ToggleConfigurationToolbarOpaqueAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER = 'TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER';
+export interface ToggleConfigurationToolbarToggleDrawerAction {
+    type: typeof TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER;
+    payload: keyof typeof TOOLBAR_DRAWERS;
+}
+
+
 export const TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN = 'TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN';
 export interface ToggleConfigurationSpaceShowTransformOriginAction {
     type: typeof TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN;
@@ -127,10 +134,10 @@ export interface ToggleConfigurationSpaceFirstPersonAction {
 }
 
 
-export const TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER = 'TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER';
-export interface ToggleConfigurationToolbarToggleDrawerAction {
-    type: typeof TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER;
-    payload: keyof typeof TOOLBAR_DRAWERS;
+export const SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS = 'SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS';
+export interface SetConfigurationSpaceTransformLocksAction {
+    type: typeof SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS;
+    payload: string;
 }
 
 
@@ -152,8 +159,9 @@ export type ConfigurationActionsType = SetConfigurationAction
     | ToggleConfigurationToolbarTransformButtonsAction
     | ToggleConfigurationSpaceShowTransformOriginAction
     | ToggleConfigurationToolbarOpaqueAction
+    | ToggleConfigurationToolbarToggleDrawerAction
     | SetConfigurationSpaceTransformOriginSizeAction
     | SetConfigurationSpaceTransformModeAction
     | SetConfigurationSpaceTransformTouchAction
     | ToggleConfigurationSpaceFirstPersonAction
-    | ToggleConfigurationToolbarToggleDrawerAction;
+    | SetConfigurationSpaceTransformLocksAction;

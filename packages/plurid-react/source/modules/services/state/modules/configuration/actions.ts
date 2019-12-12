@@ -39,6 +39,8 @@ import {
     ToggleConfigurationToolbarTransformButtonsAction,
     TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE,
     ToggleConfigurationToolbarOpaqueAction,
+    TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
+    ToggleConfigurationToolbarToggleDrawerAction,
 
     TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
     ToggleConfigurationSpaceShowTransformOriginAction,
@@ -53,8 +55,8 @@ import {
     TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
     ToggleConfigurationSpaceFirstPersonAction,
 
-    TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
-    ToggleConfigurationToolbarToggleDrawerAction,
+    SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS,
+    SetConfigurationSpaceTransformLocksAction,
 } from './types';
 
 
@@ -176,6 +178,16 @@ export const toggleConfigurationToolbarOpaque = (): ToggleConfigurationToolbarOp
 }
 
 
+export const toggleConfigurationToolbarToggleDrawer = (
+    drawer: keyof typeof TOOLBAR_DRAWERS,
+): ToggleConfigurationToolbarToggleDrawerAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
+        payload: drawer,
+    };
+}
+
+
 export const setConfigurationSpaceTransformOriginSize = (
     size: keyof typeof SIZES,
 ): SetConfigurationSpaceTransformOriginSizeAction => {
@@ -213,11 +225,11 @@ export const toggleConfigurationSpaceFirstPerson = (): ToggleConfigurationSpaceF
 }
 
 
-export const toggleConfigurationToolbarToggleDrawer = (
-    drawer: keyof typeof TOOLBAR_DRAWERS,
-): ToggleConfigurationToolbarToggleDrawerAction => {
+export const setConfigurationSpaceTransformLocks = (
+    transformLock: string,
+): SetConfigurationSpaceTransformLocksAction => {
     return {
-        type: TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
-        payload: drawer,
+        type: SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS,
+        payload: transformLock,
     };
 }
