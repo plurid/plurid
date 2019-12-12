@@ -150,6 +150,7 @@ export const handleGlobalShortcuts = (
     if (
         event.code === 'KeyS'
         && noModifiers
+        && !firstPerson
     ) {
         return dispatch(
             actions.configuration.setConfigurationSpaceTransformMode(
