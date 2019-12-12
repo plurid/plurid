@@ -11,6 +11,8 @@ import {
     SetConfigurationThemeGeneralAction,
     SetConfigurationThemeInteractionAction,
 
+    ToggleConfigurationToolbarToggleDrawerAction,
+
     ToggleConfigurationViewcubeHideAction,
     ToggleConfigurationViewcubeOpaqueAction,
 
@@ -19,7 +21,7 @@ import {
     SetConfigurationSpaceTransformModeAction,
     SetConfigurationSpaceTransformTouchAction,
 
-    ToggleConfigurationToolbarToggleDrawerAction,
+    SetConfigurationSpaceTransformLocksAction,
 } from './types';
 
 
@@ -368,6 +370,32 @@ export const toggleConfigurationToolbarToggleDrawer = (
             action.payload,
         ];
     }
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const setConfigurationSpaceTransformLocks = (
+    state: ConfigurationState,
+    action: SetConfigurationSpaceTransformLocksAction,
+): ConfigurationState => {
+    const {
+        transformLocks,
+    } = state.space;
+
+    const newState = {
+        ...state,
+    };
+
+    const updatedTransformLocks = {
+        ...transformLocks,
+    };
+    updatedTransformLocks[action.payload] = !transformLocks[action.payload];
+    newState.space.transformLocks = {
+        ...updatedTransformLocks,
+    };
 
     return {
         ...newState,

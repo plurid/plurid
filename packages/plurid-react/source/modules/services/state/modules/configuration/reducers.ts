@@ -19,6 +19,7 @@ import {
     TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
     TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
     TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE,
+    TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
 
     TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
     SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
@@ -27,8 +28,7 @@ import {
     SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
 
     TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
-
-    TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
+    SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS,
 
     ConfigurationState,
     ConfigurationActionsType,
@@ -50,6 +50,7 @@ import {
     toggleConfigurationToolbarTransformIcons,
     toggleConfigurationToolbarTransformButtons,
     toggleConfigurationToolbarOpaque,
+    toggleConfigurationToolbarToggleDrawer,
 
     toggleConfigurationShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
@@ -58,8 +59,7 @@ import {
     setConfigurationSpaceTransformTouch,
 
     toggleConfigurationSpaceFirstPerson,
-
-    toggleConfigurationToolbarToggleDrawer,
+    setConfigurationSpaceTransformLocks,
 } from './resolvers';
 
 
@@ -97,6 +97,10 @@ const configurationReducer = (
             return toggleConfigurationToolbarTransformIcons(state);
         case TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS:
             return toggleConfigurationToolbarTransformButtons(state);
+        case TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER:
+            return toggleConfigurationToolbarToggleDrawer(state, action);
+        case TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE:
+            return toggleConfigurationToolbarOpaque(state);
         case TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN:
             return toggleConfigurationShowTransformOrigin(state);
         case SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE:
@@ -107,10 +111,8 @@ const configurationReducer = (
             return setConfigurationSpaceTransformTouch(state, action);
         case TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON:
             return toggleConfigurationSpaceFirstPerson(state);
-        case TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER:
-            return toggleConfigurationToolbarToggleDrawer(state, action);
-        case TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE:
-            return toggleConfigurationToolbarOpaque(state);
+        case SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS:
+            return setConfigurationSpaceTransformLocks(state, action);
         default:
             return {
                 ...state,

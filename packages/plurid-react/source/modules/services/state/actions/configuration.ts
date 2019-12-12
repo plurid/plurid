@@ -15,6 +15,7 @@ import {
     toggleConfigurationToolbarTransformIcons,
     toggleConfigurationToolbarTransformButtons,
     toggleConfigurationToolbarOpaque,
+    toggleConfigurationToolbarToggleDrawer,
 
     toggleConfigurationSpaceShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
@@ -23,8 +24,7 @@ import {
     setConfigurationSpaceTransformTouch,
 
     toggleConfigurationSpaceFirstPerson,
-
-    toggleConfigurationToolbarToggleDrawer,
+    setConfigurationSpaceTransformLocks,
 } from '../modules/configuration/actions';
 
 
@@ -46,6 +46,7 @@ export default {
     toggleConfigurationToolbarTransformIcons,
     toggleConfigurationToolbarTransformButtons,
     toggleConfigurationToolbarOpaque,
+    toggleConfigurationToolbarToggleDrawer,
 
     toggleConfigurationSpaceShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
@@ -54,6 +55,5 @@ export default {
     setConfigurationSpaceTransformTouch,
 
     toggleConfigurationSpaceFirstPerson,
-
-    toggleConfigurationToolbarToggleDrawer,
+    setConfigurationSpaceTransformLocks,
 };
