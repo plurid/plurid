@@ -33,6 +33,8 @@ import {
     StyledMoreMenuScroll,
 } from './styled';
 
+import Drawer from '../Drawer';
+
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
 import selectors from '../../../../../services/state/selectors';
@@ -177,149 +179,148 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
             theme={interactionTheme}
         >
             <StyledMoreMenuScroll>
-                {/* THEMES */}
-                <PluridHeading
-                    theme={interactionTheme}
-                    type="h5"
-                >
-                    themes
-                </PluridHeading>
+                <Drawer
+                    heading="themes"
+                    items={(
+                        <>
+                            <StyledMoreMenuItem>
+                                general theme
 
-                <StyledMoreMenuItem>
-                    general theme
+                                <PluridDropdown
+                                    selectables={Object.keys(themes)}
+                                    selected={generalThemeName}
+                                    atSelect={(selection) => setGeneralTheme(selection)}
+                                    theme={interactionTheme}
+                                    heightItems={4}
+                                />
+                            </StyledMoreMenuItem>
 
-                    <PluridDropdown
-                        selectables={Object.keys(themes)}
-                        selected={generalThemeName}
-                        atSelect={(selection) => setGeneralTheme(selection)}
-                        theme={interactionTheme}
-                        heightItems={4}
-                    />
-                </StyledMoreMenuItem>
+                            <StyledMoreMenuItem>
+                                interaction theme
 
-                <StyledMoreMenuItem>
-                    interaction theme
-
-                    <PluridDropdown
-                        selectables={Object.keys(themes)}
-                        selected={interactionThemeName}
-                        atSelect={(selection) => setInteractionTheme(selection)}
-                        theme={interactionTheme}
-                        heightItems={3}
-                    />
-                </StyledMoreMenuItem>
-
-
-
-                {/* TRANSFORM */}
-                <PluridHeading
-                    theme={interactionTheme}
-                    type="h5"
-                >
-                    transform
-                </PluridHeading>
+                                <PluridDropdown
+                                    selectables={Object.keys(themes)}
+                                    selected={interactionThemeName}
+                                    atSelect={(selection) => setInteractionTheme(selection)}
+                                    theme={interactionTheme}
+                                    heightItems={3}
+                                />
+                            </StyledMoreMenuItem>
+                        </>
+                    )}
+                    toggled={false}
+                    toggle={() => {console.log('toggle')}}
+                />
 
 
-                <StyledMoreMenuItem>
-                    <div>
-                        lock rotation X
-                    </div>
+                <Drawer
+                    heading="transform"
+                    items={(
+                        <>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    lock rotation X
+                                </div>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={transformIcons}
-                        atChange={() => {}}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={transformIcons}
+                                    atChange={() => {}}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        lock rotation Y
-                    </div>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    lock rotation Y
+                                </div>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={transformIcons}
-                        atChange={() => {}}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={transformIcons}
+                                    atChange={() => {}}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        lock translation X
-                    </div>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    lock translation X
+                                </div>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={transformIcons}
-                        atChange={() => {}}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={transformIcons}
+                                    atChange={() => {}}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        lock translation Y
-                    </div>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    lock translation Y
+                                </div>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={transformIcons}
-                        atChange={() => {}}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={transformIcons}
+                                    atChange={() => {}}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        lock translation Z
-                    </div>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    lock translation Z
+                                </div>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={transformIcons}
-                        atChange={() => {}}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={transformIcons}
+                                    atChange={() => {}}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        lock scale
-                    </div>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    lock scale
+                                </div>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={transformIcons}
-                        atChange={() => {}}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={transformIcons}
+                                    atChange={() => {}}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        touch transform: {transformTouch === TRANSFORM_TOUCHES.PAN ? 'pan' : 'swipe'}
-                    </div>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    touch transform: {transformTouch === TRANSFORM_TOUCHES.PAN ? 'pan' : 'swipe'}
+                                </div>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={transformTouch === TRANSFORM_TOUCHES.PAN}
-                        atChange={() => transformTouch === TRANSFORM_TOUCHES.PAN
-                            ? dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.SWIPE)
-                            : dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.PAN)
-                        }
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
-
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={transformTouch === TRANSFORM_TOUCHES.PAN}
+                                    atChange={() => transformTouch === TRANSFORM_TOUCHES.PAN
+                                        ? dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.SWIPE)
+                                        : dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.PAN)
+                                    }
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
+                        </>
+                    )}
+                    toggled={false}
+                    toggle={() => {console.log('toggle')}}
+                />
 
 
                 {/* SPACE */}
