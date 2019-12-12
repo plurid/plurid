@@ -67,45 +67,49 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
         <>
             <StyledMoreMenuItem>
                 <div>
-                    always opaque
+                    show viewcube
                 </div>
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={opaque}
-                    atChange={() => dispatchToggleConfigurationViewcubeOpaque(opaque)}
-                    exclusive={true}
-                    level={2}
-                />
-            </StyledMoreMenuItem>
-
-            <StyledMoreMenuItem>
-                <div>
-                    conceal viewcube
-                </div>
-
-                <PluridSwitch
-                    theme={interactionTheme}
-                    checked={false}
-                    atChange={() => {}}
-                    exclusive={true}
-                    level={2}
-                />
-            </StyledMoreMenuItem>
-
-            <StyledMoreMenuItem>
-                <div>
-                    hide viewcube
-                </div>
-
-                <PluridSwitch
-                    theme={interactionTheme}
-                    checked={!show}
+                    checked={show}
                     atChange={() => dispatchToggleConfigurationViewcubeHide(!show)}
                     exclusive={true}
                     level={2}
                 />
             </StyledMoreMenuItem>
+
+            {show && (
+                <>
+                    <StyledMoreMenuItem>
+                        <div>
+                            always opaque
+                        </div>
+
+                        <PluridSwitch
+                            theme={interactionTheme}
+                            checked={opaque}
+                            atChange={() => dispatchToggleConfigurationViewcubeOpaque(!opaque)}
+                            exclusive={true}
+                            level={2}
+                        />
+                    </StyledMoreMenuItem>
+
+                    <StyledMoreMenuItem>
+                        <div>
+                            conceal viewcube
+                        </div>
+
+                        <PluridSwitch
+                            theme={interactionTheme}
+                            checked={false}
+                            atChange={() => {}}
+                            exclusive={true}
+                            level={2}
+                        />
+                    </StyledMoreMenuItem>
+                </>
+            )}
         </>
     );
 }
