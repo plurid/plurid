@@ -130,6 +130,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     const {
         show: showToolbar,
+        conceal,
         transformIcons,
         transformButtons,
     } = toolbar;
@@ -192,7 +193,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             onMouseEnter={() => setMouseIn(true)}
             onMouseLeave={() => setMouseIn(false)}
             mouseIn={mouseIn}
-            hideToolbar={!showToolbar}
+            hideToolbar={conceal}
             showMenu={showMenu}
         >
             <StyledToolbarButtons

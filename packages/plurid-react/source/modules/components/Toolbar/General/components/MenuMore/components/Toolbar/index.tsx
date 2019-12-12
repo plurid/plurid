@@ -70,6 +70,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
 
     const {
         show: showToolbar,
+        conceal,
         transformIcons,
         transformButtons,
     } = toolbar;
@@ -139,7 +140,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={showToolbar}
+                    checked={conceal}
                     atChange={() => dispatchToggleConfigurationToolbarConceal()}
                     exclusive={true}
                     level={2}
