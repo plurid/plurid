@@ -51,9 +51,9 @@ import {
 
 
 enum MENUS {
-    NONE,
-    DOCUMENTS,
-    MORE,
+    NONE = 'NONE',
+    DOCUMENTS = 'DOCUMENTS',
+    MORE = 'MORE',
 }
 
 const VIEW_SIZE_WIDTH_LIMIT = 800;
@@ -139,7 +139,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     const documentsBased = Object.keys(documents).length > 1;
 
     const [mouseIn, setMouseIn] = useState(false);
-    const [showMenu, setShowMenu] = useState(MENUS.NONE);
+    const [showMenu, setShowMenu] = useState<keyof typeof MENUS>(MENUS.NONE);
 
     const [showIcons, setShowIcons] = useState(transformIcons);
     const [showTransformButtons, setShowTransformButtons] = useState(transformButtons);
@@ -148,6 +148,17 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         TYPE: keyof typeof TRANSFORM_MODES,
     ) => {
         dispatchSetConfigurationSpaceTransformMode(TYPE);
+    }
+
+    const handleShowMenu = (
+        menu: keyof typeof MENUS,
+    ) => {
+        if (showMenu === menu) {
+            setShowMenu(MENUS.NONE);
+        } else {
+            dispatchSetConfigurationSpaceTransformMode(TRANSFORM_MODES.ALL);
+            setShowMenu(menu);
+        }
     }
 
     /** ViewSize Update */
@@ -382,10 +393,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     {documentsBased && (
                         <StyledToolbarTransformText
                             theme={theme}
-                            onClick={() => showMenu === MENUS.DOCUMENTS
-                                ? setShowMenu(MENUS.NONE)
-                                : setShowMenu(MENUS.DOCUMENTS)
-                            }
+                            onClick={() => handleShowMenu(MENUS.DOCUMENTS)}
                             active={showMenu === MENUS.DOCUMENTS}
                             button={true}
                         >
@@ -397,10 +405,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
                     <StyledToolbarTransformText
                         theme={theme}
-                        onClick={() => showMenu === MENUS.MORE
-                            ? setShowMenu(MENUS.NONE)
-                            : setShowMenu(MENUS.MORE)
-                        }
+                        onClick={() => handleShowMenu(MENUS.MORE)}
                         active={showMenu === MENUS.MORE}
                         button={true}
                     >
