@@ -8,12 +8,17 @@ import {
     ThemesActionsType,
 } from './types';
 
+import {
+    setGeneralTheme,
+    setInteractionTheme,
+} from './resolvers';
+
 
 
 const initialState: ThemesState = {
     general: themes.plurid,
     interaction: themes.plurid,
-}
+};
 
 const themesReducer = (
     state: ThemesState = initialState,
@@ -21,19 +26,9 @@ const themesReducer = (
 ): ThemesState => {
     switch(action.type) {
         case SET_GENERAL_THEME:
-            return {
-                ...state,
-                general: {
-                    ...action.payload,
-                },
-            };
+            return setGeneralTheme(state, action);
         case SET_INTERACTION_THEME:
-            return {
-                ...state,
-                interaction: {
-                    ...action.payload,
-                },
-            };
+            return setInteractionTheme(state, action);
         default:
             return {
                 ...state,

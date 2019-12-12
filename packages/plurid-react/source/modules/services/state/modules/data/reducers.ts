@@ -16,7 +16,7 @@ const initialState: DataState = {
     },
 };
 
-const pagesReducer = (
+const dataReducer = (
     state: DataState = initialState,
     action: DataActionsType,
 ): DataState => {
@@ -41,4 +41,4 @@ const pagesReducer = (
 }
 
 
-export default pagesReducer;
+export default dataReducer;
