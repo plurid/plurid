@@ -30,14 +30,6 @@ export const StyledToolbar: any = styled.div`
 `;
 
 
-export const StyledToolbarButtonsContainer: any = styled.div`
-    z-index: 9999;
-    user-select: none;
-    height: 75px;
-    display: grid;
-`;
-
-
 export const StyledToolbarButtons: any = styled.div`
     background-color: ${(props: any) => {
         return props.theme.backgroundColorSecondary;
@@ -78,6 +70,10 @@ export const StyledToolbarButtons: any = styled.div`
         return '1';
     }};
 
+    z-index: 9999;
+    user-select: none;
+    /* height: 75px; */
+    display: grid;
     pointer-events: all;
     display: grid;
     align-items: center;
