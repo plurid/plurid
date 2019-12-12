@@ -64,6 +64,12 @@ export interface ToggleConfigurationViewcubeOpaqueAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL = 'TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL';
+export interface ToggleConfigurationViewcubeConcealAction {
+    type: typeof TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL;
+}
+
+
 export const TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL = 'TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL';
 export interface ToggleConfigurationToolbarConcealAction {
     type: typeof TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL;
@@ -140,6 +146,7 @@ export type ConfigurationActionsType = SetConfigurationAction
     | SetConfigurationThemeInteractionAction
     | ToggleConfigurationViewcubeHideAction
     | ToggleConfigurationViewcubeOpaqueAction
+    | ToggleConfigurationViewcubeConcealAction
     | ToggleConfigurationToolbarConcealAction
     | ToggleConfigurationToolbarTransformIconsAction
     | ToggleConfigurationToolbarTransformButtonsAction

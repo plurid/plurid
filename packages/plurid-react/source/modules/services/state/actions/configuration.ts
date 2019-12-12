@@ -9,6 +9,7 @@ import {
 
     toggleConfigurationViewcubeHide,
     toggleConfigurationViewcubeOpaque,
+    toggleConfigurationViewcubeConceal,
 
     toggleConfigurationToolbarConceal,
     toggleConfigurationToolbarTransformIcons,
@@ -39,6 +40,7 @@ export default {
 
     toggleConfigurationViewcubeHide,
     toggleConfigurationViewcubeOpaque,
+    toggleConfigurationViewcubeConceal,
 
     toggleConfigurationToolbarConceal,
     toggleConfigurationToolbarTransformIcons,
