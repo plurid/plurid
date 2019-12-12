@@ -45,7 +45,7 @@ import selectors from '../../../services/state/selectors';
 import actions from '../../../services/state/actions';
 import {
     ViewSize,
-} from '../../../services/state/modules/data/types'
+} from '../../../services/state/types/space'
 
 
 
@@ -432,7 +432,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     theme: selectors.themes.getInteractionTheme(state),
-    viewSize: selectors.data.getViewSize(state),
+    viewSize: selectors.space.getViewSize(state),
     documents: selectors.data.getDocuments(state),
 });
 

@@ -22,7 +22,6 @@ import {
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
-import { ViewSize } from '../../services/state/types/data';
 import selectors from '../../services/state/selectors';
 // import actions from '../../services/state/actions';
 

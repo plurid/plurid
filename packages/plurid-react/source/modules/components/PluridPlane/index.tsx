@@ -21,7 +21,7 @@ import {
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
-import { ViewSize } from '../../services/state/types/data';
+import { ViewSize } from '../../services/state/types/space';
 import selectors from '../../services/state/selectors';
 // import actions from '../../services/state/actions';
 
@@ -115,7 +115,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
 
 
 const mapStateToProps = (state: AppState): PluridPlaneStateProperties => ({
-    viewSize: selectors.data.getViewSize(state),
+    viewSize: selectors.space.getViewSize(state),
     spaceScale: selectors.space.getScale(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
