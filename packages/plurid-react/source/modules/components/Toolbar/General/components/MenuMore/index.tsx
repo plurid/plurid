@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {
+    useRef,
+    useEffect,
+} from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -24,6 +27,10 @@ import {
     moreMenus,
 } from './data';
 
+import {
+    useDebouncedCallback,
+} from '../../../../../services/hooks';
+
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
 import selectors from '../../../../../services/state/selectors';
@@ -37,10 +44,12 @@ interface MoreMenuOwnProperties {
 interface MoreMenuStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
+    toolbarMenuScrollPosition: number;
 }
 
 interface MoreMenuDispatchProperties {
     dispatchToggleConfigurationToolbarToggleDrawer: typeof actions.configuration.toggleConfigurationToolbarToggleDrawer;
+    dispatchSetUIToolbarScrollPosition: typeof actions.ui.setUIToolbarScrollPosition;
 }
 
 type MoreMenuProperties = MoreMenuOwnProperties
@@ -52,10 +61,14 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         /** state */
         interactionTheme,
         configuration,
+        toolbarMenuScrollPosition,
 
         /** dispatch */
         dispatchToggleConfigurationToolbarToggleDrawer,
+        dispatchSetUIToolbarScrollPosition,
     } = properties;
+
+    const moreMenuScrollElement = useRef<HTMLDivElement>(null);
 
     const {
         toolbar,
@@ -65,11 +78,43 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         toggledDrawers,
     } = toolbar;
 
+    const handleWheel = useDebouncedCallback((event: WheelEvent) => {
+        if (moreMenuScrollElement.current) {
+            const scrollPosition = moreMenuScrollElement.current.scrollTop;
+            dispatchSetUIToolbarScrollPosition(scrollPosition);
+        }
+    }, 100);
+
+    useEffect(() => {
+        if (moreMenuScrollElement.current) {
+            moreMenuScrollElement.current.addEventListener('wheel', handleWheel);
+        }
+
+        return () => {
+            if (moreMenuScrollElement.current) {
+                moreMenuScrollElement.current.removeEventListener('wheel', handleWheel);
+            }
+        }
+    }, [
+        moreMenuScrollElement.current,
+    ]);
+
+    useEffect(() => {
+        if (moreMenuScrollElement.current) {
+            moreMenuScrollElement.current.scrollTop = toolbarMenuScrollPosition;
+        }
+    }, [
+        toolbarMenuScrollPosition,
+        moreMenuScrollElement.current,
+    ]);
+
     return (
         <StyledMoreMenu
             theme={interactionTheme}
         >
-            <StyledMoreMenuScroll>
+            <StyledMoreMenuScroll
+                ref={moreMenuScrollElement}
+            >
                 {moreMenus.map(moreMenu => {
                     const {
                         name,
@@ -100,6 +145,7 @@ const mapStateToProps = (
 ): MoreMenuStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
+    toolbarMenuScrollPosition: selectors.ui.getToolbarScrollPosition(state),
 });
 
 
@@ -110,6 +156,11 @@ const mapDispatchToProps = (
         drawer: keyof typeof TOOLBAR_DRAWERS,
     ) => dispatch(
         actions.configuration.toggleConfigurationToolbarToggleDrawer(drawer),
+    ),
+    dispatchSetUIToolbarScrollPosition: (
+        value: number,
+    ) => dispatch(
+        actions.ui.setUIToolbarScrollPosition(value),
     ),
 });
 
