@@ -16,6 +16,7 @@ import {
 
     SIZES,
     TRANSFORM_TOUCHES,
+    TOOLBAR_DRAWERS,
 
     PluridConfiguration,
 } from '@plurid/plurid-data';
@@ -74,6 +75,8 @@ interface MoreMenuDispatchProperties {
     dispatchSetConfigurationSpaceTransformOriginSize: typeof actions.configuration.setConfigurationSpaceTransformOriginSize;
 
     dispatchSetConfigurationSpaceTransformTouch: typeof actions.configuration.setConfigurationSpaceTransformTouch;
+
+    dispatchToggleConfigurationToolbarToggleDrawer: typeof actions.configuration.toggleConfigurationToolbarToggleDrawer;
 }
 
 type MoreMenuProperties = MoreMenuOwnProperties
@@ -107,6 +110,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchSetConfigurationSpaceTransformOriginSize,
 
         dispatchSetConfigurationSpaceTransformTouch,
+
+        dispatchToggleConfigurationToolbarToggleDrawer,
     } = properties;
 
     const selectedTheme = configuration.theme;
@@ -135,6 +140,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         show: showToolbar,
         transformIcons,
         transformButtons,
+        toggledDrawers,
     } = toolbar;
 
     const [viewSizeSmall, setViewSizeSmall] = useState(false);
@@ -208,9 +214,10 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                             </StyledMoreMenuItem>
                         </>
                     )}
-                    toggled={false}
-                    toggle={() => {console.log('toggle')}}
+                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.THEMES)}
+                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.THEMES)}
                 />
+
 
 
                 <Drawer
@@ -318,233 +325,238 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                             </StyledMoreMenuItem>
                         </>
                     )}
-                    toggled={false}
-                    toggle={() => {console.log('toggle')}}
+                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.TRANSFORM)}
+                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.TRANSFORM)}
                 />
 
 
-                {/* SPACE */}
-                <PluridHeading
-                    theme={interactionTheme}
-                    type="h5"
-                >
-                    space
-                </PluridHeading>
 
-                <StyledMoreMenuItem>
-                    hide transform origin
+                <Drawer
+                    heading="space"
+                    items={(
+                        <>
+                            <StyledMoreMenuItem>
+                                hide transform origin
 
-                    <PluridSwitch
-                        checked={!showTransformOrigin}
-                        atChange={() => dispatchToggleConfigurationSpaceShowTransformOrigin()}
-                        exclusive={true}
-                        level={2}
-                        theme={interactionTheme}
-                    />
-                </StyledMoreMenuItem>
+                                <PluridSwitch
+                                    checked={!showTransformOrigin}
+                                    atChange={() => dispatchToggleConfigurationSpaceShowTransformOrigin()}
+                                    exclusive={true}
+                                    level={2}
+                                    theme={interactionTheme}
+                                />
+                            </StyledMoreMenuItem>
 
-                <StyledMoreMenuItem>
-                    transform origin size
+                            <StyledMoreMenuItem>
+                                transform origin size
 
-                    <PluridDropdown
-                        selectables={['small', 'normal', 'large']}
-                        selected={transformOriginSize.toLowerCase()}
-                        atSelect={(selection: any) => {
-                            const selected = selection.toUpperCase();
-                            if (
-                                selected === SIZES.SMALL
-                                || selected === SIZES.NORMAL
-                                || selected === SIZES.LARGE
-                            ) {
-                                dispatchSetConfigurationSpaceTransformOriginSize(selected);
-                            }
-                        }}
-                        heightItems={3}
-                        theme={interactionTheme}
-                    />
-                </StyledMoreMenuItem>
+                                <PluridDropdown
+                                    selectables={['small', 'normal', 'large']}
+                                    selected={transformOriginSize.toLowerCase()}
+                                    atSelect={(selection: any) => {
+                                        const selected = selection.toUpperCase();
+                                        if (
+                                            selected === SIZES.SMALL
+                                            || selected === SIZES.NORMAL
+                                            || selected === SIZES.LARGE
+                                        ) {
+                                            dispatchSetConfigurationSpaceTransformOriginSize(selected);
+                                        }
+                                    }}
+                                    heightItems={3}
+                                    theme={interactionTheme}
+                                />
+                            </StyledMoreMenuItem>
 
-                <StyledMoreMenuItem>
-                    plane opacity
+                            <StyledMoreMenuItem>
+                                plane opacity
 
-                    <PluridSlider
-                        value={planeOpacity}
-                        max={1}
-                        min={0}
-                        step={0.1}
-                        defaultValue={100}
-                        atChange={(value: number) => dispatchSetConfigurationPlaneOpacity(value)}
-                        thumbSize="small"
-                        level={2}
-                        theme={interactionTheme}
-                    />
-                </StyledMoreMenuItem>
-
-
-
-                {/* TOOLBAR */}
-                <PluridHeading
-                    theme={interactionTheme}
-                    type="h5"
-                >
-                    toolbar
-                </PluridHeading>
-
-                <StyledMoreMenuItem>
-                    <div>
-                        always opaque
-                    </div>
-
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={viewcube.opaque}
-                        atChange={() => dispatchToggleConfigurationViewcubeOpaque(viewcube.opaque)}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
-
-                <StyledMoreMenuItem>
-                    <div>
-                        show transform icons
-                    </div>
-
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={transformIcons}
-                        atChange={() => dispatchToggleConfigurationToolbarTransformIcons()}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
-
-                {!viewSizeSmall && (
-                    <StyledMoreMenuItem>
-                        <div>
-                            show transform arrows
-                        </div>
-
-                        <PluridSwitch
-                            theme={interactionTheme}
-                            checked={transformButtons}
-                            atChange={() => dispatchToggleConfigurationToolbarTransformButtons()}
-                            exclusive={true}
-                            level={2}
-                        />
-                    </StyledMoreMenuItem>
-                )}
-
-                <StyledMoreMenuItem>
-                    <div>
-                        conceal toolbar
-                    </div>
-
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={showToolbar}
-                        atChange={() => dispatchToggleConfigurationToolbarConceal()}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                                <PluridSlider
+                                    value={planeOpacity}
+                                    max={1}
+                                    min={0}
+                                    step={0.1}
+                                    defaultValue={100}
+                                    atChange={(value: number) => dispatchSetConfigurationPlaneOpacity(value)}
+                                    thumbSize="small"
+                                    level={2}
+                                    theme={interactionTheme}
+                                />
+                            </StyledMoreMenuItem>
+                        </>
+                    )}
+                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.SPACE)}
+                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.SPACE)}
+                />
 
 
 
-                {/* VIEWCUBE */}
-                <PluridHeading
-                    theme={interactionTheme}
-                    type="h5"
-                >
-                    viewcube
-                </PluridHeading>
+                <Drawer
+                    heading="toolbar"
+                    items={(
+                        <>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    always opaque
+                                </div>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        always opaque
-                    </div>
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={viewcube.opaque}
+                                    atChange={() => dispatchToggleConfigurationViewcubeOpaque(viewcube.opaque)}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={viewcube.opaque}
-                        atChange={() => dispatchToggleConfigurationViewcubeOpaque(viewcube.opaque)}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    show transform icons
+                                </div>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        conceal viewcube
-                    </div>
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={transformIcons}
+                                    atChange={() => dispatchToggleConfigurationToolbarTransformIcons()}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={showToolbar}
-                        atChange={() => dispatchToggleConfigurationToolbarConceal()}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                            {!viewSizeSmall && (
+                                <StyledMoreMenuItem>
+                                    <div>
+                                        show transform arrows
+                                    </div>
 
-                <StyledMoreMenuItem>
-                    <div>
-                        hide viewcube
-                    </div>
+                                    <PluridSwitch
+                                        theme={interactionTheme}
+                                        checked={transformButtons}
+                                        atChange={() => dispatchToggleConfigurationToolbarTransformButtons()}
+                                        exclusive={true}
+                                        level={2}
+                                    />
+                                </StyledMoreMenuItem>
+                            )}
 
-                    <PluridSwitch
-                        theme={interactionTheme}
-                        checked={!showViewcube}
-                        atChange={() => dispatchToggleConfigurationViewcubeHide(!showViewcube)}
-                        exclusive={true}
-                        level={2}
-                    />
-                </StyledMoreMenuItem>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    conceal toolbar
+                                </div>
+
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={showToolbar}
+                                    atChange={() => dispatchToggleConfigurationToolbarConceal()}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
+                        </>
+                    )}
+                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.TOOLBAR)}
+                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.TOOLBAR)}
+                />
 
 
 
-                {/* SHORTCUTS */}
-                <PluridHeading
-                    theme={interactionTheme}
-                    type="h5"
-                >
-                    shortcuts
-                </PluridHeading>
+                <Drawer
+                    heading="viewcube"
+                    items={(
+                        <>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    always opaque
+                                </div>
 
-                {defaultShortcuts.map(shortcut => {
-                    const {
-                        type,
-                    } = shortcut;
-                    const shortcutData = shortcutsNames[type];
-                    const {
-                        name,
-                        key,
-                        modifier,
-                    } = shortcutData;
-                    const modifierString = Array.isArray(modifier)
-                        ? modifier.reduce((total, element) => total + ' + ' + element) + ' +'
-                        : typeof modifier === 'string'
-                            ? modifier + ' +'
-                            : '';
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={viewcube.opaque}
+                                    atChange={() => dispatchToggleConfigurationViewcubeOpaque(viewcube.opaque)}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
 
-                    return (
-                        <StyledMoreMenuItem
-                            key={name}
-                            afterline={
-                                type === 'TURN_DOWN'
-                                || type === 'TOGGLE_ROTATE'
-                                || type === 'TOGGLE_TRANSLATE'
-                            }
-                        >
-                            <div>
-                                {name}
-                            </div>
+                            <StyledMoreMenuItem>
+                                <div>
+                                    conceal viewcube
+                                </div>
 
-                            <div>
-                                {modifierString} {key}
-                            </div>
-                        </StyledMoreMenuItem>
-                    );
-                })}
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={showToolbar}
+                                    atChange={() => dispatchToggleConfigurationToolbarConceal()}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
+
+                            <StyledMoreMenuItem>
+                                <div>
+                                    hide viewcube
+                                </div>
+
+                                <PluridSwitch
+                                    theme={interactionTheme}
+                                    checked={!showViewcube}
+                                    atChange={() => dispatchToggleConfigurationViewcubeHide(!showViewcube)}
+                                    exclusive={true}
+                                    level={2}
+                                />
+                            </StyledMoreMenuItem>
+                        </>
+                    )}
+                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.VIEWCUBE)}
+                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.VIEWCUBE)}
+                />
+
+
+
+                <Drawer
+                    heading="shortcuts"
+                    items={(
+                        <>
+                            {defaultShortcuts.map(shortcut => {
+                                const {
+                                    type,
+                                } = shortcut;
+                                const shortcutData = shortcutsNames[type];
+                                const {
+                                    name,
+                                    key,
+                                    modifier,
+                                } = shortcutData;
+                                const modifierString = Array.isArray(modifier)
+                                    ? modifier.reduce((total, element) => total + ' + ' + element) + ' +'
+                                    : typeof modifier === 'string'
+                                        ? modifier + ' +'
+                                        : '';
+
+                                return (
+                                    <StyledMoreMenuItem
+                                        key={name}
+                                        afterline={
+                                            type === 'TURN_DOWN'
+                                            || type === 'TOGGLE_ROTATE'
+                                            || type === 'TOGGLE_TRANSLATE'
+                                        }
+                                    >
+                                        <div>
+                                            {name}
+                                        </div>
+
+                                        <div>
+                                            {modifierString} {key}
+                                        </div>
+                                    </StyledMoreMenuItem>
+                                );
+                            })}
+                        </>
+                    )}
+                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.SHORTCUTS)}
+                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.SHORTCUTS)}
+                />
             </StyledMoreMenuScroll>
         </StyledMoreMenu>
     );
@@ -609,6 +621,12 @@ const mapDispatchToProps = (
         touch: keyof typeof TRANSFORM_TOUCHES,
     ) => dispatch(
         actions.configuration.setConfigurationSpaceTransformTouch(touch)
+    ),
+
+    dispatchToggleConfigurationToolbarToggleDrawer: (
+        drawer: keyof typeof TOOLBAR_DRAWERS,
+    ) => dispatch(
+        actions.configuration.toggleConfigurationToolbarToggleDrawer(drawer),
     ),
 });
 
