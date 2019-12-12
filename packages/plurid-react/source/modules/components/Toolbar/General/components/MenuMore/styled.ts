@@ -28,6 +28,7 @@ export const StyledMoreMenuItem: any = styled.div`
     justify-content: space-between;
     align-items: center;
     position: relative;
+    min-height: 30px;
 
     margin-bottom: ${(props: any) => {
         if (props.afterline) {

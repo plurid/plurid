@@ -20,7 +20,7 @@ export const StyledDrawerHeading = styled.div`
     user-select: none;
     cursor: pointer;
     padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     border-bottom: 1px solid transparent;
 
     :hover {

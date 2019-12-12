@@ -117,7 +117,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
                     step={0.1}
                     defaultValue={100}
                     atChange={(value: number) => dispatchSetConfigurationPlaneOpacity(value)}
-                    thumbSize="small"
+                    thumbSize="large"
                     level={2}
                     theme={interactionTheme}
                 />
