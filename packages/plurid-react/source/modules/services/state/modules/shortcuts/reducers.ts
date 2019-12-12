@@ -6,27 +6,26 @@ import {
     ShortcutsActions,
 } from './types';
 
+import {
+    setGlobalShortcuts,
+    unsetGlobalShortcuts,
+} from './resolvers';
+
 
 
 const initialState: ShortcutsState = {
     global: true,
-}
+};
 
-const selectedThemeReducer = (
+const shortcutsReducer = (
     state: ShortcutsState = initialState,
     action: ShortcutsActions,
 ): ShortcutsState => {
     switch(action.type) {
         case SET_GLOBAL_SHORTCUTS:
-            return {
-                ...state,
-                global: true,
-            };
+            return setGlobalShortcuts(state);
         case UNSET_GLOBAL_SHORTCUTS:
-            return {
-                ...state,
-                global: false,
-            };
+            return unsetGlobalShortcuts(state);
         default:
             return {
                 ...state,
@@ -35,4 +34,4 @@ const selectedThemeReducer = (
 }
 
 
-export default selectedThemeReducer;
+export default shortcutsReducer;
