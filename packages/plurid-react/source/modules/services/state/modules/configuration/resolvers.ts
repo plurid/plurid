@@ -236,6 +236,25 @@ export const toggleConfigurationShowTransformOrigin = (
 }
 
 
+export const toggleConfigurationToolbarOpaque = (
+    state: ConfigurationState,
+): ConfigurationState => {
+    const {
+        opaque,
+    } = state.elements.toolbar;
+
+    const newState = {
+        ...state,
+    };
+
+    newState.elements.toolbar.opaque = !opaque;
+
+    return {
+        ...newState,
+    };
+}
+
+
 export const setConfigurationSpaceTransformOriginSize = (
     state: ConfigurationState,
     action: SetConfigurationSpaceTransformOriginSizeAction,

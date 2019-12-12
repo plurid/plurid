@@ -35,6 +35,8 @@ import {
     ToggleConfigurationToolbarTransformIconsAction,
     TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
     ToggleConfigurationToolbarTransformButtonsAction,
+    TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE,
+    ToggleConfigurationToolbarOpaqueAction,
 
     TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
     ToggleConfigurationSpaceShowTransformOriginAction,
@@ -154,6 +156,13 @@ export const toggleConfigurationToolbarTransformButtons = (): ToggleConfiguratio
 export const toggleConfigurationSpaceShowTransformOrigin = (): ToggleConfigurationSpaceShowTransformOriginAction => {
     return {
         type: TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
+    };
+}
+
+
+export const toggleConfigurationToolbarOpaque = (): ToggleConfigurationToolbarOpaqueAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE,
     };
 }
 

@@ -13,6 +13,7 @@ import {
     toggleConfigurationToolbarConceal,
     toggleConfigurationToolbarTransformIcons,
     toggleConfigurationToolbarTransformButtons,
+    toggleConfigurationToolbarOpaque,
 
     toggleConfigurationSpaceShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
@@ -42,6 +43,7 @@ export default {
     toggleConfigurationToolbarConceal,
     toggleConfigurationToolbarTransformIcons,
     toggleConfigurationToolbarTransformButtons,
+    toggleConfigurationToolbarOpaque,
 
     toggleConfigurationSpaceShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,

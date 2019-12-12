@@ -17,6 +17,7 @@ import {
     TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL,
     TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
     TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
+    TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE,
 
     TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
     SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
@@ -46,6 +47,7 @@ import {
     toggleConfigurationToolbarConceal,
     toggleConfigurationToolbarTransformIcons,
     toggleConfigurationToolbarTransformButtons,
+    toggleConfigurationToolbarOpaque,
 
     toggleConfigurationShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
@@ -103,6 +105,8 @@ const configurationReducer = (
             return toggleConfigurationSpaceFirstPerson(state);
         case TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER:
             return toggleConfigurationToolbarToggleDrawer(state, action);
+        case TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE:
+            return toggleConfigurationToolbarOpaque(state);
         default:
             return {
                 ...state,

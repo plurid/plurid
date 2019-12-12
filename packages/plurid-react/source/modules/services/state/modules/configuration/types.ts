@@ -82,6 +82,12 @@ export interface ToggleConfigurationToolbarTransformButtonsAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE = 'TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE';
+export interface ToggleConfigurationToolbarOpaqueAction {
+    type: typeof TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE;
+}
+
+
 export const TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN = 'TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN';
 export interface ToggleConfigurationSpaceShowTransformOriginAction {
     type: typeof TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN;
@@ -138,6 +144,7 @@ export type ConfigurationActionsType = SetConfigurationAction
     | ToggleConfigurationToolbarTransformIconsAction
     | ToggleConfigurationToolbarTransformButtonsAction
     | ToggleConfigurationSpaceShowTransformOriginAction
+    | ToggleConfigurationToolbarOpaqueAction
     | SetConfigurationSpaceTransformOriginSizeAction
     | SetConfigurationSpaceTransformModeAction
     | SetConfigurationSpaceTransformTouchAction
