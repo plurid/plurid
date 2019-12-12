@@ -189,8 +189,6 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         mouseIn,
     ]);
 
-    console.log(opaque);
-
     return (
         <StyledToolbar
             onMouseEnter={() => setMouseIn(true)}
