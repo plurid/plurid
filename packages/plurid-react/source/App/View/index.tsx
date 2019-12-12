@@ -109,10 +109,6 @@ interface ViewStateProperties {
     transform: any;
     tree: TreePage[];
     activeDocumentID: string;
-    rotationLocked: boolean;
-    translationLocked: boolean;
-    scaleLocked: boolean;
-    firstPerson: boolean;
 }
 
 interface ViewDispatchProperties {
@@ -164,11 +160,6 @@ const View: React.FC<ViewProperties> = (properties) => {
         dataDocuments,
         activeDocumentID,
 
-        rotationLocked,
-        translationLocked,
-        scaleLocked,
-        firstPerson,
-
 
         /** dispatch */
         dispatch,
@@ -212,30 +203,32 @@ const View: React.FC<ViewProperties> = (properties) => {
         handleGlobalShortcuts(
             dispatch,
             event,
-            firstPerson,
+            stateConfiguration.space.firstPerson,
         );
     }, [
-        firstPerson,
+        stateConfiguration.space.firstPerson,
         dispatch,
     ]);
 
     const wheelCallback = useCallback((event: WheelEvent) => {
-        const locks = {
-            rotation: rotationLocked,
-            translation: translationLocked,
-            scale: scaleLocked,
+        const {
+            transformMode
+        } = stateConfiguration.space;
+
+        const transformModes = {
+            rotation: transformMode === TRANSFORM_MODES.ROTATION,
+            translation: transformMode === TRANSFORM_MODES.TRANSLATION,
+            scale: transformMode === TRANSFORM_MODES.SCALE,
         };
 
         handleGlobalWheel(
             dispatch,
             event,
-            locks,
+            transformModes,
         );
     }, [
         dispatch,
-        rotationLocked,
-        translationLocked,
-        scaleLocked,
+        stateConfiguration.space.transformMode,
     ]);
 
     const handleConfiguration = (
@@ -502,10 +495,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }, [
         viewElement.current,
-        rotationLocked,
-        translationLocked,
-        scaleLocked,
-        firstPerson,
+        stateConfiguration.space.transformMode,
+        stateConfiguration.space.firstPerson,
     ]);
 
     /** Resize Listener */
@@ -733,9 +724,6 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }, [
         viewElement.current,
-        rotationLocked,
-        translationLocked,
-        scaleLocked,
         stateConfiguration.space.transformTouch,
     ]);
 
@@ -782,10 +770,6 @@ const mapStateToProperties = (
     tree: selectors.space.getTree(state),
     activeDocumentID: selectors.space.getActiveDocumentID(state),
     spaceLoading: selectors.space.getLoading(state),
-    rotationLocked: selectors.space.getRotationLocked(state),
-    translationLocked: selectors.space.getTranslationLocked(state),
-    scaleLocked: selectors.space.getScaleLocked(state),
-    firstPerson: selectors.space.getFirstPerson(state),
 });
 
 

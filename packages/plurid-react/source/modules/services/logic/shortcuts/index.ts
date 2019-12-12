@@ -32,7 +32,7 @@ export const handleGlobalShortcuts = (
         event.code === 'KeyF'
         && noModifiers
     ) {
-        return dispatch(actions.space.toggleFirstPerson());
+        return dispatch(actions.configuration.toggleConfigurationSpaceFirstPerson());
     }
 
     if (firstPerson) {

@@ -108,6 +108,12 @@ export interface SetConfigurationSpaceTransformTouchAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON = 'TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON';
+export interface ToggleConfigurationSpaceFirstPersonAction {
+    type: typeof TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON;
+}
+
+
 
 export interface ConfigurationState extends PluridConfiguration {
 }
@@ -127,4 +133,5 @@ export type ConfigurationActionsType = SetConfigurationAction
     | ToggleConfigurationSpaceShowTransformOriginAction
     | SetConfigurationSpaceTransformOriginSizeAction
     | SetConfigurationSpaceTransformModeAction
-    | SetConfigurationSpaceTransformTouchAction;
+    | SetConfigurationSpaceTransformTouchAction
+    | ToggleConfigurationSpaceFirstPersonAction;

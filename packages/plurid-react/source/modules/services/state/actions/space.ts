@@ -3,8 +3,6 @@ import {
 
     setAnimatedTransform,
 
-    toggleFirstPerson,
-
     setSpaceLocation,
 
     viewCameraMoveForward,
@@ -44,14 +42,7 @@ import {
 
     setTree,
 
-    toggleRotationLocked,
-    toggleTranslationLocked,
-    toggleScaleLocked,
-
     setActiveDocument,
-
-    setTransformOriginSize,
-    toggleShowTransformOrigin,
 
     spaceResetTransform,
 } from '../modules/space/actions';
@@ -63,8 +54,6 @@ export default {
 
     setAnimatedTransform,
 
-    toggleFirstPerson,
-
     setSpaceLocation,
 
     viewCameraMoveForward,
@@ -104,14 +93,7 @@ export default {
 
     setTree,
 
-    toggleRotationLocked,
-    toggleTranslationLocked,
-    toggleScaleLocked,
-
     setActiveDocument,
-
-    setTransformOriginSize,
-    toggleShowTransformOrigin,
 
     spaceResetTransform,
 };

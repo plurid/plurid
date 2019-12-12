@@ -44,6 +44,9 @@ import {
     SetConfigurationSpaceTransformModeAction,
     SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
     SetConfigurationSpaceTransformTouchAction,
+
+    TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
+    ToggleConfigurationSpaceFirstPersonAction,
 } from './types';
 
 
@@ -177,5 +180,12 @@ export const setConfigurationSpaceTransformTouch = (
     return {
         type: SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
         payload: touch,
+    };
+}
+
+
+export const toggleConfigurationSpaceFirstPerson = (): ToggleConfigurationSpaceFirstPersonAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
     };
 }

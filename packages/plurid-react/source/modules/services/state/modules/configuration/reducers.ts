@@ -24,6 +24,8 @@ import {
     SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
     SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
 
+    TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
+
     ConfigurationState,
     ConfigurationActionsType,
 } from './types';
@@ -48,6 +50,8 @@ import {
 
     setConfigurationSpaceTransformMode,
     setConfigurationSpaceTransformTouch,
+
+    toggleConfigurationSpaceFirstPerson,
 } from './resolvers';
 
 
@@ -91,6 +95,8 @@ const configurationReducer = (
             return setConfigurationSpaceTransformMode(state, action);
         case SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH:
             return setConfigurationSpaceTransformTouch(state, action);
+        case TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON:
+            return toggleConfigurationSpaceFirstPerson(state);
         default:
             return {
                 ...state,
