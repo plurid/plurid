@@ -20,7 +20,7 @@ export const defaultConfiguration: PluridConfiguration = {
     elements: {
         toolbar: {
             show: true,
-            opaque: false,
+            opaque: true,
             conceal: false,
             transformIcons: false,
             transformButtons: false,
