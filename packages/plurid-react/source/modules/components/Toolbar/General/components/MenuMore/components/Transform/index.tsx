@@ -65,7 +65,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
         <>
             <StyledMoreMenuItem>
                 <div>
-                    lock rotation X
+                    allow rotation X
                 </div>
 
                 <PluridSwitch
@@ -79,7 +79,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    lock rotation Y
+                    allow rotation Y
                 </div>
 
                 <PluridSwitch
@@ -93,7 +93,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    lock translation X
+                    allow translation X
                 </div>
 
                 <PluridSwitch
@@ -107,7 +107,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    lock translation Y
+                    allow translation Y
                 </div>
 
                 <PluridSwitch
@@ -121,7 +121,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    lock translation Z
+                    allow translation Z
                 </div>
 
                 <PluridSwitch
@@ -135,7 +135,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    lock scale
+                    allow scale
                 </div>
 
                 <PluridSwitch
