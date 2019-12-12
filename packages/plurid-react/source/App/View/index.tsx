@@ -90,7 +90,7 @@ import {
 } from '../../modules/services/logic/shortcuts';
 
 import { AppState } from '../../modules/services/state/store';
-import { ViewSize } from '../../modules/services/state/types/data';
+import { ViewSize } from '../../modules/services/state/types/space';
 import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
 import StateContext from '../../modules/services/state/context';
@@ -118,8 +118,8 @@ interface ViewDispatchProperties {
     dispatchSetConfigurationMicro: typeof actions.configuration.setConfigurationMicro;
 
     dispatchSetDocuments: typeof actions.data.setDocuments;
-    dispatchSetViewSize: typeof actions.data.setViewSize;
 
+    dispatchSetViewSize: typeof actions.space.setViewSize;
     dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
@@ -774,7 +774,7 @@ const mapStateToProperties = (
 ): ViewStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     dataDocuments: selectors.data.getDocuments(state),
-    viewSize: selectors.data.getViewSize(state),
+    viewSize: selectors.space.getViewSize(state),
     transform: selectors.space.getTransform(state),
     tree: selectors.space.getTree(state),
     activeDocumentID: selectors.space.getActiveDocumentID(state),
@@ -798,7 +798,7 @@ const mapDispatchToProperties = (
         actions.data.setDocuments(documents)
     ),
     dispatchSetViewSize: (viewSize: ViewSize) => dispatch(
-        actions.data.setViewSize(viewSize)
+        actions.space.setViewSize(viewSize)
     ),
 
     dispatchSetSpaceLoading: (loading: boolean) => dispatch(

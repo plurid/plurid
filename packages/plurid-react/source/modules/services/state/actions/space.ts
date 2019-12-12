@@ -45,6 +45,8 @@ import {
     setActiveDocument,
 
     spaceResetTransform,
+
+    setViewSize,
 } from '../modules/space/actions';
 
 
@@ -96,4 +98,6 @@ export default {
     setActiveDocument,
 
     spaceResetTransform,
+
+    setViewSize,
 };
