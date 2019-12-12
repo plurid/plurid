@@ -231,6 +231,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     }, [
         dispatch,
         stateConfiguration.space.transformMode,
+        stateConfiguration.space.transformLocks,
     ]);
 
     const handleConfiguration = (
