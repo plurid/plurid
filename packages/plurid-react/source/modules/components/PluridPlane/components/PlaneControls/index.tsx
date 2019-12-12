@@ -20,7 +20,9 @@ import {
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
-import Styles from '../../../../services/styles';
+import {
+    PluridTextline,
+} from '@plurid/plurid-ui-react';
 
 import { AppState } from '../../../../services/state/store';
 import StateContext from '../../../../services/state/context';
@@ -96,12 +98,11 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
             </StyledPlaneControlsLeft>
 
             <StyledPlaneControlsCenter>
-                <Styles.InputText
+                <PluridTextline
                     theme={interactionTheme}
-                    type="text"
-                    value={path}
-                    onChange={onPathInput}
-                    onKeyDown={handleOnKeyDown}
+                    text={path}
+                    atChange={onPathInput}
+                    atKeyDown={handleOnKeyDown}
                 />
             </StyledPlaneControlsCenter>
 
