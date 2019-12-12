@@ -306,13 +306,13 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 
                 <StyledMoreMenuItem>
                     <div>
-                        touch transform: ${transformTouch === TRANSFORM_TOUCHES.SWIPE ? 'swipe' : 'pan'}
+                        touch transform: {transformTouch === TRANSFORM_TOUCHES.PAN ? 'pan' : 'swipe'}
                     </div>
 
                     <PluridSwitch
                         theme={interactionTheme}
-                        checked={transformTouch === TRANSFORM_TOUCHES.SWIPE}
-                        atChange={() => transformTouch === TRANSFORM_TOUCHES.SWIPE
+                        checked={transformTouch === TRANSFORM_TOUCHES.PAN}
+                        atChange={() => transformTouch === TRANSFORM_TOUCHES.PAN
                             ? dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.SWIPE)
                             : dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.PAN)
                         }
