@@ -3,6 +3,8 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import {
     TRANSFORM_MODES,
+
+    PluridConfigurationSpaceTransformLocks,
 } from '@plurid/plurid-data';
 
 import {
@@ -198,7 +200,7 @@ export const handleGlobalShortcuts = (
 }
 
 
-interface Locks {
+interface Modes {
     rotation: boolean;
     translation: boolean;
     scale: boolean;
@@ -207,15 +209,16 @@ interface Locks {
 export const handleGlobalWheel = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: WheelEvent,
-    locks: Locks,
+    modes: Modes,
+    locks: PluridConfigurationSpaceTransformLocks,
 ) => {
     if (event.shiftKey
         || event.metaKey
         || event.altKey
         || event.ctrlKey
-        || locks.rotation
-        || locks.translation
-        || locks.scale
+        || modes.rotation
+        || modes.translation
+        || modes.scale
     ) {
         event.preventDefault();
     }
@@ -226,96 +229,104 @@ export const handleGlobalWheel = (
     }
     const direction = getWheelDirection(deltas);
 
-    if (locks.rotation) {
-        if (direction === 'left') {
+    if (modes.rotation) {
+        if (direction === 'left' && locks.rotationY) {
             dispatch(actions.space.rotateLeft());
         }
 
-        if (direction === 'right') {
+        if (direction === 'right' && locks.rotationY) {
             dispatch(actions.space.rotateRight());
+        }
+
+        if (direction === 'up' && locks.rotationX) {
+            dispatch(actions.space.rotateUp());
+        }
+
+        if (direction === 'down' && locks.rotationX) {
+            dispatch(actions.space.rotateDown());
         }
     }
 
     if (event.shiftKey && !event.altKey) {
-        if (direction === 'up') {
+        if (direction === 'up' && locks.rotationX) {
             dispatch(actions.space.rotateUp());
         }
 
-        if (direction === 'down') {
+        if (direction === 'down' && locks.rotationX) {
             dispatch(actions.space.rotateDown());
         }
 
-        if (direction === 'left') {
+        if (direction === 'left' && locks.rotationY) {
             dispatch(actions.space.rotateLeft());
         }
 
-        if (direction === 'right') {
+        if (direction === 'right' && locks.rotationY) {
             dispatch(actions.space.rotateRight());
         }
     }
 
-    if (locks.translation) {
-        if (direction === 'up') {
+    if (modes.translation) {
+        if (direction === 'up' && locks.translationY) {
             dispatch(actions.space.translateDown());
         }
 
-        if (direction === 'down') {
+        if (direction === 'down' && locks.translationY) {
             dispatch(actions.space.translateUp());
         }
 
-        if (direction === 'left') {
+        if (direction === 'left' && locks.translationX) {
             dispatch(actions.space.translateRight());
         }
 
-        if (direction === 'right') {
+        if (direction === 'right' && locks.translationX) {
             dispatch(actions.space.translateLeft());
         }
     }
 
     if (event.altKey && event.shiftKey) {
-        if (direction === 'up') {
+        if (direction === 'up' && locks.translationZ) {
             dispatch(actions.space.translateIn());
         }
 
-        if (direction === 'down') {
+        if (direction === 'down' && locks.translationZ) {
             dispatch(actions.space.translateOut());
         }
     }
 
     if (event.altKey && !event.shiftKey) {
-        if (direction === 'up') {
+        if (direction === 'up' && locks.translationY) {
             dispatch(actions.space.translateDown());
         }
 
-        if (direction === 'down') {
+        if (direction === 'down' && locks.translationY) {
             dispatch(actions.space.translateUp());
         }
 
-        if (direction === 'left') {
+        if (direction === 'left' && locks.translationX) {
             dispatch(actions.space.translateRight());
         }
 
-        if (direction === 'right') {
+        if (direction === 'right' && locks.translationX) {
             dispatch(actions.space.translateLeft());
         }
     }
 
-    if (locks.scale) {
-        if (direction === 'down') {
+    if (modes.scale) {
+        if (direction === 'down' && locks.scale) {
             dispatch(actions.space.scaleUp());
         }
 
-        if (direction === 'up') {
+        if (direction === 'up' && locks.scale) {
             dispatch(actions.space.scaleDown());
         }
     }
 
     if (event.metaKey || event.ctrlKey) {
-        if (direction === 'down') {
+        if (direction === 'down' && locks.scale) {
             dispatch(actions.space.scaleUp());
         }
 
-        if (direction === 'up') {
+        if (direction === 'up' && locks.scale) {
             dispatch(actions.space.scaleDown());
         }
     }

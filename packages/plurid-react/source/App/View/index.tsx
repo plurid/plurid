@@ -212,7 +212,8 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     const wheelCallback = useCallback((event: WheelEvent) => {
         const {
-            transformMode
+            transformMode,
+            transformLocks,
         } = stateConfiguration.space;
 
         const transformModes = {
@@ -225,6 +226,7 @@ const View: React.FC<ViewProperties> = (properties) => {
             dispatch,
             event,
             transformModes,
+            transformLocks,
         );
     }, [
         dispatch,
