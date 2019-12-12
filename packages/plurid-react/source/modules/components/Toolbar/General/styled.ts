@@ -72,7 +72,7 @@ export const StyledToolbarButtons: any = styled.div`
         return '40px 200px 200px 200px 40px';
     }};
     opacity: ${(props: any) => {
-        if (props.opaque && !props.mouseIn) {
+        if (!props.opaque && !props.mouseIn) {
             return '0.4';
         }
         return '1';
