@@ -46,7 +46,7 @@ export const StyledMoreMenuItem: any = styled.div`
                     right: 0;
                     bottom: -15px;
                     height: 1px;
-                    background-color: white;
+                    background-color: ${props.theme ? props.theme.colorPrimary : 'white'};
                 }
             `;
         }

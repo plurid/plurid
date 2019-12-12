@@ -331,8 +331,6 @@ export const toggleConfigurationToolbarToggleDrawer = (
         ];
     }
 
-    console.log(newState.elements.toolbar.toggledDrawers);
-
     return {
         ...newState,
     };

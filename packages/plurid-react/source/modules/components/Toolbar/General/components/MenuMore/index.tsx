@@ -31,9 +31,6 @@ import actions from '../../../../../services/state/actions';
 
 
 
-
-
-
 interface MoreMenuOwnProperties {
 }
 

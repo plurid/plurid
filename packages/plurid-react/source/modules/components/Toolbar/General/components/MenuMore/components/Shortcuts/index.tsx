@@ -43,7 +43,7 @@ type MenuMoreShortcutsProperties = MenuMoreShortcutsOwnProperties
 const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (properties) => {
     const {
         /** state */
-        // interactionTheme,
+        interactionTheme,
         // configuration,
 
         /** dispatch */
@@ -70,6 +70,7 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (properties) =>
                 return (
                     <StyledMoreMenuItem
                         key={name}
+                        theme={interactionTheme}
                         afterline={
                             type === 'TURN_DOWN'
                             || type === 'TOGGLE_ROTATE'
