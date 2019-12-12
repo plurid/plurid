@@ -61,6 +61,7 @@ const Drawer: React.FC<DrawerProperties> = (properties) => {
             theme={interactionTheme}
         >
             <StyledDrawerHeading
+                theme={interactionTheme}
                 onClick={() => toggle()}
             >
                 <PluridHeading
