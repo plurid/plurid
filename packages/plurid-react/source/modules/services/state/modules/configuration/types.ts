@@ -4,6 +4,7 @@ import {
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
+    TOOLBAR_DRAWERS,
 } from '@plurid/plurid-data';
 
 
@@ -114,6 +115,12 @@ export interface ToggleConfigurationSpaceFirstPersonAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER = 'TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER';
+export interface ToggleConfigurationToolbarToggleDrawerAction {
+    type: typeof TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER;
+    payload: keyof typeof TOOLBAR_DRAWERS;
+}
+
 
 export interface ConfigurationState extends PluridConfiguration {
 }
@@ -134,4 +141,5 @@ export type ConfigurationActionsType = SetConfigurationAction
     | SetConfigurationSpaceTransformOriginSizeAction
     | SetConfigurationSpaceTransformModeAction
     | SetConfigurationSpaceTransformTouchAction
-    | ToggleConfigurationSpaceFirstPersonAction;
+    | ToggleConfigurationSpaceFirstPersonAction
+    | ToggleConfigurationToolbarToggleDrawerAction;

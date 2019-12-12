@@ -4,6 +4,7 @@ import {
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
+    TOOLBAR_DRAWERS,
 } from '@plurid/plurid-data';
 
 import {
@@ -47,6 +48,9 @@ import {
 
     TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
     ToggleConfigurationSpaceFirstPersonAction,
+
+    TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
+    ToggleConfigurationToolbarToggleDrawerAction,
 } from './types';
 
 
@@ -187,5 +191,15 @@ export const setConfigurationSpaceTransformTouch = (
 export const toggleConfigurationSpaceFirstPerson = (): ToggleConfigurationSpaceFirstPersonAction => {
     return {
         type: TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
+    };
+}
+
+
+export const toggleConfigurationToolbarToggleDrawer = (
+    drawer: keyof typeof TOOLBAR_DRAWERS,
+): ToggleConfigurationToolbarToggleDrawerAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
+        payload: drawer,
     };
 }

@@ -18,6 +18,8 @@ import {
 
     SetConfigurationSpaceTransformModeAction,
     SetConfigurationSpaceTransformTouchAction,
+
+    ToggleConfigurationToolbarToggleDrawerAction,
 } from './types';
 
 
@@ -300,6 +302,34 @@ export const toggleConfigurationSpaceFirstPerson = (
     };
 
     newState.space.firstPerson = !firstPerson;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const toggleConfigurationToolbarToggleDrawer = (
+    state: ConfigurationState,
+    action: ToggleConfigurationToolbarToggleDrawerAction,
+): ConfigurationState => {
+    const {
+        toggledDrawers,
+    } = state.elements.toolbar;
+
+    const newState = {
+        ...state,
+    };
+
+    if (toggledDrawers.includes(action.payload)) {
+        const updatedDrawers = toggledDrawers.filter(el => el !== action.payload);
+        newState.elements.toolbar.toggledDrawers = [...updatedDrawers];
+    } else {
+        newState.elements.toolbar.toggledDrawers = [
+            ...toggledDrawers,
+            action.payload,
+        ];
+    }
 
     return {
         ...newState,

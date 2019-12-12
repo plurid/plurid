@@ -26,6 +26,8 @@ import {
 
     TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
 
+    TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
+
     ConfigurationState,
     ConfigurationActionsType,
 } from './types';
@@ -52,6 +54,8 @@ import {
     setConfigurationSpaceTransformTouch,
 
     toggleConfigurationSpaceFirstPerson,
+
+    toggleConfigurationToolbarToggleDrawer,
 } from './resolvers';
 
 
@@ -97,6 +101,8 @@ const configurationReducer = (
             return setConfigurationSpaceTransformTouch(state, action);
         case TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON:
             return toggleConfigurationSpaceFirstPerson(state);
+        case TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER:
+            return toggleConfigurationToolbarToggleDrawer(state, action);
         default:
             return {
                 ...state,
