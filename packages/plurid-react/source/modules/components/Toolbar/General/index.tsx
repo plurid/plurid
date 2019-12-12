@@ -64,15 +64,11 @@ interface ToolbarStateProperties {
     theme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
-    firstPerson: boolean;
-    // rotationLocked: boolean;
-    // translationLocked: boolean;
-    // scaleLocked: boolean;
     documents: any;
 }
 
 interface ToolbarDispatchProperties {
-    dispatchToggleFirstPerson: typeof actions.space.toggleFirstPerson;
+    dispatchToggleConfigurationSpaceFirstPerson: typeof actions.configuration.toggleConfigurationSpaceFirstPerson;
 
     rotateUp: typeof actions.space.rotateUp;
     rotateDown: typeof actions.space.rotateDown;
@@ -101,15 +97,11 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         /** state */
         theme,
         configuration,
-        firstPerson,
-        // rotationLocked,
-        // translationLocked,
-        // scaleLocked,
         viewSize,
         documents,
 
         /** dispatch */
-        dispatchToggleFirstPerson,
+        dispatchToggleConfigurationSpaceFirstPerson,
 
         rotateUp,
         rotateDown,
@@ -127,7 +119,10 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         dispatchSetConfigurationSpaceTransformMode,
     } = properties;
 
-    const transformMode = configuration.space.transformMode;
+    const {
+        firstPerson,
+        transformMode,
+    } = configuration.space;
 
     const {
         toolbar,
@@ -208,7 +203,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             >
                 <StyledToolbarTransformText
                     theme={theme}
-                    onClick={() => dispatchToggleFirstPerson()}
+                    onClick={() => dispatchToggleConfigurationSpaceFirstPerson()}
                     active={firstPerson}
                     button={true}
                 >
@@ -426,16 +421,14 @@ const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     theme: selectors.themes.getInteractionTheme(state),
     viewSize: selectors.data.getViewSize(state),
-    firstPerson: selectors.space.getFirstPerson(state),
-    // rotationLocked: selectors.space.getRotationLocked(state),
-    // translationLocked: selectors.space.getTranslationLocked(state),
-    // scaleLocked: selectors.space.getScaleLocked(state),
     documents: selectors.data.getDocuments(state),
 });
 
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ToolbarDispatchProperties => ({
-    dispatchToggleFirstPerson: () => dispatch(actions.space.toggleFirstPerson()),
+    dispatchToggleConfigurationSpaceFirstPerson: () => dispatch(
+        actions.configuration.toggleConfigurationSpaceFirstPerson(),
+    ),
 
     rotateUp: () => dispatch(actions.space.rotateUp()),
     rotateDown: () => dispatch(actions.space.rotateDown()),

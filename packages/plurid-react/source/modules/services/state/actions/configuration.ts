@@ -19,6 +19,8 @@ import {
 
     setConfigurationSpaceTransformMode,
     setConfigurationSpaceTransformTouch,
+
+    toggleConfigurationSpaceFirstPerson,
 } from '../modules/configuration/actions';
 
 
@@ -44,4 +46,6 @@ export default {
 
     setConfigurationSpaceTransformMode,
     setConfigurationSpaceTransformTouch,
+
+    toggleConfigurationSpaceFirstPerson,
 };

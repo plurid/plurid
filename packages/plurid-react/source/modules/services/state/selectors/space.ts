@@ -27,15 +27,6 @@ const getTransform = (state: AppState) => {
 }
 const getActiveDocumentID = (state: AppState) => state.space.activeDocumentID;
 
-const getRotationLocked = (state: AppState) => state.space.rotationLocked;
-const getTranslationLocked = (state: AppState) => state.space.translationLocked;
-const getScaleLocked = (state: AppState) => state.space.scaleLocked;
-
-const getFirstPerson = (state: AppState) => state.space.firstPerson;
-
-const getShowTransformOrigin = (state: AppState) => state.space.showTransformOrigin;
-const getTransformOriginSize = (state: AppState) => state.space.transformOriginSize;
-
 
 export default {
     getLoading,
@@ -53,13 +44,4 @@ export default {
     getTree,
 
     getActiveDocumentID,
-
-    getRotationLocked,
-    getTranslationLocked,
-    getScaleLocked,
-
-    getFirstPerson,
-
-    getShowTransformOrigin,
-    getTransformOriginSize,
 };

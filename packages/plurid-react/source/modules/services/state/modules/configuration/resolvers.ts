@@ -286,3 +286,22 @@ export const setConfigurationSpaceTransformTouch = (
         ...newState,
     };
 }
+
+
+export const toggleConfigurationSpaceFirstPerson = (
+    state: ConfigurationState,
+): ConfigurationState => {
+    const {
+        firstPerson,
+    } = state.space;
+
+    const newState = {
+        ...state,
+    };
+
+    newState.space.firstPerson = !firstPerson;
+
+    return {
+        ...newState,
+    };
+}

@@ -19,12 +19,6 @@ export interface SetAnimatedTransformAction {
 }
 
 
-export const TOGGLE_FIRST_PERSON = 'TOGGLE_FIRST_PERSON';
-export interface ToggleFirstPersonAction {
-    type: typeof TOGGLE_FIRST_PERSON;
-}
-
-
 export const SET_SPACE_LOCATION = 'SET_SPACE_LOCATION';
 export interface SetSpaceLocationAction {
     type: typeof SET_SPACE_LOCATION;
@@ -236,7 +230,6 @@ export interface SpaceState {
     translationZ: number;
     tree: TreePage[];
     activeDocumentID: string;
-    firstPerson: boolean;
     camera: Coordinates;
 }
 
@@ -250,7 +243,6 @@ export interface Coordinates {
 
 export type SpaceActionsType = SetSpaceLoadingAction
     | SetAnimatedTransformAction
-    | ToggleFirstPersonAction
     | SetSpaceLocationAction
     | ViewCameraMoveForwardAction
     | ViewCameraMoveBackwardAction
