@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export const StyledDrawer = styled.div`
     h5 {
-        font-size: 1.1rem;
+        font-size: 1rem;
         margin: 0;
     }
 
