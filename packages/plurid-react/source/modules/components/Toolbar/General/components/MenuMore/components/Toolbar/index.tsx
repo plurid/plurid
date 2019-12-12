@@ -45,6 +45,7 @@ interface MenuMoreToolbarDispatchProperties {
     dispatchToggleConfigurationToolbarConceal: typeof actions.configuration.toggleConfigurationToolbarConceal;
     dispatchToggleConfigurationToolbarTransformIcons: typeof actions.configuration.toggleConfigurationToolbarTransformIcons;
     dispatchToggleConfigurationToolbarTransformButtons: typeof actions.configuration.toggleConfigurationToolbarTransformButtons;
+    dispatchToggleConfigurationToolbarOpaque: typeof actions.configuration.toggleConfigurationToolbarOpaque
 }
 
 type MenuMoreToolbarProperties = MenuMoreToolbarOwnProperties
@@ -62,6 +63,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
         dispatchToggleConfigurationToolbarConceal,
         dispatchToggleConfigurationToolbarTransformIcons,
         dispatchToggleConfigurationToolbarTransformButtons,
+        dispatchToggleConfigurationToolbarOpaque,
     } = properties;
 
     const {
@@ -69,8 +71,8 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
     } = configuration.elements;
 
     const {
-        show: showToolbar,
         conceal,
+        opaque,
         transformIcons,
         transformButtons,
     } = toolbar;
@@ -96,8 +98,8 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={false}
-                    atChange={() => {}}
+                    checked={opaque}
+                    atChange={() => dispatchToggleConfigurationToolbarOpaque()}
                     exclusive={true}
                     level={2}
                 />
@@ -172,6 +174,9 @@ const mapDispatchToProps = (
     dispatchToggleConfigurationToolbarTransformButtons: () => dispatch(
         actions.configuration.toggleConfigurationToolbarTransformButtons()
     ),
+    dispatchToggleConfigurationToolbarOpaque: () => dispatch(
+        actions.configuration.toggleConfigurationToolbarOpaque()
+    )
 });
 
 
