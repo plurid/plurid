@@ -14,6 +14,7 @@ import {
     /** constants */
 
     /** enumerations */
+    TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
 
     /** interfaces */
@@ -318,64 +319,70 @@ const View: React.FC<ViewProperties> = (properties) => {
         event: HammerInput,
     ) => {
         const {
+            transformMode,
+        } = stateConfiguration.space;
+
+        const {
             velocity,
             distance,
             direction,
         } = event;
 
-        if (
-            !(rotationLocked || translationLocked || scaleLocked)
-        ) {
+        if (transformMode === TRANSFORM_MODES.ALL) {
             return;
         }
+
+        const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+        const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+        const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
 
         dispatchSetAnimatedTransform(true);
         switch (direction) {
             case 2:
                 /** right */
-                if (rotationLocked) {
+                if (rotationMode) {
                     rotateYWith(velocity * 60);
                 }
 
-                if (translationLocked) {
+                if (translationMode) {
                     translateXWith(-1 * distance);
                 }
                 break;
             case 4:
                 /** left */
-                if (rotationLocked) {
+                if (rotationMode) {
                     rotateYWith(velocity * 60);
                 }
 
-                if (translationLocked) {
+                if (translationMode) {
                     translateXWith(distance);
                 }
                 break;
             case 8:
                 /** top */
-                if (rotationLocked) {
+                if (rotationMode) {
                     rotateXWith(velocity * 60);
                 }
 
-                if (translationLocked) {
+                if (translationMode) {
                     translateYWith(-1 * distance);
                 }
 
-                if (scaleLocked) {
+                if (scalationMode) {
                     scaleUpWith(velocity);
                 }
                 break;
             case 16:
                 /** down */
-                if (rotationLocked) {
+                if (rotationMode) {
                     rotateXWith(velocity * 60);
                 }
 
-                if (translationLocked) {
+                if (translationMode) {
                     translateYWith(distance);
                 }
 
-                if (scaleLocked) {
+                if (scalationMode) {
                     scaleDownWith(velocity);
                 }
                 break;
@@ -389,16 +396,22 @@ const View: React.FC<ViewProperties> = (properties) => {
         event: HammerInput,
     ) => {
         const {
+            transformMode,
+        } = stateConfiguration.space;
+
+        const {
             velocity,
             distance,
             direction,
         } = event;
 
-        if (
-            !(rotationLocked || translationLocked || scaleLocked)
-        ) {
+        if (transformMode === TRANSFORM_MODES.ALL) {
             return;
         }
+
+        const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+        const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+        const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
 
         const rotationVelocity = velocity * 20;
         const translationVelocity = distance / 4;
@@ -407,49 +420,49 @@ const View: React.FC<ViewProperties> = (properties) => {
         switch (direction) {
             case 2:
                 /** right */
-                if (rotationLocked) {
+                if (rotationMode) {
                     rotateYWith(rotationVelocity);
                 }
 
-                if (translationLocked) {
+                if (translationMode) {
                     translateXWith(-1 * translationVelocity);
                 }
                 break;
             case 4:
                 /** left */
-                if (rotationLocked) {
+                if (rotationMode) {
                     rotateYWith(rotationVelocity);
                 }
 
-                if (translationLocked) {
+                if (translationMode) {
                     translateXWith(translationVelocity);
                 }
                 break;
             case 8:
                 /** top */
-                if (rotationLocked) {
+                if (rotationMode) {
                     rotateXWith(rotationVelocity);
                 }
 
-                if (translationLocked) {
+                if (translationMode) {
                     translateYWith(-1 * translationVelocity);
                 }
 
-                if (scaleLocked) {
+                if (scalationMode) {
                     scaleUpWith(scaleVelocity);
                 }
                 break;
             case 16:
                 /** down */
-                if (rotationLocked) {
+                if (rotationMode) {
                     rotateXWith(rotationVelocity);
                 }
 
-                if (translationLocked) {
+                if (translationMode) {
                     translateYWith(translationVelocity);
                 }
 
-                if (scaleLocked) {
+                if (scalationMode) {
                     scaleDownWith(scaleVelocity);
                 }
                 break;
@@ -702,20 +715,20 @@ const View: React.FC<ViewProperties> = (properties) => {
         delete Hammer.defaults.cssProps.touchSelect;
 
         const touch = new Hammer((viewElement as any).current);
-        touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
         touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+        touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
-        if (transformTouch === TRANSFORM_TOUCHES.SWIPE) {
-            touch.on('swipe', handleSwipe);
-        } else {
+        if (transformTouch === TRANSFORM_TOUCHES.PAN) {
             touch.on('pan', handlePan);
+        } else {
+            touch.on('swipe', handleSwipe);
         }
 
         return () => {
-            if (transformTouch === TRANSFORM_TOUCHES.SWIPE) {
-                touch.off('swipe', handleSwipe);
-            } else {
+            if (transformTouch === TRANSFORM_TOUCHES.PAN) {
                 touch.off('pan', handlePan);
+            } else {
+                touch.off('swipe', handleSwipe);
             }
         }
     }, [
