@@ -189,6 +189,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         mouseIn,
     ]);
 
+    console.log(opaque);
+
     return (
         <StyledToolbar
             onMouseEnter={() => setMouseIn(true)}
@@ -203,6 +205,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     showIcons={showIcons}
                     showTransformButtons={showTransformButtons}
                     documentsBased={documentsBased}
+                    mouseIn={mouseIn}
                     opaque={opaque}
                 >
                     <StyledToolbarTransformText
