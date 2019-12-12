@@ -4,11 +4,15 @@ import styled from 'styled-components';
 
 export const StyledDrawer = styled.div`
     h5 {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         margin: 0;
     }
 
     margin-bottom: 1.5rem;
+
+    color: ${(props: any) => {
+        return props.theme.colorPrimary;
+    }};
 `;
 
 
@@ -20,7 +24,9 @@ export const StyledDrawerHeading = styled.div`
     border-bottom: 1px solid transparent;
 
     :hover {
-        border-bottom: 1px solid white;
+        border-bottom: 1px solid ${(props: any) => {
+            return props.theme.colorPrimary;
+        }};
     }
 `;
 
