@@ -4,14 +4,24 @@ import styled from 'styled-components';
 
 export const StyledViewcube: any = styled.div`
     position: absolute;
-    bottom: 0;
     @media (max-width: 800px) {
         top: 0;
     }
-    right: 0;
+    bottom: ${(props: any) => {
+        if (props.conceal && !props.mouseOver) {
+            return '-90px';
+        }
+        return '0';
+    }};
+    right: ${(props: any) => {
+        if (props.conceal && !props.mouseOver) {
+            return '-100px';
+        }
+        return '0';
+    }};
     position: absolute;
     user-select: none;
-    transition: opacity 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
     z-index: 9998;
     display: grid;
     grid-template-areas: "pluridViewcubeScale           pluridViewcubeScale         pluridViewcubeScale          pluridViewcubeScale"

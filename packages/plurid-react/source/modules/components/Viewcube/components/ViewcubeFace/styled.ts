@@ -7,6 +7,7 @@ export const StyledViewcubeFace: any = styled.div`
     position: absolute;
     height: 50px;
     width: 50px;
+    cursor: pointer;
     display: grid;
     transform-style: preserve-3d;
     grid-template-areas: "pluridViewcubeFaceTopLeft         pluridViewcubeFaceTopCenter         pluridViewcubeFaceTopRight"
