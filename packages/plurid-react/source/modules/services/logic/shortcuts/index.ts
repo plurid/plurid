@@ -226,7 +226,7 @@ export const handleGlobalWheel = (
     const deltas = {
         deltaX: event.deltaX,
         deltaY: event.deltaY,
-    }
+    };
     const direction = getWheelDirection(deltas);
 
     if (modes.rotation) {
