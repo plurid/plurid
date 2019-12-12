@@ -75,10 +75,10 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
     return (
         <>
             <StyledMoreMenuItem>
-                hide transform origin
+                show transform origin
 
                 <PluridSwitch
-                    checked={!showTransformOrigin}
+                    checked={showTransformOrigin}
                     atChange={() => dispatchToggleConfigurationSpaceShowTransformOrigin()}
                     exclusive={true}
                     level={2}
