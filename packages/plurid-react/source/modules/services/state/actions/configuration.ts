@@ -21,6 +21,8 @@ import {
     setConfigurationSpaceTransformTouch,
 
     toggleConfigurationSpaceFirstPerson,
+
+    toggleConfigurationToolbarToggleDrawer,
 } from '../modules/configuration/actions';
 
 
@@ -48,4 +50,6 @@ export default {
     setConfigurationSpaceTransformTouch,
 
     toggleConfigurationSpaceFirstPerson,
+
+    toggleConfigurationToolbarToggleDrawer,
 };
