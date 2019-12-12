@@ -62,6 +62,11 @@ const mergeConfiguration = (
                     && typeof configuration.elements.toolbar.transformButtons === 'boolean'
                         ? configuration.elements.toolbar.transformButtons
                         : defaultConfiguration.elements.toolbar.transformButtons,
+                toggledDrawers: configuration.elements
+                    && configuration.elements.toolbar
+                    && configuration.elements.toolbar.toggledDrawers
+                        ? configuration.elements.toolbar.toggledDrawers
+                        : defaultConfiguration.elements.toolbar.toggledDrawers,
             },
             viewcube: {
                 show: configuration.elements
