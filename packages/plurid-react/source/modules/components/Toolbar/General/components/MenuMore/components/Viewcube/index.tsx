@@ -70,10 +70,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
         <>
             <StyledMoreMenuItem>
                 <div>
-                    {show
-                        ? 'hide'
-                        : 'show'
-                    } viewcube
+                    show viewcube
                 </div>
 
                 <PluridSwitch
