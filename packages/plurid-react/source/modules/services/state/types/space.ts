@@ -1,6 +1,6 @@
 import {
     ViewSize as _ViewSize,
-} from '../modules/data/types';
+} from '../modules/space/types';
 
 
 

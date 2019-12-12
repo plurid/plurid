@@ -58,6 +58,8 @@ import {
 
     SPACE_RESET_TRANSFORM,
 
+    SET_VIEW_SIZE,
+
     SpaceState,
     SpaceActionsType,
 } from './types';
@@ -79,6 +81,10 @@ const initialState: SpaceState = {
         x: 0,
         y: 0,
         z: 0,
+    },
+    viewSize: {
+        height: window ? window.innerHeight : 800,
+        width: window ? window.innerWidth : 1440,
     },
 };
 
@@ -410,6 +416,11 @@ const spaceReducer = (
                     translationZ: 0,
                 };
             }
+        case SET_VIEW_SIZE:
+                return {
+                    ...state,
+                    viewSize: action.payload,
+                };
         default:
             return {
                 ...state,

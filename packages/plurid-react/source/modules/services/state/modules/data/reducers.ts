@@ -1,6 +1,5 @@
 import {
     SET_DOCUMENTS,
-    SET_VIEW_SIZE,
 
     DataState,
     DataActionsType,
@@ -10,10 +9,6 @@ import {
 
 const initialState: DataState = {
     documents: {},
-    viewSize: {
-        height: window ? window.innerHeight : 800,
-        width: window ? window.innerWidth : 1440,
-    },
 };
 
 const dataReducer = (
@@ -27,11 +22,6 @@ const dataReducer = (
                 documents: {
                     ...action.payload,
                 },
-            };
-        case SET_VIEW_SIZE:
-            return {
-                ...state,
-                viewSize: action.payload,
             };
         default:
             return {

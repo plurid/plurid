@@ -86,6 +86,10 @@ import {
 
     SPACE_RESET_TRANSFORM,
     SpaceResetTransformAction,
+
+    SET_VIEW_SIZE,
+    SetViewSizeAction,
+    ViewSize,
 } from './types'
 
 
@@ -331,5 +335,15 @@ export const setActiveDocument = (documentID: string): SetActiveDocumentAction =
 export const spaceResetTransform = (): SpaceResetTransformAction => {
     return {
         type: SPACE_RESET_TRANSFORM,
+    };
+}
+
+
+export const setViewSize = (
+    payload: ViewSize,
+): SetViewSizeAction => {
+    return {
+        type: SET_VIEW_SIZE,
+        payload,
     };
 }

@@ -218,6 +218,17 @@ export interface SpaceResetTransformAction {
 }
 
 
+export const SET_VIEW_SIZE = 'SET_VIEW_SIZE';
+export interface ViewSize {
+    width: number;
+    height: number;
+}
+export interface SetViewSizeAction {
+    type: typeof SET_VIEW_SIZE;
+    payload: ViewSize;
+}
+
+
 
 export interface SpaceState {
     loading: boolean;
@@ -231,6 +242,7 @@ export interface SpaceState {
     tree: TreePage[];
     activeDocumentID: string;
     camera: Coordinates;
+    viewSize: ViewSize;
 }
 
 
@@ -276,4 +288,5 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | ScaleDownWithAction
     | SetTreeAction
     | SetActiveDocumentAction
-    | SpaceResetTransformAction;
+    | SpaceResetTransformAction
+    | SetViewSizeAction;

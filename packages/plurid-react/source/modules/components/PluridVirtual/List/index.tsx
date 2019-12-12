@@ -23,7 +23,7 @@ import selectors from '../../../services/state/selectors';
 // import actions from '../../../services/state/actions';
 import {
     ViewSize,
-} from '../../../services/state/modules/data/types';
+} from '../../../services/state/types/space';
 
 
 
@@ -169,7 +169,7 @@ const mapStateToProps = (
     state: AppState,
 ): PluridVirtualListStateProperties => ({
     translationY: selectors.space.getTranslationY(state),
-    viewSize: selectors.data.getViewSize(state),
+    viewSize: selectors.space.getViewSize(state),
 });
 
 
