@@ -2,6 +2,8 @@ import {
     PluridConfiguration,
 
     SIZES,
+    TRANSFORM_MODES,
+    TRANSFORM_TOUCHES,
 } from '@plurid/plurid-data';
 
 
@@ -92,6 +94,20 @@ export interface SetConfigurationSpaceTransformOriginSizeAction {
 }
 
 
+export const SET_CONFIGURATION_SPACE_TRANSFORM_MODE = 'SET_CONFIGURATION_SPACE_TRANSFORM_MODE';
+export interface SetConfigurationSpaceTransformModeAction {
+    type: typeof SET_CONFIGURATION_SPACE_TRANSFORM_MODE;
+    payload: keyof typeof TRANSFORM_MODES;
+}
+
+
+export const SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH = 'SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH';
+export interface SetConfigurationSpaceTransformTouchAction {
+    type: typeof SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH;
+    payload: keyof typeof TRANSFORM_TOUCHES;
+}
+
+
 
 export interface ConfigurationState extends PluridConfiguration {
 }
@@ -109,4 +125,6 @@ export type ConfigurationActionsType = SetConfigurationAction
     | ToggleConfigurationToolbarTransformIconsAction
     | ToggleConfigurationToolbarTransformButtonsAction
     | ToggleConfigurationSpaceShowTransformOriginAction
-    | SetConfigurationSpaceTransformOriginSizeAction;
+    | SetConfigurationSpaceTransformOriginSizeAction
+    | SetConfigurationSpaceTransformModeAction
+    | SetConfigurationSpaceTransformTouchAction;

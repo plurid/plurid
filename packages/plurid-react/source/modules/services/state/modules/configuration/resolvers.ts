@@ -11,6 +11,9 @@ import {
     ToggleConfigurationViewcubeOpaqueAction,
 
     SetConfigurationSpaceTransformOriginSizeAction,
+
+    SetConfigurationSpaceTransformModeAction,
+    SetConfigurationSpaceTransformTouchAction,
 } from './types';
 
 
@@ -236,6 +239,38 @@ export const setConfigurationSpaceTransformOriginSize = (
     };
 
     newState.space.transformOrigin.size = action.payload;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const setConfigurationSpaceTransformMode = (
+    state: ConfigurationState,
+    action: SetConfigurationSpaceTransformModeAction,
+): ConfigurationState => {
+    const newState = {
+        ...state,
+    };
+
+    newState.space.transformMode = action.payload;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const setConfigurationSpaceTransformTouch = (
+    state: ConfigurationState,
+    action: SetConfigurationSpaceTransformTouchAction,
+): ConfigurationState => {
+    const newState = {
+        ...state,
+    };
+
+    newState.space.transformTouch = action.payload;
 
     return {
         ...newState,

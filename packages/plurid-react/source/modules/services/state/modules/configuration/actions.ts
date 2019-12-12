@@ -2,6 +2,8 @@ import {
     PluridConfiguration,
 
     SIZES,
+    TRANSFORM_MODES,
+    TRANSFORM_TOUCHES,
 } from '@plurid/plurid-data';
 
 import {
@@ -37,6 +39,11 @@ import {
     ToggleConfigurationSpaceShowTransformOriginAction,
     SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
     SetConfigurationSpaceTransformOriginSizeAction,
+
+    SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
+    SetConfigurationSpaceTransformModeAction,
+    SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
+    SetConfigurationSpaceTransformTouchAction,
 } from './types';
 
 
@@ -150,5 +157,25 @@ export const setConfigurationSpaceTransformOriginSize = (
     return {
         type: SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
         payload: size,
+    };
+}
+
+
+export const setConfigurationSpaceTransformMode = (
+    mode: keyof typeof TRANSFORM_MODES,
+): SetConfigurationSpaceTransformModeAction => {
+    return {
+        type: SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
+        payload: mode,
+    };
+}
+
+
+export const setConfigurationSpaceTransformTouch = (
+    touch: keyof typeof TRANSFORM_TOUCHES,
+): SetConfigurationSpaceTransformTouchAction => {
+    return {
+        type: SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
+        payload: touch,
     };
 }

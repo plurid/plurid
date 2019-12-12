@@ -21,6 +21,9 @@ import {
     TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
     SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
 
+    SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
+    SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
+
     ConfigurationState,
     ConfigurationActionsType,
 } from './types';
@@ -42,6 +45,9 @@ import {
 
     toggleConfigurationShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
+
+    setConfigurationSpaceTransformMode,
+    setConfigurationSpaceTransformTouch,
 } from './resolvers';
 
 
@@ -81,6 +87,10 @@ const configurationReducer = (
             return toggleConfigurationShowTransformOrigin(state);
         case SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE:
             return setConfigurationSpaceTransformOriginSize(state, action);
+        case SET_CONFIGURATION_SPACE_TRANSFORM_MODE:
+            return setConfigurationSpaceTransformMode(state, action);
+        case SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH:
+            return setConfigurationSpaceTransformTouch(state, action);
         default:
             return {
                 ...state,
