@@ -2,6 +2,7 @@ import {
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
+    TOOLBAR_DRAWERS,
 } from '../../enumerations';
 
 import {
@@ -121,6 +122,7 @@ export interface PluridConfigurationElementsToolbar {
     conceal: boolean;
     transformIcons: boolean;
     transformButtons: boolean;
+    toggledDrawers: (keyof typeof TOOLBAR_DRAWERS)[];
 }
 
 

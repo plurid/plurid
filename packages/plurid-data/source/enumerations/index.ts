@@ -69,3 +69,14 @@ export enum TRANSFORM_TOUCHES {
     SWIPE = 'SWIPE',
     PAN = 'PAN',
 }
+
+
+export enum TOOLBAR_DRAWERS {
+    ALL = 'ALL',
+    THEMES = 'THEMES',
+    TRANSFORM = 'TRANSFORM',
+    SPACE = 'SPACE',
+    TOOLBAR = 'TOOLBAR',
+    VIEWCUBE = 'VIEWCUBE',
+    SHORTCUTS = 'SHORTCUTS',
+}
