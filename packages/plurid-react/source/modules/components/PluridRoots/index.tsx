@@ -122,12 +122,12 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                         transform: `
                             rotateY(${-spaceRotationY}deg)
                             translateX(${transformOriginX - transformOriginSizeDifference}px)
-                            translateY(${transformOriginY}px)
+                            translateY(${transformOriginY - transformOriginSizeDifference}px)
                             translateZ(${(transformOriginZ + 5)}px)
                         `,
                         transformOrigin: `
                             ${transformOriginX - transformOriginSizeDifference}px
-                            ${transformOriginY}px
+                            ${transformOriginY - transformOriginSizeDifference}px
                             ${transformOriginZ}px
                         `,
                     }}
