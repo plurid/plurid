@@ -86,20 +86,8 @@ import {
     SET_TREE,
     SetTreeAction,
 
-    TOGGLE_ROTATION_LOCKED,
-    ToggleRotationLockedAction,
-    TOGGLE_TRANSLATION_LOCKED,
-    ToggleTranslationLockedAction,
-    TOGGLE_SCALE_LOCKED,
-    ToggleScaleLockedAction,
-
     SET_ACTIVE_DOCUMENT,
     SetActiveDocumentAction,
-
-    SET_TRANSFORM_ORIGIN_SIZE,
-    SetTransformOriginSizeAction,
-    TOGGLE_SHOW_TRANSFORM_ORIGIN,
-    ToggleShowTransformOriginAction,
 
     SPACE_RESET_TRANSFORM,
     SpaceResetTransformAction,
@@ -344,46 +332,10 @@ export const setTree = (payload: TreePage[]): SetTreeAction => {
 }
 
 
-export const toggleRotationLocked = (): ToggleRotationLockedAction => {
-    return {
-        type: TOGGLE_ROTATION_LOCKED,
-    };
-}
-
-
-export const toggleTranslationLocked = (): ToggleTranslationLockedAction => {
-    return {
-        type: TOGGLE_TRANSLATION_LOCKED,
-    };
-}
-
-
-export const toggleScaleLocked = (): ToggleScaleLockedAction => {
-    return {
-        type: TOGGLE_SCALE_LOCKED,
-    };
-}
-
-
 export const setActiveDocument = (documentID: string): SetActiveDocumentAction => {
     return {
         type: SET_ACTIVE_DOCUMENT,
         payload: documentID,
-    };
-}
-
-
-export const setTransformOriginSize = (size: keyof typeof SIZES): SetTransformOriginSizeAction => {
-    return {
-        type: SET_TRANSFORM_ORIGIN_SIZE,
-        payload: size,
-    };
-}
-
-
-export const toggleShowTransformOrigin = (): ToggleShowTransformOriginAction => {
-    return {
-        type: TOGGLE_SHOW_TRANSFORM_ORIGIN,
     };
 }
 

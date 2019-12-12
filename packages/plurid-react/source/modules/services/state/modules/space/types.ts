@@ -1,8 +1,6 @@
 import {
     TreePage,
     SpaceLocation,
-
-    SIZES,
 } from '@plurid/plurid-data';
 
 
@@ -213,41 +211,10 @@ export interface SetTreeAction {
 }
 
 
-export const TOGGLE_ROTATION_LOCKED = 'TOGGLE_ROTATION_LOCKED';
-export interface ToggleRotationLockedAction {
-    type: typeof TOGGLE_ROTATION_LOCKED;
-}
-
-
-export const TOGGLE_TRANSLATION_LOCKED = 'TOGGLE_TRANSLATION_LOCKED';
-export interface ToggleTranslationLockedAction {
-    type: typeof TOGGLE_TRANSLATION_LOCKED;
-}
-
-
-export const TOGGLE_SCALE_LOCKED = 'TOGGLE_SCALE_LOCKED';
-export interface ToggleScaleLockedAction {
-    type: typeof TOGGLE_SCALE_LOCKED;
-}
-
-
 export const SET_ACTIVE_DOCUMENT = 'SET_ACTIVE_DOCUMENT';
 export interface SetActiveDocumentAction {
     type: typeof SET_ACTIVE_DOCUMENT;
     payload: string;
-}
-
-
-export const TOGGLE_SHOW_TRANSFORM_ORIGIN = 'TOGGLE_SHOW_TRANSFORM_ORIGIN';
-export interface ToggleShowTransformOriginAction {
-    type: typeof TOGGLE_SHOW_TRANSFORM_ORIGIN;
-}
-
-
-export const SET_TRANSFORM_ORIGIN_SIZE = 'SET_TRANSFORM_ORIGIN_SIZE';
-export interface SetTransformOriginSizeAction {
-    type: typeof SET_TRANSFORM_ORIGIN_SIZE;
-    payload: keyof typeof SIZES;
 }
 
 
@@ -268,14 +235,9 @@ export interface SpaceState {
     translationY: number;
     translationZ: number;
     tree: TreePage[];
-    rotationLocked: boolean;
-    translationLocked: boolean;
-    scaleLocked: boolean;
     activeDocumentID: string;
     firstPerson: boolean;
     camera: Coordinates;
-    showTransformOrigin: boolean;
-    transformOriginSize: keyof typeof SIZES;
 }
 
 
@@ -321,10 +283,5 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | ScaleUpWithAction
     | ScaleDownWithAction
     | SetTreeAction
-    | ToggleRotationLockedAction
-    | ToggleScaleLockedAction
-    | ToggleTranslationLockedAction
     | SetActiveDocumentAction
-    | ToggleShowTransformOriginAction
-    | SetTransformOriginSizeAction
     | SpaceResetTransformAction;
