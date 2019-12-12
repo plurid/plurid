@@ -20,17 +20,17 @@ import {
 
 import Drawer from '../Drawer';
 
-import MenuMoreThemes from './components/Themes';
-import MenuMoreTransform from './components/Transform';
-import MenuMoreSpace from './components/Space';
-import MenuMoreToolbar from './components/Toolbar';
-import MenuMoreViewcube from './components/Viewcube';
-import MenuMoreShortcuts from './components/Shortcuts';
+import {
+    moreMenus,
+} from './data';
 
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
 import selectors from '../../../../../services/state/selectors';
 import actions from '../../../../../services/state/actions';
+
+
+
 
 
 
@@ -73,59 +73,25 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
             theme={interactionTheme}
         >
             <StyledMoreMenuScroll>
-                <Drawer
-                    heading="themes"
-                    items={(
-                        <MenuMoreThemes />
-                    )}
-                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.THEMES)}
-                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.THEMES)}
-                />
+                {moreMenus.map(moreMenu => {
+                    const {
+                        name,
+                        drawer,
+                        component,
+                    } = moreMenu;
 
-                <Drawer
-                    heading="transform"
-                    items={(
-                        <MenuMoreTransform />
-                    )}
-                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.TRANSFORM)}
-                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.TRANSFORM)}
-                />
-
-                <Drawer
-                    heading="space"
-                    items={(
-                        <MenuMoreSpace />
-                    )}
-                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.SPACE)}
-                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.SPACE)}
-                />
-
-                <Drawer
-                    heading="toolbar"
-                    items={(
-                        <MenuMoreToolbar />
-                    )}
-                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.TOOLBAR)}
-                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.TOOLBAR)}
-                />
-
-                <Drawer
-                    heading="viewcube"
-                    items={(
-                        <MenuMoreViewcube />
-                    )}
-                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.VIEWCUBE)}
-                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.VIEWCUBE)}
-                />
-
-                <Drawer
-                    heading="shortcuts"
-                    items={(
-                        <MenuMoreShortcuts />
-                    )}
-                    toggled={toggledDrawers.includes(TOOLBAR_DRAWERS.SHORTCUTS)}
-                    toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.SHORTCUTS)}
-                />
+                    return (
+                        <Drawer
+                            key={name}
+                            heading={name}
+                            items={(
+                                <>{component}</>
+                            )}
+                            toggled={toggledDrawers.includes(drawer)}
+                            toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(drawer)}
+                        />
+                    )
+                })}
             </StyledMoreMenuScroll>
         </StyledMoreMenu>
     );
