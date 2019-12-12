@@ -1,11 +1,15 @@
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import actions from '../../state/actions';
+import {
+    TRANSFORM_MODES,
+} from '@plurid/plurid-data';
 
 import {
     getWheelDirection,
 } from '@plurid/plurid-engine';
+
+import actions from '../../state/actions';
 
 
 
@@ -112,21 +116,33 @@ export const handleGlobalShortcuts = (
         event.code === 'KeyR'
         && noModifiers
     ) {
-        return dispatch(actions.space.toggleRotationLocked());
+        return dispatch(
+            actions.configuration.setConfigurationSpaceTransformMode(
+                TRANSFORM_MODES.ROTATION,
+            ),
+        );
     }
 
     if (
         event.code === 'KeyT'
         && noModifiers
     ) {
-        return dispatch(actions.space.toggleTranslationLocked());
+        return dispatch(
+            actions.configuration.setConfigurationSpaceTransformMode(
+                TRANSFORM_MODES.TRANSLATION,
+            ),
+        );
     }
 
     if (
         event.code === 'KeyS'
         && noModifiers
     ) {
-        return dispatch(actions.space.toggleScaleLocked());
+        return dispatch(
+            actions.configuration.setConfigurationSpaceTransformMode(
+                TRANSFORM_MODES.SCALE,
+            ),
+        );
     }
 
 

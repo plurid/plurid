@@ -754,7 +754,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         <StyledView
             ref={viewElement}
             tabIndex={0}
-            lockMode={rotationLocked || scaleLocked || translationLocked}
+            lockMode={stateConfiguration.space.transformMode !== TRANSFORM_MODES.ALL}
         >
             {!spaceLoading && (
                 <>

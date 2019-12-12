@@ -1,4 +1,8 @@
 import {
+    TRANSFORM_MODES,
+} from '@plurid/plurid-data';
+
+import {
     ConfigurationState,
 
     SetConfigurationAction,
@@ -254,7 +258,13 @@ export const setConfigurationSpaceTransformMode = (
         ...state,
     };
 
-    newState.space.transformMode = action.payload;
+    if (
+        newState.space.transformMode !== action.payload
+    ) {
+        newState.space.transformMode = action.payload;
+    } else {
+        newState.space.transformMode = TRANSFORM_MODES.ALL;
+    }
 
     return {
         ...newState,

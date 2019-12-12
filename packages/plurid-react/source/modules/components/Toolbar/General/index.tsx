@@ -150,11 +150,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     const toggleTransform = (
         TYPE: keyof typeof TRANSFORM_MODES,
     ) => {
-        if (transformMode !== TYPE) {
-            dispatchSetConfigurationSpaceTransformMode(TYPE);
-        } else {
-            dispatchSetConfigurationSpaceTransformMode(TRANSFORM_MODES.ALL);
-        }
+        dispatchSetConfigurationSpaceTransformMode(TYPE);
     }
 
     /** ViewSize Update */
