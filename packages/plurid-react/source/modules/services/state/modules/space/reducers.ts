@@ -1,16 +1,4 @@
 import {
-    ROTATION_STEP,
-    TRANSLATION_STEP,
-    SCALE_STEP,
-    SCALE_LOWER_LIMIT,
-    SCALE_UPPER_LIMIT,
-} from '@plurid/plurid-data';
-
-import {
-    toRadians,
-} from '../../../utilities/geometry';
-
-import {
     SET_SPACE_LOADING,
 
     SET_ANIMATED_TRANSFORM,
@@ -64,6 +52,54 @@ import {
     SpaceActionsType,
 } from './types';
 
+import {
+    setSpaceLoading,
+    setAnimatedTransform,
+    setSpaceLocation,
+
+    viewCameraMoveForward,
+    viewCameraMoveBackward,
+    viewCameraMoveLeft,
+    viewCameraMoveRight,
+    viewCameraMoveUp,
+    viewCameraMoveDown,
+
+    viewCameraTurnUp,
+    viewCameraTurnDown,
+    viewCameraTurnLeft,
+    viewCameraTurnRight,
+
+    rotateUp,
+    rotateDown,
+    rotateX,
+    rotateXWith,
+    rotateLeft,
+    rotateRight,
+    rotateY,
+    rotateYWith,
+
+    translateUp,
+    translateDown,
+    translateLeft,
+    translateRight,
+    translateIn,
+    translateOut,
+    translateXWith,
+    translateYWith,
+
+    scaleUp,
+    scaleDown,
+    scaleUpWith,
+    scaleDownWith,
+
+    setTree,
+    setActiveDocument,
+
+    spaceResetTransform,
+
+    setViewSize,
+} from './resolvers';
+
 
 
 const initialState: SpaceState = {
@@ -94,333 +130,85 @@ const spaceReducer = (
 ): SpaceState => {
     switch(action.type) {
         case SET_SPACE_LOADING:
-            {
-                return {
-                    ...state,
-                    loading: action.payload,
-                };
-            }
+            return setSpaceLoading(state, action);
         case SET_ANIMATED_TRANSFORM:
-            {
-                return {
-                    ...state,
-                    animatedTransform: action.payload,
-                };
-            }
+            return setAnimatedTransform(state, action);
         case SET_SPACE_LOCATION:
-            {
-                return {
-                    ...state,
-                    ...action.payload,
-                };
-            }
-
+            return setSpaceLocation(state, action);
 
         case VIEW_CAMERA_MOVE_FORWARD:
-            {
-                const translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
-                const translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
-                return {
-                    ...state,
-                    translationX,
-                    translationZ,
-                };
-            }
+            return viewCameraMoveForward(state);
         case VIEW_CAMERA_MOVE_BACKWARD:
-            {
-                const translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
-                const translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
-                return {
-                    ...state,
-                    translationX,
-                    translationZ,
-                };
-            }
+            return viewCameraMoveBackward(state);
         case VIEW_CAMERA_MOVE_LEFT:
-            {
-                const translationX = state.translationX + TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
-                const translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
-                return {
-                    ...state,
-                    translationX,
-                    translationZ,
-                };
-            }
+            return viewCameraMoveLeft(state);
         case VIEW_CAMERA_MOVE_RIGHT:
-            {
-                const translationX = state.translationX - TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
-                const translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
-                return {
-                    ...state,
-                    translationX,
-                    translationZ,
-                };
-            }
+            return viewCameraMoveRight(state);
         case VIEW_CAMERA_MOVE_UP:
-            {
-                const translationY = state.translationY + TRANSLATION_STEP * 3;
-                return {
-                    ...state,
-                    translationY,
-                };
-            }
+            return viewCameraMoveUp(state);
         case VIEW_CAMERA_MOVE_DOWN:
-            {
-                const translationY = state.translationY - TRANSLATION_STEP * 3;
-                return {
-                    ...state,
-                    translationY,
-                };
-            }
-
+            return viewCameraMoveDown(state);
 
         case VIEW_CAMERA_TURN_UP:
-            {
-                const rotationX = (state.rotationX + ROTATION_STEP) % 360;
-                return {
-                    ...state,
-                    rotationX,
-                };
-            }
+            return viewCameraTurnUp(state);
         case VIEW_CAMERA_TURN_DOWN:
-            {
-                const rotationX = (state.rotationX - ROTATION_STEP) % 360;
-                return {
-                    ...state,
-                    rotationX,
-                };
-            }
+            return viewCameraTurnDown(state);
         case VIEW_CAMERA_TURN_LEFT:
-            {
-                const rotationY = (state.rotationY - ROTATION_STEP) % 360;
-                return {
-                    ...state,
-                    rotationY,
-                };
-            }
+            return viewCameraTurnLeft(state);
         case VIEW_CAMERA_TURN_RIGHT:
-            {
-                const rotationY = (state.rotationY + ROTATION_STEP) % 360;
-                return {
-                    ...state,
-                    rotationY,
-                };
-            }
-
+            return viewCameraTurnRight(state);
 
         case ROTATE_UP:
-            {
-                const rotationX = (state.rotationX + ROTATION_STEP) % 360;
-                return {
-                    ...state,
-                    rotationX,
-                };
-            }
+            return rotateUp(state);
         case ROTATE_DOWN:
-            {
-                const rotationX = (state.rotationX - ROTATION_STEP) % 360;
-                return {
-                    ...state,
-                    rotationX,
-                };
-            }
+            return rotateDown(state);
         case ROTATE_X:
-            {
-                return {
-                    ...state,
-                    rotationX: action.payload,
-                };
-            }
+            return rotateX(state, action);
         case ROTATE_X_WITH:
-            {
-                const rotationX = state.rotationX + action.payload;
-                return {
-                    ...state,
-                    rotationX,
-                };
-            }
+            return rotateXWith(state, action);
         case ROTATE_LEFT:
-            {
-                const rotationY = (state.rotationY + ROTATION_STEP) % 360;
-                return {
-                    ...state,
-                    rotationY,
-                };
-            }
+            return rotateLeft(state);
         case ROTATE_RIGHT:
-            {
-                const rotationY = (state.rotationY - ROTATION_STEP) % 360;
-                return {
-                    ...state,
-                    rotationY,
-                };
-            }
+            return rotateRight(state);
         case ROTATE_Y:
-            {
-                return {
-                    ...state,
-                    rotationY: action.payload,
-                };
-            }
+            return rotateY(state, action);
         case ROTATE_Y_WITH:
-            {
-                const rotationY = state.rotationY + action.payload;
-                return {
-                    ...state,
-                    rotationY,
-                };
-            }
+            return rotateYWith(state, action);
+
         case TRANSLATE_UP:
-            {
-                const translationY = state.translationY - TRANSLATION_STEP;
-                return {
-                    ...state,
-                    translationY,
-                };
-            }
+            return translateUp(state);
         case TRANSLATE_DOWN:
-            {
-                const translationY = state.translationY + TRANSLATION_STEP;
-                return {
-                    ...state,
-                    translationY,
-                };
-            }
+            return translateDown(state);
         case TRANSLATE_LEFT:
-            {
-                const translationX = state.translationX - TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
-                const translationZ = state.translationZ - TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
-                return {
-                    ...state,
-                    translationX,
-                    translationZ,
-                };
-            }
+            return translateLeft(state);
         case TRANSLATE_RIGHT:
-            {
-                const translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
-                const translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
-                return {
-                    ...state,
-                    translationX,
-                    translationZ,
-                };
-            }
+            return translateRight(state);
         case TRANSLATE_IN:
-            {
-                const translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
-                const translationX = state.translationX - TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
-                return {
-                    ...state,
-                    translationX,
-                    translationZ,
-                };
-            }
+            return translateIn(state);
         case TRANSLATE_OUT:
-            {
-                const translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
-                const translationX = state.translationX + TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
-                return {
-                    ...state,
-                    translationX,
-                    translationZ,
-                };
-            }
+            return translateOut(state);
         case TRANSLATE_X_WITH:
-            {
-                const translationX = state.translationX + action.payload;
-                return {
-                    ...state,
-                    translationX,
-                };
-            }
+            return translateXWith(state, action);
         case TRANSLATE_Y_WITH:
-            {
-                const translationY = state.translationY + action.payload;
-                return {
-                    ...state,
-                    translationY,
-                };
-            }
+            return translateYWith(state, action);
+
         case SCALE_UP:
-            {
-                const computedScale = state.scale + SCALE_STEP;
-                const scale = computedScale < SCALE_UPPER_LIMIT
-                    ? computedScale
-                    : SCALE_UPPER_LIMIT;
-                return {
-                    ...state,
-                    scale,
-                };
-            }
+            return scaleUp(state);
         case SCALE_DOWN:
-            {
-                const computedScale = state.scale - SCALE_STEP;
-                const scale = computedScale > SCALE_LOWER_LIMIT
-                    ? computedScale
-                    : SCALE_LOWER_LIMIT;
-                return {
-                    ...state,
-                    scale,
-                };
-            }
+            return scaleDown(state);
         case SCALE_UP_WITH:
-            {
-                const computedScale = state.scale + Math.abs(action.payload);
-                const scale = computedScale < SCALE_UPPER_LIMIT
-                    ? computedScale
-                    : SCALE_UPPER_LIMIT;
-
-                return {
-                    ...state,
-                    scale,
-                };
-            }
+            return scaleUpWith(state, action);
         case SCALE_DOWN_WITH:
-            {
-                const computedScale = state.scale - Math.abs(action.payload);
-                const scale = computedScale > SCALE_LOWER_LIMIT
-                    ? computedScale
-                    : SCALE_LOWER_LIMIT;
+            return scaleDownWith(state, action);
 
-                return {
-                    ...state,
-                    scale,
-                };
-            }
         case SET_TREE:
-            {
-                return {
-                    ...state,
-                    tree: [
-                        ...action.payload,
-                    ],
-                };
-            }
+            return setTree(state, action);
         case SET_ACTIVE_DOCUMENT:
-            {
-                return {
-                    ...state,
-                    activeDocumentID: action.payload,
-                };
-            }
+            return setActiveDocument(state, action);
         case SPACE_RESET_TRANSFORM:
-            {
-                return {
-                    ...state,
-                    scale: 1,
-                    rotationX: 0,
-                    rotationY: 0,
-                    translationX: 0,
-                    translationY: 0,
-                    translationZ: 0,
-                };
-            }
+            return spaceResetTransform(state);
         case SET_VIEW_SIZE:
-                return {
-                    ...state,
-                    viewSize: action.payload,
-                };
+            return setViewSize(state, action);
         default:
             return {
                 ...state,
