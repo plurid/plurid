@@ -14,7 +14,7 @@ import {
 
 import SubAppRoot from './SubAppRoot';
 
-import reducer from '../../modules/services/state/reducers';
+import reducer from '../../modules/services/state/store/reducers';
 import StateContext from '../../modules/services/state/context';
 
 
