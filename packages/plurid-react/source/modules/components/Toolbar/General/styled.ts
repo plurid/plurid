@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+import {
+    MENUS,
+} from './data';
+
 
 
 export const StyledToolbar: any = styled.div`
@@ -14,7 +18,7 @@ export const StyledToolbar: any = styled.div`
         return '-55px';
     }};
     pointer-events: ${(props: any) => {
-        if (props.showMenu) {
+        if (props.showMenu !== MENUS.NONE) {
             return 'all';
         }
         return 'none';

@@ -29,6 +29,12 @@ import {
     StyledIcon,
 } from './styled';
 
+import {
+    MENUS,
+
+    VIEW_SIZE_WIDTH_LIMIT,
+} from './data';
+
 import MenuDocuments from './components/MenuDocuments';
 import MenuMore from './components/MenuMore';
 
@@ -45,17 +51,9 @@ import selectors from '../../../services/state/selectors';
 import actions from '../../../services/state/actions';
 import {
     ViewSize,
-} from '../../../services/state/types/space'
+} from '../../../services/state/types/space';
 
 
-
-enum MENUS {
-    NONE = 'NONE',
-    DOCUMENTS = 'DOCUMENTS',
-    MORE = 'MORE',
-}
-
-const VIEW_SIZE_WIDTH_LIMIT = 800;
 
 interface ToolbarOwnProperties {
 }
