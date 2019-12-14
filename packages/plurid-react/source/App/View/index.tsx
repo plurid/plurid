@@ -657,34 +657,38 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     /** Handle Tree */
     useEffect(() => {
-        if (activeDocumentID) {
+        if (activeDocumentID && contextDocumentsRef.current) {
             const activeDocument = dataDocuments[activeDocumentID];
             // console.log('activeDocument', activeDocument);
             const pages = activeDocument.pages;
 
             const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
             const contextPages = activeContextDocument.pages;
+            // console.log('contextPages', contextPages);
 
             const treePages: TreePage[] = [];
             for (const pageID in pages) {
                 const docPage = pages[pageID]
 
-                const contextPage = contextPages[pageID];
-                const treePage: TreePage = {
-                    pageID: contextPage.id,
-                    planeID: uuid(),
-                    path: contextPage.path,
-                    location: {
-                        translateX: 0,
-                        translateY: 0,
-                        translateZ: 0,
-                        rotateX: 0,
-                        rotateY: 0,
-                    },
-                    show: docPage.root,
-                };
-
                 if (docPage.root) {
+                    const contextPage = contextPages[pageID];
+                    if (!contextPage) {
+                        continue;
+                    }
+
+                    const treePage: TreePage = {
+                        pageID: contextPage.id,
+                        planeID: uuid(),
+                        path: contextPage.path,
+                        location: {
+                            translateX: 0,
+                            translateY: 0,
+                            translateZ: 0,
+                            rotateX: 0,
+                            rotateY: 0,
+                        },
+                        show: docPage.root,
+                    };
                     treePages.push(treePage);
                 }
             }
@@ -744,7 +748,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         documents: contextDocumentsRef.current,
     };
     // console.log('pluridContext', pluridContext);
-
+    // console.log('dataDocuments', dataDocuments);
     // console.log('Rendered Plurid View');
 
     return (
