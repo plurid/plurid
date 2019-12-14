@@ -355,10 +355,12 @@ export const translateXWith = (
     state: SpaceState,
     action: TranslateXWithAction,
 ): SpaceState => {
-    const translationX = state.translationX + action.payload;
+    const translationX = state.translationX +  action.payload * Math.cos(toRadians(state.rotationY));
+    const translationZ = state.translationZ +  action.payload * Math.sin(toRadians(state.rotationY));
     return {
         ...state,
         translationX,
+        translationZ,
     };
 }
 
