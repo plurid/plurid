@@ -38,6 +38,8 @@ import {
 import MenuDocuments from './components/MenuDocuments';
 import MenuMore from './components/MenuMore';
 
+import TransformArrow from './components/TransformArrow';
+
 import FirstPersonIcon from '../../../assets/icons/first-person-icon';
 import RotateIcon from '../../../assets/icons/rotate-icon';
 import TranslateIcon from '../../../assets/icons/translate-icon';
@@ -234,12 +236,17 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 >
                     {showTransformButtons && (
                         <>
-                            <StyledToolbarTransformButton
+                            <TransformArrow
+                                direction="left"
+                                transform={() => rotateRight()}
+                            />
+
+                            {/* <StyledToolbarTransformButton
                                 theme={theme}
                                 onClick={rotateRight}
                             >
                                 ◀
-                            </StyledToolbarTransformButton>
+                            </StyledToolbarTransformButton> */}
 
                             <StyledToolbarTransformButton
                                 theme={theme}
