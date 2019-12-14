@@ -89,13 +89,13 @@ const TransformArrow: React.FC<TransformArrowProperties> = (properties) => {
                 setArrowSign('◀');
                 break;
             case 'right':
-                setArrowSign('◀');
+                setArrowSign('▶');
                 break;
             case 'up':
-                setArrowSign('◀');
+                setArrowSign('▲');
                 break;
             case 'down':
-                setArrowSign('◀');
+                setArrowSign('▼');
                 break;
         }
     }, [
