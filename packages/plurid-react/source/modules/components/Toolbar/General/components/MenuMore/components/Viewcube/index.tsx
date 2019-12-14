@@ -36,6 +36,7 @@ interface MenuMoreViewcubeStateProperties {
 
 interface MenuMoreViewcubeDispatchProperties {
     dispatchToggleConfigurationViewcubeHide: typeof actions.configuration.toggleConfigurationViewcubeHide;
+    dispatchToggleConfigurationViewcubeButtons: typeof actions.configuration.toggleConfigurationViewcubeButtons;
     dispatchToggleConfigurationViewcubeOpaque: typeof actions.configuration.toggleConfigurationViewcubeOpaque;
     dispatchToggleConfigurationViewcubeConceal: typeof actions.configuration.toggleConfigurationViewcubeConceal;
 }
@@ -52,6 +53,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
 
         /** dispatch */
         dispatchToggleConfigurationViewcubeHide,
+        dispatchToggleConfigurationViewcubeButtons,
         dispatchToggleConfigurationViewcubeOpaque,
         dispatchToggleConfigurationViewcubeConceal,
     } = properties;
@@ -62,6 +64,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
 
     const {
         show,
+        buttons,
         opaque,
         conceal,
     } = viewcube;
@@ -84,6 +87,20 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
 
             {show && (
                 <>
+                    <StyledMoreMenuItem>
+                        <div>
+                            show transform buttons
+                        </div>
+
+                        <PluridSwitch
+                            theme={interactionTheme}
+                            checked={buttons}
+                            atChange={() => dispatchToggleConfigurationViewcubeButtons(!buttons)}
+                            exclusive={true}
+                            level={2}
+                        />
+                    </StyledMoreMenuItem>
+
                     <StyledMoreMenuItem>
                         <div>
                             always opaque
@@ -131,6 +148,9 @@ const mapDispatchToProps = (
 ): MenuMoreViewcubeDispatchProperties => ({
     dispatchToggleConfigurationViewcubeHide: (toggle: boolean) => dispatch(
         actions.configuration.toggleConfigurationViewcubeHide(toggle)
+    ),
+    dispatchToggleConfigurationViewcubeButtons: (toggle: boolean) => dispatch(
+        actions.configuration.toggleConfigurationViewcubeButtons(toggle)
     ),
     dispatchToggleConfigurationViewcubeOpaque: (toggle: boolean) => dispatch(
         actions.configuration.toggleConfigurationViewcubeOpaque(toggle)

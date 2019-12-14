@@ -14,6 +14,7 @@ import {
     ToggleConfigurationToolbarToggleDrawerAction,
 
     ToggleConfigurationViewcubeHideAction,
+    ToggleConfigurationViewcubeButtonsAction,
     ToggleConfigurationViewcubeOpaqueAction,
 
     SetConfigurationSpaceTransformOriginSizeAction,
@@ -139,6 +140,22 @@ export const toggleConfigurationViewcubeHide = (
     };
 
     newState.elements.viewcube.show = action.payload;
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const toggleConfigurationViewcubeButtons = (
+    state: ConfigurationState,
+    action: ToggleConfigurationViewcubeButtonsAction,
+): ConfigurationState => {
+    const newState = {
+        ...state,
+    };
+
+    newState.elements.viewcube.buttons = action.payload;
 
     return {
         ...newState,

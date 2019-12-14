@@ -12,6 +12,7 @@ import {
     SET_CONFIGURATION_THEME_INTERACTION,
 
     TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
+    TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS,
     TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
     TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL,
 
@@ -43,6 +44,7 @@ import {
     setConfigurationThemeInteraction,
 
     toggleConfigurationViewcubeHide,
+    toggleConfigurationViewcubeButtons,
     toggleConfigurationViewcubeOpaque,
     toggleConfigurationViewcubeConceal,
 
@@ -77,20 +79,26 @@ const configurationReducer = (
             return setConfiguration(state, action);
         case SET_CONFIGURATION_MICRO:
             return setConfigurationMicro(state);
+
         case SET_CONFIGURATION_PLANE_CONTROLS:
             return setConfigurationPlaneControls(state, action);
         case SET_CONFIGURATION_PLANE_OPACITY:
             return setConfigurationPlaneOpacity(state, action);
+
         case SET_CONFIGURATION_THEME_GENERAL:
             return setConfigurationThemeGeneral(state, action);
         case SET_CONFIGURATION_THEME_INTERACTION:
             return setConfigurationThemeInteraction(state, action);
+
         case TOGGLE_CONFIGURATION_VIEWCUBE_HIDE:
             return toggleConfigurationViewcubeHide(state, action);
+        case TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS:
+            return toggleConfigurationViewcubeButtons(state, action);
         case TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE:
             return toggleConfigurationViewcubeOpaque(state, action);
         case TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL:
             return toggleConfigurationViewcubeConceal(state);
+
         case TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL:
             return toggleConfigurationToolbarConceal(state);
         case TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS:
@@ -101,6 +109,7 @@ const configurationReducer = (
             return toggleConfigurationToolbarToggleDrawer(state, action);
         case TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE:
             return toggleConfigurationToolbarOpaque(state);
+
         case TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN:
             return toggleConfigurationShowTransformOrigin(state);
         case SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE:

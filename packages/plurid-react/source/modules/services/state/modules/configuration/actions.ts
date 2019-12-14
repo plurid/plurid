@@ -26,6 +26,8 @@ import {
 
     TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
     ToggleConfigurationViewcubeHideAction,
+    TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS,
+    ToggleConfigurationViewcubeButtonsAction,
     TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
     ToggleConfigurationViewcubeOpaqueAction,
     TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL,
@@ -121,6 +123,16 @@ export const toggleConfigurationViewcubeHide = (
 ): ToggleConfigurationViewcubeHideAction => {
     return {
         type: TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
+        payload: toggle,
+    };
+}
+
+
+export const toggleConfigurationViewcubeButtons = (
+    toggle: boolean,
+): ToggleConfigurationViewcubeButtonsAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS,
         payload: toggle,
     };
 }
