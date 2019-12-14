@@ -22,7 +22,6 @@ export const StyledViewcubeFace: any = styled.div`
         if (props.mouseOver) {
             return props.theme.colorTertiary;
         }
-        // return 'transparent';
         return props.theme.backgroundColorSecondary;
     }};
     box-shadow: ${(props: any) => {
