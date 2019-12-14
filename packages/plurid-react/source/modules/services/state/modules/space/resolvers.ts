@@ -32,6 +32,7 @@ import {
     SetActiveDocumentAction,
 
     SetViewSizeAction,
+    SetSpaceSizeAction,
 } from './types';
 
 
@@ -484,6 +485,21 @@ export const setViewSize = (
 ): SpaceState => {
     return {
         ...state,
-        viewSize: action.payload,
+        viewSize: {
+            ...action.payload,
+        },
+    };
+}
+
+
+export const setSpaceSize = (
+    state: SpaceState,
+    action: SetSpaceSizeAction,
+): SpaceState => {
+    return {
+        ...state,
+        spaceSize: {
+            ...action.payload,
+        },
     };
 }

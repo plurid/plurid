@@ -47,6 +47,7 @@ import {
     spaceResetTransform,
 
     setViewSize,
+    setSpaceSize,
 } from '../modules/space/actions';
 
 
@@ -100,4 +101,5 @@ export default {
     spaceResetTransform,
 
     setViewSize,
+    setSpaceSize,
 };
