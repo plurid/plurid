@@ -20,7 +20,7 @@ import {
 import {
     StyledToolbar,
     StyledToolbarButtons,
-    StyledToolbarTransformText,
+    StyledToolbarButton,
 
     StyledIcon,
 } from './styled';
@@ -187,7 +187,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 mouseIn={mouseIn}
                 opaque={opaque}
             >
-                <StyledToolbarTransformText
+                <StyledToolbarButton
                     theme={theme}
                     onClick={() => dispatchToggleConfigurationSpaceFirstPerson()}
                     active={firstPerson}
@@ -196,7 +196,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     <StyledIcon>
                         {FirstPersonIcon}
                     </StyledIcon>
-                </StyledToolbarTransformText>
+                </StyledToolbarButton>
 
 
                 <ToolbarRotate
@@ -222,7 +222,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
 
                 {documentsBased && (
-                    <StyledToolbarTransformText
+                    <StyledToolbarButton
                         theme={theme}
                         onClick={() => handleShowMenu(MENUS.DOCUMENTS)}
                         active={showMenu === MENUS.DOCUMENTS}
@@ -231,10 +231,10 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         <StyledIcon>
                             {DocumentsIcon}
                         </StyledIcon>
-                    </StyledToolbarTransformText>
+                    </StyledToolbarButton>
                 )}
 
-                <StyledToolbarTransformText
+                <StyledToolbarButton
                     theme={theme}
                     onClick={() => handleShowMenu(MENUS.MORE)}
                     active={showMenu === MENUS.MORE}
@@ -243,7 +243,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     <StyledIcon>
                         {MoreIcon}
                     </StyledIcon>
-                </StyledToolbarTransformText>
+                </StyledToolbarButton>
             </StyledToolbarButtons>
 
             {showMenu === MENUS.DOCUMENTS && (

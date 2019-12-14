@@ -16,7 +16,7 @@ import {
 } from './styled';
 
 import {
-    StyledToolbarTransformText,
+    StyledToolbarButton,
     StyledIcon,
 } from '../../styled';
 
@@ -90,7 +90,7 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (properties) => {
                 </>
             )}
 
-            <StyledToolbarTransformText
+            <StyledToolbarButton
                 theme={interactionTheme}
                 onClick={() => toggleTransform(TRANSFORM_MODES.ROTATION)}
                 active={transformMode === TRANSFORM_MODES.ROTATION}
@@ -107,7 +107,7 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (properties) => {
                         <>rotate</>
                     )
                 }
-            </StyledToolbarTransformText>
+            </StyledToolbarButton>
 
             {showTransformButtons && (
                 <>
