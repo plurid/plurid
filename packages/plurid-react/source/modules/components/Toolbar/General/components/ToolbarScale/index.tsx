@@ -16,7 +16,7 @@ import {
 } from './styled';
 
 import {
-    StyledToolbarTransformText,
+    StyledToolbarButton,
     StyledIcon,
 } from '../../styled';
 
@@ -78,7 +78,7 @@ const ToolbarScale: React.FC<ToolbarScaleProperties> = (properties) => {
                 />
             )}
 
-            <StyledToolbarTransformText
+            <StyledToolbarButton
                 theme={interactionTheme}
                 onClick={() => toggleTransform(TRANSFORM_MODES.SCALE)}
                 active={transformMode === TRANSFORM_MODES.SCALE}
@@ -95,7 +95,7 @@ const ToolbarScale: React.FC<ToolbarScaleProperties> = (properties) => {
                         <>scale</>
                     )
                 }
-            </StyledToolbarTransformText>
+            </StyledToolbarButton>
 
             {showTransformButtons && (
                 <TransformArrow

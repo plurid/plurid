@@ -16,7 +16,7 @@ import {
 } from './styled';
 
 import {
-    StyledToolbarTransformText,
+    StyledToolbarButton,
     StyledIcon,
 } from '../../styled';
 
@@ -90,7 +90,7 @@ const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (properties) => {
                 </>
             )}
 
-            <StyledToolbarTransformText
+            <StyledToolbarButton
                 theme={interactionTheme}
                 onClick={() => toggleTransform(TRANSFORM_MODES.TRANSLATION)}
                 active={transformMode === TRANSFORM_MODES.TRANSLATION}
@@ -107,7 +107,7 @@ const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (properties) => {
                         <>translate</>
                     )
                 }
-            </StyledToolbarTransformText>
+            </StyledToolbarButton>
 
             {showTransformButtons && (
                 <>

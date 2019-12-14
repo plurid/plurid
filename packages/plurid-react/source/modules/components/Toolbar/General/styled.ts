@@ -103,7 +103,7 @@ export const StyledToolbarButtons: any = styled.div`
 `;
 
 
-export const StyledToolbarTransformText: any = styled.div`
+export const StyledToolbarButton: any = styled.div`
     padding: ${(props: any) => {
         if (props.button) {
             return '0';
