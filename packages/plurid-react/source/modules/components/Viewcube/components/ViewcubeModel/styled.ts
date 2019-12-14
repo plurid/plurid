@@ -9,7 +9,7 @@ export const StyledViewcubeModel: any = styled.div`
 
 export const StyleViewcubeModelContainer: any = styled.div`
     perspective: 2000px;
-    perspective-origin: 100% 80%;
+    perspective-origin: 50% 50%;
 `;
 
 

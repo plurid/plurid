@@ -15,7 +15,21 @@ export const StyledViewcubeFace: any = styled.div`
                          "pluridViewcubeFaceBottomLeft      pluridViewcubeFaceBottomCenter      pluridViewcubeFaceBottomRight";
     grid-template-rows: 10px 30px 10px;
     grid-template-columns: 10px 30px 10px;
+    box-sizing: content-box;
+    transition: all 300ms linear;
 
+    border: 1px solid ${(props: any) => {
+        if (props.mouseOver) {
+            return props.theme.colorTertiary;
+        }
+        return 'transparent';
+    }};
+    box-shadow: ${(props: any) => {
+        if (props.face === 'base') {
+            return '0px 0px 12px 2px ' + props.theme.boxShadowPenumbraColor;
+        }
+        return '';
+    }};
     opacity: ${(props: any) => {
         if (!props.opaque) {
             if (props.mouseOver) {
