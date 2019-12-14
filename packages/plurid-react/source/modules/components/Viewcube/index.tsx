@@ -97,7 +97,13 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
         }, 450);
     }
 
-    const animatedReset = () => {
+    const animatedReset = (event: React.MouseEvent) => {
+        if (event.ctrlKey || event.metaKey) {
+            // fit into view
+            return;
+        }
+
+        // reset view
         dispatchSetAnimatedTransform(true);
         dispatchSpaceResetTransform();
         setTimeout(() => {
@@ -176,7 +182,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     </StyledViewcubeArrow>
 
                     <StyledFitView
-                        onClick={() => animatedReset()}
+                        onClick={animatedReset}
                     >
                         {GlobalIcon}
                     </StyledFitView>
