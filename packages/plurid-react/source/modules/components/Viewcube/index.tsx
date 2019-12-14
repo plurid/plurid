@@ -72,6 +72,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
     } = elements;
 
     const {
+        buttons,
         opaque,
         conceal,
     } = viewcube;
@@ -117,7 +118,8 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                 mouseOver={mouseOver}
             />
 
-            {mouseOver && (
+            {mouseOver
+            && buttons && (
                 <>
                     <StyledViewcubeArrow
                         style={{
