@@ -327,7 +327,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     {showTransformButtons && (
                         <>
                             <TransformArrow
-                                direction="right"
+                                direction="left"
                                 transform={() => translateLeft()}
                             />
 
