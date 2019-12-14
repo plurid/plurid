@@ -454,10 +454,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.1.18.tgz#bf809f1a25cd9bfe84289f6323956ba842803173"
   integrity sha512-Mx1mAvsnEiNK4BYHgPSO/ywxVl4FDquLramd2CILwfuMuUJq10e1VICGw4zT+YEIWJcogfIlAZikVElCEVgrzQ==
 
-"@plurid/plurid-ui-react@^0.1.35":
-  version "0.1.35"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.35.tgz#1cffb3b912991704aa9e709a1936fff7dd634c59"
-  integrity sha512-SrUqHsUmRC+rnnYlwM/xwxn47LHf/ofu+Cu0JU2Z/+Ahu58SoIMTBaCSaYMouMkgtnXja5HPAlArDTf+AufEKQ==
+"@plurid/plurid-ui-react@^0.1.36":
+  version "0.1.36"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.36.tgz#c6ca3b23d25d4b35e0ccc18493348c270e0d4aa2"
+  integrity sha512-5OIENsmsyF/I2SVrdyP4CHPfcsvwnoM7CsvQtbTNd0NdKP2oJMK7kkMSFOZ0SpIuqgmnZDPl18x7moBcJ8lB/A==
 
 "@types/babel__core@^7.1.0":
   version "7.1.3"
