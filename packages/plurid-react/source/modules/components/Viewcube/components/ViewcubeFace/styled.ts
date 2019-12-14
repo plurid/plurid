@@ -18,7 +18,12 @@ export const StyledViewcubeFace: any = styled.div`
 
     opacity: ${(props: any) => {
         if (!props.opaque) {
-            return '0.8';
+            if (props.mouseOver) {
+                return '0.8';
+            }
+            if (!props.mouseOver) {
+                return '0.4';
+            }
         }
         return '1';
     }};

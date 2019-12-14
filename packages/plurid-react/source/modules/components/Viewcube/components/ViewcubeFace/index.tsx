@@ -201,6 +201,7 @@ const zoneClickTransforms = {
 
 interface ViewcubeFaceOwnProperties {
     face: string;
+    mouseOver: boolean;
     hoveredZone: string;
     setHoveredZone: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -225,6 +226,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
     const {
         /** own */
         face,
+        mouseOver,
         hoveredZone,
         setHoveredZone,
 
@@ -263,6 +265,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
             theme={generalTheme}
             face={face}
             opaque={opaqueFace}
+            mouseOver={mouseOver}
         >
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
