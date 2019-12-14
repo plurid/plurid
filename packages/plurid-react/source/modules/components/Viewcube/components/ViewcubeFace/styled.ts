@@ -74,6 +74,9 @@ export const StyledViewcubeFaceZone: any = styled.div`
         return props.theme.colorSecondary;
     }};
     background-color: ${(props: any) => {
+        if (props.active) {
+            return props.theme.backgroundColorTertiary;
+        }
         if (props.hovered) {
             return props.theme.backgroundColorTertiary;
         }

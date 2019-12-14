@@ -50,16 +50,20 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
     } = properties;
 
     const [hoveredZone, setHoveredZone] = useState('');
-
-    // useEffect(() => {
-    //     console.log(hoveredZone);
-    // }, [
-    //     hoveredZone,
-    // ]);
+    const [activeZone, setActiveZone] = useState('');
 
     const handleMouseLeave = () => {
         setHoveredZone('');
     }
+
+    useEffect(() => {
+        if (!hoveredZone) {
+            setActiveZone('');
+        }
+    }, [
+        spaceRotationX,
+        spaceRotationY,
+    ]);
 
     return (
         <StyledViewcubeModel>
@@ -81,36 +85,48 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
                     />
                     <ViewcubeFace
                         face="back"
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
                     />
                     <ViewcubeFace
                         face="left"
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
                     />
                     <ViewcubeFace
                         face="right"
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
                     />
                     <ViewcubeFace
                         face="top"
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
                     />
                     <ViewcubeFace
                         face="base"
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
                     />
                 </StyledViewcubeModelCube>
             </StyleViewcubeModelContainer>
