@@ -20,10 +20,6 @@ import {
 import {
     StyledToolbar,
     StyledToolbarButtons,
-    StyledToolbarRotate,
-    StyledToolbarTranslate,
-    StyledToolbarScale,
-    StyledToolbarTransformButton,
     StyledToolbarTransformText,
 
     StyledIcon,
@@ -38,12 +34,11 @@ import {
 import MenuDocuments from './components/MenuDocuments';
 import MenuMore from './components/MenuMore';
 
-import TransformArrow from './components/TransformArrow';
+import ToolbarRotate from './components/ToolbarRotate';
+import ToolbarScale from './components/ToolbarScale';
+import ToolbarTranslate from './components/ToolbarTranslate';
 
 import FirstPersonIcon from '../../../assets/icons/first-person-icon';
-import RotateIcon from '../../../assets/icons/rotate-icon';
-import TranslateIcon from '../../../assets/icons/translate-icon';
-import ScaleIcon from '../../../assets/icons/scale-icon';
 import DocumentsIcon from '../../../assets/icons/documents-icon';
 import MoreIcon from '../../../assets/icons/more-icon';
 
@@ -70,19 +65,6 @@ interface ToolbarStateProperties {
 interface ToolbarDispatchProperties {
     dispatchToggleConfigurationSpaceFirstPerson: typeof actions.configuration.toggleConfigurationSpaceFirstPerson;
 
-    rotateUp: typeof actions.space.rotateUp;
-    rotateDown: typeof actions.space.rotateDown;
-    rotateLeft: typeof actions.space.rotateLeft;
-    rotateRight: typeof actions.space.rotateRight;
-
-    scaleUp: typeof actions.space.scaleUp;
-    scaleDown: typeof actions.space.scaleDown;
-
-    translateUp: typeof actions.space.translateUp;
-    translateDown: typeof actions.space.translateDown;
-    translateLeft: typeof actions.space.translateLeft;
-    translateRight: typeof actions.space.translateRight;
-
     dispatchSetConfigurationSpaceTransformMode: typeof actions.configuration.setConfigurationSpaceTransformMode;
 }
 
@@ -102,20 +84,6 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
         /** dispatch */
         dispatchToggleConfigurationSpaceFirstPerson,
-
-        rotateUp,
-        rotateDown,
-        rotateLeft,
-        rotateRight,
-
-        scaleUp,
-        scaleDown,
-
-        translateUp,
-        translateDown,
-        translateLeft,
-        translateRight,
-
         dispatchSetConfigurationSpaceTransformMode,
     } = properties;
 
@@ -231,146 +199,27 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 </StyledToolbarTransformText>
 
 
-                <StyledToolbarRotate
+                <ToolbarRotate
                     showTransformButtons={showTransformButtons}
-                >
-                    {showTransformButtons && (
-                        <>
-                            <TransformArrow
-                                direction="left"
-                                transform={() => rotateRight()}
-                            />
+                    showIcons={showIcons}
+                    transformMode={transformMode}
+                    toggleTransform={toggleTransform}
+                />
 
-                            <TransformArrow
-                                direction="up"
-                                transform={() => rotateUp()}
-                            />
-                        </>
-                    )}
-
-                    <StyledToolbarTransformText
-                        theme={theme}
-                        onClick={() => toggleTransform(TRANSFORM_MODES.ROTATION)}
-                        active={transformMode === TRANSFORM_MODES.ROTATION}
-                        showIcons={showIcons}
-                        showTransformButtons={showTransformButtons}
-                        button={showIcons}
-                    >
-                        {showIcons
-                            ? (
-                                <StyledIcon>
-                                    {RotateIcon}
-                                </StyledIcon>
-                            ) : (
-                                <>rotate</>
-                            )
-                        }
-                    </StyledToolbarTransformText>
-
-                    {showTransformButtons && (
-                        <>
-                            <TransformArrow
-                                direction="down"
-                                transform={() => rotateDown()}
-                            />
-
-                            <TransformArrow
-                                direction="right"
-                                transform={() => rotateLeft()}
-                            />
-                        </>
-                    )}
-                </StyledToolbarRotate>
-
-
-                <StyledToolbarScale
+                <ToolbarScale
                     showTransformButtons={showTransformButtons}
-                >
-                    {showTransformButtons && (
-                        <TransformArrow
-                            direction="up"
-                            transform={() => scaleUp()}
-                        />
-                    )}
+                    showIcons={showIcons}
+                    transformMode={transformMode}
+                    toggleTransform={toggleTransform}
+                />
 
-                    <StyledToolbarTransformText
-                        theme={theme}
-                        onClick={() => toggleTransform(TRANSFORM_MODES.SCALE)}
-                        active={transformMode === TRANSFORM_MODES.SCALE}
-                        showIcons={showIcons}
-                        showTransformButtons={showTransformButtons}
-                        button={showIcons}
-                    >
-                        {showIcons
-                            ? (
-                                <StyledIcon>
-                                    {ScaleIcon}
-                                </StyledIcon>
-                            ) : (
-                                <>scale</>
-                            )
-                        }
-                    </StyledToolbarTransformText>
-
-                    {showTransformButtons && (
-                        <TransformArrow
-                            direction="down"
-                            transform={() => scaleDown()}
-                        />
-                    )}
-                </StyledToolbarScale>
-
-
-                <StyledToolbarTranslate
+                <ToolbarTranslate
                     showTransformButtons={showTransformButtons}
-                >
-                    {showTransformButtons && (
-                        <>
-                            <TransformArrow
-                                direction="left"
-                                transform={() => translateLeft()}
-                            />
+                    showIcons={showIcons}
+                    transformMode={transformMode}
+                    toggleTransform={toggleTransform}
+                />
 
-                            <TransformArrow
-                                direction="up"
-                                transform={() => translateUp()}
-                            />
-                        </>
-                    )}
-
-                    <StyledToolbarTransformText
-                        theme={theme}
-                        onClick={() => toggleTransform(TRANSFORM_MODES.TRANSLATION)}
-                        active={transformMode === TRANSFORM_MODES.TRANSLATION}
-                        showIcons={showIcons}
-                        showTransformButtons={showTransformButtons}
-                        button={showIcons}
-                    >
-                        {showIcons
-                            ? (
-                                <StyledIcon>
-                                    {TranslateIcon}
-                                </StyledIcon>
-                            ) : (
-                                <>translate</>
-                            )
-                        }
-                    </StyledToolbarTransformText>
-
-                    {showTransformButtons && (
-                        <>
-                            <TransformArrow
-                                direction="down"
-                                transform={() => translateDown()}
-                            />
-
-                            <TransformArrow
-                                direction="right"
-                                transform={() => translateRight()}
-                            />
-                        </>
-                    )}
-                </StyledToolbarTranslate>
 
                 {documentsBased && (
                     <StyledToolbarTransformText
@@ -421,19 +270,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): Toolbar
     dispatchToggleConfigurationSpaceFirstPerson: () => dispatch(
         actions.configuration.toggleConfigurationSpaceFirstPerson(),
     ),
-
-    rotateUp: () => dispatch(actions.space.rotateUp()),
-    rotateDown: () => dispatch(actions.space.rotateDown()),
-    rotateLeft: () => dispatch(actions.space.rotateLeft()),
-    rotateRight: () => dispatch(actions.space.rotateRight()),
-
-    scaleUp: () => dispatch(actions.space.scaleUp()),
-    scaleDown: () => dispatch(actions.space.scaleDown()),
-
-    translateUp: () => dispatch(actions.space.translateUp()),
-    translateDown: () => dispatch(actions.space.translateDown()),
-    translateLeft: () => dispatch(actions.space.translateLeft()),
-    translateRight: () => dispatch(actions.space.translateRight()),
 
     dispatchSetConfigurationSpaceTransformMode: (
         mode: keyof typeof TRANSFORM_MODES,
