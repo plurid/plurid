@@ -16,6 +16,12 @@ export const StyledViewcubeFace: any = styled.div`
     grid-template-rows: 10px 30px 10px;
     grid-template-columns: 10px 30px 10px;
 
+    opacity: ${(props: any) => {
+        if (!props.opaque) {
+            return '0.8';
+        }
+        return '1';
+    }};
     transform: ${(props: any) => {
         switch (props.face) {
             case 'front':

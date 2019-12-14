@@ -110,7 +110,6 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
             onMouseMove={() => !mouseOver ? setMouseOver(true) : null}
-            transparent={!opaque}
             conceal={conceal}
             mouseOver={mouseOver}
         >
