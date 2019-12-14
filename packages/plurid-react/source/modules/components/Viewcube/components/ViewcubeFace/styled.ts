@@ -7,7 +7,7 @@ export const StyledViewcubeFace: any = styled.div`
     position: absolute;
     height: 50px;
     width: 50px;
-    cursor: pointer;
+    pointer-events: none;
     display: grid;
     transform-style: preserve-3d;
     grid-template-areas: "pluridViewcubeFaceTopLeft         pluridViewcubeFaceTopCenter         pluridViewcubeFaceTopRight"
@@ -22,7 +22,8 @@ export const StyledViewcubeFace: any = styled.div`
         if (props.mouseOver) {
             return props.theme.colorTertiary;
         }
-        return 'transparent';
+        // return 'transparent';
+        return props.theme.backgroundColorSecondary;
     }};
     box-shadow: ${(props: any) => {
         if (props.face === 'base') {
@@ -65,6 +66,8 @@ export const StyledViewcubeFace: any = styled.div`
 export const StyledViewcubeFaceZone: any = styled.div`
     display: grid;
     place-content: center;
+    cursor: pointer;
+    pointer-events: all;
 
     grid-area: ${(props:any) => `pluridViewcubeFace${props.type}`};
     color: ${(props: any) => {
