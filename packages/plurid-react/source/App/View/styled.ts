@@ -1,5 +1,8 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
+import {
+    TRANSFORM_MODES,
+} from '@plurid/plurid-data';
 
 
 export const GlobalStyle = createGlobalStyle`
@@ -41,26 +44,40 @@ export const StyledView: any = styled.div`
     width: 100%;
     position: relative;
 
+    cursor: ${(props: any) => {
+        if (
+            props.transformMode === TRANSFORM_MODES.TRANSLATION
+            || props.transformMode === TRANSFORM_MODES.ROTATION
+        ) {
+            return 'all-scroll';
+        }
+        if (
+            props.transformMode === TRANSFORM_MODES.SCALE
+        ) {
+            return 'ns-resize';
+        }
+        return 'initial';
+    }};
     user-select: ${(props: any) => {
-        if (props.lockMode) {
+        if (props.transformMode) {
             return 'none';
         }
         return 'initial';
     }};
     touch-action: ${(props: any) => {
-        if (props.lockMode) {
+        if (props.transformMode) {
             return 'none !important';
         }
         return 'initial !important';
     }};
     -webkit-user-drag: ${(props: any) => {
-        if (props.lockMode) {
+        if (props.transformMode) {
             return 'none';
         }
         return 'initial';
     }};
     -webkit-tap-highlight-color: ${(props: any) => {
-        if (props.lockMode) {
+        if (props.transformMode) {
             return 'rgba(0, 0, 0, 0)';
         }
         return 'initial';
