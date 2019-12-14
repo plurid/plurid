@@ -90,6 +90,10 @@ import {
     SET_VIEW_SIZE,
     SetViewSizeAction,
     ViewSize,
+
+    SET_SPACE_SIZE,
+    SetSpaceSizeAction,
+    SpaceSize,
 } from './types'
 
 
@@ -344,6 +348,16 @@ export const setViewSize = (
 ): SetViewSizeAction => {
     return {
         type: SET_VIEW_SIZE,
+        payload,
+    };
+}
+
+
+export const setSpaceSize = (
+    payload: SpaceSize,
+): SetSpaceSizeAction => {
+    return {
+        type: SET_SPACE_SIZE,
         payload,
     };
 }

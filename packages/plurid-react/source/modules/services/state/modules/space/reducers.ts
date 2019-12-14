@@ -47,6 +47,7 @@ import {
     SPACE_RESET_TRANSFORM,
 
     SET_VIEW_SIZE,
+    SET_SPACE_SIZE,
 
     SpaceState,
     SpaceActionsType,
@@ -98,6 +99,7 @@ import {
     spaceResetTransform,
 
     setViewSize,
+    setSpaceSize,
 } from './resolvers';
 
 
@@ -119,8 +121,13 @@ const initialState: SpaceState = {
         z: 0,
     },
     viewSize: {
-        height: window ? window.innerHeight : 800,
         width: window ? window.innerWidth : 1440,
+        height: window ? window.innerHeight : 800,
+    },
+    spaceSize: {
+        width: window ? window.innerWidth : 1440,
+        height: window ? window.innerHeight : 800,
+        depth: 0,
     },
 };
 
@@ -209,6 +216,8 @@ const spaceReducer = (
             return spaceResetTransform(state);
         case SET_VIEW_SIZE:
             return setViewSize(state, action);
+        case SET_SPACE_SIZE:
+            return setSpaceSize(state, action);
         default:
             return {
                 ...state,

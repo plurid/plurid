@@ -229,6 +229,18 @@ export interface SetViewSizeAction {
 }
 
 
+export const SET_SPACE_SIZE = 'SET_SPACE_SIZE';
+export interface SpaceSize {
+    width: number;
+    height: number;
+    depth: number;
+}
+export interface SetSpaceSizeAction {
+    type: typeof SET_SPACE_SIZE;
+    payload: SpaceSize;
+}
+
+
 
 export interface SpaceState {
     loading: boolean;
@@ -243,6 +255,7 @@ export interface SpaceState {
     activeDocumentID: string;
     camera: Coordinates;
     viewSize: ViewSize;
+    spaceSize: SpaceSize;
 }
 
 
@@ -289,4 +302,5 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | SetTreeAction
     | SetActiveDocumentAction
     | SpaceResetTransformAction
-    | SetViewSizeAction;
+    | SetViewSizeAction
+    | SetSpaceSizeAction;
