@@ -57,6 +57,13 @@ export interface ToggleConfigurationViewcubeHideAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS = 'TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS';
+export interface ToggleConfigurationViewcubeButtonsAction {
+    type: typeof TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS;
+    payload: boolean;
+}
+
+
 export const TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE = 'TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE';
 export interface ToggleConfigurationViewcubeOpaqueAction {
     type: typeof TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE;
@@ -147,19 +154,25 @@ export interface ConfigurationState extends PluridConfiguration {
 
 export type ConfigurationActionsType = SetConfigurationAction
     | SetConfigurationMicroAction
+    /** PLANE */
     | SetConfigurationPlaneControlsAction
     | SetConfigurationPlaneOpacityAction
+    /** THEME */
     | SetConfigurationThemeGeneralAction
     | SetConfigurationThemeInteractionAction
+    /** VIEWCUBE */
     | ToggleConfigurationViewcubeHideAction
+    | ToggleConfigurationViewcubeButtonsAction
     | ToggleConfigurationViewcubeOpaqueAction
     | ToggleConfigurationViewcubeConcealAction
+    /** TOOLBAR */
     | ToggleConfigurationToolbarConcealAction
     | ToggleConfigurationToolbarTransformIconsAction
     | ToggleConfigurationToolbarTransformButtonsAction
-    | ToggleConfigurationSpaceShowTransformOriginAction
     | ToggleConfigurationToolbarOpaqueAction
     | ToggleConfigurationToolbarToggleDrawerAction
+    /** SPACE */
+    | ToggleConfigurationSpaceShowTransformOriginAction
     | SetConfigurationSpaceTransformOriginSizeAction
     | SetConfigurationSpaceTransformModeAction
     | SetConfigurationSpaceTransformTouchAction

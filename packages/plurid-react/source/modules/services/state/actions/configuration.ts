@@ -8,6 +8,7 @@ import {
     setConfigurationThemeInteractionAction,
 
     toggleConfigurationViewcubeHide,
+    toggleConfigurationViewcubeButtons,
     toggleConfigurationViewcubeOpaque,
     toggleConfigurationViewcubeConceal,
 
@@ -39,6 +40,7 @@ export default {
     setConfigurationThemeInteractionAction,
 
     toggleConfigurationViewcubeHide,
+    toggleConfigurationViewcubeButtons,
     toggleConfigurationViewcubeOpaque,
     toggleConfigurationViewcubeConceal,
 
