@@ -19,6 +19,7 @@ import {
     TreePage,
     Indexed,
     PluridInternalStateDocument,
+    PluridConfiguration,
 } from '@plurid/plurid-data';
 
 import {
@@ -44,6 +45,7 @@ interface PluridLinkStateProperties {
     generalTheme: Theme;
     activeDocumentID: string;
     documents: Indexed<PluridInternalStateDocument>;
+    configuration: PluridConfiguration,
 }
 
 interface PluridLinkDispatchProperties {
@@ -79,10 +81,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         generalTheme,
         activeDocumentID,
         documents,
+        configuration,
 
         /** dispatch */
         setTree,
     } = properties;
+
+    const planeControls = configuration.elements.plane.controls.show;
 
     const [suffix, setSuffix] = useState(DEFAULT_SUFIX);
     const [devisible, setDevisible] = useState(false);
@@ -101,8 +106,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
     ]);
 
     const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
+        const planeControlsHeight = planeControls ? 56 : 0;
         const x = element.current!.offsetLeft + element.current!.offsetWidth;
-        const y = element.current!.offsetTop;
+        const y = element.current!.offsetTop + planeControlsHeight;
 
         return {
             x,
@@ -196,6 +202,7 @@ const mapStateToProps = (
     generalTheme: selectors.themes.getGeneralTheme(state),
     activeDocumentID: selectors.space.getActiveDocumentID(state),
     documents: selectors.data.getDocuments(state),
+    configuration: selectors.configuration.getConfiguration(state),
 });
 
 
