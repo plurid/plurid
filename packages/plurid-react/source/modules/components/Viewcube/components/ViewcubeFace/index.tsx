@@ -8,6 +8,10 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
+    PluridConfiguration,
+} from '@plurid/plurid-data';
+
+import {
     StyledViewcubeFace,
     StyledViewcubeFaceZone,
 } from './styled';
@@ -204,6 +208,7 @@ interface ViewcubeFaceOwnProperties {
 interface ViewcubeFaceStateProperties {
     generalTheme: Theme;
     interactionTheme: Theme;
+    configuration: PluridConfiguration;
 }
 
 interface ViewcubeFaceDispatchProperties {
@@ -226,12 +231,15 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
         /** state */
         generalTheme,
         interactionTheme,
+        configuration,
 
         /** dispatch */
         dispatchRotateX,
         dispatchRotateY,
         dispatchSetAnimatedTransform,
     } = properties;
+
+    const opaqueFace = configuration.elements.viewcube.opaque;
 
     const handleClick = (
         type: string,
@@ -254,6 +262,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
         <StyledViewcubeFace
             theme={generalTheme}
             face={face}
+            opaque={opaqueFace}
         >
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
@@ -334,6 +343,7 @@ const mapStateToProperties = (
 ): ViewcubeFaceStateProperties => ({
     generalTheme: selectors.themes.getGeneralTheme(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
+    configuration: selectors.configuration.getConfiguration(state),
 });
 
 
