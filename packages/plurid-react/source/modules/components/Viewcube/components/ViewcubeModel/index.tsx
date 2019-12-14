@@ -78,31 +78,37 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                 >
                     <ViewcubeFace
                         face="front"
+                        mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="back"
+                        mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="left"
+                        mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="right"
+                        mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="top"
+                        mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
                     />
                     <ViewcubeFace
                         face="base"
+                        mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
                     />
