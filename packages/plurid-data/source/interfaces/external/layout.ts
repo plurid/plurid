@@ -22,12 +22,18 @@ export interface LayoutMetaLayout {
 
 
 export interface LayoutColumns extends Layout {
+    /**
+     * Layout Top View
+     *
+     * ‾‾ ‾‾ ‾‾ ... ‾‾
+     */
     type: LAYOUT_TYPES.COLUMNS;
 
     /**
      * Integer value indicating the number of columns.
      *
-     * If the number of pages is greater than the number of columns, the pages will overflow onto the next row.
+     * If the number of pages is greater than the number of columns,
+     * the pages will overflow onto the next row.
      */
     columns?: number;
 }
@@ -35,6 +41,8 @@ export interface LayoutColumns extends Layout {
 
 export interface LayoutFaceToFace extends Layout {
     /**
+     * Layout Top View
+     *
      * ╱ ‾‾ ╲
      *
      * ╱    first plane
@@ -48,9 +56,9 @@ export interface LayoutFaceToFace extends Layout {
     /**
      * Angle between the first plane and the last plane of a row.
      *
-     * Value between `0.00` and `360.00`. Recommended between `0` and `90`.
+     * Value between `0.00` and `360.00`. Recommended between `0` and `180`.
      *
-     * Default is `45`.
+     * Default is `90`.
      */
     angle?: number;
 
