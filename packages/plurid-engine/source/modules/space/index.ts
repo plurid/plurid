@@ -75,11 +75,12 @@ export const computeSpaceTree = (
             {
                 const {
                     columns,
+                    gap,
                 } = configuration.space.layout;
                 const columnLayoutTree = computeColumnLayout(
                     pages,
                     columns,
-                    20,
+                    gap,
                 );
                 return columnLayoutTree;
             }

@@ -12,15 +12,17 @@ const computeColumnLayout = (
     gap: number = ROOTS_GAP,
 ): TreePage[] => {
     const tree: TreePage[] = [];
-
     const width = window.innerWidth;
     const height = window.innerHeight;
+    const gapValue = Number.isInteger(gap)
+        ? gap
+        : gap * width;
 
     for (const [index, root] of roots.entries()) {
         const rowIndex = Math.floor(index / columns);
         const columnIndex = index % columns;
-        const translateX = columnIndex * (width + gap);
-        const translateY = rowIndex * (height + gap);
+        const translateX = columnIndex * (width + gapValue);
+        const translateY = rowIndex * (height + gapValue);
 
         const treePage: TreePage = {
             ...root,
@@ -38,5 +40,6 @@ const computeColumnLayout = (
 
     return tree;
 }
+
 
 export default computeColumnLayout;
