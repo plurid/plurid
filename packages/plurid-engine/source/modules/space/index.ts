@@ -199,6 +199,50 @@ const splitIntoGroups = <T>(
 }
 
 
+const computeFaceToFaceTranslateZ = (
+    width: number,
+    angle: number,
+    first: boolean,
+) => {
+    if (first) {
+        return width * Math.sin(toRadians(angle));
+    }
+
+    return 0;
+}
+
+const computeFaceToFaceTranslateX = (
+    width: number,
+    angle: number,
+    gap: number,
+    first: boolean,
+    index: number,
+) => {
+    const firstTranslateX = width * Math.cos(toRadians(angle));
+    if (first) {
+        return firstTranslateX;
+    }
+
+    const value = width * (index - 1)
+        + 2 * firstTranslateX
+        + gap * index;
+    return value;
+}
+
+const computeFaceToFaceRotateY = (
+    angle: number,
+    first: boolean,
+    last: boolean,
+) => {
+    const rotateY = first
+        ? angle
+        : last
+            ? -angle
+            : 0;
+
+    return rotateY;
+}
+
 export const computeFaceToFaceLayout = (
     roots: TreePage[],
     angle: number = 45,
@@ -206,14 +250,15 @@ export const computeFaceToFaceLayout = (
     middle: number = 0,
 ): TreePage[] => {
     const tree: TreePage[] = [];
-
     const width = window.innerWidth;
     const height = window.innerHeight;
-    const planeAngle = 90 - angle/2;
-
+    const planeAngle = 90 - angle / 2;
     const columns = 2 + middle;
-
     const rows = splitIntoGroups(roots, columns);
+
+    const gapValue = Number.isInteger(gap)
+        ? gap
+        : gap * width;
 
     for (const [index, row] of rows.entries()) {
         const translateY = index * height;
@@ -222,21 +267,23 @@ export const computeFaceToFaceLayout = (
             const first = index === 0;
             const last = index === columns - 1;
 
-            const translateZ = first
-                ? width * Math.sin(toRadians(planeAngle))
-                : last
-                    ? 0
-                    : 0;
-            const translateX = first
-                ? width * Math.cos(toRadians(planeAngle))
-                : last
-                    ? index * width
-                    : index * width;
-            const rotateY = first
-                ? planeAngle
-                : last
-                    ? -planeAngle
-                    : 0;
+            const translateZ = computeFaceToFaceTranslateZ(
+                width,
+                planeAngle,
+                first,
+            );
+            const translateX = computeFaceToFaceTranslateX(
+                width,
+                planeAngle,
+                gapValue,
+                first,
+                index
+            );
+            const rotateY = computeFaceToFaceRotateY(
+                planeAngle,
+                first,
+                last,
+            );
 
             const treePage: TreePage = {
                 pageID: page.pageID,
@@ -254,29 +301,6 @@ export const computeFaceToFaceLayout = (
             tree.push(treePage);
         }
     }
-
-    // for (const [index, root] of roots.entries()) {
-    //     const translateX = 0;
-    //     const translateY = 0;
-
-    //     const rotateY = halfAngle;
-
-    //     const treePage: TreePage = {
-    //         pageID: root.pageID,
-    //         path: root.path,
-    //         planeID: uuid(),
-    //         location: {
-    //             translateX,
-    //             translateY,
-    //             translateZ: 0,
-    //             rotateX: 0,
-    //             rotateY,
-    //         },
-    //         show: true,
-    //     };
-
-    //     tree.push(treePage);
-    // }
 
     return tree;
 }
