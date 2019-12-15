@@ -56,37 +56,37 @@ import {
 
 import handleView from './logic';
 
-import Context from '../../modules/services/utilities/context';
+import Context from '../../modules/services/logic/context';
 
 import {
     identifyPages,
     identifyDocuments,
-} from '../../modules/services/utilities/identified';
+} from '../../modules/services/logic/identified';
 
 import {
     createIndexed,
-} from '../../modules/services/utilities/indexed';
+} from '../../modules/services/logic/indexed';
 
 import {
     createInternalStateDocument,
     createInternalContextDocument,
     findActiveDocument,
-} from '../../modules/services/utilities/documents';
+} from '../../modules/services/logic/documents';
 
 import {
     createInternalStatePage,
     createInternalContextPage,
-} from '../../modules/services/utilities/pages';
+} from '../../modules/services/logic/pages';
 
 import {
     createTreePage,
-} from '../../modules/services/utilities/tree';
+} from '../../modules/services/logic/tree';
 
 import {
     registerPaths,
-} from '../../modules/services/utilities/paths';
+} from '../../modules/services/logic/paths';
 
-import mergeConfiguration from '../../modules/services/utilities/mergeConfiguration';
+import mergeConfiguration from '../../modules/services/logic/mergeConfiguration';
 
 import {
     handleGlobalShortcuts,
