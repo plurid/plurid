@@ -33,7 +33,6 @@ import PluridPubSub, {
 
 import {
     debounce,
-    uuidv4 as uuid,
 } from '@plurid/plurid-functions';
 
 import themes, {
@@ -44,7 +43,6 @@ import themes, {
 import {
     computeSpaceTree,
     computeSpaceLocation,
-    recomputeSpaceTreeLocations,
 } from '@plurid/plurid-engine';
 
 import './index.css';
@@ -523,7 +521,10 @@ const View: React.FC<ViewProperties> = (properties) => {
                     height,
                 });
 
-                const recomputedTree = recomputeSpaceTreeLocations(tree);
+                const recomputedTree = computeSpaceTree(
+                    tree,
+                    stateConfiguration,
+                );
                 dispatchSetTree(recomputedTree);
             }
         }, 150);
