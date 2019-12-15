@@ -15,7 +15,7 @@ const App = () => {
         theme: 'plurid',
         space: {
             layout: {
-                type: 'COLUMNS',
+                type: 'ZIG_ZAG',
                 // columns: 1,
             },
             // transformOrigin: {
@@ -57,7 +57,7 @@ const App = () => {
                 element: Page2,
                 properties: {},
             },
-            // root: true,
+            root: true,
         },
         {
             path: '/page-3',
