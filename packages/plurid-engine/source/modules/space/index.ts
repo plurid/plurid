@@ -176,25 +176,6 @@ export const computeCameraLocationX = (
 }
 
 
-export const recomputeSpaceTreeLocations = (
-    tree: TreePage[],
-): TreePage[] => {
-    const updatedTree: TreePage[] = [];
-
-    tree.forEach((page, index) => {
-        const _page = { ...page };
-
-        const translateX = index === 0
-            ? 0
-            : window.innerWidth * index + ROOTS_GAP;
-        _page.location.translateX = translateX;
-        updatedTree.push(_page);
-    });
-
-    return updatedTree;
-}
-
-
 export const getTreePageByPlaneID = (
     tree: TreePage[],
     planeID: string
