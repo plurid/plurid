@@ -1,6 +1,4 @@
-import {
-    computeColumnLayout,
-} from '../';
+import computeFaceToFaceLayout from '../faceToFace';
 
 import {
     TreePage,
@@ -8,8 +6,8 @@ import {
 
 
 
-describe('computeColumnLayout', () => {
-    /** handle crypto for jest - https://stackoverflow.com/a/52612372 */
+xdescribe('computeColumnLayout', () => {
+    // handle crypto for jest - https://stackoverflow.com/a/52612372
     const crypto = require('crypto');
     Object.defineProperty(global, 'crypto', {
         value: {
@@ -17,7 +15,7 @@ describe('computeColumnLayout', () => {
         },
     });
 
-    it('computes the default column layout', () => {
+    it('computes the face to face layout', () => {
         (global as any).window = {
             innerWidth: 1200,
             innerHeight: 800,
@@ -28,7 +26,7 @@ describe('computeColumnLayout', () => {
                 pageID: '1',
                 location: {
                     rotateX: 0,
-                    rotateY: 0,
+                    rotateY: 90.1,
                     translateX: 0,
                     translateY: 0,
                     translateZ: 0,
@@ -41,7 +39,7 @@ describe('computeColumnLayout', () => {
                 pageID: '2',
                 location: {
                     rotateX: 0,
-                    rotateY: 0,
+                    rotateY: 90.1,
                     translateX: 0,
                     translateY: 0,
                     translateZ: 0,
@@ -50,27 +48,14 @@ describe('computeColumnLayout', () => {
                 planeID: '',
                 show: true,
             },
-            {
-                pageID: '3',
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                },
-                path: '/page-3',
-                planeID: '',
-                show: true,
-            },
-        ]
+        ];
 
         const locatedTree: TreePage[] = [
             {
                 pageID: '1',
                 location: {
                     rotateX: 0,
-                    rotateY: 0,
+                    rotateY: 90.1,
                     translateX: 0,
                     translateY: 0,
                     translateZ: 0,
@@ -83,7 +68,7 @@ describe('computeColumnLayout', () => {
                 pageID: '2',
                 location: {
                     rotateX: 0,
-                    rotateY: 0,
+                    rotateY: 90.1,
                     translateX: 1250,
                     translateY: 0,
                     translateZ: 0,
@@ -92,22 +77,9 @@ describe('computeColumnLayout', () => {
                 planeID: '',
                 show: true,
             },
-            {
-                pageID: '3',
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 850,
-                    translateZ: 0,
-                },
-                path: '/page-3',
-                planeID: '',
-                show: true,
-            },
         ];
 
-        const result = computeColumnLayout(treePages);
+        const result = computeFaceToFaceLayout(treePages);
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });
@@ -115,7 +87,7 @@ describe('computeColumnLayout', () => {
         expect(resultWithEmptyIDs).toStrictEqual(locatedTree);
     });
 
-    it('computes the column layout with 3 columns and 5 pages', () => {
+    it('computes the face to face layout', () => {
         (global as any).window = {
             innerWidth: 1200,
             innerHeight: 800,
@@ -257,8 +229,7 @@ describe('computeColumnLayout', () => {
             },
         ];
 
-        const columns = 3;
-        const result = computeColumnLayout(treePages, columns);
+        const result = computeFaceToFaceLayout(treePages);
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });

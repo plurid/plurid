@@ -1,6 +1,4 @@
-import {
-    computeFaceToFaceLayout,
-} from '../';
+import computeColumnLayout from '../column';
 
 import {
     TreePage,
@@ -8,8 +6,8 @@ import {
 
 
 
-xdescribe('computeColumnLayout', () => {
-    // handle crypto for jest - https://stackoverflow.com/a/52612372
+describe('computeColumnLayout', () => {
+    /** handle crypto for jest - https://stackoverflow.com/a/52612372 */
     const crypto = require('crypto');
     Object.defineProperty(global, 'crypto', {
         value: {
@@ -17,7 +15,7 @@ xdescribe('computeColumnLayout', () => {
         },
     });
 
-    it('computes the face to face layout', () => {
+    it('computes the default column layout', () => {
         (global as any).window = {
             innerWidth: 1200,
             innerHeight: 800,
@@ -28,7 +26,7 @@ xdescribe('computeColumnLayout', () => {
                 pageID: '1',
                 location: {
                     rotateX: 0,
-                    rotateY: 90.1,
+                    rotateY: 0,
                     translateX: 0,
                     translateY: 0,
                     translateZ: 0,
@@ -41,7 +39,7 @@ xdescribe('computeColumnLayout', () => {
                 pageID: '2',
                 location: {
                     rotateX: 0,
-                    rotateY: 90.1,
+                    rotateY: 0,
                     translateX: 0,
                     translateY: 0,
                     translateZ: 0,
@@ -50,14 +48,27 @@ xdescribe('computeColumnLayout', () => {
                 planeID: '',
                 show: true,
             },
-        ];
+            {
+                pageID: '3',
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 0,
+                    translateZ: 0,
+                },
+                path: '/page-3',
+                planeID: '',
+                show: true,
+            },
+        ]
 
         const locatedTree: TreePage[] = [
             {
                 pageID: '1',
                 location: {
                     rotateX: 0,
-                    rotateY: 90.1,
+                    rotateY: 0,
                     translateX: 0,
                     translateY: 0,
                     translateZ: 0,
@@ -70,7 +81,7 @@ xdescribe('computeColumnLayout', () => {
                 pageID: '2',
                 location: {
                     rotateX: 0,
-                    rotateY: 90.1,
+                    rotateY: 0,
                     translateX: 1250,
                     translateY: 0,
                     translateZ: 0,
@@ -79,9 +90,22 @@ xdescribe('computeColumnLayout', () => {
                 planeID: '',
                 show: true,
             },
+            {
+                pageID: '3',
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 850,
+                    translateZ: 0,
+                },
+                path: '/page-3',
+                planeID: '',
+                show: true,
+            },
         ];
 
-        const result = computeFaceToFaceLayout(treePages);
+        const result = computeColumnLayout(treePages);
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });
@@ -89,7 +113,7 @@ xdescribe('computeColumnLayout', () => {
         expect(resultWithEmptyIDs).toStrictEqual(locatedTree);
     });
 
-    it('computes the face to face layout', () => {
+    it('computes the column layout with 3 columns and 5 pages', () => {
         (global as any).window = {
             innerWidth: 1200,
             innerHeight: 800,
@@ -231,7 +255,8 @@ xdescribe('computeColumnLayout', () => {
             },
         ];
 
-        const result = computeFaceToFaceLayout(treePages);
+        const columns = 3;
+        const result = computeColumnLayout(treePages, columns);
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });
