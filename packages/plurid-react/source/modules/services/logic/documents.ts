@@ -25,7 +25,9 @@ import {
 
 
 /**
- * from PluridDocument create PluridInternalStateDocument
+ * From PluridDocument create PluridInternalStateDocument.
+ *
+ * @param document
  */
 export const createInternalStateDocument = (
     document: PluridDocument,
@@ -51,8 +53,11 @@ export const createInternalStateDocument = (
     return stateDocument;
 }
 
+
 /**
- * from PluridDocument create PluridInternalStateDocument
+ * From PluridDocument create PluridInternalContextDocument.
+ *
+ * @param document
  */
 export const createInternalContextDocument = (
     document: PluridDocument,
@@ -82,7 +87,7 @@ export const createInternalContextDocument = (
  */
 export const findActiveDocument = (
     documents: PluridInternalStateDocument[]
-) => {
+): string => {
     let activeDocumentID = documents[0].id;
 
     for (let document of documents) {
