@@ -23,7 +23,6 @@ const App = () => {
             },
             // layout: {
             //     type: 'ZIG_ZAG',
-            //     // columns: 1,
             // },
             // transformOrigin: {
             //     show: false,
