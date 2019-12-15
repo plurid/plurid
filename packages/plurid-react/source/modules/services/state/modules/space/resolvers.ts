@@ -7,8 +7,8 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    toRadians,
-} from '../../../utilities/geometry';
+    mathematics,
+} from '@plurid/plurid-functions';
 
 import {
     SpaceState,
@@ -35,6 +35,9 @@ import {
     SetSpaceSizeAction,
 } from './types';
 
+
+
+const toRadians = mathematics.geometry.toRadians;
 
 
 export const setSpaceLoading = (
