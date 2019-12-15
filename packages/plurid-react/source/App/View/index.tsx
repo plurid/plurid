@@ -79,6 +79,10 @@ import {
 } from '../../modules/services/utilities/pages';
 
 import {
+    createTreePage,
+} from '../../modules/services/utilities/tree';
+
+import {
     registerPaths,
 } from '../../modules/services/utilities/paths';
 
@@ -676,24 +680,20 @@ const View: React.FC<ViewProperties> = (properties) => {
                         continue;
                     }
 
-                    const treePage: TreePage = {
-                        pageID: contextPage.id,
-                        planeID: uuid(),
-                        path: contextPage.path,
-                        location: {
-                            translateX: 0,
-                            translateY: 0,
-                            translateZ: 0,
-                            rotateX: 0,
-                            rotateY: 0,
-                        },
-                        show: docPage.root,
-                    };
+                    const treePage = createTreePage(
+                        contextPage,
+                        docPage,
+                    );
                     treePages.push(treePage);
                 }
             }
 
-            const computedTree = computeSpaceTree(treePages, stateConfiguration);
+            const computedTree = computeSpaceTree(
+                treePages,
+                stateConfiguration,
+            );
+            console.log(stateConfiguration);
+            console.log(computedTree);
             dispatchSetTree(computedTree);
         }
     }, [
