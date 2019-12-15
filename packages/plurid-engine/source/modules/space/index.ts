@@ -76,7 +76,11 @@ export const computeSpaceTree = (
                 const {
                     columns,
                 } = configuration.space.layout;
-                const columnLayoutTree = computeColumnLayout(pages, columns);
+                const columnLayoutTree = computeColumnLayout(
+                    pages,
+                    columns,
+                    20,
+                );
                 return columnLayoutTree;
             }
         case LAYOUT_TYPES.ZIG_ZAG:

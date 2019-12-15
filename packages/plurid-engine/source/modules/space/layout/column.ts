@@ -9,8 +9,7 @@ import {
 const computeColumnLayout = (
     roots: TreePage[],
     columns: number = 2,
-    columnsGap: number = ROOTS_GAP,
-    rowsGap: number = ROOTS_GAP,
+    gap: number = ROOTS_GAP,
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
@@ -20,8 +19,8 @@ const computeColumnLayout = (
     for (const [index, root] of roots.entries()) {
         const rowIndex = Math.floor(index / columns);
         const columnIndex = index % columns;
-        const translateX = columnIndex * (width + columnsGap);
-        const translateY = rowIndex * (height + rowsGap);
+        const translateX = columnIndex * (width + gap);
+        const translateY = rowIndex * (height + gap);
 
         const treePage: TreePage = {
             ...root,
