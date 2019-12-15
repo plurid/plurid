@@ -34,25 +34,50 @@ export interface LayoutColumns extends Layout {
 
 
 export interface LayoutFaceToFace extends Layout {
+    /**
+     * ╱ ‾‾ ╲
+     *
+     * ╱    first plane
+     *
+     * —    (optional) middle plane(s)
+     *
+     * ╲    last plane
+     */
     type: LAYOUT_TYPES.FACE_TO_FACE;
 
     /**
-     * Value between `0.00` and `360.00` and can be negative.
-     */
-    halfAngle?: number;
-
-    /**
-     * Value between `0.00` and `x.00` (floating numbers) or between `0` and `x00` (integers).
+     * Angle between the first plane and the last plane of a row.
      *
-     * The value is based on the current width of the screen and can be negative.
+     * Value between `0.00` and `360.00`. Recommended between `0` and `90`.
+     *
+     * Default is `45`.
      */
-    middleSpace?: number;
+    angle?: number;
 
     /**
-     * Integer value indicating the number of columns to be inserted in the middle.
+     * Distance between columns.
+     *
+     * Value between `0.00` and `x.00` (floating numbers) indicating percent of view width
+     * or between `0` and `x0...0` (integers) indicating pixel values.
+     *
+     * For example:
+     * `0.5` is 50% of view width,
+     * `5` is five pixels,
+     * `1.00` is 100% of view width,
+     * `1` is one pixels,
+     * `1.35` is 135% of view width,
+     * `135` is 135 pixels.
      */
-    middleVideos?: number;
+    gap?: number;
+
+    /**
+     * Integer value indicating the number of planes (columns) to be inserted in the middle.
+     *
+     * Default is `0`.
+     */
+    middle?: number;
 }
+
 
 export interface LayoutZigZag extends Layout {
     type: LAYOUT_TYPES.ZIG_ZAG;
