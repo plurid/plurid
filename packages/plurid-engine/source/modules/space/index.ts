@@ -10,12 +10,18 @@ import {
 
     ROOTS_GAP,
     PLANE_DEFAULT_ANGLE,
+
+    LAYOUT_TYPES,
 } from '@plurid/plurid-data';
 
 import {
+    mathematics,
     uuidv4 as uuid,
 } from '@plurid/plurid-functions';
 
+
+
+const toRadians = mathematics.geometry.toRadians;
 
 
 /**
@@ -64,7 +70,7 @@ export const computeSpaceTree = (
     }
 
     switch(configuration.space.layout.type) {
-        case 'COLUMNS':
+        case LAYOUT_TYPES.COLUMNS:
             {
                 const {
                     columns,
@@ -72,7 +78,7 @@ export const computeSpaceTree = (
                 const columnLayoutTree = computeColumnLayout(pages, columns);
                 return columnLayoutTree;
             }
-        case 'ZIG_ZAG':
+        case LAYOUT_TYPES.ZIG_ZAG:
             {
                 const {
                     angle,
@@ -80,7 +86,7 @@ export const computeSpaceTree = (
                 const zigzagLayoutTree = computeZigZagLayout(pages, angle);
                 return zigzagLayoutTree;
             }
-        case 'FACE_TO_FACE':
+        case LAYOUT_TYPES.FACE_TO_FACE:
             {
                 const {
                     halfAngle,
@@ -93,9 +99,10 @@ export const computeSpaceTree = (
                     middleSpace,
                     middleVideos,
                 );
+                console.log(faceToFaceLayoutTree);
                 return faceToFaceLayoutTree;
             }
-        case 'SHEAVES':
+        case LAYOUT_TYPES.SHEAVES:
             {
                 const {
                     depth,
@@ -110,7 +117,7 @@ export const computeSpaceTree = (
                 );
                 return sheavesLayoutTree;
             }
-        case 'META':
+        case LAYOUT_TYPES.META:
             {
                 return [];
             }
@@ -176,6 +183,22 @@ export const computeZigZagLayout = (
 }
 
 
+const splitIntoGroups = <T>(
+    data: T[],
+    length: number,
+): T[][] => {
+    const initialArray = [...data];
+    const groups: any[] = [];
+
+    while (initialArray.length) {
+        const group = initialArray.splice(0, length);
+        groups.push(group);
+    }
+
+    return groups;
+}
+
+
 export const computeFaceToFaceLayout = (
     roots: TreePage[],
     halfAngle: number = 0,
@@ -186,27 +209,74 @@ export const computeFaceToFaceLayout = (
 
     const width = window.innerWidth;
     const height = window.innerHeight;
+    const angle = 90 - halfAngle;
 
-    for (const [index, root] of roots.entries()) {
-        const translateX = 0;
-        const translateY = 0;
+    const columns = 2 + middleVideos;
 
-        const treePage: TreePage = {
-            pageID: root.pageID,
-            path: root.path,
-            planeID: uuid(),
-            location: {
-                translateX,
-                translateY,
-                translateZ: 0,
-                rotateX: 0,
-                rotateY: 0,
-            },
-            show: true,
-        };
+    const rows = splitIntoGroups(roots, columns);
 
-        tree.push(treePage);
+    for (const [index, row] of rows.entries()) {
+        const translateY = index * height;
+
+        for (const [index, page] of row.entries()) {
+            const first = index === 0;
+            const last = index === columns - 1;
+
+            const translateZ = first
+                ? width * Math.sin(toRadians(angle))
+                : last
+                    ? 0
+                    : 0;
+            const translateX = first
+                ? width * Math.cos(toRadians(angle))
+                : last
+                    ? index * width
+                    : index * width;
+            const rotateY = first
+                ? angle
+                : last
+                    ? -angle
+                    : 0;
+
+            const treePage: TreePage = {
+                pageID: page.pageID,
+                path: page.path,
+                planeID: uuid(),
+                location: {
+                    translateX,
+                    translateY,
+                    translateZ,
+                    rotateX: 0,
+                    rotateY,
+                },
+                show: true,
+            };
+            tree.push(treePage);
+        }
     }
+
+    // for (const [index, root] of roots.entries()) {
+    //     const translateX = 0;
+    //     const translateY = 0;
+
+    //     const rotateY = halfAngle;
+
+    //     const treePage: TreePage = {
+    //         pageID: root.pageID,
+    //         path: root.path,
+    //         planeID: uuid(),
+    //         location: {
+    //             translateX,
+    //             translateY,
+    //             translateZ: 0,
+    //             rotateX: 0,
+    //             rotateY,
+    //         },
+    //         show: true,
+    //     };
+
+    //     tree.push(treePage);
+    // }
 
     return tree;
 }

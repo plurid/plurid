@@ -2,6 +2,7 @@ import React from 'react';
 
 import PluridApp, {
     PluridConfiguration,
+    SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
 import Page1 from './containers/Page1';
@@ -15,9 +16,15 @@ const App = () => {
         theme: 'plurid',
         space: {
             layout: {
-                type: 'ZIG_ZAG',
+                type: SPACE_LAYOUT.FACE_TO_FACE,
+                halfAngle: 45,
+                middleVideos: 1,
                 // columns: 1,
             },
+            // layout: {
+            //     type: 'ZIG_ZAG',
+            //     // columns: 1,
+            // },
             // transformOrigin: {
             //     show: false,
             //     size: 'large',
@@ -33,7 +40,7 @@ const App = () => {
             //     show: false,
             // },
             plane: {
-                width: 0.5,
+                // width: 0.5,
                 // opacity: 0,
                 // controls: {
                 //     show: false,
@@ -65,7 +72,31 @@ const App = () => {
                 element: Page1,
                 properties: {},
             },
-            // root: true,
+            root: true,
+        },
+        {
+            path: '/page-4',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            root: true,
+        },
+        {
+            path: '/page-5',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            root: true,
+        },
+        {
+            path: '/page-6',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            root: true,
         },
     ];
 
