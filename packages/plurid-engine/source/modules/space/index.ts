@@ -15,6 +15,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
+    mathematics,
     uuidv4 as uuid,
 } from '@plurid/plurid-functions';
 
@@ -23,6 +24,10 @@ import computeFaceToFaceLayout from './layout/faceToFace';
 import computeSheavesLayout from './layout/sheaves';
 import computeZigZagLayout from './layout/zigZag';
 
+
+
+const toRadians = mathematics.geometry.toRadians;
+const toDegrees = mathematics.geometry.toDegrees;
 
 
 /**
@@ -272,78 +277,116 @@ export const computePluridPlaneLocation = (
 
     const bridgeLength = 100;
 
-    let prevLinkX = treePageParent.location.translateX;
-    let rotXbranch = 90;
-    let prevTransX = treePageParent.location.translateX;
-    let prevTransY = treePageParent.location.translateY;
-    let prevTransZ = treePageParent.location.translateZ;
-    let penultimateRootAngleYRad = treePageParent.location.rotateY * Math.PI / 180;
+    // let prevLinkX = treePageParent.location.translateX;
+    // let rotXbranch = 90 + treePageParent.location.rotateY;
+    // let prevTransX = treePageParent.location.translateX;
+    // let prevTransY = treePageParent.location.translateY;
+    // let prevTransZ = treePageParent.location.translateZ;
+    // let penultimateRootAngleYRad = treePageParent.location.rotateY * Math.PI / 180;
 
+    const linkX = linkCoordinates.x;
+    const bridge = 100;
+    const hyp = Math.sqrt(linkX * linkX + bridge * bridge);
+    console.log('hyp', hyp);
+    const sinHyp = bridge / hyp;
+    console.log('sinHyp', sinHyp);
+    const asinHyp = Math.asin(sinHyp);
+    console.log('asinHyp', asinHyp);
+    const sinDeg = toDegrees(asinHyp);
+    console.log('sinDeg', sinDeg);
 
-    if (path.length < 2) {
-        // console.log('path length under 2');
-        x = prevTransX + linkCoordinates.x
-        z = -1 * bridgeLength;
-    }
+    const cosHyp = linkX / hyp;
+    console.log('cosHyp', cosHyp);
+    const acosHyp = Math.acos(cosHyp);
+    console.log('acosHyp', acosHyp);
+    const cosDeg = toDegrees(acosHyp);
+    console.log('cosDeg', cosDeg);
 
-    if (path.length === 2) {
-        // console.log('path length 2');
-        x = (prevLinkX - bridgeLength) + (linkCoordinates.x + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180);
-        z = -1 * (linkCoordinates.x + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
-    }
+    const sinDegTotal = sinDeg + treePageParent.location.rotateY;
+    console.log('sinDegTotal', sinDegTotal);
+    const cosDegTotal = cosDeg + treePageParent.location.rotateY;
+    console.log('cosDegTotal', cosDegTotal);
 
-    if (path.length === 3) {
-        // console.log('path length 3');
+    const sinTotal = Math.sin(toRadians(sinDegTotal));
+    // const sinTotal = sinHyp + Math.sin(toRadians(treePageParent.location.rotateY));
+    console.log('sinTotal', sinTotal);
+    const cosTotal = Math.cos(toRadians(cosDegTotal));
+    // const cosTotal = cosHyp + Math.cos(toRadians(treePageParent.location.rotateY));
+    console.log('cosTotal', cosTotal);
 
-        x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-        z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-    }
+    z = -1 * sinTotal * hyp;
+    x = cosTotal * hyp;
 
-    if (path.length === 4) {
-        // console.log('path length 4');
+    console.log('treePageParent.location', treePageParent.location);
+    console.log(linkCoordinates);
 
-        x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-        z = (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-    }
+    // x = Math.cos(toRadians(treePageParent.location.rotateY)) * linkCoordinates.x;
+    // z = -1 * Math.sin(toRadians(treePageParent.location.rotateY)) * linkCoordinates.x - bridgeLength;
 
-    if (path.length === 5) {
-        // console.log('path length 5');
+    // if (path.length < 2) {
+    //     console.log('path length under 2');
+    //     x = (prevTransX + linkCoordinates.x) * Math.cos(toRadians(rotXbranch));
+    //     z = -1 * bridgeLength * Math.sin(toRadians(rotXbranch));
+    // }
 
-        x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-        z = -1 * ( (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength) );
-    }
+    // if (path.length === 2) {
+    //     console.log('path length 2');
+    //     x = (prevLinkX - bridgeLength) + (linkCoordinates.x + bridgeLength) * Math.cos(rotXbranch * Math.PI / 180);
+    //     z = -1 * (linkCoordinates.x + bridgeLength) * Math.sin(rotXbranch * Math.PI / 180);
+    // }
 
-    if (path.length === 6) {
-        // console.log('path length 6');
+    // if (path.length === 3) {
+    //     console.log('path length 3');
 
-        x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-        z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-    }
+    //     x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    //     z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    // }
 
-    if (path.length === 7) {
-        // console.log('path length 7');
+    // if (path.length === 4) {
+    //     // console.log('path length 4');
 
-        x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-        z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-    }
+    //     x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    //     z = (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    // }
 
-    if (path.length === 8) {
-        // console.log('path length 8');
+    // if (path.length === 5) {
+    //     // console.log('path length 5');
 
-        x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-        z = (prevTransZ - bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-    }
+    //     x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    //     z = -1 * ( (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength) );
+    // }
 
-    if (path.length === 9) {
-        // console.log('path length 9 is as 5');
+    // if (path.length === 6) {
+    //     // console.log('path length 6');
 
-        x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
-        z = -1 * ( (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength) );
-    }
+    //     x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    //     z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    // }
 
-    y = prevTransY + linkCoordinates.y;
+    // if (path.length === 7) {
+    //     // console.log('path length 7');
 
-    // console.log('x y z', x, y, z);
+    //     x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    //     z = (prevTransZ + bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    // }
+
+    // if (path.length === 8) {
+    //     // console.log('path length 8');
+
+    //     x = (prevTransX + bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    //     z = (prevTransZ - bridgeLength) - Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    // }
+
+    // if (path.length === 9) {
+    //     // console.log('path length 9 is as 5');
+
+    //     x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
+    //     z = -1 * ( (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength) );
+    // }
+
+    y = treePageParent.location.translateY + linkCoordinates.y;
+
+    console.log('x y z', x, y, z);
 
     return {
         x,
