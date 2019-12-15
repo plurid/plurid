@@ -1,6 +1,4 @@
-import {
-    computeZigZagLayout,
-} from '../';
+import computeZigZagLayout from '../zigZag';
 
 import {
     TreePage,
