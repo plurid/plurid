@@ -36,6 +36,22 @@ export interface LayoutColumns extends Layout {
      * the pages will overflow onto the next row.
      */
     columns?: number;
+
+    /**
+     * Distance between columns.
+     *
+     * Value between `0.00` and `x.00` (floating numbers) indicating percent of view width
+     * or between `0` and `x0...0` (integers) indicating pixel values.
+     *
+     * For example:
+     * `0.5` is 50% of view width,
+     * `5` is five pixels,
+     * `1.00` is 100% of view width,
+     * `1` is one pixels,
+     * `1.35` is 135% of view width,
+     * `135` is 135 pixels.
+     */
+    gap?: number;
 }
 
 
