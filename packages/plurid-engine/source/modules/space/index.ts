@@ -89,15 +89,15 @@ export const computeSpaceTree = (
         case LAYOUT_TYPES.FACE_TO_FACE:
             {
                 const {
-                    halfAngle,
-                    middleSpace,
-                    middleVideos,
+                    angle,
+                    gap,
+                    middle,
                 } = configuration.space.layout;
                 const faceToFaceLayoutTree = computeFaceToFaceLayout(
                     pages,
-                    halfAngle,
-                    middleSpace,
-                    middleVideos,
+                    angle,
+                    gap,
+                    middle,
                 );
                 console.log(faceToFaceLayoutTree);
                 return faceToFaceLayoutTree;
@@ -201,17 +201,17 @@ const splitIntoGroups = <T>(
 
 export const computeFaceToFaceLayout = (
     roots: TreePage[],
-    halfAngle: number = 0,
-    middleSpace: number = 1,
-    middleVideos: number = 0,
+    angle: number = 45,
+    gap: number = 0,
+    middle: number = 0,
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
     const width = window.innerWidth;
     const height = window.innerHeight;
-    const angle = 90 - halfAngle;
+    const planeAngle = 90 - angle/2;
 
-    const columns = 2 + middleVideos;
+    const columns = 2 + middle;
 
     const rows = splitIntoGroups(roots, columns);
 
@@ -223,19 +223,19 @@ export const computeFaceToFaceLayout = (
             const last = index === columns - 1;
 
             const translateZ = first
-                ? width * Math.sin(toRadians(angle))
+                ? width * Math.sin(toRadians(planeAngle))
                 : last
                     ? 0
                     : 0;
             const translateX = first
-                ? width * Math.cos(toRadians(angle))
+                ? width * Math.cos(toRadians(planeAngle))
                 : last
                     ? index * width
                     : index * width;
             const rotateY = first
-                ? angle
+                ? planeAngle
                 : last
-                    ? -angle
+                    ? -planeAngle
                     : 0;
 
             const treePage: TreePage = {
