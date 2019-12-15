@@ -11,7 +11,7 @@ import {
     StyledPluridRoot,
 } from './styled';
 
-import Context from '../../services/utilities/context';
+import Context from '../../services/logic/context';
 
 import PluridPlane from '../PluridPlane';
 

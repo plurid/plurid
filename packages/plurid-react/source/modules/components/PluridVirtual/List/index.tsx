@@ -12,8 +12,8 @@ import {
 } from '@plurid/plurid-ui-react';
 
 import {
-    sumTo,
-} from '../../../services/utilities/math';
+    mathematics,
+} from '@plurid/plurid-functions';
 
 import PluridVirtualListItem from './components/ListItem';
 
@@ -84,7 +84,7 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
                 <PluridVirtualListItem
                     key={i + Math.random()}
                     index={i}
-                    top={sumTo(heights.current, i)}
+                    top={mathematics.arithmetic.sum(heights.current, i)}
                     element={item}
                     setHeight={setHeight}
                 />
@@ -95,7 +95,7 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
 
     useEffect(() => {
         if (heights.current) {
-            const elementHeight = sumTo(heights.current, heights.current.length);
+            const elementHeight = mathematics.arithmetic.sum(heights.current, heights.current.length);
             setElementHeight(elementHeight);
         }
     }, [
@@ -133,7 +133,7 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
         setResizing(true);
 
         setTimeout(() => {
-            const elementHeight = sumTo(heights.current, heights.current.length);
+            const elementHeight = mathematics.arithmetic.sum(heights.current, heights.current.length);
             setElementHeight(elementHeight);
 
             setResizing(false);
