@@ -17,9 +17,9 @@ const App = () => {
         space: {
             layout: {
                 type: SPACE_LAYOUT.FACE_TO_FACE,
-                halfAngle: 45,
-                middleVideos: 1,
-                // columns: 1,
+                angle: 30,
+                // gap: 0.1,
+                // middle: 2,
             },
             // layout: {
             //     type: 'ZIG_ZAG',
