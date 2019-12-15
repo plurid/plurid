@@ -58,10 +58,7 @@ export const computeSpaceTree = (
     pages: TreePage[],
     configuration?: PluridConfiguration,
 ): TreePage[] => {
-    if (!configuration
-        || !configuration.space
-        || !configuration.space.layout
-    ) {
+    if (!configuration) {
         const columnLayoutTree = computeColumnLayout(pages);
         return columnLayoutTree;
     }
