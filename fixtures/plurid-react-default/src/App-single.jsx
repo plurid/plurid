@@ -18,8 +18,8 @@ const App = () => {
             layout: {
                 type: SPACE_LAYOUT.FACE_TO_FACE,
                 angle: 30,
-                // gap: 0.1,
-                // middle: 2,
+                gap: 50,
+                middle: 1,
             },
             // layout: {
             //     type: 'ZIG_ZAG',
