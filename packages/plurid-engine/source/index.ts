@@ -49,6 +49,7 @@ import {
     updateTreeWithNewPage,
     removePageFromTree,
     togglePageFromTree,
+    computeSpaceSize,
 } from './modules/space';
 
 
@@ -105,4 +106,5 @@ export {
     updateTreeWithNewPage,
     removePageFromTree,
     togglePageFromTree,
+    computeSpaceSize,
 };
