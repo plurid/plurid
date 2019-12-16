@@ -12,9 +12,9 @@ import {
 } from './tree';
 
 
+
 const toRadians = mathematics.geometry.toRadians;
 const toDegrees = mathematics.geometry.toDegrees;
-
 
 
 export const computePath = (
@@ -47,6 +47,18 @@ export const computePath = (
 }
 
 
+const computeLocationXZ = (
+    linkCoordinates: any,
+    treePageParent: TreePage,
+    path: TreePage[],
+) => {
+
+    return {
+        x: 0,
+        z: 0,
+    };
+}
+
 
 export const computePluridPlaneLocation = (
     tree: TreePage[],
@@ -54,60 +66,75 @@ export const computePluridPlaneLocation = (
     treePageParent: TreePage,
     treePageParentPlaneID: string,
 ): LocationCoordinates => {
-    console.log('tree', tree);
     console.log('linkCoordinates', linkCoordinates);
     console.log('treePageParent', treePageParent);
-    console.log('treePageParentPlaneID', treePageParentPlaneID);
 
     const path = computePath(tree, treePageParentPlaneID);
     console.log('path', path);
-    let x = 0;
-    let y = 0;
-    let z = 0;
+
+    const {
+        x,
+        z,
+    } = computeLocationXZ(
+        linkCoordinates,
+        treePageParent,
+        path,
+    );
+    const y = treePageParent.location.translateY + linkCoordinates.y;
+
+    console.log('x y z', x, y, z);
+    console.log('---------------------');
+
+    return {
+        x,
+        y,
+        z,
+    };
 
 
-    // let prevLinkX = treePageParent.location.translateX;
-    // let rotXbranch = 90 + treePageParent.location.rotateY;
-    let prevTransX = treePageParent.location.translateX;
-    // let prevTransY = treePageParent.location.translateY;
-    let prevTransZ = treePageParent.location.translateZ;
-    // let penultimateRootAngleYRad = treePageParent.location.rotateY * Math.PI / 180;
 
-    const linkX = linkCoordinates.x;
-    const bridgeLength = 100;
-    const hyp = Math.sqrt(Math.pow(linkX, 2) + Math.pow(bridgeLength, 2));
-    console.log('hyp', hyp);
-    const sinHyp = bridgeLength / hyp;
-    console.log('sinHyp', sinHyp);
-    const asinHyp = Math.asin(sinHyp);
-    console.log('asinHyp', asinHyp);
-    const sinDeg = toDegrees(asinHyp);
-    console.log('sinDeg', sinDeg);
+    // // let prevLinkX = treePageParent.location.translateX;
+    // // let rotXbranch = 90 + treePageParent.location.rotateY;
+    // let prevTransX = treePageParent.location.translateX;
+    // // let prevTransY = treePageParent.location.translateY;
+    // let prevTransZ = treePageParent.location.translateZ;
+    // // let penultimateRootAngleYRad = treePageParent.location.rotateY * Math.PI / 180;
 
-    const cosHyp = linkX / hyp;
-    console.log('cosHyp', cosHyp);
-    const acosHyp = Math.acos(cosHyp);
-    console.log('acosHyp', acosHyp);
-    const cosDeg = toDegrees(acosHyp);
-    console.log('cosDeg', cosDeg);
+    // const linkX = linkCoordinates.x;
+    // const bridgeLength = 100;
+    // const hyp = Math.sqrt(Math.pow(linkX, 2) + Math.pow(bridgeLength, 2));
+    // console.log('hyp', hyp);
+    // const sinHyp = bridgeLength / hyp;
+    // console.log('sinHyp', sinHyp);
+    // const asinHyp = Math.asin(sinHyp);
+    // console.log('asinHyp', asinHyp);
+    // const sinDeg = toDegrees(asinHyp);
+    // console.log('sinDeg', sinDeg);
 
-    const sinDegTotal = sinDeg + treePageParent.location.rotateY;
-    console.log('sinDegTotal', sinDegTotal);
-    const cosDegTotal = cosDeg + treePageParent.location.rotateY;
-    console.log('cosDegTotal', cosDegTotal);
+    // const cosHyp = linkX / hyp;
+    // console.log('cosHyp', cosHyp);
+    // const acosHyp = Math.acos(cosHyp);
+    // console.log('acosHyp', acosHyp);
+    // const cosDeg = toDegrees(acosHyp);
+    // console.log('cosDeg', cosDeg);
 
-    const sinTotal = Math.sin(toRadians(sinDegTotal));
-    // const sinTotal = sinHyp + Math.sin(toRadians(treePageParent.location.rotateY));
-    console.log('sinTotal', sinTotal);
-    const cosTotal = Math.cos(toRadians(cosDegTotal));
-    // const cosTotal = cosHyp + Math.cos(toRadians(treePageParent.location.rotateY));
-    console.log('cosTotal', cosTotal);
+    // const sinDegTotal = sinDeg + treePageParent.location.rotateY;
+    // console.log('sinDegTotal', sinDegTotal);
+    // const cosDegTotal = cosDeg + treePageParent.location.rotateY;
+    // console.log('cosDegTotal', cosDegTotal);
 
-    x = cosTotal * (hyp + prevTransX);
-    z = sinTotal * (hyp + prevTransZ);
+    // const sinTotal = Math.sin(toRadians(sinDegTotal));
+    // // const sinTotal = sinHyp + Math.sin(toRadians(treePageParent.location.rotateY));
+    // console.log('sinTotal', sinTotal);
+    // const cosTotal = Math.cos(toRadians(cosDegTotal));
+    // // const cosTotal = cosHyp + Math.cos(toRadians(treePageParent.location.rotateY));
+    // console.log('cosTotal', cosTotal);
 
-    console.log('treePageParent.location', treePageParent.location);
-    console.log(linkCoordinates);
+    // x = cosTotal * (hyp + prevTransX);
+    // z = sinTotal * (hyp + prevTransZ);
+
+    // console.log('treePageParent.location', treePageParent.location);
+    // console.log(linkCoordinates);
 
     // x = Math.cos(toRadians(treePageParent.location.rotateY)) * linkCoordinates.x;
     // z = -1 * Math.sin(toRadians(treePageParent.location.rotateY)) * linkCoordinates.x - bridgeLength;
@@ -172,16 +199,4 @@ export const computePluridPlaneLocation = (
     //     x = (prevTransX - bridgeLength) + Math.cos(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength);
     //     z = -1 * ( (Math.abs(prevTransZ) + bridgeLength) + Math.sin(penultimateRootAngleYRad) * (linkCoordinates.x + bridgeLength) );
     // }
-
-    y = treePageParent.location.translateY + linkCoordinates.y;
-
-    console.log('x y z', x, y, z);
-
-    console.log('---------------------');
-
-    return {
-        x,
-        y,
-        z,
-    };
 }
