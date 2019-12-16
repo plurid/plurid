@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {
+    useRef,
+    useEffect,
+} from 'react';
 
 import {
     StyledPlaneContent,
@@ -10,12 +13,31 @@ interface PlaneContentProperties {
 }
 
 const PlaneContent: React.FC<PlaneContentProperties> = (properties) => {
+    const planeContentElement = useRef<HTMLDivElement>(null);
+
     const {
         children,
     } = properties;
 
+    useEffect(() => {
+        if (planeContentElement.current) {
+            // TODO
+            // Implement a resize observer
+            const {
+                offsetWidth,
+                offsetHeight,
+            } = planeContentElement.current;
+
+            console.log(offsetWidth, offsetHeight);
+        }
+    }, [
+        planeContentElement.current,
+    ]);
+
     return (
-        <StyledPlaneContent>
+        <StyledPlaneContent
+            ref={planeContentElement}
+        >
             {children}
         </StyledPlaneContent>
     );

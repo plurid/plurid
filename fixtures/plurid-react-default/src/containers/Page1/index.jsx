@@ -15,7 +15,9 @@ const Page1 = () => {
     const b = useRef(150);
 
     return (
-        <div style={{height: 300}}>
+        <div style={{
+            height: 300,
+        }}>
             <div
                 tabIndex={0}
                 contentEditable={true}
