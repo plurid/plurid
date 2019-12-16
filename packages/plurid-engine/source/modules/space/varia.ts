@@ -364,9 +364,7 @@ export const computeSpaceSize = (
         }
     });
 
-    console.log('width', width);
     console.log('-------------');
-    // parse tree and compute the maximum width / height / depth
 
     return {
         width,
