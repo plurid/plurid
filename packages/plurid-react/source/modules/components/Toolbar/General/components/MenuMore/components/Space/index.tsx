@@ -11,6 +11,7 @@ import {
     PluridConfiguration,
 
     SIZES,
+    LAYOUT_TYPES,
 } from '@plurid/plurid-data';
 
 import {
@@ -61,6 +62,11 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
         dispatchToggleConfigurationSpaceShowTransformOrigin,
         dispatchSetConfigurationSpaceTransformOriginSize,
     } = properties;
+
+    const layout = configuration.space.layout;
+
+    const layoutType = LAYOUT_TYPES[layout.type];
+    console.log(layoutType);
 
     const planeOpacity = configuration.elements.plane.opacity;
 
