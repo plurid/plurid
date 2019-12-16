@@ -76,16 +76,16 @@ const App = () => {
                 element: Page1,
                 properties: {},
             },
-            // root: true,
+            root: true,
         },
-        // {
-        //     path: '/page-4',
-        //     component: {
-        //         element: Page1,
-        //         properties: {},
-        //     },
-        //     root: true,
-        // },
+        {
+            path: '/page-4',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            root: true,
+        },
         // {
         //     path: '/page-5',
         //     component: {

@@ -341,24 +341,31 @@ export const computeSpaceSize = (
         z: 0,
     };
 
+    console.log('tree', tree);
     tree.map(treePage => {
-        const spaceWidth = treePage.location.translateX + width;
+        console.log('treePage', treePage);
+
+        const spaceWidth = treePage.location.translateX + treePage.width;
+        console.log('spaceWidth', spaceWidth);
         if (spaceWidth > width) {
             width = spaceWidth;
         }
 
-        const spaceHeight = treePage.location.translateY + height;
+        const spaceHeight = treePage.location.translateY + treePage.height;
+        console.log('spaceHeight', spaceHeight);
         if (spaceHeight > height) {
             height = spaceHeight;
         }
 
         const spaceDepth = treePage.location.translateZ;
+        console.log('spaceDepth', spaceDepth);
         if (spaceDepth > depth) {
             depth = spaceDepth;
         }
     });
 
     console.log('width', width);
+    console.log('-------------');
     // parse tree and compute the maximum width / height / depth
 
     return {
