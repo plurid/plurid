@@ -9,6 +9,7 @@ import {
 
 import {
     PluridConfiguration,
+    layoutNames,
 
     SIZES,
     LAYOUT_TYPES,
@@ -65,7 +66,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
 
     const layout = configuration.space.layout;
 
-    const layoutType = LAYOUT_TYPES[layout.type];
+    const layoutType = layoutNames[layout.type];
     console.log(layoutType);
 
     const planeOpacity = configuration.elements.plane.opacity;
@@ -133,17 +134,11 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
                 layout type
 
                 <PluridDropdown
-                    selectables={['columns', 'zig zag', 'face to face', 'sheaves', 'meta']}
-                    selected={transformOriginSize.toLowerCase()}
+                    selectables={[...Object.values(layoutNames)]}
+                    selected={layoutType}
                     atSelect={(selection: any) => {
-                        const selected = selection.toUpperCase();
-                        if (
-                            selected === SIZES.SMALL
-                            || selected === SIZES.NORMAL
-                            || selected === SIZES.LARGE
-                        ) {
-                            dispatchSetConfigurationSpaceTransformOriginSize(selected);
-                        }
+                        const selected = selection.toUpperCase().replace(' ', '_');
+                        console.log(selected);
                     }}
                     heightItems={3}
                     theme={interactionTheme}
