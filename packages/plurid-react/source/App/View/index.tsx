@@ -750,10 +750,10 @@ const View: React.FC<ViewProperties> = (properties) => {
     const setSpaceSize = useDebouncedCallback((spaceSize: any) => {
         dispatchSetAnimatedTransform(true);
 
-        const x = - spaceSize.width / 4;
+        const x = - spaceSize.width / 2 + window.innerWidth / 2;
         translateXWith(x);
 
-        const y = - spaceSize.height / 4;
+        const y = - spaceSize.height / 2 + window.innerHeight / 2;
         translateYWith(y);
 
         setTimeout(() => {
