@@ -19,12 +19,12 @@ const App = () => {
             //     type: SPACE_LAYOUT.COLUMNS,
             //     columns: 2,
             // },
-            layout: {
-                type: SPACE_LAYOUT.FACE_TO_FACE,
-                angle: 30,
-                gap: 50,
-                middle: 1,
-            },
+            // layout: {
+            //     type: SPACE_LAYOUT.FACE_TO_FACE,
+            //     angle: 30,
+            //     gap: 50,
+            //     middle: 1,
+            // },
             // layout: {
             //     type: 'ZIG_ZAG',
             //     angle: 50,
@@ -76,32 +76,32 @@ const App = () => {
                 element: Page1,
                 properties: {},
             },
-            root: true,
+            // root: true,
         },
-        {
-            path: '/page-4',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            root: true,
-        },
-        {
-            path: '/page-5',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            root: true,
-        },
-        {
-            path: '/page-6',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            root: true,
-        },
+        // {
+        //     path: '/page-4',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
+        // {
+        //     path: '/page-5',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
+        // {
+        //     path: '/page-6',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
     ];
 
     return (

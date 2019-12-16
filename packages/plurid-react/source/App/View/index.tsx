@@ -739,9 +739,8 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     /** Tree Effect */
     useEffect(() => {
-        computeSpaceSize(tree);
-        // compute space size
-        // console.log('tree', tree);
+        const spaceSize = computeSpaceSize(tree);
+        console.log(spaceSize);
     }, [
         tree,
     ]);
