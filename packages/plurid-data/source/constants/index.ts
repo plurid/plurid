@@ -1,4 +1,4 @@
-export * from './space';
+export * from './configuration';
 export * from './keys';
 export * from './shortcuts';
-export * from './configuration';
+export * from './space';
