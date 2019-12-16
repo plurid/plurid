@@ -1088,15 +1088,15 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@plurid/plurid-data@^0.1.66":
-  version "0.1.68"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.68.tgz#f05d7930a0c4b7b58f30026348b80da2d1c44629"
-  integrity sha512-ENp1y5sipn+7qpq72tPJzGFNeVAVDdf7qfYrOv86+hRpDr57QBhPnZOUBqHRnXWhnYRFId7WbX/zh7vIec4ahw==
+"@plurid/plurid-data@^0.1.71":
+  version "0.1.71"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.71.tgz#6810db0e6ba3ac0f21bc1e1d26f680faa4516784"
+  integrity sha512-jUt3prMYzqQXmUuqM9IuvekY/AJaCKZZ4Z1x8dCczKvJD8+mFjvufgvzrf0FJx0x1vfJ6ejwPzoBq9V8twij6w==
 
-"@plurid/plurid-engine@^0.1.24":
-  version "0.1.26"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.26.tgz#ecb8ef4b7aea48679dc92742ba46a605a5e737c3"
-  integrity sha512-2SeM3Fwy6AtEcJ6EzelocGk0KT4yIcKMeVMRGHxAYBbX6rE0fW9hHcOtK9IQaq03jGKBKhw4htyNIxV7PWaOZQ==
+"@plurid/plurid-engine@^0.1.27":
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.27.tgz#c36417e8ae8fa95f50b954579ac184796f4151b9"
+  integrity sha512-nHdpjwGv8kxhunz4arLRfqUAJr/ejZcXADwg4+MA3rjQYcQeh9L6GolL4LIgqDdOzi3uaq9hj3krG0dOjqEf+Q==
 
 "@plurid/plurid-functions@^0.1.3":
   version "0.1.3"
@@ -1108,13 +1108,13 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.3.tgz#f5014195a065f13c47f2895e4942ba1f3ec045a3"
   integrity sha512-mviWTVQhkIifQApuLa60jSVA+azeeKXYvNTFejzJJtEFG0s1h2a1BqtaH/Fj4wCzymivJsD47JqbaLfg7Xw4zA==
 
-"@plurid/plurid-react@^0.1.78":
-  version "0.1.78"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.78.tgz#32631df373109fd94829bbb8ab16a3fd5aab8b8c"
-  integrity sha512-fMMScenG8DTD6WwP1aEVJrDMHCwcQYSJSLOaGM4zx0oyXhPI542KncG+VzEuxbj+o6Jez/FFLBPM0Auds7cNWg==
+"@plurid/plurid-react@^0.1.79":
+  version "0.1.79"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.79.tgz#353ee1831f57fd9f93c0e7530f0d06d6b4e34a53"
+  integrity sha512-nZNp8vIbQ2j9XtMnRs/j/avJmlB5H3Wi9A1BsnzajJyVESdXsTpY5pCHmFfCXLwTvdn1oDx2bAXtA35FTU2Sfw==
   dependencies:
-    "@plurid/plurid-data" "^0.1.66"
-    "@plurid/plurid-engine" "^0.1.24"
+    "@plurid/plurid-data" "^0.1.71"
+    "@plurid/plurid-engine" "^0.1.27"
     "@plurid/plurid-functions" "^0.1.3"
     "@plurid/plurid-pubsub" "^0.1.3"
     "@plurid/plurid-themes" "^0.1.19"
