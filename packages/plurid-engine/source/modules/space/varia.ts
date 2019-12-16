@@ -249,6 +249,8 @@ export const updateTreeWithNewPage = (
             path: pagePath,
             parameters: extractedParameters,
             planeID,
+            width: 0,
+            height: 0,
             parentPlaneID: treePageParentPlaneID,
             location: {
                 translateX: location.x,
