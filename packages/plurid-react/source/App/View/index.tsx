@@ -748,11 +748,17 @@ const View: React.FC<ViewProperties> = (properties) => {
     ]);
 
     const setSpaceSize = useDebouncedCallback((spaceSize: any) => {
-        const x = - spaceSize.width / 2;
+        dispatchSetAnimatedTransform(true);
+
+        const x = - spaceSize.width / 4;
         translateXWith(x);
 
-        const y = - spaceSize.height / 2;
+        const y = - spaceSize.height / 4;
         translateYWith(y);
+
+        setTimeout(() => {
+            dispatchSetAnimatedTransform(false);
+        }, 450);
     }, 100);
 
     /** Tree Effect */
