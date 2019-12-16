@@ -123,6 +123,27 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
                 />
             </StyledMoreMenuItem>
 
+            <StyledMoreMenuItem>
+                layout type
+
+                <PluridDropdown
+                    selectables={['columns', 'zig zag', 'face to face', 'sheaves', 'meta']}
+                    selected={transformOriginSize.toLowerCase()}
+                    atSelect={(selection: any) => {
+                        const selected = selection.toUpperCase();
+                        if (
+                            selected === SIZES.SMALL
+                            || selected === SIZES.NORMAL
+                            || selected === SIZES.LARGE
+                        ) {
+                            dispatchSetConfigurationSpaceTransformOriginSize(selected);
+                        }
+                    }}
+                    heightItems={3}
+                    theme={interactionTheme}
+                    width={100}
+                />
+            </StyledMoreMenuItem>
         </>
     );
 }
