@@ -43,6 +43,7 @@ import themes, {
 import {
     computeSpaceTree,
     computeSpaceLocation,
+    computeSpaceSize,
 } from '@plurid/plurid-engine';
 
 import './index.css';
@@ -664,12 +665,10 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         if (activeDocumentID && contextDocumentsRef.current) {
             const activeDocument = dataDocuments[activeDocumentID];
-            // console.log('activeDocument', activeDocument);
             const pages = activeDocument.pages;
 
             const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
             const contextPages = activeContextDocument.pages;
-            // console.log('contextPages', contextPages);
 
             const treePages: TreePage[] = [];
             for (const pageID in pages) {
@@ -693,12 +692,9 @@ const View: React.FC<ViewProperties> = (properties) => {
                 treePages,
                 stateConfiguration,
             );
-            // console.log(stateConfiguration);
-            // console.log(computedTree);
             dispatchSetTree(computedTree);
         }
     }, [
-        // stateConfiguration,
         activeDocumentID,
         dataDocuments,
         contextDocumentsRef.current,
@@ -739,6 +735,15 @@ const View: React.FC<ViewProperties> = (properties) => {
     }, [
         viewElement.current,
         stateConfiguration.space.transformTouch,
+    ]);
+
+    /** Tree Effect */
+    useEffect(() => {
+        computeSpaceSize(tree);
+        // compute space size
+        // console.log('tree', tree);
+    }, [
+        tree,
     ]);
 
     const viewContainer = handleView(pages, documents);
