@@ -275,20 +275,19 @@ export const computePluridPlaneLocation = (
     let y = 0;
     let z = 0;
 
-    const bridgeLength = 100;
 
     // let prevLinkX = treePageParent.location.translateX;
     // let rotXbranch = 90 + treePageParent.location.rotateY;
-    // let prevTransX = treePageParent.location.translateX;
+    let prevTransX = treePageParent.location.translateX;
     // let prevTransY = treePageParent.location.translateY;
-    // let prevTransZ = treePageParent.location.translateZ;
+    let prevTransZ = treePageParent.location.translateZ;
     // let penultimateRootAngleYRad = treePageParent.location.rotateY * Math.PI / 180;
 
     const linkX = linkCoordinates.x;
-    const bridge = 100;
-    const hyp = Math.sqrt(linkX * linkX + bridge * bridge);
+    const bridgeLength = 100;
+    const hyp = Math.sqrt(Math.pow(linkX, 2) + Math.pow(bridgeLength, 2));
     console.log('hyp', hyp);
-    const sinHyp = bridge / hyp;
+    const sinHyp = bridgeLength / hyp;
     console.log('sinHyp', sinHyp);
     const asinHyp = Math.asin(sinHyp);
     console.log('asinHyp', asinHyp);
@@ -314,8 +313,8 @@ export const computePluridPlaneLocation = (
     // const cosTotal = cosHyp + Math.cos(toRadians(treePageParent.location.rotateY));
     console.log('cosTotal', cosTotal);
 
-    z = -1 * sinTotal * hyp;
-    x = cosTotal * hyp;
+    x = cosTotal * (hyp + prevTransX);
+    z = sinTotal * (hyp + prevTransZ);
 
     console.log('treePageParent.location', treePageParent.location);
     console.log(linkCoordinates);
