@@ -10,7 +10,9 @@ const Page2 = (properties) => {
     // console.log(properties.plurid);
 
     return (
-        <div style={{height: 400}}>
+        <div style={{
+            height: 400,
+        }}>
             page 2 <PluridLink page="/page-1">link to page 1</PluridLink>
 
             <div style={{ marginLeft: 200, marginTop: 100}}>
