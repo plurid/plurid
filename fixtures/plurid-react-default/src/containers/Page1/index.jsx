@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+    useRef,
+} from 'react';
 
 import {
     PluridLink,
@@ -7,6 +9,10 @@ import {
 
 
 const Page1 = () => {
+
+    const a = useRef(Math.random() * 800 + 100);
+    const b = useRef(Math.random() * 100 + 100);
+
     return (
         <div style={{height: 300}}>
             <div
@@ -25,7 +31,10 @@ const Page1 = () => {
                 <PluridLink page="/page-2/soo/loo">link to page 2</PluridLink>
             </div>
 
-            <div style={{ marginLeft: 250, marginTop: 70}}>
+            <div style={{
+                marginLeft: a.current,
+                marginTop: b.current,
+            }}>
                 <PluridLink page="/page-3">link to page 3</PluridLink>
             </div>
 
