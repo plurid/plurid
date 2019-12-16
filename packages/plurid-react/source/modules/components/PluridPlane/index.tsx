@@ -23,7 +23,7 @@ import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
 import { ViewSize } from '../../services/state/types/space';
 import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+import actions from '../../services/state/actions';
 
 
 
@@ -40,9 +40,11 @@ interface PluridPlaneStateProperties {
     generalTheme: Theme;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
+    tree: TreePage[];
 }
 
 interface PluridPlaneDispatchProperties {
+    updateSpaceTreePage: typeof actions.space.updateSpaceTreePage;
 }
 
 type PluridPlaneProperties = PluridPlaneOwnProperties
@@ -53,16 +55,22 @@ type PluridPlanePropertiesWithChildren = React.PropsWithChildren<PluridPlaneProp
 
 const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) => {
     const {
+        /** own */
         planeID,
         page,
         treePage,
         location,
+
         children,
 
+        /** state */
         viewSize,
-
         generalTheme,
         configuration,
+        tree,
+
+        /** dispatch */
+        updateSpaceTreePage,
     } = properties;
 
     const {
@@ -76,6 +84,18 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
     const width = planeWidth * viewSize.width || 500;
 
     // based on camera location and world position compute transform matrix
+
+    const updatePlaneSize = (
+        size: any,
+    ) => {
+        const updatedTreePage = {
+            ...treePage,
+        };
+        updatedTreePage.width = size.width;
+        updatedTreePage.height = size.height;
+
+        updateSpaceTreePage(updatedTreePage);
+    }
 
     return (
         <StyledPluridPlane
@@ -106,7 +126,9 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
                 />
             )}
 
-            <PlaneContent>
+            <PlaneContent
+                updatePlaneSize={updatePlaneSize}
+            >
                 {children}
             </PlaneContent>
         </StyledPluridPlane>
@@ -114,16 +136,24 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
 }
 
 
-const mapStateToProps = (state: AppState): PluridPlaneStateProperties => ({
+const mapStateToProps = (
+    state: AppState,
+): PluridPlaneStateProperties => ({
     viewSize: selectors.space.getViewSize(state),
     spaceScale: selectors.space.getScale(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
+    tree: selectors.space.getTree(state),
 });
 
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridPlaneDispatchProperties => ({
+const mapDispatchToProps = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): PluridPlaneDispatchProperties => ({
+    updateSpaceTreePage: (treePage: TreePage) => dispatch(
+        actions.space.updateSpaceTreePage(treePage),
+    ),
 });
 
 

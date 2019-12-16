@@ -49,6 +49,8 @@ import {
     SET_VIEW_SIZE,
     SET_SPACE_SIZE,
 
+    UPDATE_SPACE_TREE_PAGE,
+
     SpaceState,
     SpaceActionsType,
 } from './types';
@@ -100,6 +102,8 @@ import {
 
     setViewSize,
     setSpaceSize,
+
+    updateSpaceTreePage,
 } from './resolvers';
 
 
@@ -218,6 +222,8 @@ const spaceReducer = (
             return setViewSize(state, action);
         case SET_SPACE_SIZE:
             return setSpaceSize(state, action);
+        case UPDATE_SPACE_TREE_PAGE:
+            return updateSpaceTreePage(state, action);
         default:
             return {
                 ...state,

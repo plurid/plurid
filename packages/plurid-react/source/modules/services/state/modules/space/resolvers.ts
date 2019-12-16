@@ -33,7 +33,13 @@ import {
 
     SetViewSizeAction,
     SetSpaceSizeAction,
+
+    UpdateSpaceTreePageAction,
 } from './types';
+
+import {
+    updateTreePage,
+} from '../../../logic/tree';
 
 
 
@@ -504,5 +510,18 @@ export const setSpaceSize = (
         spaceSize: {
             ...action.payload,
         },
+    };
+}
+
+
+export const updateSpaceTreePage = (
+    state: SpaceState,
+    action: UpdateSpaceTreePageAction,
+): SpaceState => {
+    const updatedTree = updateTreePage(state.tree, action.payload);
+
+    return {
+        ...state,
+        tree: updatedTree,
     };
 }

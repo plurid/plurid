@@ -48,6 +48,8 @@ import {
 
     setViewSize,
     setSpaceSize,
+
+    updateSpaceTreePage,
 } from '../modules/space/actions';
 
 
@@ -102,4 +104,6 @@ export default {
 
     setViewSize,
     setSpaceSize,
+
+    updateSpaceTreePage
 };

@@ -241,6 +241,13 @@ export interface SetSpaceSizeAction {
 }
 
 
+export const UPDATE_SPACE_TREE_PAGE = 'UPDATE_SPACE_TREE_PAGE';
+export interface UpdateSpaceTreePageAction {
+    type: typeof UPDATE_SPACE_TREE_PAGE;
+    payload: TreePage;
+}
+
+
 
 export interface SpaceState {
     loading: boolean;
@@ -303,4 +310,5 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | SetActiveDocumentAction
     | SpaceResetTransformAction
     | SetViewSizeAction
-    | SetSpaceSizeAction;
+    | SetSpaceSizeAction
+    | UpdateSpaceTreePageAction;

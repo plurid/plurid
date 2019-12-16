@@ -31,3 +31,21 @@ export const createTreePage = (
     };
     return treePage;
 }
+
+
+export const updateTreePage = (
+    tree: TreePage[],
+    page: TreePage,
+): TreePage[] => {
+    const updatedTree = tree.map(treePage => {
+        if (treePage.planeID === page.planeID) {
+            return {
+                ...page,
+            };
+        }
+
+        return treePage;
+    });
+
+    return updatedTree;
+}

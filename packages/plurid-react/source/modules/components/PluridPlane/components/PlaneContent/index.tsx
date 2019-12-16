@@ -9,10 +9,15 @@ import {
 
 
 
-interface PlaneContentProperties {
+interface PlaneContentOwnProperties {
+    updatePlaneSize: any;
 }
 
-const PlaneContent: React.FC<PlaneContentProperties> = (properties) => {
+const PlaneContent: React.FC<PlaneContentOwnProperties> = (properties) => {
+    const {
+        updatePlaneSize,
+    } = properties;
+
     const planeContentElement = useRef<HTMLDivElement>(null);
 
     const {
@@ -23,12 +28,18 @@ const PlaneContent: React.FC<PlaneContentProperties> = (properties) => {
         if (planeContentElement.current) {
             // TODO
             // Implement a resize observer
+
             const {
                 offsetWidth,
                 offsetHeight,
             } = planeContentElement.current;
 
-            console.log(offsetWidth, offsetHeight);
+            const size = {
+                width: offsetWidth,
+                height: offsetHeight
+            }
+            updatePlaneSize(size)
+            // console.log(offsetWidth, offsetHeight);
         }
     }, [
         planeContentElement.current,
