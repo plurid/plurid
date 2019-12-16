@@ -8,6 +8,8 @@ export interface TreePage {
     location: TreePageLocation;
     children?: TreePage[];
     show: boolean;
+    bridgeLength?: number;
+    planeAngle?: number;
 }
 
 
