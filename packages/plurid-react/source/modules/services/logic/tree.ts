@@ -44,6 +44,13 @@ export const updateTreePage = (
             };
         }
 
+        if (treePage.children) {
+            return {
+                ...treePage,
+                children: updateTreePage(treePage.children, page),
+            };
+        }
+
         return treePage;
     });
 
