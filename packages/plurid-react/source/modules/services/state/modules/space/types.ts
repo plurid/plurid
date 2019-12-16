@@ -234,6 +234,11 @@ export interface SpaceSize {
     width: number;
     height: number;
     depth: number;
+    topCorner: {
+        x: number;
+        y: number;
+        z: number;
+    };
 }
 export interface SetSpaceSizeAction {
     type: typeof SET_SPACE_SIZE;
