@@ -24,6 +24,8 @@ describe('computeColumnLayout', () => {
         const treePages: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -37,6 +39,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -50,6 +54,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -66,6 +72,8 @@ describe('computeColumnLayout', () => {
         const locatedTree: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -79,6 +87,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -92,6 +102,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -122,6 +134,8 @@ describe('computeColumnLayout', () => {
         const treePages: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -135,6 +149,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -148,6 +164,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -161,6 +179,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '4',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -174,6 +194,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '5',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -190,6 +212,8 @@ describe('computeColumnLayout', () => {
         const locatedTree: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -203,6 +227,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -216,6 +242,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -229,6 +257,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '4',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -242,6 +272,8 @@ describe('computeColumnLayout', () => {
             },
             {
                 pageID: '5',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,

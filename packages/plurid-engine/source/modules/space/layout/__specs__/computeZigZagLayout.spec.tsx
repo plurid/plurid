@@ -24,6 +24,8 @@ describe.only('computeZigZagLayout', () => {
         const treePages: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 45,
@@ -37,6 +39,8 @@ describe.only('computeZigZagLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: -45,
@@ -50,6 +54,8 @@ describe.only('computeZigZagLayout', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 45,
@@ -66,6 +72,8 @@ describe.only('computeZigZagLayout', () => {
         const locatedTree: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 45,
@@ -79,6 +87,8 @@ describe.only('computeZigZagLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: -45,
@@ -92,6 +102,8 @@ describe.only('computeZigZagLayout', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 45,
