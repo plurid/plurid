@@ -429,15 +429,15 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@plurid/plurid-data@^0.1.68":
-  version "0.1.68"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.68.tgz#f05d7930a0c4b7b58f30026348b80da2d1c44629"
-  integrity sha512-ENp1y5sipn+7qpq72tPJzGFNeVAVDdf7qfYrOv86+hRpDr57QBhPnZOUBqHRnXWhnYRFId7WbX/zh7vIec4ahw==
+"@plurid/plurid-data@^0.1.71":
+  version "0.1.71"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.71.tgz#6810db0e6ba3ac0f21bc1e1d26f680faa4516784"
+  integrity sha512-jUt3prMYzqQXmUuqM9IuvekY/AJaCKZZ4Z1x8dCczKvJD8+mFjvufgvzrf0FJx0x1vfJ6ejwPzoBq9V8twij6w==
 
-"@plurid/plurid-engine@^0.1.26":
-  version "0.1.26"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.26.tgz#ecb8ef4b7aea48679dc92742ba46a605a5e737c3"
-  integrity sha512-2SeM3Fwy6AtEcJ6EzelocGk0KT4yIcKMeVMRGHxAYBbX6rE0fW9hHcOtK9IQaq03jGKBKhw4htyNIxV7PWaOZQ==
+"@plurid/plurid-engine@^0.1.27":
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.27.tgz#c36417e8ae8fa95f50b954579ac184796f4151b9"
+  integrity sha512-nHdpjwGv8kxhunz4arLRfqUAJr/ejZcXADwg4+MA3rjQYcQeh9L6GolL4LIgqDdOzi3uaq9hj3krG0dOjqEf+Q==
 
 "@plurid/plurid-functions@^0.1.3":
   version "0.1.3"
