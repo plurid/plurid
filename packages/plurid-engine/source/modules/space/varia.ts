@@ -335,12 +335,36 @@ export const computeSpaceSize = (
     let width = 0;
     let height = 0;
     let depth = 0;
+    let topCorner = {
+        x: 0,
+        y: 0,
+        z: 0,
+    };
 
+    tree.map(treePage => {
+        const spaceWidth = treePage.location.translateX + width;
+        if (spaceWidth > width) {
+            width = spaceWidth;
+        }
+
+        const spaceHeight = treePage.location.translateY + height;
+        if (spaceHeight > height) {
+            height = spaceHeight;
+        }
+
+        const spaceDepth = treePage.location.translateZ;
+        if (spaceDepth > depth) {
+            depth = spaceDepth;
+        }
+    });
+
+    console.log('width', width);
     // parse tree and compute the maximum width / height / depth
 
     return {
         width,
         height,
         depth,
+        topCorner,
     };
 }
