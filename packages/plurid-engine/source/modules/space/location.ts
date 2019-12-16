@@ -47,15 +47,25 @@ export const computePath = (
 }
 
 
-const computeLocationXZ = (
+const computeLocationXYZ = (
     linkCoordinates: any,
     treePageParent: TreePage,
     path: TreePage[],
-) => {
+): LocationCoordinates => {
+    const y = treePageParent.location.translateY + linkCoordinates.y;
+    let x = 0;
+    let z = 0;
+
+    console.log('linkCoordinates', linkCoordinates);
+    console.log('treePageParent', treePageParent);
+    console.log('path', path);
+    console.log('x y z', x, y, z);
+    console.log('---------------------');
 
     return {
-        x: 0,
-        z: 0,
+        x,
+        y,
+        z,
     };
 }
 
@@ -66,30 +76,13 @@ export const computePluridPlaneLocation = (
     treePageParent: TreePage,
     treePageParentPlaneID: string,
 ): LocationCoordinates => {
-    console.log('linkCoordinates', linkCoordinates);
-    console.log('treePageParent', treePageParent);
-
     const path = computePath(tree, treePageParentPlaneID);
-    console.log('path', path);
 
-    const {
-        x,
-        z,
-    } = computeLocationXZ(
+    return computeLocationXYZ(
         linkCoordinates,
         treePageParent,
         path,
     );
-    const y = treePageParent.location.translateY + linkCoordinates.y;
-
-    console.log('x y z', x, y, z);
-    console.log('---------------------');
-
-    return {
-        x,
-        y,
-        z,
-    };
 
 
 
