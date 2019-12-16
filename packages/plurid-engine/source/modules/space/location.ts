@@ -67,11 +67,14 @@ const computeDistanceBetweenPoints = (
 const computeLocationXYZ = (
     linkCoordinates: any,
     treePageParent: TreePage,
-    path: TreePage[],
+    // path: TreePage[],
 ): LocationCoordinates => {
     console.log('linkCoordinates', linkCoordinates);
     console.log('treePageParent', treePageParent);
-    console.log('path', path);
+    // console.log('path', path);
+
+    const BRIDGE_LENGTH = 100;
+    const LINK_PLANE_ANGLE = 90;
 
     const y = treePageParent.location.translateY + linkCoordinates.y;
     let x = 0;
@@ -94,21 +97,42 @@ const computeLocationXYZ = (
     );
     console.log('distanceOriginParentPlane', distanceOriginParentPlane);
 
+    const parentAngleRadians = toRadians(treePageParent.location.rotateY);
     const linkPoint: Point = {
-        x: treePageParent.location.translateX + linkCoordinates.x * Math.cos(toRadians(treePageParent.location.rotateY)),
-        z: treePageParent.location.translateZ - linkCoordinates.x * Math.sin(toRadians(treePageParent.location.rotateY)),
+        x: treePageParent.location.translateX + linkCoordinates.x * Math.cos(parentAngleRadians),
+        z: treePageParent.location.translateZ - linkCoordinates.x * Math.sin(parentAngleRadians),
     };
     console.log('linkPoint', linkPoint);
 
+    // const distanceParentPlaneLink = computeDistanceBetweenPoints(
+    //     parentPlanePoint,
+    //     linkPoint,
+    // );
+    // console.log('distanceParentPlaneLink', distanceParentPlaneLink);
 
+    // const distanceOriginLink = computeDistanceBetweenPoints(
+    //     origin,
+    //     linkPoint,
+    // );
+    // console.log('distanceOriginLink', distanceOriginLink);
 
-    console.log('x y z', x, y, z);
-    console.log('---------------------');
+    // const distanceParentPlaneLinkPlane = Math.sqrt(
+    //     Math.pow(distanceParentPlaneLink, 2)
+    //     + Math.pow(BRIDGE_LENGTH, 2)
+    //     - 2 * distanceParentPlaneLink * BRIDGE_LENGTH * Math.cos(toRadians(LINK_PLANE_ANGLE))
+    // );
+    // console.log('distanceParentPlaneLinkPlane', distanceParentPlaneLinkPlane);
+
+    const linkPlaneX = linkPoint.x + BRIDGE_LENGTH * Math.cos(toRadians(LINK_PLANE_ANGLE + treePageParent.location.rotateY));
+    const linkPlaneZ = linkPoint.z - BRIDGE_LENGTH * Math.sin(toRadians(LINK_PLANE_ANGLE + treePageParent.location.rotateY));
+
+    // console.log('x y z', x, y, z);
+    // console.log('---------------------');
 
     return {
-        x: linkPoint.x,
+        x: linkPlaneX,
         y,
-        z: linkPoint.z,
+        z: linkPlaneZ,
     };
 }
 
@@ -119,12 +143,12 @@ export const computePluridPlaneLocation = (
     treePageParent: TreePage,
     treePageParentPlaneID: string,
 ): LocationCoordinates => {
-    const path = computePath(tree, treePageParentPlaneID);
+    // const path = computePath(tree, treePageParentPlaneID);
 
     return computeLocationXYZ(
         linkCoordinates,
         treePageParent,
-        path,
+        // path,
     );
 
 
