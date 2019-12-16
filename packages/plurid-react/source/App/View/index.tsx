@@ -92,6 +92,10 @@ import {
     handleGlobalWheel,
 } from '../../modules/services/logic/shortcuts';
 
+import {
+    useDebouncedCallback,
+} from '../../modules/services/hooks/debounce';
+
 import { AppState } from '../../modules/services/state/store';
 import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
@@ -263,15 +267,15 @@ const View: React.FC<ViewProperties> = (properties) => {
             dispatchSetSpaceLocation(spaceLocation);
         }
 
-        if (configuration.space.center && !configuration.space.camera) {
-            const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
-            translateXWith(x);
+        // if (configuration.space.center && !configuration.space.camera) {
+        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
+        //     translateXWith(x);
 
-            // to get plane height;
-            const planeHeight = 300;
-            const y = window.innerHeight / 2 - planeHeight/2;
-            translateYWith(y);
-        }
+        //     // to get plane height;
+        //     const planeHeight = 300;
+        //     const y = window.innerHeight / 2 - planeHeight/2;
+        //     translateYWith(y);
+        // }
 
         if (configuration.theme) {
             if (typeof configuration.theme === 'object') {
@@ -743,10 +747,20 @@ const View: React.FC<ViewProperties> = (properties) => {
         stateConfiguration.space.transformTouch,
     ]);
 
+    const setSpaceSize = useDebouncedCallback((spaceSize: any) => {
+        const x = - spaceSize.width / 2;
+        translateXWith(x);
+
+        const y = - spaceSize.height / 2;
+        translateYWith(y);
+    }, 100);
+
     /** Tree Effect */
     useEffect(() => {
         const spaceSize = computeSpaceSize(tree);
+
         dispatchSetSpaceSize(spaceSize);
+        setSpaceSize(spaceSize);
     }, [
         tree,
     ]);
