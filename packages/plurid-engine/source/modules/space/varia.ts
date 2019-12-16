@@ -332,5 +332,15 @@ export const togglePageFromTree = (
 export const computeSpaceView = (
     tree: TreePage[],
 ) => {
+    let width = 0;
+    let height = 0;
+    let depth = 0;
 
+    // parse tree and compute the maximum width / height / depth
+
+    return {
+        width,
+        height,
+        depth,
+    };
 }
