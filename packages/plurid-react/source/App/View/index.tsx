@@ -93,11 +93,15 @@ import {
 } from '../../modules/services/logic/shortcuts';
 
 import { AppState } from '../../modules/services/state/store';
-import { ViewSize } from '../../modules/services/state/types/space';
 import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
 import StateContext from '../../modules/services/state/context';
-
+import {
+    ViewSize,
+} from '../../modules/services/state/types/space';
+import {
+    SpaceSize,
+} from '../../modules/services/state/modules/space/types';
 
 
 export interface ViewOwnProperties {
@@ -127,6 +131,7 @@ interface ViewDispatchProperties {
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
     dispatchSetTree: typeof actions.space.setTree;
+    dispatchSetSpaceSize: typeof actions.space.setSpaceSize;
 
     dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
     dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
@@ -177,6 +182,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         dispatchSetAnimatedTransform,
         dispatchSetSpaceLocation,
         dispatchSetTree,
+        dispatchSetSpaceSize,
 
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
@@ -740,7 +746,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     /** Tree Effect */
     useEffect(() => {
         const spaceSize = computeSpaceSize(tree);
-        console.log(spaceSize);
+        dispatchSetSpaceSize(spaceSize);
     }, [
         tree,
     ]);
@@ -821,6 +827,9 @@ const mapDispatchToProperties = (
     ),
     dispatchSetTree: (tree: TreePage[]) => dispatch(
         actions.space.setTree(tree)
+    ),
+    dispatchSetSpaceSize: (payload: SpaceSize) => dispatch(
+        actions.space.setSpaceSize(payload)
     ),
 
     dispatchSetGeneralTheme: (theme: Theme) => dispatch(

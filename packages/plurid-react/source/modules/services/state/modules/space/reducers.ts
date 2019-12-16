@@ -132,6 +132,11 @@ const initialState: SpaceState = {
         width: window ? window.innerWidth : 1440,
         height: window ? window.innerHeight : 800,
         depth: 0,
+        topCorner: {
+            x: 0,
+            y: 0,
+            z: 0,
+        },
     },
 };
 
