@@ -26,10 +26,17 @@ const computeColumnLayout = (
 
         const treePage: TreePage = {
             ...root,
+            // location: {
+            //     translateX,
+            //     translateY,
+            //     translateZ: 0,
+            //     rotateX: 0,
+            //     rotateY: 0,
+            // },
             location: {
-                translateX,
+                translateX: 200,
                 translateY,
-                translateZ: 0,
+                translateZ: 300,
                 rotateX: 0,
                 rotateY: 0,
             },
