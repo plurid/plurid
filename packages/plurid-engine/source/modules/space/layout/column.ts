@@ -34,11 +34,11 @@ const computeColumnLayout = (
             //     rotateY: 0,
             // },
             location: {
-                translateX: 200,
+                translateX: -1200,
                 translateY,
-                translateZ: 300,
+                translateZ: -300,
                 rotateX: 0,
-                rotateY: 0,
+                rotateY: 350,
             },
         };
 

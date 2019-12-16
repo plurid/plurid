@@ -47,25 +47,68 @@ export const computePath = (
 }
 
 
+interface Point {
+    x: number,
+    z: number,
+}
+
+const computeDistanceBetweenPoints = (
+    point1: Point,
+    point2: Point,
+): number => {
+    const distance = Math.sqrt(
+        Math.pow((point2.x - point1.x), 2)
+        + Math.pow((point2.z - point1.z), 2)
+    );
+    return distance;
+}
+
+
 const computeLocationXYZ = (
     linkCoordinates: any,
     treePageParent: TreePage,
     path: TreePage[],
 ): LocationCoordinates => {
+    console.log('linkCoordinates', linkCoordinates);
+    console.log('treePageParent', treePageParent);
+    console.log('path', path);
+
     const y = treePageParent.location.translateY + linkCoordinates.y;
     let x = 0;
     let z = 0;
 
-    console.log('linkCoordinates', linkCoordinates);
-    console.log('treePageParent', treePageParent);
-    console.log('path', path);
+    const origin: Point = {
+        x: 0,
+        z: 0,
+    };
+
+    const parentPlanePoint: Point = {
+        x: treePageParent.location.translateX,
+        z: treePageParent.location.translateZ,
+    };
+    // console.log('parentPlanePoint', parentPlanePoint);
+
+    const distanceOriginParentPlane = computeDistanceBetweenPoints(
+        origin,
+        parentPlanePoint,
+    );
+    console.log('distanceOriginParentPlane', distanceOriginParentPlane);
+
+    const linkPoint: Point = {
+        x: treePageParent.location.translateX + linkCoordinates.x * Math.cos(toRadians(treePageParent.location.rotateY)),
+        z: treePageParent.location.translateZ - linkCoordinates.x * Math.sin(toRadians(treePageParent.location.rotateY)),
+    };
+    console.log('linkPoint', linkPoint);
+
+
+
     console.log('x y z', x, y, z);
     console.log('---------------------');
 
     return {
-        x,
+        x: linkPoint.x,
         y,
-        z,
+        z: linkPoint.z,
     };
 }
 
