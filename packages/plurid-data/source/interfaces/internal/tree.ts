@@ -5,6 +5,8 @@ export interface TreePage {
     path: string;
     parameters?: PathParameter;
     query?: PathQuery;
+    height: number;
+    width: number;
     location: TreePageLocation;
     children?: TreePage[];
     show: boolean;
