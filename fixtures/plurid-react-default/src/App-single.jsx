@@ -15,10 +15,10 @@ const App = () => {
         // micro: true,
         theme: 'plurid',
         space: {
-            // layout: {
-            //     type: SPACE_LAYOUT.COLUMNS,
-            //     columns: 2,
-            // },
+            layout: {
+                type: SPACE_LAYOUT.COLUMNS,
+                columns: 3,
+            },
             // layout: {
             //     type: SPACE_LAYOUT.FACE_TO_FACE,
             //     angle: 30,
@@ -86,22 +86,22 @@ const App = () => {
             },
             root: true,
         },
-        // {
-        //     path: '/page-5',
-        //     component: {
-        //         element: Page1,
-        //         properties: {},
-        //     },
-        //     root: true,
-        // },
-        // {
-        //     path: '/page-6',
-        //     component: {
-        //         element: Page1,
-        //         properties: {},
-        //     },
-        //     root: true,
-        // },
+        {
+            path: '/page-5',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            root: true,
+        },
+        {
+            path: '/page-6',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+            root: true,
+        },
     ];
 
     return (
