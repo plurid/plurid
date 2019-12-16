@@ -18,6 +18,8 @@ export const createTreePage = (
         pageID: contextPage.id,
         planeID: uuid(),
         path: contextPage.path,
+        height: 0,
+        width: 0,
         location: {
             translateX: 0,
             translateY: 0,
