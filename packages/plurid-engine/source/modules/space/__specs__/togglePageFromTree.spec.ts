@@ -25,6 +25,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -32,6 +34,8 @@ describe('togglePageFromTree', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [],
                     }
@@ -42,6 +46,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -53,6 +59,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -60,6 +68,8 @@ describe('togglePageFromTree', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: false,
                         children: [],
                     }
@@ -70,6 +80,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -88,6 +100,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -95,6 +109,8 @@ describe('togglePageFromTree', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [],
                     }
@@ -105,6 +121,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -113,6 +131,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -124,6 +144,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -131,6 +153,8 @@ describe('togglePageFromTree', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: false,
                         children: [],
                     }
@@ -141,6 +165,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -149,6 +175,8 @@ describe('togglePageFromTree', () => {
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },

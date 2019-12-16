@@ -25,6 +25,8 @@ describe('updateTreePage', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -33,6 +35,8 @@ describe('updateTreePage', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -42,6 +46,8 @@ describe('updateTreePage', () => {
             planeID: 'aaa',
             path: '/aaa',
             location,
+            height: 0,
+            width: 0,
             show: true,
             children: [
                 {
@@ -49,6 +55,8 @@ describe('updateTreePage', () => {
                     planeID: 'bbb',
                     path: '/aaa/bbb',
                     location,
+                    height: 0,
+                    width: 0,
                     show: true,
                     children: [],
                 }
@@ -61,6 +69,8 @@ describe('updateTreePage', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -77,6 +87,8 @@ describe('updateTreePage', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -84,6 +96,8 @@ describe('updateTreePage', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [],
                     }
@@ -94,6 +108,8 @@ describe('updateTreePage', () => {
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -103,6 +119,8 @@ describe('updateTreePage', () => {
             planeID: 'bbb',
             path: '/aaa/bbb',
             location,
+            height: 0,
+            width: 0,
             show: true,
             children: [
                 {
@@ -110,6 +128,8 @@ describe('updateTreePage', () => {
                     planeID: 'ccc',
                     path: '/aaa/bbb/ccc',
                     location,
+                    height: 0,
+                    width: 0,
                     show: true,
                     children: [],
                 }
@@ -121,6 +141,8 @@ describe('updateTreePage', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     updatedPage,
@@ -131,6 +153,8 @@ describe('updateTreePage', () => {
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },

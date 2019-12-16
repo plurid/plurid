@@ -22,6 +22,8 @@ const tree: TreePage[] = [
         planeID: 'aaa',
         path: '/aaa',
         location,
+        height: 0,
+        width: 0,
         show: true,
         children: [
             {
@@ -29,6 +31,8 @@ const tree: TreePage[] = [
                 planeID: 'bbb',
                 path: '/aaa/bbb',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -36,6 +40,8 @@ const tree: TreePage[] = [
                         planeID: 'ccc',
                         path: '/aaa/bbb/ccc',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [],
                     },
@@ -48,6 +54,8 @@ const tree: TreePage[] = [
         planeID: 'ddd',
         path: '/ddd',
         location,
+        height: 0,
+        width: 0,
         show: true,
         children: [],
     },
@@ -56,6 +64,8 @@ const tree: TreePage[] = [
         planeID: 'eee',
         path: '/eee',
         location,
+        height: 0,
+        width: 0,
         show: true,
         children: [
             {
@@ -63,6 +73,8 @@ const tree: TreePage[] = [
                 planeID: 'fff',
                 path: '/eee/fff',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },

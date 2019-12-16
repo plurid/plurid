@@ -25,6 +25,8 @@ describe('removePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -32,6 +34,8 @@ describe('removePageFromTree', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [],
                     }
@@ -42,6 +46,8 @@ describe('removePageFromTree', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -53,6 +59,8 @@ describe('removePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -61,6 +69,8 @@ describe('removePageFromTree', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -78,6 +88,8 @@ describe('removePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -85,6 +97,8 @@ describe('removePageFromTree', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [
                             {
@@ -92,6 +106,8 @@ describe('removePageFromTree', () => {
                                 planeID: 'ccc',
                                 path: '/aaa/bbb/ccc',
                                 location,
+                                height: 0,
+                                width: 0,
                                 show: true,
                                 children: [],
                             },
@@ -104,6 +120,8 @@ describe('removePageFromTree', () => {
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -114,6 +132,8 @@ describe('removePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -121,6 +141,8 @@ describe('removePageFromTree', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [],
                     },
@@ -131,6 +153,8 @@ describe('removePageFromTree', () => {
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -148,6 +172,8 @@ describe('removePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -155,6 +181,8 @@ describe('removePageFromTree', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [
                             {
@@ -162,6 +190,8 @@ describe('removePageFromTree', () => {
                                 planeID: 'ccc',
                                 path: '/aaa/bbb/ccc',
                                 location,
+                                height: 0,
+                                width: 0,
                                 show: true,
                                 children: [],
                             },
@@ -174,6 +204,8 @@ describe('removePageFromTree', () => {
                 planeID: 'ddd',
                 path: '/ddd',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
@@ -184,6 +216,8 @@ describe('removePageFromTree', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -191,6 +225,8 @@ describe('removePageFromTree', () => {
                         planeID: 'bbb',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [
                             {
@@ -198,6 +234,8 @@ describe('removePageFromTree', () => {
                                 planeID: 'ccc',
                                 path: '/aaa/bbb/ccc',
                                 location,
+                                height: 0,
+                                width: 0,
                                 show: true,
                                 children: [],
                             },

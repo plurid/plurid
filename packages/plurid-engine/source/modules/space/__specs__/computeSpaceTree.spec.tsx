@@ -29,6 +29,8 @@ describe('computeSpaceTree', () => {
         const treePages: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -42,6 +44,8 @@ describe('computeSpaceTree', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -55,6 +59,8 @@ describe('computeSpaceTree', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -71,6 +77,8 @@ describe('computeSpaceTree', () => {
         const locatedTree: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -84,6 +92,8 @@ describe('computeSpaceTree', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -97,6 +107,8 @@ describe('computeSpaceTree', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -138,6 +150,8 @@ describe('computeSpaceTree', () => {
         const treePages: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -151,6 +165,8 @@ describe('computeSpaceTree', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -164,6 +180,8 @@ describe('computeSpaceTree', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -180,6 +198,8 @@ describe('computeSpaceTree', () => {
         const locatedTree: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -193,6 +213,8 @@ describe('computeSpaceTree', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -206,6 +228,8 @@ describe('computeSpaceTree', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
