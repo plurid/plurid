@@ -21,6 +21,8 @@ describe('computePath', () => {
     it('computes the path on the first child', () => {
         const targetPage = {
             pageID: '1',
+            height: 0,
+            width: 0,
             planeID: 'aaa',
             path: '/aaa',
             location,
@@ -34,6 +36,8 @@ describe('computePath', () => {
                 planeID: 'bbb',
                 path: '/bbb',
                 location,
+                height: 0,
+                width: 0,
                 children: [],
                 show: true,
             },
@@ -51,6 +55,8 @@ describe('computePath', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 children: [],
                 show: true,
             },
@@ -59,6 +65,8 @@ describe('computePath', () => {
                 planeID: 'bbb',
                 path: '/bbb',
                 location,
+                height: 0,
+                width: 0,
                 children: [],
                 show: true,
             },
@@ -75,6 +83,8 @@ describe('computePath', () => {
             planeID: 'aaa',
             path: '/aaa',
             location,
+            height: 0,
+            width: 0,
             show: true,
             children: [],
         };
@@ -84,6 +94,8 @@ describe('computePath', () => {
             parentPlaneID: 'aaa',
             path: '/aaa/bbb',
             location,
+            height: 0,
+            width: 0,
             show: true,
             children: [],
         };
@@ -93,6 +105,8 @@ describe('computePath', () => {
                 planeID: 'aaa',
                 path: '/aaa',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [
                     {
@@ -101,6 +115,8 @@ describe('computePath', () => {
                         parentPlaneID: 'aaa',
                         path: '/aaa/bbb',
                         location,
+                        height: 0,
+                        width: 0,
                         show: true,
                         children: [],
                     }
@@ -111,6 +127,8 @@ describe('computePath', () => {
                 planeID: 'ccc',
                 path: '/ccc',
                 location,
+                height: 0,
+                width: 0,
                 show: true,
                 children: [],
             },
