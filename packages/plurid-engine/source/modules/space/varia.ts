@@ -235,10 +235,8 @@ export const updateTreeWithNewPage = (
 
     if (treePageParent) {
         const location = computePluridPlaneLocation(
-            tree,
             linkCoordinates,
             treePageParent,
-            treePageParentPlaneID,
         );
 
         const extractedParameters = extractParameters(
