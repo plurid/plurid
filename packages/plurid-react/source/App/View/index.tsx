@@ -693,8 +693,8 @@ const View: React.FC<ViewProperties> = (properties) => {
                 treePages,
                 stateConfiguration,
             );
-            console.log(stateConfiguration);
-            console.log(computedTree);
+            // console.log(stateConfiguration);
+            // console.log(computedTree);
             dispatchSetTree(computedTree);
         }
     }, [
