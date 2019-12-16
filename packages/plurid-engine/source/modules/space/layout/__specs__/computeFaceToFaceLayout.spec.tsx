@@ -24,6 +24,8 @@ xdescribe('computeColumnLayout', () => {
         const treePages: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 90.1,
@@ -37,6 +39,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 90.1,
@@ -53,6 +57,8 @@ xdescribe('computeColumnLayout', () => {
         const locatedTree: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 90.1,
@@ -66,6 +72,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 90.1,
@@ -96,6 +104,8 @@ xdescribe('computeColumnLayout', () => {
         const treePages: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -109,6 +119,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -122,6 +134,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -135,6 +149,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '4',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -148,6 +164,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '5',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -164,6 +182,8 @@ xdescribe('computeColumnLayout', () => {
         const locatedTree: TreePage[] = [
             {
                 pageID: '1',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -177,6 +197,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '2',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -190,6 +212,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '3',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -203,6 +227,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '4',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -216,6 +242,8 @@ xdescribe('computeColumnLayout', () => {
             },
             {
                 pageID: '5',
+                height: 0,
+                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
