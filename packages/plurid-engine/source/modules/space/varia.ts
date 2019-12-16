@@ -329,7 +329,7 @@ export const togglePageFromTree = (
 }
 
 
-export const computeSpaceView = (
+export const computeSpaceSize = (
     tree: TreePage[],
 ) => {
     let width = 0;
