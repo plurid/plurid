@@ -325,3 +325,10 @@ export const togglePageFromTree = (
 
     return updatedTree;
 }
+
+
+export const computeSpaceView = (
+    tree: TreePage[],
+) => {
+
+}
