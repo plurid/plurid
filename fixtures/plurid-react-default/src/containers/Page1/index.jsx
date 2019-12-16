@@ -9,9 +9,10 @@ import {
 
 
 const Page1 = () => {
-
-    const a = useRef(Math.random() * 800 + 100);
-    const b = useRef(Math.random() * 100 + 100);
+    // const a = useRef(Math.random() * 800 + 100);
+    // const b = useRef(Math.random() * 100 + 100);
+    const a = useRef(200);
+    const b = useRef(150);
 
     return (
         <div style={{height: 300}}>
