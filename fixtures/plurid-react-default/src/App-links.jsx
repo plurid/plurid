@@ -2,7 +2,7 @@ import React from 'react';
 
 import PluridApp, {
     PluridConfiguration,
-    SPACE_LAYOUT,
+    // SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
 import Page1 from './containers/Page1';
