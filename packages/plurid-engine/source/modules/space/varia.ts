@@ -115,7 +115,6 @@ export const computeSpaceTree = (
                     gap,
                     middle,
                 );
-                console.log(faceToFaceLayoutTree);
                 return faceToFaceLayoutTree;
             }
         case LAYOUT_TYPES.SHEAVES:
