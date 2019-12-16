@@ -68,3 +68,12 @@ export const defaultConfiguration: PluridConfiguration = {
         firstPerson: false,
     },
 };
+
+
+export const layoutNames = {
+    COLUMNS: 'columns',
+    FACE_TO_FACE: 'face to face',
+    ZIG_ZAG: 'zig zag',
+    SHEAVES: 'sheaves',
+    META: 'meta',
+};
