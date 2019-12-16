@@ -94,6 +94,9 @@ import {
     SET_SPACE_SIZE,
     SetSpaceSizeAction,
     SpaceSize,
+
+    UPDATE_SPACE_TREE_PAGE,
+    UpdateSpaceTreePageAction,
 } from './types'
 
 
@@ -358,6 +361,17 @@ export const setSpaceSize = (
 ): SetSpaceSizeAction => {
     return {
         type: SET_SPACE_SIZE,
+        payload,
+    };
+}
+
+
+
+export const updateSpaceTreePage = (
+    payload: TreePage,
+): UpdateSpaceTreePageAction => {
+    return {
+        type: UPDATE_SPACE_TREE_PAGE,
         payload,
     };
 }
