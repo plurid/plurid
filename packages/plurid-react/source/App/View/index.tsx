@@ -267,15 +267,15 @@ const View: React.FC<ViewProperties> = (properties) => {
             dispatchSetSpaceLocation(spaceLocation);
         }
 
-        // if (configuration.space.center && !configuration.space.camera) {
-        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
-        //     translateXWith(x);
+        if (configuration.space.center && !configuration.space.camera) {
+            const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
+            translateXWith(x);
 
-        //     // to get plane height;
-        //     const planeHeight = 300;
-        //     const y = window.innerHeight / 2 - planeHeight/2;
-        //     translateYWith(y);
-        // }
+            // to get plane height;
+            const planeHeight = 300;
+            const y = window.innerHeight / 2 - planeHeight/2;
+            translateYWith(y);
+        }
 
         if (configuration.theme) {
             if (typeof configuration.theme === 'object') {
@@ -503,7 +503,6 @@ const View: React.FC<ViewProperties> = (properties) => {
     const computeTree = (
         tree: TreePage[],
     ) => {
-        console.log('tree', tree);
         const computedTree = computeSpaceTree(
             tree,
             stateConfiguration,
@@ -551,7 +550,6 @@ const View: React.FC<ViewProperties> = (properties) => {
     /** Resize Listener */
     useEffect(() => {
         const handleResize = debounce(() => {
-            console.log('handleResize')
             if (viewElement && viewElement.current) {
                 const width = viewElement.current.offsetWidth;
                 const height = viewElement.current.offsetHeight;
