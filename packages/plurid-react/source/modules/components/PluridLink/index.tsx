@@ -112,6 +112,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
 
         const linkCoordinates = getPluridLinkCoordinates();
+        console.log(parentPlaneID, linkCoordinates);
 
         const searchDocumentID = document ? document : activeDocumentID;
         const activeDocument = documents[searchDocumentID];
