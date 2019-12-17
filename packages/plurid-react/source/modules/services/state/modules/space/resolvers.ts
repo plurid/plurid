@@ -41,6 +41,7 @@ import {
 
 import {
     updateTreePage,
+    updateTreeByPlaneIDWithLinkCoordinates,
 } from '../../../logic/tree';
 
 
@@ -533,7 +534,19 @@ export const updateSpaceLinkCoordinates = (
     state: SpaceState,
     action: UpdateSpaceLinkCoordinatesAction,
 ): SpaceState => {
+    const {
+        planeID,
+        linkCoordinates,
+    } = action.payload;
+
+    const updatedTree = updateTreeByPlaneIDWithLinkCoordinates(
+        state.tree,
+        planeID,
+        linkCoordinates,
+    );
+
     return {
         ...state,
+        tree: updatedTree,
     };
 }
