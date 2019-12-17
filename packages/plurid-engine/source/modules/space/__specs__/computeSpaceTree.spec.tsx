@@ -41,6 +41,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -56,6 +57,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '3',
@@ -71,6 +73,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 
@@ -89,6 +92,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -104,6 +108,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '3',
@@ -119,6 +124,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 
@@ -162,6 +168,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -177,6 +184,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '3',
@@ -192,6 +200,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 
@@ -210,6 +219,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -225,6 +235,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '3',
@@ -240,6 +251,7 @@ describe('computeSpaceTree', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 
