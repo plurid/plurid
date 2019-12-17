@@ -16,8 +16,10 @@ describe('computeColumnLayout', () => {
     });
 
     it('computes the default column layout', () => {
+        const innerWidth = 1200;
+
         (global as any).window = {
-            innerWidth: 1200,
+            innerWidth,
             innerHeight: 800,
         };
 
@@ -96,7 +98,7 @@ describe('computeColumnLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 1250,
+                    translateX: 65,
                     translateY: 0,
                     translateZ: 0,
                 },
@@ -244,7 +246,7 @@ describe('computeColumnLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 1250,
+                    translateX: 650,
                     translateY: 0,
                     translateZ: 0,
                 },
@@ -260,7 +262,7 @@ describe('computeColumnLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 2500,
+                    translateX: 1300,
                     translateY: 0,
                     translateZ: 0,
                 },
@@ -292,7 +294,7 @@ describe('computeColumnLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 1250,
+                    translateX: 650,
                     translateY: 850,
                     translateZ: 0,
                 },
