@@ -1,15 +1,18 @@
 import {
+    /** constants */
+    ROOTS_GAP,
+    PLANE_DEFAULT_ANGLE,
+
+    /** enumerations */
+    LAYOUT_TYPES,
+
+    /** interfaces */
     PluridPage,
     PluridConfiguration,
     TreePage,
     SpaceLocation,
-
+    LinkCoordinates,
     PageParameter,
-
-    ROOTS_GAP,
-    PLANE_DEFAULT_ANGLE,
-
-    LAYOUT_TYPES,
 } from '@plurid/plurid-data';
 
 import {
@@ -224,7 +227,7 @@ export const updateTreeWithNewPage = (
     treePageParentPlaneID: string,
     pagePath: string,
     pageID: string,
-    linkCoordinates: any,
+    linkCoordinates: LinkCoordinates,
     parameters?: PageParameter[],
 ): UpdatedTreeWithNewPage => {
     // to receive parameters and composePath from pagePath and parameters
