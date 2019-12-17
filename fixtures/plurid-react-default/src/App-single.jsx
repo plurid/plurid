@@ -15,10 +15,11 @@ const App = () => {
         // micro: true,
         theme: 'plurid',
         space: {
-            // layout: {
-            //     type: SPACE_LAYOUT.COLUMNS,
-            //     columns: 3,
-            // },
+            layout: {
+                type: SPACE_LAYOUT.COLUMNS,
+                columns: 3,
+                gap: 0.1,
+            },
             // layout: {
             //     type: SPACE_LAYOUT.FACE_TO_FACE,
             //     angle: 30,
