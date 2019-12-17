@@ -2,6 +2,10 @@ import {
     TreePage,
 } from '@plurid/plurid-data';
 
+import {
+    recomputeChildrenLocation,
+} from '../varia';
+
 
 
 const computeSheavesLayout = (
@@ -30,7 +34,14 @@ const computeSheavesLayout = (
             },
         };
 
-        tree.push(treePage);
+        const children = recomputeChildrenLocation(treePage);
+
+        const treePageWithChildren = {
+            ...treePage,
+            children,
+        }
+
+        tree.push(treePageWithChildren);
     }
 
     return tree;

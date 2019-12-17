@@ -4,6 +4,10 @@ import {
 
 import computeColumnLayout from './column';
 
+import {
+    recomputeChildrenLocation,
+} from '../varia';
+
 
 
 const computeZigZagLayout = (
@@ -20,9 +24,16 @@ const computeZigZagLayout = (
             : -1;
         page.location.rotateY = value * angle;
 
-        tree.push({
+        const children = recomputeChildrenLocation(page);
+
+        const treePageWithChildren = {
             ...page,
-        });
+            children,
+        }
+
+        tree.push(
+            {...treePageWithChildren}
+        );
     }
 
     return tree;
