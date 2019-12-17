@@ -500,13 +500,15 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }, 100);
 
-    const computeTree = () => {
+    const computeTree = (
+        tree: TreePage[],
+    ) => {
         console.log('tree', tree);
         const computedTree = computeSpaceTree(
             tree,
             stateConfiguration,
         );
-        // dispatchSetTree(computedTree);
+        dispatchSetTree(computedTree);
     }
 
     /** Keydown, Wheel Listeners */
@@ -584,7 +586,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     /** View Size Listener */
     useEffect(() => {
-        computeTree();
+        computeTree(tree);
     }, [
         viewSize,
     ]);
