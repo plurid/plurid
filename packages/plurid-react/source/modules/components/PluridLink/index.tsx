@@ -154,17 +154,44 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         }
     }
 
-    const hideLinkFromTree = () => {
+    const toggleLinkFromTree = () => {
         const updatedTree = togglePageFromTree(tree, pluridPlaneID);
         setTree(updatedTree);
         setShowLink(show => !show);
+    }
+
+    const updateTreeWithLinkCoordinates = () => {
+        const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
+
+        const linkCoordinates = getPluridLinkCoordinates();
+
+        console.log(parentPlaneID, linkCoordinates);
+
+        // const {
+        //     pluridPlaneID,
+        //     updatedTree,
+        // } = updateTreeWithNewPage(
+        //     tree,
+        //     parentPlaneID,
+        //     pagePath,
+        //     pathData.pageID,
+        //     linkCoordinates,
+        //     pathData.parameters,
+        // );
+
+        // if (pluridPlaneID) {
+        //     setTree(updatedTree);
+        //     setShowLink(true);
+        //     setPluridPlaneID(pluridPlaneID);
+        // }
+
     }
 
     const handleShowPluridPlane = () => {
         if (!showLink && !pluridPlaneID) {
             updateTreeWithLink();
         } else {
-            hideLinkFromTree();
+            toggleLinkFromTree();
         }
     }
 
@@ -197,7 +224,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
     useEffect(() => {
         if (showLink) {
-            updateTreeWithLink();
+            updateTreeWithLinkCoordinates();
             console.log(`link ${pluridPlaneID} has modified`);
         }
     }, [
