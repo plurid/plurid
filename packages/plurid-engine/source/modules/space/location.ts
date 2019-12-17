@@ -1,6 +1,9 @@
 import {
+    /** interfaces */
     TreePage,
     LocationCoordinates,
+    LinkCoordinates,
+    TopPlanePoint,
 } from '@plurid/plurid-data';
 
 import {
@@ -46,33 +49,31 @@ export const computePath = (
 }
 
 
-interface PlanePoint {
-    x: number,
-    z: number,
-}
-
 export const computePluridPlaneLocation = (
-    linkCoordinates: any,
+    linkCoordinates: LinkCoordinates,
     treePageParent: TreePage,
+    bridgeLength: number = 100,
+    linkPlaneAngle: number = 90,
 ): LocationCoordinates => {
-    const BRIDGE_LENGTH = 100;
-    const LINK_PLANE_ANGLE = 90;
-
+    /** Compute the coordinates of the link. */
     const parentAngleRadians = toRadians(treePageParent.location.rotateY);
-    const linkPoint: PlanePoint = {
+    const linkPoint: TopPlanePoint = {
         x: treePageParent.location.translateX + linkCoordinates.x * Math.cos(parentAngleRadians),
         z: treePageParent.location.translateZ - linkCoordinates.x * Math.sin(parentAngleRadians),
     };
 
-    const linkAngleRadians = toRadians(LINK_PLANE_ANGLE + treePageParent.location.rotateY);
-    const x = linkPoint.x + BRIDGE_LENGTH * Math.cos(linkAngleRadians);
-    const z = linkPoint.z - BRIDGE_LENGTH * Math.sin(linkAngleRadians);
+    /** Compute the coordinates of the plane. */
+    const linkAngleRadians = toRadians(linkPlaneAngle + treePageParent.location.rotateY);
+    const x = linkPoint.x + bridgeLength * Math.cos(linkAngleRadians);
+    const z = linkPoint.z - bridgeLength * Math.sin(linkAngleRadians);
 
     const y = treePageParent.location.translateY + linkCoordinates.y;
 
-    return {
+    const locationCoordinates: LocationCoordinates = {
         x,
         y,
         z,
     };
+
+    return locationCoordinates;
 }
