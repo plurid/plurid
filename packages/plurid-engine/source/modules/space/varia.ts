@@ -312,6 +312,30 @@ export const removePageFromTree = (
 }
 
 
+export const toggleChildren = (
+    children: TreePage[],
+): TreePage[] => {
+    const updatedChildren = children.map(child => {
+        if (child.children) {
+            const updatedChild = {
+                ...child,
+                show: !child.show,
+                children: toggleChildren(child.children),
+            }
+            return updatedChild;
+        }
+
+        const updatedChild: TreePage = {
+            ...child,
+            show: !child.show,
+        };
+        return updatedChild;
+    });
+
+    return updatedChildren;
+}
+
+
 export const togglePageFromTree = (
     tree: TreePage[],
     pluridPlaneID: string,
@@ -319,20 +343,28 @@ export const togglePageFromTree = (
     const updatedTree: TreePage[] = [];
 
     for (const page of tree) {
-        let toggled = false;
-
         if (page.planeID === pluridPlaneID) {
-            const _page = { ...page };
-            _page.show = !_page.show;
-            updatedTree.push(_page);
-            toggled = true;
-        } else if (page.children && !toggled) {
+            const updatedPage: TreePage = {
+                ...page,
+                show: !page.show,
+                children: [],
+                // TODO
+                // Instead of removing all the children to toggle them
+                // currently, issue with the plurid link creating new instances.
+                // children: page.children ? toggleChildren(page.children) : [],
+            };
+            updatedTree.push(updatedPage);
+            continue;
+        }
+
+        if (page.children) {
             const pageTree = togglePageFromTree(page.children, pluridPlaneID);
             page.children = [ ...pageTree ];
             updatedTree.push(page);
-        } else {
-            updatedTree.push(page);
+            continue;
         }
+
+        updatedTree.push(page);
     }
 
     return updatedTree;
