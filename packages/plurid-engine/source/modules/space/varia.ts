@@ -106,6 +106,7 @@ export const computeSpaceTree = (
                 const zigzagLayoutTree = computeZigZagLayout(
                     pages,
                     angle,
+                    configuration,
                 );
                 return zigzagLayoutTree;
             }
@@ -121,6 +122,7 @@ export const computeSpaceTree = (
                     angle,
                     gap,
                     middle,
+                    configuration,
                 );
                 return faceToFaceLayoutTree;
             }
@@ -136,6 +138,7 @@ export const computeSpaceTree = (
                     depth,
                     offsetX,
                     offsetY,
+                    configuration,
                 );
                 return sheavesLayoutTree;
             }

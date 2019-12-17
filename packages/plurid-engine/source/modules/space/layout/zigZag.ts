@@ -1,5 +1,8 @@
 import {
     TreePage,
+    PluridConfiguration,
+
+    defaultConfiguration,
 } from '@plurid/plurid-data';
 
 import computeColumnLayout from './column';
@@ -13,6 +16,7 @@ import {
 const computeZigZagLayout = (
     pages: TreePage[],
     angle: number = 45,
+    configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
