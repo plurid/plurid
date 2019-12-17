@@ -6,7 +6,7 @@ import computeColumnLayout from './column';
 
 import {
     recomputeChildrenLocation,
-} from '../varia';
+} from '../location';
 
 
 

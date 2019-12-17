@@ -77,3 +77,48 @@ export const computePluridPlaneLocation = (
 
     return locationCoordinates;
 }
+
+
+export const recomputeChildrenLocation = (
+    page: TreePage,
+): TreePage[] => {
+    if (!page.children) {
+        return [];
+    }
+
+    const updatedChildren: TreePage[] = [];
+
+    for (const child of page.children) {
+        if (child.linkCoordinates) {
+            const location = computePluridPlaneLocation(
+                child.linkCoordinates,
+                page,
+                child.bridgeLength,
+                child.planeAngle,
+            );
+
+            const updatedChild = {
+                ...child,
+                location: {
+                    ...child.location,
+                    translateX: location.x,
+                    translateY: location.y,
+                    translateZ: location.z,
+                },
+            };
+
+            const children = updatedChild.children
+                ? recomputeChildrenLocation(updatedChild)
+                : [];
+
+            const updatedChildWithChildren = {
+                ...updatedChild,
+                children,
+            };
+
+            updatedChildren.push(updatedChildWithChildren);
+        }
+    }
+
+    return updatedChildren;
+}
