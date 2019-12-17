@@ -37,6 +37,7 @@ import selectors from '../../services/state/selectors';
 import actions from '../../services/state/actions';
 import {
     ViewSize,
+    UpdateSpaceLinkCoordinatesPayload,
 } from '../../services/state/modules/space/types';
 
 
@@ -54,6 +55,7 @@ interface PluridLinkStateProperties {
 
 interface PluridLinkDispatchProperties {
     setTree: typeof actions.space.setTree;
+    dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
 }
 
 type PluridLinkProperties = PluridLinkOwnProperties
@@ -87,6 +89,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
         /** dispatch */
         setTree,
+        dispatchUpdateSpaceLinkCoordinates,
     } = properties;
 
     const planeControls = configuration.elements.plane.controls.show;
@@ -102,17 +105,17 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         const x = linkElement.current!.offsetLeft + linkElement.current!.offsetWidth;
         const y = linkElement.current!.offsetTop + planeControlsHeight;
 
-        return {
+        const pluridLinkCoordinates: PluridLinkCoordinates = {
             x,
             y,
         };
+        return pluridLinkCoordinates;
     }
 
     const updateTreeWithLink = () => {
         const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
 
         const linkCoordinates = getPluridLinkCoordinates();
-        console.log(linkCoordinates, pluridPlaneID);
 
         const searchDocumentID = document ? document : activeDocumentID;
         const activeDocument = documents[searchDocumentID];
@@ -162,10 +165,14 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
     }
 
     const updateLinkCoordinates = () => {
-        // given the pluridPlaneID update the coordinates
         const linkCoordinates = getPluridLinkCoordinates();
-
         console.log(linkCoordinates, pluridPlaneID);
+
+        const payload: UpdateSpaceLinkCoordinatesPayload = {
+            planeID: pluridPlaneID,
+            linkCoordinates,
+        };
+        dispatchUpdateSpaceLinkCoordinates(payload);
     }
 
     const handleShowPluridPlane = () => {
@@ -206,7 +213,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
     useEffect(() => {
         if (showLink) {
             updateLinkCoordinates();
-            console.log(`link ${pluridPlaneID} has modified`);
         }
     }, [
         viewSize,
@@ -240,6 +246,12 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridLinkDispatchProperties => ({
     setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
+
+    dispatchUpdateSpaceLinkCoordinates: (
+        payload: UpdateSpaceLinkCoordinatesPayload,
+    ) => dispatch(
+        actions.space.updateSpaceLinkCoordinates(payload)
+    ),
 });
 
 
