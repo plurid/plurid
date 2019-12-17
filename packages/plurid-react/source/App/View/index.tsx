@@ -484,6 +484,22 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }
 
+    const centerSpaceSize = useDebouncedCallback((
+        spaceSize: any,
+    ) => {
+        const x = - spaceSize.width / 2 + window.innerWidth / 2;
+        const y = - spaceSize.height / 2 + window.innerHeight / 2;
+
+        if (!initialized) {
+            dispatchSetAnimatedTransform(true);
+            translateXWith(x);
+            translateYWith(y);
+            setTimeout(() => {
+                dispatchSetAnimatedTransform(false);
+            }, 450);
+        }
+    }, 100);
+
     /** Keydown, Wheel Listeners */
     useEffect(() => {
         if (viewElement.current) {
@@ -747,26 +763,12 @@ const View: React.FC<ViewProperties> = (properties) => {
         stateConfiguration.space.transformTouch,
     ]);
 
-    const setSpaceSize = useDebouncedCallback((spaceSize: any) => {
-        dispatchSetAnimatedTransform(true);
-
-        const x = - spaceSize.width / 2 + window.innerWidth / 2;
-        translateXWith(x);
-
-        const y = - spaceSize.height / 2 + window.innerHeight / 2;
-        translateYWith(y);
-
-        setTimeout(() => {
-            dispatchSetAnimatedTransform(false);
-        }, 450);
-    }, 100);
-
     /** Tree Effect */
     useEffect(() => {
         const spaceSize = computeSpaceSize(tree);
 
         dispatchSetSpaceSize(spaceSize);
-        setSpaceSize(spaceSize);
+        // centerSpaceSize(spaceSize);
     }, [
         tree,
     ]);
