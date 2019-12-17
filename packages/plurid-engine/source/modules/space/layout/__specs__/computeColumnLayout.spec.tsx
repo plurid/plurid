@@ -98,7 +98,7 @@ describe('computeColumnLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 65,
+                    translateX: 650,
                     translateY: 0,
                     translateZ: 0,
                 },
