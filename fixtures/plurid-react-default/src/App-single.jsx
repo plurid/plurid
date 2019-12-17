@@ -34,7 +34,7 @@ const App = () => {
             //     show: false,
             //     size: 'large',
             // },
-            // center: true,
+            center: true,
             // opaque: false,
         },
         elements: {
