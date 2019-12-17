@@ -33,7 +33,7 @@ export const defaultConfiguration: PluridConfiguration = {
             buttons: true,
         },
         plane: {
-            width: 1,
+            width: 0.5,
             opacity: 1,
             controls: {
                 show: true,
