@@ -383,3 +383,45 @@ export const computeSpaceSize = (
         topCorner,
     };
 }
+
+
+export const recomputeChildrenLocation = (
+    page: TreePage,
+): TreePage[] => {
+    if (!page.children) {
+        return [];
+    }
+
+    const updatedChildren: TreePage[] = [];
+
+    for (const child of page.children) {
+        if (child.linkCoordinates) {
+            const location = computePluridPlaneLocation(
+                child.linkCoordinates,
+                page,
+                child.bridgeLength,
+                child.planeAngle,
+            );
+
+            const children = child.children
+                ? recomputeChildrenLocation(child)
+                : [];
+
+            const updatedChild = {
+                ...child,
+                location: {
+                    ...child.location,
+                    translateX: location.x,
+                    translateY: location.y,
+                    translateZ: location.z,
+                },
+                children,
+            };
+
+            updatedChildren.push(updatedChild);
+        }
+    }
+
+
+    return updatedChildren;
+}
