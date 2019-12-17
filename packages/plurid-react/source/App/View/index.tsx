@@ -677,6 +677,13 @@ const View: React.FC<ViewProperties> = (properties) => {
         configuration,
     ]);
 
+    /** State Configuration Layout */
+    useEffect(() => {
+        computeTree(tree);
+    }, [
+        stateConfiguration.space.layout,
+    ]);
+
     /** PubSub Subscription */
     useEffect(() => {
         if (pubsub) {
