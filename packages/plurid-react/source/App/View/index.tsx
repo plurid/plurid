@@ -501,11 +501,12 @@ const View: React.FC<ViewProperties> = (properties) => {
     }, 100);
 
     const computeTree = () => {
+        console.log('tree', tree);
         const computedTree = computeSpaceTree(
             tree,
             stateConfiguration,
         );
-        dispatchSetTree(computedTree);
+        // dispatchSetTree(computedTree);
     }
 
     /** Keydown, Wheel Listeners */

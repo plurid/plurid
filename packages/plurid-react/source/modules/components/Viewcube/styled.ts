@@ -28,6 +28,7 @@ export const StyledViewcube: any = styled.div`
     user-select: none;
     transition: all 300ms ease-in-out;
     z-index: 9998;
+    height: 165px;
     display: grid;
     grid-template-areas: "pluridViewcubeScale           pluridViewcubeScale         pluridViewcubeScale          pluridViewcubeScale"
                          "pluridViewcubeEmptyOne        pluridViewcubeRotateUp      pluridViewcubeEmptyTwo       pluridViewcubeTranslateY"
