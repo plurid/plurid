@@ -68,7 +68,7 @@ const App = () => {
                 element: Page2,
                 properties: {},
             },
-            // root: true,
+            root: true,
         },
         {
             path: '/page-3',

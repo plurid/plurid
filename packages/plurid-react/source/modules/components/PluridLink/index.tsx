@@ -112,7 +112,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
 
         const linkCoordinates = getPluridLinkCoordinates();
-        console.log(parentPlaneID, linkCoordinates);
 
         const searchDocumentID = document ? document : activeDocumentID;
         const activeDocument = documents[searchDocumentID];
@@ -161,31 +160,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         setShowLink(show => !show);
     }
 
-    const updateTreeWithLinkCoordinates = () => {
-        const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
-
+    const updateLinkCoordinates = () => {
+        // given the pluridPlaneID update the coordinates
         const linkCoordinates = getPluridLinkCoordinates();
 
-        console.log(parentPlaneID, linkCoordinates);
-
-        // const {
-        //     pluridPlaneID,
-        //     updatedTree,
-        // } = updateTreeWithNewPage(
-        //     tree,
-        //     parentPlaneID,
-        //     pagePath,
-        //     pathData.pageID,
-        //     linkCoordinates,
-        //     pathData.parameters,
-        // );
-
-        // if (pluridPlaneID) {
-        //     setTree(updatedTree);
-        //     setShowLink(true);
-        //     setPluridPlaneID(pluridPlaneID);
-        // }
-
+        console.log(linkCoordinates, pluridPlaneID);
     }
 
     const handleShowPluridPlane = () => {
@@ -225,7 +204,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
     useEffect(() => {
         if (showLink) {
-            updateTreeWithLinkCoordinates();
+            updateLinkCoordinates();
             console.log(`link ${pluridPlaneID} has modified`);
         }
     }, [
