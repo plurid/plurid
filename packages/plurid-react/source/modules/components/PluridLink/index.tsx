@@ -35,6 +35,9 @@ import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
 import selectors from '../../services/state/selectors';
 import actions from '../../services/state/actions';
+import {
+    ViewSize,
+} from '../../services/state/modules/space/types';
 
 
 
@@ -46,6 +49,7 @@ interface PluridLinkStateProperties {
     activeDocumentID: string;
     documents: Indexed<PluridInternalStateDocument>;
     configuration: PluridConfiguration,
+    viewSize: ViewSize,
 }
 
 interface PluridLinkDispatchProperties {
@@ -62,10 +66,7 @@ interface PluridLinkCoordinates {
 }
 
 const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (properties) => {
-    const [showLink, setShowLink] = useState(false);
-    const [pluridPlaneID, setPluridPlaneID] = useState('');
-
-    const element: React.RefObject<HTMLAnchorElement> = useRef(null);
+    const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
 
     const {
         /** own */
@@ -82,6 +83,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         activeDocumentID,
         documents,
         configuration,
+        viewSize,
 
         /** dispatch */
         setTree,
@@ -89,9 +91,97 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
     const planeControls = configuration.elements.plane.controls.show;
 
+    const [showLink, setShowLink] = useState(false);
+    const [pluridPlaneID, setPluridPlaneID] = useState('');
+
     const [suffix, setSuffix] = useState(DEFAULT_SUFIX);
     const [devisible, setDevisible] = useState(false);
 
+    const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
+        const planeControlsHeight = planeControls ? 56 : 0;
+        const x = linkElement.current!.offsetLeft + linkElement.current!.offsetWidth;
+        const y = linkElement.current!.offsetTop + planeControlsHeight;
+
+        return {
+            x,
+            y,
+        };
+    }
+
+    const updateTreeWithLink = () => {
+        const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
+
+        const linkCoordinates = getPluridLinkCoordinates();
+
+        const searchDocumentID = document ? document : activeDocumentID;
+        const activeDocument = documents[searchDocumentID];
+
+        const {
+            paths,
+        } = activeDocument;
+
+        let pathData = null;
+        for (const pathValue of Object.values(paths)) {
+            const re = new RegExp(pathValue.regex);
+            const match = pagePath.match(re);
+
+            if (match) {
+                pathData = {...pathValue};
+                break;
+            }
+        }
+
+        if (pathData) {
+            // console.log(pathData);
+
+            const {
+                pluridPlaneID,
+                updatedTree,
+            } = updateTreeWithNewPage(
+                tree,
+                parentPlaneID,
+                pagePath,
+                pathData.pageID,
+                linkCoordinates,
+                pathData.parameters,
+            );
+
+            if (pluridPlaneID) {
+                setTree(updatedTree);
+                setShowLink(true);
+                setPluridPlaneID(pluridPlaneID);
+            }
+        }
+    }
+
+    const hideLinkFromTree = () => {
+        const updatedTree = togglePageFromTree(tree, pluridPlaneID);
+        setTree(updatedTree);
+        setShowLink(show => !show);
+    }
+
+    const handleShowPluridPlane = () => {
+        if (!showLink && !pluridPlaneID) {
+            updateTreeWithLink();
+        } else {
+            hideLinkFromTree();
+        }
+    }
+
+    const handleClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault();
+
+        if (atClick !== undefined) {
+            atClick(event);
+        }
+
+        handleShowPluridPlane();
+    }, [
+        linkElement.current,
+        tree,
+    ]);
+
+    /** Set Default suffix, devisible */
     useEffect(() => {
         if (_suffix !== undefined) {
             setSuffix(_suffix);
@@ -105,85 +195,18 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         _devisible,
     ]);
 
-    const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
-        const planeControlsHeight = planeControls ? 56 : 0;
-        const x = element.current!.offsetLeft + element.current!.offsetWidth;
-        const y = element.current!.offsetTop + planeControlsHeight;
-
-        return {
-            x,
-            y,
-        };
-    }
-
-    const handleShowPluridPlane = () => {
-        if (!showLink && !pluridPlaneID) {
-            const parentPlaneID = getPluridPlaneIDByData(element.current);
-
-            const linkCoordinates = getPluridLinkCoordinates();
-
-            const searchDocumentID = document ? document : activeDocumentID;
-            const activeDocument = documents[searchDocumentID];
-
-            const {
-                paths,
-            } = activeDocument;
-
-            let pathData = null;
-            for (const pathValue of Object.values(paths)) {
-                const re = new RegExp(pathValue.regex);
-                const match = pagePath.match(re);
-
-                if (match) {
-                    pathData = {...pathValue};
-                    break;
-                }
-            }
-
-            if (pathData) {
-                // console.log(pathData);
-
-                const {
-                    pluridPlaneID,
-                    updatedTree,
-                } = updateTreeWithNewPage(
-                    tree,
-                    parentPlaneID,
-                    pagePath,
-                    pathData.pageID,
-                    linkCoordinates,
-                    pathData.parameters,
-                );
-
-                if (pluridPlaneID) {
-                    setTree(updatedTree);
-                    setShowLink(true);
-                    setPluridPlaneID(pluridPlaneID);
-                }
-            }
-        } else {
-            const updatedTree = togglePageFromTree(tree, pluridPlaneID);
-            setTree(updatedTree);
-            setShowLink(show => !show);
+    useEffect(() => {
+        if (showLink) {
+            updateTreeWithLink();
+            console.log(`link ${pluridPlaneID} has modified`);
         }
-    }
-
-    const handleClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
-        event.preventDefault();
-
-        if (atClick !== undefined) {
-            atClick(event);
-        }
-
-        handleShowPluridPlane();
     }, [
-        element.current,
-        tree,
+        viewSize,
     ]);
 
     return (
         <StyledPluridLink
-            ref={element}
+            ref={linkElement}
             onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
             theme={generalTheme}
             suffix={suffix}
@@ -203,6 +226,7 @@ const mapStateToProps = (
     activeDocumentID: selectors.space.getActiveDocumentID(state),
     documents: selectors.data.getDocuments(state),
     configuration: selectors.configuration.getConfiguration(state),
+    viewSize: selectors.space.getViewSize(state),
 });
 
 

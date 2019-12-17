@@ -15,16 +15,16 @@ const App = () => {
         // micro: true,
         theme: 'plurid',
         space: {
-            layout: {
-                type: SPACE_LAYOUT.COLUMNS,
-                columns: 3,
-            },
             // layout: {
-            //     type: SPACE_LAYOUT.FACE_TO_FACE,
-            //     angle: 30,
-            //     gap: 50,
-            //     middle: 1,
+            //     type: SPACE_LAYOUT.COLUMNS,
+            //     columns: 3,
             // },
+            layout: {
+                type: SPACE_LAYOUT.FACE_TO_FACE,
+                angle: 30,
+                gap: 50,
+                middle: 1,
+            },
             // layout: {
             //     type: 'ZIG_ZAG',
             //     angle: 50,
