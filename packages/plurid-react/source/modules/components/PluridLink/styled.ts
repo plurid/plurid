@@ -10,7 +10,7 @@ export const StyledPluridLink: any = styled.a`
 
     cursor: pointer;
     color: ${(props: any) => {
-        return props.theme.colorSecondary;
+        return props.theme.colorTertiary;
     }};
 
     :hover {
