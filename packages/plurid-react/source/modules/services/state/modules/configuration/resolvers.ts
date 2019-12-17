@@ -1,5 +1,12 @@
 import {
     TRANSFORM_MODES,
+
+    LAYOUT_TYPES,
+    LayoutColumns,
+    LayoutFaceToFace,
+    LayoutZigZag,
+    LayoutMeta,
+    LayoutSheaves,
 } from '@plurid/plurid-data';
 
 import {
@@ -23,6 +30,7 @@ import {
     SetConfigurationSpaceTransformTouchAction,
 
     SetConfigurationSpaceTransformLocksAction,
+    SetConfigurationSpaceLayoutTypeAction,
 } from './types';
 
 
@@ -413,6 +421,28 @@ export const setConfigurationSpaceTransformLocks = (
     newState.space.transformLocks = {
         ...updatedTransformLocks,
     };
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const setConfigurationSpaceLayout = (
+    state: ConfigurationState,
+    action: SetConfigurationSpaceLayoutTypeAction,
+): ConfigurationState => {
+    const newState = {
+        ...state,
+    };
+
+    const layout: any = {
+        type: LAYOUT_TYPES[action.payload],
+    }
+
+    newState.space.layout = {
+        ...layout,
+    }
 
     return {
         ...newState,

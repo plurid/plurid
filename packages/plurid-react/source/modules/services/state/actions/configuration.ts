@@ -26,6 +26,7 @@ import {
 
     toggleConfigurationSpaceFirstPerson,
     setConfigurationSpaceTransformLocks,
+    setConfigurationSpaceLayoutType,
 } from '../modules/configuration/actions';
 
 
@@ -58,4 +59,5 @@ export default {
 
     toggleConfigurationSpaceFirstPerson,
     setConfigurationSpaceTransformLocks,
+    setConfigurationSpaceLayoutType,
 };
