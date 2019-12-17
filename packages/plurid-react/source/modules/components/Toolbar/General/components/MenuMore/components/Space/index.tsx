@@ -45,6 +45,7 @@ interface MenuMoreSpaceDispatchProperties {
 
     dispatchToggleConfigurationSpaceShowTransformOrigin: typeof actions.configuration.toggleConfigurationSpaceShowTransformOrigin;
     dispatchSetConfigurationSpaceTransformOriginSize: typeof actions.configuration.setConfigurationSpaceTransformOriginSize;
+    dispatchSetConfigurationSpaceLayoutType: typeof actions.configuration.setConfigurationSpaceLayoutType;
 }
 
 type MenuMoreSpaceProperties = MenuMoreSpaceOwnProperties
@@ -62,12 +63,12 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
 
         dispatchToggleConfigurationSpaceShowTransformOrigin,
         dispatchSetConfigurationSpaceTransformOriginSize,
+        dispatchSetConfigurationSpaceLayoutType,
     } = properties;
 
     const layout = configuration.space.layout;
 
     const layoutType = layoutNames[layout.type];
-    console.log(layoutType);
 
     const planeOpacity = configuration.elements.plane.opacity;
 
@@ -139,6 +140,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
                     atSelect={(selection: any) => {
                         const selected = selection.toUpperCase().replace(' ', '_');
                         console.log(selected);
+                        dispatchSetConfigurationSpaceLayoutType(selected);
                     }}
                     heightItems={3}
                     theme={interactionTheme}
@@ -168,8 +170,15 @@ const mapDispatchToProps = (
     dispatchToggleConfigurationSpaceShowTransformOrigin: () => dispatch(
         actions.configuration.toggleConfigurationSpaceShowTransformOrigin()
     ),
-    dispatchSetConfigurationSpaceTransformOriginSize: (size: keyof typeof SIZES) => dispatch(
+    dispatchSetConfigurationSpaceTransformOriginSize: (
+        size: keyof typeof SIZES,
+    ) => dispatch(
         actions.configuration.setConfigurationSpaceTransformOriginSize(size)
+    ),
+    dispatchSetConfigurationSpaceLayoutType: (
+        layoutType: keyof typeof LAYOUT_TYPES,
+    ) => dispatch(
+        actions.configuration.setConfigurationSpaceLayoutType(layoutType),
     ),
 });
 

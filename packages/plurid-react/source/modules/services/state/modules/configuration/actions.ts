@@ -5,6 +5,7 @@ import {
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
     TOOLBAR_DRAWERS,
+    LAYOUT_TYPES,
 } from '@plurid/plurid-data';
 
 import {
@@ -59,6 +60,9 @@ import {
 
     SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS,
     SetConfigurationSpaceTransformLocksAction,
+
+    SET_CONFIGURATION_SPACE_LAYOUT_TYPE,
+    SetConfigurationSpaceLayoutTypeAction,
 } from './types';
 
 
@@ -243,5 +247,15 @@ export const setConfigurationSpaceTransformLocks = (
     return {
         type: SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS,
         payload: transformLock,
+    };
+}
+
+
+export const setConfigurationSpaceLayoutType = (
+    layoutType: keyof typeof LAYOUT_TYPES,
+): SetConfigurationSpaceLayoutTypeAction => {
+    return {
+        type: SET_CONFIGURATION_SPACE_LAYOUT_TYPE,
+        payload: layoutType,
     };
 }

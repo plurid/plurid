@@ -5,6 +5,7 @@ import {
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
     TOOLBAR_DRAWERS,
+    LAYOUT_TYPES,
 } from '@plurid/plurid-data';
 
 
@@ -148,6 +149,13 @@ export interface SetConfigurationSpaceTransformLocksAction {
 }
 
 
+export const SET_CONFIGURATION_SPACE_LAYOUT_TYPE = 'SET_CONFIGURATION_SPACE_LAYOUT_TYPE';
+export interface SetConfigurationSpaceLayoutTypeAction {
+    type: typeof SET_CONFIGURATION_SPACE_LAYOUT_TYPE;
+    payload: keyof typeof LAYOUT_TYPES;
+}
+
+
 export interface ConfigurationState extends PluridConfiguration {
 }
 
@@ -177,4 +185,5 @@ export type ConfigurationActionsType = SetConfigurationAction
     | SetConfigurationSpaceTransformModeAction
     | SetConfigurationSpaceTransformTouchAction
     | ToggleConfigurationSpaceFirstPersonAction
-    | SetConfigurationSpaceTransformLocksAction;
+    | SetConfigurationSpaceTransformLocksAction
+    | SetConfigurationSpaceLayoutTypeAction;

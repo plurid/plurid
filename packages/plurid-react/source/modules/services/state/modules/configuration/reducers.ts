@@ -30,6 +30,7 @@ import {
 
     TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
     SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS,
+    SET_CONFIGURATION_SPACE_LAYOUT_TYPE,
 
     ConfigurationState,
     ConfigurationActionsType,
@@ -62,6 +63,7 @@ import {
 
     toggleConfigurationSpaceFirstPerson,
     setConfigurationSpaceTransformLocks,
+    setConfigurationSpaceLayout,
 } from './resolvers';
 
 
@@ -122,6 +124,8 @@ const configurationReducer = (
             return toggleConfigurationSpaceFirstPerson(state);
         case SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS:
             return setConfigurationSpaceTransformLocks(state, action);
+        case SET_CONFIGURATION_SPACE_LAYOUT_TYPE:
+            return setConfigurationSpaceLayout(state, action);
         default:
             return {
                 ...state,
