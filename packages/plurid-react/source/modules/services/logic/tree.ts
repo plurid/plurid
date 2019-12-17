@@ -2,6 +2,7 @@ import {
     PluridInternalContextPage,
     PluridInternalStatePage,
     TreePage,
+    LinkCoordinates,
 } from '@plurid/plurid-data';
 
 import {
@@ -49,6 +50,44 @@ export const updateTreePage = (
                 ...treePage,
                 children: updateTreePage(treePage.children, page),
             };
+        }
+
+        return treePage;
+    });
+
+    return updatedTree;
+}
+
+
+
+export const updateTreeByPlaneIDWithLinkCoordinates = (
+    tree: TreePage[],
+    planeID: string,
+    linkCoordinates: LinkCoordinates,
+): TreePage[] => {
+    const updatedTree = tree.map(treePage => {
+        if (treePage.planeID === planeID) {
+            const updatedPage = {
+                ...treePage,
+                linkCoordinates,
+            };
+
+            return updatedPage;
+        }
+
+        if (treePage.children) {
+            const updatedChildren = updateTreeByPlaneIDWithLinkCoordinates(
+                treePage.children,
+                planeID,
+                linkCoordinates,
+            );
+
+            const updatedPage = {
+                ...treePage,
+                children: updatedChildren,
+            };
+
+            return updatedPage;
         }
 
         return treePage;
