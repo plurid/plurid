@@ -12,7 +12,7 @@ import {
 
 import {
     recomputeChildrenLocation,
-} from '../varia';
+} from '../location';
 
 
 
