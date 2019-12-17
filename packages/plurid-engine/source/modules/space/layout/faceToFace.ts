@@ -1,5 +1,8 @@
 import {
     TreePage,
+    PluridConfiguration,
+
+    defaultConfiguration,
 } from '@plurid/plurid-data';
 
 import {
@@ -69,9 +72,12 @@ const computeFaceToFaceLayout = (
     angle: number = 45,
     gap: number = 0,
     middle: number = 0,
+    configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {
     const tree: TreePage[] = [];
-    const width = window.innerWidth;
+    const width = Number.isInteger(configuration.elements.plane.width)
+        ? configuration.elements.plane.width
+        : configuration.elements.plane.width * window.innerWidth;
     const height = window.innerHeight;
     const planeAngle = 90 - angle / 2;
     const columns = 2 + middle;

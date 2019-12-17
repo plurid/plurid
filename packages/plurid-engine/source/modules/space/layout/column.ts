@@ -19,7 +19,9 @@ const computeColumnLayout = (
     configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {
     const tree: TreePage[] = [];
-    const width = configuration.elements.plane.width * window.innerWidth;
+    const width = Number.isInteger(configuration.elements.plane.width)
+        ? configuration.elements.plane.width
+        : configuration.elements.plane.width * window.innerWidth;
     const height = window.innerHeight;
     const gapValue = Number.isInteger(gap)
         ? gap

@@ -1,5 +1,8 @@
 import {
     TreePage,
+    PluridConfiguration,
+
+    defaultConfiguration,
 } from '@plurid/plurid-data';
 
 import {
@@ -13,10 +16,13 @@ const computeSheavesLayout = (
     depth: number = 0.3,
     offsetX: number = 0,
     offsetY: number = 0,
+    configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
-    const width = window.innerWidth;
+    const width = Number.isInteger(configuration.elements.plane.width)
+        ? configuration.elements.plane.width
+        : configuration.elements.plane.width * window.innerWidth;
     const height = window.innerHeight;
 
     for (const [index, page] of roots.entries()) {
