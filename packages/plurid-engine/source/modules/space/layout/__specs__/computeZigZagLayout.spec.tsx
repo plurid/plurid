@@ -36,6 +36,7 @@ describe.only('computeZigZagLayout', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -51,6 +52,7 @@ describe.only('computeZigZagLayout', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '3',
@@ -66,6 +68,7 @@ describe.only('computeZigZagLayout', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 
@@ -84,6 +87,7 @@ describe.only('computeZigZagLayout', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -99,6 +103,7 @@ describe.only('computeZigZagLayout', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '3',
@@ -114,6 +119,7 @@ describe.only('computeZigZagLayout', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 

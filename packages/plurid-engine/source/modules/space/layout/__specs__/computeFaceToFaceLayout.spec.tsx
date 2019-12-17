@@ -36,6 +36,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -51,6 +52,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 
@@ -69,6 +71,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -84,6 +87,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 
@@ -116,6 +120,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -131,6 +136,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '3',
@@ -146,6 +152,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '4',
@@ -161,6 +168,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-4',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '5',
@@ -176,6 +184,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-5',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 
@@ -194,6 +203,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-1',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '2',
@@ -209,6 +219,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '3',
@@ -224,6 +235,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '4',
@@ -239,6 +251,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-4',
                 planeID: '',
                 show: true,
+                children: [],
             },
             {
                 pageID: '5',
@@ -254,6 +267,7 @@ xdescribe('computeColumnLayout', () => {
                 path: '/page-5',
                 planeID: '',
                 show: true,
+                children: [],
             },
         ];
 
