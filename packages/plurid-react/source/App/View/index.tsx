@@ -551,6 +551,7 @@ const View: React.FC<ViewProperties> = (properties) => {
     /** Resize Listener */
     useEffect(() => {
         const handleResize = debounce(() => {
+            console.log('handleResize')
             if (viewElement && viewElement.current) {
                 const width = viewElement.current.offsetWidth;
                 const height = viewElement.current.offsetHeight;
