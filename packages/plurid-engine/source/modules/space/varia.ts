@@ -94,6 +94,7 @@ export const computeSpaceTree = (
                     pages,
                     columns,
                     gap,
+                    configuration,
                 );
                 return columnLayoutTree;
             }
@@ -102,7 +103,10 @@ export const computeSpaceTree = (
                 const {
                     angle,
                 } = configuration.space.layout;
-                const zigzagLayoutTree = computeZigZagLayout(pages, angle);
+                const zigzagLayoutTree = computeZigZagLayout(
+                    pages,
+                    angle,
+                );
                 return zigzagLayoutTree;
             }
         case LAYOUT_TYPES.FACE_TO_FACE:

@@ -1,7 +1,9 @@
 import {
+    PluridConfiguration,
     TreePage,
 
     ROOTS_GAP,
+    defaultConfiguration,
 } from '@plurid/plurid-data';
 
 import {
@@ -14,9 +16,10 @@ const computeColumnLayout = (
     roots: TreePage[],
     columns: number = 2,
     gap: number = ROOTS_GAP,
+    configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {
     const tree: TreePage[] = [];
-    const width = window.innerWidth;
+    const width = configuration.elements.plane.width * window.innerWidth;
     const height = window.innerHeight;
     const gapValue = Number.isInteger(gap)
         ? gap

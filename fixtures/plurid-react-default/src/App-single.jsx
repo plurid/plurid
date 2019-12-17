@@ -44,7 +44,7 @@ const App = () => {
             //     show: false,
             // },
             plane: {
-                // width: 0.5,
+                width: 0.5,
                 // opacity: 0,
                 // controls: {
                 //     show: false,
