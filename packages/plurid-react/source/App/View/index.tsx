@@ -500,6 +500,14 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }, 100);
 
+    const computeTree = () => {
+        const computedTree = computeSpaceTree(
+            tree,
+            stateConfiguration,
+        );
+        dispatchSetTree(computedTree);
+    }
+
     /** Keydown, Wheel Listeners */
     useEffect(() => {
         if (viewElement.current) {
@@ -547,12 +555,6 @@ const View: React.FC<ViewProperties> = (properties) => {
                     width,
                     height,
                 });
-
-                const recomputedTree = computeSpaceTree(
-                    tree,
-                    stateConfiguration,
-                );
-                dispatchSetTree(recomputedTree);
             }
         }, 150);
 
@@ -561,8 +563,29 @@ const View: React.FC<ViewProperties> = (properties) => {
         return () => {
             window.removeEventListener('resize', handleResize);
         }
+    }, []);
+
+    /** Set View Size */
+    useEffect(() => {
+        if (viewElement && viewElement.current) {
+            const width = viewElement.current.offsetWidth;
+            const height = viewElement.current.offsetHeight;
+            if (width && height) {
+                dispatchSetViewSize({
+                    height: viewElement.current.offsetHeight,
+                    width: viewElement.current.offsetWidth,
+                });
+            }
+        }
     }, [
-        tree,
+        viewElement.current,
+    ]);
+
+    /** View Size Listener */
+    useEffect(() => {
+        computeTree();
+    }, [
+        viewSize,
     ]);
 
     /** Pages, Documents */
@@ -636,22 +659,6 @@ const View: React.FC<ViewProperties> = (properties) => {
     }, [
         pages,
         documents,
-    ]);
-
-    /** View Size */
-    useEffect(() => {
-        if (viewElement && viewElement.current) {
-            const width = viewElement.current.offsetWidth;
-            const height = viewElement.current.offsetHeight;
-            if (width && height) {
-                dispatchSetViewSize({
-                    height: viewElement.current.offsetHeight,
-                    width: viewElement.current.offsetWidth,
-                });
-            }
-        }
-    }, [
-        viewElement.current,
     ]);
 
     /** Configuration */
@@ -763,7 +770,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         stateConfiguration.space.transformTouch,
     ]);
 
-    /** Tree Effect */
+    /** Space Size */
     useEffect(() => {
         const spaceSize = computeSpaceSize(tree);
 
