@@ -8,10 +8,11 @@ export interface TreePage {
     height: number;
     width: number;
     location: TreePageLocation;
-    children?: TreePage[];
     show: boolean;
+    children?: TreePage[];
     bridgeLength?: number;
     planeAngle?: number;
+    linkCoordinates?: LinkCoordinates;
 }
 
 
@@ -47,5 +48,17 @@ export interface SpaceLocation {
 export interface LocationCoordinates {
     x: number;
     y: number;
+    z: number;
+}
+
+
+export interface LinkCoordinates {
+    x: number;
+    y: number;
+}
+
+
+export interface TopPlanePoint {
+    x: number;
     z: number;
 }
