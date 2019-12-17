@@ -138,8 +138,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
                     selectables={[...Object.values(layoutNames)]}
                     selected={layoutType}
                     atSelect={(selection: any) => {
-                        const selected = selection.toUpperCase().replace(' ', '_');
-                        console.log(selected);
+                        const selected = selection.toUpperCase().replace(/\s/g, '_');
                         dispatchSetConfigurationSpaceLayoutType(selected);
                     }}
                     heightItems={3}
