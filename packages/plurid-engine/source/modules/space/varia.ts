@@ -341,30 +341,30 @@ export const computeSpaceSize = (
         z: 0,
     };
 
-    console.log('tree', tree);
+    // console.log('tree', tree);
     tree.map(treePage => {
-        console.log('treePage', treePage);
+        // console.log('treePage', treePage);
 
         const spaceWidth = treePage.location.translateX + treePage.width;
-        console.log('spaceWidth', spaceWidth);
+        // console.log('spaceWidth', spaceWidth);
         if (spaceWidth > width) {
             width = spaceWidth;
         }
 
         const spaceHeight = treePage.location.translateY + treePage.height;
-        console.log('spaceHeight', spaceHeight);
+        // console.log('spaceHeight', spaceHeight);
         if (spaceHeight > height) {
             height = spaceHeight;
         }
 
         const spaceDepth = treePage.location.translateZ;
-        console.log('spaceDepth', spaceDepth);
+        // console.log('spaceDepth', spaceDepth);
         if (spaceDepth > depth) {
             depth = spaceDepth;
         }
     });
 
-    console.log('-------------');
+    // console.log('-------------');
 
     return {
         width,
