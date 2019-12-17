@@ -1,6 +1,7 @@
 import {
     TreePage,
     SpaceLocation,
+    LinkCoordinates,
 } from '@plurid/plurid-data';
 
 
@@ -253,6 +254,17 @@ export interface UpdateSpaceTreePageAction {
 }
 
 
+export interface UpdateSpaceLinkCoordinatesPayload {
+    planeID: string;
+    linkCoordinates: LinkCoordinates;
+}
+export const UPDATE_SPACE_LINK_COORDINATES = 'UPDATE_SPACE_LINK_COORDINATES';
+export interface UpdateSpaceLinkCoordinatesAction {
+    type: typeof UPDATE_SPACE_LINK_COORDINATES;
+    payload: UpdateSpaceLinkCoordinatesPayload;
+}
+
+
 
 export interface SpaceState {
     loading: boolean;
@@ -316,4 +328,5 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | SpaceResetTransformAction
     | SetViewSizeAction
     | SetSpaceSizeAction
-    | UpdateSpaceTreePageAction;
+    | UpdateSpaceTreePageAction
+    | UpdateSpaceLinkCoordinatesAction;

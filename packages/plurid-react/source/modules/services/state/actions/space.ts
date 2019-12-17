@@ -50,6 +50,8 @@ import {
     setSpaceSize,
 
     updateSpaceTreePage,
+
+    updateSpaceLinkCoordinates,
 } from '../modules/space/actions';
 
 
@@ -105,5 +107,7 @@ export default {
     setViewSize,
     setSpaceSize,
 
-    updateSpaceTreePage
+    updateSpaceTreePage,
+
+    updateSpaceLinkCoordinates,
 };

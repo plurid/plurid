@@ -97,6 +97,10 @@ import {
 
     UPDATE_SPACE_TREE_PAGE,
     UpdateSpaceTreePageAction,
+
+    UPDATE_SPACE_LINK_COORDINATES,
+    UpdateSpaceLinkCoordinatesAction,
+    UpdateSpaceLinkCoordinatesPayload,
 } from './types'
 
 
@@ -372,6 +376,16 @@ export const updateSpaceTreePage = (
 ): UpdateSpaceTreePageAction => {
     return {
         type: UPDATE_SPACE_TREE_PAGE,
+        payload,
+    };
+}
+
+
+export const updateSpaceLinkCoordinates = (
+    payload: UpdateSpaceLinkCoordinatesPayload,
+): UpdateSpaceLinkCoordinatesAction => {
+    return {
+        type: UPDATE_SPACE_LINK_COORDINATES,
         payload,
     };
 }

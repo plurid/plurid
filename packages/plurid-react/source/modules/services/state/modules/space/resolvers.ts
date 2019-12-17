@@ -35,6 +35,8 @@ import {
     SetSpaceSizeAction,
 
     UpdateSpaceTreePageAction,
+
+    UpdateSpaceLinkCoordinatesAction,
 } from './types';
 
 import {
@@ -523,5 +525,15 @@ export const updateSpaceTreePage = (
     return {
         ...state,
         tree: updatedTree,
+    };
+}
+
+
+export const updateSpaceLinkCoordinates = (
+    state: SpaceState,
+    action: UpdateSpaceLinkCoordinatesAction,
+): SpaceState => {
+    return {
+        ...state,
     };
 }

@@ -51,6 +51,8 @@ import {
 
     UPDATE_SPACE_TREE_PAGE,
 
+    UPDATE_SPACE_LINK_COORDINATES,
+
     SpaceState,
     SpaceActionsType,
 } from './types';
@@ -104,6 +106,8 @@ import {
     setSpaceSize,
 
     updateSpaceTreePage,
+
+    updateSpaceLinkCoordinates,
 } from './resolvers';
 
 
@@ -229,6 +233,8 @@ const spaceReducer = (
             return setSpaceSize(state, action);
         case UPDATE_SPACE_TREE_PAGE:
             return updateSpaceTreePage(state, action);
+        case UPDATE_SPACE_LINK_COORDINATES:
+            return updateSpaceLinkCoordinates(state, action);
         default:
             return {
                 ...state,
