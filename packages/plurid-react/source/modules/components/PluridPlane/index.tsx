@@ -81,7 +81,9 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
 
     const showPlaneControls = controls.show;
 
-    const width = planeWidth * viewSize.width || 500;
+    const width = Number.isInteger(planeWidth)
+        ? planeWidth
+        : planeWidth * viewSize.width;
 
     // based on camera location and world position compute transform matrix
 
