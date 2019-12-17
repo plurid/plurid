@@ -243,7 +243,7 @@ export const updateTreeWithNewPage = (
 
         const extractedParameters = extractParameters(
             pagePath,
-            parameters
+            parameters,
         );
 
         const planeID = uuid();
@@ -263,13 +263,20 @@ export const updateTreeWithNewPage = (
                 rotateY: treePageParent.location.rotateY + PLANE_DEFAULT_ANGLE,
             },
             show: true,
+            bridgeLength: 100,
+            planeAngle: 90,
+            linkCoordinates,
         };
-        if (treePageParent.children) {
-            treePageParent.children.push(newTreePage);
+
+        const updatedTreePageParent = {...treePageParent};
+        if (updatedTreePageParent.children) {
+            updatedTreePageParent.children.push(newTreePage);
         } else {
-            treePageParent.children = [newTreePage];
+            updatedTreePageParent.children = [newTreePage];
         }
-        const updatedTree = updateTreePage(tree, treePageParent);
+
+        const updatedTree = updateTreePage(tree, updatedTreePageParent);
+
         return {
             pluridPlaneID: planeID,
             updatedTree,
