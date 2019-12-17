@@ -10,6 +10,10 @@ import {
     splitIntoGroups,
 } from '../utilities';
 
+import {
+    recomputeChildrenLocation,
+} from '../varia';
+
 
 
 const toRadians = mathematics.geometry.toRadians;
@@ -102,6 +106,8 @@ const computeFaceToFaceLayout = (
                 last,
             );
 
+            const children = recomputeChildrenLocation(page);
+
             const treePage: TreePage = {
                 ...page,
                 location: {
@@ -111,6 +117,7 @@ const computeFaceToFaceLayout = (
                     rotateX: 0,
                     rotateY,
                 },
+                children,
             };
             tree.push(treePage);
         }
