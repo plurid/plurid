@@ -403,10 +403,6 @@ export const recomputeChildrenLocation = (
                 child.planeAngle,
             );
 
-            const children = child.children
-                ? recomputeChildrenLocation(child)
-                : [];
-
             const updatedChild = {
                 ...child,
                 location: {
@@ -415,13 +411,20 @@ export const recomputeChildrenLocation = (
                     translateY: location.y,
                     translateZ: location.z,
                 },
+            };
+
+            const children = updatedChild.children
+                ? recomputeChildrenLocation(updatedChild)
+                : [];
+
+            const updatedChildWithChildren = {
+                ...updatedChild,
                 children,
             };
 
-            updatedChildren.push(updatedChild);
+            updatedChildren.push(updatedChildWithChildren);
         }
     }
-
 
     return updatedChildren;
 }

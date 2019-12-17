@@ -4,6 +4,10 @@ import {
     ROOTS_GAP,
 } from '@plurid/plurid-data';
 
+import {
+    recomputeChildrenLocation,
+} from '../varia';
+
 
 
 const computeColumnLayout = (
@@ -35,7 +39,14 @@ const computeColumnLayout = (
             },
         };
 
-        tree.push(treePage);
+        const children = recomputeChildrenLocation(treePage);
+
+        const treePageWithChildren = {
+            ...treePage,
+            children,
+        }
+
+        tree.push(treePageWithChildren);
     }
 
     return tree;

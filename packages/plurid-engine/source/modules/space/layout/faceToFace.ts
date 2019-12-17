@@ -106,8 +106,6 @@ const computeFaceToFaceLayout = (
                 last,
             );
 
-            const children = recomputeChildrenLocation(page);
-
             const treePage: TreePage = {
                 ...page,
                 location: {
@@ -117,9 +115,16 @@ const computeFaceToFaceLayout = (
                     rotateX: 0,
                     rotateY,
                 },
-                children,
             };
-            tree.push(treePage);
+
+            const children = recomputeChildrenLocation(treePage);
+
+            const treePageWithChildren = {
+                ...treePage,
+                children,
+            }
+
+            tree.push(treePageWithChildren);
         }
     }
 
