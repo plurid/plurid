@@ -9,6 +9,8 @@ export const StyledDrawer: any = styled.div`
     }
 
     margin-bottom: 2rem;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
 
     background-color: ${(props: any) => {
         if (props.transparentUI && props.mouseOver) {
@@ -25,12 +27,9 @@ export const StyledDrawer: any = styled.div`
 export const StyledDrawerHeading: any = styled.div`
     user-select: none;
     cursor: pointer;
-    /* padding-bottom: 0.5rem; */
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid transparent;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
 
     :hover {
         border-bottom: 1px solid ${(props: any) => {
