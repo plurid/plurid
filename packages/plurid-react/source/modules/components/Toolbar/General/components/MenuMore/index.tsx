@@ -71,8 +71,13 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     const moreMenuScrollElement = useRef<HTMLDivElement>(null);
 
     const {
+        transparentUI,
+        elements,
+    } = configuration;
+
+    const {
         toolbar,
-    } = configuration.elements;
+    } = elements;
 
     const {
         toggledDrawers,
@@ -111,6 +116,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     return (
         <StyledMoreMenu
             theme={interactionTheme}
+            transparentUI={transparentUI}
         >
             <StyledMoreMenuScroll
                 ref={moreMenuScrollElement}

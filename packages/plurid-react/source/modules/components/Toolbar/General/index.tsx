@@ -88,13 +88,19 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
     } = properties;
 
     const {
+        transparentUI,
+        elements,
+        space,
+    } = configuration;
+
+    const {
         firstPerson,
         transformMode,
-    } = configuration.space;
+    } = space;
 
     const {
         toolbar,
-    } = configuration.elements;
+    } = elements;
 
     const {
         conceal,
@@ -186,6 +192,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 documentsBased={documentsBased}
                 mouseIn={mouseIn}
                 opaque={opaque}
+                transparentUI={transparentUI}
             >
                 <StyledToolbarButton
                     theme={theme}
