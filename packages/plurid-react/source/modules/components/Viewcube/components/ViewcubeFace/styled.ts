@@ -76,6 +76,10 @@ export const StyledViewcubeFaceZone: any = styled.div`
         return props.theme.colorSecondary;
     }};
     background-color: ${(props: any) => {
+        if (props.transparentUI && !props.hovered) {
+            return props.theme.backgroundColorPrimaryAlpha;
+        }
+
         if (props.active) {
             return props.theme.backgroundColorTertiary;
         }
@@ -85,6 +89,10 @@ export const StyledViewcubeFaceZone: any = styled.div`
         return props.theme.backgroundColorSecondary;
     }};
     border: 1px solid ${(props: any) => {
+        if (props.transparentUI && !props.hovered) {
+            return 'transparent';
+        }
+
         if (props.hovered) {
             return props.theme.colorTertiary;
         }

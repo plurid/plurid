@@ -67,17 +67,22 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
         viewSize,
         generalTheme,
         configuration,
-        tree,
+        // tree,
 
         /** dispatch */
         updateSpaceTreePage,
     } = properties;
 
     const {
+        transparentUI,
+        elements,
+    } = configuration;
+
+    const {
         controls,
         width: planeWidth,
         opacity: planeOpacity,
-    } = configuration.elements.plane;
+    } = elements.plane;
 
     const showPlaneControls = controls.show;
 
@@ -116,6 +121,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
                     rotateY(${location.rotateY}deg)
                 `,
             }}
+            transparentUI={transparentUI}
         >
             {treePage.parentPlaneID && (
                 <PlaneBridge />

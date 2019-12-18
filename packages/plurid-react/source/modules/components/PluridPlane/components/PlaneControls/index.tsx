@@ -62,8 +62,13 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
     } = properties;
 
     const {
+        transparentUI,
+        elements,
+    } = configuration;
+
+    const {
         pathbar,
-    } = configuration.elements.plane.controls;
+    } = elements.plane.controls;
 
     let basePath = '';
     if (configuration) {
@@ -93,6 +98,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
     return (
         <StyledPlaneControls
             theme={generalTheme}
+            transparentUI={transparentUI}
         >
             <StyledPlaneControlsLeft>
             </StyledPlaneControlsLeft>

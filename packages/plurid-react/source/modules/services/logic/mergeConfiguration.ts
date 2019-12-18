@@ -47,6 +47,9 @@ const mergeConfiguration = (
         micro: typeof configuration.micro === 'boolean'
             ? configuration.micro
             : defaultConfiguration.micro,
+        transparentUI: typeof configuration.transparentUI === 'boolean'
+            ? configuration.transparentUI
+            : defaultConfiguration.transparentUI,
         theme: {
             general: typeof configuration.theme === 'string'
                 ? configuration.theme
