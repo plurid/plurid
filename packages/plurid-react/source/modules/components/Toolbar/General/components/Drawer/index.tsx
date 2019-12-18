@@ -77,6 +77,7 @@ const Drawer: React.FC<DrawerProperties> = (properties) => {
             onMouseLeave={() => setMouseOver(false)}
             transparentUI={transparentUI}
             mouseOver={mouseOver}
+            toggled={toggled}
         >
             <StyledDrawerHeading
                 theme={interactionTheme}
