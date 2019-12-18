@@ -41,6 +41,7 @@ export const StyledPluridPlane: any = styled.div`
     height: auto;
     width: 100%;
     font-size: 0.9rem;
+    transition: background-color 300ms linear;
 
     display: grid;
     grid-template-columns: 1fr;
