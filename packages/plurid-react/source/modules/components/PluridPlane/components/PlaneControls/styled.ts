@@ -2,8 +2,12 @@ import styled from 'styled-components';
 
 
 
-export const StyledPlaneControls = styled.div`
+export const StyledPlaneControls: any = styled.div`
     background-color: ${(props: any) => {
+        if (props.transparentUI) {
+            return props.theme.backgroundColorPrimaryAlpha;
+        }
+
         return props.theme.backgroundColorDark;
     }};
 
@@ -12,7 +16,7 @@ export const StyledPlaneControls = styled.div`
     align-items: center;
     justify-content: center;
     grid-template-rows: 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 1fr;
 
     @media (max-width: 800px) {
         grid-template-columns: 1fr 3fr 1fr;

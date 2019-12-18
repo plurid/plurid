@@ -7,6 +7,10 @@ import {
 
 export const StyledPluridPlane: any = styled.div`
     background-color: ${(props: any) => {
+        if (props.transparentUI) {
+            return props.theme.backgroundColorPrimaryAlpha;
+        }
+
         if (props.planeOpacity !== 1) {
             const decomposedColor = decomposeColor(props.theme.backgroundColorPrimary);
             if (decomposedColor) {

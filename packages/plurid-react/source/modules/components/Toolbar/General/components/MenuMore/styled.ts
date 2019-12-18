@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledMoreMenu = styled.div`
+export const StyledMoreMenu: any = styled.div`
     position: absolute;
     bottom: 75px;
     height: 250px;
@@ -15,6 +15,10 @@ export const StyledMoreMenu = styled.div`
     overflow: hidden;
 
     background-color: ${(props: any) => {
+        if (props.transparentUI) {
+            return props.theme.backgroundColorPrimaryAlpha;
+        }
+
         return props.theme.backgroundColorSecondary;
     }};
     box-shadow: ${(props: any) => {

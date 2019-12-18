@@ -14,6 +14,7 @@ const App = () => {
     const appConfiguration: PluridConfiguration = {
         // micro: true,
         theme: 'plurid',
+        transparentUI: true,
         space: {
             layout: {
                 type: SPACE_LAYOUT.COLUMNS,

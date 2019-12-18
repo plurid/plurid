@@ -36,6 +36,10 @@ export const StyledToolbar: any = styled.div`
 
 export const StyledToolbarButtons: any = styled.div`
     background-color: ${(props: any) => {
+        if (props.transparentUI) {
+            return props.theme.backgroundColorPrimaryAlpha;
+        }
+
         return props.theme.backgroundColorSecondary;
     }};
     box-shadow: ${(props: any) => {
