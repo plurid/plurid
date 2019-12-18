@@ -135,7 +135,9 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
                 </StyledMoreMenuItem>
             )}
 
-            <StyledMoreMenuItem>
+            <StyledMoreMenuItem
+                last={true}
+            >
                 <div>
                     conceal toolbar
                 </div>

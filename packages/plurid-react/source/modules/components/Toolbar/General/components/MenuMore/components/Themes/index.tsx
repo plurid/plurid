@@ -111,7 +111,9 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (properties) => {
                 />
             </StyledMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledMoreMenuItem
+                last={true}
+            >
                 interaction theme
 
                 <PluridDropdown

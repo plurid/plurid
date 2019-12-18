@@ -36,6 +36,9 @@ export const StyledMoreMenuItem: any = styled.div`
     padding: 0 0.5rem;
 
     margin-bottom: ${(props: any) => {
+        if (props.last) {
+            return '0';
+        }
         if (props.afterline) {
             return '30px';
         }
