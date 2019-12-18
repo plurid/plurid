@@ -13,7 +13,7 @@ export const StyledDrawer: any = styled.div`
     border-top-right-radius: 15px;
 
     padding-bottom: ${(props: any) => {
-        if (props.transparentUI && props.mouseOver) {
+        if (props.transparentUI && props.toggled) {
             return '0.5rem';
         }
         return '0';
