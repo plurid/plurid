@@ -34,6 +34,7 @@ import selectors from '../../../../services/state/selectors';
 interface PlaneControlsOwnProperties {
     page: PluridPage;
     treePage: TreePage;
+    mouseOver: boolean;
 }
 
 interface PlaneControlsStateProperties {
@@ -54,6 +55,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
         /** own */
         page,
         treePage,
+        mouseOver,
 
         /** state */
         configuration,
@@ -98,6 +100,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
     return (
         <StyledPlaneControls
             theme={generalTheme}
+            mouseOver={mouseOver}
             transparentUI={transparentUI}
         >
             <StyledPlaneControlsLeft>
