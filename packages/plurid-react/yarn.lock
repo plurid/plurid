@@ -429,15 +429,15 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@plurid/plurid-data@^0.1.77":
-  version "0.1.77"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.77.tgz#5b92710a8b664d8023f4b507c5cdc1316abb77b3"
-  integrity sha512-6KxCpcbmWIXUu3epAXmO3OhJ8xOfCQYbjD78Hr8XSO3j7Peb+z8tw8DfykJ3HGYTT1uff7zesDUrwp3zVyGa5Q==
+"@plurid/plurid-data@^0.1.78":
+  version "0.1.78"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.78.tgz#6783daf872274d4b360036aa7df43190523ffe44"
+  integrity sha512-G5250joOk20tkDxNGihV5SR0iaEEA4FfJIr7Lv9HN10uE9d9UqMtKMLLtyEpqA+AQTBQRzDie5Ee0qAAAHsDFw==
 
-"@plurid/plurid-engine@^0.1.32":
-  version "0.1.32"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.32.tgz#e5f0a641224a8543784454257297e18ee574fae6"
-  integrity sha512-191jsVtRF5dle8qiGGAc8kJEaql2PiLSqZ0M2mGW4YFacPZ6MjdFsR2OE7SzUHAKHssXA44R0kaMGjXGU84M5g==
+"@plurid/plurid-engine@^0.1.33":
+  version "0.1.33"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.33.tgz#25ff9293998ea69252b2d15a5bd29b69388a1edd"
+  integrity sha512-+cCtYuIfBetfn0XsE5ddcfrwFE1/pz5jFl0KTRyhxl0OGlJLlV4p8OCOxtbWm4GPeoCHmDARNIzFII3oO0Axug==
 
 "@plurid/plurid-functions@^0.1.3":
   version "0.1.3"
@@ -449,10 +449,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.3.tgz#f5014195a065f13c47f2895e4942ba1f3ec045a3"
   integrity sha512-mviWTVQhkIifQApuLa60jSVA+azeeKXYvNTFejzJJtEFG0s1h2a1BqtaH/Fj4wCzymivJsD47JqbaLfg7Xw4zA==
 
-"@plurid/plurid-themes@^0.1.19":
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.1.19.tgz#bff19878e09b1b31c0cb0394beb01a7c5739fdf9"
-  integrity sha512-mhyLw70mtJivrXevzyW3P4ok3hAH8jLoVkMc9P9ql5I4FQefHQaeGORRfEkzaBAIqb4Bq84MzH/kPPx06IkRig==
+"@plurid/plurid-themes@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.1.21.tgz#0b1c18e2bbeb1d56d08b1c8a9b11e32425c77a64"
+  integrity sha512-u5iKgjbiPHQnYv3ZyO1SOIf8XBRkRj0PQxHtuuxIqBH6Hbkkbee5+OcgvHnD474lAcnPnJ/yKTyGDipcnthHmw==
 
 "@plurid/plurid-ui-react@^0.1.38":
   version "0.1.38"
@@ -565,10 +565,10 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^24.0.23":
-  version "24.0.23"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-24.0.23.tgz#046f8e2ade026fe831623e361a36b6fb9a4463e4"
-  integrity sha512-L7MBvwfNpe7yVPTXLn32df/EK+AMBFAFvZrRuArGs7npEWnlziUXK+5GMIUTI4NIuwok3XibsjXCs5HxviYXjg==
+"@types/jest@^24.0.24":
+  version "24.0.24"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-24.0.24.tgz#0f2f523dc77cc1bc6bef34eaf287ede887a73f05"
+  integrity sha512-vgaG968EDPSJPMunEDdZvZgvxYSmeH8wKqBlHSkBt1pV2XlLEVDzsj1ZhLuI4iG4Pv841tES61txSBF0obh4CQ==
   dependencies:
     jest-diff "^24.3.0"
 
