@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+    useState,
+} from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -6,6 +8,10 @@ import { ThunkDispatch } from 'redux-thunk';
 import {
     Theme,
 } from '@plurid/plurid-themes';
+
+import {
+    PluridConfiguration,
+} from '@plurid/plurid-data';
 
 import {
     PluridHeading,
@@ -33,6 +39,7 @@ interface DrawerOwnProperties {
 
 interface DrawerStateProperties {
     interactionTheme: Theme;
+    configuration: PluridConfiguration;
 }
 
 interface DrawerDispatchProperties {
@@ -52,9 +59,16 @@ const Drawer: React.FC<DrawerProperties> = (properties) => {
 
         /** state */
         interactionTheme,
+        configuration,
 
         /** dispatch */
     } = properties;
+
+    const {
+        transparentUI,
+    } = configuration;
+
+    const [mouseOver, setMouseOver] = useState(false);
 
     return (
         <StyledDrawer
@@ -62,6 +76,10 @@ const Drawer: React.FC<DrawerProperties> = (properties) => {
         >
             <StyledDrawerHeading
                 theme={interactionTheme}
+                transparentUI={transparentUI}
+                mouseOver={mouseOver}
+                onMouseEnter={() => setMouseOver(true)}
+                onMouseLeave={() => setMouseOver(false)}
                 onClick={() => toggle()}
             >
                 <PluridHeading
@@ -86,6 +104,7 @@ const mapStateToProps = (
     state: AppState,
 ): DrawerStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
+    configuration: selectors.configuration.getConfiguration(state),
 });
 
 
