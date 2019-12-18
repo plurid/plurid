@@ -9,10 +9,15 @@ export const StyledDrawer: any = styled.div`
     }
 
     margin-bottom: 2rem;
-    padding-bottom: 0.5rem;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 
+    padding-bottom: ${(props: any) => {
+        if (props.transparentUI && props.mouseOver) {
+            return '0.5rem';
+        }
+        return '0';
+    }};
     background-color: ${(props: any) => {
         if (props.transparentUI && props.mouseOver) {
             return props.theme.backgroundColorSecondary;
