@@ -24,6 +24,12 @@ export const StyledDrawer: any = styled.div`
         }
         return 'transparent';
     }};
+    box-shadow: ${(props: any) => {
+        if (props.transparentUI && props.mouseOver) {
+            return props.theme.boxShadowUmbra;
+        }
+        return 'none';
+    }};
     color: ${(props: any) => {
         return props.theme.colorPrimary;
     }};
@@ -36,13 +42,6 @@ export const StyledDrawerHeading: any = styled.div`
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid transparent;
-
-    box-shadow: ${(props: any) => {
-        if (props.transparentUI && props.mouseOver) {
-            return props.theme.boxShadowUmbra;
-        }
-        return 'none';
-    }};
 
     :hover {
         border-bottom: 1px solid ${(props: any) => {
