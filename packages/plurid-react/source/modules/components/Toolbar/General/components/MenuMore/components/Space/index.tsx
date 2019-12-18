@@ -43,6 +43,7 @@ interface MenuMoreSpaceStateProperties {
 interface MenuMoreSpaceDispatchProperties {
     dispatchSetConfigurationPlaneOpacity: typeof actions.configuration.setConfigurationPlaneOpacity;
 
+    dispatchToggleConfigurationSpaceTransparentUI: typeof actions.configuration.toggleConfigurationSpaceTransparentUI;
     dispatchToggleConfigurationSpaceShowTransformOrigin: typeof actions.configuration.toggleConfigurationSpaceShowTransformOrigin;
     dispatchSetConfigurationSpaceTransformOriginSize: typeof actions.configuration.setConfigurationSpaceTransformOriginSize;
     dispatchSetConfigurationSpaceLayoutType: typeof actions.configuration.setConfigurationSpaceLayoutType;
@@ -61,27 +62,46 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
         /** dispatch */
         dispatchSetConfigurationPlaneOpacity,
 
+        dispatchToggleConfigurationSpaceTransparentUI,
         dispatchToggleConfigurationSpaceShowTransformOrigin,
         dispatchSetConfigurationSpaceTransformOriginSize,
         dispatchSetConfigurationSpaceLayoutType,
     } = properties;
 
-    const layout = configuration.space.layout;
+    const {
+        transparentUI,
+        space,
+        elements,
+    } = configuration;
+
+    const {
+        layout,
+        transformOrigin,
+    } = space;
 
     const layoutType = layoutNames[layout.type];
 
-    const planeOpacity = configuration.elements.plane.opacity;
-
-    const {
-        transformOrigin,
-    } = configuration.space;
     const {
         show: showTransformOrigin,
         size: transformOriginSize,
     } = transformOrigin;
 
+    const planeOpacity = elements.plane.opacity;
+
     return (
         <>
+            <StyledMoreMenuItem>
+                transparent user interface
+
+                <PluridSwitch
+                    checked={transparentUI}
+                    atChange={() => dispatchToggleConfigurationSpaceTransparentUI()}
+                    exclusive={true}
+                    level={2}
+                    theme={interactionTheme}
+                />
+            </StyledMoreMenuItem>
+
             <StyledMoreMenuItem>
                 show transform origin
 
@@ -166,6 +186,9 @@ const mapDispatchToProps = (
         actions.configuration.setConfigurationPlaneOpacity(value)
     ),
 
+    dispatchToggleConfigurationSpaceTransparentUI: () => dispatch(
+        actions.configuration.toggleConfigurationSpaceTransparentUI()
+    ),
     dispatchToggleConfigurationSpaceShowTransformOrigin: () => dispatch(
         actions.configuration.toggleConfigurationSpaceShowTransformOrigin()
     ),

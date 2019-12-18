@@ -22,6 +22,7 @@ import {
     TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE,
     TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
 
+    TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI,
     TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
     SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
 
@@ -55,6 +56,7 @@ import {
     toggleConfigurationToolbarOpaque,
     toggleConfigurationToolbarToggleDrawer,
 
+    toggleConfigurationSpaceTransparentUI,
     toggleConfigurationShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
 
@@ -112,6 +114,8 @@ const configurationReducer = (
         case TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE:
             return toggleConfigurationToolbarOpaque(state);
 
+        case TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI:
+            return toggleConfigurationSpaceTransparentUI(state);
         case TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN:
             return toggleConfigurationShowTransformOrigin(state);
         case SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE:

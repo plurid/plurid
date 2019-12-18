@@ -2,11 +2,6 @@ import {
     TRANSFORM_MODES,
 
     LAYOUT_TYPES,
-    LayoutColumns,
-    LayoutFaceToFace,
-    LayoutZigZag,
-    LayoutMeta,
-    LayoutSheaves,
 } from '@plurid/plurid-data';
 
 import {
@@ -300,6 +295,20 @@ export const toggleConfigurationToolbarOpaque = (
     };
 }
 
+
+export const toggleConfigurationSpaceTransparentUI = (
+    state: ConfigurationState,
+): ConfigurationState => {
+    const newState = {
+        ...state,
+    };
+
+    newState.transparentUI = !state.transparentUI;
+
+    return {
+        ...newState,
+    };
+}
 
 export const setConfigurationSpaceTransformOriginSize = (
     state: ConfigurationState,

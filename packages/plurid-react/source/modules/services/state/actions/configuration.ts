@@ -18,6 +18,7 @@ import {
     toggleConfigurationToolbarOpaque,
     toggleConfigurationToolbarToggleDrawer,
 
+    toggleConfigurationSpaceTransparentUI,
     toggleConfigurationSpaceShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
 
@@ -51,6 +52,7 @@ export default {
     toggleConfigurationToolbarOpaque,
     toggleConfigurationToolbarToggleDrawer,
 
+    toggleConfigurationSpaceTransparentUI,
     toggleConfigurationSpaceShowTransformOrigin,
     setConfigurationSpaceTransformOriginSize,
 

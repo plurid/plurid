@@ -45,6 +45,8 @@ import {
     TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
     ToggleConfigurationToolbarToggleDrawerAction,
 
+    TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI,
+    ToggleConfigurationSpaceTransparentUIAction,
     TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
     ToggleConfigurationSpaceShowTransformOriginAction,
     SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
@@ -176,6 +178,13 @@ export const toggleConfigurationToolbarTransformIcons = (): ToggleConfigurationT
 export const toggleConfigurationToolbarTransformButtons = (): ToggleConfigurationToolbarTransformButtonsAction => {
     return {
         type: TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
+    };
+}
+
+
+export const toggleConfigurationSpaceTransparentUI = (): ToggleConfigurationSpaceTransparentUIAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI,
     };
 }
 

@@ -109,6 +109,12 @@ export interface ToggleConfigurationToolbarToggleDrawerAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI = 'TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI';
+export interface ToggleConfigurationSpaceTransparentUIAction {
+    type: typeof TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI;
+}
+
+
 export const TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN = 'TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN';
 export interface ToggleConfigurationSpaceShowTransformOriginAction {
     type: typeof TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN;
@@ -180,6 +186,7 @@ export type ConfigurationActionsType = SetConfigurationAction
     | ToggleConfigurationToolbarOpaqueAction
     | ToggleConfigurationToolbarToggleDrawerAction
     /** SPACE */
+    | ToggleConfigurationSpaceTransparentUIAction
     | ToggleConfigurationSpaceShowTransformOriginAction
     | SetConfigurationSpaceTransformOriginSizeAction
     | SetConfigurationSpaceTransformModeAction
