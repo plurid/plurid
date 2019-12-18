@@ -17,6 +17,7 @@ export const defaultConfiguration: PluridConfiguration = {
         general: 'plurid',
         interaction: 'plurid',
     },
+    transparentUI: false,
     elements: {
         toolbar: {
             show: true,

@@ -27,6 +27,16 @@ export interface PluridConfiguration {
      */
     theme: string | PluridConfigurationTheme;
 
+    /**
+     * Set the User Interface transparent.
+     *
+     * Default `false`.
+     */
+    transparentUI: boolean;
+
+    /**
+     * `toolbar`, `viewcube`, and `plane` configuration.
+     */
     elements: PluridConfigurationElements;
 
     space: PluridConfigurationSpace;
