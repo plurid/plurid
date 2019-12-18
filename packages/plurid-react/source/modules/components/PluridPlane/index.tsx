@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+    useState,
+} from 'react';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -90,6 +92,8 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
         ? planeWidth
         : planeWidth * viewSize.width;
 
+    const [mouseOver, setMouseOver] = useState(false);
+
     // based on camera location and world position compute transform matrix
 
     const updatePlaneSize = (
@@ -121,7 +125,10 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
                     rotateY(${location.rotateY}deg)
                 `,
             }}
+            onMouseEnter={() => setMouseOver(true)}
+            onMouseLeave={() => setMouseOver(false)}
             transparentUI={transparentUI}
+            mouseOver={mouseOver}
         >
             {treePage.parentPlaneID && (
                 <PlaneBridge />
@@ -131,6 +138,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
                 <PlaneControls
                     page={page}
                     treePage={treePage}
+                    mouseOver={mouseOver}
                 />
             )}
 
