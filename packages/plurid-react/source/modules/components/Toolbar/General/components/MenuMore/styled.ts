@@ -5,7 +5,7 @@ import styled from 'styled-components';
 export const StyledMoreMenu: any = styled.div`
     position: absolute;
     bottom: 75px;
-    height: 250px;
+    height: 280px;
     width: 380px;
     left: 50%;
     transform: translateX(-50%);
@@ -33,6 +33,7 @@ export const StyledMoreMenuItem: any = styled.div`
     align-items: center;
     position: relative;
     min-height: 30px;
+    padding: 0 0.5rem;
 
     margin-bottom: ${(props: any) => {
         if (props.afterline) {
@@ -61,7 +62,7 @@ export const StyledMoreMenuItem: any = styled.div`
 
 
 export const StyledMoreMenuScroll = styled.div`
-    height: 210px;
+    height: 240px;
     overflow: scroll;
     padding: 0 5px;
 

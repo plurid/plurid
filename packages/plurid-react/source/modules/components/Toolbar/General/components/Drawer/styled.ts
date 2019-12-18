@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledDrawer = styled.div`
+export const StyledDrawer: any = styled.div`
     h5 {
         font-size: 1rem;
         margin: 0;
@@ -10,6 +10,12 @@ export const StyledDrawer = styled.div`
 
     margin-bottom: 2rem;
 
+    background-color: ${(props: any) => {
+        if (props.transparentUI && props.mouseOver) {
+            return props.theme.backgroundColorSecondary;
+        }
+        return 'transparent';
+    }};
     color: ${(props: any) => {
         return props.theme.colorPrimary;
     }};
@@ -19,17 +25,12 @@ export const StyledDrawer = styled.div`
 export const StyledDrawerHeading: any = styled.div`
     user-select: none;
     cursor: pointer;
-    padding-bottom: 0.5rem;
+    /* padding-bottom: 0.5rem; */
+    padding: 0.5rem;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid transparent;
-
-    background-color: ${(props: any) => {
-        if (props.transparentUI && props.mouseOver) {
-            return props.theme.backgroundColorPrimaryAlpha;
-        }
-
-        return 'transparent';
-    }};
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
 
     :hover {
         border-bottom: 1px solid ${(props: any) => {
