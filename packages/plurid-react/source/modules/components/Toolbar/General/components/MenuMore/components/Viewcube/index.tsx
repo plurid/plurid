@@ -71,7 +71,9 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
 
     return (
         <>
-            <StyledMoreMenuItem>
+            <StyledMoreMenuItem
+                last={!show ? true : false}
+            >
                 <div>
                     show viewcube
                 </div>
@@ -115,7 +117,9 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
                         />
                     </StyledMoreMenuItem>
 
-                    <StyledMoreMenuItem>
+                    <StyledMoreMenuItem
+                        last={true}
+                    >
                         <div>
                             conceal viewcube
                         </div>

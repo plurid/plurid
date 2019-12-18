@@ -151,7 +151,9 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
                 />
             </StyledMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledMoreMenuItem
+                last={true}
+            >
                 layout type
 
                 <PluridDropdown

@@ -147,7 +147,9 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
                 />
             </StyledMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledMoreMenuItem
+                last={true}
+            >
                 <div>
                     touch transform: {transformTouch === TRANSFORM_TOUCHES.PAN
                         ? 'pan'

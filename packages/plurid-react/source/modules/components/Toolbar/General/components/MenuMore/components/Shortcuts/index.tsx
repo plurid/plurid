@@ -51,7 +51,7 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (properties) =>
 
     return (
         <>
-            {defaultShortcuts.map(shortcut => {
+            {defaultShortcuts.map((shortcut, index) => {
                 const {
                     type,
                 } = shortcut;
@@ -76,6 +76,7 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (properties) =>
                             || type === 'TOGGLE_ROTATE'
                             || type === 'TOGGLE_TRANSLATE'
                         }
+                        last={index === defaultShortcuts.length - 1 ? true : false}
                     >
                         <div>
                             {name}

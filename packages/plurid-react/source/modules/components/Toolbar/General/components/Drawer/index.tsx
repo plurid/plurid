@@ -82,6 +82,8 @@ const Drawer: React.FC<DrawerProperties> = (properties) => {
             <StyledDrawerHeading
                 theme={interactionTheme}
                 onClick={() => toggle()}
+                transparentUI={transparentUI}
+                mouseOver={mouseOver}
             >
                 <PluridHeading
                     theme={interactionTheme}
