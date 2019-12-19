@@ -5,7 +5,7 @@ import styled from 'styled-components';
 export const StyledPlaneControls: any = styled.div`
     background-color: ${(props: any) => {
         if (props.transparentUI && !props.mouseOver) {
-            return props.theme.backgroundColorPrimaryAlpha;
+            return 'transparent';
         }
 
         return props.theme.backgroundColorDark;
