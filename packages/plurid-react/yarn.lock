@@ -444,15 +444,15 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.79.tgz#1afdad71cc725a48863057f353c7cd864dd2eec8"
   integrity sha512-VK0VVj6OiinJYN2ZUPriHOY1byPT20dLJnjWhu9PYXP7v+B9EVP6czezMwiGhutXeBEAbJJGt6u/qr16WeiFCg==
 
-"@plurid/plurid-engine@^0.1.33":
-  version "0.1.33"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.33.tgz#25ff9293998ea69252b2d15a5bd29b69388a1edd"
-  integrity sha512-+cCtYuIfBetfn0XsE5ddcfrwFE1/pz5jFl0KTRyhxl0OGlJLlV4p8OCOxtbWm4GPeoCHmDARNIzFII3oO0Axug==
+"@plurid/plurid-engine@^0.1.34":
+  version "0.1.34"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.34.tgz#cad84291cf13247bc64c4858b3b59257d7c18e3e"
+  integrity sha512-3asFINKqn88ziRMZK+Sw3mEhtkve+B2tAB1qNa65rU/f+rHtHWJbWdrITabl6+lPeiThOsZ9USME45zdNDhmCw==
 
-"@plurid/plurid-functions@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.3.tgz#64b6baf4b767be7b53f89dcdfe4c9e4613147758"
-  integrity sha512-QeCR2ODXajsyJmsRK/2UByBLAslJEtWlU8/31Crtc8fM4ycVUShcLiRv5N1eiDV7oJ4GN2FBgDXEfSrENfljwg==
+"@plurid/plurid-functions@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.4.tgz#e67d94df1db8646118144963ff0cb1b78316760b"
+  integrity sha512-x3bmBQQKQ+ARM5lt4d/6evQS22bgKVadkFTBd/fTaKKa6wVmwdUcqtGkB6A3nqWsKS2KivJ6AmJkMGW1twz/QQ==
 
 "@plurid/plurid-pubsub@^0.1.3":
   version "0.1.3"
