@@ -101,7 +101,7 @@ describe('computeSpaceTree', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 650,
+                    translateX: 1250,
                     translateY: 0,
                     translateZ: 0,
                 },
