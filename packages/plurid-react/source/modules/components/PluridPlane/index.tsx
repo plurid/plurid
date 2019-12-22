@@ -21,6 +21,10 @@ import {
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
+import {
+    mathematics,
+} from '@plurid/plurid-functions';
+
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
 import { ViewSize } from '../../services/state/types/space';
@@ -28,17 +32,6 @@ import selectors from '../../services/state/selectors';
 import actions from '../../services/state/actions';
 
 
-
-const checkInteger = (value: number) => {
-    if (
-        Number.isInteger(value)
-        && value !== 1
-    ) {
-        return true;
-    }
-
-    return false;
-}
 
 interface PluridPlaneOwnProperties {
     planeID: string;
@@ -99,7 +92,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
 
     const showPlaneControls = controls.show;
 
-    const width = checkInteger(planeWidth)
+    const width = mathematics.numbers.checkIntegerNonUnit(planeWidth)
         ? planeWidth
         : planeWidth * viewSize.width;
 
