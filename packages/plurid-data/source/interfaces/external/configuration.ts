@@ -153,6 +153,8 @@ export interface PluridConfigurationElementsPlane {
      * Value between `0.00` and `x.00` (floating numbers) or between `0` and `x00` (integers).
      *
      * The value is based on the current width of the screen and cannot be negative.
+     *
+     * `1` and `1.00` are based on screen width.
      */
     width: number;
 
