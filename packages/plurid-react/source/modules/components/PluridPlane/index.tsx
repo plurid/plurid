@@ -29,6 +29,17 @@ import actions from '../../services/state/actions';
 
 
 
+const checkInteger = (value: number) => {
+    if (
+        Number.isInteger(value)
+        && value !== 1
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
 interface PluridPlaneOwnProperties {
     planeID: string;
     page: PluridPage;
@@ -88,7 +99,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
 
     const showPlaneControls = controls.show;
 
-    const width = Number.isInteger(planeWidth)
+    const width = checkInteger(planeWidth)
         ? planeWidth
         : planeWidth * viewSize.width;
 
