@@ -6,6 +6,10 @@ import {
 } from '@plurid/plurid-data';
 
 import {
+    mathematics,
+} from '@plurid/plurid-functions';
+
+import {
     recomputeChildrenLocation,
 } from '../location';
 
@@ -20,7 +24,7 @@ const computeSheavesLayout = (
 ): TreePage[] => {
     const tree: TreePage[] = [];
 
-    const width = Number.isInteger(configuration.elements.plane.width)
+    const width = mathematics.numbers.checkIntegerNonUnit(configuration.elements.plane.width)
         ? configuration.elements.plane.width
         : configuration.elements.plane.width * window.innerWidth;
     const height = window.innerHeight;
