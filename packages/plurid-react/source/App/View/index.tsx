@@ -691,7 +691,7 @@ const View: React.FC<ViewProperties> = (properties) => {
         }
     }, [
         pubsub,
-    ])
+    ]);
 
     /** PubSub Publish */
     useEffect(() => {
