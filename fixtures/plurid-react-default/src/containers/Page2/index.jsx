@@ -7,7 +7,7 @@ import {
 
 
 const Page2 = (properties) => {
-    // console.log(properties.plurid);
+    console.log(properties.plurid);
 
     return (
         <div style={{
