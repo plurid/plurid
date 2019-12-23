@@ -78,6 +78,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         devisible: _devisible,
         suffix: _suffix,
         atClick,
+        style,
 
         /** state */
         tree,
@@ -166,7 +167,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
     const updateLinkCoordinates = () => {
         const linkCoordinates = getPluridLinkCoordinates();
-        console.log(linkCoordinates, pluridPlaneID);
 
         const payload: UpdateSpaceLinkCoordinatesPayload = {
             planeID: pluridPlaneID,
@@ -225,6 +225,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
             theme={generalTheme}
             suffix={suffix}
             devisible={devisible}
+            style={{
+                ...style,
+            }}
         >
             {children}
         </StyledPluridLink>
