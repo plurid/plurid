@@ -439,10 +439,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@plurid/plurid-data@^0.1.80":
-  version "0.1.80"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.80.tgz#b67452c6dd1fea0c23f8c71ec561d7846bc79a6e"
-  integrity sha512-fy8XLMqSayZ0gkQoORIwLBaAwrwlLESH/SN04kjsxcwpv/IMzz6vI9JV+S5ysYbUxkC5jAk7ZAy47aV2APt8tA==
+"@plurid/plurid-data@^0.1.81":
+  version "0.1.81"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.81.tgz#55069569ac31a11f786223dc0ea82dc3ec102587"
+  integrity sha512-tGTm1K0DVVpdowOF98r9k3MXiV/iitHEFsLUZegR1EDoIkE/iwuSfZ3K+RAsD/kLoqXSvUXgJfxz/pz4qqUxkg==
 
 "@plurid/plurid-engine@^0.1.34":
   version "0.1.34"
@@ -5297,10 +5297,18 @@ redux-thunk@^2.3.0:
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
   integrity sha512-km6dclyFnmcvxhAcrQV2AkZmPQjzPDjgVlQtR0EQjxZPyJ0BnMf3in1ryuR8A2qU0HldVRfxYXbFSKlI3N7Slw==
 
-redux@^4.0.0, redux@^4.0.4:
+redux@^4.0.0:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.4.tgz#4ee1aeb164b63d6a1bcc57ae4aa0b6e6fa7a3796"
   integrity sha512-vKv4WdiJxOWKxK0yRoaK3Y4pxxB0ilzVx6dszU2W8wLxlb2yikRph4iV/ymtdJ6ZxpBLFbyrxklnT5yBbQSl3Q==
+  dependencies:
+    loose-envify "^1.4.0"
+    symbol-observable "^1.2.0"
+
+redux@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"
+  integrity sha512-VSz1uMAH24DM6MF72vcojpYPtrTUu3ByVWfPL1nPfVRb5mZVTve5GnNCUV53QM/BZ66xfWrm0CTWoM+Xlz8V1w==
   dependencies:
     loose-envify "^1.4.0"
     symbol-observable "^1.2.0"
