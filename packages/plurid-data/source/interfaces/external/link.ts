@@ -28,5 +28,5 @@ export interface PluridLink {
      */
     atClick?: (event?: MouseEvent | React.MouseEvent) => void;
 
-    style: React.CSSProperties,
+    style?: React.CSSProperties,
 }
