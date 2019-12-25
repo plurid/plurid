@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react",
-    "version": "0.1.87",
+    "version": "0.1.88",
     "description": "React implementation of Plurid to explore the web in three dimensions",
     "keywords": [
         "plurid",
@@ -58,7 +58,7 @@
         "@plurid/plurid-engine": "^0.1.34",
         "@plurid/plurid-functions": "^0.1.4",
         "@plurid/plurid-pubsub": "^0.1.3",
-        "@plurid/plurid-themes": "^0.1.21",
+        "@plurid/plurid-themes": "^0.1.22",
         "@plurid/plurid-ui-react": "^0.1.38",
         "hammerjs": "^2.0.8",
         "redux-devtools-extension": "^2.13.8"
