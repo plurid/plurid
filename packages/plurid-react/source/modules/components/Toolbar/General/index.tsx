@@ -38,9 +38,15 @@ import ToolbarRotate from './components/ToolbarRotate';
 import ToolbarScale from './components/ToolbarScale';
 import ToolbarTranslate from './components/ToolbarTranslate';
 
-import FirstPersonIcon from '../../../assets/icons/first-person-icon';
-import DocumentsIcon from '../../../assets/icons/documents-icon';
-import MoreIcon from '../../../assets/icons/more-icon';
+import {
+    PluridIconFirstPerson,
+    PluridIconDocuments,
+    PluridIconMore,
+} from '@plurid/plurid-icons-react';
+
+// import FirstPersonIcon from '../../../assets/icons/first-person-icon';
+// import DocumentsIcon from '../../../assets/icons/documents-icon';
+// import MoreIcon from '../../../assets/icons/more-icon';
 
 import { AppState } from '../../../services/state/store';
 import StateContext from '../../../services/state/context';
@@ -201,7 +207,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     button={true}
                 >
                     <StyledIcon>
-                        {FirstPersonIcon}
+                        <PluridIconFirstPerson />
+                        {/* {FirstPersonIcon} */}
                     </StyledIcon>
                 </StyledToolbarButton>
 
@@ -236,7 +243,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                         button={true}
                     >
                         <StyledIcon>
-                            {DocumentsIcon}
+                            <PluridIconDocuments />
+                            {/* {DocumentsIcon} */}
                         </StyledIcon>
                     </StyledToolbarButton>
                 )}
@@ -248,7 +256,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     button={true}
                 >
                     <StyledIcon>
-                        {MoreIcon}
+                        <PluridIconMore />
+                        {/* {MoreIcon} */}
                     </StyledIcon>
                 </StyledToolbarButton>
             </StyledToolbarButtons>
