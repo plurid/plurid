@@ -14,6 +14,10 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
+    PluridIconGlobal,
+} from '@plurid/plurid-icons-react';
+
+import {
     StyledViewcube,
     StyledViewcubeArrow,
     StyledViewcubeArrowIcon,
@@ -21,8 +25,6 @@ import {
 } from './styled';
 
 import ViewcubeModel from './components/ViewcubeModel';
-
-import GlobalIcon from '../../assets/icons/global-icon';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
@@ -184,7 +186,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     <StyledFitView
                         onClick={animatedReset}
                     >
-                        {GlobalIcon}
+                        <PluridIconGlobal />
                     </StyledFitView>
                 </>
             )}

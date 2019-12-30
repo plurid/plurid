@@ -44,10 +44,6 @@ import {
     PluridIconMore,
 } from '@plurid/plurid-icons-react';
 
-// import FirstPersonIcon from '../../../assets/icons/first-person-icon';
-// import DocumentsIcon from '../../../assets/icons/documents-icon';
-// import MoreIcon from '../../../assets/icons/more-icon';
-
 import { AppState } from '../../../services/state/store';
 import StateContext from '../../../services/state/context';
 import selectors from '../../../services/state/selectors';
@@ -208,7 +204,6 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 >
                     <StyledIcon>
                         <PluridIconFirstPerson />
-                        {/* {FirstPersonIcon} */}
                     </StyledIcon>
                 </StyledToolbarButton>
 
@@ -244,7 +239,6 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                     >
                         <StyledIcon>
                             <PluridIconDocuments />
-                            {/* {DocumentsIcon} */}
                         </StyledIcon>
                     </StyledToolbarButton>
                 )}
@@ -257,7 +251,6 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 >
                     <StyledIcon>
                         <PluridIconMore />
-                        {/* {MoreIcon} */}
                     </StyledIcon>
                 </StyledToolbarButton>
             </StyledToolbarButtons>

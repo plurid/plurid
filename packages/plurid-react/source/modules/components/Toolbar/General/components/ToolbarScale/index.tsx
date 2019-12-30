@@ -8,6 +8,10 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
+    PluridIconScale,
+} from '@plurid/plurid-icons-react';
+
+import {
     TRANSFORM_MODES,
 } from '@plurid/plurid-data';
 
@@ -21,8 +25,6 @@ import {
 } from '../../styled';
 
 import TransformArrow from '../TransformArrow';
-
-import ScaleIcon from '../../../../../assets/icons/scale-icon';
 
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
@@ -89,7 +91,7 @@ const ToolbarScale: React.FC<ToolbarScaleProperties> = (properties) => {
                 {showIcons
                     ? (
                         <StyledIcon>
-                            {ScaleIcon}
+                            <PluridIconScale />
                         </StyledIcon>
                     ) : (
                         <>scale</>
