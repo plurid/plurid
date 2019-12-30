@@ -8,6 +8,10 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
+    PluridIconRotate,
+} from '@plurid/plurid-icons-react';
+
+import {
     TRANSFORM_MODES,
 } from '@plurid/plurid-data';
 
@@ -21,8 +25,6 @@ import {
 } from '../../styled';
 
 import TransformArrow from '../TransformArrow';
-
-import RotateIcon from '../../../../../assets/icons/rotate-icon';
 
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
@@ -101,7 +103,7 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (properties) => {
                 {showIcons
                     ? (
                         <StyledIcon>
-                            {RotateIcon}
+                            <PluridIconRotate />
                         </StyledIcon>
                     ) : (
                         <>rotate</>

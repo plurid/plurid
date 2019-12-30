@@ -8,6 +8,10 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
+    PluridIconTranslate,
+} from '@plurid/plurid-icons-react';
+
+import {
     TRANSFORM_MODES,
 } from '@plurid/plurid-data';
 
@@ -21,8 +25,6 @@ import {
 } from '../../styled';
 
 import TransformArrow from '../TransformArrow';
-
-import TranslateIcon from '../../../../../assets/icons/translate-icon';
 
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
@@ -101,7 +103,7 @@ const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (properties) => {
                 {showIcons
                     ? (
                         <StyledIcon>
-                            {TranslateIcon}
+                            <PluridIconTranslate />
                         </StyledIcon>
                     ) : (
                         <>translate</>
