@@ -65,6 +65,20 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
         <>
             <StyledMoreMenuItem>
                 <div>
+                    multi-mode transform
+                </div>
+
+                <PluridSwitch
+                    theme={interactionTheme}
+                    checked={transformLocks.rotationX}
+                    atChange={() => dispatchSetConfigurationSpaceTransformLocks('rotationX')}
+                    exclusive={true}
+                    level={2}
+                />
+            </StyledMoreMenuItem>
+
+            <StyledMoreMenuItem>
+                <div>
                     allow rotation X
                 </div>
 
