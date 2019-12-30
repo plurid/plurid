@@ -454,6 +454,11 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.4.tgz#e67d94df1db8646118144963ff0cb1b78316760b"
   integrity sha512-x3bmBQQKQ+ARM5lt4d/6evQS22bgKVadkFTBd/fTaKKa6wVmwdUcqtGkB6A3nqWsKS2KivJ6AmJkMGW1twz/QQ==
 
+"@plurid/plurid-icons-react@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-icons-react/-/plurid-icons-react-0.1.2.tgz#5e5985c239a51ce7c73bf63fb66348033568b829"
+  integrity sha512-hknLa0InyUmlIIHFE5L3oDul7YpdZ0yhFjd8sjc3ezpWRpK1Tb9384Ppky4Rjk5NVVAHU3lwYVUnLekVuVRazQ==
+
 "@plurid/plurid-pubsub@^0.1.3":
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.3.tgz#f5014195a065f13c47f2895e4942ba1f3ec045a3"
@@ -464,10 +469,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.1.22.tgz#0e2a122d3e45db626288dfb04548e8a3664a434e"
   integrity sha512-HYnoUgjYZqd8msFzC5Ar2GreAdM/tcmtQePmAi8DFLHD47dfrHDgZZAtO5PTUP5FM9FTzCsQTQtUu6/gKyTE0Q==
 
-"@plurid/plurid-ui-react@^0.1.38":
-  version "0.1.38"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.38.tgz#6a534815c377e71d36bf56aa16e9d485d2a724d4"
-  integrity sha512-BrhDPGSD3wWtmcYgd3iFKL1qNh5f4Ju/OHuBAT435UigZooD8iA4gpHrnr5/nyTtuLgGXz5I+/OnGaJwiVLNFA==
+"@plurid/plurid-ui-react@^0.1.40":
+  version "0.1.40"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.40.tgz#5ee54175b6ae04d04d095e09f3b416a71c7479d7"
+  integrity sha512-jWwQGjcbur2piqhnI9l1IqORa0YXtTRKKFzfMKut0ND7hAqn3xzlTgqYe1THqd4Sxi6ssQOOHxrkd3f+MF5kGA==
 
 "@types/babel__core@^7.1.0":
   version "7.1.3"
@@ -575,10 +580,10 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^24.0.24":
-  version "24.0.24"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-24.0.24.tgz#0f2f523dc77cc1bc6bef34eaf287ede887a73f05"
-  integrity sha512-vgaG968EDPSJPMunEDdZvZgvxYSmeH8wKqBlHSkBt1pV2XlLEVDzsj1ZhLuI4iG4Pv841tES61txSBF0obh4CQ==
+"@types/jest@^24.0.25":
+  version "24.0.25"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-24.0.25.tgz#2aba377824ce040114aa906ad2cac2c85351360f"
+  integrity sha512-hnP1WpjN4KbGEK4dLayul6lgtys6FPz0UfxMeMQCv0M+sTnzN3ConfiO72jHgLxl119guHgI8gLqDOrRLsyp2g==
   dependencies:
     jest-diff "^24.3.0"
 
