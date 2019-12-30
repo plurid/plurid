@@ -156,9 +156,9 @@ export const StyledIcon = styled.div`
     display: grid;
     place-content: center;
 
-    svg {
+    /* svg {
         height: 15px;
         width: 15px;
         fill: white;
-    }
+    } */
 `;
