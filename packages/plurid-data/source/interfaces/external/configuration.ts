@@ -85,6 +85,10 @@ export interface PluridConfigurationSpace {
      * Allow only one type of transformation, or all of them.
      */
     transformMode: keyof typeof TRANSFORM_MODES;
+    /**
+     * Allow multiple types of transformations.
+     */
+    transformMultimode: boolean;
 
     transformTouch: keyof typeof TRANSFORM_TOUCHES;
 

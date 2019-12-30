@@ -65,6 +65,7 @@ export const defaultConfiguration: PluridConfiguration = {
             scale: true,
         },
         transformMode: TRANSFORM_MODES.ALL,
+        transformMultimode: false,
         transformTouch: TRANSFORM_TOUCHES.PAN,
         firstPerson: false,
     },
