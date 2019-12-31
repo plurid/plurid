@@ -135,6 +135,13 @@ export interface SetConfigurationSpaceTransformModeAction {
 }
 
 
+export const TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE = 'TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE';
+export interface ToggleConfigurationSpaceTransformMultimodeAction {
+    type: typeof TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE;
+    payload: boolean;
+}
+
+
 export const SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH = 'SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH';
 export interface SetConfigurationSpaceTransformTouchAction {
     type: typeof SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH;
@@ -190,6 +197,7 @@ export type ConfigurationActionsType = SetConfigurationAction
     | ToggleConfigurationSpaceShowTransformOriginAction
     | SetConfigurationSpaceTransformOriginSizeAction
     | SetConfigurationSpaceTransformModeAction
+    | ToggleConfigurationSpaceTransformMultimodeAction
     | SetConfigurationSpaceTransformTouchAction
     | ToggleConfigurationSpaceFirstPersonAction
     | SetConfigurationSpaceTransformLocksAction
