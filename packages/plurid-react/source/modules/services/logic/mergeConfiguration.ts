@@ -221,6 +221,11 @@ const mergeConfiguration = (
                 'string',
                 configuration,
             ),
+            transformMultimode: specifiedOrDefault(
+                'space.transformMultimode',
+                'boolean',
+                configuration,
+            ),
             transformTouch: specifiedOrDefault(
                 'space.transformTouch',
                 'string',

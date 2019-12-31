@@ -22,6 +22,7 @@ import {
     SetConfigurationSpaceTransformOriginSizeAction,
 
     SetConfigurationSpaceTransformModeAction,
+    ToggleConfigurationSpaceTransformMultimodeAction,
     SetConfigurationSpaceTransformTouchAction,
 
     SetConfigurationSpaceTransformLocksAction,
@@ -341,6 +342,22 @@ export const setConfigurationSpaceTransformMode = (
     } else {
         newState.space.transformMode = TRANSFORM_MODES.ALL;
     }
+
+    return {
+        ...newState,
+    };
+}
+
+
+export const toggleConfigurationSpaceTransformMultimode = (
+    state: ConfigurationState,
+    action: ToggleConfigurationSpaceTransformMultimodeAction,
+): ConfigurationState => {
+    const newState = {
+        ...state,
+    };
+
+    newState.space.transformMultimode = action.payload;
 
     return {
         ...newState,

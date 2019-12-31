@@ -54,6 +54,8 @@ import {
 
     SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
     SetConfigurationSpaceTransformModeAction,
+    TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE,
+    ToggleConfigurationSpaceTransformMultimodeAction,
     SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
     SetConfigurationSpaceTransformTouchAction,
 
@@ -229,6 +231,16 @@ export const setConfigurationSpaceTransformMode = (
     return {
         type: SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
         payload: mode,
+    };
+}
+
+
+export const toggleConfigurationSpaceTransformMultimode = (
+    toggle: boolean,
+): ToggleConfigurationSpaceTransformMultimodeAction => {
+    return {
+        type: TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE,
+        payload: toggle,
     };
 }
 

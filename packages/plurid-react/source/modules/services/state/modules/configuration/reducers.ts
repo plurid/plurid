@@ -27,6 +27,7 @@ import {
     SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
 
     SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
+    TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE,
     SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
 
     TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
@@ -61,6 +62,7 @@ import {
     setConfigurationSpaceTransformOriginSize,
 
     setConfigurationSpaceTransformMode,
+    toggleConfigurationSpaceTransformMultimode,
     setConfigurationSpaceTransformTouch,
 
     toggleConfigurationSpaceFirstPerson,
@@ -122,6 +124,8 @@ const configurationReducer = (
             return setConfigurationSpaceTransformOriginSize(state, action);
         case SET_CONFIGURATION_SPACE_TRANSFORM_MODE:
             return setConfigurationSpaceTransformMode(state, action);
+        case TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE:
+            return toggleConfigurationSpaceTransformMultimode(state, action);
         case SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH:
             return setConfigurationSpaceTransformTouch(state, action);
         case TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON:

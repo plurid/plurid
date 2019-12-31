@@ -23,6 +23,7 @@ import {
     setConfigurationSpaceTransformOriginSize,
 
     setConfigurationSpaceTransformMode,
+    toggleConfigurationSpaceTransformMultimode,
     setConfigurationSpaceTransformTouch,
 
     toggleConfigurationSpaceFirstPerson,
@@ -57,6 +58,7 @@ export default {
     setConfigurationSpaceTransformOriginSize,
 
     setConfigurationSpaceTransformMode,
+    toggleConfigurationSpaceTransformMultimode,
     setConfigurationSpaceTransformTouch,
 
     toggleConfigurationSpaceFirstPerson,
