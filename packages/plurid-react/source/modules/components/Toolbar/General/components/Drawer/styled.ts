@@ -42,6 +42,7 @@ export const StyledDrawerHeading: any = styled.div`
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid transparent;
+    text-align: left;
 
     :hover {
         border-bottom: 1px solid ${(props: any) => {
@@ -52,5 +53,4 @@ export const StyledDrawerHeading: any = styled.div`
 
 
 export const StyledDrawerItems = styled.div`
-
 `;
