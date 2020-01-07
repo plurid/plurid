@@ -1,7 +1,10 @@
-import React from 'react';
+import React, {
+    useState,
+    useEffect,
+} from 'react';
 
 import PluridApp, {
-    PluridConfiguration,
+    // PluridConfiguration,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -11,7 +14,7 @@ import Page2 from './containers/Page2';
 
 
 const App = () => {
-    const appConfiguration: PluridConfiguration = {
+    const appConfiguration = {
         // micro: true,
         theme: 'plurid',
         transparentUI: true,
@@ -54,6 +57,9 @@ const App = () => {
             },
         },
     };
+    const anotherConfiguration = {
+        micro: true,
+    }
 
     const appPages = [
         {
@@ -106,10 +112,20 @@ const App = () => {
         // },
     ];
 
+    const [configuation, setConfiguration] = useState(appConfiguration);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setConfiguration(anotherConfiguration);
+        }, 4000);
+    }, [
+        anotherConfiguration
+    ]);
+
     return (
         <div>
             <PluridApp
-                configuration={appConfiguration}
+                configuration={configuation}
                 pages={appPages}
             />
         </div>
