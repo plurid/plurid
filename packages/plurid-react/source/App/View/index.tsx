@@ -667,10 +667,10 @@ const View: React.FC<ViewProperties> = (properties) => {
     useEffect(() => {
         const mergedConfiguration = mergeConfiguration(configuration);
 
-        if (!initialized) {
+        // if (!initialized) {
             handleConfiguration(mergedConfiguration);
-            setInitialized(true);
-        }
+        //     setInitialized(true);
+        // }
 
         dispatchSetSpaceLoading(false);
     }, [
