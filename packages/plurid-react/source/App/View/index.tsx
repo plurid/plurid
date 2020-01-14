@@ -32,7 +32,7 @@ import PluridPubSub, {
 } from '@plurid/plurid-pubsub'
 
 import {
-    debounce,
+    meta,
 } from '@plurid/plurid-functions';
 
 import themes, {
@@ -549,7 +549,7 @@ const View: React.FC<ViewProperties> = (properties) => {
 
     /** Resize Listener */
     useEffect(() => {
-        const handleResize = debounce(() => {
+        const handleResize = meta.debounce(() => {
             if (viewElement && viewElement.current) {
                 const width = viewElement.current.offsetWidth;
                 const height = viewElement.current.offsetHeight;
