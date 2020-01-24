@@ -17,7 +17,7 @@ const App = () => {
     const appConfiguration = {
         // micro: true,
         theme: 'plurid',
-        transparentUI: true,
+        // transparentUI: true,
         space: {
             layout: {
                 type: SPACE_LAYOUT.COLUMNS,
@@ -62,30 +62,38 @@ const App = () => {
     }
 
     const appPages = [
+        // {
+        //     path: '/page-1',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
         {
-            path: '/page-1',
+            path: '/:page$',
             component: {
                 element: Page1,
                 properties: {},
             },
             root: true,
         },
-        {
-            path: '/page-2',
-            component: {
-                element: Page2,
-                properties: {},
-            },
-            root: true,
-        },
-        {
-            path: '/page-3',
-            component: {
-                element: Page1,
-                properties: {},
-            },
-            // root: true,
-        },
+        // {
+        //     path: '/page-2',
+        //     component: {
+        //         element: Page2,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
+        // {
+        //     path: '/page-3',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     // root: true,
+        // },
         // {
         //     path: '/page-4',
         //     component: {
@@ -114,13 +122,13 @@ const App = () => {
 
     const [configuation, setConfiguration] = useState(appConfiguration);
 
-    useEffect(() => {
-        setTimeout(() => {
-            setConfiguration(anotherConfiguration);
-        }, 4000);
-    }, [
-        anotherConfiguration
-    ]);
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         setConfiguration(anotherConfiguration);
+    //     }, 4000);
+    // }, [
+    //     anotherConfiguration
+    // ]);
 
     return (
         <div>
