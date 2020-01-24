@@ -137,7 +137,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         }
 
         if (pathData) {
-            // console.log(pathData);
+            console.log(pathData);
 
             const {
                 pluridPlaneID,

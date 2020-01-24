@@ -8,7 +8,9 @@ import {
 
 
 
-const Page1 = () => {
+const Page1 = (properties) => {
+    console.log('aaa', properties);
+
     // const a = useRef(Math.random() * 800 + 100);
     // const b = useRef(Math.random() * 100 + 100);
     const a = useRef(200);
