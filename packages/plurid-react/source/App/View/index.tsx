@@ -522,6 +522,7 @@ const View: React.FC<ViewProperties> = (
         const computedTree = computeSpaceTree(
             tree,
             stateConfiguration,
+            view,
         );
         dispatchSetTree(computedTree);
     }
@@ -734,7 +735,7 @@ const View: React.FC<ViewProperties> = (
             for (const pageID in pages) {
                 const docPage = pages[pageID]
 
-                if (docPage.root) {
+                // if (docPage.root) {
                     const contextPage = contextPages[pageID];
                     if (!contextPage) {
                         continue;
@@ -745,13 +746,15 @@ const View: React.FC<ViewProperties> = (
                         docPage,
                     );
                     treePages.push(treePage);
-                }
+                // }
             }
 
             const computedTree = computeSpaceTree(
                 treePages,
                 stateConfiguration,
+                view,
             );
+            console.log('computedTree', computedTree);
             dispatchSetTree(computedTree);
         }
     }, [

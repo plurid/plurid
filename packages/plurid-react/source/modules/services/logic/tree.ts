@@ -28,7 +28,8 @@ export const createTreePage = (
             rotateX: 0,
             rotateY: 0,
         },
-        show: documentPage.root,
+        // show: documentPage.root,
+        show: true,
     };
     return treePage;
 }
