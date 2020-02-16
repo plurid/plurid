@@ -203,6 +203,7 @@ const View: React.FC<ViewProperties> = (
     const {
         configuration,
         pages,
+        view,
         documents,
         pubsub,
     } = appProperties;

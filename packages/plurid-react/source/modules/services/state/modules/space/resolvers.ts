@@ -10,34 +10,7 @@ import {
     mathematics,
 } from '@plurid/plurid-functions';
 
-import {
-    SpaceState,
-
-    SetSpaceLoadingAction,
-    SetAnimatedTransformAction,
-    SetSpaceLocationAction,
-
-    RotateXAction,
-    RotateXWithAction,
-    RotateYAction,
-    RotateYWithAction,
-
-    TranslateXWithAction,
-    TranslateYWithAction,
-
-    ScaleUpWithAction,
-    ScaleDownWithAction,
-
-    SetTreeAction,
-    SetActiveDocumentAction,
-
-    SetViewSizeAction,
-    SetSpaceSizeAction,
-
-    UpdateSpaceTreePageAction,
-
-    UpdateSpaceLinkCoordinatesAction,
-} from './types';
+import * as Types from './types';
 
 import {
     updateTreePage,
@@ -46,13 +19,16 @@ import {
 
 
 
-const toRadians = mathematics.geometry.toRadians;
+const {
+    toRadians,
+} = mathematics.geometry;
+
 
 
 export const setSpaceLoading = (
-    state: SpaceState,
-    action: SetSpaceLoadingAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.SetSpaceLoadingAction,
+): Types.State => {
     return {
         ...state,
         loading: action.payload,
@@ -61,9 +37,9 @@ export const setSpaceLoading = (
 
 
 export const setAnimatedTransform = (
-    state: SpaceState,
-    action: SetAnimatedTransformAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.SetAnimatedTransformAction,
+): Types.State => {
     return {
         ...state,
         animatedTransform: action.payload,
@@ -72,9 +48,9 @@ export const setAnimatedTransform = (
 
 
 export const setSpaceLocation = (
-    state: SpaceState,
-    action: SetSpaceLocationAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.SetSpaceLocationAction,
+): Types.State => {
     return {
         ...state,
         ...action.payload,
@@ -83,8 +59,8 @@ export const setSpaceLocation = (
 
 
 export const viewCameraMoveForward = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
     const translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
     return {
@@ -96,8 +72,8 @@ export const viewCameraMoveForward = (
 
 
 export const viewCameraMoveBackward = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
     const translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
     return {
@@ -109,8 +85,8 @@ export const viewCameraMoveBackward = (
 
 
 export const viewCameraMoveLeft = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationX = state.translationX + TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
     const translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
     return {
@@ -122,8 +98,8 @@ export const viewCameraMoveLeft = (
 
 
 export const viewCameraMoveRight = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationX = state.translationX - TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
     const translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
     return {
@@ -135,8 +111,8 @@ export const viewCameraMoveRight = (
 
 
 export const viewCameraMoveUp = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationY = state.translationY + TRANSLATION_STEP * 3;
     return {
         ...state,
@@ -146,8 +122,8 @@ export const viewCameraMoveUp = (
 
 
 export const viewCameraMoveDown = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationY = state.translationY - TRANSLATION_STEP * 3;
     return {
         ...state,
@@ -157,8 +133,8 @@ export const viewCameraMoveDown = (
 
 
 export const viewCameraTurnUp = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const rotationX = (state.rotationX + ROTATION_STEP) % 360;
     return {
         ...state,
@@ -168,8 +144,8 @@ export const viewCameraTurnUp = (
 
 
 export const viewCameraTurnDown = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const rotationX = (state.rotationX - ROTATION_STEP) % 360;
     return {
         ...state,
@@ -179,8 +155,8 @@ export const viewCameraTurnDown = (
 
 
 export const viewCameraTurnLeft = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const rotationY = (state.rotationY - ROTATION_STEP) % 360;
     return {
         ...state,
@@ -190,8 +166,8 @@ export const viewCameraTurnLeft = (
 
 
 export const viewCameraTurnRight = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const rotationY = (state.rotationY + ROTATION_STEP) % 360;
     return {
         ...state,
@@ -201,8 +177,8 @@ export const viewCameraTurnRight = (
 
 
 export const rotateUp = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const rotationX = (state.rotationX + ROTATION_STEP) % 360;
     return {
         ...state,
@@ -212,8 +188,8 @@ export const rotateUp = (
 
 
 export const rotateDown = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const rotationX = (state.rotationX - ROTATION_STEP) % 360;
     return {
         ...state,
@@ -223,9 +199,9 @@ export const rotateDown = (
 
 
 export const rotateX = (
-    state: SpaceState,
-    action: RotateXAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.RotateXAction,
+): Types.State => {
     return {
         ...state,
         rotationX: action.payload,
@@ -234,9 +210,9 @@ export const rotateX = (
 
 
 export const rotateXWith = (
-    state: SpaceState,
-    action: RotateXWithAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.RotateXWithAction,
+): Types.State => {
     const rotationX = state.rotationX + action.payload;
     return {
         ...state,
@@ -246,8 +222,8 @@ export const rotateXWith = (
 
 
 export const rotateLeft = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const rotationY = (state.rotationY + ROTATION_STEP) % 360;
     return {
         ...state,
@@ -257,8 +233,8 @@ export const rotateLeft = (
 
 
 export const rotateRight = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const rotationY = (state.rotationY - ROTATION_STEP) % 360;
     return {
         ...state,
@@ -268,9 +244,9 @@ export const rotateRight = (
 
 
 export const rotateY = (
-    state: SpaceState,
-    action: RotateYAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.RotateYAction,
+): Types.State => {
     return {
         ...state,
         rotationY: action.payload,
@@ -279,9 +255,9 @@ export const rotateY = (
 
 
 export const rotateYWith = (
-    state: SpaceState,
-    action: RotateYWithAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.RotateYWithAction,
+): Types.State => {
     const rotationY = state.rotationY + action.payload;
     return {
         ...state,
@@ -291,8 +267,8 @@ export const rotateYWith = (
 
 
 export const translateUp = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationY = state.translationY - TRANSLATION_STEP;
     return {
         ...state,
@@ -302,8 +278,8 @@ export const translateUp = (
 
 
 export const translateDown = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationY = state.translationY + TRANSLATION_STEP;
     return {
         ...state,
@@ -313,8 +289,8 @@ export const translateDown = (
 
 
 export const translateLeft = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationX = state.translationX - TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
     const translationZ = state.translationZ - TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
     return {
@@ -326,8 +302,8 @@ export const translateLeft = (
 
 
 export const translateRight = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
     const translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
     return {
@@ -339,8 +315,8 @@ export const translateRight = (
 
 
 export const translateIn = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
     const translationX = state.translationX - TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
     return {
@@ -352,8 +328,8 @@ export const translateIn = (
 
 
 export const translateOut = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
     const translationX = state.translationX + TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
     return {
@@ -365,9 +341,9 @@ export const translateOut = (
 
 
 export const translateXWith = (
-    state: SpaceState,
-    action: TranslateXWithAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.TranslateXWithAction,
+): Types.State => {
     const translationX = state.translationX +  action.payload * Math.cos(toRadians(state.rotationY));
     const translationZ = state.translationZ +  action.payload * Math.sin(toRadians(state.rotationY));
     return {
@@ -379,9 +355,9 @@ export const translateXWith = (
 
 
 export const translateYWith = (
-    state: SpaceState,
-    action: TranslateYWithAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.TranslateYWithAction,
+): Types.State => {
     const translationY = state.translationY + action.payload;
     return {
         ...state,
@@ -391,8 +367,8 @@ export const translateYWith = (
 
 
 export const scaleUp = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const computedScale = state.scale + SCALE_STEP;
     const scale = computedScale < SCALE_UPPER_LIMIT
         ? computedScale
@@ -405,8 +381,8 @@ export const scaleUp = (
 
 
 export const scaleDown = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     const computedScale = state.scale - SCALE_STEP;
     const scale = computedScale > SCALE_LOWER_LIMIT
         ? computedScale
@@ -419,9 +395,9 @@ export const scaleDown = (
 
 
 export const scaleUpWith = (
-    state: SpaceState,
-    action: ScaleUpWithAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.ScaleUpWithAction,
+): Types.State => {
     const computedScale = state.scale + Math.abs(action.payload);
     const scale = computedScale < SCALE_UPPER_LIMIT
         ? computedScale
@@ -436,9 +412,9 @@ export const scaleUpWith = (
 
 
 export const scaleDownWith = (
-    state: SpaceState,
-    action: ScaleDownWithAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.ScaleDownWithAction,
+): Types.State => {
     const computedScale = state.scale - Math.abs(action.payload);
     const scale = computedScale > SCALE_LOWER_LIMIT
         ? computedScale
@@ -453,9 +429,9 @@ export const scaleDownWith = (
 
 
 export const setTree = (
-    state: SpaceState,
-    action: SetTreeAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.SetTreeAction,
+): Types.State => {
     return {
         ...state,
         tree: [
@@ -466,9 +442,9 @@ export const setTree = (
 
 
 export const setActiveDocument = (
-    state: SpaceState,
-    action: SetActiveDocumentAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.SetActiveDocumentAction,
+): Types.State => {
     return {
         ...state,
         activeDocumentID: action.payload,
@@ -477,8 +453,8 @@ export const setActiveDocument = (
 
 
 export const spaceResetTransform = (
-    state: SpaceState,
-): SpaceState => {
+    state: Types.State,
+): Types.State => {
     return {
         ...state,
         scale: 1,
@@ -492,9 +468,9 @@ export const spaceResetTransform = (
 
 
 export const setViewSize = (
-    state: SpaceState,
-    action: SetViewSizeAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.SetViewSizeAction,
+): Types.State => {
     return {
         ...state,
         viewSize: {
@@ -505,9 +481,9 @@ export const setViewSize = (
 
 
 export const setSpaceSize = (
-    state: SpaceState,
-    action: SetSpaceSizeAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.SetSpaceSizeAction,
+): Types.State => {
     return {
         ...state,
         spaceSize: {
@@ -518,9 +494,9 @@ export const setSpaceSize = (
 
 
 export const updateSpaceTreePage = (
-    state: SpaceState,
-    action: UpdateSpaceTreePageAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.UpdateSpaceTreePageAction,
+): Types.State => {
     const updatedTree = updateTreePage(state.tree, action.payload);
 
     return {
@@ -531,9 +507,9 @@ export const updateSpaceTreePage = (
 
 
 export const updateSpaceLinkCoordinates = (
-    state: SpaceState,
-    action: UpdateSpaceLinkCoordinatesAction,
-): SpaceState => {
+    state: Types.State,
+    action: Types.UpdateSpaceLinkCoordinatesAction,
+): Types.State => {
     const {
         planeID,
         linkCoordinates,
@@ -548,5 +524,16 @@ export const updateSpaceLinkCoordinates = (
     return {
         ...state,
         tree: updatedTree,
+    };
+}
+
+
+export const spaceSetView = (
+    state: Types.State,
+    action: Types.SpaceSetViewAction,
+): Types.State => {
+    return {
+        ...state,
+        view: action.payload,
     };
 }

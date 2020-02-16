@@ -265,8 +265,23 @@ export interface UpdateSpaceLinkCoordinatesAction {
 }
 
 
+export const SPACE_SET_VIEW = 'SPACE_SET_VIEW';
+export interface SpaceSetViewAction {
+    type: typeof SPACE_SET_VIEW;
+    payload: string[];
+}
 
-export interface SpaceState {
+
+
+export interface Coordinates {
+    x: number;
+    y: number;
+    z: number;
+}
+
+
+
+export interface State {
     loading: boolean;
     animatedTransform: boolean;
     scale: number;
@@ -280,17 +295,11 @@ export interface SpaceState {
     camera: Coordinates;
     viewSize: ViewSize;
     spaceSize: SpaceSize;
+    view: string[];
 }
 
 
-export interface Coordinates {
-    x: number;
-    y: number;
-    z: number;
-}
-
-
-export type SpaceActionsType = SetSpaceLoadingAction
+export type Actions = SetSpaceLoadingAction
     | SetAnimatedTransformAction
     | SetSpaceLocationAction
     | ViewCameraMoveForwardAction
@@ -329,4 +338,5 @@ export type SpaceActionsType = SetSpaceLoadingAction
     | SetViewSizeAction
     | SetSpaceSizeAction
     | UpdateSpaceTreePageAction
-    | UpdateSpaceLinkCoordinatesAction;
+    | UpdateSpaceLinkCoordinatesAction
+    | SpaceSetViewAction;

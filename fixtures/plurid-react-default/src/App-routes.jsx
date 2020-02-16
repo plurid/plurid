@@ -107,7 +107,7 @@ const App = () => {
         // },
     ];
 
-    const space = [
+    const view = [
         '/one',
     ];
 
@@ -116,6 +116,7 @@ const App = () => {
             <PluridApp
                 configuration={appConfiguration}
                 pages={appPages}
+                view={view}
             />
         </div>
     );
