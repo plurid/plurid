@@ -58,6 +58,7 @@ const App = () => {
     const appPages = [
         {
             path: '/:page',
+            // path: '/one',
             component: {
                 element: Page1,
                 properties: {
@@ -108,7 +109,9 @@ const App = () => {
     ];
 
     const view = [
-        '/one',
+        // '/one',
+        '/two',
+        // '/three',
     ];
 
     return (
