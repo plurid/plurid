@@ -78,7 +78,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     const Page = _page.component.element;
                     const properties = _page.component.properties || {};
                     const pluridProperties = {
-                        parameters: child.parameters,
+                        parameters: child.parameters || {},
                         query: {},
                     };
 
@@ -148,7 +148,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
 
     const pageProperties = pluridPage.component.properties || {};
     const pluridProperties = {
-        parameters: page.parameters,
+        parameters: page.parameters || {},
         query: {},
     };
 
