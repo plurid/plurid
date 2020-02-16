@@ -36,6 +36,10 @@ import {
     extractParameters,
 } from './parameters';
 
+import {
+    match,
+} from '../router';
+
 
 
 /**
@@ -77,11 +81,14 @@ export const computeRootLocationX = (
 export const computeSpaceTree = (
     pages: TreePage[],
     configuration?: PluridConfiguration,
+    view?: string[],
 ): TreePage[] => {
     if (!configuration) {
         const columnLayoutTree = computeColumnLayout(pages);
         return columnLayoutTree;
     }
+
+    const assignedPages = assignPagesFromView(pages, view);
 
     switch(configuration.space.layout.type) {
         case LAYOUT_TYPES.COLUMNS:
@@ -91,7 +98,7 @@ export const computeSpaceTree = (
                     gap,
                 } = configuration.space.layout;
                 const columnLayoutTree = computeColumnLayout(
-                    pages,
+                    assignedPages,
                     columns,
                     gap,
                     configuration,
@@ -104,7 +111,7 @@ export const computeSpaceTree = (
                     angle,
                 } = configuration.space.layout;
                 const zigzagLayoutTree = computeZigZagLayout(
-                    pages,
+                    assignedPages,
                     angle,
                     configuration,
                 );
@@ -118,7 +125,7 @@ export const computeSpaceTree = (
                     middle,
                 } = configuration.space.layout;
                 const faceToFaceLayoutTree = computeFaceToFaceLayout(
-                    pages,
+                    assignedPages,
                     angle,
                     gap,
                     middle,
@@ -134,7 +141,7 @@ export const computeSpaceTree = (
                     offsetY,
                 } = configuration.space.layout;
                 const sheavesLayoutTree = computeSheavesLayout(
-                    pages,
+                    assignedPages,
                     depth,
                     offsetX,
                     offsetY,
@@ -151,6 +158,26 @@ export const computeSpaceTree = (
     }
 }
 
+
+export const assignPagesFromView = (
+    pages: TreePage[],
+    view?: string[],
+): TreePage[] => {
+    if (!view) {
+        return pages;
+    }
+
+    const tree: TreePage[] = [];
+
+    view.forEach(viewPage => {
+        const matchedPage = match(viewPage, pages);
+        if (matchedPage) {
+            tree.push(matchedPage);
+        }
+    });
+
+    return tree;
+}
 
 
 export const computeSpaceLocation = (
