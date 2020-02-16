@@ -9,7 +9,7 @@ import {
 
 
 const Page1 = (properties) => {
-    console.log('aaa', properties);
+    // console.log('aaa', properties);
 
     // const a = useRef(Math.random() * 800 + 100);
     // const b = useRef(Math.random() * 100 + 100);
