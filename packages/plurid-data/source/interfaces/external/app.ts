@@ -34,6 +34,11 @@ export interface PluridApp {
     pageContextValue?: any,
 
     /**
+     * Paths of the pages in view on the initial rendering
+     */
+    view?: string[],
+
+    /**
      * A `PluridApp` must be either pages or documents based.
      *
      * A `PluridDocument` is a collection of PluridPages (`PluridPage[]`).
