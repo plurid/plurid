@@ -31,6 +31,9 @@ export const match = (
         }
 
         const parameters = extractParameters(route.path);
+        console.log('parameters', parameters);
+        console.log('path', path);
+        console.log('route.path', route.path);
 
         if (parameters.length === 0) {
             if (route.path === path) {
