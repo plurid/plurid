@@ -89,6 +89,7 @@ export const computeSpaceTree = (
     }
 
     const assignedPages = assignPagesFromView(pages, view);
+    console.log('assignedPages', assignedPages);
 
     switch(configuration.space.layout.type) {
         case LAYOUT_TYPES.COLUMNS:
@@ -169,8 +170,13 @@ export const assignPagesFromView = (
 
     const tree: TreePage[] = [];
 
+
     view.forEach(viewPage => {
         const matchedPage = match(viewPage, pages);
+        console.log('viewPage', viewPage);
+        console.log('pages', pages);
+
+        console.log('matchedPage', matchedPage);
         if (matchedPage) {
             tree.push(matchedPage);
         }
