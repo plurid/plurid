@@ -60,26 +60,27 @@ const App = () => {
             path: '/:page',
             component: {
                 element: Page1,
-                properties: {},
-            },
-            root: true,
-        },
-        {
-            path: '/page-2',
-            component: {
-                element: Page2,
-                properties: {},
-            },
-            root: true,
-        },
-        {
-            path: '/page-3',
-            component: {
-                element: Page1,
-                properties: {},
+                properties: {
+                },
             },
             // root: true,
         },
+        // {
+        //     path: '/page-2',
+        //     component: {
+        //         element: Page2,
+        //         properties: {},
+        //     },
+        //     root: true,
+        // },
+        // {
+        //     path: '/page-3',
+        //     component: {
+        //         element: Page1,
+        //         properties: {},
+        //     },
+        //     // root: true,
+        // },
         // {
         //     path: '/page-4',
         //     component: {
@@ -104,6 +105,10 @@ const App = () => {
         //     },
         //     root: true,
         // },
+    ];
+
+    const space = [
+        '/one',
     ];
 
     return (
