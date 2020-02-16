@@ -58,7 +58,7 @@
         "styled-components": ">=4"
     },
     "dependencies": {
-        "@plurid/plurid-data": "^0.1.82",
+        "@plurid/plurid-data": "^0.1.83",
         "@plurid/plurid-engine": "^0.1.34",
         "@plurid/plurid-pubsub": "^0.1.3",
         "hammerjs": "^2.0.8",
