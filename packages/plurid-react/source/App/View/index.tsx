@@ -148,6 +148,8 @@ interface ViewDispatchProperties {
     scaleDownWith: typeof actions.space.scaleDownWith;
 
     dispatchSetActiveDocument: typeof actions.space.setActiveDocument;
+
+    dispatchSpaceSetView: typeof actions.space.spaceSetView;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -198,6 +200,8 @@ const View: React.FC<ViewProperties> = (
         scaleDownWith,
 
         dispatchSetActiveDocument,
+
+        dispatchSpaceSetView,
     } = properties;
 
     const {
@@ -803,6 +807,15 @@ const View: React.FC<ViewProperties> = (
         tree,
     ]);
 
+    /** Handle View */
+    useEffect(() => {
+        if (view) {
+            dispatchSpaceSetView(view);
+        }
+    }, [
+        view,
+    ]);
+
 
     /** context */
     const pluridContext: PluridContext = {
@@ -916,6 +929,12 @@ const mapDispatchToProperties = (
 
     dispatchSetActiveDocument: (activeDocument: string) => dispatch(
         actions.space.setActiveDocument(activeDocument)
+    ),
+
+    dispatchSpaceSetView: (
+        view,
+    ) => dispatch(
+        actions.space.spaceSetView(view),
     ),
 });
 
