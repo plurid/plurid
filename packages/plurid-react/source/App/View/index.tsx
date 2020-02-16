@@ -4,6 +4,7 @@ import React, {
     useCallback,
     useRef,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -11,8 +12,6 @@ import { ThunkDispatch } from 'redux-thunk';
 import Hammer from 'hammerjs';
 
 import {
-    /** constants */
-
     /** enumerations */
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
@@ -108,6 +107,7 @@ import {
 } from '../../modules/services/state/modules/space/types';
 
 
+
 export interface ViewOwnProperties {
     appProperties: PluridAppProperties;
 }
@@ -154,11 +154,10 @@ type ViewProperties = ViewOwnProperties
     & ViewStateProperties
     & ViewDispatchProperties;
 
-const View: React.FC<ViewProperties> = (properties) => {
-    const viewElement = useRef<HTMLDivElement>(null);
-
-    const contextDocumentsRef = useRef<Indexed<PluridInternalContextDocument>>({});
-
+const View: React.FC<ViewProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** own */
         appProperties,
@@ -208,10 +207,20 @@ const View: React.FC<ViewProperties> = (properties) => {
         pubsub,
     } = appProperties;
 
+
+    /** references */
+    const viewElement = useRef<HTMLDivElement>(null);
+
+    const contextDocumentsRef = useRef<Indexed<PluridInternalContextDocument>>({});
+
+
+    /** state */
     const [initialized, setInitialized] = useState(false);
 
     // const [contextDocuments, setContextDocuments] = useState<Indexed<PluridInternalContextDocument>>({});
 
+
+    /** callbacks */
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         const {
             transformLocks,
@@ -253,6 +262,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         stateConfiguration.space.transformLocks,
     ]);
 
+
+    /** handlers */
     const handleConfiguration = (
         configuration: PluridAppConfiguration,
     ) => {
@@ -510,6 +521,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         dispatchSetTree(computedTree);
     }
 
+
+    /** effects */
     /** Keydown, Wheel Listeners */
     useEffect(() => {
         if (viewElement.current) {
@@ -789,8 +802,8 @@ const View: React.FC<ViewProperties> = (properties) => {
         tree,
     ]);
 
-    const viewContainer = handleView(pages, documents);
 
+    /** context */
     const pluridContext: PluridContext = {
         pageContext: appProperties.pageContext,
         pageContextValue: appProperties.pageContextValue,
@@ -799,6 +812,10 @@ const View: React.FC<ViewProperties> = (properties) => {
     // console.log('pluridContext', pluridContext);
     // console.log('dataDocuments', dataDocuments);
     // console.log('Rendered Plurid View');
+
+
+    /** render */
+    const viewContainer = handleView(pages, documents);
 
     return (
         <StyledView
