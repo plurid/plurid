@@ -79,6 +79,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     const properties = _page.component.properties || {};
                     const pluridProperties = {
                         parameters: child.parameters,
+                        query: {},
                     };
 
                     plane = (
@@ -148,6 +149,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const pageProperties = pluridPage.component.properties || {};
     const pluridProperties = {
         parameters: page.parameters,
+        query: {},
     };
 
     return (
