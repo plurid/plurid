@@ -16,8 +16,8 @@ export interface PluridPage {
      * The path can have parameters, e.g. `/page/:id`.
      *
      * The parameter, in the example `id`,
-     * will be passed in the property `parameters` to the component,
-     * e.g. `componentProperties.parameters.id`.
+     * will be passed in the property `plurid.parameters` to the component,
+     * e.g. `componentProperties.plurid.parameters.id`.
      *
      * The path can be used by the `PluridLink`.
      */
@@ -58,7 +58,7 @@ export interface PluridComponentReact {
 }
 
 export interface ReactComponentWithPluridProperties {
-    plurid: any;
+    plurid: PluridProperties;
     [key: string]: any;
 }
 
@@ -67,6 +67,17 @@ export interface PluridComponentProperties {
 }
 
 
+export interface PluridProperties {
+    parameters: PluridComponentParameters;
+    query: PluridComponentQuery;
+}
+
+
 export interface PluridComponentParameters {
+    [key: string]: string;
+}
+
+
+export interface PluridComponentQuery {
     [key: string]: string;
 }
