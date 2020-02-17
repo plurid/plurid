@@ -1,21 +1,18 @@
-import {
-    SET_GLOBAL_SHORTCUTS,
-    SetGlobalShortcutsAction,
-    UNSET_GLOBAL_SHORTCUTS,
-    UnsetGlobalShortcutsAction,
-} from './types'
+import * as Types from './types';
 
 
 
-export const setGlobalShortcuts = (): SetGlobalShortcutsAction => {
+export const setGlobalShortcuts = (
+): Types.ShortcutsSetGlobalShortcutsAction => {
     return {
-        type: SET_GLOBAL_SHORTCUTS,
+        type: Types.SHORTCUTS_SET_GLOBAL_SHORTCUTS,
     };
 }
 
 
-export const unsetGlobalShortcuts = (): UnsetGlobalShortcutsAction => {
+export const unsetGlobalShortcuts = (
+): Types.ShortcutsUnsetGlobalShortcutsAction => {
     return {
-        type: UNSET_GLOBAL_SHORTCUTS,
+        type: Types.SHORTCUTS_UNSET_GLOBAL_SHORTCUTS,
     };
 }

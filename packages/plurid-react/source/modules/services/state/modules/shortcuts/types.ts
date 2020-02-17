@@ -1,20 +1,20 @@
-export const SET_GLOBAL_SHORTCUTS = 'SET_GLOBAL_SHORTCUTS';
-export interface SetGlobalShortcutsAction {
-    type: typeof SET_GLOBAL_SHORTCUTS;
+export const SHORTCUTS_SET_GLOBAL_SHORTCUTS = 'SHORTCUTS_SET_GLOBAL_SHORTCUTS';
+export interface ShortcutsSetGlobalShortcutsAction {
+    type: typeof SHORTCUTS_SET_GLOBAL_SHORTCUTS;
 }
 
 
-export const UNSET_GLOBAL_SHORTCUTS = 'UNSET_GLOBAL_SHORTCUTS';
-export interface UnsetGlobalShortcutsAction {
-    type: typeof UNSET_GLOBAL_SHORTCUTS;
+export const SHORTCUTS_UNSET_GLOBAL_SHORTCUTS = 'SHORTCUTS_UNSET_GLOBAL_SHORTCUTS';
+export interface ShortcutsUnsetGlobalShortcutsAction {
+    type: typeof SHORTCUTS_UNSET_GLOBAL_SHORTCUTS;
 }
 
 
 
-export interface ShortcutsState {
+export interface State {
     global: boolean;
 }
 
 
-export type ShortcutsActions = SetGlobalShortcutsAction
-    | UnsetGlobalShortcutsAction;
+export type Actions = ShortcutsSetGlobalShortcutsAction
+    | ShortcutsUnsetGlobalShortcutsAction;
