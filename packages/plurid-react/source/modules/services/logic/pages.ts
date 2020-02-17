@@ -17,8 +17,8 @@ export const createInternalStatePage = (
     const statePage: PluridInternalStatePage = {
         id: page.id || uuid(),
         path: page.path,
-        root: page.root || false,
-        ordinal: page.ordinal || 0,
+        // root: page.root || false,
+        // ordinal: page.ordinal || 0,
     };
 
     return statePage;

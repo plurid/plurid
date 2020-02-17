@@ -22,7 +22,7 @@ export const registerPaths = (
             id: uuid(),
             pageID: page.id,
             address: page.path,
-            regex: handledPath.regex,
+            // regex: handledPath.regex,
             parameters: handledPath.parameters,
         };
         paths.push(path);
