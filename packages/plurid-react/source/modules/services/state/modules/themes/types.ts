@@ -4,25 +4,26 @@ import {
 
 
 
-export const SET_GENERAL_THEME = 'SET_GENERAL_THEME';
-export interface SetGeneralThemeAction {
-    type: typeof SET_GENERAL_THEME;
+export const THEMES_SET_GENERAL_THEME = 'THEMES_SET_GENERAL_THEME';
+export interface ThemesSetGeneralThemeAction {
+    type: typeof THEMES_SET_GENERAL_THEME;
     payload: Theme;
 }
 
 
-export const SET_INTERACTION_THEME = 'SET_INTERACTION_THEME';
-export interface SetInteractionThemeAction {
-    type: typeof SET_INTERACTION_THEME;
+export const THEMES_SET_INTERACTION_THEME = 'THEMES_SET_INTERACTION_THEME';
+export interface ThemesSetInteractionThemeAction {
+    type: typeof THEMES_SET_INTERACTION_THEME;
     payload: Theme;
 }
 
 
 
-export interface ThemesState {
+export interface State {
     general: Theme;
     interaction: Theme;
 }
 
-export type ThemesActionsType = SetGeneralThemeAction
-    | SetInteractionThemeAction;
+
+export type Actions = ThemesSetGeneralThemeAction
+    | ThemesSetInteractionThemeAction;

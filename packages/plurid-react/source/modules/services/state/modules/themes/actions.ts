@@ -2,20 +2,15 @@ import {
     Theme,
 } from '@plurid/plurid-themes';
 
-import {
-    SET_GENERAL_THEME,
-    SetGeneralThemeAction,
-    SET_INTERACTION_THEME,
-    SetInteractionThemeAction,
-} from './types';
+import * as Types from './types';
 
 
 
 export const setGeneralTheme = (
     theme: Theme,
-): SetGeneralThemeAction => {
+): Types.ThemesSetGeneralThemeAction => {
     return {
-        type: SET_GENERAL_THEME,
+        type: Types.THEMES_SET_GENERAL_THEME,
         payload: theme,
     };
 }
@@ -23,9 +18,9 @@ export const setGeneralTheme = (
 
 export const setInteractionTheme = (
     theme: Theme,
-): SetInteractionThemeAction => {
+): Types.ThemesSetInteractionThemeAction => {
     return {
-        type: SET_INTERACTION_THEME,
+        type: Types.THEMES_SET_INTERACTION_THEME,
         payload: theme,
     };
 }

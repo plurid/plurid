@@ -1,16 +1,11 @@
-import {
-    ThemesState,
-
-    SetGeneralThemeAction,
-    SetInteractionThemeAction,
-} from './types';
+import * as Types from './types';
 
 
 
 export const setGeneralTheme = (
-    state: ThemesState,
-    action: SetGeneralThemeAction,
-) => {
+    state: Types.State,
+    action: Types.ThemesSetGeneralThemeAction,
+): Types.State => {
     return {
         ...state,
         general: {
@@ -21,9 +16,9 @@ export const setGeneralTheme = (
 
 
 export const setInteractionTheme = (
-    state: ThemesState,
-    action: SetInteractionThemeAction,
-) => {
+    state: Types.State,
+    action: Types.ThemesSetInteractionThemeAction,
+): Types.State => {
     return {
         ...state,
         interaction: {
