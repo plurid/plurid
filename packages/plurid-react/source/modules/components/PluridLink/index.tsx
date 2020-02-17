@@ -27,6 +27,7 @@ import {
 } from '../../services/logic/plane';
 
 import {
+    // router,
     space,
 } from '@plurid/plurid-engine';
 
@@ -126,6 +127,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         } = activeDocument;
 
         let pathData = null;
+
+        // const a = router.match(pagePath, Object.values(paths));
+
         for (const pathValue of Object.values(paths)) {
             // const re = new RegExp(pathValue.regex);
             // const match = pagePath.match(re);
