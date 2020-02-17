@@ -22,8 +22,7 @@ const App = () => {
             //     gap: 0.1,
             // },
             layout: {
-                type: 'ROWS',
-                // type: SPACE_LAYOUT.ROWS,
+                type: SPACE_LAYOUT.ROWS,
                 rows: 1,
                 gap: 0.1,
             },
