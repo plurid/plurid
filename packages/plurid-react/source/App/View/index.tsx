@@ -719,7 +719,7 @@ const View: React.FC<ViewProperties> = (
             const activeDocument = dataDocuments[activeDocumentID];
             const pages = activeDocument.pages;
 
-            console.log('pages', pages);
+            // console.log('pages', pages);
 
             const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
             const contextPages = activeContextDocument.pages;
@@ -742,14 +742,14 @@ const View: React.FC<ViewProperties> = (
                 // }
             }
 
-            console.log('treePages', treePages);
+            // console.log('treePages', treePages);
 
             const computedTree = space.computeSpaceTree(
                 treePages,
                 stateConfiguration,
                 view,
             );
-            console.log('computedTree', computedTree);
+            // console.log('computedTree', computedTree);
             dispatchSetTree(computedTree);
         }
     }, [
