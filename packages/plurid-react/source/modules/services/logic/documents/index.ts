@@ -12,15 +12,13 @@ import {
 import {
     createInternalStatePage,
     createInternalContextPage,
-} from './pages';
+} from '../pages';
 
-import {
-    createIndexed,
-} from './indexed';
+import * as helpers from '../helpers';
 
 import {
     registerPaths,
-} from './paths';
+} from '../paths';
 
 
 
@@ -36,10 +34,10 @@ export const createInternalStateDocument = (
         const internalStatePage = createInternalStatePage(page);
         return internalStatePage;
     });
-    const indexedStatePages = createIndexed(statePages);
+    const indexedStatePages = helpers.createIndexed(statePages);
 
     const paths = registerPaths(statePages);
-    const indexedPaths = createIndexed(paths);
+    const indexedPaths = helpers.createIndexed(paths);
 
     const stateDocument: PluridInternalStateDocument = {
         name: document.name,
@@ -66,7 +64,7 @@ export const createInternalContextDocument = (
         const internalContextPage = createInternalContextPage(page);
         return internalContextPage;
     });
-    const indexedContextPages = createIndexed(contextPages);
+    const indexedContextPages = helpers.createIndexed(contextPages);
 
     const contextDocument: PluridInternalContextDocument = {
         name: document.name,

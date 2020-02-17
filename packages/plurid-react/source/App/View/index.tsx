@@ -54,14 +54,7 @@ import handleView from './logic';
 
 import Context from '../../modules/services/logic/context';
 
-import {
-    identifyPages,
-    identifyDocuments,
-} from '../../modules/services/logic/identified';
-
-import {
-    createIndexed,
-} from '../../modules/services/logic/indexed';
+import * as helpers from '../../modules/services/logic/helpers';
 
 import {
     createInternalStateDocument,
@@ -82,7 +75,7 @@ import {
     registerPaths,
 } from '../../modules/services/logic/paths';
 
-import mergeConfiguration from '../../modules/services/logic/mergeConfiguration';
+import mergeConfiguration from '../../modules/services/logic/configuration';
 
 import {
     handleGlobalShortcuts,
@@ -610,7 +603,7 @@ const View: React.FC<ViewProperties> = (
     /** Pages, Documents */
     useEffect(() => {
         if (!documents && pages) {
-            const identifiedPages = identifyPages(pages);
+            const identifiedPages = helpers.identifyPages(pages);
 
             const statePages = identifiedPages.map(page => {
                 const statePage = createInternalStatePage(page);
@@ -622,11 +615,11 @@ const View: React.FC<ViewProperties> = (
                 return contextPage;
             });
 
-            const indexedStatePages = createIndexed(statePages);
-            const indexedContextPages = createIndexed(contextPages);
+            const indexedStatePages = helpers.createIndexed(statePages);
+            const indexedContextPages = helpers.createIndexed(contextPages);
 
             const paths = registerPaths(statePages);
-            const indexedPaths = createIndexed(paths);
+            const indexedPaths = helpers.createIndexed(paths);
 
             const document: PluridInternalStateDocument = {
                 id: 'default',
@@ -655,7 +648,7 @@ const View: React.FC<ViewProperties> = (
         }
 
         if (documents) {
-            const identifiedDocuments = identifyDocuments(documents);
+            const identifiedDocuments = helpers.identifyDocuments(documents);
 
             const stateDocuments = identifiedDocuments.map(document => {
                 const stateDocument = createInternalStateDocument(document);
@@ -666,8 +659,8 @@ const View: React.FC<ViewProperties> = (
                 return contextDocument;
             });
 
-            const indexedStateDocuments = createIndexed(stateDocuments);
-            const indexedContextDocuments = createIndexed(contextDocuments);
+            const indexedStateDocuments = helpers.createIndexed(stateDocuments);
+            const indexedContextDocuments = helpers.createIndexed(contextDocuments);
 
             contextDocumentsRef.current = {...indexedContextDocuments};
             dispatchSetDocuments(indexedStateDocuments);
