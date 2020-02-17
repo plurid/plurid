@@ -74,10 +74,10 @@ const App = () => {
         {
             path: '/:page',
             component: {
-                element: Page1,
+                element: (properties) => (<Page1 />),
                 properties: {},
             },
-            root: true,
+            // root: true,
         },
         // {
         //     path: '/page-2',
@@ -131,11 +131,19 @@ const App = () => {
     //     anotherConfiguration
     // ]);
 
+    const view = [
+        '/one',
+        '/two',
+        '/three',
+    ];
+
+
     return (
         <div>
             <PluridApp
                 configuration={configuation}
                 pages={appPages}
+                view={view}
             />
         </div>
     );
