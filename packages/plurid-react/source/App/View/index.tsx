@@ -40,9 +40,7 @@ import themes, {
 } from '@plurid/plurid-themes';
 
 import {
-    computeSpaceTree,
-    computeSpaceLocation,
-    computeSpaceSize,
+    space,
 } from '@plurid/plurid-engine';
 
 import './index.css';
@@ -279,7 +277,7 @@ const View: React.FC<ViewProperties> = (
         }
 
         if (configuration.space) {
-            const spaceLocation = computeSpaceLocation(configuration);
+            const spaceLocation = space.computeSpaceLocation(configuration);
             dispatchSetSpaceLocation(spaceLocation);
         }
 
@@ -753,7 +751,7 @@ const View: React.FC<ViewProperties> = (
 
             console.log('treePages', treePages);
 
-            const computedTree = computeSpaceTree(
+            const computedTree = space.computeSpaceTree(
                 treePages,
                 stateConfiguration,
                 view,
@@ -806,7 +804,7 @@ const View: React.FC<ViewProperties> = (
 
     /** Space Size */
     useEffect(() => {
-        const spaceSize = computeSpaceSize(tree);
+        const spaceSize = space.computeSpaceSize(tree);
 
         dispatchSetSpaceSize(spaceSize);
         // centerSpaceSize(spaceSize);
