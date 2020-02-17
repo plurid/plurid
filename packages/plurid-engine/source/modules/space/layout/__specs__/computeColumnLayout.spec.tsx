@@ -114,8 +114,8 @@ describe('computeColumnLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 0,
-                    translateY: 850,
+                    translateX: 2500,
+                    translateY: 0,
                     translateZ: 0,
                 },
                 path: '/page-3',
@@ -246,8 +246,8 @@ describe('computeColumnLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 1250,
-                    translateY: 0,
+                    translateX: 0,
+                    translateY: 850,
                     translateZ: 0,
                 },
                 path: '/page-2',
@@ -262,8 +262,8 @@ describe('computeColumnLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 2500,
-                    translateY: 0,
+                    translateX: 0,
+                    translateY: 1700,
                     translateZ: 0,
                 },
                 path: '/page-3',
@@ -278,8 +278,8 @@ describe('computeColumnLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 0,
-                    translateX: 0,
-                    translateY: 850,
+                    translateX: 1250,
+                    translateY: 0,
                     translateZ: 0,
                 },
                 path: '/page-4',
