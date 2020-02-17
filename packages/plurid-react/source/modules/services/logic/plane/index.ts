@@ -1,4 +1,6 @@
-export const getPluridPlaneIDByData = (element: HTMLElement | null): any => {
+export const getPluridPlaneIDByData = (
+    element: HTMLElement | null,
+): any => {
     if (!element) {
         return '';
     }
