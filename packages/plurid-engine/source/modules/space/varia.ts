@@ -111,11 +111,13 @@ export const computeSpaceTree = (
             {
                 const {
                     rows,
+                    rowLength,
                     gap,
                 } = configuration.space.layout;
                 const rowLayoutTree = computeRowLayout(
                     assignedPages,
                     rows,
+                    rowLength,
                     gap,
                     configuration,
                 );
