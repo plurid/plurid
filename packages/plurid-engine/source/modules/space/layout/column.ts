@@ -54,7 +54,7 @@ const computeColumnLayout = (
         const treePageWithChildren = {
             ...treePage,
             children,
-        }
+        };
 
         tree.push(treePageWithChildren);
     }

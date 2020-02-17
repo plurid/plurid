@@ -54,7 +54,7 @@ const computeRowLayout = (
         const treePageWithChildren = {
             ...treePage,
             children,
-        }
+        };
 
         tree.push(treePageWithChildren);
     }
