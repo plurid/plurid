@@ -1,12 +1,10 @@
-import {
-    ShortcutsState,
-} from './types';
+import * as Types from './types';
 
 
 
 export const setGlobalShortcuts = (
-    state: ShortcutsState,
-) => {
+    state: Types.State,
+): Types.State => {
     return {
         ...state,
         global: true,
@@ -15,8 +13,8 @@ export const setGlobalShortcuts = (
 
 
 export const unsetGlobalShortcuts = (
-    state: ShortcutsState,
-) => {
+    state: Types.State,
+): Types.State => {
     return {
         ...state,
         global: false,
