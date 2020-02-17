@@ -6,9 +6,9 @@ export interface SetUIToolbarScrollPositionAction {
 
 
 
-export interface UIState {
+export interface State {
     toolbarScrollPosition: number;
 }
 
 
-export type UIActionsType = SetUIToolbarScrollPositionAction;
+export type Actions = SetUIToolbarScrollPositionAction;

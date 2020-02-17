@@ -1,15 +1,11 @@
-import {
-    UIState,
-
-    SetUIToolbarScrollPositionAction,
-} from './types';
+import * as Types from './types';
 
 
 
 export const setUIToolbarScrollPosition = (
-    state: UIState,
-    action: SetUIToolbarScrollPositionAction,
-): UIState => {
+    state: Types.State,
+    action: Types.SetUIToolbarScrollPositionAction,
+): Types.State => {
     return {
         ...state,
         toolbarScrollPosition: action.payload,

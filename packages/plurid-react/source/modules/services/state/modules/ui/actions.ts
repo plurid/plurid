@@ -1,15 +1,12 @@
-import {
-    SET_UI_TOOLBAR_SCROLL_POSITION,
-    SetUIToolbarScrollPositionAction,
-} from './types';
+import * as Types from './types';
 
 
 
 export const setUIToolbarScrollPosition = (
     value: number,
-): SetUIToolbarScrollPositionAction => {
+): Types.SetUIToolbarScrollPositionAction => {
     return {
-        type: SET_UI_TOOLBAR_SCROLL_POSITION,
+        type: Types.SET_UI_TOOLBAR_SCROLL_POSITION,
         payload: value,
     };
 }
