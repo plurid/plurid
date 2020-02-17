@@ -6,14 +6,18 @@
     "license": "MIT",
     "private": true,
     "dependencies": {
-        "@plurid/plurid-react": "^0.1.86",
+        "@plurid/plurid-functions": "^0.1.7",
+        "@plurid/plurid-icons-react": "^0.1.17",
+        "@plurid/plurid-react": "^0.1.93",
+        "@plurid/plurid-themes": "^0.1.26",
+        "@plurid/plurid-ui-react": "^0.1.79",
         "react": "^16.12.0",
         "react-dom": "^16.12.0",
         "react-redux": "^7.1.3",
-        "react-scripts": "^3.3.0",
-        "redux": "^4.0.4",
+        "react-scripts": "^3.4.0",
+        "redux": "^4.0.5",
         "redux-thunk": "^2.3.0",
-        "styled-components": "^4.4.1"
+        "styled-components": "^5.0.1"
     },
     "scripts": {
         "start": "react-scripts start",
