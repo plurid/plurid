@@ -59,7 +59,7 @@
     },
     "dependencies": {
         "@plurid/plurid-data": "^0.1.83",
-        "@plurid/plurid-engine": "^0.1.34",
+        "@plurid/plurid-engine": "^0.1.36",
         "@plurid/plurid-pubsub": "^0.1.3",
         "hammerjs": "^2.0.8",
         "redux-devtools-extension": "^2.13.8"
