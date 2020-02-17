@@ -21,10 +21,15 @@ const App = () => {
         // transparentUI: true,
         space: {
             layout: {
-                type: SPACE_LAYOUT.COLUMNS,
-                columns: 3,
+                type: SPACE_LAYOUT.ROWS,
+                rows: 1,
                 gap: 0.1,
             },
+            // layout: {
+            //     type: SPACE_LAYOUT.COLUMNS,
+            //     columns: 3,
+            //     gap: 0.1,
+            // },
             // layout: {
             //     type: SPACE_LAYOUT.FACE_TO_FACE,
             //     angle: 30,
@@ -135,6 +140,10 @@ const App = () => {
         '/one',
         '/two',
         '/three',
+        '/four',
+        '/five',
+        '/six',
+        '/seven',
     ];
 
 
