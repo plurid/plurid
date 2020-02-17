@@ -11,6 +11,10 @@ import {
 const Page1: React.FC<any> = (
     properties,
 ) => {
+    const {
+        plurid,
+    } = properties;
+
     // console.log('aaa', properties);
 
     // const a = useRef(Math.random() * 800 + 100);
@@ -33,7 +37,7 @@ const Page1: React.FC<any> = (
                 editable
             </div>
 
-            page 1
+            -- {plurid.parameters.page}
 
             <input />
 
