@@ -3,7 +3,7 @@ export interface TreePage {
     planeID: string;
     parentPlaneID?: string;
     path: string;
-    parameters?: PathParameter;
+    parameters?: PathParameters;
     query?: PathQuery;
     height: number;
     width: number;
@@ -16,7 +16,7 @@ export interface TreePage {
 }
 
 
-export interface PathParameter {
+export interface PathParameters {
     [key: string]: string;
 }
 
