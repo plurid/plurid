@@ -45,8 +45,8 @@ describe.only('computeZigZagLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: -45,
-                    translateX: 0,
-                    translateY: 850,
+                    translateX: 1250,
+                    translateY: 0,
                     translateZ: 0,
                 },
                 path: '/page-2',
@@ -61,8 +61,8 @@ describe.only('computeZigZagLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 45,
-                    translateX: 0,
-                    translateY: 1700,
+                    translateX: 2500,
+                    translateY: 0,
                     translateZ: 0,
                 },
                 path: '/page-3',
@@ -96,8 +96,8 @@ describe.only('computeZigZagLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: -45,
-                    translateX: 0,
-                    translateY: 850,
+                    translateX: 1250,
+                    translateY: 0,
                     translateZ: 0,
                 },
                 path: '/page-2',
@@ -112,8 +112,8 @@ describe.only('computeZigZagLayout', () => {
                 location: {
                     rotateX: 0,
                     rotateY: 45,
-                    translateX: 0,
-                    translateY: 1700,
+                    translateX: 2500,
+                    translateY: 0,
                     translateZ: 0,
                 },
                 path: '/page-3',
