@@ -20,3 +20,20 @@ export interface ActiveRoute<T> extends Route<T> {
 export interface RouteParameters {
     [key: string]: string;
 }
+
+
+export interface RouteQuery {
+    [key: string]: string;
+}
+
+
+export interface TwithPath {
+    [key: string]: any;
+    path: string;
+}
+
+export interface MatchResponse<T> {
+    route: T;
+    parameters: RouteParameters;
+    query: RouteQuery;
+}
