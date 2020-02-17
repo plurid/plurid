@@ -19,7 +19,7 @@ import {
 const computeRowLayout = (
     roots: TreePage[],
     rows: number = 1,
-    rowLength: number | undefined,
+    rowLength?: number,
     gap: number = ROOTS_GAP,
     configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {

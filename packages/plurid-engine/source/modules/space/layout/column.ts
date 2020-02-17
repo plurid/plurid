@@ -19,7 +19,7 @@ import {
 const computeColumnLayout = (
     roots: TreePage[],
     columns: number = 1,
-    columnLength: number | undefined,
+    columnLength?: number,
     gap: number = ROOTS_GAP,
     configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {
