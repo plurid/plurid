@@ -41,12 +41,19 @@ export interface PagePath {
     id: string;
     pageID: string;
     address: string;
-    regex: string;
+    // regex: string;
     parameters?: PageParameter[];
+    query?: PageQuery[];
 }
 
 
 export interface PageParameter {
+    name: string;
+    index: number;
+}
+
+
+export interface PageQuery {
     name: string;
     index: number;
 }
