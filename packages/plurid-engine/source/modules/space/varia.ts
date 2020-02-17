@@ -177,8 +177,14 @@ export const assignPagesFromView = (
         console.log('pages', pages);
 
         console.log('matchedPage', matchedPage);
+        console.log('------------------');
         if (matchedPage) {
-            tree.push(matchedPage);
+            const newPage = {
+                ...matchedPage,
+                path: viewPage,
+                planeID: Math.random() + '',
+            };
+            tree.push(newPage);
         }
     });
 
