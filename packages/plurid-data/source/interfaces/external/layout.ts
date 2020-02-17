@@ -41,6 +41,11 @@ export interface LayoutColumns extends Layout {
     columns?: number;
 
     /**
+     * Number of planes per column.
+     */
+    columnLength?: number;
+
+    /**
      * Distance between columns.
      *
      * Value between `0.00` and `x.00` (floating numbers) indicating percent of view width
@@ -76,6 +81,11 @@ export interface LayoutRows extends Layout {
      * the pages will overflow onto the next column.
      */
     rows?: number;
+
+    /**
+     * Number of planes per row.
+     */
+    rowLength?: number;
 
     /**
      * Distance between rows.
