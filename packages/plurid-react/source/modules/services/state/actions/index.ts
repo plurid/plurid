@@ -3,7 +3,7 @@ import data from './data';
 import shortcuts from './shortcuts';
 import * as space from '../modules/space';
 import * as themes from '../modules/themes';
-import ui from './ui';
+import * as ui from '../modules/ui';
 
 
 
@@ -13,5 +13,5 @@ export default {
     shortcuts,
     space: space.actions,
     themes: themes.actions,
-    ui,
+    ui: ui.actions,
 };
