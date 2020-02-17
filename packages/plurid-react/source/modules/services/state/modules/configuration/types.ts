@@ -169,6 +169,7 @@ export interface SetConfigurationSpaceLayoutTypeAction {
 }
 
 
+
 export interface State extends PluridConfiguration {
 }
 
