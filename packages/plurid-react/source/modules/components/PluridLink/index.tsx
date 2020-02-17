@@ -143,7 +143,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
                 pagePath,
                 route.id,
                 linkCoordinates,
-                [],
+                parameters,
             );
 
             if (pluridPlaneID) {

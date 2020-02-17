@@ -6,7 +6,7 @@ import {
     PluridInternalStatePage,
 
     PagePath,
-    PageParameter,
+    PathParameters,
 } from '@plurid/plurid-data';
 
 
@@ -48,7 +48,7 @@ export const registerPaths = (
 
 interface PathHandler {
     regex: string;
-    parameters?: PageParameter[];
+    parameters?: PathParameters;
 }
 
 const handlePath = (
