@@ -169,11 +169,11 @@ export interface SetConfigurationSpaceLayoutTypeAction {
 }
 
 
-export interface ConfigurationState extends PluridConfiguration {
+export interface State extends PluridConfiguration {
 }
 
 
-export type ConfigurationActionsType = SetConfigurationAction
+export type Actions = SetConfigurationAction
     | SetConfigurationMicroAction
     /** PLANE */
     | SetConfigurationPlaneControlsAction

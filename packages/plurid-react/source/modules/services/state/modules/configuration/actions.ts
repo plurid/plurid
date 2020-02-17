@@ -8,89 +8,33 @@ import {
     LAYOUT_TYPES,
 } from '@plurid/plurid-data';
 
-import {
-    SetConfigurationAction,
-    SET_CONFIGURATION,
-    SetConfigurationMicroAction,
-    SET_CONFIGURATION_MICRO,
-
-    SET_CONFIGURATION_PLANE_CONTROLS,
-    SetConfigurationPlaneControlsAction,
-
-    SET_CONFIGURATION_PLANE_OPACITY,
-    SetConfigurationPlaneOpacityAction,
-
-    SET_CONFIGURATION_THEME_GENERAL,
-    SetConfigurationThemeGeneralAction,
-    SET_CONFIGURATION_THEME_INTERACTION,
-    SetConfigurationThemeInteractionAction,
-
-    TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
-    ToggleConfigurationViewcubeHideAction,
-    TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS,
-    ToggleConfigurationViewcubeButtonsAction,
-    TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
-    ToggleConfigurationViewcubeOpaqueAction,
-    TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL,
-    ToggleConfigurationViewcubeConcealAction,
-
-    TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL,
-    ToggleConfigurationToolbarConcealAction,
-    TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
-    ToggleConfigurationToolbarTransformIconsAction,
-    TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
-    ToggleConfigurationToolbarTransformButtonsAction,
-    TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE,
-    ToggleConfigurationToolbarOpaqueAction,
-    TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
-    ToggleConfigurationToolbarToggleDrawerAction,
-
-    TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI,
-    ToggleConfigurationSpaceTransparentUIAction,
-    TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
-    ToggleConfigurationSpaceShowTransformOriginAction,
-    SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
-    SetConfigurationSpaceTransformOriginSizeAction,
-
-    SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
-    SetConfigurationSpaceTransformModeAction,
-    TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE,
-    ToggleConfigurationSpaceTransformMultimodeAction,
-    SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
-    SetConfigurationSpaceTransformTouchAction,
-
-    TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
-    ToggleConfigurationSpaceFirstPersonAction,
-
-    SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS,
-    SetConfigurationSpaceTransformLocksAction,
-
-    SET_CONFIGURATION_SPACE_LAYOUT_TYPE,
-    SetConfigurationSpaceLayoutTypeAction,
-} from './types';
+import * as Types from './types';
 
 
 
-export const setConfiguration = (payload: PluridConfiguration): SetConfigurationAction => {
+export const setConfiguration = (
+    payload: PluridConfiguration,
+): Types.SetConfigurationAction => {
     return {
-        type: SET_CONFIGURATION,
+        type: Types.SET_CONFIGURATION,
         payload,
     };
 }
 
 
-export const setConfigurationMicro = (): SetConfigurationMicroAction => {
+export const setConfigurationMicro = (
+): Types.SetConfigurationMicroAction => {
     return {
-        type: SET_CONFIGURATION_MICRO,
+        type: Types.SET_CONFIGURATION_MICRO,
     };
 }
 
 
 export const setConfigurationPlaneControls = (
     planeControls: boolean,
-): SetConfigurationPlaneControlsAction => {
+): Types.SetConfigurationPlaneControlsAction => {
     return {
-        type: SET_CONFIGURATION_PLANE_CONTROLS,
+        type: Types.SET_CONFIGURATION_PLANE_CONTROLS,
         payload: planeControls,
     };
 }
@@ -98,9 +42,9 @@ export const setConfigurationPlaneControls = (
 
 export const setConfigurationPlaneOpacity = (
     value: number,
-): SetConfigurationPlaneOpacityAction => {
+): Types.SetConfigurationPlaneOpacityAction => {
     return {
-        type: SET_CONFIGURATION_PLANE_OPACITY,
+        type: Types.SET_CONFIGURATION_PLANE_OPACITY,
         payload: value,
     };
 }
@@ -108,9 +52,9 @@ export const setConfigurationPlaneOpacity = (
 
 export const setConfigurationThemeGeneralAction = (
     payload: string,
-): SetConfigurationThemeGeneralAction => {
+): Types.SetConfigurationThemeGeneralAction => {
     return {
-        type: SET_CONFIGURATION_THEME_GENERAL,
+        type: Types.SET_CONFIGURATION_THEME_GENERAL,
         payload,
     };
 }
@@ -118,9 +62,9 @@ export const setConfigurationThemeGeneralAction = (
 
 export const setConfigurationThemeInteractionAction = (
     payload: string,
-): SetConfigurationThemeInteractionAction => {
+): Types.SetConfigurationThemeInteractionAction => {
     return {
-        type: SET_CONFIGURATION_THEME_INTERACTION,
+        type: Types.SET_CONFIGURATION_THEME_INTERACTION,
         payload,
     };
 }
@@ -128,9 +72,9 @@ export const setConfigurationThemeInteractionAction = (
 
 export const toggleConfigurationViewcubeHide = (
     toggle: boolean,
-): ToggleConfigurationViewcubeHideAction => {
+): Types.ToggleConfigurationViewcubeHideAction => {
     return {
-        type: TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
+        type: Types.TOGGLE_CONFIGURATION_VIEWCUBE_HIDE,
         payload: toggle,
     };
 }
@@ -138,9 +82,9 @@ export const toggleConfigurationViewcubeHide = (
 
 export const toggleConfigurationViewcubeButtons = (
     toggle: boolean,
-): ToggleConfigurationViewcubeButtonsAction => {
+): Types.ToggleConfigurationViewcubeButtonsAction => {
     return {
-        type: TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS,
+        type: Types.TOGGLE_CONFIGURATION_VIEWCUBE_BUTTONS,
         payload: toggle,
     };
 }
@@ -148,68 +92,75 @@ export const toggleConfigurationViewcubeButtons = (
 
 export const toggleConfigurationViewcubeOpaque = (
     toggle: boolean,
-): ToggleConfigurationViewcubeOpaqueAction => {
+): Types.ToggleConfigurationViewcubeOpaqueAction => {
     return {
-        type: TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
+        type: Types.TOGGLE_CONFIGURATION_VIEWCUBE_OPAQUE,
         payload: toggle,
     };
 }
 
 
-export const toggleConfigurationViewcubeConceal = (): ToggleConfigurationViewcubeConcealAction => {
+export const toggleConfigurationViewcubeConceal = (
+): Types.ToggleConfigurationViewcubeConcealAction => {
     return {
-        type: TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL,
+        type: Types.TOGGLE_CONFIGURATION_VIEWCUBE_CONCEAL,
     };
 }
 
 
-export const toggleConfigurationToolbarConceal = (): ToggleConfigurationToolbarConcealAction => {
+export const toggleConfigurationToolbarConceal = (
+): Types.ToggleConfigurationToolbarConcealAction => {
     return {
-        type: TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL,
+        type: Types.TOGGLE_CONFIGURATION_TOOLBAR_CONCEAL,
     };
 }
 
 
-export const toggleConfigurationToolbarTransformIcons = (): ToggleConfigurationToolbarTransformIconsAction => {
+export const toggleConfigurationToolbarTransformIcons = (
+): Types.ToggleConfigurationToolbarTransformIconsAction => {
     return {
-        type: TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
+        type: Types.TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_ICONS,
     };
 }
 
 
-export const toggleConfigurationToolbarTransformButtons = (): ToggleConfigurationToolbarTransformButtonsAction => {
+export const toggleConfigurationToolbarTransformButtons = (
+): Types.ToggleConfigurationToolbarTransformButtonsAction => {
     return {
-        type: TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
+        type: Types.TOGGLE_CONFIGURATION_TOOLBAR_TRANSFORM_BUTTONS,
     };
 }
 
 
-export const toggleConfigurationSpaceTransparentUI = (): ToggleConfigurationSpaceTransparentUIAction => {
+export const toggleConfigurationSpaceTransparentUI = (
+): Types.ToggleConfigurationSpaceTransparentUIAction => {
     return {
-        type: TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI,
+        type: Types.TOGGLE_CONFIGURATION_SPACE_TRANSPARENT_UI,
     };
 }
 
 
-export const toggleConfigurationSpaceShowTransformOrigin = (): ToggleConfigurationSpaceShowTransformOriginAction => {
+export const toggleConfigurationSpaceShowTransformOrigin = (
+): Types.ToggleConfigurationSpaceShowTransformOriginAction => {
     return {
-        type: TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
+        type: Types.TOGGLE_CONFIGURATION_SPACE_SHOW_TRANSFORM_ORIGIN,
     };
 }
 
 
-export const toggleConfigurationToolbarOpaque = (): ToggleConfigurationToolbarOpaqueAction => {
+export const toggleConfigurationToolbarOpaque = (
+): Types.ToggleConfigurationToolbarOpaqueAction => {
     return {
-        type: TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE,
+        type: Types.TOGGLE_CONFIGURATION_TOOLBAR_OPAQUE,
     };
 }
 
 
 export const toggleConfigurationToolbarToggleDrawer = (
     drawer: keyof typeof TOOLBAR_DRAWERS,
-): ToggleConfigurationToolbarToggleDrawerAction => {
+): Types.ToggleConfigurationToolbarToggleDrawerAction => {
     return {
-        type: TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
+        type: Types.TOGGLE_CONFIGURATION_TOOLBAR_TOGGLE_DRAWER,
         payload: drawer,
     };
 }
@@ -217,9 +168,9 @@ export const toggleConfigurationToolbarToggleDrawer = (
 
 export const setConfigurationSpaceTransformOriginSize = (
     size: keyof typeof SIZES,
-): SetConfigurationSpaceTransformOriginSizeAction => {
+): Types.SetConfigurationSpaceTransformOriginSizeAction => {
     return {
-        type: SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
+        type: Types.SET_CONFIGURATION_SPACE_TRANSFORM_ORIGIN_SIZE,
         payload: size,
     };
 }
@@ -227,9 +178,9 @@ export const setConfigurationSpaceTransformOriginSize = (
 
 export const setConfigurationSpaceTransformMode = (
     mode: keyof typeof TRANSFORM_MODES,
-): SetConfigurationSpaceTransformModeAction => {
+): Types.SetConfigurationSpaceTransformModeAction => {
     return {
-        type: SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
+        type: Types.SET_CONFIGURATION_SPACE_TRANSFORM_MODE,
         payload: mode,
     };
 }
@@ -237,9 +188,9 @@ export const setConfigurationSpaceTransformMode = (
 
 export const toggleConfigurationSpaceTransformMultimode = (
     toggle: boolean,
-): ToggleConfigurationSpaceTransformMultimodeAction => {
+): Types.ToggleConfigurationSpaceTransformMultimodeAction => {
     return {
-        type: TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE,
+        type: Types.TOGGLE_CONFIGURATION_SPACE_TRANSFORM_MULTIMODE,
         payload: toggle,
     };
 }
@@ -247,26 +198,27 @@ export const toggleConfigurationSpaceTransformMultimode = (
 
 export const setConfigurationSpaceTransformTouch = (
     touch: keyof typeof TRANSFORM_TOUCHES,
-): SetConfigurationSpaceTransformTouchAction => {
+): Types.SetConfigurationSpaceTransformTouchAction => {
     return {
-        type: SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
+        type: Types.SET_CONFIGURATION_SPACE_TRANSFORM_TOUCH,
         payload: touch,
     };
 }
 
 
-export const toggleConfigurationSpaceFirstPerson = (): ToggleConfigurationSpaceFirstPersonAction => {
+export const toggleConfigurationSpaceFirstPerson = (
+): Types.ToggleConfigurationSpaceFirstPersonAction => {
     return {
-        type: TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
+        type: Types.TOGGLE_CONFIGURATION_SPACE_FIRST_PERSON,
     };
 }
 
 
 export const setConfigurationSpaceTransformLocks = (
     transformLock: string,
-): SetConfigurationSpaceTransformLocksAction => {
+): Types.SetConfigurationSpaceTransformLocksAction => {
     return {
-        type: SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS,
+        type: Types.SET_CONFIGURATION_SPACE_TRANSFORM_LOCKS,
         payload: transformLock,
     };
 }
@@ -274,9 +226,9 @@ export const setConfigurationSpaceTransformLocks = (
 
 export const setConfigurationSpaceLayoutType = (
     layoutType: keyof typeof LAYOUT_TYPES,
-): SetConfigurationSpaceLayoutTypeAction => {
+): Types.SetConfigurationSpaceLayoutTypeAction => {
     return {
-        type: SET_CONFIGURATION_SPACE_LAYOUT_TYPE,
+        type: Types.SET_CONFIGURATION_SPACE_LAYOUT_TYPE,
         payload: layoutType,
     };
 }
