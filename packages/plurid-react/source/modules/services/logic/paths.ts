@@ -54,36 +54,40 @@ interface PathHandler {
 const handlePath = (
     path: string,
 ): PathHandler => {
-    const re = /\/([^/]+)/g;
-    const match = path.match(re);
-
-    if (!match) {
-        return {
-            regex: path,
-        };
-    }
-
-    const composedRegex = composePathRegex(match);
-
-    const parameters: PageParameter[] = [];
-
-    for (const [index, subpath] of match.entries()) {
-        if (
-            subpathIsParameter(subpath)
-        ) {
-            const name = subpath.slice(2,);
-            const parameter = {
-                name,
-                index,
-            }
-            parameters.push(parameter);
-        }
-    }
-
     return {
-        regex: composedRegex,
-        parameters: parameters.length > 0 ? parameters : undefined,
+        regex: '',
     };
+
+    // const re = /\/([^/]+)/g;
+    // const match = path.match(re);
+
+    // if (!match) {
+    //     return {
+    //         regex: path,
+    //     };
+    // }
+
+    // const composedRegex = composePathRegex(match);
+
+    // const parameters: PageParameter[] = [];
+
+    // for (const [index, subpath] of match.entries()) {
+    //     if (
+    //         subpathIsParameter(subpath)
+    //     ) {
+    //         const name = subpath.slice(2,);
+    //         const parameter = {
+    //             name,
+    //             index,
+    //         }
+    //         parameters.push(parameter);
+    //     }
+    // }
+
+    // return {
+    //     regex: composedRegex,
+    //     parameters: parameters.length > 0 ? parameters : undefined,
+    // };
 
 
     /** PARSING VERSION */
