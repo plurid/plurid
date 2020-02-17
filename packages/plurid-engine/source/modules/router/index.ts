@@ -1,6 +1,7 @@
 import {
     /** interfaces */
     TreePage,
+    PluridInternalStatePage,
 } from '@plurid/plurid-data';
 
 import {
@@ -15,16 +16,21 @@ import {
 
 
 
+interface TwithPath {
+    [key: string]: any;
+    path: string;
+}
+
 /**
  * Matches the adequate `route` given the `path`, if any.
  *
  * @param path
  * @param routes
  */
-export const match = (
+export const match = <T extends TwithPath>(
     path: string,
-    routes: TreePage[],
-): TreePage | undefined => {
+    routes: T[],
+): T | undefined => {
     for (const route of routes) {
         if (route.path === '*') {
             return route;
