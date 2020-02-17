@@ -8,7 +8,9 @@ import {
 
 
 
-const Page1 = (properties) => {
+const Page1: React.FC<any> = (
+    properties,
+) => {
     // console.log('aaa', properties);
 
     // const a = useRef(Math.random() * 800 + 100);

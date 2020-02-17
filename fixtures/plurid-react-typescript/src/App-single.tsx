@@ -5,6 +5,7 @@ import React, {
 
 import PluridApp, {
     // PluridConfiguration,
+    PluridPage,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -57,11 +58,11 @@ const App = () => {
             },
         },
     };
-    const anotherConfiguration = {
-        micro: true,
-    }
+    // const anotherConfiguration = {
+    //     micro: true,
+    // };
 
-    const appPages = [
+    const appPages: PluridPage[] = [
         // {
         //     path: '/page-1',
         //     component: {
@@ -71,7 +72,7 @@ const App = () => {
         //     root: true,
         // },
         {
-            path: '/:page$',
+            path: '/:page',
             component: {
                 element: Page1,
                 properties: {},

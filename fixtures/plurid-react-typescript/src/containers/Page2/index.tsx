@@ -6,7 +6,9 @@ import {
 
 
 
-const Page2 = (properties) => {
+const Page2: React.FC<any> = (
+    properties,
+) => {
     // console.log(properties.plurid);
 
     return (
