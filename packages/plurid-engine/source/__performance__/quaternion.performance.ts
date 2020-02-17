@@ -1,5 +1,5 @@
 import { performance } from 'perf_hooks';
-import { computeQuaternionFromEulers } from '../';
+import { quaternion } from '../';
 
 
 
@@ -14,7 +14,7 @@ import { computeQuaternionFromEulers } from '../';
 const t0 = performance.now();
 
 for (let i = 0; i < 1000; i++) {
-    const quaternionFromEuler = computeQuaternionFromEulers(120, 130, 140);
+    quaternion.computeQuaternionFromEulers(120, 130, 140);
 }
 
 const t1 = performance.now();
