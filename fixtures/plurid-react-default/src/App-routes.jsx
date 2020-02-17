@@ -109,9 +109,9 @@ const App = () => {
     ];
 
     const view = [
-        // '/one',
+        '/one',
         '/two',
-        // '/three',
+        '/three',
     ];
 
     return (
