@@ -16,9 +16,15 @@ const App = () => {
         theme: 'plurid',
         transparentUI: true,
         space: {
+            // layout: {
+            //     type: SPACE_LAYOUT.COLUMNS,
+            //     columns: 4,
+            //     gap: 0.1,
+            // },
             layout: {
-                type: SPACE_LAYOUT.COLUMNS,
-                columns: 3,
+                type: 'ROWS',
+                // type: SPACE_LAYOUT.ROWS,
+                rows: 1,
                 gap: 0.1,
             },
             // layout: {
@@ -113,7 +119,7 @@ const App = () => {
         '/two',
         '/three',
         '/four',
-        '/four',
+        '/five',
     ];
 
     return (
