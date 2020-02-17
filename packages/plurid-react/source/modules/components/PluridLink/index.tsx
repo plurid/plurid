@@ -53,7 +53,7 @@ interface PluridLinkStateProperties {
 }
 
 interface PluridLinkDispatchProperties {
-    setTree: typeof actions.space.setTree;
+    dispatchSetTree: typeof actions.space.setTree;
     dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
 }
 
@@ -78,6 +78,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         suffix: _suffix,
         atClick,
         style,
+        className,
 
         /** state */
         tree,
@@ -88,7 +89,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         viewSize,
 
         /** dispatch */
-        setTree,
+        dispatchSetTree,
         dispatchUpdateSpaceLinkCoordinates,
     } = properties;
 
@@ -126,10 +127,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
         let pathData = null;
         for (const pathValue of Object.values(paths)) {
-            const re = new RegExp(pathValue.regex);
-            const match = pagePath.match(re);
+            // const re = new RegExp(pathValue.regex);
+            // const match = pagePath.match(re);
 
-            if (match) {
+            if (pathValue.address === pagePath) {
                 pathData = {...pathValue};
                 break;
             }
@@ -151,7 +152,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
             );
 
             if (pluridPlaneID) {
-                setTree(updatedTree);
+                dispatchSetTree(updatedTree);
                 setShowLink(true);
                 setPluridPlaneID(pluridPlaneID);
             }
@@ -160,7 +161,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
     const toggleLinkFromTree = () => {
         const updatedTree = space.togglePageFromTree(tree, pluridPlaneID);
-        setTree(updatedTree);
+        dispatchSetTree(updatedTree);
         setShowLink(show => !show);
     }
 
@@ -227,6 +228,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
             style={{
                 ...style,
             }}
+            className={className}
         >
             {children}
         </StyledPluridLink>
@@ -246,8 +248,14 @@ const mapStateToProps = (
 });
 
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PluridLinkDispatchProperties => ({
-    setTree: (tree: TreePage[]) => dispatch(actions.space.setTree(tree)),
+const mapDispatchToProps = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): PluridLinkDispatchProperties => ({
+    dispatchSetTree: (
+        tree: TreePage[],
+    ) => dispatch(
+        actions.space.setTree(tree),
+    ),
 
     dispatchUpdateSpaceLinkCoordinates: (
         payload: UpdateSpaceLinkCoordinatesPayload,
