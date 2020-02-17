@@ -92,7 +92,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
             ? 5
             : 7.5;
 
-    console.log('aaa state tree', stateTree);
 
     /** render */
     return (
