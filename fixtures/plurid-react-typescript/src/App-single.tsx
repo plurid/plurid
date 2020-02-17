@@ -23,6 +23,7 @@ const App = () => {
             layout: {
                 type: SPACE_LAYOUT.ROWS,
                 rows: 1,
+                // rowLength: 3,
                 gap: 0.1,
             },
             // layout: {
@@ -126,7 +127,7 @@ const App = () => {
         // },
     ];
 
-    const [configuation, setConfiguration] = useState(appConfiguration);
+    // const [configuration, setConfiguration] = useState(appConfiguration);
 
     // useEffect(() => {
     //     setTimeout(() => {
@@ -150,7 +151,7 @@ const App = () => {
     return (
         <div>
             <PluridApp
-                configuration={configuation}
+                configuration={appConfiguration}
                 pages={appPages}
                 view={view}
             />

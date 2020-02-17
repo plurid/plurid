@@ -6,7 +6,7 @@ import PluridApp, {
 } from '@plurid/plurid-react';
 
 import Page1 from './containers/Page1';
-import Page2 from './containers/Page2';
+// import Page2 from './containers/Page2';
 
 
 
