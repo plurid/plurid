@@ -33,17 +33,17 @@ export interface PluridPage {
      */
     id?: string;
 
-    /**
-     * If true, the page will be rendered on the initial layout.
-     */
-    root?: boolean;
+    // /**
+    //  * If true, the page will be rendered on the initial layout.
+    //  */
+    // root?: boolean;
 
-    /**
-     * By default, the order the pages are shown in is based on their index in the `pages[]`.
-     * The ordinal can be used to overrule the default order.
-     * If not unique, the pages with equal `ordinal` will be ordered by index.
-     */
-    ordinal?: number;
+    // /**
+    //  * By default, the order the pages are shown in is based on their index in the `pages[]`.
+    //  * The ordinal can be used to overrule the default order.
+    //  * If not unique, the pages with equal `ordinal` will be ordered by index.
+    //  */
+    // ordinal?: number;
 }
 
 
@@ -53,7 +53,8 @@ export type PluridPageContext<T> = React.Context<T>;
 
 
 export interface PluridComponentReact {
-    element: (properties: ReactComponentWithPluridProperties) => JSX.Element,
+    element: React.FC<ReactComponentWithPluridProperties>,
+    // element: (properties: ReactComponentWithPluridProperties) => JSX.Element,
     properties?: PluridComponentProperties;
 }
 

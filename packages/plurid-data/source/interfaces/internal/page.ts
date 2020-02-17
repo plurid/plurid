@@ -10,8 +10,8 @@ export interface PluridInternalPage {
 }
 
 export interface PluridInternalStatePage extends PluridInternalPage {
-    root: boolean;
-    ordinal: number;
+    // root: boolean;
+    // ordinal: number;
 }
 
 export interface PluridInternalContextPage extends PluridInternalPage {
