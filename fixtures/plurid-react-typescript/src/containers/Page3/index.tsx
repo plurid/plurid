@@ -6,7 +6,9 @@ import {
 
 
 
-const Page3 = () => {
+const Page3: React.FC<any> = (
+    properties,
+) => {
     return (
         <div
             style={{height: 400}}
