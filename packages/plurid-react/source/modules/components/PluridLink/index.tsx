@@ -130,13 +130,18 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         const matchedPage = router.match(pagePath, Object.values(pages));
         if (matchedPage) {
             const {
+                route,
+                parameters,
+            } = matchedPage;
+
+            const {
                 pluridPlaneID,
                 updatedTree,
             } = space.updateTreeWithNewPage(
                 tree,
                 parentPlaneID,
                 pagePath,
-                matchedPage.id,
+                route.id,
                 linkCoordinates,
                 [],
             );
