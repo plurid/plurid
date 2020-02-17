@@ -1,5 +1,5 @@
 import React, {
-    useState,
+    // useState,
     // useEffect,
 } from 'react';
 
@@ -83,7 +83,11 @@ const App = () => {
         {
             path: '/:page',
             component: {
-                element: (properties) => (<Page1 />),
+                element: (properties) => (
+                    <Page1
+                        plurid={properties.plurid}
+                    />
+                ),
                 properties: {},
             },
             // root: true,
