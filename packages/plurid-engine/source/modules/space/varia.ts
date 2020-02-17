@@ -97,11 +97,13 @@ export const computeSpaceTree = (
             {
                 const {
                     columns,
+                    columnLength,
                     gap,
                 } = configuration.space.layout;
                 const columnLayoutTree = computeColumnLayout(
                     assignedPages,
                     columns,
+                    columnLength,
                     gap,
                     configuration,
                 );

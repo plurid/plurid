@@ -19,6 +19,7 @@ import {
 const computeColumnLayout = (
     roots: TreePage[],
     columns: number = 1,
+    columnLength: number | undefined,
     gap: number = ROOTS_GAP,
     configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {
@@ -32,11 +33,23 @@ const computeColumnLayout = (
         ? gap
         : gap * width;
 
+    const length = columnLength || Math.ceil(roots.length / columns);
+
     for (const [index, root] of roots.entries()) {
-        const rowIndex = index % columns;
-        const columnIndex = Math.floor(index / columns);
+        const rowIndex = index % length;
+        const columnIndex = Math.floor(index / length);
+
+        // const rowIndex = index % columns;
+        // const columnIndex = Math.floor(index / columns);
+
+        // const rowIndex = Math.floor(index / length);
+        // const columnIndex = index % length;
+
         const translateX = columnIndex * (width + gapValue);
         const translateY = rowIndex * (height + gapValue);
+
+        console.log('rowIndex', rowIndex);
+        console.log('columnIndex', columnIndex);
 
         const treePage: TreePage = {
             ...root,
