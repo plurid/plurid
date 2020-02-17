@@ -3,18 +3,15 @@ import {
     PluridInternalStateDocument,
 } from '@plurid/plurid-data';
 
-import {
-    SET_DOCUMENTS,
-    SetDocumentsAction,
-} from './types';
+import * as Types from './types';
 
 
 
 export const setDocuments = (
     payload: Indexed<PluridInternalStateDocument>,
-): SetDocumentsAction => {
+): Types.DataSetDocumentsAction => {
     return {
-        type: SET_DOCUMENTS,
+        type: Types.DATA_SET_DOCUMENTS,
         payload,
     };
 }

@@ -5,17 +5,17 @@ import {
 
 
 
-export const SET_DOCUMENTS = 'SET_DOCUMENTS';
-export interface SetDocumentsAction {
-    type: typeof SET_DOCUMENTS;
+export const DATA_SET_DOCUMENTS = 'DATA_SET_DOCUMENTS';
+export interface DataSetDocumentsAction {
+    type: typeof DATA_SET_DOCUMENTS;
     payload: Indexed<PluridInternalStateDocument>;
 }
 
 
 
-export interface DataState {
+export interface State {
     documents: Indexed<PluridInternalStateDocument>;
 }
 
 
-export type DataActionsType = SetDocumentsAction;
+export type Actions = DataSetDocumentsAction;
