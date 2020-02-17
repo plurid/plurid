@@ -40,7 +40,7 @@ interface PluridRootsStateProperties {
     spaceTranslationX: number;
     spaceTranslationY: number;
     spaceTranslationZ: number;
-    tree: TreePage[];
+    stateTree: TreePage[];
 }
 
 interface PluridRootsDispatchProperties {
@@ -50,7 +50,10 @@ type PluridRootsProperties = PluridRootsOwnProperties
     & PluridRootsStateProperties
     & PluridRootsDispatchProperties;
 
-const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
+const PluridRoots: React.FC<PluridRootsProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
         configuration,
@@ -62,7 +65,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
         spaceTranslationX,
         spaceTranslationY,
         spaceTranslationZ,
-        tree,
+        stateTree,
     } = properties;
 
     const {
@@ -89,6 +92,9 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
             ? 5
             : 7.5;
 
+    console.log('aaa state tree', stateTree);
+
+    /** render */
     return (
         <StyledPluridRoots
             style={{
@@ -134,7 +140,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (properties) => {
                 />
             )}
 
-            {tree.map(page => {
+            {stateTree.map(page => {
                 return (
                     <PluridRoot
                         key={page.path}
@@ -159,7 +165,7 @@ const mapStateToProps = (
     spaceTranslationX: selectors.space.getTranslationX(state),
     spaceTranslationY: selectors.space.getTranslationY(state),
     spaceTranslationZ: selectors.space.getTranslationZ(state),
-    tree: selectors.space.getTree(state),
+    stateTree: selectors.space.getTree(state),
 });
 
 
