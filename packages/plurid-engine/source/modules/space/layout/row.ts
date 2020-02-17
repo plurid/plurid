@@ -33,8 +33,8 @@ const computeRowLayout = (
         : gap * width;
 
     for (const [index, root] of roots.entries()) {
-        const rowIndex = Math.floor(index / rows);
-        const columnIndex = index % rows;
+        const rowIndex = index % rows;
+        const columnIndex = Math.floor(index / rows);
         const translateX = columnIndex * (width + gapValue);
         const translateY = rowIndex * (height + gapValue);
 
