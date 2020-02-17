@@ -20,6 +20,7 @@ import {
 } from '@plurid/plurid-functions';
 
 import computeColumnLayout from './layout/column';
+import computeRowLayout from './layout/row';
 import computeFaceToFaceLayout from './layout/faceToFace';
 import computeSheavesLayout from './layout/sheaves';
 import computeZigZagLayout from './layout/zigZag';
@@ -101,6 +102,20 @@ export const computeSpaceTree = (
                 const columnLayoutTree = computeColumnLayout(
                     assignedPages,
                     columns,
+                    gap,
+                    configuration,
+                );
+                return columnLayoutTree;
+            }
+        case LAYOUT_TYPES.ROWS:
+            {
+                const {
+                    rows,
+                    gap,
+                } = configuration.space.layout;
+                const columnLayoutTree = computeRowLayout(
+                    assignedPages,
+                    rows,
                     gap,
                     configuration,
                 );
