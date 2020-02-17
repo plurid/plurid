@@ -182,7 +182,7 @@ export const assignPagesFromView = (
             const newPage = {
                 ...matchedPage,
                 path: viewPage,
-                planeID: Math.random() + '',
+                planeID: uuid(),
             };
             tree.push(newPage);
         }
