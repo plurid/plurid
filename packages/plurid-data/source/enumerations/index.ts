@@ -43,6 +43,7 @@ export enum KEY_MODIFIERS {
 
 export enum LAYOUT_TYPES {
     COLUMNS = 'COLUMNS',
+    ROWS = 'ROWS',
     FACE_TO_FACE = 'FACE_TO_FACE',
     ZIG_ZAG = 'ZIG_ZAG',
     SHEAVES = 'SHEAVES',

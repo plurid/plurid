@@ -17,7 +17,7 @@ export interface LayoutMeta extends Layout {
 export interface LayoutMetaLayout {
     size?: number;
     pages?: string[];
-    layout: LayoutColumns | LayoutFaceToFace | LayoutZigZag | LayoutSheaves;
+    layout: LayoutColumns | LayoutRows | LayoutFaceToFace | LayoutZigZag | LayoutSheaves;
 }
 
 
@@ -25,7 +25,10 @@ export interface LayoutColumns extends Layout {
     /**
      * Layout Top View
      *
-     * ‾‾ ‾‾ ‾‾ ... ‾‾
+     * ‾1‾ ‾4‾
+     * ‾2‾ ‾5‾
+     * ‾3‾
+     *
      */
     type: LAYOUT_TYPES.COLUMNS;
 
@@ -39,6 +42,43 @@ export interface LayoutColumns extends Layout {
 
     /**
      * Distance between columns.
+     *
+     * Value between `0.00` and `x.00` (floating numbers) indicating percent of view width
+     * or between `0` and `x0...0` (integers) indicating pixel values.
+     *
+     * For example:
+     * `0.5` is 50% of view width,
+     * `5` is five pixels,
+     * `1.00` is 100% of view width,
+     * `1` is one pixels,
+     * `1.35` is 135% of view width,
+     * `135` is 135 pixels.
+     */
+    gap?: number;
+}
+
+
+export interface LayoutRows extends Layout {
+    /**
+     * Layout Top View
+     *
+     * ‾1‾ ‾2‾
+     * ‾3‾ ‾4‾
+     * ‾5‾
+     *
+     */
+    type: LAYOUT_TYPES.ROWS;
+
+    /**
+     * Integer value indicating the number of rows.
+     *
+     * If the number of pages is greater than the number of rows,
+     * the pages will overflow onto the next column.
+     */
+    rows?: number;
+
+    /**
+     * Distance between rows.
      *
      * Value between `0.00` and `x.00` (floating numbers) indicating percent of view width
      * or between `0` and `x0...0` (integers) indicating pixel values.
