@@ -112,6 +112,8 @@ const App = () => {
         '/one',
         '/two',
         '/three',
+        '/four',
+        '/four',
     ];
 
     return (

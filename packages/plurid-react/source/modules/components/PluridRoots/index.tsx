@@ -143,7 +143,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
             {stateTree.map(page => {
                 return (
                     <PluridRoot
-                        key={page.path}
+                        key={page.planeID}
                         page={page}
                     />
                 );
