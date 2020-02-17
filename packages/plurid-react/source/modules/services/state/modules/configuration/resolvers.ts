@@ -4,37 +4,14 @@ import {
     LAYOUT_TYPES,
 } from '@plurid/plurid-data';
 
-import {
-    ConfigurationState,
-
-    SetConfigurationAction,
-    SetConfigurationPlaneControlsAction,
-    SetConfigurationPlaneOpacityAction,
-    SetConfigurationThemeGeneralAction,
-    SetConfigurationThemeInteractionAction,
-
-    ToggleConfigurationToolbarToggleDrawerAction,
-
-    ToggleConfigurationViewcubeHideAction,
-    ToggleConfigurationViewcubeButtonsAction,
-    ToggleConfigurationViewcubeOpaqueAction,
-
-    SetConfigurationSpaceTransformOriginSizeAction,
-
-    SetConfigurationSpaceTransformModeAction,
-    ToggleConfigurationSpaceTransformMultimodeAction,
-    SetConfigurationSpaceTransformTouchAction,
-
-    SetConfigurationSpaceTransformLocksAction,
-    SetConfigurationSpaceLayoutTypeAction,
-} from './types';
+import * as Types from './types';
 
 
 
 export const setConfiguration = (
-    state: ConfigurationState,
-    action: SetConfigurationAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationAction,
+): Types.State => {
     return {
         ...state,
         ...action.payload,
@@ -43,8 +20,8 @@ export const setConfiguration = (
 
 
 export const setConfigurationMicro = (
-    state: ConfigurationState,
-): ConfigurationState => {
+    state: Types.State,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -60,9 +37,9 @@ export const setConfigurationMicro = (
 
 
 export const setConfigurationPlaneControls = (
-    state: ConfigurationState,
-    action: SetConfigurationPlaneControlsAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationPlaneControlsAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -76,9 +53,9 @@ export const setConfigurationPlaneControls = (
 
 
 export const setConfigurationPlaneOpacity = (
-    state: ConfigurationState,
-    action: SetConfigurationPlaneOpacityAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationPlaneOpacityAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -92,9 +69,9 @@ export const setConfigurationPlaneOpacity = (
 
 
 export const setConfigurationThemeGeneral = (
-    state: ConfigurationState,
-    action: SetConfigurationThemeGeneralAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationThemeGeneralAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -114,9 +91,9 @@ export const setConfigurationThemeGeneral = (
 
 
 export const setConfigurationThemeInteraction = (
-    state: ConfigurationState,
-    action: SetConfigurationThemeInteractionAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationThemeInteractionAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -136,9 +113,9 @@ export const setConfigurationThemeInteraction = (
 
 
 export const toggleConfigurationViewcubeHide = (
-    state: ConfigurationState,
-    action: ToggleConfigurationViewcubeHideAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.ToggleConfigurationViewcubeHideAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -152,9 +129,9 @@ export const toggleConfigurationViewcubeHide = (
 
 
 export const toggleConfigurationViewcubeButtons = (
-    state: ConfigurationState,
-    action: ToggleConfigurationViewcubeButtonsAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.ToggleConfigurationViewcubeButtonsAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -168,9 +145,9 @@ export const toggleConfigurationViewcubeButtons = (
 
 
 export const toggleConfigurationViewcubeOpaque = (
-    state: ConfigurationState,
-    action: ToggleConfigurationViewcubeOpaqueAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.ToggleConfigurationViewcubeOpaqueAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -184,8 +161,8 @@ export const toggleConfigurationViewcubeOpaque = (
 
 
 export const toggleConfigurationViewcubeConceal = (
-    state: ConfigurationState,
-): ConfigurationState => {
+    state: Types.State,
+): Types.State => {
     const {
         conceal,
     } = state.elements.viewcube;
@@ -203,8 +180,8 @@ export const toggleConfigurationViewcubeConceal = (
 
 
 export const toggleConfigurationToolbarConceal = (
-    state: ConfigurationState,
-): ConfigurationState => {
+    state: Types.State,
+): Types.State => {
     const {
         conceal,
     } = state.elements.toolbar;
@@ -222,8 +199,8 @@ export const toggleConfigurationToolbarConceal = (
 
 
 export const toggleConfigurationToolbarTransformIcons = (
-    state: ConfigurationState,
-): ConfigurationState => {
+    state: Types.State,
+): Types.State => {
     const {
         transformIcons,
     } = state.elements.toolbar;
@@ -241,8 +218,8 @@ export const toggleConfigurationToolbarTransformIcons = (
 
 
 export const toggleConfigurationToolbarTransformButtons = (
-    state: ConfigurationState,
-): ConfigurationState => {
+    state: Types.State,
+): Types.State => {
     const {
         transformButtons,
     } = state.elements.toolbar;
@@ -260,8 +237,8 @@ export const toggleConfigurationToolbarTransformButtons = (
 
 
 export const toggleConfigurationShowTransformOrigin = (
-    state: ConfigurationState,
-): ConfigurationState => {
+    state: Types.State,
+): Types.State => {
     const {
         show,
     } = state.space.transformOrigin;
@@ -279,8 +256,8 @@ export const toggleConfigurationShowTransformOrigin = (
 
 
 export const toggleConfigurationToolbarOpaque = (
-    state: ConfigurationState,
-): ConfigurationState => {
+    state: Types.State,
+): Types.State => {
     const {
         opaque,
     } = state.elements.toolbar;
@@ -298,8 +275,8 @@ export const toggleConfigurationToolbarOpaque = (
 
 
 export const toggleConfigurationSpaceTransparentUI = (
-    state: ConfigurationState,
-): ConfigurationState => {
+    state: Types.State,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -312,9 +289,9 @@ export const toggleConfigurationSpaceTransparentUI = (
 }
 
 export const setConfigurationSpaceTransformOriginSize = (
-    state: ConfigurationState,
-    action: SetConfigurationSpaceTransformOriginSizeAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationSpaceTransformOriginSizeAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -328,9 +305,9 @@ export const setConfigurationSpaceTransformOriginSize = (
 
 
 export const setConfigurationSpaceTransformMode = (
-    state: ConfigurationState,
-    action: SetConfigurationSpaceTransformModeAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationSpaceTransformModeAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -350,9 +327,9 @@ export const setConfigurationSpaceTransformMode = (
 
 
 export const toggleConfigurationSpaceTransformMultimode = (
-    state: ConfigurationState,
-    action: ToggleConfigurationSpaceTransformMultimodeAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.ToggleConfigurationSpaceTransformMultimodeAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -366,9 +343,9 @@ export const toggleConfigurationSpaceTransformMultimode = (
 
 
 export const setConfigurationSpaceTransformTouch = (
-    state: ConfigurationState,
-    action: SetConfigurationSpaceTransformTouchAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationSpaceTransformTouchAction,
+): Types.State => {
     const newState = {
         ...state,
     };
@@ -382,8 +359,8 @@ export const setConfigurationSpaceTransformTouch = (
 
 
 export const toggleConfigurationSpaceFirstPerson = (
-    state: ConfigurationState,
-): ConfigurationState => {
+    state: Types.State,
+): Types.State => {
     const {
         firstPerson,
     } = state.space;
@@ -401,9 +378,9 @@ export const toggleConfigurationSpaceFirstPerson = (
 
 
 export const toggleConfigurationToolbarToggleDrawer = (
-    state: ConfigurationState,
-    action: ToggleConfigurationToolbarToggleDrawerAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.ToggleConfigurationToolbarToggleDrawerAction,
+): Types.State => {
     const {
         toggledDrawers,
     } = state.elements.toolbar;
@@ -429,9 +406,9 @@ export const toggleConfigurationToolbarToggleDrawer = (
 
 
 export const setConfigurationSpaceTransformLocks = (
-    state: ConfigurationState,
-    action: SetConfigurationSpaceTransformLocksAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationSpaceTransformLocksAction,
+): Types.State => {
     const {
         transformLocks,
     } = state.space;
@@ -455,9 +432,9 @@ export const setConfigurationSpaceTransformLocks = (
 
 
 export const setConfigurationSpaceLayout = (
-    state: ConfigurationState,
-    action: SetConfigurationSpaceLayoutTypeAction,
-): ConfigurationState => {
+    state: Types.State,
+    action: Types.SetConfigurationSpaceLayoutTypeAction,
+): Types.State => {
     const newState = {
         ...state,
     };
