@@ -81,7 +81,7 @@ const App = () => {
         //     root: true,
         // },
         {
-            path: '/:page',
+            path: '*',
             component: {
                 element: (properties) => (
                     <Page1
