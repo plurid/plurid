@@ -189,17 +189,19 @@ export const assignPagesFromView = (
 
     const tree: TreePage[] = [];
 
-
     view.forEach(viewPage => {
         const matchedPage = match(viewPage, pages);
-        console.log('viewPage', viewPage);
-        console.log('pages', pages);
+        // console.log('viewPage', viewPage);
+        // console.log('pages', pages);
 
-        console.log('matchedPage', matchedPage);
-        console.log('------------------');
+        // console.log('matchedPage', matchedPage);
+        // console.log('------------------');
         if (matchedPage) {
+            const {
+                route,
+            } = matchedPage;
             const newPage = {
-                ...matchedPage,
+                ...route,
                 path: viewPage,
                 planeID: uuid(),
             };

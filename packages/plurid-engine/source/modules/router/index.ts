@@ -1,25 +1,22 @@
 import {
     /** interfaces */
     TreePage,
-    PluridInternalStatePage,
 } from '@plurid/plurid-data';
 
 import {
-    Route,
-    ActiveRoute,
+    // Route,
+    // ActiveRoute,
     RouteParameters,
+    RouteQuery,
+    TwithPath,
+    MatchResponse,
 } from './interfaces';
 
-import {
-    compareTypes,
-} from './compareTypes';
+// import {
+//     compareTypes,
+// } from './compareTypes';
 
 
-
-interface TwithPath {
-    [key: string]: any;
-    path: string;
-}
 
 /**
  * Matches the adequate `route` given the `path`, if any.
@@ -30,36 +27,53 @@ interface TwithPath {
 export const match = <T extends TwithPath>(
     path: string,
     routes: T[],
-): T | undefined => {
+): MatchResponse<T> | undefined => {
     for (const route of routes) {
         if (route.path === '*') {
-            return route;
+            return {
+                route,
+                parameters: {},
+                query: {},
+            };
         }
 
         const parameters = extractParameters(route.path);
-        console.log('parameters', parameters);
-        console.log('path', path);
-        console.log('route.path', route.path);
+        // console.log('parameters', parameters);
+        // console.log('path', path);
+        // console.log('route.path', route.path);
 
         if (parameters.length === 0) {
             if (route.path === path) {
-                return route;
+                return {
+                    route,
+                    parameters: {},
+                    query: {},
+                };
             }
         }
 
         if (parameters.length > 0) {
             const {
-                // pathElements,
+                pathElements,
                 comparingPath,
             } = computeComparingPath(path, parameters);
 
             if (comparingPath === route.path) {
-                return route;
+                const parametersValues = extractParametersValues(
+                    parameters,
+                    pathElements,
+                );
 
-                // const parametersValues = extractParametersValues(
-                //     parameters,
-                //     pathElements,
-                // );
+                const queryValues = extractQueryValues(
+                    path
+                );
+
+                return {
+                    route,
+                    parameters: parametersValues,
+                    query: queryValues,
+                };
+
 
                 // if (route.length) {
                 //     const handledRoute = handleRouteLength(pathElements, route);
@@ -156,6 +170,42 @@ export const extractParametersValues = (
     );
 
     return parametersValues;
+}
+
+
+/**
+ * Extract the query values.
+ *
+ * e.g.
+ *
+ * `path = '/foo?id=1&asd=asd'`
+ *
+ * `query = { id: 1, asd: 'asd' }`
+ *
+ * @param path
+ */
+export const extractQueryValues = (
+    path: string,
+): RouteQuery => {
+    const querySplit = path.split('?');
+
+    if (querySplit.length === 2) {
+        const queryValues: RouteQuery = {};
+        const query = querySplit[1];
+        const queryItems = query.split('&');
+
+        for (const item in queryItems) {
+            const queryValue = item.split('=');
+            const id = queryValue[0];
+            const value = queryValue[1];
+
+            queryValues[id] = value;
+        }
+
+        return queryValues;
+    } else {
+        return {};
+    }
 }
 
 
