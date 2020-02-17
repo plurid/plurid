@@ -12,7 +12,7 @@ import {
     TreePage,
     SpaceLocation,
     LinkCoordinates,
-    PageParameter,
+    PathParameters,
 } from '@plurid/plurid-data';
 
 import {
@@ -295,7 +295,7 @@ export const updateTreeWithNewPage = (
     pagePath: string,
     pageID: string,
     linkCoordinates: LinkCoordinates,
-    parameters?: PageParameter[],
+    parameters?: PathParameters,
 ): UpdatedTreeWithNewPage => {
     // to receive parameters and composePath from pagePath and parameters
 
