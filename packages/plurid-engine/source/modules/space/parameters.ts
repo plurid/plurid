@@ -1,13 +1,12 @@
 import {
-    PageParameter,
-    PathParameter,
+    PathParameters
 } from '@plurid/plurid-data';
 
 
 
 export const extractParameters = (
     pagePath: string,
-    parameters?: PageParameter[],
+    parameters?: PathParameters,
 ) => {
     if (!parameters) {
         return {};
@@ -19,16 +18,16 @@ export const extractParameters = (
         return {};
     }
 
-    const extractedParameters: PathParameter = {};
+    const extractedParameters: PathParameters = {};
 
-    for (const [index, matched] of match.entries()) {
-        for (const definedParameters of parameters) {
-            if (definedParameters.index === index) {
-                const cleanedParameter = matched.slice(1,);
-                extractedParameters[definedParameters.name] = cleanedParameter;
-            }
-        }
-    }
+    // for (const [index, matched] of match.entries()) {
+    //     for (const [parameterIndex, parameterValue] of Object.entries(parameters)) {
+    //         if (parameterIndex === index) {
+    //             const cleanedParameter = matched.slice(1,);
+    //             extractedParameters[parameterValue] = cleanedParameter;
+    //         }
+    //     }
+    // }
 
     return extractedParameters;
 }
