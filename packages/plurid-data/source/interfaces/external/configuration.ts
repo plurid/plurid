@@ -7,6 +7,7 @@ import {
 
 import {
     LayoutColumns,
+    LayoutRows,
     LayoutZigZag,
     LayoutFaceToFace,
     LayoutSheaves,
@@ -50,7 +51,7 @@ export interface PluridConfigurationTheme {
 
 
 export interface PluridConfigurationSpace {
-    layout: LayoutColumns | LayoutZigZag | LayoutFaceToFace | LayoutSheaves | LayoutMeta;
+    layout: LayoutColumns | LayoutRows | LayoutZigZag | LayoutFaceToFace | LayoutSheaves | LayoutMeta;
 
     /**
      * Perspective value. Recommended between 1300 and 2000.
