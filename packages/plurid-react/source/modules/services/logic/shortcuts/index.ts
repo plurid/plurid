@@ -8,7 +8,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    getWheelDirection,
+    direction as directionLogic,
 } from '@plurid/plurid-engine';
 
 import actions from '../../state/actions';
@@ -239,7 +239,7 @@ export const handleGlobalWheel = (
         deltaX: event.deltaX,
         deltaY: event.deltaY,
     };
-    const direction = getWheelDirection(deltas);
+    const direction = directionLogic.getWheelDirection(deltas);
 
     if (modes.rotation) {
         if (direction === 'left' && locks.rotationY) {

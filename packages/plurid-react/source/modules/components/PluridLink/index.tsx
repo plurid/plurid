@@ -27,8 +27,7 @@ import {
 } from '../../services/logic/plane';
 
 import {
-    updateTreeWithNewPage,
-    togglePageFromTree,
+    space,
 } from '@plurid/plurid-engine';
 
 import { AppState } from '../../services/state/store';
@@ -142,7 +141,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
             const {
                 pluridPlaneID,
                 updatedTree,
-            } = updateTreeWithNewPage(
+            } = space.updateTreeWithNewPage(
                 tree,
                 parentPlaneID,
                 pagePath,
@@ -160,7 +159,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
     }
 
     const toggleLinkFromTree = () => {
-        const updatedTree = togglePageFromTree(tree, pluridPlaneID);
+        const updatedTree = space.togglePageFromTree(tree, pluridPlaneID);
         setTree(updatedTree);
         setShowLink(show => !show);
     }
