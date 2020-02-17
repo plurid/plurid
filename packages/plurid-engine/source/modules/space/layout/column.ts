@@ -39,17 +39,8 @@ const computeColumnLayout = (
         const rowIndex = index % length;
         const columnIndex = Math.floor(index / length);
 
-        // const rowIndex = index % columns;
-        // const columnIndex = Math.floor(index / columns);
-
-        // const rowIndex = Math.floor(index / length);
-        // const columnIndex = index % length;
-
         const translateX = columnIndex * (width + gapValue);
         const translateY = rowIndex * (height + gapValue);
-
-        console.log('rowIndex', rowIndex);
-        console.log('columnIndex', columnIndex);
 
         const treePage: TreePage = {
             ...root,
