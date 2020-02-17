@@ -73,25 +73,32 @@ const App = () => {
 
     const appPages: PluridPage[] = [
         // {
+        //     id: 'pageOne',
         //     path: '/page-1',
         //     component: {
         //         element: Page1,
         //         properties: {},
         //     },
-        //     root: true,
+        //     // root: true,
         // },
+        // {
+        //     id: 'pageTwo',
+        //     path: '/page-2',
+        //     component: {
+        //         element: Page2,
+        //         properties: {},
+        //     },
+        //     // root: true,
+        // },
+
         {
             path: '*',
             component: {
-                element: (properties) => (
-                    <Page1
-                        plurid={properties.plurid}
-                    />
-                ),
+                element: Page1,
                 properties: {},
             },
-            // root: true,
         },
+
         // {
         //     path: '/page-2',
         //     component: {

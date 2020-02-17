@@ -41,6 +41,10 @@ const Page1: React.FC<any> = (
 
             <input />
 
+            {/* <div>
+                <PluridLink page="pageTwo">link to page 2 by id</PluridLink>
+            </div> */}
+
             <div>
                 <PluridLink page="/page-2/soo/loo">link to page 2</PluridLink>
             </div>
