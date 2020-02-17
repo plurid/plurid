@@ -13,6 +13,11 @@ import {
     PluridInternalContextPage,
 } from './page';
 
+import {
+    PathParameters,
+    PathQuery,
+} from './tree';
+
 
 
 export interface IdentifiedPluridDocument extends Identified<PluridDocument> {
@@ -41,19 +46,6 @@ export interface PagePath {
     id: string;
     pageID: string;
     address: string;
-    // regex: string;
-    parameters?: PageParameter[];
-    query?: PageQuery[];
-}
-
-
-export interface PageParameter {
-    name: string;
-    index: number;
-}
-
-
-export interface PageQuery {
-    name: string;
-    index: number;
+    parameters?: PathParameters;
+    query?: PathQuery;
 }
