@@ -18,22 +18,23 @@ import {
 
 const computeColumnLayout = (
     roots: TreePage[],
-    columns: number = 2,
+    columns: number = 1,
     gap: number = ROOTS_GAP,
     configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {
     const tree: TreePage[] = [];
-    const width = mathematics.numbers.checkIntegerNonUnit(configuration.elements.plane.width)
-        ? configuration.elements.plane.width
-        : configuration.elements.plane.width * window.innerWidth;
+    const configurationWidth = configuration.elements.plane.width;
+    const width = mathematics.numbers.checkIntegerNonUnit(configurationWidth)
+        ? configurationWidth
+        : configurationWidth * window.innerWidth;
     const height = window.innerHeight;
     const gapValue = mathematics.numbers.checkIntegerNonUnit(gap)
         ? gap
         : gap * width;
 
     for (const [index, root] of roots.entries()) {
-        const rowIndex = Math.floor(index / columns);
-        const columnIndex = index % columns;
+        const rowIndex = index % columns;
+        const columnIndex = Math.floor(index / columns);
         const translateX = columnIndex * (width + gapValue);
         const translateY = rowIndex * (height + gapValue);
 
