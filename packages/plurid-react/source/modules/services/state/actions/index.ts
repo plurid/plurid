@@ -2,7 +2,7 @@ import configuration from './configuration';
 import data from './data';
 import shortcuts from './shortcuts';
 import * as space from '../modules/space';
-import themes from './themes';
+import * as themes from '../modules/themes';
 import ui from './ui';
 
 
@@ -12,6 +12,6 @@ export default {
     data,
     shortcuts,
     space: space.actions,
-    themes,
+    themes: themes.actions,
     ui,
 };
