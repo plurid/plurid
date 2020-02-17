@@ -27,7 +27,7 @@ import {
 } from '../../services/logic/plane';
 
 import {
-    // router,
+    router,
     space,
 } from '@plurid/plurid-engine';
 
@@ -123,26 +123,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         const activeDocument = documents[searchDocumentID];
 
         const {
-            paths,
+            // paths,
+            pages,
         } = activeDocument;
 
-        let pathData = null;
-
-        // const a = router.match(pagePath, Object.values(paths));
-
-        for (const pathValue of Object.values(paths)) {
-            // const re = new RegExp(pathValue.regex);
-            // const match = pagePath.match(re);
-
-            if (pathValue.address === pagePath) {
-                pathData = {...pathValue};
-                break;
-            }
-        }
-
-        if (pathData) {
-            console.log(pathData);
-
+        const matchedPage = router.match(pagePath, Object.values(pages));
+        if (matchedPage) {
             const {
                 pluridPlaneID,
                 updatedTree,
@@ -150,9 +136,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
                 tree,
                 parentPlaneID,
                 pagePath,
-                pathData.pageID,
+                matchedPage.id,
                 linkCoordinates,
-                pathData.parameters,
+                [],
             );
 
             if (pluridPlaneID) {
@@ -161,6 +147,39 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
                 setPluridPlaneID(pluridPlaneID);
             }
         }
+
+        // let pathData = null;
+        // for (const pathValue of Object.values(paths)) {
+        //     // const re = new RegExp(pathValue.regex);
+        //     // const match = pagePath.match(re);
+
+        //     if (pathValue.address === pagePath) {
+        //         pathData = {...pathValue};
+        //         break;
+        //     }
+        // }
+
+        // if (pathData) {
+        //     console.log(pathData);
+
+        //     const {
+        //         pluridPlaneID,
+        //         updatedTree,
+        //     } = space.updateTreeWithNewPage(
+        //         tree,
+        //         parentPlaneID,
+        //         pagePath,
+        //         pathData.pageID,
+        //         linkCoordinates,
+        //         pathData.parameters,
+        //     );
+
+        //     if (pluridPlaneID) {
+        //         dispatchSetTree(updatedTree);
+        //         setShowLink(true);
+        //         setPluridPlaneID(pluridPlaneID);
+        //     }
+        // }
     }
 
     const toggleLinkFromTree = () => {
