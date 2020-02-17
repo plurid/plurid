@@ -18,7 +18,7 @@ import {
 
 const computeRowLayout = (
     roots: TreePage[],
-    columns: number = 2,
+    rows: number = 1,
     gap: number = ROOTS_GAP,
     configuration: PluridConfiguration = defaultConfiguration,
 ): TreePage[] => {
@@ -32,8 +32,8 @@ const computeRowLayout = (
         : gap * width;
 
     for (const [index, root] of roots.entries()) {
-        const rowIndex = Math.floor(index / columns);
-        const columnIndex = index % columns;
+        const rowIndex = Math.floor(index / rows);
+        const columnIndex = index % rows;
         const translateX = columnIndex * (width + gapValue);
         const translateY = rowIndex * (height + gapValue);
 

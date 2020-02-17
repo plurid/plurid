@@ -113,13 +113,13 @@ export const computeSpaceTree = (
                     rows,
                     gap,
                 } = configuration.space.layout;
-                const columnLayoutTree = computeRowLayout(
+                const rowLayoutTree = computeRowLayout(
                     assignedPages,
                     rows,
                     gap,
                     configuration,
                 );
-                return columnLayoutTree;
+                return rowLayoutTree;
             }
         case LAYOUT_TYPES.ZIG_ZAG:
             {
