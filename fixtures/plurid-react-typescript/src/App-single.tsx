@@ -6,6 +6,7 @@ import React, {
 import PluridApp, {
     // PluridConfiguration,
     PluridPage,
+    PluridView,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -151,14 +152,25 @@ const App = () => {
     //     anotherConfiguration
     // ]);
 
-    const view = [
-        '/one',
-        '/two',
-        '/three',
-        '/four',
-        '/five',
-        '/six',
-        '/seven',
+    // const view = [
+    //     '/one',
+    //     '/two',
+    //     '/three',
+    //     '/four',
+    //     '/five',
+    //     '/six',
+    //     '/seven',
+    // ];
+
+    const pluridView: PluridView[] = [
+        {
+            path: '/one',
+            ordinal: 1,
+        },
+        {
+            path: '/two',
+            ordinal: 0,
+        },
     ];
 
 
@@ -167,7 +179,7 @@ const App = () => {
             <PluridApp
                 configuration={appConfiguration}
                 pages={appPages}
-                view={view}
+                view={pluridView}
             />
         </div>
     );
