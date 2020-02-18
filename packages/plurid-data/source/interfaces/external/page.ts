@@ -32,18 +32,6 @@ export interface PluridPage {
      * but the `PluridLink`s must be ID-based to ensure correct linking.
      */
     id?: string;
-
-    // /**
-    //  * If true, the page will be rendered on the initial layout.
-    //  */
-    // root?: boolean;
-
-    // /**
-    //  * By default, the order the pages are shown in is based on their index in the `pages[]`.
-    //  * The ordinal can be used to overrule the default order.
-    //  * If not unique, the pages with equal `ordinal` will be ordered by index.
-    //  */
-    // ordinal?: number;
 }
 
 
@@ -81,4 +69,22 @@ export interface PluridComponentParameters {
 
 export interface PluridComponentQuery {
     [key: string]: string;
+}
+
+
+
+export interface PluridView {
+    /**
+     * Path to a `PluridPage`.
+     *
+     * The path can be URL-like, e.g. `'/page/one?query=true'`, or the page id.
+     */
+    path: string;
+
+    /**
+     * By default, the order the pages are shown in is based on their index in the `view[]`.
+     * The ordinal can be used to overrule the default order.
+     * If not unique, the pages with equal `ordinal` will be ordered by index.
+     */
+    ordinal: number;
 }
