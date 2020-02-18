@@ -446,10 +446,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@plurid/plurid-data@^0.1.87":
-  version "0.1.87"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.87.tgz#a466fb23afc2d52e84a021b7b146937d136eea6f"
-  integrity sha512-HffqgBvdwsuEhQIXTkJH9AyMJHLP2S4G2Hlq8nB95s69mCbBz8uev77vqMHyJIZSpTfLFnlWcAxnL8WHP2qXbg==
+"@plurid/plurid-data@^0.1.88":
+  version "0.1.88"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.88.tgz#f2752f9e9f1c8b553406750e7d8f968cf0c78929"
+  integrity sha512-wnEllyj+V1+np0mtvU4r7u1Lvkz/UGkEmIT1I2/byiGu+2L4t9W0IsL6i/LrQst8o09vhn3vtx1qSy+nIDoCwQ==
 
 "@plurid/plurid-functions@^0.1.7":
   version "0.1.7"
@@ -588,10 +588,10 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
 
-"@types/react@^16.9.19":
-  version "16.9.19"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.19.tgz#c842aa83ea490007d29938146ff2e4d9e4360c40"
-  integrity sha512-LJV97//H+zqKWMms0kvxaKYJDG05U2TtQB3chRLF8MPNs+MQh/H1aGlyDUxjaHvu08EAGerdX2z4LTBc7ns77A==
+"@types/react@^16.9.20":
+  version "16.9.20"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.20.tgz#e83285766340fb1a7fafe7e5c4708c53832e3641"
+  integrity sha512-jRrWBr25zzEVNa4QbESKLPluvrZ3W6Odfwrfe2F5vzbrDuNvlpnHa/xbZcXg8RH5D4CE181J5VxrRrLvzRH+5A==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
