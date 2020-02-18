@@ -58,8 +58,8 @@
         "styled-components": ">=4"
     },
     "dependencies": {
-        "@plurid/plurid-data": "^0.1.90",
-        "@plurid/plurid-engine": "^0.1.38",
+        "@plurid/plurid-data": "^0.1.91",
+        "@plurid/plurid-engine": "^0.1.39",
         "@plurid/plurid-pubsub": "^0.1.3",
         "hammerjs": "^2.0.8",
         "redux-devtools-extension": "^2.13.8"
