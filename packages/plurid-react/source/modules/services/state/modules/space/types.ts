@@ -2,6 +2,7 @@ import {
     TreePage,
     SpaceLocation,
     LinkCoordinates,
+    PluridView,
 } from '@plurid/plurid-data';
 
 
@@ -268,7 +269,7 @@ export interface UpdateSpaceLinkCoordinatesAction {
 export const SPACE_SET_VIEW = 'SPACE_SET_VIEW';
 export interface SpaceSetViewAction {
     type: typeof SPACE_SET_VIEW;
-    payload: string[];
+    payload: string[] | PluridView[];
 }
 
 
