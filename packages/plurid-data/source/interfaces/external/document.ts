@@ -21,6 +21,8 @@ export interface PluridDocument {
      * By default, the order the documents are shown in is based on their index in the `documents[]`.
      * The ordinal can be used to overrule the default order.
      * If not unique, the documents with equal `ordinal` will be ordered by index.
+     *
+     * 0-based.
      */
     ordinal?: number;
 
