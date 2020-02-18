@@ -7,16 +7,21 @@ import {
 describe('extractParameters', () => {
     it('extracts a simple parameter', () => {
         const pagePath = '/page-2/loo/soo';
-        const parameters = [
-            {
-                index: 1,
-                name: 'foo',
-            },
-            {
-                index: 2,
-                name: 'boo',
-            },
-        ];
+        // const parameters = [
+        //     {
+        //         index: 1,
+        //         name: 'foo',
+        //     },
+        //     {
+        //         index: 2,
+        //         name: 'boo',
+        //     },
+        // ];
+        const parameters = {
+            foo: 'loo',
+            boo: 'soo',
+        }
+
         const result = extractParameters(pagePath, parameters);
 
         const expected = {
