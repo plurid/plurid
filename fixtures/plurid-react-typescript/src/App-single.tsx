@@ -169,6 +169,10 @@ const App = () => {
         },
         {
             path: '/two',
+            ordinal: 2,
+        },
+        {
+            path: '/three',
             ordinal: 0,
         },
     ];
