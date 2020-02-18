@@ -190,7 +190,7 @@ export const assignPagesFromView = (
 
     const tree: TreePage[] = [];
 
-    for (const viewPage of view) {
+    for (const [index, viewPage] of view.entries()) {
         const viewPagePath = typeof viewPage === 'string'
             ? viewPage
             : viewPage.path;
@@ -204,6 +204,14 @@ export const assignPagesFromView = (
         // console.log('------------------');
 
         if (matchedPage) {
+            const viewPageOrdinal = typeof viewPage === 'string'
+                ? index
+                : typeof viewPage.ordinal === 'number'
+                    ? viewPage.ordinal
+                    : index;
+
+            // handle viewPageOrdinal
+
             const {
                 route,
             } = matchedPage;
