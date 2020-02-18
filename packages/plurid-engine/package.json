@@ -68,7 +68,6 @@
         "replace-in-file": "^5.0.2",
         "rimraf": "^3.0.2",
         "rollup": "^1.31.1",
-        "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-sourcemaps": "^0.5.0",
         "rollup-plugin-typescript2": "^0.26.0",
         "shelljs": "^0.8.3",
@@ -76,5 +75,8 @@
         "ts-node": "^8.6.2",
         "typedoc": "^0.16.10",
         "typescript": "^3.7.5"
+    },
+    "dependencies": {
+        "@rollup/plugin-commonjs": "^11.0.2"
     }
 }
