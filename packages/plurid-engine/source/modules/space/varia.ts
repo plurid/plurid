@@ -8,6 +8,7 @@ import {
 
     /** interfaces */
     PluridPage,
+    PluridView,
     PluridConfiguration,
     TreePage,
     SpaceLocation,
@@ -82,7 +83,7 @@ export const computeRootLocationX = (
 export const computeSpaceTree = (
     pages: TreePage[],
     configuration?: PluridConfiguration,
-    view?: string[],
+    view?: string[] | PluridView[],
 ): TreePage[] => {
     if (!configuration) {
         const columnLayoutTree = computeColumnLayout(pages);
@@ -181,7 +182,7 @@ export const computeSpaceTree = (
 
 export const assignPagesFromView = (
     pages: TreePage[],
-    view?: string[],
+    view?: string[] | PluridView[],
 ): TreePage[] => {
     if (!view) {
         return pages;
@@ -189,25 +190,31 @@ export const assignPagesFromView = (
 
     const tree: TreePage[] = [];
 
-    view.forEach(viewPage => {
-        const matchedPage = match(viewPage, pages);
+    for (const viewPage of view) {
+        const viewPagePath = typeof viewPage === 'string'
+            ? viewPage
+            : viewPage.path;
+
+        const matchedPage = match(viewPagePath, pages);
+
         // console.log('viewPage', viewPage);
         // console.log('pages', pages);
 
         // console.log('matchedPage', matchedPage);
         // console.log('------------------');
+
         if (matchedPage) {
             const {
                 route,
             } = matchedPage;
             const newPage = {
                 ...route,
-                path: viewPage,
+                path: viewPagePath,
                 planeID: uuid(),
             };
             tree.push(newPage);
         }
-    });
+    }
 
     return tree;
 }
