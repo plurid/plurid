@@ -1,10 +1,12 @@
 import {
+    /** interfaces */
     PluridPage,
     PluridDocument,
     PluridConfiguration,
-
+    PluridView,
     RecursivePartial,
 
+    /** enumerations */
     LAYOUT_TYPES as SPACE_LAYOUT,
     SIZES,
     TRANSFORM_MODES,
@@ -29,6 +31,7 @@ export {
     PluridPage,
     PluridDocument,
     PluridConfiguration,
+    PluridView,
     RecursivePartial,
 
     /** Enumerations */
