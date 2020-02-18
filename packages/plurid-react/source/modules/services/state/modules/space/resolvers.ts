@@ -1,4 +1,5 @@
 import {
+    /** constants */
     ROTATION_STEP,
     TRANSLATION_STEP,
     SCALE_STEP,
