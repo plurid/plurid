@@ -204,14 +204,6 @@ export const assignPagesFromView = (
         // console.log('------------------');
 
         if (matchedPage) {
-            const viewPageOrdinal = typeof viewPage === 'string'
-                ? index
-                : typeof viewPage.ordinal === 'number'
-                    ? viewPage.ordinal
-                    : index;
-
-            // handle viewPageOrdinal
-
             const {
                 route,
             } = matchedPage;
@@ -220,7 +212,30 @@ export const assignPagesFromView = (
                 path: viewPagePath,
                 planeID: uuid(),
             };
-            tree.push(newPage);
+
+            const viewPageOrdinal = typeof viewPage === 'string'
+                ? index
+                : typeof viewPage.ordinal === 'number'
+                    ? viewPage.ordinal
+                    : index;
+
+            const treePage = tree[viewPageOrdinal];
+
+            if (typeof treePage === 'undefined') {
+                tree[viewPageOrdinal] = newPage;
+            } else {
+                let elementSet = false;
+                let pageIndex = viewPageOrdinal;
+
+                do {
+                    const nextIndex = pageIndex + 1;
+                    const nextTreePage = tree[nextIndex];
+                    if (typeof nextTreePage === 'undefined') {
+                        tree[nextIndex] = newPage;
+                        elementSet = true;
+                    }
+                } while (!elementSet);
+            }
         }
     }
 
