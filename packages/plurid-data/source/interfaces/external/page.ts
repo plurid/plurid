@@ -86,5 +86,5 @@ export interface PluridView {
      * The ordinal can be used to overrule the default order.
      * If not unique, the pages with equal `ordinal` will be ordered by index.
      */
-    ordinal: number;
+    ordinal?: number;
 }
