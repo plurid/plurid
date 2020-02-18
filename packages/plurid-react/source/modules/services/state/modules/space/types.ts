@@ -296,7 +296,7 @@ export interface State {
     camera: Coordinates;
     viewSize: ViewSize;
     spaceSize: SpaceSize;
-    view: string[];
+    view: string[] | PluridView[];
 }
 
 
