@@ -111,6 +111,7 @@ interface ViewStateProperties {
     transform: any;
     tree: TreePage[];
     activeDocumentID: string;
+    stateSpaceLocation: any;
 }
 
 interface ViewDispatchProperties {
@@ -163,7 +164,7 @@ const View: React.FC<ViewProperties> = (
         transform,
         dataDocuments,
         activeDocumentID,
-
+        stateSpaceLocation,
 
         /** dispatch */
         dispatch,
@@ -815,6 +816,20 @@ const View: React.FC<ViewProperties> = (
     ]);
 
 
+    useEffect(() => {
+        const a = space.computeCulledView(
+            tree,
+            view || [],
+            stateSpaceLocation,
+        );
+        console.log(a);
+    }, [
+        tree,
+        view,
+        stateSpaceLocation,
+    ]);
+
+
     /** context */
     const pluridContext: PluridContext = {
         pageContext: appProperties.pageContext,
@@ -861,6 +876,7 @@ const mapStateToProperties = (
     tree: selectors.space.getTree(state),
     activeDocumentID: selectors.space.getActiveDocumentID(state),
     spaceLoading: selectors.space.getLoading(state),
+    stateSpaceLocation: selectors.space.getTransform(state),
 });
 
 
