@@ -29,9 +29,16 @@ export interface PluridPage {
      * If provided to one page, all the pages must have IDs.
      *
      * Once provided, the pages can have similar paths,
-     * but the `PluridLink`s must be ID-based to ensure correct linking.
+     * but the `PluridLink`s should be ID-based to ensure correct linking.
      */
     id?: string;
+
+    /**
+     * Optional, application or document-wide unique identifier (if multiple documents).
+     *
+     * A cluster will ensure that all the pages it contains will be rendered together.
+     */
+    cluster?: string;
 }
 
 
@@ -89,4 +96,11 @@ export interface PluridView {
      * 0-based.
      */
     ordinal?: number;
+}
+
+
+export interface PluridCluster {
+    id: string;
+    name?: string;
+    clusters?: PluridCluster[];
 }
