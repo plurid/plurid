@@ -521,7 +521,7 @@ export const computeSpaceSize = (
  * @param view
  * @param location
  */
-export const computedCulledView = (
+export const computeCulledView = (
     pages: TreePage[],
     view: string[] | PluridView[],
     location: SpaceLocation,
@@ -554,6 +554,8 @@ export const computedCulledView = (
             );
         }
     }
+
+    return culledView;
 }
 
 
