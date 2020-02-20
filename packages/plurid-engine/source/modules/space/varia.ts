@@ -524,7 +524,7 @@ export const computeSpaceSize = (
 export const computedCulledView = (
     pages: TreePage[],
     view: string[] | PluridView[],
-    location: any,
+    location: SpaceLocation,
     radius: number = 8000,
 ) => {
     const culledView: string[] = [];
@@ -571,8 +571,15 @@ const findPage = (
 
 const checkPageInView = (
     page: TreePage,
-    location: any,
+    location: SpaceLocation,
     radius: number,
 ) => {
+    if (
+        page.location.translateX < location.translationX + radius
+        || page.location.translateX < location.translationX - radius
+    ) {
+        return true;
+    }
+
     return false;
 }
