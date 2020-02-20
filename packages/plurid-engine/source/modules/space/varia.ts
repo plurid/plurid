@@ -512,3 +512,67 @@ export const computeSpaceSize = (
         topCorner,
     };
 }
+
+
+/**
+ * Compute only the view within a given radius around the user.
+ *
+ * @param pages
+ * @param view
+ * @param location
+ */
+export const computedCulledView = (
+    pages: TreePage[],
+    view: string[] | PluridView[],
+    location: any,
+    radius: number = 8000,
+) => {
+    const culledView: string[] = [];
+
+    for (const viewPage of view) {
+        const path = typeof viewPage === 'string'
+            ? viewPage
+            : viewPage.path;
+
+        const page = findPage(
+            path,
+            pages,
+        );
+        if (!page) {
+            return;
+        }
+
+        const pageInView = checkPageInView(
+            page,
+            location,
+            radius,
+        );
+
+        if (pageInView) {
+            culledView.push(
+                page.path,
+            );
+        }
+    }
+}
+
+
+const findPage = (
+    view: string,
+    pages: TreePage[],
+) => {
+    for (const page of pages) {
+        if (page.path === view) {
+            return page;
+        }
+    }
+}
+
+
+const checkPageInView = (
+    page: TreePage,
+    location: any,
+    radius: number,
+) => {
+    return false;
+}
