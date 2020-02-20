@@ -6,14 +6,16 @@ import {
 } from '../../enumerations';
 
 import {
-    LayoutColumns,
-    LayoutRows,
-    LayoutZigZag,
-    LayoutFaceToFace,
-    LayoutSheaves,
-    LayoutMeta,
+    RecursivePartial,
+} from '../helpers';
+
+import {
+    PluridLayout,
 } from './layout';
 
+
+
+export type PluridPartialConfiguration = RecursivePartial<PluridConfiguration>;
 
 
 export interface PluridConfiguration {
@@ -51,7 +53,7 @@ export interface PluridConfigurationTheme {
 
 
 export interface PluridConfigurationSpace {
-    layout: LayoutColumns | LayoutRows | LayoutZigZag | LayoutFaceToFace | LayoutSheaves | LayoutMeta;
+    layout: PluridLayout;
 
     /**
      * Perspective value. Recommended between 1300 and 2000.

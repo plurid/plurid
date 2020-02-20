@@ -1,5 +1,9 @@
 import React from 'react';
 
+import {
+    PluridLayout,
+} from './layout';
+
 
 
 export interface PluridPage {
@@ -103,4 +107,5 @@ export interface PluridCluster {
     id: string;
     name?: string;
     clusters?: PluridCluster[];
+    layout?: PluridLayout;
 }
