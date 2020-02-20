@@ -187,3 +187,12 @@ export interface LayoutSheaves extends Layout {
      */
     offsetY?: number;
 }
+
+
+
+export type PluridLayout = LayoutColumns
+    | LayoutRows
+    | LayoutZigZag
+    | LayoutFaceToFace
+    | LayoutSheaves
+    | LayoutMeta;
