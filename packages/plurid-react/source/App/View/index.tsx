@@ -821,6 +821,7 @@ const View: React.FC<ViewProperties> = (
             tree,
             view || [],
             stateSpaceLocation,
+            200,
         );
         console.log(a);
     }, [
