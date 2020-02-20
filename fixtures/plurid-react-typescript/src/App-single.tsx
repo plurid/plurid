@@ -93,7 +93,21 @@ const App = () => {
         // },
 
         {
-            path: '*',
+            path: '/one',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+        },
+        {
+            path: '/two',
+            component: {
+                element: Page1,
+                properties: {},
+            },
+        },
+        {
+            path: '/three',
             component: {
                 element: Page1,
                 properties: {},
