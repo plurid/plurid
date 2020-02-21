@@ -351,3 +351,13 @@ export const spaceSetView = (
         payload,
     };
 }
+
+
+export const spaceSetCulledView = (
+    payload: string[] | PluridView[],
+): Types.SpaceSetCulledViewAction => {
+    return {
+        type: Types.SPACE_SET_CULLED_VIEW,
+        payload,
+    };
+}

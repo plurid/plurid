@@ -538,3 +538,14 @@ export const spaceSetView = (
         view: action.payload,
     };
 }
+
+
+export const spaceSetCulledView = (
+    state: Types.State,
+    action: Types.SpaceSetCulledViewAction,
+): Types.State => {
+    return {
+        ...state,
+        culledView: action.payload,
+    };
+}

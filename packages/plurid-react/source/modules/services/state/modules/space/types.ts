@@ -273,6 +273,13 @@ export interface SpaceSetViewAction {
 }
 
 
+export const SPACE_SET_CULLED_VIEW = 'SPACE_SET_CULLED_VIEW';
+export interface SpaceSetCulledViewAction {
+    type: typeof SPACE_SET_CULLED_VIEW;
+    payload: string[] | PluridView[];
+}
+
+
 
 export interface Coordinates {
     x: number;
@@ -297,6 +304,7 @@ export interface State {
     viewSize: ViewSize;
     spaceSize: SpaceSize;
     view: string[] | PluridView[];
+    culledView: string[] | PluridView[];
 }
 
 
@@ -340,4 +348,5 @@ export type Actions = SetSpaceLoadingAction
     | SetSpaceSizeAction
     | UpdateSpaceTreePageAction
     | UpdateSpaceLinkCoordinatesAction
-    | SpaceSetViewAction;
+    | SpaceSetViewAction
+    | SpaceSetCulledViewAction;
