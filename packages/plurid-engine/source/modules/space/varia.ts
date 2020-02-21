@@ -576,9 +576,24 @@ const checkPageInView = (
     location: SpaceLocation,
     radius: number,
 ) => {
+    const radiusLeft = location.translationX < 0
+        ? Math.abs(location.translationX) - radius
+        : -1 * location.translationX - radius;
+    const radiusRight = location.translationX < 0
+        ? Math.abs(location.translationX) + radius
+        : -1 * location.translationX + radius;
+    const locationX = page.location.translateX;
+
+    if (page.path === '/three') {
+        console.log('radiusLeft', radiusLeft);
+        console.log('radiusRight', radiusRight);
+        console.log('locationX', locationX);
+        console.log('-----');
+    }
+
     if (
-        page.location.translateX < location.translationX + radius
-        || page.location.translateX < location.translationX - radius
+        radiusLeft < locationX
+        && locationX < radiusRight
     ) {
         return true;
     }
