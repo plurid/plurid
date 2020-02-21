@@ -33,6 +33,7 @@ const initialState: Types.State = {
         },
     },
     view: [],
+    culledView: [],
 };
 
 

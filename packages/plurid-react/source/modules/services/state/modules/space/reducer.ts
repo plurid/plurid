@@ -100,6 +100,8 @@ const reducer = (
 
         case Types.SPACE_SET_VIEW:
             return resolvers.spaceSetView(state, action);
+        case Types.SPACE_SET_CULLED_VIEW:
+            return resolvers.spaceSetCulledView(state, action);
 
         default:
             return {
