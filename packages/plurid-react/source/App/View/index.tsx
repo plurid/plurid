@@ -898,7 +898,7 @@ const View: React.FC<ViewProperties> = (
             initialTree,
             view || [],
             stateSpaceLocation,
-            200,
+            2000,
         );
 
         // console.log('culledView', culledView);
