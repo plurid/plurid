@@ -48,7 +48,7 @@ export const moreMenus: MoreMenu[] = [
     },
     {
         name: 'technical',
-        drawer: TOOLBAR_DRAWERS.VIEWCUBE,
+        drawer: TOOLBAR_DRAWERS.TECHNICAL,
         component: (<MenuMoreTechnical />),
     },
     {
