@@ -124,6 +124,7 @@ interface ViewStateProperties {
     viewSize: ViewSize;
     spaceLoading: boolean;
     transform: any;
+    initialTree: TreePage[];
     tree: TreePage[];
     activeDocumentID: string;
     stateSpaceLocation: any;
@@ -142,6 +143,7 @@ interface ViewDispatchProperties {
     dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
+    dispatchSetInitialTree: typeof actions.space.setInitialTree;
     dispatchSetTree: typeof actions.space.setTree;
     dispatchSetSpaceSize: typeof actions.space.setSpaceSize;
 
@@ -176,6 +178,7 @@ const View: React.FC<ViewProperties> = (
         /** state */
         configuration: stateConfiguration,
         spaceLoading,
+        initialTree,
         tree,
         viewSize,
         transform,
@@ -196,6 +199,7 @@ const View: React.FC<ViewProperties> = (
         dispatchSetSpaceLoading,
         dispatchSetAnimatedTransform,
         dispatchSetSpaceLocation,
+        dispatchSetInitialTree,
         dispatchSetTree,
         dispatchSetSpaceSize,
 
@@ -736,53 +740,100 @@ const View: React.FC<ViewProperties> = (
 
     /** Handle Tree */
     useEffect(() => {
-        if (activeDocumentID && contextDocumentsRef.current) {
-            const activeDocument = dataDocuments[activeDocumentID];
-            const pages = activeDocument.pages;
+        const _view = stateCulledView.length > 0
+            ? stateCulledView
+            : view;
+        console.log('_view', _view);
 
-            // console.log('pages', pages);
+        const computedTree = space.computeSpaceTree(
+            initialTree,
+            stateConfiguration,
+            _view,
+        );
+        console.log('computedTree', computedTree);
+        dispatchSetTree(computedTree);
 
-            const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
-            const contextPages = activeContextDocument.pages;
+        // if (activeDocumentID && contextDocumentsRef.current) {
+        //     const activeDocument = dataDocuments[activeDocumentID];
+        //     const pages = activeDocument.pages;
 
-            const treePages: TreePage[] = [];
-            for (const pageID in pages) {
-                const docPage = pages[pageID]
+        //     // console.log('pages', pages);
 
-                // if (docPage.root) {
-                    const contextPage = contextPages[pageID];
-                    if (!contextPage) {
-                        continue;
-                    }
+        //     const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
+        //     const contextPages = activeContextDocument.pages;
 
-                    const treePage = createTreePage(
-                        contextPage,
-                        docPage,
-                    );
-                    treePages.push(treePage);
-                // }
-            }
+        //     const treePages: TreePage[] = [];
+        //     for (const pageID in pages) {
+        //         const docPage = pages[pageID]
 
-            // console.log('treePages', treePages);
+        //         // if (docPage.root) {
+        //             const contextPage = contextPages[pageID];
+        //             if (!contextPage) {
+        //                 continue;
+        //             }
 
-            const _view = stateCulledView.length > 0
-                ? stateCulledView
-                : view;
-            console.log('_view', _view);
+        //             const treePage = createTreePage(
+        //                 contextPage,
+        //                 docPage,
+        //             );
+        //             treePages.push(treePage);
+        //         // }
+        //     }
 
-            const computedTree = space.computeSpaceTree(
-                treePages,
-                stateConfiguration,
-                _view,
-            );
-            console.log('computedTree', computedTree);
-            dispatchSetTree(computedTree);
-        }
+        //     console.log('treePages', treePages);
+        // }
     }, [
+        initialTree,
         activeDocumentID,
         dataDocuments,
         contextDocumentsRef.current,
         stateCulledView,
+    ]);
+
+
+    useEffect(() => {
+        if (initialTree.length === 0) {
+            if (activeDocumentID && contextDocumentsRef.current) {
+                const activeDocument = dataDocuments[activeDocumentID];
+                const pages = activeDocument.pages;
+
+                // console.log('pages', pages);
+
+                const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
+                const contextPages = activeContextDocument.pages;
+
+                const treePages: TreePage[] = [];
+                for (const pageID in pages) {
+                    const docPage = pages[pageID]
+
+                    // if (docPage.root) {
+                        const contextPage = contextPages[pageID];
+                        if (!contextPage) {
+                            continue;
+                        }
+
+                        const treePage = createTreePage(
+                            contextPage,
+                            docPage,
+                        );
+                        treePages.push(treePage);
+                    // }
+                }
+
+                const computedTree = space.computeSpaceTree(
+                    treePages,
+                    stateConfiguration,
+                    view,
+                );
+                console.log('computedTree - Initial', computedTree);
+                dispatchSetInitialTree(computedTree);
+            }
+        }
+    }, [
+        initialTree,
+        activeDocumentID,
+        dataDocuments,
+        contextDocumentsRef.current,
     ]);
 
     /** Touch */
@@ -841,7 +892,7 @@ const View: React.FC<ViewProperties> = (
         view,
     ]);
 
-
+    /** Handle Culled View */
     useEffect(() => {
         const culledView = space.computeCulledView(
             tree,
@@ -850,7 +901,7 @@ const View: React.FC<ViewProperties> = (
             200,
         );
 
-        console.log('culledView', culledView);
+        // console.log('culledView', culledView);
 
         if (culledView && !arraysEqual(stateCulledView, culledView)) {
             console.log('culledView', culledView);
@@ -907,6 +958,7 @@ const mapStateToProperties = (
     dataDocuments: selectors.data.getDocuments(state),
     viewSize: selectors.space.getViewSize(state),
     transform: selectors.space.getTransform(state),
+    initialTree: selectors.space.getInitialTree(state),
     tree: selectors.space.getTree(state),
     activeDocumentID: selectors.space.getActiveDocumentID(state),
     spaceLoading: selectors.space.getLoading(state),
@@ -943,8 +995,15 @@ const mapDispatchToProperties = (
     dispatchSetSpaceLocation: (spaceLocation: any) => dispatch(
         actions.space.setSpaceLocation(spaceLocation)
     ),
-    dispatchSetTree: (tree: TreePage[]) => dispatch(
-        actions.space.setTree(tree)
+    dispatchSetInitialTree: (
+        tree: TreePage[],
+    ) => dispatch(
+        actions.space.setInitialTree(tree),
+    ),
+    dispatchSetTree: (
+        tree: TreePage[],
+    ) => dispatch(
+        actions.space.setTree(tree),
     ),
     dispatchSetSpaceSize: (payload: SpaceSize) => dispatch(
         actions.space.setSpaceSize(payload)

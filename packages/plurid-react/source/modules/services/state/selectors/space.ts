@@ -14,6 +14,7 @@ const getTranslationX = (state: AppState): number => state.space.translationX;
 const getTranslationY = (state: AppState): number => state.space.translationY;
 const getTranslationZ = (state: AppState): number => state.space.translationZ;
 const getScale = (state: AppState): number => state.space.scale;
+const getInitialTree = (state: AppState): TreePage[] => state.space.initialTree;
 const getTree = (state: AppState): TreePage[] => state.space.tree;
 const getTransform = (state: AppState) => {
     return {
@@ -43,6 +44,7 @@ export default {
     getScale,
     getTransform,
 
+    getInitialTree,
     getTree,
 
     getActiveDocumentID,
