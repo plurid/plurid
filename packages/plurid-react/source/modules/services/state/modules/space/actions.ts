@@ -276,12 +276,13 @@ export const scaleDownWith = (
 
 export const setInitialTree = (
     payload: TreePage[],
-): Types.SetTreeAction => {
+): Types.SetInitialTreeAction => {
     return {
-        type: Types.SET_TREE,
+        type: Types.SET_INITIAL_TREE,
         payload,
     };
 }
+
 
 export const setTree = (
     payload: TreePage[],
