@@ -23,7 +23,7 @@ const App = () => {
         space: {
             layout: {
                 type: SPACE_LAYOUT.COLUMNS,
-                columns: 10,
+                columns: 2,
                 // columnLength: 2,
                 gap: 0.1,
             },
