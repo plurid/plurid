@@ -72,7 +72,7 @@ const App = () => {
     //     micro: true,
     // };
 
-    const oneHundred = [...new Array(5)].map((_, index) => index);
+    const oneHundred = [...new Array(100)].map((_, index) => index);
 
     const multiplePages = oneHundred.map((val) => {
         return {
