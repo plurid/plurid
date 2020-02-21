@@ -83,6 +83,8 @@ const reducer = (
         case Types.SCALE_DOWN_WITH:
             return resolvers.scaleDownWith(state, action);
 
+        case Types.SET_INITIAL_TREE:
+            return resolvers.setInitialTree(state, action);
         case Types.SET_TREE:
             return resolvers.setTree(state, action);
         case Types.SET_ACTIVE_DOCUMENT:
