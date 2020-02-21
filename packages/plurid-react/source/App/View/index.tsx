@@ -909,7 +909,7 @@ const View: React.FC<ViewProperties> = (
         // console.log('culledView', culledView);
 
         if (culledView && !arraysEqual(stateCulledView, culledView)) {
-            console.log('culledView', culledView);
+            // console.log('culledView', culledView);
             // setLocalCulledView(culledView);
             dispatchSpaceSetCulledView(culledView);
         }
