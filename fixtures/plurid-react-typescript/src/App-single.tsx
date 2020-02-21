@@ -23,7 +23,7 @@ const App = () => {
         space: {
             layout: {
                 type: SPACE_LAYOUT.COLUMNS,
-                columns: 1,
+                columns: 10,
                 // columnLength: 2,
                 gap: 0.1,
             },
@@ -71,6 +71,22 @@ const App = () => {
     // const anotherConfiguration = {
     //     micro: true,
     // };
+
+    const oneHundred = [...new Array(5)].map((_, index) => index);
+
+    const multiplePages = oneHundred.map((val) => {
+        return {
+            path: '/' + val,
+            component: {
+                element: Page1,
+                properties: {},
+            },
+        };
+    });
+
+    const multipleViews = oneHundred.map((val) => {
+        return '/' + val;
+    });
 
     const appPages: PluridPage[] = [
         // {
@@ -196,8 +212,8 @@ const App = () => {
         <div>
             <PluridApp
                 configuration={appConfiguration}
-                pages={appPages}
-                view={pluridView}
+                pages={multiplePages}
+                view={multipleViews}
             />
         </div>
     );
