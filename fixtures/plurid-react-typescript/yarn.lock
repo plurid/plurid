@@ -1124,38 +1124,38 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@plurid/plurid-data@^0.1.91":
-  version "0.1.91"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.91.tgz#ed674a00684f03b927af52c658c554afcf06c660"
-  integrity sha512-odxP5sjwTvetEPosi+Tu3WwEki9rn7/bXbJdxaY1SWPbovh7pHhL6GTbKdGeoxBYrYgWVmSXZHkFLI+Q3IUKNQ==
+"@plurid/plurid-data@^0.1.92":
+  version "0.1.92"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.92.tgz#1ae72b41e443f20d731c578be99636bb780269f9"
+  integrity sha512-NkaCS5Y+T0aS17tAnbNceJy5i/j/XB7/hg4OrJdbaWRxMMe6jH9WG7uFJ7Qv+KULiBsGVnN6n2fNf9CwJ41bag==
 
-"@plurid/plurid-engine@^0.1.39":
-  version "0.1.39"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.39.tgz#fd900de0547e21dc5749a1d04ed341ed1370003e"
-  integrity sha512-WrTkMshLsVgaWumlDMYYLWr3s0b1MY6g3hOznH+fZk6dKDssqs9mjH84pwEnANi9zefC4FaOVwOX9b0v2UVxMA==
+"@plurid/plurid-engine@^0.1.40":
+  version "0.1.40"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.40.tgz#cadc5e956b67f023d79f09d1c6699385e7261319"
+  integrity sha512-aWnDOD4m8XznfMa5tE7oE/bSV2vWv9dDUElxvxvVKw9I2uaNMif7pA775cXR60AO+3PgA2SibrW0xnJarE25YA==
 
 "@plurid/plurid-functions@^0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.7.tgz#3d0b1c0014d74b05c5ef726949fdd93069b00c64"
   integrity sha512-TKXzRLe2xdh/vqa1iaBvT35mmlWKafa6TgSU1qA4rW88+EPt5xIoTOfjXM/i3a4ci/zMlS4qExiSPaHH+lxwKw==
 
-"@plurid/plurid-icons-react@^0.1.17":
-  version "0.1.17"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-icons-react/-/plurid-icons-react-0.1.17.tgz#2411f546657602531f88312e64878f231c0c0c9a"
-  integrity sha512-ZDXlIHeEUbysw9C34cIcHpZjouNq9Qtc6DKg1gMxnwBx7GSMf5VI0cIVa2f0oKFaTn4EL44JqbHJnkqq0IBAKw==
+"@plurid/plurid-icons-react@^0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-icons-react/-/plurid-icons-react-0.1.18.tgz#5399bf1199adfc9cde8a780912616d746182bbae"
+  integrity sha512-GOHPrylbPts3AhQbLwdDB5y2H94n60vEJ4d5URzWtqIiKfpwAjQBGRGljYVryJ7mgBTneEGs1V09OyHXWAnfAw==
 
 "@plurid/plurid-pubsub@^0.1.3":
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.3.tgz#f5014195a065f13c47f2895e4942ba1f3ec045a3"
   integrity sha512-mviWTVQhkIifQApuLa60jSVA+azeeKXYvNTFejzJJtEFG0s1h2a1BqtaH/Fj4wCzymivJsD47JqbaLfg7Xw4zA==
 
-"@plurid/plurid-react@^0.1.96":
-  version "0.1.96"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.96.tgz#6fd6fd92bf953ca9f02dfc1a5a301a64d5ea8d93"
-  integrity sha512-NcJqTGlg/u5unsmB99b6ViTgkXAsB3ZUR8gRxK3JGim7SJWc7CqcwparKwmwspOrPIYcV+WdPt1ICeItQEuBzg==
+"@plurid/plurid-react@^0.1.97":
+  version "0.1.97"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.97.tgz#04801b9f4c8d0de6222c10ef96186a209e559aa9"
+  integrity sha512-uhKg4JKO0pnFC3eVtRXIVb/YbV6eF3HFh0B7hAOqW5rRS+/n4E7kkX0LqC+bGzx7MJervY+5VQEoQt1z10qhVw==
   dependencies:
-    "@plurid/plurid-data" "^0.1.91"
-    "@plurid/plurid-engine" "^0.1.39"
+    "@plurid/plurid-data" "^0.1.92"
+    "@plurid/plurid-engine" "^0.1.40"
     "@plurid/plurid-pubsub" "^0.1.3"
     hammerjs "^2.0.8"
     redux-devtools-extension "^2.13.8"
@@ -1397,10 +1397,18 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@*", "@types/jest@^25.1.2":
+"@types/jest@*":
   version "25.1.2"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-25.1.2.tgz#1c4c8770c27906c7d8def5d2033df9dbd39f60da"
   integrity sha512-EsPIgEsonlXmYV7GzUqcvORsSS9Gqxw/OvkGwHfAdpjduNRxMlhsav0O5Kb0zijc/eXSO/uW6SJt9nwull8AUQ==
+  dependencies:
+    jest-diff "^25.1.0"
+    pretty-format "^25.1.0"
+
+"@types/jest@^25.1.3":
+  version "25.1.3"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-25.1.3.tgz#9b0b5addebccfb631175870be8ba62182f1bc35a"
+  integrity sha512-jqargqzyJWgWAJCXX96LBGR/Ei7wQcZBvRv0PLEu9ZByMfcs23keUJrKv9FMR6YZf9YCbfqDqgmY+JUBsnqhrg==
   dependencies:
     jest-diff "^25.1.0"
     pretty-format "^25.1.0"
@@ -1415,10 +1423,15 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
-"@types/node@*", "@types/node@^13.7.1":
+"@types/node@*":
   version "13.7.1"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.1.tgz#238eb34a66431b71d2aaddeaa7db166f25971a0d"
   integrity sha512-Zq8gcQGmn4txQEJeiXo/KiLpon8TzAl0kmKH4zdWctPj05nWwp1ClMdAVEloqrQKfaC48PNLdgN/aVaLqUrluA==
+
+"@types/node@^13.7.4":
+  version "13.7.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.4.tgz#76c3cb3a12909510f52e5dc04a6298cdf9504ffd"
+  integrity sha512-oVeL12C6gQS/GAExndigSaLxTrKpQPxewx9bOcwfvJiJge4rr7wNaph4J+ns5hrmIV2as5qxqN8YKthn9qh0jw==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -1450,10 +1463,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@^16.9.20":
-  version "16.9.20"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.20.tgz#e83285766340fb1a7fafe7e5c4708c53832e3641"
-  integrity sha512-jRrWBr25zzEVNa4QbESKLPluvrZ3W6Odfwrfe2F5vzbrDuNvlpnHa/xbZcXg8RH5D4CE181J5VxrRrLvzRH+5A==
+"@types/react@^16.9.21":
+  version "16.9.21"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.21.tgz#99e274e2ecfab6bb93920e918341daa3198b348d"
+  integrity sha512-xpmenCMeBwJRct8vmIfczlgdOXWIWASoOM857kxKfHlVQvDltRh7IFRVfGws79iO2jkNPXOeWREyKoClzhBaQA==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -10031,10 +10044,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@~3.7.5:
-  version "3.7.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
-  integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
+typescript@~3.8.2:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.2.tgz#91d6868aaead7da74f493c553aeff76c0c0b1d5a"
+  integrity sha512-EgOVgL/4xfVrCMbhYKUQTdF37SQn4Iw73H5BgCrF1Abdun7Kwy/QZsE/ssAy0y4LxBbvua3PIbFsbRczWWnDdQ==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
