@@ -595,20 +595,6 @@ const checkPageInView = (
     const inViewOnX = radiusLeft <= locationX && locationX <= radiusRight;
     const inViewOnY = radiusTop <= locationY && locationY <= radiusBottom;
 
-    if (page.path === '/three') {
-        console.log('radiusLeft', radiusLeft);
-        console.log('radiusRight', radiusRight);
-        console.log('locationX', locationX);
-
-        console.log('radiusTop', radiusTop);
-        console.log('radiusBottom', radiusBottom);
-        console.log('locationY', locationY);
-
-        console.log('inViewOnX', inViewOnX);
-        console.log('inViewOnY', inViewOnY);
-        console.log('-----');
-    }
-
     if (
         inViewOnX && inViewOnY
     ) {
