@@ -743,7 +743,7 @@ const View: React.FC<ViewProperties> = (
         const _view = stateCulledView.length > 0
             ? stateCulledView
             : view;
-        console.log('_view', _view);
+        // console.log('_view', _view);
 
         const computedTree = space.computeViewTree(
             initialTree,
@@ -755,7 +755,7 @@ const View: React.FC<ViewProperties> = (
         //     stateConfiguration,
         //     _view,
         // );
-        console.log('computedTree', computedTree);
+        // console.log('computedTree', computedTree);
         dispatchSetTree(computedTree);
 
         // if (activeDocumentID && contextDocumentsRef.current) {
@@ -830,7 +830,7 @@ const View: React.FC<ViewProperties> = (
                     stateConfiguration,
                     view,
                 );
-                console.log('computedTree - Initial', computedTree);
+                // console.log('computedTree - Initial', computedTree);
                 dispatchSetInitialTree(computedTree);
             }
         }
