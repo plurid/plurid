@@ -428,6 +428,18 @@ export const scaleDownWith = (
 }
 
 
+export const setInitialTree = (
+    state: Types.State,
+    action: Types.SetInitialTreeAction,
+): Types.State => {
+    return {
+        ...state,
+        initialTree: [
+            ...action.payload,
+        ],
+    };
+}
+
 
 export const setTree = (
     state: Types.State,

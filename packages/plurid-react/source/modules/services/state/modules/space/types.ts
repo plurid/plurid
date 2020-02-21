@@ -200,6 +200,13 @@ export interface ScaleDownWithAction {
 }
 
 
+export const SET_INITIAL_TREE = 'SET_INITIAL_TREE';
+export interface SetInitialTreeAction {
+    type: typeof SET_INITIAL_TREE;
+    payload: TreePage[];
+}
+
+
 export const SET_TREE = 'SET_TREE';
 export interface SetTreeAction {
     type: typeof SET_TREE;
@@ -298,6 +305,7 @@ export interface State {
     translationX: number;
     translationY: number;
     translationZ: number;
+    initialTree: TreePage[];
     tree: TreePage[];
     activeDocumentID: string;
     camera: Coordinates;
@@ -341,6 +349,7 @@ export type Actions = SetSpaceLoadingAction
     | ScaleDownAction
     | ScaleUpWithAction
     | ScaleDownWithAction
+    | SetInitialTreeAction
     | SetTreeAction
     | SetActiveDocumentAction
     | SpaceResetTransformAction

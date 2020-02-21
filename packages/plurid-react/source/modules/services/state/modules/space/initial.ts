@@ -11,6 +11,7 @@ const initialState: Types.State = {
     translationX: 0,
     translationY: 0,
     translationZ: 0,
+    initialTree: [],
     tree: [],
     activeDocumentID: '',
     camera: {
