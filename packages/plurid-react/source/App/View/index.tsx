@@ -98,6 +98,21 @@ import {
 } from '../../modules/services/state/modules/space/types';
 
 
+const arraysEqual = (a: any[], b: any[]) => {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length != b.length) return false;
+
+    // If you don't care about the order of the elements inside
+    // the array, you should sort both arrays here.
+    // Please note that calling sort on an array will modify that array.
+    // you might want to clone your array first.
+
+    for (var i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+}
 
 export interface ViewOwnProperties {
     appProperties: PluridAppProperties;
@@ -112,6 +127,7 @@ interface ViewStateProperties {
     tree: TreePage[];
     activeDocumentID: string;
     stateSpaceLocation: any;
+    stateCulledView: any;
 }
 
 interface ViewDispatchProperties {
@@ -142,6 +158,7 @@ interface ViewDispatchProperties {
     dispatchSetActiveDocument: typeof actions.space.setActiveDocument;
 
     dispatchSpaceSetView: typeof actions.space.spaceSetView;
+    dispatchSpaceSetCulledView: typeof actions.space.spaceSetCulledView;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -165,6 +182,7 @@ const View: React.FC<ViewProperties> = (
         dataDocuments,
         activeDocumentID,
         stateSpaceLocation,
+        stateCulledView,
 
         /** dispatch */
         dispatch,
@@ -194,6 +212,7 @@ const View: React.FC<ViewProperties> = (
         dispatchSetActiveDocument,
 
         dispatchSpaceSetView,
+        dispatchSpaceSetCulledView,
     } = properties;
 
     const {
@@ -213,6 +232,7 @@ const View: React.FC<ViewProperties> = (
 
     /** state */
     const [initialized, setInitialized] = useState(false);
+    const [localCulledView, setLocalCulledView] = useState<string[]>([]);
 
     // const [contextDocuments, setContextDocuments] = useState<Indexed<PluridInternalContextDocument>>({});
 
@@ -745,18 +765,24 @@ const View: React.FC<ViewProperties> = (
 
             // console.log('treePages', treePages);
 
+            const _view = stateCulledView.length > 0
+                ? stateCulledView
+                : view;
+            console.log('_view', _view);
+
             const computedTree = space.computeSpaceTree(
                 treePages,
                 stateConfiguration,
-                view,
+                _view,
             );
-            // console.log('computedTree', computedTree);
+            console.log('computedTree', computedTree);
             dispatchSetTree(computedTree);
         }
     }, [
         activeDocumentID,
         dataDocuments,
         contextDocumentsRef.current,
+        stateCulledView,
     ]);
 
     /** Touch */
@@ -817,13 +843,20 @@ const View: React.FC<ViewProperties> = (
 
 
     useEffect(() => {
-        const a = space.computeCulledView(
+        const culledView = space.computeCulledView(
             tree,
             view || [],
             stateSpaceLocation,
             200,
         );
-        console.log(a);
+
+        console.log('culledView', culledView);
+
+        if (culledView && !arraysEqual(stateCulledView, culledView)) {
+            console.log('culledView', culledView);
+            // setLocalCulledView(culledView);
+            dispatchSpaceSetCulledView(culledView);
+        }
     }, [
         tree,
         view,
@@ -878,6 +911,7 @@ const mapStateToProperties = (
     activeDocumentID: selectors.space.getActiveDocumentID(state),
     spaceLoading: selectors.space.getLoading(state),
     stateSpaceLocation: selectors.space.getTransform(state),
+    stateCulledView: selectors.space.getCulledView(state),
 });
 
 
@@ -950,6 +984,11 @@ const mapDispatchToProperties = (
         view,
     ) => dispatch(
         actions.space.spaceSetView(view),
+    ),
+    dispatchSpaceSetCulledView: (
+        culledView,
+    ) => dispatch(
+        actions.space.spaceSetCulledView(culledView),
     ),
 });
 

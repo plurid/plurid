@@ -27,6 +27,7 @@ const getTransform = (state: AppState) => {
 }
 const getActiveDocumentID = (state: AppState) => state.space.activeDocumentID;
 const getViewSize = (state: AppState) => state.space.viewSize;
+const getCulledView = (state: AppState) => state.space.culledView;
 
 
 export default {
@@ -47,4 +48,5 @@ export default {
     getActiveDocumentID,
 
     getViewSize,
+    getCulledView,
 };
