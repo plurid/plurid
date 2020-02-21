@@ -21,19 +21,19 @@ const App = () => {
         theme: 'plurid',
         // transparentUI: true,
         space: {
-            // layout: {
-            //     type: SPACE_LAYOUT.COLUMNS,
-            //     columns: 1,
-            //     // columnLength: 2,
-            //     gap: 0.1,
-            // },
-
             layout: {
-                type: SPACE_LAYOUT.ROWS,
-                rows: 1,
-                // rowLength: 3,
+                type: SPACE_LAYOUT.COLUMNS,
+                columns: 1,
+                // columnLength: 2,
                 gap: 0.1,
             },
+
+            // layout: {
+            //     type: SPACE_LAYOUT.ROWS,
+            //     rows: 1,
+            //     // rowLength: 3,
+            //     gap: 0.1,
+            // },
 
             // layout: {
             //     type: SPACE_LAYOUT.FACE_TO_FACE,
