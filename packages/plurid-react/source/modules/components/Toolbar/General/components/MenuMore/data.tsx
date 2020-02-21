@@ -9,6 +9,7 @@ import MenuMoreTransform from './components/Transform';
 import MenuMoreSpace from './components/Space';
 import MenuMoreToolbar from './components/Toolbar';
 import MenuMoreViewcube from './components/Viewcube';
+import MenuMoreTechnical from './components/Technical';
 import MenuMoreShortcuts from './components/Shortcuts';
 
 
@@ -44,6 +45,11 @@ export const moreMenus: MoreMenu[] = [
         name: 'viewcube',
         drawer: TOOLBAR_DRAWERS.VIEWCUBE,
         component: (<MenuMoreViewcube />),
+    },
+    {
+        name: 'technical',
+        drawer: TOOLBAR_DRAWERS.VIEWCUBE,
+        component: (<MenuMoreTechnical />),
     },
     {
         name: 'shortcuts',
