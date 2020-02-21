@@ -603,3 +603,22 @@ const checkPageInView = (
 
     return false;
 }
+
+
+
+export const computeViewTree = (
+    pages: TreePage[],
+    view: string[] | PluridView[],
+): TreePage[] => {
+    const viewTree: TreePage[] = [];
+
+    for (const pageView of view) {
+        const page = pages.find(p => p.path === pageView);
+
+        if (page) {
+            viewTree.push(page);
+        }
+    }
+
+    return viewTree;
+}
