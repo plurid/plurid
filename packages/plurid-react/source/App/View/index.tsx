@@ -895,7 +895,7 @@ const View: React.FC<ViewProperties> = (
     /** Handle Culled View */
     useEffect(() => {
         const culledView = space.computeCulledView(
-            tree,
+            initialTree,
             view || [],
             stateSpaceLocation,
             200,
