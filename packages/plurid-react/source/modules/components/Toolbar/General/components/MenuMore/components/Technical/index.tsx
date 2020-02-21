@@ -77,6 +77,7 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
                     atChange={handleCullingDistance}
                     min={1_000}
                     max={20_000}
+                    defaultValue={10_000}
                 />
             </StyledMoreMenuItem>
         </>
