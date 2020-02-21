@@ -745,6 +745,11 @@ const View: React.FC<ViewProperties> = (
             : view;
         console.log('_view', _view);
 
+        const c = space.computeViewTree(
+            initialTree,
+            _view,
+        );
+
         const computedTree = space.computeSpaceTree(
             initialTree,
             stateConfiguration,
