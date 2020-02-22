@@ -39,17 +39,17 @@
     ],
     "preferGlobal": true,
     "scripts": {
-        "tsc": "tsc",
         "lint": "tslint --project tsconfig.json -t codeFrame 'source/**/*.ts' 'test/**/*.ts'",
-        "prebuild": "rimraf distribution",
-        "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out documentation --target es6 --theme minimal --mode file source && yarn build.removeSpecs",
-        "build.development": "tsc --module commonjs && rollup -c rollup.config.ts && yarn build.removeSpecs",
-        "build.removeSpecs": "rm -rf `find ./distribution/ -type d -name __specs__`",
-        "start": "rollup -c rollup.config.ts -w",
         "spec": "jest --coverage",
         "spec:watch": "jest --coverage --watch",
         "spec:prod": "npm run lint && npm run spec -- --no-cache",
         "report-coverage": "cat ./coverage/lcov.info | coveralls",
+        "documentation": "typedoc --out documentation --target es6 --theme minimal --mode file source",
+        "start": "rollup -c rollup.config.ts -w",
+        "build.removeSpecs": "rm -rf `find ./distribution/ -type d -name __specs__`",
+        "build.development": "rollup -c rollup.config.ts && yarn build.removeSpecs",
+        "build": "rollup -c rollup.config.ts && yarn build.removeSpecs",
+        "prebuild": "rimraf distribution",
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
