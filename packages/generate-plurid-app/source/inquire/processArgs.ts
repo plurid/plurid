@@ -83,15 +83,17 @@ const generatedPluridReactApplication = (
 
     exec(`yarn add ${pluridReactPackages}`, {
         cwd: app.directory,
-    }, (error, stdout, stderr) => {
+    }, () => {
         console.log('\tPlurid\' packages added succesfully.');
 
         console.log('\n\tSetting files.');
 
         const publicDir = path.join(app.directory, './public');
         const sourceDir = path.join(app.directory, './src');
+        const gitDir = path.join(app.directory, './.git');
         fs.rmdirSync(publicDir, {recursive: true});
         fs.rmdirSync(sourceDir, {recursive: true});
+        fs.rmdirSync(gitDir, {recursive: true});
 
         const base = './node_modules/@plurid/generate-plurid-app/distribution/files/react-typescript-client';
 
@@ -100,9 +102,17 @@ const generatedPluridReactApplication = (
         copyDir(templatePublicDir, publicDir);
         copyDir(templateSourceDir, sourceDir);
 
-        console.log('\n\tAll done.');
+        exec(`yarn remove @plurid/generate-plurid-app`, {
+            cwd: app.directory,
+        }, () => {
+            console.log('\n\tAll done.');
 
-        console.log('\n\tChange directory, run `yarn start` and enjoy.\n');
+            console.log('\n\tChange directory');
+            console.log(`\n\t\tcd ${app.directory}`);
+            console.log('\n\trun\n');
+            console.log('\n\t\tyarn start\n');
+            console.log('\n\tand enjoy.\n');
+        }
     });
 }
 
