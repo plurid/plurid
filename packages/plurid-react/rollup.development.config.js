@@ -12,6 +12,11 @@ import pkg from './package.json';
 
 
 
+const globals = [
+    'hammerjs': 'hammerjs',
+];
+
+
 export default [
     {
         input: 'source/index.tsx',
@@ -20,13 +25,13 @@ export default [
                 file: pkg.main,
                 format: 'cjs',
                 exports: 'named',
-                sourcemap: true
+                sourcemap: true,
             },
             {
                 file: pkg.module,
                 format: 'es',
                 exports: 'named',
-                sourcemap: true
+                sourcemap: true,
             }
         ],
         plugins: [
@@ -58,7 +63,7 @@ export default [
                 file: 'distribution/plurid-react.min.js',
                 format: 'cjs',
                 exports: 'named',
-                sourcemap: true
+                sourcemap: true,
             },
         ],
         plugins: [
