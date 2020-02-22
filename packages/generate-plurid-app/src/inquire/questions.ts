@@ -5,17 +5,17 @@ import * as inquirer from 'inquirer';
 const values = {
     language: [
         'TypeScript',
-        'JavaScript',
+        // 'JavaScript',
         new inquirer.Separator('---- pick one ----'),
     ],
     ui: [
-        'HTML Custom Elements',
+        // 'HTML Custom Elements',
         'React',
         // 'Vue',
         new inquirer.Separator('---- pick one ----'),
     ],
     type: [
-        'Server-Side Rendered',
+        // 'Server-Side Rendered',
         'Client-Only',
         new inquirer.Separator('---- pick one ----'),
     ],
