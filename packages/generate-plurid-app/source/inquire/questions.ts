@@ -29,7 +29,7 @@ interface Question {
     choices?: any[];
 }
 
-export const questions: Question[] = [
+const questions: Question[] = [
     {
         type: 'input',
         name: 'app',
@@ -39,18 +39,21 @@ export const questions: Question[] = [
         type: 'list',
         name: 'language',
         message: 'Choose the application language:',
-        choices: values.language
+        choices: values.language,
     },
     {
         type: 'list',
         name: 'ui',
         message: 'Choose the user interface engine:',
-        choices: values.ui
+        choices: values.ui,
     },
     {
         type: 'list',
         name: 'type',
         message: 'Choose the application type:',
-        choices: values.type
+        choices: values.type,
     },
 ];
+
+
+export default questions;

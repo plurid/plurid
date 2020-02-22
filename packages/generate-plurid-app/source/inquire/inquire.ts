@@ -1,11 +1,10 @@
 import * as inquirer from 'inquirer';
 
-import {
-    processArgs,
-} from './processArgs';
+import processArguments from '../process';
 
 
-export const inquire = (
+
+const inquire = (
     questions: any,
 ) => {
     inquirer
@@ -24,6 +23,9 @@ export const inquire = (
                 ui,
                 type,
             };
-            await processArgs(args);
+            await processArguments(args);
         });
 }
+
+
+export default inquire;
