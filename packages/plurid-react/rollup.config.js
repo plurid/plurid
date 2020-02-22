@@ -6,7 +6,7 @@ import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import minify from 'rollup-plugin-babel-minify';
+// import minify from 'rollup-plugin-babel-minify';
 
 import pkg from './package.json';
 
@@ -51,18 +51,18 @@ export default [
             }),
         ],
     },
-    {
-        input: pkg.main,
-        output: [
-            {
-                file: 'distribution/index.min.js',
-                format: 'cjs',
-                exports: 'named',
-                sourcemap: true
-            },
-        ],
-        plugins: [
-            minify(),
-        ],
-    }
+    // {
+    //     input: pkg.main,
+    //     output: [
+    //         {
+    //             file: 'distribution/index.min.js',
+    //             format: 'cjs',
+    //             exports: 'named',
+    //             sourcemap: true
+    //         },
+    //     ],
+    //     plugins: [
+    //         minify(),
+    //     ],
+    // }
 ];
