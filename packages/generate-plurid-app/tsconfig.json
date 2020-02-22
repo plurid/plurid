@@ -16,5 +16,8 @@
     },
     "include": [
         "source"
+    ],
+    "exclude": [
+        "source/files"
     ]
 }

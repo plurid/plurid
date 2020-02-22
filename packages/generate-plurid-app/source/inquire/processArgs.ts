@@ -33,10 +33,15 @@ const generatedPluridReactApplication = (
 ) => {
     console.log('\tAdding the plurid\' packages to the React Application...');
 
+    exec('pwd', {
+        cwd: app.directory,
+    }, (error, stdout, stderr) => {
+        exec(`yarn add @plurid/plurid-react`, () => {
+            console.log('\tPlurid\' packages added succesfully.');
 
-    console.log('\tPlurid\' packages added succesfully.');
-
-    console.log('\n\tChange directory, run `yarn start` and enjoy.\n');
+            console.log('\n\tChange directory, run `yarn start` and enjoy.\n');
+        });
+    });
 }
 
 const createReactApplication = async (
