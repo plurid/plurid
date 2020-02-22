@@ -1,18 +1,20 @@
-const resolveAppDirectory = (path: string) => {
-    return path;
+import path from 'path';
+
+
+const resolveAppDirectory = (
+    appPath: string,
+) => {
+    if (appPath) {
+        return path.resolve(process.cwd(), appPath);
+    } else {
+        return path.resolve(process.cwd(), './plurid-app');
+    }
 }
 
 
 export const processArgs = async (
     program: any,
 ) => {
-    // console.log('Plurid Application');
-    // console.log('------------------');
-    // console.log(answers.app);
-    // console.log(answers.language);
-    // console.log(answers.ui);
-    // console.log(answers.type);
-
     let app: string;
     let language: string;
     let ui: string;
@@ -37,11 +39,11 @@ export const processArgs = async (
     switch(program.ui) {
         case 'html':
         case 'react':
-        // case 'vue':
+        case 'vue':
             ui = program.ui;
             break;
         default:
-            ui = 'html';
+            ui = 'react';
     }
 
     switch(program.type) {
@@ -53,11 +55,6 @@ export const processArgs = async (
             type = 'client';
     }
 
-    // console.log(program.app);
-    // console.log(program.language);
-    // console.log(program.ui);
-    // console.log(program.type);
-    // console.log('-----');
     console.log('Application will be generated at:', app);
     console.log('The application language is:', language);
     console.log('The application is based on:', ui);
