@@ -1,7 +1,6 @@
 import React from 'react';
 
 import PluridApp, {
-    // PluridConfiguration,
     PluridPage,
     PluridView,
     SPACE_LAYOUT,
@@ -37,13 +36,13 @@ const App = () => {
                 element: Page,
                 properties: {},
             },
-            // root: true,
         },
-
     ];
 
-    const pluridView = [
-        '/page',
+    const pluridView: PluridView[] = [
+        {
+            path: '/page',
+        }
     ];
 
 
