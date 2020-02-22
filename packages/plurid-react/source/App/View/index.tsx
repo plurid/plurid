@@ -536,7 +536,7 @@ const View: React.FC<ViewProperties> = (
 
 
     const computedCulledFunction = () => {
-        console.log('computed culled');
+        // console.log('computed culled');
 
         const culledView = space.computeCulledView(
             initialTree,
