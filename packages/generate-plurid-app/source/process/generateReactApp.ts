@@ -39,7 +39,7 @@ const generatePluridReactApplication = (
     }, () => {
         console.log('\tPlurid\' packages added succesfully.');
 
-        console.log('\n\tSetting files.');
+        console.log('\n\tSetting up the template files...');
 
         const publicDir = path.join(app.directory, './public');
         const sourceDir = path.join(app.directory, './src');
@@ -77,6 +77,7 @@ const generateReactApplication = async (
         : '';
 
     console.log('\tGenerating the React Application...');
+
     exec(`yarn create react-app ${app.directory} ${language}`, () => {
         console.log('\tReact Application generated successfully.');
 
