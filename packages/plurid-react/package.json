@@ -53,7 +53,6 @@
         "react-dom": ">=16",
         "react-redux": ">=7",
         "redux": ">=4",
-        "redux-devtools-extension": ">=2.13",
         "redux-thunk": ">=2",
         "styled-components": ">=4"
     },
