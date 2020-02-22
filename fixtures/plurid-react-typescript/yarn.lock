@@ -841,7 +841,7 @@
     "@babel/helper-plugin-utils" "^7.8.3"
     "@babel/plugin-transform-typescript" "^7.8.3"
 
-"@babel/runtime@7.8.4", "@babel/runtime@^7.0.0", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.3":
+"@babel/runtime@7.8.4", "@babel/runtime@^7.0.0", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.3":
   version "7.8.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.4.tgz#d79f5a2040f7caa24d53e563aad49cbc05581308"
   integrity sha512-neAp3zt80trRVBI1x0azq6c57aNBqYZH8KhMm3TaB7wEI5Q4A2SHfBHE8w9gOhI/lrqxtEbXZgQIrHP+wvSGwQ==
@@ -1124,15 +1124,15 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@plurid/plurid-data@^0.1.92":
-  version "0.1.92"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.92.tgz#1ae72b41e443f20d731c578be99636bb780269f9"
-  integrity sha512-NkaCS5Y+T0aS17tAnbNceJy5i/j/XB7/hg4OrJdbaWRxMMe6jH9WG7uFJ7Qv+KULiBsGVnN6n2fNf9CwJ41bag==
+"@plurid/plurid-data@^0.1.93":
+  version "0.1.93"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.93.tgz#b10060d39899cf82e9dd86c9ff13bfef1df8aec9"
+  integrity sha512-AxYalfDGw9JdR4wyOGY75A2h5ukexUF/myHgz+Amc/JiaAjIRDMQ9qsGusuJI9U7eC1vH5pQHuGfbI1W51Vgmg==
 
-"@plurid/plurid-engine@^0.1.40":
-  version "0.1.40"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.40.tgz#cadc5e956b67f023d79f09d1c6699385e7261319"
-  integrity sha512-aWnDOD4m8XznfMa5tE7oE/bSV2vWv9dDUElxvxvVKw9I2uaNMif7pA775cXR60AO+3PgA2SibrW0xnJarE25YA==
+"@plurid/plurid-engine@^0.1.41":
+  version "0.1.41"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.41.tgz#fbaf12dd3f1090032b13a7e5f041b61e80fa35e1"
+  integrity sha512-2ww2rbKPLOZjJlwCD+kmOq+vjYHbJDtba1homGDtrP+dImHQ9c+36sqluAFrjCuJATW9YIOdyQsgWecFLiuaRQ==
 
 "@plurid/plurid-functions@^0.1.7":
   version "0.1.7"
@@ -1149,16 +1149,14 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.3.tgz#f5014195a065f13c47f2895e4942ba1f3ec045a3"
   integrity sha512-mviWTVQhkIifQApuLa60jSVA+azeeKXYvNTFejzJJtEFG0s1h2a1BqtaH/Fj4wCzymivJsD47JqbaLfg7Xw4zA==
 
-"@plurid/plurid-react@^0.1.97":
-  version "0.1.97"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.97.tgz#04801b9f4c8d0de6222c10ef96186a209e559aa9"
-  integrity sha512-uhKg4JKO0pnFC3eVtRXIVb/YbV6eF3HFh0B7hAOqW5rRS+/n4E7kkX0LqC+bGzx7MJervY+5VQEoQt1z10qhVw==
+"@plurid/plurid-react@^0.1.100":
+  version "0.1.100"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.100.tgz#4863f278f2158d355e3d271cd113ca486792a5ca"
+  integrity sha512-EmhPPUw4swVxe1DW2NQvRzBQQZURzjwoQDGRVCjVIfetAN14Qwf52rVcZr6+/GxdSfqlIqP1tfYDw7njCAxCxA==
   dependencies:
-    "@plurid/plurid-data" "^0.1.92"
-    "@plurid/plurid-engine" "^0.1.40"
+    "@plurid/plurid-data" "^0.1.93"
+    "@plurid/plurid-engine" "^0.1.41"
     "@plurid/plurid-pubsub" "^0.1.3"
-    hammerjs "^2.0.8"
-    redux-devtools-extension "^2.13.8"
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
@@ -1306,12 +1304,12 @@
     pretty-format "^25.1.0"
     redent "^3.0.0"
 
-"@testing-library/react@^9.4.0":
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-9.4.0.tgz#b021ac8cb987c8dc54c6841875f745bf9b2e88e5"
-  integrity sha512-XdhDWkI4GktUPsz0AYyeQ8M9qS/JFie06kcSnUVcpgOwFjAu9vhwR83qBl+lw9yZWkbECjL8Hd+n5hH6C0oWqg==
+"@testing-library/react@^9.4.1":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-9.4.1.tgz#955771568aa3216107d307bfdf470bf2394308a0"
+  integrity sha512-sta3ui24HPgW92quHyQj6gpOkNgLNx8BX/QOU4k1bddo43ZdqlGwmzCYwL93bExfhergwiau+IzBGl7TCsSFeA==
   dependencies:
-    "@babel/runtime" "^7.7.6"
+    "@babel/runtime" "^7.8.3"
     "@testing-library/dom" "^6.11.0"
     "@types/testing-library__react" "^9.1.2"
 
@@ -1463,10 +1461,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@^16.9.21":
-  version "16.9.21"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.21.tgz#99e274e2ecfab6bb93920e918341daa3198b348d"
-  integrity sha512-xpmenCMeBwJRct8vmIfczlgdOXWIWASoOM857kxKfHlVQvDltRh7IFRVfGws79iO2jkNPXOeWREyKoClzhBaQA==
+"@types/react@^16.9.22":
+  version "16.9.22"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.22.tgz#f0288c92d94e93c4b43e3f5633edf788b2c040ae"
+  integrity sha512-7OSt4EGiLvy0h5R7X+r0c7S739TCU/LvWbkNOrm10lUwNHe7XPz5OLhLOSZeCkqO9JSCly1NkYJ7ODTUqVnHJQ==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -8663,11 +8661,6 @@ redent@^3.0.0:
   dependencies:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
-
-redux-devtools-extension@^2.13.8:
-  version "2.13.8"
-  resolved "https://registry.yarnpkg.com/redux-devtools-extension/-/redux-devtools-extension-2.13.8.tgz#37b982688626e5e4993ff87220c9bbb7cd2d96e1"
-  integrity sha512-8qlpooP2QqPtZHQZRhx3x3OP5skEV1py/zUdMY28WNAocbafxdG2tRD1MWE7sp8obGMNYuLWanhhQ7EQvT1FBg==
 
 redux-thunk@^2.3.0:
   version "2.3.0"
