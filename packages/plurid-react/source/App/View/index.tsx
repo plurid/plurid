@@ -532,6 +532,31 @@ const View: React.FC<ViewProperties> = (
         }
     }, 100);
 
+
+    const computedCulledFunction = () => {
+        console.log('computed culled');
+
+        const culledView = space.computeCulledView(
+            initialTree,
+            view || [],
+            stateSpaceLocation,
+            1500,
+        );
+
+        // console.log('culledView', culledView);
+
+        if (culledView && !arraysEqual(stateCulledView, culledView)) {
+            // console.log('culledView', culledView);
+            // setLocalCulledView(culledView);
+            dispatchSpaceSetCulledView(culledView);
+        }
+    }
+
+    const computeCulled = useDebouncedCallback(
+        computedCulledFunction,
+        50,
+    );
+
     const computeTree = (
         tree: TreePage[],
     ) => {
@@ -795,7 +820,7 @@ const View: React.FC<ViewProperties> = (
         stateCulledView,
     ]);
 
-
+    /** Handle Initial Tree */
     useEffect(() => {
         if (initialTree.length === 0) {
             if (activeDocumentID && contextDocumentsRef.current) {
@@ -899,20 +924,21 @@ const View: React.FC<ViewProperties> = (
 
     /** Handle Culled View */
     useEffect(() => {
-        const culledView = space.computeCulledView(
-            initialTree,
-            view || [],
-            stateSpaceLocation,
-            2000,
-        );
+        computeCulled();
+        // const culledView = space.computeCulledView(
+        //     initialTree,
+        //     view || [],
+        //     stateSpaceLocation,
+        //     2000,
+        // );
 
-        // console.log('culledView', culledView);
+        // // console.log('culledView', culledView);
 
-        if (culledView && !arraysEqual(stateCulledView, culledView)) {
-            // console.log('culledView', culledView);
-            // setLocalCulledView(culledView);
-            dispatchSpaceSetCulledView(culledView);
-        }
+        // if (culledView && !arraysEqual(stateCulledView, culledView)) {
+        //     // console.log('culledView', culledView);
+        //     // setLocalCulledView(culledView);
+        //     dispatchSpaceSetCulledView(culledView);
+        // }
     }, [
         tree,
         view,
