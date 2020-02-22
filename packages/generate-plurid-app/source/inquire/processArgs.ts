@@ -2,7 +2,9 @@ import path from 'path';
 
 import fs from 'fs';
 
-import { exec } from 'child_process';
+import {
+    exec,
+} from 'child_process';
 
 
 
@@ -26,6 +28,17 @@ const makeAppDirectory = (
 }
 
 
+const generatedPluridReactApplication = (
+    app: any,
+) => {
+    console.log('\tAdding the plurid\' packages to the React Application...');
+
+
+    console.log('\tPlurid\' packages added succesfully.');
+
+    console.log('\n\tChange directory, run `yarn start` and enjoy.\n');
+}
+
 const createReactApplication = async (
     app: any,
 ) => {
@@ -33,7 +46,12 @@ const createReactApplication = async (
         ? '--template typescript'
         : '';
 
-    exec(`yarn create react-app ${app.directory} ${language}`);
+    console.log('\tGenerating the React Application...');
+    exec(`yarn create react-app ${app.directory} ${language}`, () => {
+        console.log('\tReact Application generated successfully.');
+
+        generatedPluridReactApplication(app);
+    });
 }
 
 
@@ -93,7 +111,7 @@ export const processArgs = async (
     }
 
     console.log('\n\tThe plurid\' application will be generated at:');
-    console.log('\t', app);
+    console.log(`\t${app}`);
     console.log('\tThe application language is:', language);
     console.log('\tThe application is based on:', ui);
     console.log('\tThe application type is:', type);
