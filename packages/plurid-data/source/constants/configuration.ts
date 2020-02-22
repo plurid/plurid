@@ -7,7 +7,11 @@ import {
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
-} from '../enumerations'
+} from '../enumerations';
+
+import {
+    PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
+} from './defaults';
 
 
 
@@ -68,6 +72,7 @@ export const defaultConfiguration: PluridConfiguration = {
         transformMultimode: false,
         transformTouch: TRANSFORM_TOUCHES.PAN,
         firstPerson: false,
+        cullingDistance: PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
     },
 };
 

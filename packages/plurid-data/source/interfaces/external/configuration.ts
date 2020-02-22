@@ -97,6 +97,8 @@ export interface PluridConfigurationSpace {
 
     firstPerson: boolean;
 
+    cullingDistance: number;
+
     // FUTURE:
     /**
      * Change the browser URL depending on the active plane/plane in sight.
