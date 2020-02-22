@@ -62,7 +62,7 @@ const makeAppDirectory = (
 const generatedPluridReactApplication = (
     app: any,
 ) => {
-    console.log('\tAdding the plurid\' packages to the React Application...');
+    console.log('\n\tAdding the plurid\' packages to the React Application...');
 
     const requiredPluridReactPackages = [
         '@plurid/generate-plurid-app',
