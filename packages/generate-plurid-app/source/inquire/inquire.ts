@@ -1,15 +1,29 @@
 import * as inquirer from 'inquirer';
 
+import {
+    processArgs,
+} from './processArgs';
 
-export const inquire = (questions: any) => {
+
+export const inquire = (
+    questions: any,
+) => {
     inquirer
         .prompt(questions)
-        .then(function (answers: any) {
-            console.log('Plurid Application');
-            console.log('------------------');
-            console.log(answers.app);
-            console.log(answers.language);
-            console.log(answers.ui);
-            console.log(answers.type);
+        .then(async (answers: any) => {
+            const {
+                app,
+                language,
+                ui,
+                type,
+            } = answers;
+
+            const args = {
+                app,
+                language,
+                ui,
+                type,
+            };
+            await processArgs(args);
         });
 }
