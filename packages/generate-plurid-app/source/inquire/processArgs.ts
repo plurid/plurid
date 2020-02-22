@@ -33,12 +33,34 @@ const generatedPluridReactApplication = (
 ) => {
     console.log('\tAdding the plurid\' packages to the React Application...');
 
-    const pluridPackages = '@plurid/plurid-react';
+    const requiredPluridReactPackages = [
+        '@plurid/plurid-functions',
+        '@plurid/plurid-icons-react',
+        '@plurid/plurid-react',
+        '@plurid/plurid-themes',
+        '@plurid/plurid-ui-react',
+        'hammerjs',
+        'react-redux',
+        'redux',
+        'redux-thunk',
+        'styled-components',
+    ];
 
-    exec(`yarn add ${pluridPackages}`, {
+    const pluridReactPackages = requiredPluridReactPackages.join(' ');
+
+    exec(`yarn add ${pluridReactPackages}`, {
         cwd: app.directory,
     }, (error, stdout, stderr) => {
         console.log('\tPlurid\' packages added succesfully.');
+
+        console.log('\n\tSetting files. Finishing things up.');
+
+        const publicDir = path.join(app.directory, './public');
+        const srcDir = path.join(app.directory, './src');
+        fs.rmdirSync(publicDir, {recursive: true});
+        fs.rmdirSync(srcDir, {recursive: true});
+
+        console.log('\n\tAll done.');
 
         console.log('\n\tChange directory, run `yarn start` and enjoy.\n');
     });
