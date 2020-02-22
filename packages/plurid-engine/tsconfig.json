@@ -7,14 +7,11 @@
         "strict": true,
         "sourceMap": true,
         "declaration": true,
-        "jsx": "react",
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "downlevelIteration": true,
         "resolveJsonModule": true,
-        "declarationDir": "distribution/types",
-        "outDir": "distribution/lib",
         "types": [
             "jest",
             "node"
