@@ -37,8 +37,8 @@
         "clean": "rm -rf ./distribution",
         "spec": "jest",
         "lint": "eslint ./source --ext .ts,.tsx",
-        "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
-        "build.development": "yarn clean && rollup -c rollup.config.development.js --environment MODE_ENV:local",
+        "start": "yarn clean && rollup -c rollup.config.development.js -w --environment MODE_ENV:local",
+        "build.development": "yarn clean && rollup -c rollup.config.development.js --environment MODE_ENV:development",
         "build.production": "yarn clean && rollup -c --environment MODE_ENV:production",
         "build": "yarn clean && yarn lint && yarn spec && yarn build.production",
         "prepublishOnly": "yarn build"
