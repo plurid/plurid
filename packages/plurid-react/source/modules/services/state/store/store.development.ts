@@ -7,26 +7,25 @@ import rootReducer from './reducers';
 
 
 
-let devtools: any;
+// let devtools: any;
 
-const loadDevTools = async () => {
-    devtools = await import('redux-devtools-extension/logOnlyInProduction');
-}
-
+// const loadDevTools = async () => {
+//     devtools = await import('redux-devtools-extension/logOnlyInProduction');
+// }
 
 export type AppState = ReturnType<typeof rootReducer>;
 
 const store = (preloadedState: AppState | {}) => {
     const middleware = [ thunk ];
 
-    loadDevTools();
+    const composeEnhancers = typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+        ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(...middleware)
+        : applyMiddleware(...middleware);
 
     const _store = createStore(
         rootReducer,
         preloadedState,
-        devtools
-            ? devtools.composeWithDevTools(applyMiddleware(...middleware))
-            : applyMiddleware(...middleware),
+        composeEnhancers,
     );
 
     return _store;
