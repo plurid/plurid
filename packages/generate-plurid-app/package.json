@@ -7,7 +7,8 @@
         "generate",
         "application",
         "3D",
-        "html"
+        "html",
+        "react"
     ],
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "license": "MIT",
@@ -26,24 +27,24 @@
     "engines": {
         "node": ">=6.0.0"
     },
-    "main": "dist/generate-plurid-app.umd.js",
-    "module": "dist/generate-plurid-app.es5.js",
-    "typings": "dist/types/index.d.ts",
+    "main": "distribution/index.js",
+    "module": "distribution/index.es.js",
+    "typings": "distribution/types/index.d.ts",
     "bin": {
         "generate-plurid-app": "bin/generate-plurid-app"
     },
     "files": [
-        "dist",
-        "bin"
+        "distribution",
+        "binary"
     ],
     "preferGlobal": true,
     "scripts": {
         "tsc": "tsc",
-        "lint": "tslint --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-        "prebuild": "rimraf dist",
-        "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src && yarn build.removeSpecs",
-        "build.dev": "tsc --module commonjs && rollup -c rollup.config.ts && yarn build.removeSpecs",
-        "build.removeSpecs": "rm -rf `find ./dist/ -type d -name __specs__`",
+        "lint": "tslint --project tsconfig.json -t codeFrame 'source/**/*.ts' 'test/**/*.ts'",
+        "prebuild": "rimraf distribution",
+        "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out documentation --target es6 --theme minimal --mode file source && yarn build.removeSpecs",
+        "build.development": "tsc --module commonjs && rollup -c rollup.config.ts && yarn build.removeSpecs",
+        "build.removeSpecs": "rm -rf `find ./distribution/ -type d -name __specs__`",
         "start": "rollup -c rollup.config.ts -w",
         "spec": "jest --coverage",
         "spec:watch": "jest --coverage --watch",
