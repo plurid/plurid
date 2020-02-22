@@ -23,8 +23,8 @@
     "files": [
         "distribution"
     ],
-    "main": "distribution/plurid-engine.js",
-    "module": "distribution/plurid-engine.es.js",
+    "main": "distribution/index.js",
+    "module": "distribution/index.es.js",
     "typings": "distribution/index.d.ts",
     "engines": {
         "node": ">=8.0.0"
