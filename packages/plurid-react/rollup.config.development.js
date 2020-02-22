@@ -6,15 +6,9 @@ import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import minify from 'rollup-plugin-babel-minify';
 
 import pkg from './package.json';
 
-
-
-const globals = [
-    'hammerjs': 'hammerjs',
-];
 
 
 export default [
@@ -25,14 +19,8 @@ export default [
                 file: pkg.main,
                 format: 'cjs',
                 exports: 'named',
-                sourcemap: true,
+                sourcemap: true
             },
-            {
-                file: pkg.module,
-                format: 'es',
-                exports: 'named',
-                sourcemap: true,
-            }
         ],
         plugins: [
             replace({
@@ -56,18 +44,4 @@ export default [
             }),
         ],
     },
-    {
-        input: pkg.main,
-        output: [
-            {
-                file: 'distribution/plurid-react.min.js',
-                format: 'cjs',
-                exports: 'named',
-                sourcemap: true,
-            },
-        ],
-        plugins: [
-            minify(),
-        ],
-    }
 ];

@@ -38,7 +38,7 @@
         "spec": "jest",
         "lint": "eslint ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
-        "build.development": "yarn clean && rollup -c --environment MODE_ENV:local",
+        "build.development": "yarn clean && rollup -c rollup.config.development.js --environment MODE_ENV:local",
         "build.production": "yarn clean && rollup -c --environment MODE_ENV:production",
         "build": "yarn clean && yarn lint && yarn spec && yarn build.production",
         "prepublishOnly": "yarn build"
@@ -48,19 +48,19 @@
         "@plurid/plurid-icons-react": ">=0.1",
         "@plurid/plurid-themes": ">=0.1",
         "@plurid/plurid-ui-react": ">=0.1",
+        "hammerjs": "^2.0.8",
         "react": ">=16",
         "react-dom": ">=16",
         "react-redux": ">=7",
         "redux": ">=4",
         "redux-thunk": ">=2",
+        "redux-devtools-extension": "^2.13.8",
         "styled-components": ">=4"
     },
     "dependencies": {
         "@plurid/plurid-data": "^0.1.92",
         "@plurid/plurid-engine": "^0.1.40",
-        "@plurid/plurid-pubsub": "^0.1.3",
-        "hammerjs": "^2.0.8",
-        "redux-devtools-extension": "^2.13.8"
+        "@plurid/plurid-pubsub": "^0.1.3"
     },
     "devDependencies": {
         "@babel/core": "^7.8.4",
