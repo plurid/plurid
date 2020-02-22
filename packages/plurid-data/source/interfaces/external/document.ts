@@ -1,5 +1,7 @@
 import {
     PluridPage,
+    PluridView,
+    PluridCluster,
 } from './page';
 
 
@@ -32,4 +34,15 @@ export interface PluridDocument {
      * Only one document can be active at a time.
      */
     active?: boolean;
+
+    /**
+     * Paths to the pages in view on the initial rendering.
+     */
+    view?: string[] | PluridView[];
+
+    /**
+     * A cluster ensures the rendering of all the pages that it contains
+     * in the same space zone.
+     */
+    clusters?: PluridCluster[];
 }
