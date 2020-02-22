@@ -1,4 +1,6 @@
 import path from 'path';
+import fs from 'fs';
+
 
 
 const resolveAppDirectory = (
@@ -8,6 +10,15 @@ const resolveAppDirectory = (
         return path.resolve(process.cwd(), appPath);
     } else {
         return path.resolve(process.cwd(), './plurid-app');
+    }
+}
+
+
+const makeAppDirectory = (
+    appDir: string,
+) => {
+    if (!fs.existsSync(appDir)) {
+        fs.mkdirSync(appDir);
     }
 }
 
@@ -26,6 +37,8 @@ export const processArgs = async (
     }
 
     app = resolveAppDirectory(program.app);
+
+    makeAppDirectory(app);
 
     switch(program.language) {
         case 'typescript':
