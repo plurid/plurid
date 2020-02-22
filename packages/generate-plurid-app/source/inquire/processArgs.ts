@@ -112,7 +112,7 @@ const generatedPluridReactApplication = (
             console.log('\n\trun\n');
             console.log('\n\t\tyarn start\n');
             console.log('\n\tand enjoy.\n');
-        }
+        });
     });
 }
 
