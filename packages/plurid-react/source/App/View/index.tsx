@@ -86,6 +86,8 @@ import {
     useDebouncedCallback,
 } from '../../modules/services/hooks/debounce';
 
+import useThrottledCallback from '../../modules/services/hooks/throttle';
+
 import { AppState } from '../../modules/services/state/store';
 import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
@@ -552,9 +554,9 @@ const View: React.FC<ViewProperties> = (
         }
     }
 
-    const computeCulled = useDebouncedCallback(
+    const computeCulled = useThrottledCallback(
         computedCulledFunction,
-        50,
+        500,
     );
 
     const computeTree = (
