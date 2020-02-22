@@ -109,8 +109,8 @@ const generatedPluridReactApplication = (
 
             console.log('\n\tChange directory');
             console.log(`\n\t\tcd ${app.directory}`);
-            console.log('\n\trun\n');
-            console.log('\n\t\tyarn start\n');
+            console.log('\n\trun');
+            console.log('\n\t\tyarn start');
             console.log('\n\tand enjoy.\n');
         });
     });
