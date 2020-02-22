@@ -6,10 +6,37 @@ import {
     exec,
 } from 'child_process';
 
-import {
-    getInstalledPathSync,
-} from 'get-installed-path';
 
+
+const copyDir = (
+    src: any,
+    dest: any,
+) => {
+    makeAppDirectory(dest);
+
+	var files = fs.readdirSync(src);
+	for(var i = 0; i < files.length; i++) {
+		var current = fs.lstatSync(path.join(src, files[i]));
+		if(current.isDirectory()) {
+			copyDir(path.join(src, files[i]), path.join(dest, files[i]));
+		} else if(current.isSymbolicLink()) {
+			var symlink = fs.readlinkSync(path.join(src, files[i]));
+			fs.symlinkSync(symlink, path.join(dest, files[i]));
+		} else {
+			copyFile(path.join(src, files[i]), path.join(dest, files[i]));
+		}
+	}
+};
+
+
+const copyFile = (
+    src: any,
+    dest: any,
+) => {
+	var oldFile = fs.createReadStream(src);
+	var newFile = fs.createWriteStream(dest);
+    oldFile.pipe(newFile);
+};
 
 
 const resolveAppDirectory = (
@@ -69,6 +96,8 @@ const generatedPluridReactApplication = (
 
         const templatePublicDir = path.join(app.directory, base + '/public');
         const templateSourceDir = path.join(app.directory, base + '/src');
+        copyDir(templatePublicDir, publicDir);
+        copyDir(templateSourceDir, sourceDir);
 
         console.log('\n\tAll done.');
 
