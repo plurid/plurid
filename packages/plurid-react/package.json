@@ -26,9 +26,9 @@
     "files": [
         "distribution/"
     ],
-    "main": "distribution/index.js",
-    "module": "distribution/index.es.js",
-    "types": "distribution/index.d.ts",
+    "main": "distribution/plurid-react.js",
+    "module": "distribution/plurid-react.es.js",
+    "types": "distribution/plurid-react.d.ts",
     "engines": {
         "node": ">=8",
         "npm": ">=6"
@@ -37,7 +37,7 @@
         "clean": "rm -rf ./distribution",
         "spec": "jest",
         "lint": "eslint ./source --ext .ts,.tsx",
-        "minify.cjs": "minify ./distribution/index.js --out-file ./distribution/index.min.js",
+        "minify.cjs": "minify ./distribution/plurid-react.js --out-file ./distribution/plurid-react.min.js",
         "minify": "yarn minify.cjs",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
         "build.development": "yarn clean && rollup -c --environment MODE_ENV:local",
