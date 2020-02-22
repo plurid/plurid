@@ -6,6 +6,10 @@ import {
     exec,
 } from 'child_process';
 
+import {
+    getInstalledPathSync,
+} from 'get-installed-path';
+
 
 
 const resolveAppDirectory = (
@@ -59,6 +63,9 @@ const generatedPluridReactApplication = (
         const srcDir = path.join(app.directory, './src');
         fs.rmdirSync(publicDir, {recursive: true});
         fs.rmdirSync(srcDir, {recursive: true});
+
+        const installedPath = getInstalledPathSync('@plurid/generate-plurid-app');
+        console.log('installedPath', installedPath);
 
         console.log('\n\tAll done.');
 
