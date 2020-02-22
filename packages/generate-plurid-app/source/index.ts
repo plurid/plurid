@@ -1,10 +1,13 @@
-import program, { CommanderStatic } from 'commander';
+import program, {
+    CommanderStatic,
+} from 'commander';
 
 import {
     inquire,
-    processArgs,
     questions,
 } from './inquire';
+
+import processArguments from './process';
 
 
 
@@ -26,7 +29,7 @@ async function main(program: CommanderStatic) {
             .option('-u, --ui <ui-engine>', 'set UI engine ("html" -> HTML Custom Elements || "react" -> React || "vue" -> Vue)')
             .option('-t, --type <app-type>', 'set app type ("client" -> Client-Only || "ssr" -> Server-Side Rendering)')
             .action(async () => {
-                await processArgs(program);
+                await processArguments(program);
             });
     }
 
