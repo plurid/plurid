@@ -11,7 +11,7 @@ import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
     <App />,
-    document.getElementById('root'),
+    document.getElementById('plurid-app'),
 );
 
 serviceWorker.unregister();
