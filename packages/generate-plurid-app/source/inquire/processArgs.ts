@@ -38,6 +38,7 @@ const generatedPluridReactApplication = (
     console.log('\tAdding the plurid\' packages to the React Application...');
 
     const requiredPluridReactPackages = [
+        '@plurid/generate-plurid-app',
         '@plurid/plurid-functions',
         '@plurid/plurid-icons-react',
         '@plurid/plurid-react',
@@ -57,15 +58,17 @@ const generatedPluridReactApplication = (
     }, (error, stdout, stderr) => {
         console.log('\tPlurid\' packages added succesfully.');
 
-        console.log('\n\tSetting files. Finishing things up.');
+        console.log('\n\tSetting files.');
 
         const publicDir = path.join(app.directory, './public');
-        const srcDir = path.join(app.directory, './src');
+        const sourceDir = path.join(app.directory, './src');
         fs.rmdirSync(publicDir, {recursive: true});
-        fs.rmdirSync(srcDir, {recursive: true});
+        fs.rmdirSync(sourceDir, {recursive: true});
 
-        const installedPath = getInstalledPathSync('@plurid/generate-plurid-app');
-        console.log('installedPath', installedPath);
+        const base = './node_modules/@plurid/generate-plurid-app/distribution/files/react-typescript-client';
+
+        const templatePublicDir = path.join(app.directory, base + '/public');
+        const templateSourceDir = path.join(app.directory, base + '/src');
 
         console.log('\n\tAll done.');
 
