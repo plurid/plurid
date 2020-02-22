@@ -58,8 +58,8 @@
         "styled-components": ">=4"
     },
     "dependencies": {
-        "@plurid/plurid-data": "^0.1.92",
-        "@plurid/plurid-engine": "^0.1.40",
+        "@plurid/plurid-data": "^0.1.93",
+        "@plurid/plurid-engine": "^0.1.41",
         "@plurid/plurid-pubsub": "^0.1.3"
     },
     "devDependencies": {
@@ -101,7 +101,7 @@
         "rollup-plugin-babel": "^4.3.3",
         "rollup-plugin-babel-minify": "^9.1.1",
         "rollup-plugin-peer-deps-external": "^2.2.2",
-        "rollup-plugin-postcss": "^2.0.6",
+        "rollup-plugin-postcss": "^2.1.1",
         "rollup-plugin-typescript2": "^0.26.0",
         "styled-components": "^5.0.1",
         "ts-jest": "^25.2.1",
