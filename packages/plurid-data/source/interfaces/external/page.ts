@@ -49,6 +49,9 @@ export interface PluridPage {
 
 export type PluridPageContext<T> = React.Context<T>;
 
+export interface PluridPageContextValue {
+    [key: string]: any;
+}
 
 
 export interface PluridComponentReact {
