@@ -76,6 +76,7 @@ const generatedPluridReactApplication = (
         'redux',
         'redux-thunk',
         'styled-components',
+        '@types/styled-components',
     ];
 
     const pluridReactPackages = requiredPluridReactPackages.join(' ');
