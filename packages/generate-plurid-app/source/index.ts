@@ -25,8 +25,8 @@ async function main(program: CommanderStatic) {
             .option('-l, --language <language>', 'set language ("typescript" -> TypeScript || "javascript" -> JavaScript)')
             .option('-u, --ui <ui-engine>', 'set UI engine ("html" -> HTML Custom Elements || "react" -> React || "vue" -> Vue)')
             .option('-t, --type <app-type>', 'set app type ("client" -> Client-Only || "ssr" -> Server-Side Rendering)')
-            .action(() => {
-                processArgs(program);
+            .action(async () => {
+                await processArgs(program);
             });
     }
 

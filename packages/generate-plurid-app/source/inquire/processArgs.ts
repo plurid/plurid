@@ -2,7 +2,17 @@ const resolveAppDirectory = (path: string) => {
     return path;
 }
 
-export const processArgs = (program: any) => {
+
+export const processArgs = async (
+    program: any,
+) => {
+    // console.log('Plurid Application');
+    // console.log('------------------');
+    // console.log(answers.app);
+    // console.log(answers.language);
+    // console.log(answers.ui);
+    // console.log(answers.type);
+
     let app: string;
     let language: string;
     let ui: string;
