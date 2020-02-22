@@ -55,7 +55,7 @@ export default [
         input: pkg.main,
         output: [
             {
-                file: 'distribution/plurid-react.min.js',
+                file: 'distribution/index.min.js',
                 format: 'cjs',
                 exports: 'named',
                 sourcemap: true
