@@ -1,5 +1,8 @@
 import path from 'path';
+
 import fs from 'fs';
+
+import { exec } from 'child_process';
 
 
 
@@ -19,6 +22,27 @@ const makeAppDirectory = (
 ) => {
     if (!fs.existsSync(appDir)) {
         fs.mkdirSync(appDir);
+    }
+}
+
+
+const createReactApplication = async (
+    app: any,
+) => {
+    const language = app.language === 'typescript'
+        ? '--template typescript'
+        : '';
+
+    exec(`yarn create react-app ${app.directory} ${language}`);
+}
+
+
+const createApplication = async (
+    app: any,
+) => {
+    switch (app.ui) {
+        case 'react':
+            createReactApplication(app);
     }
 }
 
@@ -68,8 +92,18 @@ export const processArgs = async (
             type = 'client';
     }
 
-    console.log('Application will be generated at:', app);
-    console.log('The application language is:', language);
-    console.log('The application is based on:', ui);
-    console.log('The application type is:', type);
+    console.log('\n\tThe plurid\' application will be generated at:');
+    console.log('\t', app);
+    console.log('\tThe application language is:', language);
+    console.log('\tThe application is based on:', ui);
+    console.log('\tThe application type is:', type);
+    console.log('\n');
+
+    const application = {
+        directory: app,
+        language,
+        ui,
+        type,
+    };
+    await createApplication(application);
 }
