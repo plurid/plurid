@@ -26,9 +26,9 @@
     "files": [
         "distribution/"
     ],
-    "main": "distribution/plurid-react.js",
-    "module": "distribution/plurid-react.es.js",
-    "types": "distribution/plurid-react.d.ts",
+    "main": "distribution/index.js",
+    "module": "distribution/index.es.js",
+    "types": "distribution/index.d.ts",
     "engines": {
         "node": ">=8",
         "npm": ">=6"
