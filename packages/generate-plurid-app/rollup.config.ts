@@ -32,14 +32,18 @@ export default {
             sourcemap: true,
         },
     ],
-    external: [],
+    external: [
+        'child_process',
+        'path',
+        'fs',
+    ],
     watch: {
         include: 'source/**',
     },
     plugins: [
         json(),
         typescript({
-            useTsconfigDeclarationDir: true
+            useTsconfigDeclarationDir: true,
         }),
         external({
             includeDependencies: true,
@@ -51,7 +55,7 @@ export default {
         sourceMaps(),
         copy({
             targets: [
-                { src: 'source/files/', dest: 'distribution/files/' },
+                { src: 'source/files/', dest: 'distribution/' },
             ],
         }),
     ],
