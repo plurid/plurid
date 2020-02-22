@@ -4,9 +4,10 @@ node_modules
 # builds
 build
 dist
+distribution
 coverage
-dist
 docs
+documentation
 compiled
 .rpt2_cache
 .awcache
