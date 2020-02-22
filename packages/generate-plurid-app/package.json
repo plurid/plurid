@@ -31,7 +31,7 @@
     "module": "distribution/index.es.js",
     "typings": "distribution/types/index.d.ts",
     "bin": {
-        "generate-plurid-app": "bin/generate-plurid-app"
+        "generate-plurid-app": "binary/generate-plurid-app"
     },
     "files": [
         "distribution",
