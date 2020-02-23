@@ -15,7 +15,7 @@
 Transform web documents into a 3D explorable structure
 
 
-The monorepository contains packages implementing the `plurid'` technology to create a 3D browser view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-spec).
+The monorepository contains packages implementing the `plurid'` technology to create a 3D browser view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
 
 
 <p align="center">
@@ -144,6 +144,10 @@ To generate a `plurid'` web application the CLI tool `@plurid/generate-plurid-ap
 
 [plurid-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-server -->
 
+
+[@plurid/plurid-specification][plurid-specification] • plurid' specification
+
+[plurid-specification]: https://github.com/plurid/plurid/tree/master/packages/plurid-specification
 
 
 <!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-state">
