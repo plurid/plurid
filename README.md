@@ -12,7 +12,7 @@
 </h1>
 
 
-Transform web documents into a 3D explorable structure
+Explore information as a 3D structure.
 
 
 The monorepository contains packages implementing the `plurid'` technology to create a 3D browser view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
@@ -25,7 +25,7 @@ The monorepository contains packages implementing the `plurid'` technology to cr
 
 ## Plurid Application
 
-To generate a `plurid'` web application the CLI tool `@plurid/generate-plurid-app` can be used
+To generate a `plurid'` web application the CLI tool `@plurid/generate-plurid-app` can be used running the command:
 
     npx @plurid/generate-plurid-app
 
