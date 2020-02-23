@@ -10,14 +10,14 @@ import {
     Application,
     Language,
     UI,
-    Type,
+    Renderer,
     Manager,
 } from '../data/interfaces';
 
 import {
     language as languageTypes,
     ui as uiTypes,
-    type as typeTypes,
+    renderer as rendererTypes,
     manager as managerTypes,
 } from '../data/constants';
 
@@ -40,7 +40,7 @@ const processArguments = async (
     let directory: string;
     let language: Language;
     let ui: UI;
-    let type: Type;
+    let renderer: Renderer;
     let manager: Manager;
 
     if (program.directory === undefined) {
@@ -77,15 +77,15 @@ const processArguments = async (
             ui = uiTypes.react;
     }
 
-    switch(program.type.toLowerCase()) {
-        case typeTypes.client.toLowerCase():
-            type = typeTypes.client;
+    switch(program.renderer.toLowerCase()) {
+        case rendererTypes.client.toLowerCase():
+            renderer = rendererTypes.client;
             break;
-        case typeTypes.server.toLowerCase():
-            type = typeTypes.server;
+        case rendererTypes.server.toLowerCase():
+            renderer = rendererTypes.server;
             break;
         default:
-            type = typeTypes.client;
+            renderer = rendererTypes.client;
     }
 
     switch(program.manager.toLowerCase()) {
@@ -103,7 +103,7 @@ const processArguments = async (
     console.log(`\t${directory}`);
     console.log('\tThe application language is:', language);
     console.log('\tThe application is based on:', ui);
-    console.log('\tThe application type is:', type);
+    console.log('\tThe application rendering side is:', renderer);
     console.log('\tThe package manager is:', manager);
     console.log('\n');
 
@@ -111,7 +111,7 @@ const processArguments = async (
         directory,
         language,
         ui,
-        type,
+        renderer,
         manager,
     };
     await generateApplication(application);

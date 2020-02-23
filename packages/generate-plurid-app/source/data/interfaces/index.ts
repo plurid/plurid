@@ -10,7 +10,7 @@ export interface Answers {
     directory: string;
     language: string;
     ui: string;
-    type: string;
+    renderer: string;
     manager: string;
 }
 
@@ -39,13 +39,13 @@ export interface IUI {
 }
 
 
-export type TypeClient = 'Client-Side';
-export type TypeServer = 'Server-Side';
-export type Type = TypeClient | TypeServer;
+export type RendererClient = 'Client';
+export type RendererServer = 'Server';
+export type Renderer = RendererClient | RendererServer;
 
-export interface IType {
-    client: TypeClient;
-    server: TypeServer;
+export interface IRenderer {
+    client: RendererClient;
+    server: RendererServer;
 }
 
 
@@ -63,6 +63,6 @@ export interface Application {
     directory: string;
     language: Language;
     ui: UI;
-    type: Type;
+    renderer: Renderer;
     manager: Manager;
 }

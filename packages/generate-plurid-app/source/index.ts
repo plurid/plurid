@@ -28,17 +28,17 @@ async function main(program: CommanderStatic) {
 
     if (process.argv.length > 2) {
         program
-            .option('-d, --directory <path>', 'set the app directory')
+            .option('-d, --directory <path>', 'set the application directory')
             .option('-l, --language <language>', 'set language ("typescript" -> TypeScript || "javascript" -> JavaScript)')
             .option('-u, --ui <ui-engine>', 'set UI engine ("html" -> HTML Custom Elements || "react" -> React || "vue" -> Vue)')
-            .option('-t, --type <app-type>', 'set app type ("client" -> Client-Only || "ssr" -> Server-Side Rendering)')
+            .option('-r, --renderer <renderer>', 'set application rendering side ("client" -> Client-Side Rendering || "server" -> Server-Side Rendering)')
             .option('-m, --manager <package-manager>', 'set the package manager ("npm" || "yarn")')
             .action(async () => {
                 const {
                     directory,
                     language,
                     ui,
-                    type,
+                    renderer,
                     manager,
                 } = program;
 
@@ -46,7 +46,7 @@ async function main(program: CommanderStatic) {
                     directory,
                     language,
                     ui,
-                    type,
+                    renderer,
                     manager,
                 };
 

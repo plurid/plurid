@@ -19,7 +19,7 @@ const inquire = (
                 directory,
                 language,
                 ui,
-                type,
+                renderer,
                 manager,
             } = args;
 
@@ -27,7 +27,7 @@ const inquire = (
                 directory,
                 language,
                 ui,
-                type,
+                renderer,
                 manager,
             };
             await processArguments(answers);

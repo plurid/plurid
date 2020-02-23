@@ -1,7 +1,7 @@
 import {
     ILanguage,
     IUI,
-    IType,
+    IRenderer,
     IManager,
 } from '../interfaces';
 
@@ -27,11 +27,11 @@ export const ui: IUI = {
 };
 
 
-export const typeClient = 'Client-Side';
-export const typeServer = 'Server-Side';
-export const type: IType = {
-    client: typeClient,
-    server: typeServer,
+export const rendererClient = 'Client';
+export const rendererServer = 'Server';
+export const renderer: IRenderer = {
+    client: rendererClient,
+    server: rendererServer,
 };
 
 
