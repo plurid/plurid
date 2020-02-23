@@ -51,13 +51,13 @@ const questions: Question[] = [
     },
     {
         type: 'list',
-        name: 'type',
+        name: 'renderer',
         message: 'Choose the application rendering side:',
         choices: values.renderer,
     },
     {
         type: 'list',
-        name: 'type',
+        name: 'manager',
         message: 'Choose the package manager:',
         choices: values.manager,
     },
