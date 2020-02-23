@@ -7,13 +7,12 @@ import {
 } from 'child_process';
 
 import {
-    copyDir,
+    copyDirectory,
 } from '../utilities';
 
 import {
     Application,
 } from '../data/interfaces';
-
 
 
 
@@ -57,8 +56,8 @@ const generatePluridReactApplication = (
 
         const templatePublicDir = path.join(app.directory, base + '/public');
         const templateSourceDir = path.join(app.directory, base + '/src');
-        copyDir(templatePublicDir, publicDir);
-        copyDir(templateSourceDir, sourceDir);
+        copyDirectory(templatePublicDir, publicDir);
+        copyDirectory(templateSourceDir, sourceDir);
 
         exec(`yarn remove @plurid/generate-plurid-app`, {
             cwd: app.directory,

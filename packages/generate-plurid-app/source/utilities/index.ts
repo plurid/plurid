@@ -4,19 +4,20 @@ import fs from 'fs';
 
 
 
-export const copyDir = (
+export const copyDirectory = (
     src: any,
     dest: any,
 ) => {
-    makeAppDirectory(dest);
+    makeDirectory(dest);
 
-	var files = fs.readdirSync(src);
-	for(var i = 0; i < files.length; i++) {
-		var current = fs.lstatSync(path.join(src, files[i]));
-		if(current.isDirectory()) {
-			copyDir(path.join(src, files[i]), path.join(dest, files[i]));
-		} else if(current.isSymbolicLink()) {
-			var symlink = fs.readlinkSync(path.join(src, files[i]));
+	const files = fs.readdirSync(src);
+	for(let i = 0; i < files.length; i++) {
+        const current = fs.lstatSync(path.join(src, files[i]));
+
+		if (current.isDirectory()) {
+			copyDirectory(path.join(src, files[i]), path.join(dest, files[i]));
+		} else if (current.isSymbolicLink()) {
+			const symlink = fs.readlinkSync(path.join(src, files[i]));
 			fs.symlinkSync(symlink, path.join(dest, files[i]));
 		} else {
 			copyFile(path.join(src, files[i]), path.join(dest, files[i]));
@@ -46,10 +47,10 @@ export const resolveAppDirectory = (
 }
 
 
-export const makeAppDirectory = (
-    appDir: string,
+export const makeDirectory = (
+    directory: string,
 ) => {
-    if (!fs.existsSync(appDir)) {
-        fs.mkdirSync(appDir);
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory);
     }
 }
