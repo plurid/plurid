@@ -109,7 +109,6 @@ const processArguments = async (
         console.log('\tThe application is based on:', ui);
         console.log('\tThe application rendering side is:', renderer);
         console.log('\tThe package manager is:', manager);
-        console.log('\n');
 
         const application: Application = {
             directory,
