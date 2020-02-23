@@ -7,15 +7,16 @@ import {
 
 import {
     Answers,
+    Application,
 } from '../data/interfaces';
 
 
 
 const generateApplication = async (
-    app: any,
+    app: Application,
 ) => {
     switch (app.ui) {
-        case 'react':
+        case 'React':
             generateReactApp(app);
     }
 }
@@ -39,41 +40,51 @@ const processArguments = async (
 
     makeAppDirectory(directory);
 
-    switch(program.language) {
+    switch(program.language.toLowerCase()) {
         case 'typescript':
+            language = 'TypeScript';
+            break;
         case 'javascript':
-            language = program.language;
+            language = 'JavaScript';
             break;
         default:
-            language = 'typescript';
+            language = 'TypesSript';
     }
 
-    switch(program.ui) {
+    switch(program.ui.toLowerCase()) {
         case 'html':
+            ui = 'HTML';
+            break;
         case 'react':
+            ui = 'React';
+            break;
         case 'vue':
-            ui = program.ui;
+            ui = 'Vue';
             break;
         default:
-            ui = 'react';
+            ui = 'React';
     }
 
-    switch(program.type) {
+    switch(program.type.toLowerCase()) {
         case 'client':
+            type = 'Client-Side';
+            break;
         case 'ssr':
-            type = program.type;
+            type = 'Server-Side';
             break;
         default:
-            type = 'client';
+            type = 'Client-Sider';
     }
 
-    switch(program.manager) {
+    switch(program.manager.toLowerCase()) {
         case 'npm':
+            manager = 'NPM';
+            break;
         case 'yarn':
-            manager = program.manager;
+            manager = 'Yarn';
             break;
         default:
-            manager = 'yarn';
+            manager = 'Yarn';
     }
 
     console.log('\n\tThe plurid\' application will be generated at:');
@@ -81,9 +92,10 @@ const processArguments = async (
     console.log('\tThe application language is:', language);
     console.log('\tThe application is based on:', ui);
     console.log('\tThe application type is:', type);
+    console.log('\tThe package manager is:', manager);
     console.log('\n');
 
-    const application = {
+    const application: Application = {
         directory,
         language,
         ui,

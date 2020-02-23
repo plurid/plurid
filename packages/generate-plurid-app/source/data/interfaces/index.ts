@@ -13,3 +13,12 @@ export interface Answers {
     type: string;
     manager: string;
 }
+
+
+export interface Application {
+    directory: string;
+    language: string;
+    ui: string;
+    type: string;
+    manager: string;
+}
