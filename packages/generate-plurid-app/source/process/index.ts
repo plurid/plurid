@@ -5,6 +5,10 @@ import {
     makeAppDirectory,
 } from '../utilities';
 
+import {
+    Answers,
+} from '../data/interfaces';
+
 
 
 const generateApplication = async (
@@ -18,21 +22,22 @@ const generateApplication = async (
 
 
 const processArguments = async (
-    program: any,
+    program: Answers,
 ) => {
-    let app: string;
+    let directory: string;
     let language: string;
     let ui: string;
     let type: string;
+    let manager: string;
 
-    if (program.app === undefined) {
+    if (program.directory === undefined) {
         console.log('App directory (-a or --app) must be specified.');
         process.exit(1);
     }
 
-    app = resolveAppDirectory(program.app);
+    directory = resolveAppDirectory(program.directory);
 
-    makeAppDirectory(app);
+    makeAppDirectory(directory);
 
     switch(program.language) {
         case 'typescript':
@@ -62,18 +67,28 @@ const processArguments = async (
             type = 'client';
     }
 
+    switch(program.manager) {
+        case 'npm':
+        case 'yarn':
+            manager = program.manager;
+            break;
+        default:
+            manager = 'yarn';
+    }
+
     console.log('\n\tThe plurid\' application will be generated at:');
-    console.log(`\t${app}`);
+    console.log(`\t${directory}`);
     console.log('\tThe application language is:', language);
     console.log('\tThe application is based on:', ui);
     console.log('\tThe application type is:', type);
     console.log('\n');
 
     const application = {
-        directory: app,
+        directory,
         language,
         ui,
         type,
+        manager,
     };
     await generateApplication(application);
 }

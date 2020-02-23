@@ -7,6 +7,10 @@ import {
     questions,
 } from './inquire';
 
+import {
+    Answers,
+} from './data/interfaces';
+
 import processArguments from './process';
 
 
@@ -24,12 +28,29 @@ async function main(program: CommanderStatic) {
 
     if (process.argv.length > 2) {
         program
-            .option('-a, --app <path>', 'set the app directory')
+            .option('-d, --directory <path>', 'set the app directory')
             .option('-l, --language <language>', 'set language ("typescript" -> TypeScript || "javascript" -> JavaScript)')
             .option('-u, --ui <ui-engine>', 'set UI engine ("html" -> HTML Custom Elements || "react" -> React || "vue" -> Vue)')
             .option('-t, --type <app-type>', 'set app type ("client" -> Client-Only || "ssr" -> Server-Side Rendering)')
+            .option('-m, --manager <package-manager>', 'set the package manager ("npm" || "yarn")')
             .action(async () => {
-                await processArguments(program);
+                const {
+                    directory,
+                    language,
+                    ui,
+                    type,
+                    manager,
+                } = program;
+
+                const answers: Answers = {
+                    directory,
+                    language,
+                    ui,
+                    type,
+                    manager,
+                };
+
+                await processArguments(answers);
             });
     }
 
