@@ -85,7 +85,13 @@ const generatePluridReactApplication = (
             console.log('\n\tChange directory');
             console.log(`\n\t\tcd ${app.directory}`);
             console.log('\n\trun');
-            console.log('\n\t\tyarn start');
+
+            if (app.manager === 'Yarn') {
+                console.log('\n\t\tyarn start');
+            } else {
+                console.log('\n\t\tnpm start');
+            }
+
             console.log('\n\tand enjoy.\n');
         });
     });
