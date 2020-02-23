@@ -38,7 +38,13 @@ const generatePluridReactApplication = (
 
     const pluridReactPackages = requiredPluridReactPackages.join(' ');
 
-    exec(`yarn add ${pluridReactPackages}`, {
+    const yarnInstallCommand = `yarn add ${pluridReactPackages}`;
+    const npmInstallCommand = `npm install ${pluridReactPackages}`;
+    const installCommand = app.manager === 'Yarn'
+        ? yarnInstallCommand
+        : npmInstallCommand;
+
+    exec(installCommand, {
         cwd: app.directory,
     }, () => {
         console.log('\tPlurid\' packages added succesfully.');
@@ -52,14 +58,26 @@ const generatePluridReactApplication = (
         fs.rmdirSync(sourceDir, {recursive: true});
         fs.rmdirSync(gitDir, {recursive: true});
 
-        const base = './node_modules/@plurid/generate-plurid-app/distribution/files/react-typescript-client';
+        const templateTypeScript = 'react-typescript-client';
+        const templateJavaScript = 'react-javascript-client';
+        const templateFiles = app.language === 'TypeScript'
+            ? templateTypeScript
+            : templateJavaScript;
+
+        const base = `./node_modules/@plurid/generate-plurid-app/distribution/files/${templateFiles}`;
 
         const templatePublicDir = path.join(app.directory, base + '/public');
         const templateSourceDir = path.join(app.directory, base + '/src');
         copyDirectory(templatePublicDir, publicDir);
         copyDirectory(templateSourceDir, sourceDir);
 
-        exec(`yarn remove @plurid/generate-plurid-app`, {
+        const yarnUninstallCommand = `yarn remove @plurid/generate-plurid-app`;
+        const npmUninstallCommand = `npm uninstall @plurid/generate-plurid-app`;
+        const uninstallCommand = app.manager === 'Yarn'
+            ? yarnUninstallCommand
+            : npmUninstallCommand;
+
+        exec(uninstallCommand, {
             cwd: app.directory,
         }, () => {
             console.log('\n\tAll done.');
@@ -83,7 +101,13 @@ const generateReactApplication = async (
 
     console.log('\tGenerating the React Application...');
 
-    exec(`yarn create react-app ${app.directory} ${language}`, () => {
+    const yarnCreateCommand = `yarn create react-app ${app.directory} ${language}`;
+    const npmCreateCommand = `npx create-react-app ${app.directory} ${language}`;
+    const createCommand = app.manager === 'Yarn'
+        ? yarnCreateCommand
+        : npmCreateCommand;
+
+    exec(createCommand, () => {
         console.log('\tReact Application generated successfully.');
 
         generatePluridReactApplication(app);
