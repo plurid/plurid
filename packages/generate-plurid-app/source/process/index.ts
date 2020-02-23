@@ -74,6 +74,9 @@ const processArguments = async (
             case uiTypes.vue.toLowerCase():
                 ui = uiTypes.vue;
                 break;
+            case uiTypes.angular.toLowerCase():
+                ui = uiTypes.angular;
+                break;
             default:
                 ui = uiTypes.react;
         }
