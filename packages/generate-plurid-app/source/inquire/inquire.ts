@@ -2,28 +2,35 @@ import * as inquirer from 'inquirer';
 
 import processArguments from '../process';
 
+import {
+    Question,
+    Answers,
+} from '../data/interfaces';
+
 
 
 const inquire = (
-    questions: any,
+    questions: Question[],
 ) => {
     inquirer
         .prompt(questions)
-        .then(async (answers: any) => {
+        .then(async (args: any) => {
             const {
-                app,
+                directory,
                 language,
                 ui,
                 type,
-            } = answers;
+                manager,
+            } = args;
 
-            const args = {
-                app,
+            const answers: Answers = {
+                directory,
                 language,
                 ui,
                 type,
+                manager,
             };
-            await processArguments(args);
+            await processArguments(answers);
         });
 }
 

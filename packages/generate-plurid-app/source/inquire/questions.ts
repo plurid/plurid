@@ -1,11 +1,15 @@
 import * as inquirer from 'inquirer';
 
+import {
+    Question,
+} from '../data/interfaces';
+
 
 
 const values = {
     language: [
         'TypeScript',
-        // 'JavaScript',
+        'JavaScript',
         new inquirer.Separator('---- pick one ----'),
     ],
     ui: [
@@ -16,23 +20,21 @@ const values = {
     ],
     type: [
         // 'Server-Side Rendered',
-        'Client-Only',
+        'Client-Side',
+        new inquirer.Separator('---- pick one ----'),
+    ],
+    manager: [
+        'npm',
+        'yarn',
         new inquirer.Separator('---- pick one ----'),
     ],
 };
 
 
-interface Question {
-    type: string;
-    name: string;
-    message: string;
-    choices?: any[];
-}
-
 const questions: Question[] = [
     {
         type: 'input',
-        name: 'app',
+        name: 'directory',
         message: 'Enter the directory path where the application will be generated:'
     },
     {
@@ -52,6 +54,12 @@ const questions: Question[] = [
         name: 'type',
         message: 'Choose the application type:',
         choices: values.type,
+    },
+    {
+        type: 'list',
+        name: 'type',
+        message: 'Choose the package manager:',
+        choices: values.manager,
     },
 ];
 
