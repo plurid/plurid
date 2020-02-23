@@ -10,10 +10,15 @@ import {
     copyDir,
 } from '../utilities';
 
+import {
+    Application,
+} from '../data/interfaces';
+
+
 
 
 const generatePluridReactApplication = (
-    app: any,
+    app: Application,
 ) => {
     console.log('\n\tAdding the plurid\' packages to the React Application...');
 
@@ -69,10 +74,11 @@ const generatePluridReactApplication = (
     });
 }
 
+
 const generateReactApplication = async (
-    app: any,
+    app: Application,
 ) => {
-    const language = app.language === 'typescript'
+    const language = app.language === 'TypeScript'
         ? '--template typescript'
         : '';
 
