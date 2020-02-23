@@ -59,27 +59,27 @@ export const StyledView: any = styled.div`
         return 'initial';
     }};
     user-select: ${(props: any) => {
-        if (props.transformMode) {
+        if (props.transformMode !== 'ALL') {
             return 'none';
         }
-        return 'initial';
+        return 'initial !important';
     }};
     touch-action: ${(props: any) => {
-        if (props.transformMode) {
+        if (props.transformMode !== 'ALL') {
             return 'none !important';
         }
         return 'initial !important';
     }};
     -webkit-user-drag: ${(props: any) => {
-        if (props.transformMode) {
+        if (props.transformMode !== 'ALL') {
             return 'none';
         }
-        return 'initial';
+        return 'initial !important';
     }};
     -webkit-tap-highlight-color: ${(props: any) => {
-        if (props.transformMode) {
+        if (props.transformMode !== 'ALL') {
             return 'rgba(0, 0, 0, 0)';
         }
-        return 'initial';
+        return 'initial !important';
     }};
 `;
