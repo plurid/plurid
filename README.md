@@ -66,23 +66,23 @@ To generate a `plurid'` web application the CLI tool `@plurid/generate-plurid-ap
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html">
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-html.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
 [@plurid/plurid-html][plurid-html] • HTML Custom Elements implementation
 
-[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid-html
+[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid-html -->
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html-ssr">
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html-ssr">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-html-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
 [@plurid/plurid-html-ssr][plurid-html-ssr] • HTML Custom Elements implementation with Server-Side Rendering
 
-[plurid-html-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-html-ssr
+[plurid-html-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-html-ssr -->
 
 
 
@@ -106,70 +106,70 @@ To generate a `plurid'` web application the CLI tool `@plurid/generate-plurid-ap
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react-ssr">
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react-ssr">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-react-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
 [@plurid/plurid-react-ssr][plurid-react-ssr] • React implementation with Server-Side Rendering
 
-[plurid-react-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-ssr
+[plurid-react-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-ssr -->
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-renderer">
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-renderer">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-renderer.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
 [@plurid/plurid-renderer][plurid-renderer] • rendering engine
 
-[plurid-renderer]: https://github.com/plurid/plurid/tree/master/packages/plurid-renderer
+[plurid-renderer]: https://github.com/plurid/plurid/tree/master/packages/plurid-renderer -->
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-scripts">
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-scripts">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-scripts.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
 [@plurid/plurid-scripts][plurid-scripts] • build/development utility functions
 
-[plurid-scripts]: https://github.com/plurid/plurid/tree/master/packages/plurid-scripts
+[plurid-scripts]: https://github.com/plurid/plurid/tree/master/packages/plurid-scripts -->
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-server">
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-server">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
 [@plurid/plurid-server][plurid-server] • server for server-side rendering and application serving
 
-[plurid-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-server
+[plurid-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-server -->
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-state">
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-state">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-state.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
 [@plurid/plurid-state][plurid-state] • state management for a plurid application
 
-[plurid-state]: https://github.com/plurid/plurid/tree/master/packages/plurid-state
+[plurid-state]: https://github.com/plurid/plurid/tree/master/packages/plurid-state -->
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-vue">
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-vue">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-vue.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
 [@plurid/plurid-vue][plurid-vue] • Vue implementation
 
-[plurid-vue]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue
+[plurid-vue]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue -->
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-vue-ssr">
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-vue-ssr">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-vue-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
 [@plurid/plurid-vue-ssr][plurid-vue-ssr] • Vue implementation with Server-Side Rendering
 
-[plurid-vue-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue-ssr
+[plurid-vue-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue-ssr -->
