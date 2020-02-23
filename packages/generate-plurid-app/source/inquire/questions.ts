@@ -18,9 +18,9 @@ const values = {
         // 'Vue',
         new inquirer.Separator('---- pick one ----'),
     ],
-    type: [
-        // 'Server-Side Rendered',
-        'Client-Side',
+    renderer: [
+        'Client',
+        // 'Server',
         new inquirer.Separator('---- pick one ----'),
     ],
     manager: [
@@ -52,8 +52,8 @@ const questions: Question[] = [
     {
         type: 'list',
         name: 'type',
-        message: 'Choose the application type:',
-        choices: values.type,
+        message: 'Choose the application rendering side:',
+        choices: values.renderer,
     },
     {
         type: 'list',
