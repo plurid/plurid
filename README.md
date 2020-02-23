@@ -27,9 +27,7 @@ The monorepository contains packages implementing the `plurid'` technology to cr
 
 To generate a `plurid'` application the CLI tool `@plurid/generate-plurid-app` can be used
 
-```
-npx @plurid/generate-plurid-app
-```
+    npx @plurid/generate-plurid-app
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/diagrams/plurid-generate.png" height="600px">
@@ -42,7 +40,7 @@ npx @plurid/generate-plurid-app
     <img src="https://img.shields.io/npm/v/@plurid/generate-plurid-app.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/generate-plurid-app][generate-plurid-app] • create a `plurid'` application with one command
+[@plurid/generate-plurid-app][generate-plurid-app] • generate a `plurid'` application with one command (and some choices)
 
 [generate-plurid-app]: https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app
 
