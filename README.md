@@ -25,7 +25,7 @@ The monorepository contains packages implementing the `plurid'` technology to cr
 
 ## Plurid Application
 
-To generate a `plurid'` web application the CLI tool `@plurid/generate-plurid-app` can be used running the command:
+To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plurid-app` by running the command (provided you have [`NodeJS`](https://nodejs.org/en/) installed on your machine):
 
     npx @plurid/generate-plurid-app
 
