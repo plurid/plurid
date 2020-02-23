@@ -50,7 +50,7 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
     <img src="https://img.shields.io/npm/v/@plurid/plurid-data.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-data][plurid-data] • constants, interfaces, enumerations
+[@plurid/plurid-data][plurid-data] • constants, enumerations, interfaces
 
 [plurid-data]: https://github.com/plurid/plurid/tree/master/packages/plurid-data
 
@@ -60,7 +60,7 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
     <img src="https://img.shields.io/npm/v/@plurid/plurid-engine.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-engine][plurid-engine] • 3D utility functions
+[@plurid/plurid-engine][plurid-engine] • 3D and utility functions
 
 [plurid-engine]: https://github.com/plurid/plurid/tree/master/packages/plurid-engine
 
