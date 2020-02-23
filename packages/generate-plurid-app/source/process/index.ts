@@ -2,7 +2,7 @@ import generateReactApp from './generateReactApp';
 
 import {
     resolveAppDirectory,
-    makeAppDirectory,
+    makeDirectory,
 } from '../utilities';
 
 import {
@@ -51,7 +51,7 @@ const processArguments = async (
 
         directory = resolveAppDirectory(program.directory);
 
-        makeAppDirectory(directory);
+        makeDirectory(directory);
 
         switch(program.language.toLowerCase()) {
             case languageTypes.typescript.toLowerCase():
