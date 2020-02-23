@@ -24,8 +24,8 @@ const values = {
         new inquirer.Separator('---- pick one ----'),
     ],
     manager: [
-        'npm',
         'yarn',
+        'npm',
         new inquirer.Separator('---- pick one ----'),
     ],
 };

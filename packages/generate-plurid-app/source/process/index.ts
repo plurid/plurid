@@ -8,7 +8,18 @@ import {
 import {
     Answers,
     Application,
+    Language,
+    UI,
+    Type,
+    Manager,
 } from '../data/interfaces';
+
+import {
+    language as languageTypes,
+    ui as uiTypes,
+    type as typeTypes,
+    manager as managerTypes,
+} from '../data/constants';
 
 
 
@@ -16,8 +27,9 @@ const generateApplication = async (
     app: Application,
 ) => {
     switch (app.ui) {
-        case 'React':
+        case uiTypes.react:
             generateReactApp(app);
+            return;
     }
 }
 
@@ -26,10 +38,10 @@ const processArguments = async (
     program: Answers,
 ) => {
     let directory: string;
-    let language: string;
-    let ui: string;
-    let type: string;
-    let manager: string;
+    let language: Language;
+    let ui: UI;
+    let type: Type;
+    let manager: Manager;
 
     if (program.directory === undefined) {
         console.log('App directory (-a or --app) must be specified.');
@@ -41,50 +53,50 @@ const processArguments = async (
     makeAppDirectory(directory);
 
     switch(program.language.toLowerCase()) {
-        case 'typescript':
-            language = 'TypeScript';
+        case languageTypes.typescript.toLowerCase():
+            language = languageTypes.typescript;
             break;
-        case 'javascript':
-            language = 'JavaScript';
+        case languageTypes.javascript.toLowerCase():
+            language = languageTypes.javascript;
             break;
         default:
-            language = 'TypesSript';
+            language = languageTypes.typescript;
     }
 
     switch(program.ui.toLowerCase()) {
-        case 'html':
-            ui = 'HTML';
+        case uiTypes.html.toLowerCase():
+            ui = uiTypes.html;
             break;
-        case 'react':
-            ui = 'React';
+        case uiTypes.react.toLowerCase():
+            ui = uiTypes.react;
             break;
-        case 'vue':
-            ui = 'Vue';
+        case uiTypes.vue.toLowerCase():
+            ui = uiTypes.vue;
             break;
         default:
-            ui = 'React';
+            ui = uiTypes.react;
     }
 
     switch(program.type.toLowerCase()) {
-        case 'client':
-            type = 'Client-Side';
+        case typeTypes.client.toLowerCase():
+            type = typeTypes.client;
             break;
-        case 'ssr':
-            type = 'Server-Side';
+        case typeTypes.server.toLowerCase():
+            type = typeTypes.server;
             break;
         default:
-            type = 'Client-Sider';
+            type = typeTypes.client;
     }
 
     switch(program.manager.toLowerCase()) {
-        case 'npm':
-            manager = 'NPM';
+        case managerTypes.yarn:
+            manager = managerTypes.yarn;
             break;
-        case 'yarn':
-            manager = 'Yarn';
+        case managerTypes.npm.toLowerCase():
+            manager = managerTypes.npm;
             break;
         default:
-            manager = 'Yarn';
+            manager = managerTypes.yarn;
     }
 
     console.log('\n\tThe plurid\' application will be generated at:');
