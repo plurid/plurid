@@ -108,7 +108,7 @@ const generateReactApplication = async (
     console.log('\tGenerating the React Application...');
 
     const yarnCreateCommand = `yarn create react-app ${app.directory} ${language}`;
-    const npmCreateCommand = `npx create-react-app ${app.directory} ${language}`;
+    const npmCreateCommand = `npx create-react-app ${app.directory} ${language} --use-npm`;
     const createCommand = app.manager === 'Yarn'
         ? yarnCreateCommand
         : npmCreateCommand;
