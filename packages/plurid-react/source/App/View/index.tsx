@@ -879,15 +879,13 @@ const View: React.FC<ViewProperties> = (
     };
 
     console.log('Rendered');
-    console.log(
-        configuration,
-        pages,
-        view,
-        documents,
-    );
+    console.log('configuration', configuration);
+    console.log('pages', pages);
+    console.log('view', view);
+    console.log('documents', documents);
 
 
-    /** render */
+    // /** render */
     const viewContainer = handleView(pages, documents);
 
     return (
