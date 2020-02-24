@@ -225,650 +225,650 @@ const View: React.FC<ViewProperties> = (
     const contextDocumentsRef = useRef<Indexed<PluridInternalContextDocument>>({});
 
 
-    /** state */
-    const [initialized, setInitialized] = useState(false);
-
-
-    /** callbacks */
-    const shortcutsCallback = useCallback((event: KeyboardEvent) => {
-        const {
-            transformLocks,
-        } = stateConfiguration.space;
-
-        handleGlobalShortcuts(
-            dispatch,
-            event,
-            stateConfiguration.space.firstPerson,
-            transformLocks,
-        );
-    }, [
-        stateConfiguration.space.firstPerson,
-        stateConfiguration.space.transformLocks,
-        dispatch,
-    ]);
-
-    const wheelCallback = useCallback((event: WheelEvent) => {
-        const {
-            transformMode,
-            transformLocks,
-        } = stateConfiguration.space;
-
-        const transformModes = {
-            rotation: transformMode === TRANSFORM_MODES.ROTATION,
-            translation: transformMode === TRANSFORM_MODES.TRANSLATION,
-            scale: transformMode === TRANSFORM_MODES.SCALE,
-        };
-
-        handleGlobalWheel(
-            dispatch,
-            event,
-            transformModes,
-            transformLocks,
-        );
-    }, [
-        dispatch,
-        stateConfiguration.space.transformMode,
-        stateConfiguration.space.transformLocks,
-    ]);
-
-
-    /** handlers */
-    const handleConfiguration = (
-        configuration: PluridAppConfiguration,
-    ) => {
-        dispatchSetConfiguration(configuration);
-
-        if (configuration.micro) {
-            dispatchSetConfigurationMicro();
-        }
-
-        if (configuration.space) {
-            const spaceLocation = space.computeSpaceLocation(configuration);
-            dispatchSetSpaceLocation(spaceLocation);
-        }
-
-        if (configuration.space.center && !configuration.space.camera) {
-            const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
-            translateXWith(x);
-
-            // to get plane height;
-            const planeHeight = 300;
-            const y = window.innerHeight / 2 - planeHeight/2;
-            translateYWith(y);
-        }
-
-        if (configuration.theme) {
-            if (typeof configuration.theme === 'object') {
-                const {
-                    general,
-                    interaction,
-                } = configuration.theme;
-
-                if (general) {
-                    if (Object.keys(THEME_NAMES).includes(general)) {
-                        dispatchSetGeneralTheme(themes[general]);
-                    }
-                }
-
-                if (interaction) {
-                    if (Object.keys(THEME_NAMES).includes(interaction)) {
-                        dispatchSetInteractionTheme(themes[interaction]);
-                    }
-                }
-            } else {
-                if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
-                    dispatchSetGeneralTheme(themes[configuration.theme]);
-                    dispatchSetInteractionTheme(themes[configuration.theme]);
-                }
-            }
-        }
-    }
-
-    const handlePubSubSubscribe = (
-        pubsub: PluridPubSub,
-    ) => {
-        pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
-            const {
-                value,
-            } = data;
-            rotateXWith(value);
-        });
-
-        pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
-            const {
-                value,
-            } = data;
-            rotateYWith(value);
-        });
-    }
-
-    const handlePubSubPublish = (
-        pubsub: PluridPubSub,
-    ) => {
-        pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
-
-        pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
-    }
-
-    const handleSwipe = (
-        event: HammerInput,
-    ) => {
-        const {
-            transformMode,
-        } = stateConfiguration.space;
-
-        const {
-            velocity,
-            distance,
-            direction,
-        } = event;
-
-        if (transformMode === TRANSFORM_MODES.ALL) {
-            return;
-        }
-
-        const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
-        const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
-        const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
-
-        dispatchSetAnimatedTransform(true);
-        switch (direction) {
-            case 2:
-                /** right */
-                if (rotationMode) {
-                    rotateYWith(velocity * 60);
-                }
-
-                if (translationMode) {
-                    translateXWith(-1 * distance);
-                }
-                break;
-            case 4:
-                /** left */
-                if (rotationMode) {
-                    rotateYWith(velocity * 60);
-                }
-
-                if (translationMode) {
-                    translateXWith(distance);
-                }
-                break;
-            case 8:
-                /** top */
-                if (rotationMode) {
-                    rotateXWith(velocity * 60);
-                }
-
-                if (translationMode) {
-                    translateYWith(-1 * distance);
-                }
-
-                if (scalationMode) {
-                    scaleUpWith(velocity);
-                }
-                break;
-            case 16:
-                /** down */
-                if (rotationMode) {
-                    rotateXWith(velocity * 60);
-                }
-
-                if (translationMode) {
-                    translateYWith(distance);
-                }
-
-                if (scalationMode) {
-                    scaleDownWith(velocity);
-                }
-                break;
-        }
-        setTimeout(() => {
-            dispatchSetAnimatedTransform(false);
-        }, 450);
-    }
-
-    const handlePan = (
-        event: HammerInput,
-    ) => {
-        const {
-            transformMode,
-        } = stateConfiguration.space;
-
-        const {
-            velocity,
-            distance,
-            direction,
-        } = event;
-
-        if (transformMode === TRANSFORM_MODES.ALL) {
-            return;
-        }
-
-        const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
-        const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
-        const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
-
-        const rotationVelocity = velocity * 20;
-        const translationVelocity = distance / 5;
-        const scaleVelocity = velocity / 4;
-
-        switch (direction) {
-            case 2:
-                /** right */
-                if (rotationMode) {
-                    rotateYWith(rotationVelocity);
-                }
-
-                if (translationMode) {
-                    translateXWith(-1 * translationVelocity);
-                }
-                break;
-            case 4:
-                /** left */
-                if (rotationMode) {
-                    rotateYWith(rotationVelocity);
-                }
-
-                if (translationMode) {
-                    translateXWith(translationVelocity);
-                }
-                break;
-            case 8:
-                /** top */
-                if (rotationMode) {
-                    rotateXWith(rotationVelocity);
-                }
-
-                if (translationMode) {
-                    translateYWith(-1 * translationVelocity);
-                }
-
-                if (scalationMode) {
-                    scaleUpWith(scaleVelocity);
-                }
-                break;
-            case 16:
-                /** down */
-                if (rotationMode) {
-                    rotateXWith(rotationVelocity);
-                }
-
-                if (translationMode) {
-                    translateYWith(translationVelocity);
-                }
-
-                if (scalationMode) {
-                    scaleDownWith(scaleVelocity);
-                }
-                break;
-        }
-    }
-
-    const centerSpaceSize = useDebouncedCallback((
-        spaceSize: any,
-    ) => {
-        const x = - spaceSize.width / 2 + window.innerWidth / 2;
-        const y = - spaceSize.height / 2 + window.innerHeight / 2;
-
-        if (!initialized) {
-            dispatchSetAnimatedTransform(true);
-            translateXWith(x);
-            translateYWith(y);
-            setTimeout(() => {
-                dispatchSetAnimatedTransform(false);
-            }, 450);
-        }
-    }, 100);
-
-
-    const computedCulledFunction = () => {
-        const culledView = space.computeCulledView(
-            initialTree,
-            view || [],
-            stateSpaceLocation,
-            1500,
-        );
-
-        if (culledView && !arraysEqual(stateCulledView, culledView)) {
-            dispatchSpaceSetCulledView(culledView);
-        }
-    }
-
-    const computeCulled = useThrottledCallback(
-        computedCulledFunction,
-        500,
-    );
-
-    const computeTree = (
-        tree: TreePage[],
-    ) => {
-        // const computedTree = computeSpaceTree(
-        //     tree,
-        //     stateConfiguration,
-        //     view,
-        // );
-        // dispatchSetTree(computedTree);
-    }
-
-
-    /** effects */
-    /** Keydown, Wheel Listeners */
-    useEffect(() => {
-        if (viewElement.current) {
-            viewElement.current.addEventListener(
-                'keydown',
-                shortcutsCallback,
-                {
-                    passive: false,
-                },
-            );
-            viewElement.current.addEventListener(
-                'wheel',
-                wheelCallback,
-                {
-                    passive: false,
-                },
-            );
-        }
-
-        return () => {
-            if (viewElement.current) {
-                viewElement.current.removeEventListener(
-                    'keydown',
-                    shortcutsCallback,
-                );
-                viewElement.current.removeEventListener(
-                    'wheel',
-                    wheelCallback,
-                );
-            }
-        }
-    }, [
-        viewElement.current,
-        stateConfiguration.space.transformMode,
-        stateConfiguration.space.firstPerson,
-    ]);
-
-    /** Resize Listener */
-    useEffect(() => {
-        const handleResize = meta.debounce(() => {
-            if (viewElement && viewElement.current) {
-                const width = viewElement.current.offsetWidth;
-                const height = viewElement.current.offsetHeight;
-                dispatchSetViewSize({
-                    width,
-                    height,
-                });
-            }
-        }, 150);
-
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        }
-    }, []);
-
-    /** Set View Size */
-    useEffect(() => {
-        if (viewElement && viewElement.current) {
-            const width = viewElement.current.offsetWidth;
-            const height = viewElement.current.offsetHeight;
-            if (width && height) {
-                dispatchSetViewSize({
-                    height: viewElement.current.offsetHeight,
-                    width: viewElement.current.offsetWidth,
-                });
-            }
-        }
-    }, [
-        viewElement.current,
-    ]);
-
-    /** View Size Listener */
-    useEffect(() => {
-        computeTree(tree);
-    }, [
-        viewSize,
-    ]);
-
-    /** Pages, Documents */
-    useEffect(() => {
-        if (!documents && pages) {
-            const identifiedPages = helpers.identifyPages(pages);
-
-            const statePages = identifiedPages.map(page => {
-                const statePage = createInternalStatePage(page);
-                return statePage;
-            });
-
-            const contextPages = identifiedPages.map(page => {
-                const contextPage = createInternalContextPage(page);
-                return contextPage;
-            });
-
-            const indexedStatePages = helpers.createIndexed(statePages);
-            const indexedContextPages = helpers.createIndexed(contextPages);
-
-            const paths = registerPaths(statePages);
-            const indexedPaths = helpers.createIndexed(paths);
-
-            const document: PluridInternalStateDocument = {
-                id: 'default',
-                name: 'default',
-                pages: indexedStatePages,
-                paths: indexedPaths,
-                ordinal: 0,
-                active: true,
-            };
-
-            const documents = {
-                default: document,
-            };
-
-            const contextDocument = {
-                id: 'default',
-                name: 'default',
-                pages: indexedContextPages,
-            };
-            contextDocumentsRef.current = {
-                default: contextDocument,
-            };
-            dispatchSetDocuments(documents);
-
-            dispatchSetActiveDocument('default');
-        }
-
-        if (documents) {
-            const identifiedDocuments = helpers.identifyDocuments(documents);
-
-            const stateDocuments = identifiedDocuments.map(document => {
-                const stateDocument = createInternalStateDocument(document);
-                return stateDocument;
-            });
-            const contextDocuments = identifiedDocuments.map(document => {
-                const contextDocument = createInternalContextDocument(document);
-                return contextDocument;
-            });
-
-            const indexedStateDocuments = helpers.createIndexed(stateDocuments);
-            const indexedContextDocuments = helpers.createIndexed(contextDocuments);
-
-            contextDocumentsRef.current = {...indexedContextDocuments};
-            dispatchSetDocuments(indexedStateDocuments);
-
-            const activeDocumentID = findActiveDocument(stateDocuments);
-            dispatchSetActiveDocument(activeDocumentID);
-        }
-    }, [
-        pages,
-        documents,
-    ]);
-
-    /** Configuration */
-    useEffect(() => {
-        const mergedConfiguration = mergeConfiguration(configuration);
-
-        if (!initialized) {
-            handleConfiguration(mergedConfiguration);
-            setInitialized(true);
-        }
-
-        dispatchSetSpaceLoading(false);
-    }, [
-        configuration,
-    ]);
-
-    /** State Configuration Layout */
-    useEffect(() => {
-        computeTree(tree);
-    }, [
-        stateConfiguration.space.layout,
-    ]);
-
-    /** PubSub Subscription */
-    useEffect(() => {
-        if (pubsub) {
-            handlePubSubSubscribe(pubsub);
-        }
-    }, [
-        pubsub,
-    ]);
-
-    /** PubSub Publish */
-    useEffect(() => {
-        if (pubsub) {
-            handlePubSubPublish(pubsub);
-        }
-    }, [
-        stateConfiguration,
-        transform,
-    ]);
-
-    /** Handle Tree */
-    useEffect(() => {
-        const _view = stateCulledView.length > 0
-            ? stateCulledView
-            : view;
-
-        const computedTree = space.computeViewTree(
-            initialTree,
-            _view,
-        );
-
-        dispatchSetTree(computedTree);
-    }, [
-        initialTree,
-        activeDocumentID,
-        dataDocuments,
-        contextDocumentsRef.current,
-        stateCulledView,
-    ]);
-
-    /** Handle Initial Tree */
-    useEffect(() => {
-        if (initialTree.length === 0) {
-            if (activeDocumentID && contextDocumentsRef.current) {
-                const activeDocument = dataDocuments[activeDocumentID];
-                const pages = activeDocument.pages;
-
-                const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
-                const contextPages = activeContextDocument.pages;
-
-                const treePages: TreePage[] = [];
-                for (const pageID in pages) {
-                    const docPage = pages[pageID]
-                    const contextPage = contextPages[pageID];
-                    if (!contextPage) {
-                        continue;
-                    }
-
-                    const treePage = createTreePage(
-                        contextPage,
-                        docPage,
-                    );
-                    treePages.push(treePage);
-                }
-
-                const computedTree = space.computeSpaceTree(
-                    treePages,
-                    stateConfiguration,
-                    view,
-                );
-                dispatchSetInitialTree(computedTree);
-            }
-        }
-    }, [
-        initialTree,
-        activeDocumentID,
-        dataDocuments,
-        contextDocumentsRef.current,
-    ]);
-
-    /** Touch */
-    useEffect(() => {
-        const {
-            transformTouch,
-        } = stateConfiguration.space;
-
-        /**
-         * Remove Hammerjs default css properties to add them only when in Lock Mode.
-         * https://stackoverflow.com/a/37896547
-         */
-        delete Hammer.defaults.cssProps.userSelect;
-        delete Hammer.defaults.cssProps.userDrag;
-        delete Hammer.defaults.cssProps.tapHighlightColor;
-        delete Hammer.defaults.cssProps.touchSelect;
-
-        const touch = new Hammer((viewElement as any).current);
-        touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-        touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-
-        if (transformTouch === TRANSFORM_TOUCHES.PAN) {
-            touch.on('pan', handlePan);
-        } else {
-            touch.on('swipe', handleSwipe);
-        }
-
-        return () => {
-            if (transformTouch === TRANSFORM_TOUCHES.PAN) {
-                touch.off('pan', handlePan);
-            } else {
-                touch.off('swipe', handleSwipe);
-            }
-        }
-    }, [
-        viewElement.current,
-        stateConfiguration.space.transformTouch,
-    ]);
-
-    /** Space Size */
-    useEffect(() => {
-        const spaceSize = space.computeSpaceSize(tree);
-
-        dispatchSetSpaceSize(spaceSize);
-        // centerSpaceSize(spaceSize);
-    }, [
-        tree,
-    ]);
-
-    /** Handle View */
-    useEffect(() => {
-        if (view) {
-            dispatchSpaceSetView(view);
-        }
-    }, [
-        view,
-    ]);
-
-    /** Handle Culled View */
-    useEffect(() => {
-        computeCulled();
-    }, [
-        tree,
-        view,
-        stateSpaceLocation,
-    ]);
+    // /** state */
+    // const [initialized, setInitialized] = useState(false);
+
+
+    // /** callbacks */
+    // const shortcutsCallback = useCallback((event: KeyboardEvent) => {
+    //     const {
+    //         transformLocks,
+    //     } = stateConfiguration.space;
+
+    //     handleGlobalShortcuts(
+    //         dispatch,
+    //         event,
+    //         stateConfiguration.space.firstPerson,
+    //         transformLocks,
+    //     );
+    // }, [
+    //     stateConfiguration.space.firstPerson,
+    //     stateConfiguration.space.transformLocks,
+    //     dispatch,
+    // ]);
+
+    // const wheelCallback = useCallback((event: WheelEvent) => {
+    //     const {
+    //         transformMode,
+    //         transformLocks,
+    //     } = stateConfiguration.space;
+
+    //     const transformModes = {
+    //         rotation: transformMode === TRANSFORM_MODES.ROTATION,
+    //         translation: transformMode === TRANSFORM_MODES.TRANSLATION,
+    //         scale: transformMode === TRANSFORM_MODES.SCALE,
+    //     };
+
+    //     handleGlobalWheel(
+    //         dispatch,
+    //         event,
+    //         transformModes,
+    //         transformLocks,
+    //     );
+    // }, [
+    //     dispatch,
+    //     stateConfiguration.space.transformMode,
+    //     stateConfiguration.space.transformLocks,
+    // ]);
+
+
+    // /** handlers */
+    // const handleConfiguration = (
+    //     configuration: PluridAppConfiguration,
+    // ) => {
+    //     dispatchSetConfiguration(configuration);
+
+    //     if (configuration.micro) {
+    //         dispatchSetConfigurationMicro();
+    //     }
+
+    //     if (configuration.space) {
+    //         const spaceLocation = space.computeSpaceLocation(configuration);
+    //         dispatchSetSpaceLocation(spaceLocation);
+    //     }
+
+    //     if (configuration.space.center && !configuration.space.camera) {
+    //         const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
+    //         translateXWith(x);
+
+    //         // to get plane height;
+    //         const planeHeight = 300;
+    //         const y = window.innerHeight / 2 - planeHeight/2;
+    //         translateYWith(y);
+    //     }
+
+    //     if (configuration.theme) {
+    //         if (typeof configuration.theme === 'object') {
+    //             const {
+    //                 general,
+    //                 interaction,
+    //             } = configuration.theme;
+
+    //             if (general) {
+    //                 if (Object.keys(THEME_NAMES).includes(general)) {
+    //                     dispatchSetGeneralTheme(themes[general]);
+    //                 }
+    //             }
+
+    //             if (interaction) {
+    //                 if (Object.keys(THEME_NAMES).includes(interaction)) {
+    //                     dispatchSetInteractionTheme(themes[interaction]);
+    //                 }
+    //             }
+    //         } else {
+    //             if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
+    //                 dispatchSetGeneralTheme(themes[configuration.theme]);
+    //                 dispatchSetInteractionTheme(themes[configuration.theme]);
+    //             }
+    //         }
+    //     }
+    // }
+
+    // const handlePubSubSubscribe = (
+    //     pubsub: PluridPubSub,
+    // ) => {
+    //     pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
+    //         const {
+    //             value,
+    //         } = data;
+    //         rotateXWith(value);
+    //     });
+
+    //     pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
+    //         const {
+    //             value,
+    //         } = data;
+    //         rotateYWith(value);
+    //     });
+    // }
+
+    // const handlePubSubPublish = (
+    //     pubsub: PluridPubSub,
+    // ) => {
+    //     pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
+
+    //     pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
+    // }
+
+    // const handleSwipe = (
+    //     event: HammerInput,
+    // ) => {
+    //     const {
+    //         transformMode,
+    //     } = stateConfiguration.space;
+
+    //     const {
+    //         velocity,
+    //         distance,
+    //         direction,
+    //     } = event;
+
+    //     if (transformMode === TRANSFORM_MODES.ALL) {
+    //         return;
+    //     }
+
+    //     const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+    //     const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+    //     const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
+
+    //     dispatchSetAnimatedTransform(true);
+    //     switch (direction) {
+    //         case 2:
+    //             /** right */
+    //             if (rotationMode) {
+    //                 rotateYWith(velocity * 60);
+    //             }
+
+    //             if (translationMode) {
+    //                 translateXWith(-1 * distance);
+    //             }
+    //             break;
+    //         case 4:
+    //             /** left */
+    //             if (rotationMode) {
+    //                 rotateYWith(velocity * 60);
+    //             }
+
+    //             if (translationMode) {
+    //                 translateXWith(distance);
+    //             }
+    //             break;
+    //         case 8:
+    //             /** top */
+    //             if (rotationMode) {
+    //                 rotateXWith(velocity * 60);
+    //             }
+
+    //             if (translationMode) {
+    //                 translateYWith(-1 * distance);
+    //             }
+
+    //             if (scalationMode) {
+    //                 scaleUpWith(velocity);
+    //             }
+    //             break;
+    //         case 16:
+    //             /** down */
+    //             if (rotationMode) {
+    //                 rotateXWith(velocity * 60);
+    //             }
+
+    //             if (translationMode) {
+    //                 translateYWith(distance);
+    //             }
+
+    //             if (scalationMode) {
+    //                 scaleDownWith(velocity);
+    //             }
+    //             break;
+    //     }
+    //     setTimeout(() => {
+    //         dispatchSetAnimatedTransform(false);
+    //     }, 450);
+    // }
+
+    // const handlePan = (
+    //     event: HammerInput,
+    // ) => {
+    //     const {
+    //         transformMode,
+    //     } = stateConfiguration.space;
+
+    //     const {
+    //         velocity,
+    //         distance,
+    //         direction,
+    //     } = event;
+
+    //     if (transformMode === TRANSFORM_MODES.ALL) {
+    //         return;
+    //     }
+
+    //     const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+    //     const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+    //     const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
+
+    //     const rotationVelocity = velocity * 20;
+    //     const translationVelocity = distance / 5;
+    //     const scaleVelocity = velocity / 4;
+
+    //     switch (direction) {
+    //         case 2:
+    //             /** right */
+    //             if (rotationMode) {
+    //                 rotateYWith(rotationVelocity);
+    //             }
+
+    //             if (translationMode) {
+    //                 translateXWith(-1 * translationVelocity);
+    //             }
+    //             break;
+    //         case 4:
+    //             /** left */
+    //             if (rotationMode) {
+    //                 rotateYWith(rotationVelocity);
+    //             }
+
+    //             if (translationMode) {
+    //                 translateXWith(translationVelocity);
+    //             }
+    //             break;
+    //         case 8:
+    //             /** top */
+    //             if (rotationMode) {
+    //                 rotateXWith(rotationVelocity);
+    //             }
+
+    //             if (translationMode) {
+    //                 translateYWith(-1 * translationVelocity);
+    //             }
+
+    //             if (scalationMode) {
+    //                 scaleUpWith(scaleVelocity);
+    //             }
+    //             break;
+    //         case 16:
+    //             /** down */
+    //             if (rotationMode) {
+    //                 rotateXWith(rotationVelocity);
+    //             }
+
+    //             if (translationMode) {
+    //                 translateYWith(translationVelocity);
+    //             }
+
+    //             if (scalationMode) {
+    //                 scaleDownWith(scaleVelocity);
+    //             }
+    //             break;
+    //     }
+    // }
+
+    // const centerSpaceSize = useDebouncedCallback((
+    //     spaceSize: any,
+    // ) => {
+    //     const x = - spaceSize.width / 2 + window.innerWidth / 2;
+    //     const y = - spaceSize.height / 2 + window.innerHeight / 2;
+
+    //     if (!initialized) {
+    //         dispatchSetAnimatedTransform(true);
+    //         translateXWith(x);
+    //         translateYWith(y);
+    //         setTimeout(() => {
+    //             dispatchSetAnimatedTransform(false);
+    //         }, 450);
+    //     }
+    // }, 100);
+
+
+    // const computedCulledFunction = () => {
+    //     const culledView = space.computeCulledView(
+    //         initialTree,
+    //         view || [],
+    //         stateSpaceLocation,
+    //         1500,
+    //     );
+
+    //     if (culledView && !arraysEqual(stateCulledView, culledView)) {
+    //         dispatchSpaceSetCulledView(culledView);
+    //     }
+    // }
+
+    // const computeCulled = useThrottledCallback(
+    //     computedCulledFunction,
+    //     500,
+    // );
+
+    // const computeTree = (
+    //     tree: TreePage[],
+    // ) => {
+    //     // const computedTree = computeSpaceTree(
+    //     //     tree,
+    //     //     stateConfiguration,
+    //     //     view,
+    //     // );
+    //     // dispatchSetTree(computedTree);
+    // }
+
+
+    // /** effects */
+    // /** Keydown, Wheel Listeners */
+    // useEffect(() => {
+    //     if (viewElement.current) {
+    //         viewElement.current.addEventListener(
+    //             'keydown',
+    //             shortcutsCallback,
+    //             {
+    //                 passive: false,
+    //             },
+    //         );
+    //         viewElement.current.addEventListener(
+    //             'wheel',
+    //             wheelCallback,
+    //             {
+    //                 passive: false,
+    //             },
+    //         );
+    //     }
+
+    //     return () => {
+    //         if (viewElement.current) {
+    //             viewElement.current.removeEventListener(
+    //                 'keydown',
+    //                 shortcutsCallback,
+    //             );
+    //             viewElement.current.removeEventListener(
+    //                 'wheel',
+    //                 wheelCallback,
+    //             );
+    //         }
+    //     }
+    // }, [
+    //     viewElement.current,
+    //     stateConfiguration.space.transformMode,
+    //     stateConfiguration.space.firstPerson,
+    // ]);
+
+    // /** Resize Listener */
+    // useEffect(() => {
+    //     const handleResize = meta.debounce(() => {
+    //         if (viewElement && viewElement.current) {
+    //             const width = viewElement.current.offsetWidth;
+    //             const height = viewElement.current.offsetHeight;
+    //             dispatchSetViewSize({
+    //                 width,
+    //                 height,
+    //             });
+    //         }
+    //     }, 150);
+
+    //     window.addEventListener('resize', handleResize);
+
+    //     return () => {
+    //         window.removeEventListener('resize', handleResize);
+    //     }
+    // }, []);
+
+    // /** Set View Size */
+    // useEffect(() => {
+    //     if (viewElement && viewElement.current) {
+    //         const width = viewElement.current.offsetWidth;
+    //         const height = viewElement.current.offsetHeight;
+    //         if (width && height) {
+    //             dispatchSetViewSize({
+    //                 height: viewElement.current.offsetHeight,
+    //                 width: viewElement.current.offsetWidth,
+    //             });
+    //         }
+    //     }
+    // }, [
+    //     viewElement.current,
+    // ]);
+
+    // /** View Size Listener */
+    // useEffect(() => {
+    //     computeTree(tree);
+    // }, [
+    //     viewSize,
+    // ]);
+
+    // /** Pages, Documents */
+    // useEffect(() => {
+    //     if (!documents && pages) {
+    //         const identifiedPages = helpers.identifyPages(pages);
+
+    //         const statePages = identifiedPages.map(page => {
+    //             const statePage = createInternalStatePage(page);
+    //             return statePage;
+    //         });
+
+    //         const contextPages = identifiedPages.map(page => {
+    //             const contextPage = createInternalContextPage(page);
+    //             return contextPage;
+    //         });
+
+    //         const indexedStatePages = helpers.createIndexed(statePages);
+    //         const indexedContextPages = helpers.createIndexed(contextPages);
+
+    //         const paths = registerPaths(statePages);
+    //         const indexedPaths = helpers.createIndexed(paths);
+
+    //         const document: PluridInternalStateDocument = {
+    //             id: 'default',
+    //             name: 'default',
+    //             pages: indexedStatePages,
+    //             paths: indexedPaths,
+    //             ordinal: 0,
+    //             active: true,
+    //         };
+
+    //         const documents = {
+    //             default: document,
+    //         };
+
+    //         const contextDocument = {
+    //             id: 'default',
+    //             name: 'default',
+    //             pages: indexedContextPages,
+    //         };
+    //         contextDocumentsRef.current = {
+    //             default: contextDocument,
+    //         };
+    //         dispatchSetDocuments(documents);
+
+    //         dispatchSetActiveDocument('default');
+    //     }
+
+    //     if (documents) {
+    //         const identifiedDocuments = helpers.identifyDocuments(documents);
+
+    //         const stateDocuments = identifiedDocuments.map(document => {
+    //             const stateDocument = createInternalStateDocument(document);
+    //             return stateDocument;
+    //         });
+    //         const contextDocuments = identifiedDocuments.map(document => {
+    //             const contextDocument = createInternalContextDocument(document);
+    //             return contextDocument;
+    //         });
+
+    //         const indexedStateDocuments = helpers.createIndexed(stateDocuments);
+    //         const indexedContextDocuments = helpers.createIndexed(contextDocuments);
+
+    //         contextDocumentsRef.current = {...indexedContextDocuments};
+    //         dispatchSetDocuments(indexedStateDocuments);
+
+    //         const activeDocumentID = findActiveDocument(stateDocuments);
+    //         dispatchSetActiveDocument(activeDocumentID);
+    //     }
+    // }, [
+    //     pages,
+    //     documents,
+    // ]);
+
+    // /** Configuration */
+    // useEffect(() => {
+    //     const mergedConfiguration = mergeConfiguration(configuration);
+
+    //     if (!initialized) {
+    //         handleConfiguration(mergedConfiguration);
+    //         setInitialized(true);
+    //     }
+
+    //     dispatchSetSpaceLoading(false);
+    // }, [
+    //     configuration,
+    // ]);
+
+    // /** State Configuration Layout */
+    // useEffect(() => {
+    //     computeTree(tree);
+    // }, [
+    //     stateConfiguration.space.layout,
+    // ]);
+
+    // /** PubSub Subscription */
+    // useEffect(() => {
+    //     if (pubsub) {
+    //         handlePubSubSubscribe(pubsub);
+    //     }
+    // }, [
+    //     pubsub,
+    // ]);
+
+    // /** PubSub Publish */
+    // useEffect(() => {
+    //     if (pubsub) {
+    //         handlePubSubPublish(pubsub);
+    //     }
+    // }, [
+    //     stateConfiguration,
+    //     transform,
+    // ]);
+
+    // /** Handle Tree */
+    // useEffect(() => {
+    //     const _view = stateCulledView.length > 0
+    //         ? stateCulledView
+    //         : view;
+
+    //     const computedTree = space.computeViewTree(
+    //         initialTree,
+    //         _view,
+    //     );
+
+    //     dispatchSetTree(computedTree);
+    // }, [
+    //     initialTree,
+    //     activeDocumentID,
+    //     dataDocuments,
+    //     contextDocumentsRef.current,
+    //     stateCulledView,
+    // ]);
+
+    // /** Handle Initial Tree */
+    // useEffect(() => {
+    //     if (initialTree.length === 0) {
+    //         if (activeDocumentID && contextDocumentsRef.current) {
+    //             const activeDocument = dataDocuments[activeDocumentID];
+    //             const pages = activeDocument.pages;
+
+    //             const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
+    //             const contextPages = activeContextDocument.pages;
+
+    //             const treePages: TreePage[] = [];
+    //             for (const pageID in pages) {
+    //                 const docPage = pages[pageID]
+    //                 const contextPage = contextPages[pageID];
+    //                 if (!contextPage) {
+    //                     continue;
+    //                 }
+
+    //                 const treePage = createTreePage(
+    //                     contextPage,
+    //                     docPage,
+    //                 );
+    //                 treePages.push(treePage);
+    //             }
+
+    //             const computedTree = space.computeSpaceTree(
+    //                 treePages,
+    //                 stateConfiguration,
+    //                 view,
+    //             );
+    //             dispatchSetInitialTree(computedTree);
+    //         }
+    //     }
+    // }, [
+    //     initialTree,
+    //     activeDocumentID,
+    //     dataDocuments,
+    //     contextDocumentsRef.current,
+    // ]);
+
+    // /** Touch */
+    // useEffect(() => {
+    //     const {
+    //         transformTouch,
+    //     } = stateConfiguration.space;
+
+    //     /**
+    //      * Remove Hammerjs default css properties to add them only when in Lock Mode.
+    //      * https://stackoverflow.com/a/37896547
+    //      */
+    //     delete Hammer.defaults.cssProps.userSelect;
+    //     delete Hammer.defaults.cssProps.userDrag;
+    //     delete Hammer.defaults.cssProps.tapHighlightColor;
+    //     delete Hammer.defaults.cssProps.touchSelect;
+
+    //     const touch = new Hammer((viewElement as any).current);
+    //     touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+    //     touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+
+    //     if (transformTouch === TRANSFORM_TOUCHES.PAN) {
+    //         touch.on('pan', handlePan);
+    //     } else {
+    //         touch.on('swipe', handleSwipe);
+    //     }
+
+    //     return () => {
+    //         if (transformTouch === TRANSFORM_TOUCHES.PAN) {
+    //             touch.off('pan', handlePan);
+    //         } else {
+    //             touch.off('swipe', handleSwipe);
+    //         }
+    //     }
+    // }, [
+    //     viewElement.current,
+    //     stateConfiguration.space.transformTouch,
+    // ]);
+
+    // /** Space Size */
+    // useEffect(() => {
+    //     const spaceSize = space.computeSpaceSize(tree);
+
+    //     dispatchSetSpaceSize(spaceSize);
+    //     // centerSpaceSize(spaceSize);
+    // }, [
+    //     tree,
+    // ]);
+
+    // /** Handle View */
+    // useEffect(() => {
+    //     if (view) {
+    //         dispatchSpaceSetView(view);
+    //     }
+    // }, [
+    //     view,
+    // ]);
+
+    // /** Handle Culled View */
+    // useEffect(() => {
+    //     computeCulled();
+    // }, [
+    //     tree,
+    //     view,
+    //     stateSpaceLocation,
+    // ]);
 
 
     /** context */
@@ -877,6 +877,14 @@ const View: React.FC<ViewProperties> = (
         pageContextValue: appProperties.pageContextValue,
         documents: contextDocumentsRef.current,
     };
+
+    console.log('Rendered');
+    console.log(
+        configuration,
+        pages,
+        view,
+        documents,
+    );
 
 
     /** render */

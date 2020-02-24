@@ -1,9 +1,10 @@
 import {
     /** interfaces */
     PluridPage,
+    PluridView,
     PluridDocument,
     PluridConfiguration,
-    PluridView,
+    PluridPartialConfiguration,
     RecursivePartial,
 
     /** enumerations */
@@ -29,9 +30,10 @@ import PluridVirtualList from './modules/components/PluridVirtual/List';
 export {
     /** Interfaces */
     PluridPage,
+    PluridView,
     PluridDocument,
     PluridConfiguration,
-    PluridView,
+    PluridPartialConfiguration,
     RecursivePartial,
 
     /** Enumerations */
