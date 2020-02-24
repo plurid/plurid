@@ -122,7 +122,7 @@ export interface ViewOwnProperties {
 
 interface ViewStateProperties {
     configuration: PluridAppConfiguration;
-    dataDocuments: Indexed<PluridInternalStateDocument>;
+    stateDataDocuments: Indexed<PluridInternalStateDocument>;
     viewSize: ViewSize;
     spaceLoading: boolean;
     transform: any;
@@ -184,7 +184,7 @@ const View: React.FC<ViewProperties> = (
         tree,
         viewSize,
         transform,
-        dataDocuments,
+        stateDataDocuments,
         activeDocumentID,
         stateSpaceLocation,
         stateCulledView,
@@ -285,82 +285,84 @@ const View: React.FC<ViewProperties> = (
 
 
     // /** handlers */
-    const handlePages = (
-        pages: PluridPage[],
-    ) => {
-        const identifiedPages = helpers.identifyPages(pages);
+    // const handlePages = (
+    //     pages: PluridPage[],
+    // ) => {
+    //     const identifiedPages = helpers.identifyPages(pages);
 
-        const statePages = identifiedPages.map(page => {
-            const statePage = createInternalStatePage(page);
-            return statePage;
-        });
+    //     const statePages = identifiedPages.map(page => {
+    //         const statePage = createInternalStatePage(page);
+    //         return statePage;
+    //     });
 
-        const contextPages = identifiedPages.map(page => {
-            const contextPage = createInternalContextPage(page);
-            return contextPage;
-        });
+    //     const contextPages = identifiedPages.map(page => {
+    //         const contextPage = createInternalContextPage(page);
+    //         return contextPage;
+    //     });
 
-        const indexedStatePages = helpers.createIndexed(statePages);
-        const indexedContextPages = helpers.createIndexed(contextPages);
+    //     const indexedStatePages = helpers.createIndexed(statePages);
+    //     const indexedContextPages = helpers.createIndexed(contextPages);
 
-        const paths = registerPaths(statePages);
-        const indexedPaths = helpers.createIndexed(paths);
+    //     const paths = registerPaths(statePages);
+    //     const indexedPaths = helpers.createIndexed(paths);
 
-        const document: PluridInternalStateDocument = {
-            id: 'default',
-            name: 'default',
-            pages: indexedStatePages,
-            paths: indexedPaths,
-            ordinal: 0,
-            active: true,
-        };
+    //     const document: PluridInternalStateDocument = {
+    //         id: 'default',
+    //         name: 'default',
+    //         pages: indexedStatePages,
+    //         paths: indexedPaths,
+    //         ordinal: 0,
+    //         active: true,
+    //     };
 
-        const documents = {
-            default: document,
-        };
+    //     const documents = {
+    //         default: document,
+    //     };
 
-        const contextDocument = {
-            id: 'default',
-            name: 'default',
-            pages: indexedContextPages,
-        };
-        contextDocumentsRef.current = {
-            default: contextDocument,
-        };
-        dispatchSetDocuments(documents);
+    //     const contextDocument = {
+    //         id: 'default',
+    //         name: 'default',
+    //         pages: indexedContextPages,
+    //     };
+    //     contextDocumentsRef.current = {
+    //         default: contextDocument,
+    //     };
+    //     dispatchSetDocuments(documents);
 
-        dispatchSetActiveDocument('default');
-    }
+    //     dispatchSetActiveDocument('default');
+    // }
 
-    const handleDocuments = (
-        documents: PluridDocument[],
-    ) => {
-        const identifiedDocuments = helpers.identifyDocuments(documents);
+    // const handleDocuments = (
+    //     documents: PluridDocument[],
+    // ) => {
+    //     const identifiedDocuments = helpers.identifyDocuments(documents);
 
-        const stateDocuments = identifiedDocuments.map(document => {
-            const stateDocument = createInternalStateDocument(document);
-            return stateDocument;
-        });
-        const contextDocuments = identifiedDocuments.map(document => {
-            const contextDocument = createInternalContextDocument(document);
-            return contextDocument;
-        });
+    //     const stateDocuments = identifiedDocuments.map(document => {
+    //         const stateDocument = createInternalStateDocument(document);
+    //         return stateDocument;
+    //     });
+    //     const contextDocuments = identifiedDocuments.map(document => {
+    //         const contextDocument = createInternalContextDocument(document);
+    //         return contextDocument;
+    //     });
 
-        const indexedStateDocuments = helpers.createIndexed(stateDocuments);
-        const indexedContextDocuments = helpers.createIndexed(contextDocuments);
+    //     const indexedStateDocuments = helpers.createIndexed(stateDocuments);
+    //     const indexedContextDocuments = helpers.createIndexed(contextDocuments);
 
-        contextDocumentsRef.current = {...indexedContextDocuments};
-        dispatchSetDocuments(indexedStateDocuments);
+    //     contextDocumentsRef.current = {...indexedContextDocuments};
+    //     dispatchSetDocuments(indexedStateDocuments);
 
-        const activeDocumentID = findActiveDocument(stateDocuments);
-        dispatchSetActiveDocument(activeDocumentID);
-    }
-
+    //     const activeDocumentID = findActiveDocument(stateDocuments);
+    //     dispatchSetActiveDocument(activeDocumentID);
+    // }
 
     const createDocuments = (
         pages: PluridPage[] | undefined,
         documents: PluridDocument[] | undefined,
+        stateDocuments: Indexed<PluridInternalStateDocument>,
     ): HandledDocuments | undefined => {
+        // To check against already loaded pages and documents
+        // and update only the changes
         if (!documents && pages) {
             const identifiedPages = helpers.identifyPages(pages);
 
@@ -446,18 +448,46 @@ const View: React.FC<ViewProperties> = (
     }
 
     const computeTree = (
-        activeDocument: string,
+        activeDocumentID: string,
         documents: Indexed<PluridInternalStateDocument>,
         configuration: PluridAppConfiguration,
         view: string[] | PluridView[] | undefined,
         clusters: PluridCluster[] | undefined,
+        contextDocuments: Indexed<PluridInternalContextDocument>,
         previousTree: TreePage[],
     ) => {
+        const activeDocument = documents[activeDocumentID];
+        const pages = activeDocument.pages;
 
+        const activeContextDocument = contextDocuments[activeDocumentID];
+        const contextPages = activeContextDocument.pages;
+
+        const treePages: TreePage[] = [];
+        for (const pageID in pages) {
+            const docPage = pages[pageID]
+            const contextPage = contextPages[pageID];
+            if (!contextPage) {
+                continue;
+            }
+
+            const treePage = createTreePage(
+                contextPage,
+                docPage,
+            );
+            treePages.push(treePage);
+        }
+
+        const computedTree = space.computeSpaceTree(
+            treePages,
+            configuration,
+            view,
+        );
+
+        return computedTree;
     }
 
 
-    const computeApp = (
+    const computeApplication = (
         configuration: PluridPartialConfiguration | undefined,
         pages: PluridPage[] | undefined,
         view: string[] | PluridView[] | undefined,
@@ -468,7 +498,12 @@ const View: React.FC<ViewProperties> = (
         const appConfiguration = computeCommonConfiguration(configuration);
 
         // create internal documents
-        const createdDocuments = createDocuments(pages, documents);
+        const createdDocuments = createDocuments(
+            pages,
+            documents,
+            stateDataDocuments,
+        );
+        console.log('createdDocuments', createdDocuments);
 
         if (!createdDocuments) {
             return;
@@ -476,6 +511,7 @@ const View: React.FC<ViewProperties> = (
 
         const {
             stateDocuments,
+            contextDocuments,
         } = createdDocuments;
 
         const activeDocument = getActiveDocument(stateDocuments);
@@ -486,8 +522,18 @@ const View: React.FC<ViewProperties> = (
             appConfiguration,
             view,
             clusters,
+            contextDocuments,
             tree,
         );
+
+
+        contextDocumentsRef.current = contextDocuments;
+
+
+        dispatchSetActiveDocument(activeDocument);
+        dispatchSetInitialTree(newTree);
+        dispatchSetTree(newTree);
+        dispatchSetSpaceLoading(false);
     }
 
     // const handleConfiguration = (
@@ -769,7 +815,24 @@ const View: React.FC<ViewProperties> = (
     // }
 
 
-    // /** effects */
+    /** effects */
+    /** Compute Application */
+    useEffect(() => {
+        computeApplication(
+            configuration,
+            pages,
+            view,
+            clusters,
+            documents,
+        );
+    }, [
+        configuration,
+        pages,
+        view,
+        clusters,
+        documents,
+    ]);
+
     // /** Keydown, Wheel Listeners */
     // useEffect(() => {
     //     if (viewElement.current) {
@@ -919,7 +982,7 @@ const View: React.FC<ViewProperties> = (
     // }, [
     //     initialTree,
     //     activeDocumentID,
-    //     dataDocuments,
+    //     stateDataDocuments,
     //     contextDocumentsRef.current,
     //     stateCulledView,
     // ]);
@@ -928,7 +991,7 @@ const View: React.FC<ViewProperties> = (
     // useEffect(() => {
     //     if (initialTree.length === 0) {
     //         if (activeDocumentID && contextDocumentsRef.current) {
-    //             const activeDocument = dataDocuments[activeDocumentID];
+    //             const activeDocument = stateDataDocuments[activeDocumentID];
     //             const pages = activeDocument.pages;
 
     //             const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
@@ -960,7 +1023,7 @@ const View: React.FC<ViewProperties> = (
     // }, [
     //     initialTree,
     //     activeDocumentID,
-    //     dataDocuments,
+    //     stateDataDocuments,
     //     contextDocumentsRef.current,
     // ]);
 
@@ -1074,7 +1137,7 @@ const mapStateToProperties = (
     state: AppState,
 ): ViewStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
-    dataDocuments: selectors.data.getDocuments(state),
+    stateDataDocuments: selectors.data.getDocuments(state),
     viewSize: selectors.space.getViewSize(state),
     transform: selectors.space.getTransform(state),
     initialTree: selectors.space.getInitialTree(state),
