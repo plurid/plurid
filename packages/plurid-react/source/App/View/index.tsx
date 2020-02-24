@@ -242,46 +242,46 @@ const View: React.FC<ViewProperties> = (
 
 
     // /** callbacks */
-    // const shortcutsCallback = useCallback((event: KeyboardEvent) => {
-    //     const {
-    //         transformLocks,
-    //     } = stateConfiguration.space;
+    const shortcutsCallback = useCallback((event: KeyboardEvent) => {
+        const {
+            transformLocks,
+        } = stateConfiguration.space;
 
-    //     handleGlobalShortcuts(
-    //         dispatch,
-    //         event,
-    //         stateConfiguration.space.firstPerson,
-    //         transformLocks,
-    //     );
-    // }, [
-    //     stateConfiguration.space.firstPerson,
-    //     stateConfiguration.space.transformLocks,
-    //     dispatch,
-    // ]);
+        handleGlobalShortcuts(
+            dispatch,
+            event,
+            stateConfiguration.space.firstPerson,
+            transformLocks,
+        );
+    }, [
+        stateConfiguration.space.firstPerson,
+        stateConfiguration.space.transformLocks,
+        dispatch,
+    ]);
 
-    // const wheelCallback = useCallback((event: WheelEvent) => {
-    //     const {
-    //         transformMode,
-    //         transformLocks,
-    //     } = stateConfiguration.space;
+    const wheelCallback = useCallback((event: WheelEvent) => {
+        const {
+            transformMode,
+            transformLocks,
+        } = stateConfiguration.space;
 
-    //     const transformModes = {
-    //         rotation: transformMode === TRANSFORM_MODES.ROTATION,
-    //         translation: transformMode === TRANSFORM_MODES.TRANSLATION,
-    //         scale: transformMode === TRANSFORM_MODES.SCALE,
-    //     };
+        const transformModes = {
+            rotation: transformMode === TRANSFORM_MODES.ROTATION,
+            translation: transformMode === TRANSFORM_MODES.TRANSLATION,
+            scale: transformMode === TRANSFORM_MODES.SCALE,
+        };
 
-    //     handleGlobalWheel(
-    //         dispatch,
-    //         event,
-    //         transformModes,
-    //         transformLocks,
-    //     );
-    // }, [
-    //     dispatch,
-    //     stateConfiguration.space.transformMode,
-    //     stateConfiguration.space.transformLocks,
-    // ]);
+        handleGlobalWheel(
+            dispatch,
+            event,
+            transformModes,
+            transformLocks,
+        );
+    }, [
+        dispatch,
+        stateConfiguration.space.transformMode,
+        stateConfiguration.space.transformLocks,
+    ]);
 
 
     // /** handlers */
@@ -613,159 +613,159 @@ const View: React.FC<ViewProperties> = (
     //     pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
     // }
 
-    // const handleSwipe = (
-    //     event: HammerInput,
-    // ) => {
-    //     const {
-    //         transformMode,
-    //     } = stateConfiguration.space;
+    const handleSwipe = (
+        event: HammerInput,
+    ) => {
+        const {
+            transformMode,
+        } = stateConfiguration.space;
 
-    //     const {
-    //         velocity,
-    //         distance,
-    //         direction,
-    //     } = event;
+        const {
+            velocity,
+            distance,
+            direction,
+        } = event;
 
-    //     if (transformMode === TRANSFORM_MODES.ALL) {
-    //         return;
-    //     }
+        if (transformMode === TRANSFORM_MODES.ALL) {
+            return;
+        }
 
-    //     const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
-    //     const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
-    //     const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
+        const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+        const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+        const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
 
-    //     dispatchSetAnimatedTransform(true);
-    //     switch (direction) {
-    //         case 2:
-    //             /** right */
-    //             if (rotationMode) {
-    //                 rotateYWith(velocity * 60);
-    //             }
+        dispatchSetAnimatedTransform(true);
+        switch (direction) {
+            case 2:
+                /** right */
+                if (rotationMode) {
+                    rotateYWith(velocity * 60);
+                }
 
-    //             if (translationMode) {
-    //                 translateXWith(-1 * distance);
-    //             }
-    //             break;
-    //         case 4:
-    //             /** left */
-    //             if (rotationMode) {
-    //                 rotateYWith(velocity * 60);
-    //             }
+                if (translationMode) {
+                    translateXWith(-1 * distance);
+                }
+                break;
+            case 4:
+                /** left */
+                if (rotationMode) {
+                    rotateYWith(velocity * 60);
+                }
 
-    //             if (translationMode) {
-    //                 translateXWith(distance);
-    //             }
-    //             break;
-    //         case 8:
-    //             /** top */
-    //             if (rotationMode) {
-    //                 rotateXWith(velocity * 60);
-    //             }
+                if (translationMode) {
+                    translateXWith(distance);
+                }
+                break;
+            case 8:
+                /** top */
+                if (rotationMode) {
+                    rotateXWith(velocity * 60);
+                }
 
-    //             if (translationMode) {
-    //                 translateYWith(-1 * distance);
-    //             }
+                if (translationMode) {
+                    translateYWith(-1 * distance);
+                }
 
-    //             if (scalationMode) {
-    //                 scaleUpWith(velocity);
-    //             }
-    //             break;
-    //         case 16:
-    //             /** down */
-    //             if (rotationMode) {
-    //                 rotateXWith(velocity * 60);
-    //             }
+                if (scalationMode) {
+                    scaleUpWith(velocity);
+                }
+                break;
+            case 16:
+                /** down */
+                if (rotationMode) {
+                    rotateXWith(velocity * 60);
+                }
 
-    //             if (translationMode) {
-    //                 translateYWith(distance);
-    //             }
+                if (translationMode) {
+                    translateYWith(distance);
+                }
 
-    //             if (scalationMode) {
-    //                 scaleDownWith(velocity);
-    //             }
-    //             break;
-    //     }
-    //     setTimeout(() => {
-    //         dispatchSetAnimatedTransform(false);
-    //     }, 450);
-    // }
+                if (scalationMode) {
+                    scaleDownWith(velocity);
+                }
+                break;
+        }
+        setTimeout(() => {
+            dispatchSetAnimatedTransform(false);
+        }, 450);
+    }
 
-    // const handlePan = (
-    //     event: HammerInput,
-    // ) => {
-    //     const {
-    //         transformMode,
-    //     } = stateConfiguration.space;
+    const handlePan = (
+        event: HammerInput,
+    ) => {
+        const {
+            transformMode,
+        } = stateConfiguration.space;
 
-    //     const {
-    //         velocity,
-    //         distance,
-    //         direction,
-    //     } = event;
+        const {
+            velocity,
+            distance,
+            direction,
+        } = event;
 
-    //     if (transformMode === TRANSFORM_MODES.ALL) {
-    //         return;
-    //     }
+        if (transformMode === TRANSFORM_MODES.ALL) {
+            return;
+        }
 
-    //     const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
-    //     const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
-    //     const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
+        const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+        const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+        const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
 
-    //     const rotationVelocity = velocity * 20;
-    //     const translationVelocity = distance / 5;
-    //     const scaleVelocity = velocity / 4;
+        const rotationVelocity = velocity * 20;
+        const translationVelocity = distance / 5;
+        const scaleVelocity = velocity / 4;
 
-    //     switch (direction) {
-    //         case 2:
-    //             /** right */
-    //             if (rotationMode) {
-    //                 rotateYWith(rotationVelocity);
-    //             }
+        switch (direction) {
+            case 2:
+                /** right */
+                if (rotationMode) {
+                    rotateYWith(rotationVelocity);
+                }
 
-    //             if (translationMode) {
-    //                 translateXWith(-1 * translationVelocity);
-    //             }
-    //             break;
-    //         case 4:
-    //             /** left */
-    //             if (rotationMode) {
-    //                 rotateYWith(rotationVelocity);
-    //             }
+                if (translationMode) {
+                    translateXWith(-1 * translationVelocity);
+                }
+                break;
+            case 4:
+                /** left */
+                if (rotationMode) {
+                    rotateYWith(rotationVelocity);
+                }
 
-    //             if (translationMode) {
-    //                 translateXWith(translationVelocity);
-    //             }
-    //             break;
-    //         case 8:
-    //             /** top */
-    //             if (rotationMode) {
-    //                 rotateXWith(rotationVelocity);
-    //             }
+                if (translationMode) {
+                    translateXWith(translationVelocity);
+                }
+                break;
+            case 8:
+                /** top */
+                if (rotationMode) {
+                    rotateXWith(rotationVelocity);
+                }
 
-    //             if (translationMode) {
-    //                 translateYWith(-1 * translationVelocity);
-    //             }
+                if (translationMode) {
+                    translateYWith(-1 * translationVelocity);
+                }
 
-    //             if (scalationMode) {
-    //                 scaleUpWith(scaleVelocity);
-    //             }
-    //             break;
-    //         case 16:
-    //             /** down */
-    //             if (rotationMode) {
-    //                 rotateXWith(rotationVelocity);
-    //             }
+                if (scalationMode) {
+                    scaleUpWith(scaleVelocity);
+                }
+                break;
+            case 16:
+                /** down */
+                if (rotationMode) {
+                    rotateXWith(rotationVelocity);
+                }
 
-    //             if (translationMode) {
-    //                 translateYWith(translationVelocity);
-    //             }
+                if (translationMode) {
+                    translateYWith(translationVelocity);
+                }
 
-    //             if (scalationMode) {
-    //                 scaleDownWith(scaleVelocity);
-    //             }
-    //             break;
-    //     }
-    // }
+                if (scalationMode) {
+                    scaleDownWith(scaleVelocity);
+                }
+                break;
+        }
+    }
 
     // const centerSpaceSize = useDebouncedCallback((
     //     spaceSize: any,
@@ -833,42 +833,42 @@ const View: React.FC<ViewProperties> = (
         documents,
     ]);
 
-    // /** Keydown, Wheel Listeners */
-    // useEffect(() => {
-    //     if (viewElement.current) {
-    //         viewElement.current.addEventListener(
-    //             'keydown',
-    //             shortcutsCallback,
-    //             {
-    //                 passive: false,
-    //             },
-    //         );
-    //         viewElement.current.addEventListener(
-    //             'wheel',
-    //             wheelCallback,
-    //             {
-    //                 passive: false,
-    //             },
-    //         );
-    //     }
+    /** Keydown, Wheel Listeners */
+    useEffect(() => {
+        if (viewElement.current) {
+            viewElement.current.addEventListener(
+                'keydown',
+                shortcutsCallback,
+                {
+                    passive: false,
+                },
+            );
+            viewElement.current.addEventListener(
+                'wheel',
+                wheelCallback,
+                {
+                    passive: false,
+                },
+            );
+        }
 
-    //     return () => {
-    //         if (viewElement.current) {
-    //             viewElement.current.removeEventListener(
-    //                 'keydown',
-    //                 shortcutsCallback,
-    //             );
-    //             viewElement.current.removeEventListener(
-    //                 'wheel',
-    //                 wheelCallback,
-    //             );
-    //         }
-    //     }
-    // }, [
-    //     viewElement.current,
-    //     stateConfiguration.space.transformMode,
-    //     stateConfiguration.space.firstPerson,
-    // ]);
+        return () => {
+            if (viewElement.current) {
+                viewElement.current.removeEventListener(
+                    'keydown',
+                    shortcutsCallback,
+                );
+                viewElement.current.removeEventListener(
+                    'wheel',
+                    wheelCallback,
+                );
+            }
+        }
+    }, [
+        viewElement.current,
+        stateConfiguration.space.transformMode,
+        stateConfiguration.space.firstPerson,
+    ]);
 
     // /** Resize Listener */
     // useEffect(() => {
@@ -1027,42 +1027,42 @@ const View: React.FC<ViewProperties> = (
     //     contextDocumentsRef.current,
     // ]);
 
-    // /** Touch */
-    // useEffect(() => {
-    //     const {
-    //         transformTouch,
-    //     } = stateConfiguration.space;
+    /** Touch */
+    useEffect(() => {
+        const {
+            transformTouch,
+        } = stateConfiguration.space;
 
-    //     /**
-    //      * Remove Hammerjs default css properties to add them only when in Lock Mode.
-    //      * https://stackoverflow.com/a/37896547
-    //      */
-    //     delete Hammer.defaults.cssProps.userSelect;
-    //     delete Hammer.defaults.cssProps.userDrag;
-    //     delete Hammer.defaults.cssProps.tapHighlightColor;
-    //     delete Hammer.defaults.cssProps.touchSelect;
+        /**
+         * Remove Hammerjs default css properties to add them only when in Lock Mode.
+         * https://stackoverflow.com/a/37896547
+         */
+        delete Hammer.defaults.cssProps.userSelect;
+        delete Hammer.defaults.cssProps.userDrag;
+        delete Hammer.defaults.cssProps.tapHighlightColor;
+        delete Hammer.defaults.cssProps.touchSelect;
 
-    //     const touch = new Hammer((viewElement as any).current);
-    //     touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-    //     touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+        const touch = new Hammer((viewElement as any).current);
+        touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+        touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
-    //     if (transformTouch === TRANSFORM_TOUCHES.PAN) {
-    //         touch.on('pan', handlePan);
-    //     } else {
-    //         touch.on('swipe', handleSwipe);
-    //     }
+        if (transformTouch === TRANSFORM_TOUCHES.PAN) {
+            touch.on('pan', handlePan);
+        } else {
+            touch.on('swipe', handleSwipe);
+        }
 
-    //     return () => {
-    //         if (transformTouch === TRANSFORM_TOUCHES.PAN) {
-    //             touch.off('pan', handlePan);
-    //         } else {
-    //             touch.off('swipe', handleSwipe);
-    //         }
-    //     }
-    // }, [
-    //     viewElement.current,
-    //     stateConfiguration.space.transformTouch,
-    // ]);
+        return () => {
+            if (transformTouch === TRANSFORM_TOUCHES.PAN) {
+                touch.off('pan', handlePan);
+            } else {
+                touch.off('swipe', handleSwipe);
+            }
+        }
+    }, [
+        viewElement.current,
+        stateConfiguration.space.transformTouch,
+    ]);
 
     // /** Space Size */
     // useEffect(() => {
