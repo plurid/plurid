@@ -19,11 +19,16 @@ import {
     /** interfaces */
     PluridApp as PluridAppProperties,
     PluridConfiguration as PluridAppConfiguration,
-    Indexed,
+    PluridPartialConfiguration,
     PluridContext,
+    PluridPage,
+    PluridView,
+    PluridCluster,
+    PluridDocument,
     TreePage,
     PluridInternalStateDocument,
     PluridInternalContextDocument,
+    Indexed,
 } from '@plurid/plurid-data';
 
 import PluridPubSub, {
@@ -75,7 +80,7 @@ import {
     registerPaths,
 } from '../../modules/services/logic/paths';
 
-import mergeConfiguration from '../../modules/services/logic/configuration';
+import computeCommonConfiguration from '../../modules/services/logic/configuration';
 
 import {
     handleGlobalShortcuts,
@@ -103,6 +108,12 @@ import {
     SpaceSize,
 } from '../../modules/services/state/modules/space/types';
 
+
+
+export interface HandledDocuments {
+    stateDocuments: Indexed<PluridInternalStateDocument>;
+    contextDocuments: Indexed<PluridInternalContextDocument>;
+}
 
 
 export interface ViewOwnProperties {
@@ -214,6 +225,7 @@ const View: React.FC<ViewProperties> = (
         configuration,
         pages,
         view,
+        clusters,
         documents,
         pubsub,
     } = appProperties;
@@ -273,6 +285,209 @@ const View: React.FC<ViewProperties> = (
 
 
     // /** handlers */
+    const handlePages = (
+        pages: PluridPage[],
+    ) => {
+        const identifiedPages = helpers.identifyPages(pages);
+
+        const statePages = identifiedPages.map(page => {
+            const statePage = createInternalStatePage(page);
+            return statePage;
+        });
+
+        const contextPages = identifiedPages.map(page => {
+            const contextPage = createInternalContextPage(page);
+            return contextPage;
+        });
+
+        const indexedStatePages = helpers.createIndexed(statePages);
+        const indexedContextPages = helpers.createIndexed(contextPages);
+
+        const paths = registerPaths(statePages);
+        const indexedPaths = helpers.createIndexed(paths);
+
+        const document: PluridInternalStateDocument = {
+            id: 'default',
+            name: 'default',
+            pages: indexedStatePages,
+            paths: indexedPaths,
+            ordinal: 0,
+            active: true,
+        };
+
+        const documents = {
+            default: document,
+        };
+
+        const contextDocument = {
+            id: 'default',
+            name: 'default',
+            pages: indexedContextPages,
+        };
+        contextDocumentsRef.current = {
+            default: contextDocument,
+        };
+        dispatchSetDocuments(documents);
+
+        dispatchSetActiveDocument('default');
+    }
+
+    const handleDocuments = (
+        documents: PluridDocument[],
+    ) => {
+        const identifiedDocuments = helpers.identifyDocuments(documents);
+
+        const stateDocuments = identifiedDocuments.map(document => {
+            const stateDocument = createInternalStateDocument(document);
+            return stateDocument;
+        });
+        const contextDocuments = identifiedDocuments.map(document => {
+            const contextDocument = createInternalContextDocument(document);
+            return contextDocument;
+        });
+
+        const indexedStateDocuments = helpers.createIndexed(stateDocuments);
+        const indexedContextDocuments = helpers.createIndexed(contextDocuments);
+
+        contextDocumentsRef.current = {...indexedContextDocuments};
+        dispatchSetDocuments(indexedStateDocuments);
+
+        const activeDocumentID = findActiveDocument(stateDocuments);
+        dispatchSetActiveDocument(activeDocumentID);
+    }
+
+
+    const createDocuments = (
+        pages: PluridPage[] | undefined,
+        documents: PluridDocument[] | undefined,
+    ): HandledDocuments | undefined => {
+        if (!documents && pages) {
+            const identifiedPages = helpers.identifyPages(pages);
+
+            const statePages = identifiedPages.map(page => {
+                const statePage = createInternalStatePage(page);
+                return statePage;
+            });
+
+            const contextPages = identifiedPages.map(page => {
+                const contextPage = createInternalContextPage(page);
+                return contextPage;
+            });
+
+            const indexedStatePages = helpers.createIndexed(statePages);
+            const indexedContextPages = helpers.createIndexed(contextPages);
+
+            const paths = registerPaths(statePages);
+            const indexedPaths = helpers.createIndexed(paths);
+
+            const document: PluridInternalStateDocument = {
+                id: 'default',
+                name: 'default',
+                pages: indexedStatePages,
+                paths: indexedPaths,
+                ordinal: 0,
+                active: true,
+            };
+            const stateDocuments: Indexed<PluridInternalStateDocument> = {
+                default: document,
+            };
+
+            const contextDocument = {
+                id: 'default',
+                name: 'default',
+                pages: indexedContextPages,
+            };
+            const contextDocuments: Indexed<PluridInternalContextDocument> = {
+                default: contextDocument,
+            };
+
+            return {
+                stateDocuments,
+                contextDocuments,
+            };
+        }
+
+        if (documents) {
+            const identifiedDocuments = helpers.identifyDocuments(documents);
+
+            const stateDocuments = identifiedDocuments.map(document => {
+                const stateDocument = createInternalStateDocument(document);
+                return stateDocument;
+            });
+            const contextDocuments = identifiedDocuments.map(document => {
+                const contextDocument = createInternalContextDocument(document);
+                return contextDocument;
+            });
+
+            const indexedStateDocuments = helpers.createIndexed(stateDocuments);
+            const indexedContextDocuments = helpers.createIndexed(contextDocuments);
+
+            return {
+                stateDocuments: indexedStateDocuments,
+                contextDocuments: indexedContextDocuments,
+            };
+        }
+
+        return;
+    }
+
+    const getActiveDocument = (
+        documents: Indexed<PluridInternalStateDocument> | undefined,
+    ) => {
+        if (documents) {
+            for (const document of Object.values(documents)) {
+                if (document.active) {
+                    return document.id;
+                }
+            }
+        }
+
+        return '';
+    }
+
+    const computeTree = (
+        activeDocument: string,
+        documents: Indexed<PluridInternalStateDocument>,
+        configuration: PluridAppConfiguration,
+        view: string[] | PluridView[] | undefined,
+        clusters: PluridCluster[] | undefined,
+    ) => {
+
+    }
+
+
+    const computeApp = (
+        configuration: PluridPartialConfiguration | undefined,
+        pages: PluridPage[] | undefined,
+        view: string[] | PluridView[] | undefined,
+        clusters: PluridCluster[] | undefined,
+        documents: PluridDocument[] | undefined,
+    ) => {
+        // merge user and default configuration
+        const appConfiguration = computeCommonConfiguration(configuration);
+
+        // create internal documents
+        const createdDocuments = createDocuments(pages, documents);
+
+        if (!createdDocuments) {
+            return;
+        }
+
+        const {
+            stateDocuments,
+        } = createdDocuments;
+
+        const activeDocument = getActiveDocument(stateDocuments);
+
+        const tree = computeTree(
+            activeDocument,
+            stateDocuments,
+            appConfiguration,
+            view,
+            clusters,
+        );
+    }
+
     // const handleConfiguration = (
     //     configuration: PluridAppConfiguration,
     // ) => {
@@ -521,23 +736,23 @@ const View: React.FC<ViewProperties> = (
     // }, 100);
 
 
-    // const computedCulledFunction = () => {
-    //     const culledView = space.computeCulledView(
-    //         initialTree,
-    //         view || [],
-    //         stateSpaceLocation,
-    //         1500,
-    //     );
+    const computedCulledFunction = () => {
+        const culledView = space.computeCulledView(
+            initialTree,
+            view || [],
+            stateSpaceLocation,
+            1500,
+        );
 
-    //     if (culledView && !arraysEqual(stateCulledView, culledView)) {
-    //         dispatchSpaceSetCulledView(culledView);
-    //     }
-    // }
+        if (culledView && !arraysEqual(stateCulledView, culledView)) {
+            dispatchSpaceSetCulledView(culledView);
+        }
+    }
 
-    // const computeCulled = useThrottledCallback(
-    //     computedCulledFunction,
-    //     500,
-    // );
+    const computeCulled = useThrottledCallback(
+        computedCulledFunction,
+        500,
+    );
 
     // const computeTree = (
     //     tree: TreePage[],
@@ -609,21 +824,21 @@ const View: React.FC<ViewProperties> = (
     //     }
     // }, []);
 
-    // /** Set View Size */
-    // useEffect(() => {
-    //     if (viewElement && viewElement.current) {
-    //         const width = viewElement.current.offsetWidth;
-    //         const height = viewElement.current.offsetHeight;
-    //         if (width && height) {
-    //             dispatchSetViewSize({
-    //                 height: viewElement.current.offsetHeight,
-    //                 width: viewElement.current.offsetWidth,
-    //             });
-    //         }
-    //     }
-    // }, [
-    //     viewElement.current,
-    // ]);
+    /** Set View Size */
+    useEffect(() => {
+        if (viewElement && viewElement.current) {
+            const width = viewElement.current.offsetWidth;
+            const height = viewElement.current.offsetHeight;
+            if (width && height) {
+                dispatchSetViewSize({
+                    height: viewElement.current.offsetHeight,
+                    width: viewElement.current.offsetWidth,
+                });
+            }
+        }
+    }, [
+        viewElement.current,
+    ]);
 
     // /** View Size Listener */
     // useEffect(() => {
@@ -632,78 +847,19 @@ const View: React.FC<ViewProperties> = (
     //     viewSize,
     // ]);
 
-    // /** Pages, Documents */
-    // useEffect(() => {
-    //     if (!documents && pages) {
-    //         const identifiedPages = helpers.identifyPages(pages);
+    /** Pages, Documents */
+    useEffect(() => {
+        if (!documents && pages) {
+            handlePages(pages);
+        }
 
-    //         const statePages = identifiedPages.map(page => {
-    //             const statePage = createInternalStatePage(page);
-    //             return statePage;
-    //         });
-
-    //         const contextPages = identifiedPages.map(page => {
-    //             const contextPage = createInternalContextPage(page);
-    //             return contextPage;
-    //         });
-
-    //         const indexedStatePages = helpers.createIndexed(statePages);
-    //         const indexedContextPages = helpers.createIndexed(contextPages);
-
-    //         const paths = registerPaths(statePages);
-    //         const indexedPaths = helpers.createIndexed(paths);
-
-    //         const document: PluridInternalStateDocument = {
-    //             id: 'default',
-    //             name: 'default',
-    //             pages: indexedStatePages,
-    //             paths: indexedPaths,
-    //             ordinal: 0,
-    //             active: true,
-    //         };
-
-    //         const documents = {
-    //             default: document,
-    //         };
-
-    //         const contextDocument = {
-    //             id: 'default',
-    //             name: 'default',
-    //             pages: indexedContextPages,
-    //         };
-    //         contextDocumentsRef.current = {
-    //             default: contextDocument,
-    //         };
-    //         dispatchSetDocuments(documents);
-
-    //         dispatchSetActiveDocument('default');
-    //     }
-
-    //     if (documents) {
-    //         const identifiedDocuments = helpers.identifyDocuments(documents);
-
-    //         const stateDocuments = identifiedDocuments.map(document => {
-    //             const stateDocument = createInternalStateDocument(document);
-    //             return stateDocument;
-    //         });
-    //         const contextDocuments = identifiedDocuments.map(document => {
-    //             const contextDocument = createInternalContextDocument(document);
-    //             return contextDocument;
-    //         });
-
-    //         const indexedStateDocuments = helpers.createIndexed(stateDocuments);
-    //         const indexedContextDocuments = helpers.createIndexed(contextDocuments);
-
-    //         contextDocumentsRef.current = {...indexedContextDocuments};
-    //         dispatchSetDocuments(indexedStateDocuments);
-
-    //         const activeDocumentID = findActiveDocument(stateDocuments);
-    //         dispatchSetActiveDocument(activeDocumentID);
-    //     }
-    // }, [
-    //     pages,
-    //     documents,
-    // ]);
+        if (documents) {
+            handleDocuments(documents);
+        }
+    }, [
+        pages,
+        documents,
+    ]);
 
     // /** Configuration */
     // useEffect(() => {
@@ -745,65 +901,65 @@ const View: React.FC<ViewProperties> = (
     //     transform,
     // ]);
 
-    // /** Handle Tree */
-    // useEffect(() => {
-    //     const _view = stateCulledView.length > 0
-    //         ? stateCulledView
-    //         : view;
+    /** Handle Tree */
+    useEffect(() => {
+        const _view = stateCulledView.length > 0
+            ? stateCulledView
+            : view;
 
-    //     const computedTree = space.computeViewTree(
-    //         initialTree,
-    //         _view,
-    //     );
+        const computedTree = space.computeViewTree(
+            initialTree,
+            _view,
+        );
 
-    //     dispatchSetTree(computedTree);
-    // }, [
-    //     initialTree,
-    //     activeDocumentID,
-    //     dataDocuments,
-    //     contextDocumentsRef.current,
-    //     stateCulledView,
-    // ]);
+        dispatchSetTree(computedTree);
+    }, [
+        initialTree,
+        activeDocumentID,
+        dataDocuments,
+        contextDocumentsRef.current,
+        stateCulledView,
+    ]);
 
-    // /** Handle Initial Tree */
-    // useEffect(() => {
-    //     if (initialTree.length === 0) {
-    //         if (activeDocumentID && contextDocumentsRef.current) {
-    //             const activeDocument = dataDocuments[activeDocumentID];
-    //             const pages = activeDocument.pages;
+    /** Handle Initial Tree */
+    useEffect(() => {
+        if (initialTree.length === 0) {
+            if (activeDocumentID && contextDocumentsRef.current) {
+                const activeDocument = dataDocuments[activeDocumentID];
+                const pages = activeDocument.pages;
 
-    //             const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
-    //             const contextPages = activeContextDocument.pages;
+                const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
+                const contextPages = activeContextDocument.pages;
 
-    //             const treePages: TreePage[] = [];
-    //             for (const pageID in pages) {
-    //                 const docPage = pages[pageID]
-    //                 const contextPage = contextPages[pageID];
-    //                 if (!contextPage) {
-    //                     continue;
-    //                 }
+                const treePages: TreePage[] = [];
+                for (const pageID in pages) {
+                    const docPage = pages[pageID]
+                    const contextPage = contextPages[pageID];
+                    if (!contextPage) {
+                        continue;
+                    }
 
-    //                 const treePage = createTreePage(
-    //                     contextPage,
-    //                     docPage,
-    //                 );
-    //                 treePages.push(treePage);
-    //             }
+                    const treePage = createTreePage(
+                        contextPage,
+                        docPage,
+                    );
+                    treePages.push(treePage);
+                }
 
-    //             const computedTree = space.computeSpaceTree(
-    //                 treePages,
-    //                 stateConfiguration,
-    //                 view,
-    //             );
-    //             dispatchSetInitialTree(computedTree);
-    //         }
-    //     }
-    // }, [
-    //     initialTree,
-    //     activeDocumentID,
-    //     dataDocuments,
-    //     contextDocumentsRef.current,
-    // ]);
+                const computedTree = space.computeSpaceTree(
+                    treePages,
+                    stateConfiguration,
+                    view,
+                );
+                dispatchSetInitialTree(computedTree);
+            }
+        }
+    }, [
+        initialTree,
+        activeDocumentID,
+        dataDocuments,
+        contextDocumentsRef.current,
+    ]);
 
     // /** Touch */
     // useEffect(() => {
@@ -842,33 +998,33 @@ const View: React.FC<ViewProperties> = (
     //     stateConfiguration.space.transformTouch,
     // ]);
 
-    // /** Space Size */
-    // useEffect(() => {
-    //     const spaceSize = space.computeSpaceSize(tree);
+    /** Space Size */
+    useEffect(() => {
+        const spaceSize = space.computeSpaceSize(tree);
 
-    //     dispatchSetSpaceSize(spaceSize);
-    //     // centerSpaceSize(spaceSize);
-    // }, [
-    //     tree,
-    // ]);
+        dispatchSetSpaceSize(spaceSize);
+        // centerSpaceSize(spaceSize);
+    }, [
+        tree,
+    ]);
 
-    // /** Handle View */
-    // useEffect(() => {
-    //     if (view) {
-    //         dispatchSpaceSetView(view);
-    //     }
-    // }, [
-    //     view,
-    // ]);
+    /** Handle View */
+    useEffect(() => {
+        if (view) {
+            dispatchSpaceSetView(view);
+        }
+    }, [
+        view,
+    ]);
 
-    // /** Handle Culled View */
-    // useEffect(() => {
-    //     computeCulled();
-    // }, [
-    //     tree,
-    //     view,
-    //     stateSpaceLocation,
-    // ]);
+    /** Handle Culled View */
+    useEffect(() => {
+        computeCulled();
+    }, [
+        tree,
+        view,
+        stateSpaceLocation,
+    ]);
 
 
     /** context */
@@ -879,13 +1035,14 @@ const View: React.FC<ViewProperties> = (
     };
 
     console.log('Rendered');
-    console.log('configuration', configuration);
-    console.log('pages', pages);
-    console.log('view', view);
-    console.log('documents', documents);
+    // console.log('configuration', configuration);
+    // console.log('pages', pages);
+    // console.log('view', view);
+    // console.log('documents', documents);
+    console.log('---------------');
 
 
-    // /** render */
+    /** render */
     const viewContainer = handleView(pages, documents);
 
     return (

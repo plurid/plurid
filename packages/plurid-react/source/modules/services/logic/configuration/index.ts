@@ -1,6 +1,6 @@
 import {
+    PluridPartialConfiguration,
     PluridConfiguration,
-    RecursivePartial,
     defaultConfiguration,
 } from '@plurid/plurid-data';
 
@@ -13,7 +13,7 @@ import {
 const specifiedOrDefault = <T>(
     path: string,
     type: string,
-    configuration: RecursivePartial<PluridConfiguration>,
+    configuration: PluridPartialConfiguration,
 ): T => {
     const item = getNested(configuration, path);
 
@@ -26,7 +26,7 @@ const specifiedOrDefault = <T>(
 
 
 const mergeConfiguration = (
-    configuration?: RecursivePartial<PluridConfiguration>,
+    configuration?: PluridPartialConfiguration,
 ): PluridConfiguration => {
     if (!configuration) {
         return { ...defaultConfiguration };
