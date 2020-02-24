@@ -55,13 +55,20 @@ export interface PluridPageContextValue {
 
 
 export interface PluridComponentReact {
-    element: React.FC<ReactComponentWithPluridProperties>,
-    // element: (properties: ReactComponentWithPluridProperties) => JSX.Element,
+    /**
+     * The `element` will receive the properties, if any,
+     * and the `plurid` property.
+     */
+    element: React.FC<ReactComponentWithPluridProperty>,
+
+    /**
+     * The `properties` will be passed to the `element` at runtime.
+     */
     properties?: PluridComponentProperties;
 }
 
-export interface ReactComponentWithPluridProperties {
-    plurid: PluridProperties;
+export interface ReactComponentWithPluridProperty {
+    plurid: PluridProperty;
     [key: string]: any;
 }
 
@@ -70,7 +77,7 @@ export interface PluridComponentProperties {
 }
 
 
-export interface PluridProperties {
+export interface PluridProperty {
     parameters: PluridComponentParameters;
     query: PluridComponentQuery;
 }
