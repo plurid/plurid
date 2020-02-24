@@ -451,6 +451,7 @@ const View: React.FC<ViewProperties> = (
         configuration: PluridAppConfiguration,
         view: string[] | PluridView[] | undefined,
         clusters: PluridCluster[] | undefined,
+        previousTree: TreePage[],
     ) => {
 
     }
@@ -479,12 +480,13 @@ const View: React.FC<ViewProperties> = (
 
         const activeDocument = getActiveDocument(stateDocuments);
 
-        const tree = computeTree(
+        const newTree = computeTree(
             activeDocument,
             stateDocuments,
             appConfiguration,
             view,
             clusters,
+            tree,
         );
     }
 
@@ -736,23 +738,24 @@ const View: React.FC<ViewProperties> = (
     // }, 100);
 
 
-    const computedCulledFunction = () => {
-        const culledView = space.computeCulledView(
-            initialTree,
-            view || [],
-            stateSpaceLocation,
-            1500,
-        );
+    // const computedCulledFunction = () => {
+    //     const culledView = space.computeCulledView(
+    //         initialTree,
+    //         view || [],
+    //         stateSpaceLocation,
+    //         1500,
+    //     );
 
-        if (culledView && !arraysEqual(stateCulledView, culledView)) {
-            dispatchSpaceSetCulledView(culledView);
-        }
-    }
+    //     if (culledView && !arraysEqual(stateCulledView, culledView)) {
+    //         dispatchSpaceSetCulledView(culledView);
+    //     }
+    // }
 
-    const computeCulled = useThrottledCallback(
-        computedCulledFunction,
-        500,
-    );
+    // const computeCulled = useThrottledCallback(
+    //     computedCulledFunction,
+    //     500,
+    // );
+
 
     // const computeTree = (
     //     tree: TreePage[],
@@ -824,21 +827,21 @@ const View: React.FC<ViewProperties> = (
     //     }
     // }, []);
 
-    /** Set View Size */
-    useEffect(() => {
-        if (viewElement && viewElement.current) {
-            const width = viewElement.current.offsetWidth;
-            const height = viewElement.current.offsetHeight;
-            if (width && height) {
-                dispatchSetViewSize({
-                    height: viewElement.current.offsetHeight,
-                    width: viewElement.current.offsetWidth,
-                });
-            }
-        }
-    }, [
-        viewElement.current,
-    ]);
+    // /** Set View Size */
+    // useEffect(() => {
+    //     if (viewElement && viewElement.current) {
+    //         const width = viewElement.current.offsetWidth;
+    //         const height = viewElement.current.offsetHeight;
+    //         if (width && height) {
+    //             dispatchSetViewSize({
+    //                 height: viewElement.current.offsetHeight,
+    //                 width: viewElement.current.offsetWidth,
+    //             });
+    //         }
+    //     }
+    // }, [
+    //     viewElement.current,
+    // ]);
 
     // /** View Size Listener */
     // useEffect(() => {
@@ -847,19 +850,19 @@ const View: React.FC<ViewProperties> = (
     //     viewSize,
     // ]);
 
-    /** Pages, Documents */
-    useEffect(() => {
-        if (!documents && pages) {
-            handlePages(pages);
-        }
+    // /** Pages, Documents */
+    // useEffect(() => {
+    //     if (!documents && pages) {
+    //         handlePages(pages);
+    //     }
 
-        if (documents) {
-            handleDocuments(documents);
-        }
-    }, [
-        pages,
-        documents,
-    ]);
+    //     if (documents) {
+    //         handleDocuments(documents);
+    //     }
+    // }, [
+    //     pages,
+    //     documents,
+    // ]);
 
     // /** Configuration */
     // useEffect(() => {
@@ -901,65 +904,65 @@ const View: React.FC<ViewProperties> = (
     //     transform,
     // ]);
 
-    /** Handle Tree */
-    useEffect(() => {
-        const _view = stateCulledView.length > 0
-            ? stateCulledView
-            : view;
+    // /** Handle Tree */
+    // useEffect(() => {
+    //     const _view = stateCulledView.length > 0
+    //         ? stateCulledView
+    //         : view;
 
-        const computedTree = space.computeViewTree(
-            initialTree,
-            _view,
-        );
+    //     const computedTree = space.computeViewTree(
+    //         initialTree,
+    //         _view,
+    //     );
 
-        dispatchSetTree(computedTree);
-    }, [
-        initialTree,
-        activeDocumentID,
-        dataDocuments,
-        contextDocumentsRef.current,
-        stateCulledView,
-    ]);
+    //     dispatchSetTree(computedTree);
+    // }, [
+    //     initialTree,
+    //     activeDocumentID,
+    //     dataDocuments,
+    //     contextDocumentsRef.current,
+    //     stateCulledView,
+    // ]);
 
-    /** Handle Initial Tree */
-    useEffect(() => {
-        if (initialTree.length === 0) {
-            if (activeDocumentID && contextDocumentsRef.current) {
-                const activeDocument = dataDocuments[activeDocumentID];
-                const pages = activeDocument.pages;
+    // /** Handle Initial Tree */
+    // useEffect(() => {
+    //     if (initialTree.length === 0) {
+    //         if (activeDocumentID && contextDocumentsRef.current) {
+    //             const activeDocument = dataDocuments[activeDocumentID];
+    //             const pages = activeDocument.pages;
 
-                const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
-                const contextPages = activeContextDocument.pages;
+    //             const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
+    //             const contextPages = activeContextDocument.pages;
 
-                const treePages: TreePage[] = [];
-                for (const pageID in pages) {
-                    const docPage = pages[pageID]
-                    const contextPage = contextPages[pageID];
-                    if (!contextPage) {
-                        continue;
-                    }
+    //             const treePages: TreePage[] = [];
+    //             for (const pageID in pages) {
+    //                 const docPage = pages[pageID]
+    //                 const contextPage = contextPages[pageID];
+    //                 if (!contextPage) {
+    //                     continue;
+    //                 }
 
-                    const treePage = createTreePage(
-                        contextPage,
-                        docPage,
-                    );
-                    treePages.push(treePage);
-                }
+    //                 const treePage = createTreePage(
+    //                     contextPage,
+    //                     docPage,
+    //                 );
+    //                 treePages.push(treePage);
+    //             }
 
-                const computedTree = space.computeSpaceTree(
-                    treePages,
-                    stateConfiguration,
-                    view,
-                );
-                dispatchSetInitialTree(computedTree);
-            }
-        }
-    }, [
-        initialTree,
-        activeDocumentID,
-        dataDocuments,
-        contextDocumentsRef.current,
-    ]);
+    //             const computedTree = space.computeSpaceTree(
+    //                 treePages,
+    //                 stateConfiguration,
+    //                 view,
+    //             );
+    //             dispatchSetInitialTree(computedTree);
+    //         }
+    //     }
+    // }, [
+    //     initialTree,
+    //     activeDocumentID,
+    //     dataDocuments,
+    //     contextDocumentsRef.current,
+    // ]);
 
     // /** Touch */
     // useEffect(() => {
@@ -998,33 +1001,33 @@ const View: React.FC<ViewProperties> = (
     //     stateConfiguration.space.transformTouch,
     // ]);
 
-    /** Space Size */
-    useEffect(() => {
-        const spaceSize = space.computeSpaceSize(tree);
+    // /** Space Size */
+    // useEffect(() => {
+    //     const spaceSize = space.computeSpaceSize(tree);
 
-        dispatchSetSpaceSize(spaceSize);
-        // centerSpaceSize(spaceSize);
-    }, [
-        tree,
-    ]);
+    //     dispatchSetSpaceSize(spaceSize);
+    //     // centerSpaceSize(spaceSize);
+    // }, [
+    //     tree,
+    // ]);
 
-    /** Handle View */
-    useEffect(() => {
-        if (view) {
-            dispatchSpaceSetView(view);
-        }
-    }, [
-        view,
-    ]);
+    // /** Handle View */
+    // useEffect(() => {
+    //     if (view) {
+    //         dispatchSpaceSetView(view);
+    //     }
+    // }, [
+    //     view,
+    // ]);
 
-    /** Handle Culled View */
-    useEffect(() => {
-        computeCulled();
-    }, [
-        tree,
-        view,
-        stateSpaceLocation,
-    ]);
+    // /** Handle Culled View */
+    // useEffect(() => {
+    //     computeCulled();
+    // }, [
+    //     tree,
+    //     view,
+    //     stateSpaceLocation,
+    // ]);
 
 
     /** context */
