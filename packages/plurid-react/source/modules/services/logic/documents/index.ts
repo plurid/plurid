@@ -86,6 +86,10 @@ export const createInternalContextDocument = (
 export const findActiveDocument = (
     documents: PluridInternalStateDocument[]
 ): string => {
+    if (documents.length === 0) {
+        return '';
+    }
+
     let activeDocumentID = documents[0].id;
 
     for (let document of documents) {

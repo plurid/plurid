@@ -433,20 +433,6 @@ const View: React.FC<ViewProperties> = (
         return;
     }
 
-    const getActiveDocument = (
-        documents: Indexed<PluridInternalStateDocument> | undefined,
-    ) => {
-        if (documents) {
-            for (const document of Object.values(documents)) {
-                if (document.active) {
-                    return document.id;
-                }
-            }
-        }
-
-        return '';
-    }
-
     const computeTree = (
         activeDocumentID: string,
         documents: Indexed<PluridInternalStateDocument>,
@@ -514,7 +500,7 @@ const View: React.FC<ViewProperties> = (
             contextDocuments,
         } = createdDocuments;
 
-        const activeDocument = getActiveDocument(stateDocuments);
+        const activeDocument = findActiveDocument(Object.values(stateDocuments));
 
         const newTree = computeTree(
             activeDocument,
@@ -533,6 +519,7 @@ const View: React.FC<ViewProperties> = (
         dispatchSetActiveDocument(activeDocument);
         dispatchSetInitialTree(newTree);
         dispatchSetTree(newTree);
+        dispatchSetConfiguration(appConfiguration);
         dispatchSetSpaceLoading(false);
     }
 
