@@ -238,9 +238,6 @@ const View: React.FC<ViewProperties> = (
 
     /** state */
     const [initialized, setInitialized] = useState(false);
-    const [localCulledView, setLocalCulledView] = useState<string[]>([]);
-
-    // const [contextDocuments, setContextDocuments] = useState<Indexed<PluridInternalContextDocument>>({});
 
 
     /** callbacks */
@@ -829,7 +826,7 @@ const View: React.FC<ViewProperties> = (
                 const activeDocument = dataDocuments[activeDocumentID];
                 const pages = activeDocument.pages;
 
-                // console.log('pages', pages);
+                console.log('pages', pages);
 
                 const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
                 const contextPages = activeContextDocument.pages;
@@ -927,20 +924,6 @@ const View: React.FC<ViewProperties> = (
     /** Handle Culled View */
     useEffect(() => {
         computeCulled();
-        // const culledView = space.computeCulledView(
-        //     initialTree,
-        //     view || [],
-        //     stateSpaceLocation,
-        //     2000,
-        // );
-
-        // // console.log('culledView', culledView);
-
-        // if (culledView && !arraysEqual(stateCulledView, culledView)) {
-        //     // console.log('culledView', culledView);
-        //     // setLocalCulledView(culledView);
-        //     dispatchSpaceSetCulledView(culledView);
-        // }
     }, [
         tree,
         view,
@@ -956,7 +939,8 @@ const View: React.FC<ViewProperties> = (
     };
     // console.log('pluridContext', pluridContext);
     // console.log('dataDocuments', dataDocuments);
-    // console.log('Rendered Plurid View');
+    console.log('Rendered Plurid View');
+    console.log('initialTree', initialTree);
 
 
     /** render */

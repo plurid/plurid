@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 // import App from './App';
-import App from './App-single';
+// import App from './App-single';
+import App from './App-dynamic';
 
 import * as serviceWorker from './serviceWorker';
 
