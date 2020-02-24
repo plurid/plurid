@@ -25,7 +25,9 @@ const multiplePages = oneHundred.map((val) => {
         path: '/' + val,
         component: {
             element: Page1,
-            properties: {},
+            properties: {
+                value: val,
+            },
         },
     };
 });
@@ -74,7 +76,9 @@ const App = () => {
             path: '/' + id,
             component: {
                 element: Page1,
-                properties: {},
+                properties: {
+                    one: 'one',
+                },
             },
         };
         const pages = [
