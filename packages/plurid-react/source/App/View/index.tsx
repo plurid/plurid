@@ -480,6 +480,8 @@ const View: React.FC<ViewProperties> = (
         clusters: PluridCluster[] | undefined,
         documents: PluridDocument[] | undefined,
     ) => {
+        /** computing */
+
         // merge user and default configuration
         const appConfiguration = computeCommonConfiguration(configuration);
 
@@ -489,7 +491,6 @@ const View: React.FC<ViewProperties> = (
             documents,
             stateDataDocuments,
         );
-        console.log('createdDocuments', createdDocuments);
 
         if (!createdDocuments) {
             return;
@@ -512,14 +513,17 @@ const View: React.FC<ViewProperties> = (
             stateTree,
         );
 
+        const spaceSize = space.computeSpaceSize(newTree);
 
+
+        /** assignments */
         contextDocumentsRef.current = contextDocuments;
 
-
+        dispatchSetSpaceSize(spaceSize);
         dispatchSetActiveDocument(activeDocument);
+        dispatchSetConfiguration(appConfiguration);
         dispatchSetInitialTree(newTree);
         dispatchSetTree(newTree);
-        dispatchSetConfiguration(appConfiguration);
         dispatchSetSpaceLoading(false);
     }
 
