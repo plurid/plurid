@@ -85,7 +85,7 @@ const App = () => {
 
         const view = [
             ...multipleViews,
-            id,
+            '/' + id,
         ];
         setPluridView(view);
     }
