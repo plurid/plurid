@@ -127,7 +127,7 @@ interface ViewStateProperties {
     spaceLoading: boolean;
     transform: any;
     initialTree: TreePage[];
-    tree: TreePage[];
+    stateTree: TreePage[];
     activeDocumentID: string;
     stateSpaceLocation: any;
     stateCulledView: any;
@@ -181,7 +181,7 @@ const View: React.FC<ViewProperties> = (
         configuration: stateConfiguration,
         spaceLoading,
         initialTree,
-        tree,
+        stateTree,
         viewSize,
         transform,
         stateDataDocuments,
@@ -523,7 +523,7 @@ const View: React.FC<ViewProperties> = (
             view,
             clusters,
             contextDocuments,
-            tree,
+            stateTree,
         );
 
 
@@ -1141,7 +1141,7 @@ const mapStateToProperties = (
     viewSize: selectors.space.getViewSize(state),
     transform: selectors.space.getTransform(state),
     initialTree: selectors.space.getInitialTree(state),
-    tree: selectors.space.getTree(state),
+    stateTree: selectors.space.getTree(state),
     activeDocumentID: selectors.space.getActiveDocumentID(state),
     spaceLoading: selectors.space.getLoading(state),
     stateSpaceLocation: selectors.space.getTransform(state),
