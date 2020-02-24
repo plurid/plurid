@@ -578,31 +578,31 @@ const View: React.FC<ViewProperties> = (
     //     }
     // }
 
-    // const handlePubSubSubscribe = (
-    //     pubsub: PluridPubSub,
-    // ) => {
-    //     pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
-    //         const {
-    //             value,
-    //         } = data;
-    //         rotateXWith(value);
-    //     });
+    const handlePubSubSubscribe = (
+        pubsub: PluridPubSub,
+    ) => {
+        pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
+            const {
+                value,
+            } = data;
+            rotateXWith(value);
+        });
 
-    //     pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
-    //         const {
-    //             value,
-    //         } = data;
-    //         rotateYWith(value);
-    //     });
-    // }
+        pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
+            const {
+                value,
+            } = data;
+            rotateYWith(value);
+        });
+    }
 
-    // const handlePubSubPublish = (
-    //     pubsub: PluridPubSub,
-    // ) => {
-    //     pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
+    const handlePubSubPublish = (
+        pubsub: PluridPubSub,
+    ) => {
+        pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
 
-    //     pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
-    // }
+        pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
+    }
 
     const handleSwipe = (
         event: HammerInput,
@@ -939,24 +939,24 @@ const View: React.FC<ViewProperties> = (
     //     stateConfiguration.space.layout,
     // ]);
 
-    // /** PubSub Subscription */
-    // useEffect(() => {
-    //     if (pubsub) {
-    //         handlePubSubSubscribe(pubsub);
-    //     }
-    // }, [
-    //     pubsub,
-    // ]);
+    /** PubSub Subscribe */
+    useEffect(() => {
+        if (pubsub) {
+            handlePubSubSubscribe(pubsub);
+        }
+    }, [
+        pubsub,
+    ]);
 
-    // /** PubSub Publish */
-    // useEffect(() => {
-    //     if (pubsub) {
-    //         handlePubSubPublish(pubsub);
-    //     }
-    // }, [
-    //     stateConfiguration,
-    //     transform,
-    // ]);
+    /** PubSub Publish */
+    useEffect(() => {
+        if (pubsub) {
+            handlePubSubPublish(pubsub);
+        }
+    }, [
+        stateConfiguration,
+        transform,
+    ]);
 
     // /** Handle Tree */
     // useEffect(() => {
