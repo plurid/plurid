@@ -78,13 +78,13 @@ const App = () => {
             },
         };
         const pages = [
-            ...multiplePages,
+            ...pluridPages,
             page,
         ];
         setPluridPages(pages);
 
         const view = [
-            ...multipleViews,
+            ...pluridView,
             '/' + id,
         ];
         setPluridView(view);
