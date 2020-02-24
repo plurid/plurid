@@ -88,6 +88,10 @@ import {
 
 import useThrottledCallback from '../../modules/services/hooks/throttle';
 
+import {
+    arraysEqual,
+} from '../../modules/services/utilities/array';
+
 import { AppState } from '../../modules/services/state/store';
 import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
@@ -100,21 +104,6 @@ import {
 } from '../../modules/services/state/modules/space/types';
 
 
-const arraysEqual = (a: any[], b: any[]) => {
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length != b.length) return false;
-
-    // If you don't care about the order of the elements inside
-    // the array, you should sort both arrays here.
-    // Please note that calling sort on an array will modify that array.
-    // you might want to clone your array first.
-
-    for (var i = 0; i < a.length; ++i) {
-      if (a[i] !== b[i]) return false;
-    }
-    return true;
-}
 
 export interface ViewOwnProperties {
     appProperties: PluridAppProperties;
@@ -533,8 +522,6 @@ const View: React.FC<ViewProperties> = (
 
 
     const computedCulledFunction = () => {
-        // console.log('computed culled');
-
         const culledView = space.computeCulledView(
             initialTree,
             view || [],
@@ -542,11 +529,7 @@ const View: React.FC<ViewProperties> = (
             1500,
         );
 
-        // console.log('culledView', culledView);
-
         if (culledView && !arraysEqual(stateCulledView, culledView)) {
-            // console.log('culledView', culledView);
-            // setLocalCulledView(culledView);
             dispatchSpaceSetCulledView(culledView);
         }
     }
@@ -726,10 +709,10 @@ const View: React.FC<ViewProperties> = (
     useEffect(() => {
         const mergedConfiguration = mergeConfiguration(configuration);
 
-        // if (!initialized) {
+        if (!initialized) {
             handleConfiguration(mergedConfiguration);
-        //     setInitialized(true);
-        // }
+            setInitialized(true);
+        }
 
         dispatchSetSpaceLoading(false);
     }, [
@@ -767,50 +750,13 @@ const View: React.FC<ViewProperties> = (
         const _view = stateCulledView.length > 0
             ? stateCulledView
             : view;
-        // console.log('_view', _view);
 
         const computedTree = space.computeViewTree(
             initialTree,
             _view,
         );
 
-        // const computedTree = space.computeSpaceTree(
-        //     initialTree,
-        //     stateConfiguration,
-        //     _view,
-        // );
-        // console.log('computedTree', computedTree);
         dispatchSetTree(computedTree);
-
-        // if (activeDocumentID && contextDocumentsRef.current) {
-        //     const activeDocument = dataDocuments[activeDocumentID];
-        //     const pages = activeDocument.pages;
-
-        //     // console.log('pages', pages);
-
-        //     const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
-        //     const contextPages = activeContextDocument.pages;
-
-        //     const treePages: TreePage[] = [];
-        //     for (const pageID in pages) {
-        //         const docPage = pages[pageID]
-
-        //         // if (docPage.root) {
-        //             const contextPage = contextPages[pageID];
-        //             if (!contextPage) {
-        //                 continue;
-        //             }
-
-        //             const treePage = createTreePage(
-        //                 contextPage,
-        //                 docPage,
-        //             );
-        //             treePages.push(treePage);
-        //         // }
-        //     }
-
-        //     console.log('treePages', treePages);
-        // }
     }, [
         initialTree,
         activeDocumentID,
@@ -826,27 +772,22 @@ const View: React.FC<ViewProperties> = (
                 const activeDocument = dataDocuments[activeDocumentID];
                 const pages = activeDocument.pages;
 
-                console.log('pages', pages);
-
                 const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
                 const contextPages = activeContextDocument.pages;
 
                 const treePages: TreePage[] = [];
                 for (const pageID in pages) {
                     const docPage = pages[pageID]
+                    const contextPage = contextPages[pageID];
+                    if (!contextPage) {
+                        continue;
+                    }
 
-                    // if (docPage.root) {
-                        const contextPage = contextPages[pageID];
-                        if (!contextPage) {
-                            continue;
-                        }
-
-                        const treePage = createTreePage(
-                            contextPage,
-                            docPage,
-                        );
-                        treePages.push(treePage);
-                    // }
+                    const treePage = createTreePage(
+                        contextPage,
+                        docPage,
+                    );
+                    treePages.push(treePage);
                 }
 
                 const computedTree = space.computeSpaceTree(
@@ -854,7 +795,6 @@ const View: React.FC<ViewProperties> = (
                     stateConfiguration,
                     view,
                 );
-                // console.log('computedTree - Initial', computedTree);
                 dispatchSetInitialTree(computedTree);
             }
         }
@@ -937,10 +877,6 @@ const View: React.FC<ViewProperties> = (
         pageContextValue: appProperties.pageContextValue,
         documents: contextDocumentsRef.current,
     };
-    // console.log('pluridContext', pluridContext);
-    // console.log('dataDocuments', dataDocuments);
-    console.log('Rendered Plurid View');
-    console.log('initialTree', initialTree);
 
 
     /** render */
