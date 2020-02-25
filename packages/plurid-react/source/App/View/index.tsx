@@ -482,26 +482,9 @@ const View: React.FC<ViewProperties> = (
     const handleConfiguration = (
         configuration: PluridAppConfiguration,
     ) => {
-        // dispatchSetConfiguration(configuration);
-
         if (configuration.micro) {
             dispatchSetConfigurationMicro();
         }
-
-        // if (configuration.space) {
-        //     const spaceLocation = space.computeSpaceLocation(configuration);
-        //     dispatchSetSpaceLocation(spaceLocation);
-        // }
-
-        // if (configuration.space.center && !configuration.space.camera) {
-        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
-        //     translateXWith(x);
-
-        //     // to get plane height;
-        //     const planeHeight = 300;
-        //     const y = window.innerHeight / 2 - planeHeight/2;
-        //     translateYWith(y);
-        // }
 
         if (configuration.theme) {
             if (typeof configuration.theme === 'object') {
@@ -528,6 +511,21 @@ const View: React.FC<ViewProperties> = (
                 }
             }
         }
+
+        // if (configuration.space) {
+        //     const spaceLocation = space.computeSpaceLocation(configuration);
+        //     dispatchSetSpaceLocation(spaceLocation);
+        // }
+
+        // if (configuration.space.center && !configuration.space.camera) {
+        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
+        //     translateXWith(x);
+
+        //     // to get plane height;
+        //     const planeHeight = 300;
+        //     const y = window.innerHeight / 2 - planeHeight/2;
+        //     translateYWith(y);
+        // }
     }
 
     const handlePubSubSubscribe = (
@@ -868,20 +866,6 @@ const View: React.FC<ViewProperties> = (
     // }, [
     //     pages,
     //     documents,
-    // ]);
-
-    // /** Configuration */
-    // useEffect(() => {
-    //     const mergedConfiguration = mergeConfiguration(configuration);
-
-    //     // if (!initialized) {
-    //         handleConfiguration(mergedConfiguration);
-    //         // setInitialized(true);
-    //     // }
-
-    //     // dispatchSetSpaceLoading(false);
-    // }, [
-    //     configuration,
     // ]);
 
     // /** State Configuration Layout */
