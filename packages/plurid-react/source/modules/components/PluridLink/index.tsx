@@ -15,7 +15,7 @@ import {
 
 import {
     /** constants */
-    PLURID_LINK_DEFAULT_SUFFIX,
+    PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
 
     /** interfaces */
     PluridLink as PluridLinkOwnProperties,
@@ -63,12 +63,12 @@ const defaultLinkCoordinates: PluridLinkCoordinates = {
 };
 
 interface PluridLinkStateProperties {
-    tree: TreePage[];
-    generalTheme: Theme;
-    activeDocumentID: string;
-    documents: Indexed<PluridInternalStateDocument>;
-    configuration: PluridConfiguration,
-    viewSize: ViewSize,
+    stateTree: TreePage[];
+    stateGeneralTheme: Theme;
+    stateActiveDocumentID: string;
+    stateDocuments: Indexed<PluridInternalStateDocument>;
+    stateConfiguration: PluridConfiguration,
+    stateViewSize: ViewSize,
 }
 
 interface PluridLinkDispatchProperties {
@@ -96,19 +96,19 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         className,
 
         /** state */
-        tree,
-        generalTheme,
-        activeDocumentID,
-        documents,
-        configuration,
-        viewSize,
+        stateTree,
+        stateGeneralTheme,
+        stateActiveDocumentID,
+        stateDocuments,
+        stateConfiguration,
+        stateViewSize,
 
         /** dispatch */
         dispatchSetTree,
         dispatchUpdateSpaceLinkCoordinates,
     } = properties;
 
-    const planeControls = configuration.elements.plane.controls.show;
+    const planeControls = stateConfiguration.elements.plane.controls.show;
 
 
     /** references */
@@ -122,7 +122,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [parentPlaneID, setParentPlaneID] = useState('');
     const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
 
-    const [suffix, setSuffix] = useState(PLURID_LINK_DEFAULT_SUFFIX);
+    const [suffix, setSuffix] = useState(PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX);
     const [devisible, setDevisible] = useState(false);
 
 
@@ -151,8 +151,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         const linkCoordinates = getPluridLinkCoordinates();
 
-        const searchDocumentID = document ? document : activeDocumentID;
-        const activeDocument = documents[searchDocumentID];
+        const searchDocumentID = document ? document : stateActiveDocumentID;
+        const activeDocument = stateDocuments[searchDocumentID];
 
         if (!activeDocument) {
             return;
@@ -170,7 +170,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 pluridPlaneID,
                 updatedTree,
             } = space.updateTreeWithNewPage(
-                tree,
+                stateTree,
                 parentPlaneID,
                 pagePath,
                 pageByID.id,
@@ -198,7 +198,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 pluridPlaneID,
                 updatedTree,
             } = space.updateTreeWithNewPage(
-                tree,
+                stateTree,
                 parentPlaneID,
                 pagePath,
                 route.id,
@@ -248,7 +248,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const toggleLinkFromTree = () => {
-        const updatedTree = space.togglePageFromTree(tree, pluridPlaneID);
+        const updatedTree = space.togglePageFromTree(stateTree, pluridPlaneID);
         dispatchSetTree(updatedTree);
         setShowLink(show => !show);
     }
@@ -281,7 +281,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         handleShowPluridPlane();
     }, [
         linkElement.current,
-        tree,
+        stateTree,
     ]);
 
 
@@ -305,7 +305,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             updateLinkCoordinates();
         }
     }, [
-        viewSize,
+        stateViewSize,
     ]);
 
     /**
@@ -328,7 +328,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
-            theme={generalTheme}
+            theme={stateGeneralTheme}
             suffix={suffix}
             devisible={devisible}
             style={{
@@ -356,12 +356,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 const mapStateToProperties = (
     state: AppState,
 ): PluridLinkStateProperties => ({
-    tree: selectors.space.getTree(state),
-    generalTheme: selectors.themes.getGeneralTheme(state),
-    activeDocumentID: selectors.space.getActiveDocumentID(state),
-    documents: selectors.data.getDocuments(state),
-    configuration: selectors.configuration.getConfiguration(state),
-    viewSize: selectors.space.getViewSize(state),
+    stateTree: selectors.space.getTree(state),
+    stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+    stateActiveDocumentID: selectors.space.getActiveDocumentID(state),
+    stateDocuments: selectors.data.getDocuments(state),
+    stateConfiguration: selectors.configuration.getConfiguration(state),
+    stateViewSize: selectors.space.getViewSize(state),
 });
 
 
