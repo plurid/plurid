@@ -20,6 +20,7 @@ import selectors from '../../../../services/state/selectors';
 
 
 interface PreviewOwnProperties {
+    linkCoordinates: any;
 }
 
 interface PreviewStateProperties {
@@ -39,16 +40,22 @@ const Preview: React.FC<PreviewProperties> = (
 ) => {
     /** properties */
     const {
+        /** own */
+        linkCoordinates,
+
         /** state */
         stateGeneralTheme,
         // stateInteractionTheme,
     } = properties;
+
+    console.log(linkCoordinates);
 
 
     /** render */
     return (
         <StyledPreview
             theme={stateGeneralTheme}
+            linkCoordinates={linkCoordinates}
         >
             Preview
         </StyledPreview>
