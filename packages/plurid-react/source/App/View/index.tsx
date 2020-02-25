@@ -285,76 +285,78 @@ const View: React.FC<ViewProperties> = (
 
 
     // /** handlers */
-    // const handlePages = (
-    //     pages: PluridPage[],
-    // ) => {
-    //     const identifiedPages = helpers.identifyPages(pages);
+    const handlePages = (
+        pages: PluridPage[],
+        stateDocuments: Indexed<PluridInternalStateDocument>,
+    ) => {
+        const identifiedPages = helpers.identifyPages(pages);
 
-    //     const statePages = identifiedPages.map(page => {
-    //         const statePage = createInternalStatePage(page);
-    //         return statePage;
-    //     });
+        const statePages = identifiedPages.map(page => {
+            const statePage = createInternalStatePage(page);
+            return statePage;
+        });
 
-    //     const contextPages = identifiedPages.map(page => {
-    //         const contextPage = createInternalContextPage(page);
-    //         return contextPage;
-    //     });
+        const contextPages = identifiedPages.map(page => {
+            const contextPage = createInternalContextPage(page);
+            return contextPage;
+        });
 
-    //     const indexedStatePages = helpers.createIndexed(statePages);
-    //     const indexedContextPages = helpers.createIndexed(contextPages);
+        const indexedStatePages = helpers.createIndexed(statePages);
+        const indexedContextPages = helpers.createIndexed(contextPages);
 
-    //     const paths = registerPaths(statePages);
-    //     const indexedPaths = helpers.createIndexed(paths);
+        const paths = registerPaths(statePages);
+        const indexedPaths = helpers.createIndexed(paths);
 
-    //     const document: PluridInternalStateDocument = {
-    //         id: 'default',
-    //         name: 'default',
-    //         pages: indexedStatePages,
-    //         paths: indexedPaths,
-    //         ordinal: 0,
-    //         active: true,
-    //     };
+        const document: PluridInternalStateDocument = {
+            id: 'default',
+            name: 'default',
+            pages: indexedStatePages,
+            paths: indexedPaths,
+            ordinal: 0,
+            active: true,
+        };
+        const indexedStateDocuments: Indexed<PluridInternalStateDocument> = {
+            default: document,
+        };
 
-    //     const documents = {
-    //         default: document,
-    //     };
+        const contextDocument = {
+            id: 'default',
+            name: 'default',
+            pages: indexedContextPages,
+        };
+        const indexedContextDocuments: Indexed<PluridInternalContextDocument> = {
+            default: contextDocument,
+        };
 
-    //     const contextDocument = {
-    //         id: 'default',
-    //         name: 'default',
-    //         pages: indexedContextPages,
-    //     };
-    //     contextDocumentsRef.current = {
-    //         default: contextDocument,
-    //     };
-    //     dispatchSetDocuments(documents);
+        return {
+            stateDocuments: indexedStateDocuments,
+            contextDocuments: indexedContextDocuments,
+        };
+    }
 
-    //     dispatchSetActiveDocument('default');
-    // }
+    const handleDocuments = (
+        documents: PluridDocument[],
+        stateDocuments: Indexed<PluridInternalStateDocument>,
+    ) => {
+        const identifiedDocuments = helpers.identifyDocuments(documents);
 
-    // const handleDocuments = (
-    //     documents: PluridDocument[],
-    // ) => {
-    //     const identifiedDocuments = helpers.identifyDocuments(documents);
+        const identifiedStateDocuments = identifiedDocuments.map(document => {
+            const stateDocument = createInternalStateDocument(document);
+            return stateDocument;
+        });
+        const identifiedContextDocuments = identifiedDocuments.map(document => {
+            const contextDocument = createInternalContextDocument(document);
+            return contextDocument;
+        });
 
-    //     const stateDocuments = identifiedDocuments.map(document => {
-    //         const stateDocument = createInternalStateDocument(document);
-    //         return stateDocument;
-    //     });
-    //     const contextDocuments = identifiedDocuments.map(document => {
-    //         const contextDocument = createInternalContextDocument(document);
-    //         return contextDocument;
-    //     });
+        const indexedStateDocuments = helpers.createIndexed(identifiedStateDocuments);
+        const indexedContextDocuments = helpers.createIndexed(identifiedContextDocuments);
 
-    //     const indexedStateDocuments = helpers.createIndexed(stateDocuments);
-    //     const indexedContextDocuments = helpers.createIndexed(contextDocuments);
-
-    //     contextDocumentsRef.current = {...indexedContextDocuments};
-    //     dispatchSetDocuments(indexedStateDocuments);
-
-    //     const activeDocumentID = findActiveDocument(stateDocuments);
-    //     dispatchSetActiveDocument(activeDocumentID);
-    // }
+        return {
+            stateDocuments: indexedStateDocuments,
+            contextDocuments: indexedContextDocuments,
+        };
+    }
 
     const createDocuments = (
         pages: PluridPage[] | undefined,
@@ -364,70 +366,17 @@ const View: React.FC<ViewProperties> = (
         // To check against already loaded pages and documents
         // and update only the changes
         if (!documents && pages) {
-            const identifiedPages = helpers.identifyPages(pages);
-
-            const statePages = identifiedPages.map(page => {
-                const statePage = createInternalStatePage(page);
-                return statePage;
-            });
-
-            const contextPages = identifiedPages.map(page => {
-                const contextPage = createInternalContextPage(page);
-                return contextPage;
-            });
-
-            const indexedStatePages = helpers.createIndexed(statePages);
-            const indexedContextPages = helpers.createIndexed(contextPages);
-
-            const paths = registerPaths(statePages);
-            const indexedPaths = helpers.createIndexed(paths);
-
-            const document: PluridInternalStateDocument = {
-                id: 'default',
-                name: 'default',
-                pages: indexedStatePages,
-                paths: indexedPaths,
-                ordinal: 0,
-                active: true,
-            };
-            const stateDocuments: Indexed<PluridInternalStateDocument> = {
-                default: document,
-            };
-
-            const contextDocument = {
-                id: 'default',
-                name: 'default',
-                pages: indexedContextPages,
-            };
-            const contextDocuments: Indexed<PluridInternalContextDocument> = {
-                default: contextDocument,
-            };
-
-            return {
+            return handlePages(
+                pages,
                 stateDocuments,
-                contextDocuments,
-            };
+            );
         }
 
         if (documents) {
-            const identifiedDocuments = helpers.identifyDocuments(documents);
-
-            const stateDocuments = identifiedDocuments.map(document => {
-                const stateDocument = createInternalStateDocument(document);
-                return stateDocument;
-            });
-            const contextDocuments = identifiedDocuments.map(document => {
-                const contextDocument = createInternalContextDocument(document);
-                return contextDocument;
-            });
-
-            const indexedStateDocuments = helpers.createIndexed(stateDocuments);
-            const indexedContextDocuments = helpers.createIndexed(contextDocuments);
-
-            return {
-                stateDocuments: indexedStateDocuments,
-                contextDocuments: indexedContextDocuments,
-            };
+            return handleDocuments(
+                documents,
+                stateDocuments,
+            );
         }
 
         return;
