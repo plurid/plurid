@@ -11,6 +11,12 @@ import {
 
 import {
     PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
+    PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
+    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_SHOW,
+    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
+    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
+    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_X,
+    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_Y,
 } from './defaults';
 
 
@@ -47,6 +53,16 @@ export const defaultConfiguration: PluridConfiguration = {
                 },
             },
         },
+        link: {
+            suffix: PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
+            preview: {
+                show: PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_SHOW,
+                fadeIn: PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
+                fadeOut: PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
+                offsetX: PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_X,
+                offsetY: PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_Y,
+            },
+        },
     },
     space: {
         layout: {
@@ -79,6 +95,7 @@ export const defaultConfiguration: PluridConfiguration = {
 
 export const layoutNames = {
     COLUMNS: 'columns',
+    ROWS: 'rows',
     FACE_TO_FACE: 'face to face',
     ZIG_ZAG: 'zig zag',
     SHEAVES: 'sheaves',

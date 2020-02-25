@@ -132,6 +132,7 @@ export interface PluridConfigurationElements {
     toolbar: PluridConfigurationElementsToolbar;
     viewcube: PluridConfigurationElementsViewcube;
     plane: PluridConfigurationElementsPlane;
+    link: PluridConfigurationElementsLink;
 }
 
 
@@ -199,4 +200,16 @@ export interface PluridConfigurationElementsPlaneControlsPathbar {
      * Executed when the pathbar from the controls has an `keyDown` event.
      */
     onKeyDown?: (event: any, pageID: string) => void;
+}
+
+
+export interface PluridConfigurationElementsLink {
+    suffix: string;
+    preview: {
+        show: boolean;
+        fadeIn: number;
+        fadeOut: number;
+        offsetX: number;
+        offsetY: number;
+    };
 }
