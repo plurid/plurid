@@ -1,7 +1,7 @@
-import Server from './objects/Server'
+import PluridServer from './objects/Server'
 
 
 
 export {
-    Server,
+    PluridServer,
 }

@@ -1,7 +1,7 @@
 import {
-    Server,
+    PluridServer,
 } from './server';
 
 
 
-export default Server;
+export default PluridServer;

@@ -1,28 +1,45 @@
+import React from 'react';
+
 // import { IncomingMessage, ServerResponse } from 'http';
 // import { parse as parseUrl, UrlWithParsedQuery } from 'url';
 // import { parse as parseQs, ParsedUrlQuery } from 'querystring';
 
 
 
-export interface ServerOptions {
+export interface PluridServerOptions {
     quiet: boolean;
 }
 
+export interface IServer {
+    application: React.FC<any>;
+    options?: PluridServerOptions;
+}
 
-export default class Server {
-    quiet: boolean
 
-    constructor(options: ServerOptions) {
-        this.quiet = options.quiet;
+export default class PluridServer implements IServer {
+    application: React.FC<any>;
+    options?: PluridServerOptions;
+
+    constructor(
+        application: React.FC<any>,
+        options?: PluridServerOptions,
+    ) {
+        this.application = application;
+        this.options = options;
     }
 
-    private logError(...args: any): void {
-        if (this.quiet) return
-        // tslint:disable-next-line
-        console.error(...args)
+    private logError(
+        ...args: any
+    ): void {
+        if (this.options?.quiet) {
+            return;
+        }
+        console.log(args);
     }
 
-    public logs(err: any) {
+    public logs(
+        err: any,
+    ) {
         this.logError(err);
     }
 
@@ -76,7 +93,6 @@ export default class Server {
     //         res.end('Not Implemented')
     //     }
     // }
-
 }
 
 
@@ -94,7 +110,7 @@ export default class Server {
 // import express from 'express';
 // import { renderToString } from 'react-dom/server';
 
-// import App from '../client/App';
+// import App from '../../../client/App';
 
 
 
