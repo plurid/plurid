@@ -10,7 +10,7 @@ export interface PluridPage {
     /**
      * Custom HTML, React, Vue, or Angular component to be rendered in the PluridPlane.
      */
-    component: PluridComponentReact;
+    component: PluridComponent;
 
     /**
      * Path to the page, e.g. `/page-1`. By convention, it starts with an '/'.
@@ -52,6 +52,9 @@ export type PluridPageContext<T> = React.Context<T>;
 export interface PluridPageContextValue {
     [key: string]: any;
 }
+
+
+export type PluridComponent = PluridComponentReact;
 
 
 export interface PluridComponentReact {
