@@ -7,7 +7,6 @@ export const StyledPluridLink: any = styled.a`
      * Forces element to go to the second row if inlined.
      */
     display: inline-block;
-    position: relative;
 
     cursor: pointer;
     color: ${(props: any) => {

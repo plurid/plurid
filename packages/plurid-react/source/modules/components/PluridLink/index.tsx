@@ -39,6 +39,7 @@ import {
 } from '../../services/logic/plane';
 
 import Preview from './components/Preview';
+import Portal from '../utilities/Portal';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
@@ -113,6 +114,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [mouseOver, setMouseOver] = useState(false);
     const [showLink, setShowLink] = useState(false);
     const [pluridPlaneID, setPluridPlaneID] = useState('');
+    const [parentPlaneID, setParentPlaneID] = useState('');
 
     const [suffix, setSuffix] = useState(PLURID_LINK_DEFAULT_SUFFIX);
     const [devisible, setDevisible] = useState(false);
@@ -133,6 +135,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const updateTreeWithLink = () => {
         const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
+        setParentPlaneID(parentPlaneID);
 
         const linkCoordinates = getPluridLinkCoordinates();
 
@@ -312,7 +315,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             {children}
 
             {mouseOver && (
-                <Preview />
+                <Portal
+                    elementID="foo"
+                    // elementID={`preview-${parentPlaneID}-${pagePath}`}
+                    rootID={parentPlaneID}
+                >
+                    <Preview />
+                </Portal>
             )}
         </StyledPluridLink>
     );

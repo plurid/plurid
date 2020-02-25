@@ -118,6 +118,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
             planeControls={showPlaneControls}
             planeOpacity={planeOpacity}
             show={treePage.show}
+            id={planeID}
             data-plurid-plane={planeID}
             style={{
                 width,
