@@ -1026,14 +1026,13 @@ const View: React.FC<ViewProperties> = (
         pageContextValue: appProperties.pageContextValue,
         documents: contextDocumentsRef.current,
     };
-    console.log(pluridContext);
 
-    console.log('Rendered');
+    // console.log('Rendered');
     // console.log('configuration', configuration);
     // console.log('pages', pages);
     // console.log('view', view);
     // console.log('documents', documents);
-    console.log('---------------');
+    // console.log('---------------');
 
 
     /** render */
