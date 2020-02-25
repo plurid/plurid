@@ -1,10 +1,7 @@
-import Server from './server/index';
+import {
+    Server,
+} from './server';
 
-
-
-// exports.default = function (options: ServerOptions) {
-//     return new Server(options)
-// }
 
 
 export default Server;
