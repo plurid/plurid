@@ -12,6 +12,7 @@ interface IStyledPreview {
 
 export const StyledPreview = styled.div<IStyledPreview>`
     position: absolute;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
     min-width: 300px;
