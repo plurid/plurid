@@ -67,9 +67,10 @@ interface PluridLinkCoordinates {
     y: number;
 }
 
-const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (properties) => {
-    const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
-
+const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** own */
         children,
@@ -96,12 +97,20 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
 
     const planeControls = configuration.elements.plane.controls.show;
 
+
+    /** references */
+    const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
+
+
+    /** state */
     const [showLink, setShowLink] = useState(false);
     const [pluridPlaneID, setPluridPlaneID] = useState('');
 
     const [suffix, setSuffix] = useState(DEFAULT_SUFIX);
     const [devisible, setDevisible] = useState(false);
 
+
+    /** handlers */
     const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
         const planeControlsHeight = planeControls ? 56 : 0;
         const x = linkElement.current!.offsetLeft + linkElement.current!.offsetWidth;
@@ -120,7 +129,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         const linkCoordinates = getPluridLinkCoordinates();
 
         const searchDocumentID = document ? document : activeDocumentID;
-        console.log('searchDocumentID', searchDocumentID);
         const activeDocument = documents[searchDocumentID];
 
         if (!activeDocument) {
@@ -253,6 +261,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         tree,
     ]);
 
+
+    /** effects */
     /** Set Default suffix, devisible */
     useEffect(() => {
         if (_suffix !== undefined) {
@@ -275,6 +285,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         viewSize,
     ]);
 
+
+    /** render */
     return (
         <StyledPluridLink
             ref={linkElement}
