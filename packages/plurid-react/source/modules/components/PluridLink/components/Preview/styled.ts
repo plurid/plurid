@@ -18,7 +18,7 @@ export const StyledPreview = styled.div<IStyledPreview>`
     z-index: 99999;
 
     top: ${(properties: IStyledPreview) => {
-        const location = properties.linkCoordinates.y + 5;
+        const location = properties.linkCoordinates.y;
         return location + 'px';
     }};
     left: ${(properties: IStyledPreview) => {
@@ -26,7 +26,7 @@ export const StyledPreview = styled.div<IStyledPreview>`
         return location + 'px';
     }};
     background-color: ${(properties: IStyledPreview) => {
-        return properties.theme.backgroundColorPrimary;
+        return properties.theme.backgroundColorSecondary;
     }};
     box-shadow: ${(properties: IStyledPreview) => {
         return properties.theme.boxShadowUmbra;
