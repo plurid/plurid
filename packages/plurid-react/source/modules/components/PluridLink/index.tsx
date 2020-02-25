@@ -113,10 +113,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** references */
     const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
+    const hoverInTimeout = useRef<null | number>(null);
+    const hoverOutTimeout = useRef<null | number>(null);
 
 
     /** state */
     const [mouseOver, setMouseOver] = useState(false);
+    const [showPreview, setShowPreview] = useState(false);
     const [showLink, setShowLink] = useState(false);
     const [pageID, setPageID] = useState('');
     const [pluridPlaneID, setPluridPlaneID] = useState('');
@@ -324,6 +327,47 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }, []);
 
 
+    const previewAppearTime = 400;
+    const previewDisappearTime = 400;
+
+    /** Show Preview */
+    useEffect(() => {
+        if (mouseOver && hoverOutTimeout.current) {
+            hoverInTimeout.current = setTimeout(
+                () => {
+                    setShowPreview(true);
+                },
+                previewAppearTime,
+            );
+
+            clearTimeout(hoverOutTimeout.current);
+        }
+
+        if (!mouseOver) {
+            hoverOutTimeout.current = setTimeout(
+                () => {
+                    setShowPreview(false);
+                    if (hoverInTimeout.current) {
+                        clearTimeout(hoverInTimeout.current);
+                    }
+                },
+                previewDisappearTime,
+            );
+        }
+
+        return () => {
+            if (hoverOutTimeout.current) {
+                clearTimeout(hoverOutTimeout.current);
+            }
+            if (hoverInTimeout.current) {
+                clearTimeout(hoverInTimeout.current);
+            }
+        }
+    }, [
+        mouseOver,
+    ]);
+
+
     /** render */
     return (
         <StyledPluridLink
@@ -341,7 +385,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         >
             {children}
 
-            {mouseOver
+            {showPreview
             && !showLink
             && (
                 <Portal
