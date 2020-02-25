@@ -14,10 +14,10 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    StyledPluridLink,
-} from './styled';
+    /** constants */
+    PLURID_LINK_DEFAULT_SUFFIX,
 
-import {
+    /** interfaces */
     PluridLink as PluridLinkOwnProperties,
     TreePage,
     Indexed,
@@ -26,13 +26,17 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    getPluridPlaneIDByData,
-} from '../../services/logic/plane';
-
-import {
     router,
     space,
 } from '@plurid/plurid-engine';
+
+import {
+    StyledPluridLink,
+} from './styled';
+
+import {
+    getPluridPlaneIDByData,
+} from '../../services/logic/plane';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
@@ -44,8 +48,6 @@ import {
 } from '../../services/state/modules/space/types';
 
 
-
-const DEFAULT_SUFIX = "'";
 
 interface PluridLinkStateProperties {
     tree: TreePage[];
@@ -109,7 +111,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [showLink, setShowLink] = useState(false);
     const [pluridPlaneID, setPluridPlaneID] = useState('');
 
-    const [suffix, setSuffix] = useState(DEFAULT_SUFIX);
+    const [suffix, setSuffix] = useState(PLURID_LINK_DEFAULT_SUFFIX);
     const [devisible, setDevisible] = useState(false);
 
 
