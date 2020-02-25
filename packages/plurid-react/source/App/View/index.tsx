@@ -1,8 +1,8 @@
 import React, {
-    useEffect,
-    useState,
-    useCallback,
     useRef,
+    // useState,
+    useCallback,
+    useEffect,
 } from 'react';
 
 import { AnyAction } from 'redux';
@@ -434,6 +434,8 @@ const View: React.FC<ViewProperties> = (
         // merge user and default configuration
         const appConfiguration = computeCommonConfiguration(configuration);
 
+        handleConfiguration(appConfiguration);
+
         // create internal documents
         const createdDocuments = createDocuments(
             pages,
@@ -477,56 +479,56 @@ const View: React.FC<ViewProperties> = (
         dispatchSetSpaceLoading(false);
     }
 
-    // const handleConfiguration = (
-    //     configuration: PluridAppConfiguration,
-    // ) => {
-    //     dispatchSetConfiguration(configuration);
+    const handleConfiguration = (
+        configuration: PluridAppConfiguration,
+    ) => {
+        // dispatchSetConfiguration(configuration);
 
-    //     if (configuration.micro) {
-    //         dispatchSetConfigurationMicro();
-    //     }
+        if (configuration.micro) {
+            dispatchSetConfigurationMicro();
+        }
 
-    //     if (configuration.space) {
-    //         const spaceLocation = space.computeSpaceLocation(configuration);
-    //         dispatchSetSpaceLocation(spaceLocation);
-    //     }
+        // if (configuration.space) {
+        //     const spaceLocation = space.computeSpaceLocation(configuration);
+        //     dispatchSetSpaceLocation(spaceLocation);
+        // }
 
-    //     if (configuration.space.center && !configuration.space.camera) {
-    //         const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
-    //         translateXWith(x);
+        // if (configuration.space.center && !configuration.space.camera) {
+        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
+        //     translateXWith(x);
 
-    //         // to get plane height;
-    //         const planeHeight = 300;
-    //         const y = window.innerHeight / 2 - planeHeight/2;
-    //         translateYWith(y);
-    //     }
+        //     // to get plane height;
+        //     const planeHeight = 300;
+        //     const y = window.innerHeight / 2 - planeHeight/2;
+        //     translateYWith(y);
+        // }
 
-    //     if (configuration.theme) {
-    //         if (typeof configuration.theme === 'object') {
-    //             const {
-    //                 general,
-    //                 interaction,
-    //             } = configuration.theme;
+        if (configuration.theme) {
+            if (typeof configuration.theme === 'object') {
+                const {
+                    general,
+                    interaction,
+                } = configuration.theme;
 
-    //             if (general) {
-    //                 if (Object.keys(THEME_NAMES).includes(general)) {
-    //                     dispatchSetGeneralTheme(themes[general]);
-    //                 }
-    //             }
+                if (general) {
+                    if (Object.keys(THEME_NAMES).includes(general)) {
+                        dispatchSetGeneralTheme(themes[general]);
+                    }
+                }
 
-    //             if (interaction) {
-    //                 if (Object.keys(THEME_NAMES).includes(interaction)) {
-    //                     dispatchSetInteractionTheme(themes[interaction]);
-    //                 }
-    //             }
-    //         } else {
-    //             if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
-    //                 dispatchSetGeneralTheme(themes[configuration.theme]);
-    //                 dispatchSetInteractionTheme(themes[configuration.theme]);
-    //             }
-    //         }
-    //     }
-    // }
+                if (interaction) {
+                    if (Object.keys(THEME_NAMES).includes(interaction)) {
+                        dispatchSetInteractionTheme(themes[interaction]);
+                    }
+                }
+            } else {
+                if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
+                    dispatchSetGeneralTheme(themes[configuration.theme]);
+                    dispatchSetInteractionTheme(themes[configuration.theme]);
+                }
+            }
+        }
+    }
 
     const handlePubSubSubscribe = (
         pubsub: PluridPubSub,
@@ -872,12 +874,12 @@ const View: React.FC<ViewProperties> = (
     // useEffect(() => {
     //     const mergedConfiguration = mergeConfiguration(configuration);
 
-    //     if (!initialized) {
+    //     // if (!initialized) {
     //         handleConfiguration(mergedConfiguration);
-    //         setInitialized(true);
-    //     }
+    //         // setInitialized(true);
+    //     // }
 
-    //     dispatchSetSpaceLoading(false);
+    //     // dispatchSetSpaceLoading(false);
     // }, [
     //     configuration,
     // ]);
