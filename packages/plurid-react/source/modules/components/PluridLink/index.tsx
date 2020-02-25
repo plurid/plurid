@@ -147,8 +147,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const updateTreeWithLink = () => {
-        console.log(parentPlaneID);
-
         const linkCoordinates = getPluridLinkCoordinates();
 
         const searchDocumentID = document ? document : stateActiveDocumentID;
