@@ -1,6 +1,4 @@
-import {
-    PropsWithChildren
-} from 'react';
+import React from 'react';
 
 import { createPortal } from 'react-dom';
 import usePortal from '../../../services/hooks/portal';
@@ -18,8 +16,8 @@ interface PortalProperties {
  *   <p>elements</p>
  * </Portal>
  */
-const Portal = (
-    properties: PropsWithChildren<PortalProperties>,
+const Portal: React.FC<PortalProperties> = (
+    properties,
 ) => {
     const {
         elementID,
