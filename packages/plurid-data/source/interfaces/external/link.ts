@@ -28,15 +28,15 @@ export interface PluridLink {
      * e.g. `'/path/to/page?id=1&show=true'`, where `id=1` and `show=true` are key=value pairs
      *
      * * specify a text fragment,
-     * e.g. `'/path/to/page#:~:text=A%20door,is%opened.[0]'`,
-     * where the fragment `#:~:text=A%20door,is%opened.[0]`
+     * e.g. `'/path/to/page#:~:text=A%20door,is%20opened.,[0]'`,
+     * where the fragment `#:~:text=A%20door,is%20opened.,[0]`
      * is loosely based on the https://github.com/WICG/ScrollToTextFragment specification,
      * and indicates the link to bring into view the first occurence `[0]`, if any,
-     * of the text fragment starting with `A door` and ending with `is opened`.
+     * of the text fragment starting with `A door` and ending with `is opened.`.
      *
      * * specify a page element,
-     * e.g. `'/path/to/page#:~:element=123[1]'`,
-     * where the fragment `#:~:element=123[1]`
+     * e.g. `'/path/to/page#:~:element=123,[1]'`,
+     * where the fragment `#:~:element=123,[1]`
      * indicates the link to bring into view the second occurence `[1]`, if any,
      * of the element with the attribute `data-plurid-element=123`.
      */
