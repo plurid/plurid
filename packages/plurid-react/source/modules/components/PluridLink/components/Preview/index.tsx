@@ -9,54 +9,56 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    StyledNotFound,
+    StyledPreview,
 } from './styled';
 
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+import { AppState } from '../../../../services/state/store';
+import StateContext from '../../../../services/state/context';
+import selectors from '../../../../services/state/selectors';
+// import actions from '../../../../services/state/actions';
 
 
 
-interface NotFoundOwnProperties {
+interface PreviewOwnProperties {
 }
 
-interface NotFoundStateProperties {
+interface PreviewStateProperties {
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface NotFoundDispatchProperties {
+interface PreviewDispatchProperties {
 }
 
-type NotFoundProperties = NotFoundOwnProperties
-    & NotFoundStateProperties
-    & NotFoundDispatchProperties;
+type PreviewProperties = PreviewOwnProperties
+    & PreviewStateProperties
+    & PreviewDispatchProperties;
 
-const NotFound: React.FC<NotFoundProperties> = (
+const Preview: React.FC<PreviewProperties> = (
     properties,
 ) => {
     /** properties */
-    // const {
-        // /** state */
-        // stateGeneralTheme,
+    const {
+        /** state */
+        stateGeneralTheme,
         // stateInteractionTheme,
-    // } = properties;
+    } = properties;
 
 
     /** render */
     return (
-        <StyledNotFound>
-            Plurid' Page Not Found
-        </StyledNotFound>
+        <StyledPreview
+            theme={stateGeneralTheme}
+        >
+            Preview
+        </StyledPreview>
     );
 }
 
 
 const mapStateToProperties = (
     state: AppState,
-): NotFoundStateProperties => ({
+): PreviewStateProperties => ({
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
 });
@@ -64,7 +66,7 @@ const mapStateToProperties = (
 
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): NotFoundDispatchProperties => ({
+): PreviewDispatchProperties => ({
 });
 
 
@@ -75,4 +77,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(NotFound);
+)(Preview);
