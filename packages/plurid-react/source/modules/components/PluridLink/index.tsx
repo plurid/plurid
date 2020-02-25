@@ -52,6 +52,16 @@ import {
 
 
 
+interface PluridLinkCoordinates {
+    x: number;
+    y: number;
+}
+
+const defaultLinkCoordinates: PluridLinkCoordinates = {
+    x: 0,
+    y: 0,
+};
+
 interface PluridLinkStateProperties {
     tree: TreePage[];
     generalTheme: Theme;
@@ -69,11 +79,6 @@ interface PluridLinkDispatchProperties {
 type PluridLinkProperties = PluridLinkOwnProperties
     & PluridLinkStateProperties
     & PluridLinkDispatchProperties;
-
-interface PluridLinkCoordinates {
-    x: number;
-    y: number;
-}
 
 const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     properties,
@@ -115,6 +120,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [showLink, setShowLink] = useState(false);
     const [pluridPlaneID, setPluridPlaneID] = useState('');
     const [parentPlaneID, setParentPlaneID] = useState('');
+    const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
 
     const [suffix, setSuffix] = useState(PLURID_LINK_DEFAULT_SUFFIX);
     const [devisible, setDevisible] = useState(false);
@@ -122,20 +128,26 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** handlers */
     const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
-        const planeControlsHeight = planeControls ? 56 : 0;
-        const x = linkElement.current!.offsetLeft + linkElement.current!.offsetWidth;
-        const y = linkElement.current!.offsetTop + planeControlsHeight;
+        const link = linkElement.current;
 
-        const pluridLinkCoordinates: PluridLinkCoordinates = {
+        if (!link) {
+            return {
+                ...defaultLinkCoordinates,
+            };
+        }
+
+        const planeControlsHeight = planeControls ? 56 : 0;
+        const x = link.offsetLeft + link.offsetWidth;
+        const y = link.offsetTop + planeControlsHeight;
+
+        return {
             x,
             y,
         };
-        return pluridLinkCoordinates;
     }
 
     const updateTreeWithLink = () => {
-        const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
-        setParentPlaneID(parentPlaneID);
+        console.log(parentPlaneID);
 
         const linkCoordinates = getPluridLinkCoordinates();
 
@@ -296,6 +308,18 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         viewSize,
     ]);
 
+    /**
+     * Get Parent Plane ID
+     * Get Plurid Link Coordinates
+     */
+    useEffect(() => {
+        const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
+        setParentPlaneID(parentPlaneID);
+
+        const linkCoordinates = getPluridLinkCoordinates();
+        setLinkCoordinates(linkCoordinates);
+    }, []);
+
 
     /** render */
     return (
@@ -316,11 +340,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
             {mouseOver && (
                 <Portal
-                    elementID="foo"
-                    // elementID={`preview-${parentPlaneID}-${pagePath}`}
+                    elementID={`preview-${parentPlaneID}`}
                     rootID={parentPlaneID}
                 >
-                    <Preview />
+                    <Preview
+                        linkCoordinates={linkCoordinates}
+                    />
                 </Portal>
             )}
         </StyledPluridLink>
