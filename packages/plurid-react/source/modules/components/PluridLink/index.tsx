@@ -336,7 +336,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         >
             {children}
 
-            {mouseOver && (
+            {mouseOver
+            && !showLink
+            && (
                 <Portal
                     elementID={`preview-${parentPlaneID}`}
                     rootID={parentPlaneID}
