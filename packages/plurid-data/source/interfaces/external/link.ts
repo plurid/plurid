@@ -1,3 +1,9 @@
+import {
+    PluridComponent,
+} from './page';
+
+
+
 export interface PluridLink {
     /**
      * The name of the document. If not specified defaults to the current one.
@@ -27,6 +33,11 @@ export interface PluridLink {
      * Execute function at click (onClick Event).
      */
     atClick?: (event?: MouseEvent | React.MouseEvent) => void;
+
+    /**
+     * Show or not the default Not Found component, or pass a custom component
+     */
+    notFound?: boolean | PluridComponent;
 
     style?: React.CSSProperties;
     className?: string;
