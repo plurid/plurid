@@ -209,6 +209,93 @@ export const extractQueryValues = (
 }
 
 
+export const extractFragments = (
+    fragments: string,
+): LinkFragments => {
+    // text=Foo,Boo,[1]&element=123,[0]
+
+    const fragmentItems = fragments.split('&');
+
+    const textFragments: LinkFragmentText[] = [];
+    const elementFragments: LinkFragmentElement[] = [];
+
+    for (const item in fragmentItems) {
+        const parsedFragment = parseFragment(item);
+        if (parsedFragment) {
+            switch (parsedFragment.type) {
+                case 'text':
+                    textFragments.push(parsedFragment);
+                    break;
+                case 'element':
+                    elementFragments.push(parsedFragment);
+                    break;
+            }
+        }
+    }
+
+    return {
+        texts: textFragments,
+        elements: elementFragments,
+    };
+}
+
+
+export const parseFragment = (
+    fragment: string,
+): LinkFragmentText | LinkFragmentElement | undefined => {
+    const fragmentData = fragment.split('=');
+    const fragmentType = fragmentData[0];
+    const fragmentValues = fragmentData[1];
+
+    switch (fragmentType.toLowerCase()) {
+        case 'text':
+            // extract text data from
+            // e.g.
+            // text=Foo,Boo,[0]
+            const textValues = fragmentValues.split(',');
+            const textStart = textValues[0];
+            const textEnd = textValues[1];
+            const textOccurence = extractOccurence(textValues[2]);
+            return {
+                type: 'text',
+                start: textStart,
+                end: textEnd,
+                occurence: textOccurence,
+            };
+        case 'element':
+            // extract element data from
+            // e.g.
+            // element=123,[0]
+            const elementValues = fragmentValues.split(',');
+            const elementID = elementValues[0];
+            const elementOccurence = extractOccurence(elementValues[1]);
+            return {
+                type: 'element',
+                id: elementID,
+                occurence: elementOccurence,
+            };
+    }
+
+    return undefined;
+}
+
+export const extractOccurence = (
+    occurence: string | undefined,
+): number => {
+    if (!occurence) {
+        return 0;
+    }
+
+    const occurenceMatch = occurence.match(/\[(\d*)\]/);
+    const occurenceValue = occurenceMatch
+        ? parseInt(occurenceMatch[1])
+        : 0;
+
+    return occurenceValue;
+}
+
+
+
 /**
  * Based on the `path` and the `parameters` computes a match for comparison.
  *
@@ -298,4 +385,75 @@ export const handleRouteLength = (
     // }
 
     return;
+}
+
+
+
+export interface ParsedLink {
+    path: string;
+    query?: RouteQuery;
+    fragments?: LinkFragments;
+}
+
+export interface LinkFragments {
+    texts: LinkFragmentText[];
+    elements: LinkFragmentElement[];
+}
+
+export interface LinkFragment {
+    type: string;
+}
+
+export interface LinkFragmentText extends LinkFragment {
+    type: 'text';
+    start: string;
+    end: string;
+    occurence: number;
+}
+
+export interface LinkFragmentElement extends LinkFragment {
+    type: 'element';
+    id: string;
+    occurence: number;
+}
+
+
+/**
+ * Extract path, query, fragments from a link.
+ *
+ * e.g., from `'/one?id=1#:~:text=Foo,Boo'` it extracts
+ *
+ * @example
+ *  {
+ *      path: '/one',
+ *      query: {
+ *          id: 1,
+ *      },
+ *      fragments: {
+ *          text: {
+ *              start: 'Foo',
+ *              end: 'Boo',
+ *              occurence: 0,
+ *          },
+ *      },
+ *  }
+ *
+ * @param link
+ */
+export const linkParser = (
+    link: string,
+): ParsedLink => {
+    const split = link.split('#:~:');
+    const pathWithQuery = split[0];
+    const fragmentsValues = split[1];
+
+    const path = pathWithQuery.split('?')[0];
+    const query = extractQueryValues(pathWithQuery);
+    const fragments = extractFragments(fragmentsValues);
+
+    return {
+        path,
+        query,
+        fragments,
+    };
 }
