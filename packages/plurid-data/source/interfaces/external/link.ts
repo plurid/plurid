@@ -64,6 +64,12 @@ export interface PluridLink {
      */
     notFound?: boolean | PluridComponent;
 
+    preview?: boolean;
+    previewFadeIn?: number;
+    previewFadeOut?: number;
+    previewOffsetX?: number;
+    previewOffsetY?: number;
+
     style?: React.CSSProperties;
     className?: string;
 }
