@@ -48,8 +48,6 @@ const Preview: React.FC<PreviewProperties> = (
         // stateInteractionTheme,
     } = properties;
 
-    console.log(linkCoordinates);
-
 
     /** render */
     return (

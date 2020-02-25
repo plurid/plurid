@@ -18,10 +18,12 @@ export const StyledPreview = styled.div<IStyledPreview>`
     z-index: 99999;
 
     top: ${(properties: IStyledPreview) => {
-        return properties.linkCoordinates.x + 'px';
+        const location = properties.linkCoordinates.y + 5;
+        return location + 'px';
     }};
     left: ${(properties: IStyledPreview) => {
-        return properties.linkCoordinates.y + 'px';
+        const location = properties.linkCoordinates.x + 5;
+        return location + 'px';
     }};
     background-color: ${(properties: IStyledPreview) => {
         return properties.theme.backgroundColorPrimary;
