@@ -1026,6 +1026,7 @@ const View: React.FC<ViewProperties> = (
         pageContextValue: appProperties.pageContextValue,
         documents: contextDocumentsRef.current,
     };
+    console.log(pluridContext);
 
     console.log('Rendered');
     // console.log('configuration', configuration);

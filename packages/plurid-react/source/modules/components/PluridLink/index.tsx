@@ -118,6 +118,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     /** state */
     const [mouseOver, setMouseOver] = useState(false);
     const [showLink, setShowLink] = useState(false);
+    const [pageID, setPageID] = useState('');
     const [pluridPlaneID, setPluridPlaneID] = useState('');
     const [parentPlaneID, setParentPlaneID] = useState('');
     const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
@@ -164,6 +165,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         const pageByID = pages[pagePath];
 
         if (pageByID) {
+            setPageID(pageByID.id);
+
             const {
                 pluridPlaneID,
                 updatedTree,
@@ -191,6 +194,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 route,
                 parameters,
             } = matchedPage;
+
+            setPageID(route.id);
 
             const {
                 pluridPlaneID,
@@ -344,6 +349,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                     rootID={parentPlaneID}
                 >
                     <Preview
+                        document={document}
+                        pageID={pageID}
                         linkCoordinates={linkCoordinates}
                     />
                 </Portal>
