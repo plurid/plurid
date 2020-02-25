@@ -38,6 +38,8 @@ import {
     getPluridPlaneIDByData,
 } from '../../services/logic/plane';
 
+import Preview from './components/Preview';
+
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
 import selectors from '../../services/state/selectors';
@@ -108,6 +110,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     /** state */
+    const [mouseOver, setMouseOver] = useState(false);
     const [showLink, setShowLink] = useState(false);
     const [pluridPlaneID, setPluridPlaneID] = useState('');
 
@@ -296,6 +299,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         <StyledPluridLink
             ref={linkElement}
             onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
+            onMouseEnter={() => setMouseOver(true)}
+            onMouseLeave={() => setMouseOver(false)}
             theme={generalTheme}
             suffix={suffix}
             devisible={devisible}
@@ -305,12 +310,16 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             className={className}
         >
             {children}
+
+            {mouseOver && (
+                <Preview />
+            )}
         </StyledPluridLink>
     );
 }
 
 
-const mapStateToProps = (
+const mapStateToProperties = (
     state: AppState,
 ): PluridLinkStateProperties => ({
     tree: selectors.space.getTree(state),
@@ -322,7 +331,7 @@ const mapStateToProps = (
 });
 
 
-const mapDispatchToProps = (
+const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridLinkDispatchProperties => ({
     dispatchSetTree: (
@@ -340,8 +349,8 @@ const mapDispatchToProps = (
 
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,
