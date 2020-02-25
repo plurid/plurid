@@ -6,6 +6,7 @@ import {
     PluridPageContextValue,
     PluridView,
     PluridCluster,
+    PluridComponent,
 } from './page';
 
 import {
@@ -52,7 +53,18 @@ export interface PluridApp {
      */
     documents?: PluridDocument[];
 
+    /**
+     * Show or not the default Not Found component, or pass a custom component
+     */
+    notFound?: boolean | PluridComponent;
+
+    /**
+     * Application-wide partial configuration.
+     */
     configuration?: PluridPartialConfiguration;
 
+    /**
+     * Publish/Subscribe bus based on `@plurid/plurid-pubsub`.
+     */
     pubsub?: PluridPubSub;
 }
