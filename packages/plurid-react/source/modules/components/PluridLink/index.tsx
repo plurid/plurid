@@ -4,11 +4,14 @@ import React, {
     useCallback,
     useEffect,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { Theme } from '@plurid/plurid-themes';
+import {
+    Theme,
+} from '@plurid/plurid-themes';
 
 import {
     StyledPluridLink,
@@ -140,7 +143,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             pages,
         } = activeDocument;
 
-        const pageByID = pages[pagePath]
+        const pageByID = pages[pagePath];
 
         if (pageByID) {
             const {
