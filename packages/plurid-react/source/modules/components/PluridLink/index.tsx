@@ -120,7 +120,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (pro
         const linkCoordinates = getPluridLinkCoordinates();
 
         const searchDocumentID = document ? document : activeDocumentID;
+        console.log('searchDocumentID', searchDocumentID);
         const activeDocument = documents[searchDocumentID];
+
+        if (!activeDocument) {
+            return;
+        }
 
         const {
             // paths,

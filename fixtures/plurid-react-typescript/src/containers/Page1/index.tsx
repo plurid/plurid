@@ -49,6 +49,10 @@ const Page1: React.FC<any> = (
                 <PluridLink page="/page-2/soo/loo">link to page 2</PluridLink>
             </div>
 
+            <div>
+                <PluridLink page="/0">link to 0</PluridLink>
+            </div>
+
             <div style={{
                 marginLeft: a.current,
                 marginTop: b.current,

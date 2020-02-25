@@ -520,6 +520,7 @@ const View: React.FC<ViewProperties> = (
         contextDocumentsRef.current = contextDocuments;
 
         dispatchSetSpaceSize(spaceSize);
+        dispatchSetDocuments(stateDocuments);
         dispatchSetActiveDocument(activeDocument);
         dispatchSetConfiguration(appConfiguration);
         dispatchSetInitialTree(newTree);
@@ -1091,12 +1092,12 @@ const View: React.FC<ViewProperties> = (
         documents: contextDocumentsRef.current,
     };
 
-    // console.log('Rendered');
+    console.log('Rendered');
     // console.log('configuration', configuration);
     // console.log('pages', pages);
     // console.log('view', view);
     // console.log('documents', documents);
-    // console.log('---------------');
+    console.log('---------------');
 
 
     /** render */
