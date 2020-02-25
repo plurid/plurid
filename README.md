@@ -106,13 +106,13 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
 
 
 
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react-ssr">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-react-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
+<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react-server">
+    <img src="https://img.shields.io/npm/v/@plurid/plurid-react-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-react-ssr][plurid-react-ssr] • React implementation with Server-Side Rendering
+[@plurid/plurid-react-server][plurid-react-server] • React implementation with Server-Side Rendering
 
-[plurid-react-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-ssr -->
+[plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-server
 
 
 
