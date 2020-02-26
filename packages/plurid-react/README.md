@@ -45,3 +45,44 @@ add the types (if a TypeScript project)
 or
 
     yarn add -D @types/styled-components @types/react-redux
+
+
+A simple, rendering-test application, could look like
+
+    /** imports */
+    import React from 'react';
+
+    import PluridApp, {
+        PluridPage,
+    } from '@plurid/plurid-react';
+
+
+
+    /** React Functional Component */
+    const Application: React.FC<any> = () => {
+        /** plurid' pages */
+        const pages: PluridPage[] = [
+            {
+                path: '/',
+                component: {
+                    element: () => (<div>Plurid' Application</div>),
+                },
+            },
+        ];
+
+        /** plurid' view */
+        const view: string[] = [
+            '/',
+        ];
+
+        /** render */
+        return (
+            <PluridApp
+                pages={pages}
+                view={view}
+            />
+        );
+    }
+
+
+    export default Application;
