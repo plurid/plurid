@@ -7,8 +7,6 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import Hammer from 'hammerjs';
-
 import {
     Theme,
 } from '@plurid/plurid-themes';
@@ -16,6 +14,10 @@ import {
 import {
     StyledTransformArrow,
 } from './styled';
+
+import {
+    loadHammer,
+} from '../../../../../services/utilities/imports';
 
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
@@ -104,16 +106,33 @@ const TransformArrow: React.FC<TransformArrowProperties> = (properties) => {
 
     /** Touch */
     useEffect(() => {
-        const touch = new Hammer((arrowElement as any).current);
-        touch.on('tap press pressup', handleTouch);
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        let touch: HammerManager;
+
+        const handleTouch = async () => {
+            const HammerImport = await loadHammer();
+            const Hammer = HammerImport.default;
+
+            touch = new Hammer((arrowElement as any).current);
+            touch.on('tap press pressup', handleTouch);
+        }
+
+        handleTouch();
 
         return () => {
-            touch.off('tap press pressup', handleTouch);
+            if (touch) {
+                touch.off('tap press pressup', handleTouch);
+            }
         }
     }, [
         arrowElement.current,
     ]);
 
+
+    /** render */
     return (
         <StyledTransformArrow
             ref={arrowElement}

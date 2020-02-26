@@ -82,8 +82,15 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         size: transformOriginSize,
     } = transformOrigin;
 
-    const transformOriginX = spaceTranslationX * -1 + window.innerWidth/2;
-    const transformOriginY = spaceTranslationY * -1 + window.innerHeight/2;
+    const innerWidth = typeof window === 'undefined'
+        ? 720
+        : window.innerWidth/2;
+    const innerHeight = typeof window === 'undefined'
+        ? 400
+        : window.innerHeight/2;
+
+    const transformOriginX = spaceTranslationX * -1 + innerWidth;
+    const transformOriginY = spaceTranslationY * -1 + innerHeight;
     const transformOriginZ = spaceTranslationZ * -1;
 
     const transformOriginSizeDifference = transformOriginSize === SIZES.SMALL
