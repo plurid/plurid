@@ -90,7 +90,7 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
     <img src="https://img.shields.io/npm/v/@plurid/plurid-pubsub.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-pubsub][plurid-pubsub] • Publish/Subscribe message bus
+[@plurid/plurid-pubsub][plurid-pubsub] • publish/subscribe message bus
 
 [plurid-pubsub]: https://github.com/plurid/plurid/tree/master/packages/plurid-pubsub
 
@@ -100,7 +100,7 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
     <img src="https://img.shields.io/npm/v/@plurid/plurid-react.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-react][plurid-react] • React implementation
+[@plurid/plurid-react][plurid-react] • implementation for React
 
 [plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid-react
 
@@ -110,7 +110,7 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
     <img src="https://img.shields.io/npm/v/@plurid/plurid-react-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-react-server][plurid-react-server] • Server for the React implementation
+[@plurid/plurid-react-server][plurid-react-server] • server for the React implementation
 
 [plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-server
 
