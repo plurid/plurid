@@ -20,12 +20,12 @@ const initialState: Types.State = {
         z: 0,
     },
     viewSize: {
-        width: window ? window.innerWidth : 1440,
-        height: window ? window.innerHeight : 800,
+        width: typeof window === 'undefined' ? 1440 : window.innerWidth,
+        height: typeof window === 'undefined' ? 800 : window.innerHeight,
     },
     spaceSize: {
-        width: window ? window.innerWidth : 1440,
-        height: window ? window.innerHeight : 800,
+        width: typeof window === 'undefined' ? 1440 : window.innerWidth,
+        height: typeof window === 'undefined' ? 800 : window.innerHeight,
         depth: 0,
         topCorner: {
             x: 0,

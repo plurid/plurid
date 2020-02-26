@@ -95,6 +95,10 @@ import {
     arraysEqual,
 } from '../../modules/services/utilities/array';
 
+import {
+    loadHammer,
+} from '../../modules/services/utilities/imports';
+
 import { AppState } from '../../modules/services/state/store';
 import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
@@ -108,9 +112,6 @@ import {
 
 
 
-const loadHammer = async () => {
-    return await import('hammerjs');
-}
 
 export interface HandledDocuments {
     stateDocuments: Indexed<PluridInternalStateDocument>;
@@ -958,13 +959,13 @@ const View: React.FC<ViewProperties> = (
 
     /** Touch */
     useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
         let touch: HammerManager;
 
         const handleTouch = async () => {
-            if (typeof window === 'undefined') {
-                return;
-            }
-
             const HammerImport = await loadHammer();
             const Hammer = HammerImport.default;
 

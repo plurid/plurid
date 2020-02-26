@@ -75,7 +75,9 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
     let basePath = '';
     if (configuration) {
         if (pathbar.domainURL) {
-            basePath = window.location.hostname;
+            basePath = typeof window === 'undefined'
+                ? ''
+                : window.location.hostname;
         }
     }
 

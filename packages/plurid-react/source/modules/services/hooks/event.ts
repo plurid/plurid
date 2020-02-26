@@ -2,12 +2,28 @@ import { useEffect } from 'react';
 
 
 
-export const useWindowEvent = (event: any, callback: any) => {
+export const useWindowEvent = (
+    event: any,
+    callback: any,
+) => {
     useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
         window.addEventListener(event, callback, { passive: false });
-        return () => window.removeEventListener(event, callback);
-    }, [event, callback]);
+
+        return () => {
+            if (typeof window === 'undefined') {
+                return;
+            }
+            window.removeEventListener(event, callback);
+        }
+    }, [
+        event,
+        callback,
+    ]);
 };
+
 
 export const useElementEvent = (
     event: any,
