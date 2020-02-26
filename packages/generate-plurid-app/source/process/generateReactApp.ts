@@ -16,10 +16,31 @@ import {
 
 
 
-const addScript = async (
-    configuration: any,
-) => {
+interface AddScriptConfiguration {
+    name: string,
+    value: string,
+    path: string,
+}
 
+const addScript = async (
+    configuration: AddScriptConfiguration,
+) => {
+    const {
+        name,
+        value,
+        path,
+    } = configuration;
+
+    const file = fs.readFileSync(path);
+    const jsonFile = JSON.parse(file.toString());
+
+    if (!jsonFile.scripts) {
+        jsonFile.scripts = {};
+    }
+
+    jsonFile.scripts[name] = value;
+
+    fs.writeFileSync(path, jsonFile);
 }
 
 
