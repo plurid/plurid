@@ -110,7 +110,7 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
     <img src="https://img.shields.io/npm/v/@plurid/plurid-react-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-react-server][plurid-react-server] • React implementation with Server-Side Rendering
+[@plurid/plurid-react-server][plurid-react-server] • Server for the React implementation
 
 [plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-server
 
