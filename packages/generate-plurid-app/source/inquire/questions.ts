@@ -20,7 +20,7 @@ const values = {
     ],
     renderer: [
         'Client',
-        // 'Server',
+        'Server',
         new inquirer.Separator('---- pick one ----'),
     ],
     manager: [

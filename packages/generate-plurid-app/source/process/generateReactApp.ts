@@ -98,7 +98,7 @@ const generatePluridReactApplication = (
 }
 
 
-const generateReactApplication = async (
+const generateReactClientApplication = async (
     app: Application,
 ) => {
     const language = app.language === 'TypeScript'
@@ -118,6 +118,25 @@ const generateReactApplication = async (
 
         generatePluridReactApplication(app);
     });
+}
+
+
+const generateReactServerApplication = async (
+    app: Application,
+) => {
+    console.log('Generating Server Rendered Plurid Application');
+}
+
+
+const generateReactApplication = async (
+    app: Application,
+) => {
+    switch (app.renderer) {
+        case 'Client':
+            return await generateReactClientApplication(app);
+        case 'Server':
+            return await generateReactServerApplication(app);
+    }
 }
 
 
