@@ -22,7 +22,7 @@ const config = {
     // that is generated
     output: {
         filename: 'server.js',
-        path: path.resolve(__dirname, 'build')
+        path: path.resolve(__dirname, '../build')
     }
 };
 
