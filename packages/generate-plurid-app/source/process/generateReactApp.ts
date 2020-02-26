@@ -45,6 +45,40 @@ const addScript = async (
 }
 
 
+export const arrangePackageJSON = (
+    packagePath: string,
+) => {
+    const file = fs.readFileSync(packagePath);
+    const jsonFile = JSON.parse(file.toString());
+
+    const name = jsonFile.name;
+    const version = jsonFile.version;
+    const description = 'plurid\' web application';
+    const author = jsonFile.author || '';
+    const license = 'private';
+    const main = 'build/server.js';
+    const scripts = jsonFile.scripts;
+    const dependencies = jsonFile.dependencies;
+    const devDependencies = jsonFile.devDependencies;
+
+    const updatedFile = {
+        name,
+        version,
+        description,
+        author,
+        license,
+        main,
+        scripts,
+        dependencies,
+        devDependencies,
+    };
+
+    let data = JSON.stringify(updatedFile, null, 4);
+    fs.writeFileSync(packagePath, data);
+}
+
+
+
 export const removeGeneratePackage = (
     app: Application,
 ) => {
@@ -283,6 +317,7 @@ const generateReactServerApplication = async (
                     path: packageJsonPath,
                 });
 
+                arrangePackageJSON(packageJsonPath);
 
                 removeGeneratePackage(app);
             });
