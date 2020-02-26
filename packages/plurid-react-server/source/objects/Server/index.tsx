@@ -31,7 +31,7 @@ export default class PluridServer {
 
     private serverApplication: Express;
     private server: Server | undefined;
-    private port: number = DEFAULT_SERVER_PORT;
+    private port: number;
 
     constructor(
         configuration: PluridServerConfiguration,
@@ -51,6 +51,7 @@ export default class PluridServer {
         this.options = this.handleOptions(options);
 
         this.serverApplication = express();
+        this.port = DEFAULT_SERVER_PORT;
 
         this.computeApplication();
 
