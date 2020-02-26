@@ -1,6 +1,4 @@
-import {
-    PluridServer,
-} from './server';
+import PluridServer from './objects/Server'
 
 
 
