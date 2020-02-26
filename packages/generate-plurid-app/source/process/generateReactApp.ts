@@ -40,7 +40,8 @@ const addScript = async (
 
     jsonFile.scripts[name] = value;
 
-    fs.writeFileSync(path, jsonFile);
+    let data = JSON.stringify(jsonFile, null, 4);
+    fs.writeFileSync(path, data);
 }
 
 
