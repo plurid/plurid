@@ -7,7 +7,7 @@ import PluridServer from '@plurid/plurid-react-server';
 
 const Application = () => {
     return (
-        <div>Application here</div>
+        <div>Plurid' Application</div>
     );
 }
 
