@@ -956,6 +956,10 @@ const View: React.FC<ViewProperties> = (
 
     /** Touch */
     useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
         const {
             transformTouch,
         } = stateConfiguration.space;
