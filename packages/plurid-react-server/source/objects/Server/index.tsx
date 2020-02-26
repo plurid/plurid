@@ -26,6 +26,7 @@ import {
 } from '../../data/interfaces';
 
 import Renderer from '../Renderer';
+import Router from '../Router';
 
 
 
@@ -99,7 +100,14 @@ export default class PluridServer {
 
         this.serverApplication.get('*', (request, response) => {
             console.log('Request on path:', request.path);
+            console.log('Request on originalUrl:', request.originalUrl);
 
+            const router = new Router({
+                routes: this.routes,
+            });
+            const route = router.match(request.originalUrl);
+
+            // pass route to application;
             const content = renderToString(
                 React.createElement(this.Application),
             );
