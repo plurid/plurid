@@ -4,7 +4,7 @@ import React from 'react';
 
 const Application = () => {
     return (
-        <div>Application here</div>
+        <div>Plurid' here</div>
     );
 }
 
