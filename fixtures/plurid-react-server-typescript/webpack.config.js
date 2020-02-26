@@ -2,6 +2,7 @@ module.exports = {
     entry: "./source/index.tsx",
 
     mode: "production",
+    target: 'node',
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",

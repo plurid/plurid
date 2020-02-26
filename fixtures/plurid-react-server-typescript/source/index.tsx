@@ -1,7 +1,15 @@
+import React from 'react';
+
 import PluridServer from '@plurid/plurid-react-server';
 
-import Application from './client/App';
+// import Application from './client/App';
 
+
+const Application = () => {
+    return (
+        <div>Application here</div>
+    );
+}
 
 
 const PORT = 33000;
