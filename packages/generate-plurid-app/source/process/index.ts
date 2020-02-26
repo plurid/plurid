@@ -28,8 +28,7 @@ const generateApplication = async (
 ) => {
     switch (app.ui) {
         case uiTypes.react:
-            generateReactApp(app);
-            return;
+            return await generateReactApp(app);
     }
 }
 
