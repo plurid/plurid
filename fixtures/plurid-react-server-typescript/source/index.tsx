@@ -6,11 +6,11 @@ import Application from './client/App';
 
 const PORT = 33000;
 
-const routes = [
+const routes: any[] = [
     // route objects
 ];
 const index = '/path/to/index';
-const middleware = [
+const middleware: any[] = [
     // express-like middleware
 ];
 const options = {
