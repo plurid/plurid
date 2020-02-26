@@ -1,4 +1,5 @@
 import {
+    DEFAULT_RENDERER_STORE,
     DEFAULT_RENDERER_SCRIPT,
 } from '../../data/constants';
 
@@ -28,7 +29,7 @@ export default class PluridRenderer {
 
         this.head = head;
         this.content = content;
-        this.store = this.safeStore(store);
+        this.store = this.safeStore(store) || DEFAULT_RENDERER_STORE;
         this.script = script || DEFAULT_RENDERER_SCRIPT;
     }
 
