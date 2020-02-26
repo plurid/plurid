@@ -1,10 +1,13 @@
 import React from 'react';
 
 import PluridServer, {
+    PluridServerRoute,
+    PluridServerMiddleware,
     PluridServerPartialOptions,
 } from '@plurid/plurid-react-server';
 
 // import Application from './client/App';
+
 
 
 const Application = () => {
@@ -16,14 +19,17 @@ const Application = () => {
 
 const PORT = 33000;
 
-const routes: any[] = [
+
+const routes: PluridServerRoute[] = [
     // route objects
 ];
-const middleware: any[] = [
+
+const middleware: PluridServerMiddleware[] = [
     // express-like middleware
 ];
+
 const options: PluridServerPartialOptions = {
-    root: 'foo',
+    root: 'plurid',
     // plurid' server specific options
 };
 
