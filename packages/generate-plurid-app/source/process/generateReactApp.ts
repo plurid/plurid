@@ -201,6 +201,7 @@ const generateReactServerApplication = async (
         '@types/react-redux',
         '@types/styled-components',
         'babel-loader',
+        'file-loader',
         'open',
         'source-map-loader',
         'ts-loader',
@@ -262,6 +263,11 @@ const generateReactServerApplication = async (
                     path: packageJsonPath,
                 });
                 await addScript({
+                    name: 'build.client.production',
+                    value: 'webpack --config scripts/webpack.client.production.js',
+                    path: packageJsonPath,
+                });
+                await addScript({
                     name: 'build.server',
                     value: 'webpack --config scripts/webpack.server.js',
                     path: packageJsonPath,
@@ -269,6 +275,11 @@ const generateReactServerApplication = async (
                 await addScript({
                     name: 'build.development',
                     value: 'yarn build.server && yarn build.client.development',
+                    path: packageJsonPath,
+                });
+                await addScript({
+                    name: 'build.production',
+                    value: 'yarn build.server && yarn build.client.production',
                     path: packageJsonPath,
                 });
 
