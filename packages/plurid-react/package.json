@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react",
-    "version": "0.1.105",
+    "version": "0.1.106",
     "description": "React implementation of Plurid to explore the web in three dimensions",
     "keywords": [
         "plurid",
