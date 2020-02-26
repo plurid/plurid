@@ -30,7 +30,6 @@ import Renderer from '../Renderer';
 export default class PluridServer {
     private Application: React.FC<any>;
     private routes: PluridServerRoute[];
-    private index: string;
     private middleware: PluridServerMiddleware[];
     private options: PluridServerOptions;
 
@@ -45,14 +44,12 @@ export default class PluridServer {
         const {
             Application,
             routes,
-            index,
             middleware,
             options,
         } = configuration;
 
         this.Application = Application;
         this.routes = routes;
-        this.index = index;
         this.middleware = middleware || [];
         this.options = this.handleOptions(options);
 
@@ -110,6 +107,7 @@ export default class PluridServer {
                 content,
                 head,
                 store: '',
+                script: this.options.script,
             });
 
             response.send(this.renderer?.html());
@@ -121,7 +119,10 @@ export default class PluridServer {
     ) {
         const options: PluridServerOptions = {
             quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
+            open: partialOptions?.open || false,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
+            root: partialOptions?.root || 'root',
+            script: partialOptions?.script || '/index.js',
         };
         return options;
     }
