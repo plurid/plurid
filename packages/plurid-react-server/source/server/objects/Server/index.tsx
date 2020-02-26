@@ -1,47 +1,112 @@
 import React from 'react';
 
-// import { IncomingMessage, ServerResponse } from 'http';
-// import { parse as parseUrl, UrlWithParsedQuery } from 'url';
-// import { parse as parseQs, ParsedUrlQuery } from 'querystring';
+import {
+    Server,
+} from 'http';
+
+import express, {
+    Express,
+} from 'express';
+
+import {
+    PluridServerRoute,
+    PluridServerMiddleware,
+    PluridServerOptions,
+    PluridServerPartialOptions,
+    PluridServerConfiguration,
+} from '../../data/interfaces';
 
 
 
-export interface PluridServerOptions {
-    quiet: boolean;
-}
+export default class PluridServer {
+    private Application: React.FC<any>;
+    private routes: PluridServerRoute[];
+    private index: string;
+    private middleware: PluridServerMiddleware[];
+    private options: PluridServerOptions;
 
-export interface IServer {
-    application: React.FC<any>;
-    options?: PluridServerOptions;
-}
-
-
-export default class PluridServer implements IServer {
-    application: React.FC<any>;
-    options?: PluridServerOptions;
+    private serverApplication: Express;
+    private server: Server | undefined;
+    private port: number = 8080;
 
     constructor(
-        application: React.FC<any>,
-        options?: PluridServerOptions,
+        configuration: PluridServerConfiguration,
     ) {
-        this.application = application;
-        this.options = options;
+        const {
+            Application,
+            routes,
+            index,
+            middleware,
+            options,
+        } = configuration;
+
+        this.Application = Application;
+        this.routes = routes;
+        this.index = index;
+        this.middleware = middleware || [];
+        this.options = this.handleOptions(options);
+
+        this.serverApplication = express();
+
+        this.computeApplication();
+
+        process.addListener('SIGINT', () => {
+            this.stop();
+            process.exit(0);
+        });
     }
 
-    private logError(
-        ...args: any
-    ): void {
-        if (this.options?.quiet) {
-            return;
+    public start(
+        port = this.port,
+    ) {
+        this.port = port;
+        const serverlink = `http://localhost:${port}`;
+        if (!this.options.quiet) {
+            console.log(`\n\tPlurid Server Started on Port ${port}: ${serverlink}\n`);
         }
-        console.log(args);
+
+        this.server = this.serverApplication.listen(port);
     }
 
-    public logs(
-        err: any,
-    ) {
-        this.logError(err);
+    public stop() {
+        if (!this.options.quiet) {
+            console.log(`\n\tPlurid Server Closed on Port ${this.port}\n`);
+        }
+
+        if (this.server) {
+            this.server.close();
+        }
     }
+
+    private computeApplication() {
+        console.log(
+            this.Application,
+            this.routes,
+            this.index,
+            this.middleware,
+            this.options,
+        );
+    }
+
+    private handleOptions (
+        partialOptions?: PluridServerPartialOptions,
+    ) {
+        const options: PluridServerOptions = {
+            quiet: partialOptions?.quiet || false,
+        };
+        return options;
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
     // private handleRequest(
     //     req: IncomingMessage,
@@ -93,14 +158,15 @@ export default class PluridServer implements IServer {
     //         res.end('Not Implemented')
     //     }
     // }
-}
 
 
 
 
 
 
-
+// import { IncomingMessage, ServerResponse } from 'http';
+// import { parse as parseUrl, UrlWithParsedQuery } from 'url';
+// import { parse as parseQs, ParsedUrlQuery } from 'querystring';
 
 
 // import path from 'path';
