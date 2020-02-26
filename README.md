@@ -23,6 +23,7 @@ The monorepository contains packages implementing the `plurid'` technology to cr
 </p>
 
 
+
 ## Plurid' Application
 
 To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plurid-app` by running the command (provided you have [`NodeJS`](https://nodejs.org/en/) installed on your machine):
@@ -34,7 +35,12 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
 </p>
 
 
+
 ## Packages
+
+
+### Generate
+
 
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/generate-plurid-app">
     <img src="https://img.shields.io/npm/v/@plurid/generate-plurid-app.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
@@ -44,6 +50,9 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
 
 [generate-plurid-app]: https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app
 
+
+
+### Tools
 
 
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-data">
@@ -118,6 +127,9 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
 
 [plurid-state]: https://github.com/plurid/plurid/tree/master/packages/plurid-state -->
 
+
+
+### Implementations
 
 
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html">
