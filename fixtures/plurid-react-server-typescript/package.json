@@ -1,6 +1,12 @@
 {
-  "name": "plurid-react-server-typescript",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+    "name": "plurid-react-server-typescript",
+    "version": "1.0.0",
+    "main": "build/index.js",
+    "license": "MIT",
+    "dependencies": {
+        "@types/react": "^16.9.23",
+        "@types/react-dom": "^16.9.5",
+        "react": "^16.12.0",
+        "react-dom": "^16.12.0"
+    }
 }
