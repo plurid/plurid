@@ -4,19 +4,26 @@
     "main": "build/index.js",
     "license": "MIT",
     "scripts": {
-        "start": "webpack"
+        "build.server": "webpack --config webpack.server.js"
     },
     "dependencies": {
+        "@plurid/plurid-react-server": "^0.1.0",
         "react": "^16.12.0",
         "react-dom": "^16.12.0"
     },
     "devDependencies": {
+        "@babel/core": "^7.8.4",
+        "@babel/preset-env": "^7.8.4",
+        "@babel/preset-react": "^7.8.3",
         "@types/react": "^16.9.23",
         "@types/react-dom": "^16.9.5",
+        "babel-loader": "^8.0.6",
         "source-map-loader": "^0.2.4",
         "ts-loader": "^6.2.1",
         "typescript": "^3.8.2",
         "webpack": "^4.41.6",
-        "webpack-cli": "^3.3.11"
+        "webpack-cli": "^3.3.11",
+        "webpack-merge": "^4.2.2",
+        "webpack-node-externals": "^1.7.2"
     }
 }
