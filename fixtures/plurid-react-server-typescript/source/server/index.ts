@@ -20,7 +20,7 @@ const middleware: PluridServerMiddleware[] = [
 ];
 
 const options: PluridServerPartialOptions = {
-    root: 'plurid',
+    root: 'plurid-app',
     open: true,
 };
 
