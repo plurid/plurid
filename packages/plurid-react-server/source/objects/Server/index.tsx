@@ -1,4 +1,5 @@
 import React from 'react';
+import { renderToString } from 'react-dom/server';
 
 import {
     Server,
@@ -100,8 +101,12 @@ export default class PluridServer {
             //     this.options,
             // );
 
+            const content = renderToString(
+                React.createElement(this.Application),
+            );
+
             this.renderer = new Renderer({
-                content: 'application',
+                content,
                 head: '',
                 store: '',
             });
