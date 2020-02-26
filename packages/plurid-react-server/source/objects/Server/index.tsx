@@ -10,6 +10,7 @@ import express, {
 
 import {
     DEFAULT_SERVER_PORT,
+    DEFAULT_SERVER_OPTIONS,
 } from '../../data/constants';
 
 import {
@@ -87,6 +88,8 @@ export default class PluridServer {
     }
 
     private computeApplication() {
+        this.loadMiddleware();
+
         this.serverApplication.get('*', (request, response) => {
             console.log('Request on path:', request.path);
             // console.log(
@@ -111,9 +114,22 @@ export default class PluridServer {
         partialOptions?: PluridServerPartialOptions,
     ) {
         const options: PluridServerOptions = {
-            quiet: partialOptions?.quiet || false,
+            quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
+            buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
         };
         return options;
+    }
+
+    private loadMiddleware () {
+        this.serverApplication.use(
+            express.static(this.options.buildDirectory),
+        );
+
+        for (const middleware of this.middleware) {
+            this.serverApplication.use(
+                middleware,
+            );
+        }
     }
 }
 

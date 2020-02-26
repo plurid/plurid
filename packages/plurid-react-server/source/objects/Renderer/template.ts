@@ -5,7 +5,7 @@ const template = (
     script: string,
 ) => {
     return `
-<!doctype html>
+<!DOCTYPE html>
     <head>
         ${head}
     </head>

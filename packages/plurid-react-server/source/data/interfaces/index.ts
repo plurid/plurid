@@ -24,6 +24,7 @@ export type PluridServerMiddleware = (
 
 export interface PluridServerOptions {
     quiet: boolean;
+    buildDirectory: string;
 }
 
 export type PluridServerPartialOptions = Partial<PluridServerOptions>;
