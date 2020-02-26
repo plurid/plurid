@@ -9,6 +9,10 @@ import express, {
 } from 'express';
 
 import {
+    DEFAULT_SERVER_PORT,
+} from '../../data/constants';
+
+import {
     PluridServerRoute,
     PluridServerMiddleware,
     PluridServerOptions,
@@ -27,7 +31,7 @@ export default class PluridServer {
 
     private serverApplication: Express;
     private server: Server | undefined;
-    private port: number = 8080;
+    private port: number = DEFAULT_SERVER_PORT;
 
     constructor(
         configuration: PluridServerConfiguration,
@@ -86,6 +90,11 @@ export default class PluridServer {
             this.middleware,
             this.options,
         );
+
+        this.serverApplication.get('*', (request, response) => {
+            console.log('Request on path:', request.path);
+            response.send('<b>Plurid Server is on</b>');
+        });
     }
 
     private handleOptions (
