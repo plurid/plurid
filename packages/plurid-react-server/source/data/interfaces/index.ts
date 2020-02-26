@@ -3,6 +3,10 @@ import React from 'react';
 
 
 
+export * from './internal';
+
+
+
 export interface PluridServerRoute {
     path: string;
     view: string | string[];
