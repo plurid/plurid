@@ -22,7 +22,11 @@ React implementation of [Plurid](https://github.com/plurid/plurid) to view and e
 
 # Install
 
-Given an already given setup for a React-based web application, add the plurid' package
+The most simple manner to setup a "batteries included" plurid' web application is to use [@plurid/generate-plurid-app](https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app)
+
+    npx @plurid/generate-plurid-app
+
+In order to setup a plurid' web application in a more specific manner, given a standard setup for a React-based web application (recommended [create-react-app](https://github.com/facebook/create-react-app)), add the plurid' package
 
     npm install @plurid/plurid-react
 
@@ -38,7 +42,7 @@ or
 
     yarn add @plurid/plurid-functions @plurid/plurid-icons-react @plurid/plurid-themes @plurid/plurid-ui-react hammerjs redux react-redux redux-thunk styled-components
 
-add the types (if a TypeScript project)
+add the types (if it is a TypeScript project)
 
     npm install -D @types/styled-components @types/react-redux
 
@@ -47,7 +51,7 @@ or
     yarn add -D @types/styled-components @types/react-redux
 
 
-A simple, rendering-test application, could look like
+A simple, rendering-test application component, could look like
 
     /** imports */
     import React from 'react';
