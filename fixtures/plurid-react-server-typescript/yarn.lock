@@ -827,10 +827,10 @@
   dependencies:
     express "^4.17.1"
 
-"@plurid/plurid-react@^0.1.104":
-  version "0.1.104"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.104.tgz#7ce47c050abc415e6599eb9fde854035244defac"
-  integrity sha512-81MCNME0pHj+eINVcy2u9aop5Zj/gfZX3Bfcop8zbQEyXKS/GUUMSx+m2TN4mweT0Me5mJzwAxAvrHvC3ea0HQ==
+"@plurid/plurid-react@^0.1.105":
+  version "0.1.105"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.105.tgz#c74e4d49b305c67e751b357d7bc27accdb664eac"
+  integrity sha512-Da9+JGz2W1ZWoq0/gsxkitHgSWz5Iy1GmTqONVTy0WXHMOIDm3lh9X7mbuZ/Qz/9HC2t7H+wdMcC56H7N/ADQQ==
   dependencies:
     "@plurid/plurid-data" "^0.1.97"
     "@plurid/plurid-engine" "^0.1.41"
@@ -1404,13 +1404,6 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
-
-bundle-loader@^0.5.6:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/bundle-loader/-/bundle-loader-0.5.6.tgz#6c9042e62f1c89941458805a3a479d10f34c71fd"
-  integrity sha512-SUgX+u/LJzlJiuoIghuubZ66eflehnjmqSfh/ib9DTe08sxRJ5F/MhHSjp7GfSJivSp8NWgez4PVNAUuMg7vSg==
-  dependencies:
-    loader-utils "^1.1.0"
 
 bytes@3.1.0:
   version "3.1.0"

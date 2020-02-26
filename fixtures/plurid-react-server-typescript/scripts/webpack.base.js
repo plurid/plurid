@@ -16,13 +16,6 @@ module.exports = {
                 ]
             },
             {
-                test: /hammerjs/,
-                loader: "bundle-loader",
-                options: {
-                    lazy: true,
-                },
-            },
-            {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/,
