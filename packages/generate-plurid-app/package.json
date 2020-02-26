@@ -56,7 +56,6 @@
         "@rollup/plugin-commonjs": "^11.0.2",
         "@rollup/plugin-json": "^4.0.2",
         "@rollup/plugin-node-resolve": "^7.1.1",
-        "add-project-script": "^1.0.2",
         "commander": "^4.1.1",
         "inquirer": "^7.0.4"
     },
