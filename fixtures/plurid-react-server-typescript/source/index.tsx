@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 
 import PluridServer, {
     PluridServerRoute,
@@ -6,15 +6,15 @@ import PluridServer, {
     PluridServerPartialOptions,
 } from '@plurid/plurid-react-server';
 
-// import Application from './client/App';
+import Application from './client/App';
 
 
 
-const Application = () => {
-    return (
-        <div>Plurid' Application</div>
-    );
-}
+// const Application = () => {
+//     return (
+//         <div>Plurid' Application</div>
+//     );
+// }
 
 
 const PORT = 33000;
