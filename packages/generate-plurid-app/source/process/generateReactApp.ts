@@ -148,8 +148,9 @@ const generateReactServerApplication = async (
         'redux-thunk',
         'styled-components',
     ];
-    const yarnInstallDependenciesCommand = `yarn install ${requiredDependencies}`;
-    const npmInstallDependenciesCommand = `npm install ${requiredDependencies}`;
+    const requiredDependenciesPackages = requiredDependencies.join(' ');
+    const yarnInstallDependenciesCommand = `yarn install ${requiredDependenciesPackages}`;
+    const npmInstallDependenciesCommand = `npm install ${requiredDependenciesPackages}`;
     const installDependenciesCommand = app.manager === 'Yarn'
         ? yarnInstallDependenciesCommand
         : npmInstallDependenciesCommand;
@@ -172,8 +173,9 @@ const generateReactServerApplication = async (
         'webpack-merge',
         'webpack-node-externals',
     ];
-    const yarnInstallDevelopmentDependenciesCommand = `yarn install -D ${requiredDevelopmentDependencies}`;
-    const npmInstallDevelopmentDependenciesCommand = `npm install -D ${requiredDevelopmentDependencies}`;
+    const requiredDevelopmentDependenciesPackages = requiredDevelopmentDependencies.join(' ');
+    const yarnInstallDevelopmentDependenciesCommand = `yarn install -D ${requiredDevelopmentDependenciesPackages}`;
+    const npmInstallDevelopmentDependenciesCommand = `npm install -D ${requiredDevelopmentDependenciesPackages}`;
     const installDevelopmentDependenciesCommand = app.manager === 'Yarn'
         ? yarnInstallDevelopmentDependenciesCommand
         : npmInstallDevelopmentDependenciesCommand;
