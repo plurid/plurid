@@ -53,40 +53,42 @@ or
 
 A simple, rendering-test application component, could look like
 
-    /** imports */
-    import React from 'react';
+``` typescript
+/** imports */
+import React from 'react';
 
-    import PluridApp, {
-        PluridPage,
-    } from '@plurid/plurid-react';
+import PluridApp, {
+    PluridPage,
+} from '@plurid/plurid-react';
 
 
 
-    /** React Functional Component */
-    const Application: React.FC<any> = () => {
-        /** plurid' pages */
-        const pages: PluridPage[] = [
-            {
-                path: '/',
-                component: {
-                    element: () => (<div>Plurid' Application</div>),
-                },
+/** React Functional Component */
+const Application: React.FC<any> = () => {
+    /** plurid' pages */
+    const pages: PluridPage[] = [
+        {
+            path: '/',
+            component: {
+                element: () => (<div>Plurid' Application</div>),
             },
-        ];
+        },
+    ];
 
-        /** plurid' view */
-        const view: string[] = [
-            '/',
-        ];
+    /** plurid' view */
+    const view: string[] = [
+        '/',
+    ];
 
-        /** render */
-        return (
-            <PluridApp
-                pages={pages}
-                view={view}
-            />
-        );
-    }
+    /** render */
+    return (
+        <PluridApp
+            pages={pages}
+            view={view}
+        />
+    );
+}
 
 
-    export default Application;
+export default Application;
+```
