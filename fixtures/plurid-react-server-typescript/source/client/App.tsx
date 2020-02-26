@@ -1,11 +1,13 @@
 import React from 'react';
 
-import PluridApp from '@plurid/plurid-react';
+import PluridApp, {
+    PluridPage,
+} from '@plurid/plurid-react';
 
 
 
 const Application = () => {
-    const pages = [
+    const pages: PluridPage[] = [
         {
             path: '/',
             component: {
@@ -14,7 +16,7 @@ const Application = () => {
         },
     ];
 
-    const view = [
+    const view: string[] = [
         '/',
     ];
 
