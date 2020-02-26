@@ -4,7 +4,7 @@ import PluridServer, {
     PluridServerPartialOptions,
 } from '@plurid/plurid-react-server';
 
-import Application from './client/App';
+import Application from '../client/App';
 
 
 
