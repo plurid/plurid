@@ -1,12 +1,22 @@
 {
     "name": "plurid-react-server-typescript",
-    "version": "1.0.0",
+    "version": "0.0.0",
     "main": "build/index.js",
     "license": "MIT",
+    "scripts": {
+        "start": "webpack"
+    },
     "dependencies": {
-        "@types/react": "^16.9.23",
-        "@types/react-dom": "^16.9.5",
         "react": "^16.12.0",
         "react-dom": "^16.12.0"
+    },
+    "devDependencies": {
+        "@types/react": "^16.9.23",
+        "@types/react-dom": "^16.9.5",
+        "source-map-loader": "^0.2.4",
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.8.2",
+        "webpack": "^4.41.6",
+        "webpack-cli": "^3.3.11"
     }
 }
