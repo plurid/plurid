@@ -2,6 +2,7 @@ const template = (
     head: string,
     content: string,
     store: string,
+    root: string,
     script: string,
 ) => {
     return `
@@ -10,7 +11,7 @@ const template = (
         ${head}
     </head>
     <body>
-        <div id="root">${content}</div>
+        <div id="${root}">${content}</div>
         <script>
             window.__PRELOADED_STATE__ = ${store}
         </script>

@@ -15,6 +15,7 @@ export default class PluridRenderer {
     private head: string;
     private content: string;
     private store: string;
+    private root: string;
     private script: string;
 
     constructor(
@@ -24,12 +25,14 @@ export default class PluridRenderer {
             head,
             content,
             store,
+            root,
             script,
         } = configuration;
 
         this.head = head;
         this.content = content;
         this.store = this.safeStore(store) || DEFAULT_RENDERER_STORE;
+        this.root = root || 'root',
         this.script = script || DEFAULT_RENDERER_SCRIPT;
     }
 
@@ -38,6 +41,7 @@ export default class PluridRenderer {
             this.head,
             this.content,
             this.store,
+            this.root,
             this.script,
         );
     }
