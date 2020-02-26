@@ -9,8 +9,6 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import Hammer from 'hammerjs';
-
 import {
     /** enumerations */
     TRANSFORM_MODES,
@@ -109,6 +107,10 @@ import {
 } from '../../modules/services/state/modules/space/types';
 
 
+
+const loadHammer = async () => {
+    return await import('hammerjs');
+}
 
 export interface HandledDocuments {
     stateDocuments: Indexed<PluridInternalStateDocument>;
@@ -956,38 +958,55 @@ const View: React.FC<ViewProperties> = (
 
     /** Touch */
     useEffect(() => {
-        if (typeof window === 'undefined') {
-            return;
+        let touch: HammerManager;
+
+        const handleTouch = async () => {
+            if (typeof window === 'undefined') {
+                return;
+            }
+
+            const HammerImport = await loadHammer();
+            const Hammer = HammerImport.default;
+
+            const {
+                transformTouch,
+            } = stateConfiguration.space;
+
+            /**
+             * Remove Hammerjs default css properties to add them only when in Lock Mode.
+             * https://stackoverflow.com/a/37896547
+             */
+            delete Hammer.defaults.cssProps.userSelect;
+            delete Hammer.defaults.cssProps.userDrag;
+            delete Hammer.defaults.cssProps.tapHighlightColor;
+            delete Hammer.defaults.cssProps.touchSelect;
+
+            touch = new Hammer((viewElement as any).current);
+            touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+            touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+
+            if (transformTouch === TRANSFORM_TOUCHES.PAN) {
+                touch.on('pan', handlePan);
+            } else {
+                touch.on('swipe', handleSwipe);
+            }
         }
 
-        const {
-            transformTouch,
-        } = stateConfiguration.space;
-
-        /**
-         * Remove Hammerjs default css properties to add them only when in Lock Mode.
-         * https://stackoverflow.com/a/37896547
-         */
-        delete Hammer.defaults.cssProps.userSelect;
-        delete Hammer.defaults.cssProps.userDrag;
-        delete Hammer.defaults.cssProps.tapHighlightColor;
-        delete Hammer.defaults.cssProps.touchSelect;
-
-        const touch = new Hammer((viewElement as any).current);
-        touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-        touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-
-        if (transformTouch === TRANSFORM_TOUCHES.PAN) {
-            touch.on('pan', handlePan);
-        } else {
-            touch.on('swipe', handleSwipe);
-        }
+        handleTouch();
 
         return () => {
+            const {
+                transformTouch,
+            } = stateConfiguration.space;
+
             if (transformTouch === TRANSFORM_TOUCHES.PAN) {
-                touch.off('pan', handlePan);
+                if (touch) {
+                    touch.off('pan', handlePan);
+                }
             } else {
-                touch.off('swipe', handleSwipe);
+                if (touch) {
+                    touch.off('swipe', handleSwipe);
+                }
             }
         }
     }, [
