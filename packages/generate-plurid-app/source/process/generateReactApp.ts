@@ -124,7 +124,84 @@ const generateReactClientApplication = async (
 const generateReactServerApplication = async (
     app: Application,
 ) => {
-    console.log('Generating Server Rendered Plurid Application');
+    console.log('\n\tGenerating Server Rendered Plurid\' Application.');
+
+    const yarnInitCommand = `yarn init -y`;
+    const npmInitCommand = `npm init -y`;
+    const initCommand = app.manager === 'Yarn'
+        ? yarnInitCommand
+        : npmInitCommand;
+
+    const requiredDependencies = [
+        '@plurid/plurid-functions',
+        '@plurid/plurid-icons-react',
+        '@plurid/plurid-react',
+        '@plurid/plurid-react-server',
+        '@plurid/plurid-themes',
+        '@plurid/plurid-ui-react',
+        'hammerjs',
+        'react',
+        'react-dom',
+        'react-helmet',
+        'react-redux',
+        'redux',
+        'redux-thunk',
+        'styled-components',
+    ];
+    const yarnInstallDependenciesCommand = `yarn install ${requiredDependencies}`;
+    const npmInstallDependenciesCommand = `npm install ${requiredDependencies}`;
+    const installDependenciesCommand = app.manager === 'Yarn'
+        ? yarnInstallDependenciesCommand
+        : npmInstallDependenciesCommand;
+
+    const requiredDevelopmentDependencies = [
+        '@babel/core',
+        '@babel/preset-env',
+        '@babel/preset-react',
+        '@types/react',
+        '@types/react-dom',
+        '@types/react-redux',
+        '@types/styled-components',
+        'babel-loader',
+        'open',
+        'source-map-loader',
+        'ts-loader',
+        'typescript',
+        'webpack',
+        'webpack-cli',
+        'webpack-merge',
+        'webpack-node-externals',
+    ];
+    const yarnInstallDevelopmentDependenciesCommand = `yarn install -D ${requiredDevelopmentDependencies}`;
+    const npmInstallDevelopmentDependenciesCommand = `npm install -D ${requiredDevelopmentDependencies}`;
+    const installDevelopmentDependenciesCommand = app.manager === 'Yarn'
+        ? yarnInstallDevelopmentDependenciesCommand
+        : npmInstallDevelopmentDependenciesCommand;
+
+
+    exec(initCommand, {
+        cwd: app.directory,
+    }, () => {
+        console.log('\n\tInstalling dependencies...');
+
+        exec(installDependenciesCommand, {
+            cwd: app.directory,
+        }, () => {
+            console.log('\tDependencies installed.');
+
+            console.log('\n\tInstalling development dependencies...');
+
+            exec(installDevelopmentDependenciesCommand, {
+                cwd: app.directory,
+            }, () => {
+                console.log('\tDevelopment dependencies installed.');
+
+                // copy source files
+
+                // setup package.json scripts
+            });
+        });
+    });
 }
 
 
