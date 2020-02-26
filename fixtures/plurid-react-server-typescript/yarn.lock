@@ -827,10 +827,10 @@
   dependencies:
     express "^4.17.1"
 
-"@plurid/plurid-react@^0.1.103":
-  version "0.1.103"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.103.tgz#0fe093165b5d0ad009051fa3b28e6f085c797350"
-  integrity sha512-c7a1jREDZMoMdOUjYN4bYcOROinWxiSrF3ZA+kdr8oAnEOlLtaVZV1lgKU7VGWgc8lvR3q3x7+Svsdba8Pm2VA==
+"@plurid/plurid-react@^0.1.104":
+  version "0.1.104"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.104.tgz#7ce47c050abc415e6599eb9fde854035244defac"
+  integrity sha512-81MCNME0pHj+eINVcy2u9aop5Zj/gfZX3Bfcop8zbQEyXKS/GUUMSx+m2TN4mweT0Me5mJzwAxAvrHvC3ea0HQ==
   dependencies:
     "@plurid/plurid-data" "^0.1.97"
     "@plurid/plurid-engine" "^0.1.41"
