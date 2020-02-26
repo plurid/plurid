@@ -53,7 +53,7 @@ or
 
 A simple, rendering-test application component, could look like
 
-``` typescript
+``` tsx
 /** imports */
 import React from 'react';
 
