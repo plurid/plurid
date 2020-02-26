@@ -11,7 +11,7 @@
     "dependencies": {
         "@plurid/plurid-functions": "^0.1.7",
         "@plurid/plurid-icons-react": "^0.1.18",
-        "@plurid/plurid-react": "^0.1.103",
+        "@plurid/plurid-react": "^0.1.104",
         "@plurid/plurid-react-server": "^0.1.1",
         "@plurid/plurid-themes": "^0.1.26",
         "@plurid/plurid-ui-react": "^0.1.79",
