@@ -6,8 +6,6 @@ import {
     exec,
 } from 'child_process';
 
-import addScript from 'add-project-script';
-
 import {
     copyDirectory,
 } from '../utilities';
@@ -17,6 +15,12 @@ import {
 } from '../data/interfaces';
 
 
+
+const addScript = async (
+    configuration: any,
+) => {
+
+}
 
 
 export const removeGeneratePackage = (
@@ -206,7 +210,7 @@ const generateReactServerApplication = async (
 
             exec(installDevelopmentDependenciesCommand, {
                 cwd: app.directory,
-            }, () => {
+            }, async () => {
                 console.log('\tDevelopment dependencies installed.');
 
                 console.log('\n\tSetting up the template files...');
@@ -223,25 +227,27 @@ const generateReactServerApplication = async (
                 copyDirectory(templateDirectory, app.directory);
 
 
-                addScript({
-                    name: 'build.client.development',
-                    value: 'webpack --config scripts/webpack.client.development.js',
-                    path: app.directory,
-                });
-                addScript({
-                    name: 'build.server',
-                    value: 'webpack --config scripts/webpack.server.js',
-                    path: app.directory,
-                });
-                addScript({
-                    name: 'build.development',
-                    value: 'yarn build.server && yarn build.client.development',
-                    path: app.directory,
-                });
-                addScript({
+                const packageJsonPath = path.join(app.directory, './package.json');
+
+                await addScript({
                     name: 'start',
                     value: 'node build/server.js',
-                    path: app.directory,
+                    path: packageJsonPath,
+                });
+                await addScript({
+                    name: 'build.client.development',
+                    value: 'webpack --config scripts/webpack.client.development.js',
+                    path: packageJsonPath,
+                });
+                await addScript({
+                    name: 'build.server',
+                    value: 'webpack --config scripts/webpack.server.js',
+                    path: packageJsonPath,
+                });
+                await addScript({
+                    name: 'build.development',
+                    value: 'yarn build.server && yarn build.client.development',
+                    path: packageJsonPath,
                 });
 
 
