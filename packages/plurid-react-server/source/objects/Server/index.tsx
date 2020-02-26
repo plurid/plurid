@@ -98,14 +98,13 @@ export default class PluridServer {
     private computeApplication() {
         this.loadMiddleware();
 
-        this.serverApplication.get('*', (request, response) => {
-            console.log('Request on path:', request.path);
-            console.log('Request on originalUrl:', request.originalUrl);
+        const router = new Router({
+            routes: this.routes,
+        });
 
-            const router = new Router({
-                routes: this.routes,
-            });
-            const route = router.match(request.originalUrl);
+        this.serverApplication.get('*', (request, response) => {
+            const url = request.originalUrl || request.url;
+            const route = router.match(url);
 
             // pass route to application;
             const content = renderToString(
