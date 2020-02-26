@@ -66,26 +66,6 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-html.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-html][plurid-html] • implementation for HTML Custom Elements
-
-[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid-html
-
-
-
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html-ssr">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-html-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-html-ssr][plurid-html-ssr] • HTML Custom Elements implementation with Server-Side Rendering
-
-[plurid-html-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-html-ssr -->
-
-
-
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-pubsub">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-pubsub.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
@@ -93,26 +73,6 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
 [@plurid/plurid-pubsub][plurid-pubsub] • publish/subscribe message bus
 
 [plurid-pubsub]: https://github.com/plurid/plurid/tree/master/packages/plurid-pubsub
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-react.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-react][plurid-react] • implementation for React
-
-[plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid-react
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react-server">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-react-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-react-server][plurid-react-server] • server for the React implementation
-
-[plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-server
 
 
 
@@ -160,11 +120,51 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
 
 
 
+<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html">
+    <img src="https://img.shields.io/npm/v/@plurid/plurid-html.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
+</a>
+
+[@plurid/plurid-html][plurid-html] • implementation for HTML Custom Elements
+
+[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid-html
+
+
+
+<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html-server">
+    <img src="https://img.shields.io/npm/v/@plurid/plurid-html-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
+</a>
+
+[@plurid/plurid-html-server][plurid-html-server] • server for the HTML Custom Elements implementation
+
+[plurid-html-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-html-server -->
+
+
+
+<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react">
+    <img src="https://img.shields.io/npm/v/@plurid/plurid-react.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
+</a>
+
+[@plurid/plurid-react][plurid-react] • implementation for React
+
+[plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid-react
+
+
+
+<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react-server">
+    <img src="https://img.shields.io/npm/v/@plurid/plurid-react-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
+</a>
+
+[@plurid/plurid-react-server][plurid-react-server] • server for the React implementation
+
+[plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-server
+
+
+
 <!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-vue">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-vue.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-vue][plurid-vue] • Vue implementation
+[@plurid/plurid-vue][plurid-vue] • implementation for Vue
 
 [plurid-vue]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue -->
 
@@ -174,6 +174,6 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
     <img src="https://img.shields.io/npm/v/@plurid/plurid-vue-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-vue-ssr][plurid-vue-ssr] • Vue implementation with Server-Side Rendering
+[@plurid/plurid-vue-ssr][plurid-vue-ssr] • server for the Vue implementation
 
 [plurid-vue-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue-ssr -->
