@@ -6,6 +6,8 @@ import {
     exec,
 } from 'child_process';
 
+import addScript from 'add-project-script';
+
 import {
     copyDirectory,
 } from '../utilities';
@@ -220,7 +222,28 @@ const generateReactServerApplication = async (
                 const templateDirectory = path.join(app.directory, base);
                 copyDirectory(templateDirectory, app.directory);
 
-                // setup package.json scripts
+
+                addScript({
+                    name: 'build.client.development',
+                    value: 'webpack --config scripts/webpack.client.development.js',
+                    path: app.directory,
+                });
+                addScript({
+                    name: 'build.server',
+                    value: 'webpack --config scripts/webpack.server.js',
+                    path: app.directory,
+                });
+                addScript({
+                    name: 'build.development',
+                    value: 'yarn build.server && yarn build.client.development',
+                    path: app.directory,
+                });
+                addScript({
+                    name: 'start',
+                    value: 'node build/server.js',
+                    path: app.directory,
+                });
+
 
                 removeGeneratePackage(app);
             });
