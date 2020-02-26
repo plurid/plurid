@@ -10,6 +10,8 @@ import express, {
     Express,
 } from 'express';
 
+import open from 'open';
+
 import {
     DEFAULT_SERVER_PORT,
     DEFAULT_SERVER_OPTIONS,
@@ -68,12 +70,18 @@ export default class PluridServer {
         port = this.port,
     ) {
         this.port = port;
+
         const serverlink = `http://localhost:${port}`;
+
         if (!this.options.quiet) {
             console.log(`\n\tPlurid Server Started on Port ${port}: ${serverlink}\n`);
         }
 
         this.server = this.serverApplication.listen(port);
+
+        if (this.options.open) {
+            open(serverlink);
+        }
     }
 
     public stop() {
