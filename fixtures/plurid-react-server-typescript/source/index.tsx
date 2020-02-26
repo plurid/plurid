@@ -1,10 +1,11 @@
 import PluridServer from '@plurid/plurid-react-server';
 
+import Application from './client/App';
+
 
 
 const PORT = 33000;
 
-const Application = <div>Application here</div>;
 const routes = [
     // route objects
 ];
