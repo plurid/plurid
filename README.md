@@ -19,6 +19,7 @@ The monorepository contains packages implementing the `plurid'` technology to cr
 
 With `plurid'`, the content of a web page (or any kind of information) can now reside on a `plane of content` (a `Plurid Page`) in a three-dimensional space (a `Plurid Space`). The space can be transformed, rotated, scaled, translated, in order to get a better grasp of the displayed information (text, images, videos, and so forth).
 
+`plurid'` is being used extensively in the [`plurid' ∂products`](https://plurid.com/products), however, new applications can be [easily created](#plurid-application).
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-demo.png" height="600px">
