@@ -29,8 +29,9 @@ const middleware: PluridServerMiddleware[] = [
 ];
 
 const options: PluridServerPartialOptions = {
-    root: 'plurid',
     // plurid' server specific options
+    root: 'plurid',
+    open: true,
 };
 
 
