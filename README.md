@@ -15,7 +15,9 @@
 Explore information as a 3D structure.
 
 
-The monorepository contains packages implementing the `plurid'` technology to create a 3D browser view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
+The monorepository contains packages implementing the `plurid'` technology to create a 3D browser-powered view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
+
+With `plurid'`, the content can now reside on a `plane of content` (a `Plurid Page`) in a three-dimensional space (a `Plurid Space`). The space can be transformed, rotated, scaled, translated, in order to get a better grasp of the displayed information (text, images, videos, and so forth).
 
 
 <p align="center">
