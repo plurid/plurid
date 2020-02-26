@@ -16,6 +16,36 @@ import {
 
 
 
+
+export const removeGeneratePackage = (
+    app: Application,
+) => {
+    const yarnUninstallCommand = `yarn remove @plurid/generate-plurid-app`;
+    const npmUninstallCommand = `npm uninstall @plurid/generate-plurid-app`;
+    const uninstallCommand = app.manager === 'Yarn'
+        ? yarnUninstallCommand
+        : npmUninstallCommand;
+
+    exec(uninstallCommand, {
+        cwd: app.directory,
+    }, () => {
+        console.log('\n\tAll done.');
+
+        console.log('\n\tChange directory');
+        console.log(`\n\t\tcd ${app.directory}`);
+        console.log('\n\trun');
+
+        if (app.manager === 'Yarn') {
+            console.log('\n\t\tyarn start');
+        } else {
+            console.log('\n\t\tnpm start');
+        }
+
+        console.log('\n\tand enjoy.\n');
+    });
+}
+
+
 const generatePluridReactApplication = (
     app: Application,
 ) => {
@@ -71,29 +101,7 @@ const generatePluridReactApplication = (
         copyDirectory(templatePublicDir, publicDir);
         copyDirectory(templateSourceDir, sourceDir);
 
-        const yarnUninstallCommand = `yarn remove @plurid/generate-plurid-app`;
-        const npmUninstallCommand = `npm uninstall @plurid/generate-plurid-app`;
-        const uninstallCommand = app.manager === 'Yarn'
-            ? yarnUninstallCommand
-            : npmUninstallCommand;
-
-        exec(uninstallCommand, {
-            cwd: app.directory,
-        }, () => {
-            console.log('\n\tAll done.');
-
-            console.log('\n\tChange directory');
-            console.log(`\n\t\tcd ${app.directory}`);
-            console.log('\n\trun');
-
-            if (app.manager === 'Yarn') {
-                console.log('\n\t\tyarn start');
-            } else {
-                console.log('\n\t\tnpm start');
-            }
-
-            console.log('\n\tand enjoy.\n');
-        });
+        removeGeneratePackage(app);
     });
 }
 
@@ -133,6 +141,7 @@ const generateReactServerApplication = async (
         : npmInitCommand;
 
     const requiredDependencies = [
+        '@plurid/generate-plurid-app',
         '@plurid/plurid-functions',
         '@plurid/plurid-icons-react',
         '@plurid/plurid-react',
@@ -198,6 +207,7 @@ const generateReactServerApplication = async (
             }, () => {
                 console.log('\tDevelopment dependencies installed.');
 
+                console.log('\n\tSetting up the template files...');
                 // copy template files
                 const templateTypeScript = 'react-typescript-server';
                 const templateJavaScript = 'react-javascript-server';
@@ -211,6 +221,8 @@ const generateReactServerApplication = async (
                 copyDirectory(templateDirectory, app.directory);
 
                 // setup package.json scripts
+
+                removeGeneratePackage(app);
             });
         });
     });
