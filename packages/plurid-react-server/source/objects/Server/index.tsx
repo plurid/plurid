@@ -1,5 +1,6 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
+import { Helmet } from 'react-helmet';
 
 import {
     Server,
@@ -93,21 +94,21 @@ export default class PluridServer {
 
         this.serverApplication.get('*', (request, response) => {
             console.log('Request on path:', request.path);
-            // console.log(
-            //     this.Application,
-            //     this.routes,
-            //     this.index,
-            //     this.middleware,
-            //     this.options,
-            // );
 
             const content = renderToString(
                 React.createElement(this.Application),
             );
 
+            const helmet = Helmet.renderStatic();
+            const head = `
+                ${helmet.title.toString()}
+                ${helmet.meta.toString()}
+                ${helmet.link.toString()}
+            `;
+
             this.renderer = new Renderer({
                 content,
-                head: '',
+                head,
                 store: '',
             });
 
