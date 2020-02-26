@@ -66,13 +66,13 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
 
 
 
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html">
+<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-html.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-html][plurid-html] • HTML Custom Elements implementation
+[@plurid/plurid-html][plurid-html] • implementation for HTML Custom Elements
 
-[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid-html -->
+[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid-html
 
 
 
