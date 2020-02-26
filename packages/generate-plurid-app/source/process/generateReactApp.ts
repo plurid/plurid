@@ -198,7 +198,17 @@ const generateReactServerApplication = async (
             }, () => {
                 console.log('\tDevelopment dependencies installed.');
 
-                // copy source files
+                // copy template files
+                const templateTypeScript = 'react-typescript-server';
+                const templateJavaScript = 'react-javascript-server';
+                const templateFiles = app.language === 'TypeScript'
+                    ? templateTypeScript
+                    : templateJavaScript;
+
+                const base = `./node_modules/@plurid/generate-plurid-app/distribution/files/${templateFiles}`;
+
+                const templateDirectory = path.join(app.directory, base);
+                copyDirectory(templateDirectory, app.directory);
 
                 // setup package.json scripts
             });
