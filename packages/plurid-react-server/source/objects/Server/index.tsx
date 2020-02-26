@@ -103,11 +103,19 @@ export default class PluridServer {
                 ${helmet.link.toString()}
             `;
 
+            const store = '';
+
+            const {
+                root,
+                script,
+            } = this.options;
+
             this.renderer = new Renderer({
                 content,
                 head,
-                store: '',
-                script: this.options.script,
+                store,
+                root,
+                script,
             });
 
             response.send(this.renderer?.html());
