@@ -20,6 +20,8 @@ import {
     PluridServerConfiguration,
 } from '../../data/interfaces';
 
+import Renderer from '../Renderer';
+
 
 
 export default class PluridServer {
@@ -32,6 +34,7 @@ export default class PluridServer {
     private serverApplication: Express;
     private server: Server | undefined;
     private port: number;
+    private renderer: Renderer | undefined;
 
     constructor(
         configuration: PluridServerConfiguration,
@@ -84,17 +87,23 @@ export default class PluridServer {
     }
 
     private computeApplication() {
-        console.log(
-            this.Application,
-            this.routes,
-            this.index,
-            this.middleware,
-            this.options,
-        );
-
         this.serverApplication.get('*', (request, response) => {
             console.log('Request on path:', request.path);
-            response.send('<b>Plurid Server is on</b>');
+            // console.log(
+            //     this.Application,
+            //     this.routes,
+            //     this.index,
+            //     this.middleware,
+            //     this.options,
+            // );
+
+            this.renderer = new Renderer({
+                content: 'application',
+                head: '',
+                store: '',
+            });
+
+            response.send(this.renderer?.html());
         });
     }
 
