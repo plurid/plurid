@@ -149,7 +149,7 @@ const generateReactServerApplication = async (
         'styled-components',
     ];
     const requiredDependenciesPackages = requiredDependencies.join(' ');
-    const yarnInstallDependenciesCommand = `yarn install ${requiredDependenciesPackages}`;
+    const yarnInstallDependenciesCommand = `yarn add ${requiredDependenciesPackages}`;
     const npmInstallDependenciesCommand = `npm install ${requiredDependenciesPackages}`;
     const installDependenciesCommand = app.manager === 'Yarn'
         ? yarnInstallDependenciesCommand
@@ -174,7 +174,7 @@ const generateReactServerApplication = async (
         'webpack-node-externals',
     ];
     const requiredDevelopmentDependenciesPackages = requiredDevelopmentDependencies.join(' ');
-    const yarnInstallDevelopmentDependenciesCommand = `yarn install -D ${requiredDevelopmentDependenciesPackages}`;
+    const yarnInstallDevelopmentDependenciesCommand = `yarn add -D ${requiredDevelopmentDependenciesPackages}`;
     const npmInstallDevelopmentDependenciesCommand = `npm install -D ${requiredDevelopmentDependenciesPackages}`;
     const installDevelopmentDependenciesCommand = app.manager === 'Yarn'
         ? yarnInstallDevelopmentDependenciesCommand
