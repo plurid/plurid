@@ -60,7 +60,9 @@ const App = () => {
                 <meta name="description" content="Plurid' Application" />
 
                 <link rel="icon" href="/favicon.ico" />
-                <link rel="apple-touch-icon" href="/logo-192x192.png" />
+                <link rel="shortcut icon" type="image/png" href="/icon-192x192.png" />
+                <link rel="shortcut icon" sizes="192x192" href="/icon-192x192.png" />
+                <link rel="apple-touch-icon" href="/icon-192x192.png" />
                 <meta name="theme-color" content="#000000" />
 
                 <link rel="manifest" href="/manifest.json" />

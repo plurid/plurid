@@ -43,6 +43,7 @@
         "@types/react-redux": "^7.1.7",
         "@types/styled-components": "^5.0.1",
         "babel-loader": "^8.0.6",
+        "copy-webpack-plugin": "^5.1.1",
         "css-loader": "^3.4.2",
         "file-loader": "^5.1.0",
         "nodemon": "^2.0.2",
