@@ -316,6 +316,13 @@ const generateReactServerApplication = async (
         'redux-thunk',
         'styled-components',
     ];
+    const graphqlDependencies = [
+        'graphql',
+        'graphql-tag',
+        'apollo-client',
+        'apollo-link-http',
+        'apollo-cache-inmemory',
+    ];
     const requiredDependenciesPackages = requiredDependencies.join(' ');
     const installDependenciesCommand = computeInstallDependenciesCommand(
         app,
@@ -332,6 +339,7 @@ const generateReactServerApplication = async (
         'file-loader',
         'nodemon',
         'open',
+        'redux-devtools-extension',
         'rimraf',
         'source-map-loader',
         'style-loader',
@@ -397,97 +405,6 @@ const generateReactServerApplication = async (
     await setupPackageJSONReactServer(app);
 
     await removeGeneratePackage(app);
-
-
-    // exec(initCommand, {
-    //     cwd: app.directory,
-    // }, () => {
-    //     console.log('\n\tInstalling dependencies...');
-
-    //     exec(installDependenciesCommand, {
-    //         cwd: app.directory,
-    //     }, () => {
-    //         console.log('\tDependencies installed.');
-
-    //         console.log('\n\tInstalling development dependencies...');
-
-    //         exec(installDevelopmentDependenciesCommand, {
-    //             cwd: app.directory,
-    //         }, async () => {
-    //             console.log('\tDevelopment dependencies installed.');
-
-    //             console.log('\n\tSetting up the template files...');
-    //             // copy template files
-    //             const templateTypeScript = 'react-typescript-server';
-    //             const templateJavaScript = 'react-javascript-server';
-    //             const templateFiles = app.language === 'TypeScript'
-    //                 ? templateTypeScript
-    //                 : templateJavaScript;
-
-    //             const base = `./node_modules/@plurid/generate-plurid-app/distribution/files/${templateFiles}`;
-
-    //             const templateDirectory = path.join(app.directory, base);
-    //             copyDirectory(templateDirectory, app.directory);
-
-
-    //             const packageJsonPath = path.join(app.directory, './package.json');
-
-    //             const packageManagerRun = app.manager === 'Yarn'
-    //                 ? 'yarn'
-    //                 : 'npm run';
-
-    //             await addScript({
-    //                 name: 'prestart',
-    //                 value: `${packageManagerRun} build.production`,
-    //                 path: packageJsonPath,
-    //             });
-    //             await addScript({
-    //                 name: 'start',
-    //                 value: 'node build/server.js',
-    //                 path: packageJsonPath,
-    //             });
-    //             await addScript({
-    //                 name: 'start.development',
-    //                 value: 'node build/server.js',
-    //                 path: packageJsonPath,
-    //             });
-    //             await addScript({
-    //                 name: 'clean',
-    //                 value: 'rimraf ./build',
-    //                 path: packageJsonPath,
-    //             });
-    //             await addScript({
-    //                 name: 'build.client.development',
-    //                 value: 'webpack --config scripts/webpack.client.development.js',
-    //                 path: packageJsonPath,
-    //             });
-    //             await addScript({
-    //                 name: 'build.client.production',
-    //                 value: 'webpack --config scripts/webpack.client.production.js',
-    //                 path: packageJsonPath,
-    //             });
-    //             await addScript({
-    //                 name: 'build.server',
-    //                 value: 'webpack --config scripts/webpack.server.js',
-    //                 path: packageJsonPath,
-    //             });
-    //             await addScript({
-    //                 name: 'build.development',
-    //                 value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.development`,
-    //                 path: packageJsonPath,
-    //             });
-    //             await addScript({
-    //                 name: 'build.production',
-    //                 value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.production`,
-    //                 path: packageJsonPath,
-    //             });
-
-    //             arrangePackageJSON(packageJsonPath);
-
-    //             removeGeneratePackage(app);
-    //         });
-    //     });
-    // });
 }
 
 
