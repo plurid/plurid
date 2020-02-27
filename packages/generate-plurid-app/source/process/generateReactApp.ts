@@ -412,9 +412,9 @@ const generateReactServerApplication = async (
 
     await setupPackageJSONReactServer(app);
 
-    await removeGeneratePackage(app);
-
     await removeUnusedAddons(app);
+
+    await removeGeneratePackage(app);
 }
 
 

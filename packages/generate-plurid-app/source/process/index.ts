@@ -121,7 +121,7 @@ const processArguments = async (
                 ? 'is'
                 : 'are';
             const addonsList = addons.reduce((accumulator, addon) => accumulator + ' ' + addon);
-            console.log(`\tThe selected add-on${plural} ${verb} ${addonsList}.`);
+            console.log(`\tThe selected add-on${plural} ${verb}: ${addonsList}.`);
         } else {
             console.log('\tNo selected add-ons.');
         }
