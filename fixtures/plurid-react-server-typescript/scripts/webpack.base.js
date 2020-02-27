@@ -5,13 +5,13 @@ module.exports = {
 
     module: {
         rules: [
-            {
-                test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                ],
-            },
+            // {
+            //     test: /\.css$/,
+            //     use: [
+            //         'style-loader',
+            //         'css-loader',
+            //     ],
+            // },
             {
                 test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/i,
                 use: [
@@ -28,7 +28,7 @@ module.exports = {
                 exclude: /node_modules/,
                 use: [
                     {
-                        loader: "ts-loader",
+                        loader: 'ts-loader',
                     },
                 ],
             },
