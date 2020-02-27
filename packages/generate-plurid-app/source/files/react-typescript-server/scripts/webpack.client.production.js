@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const merge = require('webpack-merge');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const baseConfig = require('./webpack.base');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -21,20 +21,21 @@ const config = {
         children: true
     },
     optimization: {
+        minimize: true,
         minimizer: [
-        // we specify a custom UglifyJsPlugin here to get source maps in production
-        new UglifyJSPlugin({
-            cache: true,
-            parallel: true,
-            uglifyOptions: {
-            compress: false,
-            ecma: 6,
-            mangle: true
-            },
-            sourceMap: false
-        })
-        ]
+            new TerserPlugin({
+                test: /\.js(\?.*)?$/i,
+                sourceMap: true,
+                terserOptions: {
+                    output: {
+                        comments: false,
+                    },
+                },
+                extractComments: false,
+            }),
+        ],
     },
+
     // Tell webpack to root file of our server app
     entry: './source/client/index.tsx',
 
@@ -46,7 +47,7 @@ const config = {
     devtool: 'inline-source-map',
     plugins: [
         // new BundleAnalyzerPlugin(),
-        new CompressionPlugin(),
+        // new CompressionPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production')
