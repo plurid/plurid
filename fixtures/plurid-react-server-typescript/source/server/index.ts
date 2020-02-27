@@ -5,6 +5,7 @@ import PluridServer, {
 } from '@plurid/plurid-react-server';
 
 import Application from '../client/App';
+import helmet from '../client/helmet';
 
 
 
@@ -28,6 +29,7 @@ const options: PluridServerPartialOptions = {
 const pluridServer = new PluridServer({
     Application,
     routes,
+    helmet,
     middleware,
     options,
 });
