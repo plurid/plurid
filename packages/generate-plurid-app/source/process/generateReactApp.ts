@@ -310,7 +310,7 @@ const generateReactServerApplication = async (
         'hammerjs',
         'react',
         'react-dom',
-        'react-helmet',
+        'react-helmet-async',
         'react-redux',
         'redux',
         'redux-thunk',
@@ -345,7 +345,6 @@ const generateReactServerApplication = async (
     const requiredDevelopmentTypescriptDependencies = [
         '@types/react',
         '@types/react-dom',
-        '@types/react-helmet',
         '@types/react-redux',
         '@types/styled-components',
         'ts-loader',
