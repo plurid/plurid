@@ -1,13 +1,20 @@
 {
     "name": "plurid-react-server-typescript",
     "version": "0.0.0",
+    "description": "plurid' web application",
+    "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
+    "private": true,
     "main": "build/index.js",
-    "license": "MIT",
     "scripts": {
+        "prestart": "yarn build.production",
         "start": "node build/server.js",
+        "start.development": "node build/server.js",
+        "clean": "rimraf ./build",
         "build.client.development": "webpack --config scripts/webpack.client.development.js",
+        "build.client.production": "webpack --config scripts/webpack.client.production.js",
         "build.server": "webpack --config scripts/webpack.server.js",
-        "build.development": "yarn build.server && yarn build.client.development"
+        "build.development": "yarn clean && yarn build.server && yarn build.client.development",
+        "build.production": "yarn clean && yarn build.server && yarn build.client.production"
     },
     "dependencies": {
         "@plurid/plurid-functions": "^0.1.7",
@@ -35,6 +42,7 @@
         "@types/styled-components": "^5.0.1",
         "babel-loader": "^8.0.6",
         "open": "^7.0.2",
+        "rimraf": "^3.0.2",
         "source-map-loader": "^0.2.4",
         "terser-webpack-plugin": "^2.3.5",
         "ts-loader": "^6.2.1",
