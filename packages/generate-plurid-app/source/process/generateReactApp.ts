@@ -272,9 +272,6 @@ const computeInstallDevelopmentDependenciesCommand = (
 const generateReactServerApplication = async (
     app: Application,
 ) => {
-    const graphqlAddon = app.addons.includes(addons.graphql);
-    const reduxAddon = app.addons.includes(addons.redux);
-
     console.log('\n\tGenerating server rendered plurid\' application.');
 
     const initCommand = computeInitCommand(app);
@@ -296,6 +293,7 @@ const generateReactServerApplication = async (
         'redux-thunk',
         'styled-components',
     ];
+    const graphqlAddon = app.addons.includes(addons.graphql);
     const graphqlDependencies = graphqlAddon
         ? [
             'graphql',
