@@ -7,7 +7,7 @@ import App from './App';
 
 
 
-ReactDOM.render(
+ReactDOM.hydrate(
     <App />,
     document.getElementById('plurid-app'),
 );
