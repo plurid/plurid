@@ -109,12 +109,10 @@ export default class PluridServer {
             const url = request.originalUrl || request.url;
             const route = router.match(url);
 
-            // pass route to application;
-            const content = renderToString(
-                React.createElement(this.Application),
-            );
-
-            const styles = this.getStyledStyles();
+            const {
+                content,
+                styles,
+            } = this.getContentAndStyles();
 
             const { helmet } = this.helmet;
 
@@ -169,19 +167,25 @@ export default class PluridServer {
         }
     }
 
-    private getStyledStyles() {
+    private getContentAndStyles() {
         const sheet = new ServerStyleSheet();
 
         try {
-            renderToString(
+            const content = renderToString(
                 sheet.collectStyles(
                     React.createElement(this.Application),
                 ),
             );
-            const styleTags = sheet.getStyleTags();
-            return styleTags;
+            const styles = sheet.getStyleTags();
+            return {
+                content,
+                styles,
+            };
         } catch (error) {
-            return '';
+            return {
+                content: '',
+                styles: '',
+            };
         } finally {
             sheet.seal();
         }
