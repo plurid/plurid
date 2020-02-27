@@ -1,5 +1,6 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
+import { ServerStyleSheet } from 'styled-components';
 
 import {
     Server,
@@ -113,6 +114,8 @@ export default class PluridServer {
                 React.createElement(this.Application),
             );
 
+            const styles = this.getStyledStyles();
+
             const { helmet } = this.helmet;
 
             const head = `
@@ -131,6 +134,7 @@ export default class PluridServer {
             this.renderer = new Renderer({
                 content,
                 head,
+                styles,
                 store,
                 root,
                 script,
@@ -162,6 +166,24 @@ export default class PluridServer {
             this.serverApplication.use(
                 middleware,
             );
+        }
+    }
+
+    private getStyledStyles() {
+        const sheet = new ServerStyleSheet();
+
+        try {
+            renderToString(
+                sheet.collectStyles(
+                    React.createElement(this.Application),
+                ),
+            );
+            const styleTags = sheet.getStyleTags();
+            return styleTags;
+        } catch (error) {
+            return '';
+        } finally {
+            sheet.seal();
         }
     }
 }
