@@ -21,6 +21,7 @@ const inquire = (
                 ui,
                 renderer,
                 manager,
+                addons,
             } = args;
 
             const answers: Answers = {
@@ -29,6 +30,7 @@ const inquire = (
                 ui,
                 renderer,
                 manager,
+                addons,
             };
             await processArguments(answers);
         });

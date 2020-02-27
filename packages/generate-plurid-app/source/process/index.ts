@@ -102,6 +102,10 @@ const processArguments = async (
                 manager = managerTypes.yarn;
         }
 
+        const {
+            addons,
+        } = program;
+
         console.log('\n\tThe plurid\' application will be generated at:');
         console.log(`\t${directory}`);
         console.log('\tThe application language is:', language);
@@ -109,12 +113,26 @@ const processArguments = async (
         console.log('\tThe application rendering side is:', renderer);
         console.log('\tThe package manager is:', manager);
 
+        if (addons.length > 0) {
+            const plural = addons.length === 1
+                ? ''
+                : 's';
+            const verb = addons.length === 1
+                ? 'is'
+                : 'are';
+            const addonsList = addons.reduce((accumulator, addon) => accumulator + ' ' + addon);
+            console.log(`\tThe selected add-on${plural} ${verb} ${addonsList}.`);
+        } else {
+            console.log('\tNo selected add-ons.');
+        }
+
         const application: Application = {
             directory,
             language,
             ui,
             renderer,
             manager,
+            addons,
         };
         await generateApplication(application);
     } catch (error) {

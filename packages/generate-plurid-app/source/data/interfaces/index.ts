@@ -12,6 +12,7 @@ export interface Answers {
     ui: string;
     renderer: string;
     manager: string;
+    addons: string[];
 }
 
 
@@ -65,4 +66,5 @@ export interface Application {
     ui: UI;
     renderer: Renderer;
     manager: Manager;
+    addons: string[];
 }
