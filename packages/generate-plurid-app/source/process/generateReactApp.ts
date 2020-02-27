@@ -286,6 +286,15 @@ const generateReactServerApplication = async (
 
                 const packageJsonPath = path.join(app.directory, './package.json');
 
+                const packageManagerRun = app.manager === 'Yarn'
+                    ? 'yarn'
+                    : 'npm run';
+
+                await addScript({
+                    name: 'prestart',
+                    value: `${packageManagerRun} build.production`,
+                    path: packageJsonPath,
+                });
                 await addScript({
                     name: 'start',
                     value: 'node build/server.js',
@@ -308,12 +317,12 @@ const generateReactServerApplication = async (
                 });
                 await addScript({
                     name: 'build.development',
-                    value: 'yarn build.server && yarn build.client.development',
+                    value: `${packageManagerRun} build.server && ${packageManagerRun} build.client.development`,
                     path: packageJsonPath,
                 });
                 await addScript({
                     name: 'build.production',
-                    value: 'yarn build.server && yarn build.client.production',
+                    value: `${packageManagerRun} build.server && ${packageManagerRun} build.client.production`,
                     path: packageJsonPath,
                 });
 
