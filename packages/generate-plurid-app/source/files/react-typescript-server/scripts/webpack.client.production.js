@@ -21,6 +21,9 @@ const config = {
         children: true
     },
     optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
         minimize: true,
         minimizer: [
             new TerserPlugin({
@@ -36,7 +39,7 @@ const config = {
         ],
     },
 
-    // Tell webpack to root file of our server app
+    // Tell webpack to root file of our client app
     entry: './source/client/index.tsx',
 
     // Tell webpack where to put output file
@@ -44,7 +47,7 @@ const config = {
         filename: 'index.js',
         path: path.resolve(__dirname, '../build')
     },
-    devtool: 'inline-source-map',
+
     plugins: [
         // new BundleAnalyzerPlugin(),
         // new CompressionPlugin(),
