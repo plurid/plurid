@@ -62,7 +62,7 @@ export interface PluridComponentReact {
      * The `element` will receive the properties, if any,
      * and the `plurid` property.
      */
-    element: React.FC<ReactComponentWithPluridProperty>,
+    element: React.FC<ReactComponentWithPluridProperty<any>>,
 
     /**
      * The `properties` will be passed to the `element` at runtime.
@@ -70,10 +70,11 @@ export interface PluridComponentReact {
     properties?: PluridComponentProperties;
 }
 
-export interface ReactComponentWithPluridProperty {
+export interface WithPluridProperty {
     plurid: PluridProperty;
-    [key: string]: any;
 }
+
+export type ReactComponentWithPluridProperty<T> = T & WithPluridProperty;
 
 export interface PluridComponentProperties {
     [key: string]: any;
