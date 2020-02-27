@@ -1,5 +1,10 @@
 import express from 'express';
+
 import React from 'react';
+
+import {
+    Helmet,
+} from 'react-helmet-async';
 
 
 
@@ -51,7 +56,7 @@ export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 export interface PluridServerConfiguration {
     Application: React.FC<any>;
     routes: PluridServerRoute[];
-    helmet: any;
+    helmet: Helmet;
     middleware?: PluridServerMiddleware[];
     options?: PluridServerPartialOptions;
 }
