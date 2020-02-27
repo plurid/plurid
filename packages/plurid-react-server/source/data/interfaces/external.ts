@@ -57,6 +57,7 @@ export interface PluridServerConfiguration {
     Application: React.FC<any>;
     routes: PluridServerRoute[];
     helmet: Helmet;
+    styles?: string[];
     middleware?: PluridServerMiddleware[];
     options?: PluridServerPartialOptions;
 }
