@@ -52,6 +52,8 @@ export interface PluridServerOptions {
 
 export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 
+export type PluridServerAddons = 'GraphQL' | 'Redux';
+
 
 export interface PluridServerConfiguration {
     Application: React.FC<any>;
@@ -59,5 +61,13 @@ export interface PluridServerConfiguration {
     helmet: Helmet;
     styles?: string[];
     middleware?: PluridServerMiddleware[];
+
+    /**
+     * Add-ons to be handled by the server.
+     *
+     * Supported: `GraphQL`, `Redux`.
+     */
+    addons?: PluridServerAddons[];
+
     options?: PluridServerPartialOptions;
 }

@@ -31,6 +31,7 @@ import {
 import {
     PluridServerRoute,
     PluridServerMiddleware,
+    PluridServerAddons,
     PluridServerOptions,
     PluridServerPartialOptions,
     PluridServerConfiguration,
@@ -47,6 +48,7 @@ export default class PluridServer {
     private helmet: Helmet;
     private styles: string[];
     private middleware: PluridServerMiddleware[];
+    private addons: PluridServerAddons[];
     private options: PluridServerOptions;
 
     private serverApplication: Express;
@@ -63,6 +65,7 @@ export default class PluridServer {
             helmet,
             styles,
             middleware,
+            addons,
             options,
         } = configuration;
 
@@ -71,6 +74,7 @@ export default class PluridServer {
         this.helmet = helmet;
         this.styles = styles || [];
         this.middleware = middleware || [];
+        this.addons = addons || [];
         this.options = this.handleOptions(options);
 
         this.serverApplication = express();
