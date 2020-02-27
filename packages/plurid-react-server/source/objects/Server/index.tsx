@@ -45,6 +45,7 @@ export default class PluridServer {
     private Application: React.FC<any>;
     private routes: PluridServerRoute[];
     private helmet: Helmet;
+    private styles: string[];
     private middleware: PluridServerMiddleware[];
     private options: PluridServerOptions;
 
@@ -60,6 +61,7 @@ export default class PluridServer {
             Application,
             routes,
             helmet,
+            styles,
             middleware,
             options,
         } = configuration;
@@ -67,6 +69,7 @@ export default class PluridServer {
         this.Application = Application;
         this.routes = routes;
         this.helmet = helmet;
+        this.styles = styles || [];
         this.middleware = middleware || [];
         this.options = this.handleOptions(options);
 
@@ -125,6 +128,9 @@ export default class PluridServer {
                 styles,
             } = this.getContentAndStyles();
 
+            const stringedStyles = this.styles.reduce((accumulator, style) => accumulator + style);
+            const mergedStyles = styles + stringedStyles;
+
             const {
                 helmet,
             } = this.helmet;
@@ -145,7 +151,7 @@ export default class PluridServer {
             this.renderer = new Renderer({
                 content,
                 head,
-                styles,
+                styles: mergedStyles,
                 store,
                 root,
                 script,
