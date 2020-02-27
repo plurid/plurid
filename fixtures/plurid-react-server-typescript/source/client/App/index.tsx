@@ -10,7 +10,12 @@ import PluridApp, {
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
-import helmetContext from './helmet';
+import './index.css';
+import {
+    StyledApp,
+} from './styled';
+
+import helmetContext from './services/helmet';
 
 import Head from './components/Head';
 
@@ -59,7 +64,7 @@ const App = () => {
         <HelmetProvider
             context={helmetContext}
         >
-            <div>
+            <StyledApp>
                 <Head />
 
                 <PluridApp
@@ -67,7 +72,7 @@ const App = () => {
                     pages={pluridPages}
                     view={pluridView}
                 />
-            </div>
+            </StyledApp>
         </HelmetProvider>
     );
 }
