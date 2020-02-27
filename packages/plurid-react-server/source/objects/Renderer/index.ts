@@ -13,6 +13,7 @@ import template from './template';
 
 export default class PluridRenderer {
     private head: string;
+    private styles: string;
     private content: string;
     private store: string;
     private root: string;
@@ -23,6 +24,7 @@ export default class PluridRenderer {
     ) {
         const {
             head,
+            styles,
             content,
             store,
             root,
@@ -30,6 +32,7 @@ export default class PluridRenderer {
         } = configuration;
 
         this.head = head;
+        this.styles = styles;
         this.content = content;
         this.store = this.safeStore(store) || DEFAULT_RENDERER_STORE;
         this.root = root || 'root',
@@ -39,6 +42,7 @@ export default class PluridRenderer {
     public html() {
         return template(
             this.head,
+            this.styles,
             this.content,
             this.store,
             this.root,

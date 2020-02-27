@@ -1,5 +1,6 @@
 const template = (
     head: string,
+    styles: string,
     content: string,
     store: string,
     root: string,
@@ -9,6 +10,7 @@ const template = (
 <!DOCTYPE html>
     <head>
         ${head}
+        ${styles}
     </head>
     <body>
         <div id="${root}">${content}</div>
