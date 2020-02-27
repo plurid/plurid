@@ -20,6 +20,10 @@ import express, {
 import open from 'open';
 
 import {
+    Helmet,
+} from 'react-helmet-async';
+
+import {
     DEFAULT_SERVER_PORT,
     DEFAULT_SERVER_OPTIONS,
 } from '../../data/constants';
@@ -40,7 +44,7 @@ import Router from '../Router';
 export default class PluridServer {
     private Application: React.FC<any>;
     private routes: PluridServerRoute[];
-    private helmet: any;
+    private helmet: Helmet;
     private middleware: PluridServerMiddleware[];
     private options: PluridServerOptions;
 
