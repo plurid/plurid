@@ -1,6 +1,13 @@
 import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { ServerStyleSheet } from 'styled-components';
+
+import {
+    renderToString,
+ } from 'react-dom/server';
+
+import {
+    ServerStyleSheet,
+    StyleSheetManager,
+} from 'styled-components';
 
 import {
     Server,
@@ -114,7 +121,9 @@ export default class PluridServer {
                 styles,
             } = this.getContentAndStyles();
 
-            const { helmet } = this.helmet;
+            const {
+                helmet,
+            } = this.helmet;
 
             const head = `
                 ${helmet.meta.toString()}
@@ -169,18 +178,19 @@ export default class PluridServer {
 
     private getContentAndStyles() {
         const sheet = new ServerStyleSheet();
+        let content = '';
+        let styles = '';
 
         try {
-            const content = renderToString(
+            const Application = this.Application;
+            content = renderToString(
                 sheet.collectStyles(
-                    React.createElement(this.Application),
+                    <StyleSheetManager sheet={sheet.instance}>
+                        <Application />
+                    </StyleSheetManager>
                 ),
             );
-            const styles = sheet.getStyleTags();
-            return {
-                content,
-                styles,
-            };
+            styles = sheet.getStyleTags();
         } catch (error) {
             return {
                 content: '',
@@ -189,5 +199,10 @@ export default class PluridServer {
         } finally {
             sheet.seal();
         }
+
+        return {
+            content,
+            styles,
+        };
     }
 }
