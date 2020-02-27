@@ -3,7 +3,7 @@ const path = require('path');
 const merge = require('webpack-merge');
 const CopyPlugin = require('copy-webpack-plugin');
 
-const baseConfig = require('./webpack.base');
+const baseConfig = require('./webpack.client.base');
 
 
 
