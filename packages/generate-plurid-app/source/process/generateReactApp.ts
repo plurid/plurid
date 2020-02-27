@@ -148,6 +148,29 @@ export const removeGeneratePackage = async (
     });
 }
 
+export const removeUnusedAddons = async (
+    app: Application,
+) => {
+    const graphqlAddon = app.addons.includes(addons.graphql);
+    if (!graphqlAddon) {
+        const graphqlRelativeDirectory = './source/client/App/services/graphql';
+        const graphqlDirectory = path.resolve(app.directory, graphqlRelativeDirectory);
+
+        await executeCommand(
+            `rm -rf ${graphqlDirectory}`,
+        );
+    }
+
+    const reduxAddon = app.addons.includes(addons.redux);
+    if (!reduxAddon) {
+        const reduxRelativeDirectory = './source/client/App/services/state';
+        const reduxDirectory = path.resolve(app.directory, reduxRelativeDirectory);
+
+        await executeCommand(
+            `rm -rf ${reduxDirectory}`,
+        );
+    }
+}
 
 const generatePluridReactApplication = (
     app: Application,
@@ -390,6 +413,8 @@ const generateReactServerApplication = async (
     await setupPackageJSONReactServer(app);
 
     await removeGeneratePackage(app);
+
+    await removeUnusedAddons(app);
 }
 
 
