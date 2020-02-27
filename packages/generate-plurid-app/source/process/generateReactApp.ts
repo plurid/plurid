@@ -345,6 +345,7 @@ const generateReactServerApplication = async (
     const requiredDevelopmentTypescriptDependencies = [
         '@types/react',
         '@types/react-dom',
+        '@types/react-helmet',
         '@types/react-redux',
         '@types/styled-components',
         'ts-loader',
