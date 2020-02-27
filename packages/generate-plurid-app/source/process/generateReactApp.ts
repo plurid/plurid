@@ -193,16 +193,49 @@ const generateReactClientApplication = async (
 }
 
 
-const generateReactServerApplication = async (
+const computeInitCommand = (
     app: Application,
 ) => {
-    console.log('\n\tGenerating Server Rendered Plurid\' Application.');
-
     const yarnInitCommand = `yarn init -y`;
     const npmInitCommand = `npm init -y`;
     const initCommand = app.manager === 'Yarn'
         ? yarnInitCommand
         : npmInitCommand;
+    return initCommand;
+}
+
+const computeInstallDependenciesCommand = (
+    app: Application,
+    dependencies: string,
+) => {
+    const yarnInstallDependenciesCommand = `yarn add ${dependencies}`;
+    const npmInstallDependenciesCommand = `npm install ${dependencies}`;
+    const installDependenciesCommand = app.manager === 'Yarn'
+        ? yarnInstallDependenciesCommand
+        : npmInstallDependenciesCommand;
+    return installDependenciesCommand;
+}
+
+const computeInstallDevelopmentDependenciesCommand = (
+    app: Application,
+    dependencies: string,
+) => {
+    const yarnInstallDevelopmentDependenciesCommand = `yarn add -D ${dependencies}`;
+    const npmInstallDevelopmentDependenciesCommand = `npm install -D ${dependencies}`;
+    const installDevelopmentDependenciesCommand = app.manager === 'Yarn'
+        ? yarnInstallDevelopmentDependenciesCommand
+        : npmInstallDevelopmentDependenciesCommand;
+
+    return installDevelopmentDependenciesCommand;
+}
+
+
+const generateReactServerApplication = async (
+    app: Application,
+) => {
+    console.log('\n\tGenerating server rendered plurid\' application.');
+
+    const initCommand = computeInitCommand(app);
 
     const requiredDependencies = [
         '@plurid/generate-plurid-app',
@@ -222,11 +255,10 @@ const generateReactServerApplication = async (
         'styled-components',
     ];
     const requiredDependenciesPackages = requiredDependencies.join(' ');
-    const yarnInstallDependenciesCommand = `yarn add ${requiredDependenciesPackages}`;
-    const npmInstallDependenciesCommand = `npm install ${requiredDependenciesPackages}`;
-    const installDependenciesCommand = app.manager === 'Yarn'
-        ? yarnInstallDependenciesCommand
-        : npmInstallDependenciesCommand;
+    const installDependenciesCommand = computeInstallDependenciesCommand(
+        app,
+        requiredDependenciesPackages,
+    );
 
     const requiredDevelopmentDependencies = [
         '@babel/core',
@@ -256,12 +288,10 @@ const generateReactServerApplication = async (
     const requiredDevelopmentDependenciesPackages = app.language === 'TypeScript'
         ? [ ...requiredDevelopmentDependencies, ...requiredDevelopmentTypescriptDependencies].join(' ')
         : requiredDevelopmentDependencies.join(' ');
-    const yarnInstallDevelopmentDependenciesCommand = `yarn add -D ${requiredDevelopmentDependenciesPackages}`;
-    const npmInstallDevelopmentDependenciesCommand = `npm install -D ${requiredDevelopmentDependenciesPackages}`;
-    const installDevelopmentDependenciesCommand = app.manager === 'Yarn'
-        ? yarnInstallDevelopmentDependenciesCommand
-        : npmInstallDevelopmentDependenciesCommand;
-
+    const installDevelopmentDependenciesCommand = computeInstallDevelopmentDependenciesCommand(
+        app,
+        requiredDevelopmentDependenciesPackages,
+    );
 
     exec(initCommand, {
         cwd: app.directory,
