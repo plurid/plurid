@@ -5,7 +5,7 @@ import PluridServer, {
 } from '@plurid/plurid-react-server';
 
 import Application from '../client/App';
-import helmet from '../client/helmet';
+import helmet from '../client/App/services/helmet';
 
 
 
