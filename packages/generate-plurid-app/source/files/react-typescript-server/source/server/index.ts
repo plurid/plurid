@@ -16,6 +16,10 @@ const routes: PluridServerRoute[] = [
     // route objects
 ];
 
+const styles: string[] = [
+    // custom styles to be loaded into the template
+]
+
 const middleware: PluridServerMiddleware[] = [
     // express-like middleware
 ];
@@ -30,6 +34,7 @@ const pluridServer = new PluridServer({
     Application,
     routes,
     helmet,
+    styles,
     middleware,
     options,
 });
