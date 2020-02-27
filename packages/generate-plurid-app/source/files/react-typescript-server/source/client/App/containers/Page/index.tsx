@@ -8,8 +8,8 @@ import {
     StyledPage,
 } from './styled';
 
-// import pluridLogo from '../../plurid-logo.png';
-import pluridLogoSVG from '../../plurid-logo.svg';
+// import pluridLogo from '../../assets/plurid-logo.png';
+import pluridLogoSVG from '../../assets/plurid-logo.svg';
 
 
 
