@@ -822,10 +822,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.3.tgz#f5014195a065f13c47f2895e4942ba1f3ec045a3"
   integrity sha512-mviWTVQhkIifQApuLa60jSVA+azeeKXYvNTFejzJJtEFG0s1h2a1BqtaH/Fj4wCzymivJsD47JqbaLfg7Xw4zA==
 
-"@plurid/plurid-react-server@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.5.tgz#f607234ad251fe582eef1620ad7f0ef045660d94"
-  integrity sha512-LsObQDsLqvReuSQJp1M9cHf66w2SrAbJrOE/e4G2IHN7iwtWF2Gz4kmY8nqCOMeckgYwIdUTf/RIYlrVYJsAoA==
+"@plurid/plurid-react-server@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.6.tgz#5d2b54ec8fcd017f6eb0df7fd46fdfd80eb17cdb"
+  integrity sha512-bRZvkH55UKEm81WgAjvim9EZMwhiaxdZ6UR6FRfrL/UYIRr7GlPfsNzZNsafqfFoADbvFrEmIUxsuqvWck44sQ==
   dependencies:
     express "^4.17.1"
 
