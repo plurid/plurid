@@ -2,31 +2,61 @@ import React from 'react';
 
 import PluridApp, {
     PluridPage,
+    PluridView,
+    SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
+import Page from './containers/Page';
 
 
-const Application = () => {
-    const pages: PluridPage[] = [
+
+const App = () => {
+    /** properties */
+    const pluridConfiguration = {
+        theme: 'plurid',
+        space: {
+            layout: {
+                type: SPACE_LAYOUT.COLUMNS,
+                columns: 2,
+                gap: 0.1,
+            },
+            center: true,
+        },
+        elements: {
+            plane: {
+                width: 0.5,
+            },
+        },
+    };
+
+    const pluridPages: PluridPage[] = [
         {
-            path: '/',
+            path: '/page',
             component: {
-                element: () => (<div>Plurid' Application</div>),
+                element: Page,
+                properties: {},
             },
         },
     ];
 
-    const view: string[] = [
-        '/',
+    const pluridView: PluridView[] = [
+        {
+            path: '/page',
+        }
     ];
 
+
+    /** render */
     return (
-        <PluridApp
-            pages={pages}
-            view={view}
-        />
+        <div>
+            <PluridApp
+                configuration={pluridConfiguration}
+                pages={pluridPages}
+                view={pluridView}
+            />
+        </div>
     );
 }
 
 
-export default Application;
+export default App;
