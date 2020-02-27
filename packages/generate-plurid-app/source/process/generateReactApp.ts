@@ -230,10 +230,6 @@ const generateReactServerApplication = async (
         '@babel/core',
         '@babel/preset-env',
         '@babel/preset-react',
-        '@types/react',
-        '@types/react-dom',
-        '@types/react-redux',
-        '@types/styled-components',
         'babel-loader',
         'compression-webpack-plugin',
         'file-loader',
@@ -241,15 +237,23 @@ const generateReactServerApplication = async (
         'rimraf',
         'source-map-loader',
         'terser-webpack-plugin',
-        'ts-loader',
-        'typescript',
         'webpack',
         'webpack-bundle-analyzer',
         'webpack-cli',
         'webpack-merge',
         'webpack-node-externals',
     ];
-    const requiredDevelopmentDependenciesPackages = requiredDevelopmentDependencies.join(' ');
+    const requiredDevelopmentTypescriptDependencies = [
+        '@types/react',
+        '@types/react-dom',
+        '@types/react-redux',
+        '@types/styled-components',
+        'ts-loader',
+        'typescript',
+    ];
+    const requiredDevelopmentDependenciesPackages = app.language === 'TypeScript'
+        ? [ ...requiredDevelopmentDependencies, ...requiredDevelopmentTypescriptDependencies].join(' ')
+        : requiredDevelopmentDependencies.join(' ');
     const yarnInstallDevelopmentDependenciesCommand = `yarn add -D ${requiredDevelopmentDependenciesPackages}`;
     const npmInstallDevelopmentDependenciesCommand = `npm install -D ${requiredDevelopmentDependenciesPackages}`;
     const installDevelopmentDependenciesCommand = app.manager === 'Yarn'
