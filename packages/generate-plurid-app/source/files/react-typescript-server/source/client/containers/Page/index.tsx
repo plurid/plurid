@@ -8,8 +8,8 @@ import {
     StyledPage,
 } from './styled';
 
-import pluridLogo from '../../plurid-logo.png';
-
+// import pluridLogo from '../../plurid-logo.png';
+import pluridLogoSVG from '../../plurid-logo.svg';
 
 
 
@@ -31,7 +31,8 @@ const Page: React.FC<any> = (
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <img src={pluridLogo} alt="plurid logo" height={150} />
+                    {/* <img src={pluridLogo} alt="plurid logo" height={250} /> */}
+                    <img src={pluridLogoSVG} alt="plurid logo" height={250} />
                 </a>
             </div>
 
