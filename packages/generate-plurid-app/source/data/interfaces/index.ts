@@ -78,3 +78,11 @@ export interface Application {
     manager: Manager;
     addons: string[];
 }
+
+
+
+export interface AddScriptConfiguration {
+    name: string;
+    value: string;
+    path: string;
+}

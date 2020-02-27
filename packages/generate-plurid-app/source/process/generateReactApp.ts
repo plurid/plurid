@@ -7,47 +7,20 @@ import {
 } from 'child_process';
 
 import {
-    copyDirectory,
-    executeCommand,
-} from '../utilities';
+    addons,
+} from '../data/constants';
 
 import {
     Application,
 } from '../data/interfaces';
 
 import {
-    addons,
-} from '../data/constants';
+    copyDirectory,
+    executeCommand,
+    addScript,
+} from '../utilities';
 
 
-
-interface AddScriptConfiguration {
-    name: string,
-    value: string,
-    path: string,
-}
-
-const addScript = async (
-    configuration: AddScriptConfiguration,
-) => {
-    const {
-        name,
-        value,
-        path,
-    } = configuration;
-
-    const file = fs.readFileSync(path);
-    const jsonFile = JSON.parse(file.toString());
-
-    if (!jsonFile.scripts) {
-        jsonFile.scripts = {};
-    }
-
-    jsonFile.scripts[name] = value;
-
-    let data = JSON.stringify(jsonFile, null, 4);
-    fs.writeFileSync(path, data);
-}
 
 export const setupPackageJSONReactServer = async (
     app: Application,

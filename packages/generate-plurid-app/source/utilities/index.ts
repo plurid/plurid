@@ -6,6 +6,10 @@ import {
     exec,
 } from 'child_process';
 
+import {
+    AddScriptConfiguration,
+} from '../data/interfaces';
+
 
 
 export const copyDirectory = (
@@ -88,4 +92,27 @@ export const executeCommand = (
             );
         }
     );
+}
+
+
+export const addScript = async (
+    configuration: AddScriptConfiguration,
+) => {
+    const {
+        name,
+        value,
+        path,
+    } = configuration;
+
+    const file = fs.readFileSync(path);
+    const jsonFile = JSON.parse(file.toString());
+
+    if (!jsonFile.scripts) {
+        jsonFile.scripts = {};
+    }
+
+    jsonFile.scripts[name] = value;
+
+    let data = JSON.stringify(jsonFile, null, 4);
+    fs.writeFileSync(path, data);
 }
