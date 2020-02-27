@@ -3,7 +3,6 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.json'],
     },
 
-    // Tell webpack to run babel on every file it runs through
     module: {
         rules: [
             {
@@ -22,9 +21,9 @@ module.exports = {
                 exclude: /node_modules/,
                 use: [
                     {
-                        loader: "ts-loader"
-                    }
-                ]
+                        loader: "ts-loader",
+                    },
+                ],
             },
             {
                 test: /\.js$/,
