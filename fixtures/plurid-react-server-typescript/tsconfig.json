@@ -9,7 +9,7 @@
         "allowJs": false,
         "forceConsistentCasingInFileNames": true,
         "outDir": "build",
-        "declaration": true,
+        "declaration": false,
         "strict": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
