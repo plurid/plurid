@@ -1,10 +1,17 @@
 module.exports = {
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.json'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     },
 
     module: {
         rules: [
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                ],
+            },
             {
                 test: /\.(png|jpe?g|gif)$/i,
                 use: [
