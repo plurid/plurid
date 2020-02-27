@@ -15,6 +15,10 @@ import {
     Application,
 } from '../data/interfaces';
 
+import {
+    addons,
+} from '../data/constants';
+
 
 
 interface AddScriptConfiguration {
@@ -295,6 +299,9 @@ const computeInstallDevelopmentDependenciesCommand = (
 const generateReactServerApplication = async (
     app: Application,
 ) => {
+    const graphqlAddon = app.addons.includes(addons.graphql);
+    const reduxAddon = app.addons.includes(addons.redux);
+
     console.log('\n\tGenerating server rendered plurid\' application.');
 
     const initCommand = computeInitCommand(app);
@@ -316,14 +323,20 @@ const generateReactServerApplication = async (
         'redux-thunk',
         'styled-components',
     ];
-    const graphqlDependencies = [
-        'graphql',
-        'graphql-tag',
-        'apollo-client',
-        'apollo-link-http',
-        'apollo-cache-inmemory',
+    const graphqlDependencies = graphqlAddon
+        ? [
+            'graphql',
+            'graphql-tag',
+            'apollo-client',
+            'apollo-link-http',
+            'apollo-cache-inmemory',
+        ] : [];
+    const completeRequiredDependencies = [
+        ...requiredDependencies,
+        ...graphqlDependencies,
     ];
-    const requiredDependenciesPackages = requiredDependencies.join(' ');
+
+    const requiredDependenciesPackages = completeRequiredDependencies.join(' ');
     const installDependenciesCommand = computeInstallDependenciesCommand(
         app,
         requiredDependenciesPackages,

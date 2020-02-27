@@ -60,6 +60,16 @@ export interface IManager {
 }
 
 
+export type AddonsGraphQL = 'GraphQL';
+export type AddonsRedux = 'Redux';
+export type Addons = AddonsGraphQL | AddonsRedux;
+
+export interface IAddons {
+    graphql: AddonsGraphQL;
+    redux: AddonsRedux;
+}
+
+
 export interface Application {
     directory: string;
     language: Language;
