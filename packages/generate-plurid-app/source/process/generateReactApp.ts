@@ -55,7 +55,7 @@ export const arrangePackageJSON = (
     const version = jsonFile.version;
     const description = 'plurid\' web application';
     const author = jsonFile.author || '';
-    const license = 'private';
+    const privatePackage = true;
     const main = 'build/server.js';
     const scripts = jsonFile.scripts;
     const dependencies = jsonFile.dependencies;
@@ -66,7 +66,7 @@ export const arrangePackageJSON = (
         version,
         description,
         author,
-        license,
+        private: privatePackage,
         main,
         scripts,
         dependencies,
@@ -235,11 +235,15 @@ const generateReactServerApplication = async (
         '@types/react-redux',
         '@types/styled-components',
         'babel-loader',
+        'compression-webpack-plugin',
         'file-loader',
         'open',
+        'rimraf',
         'source-map-loader',
+        'terser-webpack-plugin',
         'ts-loader',
         'typescript',
+        'uglifyjs-webpack-plugin',
         'webpack',
         'webpack-cli',
         'webpack-merge',
@@ -301,6 +305,16 @@ const generateReactServerApplication = async (
                     path: packageJsonPath,
                 });
                 await addScript({
+                    name: 'start.development',
+                    value: 'node build/server.js',
+                    path: packageJsonPath,
+                });
+                await addScript({
+                    name: 'clean',
+                    value: 'rimraf ./build',
+                    path: packageJsonPath,
+                });
+                await addScript({
                     name: 'build.client.development',
                     value: 'webpack --config scripts/webpack.client.development.js',
                     path: packageJsonPath,
@@ -317,12 +331,12 @@ const generateReactServerApplication = async (
                 });
                 await addScript({
                     name: 'build.development',
-                    value: `${packageManagerRun} build.server && ${packageManagerRun} build.client.development`,
+                    value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.development`,
                     path: packageJsonPath,
                 });
                 await addScript({
                     name: 'build.production',
-                    value: `${packageManagerRun} build.server && ${packageManagerRun} build.client.production`,
+                    value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.production`,
                     path: packageJsonPath,
                 });
 
