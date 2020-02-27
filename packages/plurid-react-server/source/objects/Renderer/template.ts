@@ -10,6 +10,13 @@ const template = (
 <!DOCTYPE html>
     <head>
         ${head}
+
+        <style>
+            html {
+                background: black;
+            }
+        </style>
+
         ${styles}
     </head>
     <body>
