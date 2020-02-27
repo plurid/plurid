@@ -93,8 +93,10 @@ export const removeGeneratePackage = (
     }, () => {
         console.log('\n\tAll done.');
 
+        const relativePath = path.relative(process.cwd(), app.directory);
+
         console.log('\n\tChange directory');
-        console.log(`\n\t\tcd ${app.directory}`);
+        console.log(`\n\t\tcd ${relativePath}`);
         console.log('\n\trun');
 
         if (app.manager === 'Yarn') {
