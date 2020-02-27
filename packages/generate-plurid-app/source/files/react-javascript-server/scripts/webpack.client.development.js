@@ -8,7 +8,7 @@ const baseConfig = require('./webpack.base');
 const config = {
     mode: 'development',
 
-    entry: './source/client/index.tsx',
+    entry: './source/client/index.jsx',
 
     output: {
         filename: 'index.js',

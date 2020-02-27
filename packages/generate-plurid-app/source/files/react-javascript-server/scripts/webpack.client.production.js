@@ -38,7 +38,7 @@ const config = {
         ],
     },
 
-    entry: './source/client/index.tsx',
+    entry: './source/client/index.jsx',
 
     output: {
         filename: 'index.js',
