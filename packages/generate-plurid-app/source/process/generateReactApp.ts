@@ -63,8 +63,13 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
     await addScript({
-        name: 'start.development',
-        value: 'node build/server.js',
+        name: 'start.client.development',
+        value: 'webpack --watch --progress --config scripts/webpack.client.development.js',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'start.server.development',
+        value: 'nodemon build/server.js',
         path: packageJsonPath,
     });
     await addScript({
@@ -322,11 +327,14 @@ const generateReactServerApplication = async (
         '@babel/preset-env',
         '@babel/preset-react',
         'babel-loader',
+        'css-loader',
         'compression-webpack-plugin',
         'file-loader',
+        'nodemon',
         'open',
         'rimraf',
         'source-map-loader',
+        'style-loader',
         'terser-webpack-plugin',
         'webpack',
         'webpack-bundle-analyzer',
