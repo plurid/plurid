@@ -35,7 +35,7 @@ const questions: Question[] = [
     {
         type: 'input',
         name: 'directory',
-        message: 'Enter the directory path where the application will be generated:'
+        message: 'Enter the directory name where the application will be generated:'
     },
     {
         type: 'list',
