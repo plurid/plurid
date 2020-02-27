@@ -113,10 +113,12 @@ export default class PluridServer {
                 React.createElement(this.Application),
             );
 
+            const { helmet } = this.helmet;
+
             const head = `
-                ${this.helmet.meta.toString()}
-                ${this.helmet.title.toString()}
-                ${this.helmet.link.toString()}
+                ${helmet.meta.toString()}
+                ${helmet.title.toString()}
+                ${helmet.link.toString()}
             `;
 
             const store = '';
