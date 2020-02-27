@@ -3,6 +3,7 @@ import {
     IUI,
     IRenderer,
     IManager,
+    IAddons,
 } from '../interfaces';
 
 
@@ -40,4 +41,12 @@ export const managerYarn = 'Yarn';
 export const manager: IManager = {
     npm: managerNPM,
     yarn: managerYarn,
+};
+
+
+export const addonsGraphQL = 'GraphQL';
+export const addonsRedux = 'Redux';
+export const addons: IAddons = {
+    graphql: addonsGraphQL,
+    redux: addonsRedux,
 };
