@@ -1,1 +1,0 @@
-# `plurid-vue-ssr`
