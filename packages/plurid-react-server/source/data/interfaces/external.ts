@@ -50,7 +50,8 @@ export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 
 export interface PluridServerConfiguration {
     Application: React.FC<any>;
-    routes: PluridServerRoute[]
+    routes: PluridServerRoute[];
+    helmet: any;
     middleware?: PluridServerMiddleware[];
     options?: PluridServerPartialOptions;
 }
