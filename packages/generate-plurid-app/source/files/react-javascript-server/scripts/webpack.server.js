@@ -11,7 +11,7 @@ const config = {
 
     mode: 'production',
 
-    entry: './source/server/index.ts',
+    entry: './source/server/index.js',
 
     externals: [webpackNodeExternals()],
 

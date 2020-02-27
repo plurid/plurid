@@ -1,6 +1,6 @@
 module.exports = {
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.json'],
+        extensions: ['.js', '.jsx', '.json'],
     },
 
     module: {
@@ -13,15 +13,6 @@ module.exports = {
                         options: {
                             name: '[path][name].[hash].[ext]',
                         },
-                    },
-                ],
-            },
-            {
-                test: /\.ts(x?)$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: "ts-loader",
                     },
                 ],
             },
