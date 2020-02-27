@@ -17,6 +17,10 @@ const config = {
         path: path.resolve(__dirname, '../build'),
     },
 
+    optimization: {
+        minimize: false,
+    },
+
     devtool: 'inline-source-map',
 
     plugins: [

@@ -11,6 +11,10 @@ const config = {
 
     mode: 'production',
 
+    // optimization: {
+    //     minimize: false,
+    // },
+
     entry: './source/server/index.ts',
 
     externals: [webpackNodeExternals()],
