@@ -1,2 +1,0 @@
-# `plurid-html-ssr`
-
