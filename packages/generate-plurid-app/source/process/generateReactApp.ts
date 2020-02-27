@@ -8,6 +8,7 @@ import {
 
 import {
     copyDirectory,
+    executeCommand,
 } from '../utilities';
 
 import {
@@ -44,8 +45,64 @@ const addScript = async (
     fs.writeFileSync(path, data);
 }
 
+export const setupPackageJSONReactServer = async (
+    app: Application,
+) => {
+    const packageJsonPath = path.join(app.directory, './package.json');
+    const packageManagerRun = app.manager === 'Yarn'
+        ? 'yarn'
+        : 'npm run';
+    await addScript({
+        name: 'prestart',
+        value: `${packageManagerRun} build.production`,
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'start',
+        value: 'node build/server.js',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'start.development',
+        value: 'node build/server.js',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'clean',
+        value: 'rimraf ./build',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.client.development',
+        value: 'webpack --config scripts/webpack.client.development.js',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.client.production',
+        value: 'webpack --config scripts/webpack.client.production.js',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.server',
+        value: 'webpack --config scripts/webpack.server.js',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.development',
+        value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.development`,
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.production',
+        value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.production`,
+        path: packageJsonPath,
+    });
 
-export const arrangePackageJSON = (
+    await arrangePackageJSON(packageJsonPath);
+}
+
+
+export const arrangePackageJSON = async (
     packagePath: string,
 ) => {
     const file = fs.readFileSync(packagePath);
@@ -79,7 +136,7 @@ export const arrangePackageJSON = (
 
 
 
-export const removeGeneratePackage = (
+export const removeGeneratePackage = async (
     app: Application,
 ) => {
     const yarnUninstallCommand = `yarn remove @plurid/generate-plurid-app`;
@@ -293,95 +350,136 @@ const generateReactServerApplication = async (
         requiredDevelopmentDependenciesPackages,
     );
 
-    exec(initCommand, {
-        cwd: app.directory,
-    }, () => {
-        console.log('\n\tInstalling dependencies...');
 
-        exec(installDependenciesCommand, {
-            cwd: app.directory,
-        }, () => {
-            console.log('\tDependencies installed.');
-
-            console.log('\n\tInstalling development dependencies...');
-
-            exec(installDevelopmentDependenciesCommand, {
-                cwd: app.directory,
-            }, async () => {
-                console.log('\tDevelopment dependencies installed.');
-
-                console.log('\n\tSetting up the template files...');
-                // copy template files
-                const templateTypeScript = 'react-typescript-server';
-                const templateJavaScript = 'react-javascript-server';
-                const templateFiles = app.language === 'TypeScript'
-                    ? templateTypeScript
-                    : templateJavaScript;
-
-                const base = `./node_modules/@plurid/generate-plurid-app/distribution/files/${templateFiles}`;
-
-                const templateDirectory = path.join(app.directory, base);
-                copyDirectory(templateDirectory, app.directory);
+    await executeCommand(
+        initCommand,
+        { cwd: app.directory },
+    );
 
 
-                const packageJsonPath = path.join(app.directory, './package.json');
+    console.log('\n\tInstalling dependencies...');
+    await executeCommand(
+        installDependenciesCommand,
+        { cwd: app.directory },
+    );
+    console.log('\tDependencies installed.');
 
-                const packageManagerRun = app.manager === 'Yarn'
-                    ? 'yarn'
-                    : 'npm run';
 
-                await addScript({
-                    name: 'prestart',
-                    value: `${packageManagerRun} build.production`,
-                    path: packageJsonPath,
-                });
-                await addScript({
-                    name: 'start',
-                    value: 'node build/server.js',
-                    path: packageJsonPath,
-                });
-                await addScript({
-                    name: 'start.development',
-                    value: 'node build/server.js',
-                    path: packageJsonPath,
-                });
-                await addScript({
-                    name: 'clean',
-                    value: 'rimraf ./build',
-                    path: packageJsonPath,
-                });
-                await addScript({
-                    name: 'build.client.development',
-                    value: 'webpack --config scripts/webpack.client.development.js',
-                    path: packageJsonPath,
-                });
-                await addScript({
-                    name: 'build.client.production',
-                    value: 'webpack --config scripts/webpack.client.production.js',
-                    path: packageJsonPath,
-                });
-                await addScript({
-                    name: 'build.server',
-                    value: 'webpack --config scripts/webpack.server.js',
-                    path: packageJsonPath,
-                });
-                await addScript({
-                    name: 'build.development',
-                    value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.development`,
-                    path: packageJsonPath,
-                });
-                await addScript({
-                    name: 'build.production',
-                    value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.production`,
-                    path: packageJsonPath,
-                });
+    console.log('\n\tInstalling development dependencies...');
+    await executeCommand(
+        installDevelopmentDependenciesCommand,
+        { cwd: app.directory },
+    );
+    console.log('\tDevelopment dependencies installed.');
 
-                arrangePackageJSON(packageJsonPath);
 
-                removeGeneratePackage(app);
-            });
-        });
-    });
+    console.log('\n\tSetting up the template files...');
+    const templateTypeScript = 'react-typescript-server';
+    const templateJavaScript = 'react-javascript-server';
+    const templateFiles = app.language === 'TypeScript'
+        ? templateTypeScript
+        : templateJavaScript;
+
+    const base = `./node_modules/@plurid/generate-plurid-app/distribution/files/${templateFiles}`;
+
+    const templateDirectory = path.join(app.directory, base);
+    copyDirectory(templateDirectory, app.directory);
+
+
+    await setupPackageJSONReactServer(app);
+
+    await removeGeneratePackage(app);
+
+
+    // exec(initCommand, {
+    //     cwd: app.directory,
+    // }, () => {
+    //     console.log('\n\tInstalling dependencies...');
+
+    //     exec(installDependenciesCommand, {
+    //         cwd: app.directory,
+    //     }, () => {
+    //         console.log('\tDependencies installed.');
+
+    //         console.log('\n\tInstalling development dependencies...');
+
+    //         exec(installDevelopmentDependenciesCommand, {
+    //             cwd: app.directory,
+    //         }, async () => {
+    //             console.log('\tDevelopment dependencies installed.');
+
+    //             console.log('\n\tSetting up the template files...');
+    //             // copy template files
+    //             const templateTypeScript = 'react-typescript-server';
+    //             const templateJavaScript = 'react-javascript-server';
+    //             const templateFiles = app.language === 'TypeScript'
+    //                 ? templateTypeScript
+    //                 : templateJavaScript;
+
+    //             const base = `./node_modules/@plurid/generate-plurid-app/distribution/files/${templateFiles}`;
+
+    //             const templateDirectory = path.join(app.directory, base);
+    //             copyDirectory(templateDirectory, app.directory);
+
+
+    //             const packageJsonPath = path.join(app.directory, './package.json');
+
+    //             const packageManagerRun = app.manager === 'Yarn'
+    //                 ? 'yarn'
+    //                 : 'npm run';
+
+    //             await addScript({
+    //                 name: 'prestart',
+    //                 value: `${packageManagerRun} build.production`,
+    //                 path: packageJsonPath,
+    //             });
+    //             await addScript({
+    //                 name: 'start',
+    //                 value: 'node build/server.js',
+    //                 path: packageJsonPath,
+    //             });
+    //             await addScript({
+    //                 name: 'start.development',
+    //                 value: 'node build/server.js',
+    //                 path: packageJsonPath,
+    //             });
+    //             await addScript({
+    //                 name: 'clean',
+    //                 value: 'rimraf ./build',
+    //                 path: packageJsonPath,
+    //             });
+    //             await addScript({
+    //                 name: 'build.client.development',
+    //                 value: 'webpack --config scripts/webpack.client.development.js',
+    //                 path: packageJsonPath,
+    //             });
+    //             await addScript({
+    //                 name: 'build.client.production',
+    //                 value: 'webpack --config scripts/webpack.client.production.js',
+    //                 path: packageJsonPath,
+    //             });
+    //             await addScript({
+    //                 name: 'build.server',
+    //                 value: 'webpack --config scripts/webpack.server.js',
+    //                 path: packageJsonPath,
+    //             });
+    //             await addScript({
+    //                 name: 'build.development',
+    //                 value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.development`,
+    //                 path: packageJsonPath,
+    //             });
+    //             await addScript({
+    //                 name: 'build.production',
+    //                 value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.production`,
+    //                 path: packageJsonPath,
+    //             });
+
+    //             arrangePackageJSON(packageJsonPath);
+
+    //             removeGeneratePackage(app);
+    //         });
+    //     });
+    // });
 }
 
 
