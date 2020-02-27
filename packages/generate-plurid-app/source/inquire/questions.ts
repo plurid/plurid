@@ -29,6 +29,11 @@ const values = {
         'NPM',
         new inquirer.Separator('---- pick one ----'),
     ],
+    addons: [
+        'GraphQL',
+        'Redux',
+        new inquirer.Separator('---- select addons ----'),
+    ],
 };
 
 
@@ -61,6 +66,12 @@ const questions: Question[] = [
         name: 'manager',
         message: 'Choose the package manager:',
         choices: values.manager,
+    },
+    {
+        type: 'checkbox',
+        name: 'addons',
+        message: 'Select add-ons to use in the application:',
+        choices: values.addons,
     },
 ];
 
