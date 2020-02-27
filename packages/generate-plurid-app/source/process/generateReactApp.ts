@@ -337,6 +337,7 @@ const generateReactServerApplication = async (
         'webpack-node-externals',
     ];
     const requiredDevelopmentTypescriptDependencies = [
+        '@types/node',
         '@types/react',
         '@types/react-dom',
         '@types/react-redux',
