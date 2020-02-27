@@ -1,6 +1,7 @@
 import PluridServer, {
     PluridServerRoute,
     PluridServerMiddleware,
+    PluridServerAddons,
     PluridServerPartialOptions,
 } from '@plurid/plurid-react-server';
 
@@ -24,6 +25,12 @@ const middleware: PluridServerMiddleware[] = [
     // express-like middleware
 ];
 
+const addons: PluridServerAddons[] = [
+    // addons to be used in the application,
+    'GraphQL',
+    'Redux',
+];
+
 const options: PluridServerPartialOptions = {
     root: 'plurid-app',
     open: true,
@@ -36,6 +43,7 @@ const pluridServer = new PluridServer({
     helmet,
     styles,
     middleware,
+    addons,
     options,
 });
 
