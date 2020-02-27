@@ -16,6 +16,7 @@ const values = {
         // 'HTML Custom Elements',
         'React',
         // 'Vue',
+        // 'Angular',
         new inquirer.Separator('---- pick one ----'),
     ],
     renderer: [
