@@ -216,7 +216,7 @@ const generateReactClientApplication = async (
         ? '--template typescript'
         : '';
 
-    console.log('\tGenerating the React Application...');
+    console.log('\n\tGenerating the React Application...');
 
     const yarnCreateCommand = `yarn create react-app ${app.directory} ${language}`;
     const npmCreateCommand = `npx create-react-app ${app.directory} ${language} --use-npm`;
