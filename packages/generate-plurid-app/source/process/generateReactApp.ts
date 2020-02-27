@@ -69,7 +69,7 @@ export const setupPackageJSONReactServer = async (
     });
     await addScript({
         name: 'start.server.development',
-        value: 'nodemon build/server.js',
+        value: 'yarn build.server && nodemon build/server.js',
         path: packageJsonPath,
     });
     await addScript({
