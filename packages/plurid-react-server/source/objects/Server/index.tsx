@@ -1,18 +1,3 @@
-import React from 'react';
-
-// import {
-//     Provider as ReduxProvider,
-// } from 'react-redux';
-
-import {
-    renderToString,
- } from 'react-dom/server';
-
-import {
-    ServerStyleSheet,
-    StyleSheetManager,
-} from 'styled-components';
-
 import {
     Server,
 } from 'http';
@@ -23,9 +8,25 @@ import express, {
 
 import open from 'open';
 
+import React from 'react';
+
+import {
+    renderToString,
+} from 'react-dom/server';
+
+import {
+    ServerStyleSheet,
+    StyleSheetManager,
+} from 'styled-components';
+
 import {
     Helmet,
 } from 'react-helmet-async';
+
+import {
+    Provider as ReduxProvider,
+} from 'react-redux';
+import { ApolloProvider } from '@apollo/react-hooks';
 
 import {
     DEFAULT_SERVER_PORT,
@@ -207,12 +208,15 @@ export default class PluridServer {
         let content = '';
         let styles = '';
 
+        const graphqlClient: any = {};
+
         const useGraphQL = this.services.includes('GraphQL');
         const useRedux = this.services.includes('Redux');
 
         try {
+            const Application = this.Application;
+
             if (!useGraphQL && !useRedux) {
-                const Application = this.Application;
                 content = renderToString(
                     sheet.collectStyles(
                         <StyleSheetManager sheet={sheet.instance}>
@@ -220,49 +224,47 @@ export default class PluridServer {
                         </StyleSheetManager>
                     ),
                 );
-                styles = sheet.getStyleTags();
             }
 
             if (!useGraphQL && useRedux) {
-                const Application = this.Application;
-
                 content = renderToString(
                     sheet.collectStyles(
                         <StyleSheetManager sheet={sheet.instance}>
-                            {/* <ReduxProvider store={store}> */}
+                            <ReduxProvider store={store}>
                                 <Application />
-                            {/* </ReduxProvider> */}
+                            </ReduxProvider>
                         </StyleSheetManager>
                     ),
                 );
-                styles = sheet.getStyleTags();
             }
 
             if (useGraphQL && !useRedux) {
-                const Application = this.Application;
                 content = renderToString(
                     sheet.collectStyles(
                         <StyleSheetManager sheet={sheet.instance}>
-                            <Application />
+                            <ApolloProvider client={graphqlClient}>
+                                <Application />
+                            </ApolloProvider>
                         </StyleSheetManager>
                     ),
                 );
-                styles = sheet.getStyleTags();
             }
 
             if (useGraphQL && useRedux) {
-                const Application = this.Application;
                 content = renderToString(
                     sheet.collectStyles(
                         <StyleSheetManager sheet={sheet.instance}>
-                            {/* <ReduxProvider store={store}> */}
-                                <Application />
-                            {/* </ReduxProvider> */}
+                            <ApolloProvider client={graphqlClient}>
+                                <ReduxProvider store={store}>
+                                    <Application />
+                                </ReduxProvider>
+                            </ApolloProvider>
                         </StyleSheetManager>
                     ),
                 );
-                styles = sheet.getStyleTags();
             }
+
+            styles = sheet.getStyleTags();
         } catch (error) {
             return {
                 content: '',
