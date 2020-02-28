@@ -15,6 +15,9 @@ import {
 import {
     ApolloProvider,
 } from '@apollo/react-hooks';
+import {
+    StripeProvider,
+} from 'react-stripe-elements';
 
 import {
     PluridServerService,
@@ -74,8 +77,7 @@ export default class ContentHandler {
                     break;
                 case 'Stripe':
                     Wrap = wrapping(
-                        // Stripe Provider
-                        <></>,
+                        StripeProvider,
                         Wrap,
                         {
                             apiKey: stripeAPIKey,

@@ -75,7 +75,7 @@ export interface PluridServerConfiguration {
     /**
      * Services to be handled by the server.
      *
-     * Supported: `GraphQL`, `Redux`.
+     * Supported: `GraphQL`, `Redux`, `Stripe`.
      */
     services?: PluridServerService[];
     servicesData?: PluridServerServicesData;
