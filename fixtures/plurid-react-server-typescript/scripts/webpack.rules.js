@@ -8,7 +8,7 @@ const styleRule = {
 
 
 const fileRule = {
-    test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/i,
+    test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3|.pdf)$/i,
     use: [
         {
             loader: 'file-loader',
