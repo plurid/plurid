@@ -40,8 +40,8 @@ const middleware: PluridServerMiddleware[] = [
 const services: PluridServerService[] = [
     // services to be used in the application,
     /** uncomment to use services */
-    'Redux',
-    'GraphQL',
+    // 'Redux',
+    // 'GraphQL',
     // 'Stripe',
 ];
 

@@ -34,11 +34,11 @@ const Client: React.FC<any> = () => {
     return (
         <HelmetProvider context={helmetContext}>
             <ReduxProvider store={reduxStore(state)}>
-                {/* <ApolloProvider client={graphqlClient}> */}
+                <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
                         <App />
                     {/* </StripeProvider> */}
-                {/* </ApolloProvider> */}
+                </ApolloProvider>
             </ReduxProvider>
         </HelmetProvider>
     );
