@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react-server",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "React implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
     "keywords": [
         "plurid",
