@@ -194,6 +194,7 @@ export default class PluridServer {
 
     private configureServer() {
         this.serverApplication.disable('x-powered-by');
+
         this.serverApplication.use(
             express.static(this.options.buildDirectory),
         );
