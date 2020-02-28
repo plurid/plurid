@@ -665,6 +665,14 @@
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
 
+"@types/react-stripe-elements@^6.0.4":
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/@types/react-stripe-elements/-/react-stripe-elements-6.0.4.tgz#0931064941b4f74e25edb8955703eee90774a057"
+  integrity sha512-EzEeBiOwQJ0fPzZhtg9zqyy5GJbEbi0sFNFCowFXmRwraRcMRyZ4p2UK8nylzfCR2KtMPZ2fgUVH9xD/VL/StQ==
+  dependencies:
+    "@types/react" "*"
+    "@types/stripe-v3" "*"
+
 "@types/react@*", "@types/react@^16.9.23":
   version "16.9.23"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.23.tgz#1a66c6d468ba11a8943ad958a8cb3e737568271c"
@@ -692,6 +700,11 @@
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==
+
+"@types/stripe-v3@*":
+  version "3.1.16"
+  resolved "https://registry.yarnpkg.com/@types/stripe-v3/-/stripe-v3-3.1.16.tgz#7796d132bef4f67aa4af505c3b113892078cfba4"
+  integrity sha512-DzeBQogFSIyQ1ni39xkEvrFlBPFbKGMXDSprv3MGvvAuzCQ13Z0SnVEp9j95m39w1Q86TDT2wKj9QlPgtytiAg==
 
 "@types/styled-components@^5.0.1":
   version "5.0.1"
@@ -4729,7 +4742,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -4840,6 +4853,13 @@ react-redux@^7.2.0:
     loose-envify "^1.4.0"
     prop-types "^15.7.2"
     react-is "^16.9.0"
+
+react-stripe-elements@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/react-stripe-elements/-/react-stripe-elements-6.1.0.tgz#487ba92eca05b58c5b005058c055793e97fe28ff"
+  integrity sha512-AyZw2Qx6VmHlrlpjLKiX7qRbUj+ncwixCThx+SgBq9hdEhCxIPUdX0QMcPAttY3HK8soL/cZaY1oe2SPTMLNcQ==
+  dependencies:
+    prop-types "15.7.2"
 
 react@^16.12.0:
   version "16.12.0"
