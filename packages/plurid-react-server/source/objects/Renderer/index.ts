@@ -18,6 +18,7 @@ export default class PluridRenderer {
     private store: string;
     private root: string;
     private script: string;
+    private stripeScript: string;
 
     constructor(
         configuration: PluridRendererConfiguration,
@@ -29,6 +30,7 @@ export default class PluridRenderer {
             store,
             root,
             script,
+            stripeScript,
         } = configuration;
 
         this.head = head;
@@ -37,6 +39,7 @@ export default class PluridRenderer {
         this.store = this.safeStore(store) || DEFAULT_RENDERER_STORE;
         this.root = root || 'root',
         this.script = script || DEFAULT_RENDERER_SCRIPT;
+        this.stripeScript = stripeScript || '';
     }
 
     public html() {
@@ -47,6 +50,7 @@ export default class PluridRenderer {
             this.store,
             this.root,
             this.script,
+            this.stripeScript,
         );
     }
 

@@ -63,6 +63,7 @@ export interface PluridServerServicesData {
     reduxStoreValue?: any;
     graphqlClient?: ApolloClient<any>;
     stripeAPIKey?: string;
+    stripeScript?: string;
 }
 
 

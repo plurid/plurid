@@ -11,6 +11,7 @@ export interface PluridRendererConfiguration {
     store: string;
     root?: string;
     script?: string;
+    stripeScript?: string;
 }
 
 

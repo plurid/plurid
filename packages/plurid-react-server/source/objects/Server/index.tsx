@@ -127,13 +127,11 @@ export default class PluridServer {
             const url = request.originalUrl || request.url;
             const route = router.match(url);
 
-            const storeData = {};
-
             const {
                 content,
                 styles,
+                // head,
             } = this.getContentAndStyles(
-                storeData,
                 route,
             );
 
@@ -152,13 +150,23 @@ export default class PluridServer {
                 ${helmet.title.toString()}
                 ${helmet.link.toString()}
             `;
+            // const head = `
+            // `;
 
-            const store = '';
+            const store = JSON.stringify(
+                this.servicesData?.reduxStore(
+                    this.servicesData?.reduxStoreValue || {},
+                ) || {}
+            );
 
             const {
                 root,
                 script,
             } = this.options;
+
+            const stripeScript = this.servicesData?.stripeScript;
+
+            // console.log('servicesData', this.servicesData);
 
             this.renderer = new Renderer({
                 content,
@@ -167,6 +175,7 @@ export default class PluridServer {
                 store,
                 root,
                 script,
+                stripeScript,
             });
 
             response.send(this.renderer?.html());
@@ -199,7 +208,6 @@ export default class PluridServer {
     }
 
     private getContentAndStyles(
-        store: any,
         route: PluridServerRoute,
     ) {
         const sheet = new ServerStyleSheet();
@@ -212,9 +220,12 @@ export default class PluridServer {
                 this.services,
                 this.servicesData,
                 sheet,
+                this.helmet,
             );
 
             content = contentHandler.render();
+
+            console.log('content', content);
 
             styles = sheet.getStyleTags();
         } catch (error) {

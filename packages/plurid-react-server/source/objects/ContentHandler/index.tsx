@@ -10,6 +10,10 @@ import {
 } from 'styled-components';
 
 import {
+    Helmet,
+    HelmetProvider,
+} from 'react-helmet-async';
+import {
     Provider as ReduxProvider,
 } from 'react-redux';
 import {
@@ -33,17 +37,20 @@ export default class ContentHandler {
     private services: PluridServerService[];
     private servicesData: PluridServerServicesData | undefined;
     private stylesheet: ServerStyleSheet;
+    private helmet: Helmet;
 
     constructor(
         Application: React.FC<any>,
         services: PluridServerService[],
         servicesData: PluridServerServicesData | undefined,
         stylesheet: ServerStyleSheet,
+        helmet: Helmet,
     ) {
         this.Application = Application;
         this.services = services;
         this.servicesData = servicesData;
         this.stylesheet = stylesheet;
+        this.helmet = helmet;
     }
 
     render() {
@@ -54,44 +61,58 @@ export default class ContentHandler {
         const graphqlClient = this.servicesData?.graphqlClient;
         const stripeAPIKey = this.servicesData?.stripeAPIKey;
 
-        let Wrap: React.ClassType<any, any, any> = () => (<Application />);
+        // let Wrap: React.ClassType<any, any, any> = () => (<Application />);
 
-        for (const service of this.services) {
-            switch (service) {
-                case 'Redux':
-                    Wrap = wrapping(
-                        ReduxProvider,
-                        Wrap,
-                        {
-                            store: reduxStore(reduxStoreValue),
-                        },
-                    );
-                    break;
-                case 'GraphQL':
-                    Wrap = wrapping(
-                        ApolloProvider,
-                        Wrap,
-                        {
-                            client: graphqlClient,
-                        },
-                    );
-                    break;
-                case 'Stripe':
-                    Wrap = wrapping(
-                        StripeProvider,
-                        Wrap,
-                        {
-                            apiKey: stripeAPIKey,
-                        },
-                    );
-                    break;
-            }
-        }
+        // for (const service of this.services) {
+        //     switch (service) {
+        //         case 'Redux':
+        //             Wrap = wrapping(
+        //                 ReduxProvider,
+        //                 Wrap,
+        //                 {
+        //                     store: reduxStore(reduxStoreValue),
+        //                 },
+        //             );
+        //             break;
+        //         case 'GraphQL':
+        //             Wrap = wrapping(
+        //                 ApolloProvider,
+        //                 Wrap,
+        //                 {
+        //                     client: graphqlClient,
+        //                 },
+        //             );
+        //             break;
+        //         case 'Stripe':
+        //             Wrap = wrapping(
+        //                 StripeProvider,
+        //                 Wrap,
+        //                 {
+        //                     apiKey: stripeAPIKey,
+        //                 },
+        //             );
+        //             break;
+        //     }
+        // }
+
+        // console.log('this.services', this.services);
+        // console.log('Wrap', Wrap);
 
         const content = renderToString(
             this.stylesheet.collectStyles(
                 <StyleSheetManager sheet={this.stylesheet.instance}>
-                    <Wrap />
+                    <HelmetProvider context={this.helmet}>
+                        <ReduxProvider store={reduxStore(reduxStoreValue)}>
+                            {/* {graphqlClient && (
+                                <ApolloProvider client={graphqlClient}> */}
+                                    {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
+                                        <Application />
+                                    {/* </StripeProvider> */}
+                                {/* </ApolloProvider>
+                            )} */}
+                        </ReduxProvider>
+                    </HelmetProvider>
+                    {/* <Wrap /> */}
                 </StyleSheetManager>
             ),
         );

@@ -5,19 +5,18 @@ const template = (
     store: string,
     root: string,
     script: string,
+    stripeScript: string,
 ) => {
     return `
 <!DOCTYPE html>
     <head>
         ${head}
 
-        <style>
-            html {
-                background: black;
-            }
-        </style>
+        <style> html { background: black; } </style>
 
         ${styles}
+
+        ${stripeScript ? '' : ''}
     </head>
     <body>
         <div id="${root}">${content}</div>
