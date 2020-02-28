@@ -9,7 +9,7 @@ const baseConfig = require('./webpack.server.base.js');
 const config = {
     target: 'node',
 
-    mode: 'production',
+    mode: 'development',
 
     optimization: {
         minimize: false,
