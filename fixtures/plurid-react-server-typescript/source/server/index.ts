@@ -9,6 +9,8 @@ import PluridServer, {
 import Application from '../client/App';
 
 import helmet from '../client/App/services/helmet';
+
+/** uncomment to use services */
 import reduxStore from '../client/App/services/state/store';
 import graphqlClient from '../client/App/services/graphql/client';
 import {
@@ -34,12 +36,14 @@ const middleware: PluridServerMiddleware[] = [
 
 const services: PluridServerService[] = [
     // services to be used in the application,
+    /** uncomment to use services */
     'GraphQL',
     'Redux',
     'Stripe',
 ];
 
 const servicesData: PluridServerServicesData = {
+    /** uncomment to use services */
     reduxStore,
     graphqlClient,
     stripeAPIKey,
