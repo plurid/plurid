@@ -62,38 +62,45 @@ export default class ContentHandler {
         const stripeAPIKey = this.servicesData?.stripeAPIKey;
 
         // let Wrap: React.ClassType<any, any, any> = () => (<Application />);
+        let Wrap = wrapping(
+            HelmetProvider,
+            Application,
+            {
+                context: this.helmet,
+            }
+        );
 
-        // for (const service of this.services) {
-        //     switch (service) {
-        //         case 'Redux':
-        //             Wrap = wrapping(
-        //                 ReduxProvider,
-        //                 Wrap,
-        //                 {
-        //                     store: reduxStore(reduxStoreValue),
-        //                 },
-        //             );
-        //             break;
-        //         case 'GraphQL':
-        //             Wrap = wrapping(
-        //                 ApolloProvider,
-        //                 Wrap,
-        //                 {
-        //                     client: graphqlClient,
-        //                 },
-        //             );
-        //             break;
-        //         case 'Stripe':
-        //             Wrap = wrapping(
-        //                 StripeProvider,
-        //                 Wrap,
-        //                 {
-        //                     apiKey: stripeAPIKey,
-        //                 },
-        //             );
-        //             break;
-        //     }
-        // }
+        for (const service of this.services) {
+            switch (service) {
+                case 'Redux':
+                    Wrap = wrapping(
+                        ReduxProvider,
+                        Wrap,
+                        {
+                            store: reduxStore(reduxStoreValue),
+                        },
+                    );
+                    break;
+                case 'GraphQL':
+                    Wrap = wrapping(
+                        ApolloProvider,
+                        Wrap,
+                        {
+                            client: graphqlClient,
+                        },
+                    );
+                    break;
+                case 'Stripe':
+                    Wrap = wrapping(
+                        StripeProvider,
+                        Wrap,
+                        {
+                            apiKey: stripeAPIKey,
+                        },
+                    );
+                    break;
+            }
+        }
 
         // console.log('this.services', this.services);
         // console.log('Wrap', Wrap);
@@ -101,18 +108,18 @@ export default class ContentHandler {
         const content = renderToString(
             this.stylesheet.collectStyles(
                 <StyleSheetManager sheet={this.stylesheet.instance}>
-                    <HelmetProvider context={this.helmet}>
+                    {/* <HelmetProvider context={this.helmet}>
                         <ReduxProvider store={reduxStore(reduxStoreValue)}>
-                            {/* {graphqlClient && (
-                                <ApolloProvider client={graphqlClient}> */}
-                                    {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
+                            {graphqlClient && (
+                                <ApolloProvider client={graphqlClient}>
+                                    <StripeProvider apiKey={stripeAPIKey || ''}>
                                         <Application />
-                                    {/* </StripeProvider> */}
-                                {/* </ApolloProvider>
-                            )} */}
+                                    </StripeProvider>
+                                </ApolloProvider>
+                            )}
                         </ReduxProvider>
-                    </HelmetProvider>
-                    {/* <Wrap /> */}
+                    </HelmetProvider> */}
+                    <Wrap />
                 </StyleSheetManager>
             ),
         );
