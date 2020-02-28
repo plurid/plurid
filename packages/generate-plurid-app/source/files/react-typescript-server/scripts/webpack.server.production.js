@@ -11,9 +11,9 @@ const config = {
 
     mode: 'production',
 
-    // optimization: {
-    //     minimize: false,
-    // },
+    optimization: {
+        minimize: true,
+    },
 
     entry: './source/server/index.ts',
 
