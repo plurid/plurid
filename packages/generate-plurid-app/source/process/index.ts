@@ -103,7 +103,7 @@ const processArguments = async (
         }
 
         const {
-            addons,
+            services,
         } = program;
 
         console.log('\n\tThe plurid\' application will be generated at:');
@@ -113,17 +113,17 @@ const processArguments = async (
         console.log('\tThe application rendering side is:', renderer);
         console.log('\tThe package manager is:', manager);
 
-        if (addons.length > 0) {
-            const plural = addons.length === 1
+        if (services.length > 0) {
+            const plural = services.length === 1
                 ? ''
                 : 's';
-            const verb = addons.length === 1
+            const verb = services.length === 1
                 ? 'is'
                 : 'are';
-            const addonsList = addons.reduce((accumulator, addon) => accumulator + ' ' + addon);
-            console.log(`\tThe selected add-on${plural} ${verb}: ${addonsList}.`);
+            const servicesList = services.reduce((accumulator, service) => accumulator + ' ' + service);
+            console.log(`\tThe selected service${plural} ${verb}: ${servicesList}.`);
         } else {
-            console.log('\tNo selected add-ons.');
+            console.log('\tNo selected services.');
         }
 
         const application: Application = {
@@ -132,7 +132,7 @@ const processArguments = async (
             ui,
             renderer,
             manager,
-            addons,
+            services,
         };
         await generateApplication(application);
     } catch (error) {

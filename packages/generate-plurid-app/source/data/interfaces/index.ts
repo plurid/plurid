@@ -12,7 +12,7 @@ export interface Answers {
     ui: string;
     renderer: string;
     manager: string;
-    addons: string[];
+    services: string[];
 }
 
 
@@ -60,13 +60,15 @@ export interface IManager {
 }
 
 
-export type AddonsGraphQL = 'GraphQL';
-export type AddonsRedux = 'Redux';
-export type Addons = AddonsGraphQL | AddonsRedux;
+export type ServiceGraphQL = 'GraphQL';
+export type ServiceRedux = 'Redux';
+export type ServiceStripe = 'Stripe';
+export type Services = ServiceGraphQL | ServiceRedux | ServiceStripe;
 
-export interface IAddons {
-    graphql: AddonsGraphQL;
-    redux: AddonsRedux;
+export interface IServices {
+    graphql: ServiceGraphQL;
+    redux: ServiceRedux;
+    stripe: ServiceStripe;
 }
 
 
@@ -76,7 +78,7 @@ export interface Application {
     ui: UI;
     renderer: Renderer;
     manager: Manager;
-    addons: string[];
+    services: string[];
 }
 
 

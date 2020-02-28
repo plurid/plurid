@@ -7,7 +7,7 @@ import {
 } from 'child_process';
 
 import {
-    addons,
+    services,
 } from '../data/constants';
 
 import {
@@ -151,8 +151,8 @@ export const removeGeneratePackage = async (
 export const removeUnusedAddons = async (
     app: Application,
 ) => {
-    const graphqlAddon = app.addons.includes(addons.graphql);
-    if (!graphqlAddon) {
+    const graphqlService = app.services.includes(services.graphql);
+    if (!graphqlService) {
         const graphqlRelativeDirectory = './source/client/App/services/graphql';
         const graphqlDirectory = path.resolve(app.directory, graphqlRelativeDirectory);
 
@@ -161,8 +161,8 @@ export const removeUnusedAddons = async (
         );
     }
 
-    const reduxAddon = app.addons.includes(addons.redux);
-    if (!reduxAddon) {
+    const reduxService = app.services.includes(services.redux);
+    if (!reduxService) {
         const reduxRelativeDirectory = './source/client/App/services/state';
         const reduxDirectory = path.resolve(app.directory, reduxRelativeDirectory);
 
@@ -299,6 +299,9 @@ const generateReactServerApplication = async (
 
     const initCommand = computeInitCommand(app);
 
+    const graphqlService = app.services.includes(services.graphql);
+    const stripeService = app.services.includes(services.stripe);
+
     const requiredDependencies = [
         '@plurid/generate-plurid-app',
         '@plurid/plurid-functions',
@@ -307,6 +310,7 @@ const generateReactServerApplication = async (
         '@plurid/plurid-react-server',
         '@plurid/plurid-themes',
         '@plurid/plurid-ui-react',
+        'cross-fetch',
         'hammerjs',
         'react',
         'react-dom',
@@ -316,18 +320,24 @@ const generateReactServerApplication = async (
         'redux-thunk',
         'styled-components',
     ];
-    const graphqlAddon = app.addons.includes(addons.graphql);
-    const graphqlDependencies = graphqlAddon
+    const graphqlDependencies = graphqlService
         ? [
-            'graphql',
-            'graphql-tag',
+            '@apollo/react-hooks',
+            'apollo-cache-inmemory',
             'apollo-client',
             'apollo-link-http',
-            'apollo-cache-inmemory',
+            'apollo-utilities',
+            'graphql',
+            'graphql-tag',
+        ] : [];
+    const stripeDependencies = stripeService
+        ? [
+            'react-stripe-elements',
         ] : [];
     const completeRequiredDependencies = [
         ...requiredDependencies,
         ...graphqlDependencies,
+        ...stripeDependencies,
     ];
 
     const requiredDependenciesPackages = completeRequiredDependencies.join(' ');
@@ -363,6 +373,7 @@ const generateReactServerApplication = async (
         '@types/react-dom',
         '@types/react-redux',
         '@types/styled-components',
+        '@types/react-stripe-elements',
         'ts-loader',
         'typescript',
     ];

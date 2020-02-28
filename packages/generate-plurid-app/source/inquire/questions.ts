@@ -29,10 +29,11 @@ const values = {
         'NPM',
         new inquirer.Separator('---- pick one ----'),
     ],
-    addons: [
+    services: [
         'GraphQL',
         'Redux',
-        new inquirer.Separator('---- select addons ----'),
+        'Stripe',
+        new inquirer.Separator('---- select services ----'),
     ],
 };
 
@@ -69,9 +70,9 @@ const questions: Question[] = [
     },
     {
         type: 'checkbox',
-        name: 'addons',
-        message: 'Select add-ons to use in the application:',
-        choices: values.addons,
+        name: 'services',
+        message: 'Select services to use in the application:',
+        choices: values.services,
     },
 ];
 

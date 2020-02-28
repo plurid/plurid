@@ -3,7 +3,7 @@ import {
     IUI,
     IRenderer,
     IManager,
-    IAddons,
+    IServices,
 } from '../interfaces';
 
 
@@ -44,9 +44,11 @@ export const manager: IManager = {
 };
 
 
-export const addonsGraphQL = 'GraphQL';
-export const addonsRedux = 'Redux';
-export const addons: IAddons = {
-    graphql: addonsGraphQL,
-    redux: addonsRedux,
+export const serviceGraphQL = 'GraphQL';
+export const serviceRedux = 'Redux';
+export const serviceStripe = 'Stripe';
+export const services: IServices = {
+    graphql: serviceGraphQL,
+    redux: serviceRedux,
+    stripe: serviceStripe,
 };
