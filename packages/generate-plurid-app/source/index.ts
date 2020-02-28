@@ -40,7 +40,7 @@ async function main(program: CommanderStatic) {
                     ui,
                     renderer,
                     manager,
-                    addons,
+                    services,
                 } = program;
 
                 const answers: Answers = {
@@ -49,7 +49,7 @@ async function main(program: CommanderStatic) {
                     ui,
                     renderer,
                     manager,
-                    addons,
+                    services,
                 };
 
                 await processArguments(answers);
