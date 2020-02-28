@@ -37,16 +37,16 @@ const middleware: PluridServerMiddleware[] = [
 const services: PluridServerService[] = [
     // services to be used in the application,
     /** uncomment to use services */
-    'GraphQL',
-    'Redux',
-    'Stripe',
+    // 'Redux',
+    // 'GraphQL',
+    // 'Stripe',
 ];
 
 const servicesData: PluridServerServicesData = {
     /** uncomment to use services */
-    reduxStore,
-    graphqlClient,
-    stripeAPIKey,
+    // reduxStore,
+    // graphqlClient,
+    // stripeAPIKey,
 };
 
 const options: PluridServerPartialOptions = {
