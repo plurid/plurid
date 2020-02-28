@@ -3,28 +3,25 @@ import React from 'react';
 
 
 const wrapping = (
-    WrapperComponent: any | undefined,
+    WrappedComponent: any,
     WrappeeComponent: any,
-    wrapperProperties?: any,
-    wrappeeProperties?: any,
+    properties: any,
 ) => {
-    if (WrapperComponent) {
-        return (
-            <WrapperComponent
-                {...wrapperProperties}
-            >
-                <WrappeeComponent
-                    {...wrappeeProperties}
-                />
-            </WrapperComponent>
-        );
-    }
+    return class extends React.Component {
+        constructor(props: any) {
+            super(props);
+        }
 
-    return (
-        <WrappeeComponent
-            {...wrappeeProperties}
-        />
-    );
+        render() {
+            return (
+                <WrappedComponent
+                    {...properties}
+                >
+                    <WrappeeComponent />
+                </WrappedComponent>
+            )
+        }
+    }
 }
 
 

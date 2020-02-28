@@ -54,7 +54,7 @@ export default class ContentHandler {
         const graphqlClient = this.servicesData?.graphqlClient;
         const stripeAPIKey = this.servicesData?.stripeAPIKey;
 
-        let Wrap: JSX.Element = (<Application />);
+        let Wrap: React.ClassType<any, any, any> = () => (<Application />);
 
         for (const service of this.services) {
             switch (service) {
@@ -91,7 +91,7 @@ export default class ContentHandler {
         const content = renderToString(
             this.stylesheet.collectStyles(
                 <StyleSheetManager sheet={this.stylesheet.instance}>
-                    {Wrap}
+                    <Wrap />
                 </StyleSheetManager>
             ),
         );
