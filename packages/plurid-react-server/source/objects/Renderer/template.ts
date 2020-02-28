@@ -1,3 +1,10 @@
+const cleanTemplate = (
+    template: string,
+) => {
+    return template.replace(/(?:\r\n|\r|\n)/g, '');
+}
+
+
 const template = (
     head: string,
     styles: string,
@@ -7,12 +14,14 @@ const template = (
     script: string,
     stripeScript: string,
 ) => {
-    return `
+    const templateString = `
 <!DOCTYPE html>
     <head>
         ${head}
 
-        <style> html { background: black; } </style>
+        <style>
+            html { background:black; }
+        </style>
 
         ${styles}
 
@@ -27,6 +36,8 @@ const template = (
     </body>
 </html>
     `;
+
+    return cleanTemplate(templateString);
 }
 
 
