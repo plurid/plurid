@@ -9,14 +9,15 @@
         "prestart": "yarn build.production",
         "start": "node build/server.js",
         "start.client.development": "webpack --watch --progress --config scripts/webpack.client.development.js",
-        "start.server.development": "yarn build.server && nodemon build/server.js",
-        "start.server.development.run": "nodemon build/server.js",
+        "start.server.development": "yarn build.server && nodemon build/server.development.js",
+        "start.server.development.run": "nodemon build/server.development.js",
         "clean": "rimraf ./build",
         "build.client.development": "webpack --config scripts/webpack.client.development.js",
         "build.client.production": "webpack --config scripts/webpack.client.production.js",
-        "build.server": "webpack --config scripts/webpack.server.js",
-        "build.development": "yarn clean && yarn build.server && yarn build.client.development",
-        "build.production": "yarn clean && yarn build.server && yarn build.client.production"
+        "build.server.development": "webpack --config scripts/webpack.server.development.js",
+        "build.server.production": "webpack --config scripts/webpack.server.production.js",
+        "build.development": "yarn clean && yarn build.server.development && yarn build.client.development",
+        "build.production": "yarn clean && yarn build.server.development && yarn build.client.production"
     },
     "dependencies": {
         "@apollo/react-hooks": "^3.1.3",
