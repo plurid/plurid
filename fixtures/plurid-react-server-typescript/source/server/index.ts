@@ -42,7 +42,7 @@ const services: PluridServerService[] = [
     /** uncomment to use services */
     'Redux',
     'GraphQL',
-    'Stripe',
+    // 'Stripe',
 ];
 
 const servicesData: PluridServerServicesData = {
@@ -50,8 +50,8 @@ const servicesData: PluridServerServicesData = {
     reduxStore,
     reduxStoreValue: { plurid: 'app', },
     graphqlClient,
-    stripeAPIKey,
-    stripeScript,
+    // stripeAPIKey,
+    // stripeScript,
 };
 
 const options: PluridServerPartialOptions = {
