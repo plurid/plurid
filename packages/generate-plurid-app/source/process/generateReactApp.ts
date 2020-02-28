@@ -46,7 +46,12 @@ export const setupPackageJSONReactServer = async (
     });
     await addScript({
         name: 'start.server.development',
-        value: 'yarn build.server && nodemon build/server.js',
+        value: `${packageManagerRun} build.server.development && nodemon build/server.development.js`,
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'start.server.development.run',
+        value: 'nodemon build/server.development.js',
         path: packageJsonPath,
     });
     await addScript({
@@ -65,18 +70,23 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
     await addScript({
-        name: 'build.server',
-        value: 'webpack --config scripts/webpack.server.js',
+        name: 'build.server.development',
+        value: 'webpack --config scripts/webpack.server.development.js',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.server.production',
+        value: 'webpack --config scripts/webpack.server.production.js',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.development',
-        value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.development`,
+        value: `${packageManagerRun} clean && ${packageManagerRun} build.server.development && ${packageManagerRun} build.client.development`,
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.production',
-        value: `${packageManagerRun} clean && ${packageManagerRun} build.server && ${packageManagerRun} build.client.production`,
+        value: `${packageManagerRun} clean && ${packageManagerRun} build.server.production && ${packageManagerRun} build.client.production`,
         path: packageJsonPath,
     });
 
