@@ -50,6 +50,7 @@ export default class ContentHandler {
         const Application = this.Application;
 
         const reduxStore = this.servicesData?.reduxStore;
+        const reduxStoreValue = this.servicesData?.reduxStoreValue || {};
         const graphqlClient = this.servicesData?.graphqlClient;
         const stripeAPIKey = this.servicesData?.stripeAPIKey;
 
@@ -62,7 +63,7 @@ export default class ContentHandler {
                         ReduxProvider,
                         Wrap,
                         {
-                            store: reduxStore,
+                            store: reduxStore(reduxStoreValue),
                         },
                     );
                     break;
