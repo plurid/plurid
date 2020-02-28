@@ -1,4 +1,4 @@
-import PluridServer from './objects/Server'
+import PluridServer from './objects/Server';
 
 
 
