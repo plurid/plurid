@@ -80,6 +80,8 @@ export default class PluridServer {
         this.serverApplication = express();
         this.port = DEFAULT_SERVER_PORT;
 
+        this.configureServer();
+
         this.computeApplication();
 
         process.addListener('SIGINT', () => {
@@ -177,7 +179,7 @@ export default class PluridServer {
         });
     }
 
-    private handleOptions (
+    private handleOptions(
         partialOptions?: PluridServerPartialOptions,
     ) {
         const options: PluridServerOptions = {
@@ -190,11 +192,14 @@ export default class PluridServer {
         return options;
     }
 
-    private loadMiddleware () {
+    private configureServer() {
+        this.serverApplication.disable('x-powered-by');
         this.serverApplication.use(
             express.static(this.options.buildDirectory),
         );
+    }
 
+    private loadMiddleware() {
         for (const middleware of this.middleware) {
             this.serverApplication.use(
                 middleware,
