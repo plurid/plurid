@@ -61,7 +61,6 @@ export default class ContentHandler {
         const graphqlClient = this.servicesData?.graphqlClient;
         const stripeAPIKey = this.servicesData?.stripeAPIKey;
 
-        // let Wrap: React.ClassType<any, any, any> = () => (<Application />);
         let Wrap = wrapping(
             HelmetProvider,
             Application,

@@ -130,7 +130,6 @@ export default class PluridServer {
             const {
                 content,
                 styles,
-                // head,
             } = this.getContentAndStyles(
                 route,
             );
@@ -150,8 +149,6 @@ export default class PluridServer {
                 ${helmet.title.toString()}
                 ${helmet.link.toString()}
             `;
-            // const head = `
-            // `;
 
             const store = JSON.stringify(
                 this.servicesData?.reduxStore(
@@ -165,8 +162,6 @@ export default class PluridServer {
             } = this.options;
 
             const stripeScript = this.servicesData?.stripeScript;
-
-            // console.log('servicesData', this.servicesData);
 
             this.renderer = new Renderer({
                 content,
@@ -224,8 +219,6 @@ export default class PluridServer {
             );
 
             content = contentHandler.render();
-
-            console.log('content', content);
 
             styles = sheet.getStyleTags();
         } catch (error) {
