@@ -1,9 +1,5 @@
 import React from 'react';
 
-import {
-    HelmetProvider,
-} from 'react-helmet-async';
-
 import PluridApp, {
     PluridPage,
     PluridView,
@@ -14,8 +10,6 @@ import './index.css';
 import {
     StyledApp,
 } from './styled';
-
-import helmetContext from './services/helmet';
 
 import Head from './components/Head';
 
@@ -61,19 +55,15 @@ const App = () => {
 
     /** render */
     return (
-        <HelmetProvider
-            context={helmetContext}
-        >
-            <StyledApp>
-                <Head />
+        <StyledApp>
+            <Head />
 
-                <PluridApp
-                    configuration={pluridConfiguration}
-                    pages={pluridPages}
-                    view={pluridView}
-                />
-            </StyledApp>
-        </HelmetProvider>
+            <PluridApp
+                configuration={pluridConfiguration}
+                pages={pluridPages}
+                view={pluridView}
+            />
+        </StyledApp>
     );
 }
 

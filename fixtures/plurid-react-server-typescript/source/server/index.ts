@@ -21,6 +21,9 @@ import {
 
 const PORT = 33000;
 
+const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
+
+
 
 const routes: PluridServerRoute[] = [
     // route objects
@@ -37,16 +40,18 @@ const middleware: PluridServerMiddleware[] = [
 const services: PluridServerService[] = [
     // services to be used in the application,
     /** uncomment to use services */
-    // 'Redux',
-    // 'GraphQL',
-    // 'Stripe',
+    'Redux',
+    'GraphQL',
+    'Stripe',
 ];
 
 const servicesData: PluridServerServicesData = {
     /** uncomment to use services */
-    // reduxStore,
-    // graphqlClient,
-    // stripeAPIKey,
+    reduxStore,
+    reduxStoreValue: { plurid: 'app', },
+    graphqlClient,
+    stripeAPIKey,
+    stripeScript,
 };
 
 const options: PluridServerPartialOptions = {

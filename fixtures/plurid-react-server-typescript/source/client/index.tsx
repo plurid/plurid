@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './App';
+import Client from './Client';
 
 
 
 ReactDOM.hydrate(
-    <App />,
+    <Client />,
     document.getElementById('plurid-app'),
 );

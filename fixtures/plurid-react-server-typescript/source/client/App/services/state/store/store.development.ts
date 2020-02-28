@@ -17,10 +17,10 @@ export type AppState = ReturnType<typeof rootReducer>;
 const store = (preloadedState: any) => {
     const middleware = [ thunk ];
 
-    const localState = localStorage.loadState();
+    // const localState = localStorage.loadState();
 
     const persistedState = {
-        themes: localState?.themes,
+        // themes: localState?.themes,
     };
 
     const _store = createStore(
@@ -31,15 +31,15 @@ const store = (preloadedState: any) => {
         ),
     );
 
-    _store.subscribe(
-        () => {
-            const localState = localStorage.loadState();
-            localStorage.saveState({
-                ...localState,
-                themes: _store.getState().themes,
-            });
-        },
-    );
+    // _store.subscribe(
+    //     () => {
+    //         const localState = localStorage.loadState();
+    //         localStorage.saveState({
+    //             ...localState,
+    //             themes: _store.getState().themes,
+    //         });
+    //     },
+    // );
 
     return _store;
 }
