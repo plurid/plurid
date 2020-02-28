@@ -11,22 +11,12 @@ import open from 'open';
 import React from 'react';
 
 import {
-    renderToString,
-} from 'react-dom/server';
-
-import {
     ServerStyleSheet,
-    StyleSheetManager,
 } from 'styled-components';
 
 import {
     Helmet,
 } from 'react-helmet-async';
-
-import {
-    Provider as ReduxProvider,
-} from 'react-redux';
-import { ApolloProvider } from '@apollo/react-hooks';
 
 import {
     DEFAULT_SERVER_PORT,
@@ -37,6 +27,7 @@ import {
     PluridServerRoute,
     PluridServerMiddleware,
     PluridServerService,
+    PluridServerServicesData,
     PluridServerOptions,
     PluridServerPartialOptions,
     PluridServerConfiguration,
@@ -44,6 +35,7 @@ import {
 
 import Renderer from '../Renderer';
 import Router from '../Router';
+import ContentHandler from '../ContentHandler';
 
 
 
@@ -54,6 +46,7 @@ export default class PluridServer {
     private styles: string[];
     private middleware: PluridServerMiddleware[];
     private services: PluridServerService[];
+    private servicesData: PluridServerServicesData | undefined;
     private options: PluridServerOptions;
 
     private serverApplication: Express;
@@ -71,6 +64,7 @@ export default class PluridServer {
             styles,
             middleware,
             services,
+            servicesData,
             options,
         } = configuration;
 
@@ -80,6 +74,7 @@ export default class PluridServer {
         this.styles = styles || [];
         this.middleware = middleware || [];
         this.services = services || [];
+        this.servicesData = servicesData;
         this.options = this.handleOptions(options);
 
         this.serverApplication = express();
@@ -208,61 +203,15 @@ export default class PluridServer {
         let content = '';
         let styles = '';
 
-        const graphqlClient: any = {};
-
-        const useGraphQL = this.services.includes('GraphQL');
-        const useRedux = this.services.includes('Redux');
-
         try {
-            const Application = this.Application;
+            const contentHandler = new ContentHandler(
+                this.Application,
+                this.services,
+                this.servicesData,
+                sheet,
+            );
 
-            if (!useGraphQL && !useRedux) {
-                content = renderToString(
-                    sheet.collectStyles(
-                        <StyleSheetManager sheet={sheet.instance}>
-                            <Application />
-                        </StyleSheetManager>
-                    ),
-                );
-            }
-
-            if (!useGraphQL && useRedux) {
-                content = renderToString(
-                    sheet.collectStyles(
-                        <StyleSheetManager sheet={sheet.instance}>
-                            <ReduxProvider store={store}>
-                                <Application />
-                            </ReduxProvider>
-                        </StyleSheetManager>
-                    ),
-                );
-            }
-
-            if (useGraphQL && !useRedux) {
-                content = renderToString(
-                    sheet.collectStyles(
-                        <StyleSheetManager sheet={sheet.instance}>
-                            <ApolloProvider client={graphqlClient}>
-                                <Application />
-                            </ApolloProvider>
-                        </StyleSheetManager>
-                    ),
-                );
-            }
-
-            if (useGraphQL && useRedux) {
-                content = renderToString(
-                    sheet.collectStyles(
-                        <StyleSheetManager sheet={sheet.instance}>
-                            <ApolloProvider client={graphqlClient}>
-                                <ReduxProvider store={store}>
-                                    <Application />
-                                </ReduxProvider>
-                            </ApolloProvider>
-                        </StyleSheetManager>
-                    ),
-                );
-            }
+            content = contentHandler.render();
 
             styles = sheet.getStyleTags();
         } catch (error) {

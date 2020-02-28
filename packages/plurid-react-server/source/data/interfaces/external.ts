@@ -6,6 +6,10 @@ import {
     Helmet,
 } from 'react-helmet-async';
 
+import {
+    ApolloClient,
+} from 'apollo-client';
+
 
 
 export interface PluridServerRoute {
@@ -52,7 +56,13 @@ export interface PluridServerOptions {
 
 export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 
-export type PluridServerService = 'GraphQL' | 'Redux';
+export type PluridServerService = 'GraphQL' | 'Redux' | 'Stripe';
+
+export interface PluridServerServicesData {
+    reduxStore?: any;
+    graphqlClient?: ApolloClient<any>;
+    stripeAPIKey?: string;
+}
 
 
 export interface PluridServerConfiguration {
@@ -68,6 +78,7 @@ export interface PluridServerConfiguration {
      * Supported: `GraphQL`, `Redux`.
      */
     services?: PluridServerService[];
+    servicesData?: PluridServerServicesData;
 
     options?: PluridServerPartialOptions;
 }
