@@ -60,6 +60,7 @@ export type PluridServerService = 'GraphQL' | 'Redux' | 'Stripe';
 
 export interface PluridServerServicesData {
     reduxStore?: any;
+    reduxStoreValue?: any;
     graphqlClient?: ApolloClient<any>;
     stripeAPIKey?: string;
 }
