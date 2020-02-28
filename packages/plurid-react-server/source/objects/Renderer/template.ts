@@ -16,7 +16,7 @@ const template = (
 
         ${styles}
 
-        ${stripeScript ? '' : ''}
+        ${stripeScript}
     </head>
     <body>
         <div id="${root}">${content}</div>
