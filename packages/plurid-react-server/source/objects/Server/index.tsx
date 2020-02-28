@@ -137,7 +137,10 @@ export default class PluridServer {
                 route,
             );
 
-            const stringedStyles = this.styles.reduce((accumulator, style) => accumulator + style);
+            const stringedStyles = this.styles.reduce(
+                (accumulator, style) => accumulator + style,
+                '',
+            );
             const mergedStyles = styles + stringedStyles;
 
             const {
