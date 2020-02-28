@@ -1,5 +1,9 @@
 import React from 'react';
 
+// import {
+//     Provider as ReduxProvider,
+// } from 'react-redux';
+
 import {
     renderToString,
  } from 'react-dom/server';
@@ -31,7 +35,7 @@ import {
 import {
     PluridServerRoute,
     PluridServerMiddleware,
-    PluridServerAddons,
+    PluridServerService,
     PluridServerOptions,
     PluridServerPartialOptions,
     PluridServerConfiguration,
@@ -48,7 +52,7 @@ export default class PluridServer {
     private helmet: Helmet;
     private styles: string[];
     private middleware: PluridServerMiddleware[];
-    private addons: PluridServerAddons[];
+    private services: PluridServerService[];
     private options: PluridServerOptions;
 
     private serverApplication: Express;
@@ -65,7 +69,7 @@ export default class PluridServer {
             helmet,
             styles,
             middleware,
-            addons,
+            services,
             options,
         } = configuration;
 
@@ -74,7 +78,7 @@ export default class PluridServer {
         this.helmet = helmet;
         this.styles = styles || [];
         this.middleware = middleware || [];
-        this.addons = addons || [];
+        this.services = services || [];
         this.options = this.handleOptions(options);
 
         this.serverApplication = express();
@@ -127,10 +131,15 @@ export default class PluridServer {
             const url = request.originalUrl || request.url;
             const route = router.match(url);
 
+            const storeData = {};
+
             const {
                 content,
                 styles,
-            } = this.getContentAndStyles();
+            } = this.getContentAndStyles(
+                storeData,
+                route,
+            );
 
             const stringedStyles = this.styles.reduce((accumulator, style) => accumulator + style);
             const mergedStyles = styles + stringedStyles;
@@ -190,21 +199,70 @@ export default class PluridServer {
         }
     }
 
-    private getContentAndStyles() {
+    private getContentAndStyles(
+        store: any,
+        route: PluridServerRoute,
+    ) {
         const sheet = new ServerStyleSheet();
         let content = '';
         let styles = '';
 
+        const useGraphQL = this.services.includes('GraphQL');
+        const useRedux = this.services.includes('Redux');
+
         try {
-            const Application = this.Application;
-            content = renderToString(
-                sheet.collectStyles(
-                    <StyleSheetManager sheet={sheet.instance}>
-                        <Application />
-                    </StyleSheetManager>
-                ),
-            );
-            styles = sheet.getStyleTags();
+            if (!useGraphQL && !useRedux) {
+                const Application = this.Application;
+                content = renderToString(
+                    sheet.collectStyles(
+                        <StyleSheetManager sheet={sheet.instance}>
+                            <Application />
+                        </StyleSheetManager>
+                    ),
+                );
+                styles = sheet.getStyleTags();
+            }
+
+            if (!useGraphQL && useRedux) {
+                const Application = this.Application;
+
+                content = renderToString(
+                    sheet.collectStyles(
+                        <StyleSheetManager sheet={sheet.instance}>
+                            {/* <ReduxProvider store={store}> */}
+                                <Application />
+                            {/* </ReduxProvider> */}
+                        </StyleSheetManager>
+                    ),
+                );
+                styles = sheet.getStyleTags();
+            }
+
+            if (useGraphQL && !useRedux) {
+                const Application = this.Application;
+                content = renderToString(
+                    sheet.collectStyles(
+                        <StyleSheetManager sheet={sheet.instance}>
+                            <Application />
+                        </StyleSheetManager>
+                    ),
+                );
+                styles = sheet.getStyleTags();
+            }
+
+            if (useGraphQL && useRedux) {
+                const Application = this.Application;
+                content = renderToString(
+                    sheet.collectStyles(
+                        <StyleSheetManager sheet={sheet.instance}>
+                            {/* <ReduxProvider store={store}> */}
+                                <Application />
+                            {/* </ReduxProvider> */}
+                        </StyleSheetManager>
+                    ),
+                );
+                styles = sheet.getStyleTags();
+            }
         } catch (error) {
             return {
                 content: '',

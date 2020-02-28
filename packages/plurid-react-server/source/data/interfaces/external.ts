@@ -52,7 +52,7 @@ export interface PluridServerOptions {
 
 export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 
-export type PluridServerAddons = 'GraphQL' | 'Redux';
+export type PluridServerService = 'GraphQL' | 'Redux';
 
 
 export interface PluridServerConfiguration {
@@ -63,11 +63,11 @@ export interface PluridServerConfiguration {
     middleware?: PluridServerMiddleware[];
 
     /**
-     * Add-ons to be handled by the server.
+     * Services to be handled by the server.
      *
      * Supported: `GraphQL`, `Redux`.
      */
-    addons?: PluridServerAddons[];
+    services?: PluridServerService[];
 
     options?: PluridServerPartialOptions;
 }
