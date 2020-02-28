@@ -32,7 +32,7 @@ import wrapping from '../../utilities/wrapping';
 
 
 
-export default class ContentHandler {
+export default class PluridContentGenerator {
     private Application: React.FC<any>;
     private services: PluridServerService[];
     private servicesData: PluridServerServicesData | undefined;
@@ -101,23 +101,9 @@ export default class ContentHandler {
             }
         }
 
-        // console.log('this.services', this.services);
-        // console.log('Wrap', Wrap);
-
         const content = renderToString(
             this.stylesheet.collectStyles(
                 <StyleSheetManager sheet={this.stylesheet.instance}>
-                    {/* <HelmetProvider context={this.helmet}>
-                        <ReduxProvider store={reduxStore(reduxStoreValue)}>
-                            {graphqlClient && (
-                                <ApolloProvider client={graphqlClient}>
-                                    <StripeProvider apiKey={stripeAPIKey || ''}>
-                                        <Application />
-                                    </StripeProvider>
-                                </ApolloProvider>
-                            )}
-                        </ReduxProvider>
-                    </HelmetProvider> */}
                     <Wrap />
                 </StyleSheetManager>
             ),

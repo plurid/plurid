@@ -35,7 +35,7 @@ import {
 
 import Renderer from '../Renderer';
 import Router from '../Router';
-import ContentHandler from '../ContentHandler';
+import ContentGenerator from '../ContentGenerator';
 
 
 
@@ -217,7 +217,7 @@ export default class PluridServer {
         let styles = '';
 
         try {
-            const contentHandler = new ContentHandler(
+            const contentHandler = new ContentGenerator(
                 this.Application,
                 this.services,
                 this.servicesData,
