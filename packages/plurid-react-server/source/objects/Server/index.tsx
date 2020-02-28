@@ -152,11 +152,12 @@ export default class PluridServer {
                 ${helmet.link.toString()}
             `;
 
-            const store = JSON.stringify(
-                this.servicesData?.reduxStore(
-                    this.servicesData?.reduxStoreValue || {},
-                ) || {}
-            );
+            const store = this.servicesData?.reduxStore ?
+                JSON.stringify(
+                    this.servicesData?.reduxStore(
+                        this.servicesData?.reduxStoreValue || {},
+                    ).getState()
+                ) : '';
 
             const {
                 root,
