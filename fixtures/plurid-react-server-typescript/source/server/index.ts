@@ -1,13 +1,15 @@
 import PluridServer, {
     PluridServerRoute,
     PluridServerMiddleware,
-    PluridServerAddons,
+    PluridServerService,
+    PluridServerServicesData,
     PluridServerPartialOptions,
 } from '@plurid/plurid-react-server';
 
 import Application from '../client/App';
 import helmet from '../client/App/services/helmet';
-
+import reduxStore from '../client/App/services/state/store';
+import graphqlClient from '../client/App/services/graphql/client';
 
 
 const PORT = 33000;
@@ -25,11 +27,16 @@ const middleware: PluridServerMiddleware[] = [
     // express-like middleware
 ];
 
-const addons: PluridServerAddons[] = [
-    // addons to be used in the application,
+const services: PluridServerService[] = [
+    // services to be used in the application,
     'GraphQL',
     'Redux',
 ];
+
+const servicesData: PluridServerServicesData = {
+    reduxStore,
+    graphqlClient,
+};
 
 const options: PluridServerPartialOptions = {
     root: 'plurid-app',
@@ -43,7 +50,8 @@ const pluridServer = new PluridServer({
     helmet,
     styles,
     middleware,
-    addons,
+    services,
+    servicesData,
     options,
 });
 
