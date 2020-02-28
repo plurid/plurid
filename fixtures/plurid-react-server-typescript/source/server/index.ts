@@ -48,7 +48,7 @@ const services: PluridServerService[] = [
 const servicesData: PluridServerServicesData = {
     /** uncomment to use services */
     reduxStore,
-    reduxStoreValue: { plurid: 'app', },
+    reduxStoreValue: {},
     graphqlClient,
     // stripeAPIKey,
     // stripeScript,

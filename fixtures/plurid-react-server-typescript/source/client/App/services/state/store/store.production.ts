@@ -13,13 +13,14 @@ export type AppState = ReturnType<typeof rootReducer>;
 const store = (preloadedState: any) => {
     // const localState = localStorage.loadState();
 
-    const persistedState = {
-        // themes: localState?.themes,
-    };
+    // const persistedState = {
+    //     themes: localState?.themes,
+    // };
 
     const _store = createStore(
         rootReducer,
-        persistedState || preloadedState,
+        preloadedState,
+        // persistedState || preloadedState,
         applyMiddleware(
             thunk,
         ),
