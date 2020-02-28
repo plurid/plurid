@@ -33,9 +33,9 @@ import {
     PluridServerConfiguration,
 } from '../../data/interfaces';
 
-import Renderer from '../Renderer';
-import Router from '../Router';
-import ContentGenerator from '../ContentGenerator';
+import PluridRenderer from '../Renderer';
+import PluridRouter from '../Router';
+import PluridContentGenerator from '../ContentGenerator';
 
 
 
@@ -52,7 +52,7 @@ export default class PluridServer {
     private serverApplication: Express;
     private server: Server | undefined;
     private port: number;
-    private renderer: Renderer | undefined;
+    private renderer: PluridRenderer | undefined;
 
     constructor(
         configuration: PluridServerConfiguration,
@@ -121,7 +121,7 @@ export default class PluridServer {
     private computeApplication() {
         this.loadMiddleware();
 
-        const router = new Router({
+        const router = new PluridRouter({
             routes: this.routes,
         });
 
@@ -166,7 +166,7 @@ export default class PluridServer {
 
             const stripeScript = this.servicesData?.stripeScript;
 
-            this.renderer = new Renderer({
+            this.renderer = new PluridRenderer({
                 content,
                 head,
                 styles: mergedStyles,
@@ -217,7 +217,7 @@ export default class PluridServer {
         let styles = '';
 
         try {
-            const contentHandler = new ContentGenerator(
+            const contentHandler = new PluridContentGenerator(
                 this.Application,
                 this.services,
                 this.servicesData,
