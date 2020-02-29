@@ -257,41 +257,39 @@ export const parseFragment = (
 
     switch (fragmentType.toLowerCase()) {
         case 'text':
-            // extract text data from
-            // e.g.
-            // text=Foo,Boo,[0]
-            const textValues = fragmentValues.split(',');
-            const textStart = textValues[0];
-            const textEnd = textValues[1];
-            const textOccurence = extractOccurence(textValues[2]);
+            {
+                const textValues = fragmentValues.split(',');
+                const textStart = textValues[0];
+                const textEnd = textValues[1];
+                const textOccurence = extractOccurence(textValues[2]);
 
-            if (!textStart) {
-                return;
+                if (!textStart) {
+                    return;
+                }
+
+                return {
+                    type: 'text',
+                    start: textStart,
+                    end: textEnd || '',
+                    occurence: textOccurence,
+                };
             }
-
-            return {
-                type: 'text',
-                start: textStart,
-                end: textEnd || '',
-                occurence: textOccurence,
-            };
         case 'element':
-            // extract element data from
-            // e.g.
-            // element=123,[0]
-            const elementValues = fragmentValues.split(',');
-            const elementID = elementValues[0];
-            const elementOccurence = extractOccurence(elementValues[1]);
+            {
+                const elementValues = fragmentValues.split(',');
+                const elementID = elementValues[0];
+                const elementOccurence = extractOccurence(elementValues[1]);
 
-            if (!elementID) {
-                return;
+                if (!elementID) {
+                    return;
+                }
+
+                return {
+                    type: 'element',
+                    id: elementID,
+                    occurence: elementOccurence,
+                };
             }
-
-            return {
-                type: 'element',
-                id: elementID,
-                occurence: elementOccurence,
-            };
     }
 
     return undefined;
