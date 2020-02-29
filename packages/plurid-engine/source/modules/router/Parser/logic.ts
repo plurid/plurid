@@ -43,11 +43,22 @@ export const extractParameters = (
 
     const noParameters = parameters.every(parameter => parameter === '');
     if (noParameters) {
-        // return [];
+        return {};
     }
 
-    // return parameters;
-    return {};
+
+    const {
+        locationElements,
+        comparingPath,
+    } = computeComparingPath(location, parameters);
+    if (comparingPath !== route) {
+        return {};
+    }
+    const parametersValues = extractParametersValues(
+        parameters,
+        locationElements,
+    );
+    return parametersValues;
 }
 
 
@@ -94,10 +105,10 @@ export const computeComparingPath = (
     path: string,
     parameters: string[],
 ) => {
-    const pathElements = splitPath(path);
-    const comparingPathElements = [...pathElements];
+    const locationElements = splitPath(path);
+    const comparingPathElements = [...locationElements];
 
-    for (const index of pathElements.keys()) {
+    for (const index of locationElements.keys()) {
         if (parameters[index]) {
             comparingPathElements[index] = parameters[index];
         }
@@ -106,7 +117,7 @@ export const computeComparingPath = (
     const comparingPath = '/' + comparingPathElements.join('/');
 
     return {
-        pathElements,
+        locationElements,
         comparingPath,
     };
 }
@@ -147,7 +158,7 @@ export const extractQuery = (
         const query = querySplit[1];
         const queryItems = query.split('&');
 
-        for (const item in queryItems) {
+        for (const item of queryItems) {
             const queryValue = item.split('=');
             const id = queryValue[0];
             const value = queryValue[1];
@@ -163,16 +174,26 @@ export const extractQuery = (
 
 
 export const extractFragments = (
-    fragments: string,
+    location: string,
 ): Fragments => {
     // text=Foo,Boo,[1]&element=123,[0]
 
-    const fragmentItems = fragments.split('&');
+    const split = location.split('#:~:');
+    const fragmentsValues = split[1];
+
+    if (!fragmentsValues) {
+        return {
+            texts: [],
+            elements: [],
+        };
+    }
+
+    const fragmentItems = fragmentsValues.split('&');
 
     const textFragments: FragmentText[] = [];
     const elementFragments: FragmentElement[] = [];
 
-    for (const item in fragmentItems) {
+    for (const item of fragmentItems) {
         const parsedFragment = parseFragment(item);
         if (parsedFragment) {
             switch (parsedFragment.type) {
