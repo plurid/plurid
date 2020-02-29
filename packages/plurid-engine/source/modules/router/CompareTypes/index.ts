@@ -4,7 +4,7 @@ export type CompareTypeLessThan = '<';
 export type CompareTypeEqualGreaterThan = '>=';
 export type CompareTypeGreaterThan = '>';
 
-export type CompareTypes = CompareTypeEqual
+export type CompareType = CompareTypeEqual
     | CompareTypeEqualLessThan
     | CompareTypeLessThan
     | CompareTypeEqualGreaterThan
@@ -12,7 +12,7 @@ export type CompareTypes = CompareTypeEqual
 
 export interface ICompareTypes {
     equal: '==',
-    euqalLessThan: '<=',
+    equalLessThan: '<=',
     lessThan: '<',
     equalGreaterThan: '>=',
     greaterThan: '>',
@@ -20,7 +20,7 @@ export interface ICompareTypes {
 
 export const compareTypes: ICompareTypes = {
     equal: '==',
-    euqalLessThan: '<=',
+    equalLessThan: '<=',
     lessThan: '<',
     equalGreaterThan: '>=',
     greaterThan: '>',
