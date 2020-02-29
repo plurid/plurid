@@ -22,10 +22,11 @@ export interface PluridLink {
      * where `d71b21673037485a` is a generated page ID;
      *
      * * be a parametric route,
-     * e.g. `'/path/to/:page'`, where `:page` is the parameter name;
+     * e.g. `'/path/to/:page'`, where `:page` is the parameter value
+     * for the parameter defined in the `PluridPage[]`;
      *
-     * * receive query key=value pairs,
-     * e.g. `'/path/to/page?id=1&show=true'`, where `id=1` and `show=true` are key=value pairs
+     * * receive query `key=value` pairs,
+     * e.g. `'/path/to/page?id=1&show=true'`, where `id=1` and `show=true` are `key=value` pairs
      *
      * * specify a text fragment,
      * e.g. `'/path/to/page#:~:text=A%20door,is%20opened.,[0]'`,
