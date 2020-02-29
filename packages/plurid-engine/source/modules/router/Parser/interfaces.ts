@@ -22,6 +22,7 @@ export interface ParserOptions {
 
 export interface ParserResponse<T> {
     route: Route<T>;
+    pathname: string;
     parameters: Indexed<string>;
     query: Indexed<string>;
     fragments: Fragments;
