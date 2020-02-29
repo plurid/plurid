@@ -191,7 +191,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
-        const matchedPage = router.match(pagePath, Object.values(pages));
+        // const matchedPage = router.match(pagePath, Object.values(pages));
+        const matchedPage: any = undefined;
+
         if (matchedPage) {
             const {
                 route,
