@@ -46,12 +46,12 @@ export const setupPackageJSONReactServer = async (
     });
     await addScript({
         name: 'start.server.development',
-        value: `${packageManagerRun} build.server.development && nodemon build/server.development.js`,
+        value: `${packageManagerRun} build.server.development && nodemon build/server.js`,
         path: packageJsonPath,
     });
     await addScript({
         name: 'start.server.development.run',
-        value: 'nodemon build/server.development.js',
+        value: 'nodemon build/server.js',
         path: packageJsonPath,
     });
     await addScript({
