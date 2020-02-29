@@ -10,7 +10,6 @@ import {
 
 
 
-
 export const extractPathname = (
     location: string,
 ) => {
@@ -198,9 +197,14 @@ export const extractQuery = (
 
 
 export const extractFragments = (
-    location: string,
+    location?: string,
 ): Fragments => {
-    // text=Foo,Boo,[1]&element=123,[0]
+    if (!location) {
+        return {
+            texts: [],
+            elements: [],
+        };
+    }
 
     const split = location.split('#:~:');
     const fragmentsValues = split[1];
