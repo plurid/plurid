@@ -8,6 +8,10 @@ import {
     FragmentText,
 } from '../Router/interfaces';
 
+import {
+    ParserParametersAndMatch,
+} from './interfaces';
+
 
 
 export const extractPathname = (
@@ -43,10 +47,10 @@ export const extractPathname = (
  *
  * @param route
  */
-export const extractParameters = (
+export const extractParametersAndMatch = (
     location: string,
     route: string,
-): Indexed<string> => {
+): ParserParametersAndMatch => {
     const routeElements = splitPath(route);
     const parameters: string[] = [];
 
@@ -58,25 +62,27 @@ export const extractParameters = (
         }
     });
 
-    const noParameters = parameters.every(parameter => parameter === '');
-    if (noParameters) {
-        return {};
-    }
-
-
     const {
         locationElements,
         comparingPath,
     } = computeComparingPath(location, parameters);
     if (comparingPath !== route) {
-        return {};
+        return {
+            match: false,
+            parameters: {},
+            elements: locationElements,
+        };
     }
 
     const parametersValues = extractParametersValues(
         parameters,
         locationElements,
     );
-    return parametersValues;
+    return {
+        match: true,
+        parameters: parametersValues,
+        elements: locationElements,
+    };
 }
 
 
