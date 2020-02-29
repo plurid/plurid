@@ -10,6 +10,24 @@ import {
 
 
 
+
+export const extractPathname = (
+    location: string,
+) => {
+    const queryIndex = location.indexOf('?');
+    const noQueryPath = queryIndex === -1
+        ? location
+        : location.substring(0, queryIndex);
+
+    const fragmentIndex = noQueryPath.indexOf('#:~:');
+    const noFragmentPath = fragmentIndex === -1
+        ? noQueryPath
+        : noQueryPath.substring(0, fragmentIndex);
+
+    return noFragmentPath;
+}
+
+
 /**
  * Extracts the parameters names from a `route`.
  *
@@ -106,18 +124,8 @@ export const computeComparingPath = (
     path: string,
     parameters: string[],
 ) => {
-    const queryIndex = path.indexOf('?');
-    const noQueryPath = queryIndex === -1
-        ? path
-        : path.substring(0, queryIndex);
-
-    const fragmentIndex = path.indexOf('#:~:');
-    const noFragmentPath = fragmentIndex === -1
-        ? noQueryPath
-        : noQueryPath.substring(0, fragmentIndex);
-
-    const locationElements = splitPath(noFragmentPath);
-
+    const pathname = extractPathname(path);
+    const locationElements = splitPath(pathname);
     const comparingPathElements = [...locationElements];
 
     for (const index of locationElements.keys()) {
