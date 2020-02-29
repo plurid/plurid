@@ -14,6 +14,10 @@ import {
     TRANSFORM_TOUCHES,
 } from '@plurid/plurid-data';
 
+import {
+    router,
+} from '@plurid/plurid-engine';
+
 import PluridPubSub, {
     TOPICS,
 } from '@plurid/plurid-pubsub';
@@ -25,6 +29,14 @@ import PluridSubApp from './App/SubApp';
 import PluridLink from './modules/components/PluridLink';
 
 import PluridVirtualList from './modules/components/PluridVirtual/List';
+
+
+
+const {
+    default: PluridRouter,
+    RouteMatcher: PluridRouteMatcher,
+    RouteParser: PluridRouteParser,
+} = router;
 
 
 export {
@@ -41,6 +53,11 @@ export {
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
+
+    /** Engine */
+    PluridRouter,
+    PluridRouteMatcher,
+    PluridRouteParser,
 
     /** PubSub */
     PluridPubSub,
