@@ -6,7 +6,7 @@ import {
 
 import {
     extractPathname,
-    extractParameters,
+    extractParametersAndMatch,
     extractQuery,
     extractFragments,
 } from './logic';
@@ -47,29 +47,56 @@ export default class Parser<T> {
         return parserOptions;
     }
 
+    private extractPathname() {
+        const pathname = extractPathname(
+            this.location,
+        );
+        return pathname;
+    }
+
+    private extractParametersAndMatch() {
+        const parametersAndMatch = extractParametersAndMatch(
+            this.location,
+            this.route.location,
+        );
+
+        return parametersAndMatch;
+    }
+
+    private extractQuery() {
+        const query = extractQuery(
+            this.location,
+        );
+        return query;
+    }
+
+    private extractFragments() {
+        const fragments = this.options.fragment
+            ? extractFragments(this.location)
+            : extractFragments();
+        return fragments;
+    }
+
 
     /** public */
     /**
      * Extract pathname, parameters, query, and fragment, if available.
      */
     public extract() {
-        const pathname = extractPathname(
-            this.location,
-        );
-        const parameters = extractParameters(
-            this.location,
-            this.route.location,
-        );
-        const query = extractQuery(
-            this.location,
-        );
-        const fragments = this.options.fragment
-            ? extractFragments(this.location)
-            : extractFragments();
+        const pathname = this.extractPathname();
+        const {
+            match,
+            parameters,
+            elements,
+        } = this.extractParametersAndMatch();
+        const query = this.extractQuery();
+        const fragments = this.extractFragments();
 
         const parserResponse: ParserResponse<T> = {
             route: this.route,
             pathname,
+            elements,
+            match,
             parameters,
             query,
             fragments,
