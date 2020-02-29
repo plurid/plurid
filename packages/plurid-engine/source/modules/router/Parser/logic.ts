@@ -30,12 +30,12 @@ export const extractParameters = (
     location: string,
     route: string,
 ): Indexed<string> => {
-    const pathElements = splitPath(route);
+    const routeElements = splitPath(route);
     const parameters: string[] = [];
 
-    pathElements.forEach(pathElement => {
-        if (pathElement[0] === ':') {
-            parameters.push(pathElement);
+    routeElements.forEach(routeElement => {
+        if (routeElement[0] === ':') {
+            parameters.push(routeElement);
         } else {
             parameters.push('');
         }
@@ -54,6 +54,7 @@ export const extractParameters = (
     if (comparingPath !== route) {
         return {};
     }
+
     const parametersValues = extractParametersValues(
         parameters,
         locationElements,
@@ -105,7 +106,18 @@ export const computeComparingPath = (
     path: string,
     parameters: string[],
 ) => {
-    const locationElements = splitPath(path);
+    const queryIndex = path.indexOf('?');
+    const noQueryPath = queryIndex === -1
+        ? path
+        : path.substring(0, queryIndex);
+
+    const fragmentIndex = path.indexOf('#:~:');
+    const noFragmentPath = fragmentIndex === -1
+        ? noQueryPath
+        : noQueryPath.substring(0, fragmentIndex);
+
+    const locationElements = splitPath(noFragmentPath);
+
     const comparingPathElements = [...locationElements];
 
     for (const index of locationElements.keys()) {
@@ -151,7 +163,11 @@ export const splitPath = (
 export const extractQuery = (
     path: string,
 ): Indexed<string> => {
-    const querySplit = path.split('?');
+    const fragmentIndex = path.indexOf('#:~:');
+    const noFragmentPath = fragmentIndex === -1
+        ? path
+        : path.substring(0, fragmentIndex);
+    const querySplit = noFragmentPath.split('?');
 
     if (querySplit.length === 2) {
         const queryValues: Indexed<string> = {};
