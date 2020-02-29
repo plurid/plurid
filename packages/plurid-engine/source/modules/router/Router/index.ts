@@ -36,9 +36,19 @@ export default class Router<T> {
         options: RouterPartialOptions | undefined,
     ) {
         const routerOptions: RouterOptions = {
+            cacheLimit: options?.cacheLimit || 1000,
         };
 
         return routerOptions;
+    }
+
+    /**
+     * Check if the cache exceeds the cache limit and reset if true.
+     */
+    private checkCacheReset() {
+        if (Object.entries(this.cachedMatched).length > this.options.cacheLimit) {
+            this.cachedMatched = {};
+        }
     }
 
 
@@ -51,6 +61,7 @@ export default class Router<T> {
         for (const route of this.routes) {
             const cached = this.cachedMatched[location];
             if (cached) {
+                this.checkCacheReset();
                 return cached;
             }
 
