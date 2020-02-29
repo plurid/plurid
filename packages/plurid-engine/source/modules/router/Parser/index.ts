@@ -63,9 +63,9 @@ export default class Parser<T> {
         const query = extractQuery(
             this.location,
         );
-        const fragments = extractFragments(
-            this.location,
-        );
+        const fragments = this.options.fragment
+            ? extractFragments(this.location)
+            : extractFragments();
 
         const parserResponse: ParserResponse<T> = {
             route: this.route,
