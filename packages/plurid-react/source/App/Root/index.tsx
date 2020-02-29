@@ -20,12 +20,17 @@ interface RootProperties {
     appProperties: PluridAppProperties;
 }
 
-const Root: React.FC<RootProperties> = (properties) => {
+const Root: React.FC<RootProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         store,
         appProperties,
     } = properties;
 
+
+    /** render */
     return (
         <ReduxProvider
             store={store}

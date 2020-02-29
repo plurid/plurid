@@ -28,11 +28,16 @@ type SubAppRootProperties = SubAppRootOwnProperties
     & SubAppRootStateProperties
     & SubAppRootDispatchProperties;
 
-const SubAppRoot: React.FC<SubAppRootProperties> = (properties) => {
+const SubAppRoot: React.FC<SubAppRootProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         appProperties,
     } = properties;
 
+
+    /** render */
     return (
         <View
             appProperties={appProperties}

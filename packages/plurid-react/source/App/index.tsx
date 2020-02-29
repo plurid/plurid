@@ -12,7 +12,9 @@ import store from '../modules/services/state/store';
 const initialState = {};
 const initializedStore = store(initialState);
 
-const PluridApp: React.FC<PluridAppProperties> = (properties) => {
+const PluridApp: React.FC<PluridAppProperties> = (
+    properties,
+) => {
     return (
         <Root
             store={initializedStore}
