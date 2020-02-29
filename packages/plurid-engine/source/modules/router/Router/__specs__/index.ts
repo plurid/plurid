@@ -24,6 +24,25 @@ describe('Router', () => {
         expect(response?.pathname).toBe('/one');
     });
 
+    it.only('simple route cached', () => {
+        const routes: Route<any>[] = [
+            {
+                location: '/one',
+                view: 'one',
+            },
+            {
+                location: '/two',
+                view: 'two',
+            },
+        ];
+        const router = new Router(routes);
+        const responseOne = router.match('/one');
+
+        const responseTwo = router.match('/one');
+
+        expect(responseOne?.pathname).toBe('/one');
+    });
+
     it('simple route - parametric', () => {
         const routes: Route<any>[] = [
             {

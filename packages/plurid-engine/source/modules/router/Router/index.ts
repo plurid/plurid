@@ -1,8 +1,16 @@
 import {
+    Indexed,
+} from '@plurid/plurid-data';
+
+import {
     RouterOptions,
     RouterPartialOptions,
     Route,
 } from './interfaces';
+
+import {
+    MatcherResponse,
+} from '../Matcher/interfaces';
 
 import Matcher from '../Matcher';
 
@@ -11,6 +19,7 @@ import Matcher from '../Matcher';
 export default class Router<T> {
     private routes: Route<T>[];
     private options: RouterOptions;
+    private cachedMatched: Indexed<MatcherResponse<T>>;
 
 
     constructor(
@@ -19,6 +28,7 @@ export default class Router<T> {
     ) {
         this.routes = routes;
         this.options = this.handleOptions(options);
+        this.cachedMatched = {};
     }
 
 
@@ -39,9 +49,18 @@ export default class Router<T> {
         location: string,
     ) {
         for (const route of this.routes) {
+            const cached = this.cachedMatched[location];
+            if (cached) {
+                return cached;
+            }
+
             const matcher = new Matcher(location, route);
             const data = matcher.data();
             if (data) {
+                this.cachedMatched[location] = {
+                    ...data,
+                };
+
                 return data;
             }
         }
