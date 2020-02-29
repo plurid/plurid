@@ -38,9 +38,7 @@ import {
     extractParameters,
 } from './parameters';
 
-import {
-    match,
-} from '../router';
+import Router from '../router';
 
 
 
@@ -195,7 +193,8 @@ export const assignPagesFromView = (
             ? viewPage
             : viewPage.path;
 
-        const matchedPage = match(viewPagePath, pages);
+        // const matchedPage = match(viewPagePath, pages);
+        const matchedPage: any = undefined;
 
         // console.log('viewPage', viewPage);
         // console.log('pages', pages);

@@ -1,4 +1,8 @@
 import {
+    Indexed,
+} from '@plurid/plurid-data';
+
+import {
     ParserOptions,
     ParserPartialOptions,
     ParserResponse,
@@ -17,11 +21,13 @@ import {
 
 
 export default class Parser<T> {
+    /** properties */
     private location: string;
     private route: Route<T>;
     private options: ParserOptions;
 
 
+    /** constructor */
     constructor(
         location: string,
         route: Route<T>,
@@ -33,6 +39,7 @@ export default class Parser<T> {
     }
 
 
+    /** private */
     private handleOptions(
         options: ParserPartialOptions | undefined,
     ) {
@@ -44,23 +51,20 @@ export default class Parser<T> {
     }
 
 
+    /** public */
     /**
      * Extract pathname, parameters, query, and fragment, if available.
      */
     public extract() {
-        const {
-            location,
-        } = this.route;
-
         const parameters = extractParameters(
             this.location,
-            location,
+            this.route.location,
         );
         const query = extractQuery(
-            location,
+            this.location,
         );
         const fragments = extractFragments(
-            location,
+            this.location,
         );
 
         const parserResponse: ParserResponse<T> = {
