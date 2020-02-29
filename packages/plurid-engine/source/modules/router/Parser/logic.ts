@@ -246,10 +246,15 @@ export const parseFragment = (
             const textStart = textValues[0];
             const textEnd = textValues[1];
             const textOccurence = extractOccurence(textValues[2]);
+
+            if (!textStart) {
+                return;
+            }
+
             return {
                 type: 'text',
                 start: textStart,
-                end: textEnd,
+                end: textEnd || '',
                 occurence: textOccurence,
             };
         case 'element':
@@ -259,6 +264,11 @@ export const parseFragment = (
             const elementValues = fragmentValues.split(',');
             const elementID = elementValues[0];
             const elementOccurence = extractOccurence(elementValues[1]);
+
+            if (!elementID) {
+                return;
+            }
+
             return {
                 type: 'element',
                 id: elementID,

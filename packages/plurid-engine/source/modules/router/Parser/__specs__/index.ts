@@ -63,6 +63,30 @@ describe('Parser', () => {
         expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
     });
 
+    it('with invalid text fragment', () => {
+        const route: Route<any> = {
+            location: '/four',
+            view: 'four',
+        };
+        const parser = new Parser('/four#:~:text=', route);
+        const response = parser.extract();
+        const fragmentsTexts: any[] = [];
+        expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
+    });
+
+    it('with incomplete text fragment', () => {
+        const route: Route<any> = {
+            location: '/four',
+            view: 'four',
+        };
+        const parser = new Parser('/four#:~:text=start', route);
+        const response = parser.extract();
+        const fragmentsTexts = [
+            { type: 'text', start: 'start', end: '', occurence: 0 },
+        ];
+        expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
+    });
+
     it('with element fragment', () => {
         const route: Route<any> = {
             location: '/five',
@@ -73,6 +97,17 @@ describe('Parser', () => {
         const fragmentsElements = [
             { type: 'element', id: '555', occurence: 2 },
         ];
+        expect(response.fragments.elements).toStrictEqual(fragmentsElements);
+    });
+
+    it('with invalid element fragment', () => {
+        const route: Route<any> = {
+            location: '/five',
+            view: 'five',
+        };
+        const parser = new Parser('/five#:~:element=,[2]', route);
+        const response = parser.extract();
+        const fragmentsElements: any[] = [];
         expect(response.fragments.elements).toStrictEqual(fragmentsElements);
     });
 
