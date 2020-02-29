@@ -88,29 +88,6 @@ export interface Route<T> {
 
 
 
-export interface ActiveRoute<T> extends Route<T> {
-    parameters: Indexed<string>;
-    query: Indexed<string>;
-    fragments: Fragments;
-}
-
-
-
-export interface TwithPath {
-    [key: string]: any;
-    path: string;
-}
-
-
-export interface MatchResponse<T> {
-    route: T;
-    parameters: Indexed<string>;
-    query: Indexed<string>;
-    fragments: Fragments;
-}
-
-
-
 export interface Fragments {
     texts: FragmentText[];
     elements: FragmentElement[];
