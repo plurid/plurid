@@ -67,4 +67,11 @@ export interface PluridApp {
      * Publish/Subscribe bus based on `@plurid/plurid-pubsub`.
      */
     pubsub?: PluridPubSub;
+
+    serverData?: PluridServerData;
+}
+
+
+export interface PluridServerData {
+    view: any[];
 }
