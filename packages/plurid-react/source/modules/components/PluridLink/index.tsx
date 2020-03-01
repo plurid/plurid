@@ -52,6 +52,10 @@ import {
 
 
 
+const {
+    default: Router,
+} = router;
+
 interface PluridLinkCoordinates {
     x: number;
     y: number;
@@ -191,16 +195,34 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
+        const routes: router.Route<any>[] = Object.values(pages).map(page => {
+            const route: router.Route<any> =  {
+                location: page.path,
+                view: '',
+            };
+            return route;
+        });
+
+        const pagesRouter = new Router(routes);
+
+        const matchedRoute = pagesRouter.match(pagePath);
+        // console.log(matchedRoute);
+
         // const matchedPage = router.match(pagePath, Object.values(pages));
-        const matchedPage: any = undefined;
+        // const matchedPage: any = undefined;
 
-        if (matchedPage) {
-            const {
-                route,
-                parameters,
-            } = matchedPage;
+        if (matchedRoute) {
+            const page = Object.values(pages).find(p => p.path === matchedRoute.route.location);
+            if (!page) {
+                return;
+            }
 
-            setPageID(route.id);
+            // const {
+            //     route,
+            //     parameters,
+            // } = matchedPage;
+
+            setPageID(page.id);
 
             const {
                 pluridPlaneID,
@@ -209,9 +231,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 stateTree,
                 parentPlaneID,
                 pagePath,
-                route.id,
+                page.id,
                 linkCoordinates,
-                parameters,
+                // parameters: matchedRoute.parameters,
             );
 
             if (pluridPlaneID) {
