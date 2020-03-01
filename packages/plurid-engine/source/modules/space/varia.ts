@@ -38,7 +38,9 @@ import {
     extractParameters,
 } from './parameters';
 
-import Router from '../router';
+import Router, {
+    Route,
+} from '../router';
 
 
 
@@ -188,26 +190,31 @@ export const assignPagesFromView = (
 
     const tree: TreePage[] = [];
 
+    const routes: Route<any>[] = pages.map(page => {
+        const route: Route<any> = {
+            location: page.path,
+            view: '',
+        };
+        return route;
+    });
+
+    const router = new Router(routes);
+
     for (const [index, viewPage] of view.entries()) {
         const viewPagePath = typeof viewPage === 'string'
             ? viewPage
             : viewPage.path;
 
-        // const matchedPage = match(viewPagePath, pages);
-        const matchedPage: any = undefined;
-
-        // console.log('viewPage', viewPage);
-        // console.log('pages', pages);
-
-        // console.log('matchedPage', matchedPage);
-        // console.log('------------------');
+        const matchedPage = router.match(viewPagePath);
 
         if (matchedPage) {
-            const {
-                route,
-            } = matchedPage;
+            const page = pages.find(p => p.path === matchedPage?.route.location);
+            if (!page) {
+                break;
+            }
+
             const newPage = {
-                ...route,
+                ...page,
                 path: viewPagePath,
                 planeID: uuid(),
             };
