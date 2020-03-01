@@ -30,6 +30,10 @@ import PluridLink from './modules/components/PluridLink';
 
 import PluridVirtualList from './modules/components/PluridVirtual/List';
 
+import {
+    serverComputeApplication,
+} from './modules/services/logic/server';
+
 
 
 const {
@@ -69,6 +73,9 @@ export {
     /** Components */
     PluridLink,
     PluridVirtualList,
+
+    /** Logic */
+    serverComputeApplication,
 };
 
 
