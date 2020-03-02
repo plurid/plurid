@@ -20,7 +20,6 @@ interface RouteComponent<T> {
 }
 
 interface PluridRouterBrowserOwnProperties<T> {
-    path: string;
     routes: router.Route<T>[];
     components: RouteComponent<T>[];
 }
@@ -30,7 +29,6 @@ function PluridRouterBrowser<T>(
 ) {
     /** properties */
     const {
-        path,
         routes,
         components,
     } = properties;
@@ -46,9 +44,28 @@ function PluridRouterBrowser<T>(
     const [Component, setComponent] = useState<any>();
 
 
+    /** handlers */
+    const handlePopState = () => {
+        const path = window.location.pathname;
+        const matchedRoute = pluridRouter.current.match(path);
+
+        if (matchedRoute) {
+            setMatchedRoute(matchedRoute);
+
+            const view = matchedRoute.route.view;
+            const routeComponent = indexedComponents.current[view as any];
+
+            if (routeComponent) {
+                setComponent(routeComponent.component);
+            }
+        }
+    }
+
+
     /** effects */
     useEffect(() => {
         if (pluridRouter.current && indexedComponents.current) {
+            const path = window.location.pathname;
             const matchedRoute = pluridRouter.current.match(path);
 
             if (matchedRoute) {
@@ -62,9 +79,16 @@ function PluridRouterBrowser<T>(
                 }
             }
         }
-    }, [
-        path,
-    ]);
+    }, []);
+
+
+    useEffect(() => {
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, []);
 
 
     /** render */
