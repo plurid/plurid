@@ -127,7 +127,7 @@ const App = () => {
             <div>
                 component index
                 <br />
-                <PluridRouterLink path="/one">link to page one</PluridRouterLink>
+                <PluridRouterLink asAnchor={false} path="/one">link to page one</PluridRouterLink>
                 <PluridRouterLink path="/two">link to page two</PluridRouterLink>
             </div>
         );
