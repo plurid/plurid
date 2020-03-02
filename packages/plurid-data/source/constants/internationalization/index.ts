@@ -5,6 +5,8 @@ import italian from './italian';
 import romanian from './romanian';
 import spanish from './spanish';
 
+import internationalizationFields from './fields';
+
 
 
 export {
@@ -14,4 +16,6 @@ export {
     italian,
     romanian,
     spanish,
+
+    internationalizationFields,
 }

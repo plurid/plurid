@@ -5,7 +5,7 @@ export type InternationalizationItalian = 'italian';
 export type InternationalizationRomanian = 'romanian';
 export type InternationalizationSpanish = 'spanish';
 
-export type InternationalizationLanguages = InternationalizationEnglish
+export type InternationalizationLanguageType = InternationalizationEnglish
     | InternationalizationFrench
     | InternationalizationGerman
     | InternationalizationItalian
@@ -23,7 +23,7 @@ export type InternationalizationFieldToolbarTransformRotate = 'toolbarTransformR
 export type InternationalizationFieldToolbarTransformScale = 'toolbarTransformScale';
 export type InternationalizationFieldToolbarTransformTranslate = 'toolbarTransformTranslate';
 
-export type InternationalizationFields = InternationalizationFieldViewcubeFront
+export type InternationalizationFieldType = InternationalizationFieldViewcubeFront
     | InternationalizationFieldViewcubeBack
     | InternationalizationFieldViewcubeLeft
     | InternationalizationFieldViewcubeRight
@@ -32,6 +32,18 @@ export type InternationalizationFields = InternationalizationFieldViewcubeFront
     | InternationalizationFieldToolbarTransformRotate
     | InternationalizationFieldToolbarTransformScale
     | InternationalizationFieldToolbarTransformTranslate;
+
+export interface InternationalizationFields {
+    viewcubeFront: InternationalizationFieldViewcubeFront,
+    viewcubeBack: InternationalizationFieldViewcubeBack,
+    viewcubeLeft: InternationalizationFieldViewcubeLeft,
+    viewcubeRight: InternationalizationFieldViewcubeRight,
+    viewcubeTop: InternationalizationFieldViewcubeTop,
+    viewcubeBase: InternationalizationFieldViewcubeBase,
+    toolbarTransformRotate: InternationalizationFieldToolbarTransformRotate,
+    toolbarTransformScale: InternationalizationFieldToolbarTransformScale,
+    toolbarTransformTranslate: InternationalizationFieldToolbarTransformTranslate,
+}
 
 
 export interface Internationalization {
