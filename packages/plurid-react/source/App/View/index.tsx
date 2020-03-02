@@ -962,6 +962,10 @@ const View: React.FC<ViewProperties> = (
         let touch: HammerManager;
 
         const handleTouch = async () => {
+            if (!viewElement.current) {
+                return;
+            }
+
             const HammerImport = await loadHammer();
             const Hammer = HammerImport.default;
 
@@ -978,7 +982,7 @@ const View: React.FC<ViewProperties> = (
             delete Hammer.defaults.cssProps.tapHighlightColor;
             delete Hammer.defaults.cssProps.touchSelect;
 
-            touch = new Hammer((viewElement as any).current);
+            touch = new Hammer(viewElement.current);
             touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
             touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
