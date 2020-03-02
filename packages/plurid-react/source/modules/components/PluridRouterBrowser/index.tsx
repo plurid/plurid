@@ -47,6 +47,7 @@ function PluridRouterBrowser<T>(
     /** handlers */
     const handlePopState = () => {
         const path = window.location.pathname;
+        console.log('path', path);
         const matchedRoute = pluridRouter.current.match(path);
 
         if (matchedRoute) {
@@ -64,21 +65,7 @@ function PluridRouterBrowser<T>(
 
     /** effects */
     useEffect(() => {
-        if (pluridRouter.current && indexedComponents.current) {
-            const path = window.location.pathname;
-            const matchedRoute = pluridRouter.current.match(path);
-
-            if (matchedRoute) {
-                setMatchedRoute(matchedRoute);
-
-                const view = matchedRoute.route.view;
-                const routeComponent = indexedComponents.current[view as any];
-
-                if (routeComponent) {
-                    setComponent(routeComponent.component);
-                }
-            }
-        }
+        handlePopState();
     }, []);
 
 
