@@ -27,7 +27,8 @@ import PluridApp from './App';
 import PluridSubApp from './App/SubApp';
 
 import PluridLink from './modules/components/PluridLink';
-
+import PluridRouterBrowser from './modules/components/PluridRouterBrowser';
+import PluridRouterStatic from './modules/components/PluridRouterStatic';
 import PluridVirtualList from './modules/components/PluridVirtual/List';
 
 import {
@@ -72,6 +73,8 @@ export {
 
     /** Components */
     PluridLink,
+    PluridRouterBrowser,
+    PluridRouterStatic,
     PluridVirtualList,
 
     /** Logic */
