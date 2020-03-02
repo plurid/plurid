@@ -47,7 +47,7 @@
         "@plurid/plurid-functions": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "^0.1.99",
+        "@plurid/plurid-data": "^0.1.100",
         "@plurid/plurid-functions": "^0.1.11",
         "@plurid/plurid-pubsub": "^0.1.3",
         "@rollup/plugin-commonjs": "^11.0.2",
@@ -56,8 +56,8 @@
         "@types/node": "^13.7.7",
         "@types/react": "^16.9.23",
         "@types/rollup-plugin-sourcemaps": "^0.4.2",
-        "@typescript-eslint/eslint-plugin": "^2.21.0",
-        "@typescript-eslint/parser": "^2.21.0",
+        "@typescript-eslint/eslint-plugin": "^2.22.0",
+        "@typescript-eslint/parser": "^2.22.0",
         "colors": "^1.4.0",
         "coveralls": "^3.0.9",
         "eslint": "^6.8.0",
