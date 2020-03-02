@@ -45,6 +45,7 @@
     },
     "peerDependencies": {
         "@plurid/plurid-functions": ">=0.1",
+        "@plurid/plurid-functions-react": ">=0",
         "@plurid/plurid-icons-react": ">=0.1",
         "@plurid/plurid-themes": ">=0.1",
         "@plurid/plurid-ui-react": ">=0.1",
@@ -64,6 +65,7 @@
     "devDependencies": {
         "@babel/core": "^7.8.6",
         "@plurid/plurid-functions": "^0.1.11",
+        "@plurid/plurid-functions-react": "^0.0.1",
         "@plurid/plurid-icons-react": "^0.1.18",
         "@plurid/plurid-themes": "^0.1.26",
         "@plurid/plurid-ui-react": "^0.1.79",
