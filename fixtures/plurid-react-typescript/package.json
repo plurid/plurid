@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@plurid/plurid-functions": "^0.1.7",
+    "@plurid/plurid-functions": "^0.1.11",
     "@plurid/plurid-icons-react": "^0.1.18",
-    "@plurid/plurid-react": "^0.1.108",
+    "@plurid/plurid-react": "^0.1.110",
     "@plurid/plurid-themes": "^0.1.26",
     "@plurid/plurid-ui-react": "^0.1.79",
     "@testing-library/jest-dom": "^5.1.1",
