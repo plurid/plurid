@@ -2,6 +2,10 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
+    dom,
+} from '@plurid/plurid-functions';
+
+import {
     TRANSFORM_MODES,
 
     PluridConfigurationSpaceTransformLocks,
@@ -15,13 +19,20 @@ import actions from '../../state/actions';
 
 
 
+interface Modes {
+    rotation: boolean;
+    translation: boolean;
+    scale: boolean;
+}
+
+
 export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: KeyboardEvent,
     firstPerson: boolean,
     locks: PluridConfigurationSpaceTransformLocks,
 ) => {
-    const inputOnPath = verifyPathForInputElement((event as any).path);
+    const inputOnPath = dom.verifyPathInputElement((event as any).path);
     if (inputOnPath) {
         return;
     }
@@ -212,12 +223,6 @@ export const handleGlobalShortcuts = (
 }
 
 
-interface Modes {
-    rotation: boolean;
-    translation: boolean;
-    scale: boolean;
-}
-
 export const handleGlobalWheel = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: WheelEvent,
@@ -342,26 +347,4 @@ export const handleGlobalWheel = (
             dispatch(actions.space.scaleDown());
         }
     }
-}
-
-
-
-const verifyPathForInputElement = (
-    path: any[],
-) => {
-    let input = false;
-
-    path.some(element => {
-        if (
-            element.tagName === 'INPUT'
-            || element.tagName === 'TEXTAREA'
-            || element.contentEditable === 'true'
-        ) {
-            input = true;
-            return true;
-        }
-        return false;
-    })
-
-    return input;
 }
