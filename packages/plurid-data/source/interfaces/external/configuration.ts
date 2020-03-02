@@ -13,6 +13,10 @@ import {
     PluridLayout,
 } from './layout';
 
+import {
+    InternationalizationLanguages,
+} from '../internal/internationalization';
+
 
 
 export type PluridPartialConfiguration = RecursivePartial<PluridConfiguration>;
@@ -30,7 +34,7 @@ export interface PluridConfiguration {
      */
     theme: string | PluridConfigurationTheme;
 
-    language: 'english' | 'french' | 'german' | 'italian' | 'romanian' | 'spanish';
+    language: InternationalizationLanguages;
 
     /**
      * Set the User Interface transparent.
