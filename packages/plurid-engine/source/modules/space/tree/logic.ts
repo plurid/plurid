@@ -17,45 +17,27 @@ import {
     uuidv4 as uuid,
 } from '@plurid/plurid-functions';
 
-import computeColumnLayout from '../layout/column';
-import computeRowLayout from '../layout/row';
-import computeFaceToFaceLayout from '../layout/faceToFace';
-import computeSheavesLayout from '../layout/sheaves';
-import computeZigZagLayout from '../layout/zigZag';
-
-import Router, {
-    Route,
-} from '../../router';
+import {
+    computeColumnLayout,
+    computeRowLayout,
+    computeFaceToFaceLayout,
+    computeSheavesLayout,
+    computeZigZagLayout,
+} from '../layout';
 
 import {
     computePluridPlaneLocation,
 } from '../location';
 
+import {
+    getTreePageByPlaneID,
+} from '../utilities';
+
+import Router, {
+    Route,
+} from '../../router';
 
 
-
-export const getTreePageByPlaneID = (
-    tree: TreePage[],
-    planeID: string
-): TreePage | null => {
-    let _page = null;
-
-    for (let page of tree) {
-        if (page.planeID === planeID) {
-            _page = page;
-        }
-
-        if (page.children && !_page) {
-            _page = getTreePageByPlaneID(page.children, planeID);
-        }
-
-        if (_page) {
-            break;
-        }
-    }
-
-    return _page;
-}
 
 
 /**
