@@ -21,7 +21,7 @@ export const handleGlobalShortcuts = (
     firstPerson: boolean,
     locks: PluridConfigurationSpaceTransformLocks,
 ) => {
-    const inputOnPath = verifyPathforInputElement((event as any).path);
+    const inputOnPath = verifyPathForInputElement((event as any).path);
     if (inputOnPath) {
         return;
     }
@@ -346,7 +346,7 @@ export const handleGlobalWheel = (
 
 
 
-const verifyPathforInputElement = (
+const verifyPathForInputElement = (
     path: any[],
 ) => {
     let input = false;

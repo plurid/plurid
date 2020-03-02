@@ -47,6 +47,18 @@ export const serverComputeApplication = (
         configuration,
     } = data;
 
+    // determine if pages or document based
+
+    // index pages
+
+    // create tree pages
+
+    // create tree
+
+    // render tree
+
+
+
     const commonConfiguration = computeCommonConfiguration(configuration);
 
     const spaceTree = new space.Tree({
