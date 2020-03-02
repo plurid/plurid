@@ -1,8 +1,10 @@
 import Tree from './object';
 
 import {
-    updateTreeWithNewPage,
+    computeSpaceTree,
     togglePageFromTree,
+    updateTreePage,
+    updateTreeWithNewPage,
 } from './logic';
 
 
@@ -10,6 +12,8 @@ import {
 export {
     Tree,
 
-    updateTreeWithNewPage,
+    computeSpaceTree,
     togglePageFromTree,
+    updateTreePage,
+    updateTreeWithNewPage,
 }

@@ -1,10 +1,10 @@
 import {
-    computePath,
-} from '../';
-
-import {
     TreePage,
 } from '@plurid/plurid-data';
+
+import {
+    computePath,
+} from '../';
 
 
 

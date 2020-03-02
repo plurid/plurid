@@ -1,10 +1,10 @@
 import {
-    updateTreePage,
-} from '../';
-
-import {
     TreePage,
 } from '@plurid/plurid-data';
+
+import {
+    updateTreePage,
+} from '../';
 
 
 

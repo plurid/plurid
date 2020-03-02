@@ -1,10 +1,10 @@
 import {
-    togglePageFromTree,
-} from '../';
-
-import {
     TreePage,
 } from '@plurid/plurid-data';
+
+import {
+    togglePageFromTree,
+} from '../';
 
 
 
