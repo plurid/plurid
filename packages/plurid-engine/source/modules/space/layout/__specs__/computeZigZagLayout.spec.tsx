@@ -1,12 +1,12 @@
-import computeZigZagLayout from '../zigZag';
-
 import {
     TreePage,
 } from '@plurid/plurid-data';
 
+import computeZigZagLayout from '../zigZag';
 
 
-describe.only('computeZigZagLayout', () => {
+
+describe('computeZigZagLayout', () => {
     /** handle crypto for jest - https://stackoverflow.com/a/52612372 */
     const crypto = require('crypto');
     Object.defineProperty(global, 'crypto', {

@@ -1,8 +1,8 @@
-import computeFaceToFaceLayout from '../faceToFace';
-
 import {
     TreePage,
 } from '@plurid/plurid-data';
+
+import computeFaceToFaceLayout from '../faceToFace';
 
 
 

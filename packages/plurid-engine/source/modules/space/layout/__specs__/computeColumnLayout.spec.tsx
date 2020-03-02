@@ -1,8 +1,8 @@
-import computeColumnLayout from '../column';
-
 import {
     TreePage,
 } from '@plurid/plurid-data';
+
+import computeColumnLayout from '../column';
 
 
 
