@@ -11,7 +11,7 @@ import {
  * @param callback Function to be called.
  * @param wait Debounce time.
  */
-export function useDebouncedCallback<A extends any[]>(
+function useDebouncedCallback<A extends any[]>(
     callback: (...args: A) => void,
     wait: number,
 ) {
@@ -46,3 +46,6 @@ export function useDebouncedCallback<A extends any[]>(
         }, wait);
     };
 }
+
+
+export default useDebouncedCallback;
