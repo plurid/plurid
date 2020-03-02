@@ -1,17 +1,14 @@
 import {
     /** constants */
-    ROOTS_GAP,
     PLANE_DEFAULT_ANGLE,
 
     /** enumerations */
     LAYOUT_TYPES,
 
     /** interfaces */
-    PluridPage,
     PluridView,
     PluridConfiguration,
     TreePage,
-    SpaceLocation,
     LinkCoordinates,
     PathParameters,
 } from '@plurid/plurid-data';
@@ -20,56 +17,44 @@ import {
     uuidv4 as uuid,
 } from '@plurid/plurid-functions';
 
-import computeColumnLayout from './layout/column';
-import computeRowLayout from './layout/row';
-import computeFaceToFaceLayout from './layout/faceToFace';
-import computeSheavesLayout from './layout/sheaves';
-import computeZigZagLayout from './layout/zigZag';
-
-import {
-    getTreePageByPlaneID,
-} from './tree';
-
-import {
-    computePluridPlaneLocation,
-} from './location';
-
-import {
-    extractParameters,
-} from './parameters';
+import computeColumnLayout from '../layout/column';
+import computeRowLayout from '../layout/row';
+import computeFaceToFaceLayout from '../layout/faceToFace';
+import computeSheavesLayout from '../layout/sheaves';
+import computeZigZagLayout from '../layout/zigZag';
 
 import Router, {
     Route,
-} from '../router';
+} from '../../router';
+
+import {
+    computePluridPlaneLocation,
+} from '../location';
 
 
 
-/**
- * Compute translateX based on configuration layout if it exists
- * or based on the index of the root.
- *
- * @param configuration
- * @param root
- * @param index
- */
-export const computeRootLocationX = (
-    configuration: PluridConfiguration | undefined,
-    root: PluridPage,
-    index: number,
-) => {
-    let translateX = 0;
-    if (configuration && configuration.space) {
-        if (Array.isArray(configuration.space.layout)) {
-            const layoutIndex = configuration.space.layout.indexOf(root.path);
-            translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
+
+export const getTreePageByPlaneID = (
+    tree: TreePage[],
+    planeID: string
+): TreePage | null => {
+    let _page = null;
+
+    for (let page of tree) {
+        if (page.planeID === planeID) {
+            _page = page;
         }
-    } else {
-        translateX = index === 0
-            ? 0
-            : window.innerWidth * index + ROOTS_GAP * index;
+
+        if (page.children && !_page) {
+            _page = getTreePageByPlaneID(page.children, planeID);
+        }
+
+        if (_page) {
+            break;
+        }
     }
 
-    return translateX;
+    return _page;
 }
 
 
@@ -249,51 +234,8 @@ export const assignPagesFromView = (
 }
 
 
-export const computeSpaceLocation = (
-    configuration: PluridConfiguration,
-): SpaceLocation => {
-    // if (configuration.space && configuration.space.layout) {
-    //     const {
-    //         layout,
-    //     } = configuration.space;
-
-    // }
-
-    const cameraLocationX = computeCameraLocationX(configuration);
-    const spaceLocation = {
-        rotationX: 0,
-        rotationY: 0,
-        translationX: cameraLocationX,
-        translationY: 0,
-        translationZ: 0,
-        scale: 1,
-    };
-
-    return spaceLocation;
-}
 
 
-/**
- * Based on the specified camera, compute the X translation
- *
- * @param configuration
- */
-export const computeCameraLocationX = (
-    configuration: PluridConfiguration,
-) => {
-    let translateX = 0;
-
-    if (configuration.space
-        && Array.isArray(configuration.space.layout)
-        && typeof configuration.space.camera === 'string'
-    ) {
-        const layoutIndex = configuration.space.layout.indexOf(configuration.space.camera || '');
-        translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
-    }
-
-    // account for camera space inversion
-    return -1 * translateX;
-}
 
 
 
@@ -344,16 +286,17 @@ export const updateTreeWithNewPage = (
             treePageParent,
         );
 
-        const extractedParameters = extractParameters(
-            pagePath,
-            parameters,
-        );
+        // const extractedParameters = extractParameters(
+        //     pagePath,
+        //     parameters,
+        // );
 
         const planeID = uuid();
         const newTreePage: TreePage = {
             pageID,
             path: pagePath,
-            parameters: extractedParameters,
+            // parameters: extractedParameters,
+            parameters: {},
             planeID,
             width: 0,
             height: 0,
@@ -471,160 +414,4 @@ export const togglePageFromTree = (
     }
 
     return updatedTree;
-}
-
-
-export const computeSpaceSize = (
-    tree: TreePage[],
-) => {
-    let width = 0;
-    let height = 0;
-    let depth = 0;
-    let topCorner = {
-        x: 0,
-        y: 0,
-        z: 0,
-    };
-
-    // console.log('tree', tree);
-    tree.map(treePage => {
-        // console.log('treePage', treePage);
-
-        const spaceWidth = treePage.location.translateX + treePage.width;
-        // console.log('spaceWidth', spaceWidth);
-        if (spaceWidth > width) {
-            width = spaceWidth;
-        }
-
-        const spaceHeight = treePage.location.translateY + treePage.height;
-        // console.log('spaceHeight', spaceHeight);
-        if (spaceHeight > height) {
-            height = spaceHeight;
-        }
-
-        const spaceDepth = treePage.location.translateZ;
-        // console.log('spaceDepth', spaceDepth);
-        if (spaceDepth > depth) {
-            depth = spaceDepth;
-        }
-    });
-
-    // console.log('-------------');
-
-    return {
-        width,
-        height,
-        depth,
-        topCorner,
-    };
-}
-
-
-/**
- * Compute only the view within a given radius around the user.
- *
- * @param pages
- * @param view
- * @param location
- */
-export const computeCulledView = (
-    pages: TreePage[],
-    view: string[] | PluridView[],
-    location: SpaceLocation,
-    radius: number = 8000,
-) => {
-    const culledView: string[] = [];
-
-    for (const viewPage of view) {
-        const path = typeof viewPage === 'string'
-            ? viewPage
-            : viewPage.path;
-
-        const page = findPage(
-            path,
-            pages,
-        );
-        if (!page) {
-            return;
-        }
-
-        const pageInView = checkPageInView(
-            page,
-            location,
-            radius,
-        );
-
-        if (pageInView) {
-            culledView.push(
-                page.path,
-            );
-        }
-    }
-
-    return culledView;
-}
-
-
-const findPage = (
-    view: string,
-    pages: TreePage[],
-) => {
-    for (const page of pages) {
-        if (page.path === view) {
-            return page;
-        }
-    }
-}
-
-
-const checkPageInView = (
-    page: TreePage,
-    location: SpaceLocation,
-    radius: number,
-) => {
-    const radiusLeft = location.translationX < 0
-        ? Math.abs(location.translationX) - radius
-        : -1 * location.translationX - radius;
-    const radiusRight = location.translationX < 0
-        ? Math.abs(location.translationX) + radius
-        : -1 * location.translationX + radius;
-    const locationX = page.location.translateX;
-
-    const radiusTop = location.translationY < 0
-        ? Math.abs(location.translationY) - radius
-        : -1 * location.translationY - radius;
-    const radiusBottom = location.translationY < 0
-        ? Math.abs(location.translationY) + radius
-        : -1 * location.translationY + radius;
-    const locationY = page.location.translateY;
-
-    const inViewOnX = radiusLeft <= locationX && locationX <= radiusRight;
-    const inViewOnY = radiusTop <= locationY && locationY <= radiusBottom;
-
-    if (
-        inViewOnX && inViewOnY
-    ) {
-        return true;
-    }
-
-    return false;
-}
-
-
-
-export const computeViewTree = (
-    pages: TreePage[],
-    view: string[] | PluridView[],
-): TreePage[] => {
-    const viewTree: TreePage[] = [];
-
-    for (const pageView of view) {
-        const page = pages.find(p => p.path === pageView);
-
-        if (page) {
-            viewTree.push(page);
-        }
-    }
-
-    return viewTree;
 }
