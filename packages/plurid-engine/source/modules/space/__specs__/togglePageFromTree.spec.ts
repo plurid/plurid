@@ -4,7 +4,7 @@ import {
 
 import {
     togglePageFromTree,
-} from '../';
+} from '../tree';
 
 
 

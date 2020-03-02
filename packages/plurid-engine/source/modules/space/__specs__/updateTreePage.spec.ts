@@ -4,7 +4,7 @@ import {
 
 import {
     updateTreePage,
-} from '../';
+} from '../tree';
 
 
 
