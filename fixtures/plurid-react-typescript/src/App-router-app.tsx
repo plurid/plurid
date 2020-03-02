@@ -185,16 +185,16 @@ const App = () => {
                 add page
             </StyledAdd> */}
 
-            {/* <PluridRouterStatic
+            <PluridRouterStatic
                 path={'/one'}
                 routes={routes}
                 components={components}
-            /> */}
+            />
 
-            <PluridRouterBrowser
+            {/* <PluridRouterBrowser
                 routes={routes}
                 components={components}
-            />
+            /> */}
         </div>
     );
 }
