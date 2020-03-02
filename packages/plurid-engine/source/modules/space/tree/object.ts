@@ -2,6 +2,7 @@ import {
     TreePage,
     PluridConfiguration,
     PluridView,
+    PluridCluster,
 } from '@plurid/plurid-data';
 
 import {
@@ -12,8 +13,10 @@ import {
 
 export interface TreeData {
     pages: TreePage[],
+    clusters?: PluridCluster[],
     configuration?: PluridConfiguration,
     view?: string[] | PluridView[],
+    previousTree?: TreePage[],
 }
 
 export default class Tree {
@@ -25,7 +28,7 @@ export default class Tree {
         this.data = data;
     }
 
-    public computeTree() {
+    public compute() {
         const {
             pages,
             configuration,
