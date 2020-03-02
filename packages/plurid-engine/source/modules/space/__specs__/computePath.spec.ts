@@ -4,7 +4,7 @@ import {
 
 import {
     computePath,
-} from '../';
+} from '../location';
 
 
 
