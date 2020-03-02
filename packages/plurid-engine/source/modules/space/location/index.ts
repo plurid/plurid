@@ -1,6 +1,12 @@
 import {
+    /** constants */
+    ROOTS_GAP,
+
     /** interfaces */
+    PluridPage,
+    PluridConfiguration,
     TreePage,
+    SpaceLocation,
     LocationCoordinates,
     LinkCoordinates,
     TopPlanePoint,
@@ -12,7 +18,7 @@ import {
 
 import {
     getTreePageByPlaneID,
-} from './tree';
+} from '../tree';
 
 
 
@@ -121,4 +127,84 @@ export const recomputeChildrenLocation = (
     }
 
     return updatedChildren;
+}
+
+
+
+
+
+
+/**
+ * Compute translateX based on configuration layout if it exists
+ * or based on the index of the root.
+ *
+ * @param configuration
+ * @param root
+ * @param index
+ */
+export const computeRootLocationX = (
+    configuration: PluridConfiguration | undefined,
+    root: PluridPage,
+    index: number,
+) => {
+    let translateX = 0;
+    if (configuration && configuration.space) {
+        if (Array.isArray(configuration.space.layout)) {
+            const layoutIndex = configuration.space.layout.indexOf(root.path);
+            translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
+        }
+    } else {
+        translateX = index === 0
+            ? 0
+            : window.innerWidth * index + ROOTS_GAP * index;
+    }
+
+    return translateX;
+}
+
+
+export const computeSpaceLocation = (
+    configuration: PluridConfiguration,
+): SpaceLocation => {
+    // if (configuration.space && configuration.space.layout) {
+    //     const {
+    //         layout,
+    //     } = configuration.space;
+
+    // }
+
+    const cameraLocationX = computeCameraLocationX(configuration);
+    const spaceLocation = {
+        rotationX: 0,
+        rotationY: 0,
+        translationX: cameraLocationX,
+        translationY: 0,
+        translationZ: 0,
+        scale: 1,
+    };
+
+    return spaceLocation;
+}
+
+
+/**
+ * Based on the specified camera, compute the X translation
+ *
+ * @param configuration
+ */
+export const computeCameraLocationX = (
+    configuration: PluridConfiguration,
+) => {
+    let translateX = 0;
+
+    if (configuration.space
+        && Array.isArray(configuration.space.layout)
+        && typeof configuration.space.camera === 'string'
+    ) {
+        const layoutIndex = configuration.space.layout.indexOf(configuration.space.camera || '');
+        translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
+    }
+
+    // account for camera space inversion
+    return -1 * translateX;
 }
