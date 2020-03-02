@@ -50,12 +50,16 @@ function PluridRouterStatic<T>(
         )
     }
 
-    const Component = routeComponent.component;
+    const component = routeComponent.component;
 
+
+    /** render */
     return (
         <>
-            {matchedRoute && Component && (
-                <Component />
+            {matchedRoute && component && (
+                <>
+                    {component}
+                </>
             )}
         </>
     );

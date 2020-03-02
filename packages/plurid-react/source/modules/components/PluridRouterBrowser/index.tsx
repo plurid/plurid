@@ -66,6 +66,8 @@ function PluridRouterBrowser<T>(
         path,
     ]);
 
+
+    /** render */
     return (
         <>
             {matchedRoute && component && (
