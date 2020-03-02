@@ -30,6 +30,8 @@ export interface PluridConfiguration {
      */
     theme: string | PluridConfigurationTheme;
 
+    language: 'english' | 'french' | 'german' | 'italian' | 'romanian' | 'spanish';
+
     /**
      * Set the User Interface transparent.
      *
