@@ -43,7 +43,7 @@ function PluridRouterBrowser<T>(
 
     /** state */
     const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse<T>>();
-    const [Component, setComponent] = useState<React.FC<any>>();
+    const [component, setComponent] = useState<React.FC<any>>();
 
 
     /** effects */
@@ -68,8 +68,10 @@ function PluridRouterBrowser<T>(
 
     return (
         <>
-            {matchedRoute && Component && (
-                <Component />
+            {matchedRoute && component && (
+                <>
+                    {component}
+                </>
             )}
         </>
     );
