@@ -177,7 +177,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             const {
                 pluridPlaneID,
                 updatedTree,
-            } = space.updateTreeWithNewPage(
+            } = space.tree.updateTreeWithNewPage(
                 stateTree,
                 parentPlaneID,
                 pagePath,
@@ -227,7 +227,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             const {
                 pluridPlaneID,
                 updatedTree,
-            } = space.updateTreeWithNewPage(
+            } = space.tree.updateTreeWithNewPage(
                 stateTree,
                 parentPlaneID,
                 pagePath,
@@ -278,7 +278,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const toggleLinkFromTree = () => {
-        const updatedTree = space.togglePageFromTree(stateTree, pluridPlaneID);
+        const updatedTree = space.tree.togglePageFromTree(stateTree, pluridPlaneID);
         dispatchSetTree(updatedTree);
         setShowLink(show => !show);
     }
