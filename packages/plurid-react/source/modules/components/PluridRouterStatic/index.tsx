@@ -50,10 +50,11 @@ function PluridRouterStatic<T>(
         )
     }
 
-    const Component = routeComponent.component;
+    history.pushState(null, '', path);
 
 
     /** render */
+    const Component = routeComponent.component;
     return (
         <>
             {matchedRoute && Component && (
