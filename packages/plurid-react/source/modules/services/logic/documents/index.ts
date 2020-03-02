@@ -1,5 +1,5 @@
 import {
-    uuidv4 as uuid,
+    uuid,
 } from '@plurid/plurid-functions';
 
 import {
@@ -43,7 +43,7 @@ export const createInternalStateDocument = (
         name: document.name,
         pages: indexedStatePages,
         paths: indexedPaths,
-        id: document.id || uuid(),
+        id: document.id || uuid.generate(),
         ordinal: document.ordinal || 0,
         active: document.active || false,
     }
@@ -69,7 +69,7 @@ export const createInternalContextDocument = (
     const contextDocument: PluridInternalContextDocument = {
         name: document.name,
         pages: indexedContextPages,
-        id: document.id || uuid(),
+        id: document.id || uuid.generate(),
     }
 
     return contextDocument;
