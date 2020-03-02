@@ -23,6 +23,7 @@ const oneHundred = [...new Array(1)].map((_, index) => index);
 const multiplePages = oneHundred.map((val) => {
     return {
         path: '/' + val,
+        // path: '/:id',
         component: {
             element: Page1,
             properties: {
