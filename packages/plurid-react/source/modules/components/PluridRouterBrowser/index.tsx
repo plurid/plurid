@@ -47,7 +47,6 @@ function PluridRouterBrowser<T>(
     /** handlers */
     const handlePopState = () => {
         const path = window.location.pathname;
-        console.log('path', path);
         const matchedRoute = pluridRouter.current.match(path);
 
         if (matchedRoute) {
@@ -71,9 +70,11 @@ function PluridRouterBrowser<T>(
 
     useEffect(() => {
         window.addEventListener('popstate', handlePopState);
+        window.addEventListener('locationchanged', handlePopState);
 
         return () => {
             window.removeEventListener('popstate', handlePopState);
+            window.removeEventListener('locationchanged', handlePopState);
         };
     }, []);
 

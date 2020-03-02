@@ -23,6 +23,12 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         event.preventDefault();
 
         history.pushState(null, '', path);
+        emitLocationEvent();
+    }
+
+    const emitLocationEvent = () => {
+        const event = new Event('locationchanged');
+        window.dispatchEvent(event);
     }
 
 
