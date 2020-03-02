@@ -6,6 +6,7 @@ import React, {
 import styled from 'styled-components';
 
 import PluridApp, {
+    PluridSubApp,
     PluridPage,
     PluridRouterBrowser,
     PluridRouterStatic,
@@ -186,7 +187,7 @@ const App = () => {
             </StyledAdd> */}
 
             <PluridRouterStatic
-                path={'/one'}
+                path={'/two'}
                 routes={routes}
                 components={components}
             />
