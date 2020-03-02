@@ -14,7 +14,7 @@ import {
 } from './layout';
 
 import {
-    InternationalizationLanguages,
+    InternationalizationLanguageType,
 } from '../internal/internationalization';
 
 
@@ -34,7 +34,7 @@ export interface PluridConfiguration {
      */
     theme: string | PluridConfigurationTheme;
 
-    language: InternationalizationLanguages;
+    language: InternationalizationLanguageType;
 
     /**
      * Set the User Interface transparent.
