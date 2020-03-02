@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import PluridApp, {
     PluridPage,
     PluridRouterBrowser,
+    PluridRouterStatic,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -144,11 +145,16 @@ const App = () => {
                 add page
             </StyledAdd>
 
-            <PluridRouterBrowser
+            <PluridRouterStatic
                 path={'/two'}
                 routes={routes}
                 components={components}
             />
+            {/* <PluridRouterBrowser
+                path={'/two'}
+                routes={routes}
+                components={components}
+            /> */}
 
             {/* <PluridApp
                 configuration={appConfiguration}
