@@ -5,7 +5,8 @@ import './index.css';
 
 // import App from './App';
 // import App from './App-single';
-import App from './App-dynamic';
+// import App from './App-dynamic';
+import App from './App-router';
 
 import * as serviceWorker from './serviceWorker';
 
