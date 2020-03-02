@@ -58,8 +58,8 @@
         "styled-components": ">=4"
     },
     "dependencies": {
-        "@plurid/plurid-data": "^0.1.101",
-        "@plurid/plurid-engine": "^0.1.45",
+        "@plurid/plurid-data": "^0.1.103",
+        "@plurid/plurid-engine": "^0.1.46",
         "@plurid/plurid-pubsub": "^0.1.3"
     },
     "devDependencies": {
