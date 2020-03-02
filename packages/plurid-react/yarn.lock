@@ -449,10 +449,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@plurid/plurid-data@^0.1.100":
-  version "0.1.100"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.100.tgz#6b8a6af472bb71a6fbe7e2802cab443caf2018bb"
-  integrity sha512-6dP+dMmhPLxy2yzALPMgrZxJD1ZPALt13awvWb0IHBn+xVs4g4UeLTbV1phZvlCO/EgXBNz1pyfQ519jv5saqQ==
+"@plurid/plurid-data@^0.1.101":
+  version "0.1.101"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.101.tgz#7b8f94a32928c7b473fd8e97d101e568904c16e4"
+  integrity sha512-uTXECjtKasIvqnlfD+VUX3uwRKDcHx7wR9sve9x5rrFGyoHVxgRSgVYOqMQVGj2wRjvaxK0tfWz4S9ybz+1ZlA==
 
 "@plurid/plurid-engine@^0.1.45":
   version "0.1.45"
