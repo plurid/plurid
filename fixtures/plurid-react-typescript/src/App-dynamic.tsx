@@ -11,7 +11,7 @@ import PluridApp, {
 } from '@plurid/plurid-react';
 
 import {
-    uuidv4 as uuid,
+    uuid,
 } from '@plurid/plurid-functions';
 
 import Page1 from './containers/Page1';
@@ -71,7 +71,7 @@ const App = () => {
 
 
     const addPage = () => {
-        const id = uuid();
+        const id = uuid.generate();
         const page: PluridPage = {
             id,
             path: '/' + id,
