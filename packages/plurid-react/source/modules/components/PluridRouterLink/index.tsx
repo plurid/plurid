@@ -1,9 +1,21 @@
 import React from 'react';
 
+import {
+    StyledPluridRouterLinkAnchor,
+    StyledPluridRouterLinkDiv,
+} from './styled';
+
 
 
 interface PluridRouterLinkOwnProperties {
     path: string;
+    /**
+     * Style as an anchor tag. Default `true`.
+     */
+    asAnchor?: boolean;
+
+    style?: React.CSSProperties;
+    className?: string;
 }
 
 const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
@@ -12,13 +24,20 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     /** properties */
     const {
         path,
+        asAnchor,
         children,
+        style,
+        className,
     } = properties;
+
+    const anchor = typeof asAnchor === 'boolean'
+        ? asAnchor
+        : true;
 
 
     /** handlers */
     const handleClick = (
-        event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+        event: React.MouseEvent<Element, MouseEvent>,
     ) => {
         event.preventDefault();
 
@@ -33,12 +52,31 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 
 
     /** render */
+    if (!anchor) {
+        return (
+            <StyledPluridRouterLinkDiv
+                onClick={handleClick}
+                style={{
+                    ...style,
+                }}
+                className={className}
+            >
+                {children}
+            </StyledPluridRouterLinkDiv>
+        );
+    }
+
     return (
-        <a
+        <StyledPluridRouterLinkAnchor
+            href={path}
             onClick={handleClick}
+            style={{
+                ...style,
+            }}
+            className={className}
         >
             {children}
-        </a>
+        </StyledPluridRouterLinkAnchor>
     );
 }
 
