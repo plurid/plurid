@@ -21,6 +21,14 @@ import computeCommonConfiguration from '../configuration';
 
 
 
+export interface ServerApplicationData {
+    pages: PluridPage[],
+    view: string[] | PluridView[],
+    documents: PluridDocument[],
+    configuration: PluridPartialConfiguration,
+}
+
+
 /**
  * Render application state and string of elements for Server-Side Rendering.
  *
@@ -30,11 +38,15 @@ import computeCommonConfiguration from '../configuration';
  * @param configuration
  */
 export const serverComputeApplication = (
-    pages: PluridPage[],
-    view: string[] | PluridView[],
-    documents: PluridDocument[],
-    configuration: PluridPartialConfiguration,
+    data: ServerApplicationData,
 ): any => {
+    const {
+        pages,
+        view,
+        documents,
+        configuration,
+    } = data;
+
     const commonConfiguration = computeCommonConfiguration(configuration);
 
     const spaceTree = new space.Tree({
