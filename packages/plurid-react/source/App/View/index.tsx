@@ -415,11 +415,12 @@ const View: React.FC<ViewProperties> = (
             treePages.push(treePage);
         }
 
-        const computedTree = space.computeSpaceTree(
-            treePages,
+        const spaceTree = new space.Tree({
+            pages: treePages,
             configuration,
             view,
-        );
+        });
+        const computedTree = spaceTree.computeTree();
 
         return computedTree;
     }
