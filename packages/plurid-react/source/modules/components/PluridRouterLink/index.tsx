@@ -1,6 +1,10 @@
 import React from 'react';
 
 import {
+    PLURID_ROUTER_LOCATION_CHANGED,
+} from '@plurid/plurid-data';
+
+import {
     StyledPluridRouterLinkAnchor,
     StyledPluridRouterLinkDiv,
 } from './styled';
@@ -46,7 +50,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     }
 
     const emitLocationEvent = () => {
-        const event = new Event('locationchanged');
+        const event = new Event(PLURID_ROUTER_LOCATION_CHANGED);
         window.dispatchEvent(event);
     }
 

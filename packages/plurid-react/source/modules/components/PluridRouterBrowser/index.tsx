@@ -5,6 +5,10 @@ import React, {
 } from 'react';
 
 import {
+    PLURID_ROUTER_LOCATION_CHANGED,
+} from '@plurid/plurid-data';
+
+import {
     router,
 } from '@plurid/plurid-engine';
 
@@ -70,11 +74,11 @@ function PluridRouterBrowser<T>(
 
     useEffect(() => {
         window.addEventListener('popstate', handlePopState);
-        window.addEventListener('locationchanged', handlePopState);
+        window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
 
         return () => {
             window.removeEventListener('popstate', handlePopState);
-            window.removeEventListener('locationchanged', handlePopState);
+            window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
         };
     }, []);
 
