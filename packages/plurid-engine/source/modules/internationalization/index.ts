@@ -1,14 +1,14 @@
 import {
     internationalization,
-    InternationalizationLanguages,
-    InternationalizationFields,
+    InternationalizationLanguageType,
+    InternationalizationFieldType,
 } from '@plurid/plurid-data';
 
 
 
 const internatiolate = (
-    lamguage: InternationalizationLanguages,
-    field: InternationalizationFields,
+    lamguage: InternationalizationLanguageType,
+    field: InternationalizationFieldType,
 ) => {
     return internationalization[lamguage][field];
 }
