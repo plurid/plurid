@@ -1,5 +1,5 @@
 import {
-    uuidv4 as uuid,
+    uuid,
 } from '@plurid/plurid-functions';
 
 import {
@@ -15,7 +15,7 @@ export const createInternalStatePage = (
     page: PluridPage,
 ): PluridInternalStatePage => {
     const statePage: PluridInternalStatePage = {
-        id: page.id || uuid(),
+        id: page.id || uuid.generate(),
         path: page.path,
         // root: page.root || false,
         // ordinal: page.ordinal || 0,
@@ -29,7 +29,7 @@ export const createInternalContextPage = (
     page: PluridPage,
 ): PluridInternalContextPage => {
     const contextPage: PluridInternalContextPage = {
-        id: page.id || uuid(),
+        id: page.id || uuid.generate(),
         path: page.path,
         component: page.component,
     };

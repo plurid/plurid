@@ -6,7 +6,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    uuidv4 as uuid,
+    uuid,
 } from '@plurid/plurid-functions';
 
 
@@ -17,7 +17,7 @@ export const createTreePage = (
 ) => {
     const treePage: TreePage = {
         pageID: contextPage.id,
-        planeID: uuid(),
+        planeID: uuid.generate(),
         path: contextPage.path,
         height: 0,
         width: 0,

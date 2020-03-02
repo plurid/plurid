@@ -1,5 +1,5 @@
 import {
-    uuidv4 as uuid,
+    uuid,
 } from '@plurid/plurid-functions';
 
 import {
@@ -19,7 +19,7 @@ export const registerPaths = (
     for (const page of pages) {
         const handledPath = handlePath(page.path);
         const path: PagePath = {
-            id: uuid(),
+            id: uuid.generate(),
             pageID: page.id,
             address: page.path,
             // regex: handledPath.regex,

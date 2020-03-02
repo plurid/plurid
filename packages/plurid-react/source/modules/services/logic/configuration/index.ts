@@ -5,8 +5,8 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    getNested,
-} from '../../utilities/objects';
+    objects,
+} from '@plurid/plurid-functions';
 
 
 
@@ -15,13 +15,13 @@ const specifiedOrDefault = <T>(
     type: string,
     configuration: PluridPartialConfiguration,
 ): T => {
-    const item = getNested(configuration, path);
+    const item = objects.getNested(configuration, path);
 
     if (typeof item === type) {
         return item;
     }
 
-    return getNested(defaultConfiguration, path);
+    return objects.getNested(defaultConfiguration, path);
 }
 
 

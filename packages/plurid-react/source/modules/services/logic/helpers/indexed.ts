@@ -1,4 +1,8 @@
 import {
+    indexing,
+} from '@plurid/plurid-functions';
+
+import {
     Indexed,
 } from '@plurid/plurid-data';
 
@@ -12,11 +16,13 @@ interface TwithID {
 export const createIndexed = <T extends TwithID>(
     items: T[],
 ): Indexed<T> => {
-    const indexedItems = {};
+    return indexing.create(items);
 
-    for (let item of items) {
-        indexedItems[item.id] = item;
-    }
+    // const indexedItems = {};
 
-    return indexedItems;
+    // for (let item of items) {
+    //     indexedItems[item.id] = item;
+    // }
+
+    // return indexedItems;
 }

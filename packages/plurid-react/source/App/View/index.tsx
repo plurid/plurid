@@ -35,6 +35,7 @@ import PluridPubSub, {
 
 import {
     meta,
+    arrays,
 } from '@plurid/plurid-functions';
 
 import themes, {
@@ -90,10 +91,6 @@ import {
 } from '../../modules/services/hooks/debounce';
 
 import useThrottledCallback from '../../modules/services/hooks/throttle';
-
-import {
-    arraysEqual,
-} from '../../modules/services/utilities/array';
 
 import {
     loadHammer,
@@ -737,7 +734,7 @@ const View: React.FC<ViewProperties> = (
     //         1500,
     //     );
 
-    //     if (culledView && !arraysEqual(stateCulledView, culledView)) {
+        // if (culledView && !arrays.equal(stateCulledView, culledView)) {
     //         dispatchSpaceSetCulledView(culledView);
     //     }
     // }
