@@ -13,9 +13,8 @@ import {
 
 import {
     space,
+    general as generalEngine,
 } from '@plurid/plurid-engine';
-
-import computeCommonConfiguration from '../configuration';
 
 // import PluridRoot from '../../../components/PluridRoot';
 
@@ -58,8 +57,7 @@ export const serverComputeApplication = (
     // render tree
 
 
-
-    const commonConfiguration = computeCommonConfiguration(configuration);
+    const commonConfiguration = generalEngine.configuration.default(configuration);
 
     const spaceTree = new space.tree.Tree({
         pages: [],

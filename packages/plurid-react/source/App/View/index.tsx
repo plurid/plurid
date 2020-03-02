@@ -29,28 +29,29 @@ import {
     Indexed,
 } from '@plurid/plurid-data';
 
+import {
+    space,
+    general as generalEngine,
+} from '@plurid/plurid-engine';
+
 import PluridPubSub, {
     TOPICS,
 } from '@plurid/plurid-pubsub'
 
-import {
-    meta,
-    arrays,
-} from '@plurid/plurid-functions';
+// import {
+//     meta,
+//     arrays,
+// } from '@plurid/plurid-functions';
 
-import {
-    useDebouncedCallback,
-    useThrottledCallback,
-} from '@plurid/plurid-functions-react';
+// import {
+//     useDebouncedCallback,
+//     useThrottledCallback,
+// } from '@plurid/plurid-functions-react';
 
 import themes, {
     Theme,
     THEME_NAMES,
 } from '@plurid/plurid-themes';
-
-import {
-    space,
-} from '@plurid/plurid-engine';
 
 import './index.css';
 
@@ -63,28 +64,26 @@ import handleView from './logic';
 
 import Context from '../../modules/services/logic/context';
 
-import * as helpers from '../../modules/services/logic/helpers';
+// import * as helpers from '../../modules/services/logic/helpers';
 
-import {
-    createInternalStateDocument,
-    createInternalContextDocument,
-    findActiveDocument,
-} from '../../modules/services/logic/documents';
+// import {
+//     createInternalStateDocument,
+//     createInternalContextDocument,
+//     findActiveDocument,
+// } from '../../modules/services/logic/documents';
 
-import {
-    createInternalStatePage,
-    createInternalContextPage,
-} from '../../modules/services/logic/pages';
+// import {
+//     createInternalStatePage,
+//     createInternalContextPage,
+// } from '../../modules/services/logic/pages';
 
-import {
-    createTreePage,
-} from '../../modules/services/logic/tree';
+// import {
+//     createTreePage,
+// } from '../../modules/services/logic/tree';
 
-import {
-    registerPaths,
-} from '../../modules/services/logic/paths';
-
-import computeCommonConfiguration from '../../modules/services/logic/configuration';
+// import {
+//     registerPaths,
+// } from '../../modules/services/logic/paths';
 
 import {
     handleGlobalShortcuts,
@@ -288,23 +287,23 @@ const View: React.FC<ViewProperties> = (
         pages: PluridPage[],
         stateDocuments: Indexed<PluridInternalStateDocument>,
     ) => {
-        const identifiedPages = helpers.identifyPages(pages);
+        const identifiedPages = generalEngine.helpers.identifyPages(pages);
 
         const statePages = identifiedPages.map(page => {
-            const statePage = createInternalStatePage(page);
+            const statePage = generalEngine.pages.createInternalStatePage(page);
             return statePage;
         });
 
         const contextPages = identifiedPages.map(page => {
-            const contextPage = createInternalContextPage(page);
+            const contextPage = generalEngine.pages.createInternalContextPage(page);
             return contextPage;
         });
 
-        const indexedStatePages = helpers.createIndexed(statePages);
-        const indexedContextPages = helpers.createIndexed(contextPages);
+        const indexedStatePages = generalEngine.helpers.createIndexed(statePages);
+        const indexedContextPages = generalEngine.helpers.createIndexed(contextPages);
 
-        const paths = registerPaths(statePages);
-        const indexedPaths = helpers.createIndexed(paths);
+        const paths = generalEngine.paths.registerPaths(statePages);
+        const indexedPaths = generalEngine.helpers.createIndexed(paths);
 
         const document: PluridInternalStateDocument = {
             id: 'default',
@@ -337,19 +336,19 @@ const View: React.FC<ViewProperties> = (
         documents: PluridDocument[],
         stateDocuments: Indexed<PluridInternalStateDocument>,
     ) => {
-        const identifiedDocuments = helpers.identifyDocuments(documents);
+        const identifiedDocuments = generalEngine.helpers.identifyDocuments(documents);
 
         const identifiedStateDocuments = identifiedDocuments.map(document => {
-            const stateDocument = createInternalStateDocument(document);
+            const stateDocument = generalEngine.documents.createInternalStateDocument(document);
             return stateDocument;
         });
         const identifiedContextDocuments = identifiedDocuments.map(document => {
-            const contextDocument = createInternalContextDocument(document);
+            const contextDocument = generalEngine.documents.createInternalContextDocument(document);
             return contextDocument;
         });
 
-        const indexedStateDocuments = helpers.createIndexed(identifiedStateDocuments);
-        const indexedContextDocuments = helpers.createIndexed(identifiedContextDocuments);
+        const indexedStateDocuments = generalEngine.helpers.createIndexed(identifiedStateDocuments);
+        const indexedContextDocuments = generalEngine.helpers.createIndexed(identifiedContextDocuments);
 
         return {
             stateDocuments: indexedStateDocuments,
@@ -404,7 +403,7 @@ const View: React.FC<ViewProperties> = (
                 continue;
             }
 
-            const treePage = createTreePage(
+            const treePage = generalEngine.tree.createTreePage(
                 contextPage,
                 docPage,
             );
@@ -432,7 +431,7 @@ const View: React.FC<ViewProperties> = (
         /** computing */
 
         // merge user and default configuration
-        const appConfiguration = computeCommonConfiguration(configuration);
+        const appConfiguration = generalEngine.configuration.default(configuration);
 
         handleConfiguration(appConfiguration);
 
@@ -452,7 +451,7 @@ const View: React.FC<ViewProperties> = (
             contextDocuments,
         } = createdDocuments;
 
-        const activeDocument = findActiveDocument(Object.values(stateDocuments));
+        const activeDocument = generalEngine.documents.findActiveDocument(Object.values(stateDocuments));
 
         const newTree = computeTree(
             activeDocument,

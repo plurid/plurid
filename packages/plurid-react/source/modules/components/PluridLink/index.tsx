@@ -28,15 +28,13 @@ import {
 import {
     router,
     space,
+    general as generalEngine,
 } from '@plurid/plurid-engine';
 
 import {
     StyledPluridLink,
 } from './styled';
 
-import {
-    getPluridPlaneIDByData,
-} from '../../services/logic/plane';
 
 import Preview from './components/Preview';
 import Portal from '../utilities/Portal';
@@ -343,7 +341,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
      * Get Plurid Link Coordinates
      */
     useEffect(() => {
-        const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
+        const parentPlaneID = generalEngine.plane.getPluridPlaneIDByData(linkElement.current);
         setParentPlaneID(parentPlaneID);
 
         const linkCoordinates = getPluridLinkCoordinates();

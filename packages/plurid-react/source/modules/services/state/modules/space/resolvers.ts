@@ -1,4 +1,8 @@
 import {
+    mathematics,
+} from '@plurid/plurid-functions';
+
+import {
     /** constants */
     ROTATION_STEP,
     TRANSLATION_STEP,
@@ -8,15 +12,10 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    mathematics,
-} from '@plurid/plurid-functions';
+    general as generalEngine,
+} from '@plurid/plurid-engine';
 
 import * as Types from './types';
-
-import {
-    updateTreePage,
-    updateTreeByPlaneIDWithLinkCoordinates,
-} from '../../../logic/tree';
 
 
 
@@ -510,7 +509,7 @@ export const updateSpaceTreePage = (
     state: Types.State,
     action: Types.UpdateSpaceTreePageAction,
 ): Types.State => {
-    const updatedTree = updateTreePage(state.tree, action.payload);
+    const updatedTree = generalEngine.tree.updateTreePage(state.tree, action.payload);
 
     return {
         ...state,
@@ -528,7 +527,7 @@ export const updateSpaceLinkCoordinates = (
         linkCoordinates,
     } = action.payload;
 
-    const updatedTree = updateTreeByPlaneIDWithLinkCoordinates(
+    const updatedTree = generalEngine.tree.updateTreeByPlaneIDWithLinkCoordinates(
         state.tree,
         planeID,
         linkCoordinates,
