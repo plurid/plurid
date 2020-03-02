@@ -42,7 +42,7 @@ export const serverComputeApplication = (
         configuration: commonConfiguration,
         view,
     });
-    const tree = spaceTree.computeTree();
+    const tree = spaceTree.compute();
 
     const Roots = () => (
         <>

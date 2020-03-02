@@ -420,7 +420,7 @@ const View: React.FC<ViewProperties> = (
             configuration,
             view,
         });
-        const computedTree = spaceTree.computeTree();
+        const computedTree = spaceTree.compute();
 
         return computedTree;
     }
