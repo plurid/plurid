@@ -14,7 +14,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    uuidv4 as uuid,
+    uuid,
 } from '@plurid/plurid-functions';
 
 import {
@@ -183,7 +183,7 @@ export const assignPagesFromView = (
             const newPage = {
                 ...page,
                 path: viewPagePath,
-                planeID: uuid(),
+                planeID: uuid.generate(),
             };
 
             const viewPageOrdinal = typeof viewPage === 'string'
@@ -273,7 +273,7 @@ export const updateTreeWithNewPage = (
         //     parameters,
         // );
 
-        const planeID = uuid();
+        const planeID = uuid.generate();
         const newTreePage: TreePage = {
             pageID,
             path: pagePath,
