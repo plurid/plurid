@@ -150,7 +150,7 @@ const App = () => {
                 component two
                 <br />
                 <PluridRouterLink path="/">link to index page</PluridRouterLink>
-                <PluridRouterLink path="/one">link to page two</PluridRouterLink>
+                <PluridRouterLink path="/one">link to page one</PluridRouterLink>
             </div>
         );
     }
