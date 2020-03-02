@@ -5,11 +5,6 @@ import {
     useElementEvent,
 } from './event';
 
-import useDebouncedCallback from './debounce';
-import useThrottledCallback from './throttle';
-
-import usePortal from './portal';
-
 
 
 export {
@@ -17,9 +12,4 @@ export {
     useGlobalKeyDown,
     useGlobalWheel,
     useElementEvent,
-
-    useDebouncedCallback,
-    useThrottledCallback,
-
-    usePortal,
 }

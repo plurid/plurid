@@ -17,6 +17,10 @@ import {
 } from '@plurid/plurid-data';
 
 import {
+    useDebouncedCallback,
+} from '@plurid/plurid-functions-react';
+
+import {
     StyledMoreMenu,
     StyledMoreMenuScroll,
 } from './styled';
@@ -26,10 +30,6 @@ import Drawer from '../Drawer';
 import {
     moreMenus,
 } from './data';
-
-import {
-    useDebouncedCallback,
-} from '../../../../../services/hooks';
 
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
