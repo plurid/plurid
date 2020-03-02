@@ -411,7 +411,7 @@ const View: React.FC<ViewProperties> = (
             treePages.push(treePage);
         }
 
-        const spaceTree = new space.Tree({
+        const spaceTree = new space.tree.Tree({
             pages: treePages,
             configuration,
             view,
@@ -464,7 +464,7 @@ const View: React.FC<ViewProperties> = (
             stateTree,
         );
 
-        const spaceSize = space.computeSpaceSize(newTree);
+        const spaceSize = space.utilities.computeSpaceSize(newTree);
 
 
         /** assignments */
