@@ -38,6 +38,11 @@ import {
     arrays,
 } from '@plurid/plurid-functions';
 
+import {
+    useDebouncedCallback,
+    useThrottledCallback,
+} from '@plurid/plurid-functions-react';
+
 import themes, {
     Theme,
     THEME_NAMES,
@@ -85,11 +90,6 @@ import {
     handleGlobalShortcuts,
     handleGlobalWheel,
 } from '../../modules/services/logic/shortcuts';
-
-import {
-    useDebouncedCallback,
-    useThrottledCallback,
-} from '../../modules/services/hooks';
 
 import {
     loadHammer,

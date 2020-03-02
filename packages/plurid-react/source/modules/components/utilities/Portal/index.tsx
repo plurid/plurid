@@ -1,7 +1,12 @@
 import React from 'react';
 
-import { createPortal } from 'react-dom';
-import usePortal from '../../../services/hooks/portal';
+import {
+    createPortal,
+} from 'react-dom';
+
+import {
+    usePortal,
+} from '@plurid/plurid-functions-react';
 
 
 
