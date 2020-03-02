@@ -7,7 +7,7 @@ import {
 
 import {
     computeSpaceTree,
-} from '../';
+} from '../tree';
 
 
 
