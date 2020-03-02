@@ -1,17 +1,25 @@
 import {
-    useWindowEvent as _useWindowEvent,
-    useGlobalKeyDown as _useGlobalKeyDown,
-    useGlobalWheel as _useGlobalWheel,
+    useWindowEvent,
+    useGlobalKeyDown,
+    useGlobalWheel,
+    useElementEvent,
 } from './event';
 
-import {
-    useDebouncedCallback as _useDebouncedCallback,
-} from './debounce';
+import useDebouncedCallback from './debounce';
+import useThrottledCallback from './throttle';
+
+import usePortal from './portal';
 
 
 
-export const useWindowEvent = _useWindowEvent;
-export const useGlobalKeyDown = _useGlobalKeyDown;
-export const useGlobalWheel = _useGlobalWheel;
+export {
+    useWindowEvent,
+    useGlobalKeyDown,
+    useGlobalWheel,
+    useElementEvent,
 
-export const useDebouncedCallback = _useDebouncedCallback;
+    useDebouncedCallback,
+    useThrottledCallback,
+
+    usePortal,
+}

@@ -88,9 +88,8 @@ import {
 
 import {
     useDebouncedCallback,
-} from '../../modules/services/hooks/debounce';
-
-import useThrottledCallback from '../../modules/services/hooks/throttle';
+    useThrottledCallback,
+} from '../../modules/services/hooks';
 
 import {
     loadHammer,
