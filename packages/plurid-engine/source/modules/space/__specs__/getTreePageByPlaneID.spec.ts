@@ -4,7 +4,7 @@ import {
 
 import {
     getTreePageByPlaneID,
-} from '../';
+} from '../utilities';
 
 
 
