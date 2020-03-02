@@ -1,13 +1,13 @@
 import {
-    computeSpaceTree,
-} from '../';
-
-import {
     PluridConfiguration,
     TreePage,
     defaultConfiguration,
     LAYOUT_TYPES,
 } from '@plurid/plurid-data';
+
+import {
+    computeSpaceTree,
+} from '../';
 
 
 

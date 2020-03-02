@@ -1,4 +1,5 @@
 import {
+    computePath,
     computePluridPlaneLocation,
     recomputeChildrenLocation,
 } from './logic';
@@ -6,6 +7,7 @@ import {
 
 
 export {
+    computePath,
     computePluridPlaneLocation,
     recomputeChildrenLocation,
 }

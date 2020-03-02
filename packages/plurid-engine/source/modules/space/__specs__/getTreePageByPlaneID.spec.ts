@@ -1,10 +1,10 @@
 import {
-    getTreePageByPlaneID,
-} from '../';
-
-import {
     TreePage,
 } from '@plurid/plurid-data';
+
+import {
+    getTreePageByPlaneID,
+} from '../';
 
 
 

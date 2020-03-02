@@ -1,10 +1,10 @@
 import {
-    removePageFromTree,
-} from '../';
-
-import {
     TreePage,
 } from '@plurid/plurid-data';
+
+import {
+    removePageFromTree,
+} from '../tree/logic';
 
 
 
