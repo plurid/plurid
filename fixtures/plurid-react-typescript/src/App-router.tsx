@@ -9,6 +9,7 @@ import PluridApp, {
     PluridPage,
     PluridRouterBrowser,
     PluridRouterStatic,
+    PluridRouterLink,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -122,15 +123,36 @@ const App = () => {
     ];
 
     const componentIndex: React.FC<any> = () => {
-        return (<div>component index</div>);
+        return (
+            <div>
+                component index
+                <br />
+                <PluridRouterLink path="/one">link to page one</PluridRouterLink>
+                <PluridRouterLink path="/two">link to page two</PluridRouterLink>
+            </div>
+        );
     }
 
     const component1: React.FC<any> = () => {
-        return (<div>component one</div>);
+        return (
+            <div>
+                component one
+                <br />
+                <PluridRouterLink path="/">link to index page</PluridRouterLink>
+                <PluridRouterLink path="/two">link to page two</PluridRouterLink>
+            </div>
+        );
     }
 
     const component2: React.FC<any> = () => {
-        return (<div>component two</div>);
+        return (
+            <div>
+                component two
+                <br />
+                <PluridRouterLink path="/">link to index page</PluridRouterLink>
+                <PluridRouterLink path="/one">link to page two</PluridRouterLink>
+            </div>
+        );
     }
 
     const components = [
@@ -151,11 +173,11 @@ const App = () => {
 
     return (
         <div>
-            <StyledAdd
+            {/* <StyledAdd
                 onClick={addPage}
             >
                 add page
-            </StyledAdd>
+            </StyledAdd> */}
 
             {/* <PluridRouterStatic
                 path={'/one'}
