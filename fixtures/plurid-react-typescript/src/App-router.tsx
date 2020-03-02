@@ -108,6 +108,10 @@ const App = () => {
 
     const routes = [
         {
+            location: '/',
+            view: 'index',
+        },
+        {
             location: '/one',
             view: 'oneC',
         },
@@ -116,6 +120,10 @@ const App = () => {
             view: 'twoC',
         },
     ];
+
+    const componentIndex: React.FC<any> = () => {
+        return (<div>component index</div>);
+    }
 
     const component1: React.FC<any> = () => {
         return (<div>component one</div>);
@@ -126,6 +134,10 @@ const App = () => {
     }
 
     const components = [
+        {
+            view: 'index',
+            component: componentIndex,
+        },
         {
             view: 'oneC',
             component: component1,
@@ -150,8 +162,8 @@ const App = () => {
                 routes={routes}
                 components={components}
             /> */}
+
             <PluridRouterBrowser
-                path={'/two'}
                 routes={routes}
                 components={components}
             />
