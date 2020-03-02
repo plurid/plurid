@@ -61,7 +61,7 @@ export const serverComputeApplication = (
 
     const commonConfiguration = computeCommonConfiguration(configuration);
 
-    const spaceTree = new space.Tree({
+    const spaceTree = new space.tree.Tree({
         pages: [],
         configuration: commonConfiguration,
         view,
