@@ -16,10 +16,10 @@ const romanian: Internationalization = {
     toolbarTransformScale: 'scalare',
     toolbarTransformTranslate: 'translație',
 
-    toolbarDrawerThemesTitle: 'teme',
-    toolbarDrawerThemesGeneralTheme: 'temă generală',
-    toolbarDrawerThemesInteractionTheme: 'temă interacțiune',
-    toolbarDrawerThemesLanguage: 'limbă',
+    toolbarDrawerGlobalTitle: 'global',
+    toolbarDrawerGlobalGeneralTheme: 'temă generală',
+    toolbarDrawerGlobalInteractionTheme: 'temă interacțiune',
+    toolbarDrawerGlobalLanguage: 'limbă',
 
     toolbarDrawerTransformTitle: 'transformare',
     toolbarDrawerTransformMultiModeTransform: 'transformare multi-modală',

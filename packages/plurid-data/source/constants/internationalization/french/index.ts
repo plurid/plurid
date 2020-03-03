@@ -16,10 +16,10 @@ const french: Internationalization = {
     toolbarTransformScale: 'échelle',
     toolbarTransformTranslate: 'transpose',
 
-    toolbarDrawerThemesTitle: 'thèmes',
-    toolbarDrawerThemesGeneralTheme: 'thème général',
-    toolbarDrawerThemesInteractionTheme: 'thème d\'interaction',
-    toolbarDrawerThemesLanguage: 'langue',
+    toolbarDrawerGlobalTitle: 'global',
+    toolbarDrawerGlobalGeneralTheme: 'thème général',
+    toolbarDrawerGlobalInteractionTheme: 'thème d\'interaction',
+    toolbarDrawerGlobalLanguage: 'langue',
 
     toolbarDrawerTransformTitle: 'transformer',
     toolbarDrawerTransformMultiModeTransform: 'transformation multimode',

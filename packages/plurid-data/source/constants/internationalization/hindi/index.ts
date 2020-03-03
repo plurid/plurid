@@ -16,10 +16,10 @@ const hindi: Internationalization = {
     toolbarTransformScale: 'स्केल',
     toolbarTransformTranslate: 'अनुवाद करना',
 
-    toolbarDrawerThemesTitle: 'विषयों',
-    toolbarDrawerThemesGeneralTheme: 'सामान्य विषय',
-    toolbarDrawerThemesInteractionTheme: 'बातचीत का विषय',
-    toolbarDrawerThemesLanguage: 'भाषा',
+    toolbarDrawerGlobalTitle: 'वैश्विक',
+    toolbarDrawerGlobalGeneralTheme: 'सामान्य विषय',
+    toolbarDrawerGlobalInteractionTheme: 'बातचीत का विषय',
+    toolbarDrawerGlobalLanguage: 'भाषा',
 
     toolbarDrawerTransformTitle: 'परिवर्तन',
     toolbarDrawerTransformMultiModeTransform: 'बहु मोड परिवर्तन',

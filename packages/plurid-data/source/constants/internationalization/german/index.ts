@@ -16,10 +16,10 @@ const german: Internationalization = {
     toolbarTransformScale: 'skala',
     toolbarTransformTranslate: 'umsetzen',
 
-    toolbarDrawerThemesTitle: 'themen',
-    toolbarDrawerThemesGeneralTheme: 'allgemeines thema',
-    toolbarDrawerThemesInteractionTheme: 'interaktionsthema',
-    toolbarDrawerThemesLanguage: 'sprache',
+    toolbarDrawerGlobalTitle: 'global',
+    toolbarDrawerGlobalGeneralTheme: 'allgemeines thema',
+    toolbarDrawerGlobalInteractionTheme: 'interaktionsthema',
+    toolbarDrawerGlobalLanguage: 'sprache',
 
     toolbarDrawerTransformTitle: 'verwandeln',
     toolbarDrawerTransformMultiModeTransform: 'multimode-transformation',

@@ -16,10 +16,10 @@ const spanish: Internationalization = {
     toolbarTransformScale: 'escala',
     toolbarTransformTranslate: 'trasladar',
 
-    toolbarDrawerThemesTitle: 'temas',
-    toolbarDrawerThemesGeneralTheme: 'tema general',
-    toolbarDrawerThemesInteractionTheme: 'tema de interacción',
-    toolbarDrawerThemesLanguage: 'lengua',
+    toolbarDrawerGlobalTitle: 'global',
+    toolbarDrawerGlobalGeneralTheme: 'tema general',
+    toolbarDrawerGlobalInteractionTheme: 'tema de interacción',
+    toolbarDrawerGlobalLanguage: 'lengua',
 
     toolbarDrawerTransformTitle: 'transformar',
     toolbarDrawerTransformMultiModeTransform: 'transformación multimodo',

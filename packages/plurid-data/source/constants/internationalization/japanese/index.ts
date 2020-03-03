@@ -16,10 +16,10 @@ const japanese: Internationalization = {
     toolbarTransformScale: '規模',
     toolbarTransformTranslate: '翻訳する',
 
-    toolbarDrawerThemesTitle: 'テーマ',
-    toolbarDrawerThemesGeneralTheme: '一般的なテーマ',
-    toolbarDrawerThemesInteractionTheme: '相互作用のテーマ',
-    toolbarDrawerThemesLanguage: '言語',
+    toolbarDrawerGlobalTitle: 'グローバル',
+    toolbarDrawerGlobalGeneralTheme: '一般的なテーマ',
+    toolbarDrawerGlobalInteractionTheme: '相互作用のテーマ',
+    toolbarDrawerGlobalLanguage: '言語',
 
     toolbarDrawerTransformTitle: '変換する',
     toolbarDrawerTransformMultiModeTransform: 'マルチモード変換',
