@@ -4,6 +4,10 @@ import {
 } from '../enumerations';
 
 import {
+    fields as internationalizationFields,
+} from './internationalization';
+
+import {
     keyModifiers,
 } from './keys';
 
@@ -11,124 +15,124 @@ import {
 
 export const shortcutsNames: any = {
     TOGGLE_FIRST_PERSON: {
-        name: 'toggle first person',
+        name: internationalizationFields.toolbarDrawerShortcutsToggleFirstPerson,
         key: 'f',
     },
     MOVE_FORWARD: {
-        name: 'move forward',
+        name: internationalizationFields.toolbarDrawerShortcutsMoveForward,
         key: 'w',
     },
     MOVE_BACKWARD: {
-        name: 'move backward',
+        name: internationalizationFields.toolbarDrawerShortcutsMoveBackward,
         key: 's',
     },
     MOVE_LEFT: {
-        name: 'move left',
+        name: internationalizationFields.toolbarDrawerShortcutsMoveLeft,
         key: 'a',
     },
     MOVE_RIGHT: {
-        name: 'move right',
+        name: internationalizationFields.toolbarDrawerShortcutsMoveRight,
         key: 'd',
     },
     MOVE_UP: {
-        name: 'move up',
+        name: internationalizationFields.toolbarDrawerShortcutsMoveUp,
         key: 'e',
     },
     MOVE_DOWN: {
-        name: 'move down',
+        name: internationalizationFields.toolbarDrawerShortcutsMoveDown,
         key: 'c',
     },
     TURN_LEFT: {
-        name: 'turn left',
+        name: internationalizationFields.toolbarDrawerShortcutsTurnLeft,
         key: 'a',
         modifier: keyModifiers.SHIFT,
     },
     TURN_RIGHT: {
-        name: 'turn right',
+        name: internationalizationFields.toolbarDrawerShortcutsTurnRight,
         key: 'd',
         modifier: keyModifiers.SHIFT,
     },
     TURN_UP: {
-        name: 'turn up',
+        name: internationalizationFields.toolbarDrawerShortcutsTurnUp,
         key: 'q',
     },
     TURN_DOWN: {
-        name: 'turn down',
+        name: internationalizationFields.toolbarDrawerShortcutsTurnDown,
         key: 'z',
     },
 
     ROTATE_UP: {
-        name: 'rotate up',
+        name: internationalizationFields.toolbarDrawerShortcutsRotateUp,
         key: '↑ or scroll up',
         modifier: keyModifiers.SHIFT,
     },
     ROTATE_DOWN: {
-        name: 'rotate down',
+        name: internationalizationFields.toolbarDrawerShortcutsRotateDown,
         key: '↓ or scroll down',
         modifier: keyModifiers.SHIFT,
     },
     ROTATE_LEFT: {
-        name: 'rotate left',
+        name: internationalizationFields.toolbarDrawerShortcutsRotateLeft,
         key: '← or scroll left',
         modifier: keyModifiers.SHIFT,
     },
     ROTATE_RIGHT: {
-        name: 'rotate right',
+        name: internationalizationFields.toolbarDrawerShortcutsRotateRight,
         key: '→ or scroll right',
         modifier: keyModifiers.SHIFT,
     },
     TOGGLE_ROTATE: {
-        name: 'toggle rotate',
+        name: internationalizationFields.toolbarDrawerShortcutsToggleRotate,
         key: 'r',
     },
 
     TRANSLATE_UP: {
-        name: 'translate up',
+        name: internationalizationFields.toolbarDrawerShortcutsTranslateUp,
         key: '↑ or scroll up',
         modifier: keyModifiers.ALT,
     },
     TRANSLATE_DOWN: {
-        name: 'translate down',
+        name: internationalizationFields.toolbarDrawerShortcutsTranslateDown,
         key: '↓ or scroll down',
         modifier: keyModifiers.ALT,
     },
     TRANSLATE_LEFT: {
-        name: 'translate left',
+        name: internationalizationFields.toolbarDrawerShortcutsTranslateLeft,
         key: '← or scroll left',
         modifier: keyModifiers.ALT,
     },
     TRANSLATE_RIGHT: {
-        name: 'translate right',
+        name: internationalizationFields.toolbarDrawerShortcutsTranslateRight,
         key: '→ or scroll right',
         modifier: keyModifiers.ALT,
     },
     TRANSLATE_IN: {
-        name: 'translate in',
+        name: internationalizationFields.toolbarDrawerShortcutsTranslateIn,
         key: '↑ or scroll up',
         modifier: [keyModifiers.SHIFT, keyModifiers.ALT],
     },
     TRANSLATE_OUT: {
-        name: 'translate out',
+        name: internationalizationFields.toolbarDrawerShortcutsTranslateOut,
         key: '↓ or scroll down',
         modifier: [keyModifiers.SHIFT, keyModifiers.ALT],
     },
     TOGGLE_TRANSLATE: {
-        name: 'toggle translate',
+        name: internationalizationFields.toolbarDrawerShortcutsToggleTranslate,
         key: 't',
     },
 
     SCALE_UP: {
-        name: 'scale up',
+        name: internationalizationFields.toolbarDrawerShortcutsScaleUp,
         key: '↑ or scroll up',
         modifier: keyModifiers.CTRLMETA,
     },
     SCALE_DOWN: {
-        name: 'scale down',
+        name: internationalizationFields.toolbarDrawerShortcutsScaleDown,
         key: '↓ or scroll down',
         modifier: keyModifiers.CTRLMETA,
     },
     TOGGLE_SCALE: {
-        name: 'toggle scale',
+        name: internationalizationFields.toolbarDrawerShortcutsToggleScale,
         key: 's',
     },
 };
