@@ -120,7 +120,7 @@ const processArguments = async (
             const verb = services.length === 1
                 ? 'is'
                 : 'are';
-            const servicesList = services.reduce((accumulator, service) => accumulator + ' ' + service);
+            const servicesList = services.reduce((accumulator, service) => accumulator + ', ' + service);
             console.log(`\tThe selected service${plural} ${verb}: ${servicesList}.`);
         } else {
             console.log('\tNo selected services.');
