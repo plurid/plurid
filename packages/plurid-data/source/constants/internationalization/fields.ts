@@ -19,6 +19,7 @@ const internationalizationFields: InternationalizationFields = {
     toolbarDrawerThemesTitle: 'toolbarDrawerThemesTitle',
     toolbarDrawerThemesGeneralTheme: 'toolbarDrawerThemesGeneralTheme',
     toolbarDrawerThemesInteractionTheme: 'toolbarDrawerThemesInteractionTheme',
+    toolbarDrawerThemesLanguage: 'toolbarDrawerThemesLanguage',
 
     toolbarDrawerTransformTitle: 'toolbarDrawerTransformTitle',
     toolbarDrawerTransformMultiModeTransform: 'toolbarDrawerTransformMultiModeTransform',

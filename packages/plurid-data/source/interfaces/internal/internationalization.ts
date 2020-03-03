@@ -36,6 +36,7 @@ export type InternationalizationFieldToolbarTransformTranslate = 'toolbarTransfo
 export type InternationalizationFieldToolbarDrawerThemesTitle = 'toolbarDrawerThemesTitle';
 export type InternationalizationFieldToolbarDrawerThemesGeneralTheme = 'toolbarDrawerThemesGeneralTheme';
 export type InternationalizationFieldToolbarDrawerThemesInteractionTheme = 'toolbarDrawerThemesInteractionTheme';
+export type InternationalizationFieldToolbarDrawerThemesLanguage = 'toolbarDrawerThemesLanguage';
 
 export type InternationalizationFieldToolbarDrawerTransformTitle = 'toolbarDrawerTransformTitle';
 export type InternationalizationFieldToolbarDrawerTransformMultiModeTransform = 'toolbarDrawerTransformMultiModeTransform';
@@ -112,6 +113,7 @@ export type InternationalizationFieldType = InternationalizationFieldViewcubeFro
     | InternationalizationFieldToolbarDrawerThemesTitle
     | InternationalizationFieldToolbarDrawerThemesGeneralTheme
     | InternationalizationFieldToolbarDrawerThemesInteractionTheme
+    | InternationalizationFieldToolbarDrawerThemesLanguage
 
     | InternationalizationFieldToolbarDrawerTransformTitle
     | InternationalizationFieldToolbarDrawerTransformMultiModeTransform
@@ -189,6 +191,7 @@ export interface InternationalizationFields {
     toolbarDrawerThemesTitle: InternationalizationFieldToolbarDrawerThemesTitle,
     toolbarDrawerThemesGeneralTheme: InternationalizationFieldToolbarDrawerThemesGeneralTheme,
     toolbarDrawerThemesInteractionTheme: InternationalizationFieldToolbarDrawerThemesInteractionTheme,
+    toolbarDrawerThemesLanguage: InternationalizationFieldToolbarDrawerThemesLanguage,
 
     toolbarDrawerTransformTitle: InternationalizationFieldToolbarDrawerTransformTitle,
     toolbarDrawerTransformMultiModeTransform: InternationalizationFieldToolbarDrawerTransformMultiModeTransform,
@@ -268,6 +271,7 @@ export interface Internationalization {
     toolbarDrawerThemesTitle: string;
     toolbarDrawerThemesGeneralTheme: string;
     toolbarDrawerThemesInteractionTheme: string;
+    toolbarDrawerThemesLanguage: string;
 
     toolbarDrawerTransformTitle: string;
     toolbarDrawerTransformMultiModeTransform: string;

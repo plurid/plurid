@@ -19,6 +19,7 @@ const english: Internationalization = {
     toolbarDrawerThemesTitle: 'themes',
     toolbarDrawerThemesGeneralTheme: 'general theme',
     toolbarDrawerThemesInteractionTheme: 'interaction theme',
+    toolbarDrawerThemesLanguage: 'language',
 
     toolbarDrawerTransformTitle: 'transform',
     toolbarDrawerTransformMultiModeTransform: 'multi-mode transform',

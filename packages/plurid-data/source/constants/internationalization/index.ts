@@ -10,6 +10,7 @@ import russian from './russian';
 import spanish from './spanish';
 
 import fields from './fields';
+import languages from './languages';
 
 
 
@@ -26,4 +27,5 @@ export {
     spanish,
 
     fields,
+    languages,
 }
