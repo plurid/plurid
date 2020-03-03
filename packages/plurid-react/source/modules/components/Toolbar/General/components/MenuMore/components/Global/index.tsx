@@ -130,7 +130,12 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
                     selected={generalThemeName}
                     atSelect={(selection) => setGeneralTheme(selection)}
                     theme={interactionTheme}
-                    heightItems={4}
+                    filterable={true}
+                    heightItems={3}
+                    width={90}
+                    style={{
+                        fontSize: '0.8rem',
+                    }}
                 />
             </StyledMoreMenuItem>
 
@@ -143,6 +148,11 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
                     atSelect={(selection) => setInteractionTheme(selection)}
                     theme={interactionTheme}
                     heightItems={3}
+                    filterable={true}
+                    width={90}
+                    style={{
+                        fontSize: '0.8rem',
+                    }}
                 />
             </StyledMoreMenuItem>
 
@@ -157,6 +167,10 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
                     atSelect={(selection) => setLanguage(selection)}
                     theme={interactionTheme}
                     heightItems={3}
+                    width={90}
+                    style={{
+                        fontSize: '0.8rem',
+                    }}
                 />
             </StyledMoreMenuItem>
         </>
