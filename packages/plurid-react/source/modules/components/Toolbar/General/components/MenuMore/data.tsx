@@ -9,7 +9,7 @@ import {
 } from '@plurid/plurid-data';
 
 
-import MenuMoreThemes from './components/Themes';
+import MenuMoreGlobal from './components/Global';
 import MenuMoreTransform from './components/Transform';
 import MenuMoreSpace from './components/Space';
 import MenuMoreToolbar from './components/Toolbar';
@@ -27,9 +27,9 @@ interface MoreMenu {
 
 export const moreMenus: MoreMenu[] = [
     {
-        name: internationalization.fields.toolbarDrawerThemesTitle,
-        drawer: TOOLBAR_DRAWERS.THEMES,
-        component: (<MenuMoreThemes />),
+        name: internationalization.fields.toolbarDrawerGlobalTitle,
+        drawer: TOOLBAR_DRAWERS.GLOBAL,
+        component: (<MenuMoreGlobal />),
     },
     {
         name: internationalization.fields.toolbarDrawerTransformTitle,

@@ -123,7 +123,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
     return (
         <>
             <StyledMoreMenuItem>
-                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerThemesGeneralTheme)}
+                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalGeneralTheme)}
 
                 <PluridDropdown
                     selectables={Object.keys(themes)}
@@ -135,7 +135,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
             </StyledMoreMenuItem>
 
             <StyledMoreMenuItem>
-                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerThemesInteractionTheme)}
+                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalInteractionTheme)}
 
                 <PluridDropdown
                     selectables={Object.keys(themes)}
@@ -149,7 +149,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
             <StyledMoreMenuItem
                 last={true}
             >
-                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerThemesLanguage)}
+                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalLanguage)}
 
                 <PluridDropdown
                     selectables={internationalization.languages}
