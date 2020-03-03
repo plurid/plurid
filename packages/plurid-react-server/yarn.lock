@@ -472,6 +472,21 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.110.tgz#1da88fb336ba5ffad1f95ac392f68468492ef827"
   integrity sha512-RwUVok1rO3RCq8cliF0WQvawar2YIfQpxWhDinuxkVlxsgL2ClVkI5hjgNBbjc+KTudSOkcTiF6Jwwm1x30W2g==
 
+"@plurid/plurid-engine@^0.1.50":
+  version "0.1.50"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.50.tgz#a69dbbf9d1e4822cad93c4dbd57d2e99957fee24"
+  integrity sha512-AQMAP0JsCj97kIiHAbMqnQbraczHrqGqBtBxWb2bOo+3sxobcWB6MaBxxIUg6xJPD3+stsbQi2uZhfrbvHzWQw==
+
+"@plurid/plurid-functions@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.11.tgz#71b9c28a002375d259a740fa027f896648817720"
+  integrity sha512-6uNuZiRqeMS1XxWw82nDpXg06J9DROYEE6+61GCpY4t1cSeDBbBSbSSMGYQTFDoJFB3hpmJIm2gCx4PvhKmn9A==
+
+"@plurid/plurid-pubsub@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.3.tgz#f5014195a065f13c47f2895e4942ba1f3ec045a3"
+  integrity sha512-mviWTVQhkIifQApuLa60jSVA+azeeKXYvNTFejzJJtEFG0s1h2a1BqtaH/Fj4wCzymivJsD47JqbaLfg7Xw4zA==
+
 "@rollup/plugin-commonjs@^11.0.2":
   version "11.0.2"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-11.0.2.tgz#837cc6950752327cb90177b608f0928a4e60b582"
