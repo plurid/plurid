@@ -13,7 +13,14 @@ import {
 
 import {
     TRANSFORM_MODES,
+    internationalization,
+
+    InternationalizationLanguageType,
 } from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
 
 import {
     StyledToolbarRotate,
@@ -33,6 +40,10 @@ import actions from '../../../../../services/state/actions';
 
 
 
+const {
+    internationalizationFields,
+} = internationalization;
+
 interface ToolbarRotateOwnProperties {
     showTransformButtons: boolean;
     showIcons: boolean;
@@ -41,6 +52,7 @@ interface ToolbarRotateOwnProperties {
 }
 
 interface ToolbarRotateStateProperties {
+    stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
 }
 
@@ -64,6 +76,7 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (properties) => {
         toggleTransform,
 
         /** state */
+        stateLanguage,
         interactionTheme,
 
         /** dispatch */
@@ -106,7 +119,9 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (properties) => {
                             <PluridIconRotate />
                         </StyledIcon>
                     ) : (
-                        <>rotate</>
+                        <>
+                            {internatiolate(stateLanguage, internationalizationFields.toolbarTransformRotate)}
+                        </>
                     )
                 }
             </StyledToolbarButton>
@@ -132,6 +147,7 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): ToolbarRotateStateProperties => ({
+    stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 
