@@ -112,6 +112,17 @@ export const setConfigurationThemeInteraction = (
 }
 
 
+export const setConfigurationLanguage = (
+    state: Types.State,
+    action: Types.SetConfigurationLanguageAction,
+): Types.State => {
+    return {
+        ...state,
+        language: action.payload,
+    };
+}
+
+
 export const toggleConfigurationViewcubeHide = (
     state: Types.State,
     action: Types.ToggleConfigurationViewcubeHideAction,

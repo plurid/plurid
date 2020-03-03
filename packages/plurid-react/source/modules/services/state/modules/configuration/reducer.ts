@@ -25,6 +25,8 @@ const reducer = (
             return resolvers.setConfigurationThemeGeneral(state, action);
         case Types.SET_CONFIGURATION_THEME_INTERACTION:
             return resolvers.setConfigurationThemeInteraction(state, action);
+        case Types.SET_CONFIGURATION_LANGUAGE:
+            return resolvers.setConfigurationLanguage(state, action);
 
         case Types.TOGGLE_CONFIGURATION_VIEWCUBE_HIDE:
             return resolvers.toggleConfigurationViewcubeHide(state, action);
