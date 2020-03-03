@@ -66,6 +66,8 @@ const reducer = (
             return resolvers.setConfigurationSpaceTransformLocks(state, action);
         case Types.SET_CONFIGURATION_SPACE_LAYOUT_TYPE:
             return resolvers.setConfigurationSpaceLayout(state, action);
+        case Types.SET_CONFIGURATION_SPACE_CULLING_DISTANCE:
+            return resolvers.setConfigurationSpaceCullingDistance(state, action);
 
         default:
             return {

@@ -177,6 +177,13 @@ export interface SetConfigurationSpaceLayoutTypeAction {
 }
 
 
+export const SET_CONFIGURATION_SPACE_CULLING_DISTANCE = 'SET_CONFIGURATION_SPACE_CULLING_DISTANCE';
+export interface SetConfigurationSpaceCullingDistanceAction {
+    type: typeof SET_CONFIGURATION_SPACE_CULLING_DISTANCE;
+    payload: number;
+}
+
+
 
 export interface State extends PluridConfiguration {
 }
@@ -211,4 +218,5 @@ export type Actions = SetConfigurationAction
     | SetConfigurationSpaceTransformTouchAction
     | ToggleConfigurationSpaceFirstPersonAction
     | SetConfigurationSpaceTransformLocksAction
-    | SetConfigurationSpaceLayoutTypeAction;
+    | SetConfigurationSpaceLayoutTypeAction
+    | SetConfigurationSpaceCullingDistanceAction;

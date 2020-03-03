@@ -26,13 +26,17 @@ import {
 } from '@plurid/plurid-ui-react';
 
 import {
+    useDebouncedCallback,
+} from '@plurid/plurid-functions-react';
+
+import {
     StyledMoreMenuItem,
 } from '../../styled';
 
 import { AppState } from '../../../../../../../services/state/store';
 import StateContext from '../../../../../../../services/state/context';
 import selectors from '../../../../../../../services/state/selectors';
-// import actions from '../../../../../../../services/state/actions';
+import actions from '../../../../../../../services/state/actions';
 
 
 
@@ -46,6 +50,7 @@ interface MenuMoreTechnicalStateProperties {
 }
 
 interface MenuMoreTechnicalDispatchProperties {
+    dispatchSetConfigurationSpaceCullingDistance: typeof actions.configuration.setConfigurationSpaceCullingDistance;
 }
 
 type MenuMoreTechnicalProperties = MenuMoreTechnicalOwnProperties
@@ -63,6 +68,7 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
         stateInteractionTheme,
 
         /** dispatch */
+        dispatchSetConfigurationSpaceCullingDistance,
     } = properties;
 
     const {
@@ -74,11 +80,25 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
     const [localCullingDistance, setLocalCullingDistance] = useState(cullingDistance);
 
 
+    /** callback */
+    const dispatchCullingDistanceUpdateFunction = (
+        value: number,
+    ) => {
+        dispatchSetConfigurationSpaceCullingDistance(value);
+    }
+
+    const dispatchCullingDistanceUpdate = useDebouncedCallback(
+        dispatchCullingDistanceUpdateFunction,
+        300,
+    );
+
+
     /** handlers */
     const handleCullingDistance = (
         value: number,
     ) => {
-        setLocalCullingDistance(value)
+        setLocalCullingDistance(value);
+        dispatchCullingDistanceUpdate(value);
     }
 
 
@@ -116,6 +136,11 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): MenuMoreTechnicalDispatchProperties => ({
+    dispatchSetConfigurationSpaceCullingDistance: (
+        value,
+    ) => dispatch(
+        actions.configuration.setConfigurationSpaceCullingDistance(value),
+    ),
 });
 
 
