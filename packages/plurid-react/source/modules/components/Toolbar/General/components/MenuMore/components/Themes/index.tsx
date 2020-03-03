@@ -11,8 +11,15 @@ import themes, {
 } from '@plurid/plurid-themes';
 
 import {
+    internationalization,
+
     PluridConfiguration,
+    InternationalizationLanguageType,
 } from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
 
 import {
     PluridDropdown,
@@ -33,6 +40,7 @@ interface MenuMoreThemesOwnProperties {
 }
 
 interface MenuMoreThemesStateProperties {
+    stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
@@ -49,9 +57,13 @@ type MenuMoreThemesProperties = MenuMoreThemesOwnProperties
     & MenuMoreThemesStateProperties
     & MenuMoreThemesDispatchProperties;
 
-const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (properties) => {
+const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
+        stateLanguage,
         interactionTheme,
         configuration,
 
@@ -97,10 +109,12 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (properties) => {
         selectedTheme,
     ]);
 
+
+    /** render */
     return (
         <>
             <StyledMoreMenuItem>
-                general theme
+                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerThemesGeneralTheme)}
 
                 <PluridDropdown
                     selectables={Object.keys(themes)}
@@ -114,7 +128,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (properties) => {
             <StyledMoreMenuItem
                 last={true}
             >
-                interaction theme
+                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerThemesInteractionTheme)}
 
                 <PluridDropdown
                     selectables={Object.keys(themes)}
@@ -132,6 +146,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): MenuMoreThemesStateProperties => ({
+    stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });

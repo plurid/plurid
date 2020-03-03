@@ -8,8 +8,15 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
+    internationalization,
+
     PluridConfiguration,
+    InternationalizationLanguageType,
 } from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
 
 import {
     PluridSwitch
@@ -30,6 +37,7 @@ interface MenuMoreViewcubeOwnProperties {
 }
 
 interface MenuMoreViewcubeStateProperties {
+    stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
@@ -45,9 +53,13 @@ type MenuMoreViewcubeProperties = MenuMoreViewcubeOwnProperties
     & MenuMoreViewcubeStateProperties
     & MenuMoreViewcubeDispatchProperties;
 
-const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
+const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
+        stateLanguage,
         interactionTheme,
         configuration,
 
@@ -69,13 +81,15 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
         conceal,
     } = viewcube;
 
+
+    /** render */
     return (
         <>
             <StyledMoreMenuItem
                 last={!show ? true : false}
             >
                 <div>
-                    show viewcube
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerViewcubeShowViewcube)}
                 </div>
 
                 <PluridSwitch
@@ -91,7 +105,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
                 <>
                     <StyledMoreMenuItem>
                         <div>
-                            show transform buttons
+                            {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerViewcubeShowTransformButtons)}
                         </div>
 
                         <PluridSwitch
@@ -105,7 +119,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
 
                     <StyledMoreMenuItem>
                         <div>
-                            always opaque
+                            {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerViewcubeAlwaysOpaque)}
                         </div>
 
                         <PluridSwitch
@@ -121,7 +135,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
                         last={true}
                     >
                         <div>
-                            conceal viewcube
+                            {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerViewcubeConcealViewcube)}
                         </div>
 
                         <PluridSwitch
@@ -142,6 +156,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): MenuMoreViewcubeStateProperties => ({
+    stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });

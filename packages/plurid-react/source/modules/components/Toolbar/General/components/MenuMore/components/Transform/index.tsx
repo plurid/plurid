@@ -8,10 +8,17 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    PluridConfiguration,
+    internationalization,
 
     TRANSFORM_TOUCHES,
+
+    PluridConfiguration,
+    InternationalizationLanguageType,
 } from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
 
 import {
     PluridSwitch,
@@ -32,6 +39,7 @@ interface MenuMoreTransformOwnProperties {
 }
 
 interface MenuMoreTransformStateProperties {
+    stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
@@ -45,9 +53,13 @@ type MenuMoreTransformProperties = MenuMoreTransformOwnProperties
     & MenuMoreTransformStateProperties
     & MenuMoreTransformDispatchProperties;
 
-const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) => {
+const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
+        stateLanguage,
         interactionTheme,
         configuration,
 
@@ -61,11 +73,13 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
         transformTouch,
     } = configuration.space;
 
+
+    /** render */
     return (
         <>
             <StyledMoreMenuItem>
                 <div>
-                    multi-mode transform
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformMultiModeTransform)}
                 </div>
 
                 <PluridSwitch
@@ -79,7 +93,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    allow rotation X
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowRotationX)}
                 </div>
 
                 <PluridSwitch
@@ -93,7 +107,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    allow rotation Y
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowRotationY)}
                 </div>
 
                 <PluridSwitch
@@ -107,7 +121,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    allow translation X
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowTranslationX)}
                 </div>
 
                 <PluridSwitch
@@ -121,7 +135,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    allow translation Y
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowTranslationY)}
                 </div>
 
                 <PluridSwitch
@@ -135,7 +149,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    allow translation Z
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowTranslationZ)}
                 </div>
 
                 <PluridSwitch
@@ -149,7 +163,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 
             <StyledMoreMenuItem>
                 <div>
-                    allow scale
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowScale)}
                 </div>
 
                 <PluridSwitch
@@ -165,7 +179,8 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
                 last={true}
             >
                 <div>
-                    touch transform: {transformTouch === TRANSFORM_TOUCHES.PAN
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformTouchTransform)}
+                    :&nbsp;{transformTouch === TRANSFORM_TOUCHES.PAN
                         ? 'pan'
                         : 'swipe'
                     }
@@ -189,6 +204,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (properties) =>
 const mapStateToProps = (
     state: AppState,
 ): MenuMoreTransformStateProperties => ({
+    stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });

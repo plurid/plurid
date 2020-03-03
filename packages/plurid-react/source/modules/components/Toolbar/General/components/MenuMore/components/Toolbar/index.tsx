@@ -11,8 +11,15 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
+    internationalization,
+
     PluridConfiguration,
+    InternationalizationLanguageType,
 } from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
 
 import {
     PluridSwitch,
@@ -36,6 +43,7 @@ interface MenuMoreToolbarOwnProperties {
 }
 
 interface MenuMoreToolbarStateProperties {
+    stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
@@ -52,9 +60,13 @@ type MenuMoreToolbarProperties = MenuMoreToolbarOwnProperties
     & MenuMoreToolbarStateProperties
     & MenuMoreToolbarDispatchProperties;
 
-const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
+const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
+        stateLanguage,
         interactionTheme,
         configuration,
         viewSize,
@@ -89,11 +101,13 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
         viewSize.width,
     ]);
 
+
+    /** render */
     return (
         <>
             <StyledMoreMenuItem>
                 <div>
-                    always opaque
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerToolbarAlwaysOpaque)}
                 </div>
 
                 <PluridSwitch
@@ -107,7 +121,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
 
             <StyledMoreMenuItem>
                 <div>
-                    show transform icons
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerToolbarShowTransformIcons)}
                 </div>
 
                 <PluridSwitch
@@ -122,7 +136,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
             {!viewSizeSmall && (
                 <StyledMoreMenuItem>
                     <div>
-                        show transform arrows
+                        {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerToolbarShowTransformArrows)}
                     </div>
 
                     <PluridSwitch
@@ -139,7 +153,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
                 last={true}
             >
                 <div>
-                    conceal toolbar
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerToolbarConcealToolbar)}
                 </div>
 
                 <PluridSwitch
@@ -158,6 +172,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): MenuMoreToolbarStateProperties => ({
+    stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
     viewSize: selectors.space.getViewSize(state),
