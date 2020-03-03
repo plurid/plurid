@@ -2,12 +2,20 @@ import {
     PluridServerRoute,
 } from '@plurid/plurid-react-server';
 
+import {
+    view,
+} from './view';
+
 
 
 const routes: PluridServerRoute[] = [
     {
-        path: '/one',
-        view: 'one',
+        path: '/',
+        view: view.index,
+    },
+    {
+        path: '/page',
+        view: view.page,
     },
 ];
 

@@ -1,5 +1,10 @@
 import React from 'react';
 
+import {
+    ViewType,
+    view,
+} from './view';
+
 
 
 interface RouteComponent<T> {
@@ -8,10 +13,14 @@ interface RouteComponent<T> {
 }
 
 
-const components: RouteComponent<any>[] = [
+const components: RouteComponent<ViewType>[] = [
     {
-        view: 'one',
-        component: () => (<div>one</div>),
+        view: view.index,
+        component: () => (<div>index</div>),
+    },
+    {
+        view: view.page,
+        component: () => (<div>page</div>),
     },
 ];
 
