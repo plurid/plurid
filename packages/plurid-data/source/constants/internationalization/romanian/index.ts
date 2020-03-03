@@ -18,7 +18,7 @@ const romanian: Internationalization = {
 
     toolbarDrawerThemesTitle: 'teme',
     toolbarDrawerThemesGeneralTheme: 'temă generală',
-    toolbarDrawerThemesInteractionTheme: 'temă interacție',
+    toolbarDrawerThemesInteractionTheme: 'temă interacțiune',
     toolbarDrawerThemesLanguage: 'limbă',
 
     toolbarDrawerTransformTitle: 'transformare',
