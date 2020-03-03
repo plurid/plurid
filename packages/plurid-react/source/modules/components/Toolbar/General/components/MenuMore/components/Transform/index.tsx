@@ -45,6 +45,7 @@ interface MenuMoreTransformStateProperties {
 }
 
 interface MenuMoreTransformDispatchProperties {
+    dispatchToggleConfigurationSpaceTransformMultimode: typeof actions.configuration.toggleConfigurationSpaceTransformMultimode;
     dispatchSetConfigurationSpaceTransformTouch: typeof actions.configuration.setConfigurationSpaceTransformTouch;
     dispatchSetConfigurationSpaceTransformLocks: typeof actions.configuration.setConfigurationSpaceTransformLocks;
 }
@@ -64,11 +65,13 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
         configuration,
 
         /** dispatch */
+        dispatchToggleConfigurationSpaceTransformMultimode,
         dispatchSetConfigurationSpaceTransformTouch,
         dispatchSetConfigurationSpaceTransformLocks,
     } = properties;
 
     const {
+        transformMultimode,
         transformLocks,
         transformTouch,
     } = configuration.space;
@@ -84,8 +87,8 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
 
                 <PluridSwitch
                     theme={interactionTheme}
-                    checked={transformLocks.rotationX}
-                    atChange={() => dispatchSetConfigurationSpaceTransformLocks('rotationX')}
+                    checked={transformMultimode}
+                    atChange={() => dispatchToggleConfigurationSpaceTransformMultimode(!transformMultimode)}
                     exclusive={true}
                     level={2}
                 />
@@ -213,6 +216,11 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): MenuMoreTransformDispatchProperties => ({
+    dispatchToggleConfigurationSpaceTransformMultimode: (
+        multimode,
+    ) => dispatch(
+        actions.configuration.toggleConfigurationSpaceTransformMultimode(multimode)
+    ),
     dispatchSetConfigurationSpaceTransformTouch: (
         touch: keyof typeof TRANSFORM_TOUCHES,
     ) => dispatch(
