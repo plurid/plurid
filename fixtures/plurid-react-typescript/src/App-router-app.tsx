@@ -149,10 +149,10 @@ const App = () => {
     const component2: React.FC<any> = () => {
         return (
             <div>
-                component two
+                {/* component two
                 <br />
                 <PluridRouterLink path="/">link to index page</PluridRouterLink>
-                <PluridRouterLink path="/one">link to page one</PluridRouterLink>
+                <PluridRouterLink path="/one">link to page one</PluridRouterLink> */}
 
                 <PluridApp
                     configuration={appConfiguration}
