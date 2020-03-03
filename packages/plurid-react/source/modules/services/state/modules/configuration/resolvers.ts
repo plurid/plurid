@@ -462,3 +462,19 @@ export const setConfigurationSpaceLayout = (
         ...newState,
     };
 }
+
+
+export const setConfigurationSpaceCullingDistance = (
+    state: Types.State,
+    action: Types.SetConfigurationSpaceCullingDistanceAction,
+): Types.State => {
+    const newState = {
+        ...state,
+    };
+
+    newState.space.cullingDistance = action.payload;
+
+    return {
+        ...newState,
+    };
+}

@@ -243,3 +243,13 @@ export const setConfigurationSpaceLayoutType = (
         payload: layoutType,
     };
 }
+
+
+export const setConfigurationSpaceCullingDistance = (
+    value: number,
+): Types.SetConfigurationSpaceCullingDistanceAction => {
+    return {
+        type: Types.SET_CONFIGURATION_SPACE_CULLING_DISTANCE,
+        payload: value,
+    };
+}
