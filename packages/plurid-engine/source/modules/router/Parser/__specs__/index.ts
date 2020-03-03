@@ -5,6 +5,7 @@ import {
 } from '../../interfaces';
 
 
+
 describe('Parser', () => {
     it('simple string', () => {
         const route: Route<any> = {
