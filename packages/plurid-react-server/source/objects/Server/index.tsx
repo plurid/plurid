@@ -19,12 +19,16 @@ import {
 } from 'react-helmet-async';
 
 import {
+    router,
+} from '@plurid/plurid-engine';
+
+import {
     DEFAULT_SERVER_PORT,
     DEFAULT_SERVER_OPTIONS,
 } from '../../data/constants';
 
 import {
-    PluridServerRoute,
+    PluridServerRouting,
     PluridServerMiddleware,
     PluridServerService,
     PluridServerServicesData,
@@ -34,14 +38,16 @@ import {
 } from '../../data/interfaces';
 
 import PluridRenderer from '../Renderer';
-import PluridRouter from '../Router';
 import PluridContentGenerator from '../ContentGenerator';
 
 
 
+const PluridRouter = router.default;
+
+
 export default class PluridServer {
     private Application: React.FC<any>;
-    private routes: PluridServerRoute[];
+    private routing: PluridServerRouting;
     private helmet: Helmet;
     private styles: string[];
     private middleware: PluridServerMiddleware[];
@@ -59,7 +65,7 @@ export default class PluridServer {
     ) {
         const {
             Application,
-            routes,
+            routing,
             helmet,
             styles,
             middleware,
@@ -69,7 +75,7 @@ export default class PluridServer {
         } = configuration;
 
         this.Application = Application;
-        this.routes = routes;
+        this.routing = routing;
         this.helmet = helmet;
         this.styles = styles || [];
         this.middleware = middleware || [];
@@ -121,13 +127,16 @@ export default class PluridServer {
     private computeApplication() {
         this.loadMiddleware();
 
-        const router = new PluridRouter({
-            routes: this.routes,
-        });
+        const router = new PluridRouter(this.routing.routes);
 
         this.serverApplication.get('*', (request, response) => {
             const url = request.originalUrl || request.url;
             const route = router.match(url);
+
+            if (!route) {
+                response.send('Not Found');
+                return;
+            }
 
             const {
                 content,
@@ -210,7 +219,7 @@ export default class PluridServer {
     }
 
     private getContentAndStyles(
-        route: PluridServerRoute,
+        route: router.MatcherResponse<any>,
     ) {
         const sheet = new ServerStyleSheet();
         let content = '';
@@ -223,6 +232,7 @@ export default class PluridServer {
                 this.servicesData,
                 sheet,
                 this.helmet,
+                route,
             );
 
             content = contentHandler.render();

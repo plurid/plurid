@@ -10,14 +10,11 @@ import {
     ApolloClient,
 } from 'apollo-client';
 
+import {
+    PluridRouterComponent,
+    PluridRouterRoute,
+} from '@plurid/plurid-data';
 
-
-export interface PluridServerRoute {
-    path: string;
-    view: string | string[];
-    // type: 'get' | 'post' | 'put';
-    middleware?: PluridServerMiddleware;
-}
 
 
 export type PluridServerMiddleware = (
@@ -25,6 +22,12 @@ export type PluridServerMiddleware = (
     response: express.Response,
     next: express.NextFunction,
 ) => void;
+
+
+export interface PluridServerRouting {
+    components: PluridRouterComponent<any>[];
+    routes: PluridRouterRoute<any>[];
+}
 
 
 export interface PluridServerOptions {
@@ -69,7 +72,7 @@ export interface PluridServerServicesData {
 
 export interface PluridServerConfiguration {
     Application: React.FC<any>;
-    routes: PluridServerRoute[];
+    routing: PluridServerRouting;
     helmet: Helmet;
     styles?: string[];
     middleware?: PluridServerMiddleware[];

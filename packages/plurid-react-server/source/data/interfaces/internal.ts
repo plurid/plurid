@@ -1,9 +1,3 @@
-import {
-    PluridServerRoute,
-} from './external';
-
-
-
 export interface PluridRendererConfiguration {
     head: string;
     styles: string;
@@ -12,9 +6,4 @@ export interface PluridRendererConfiguration {
     root?: string;
     script?: string;
     stripeScript?: string;
-}
-
-
-export interface PluridRouterConfiguration {
-    routes: PluridServerRoute[];
 }
