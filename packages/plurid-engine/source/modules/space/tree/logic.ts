@@ -58,7 +58,7 @@ export const computeSpaceTree = (
     }
 
     const assignedPages = assignPagesFromView(pages, view);
-    console.log('assignedPages', assignedPages);
+    // console.log('assignedPages', assignedPages);
 
     switch(configuration.space.layout.type) {
         case LAYOUT_TYPES.COLUMNS:
