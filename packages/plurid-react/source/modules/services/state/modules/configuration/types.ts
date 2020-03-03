@@ -1,5 +1,6 @@
 import {
     PluridConfiguration,
+    InternationalizationLanguageType,
 
     SIZES,
     TRANSFORM_MODES,
@@ -48,6 +49,13 @@ export const SET_CONFIGURATION_THEME_INTERACTION = 'SET_CONFIGURATION_THEME_INTE
 export interface SetConfigurationThemeInteractionAction {
     type: typeof SET_CONFIGURATION_THEME_INTERACTION;
     payload: string;
+}
+
+
+export const SET_CONFIGURATION_LANGUAGE = 'SET_CONFIGURATION_LANGUAGE';
+export interface SetConfigurationLanguageAction {
+    type: typeof SET_CONFIGURATION_LANGUAGE;
+    payload: InternationalizationLanguageType;
 }
 
 
@@ -182,6 +190,7 @@ export type Actions = SetConfigurationAction
     /** THEME */
     | SetConfigurationThemeGeneralAction
     | SetConfigurationThemeInteractionAction
+    | SetConfigurationLanguageAction
     /** VIEWCUBE */
     | ToggleConfigurationViewcubeHideAction
     | ToggleConfigurationViewcubeButtonsAction

@@ -1,5 +1,6 @@
 import {
     PluridConfiguration,
+    InternationalizationLanguageType,
 
     SIZES,
     TRANSFORM_MODES,
@@ -65,6 +66,16 @@ export const setConfigurationThemeInteractionAction = (
 ): Types.SetConfigurationThemeInteractionAction => {
     return {
         type: Types.SET_CONFIGURATION_THEME_INTERACTION,
+        payload,
+    };
+}
+
+
+export const setConfigurationLanguageAction = (
+    payload: InternationalizationLanguageType,
+): Types.SetConfigurationLanguageAction => {
+    return {
+        type: Types.SET_CONFIGURATION_LANGUAGE,
         payload,
     };
 }
