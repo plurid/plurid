@@ -80,6 +80,11 @@ const spanish: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'aumentar proporcionalmente',
     toolbarDrawerShortcutsScaleDown: 'reducir proporcionalmente',
     toolbarDrawerShortcutsToggleScale: 'alternar escala',
+
+    toolbarDrawerShortcutsArrowOrScrollUp: '↑ o desplazarse hacia arriba',
+    toolbarDrawerShortcutsArrowOrScrollDown: '↓ o desplazarse hacia abajo',
+    toolbarDrawerShortcutsArrowOrScrollLeft: '← o desplazarse hacia la izquierda',
+    toolbarDrawerShortcutsArrowOrScrollRight: '→ o desplazarse hacia la derecha',
 };
 
 

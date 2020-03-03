@@ -80,6 +80,11 @@ const internationalizationFields: InternationalizationFields = {
     toolbarDrawerShortcutsScaleUp: 'toolbarDrawerShortcutsScaleUp',
     toolbarDrawerShortcutsScaleDown: 'toolbarDrawerShortcutsScaleDown',
     toolbarDrawerShortcutsToggleScale: 'toolbarDrawerShortcutsToggleScale',
+
+    toolbarDrawerShortcutsArrowOrScrollUp: 'toolbarDrawerShortcutsArrowOrScrollUp',
+    toolbarDrawerShortcutsArrowOrScrollDown: 'toolbarDrawerShortcutsArrowOrScrollDown',
+    toolbarDrawerShortcutsArrowOrScrollLeft: 'toolbarDrawerShortcutsArrowOrScrollLeft',
+    toolbarDrawerShortcutsArrowOrScrollRight: 'toolbarDrawerShortcutsArrowOrScrollRight',
 }
 
 

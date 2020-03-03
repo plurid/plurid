@@ -80,6 +80,11 @@ const hindi: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'स्केल अप',
     toolbarDrawerShortcutsScaleDown: 'घटाना',
     toolbarDrawerShortcutsToggleScale: 'टॉगल स्केल',
+
+    toolbarDrawerShortcutsArrowOrScrollUp: '↑ या स्क्रॉल करें',
+    toolbarDrawerShortcutsArrowOrScrollDown: '↓ या नीचे स्क्रॉल करें',
+    toolbarDrawerShortcutsArrowOrScrollLeft: '← या बाईं ओर स्क्रॉल करें',
+    toolbarDrawerShortcutsArrowOrScrollRight: '→ या दाईं ओर स्क्रॉल करें',
 };
 
 

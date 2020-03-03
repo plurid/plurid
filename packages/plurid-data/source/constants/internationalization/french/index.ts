@@ -80,6 +80,11 @@ const french: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'augmenter',
     toolbarDrawerShortcutsScaleDown: 'réduire',
     toolbarDrawerShortcutsToggleScale: 'basculer l\'échelle',
+
+    toolbarDrawerShortcutsArrowOrScrollUp: '↑ ou scroll vers le haut',
+    toolbarDrawerShortcutsArrowOrScrollDown: '↓ ou scroll vers le bas',
+    toolbarDrawerShortcutsArrowOrScrollLeft: '← ou scroll vers la gauche',
+    toolbarDrawerShortcutsArrowOrScrollRight: '→ ou scroll vers la droite',
 };
 
 
