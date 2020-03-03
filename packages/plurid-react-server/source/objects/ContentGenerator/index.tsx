@@ -38,6 +38,7 @@ export default class PluridContentGenerator {
     private servicesData: PluridServerServicesData | undefined;
     private stylesheet: ServerStyleSheet;
     private helmet: Helmet;
+    private matchedRoute: any;
 
     constructor(
         Application: React.FC<any>,
@@ -45,12 +46,14 @@ export default class PluridContentGenerator {
         servicesData: PluridServerServicesData | undefined,
         stylesheet: ServerStyleSheet,
         helmet: Helmet,
+        matchedRoute: any,
     ) {
         this.Application = Application;
         this.services = services;
         this.servicesData = servicesData;
         this.stylesheet = stylesheet;
         this.helmet = helmet;
+        this.matchedRoute = matchedRoute;
     }
 
     render() {
