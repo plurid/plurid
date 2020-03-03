@@ -19,6 +19,7 @@ const hindi: Internationalization = {
     toolbarDrawerThemesTitle: 'विषयों',
     toolbarDrawerThemesGeneralTheme: 'सामान्य विषय',
     toolbarDrawerThemesInteractionTheme: 'बातचीत का विषय',
+    toolbarDrawerThemesLanguage: 'भाषा',
 
     toolbarDrawerTransformTitle: 'परिवर्तन',
     toolbarDrawerTransformMultiModeTransform: 'बहु मोड परिवर्तन',

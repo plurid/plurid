@@ -19,6 +19,7 @@ const russian: Internationalization = {
     toolbarDrawerThemesTitle: 'темы',
     toolbarDrawerThemesGeneralTheme: 'общая тема',
     toolbarDrawerThemesInteractionTheme: 'тема взаимодействия',
+    toolbarDrawerThemesLanguage: 'язык',
 
     toolbarDrawerTransformTitle: 'преобразование',
     toolbarDrawerTransformMultiModeTransform: 'многорежимное преобразование',
