@@ -50,6 +50,9 @@ const mergeConfiguration = (
         transparentUI: typeof configuration.transparentUI === 'boolean'
             ? configuration.transparentUI
             : defaultConfiguration.transparentUI,
+        language: typeof configuration.language === 'string'
+            ? configuration.language
+            : defaultConfiguration.language,
         theme: {
             general: typeof configuration.theme === 'string'
                 ? configuration.theme
