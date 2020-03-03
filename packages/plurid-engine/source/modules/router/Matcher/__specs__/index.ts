@@ -1,15 +1,15 @@
-import Matcher from '../';
-
 import {
-    Route,
-} from '../../interfaces';
+    PluridRouterRoute,
+} from '@plurid/plurid-data';
+
+import Matcher from '../';
 
 
 
 describe('Matcher', () => {
     it('simple route match', () => {
-        const route: Route<any> = {
-            location: '/one',
+        const route: PluridRouterRoute<any> = {
+            path: '/one',
             view: 'one',
         };
         const matcher = new Matcher('/one', route);
@@ -19,8 +19,8 @@ describe('Matcher', () => {
     });
 
     it('simple route no match', () => {
-        const route: Route<any> = {
-            location: '/one',
+        const route: PluridRouterRoute<any> = {
+            path: '/one',
             view: 'one',
         };
         const matcher = new Matcher('/two', route);

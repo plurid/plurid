@@ -1,9 +1,9 @@
 import {
     Indexed,
+    PluridRouterRoute,
 } from '@plurid/plurid-data';
 
 import {
-    Route,
     Fragments,
 } from '../Router/interfaces';
 
@@ -21,7 +21,7 @@ export interface ParserOptions {
 
 
 export interface ParserResponse<T> {
-    route: Route<T>;
+    route: PluridRouterRoute<T>;
     pathname: string;
     elements: string[];
     match: boolean;

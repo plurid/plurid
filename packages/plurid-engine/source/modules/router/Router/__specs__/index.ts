@@ -1,20 +1,20 @@
-import Router from '../';
-
 import {
-    Route,
-} from '../../interfaces';
+    PluridRouterRoute,
+} from '@plurid/plurid-data';
+
+import Router from '../';
 
 
 
 describe('Router', () => {
     it('simple route', () => {
-        const routes: Route<any>[] = [
+        const routes: PluridRouterRoute<any>[] = [
             {
-                location: '/one',
+                path: '/one',
                 view: 'one',
             },
             {
-                location: '/two',
+                path: '/two',
                 view: 'two',
             },
         ];
@@ -25,13 +25,13 @@ describe('Router', () => {
     });
 
     it.only('simple route cached', () => {
-        const routes: Route<any>[] = [
+        const routes: PluridRouterRoute<any>[] = [
             {
-                location: '/one',
+                path: '/one',
                 view: 'one',
             },
             {
-                location: '/two',
+                path: '/two',
                 view: 'two',
             },
         ];
@@ -44,13 +44,13 @@ describe('Router', () => {
     });
 
     it('simple route - parametric', () => {
-        const routes: Route<any>[] = [
+        const routes: PluridRouterRoute<any>[] = [
             {
-                location: '/one/:element',
+                path: '/one/:element',
                 view: 'one',
             },
             {
-                location: '/two',
+                path: '/two',
                 view: 'two',
             },
         ];
@@ -61,13 +61,13 @@ describe('Router', () => {
     });
 
     it('simple route - query', () => {
-        const routes: Route<any>[] = [
+        const routes: PluridRouterRoute<any>[] = [
             {
-                location: '/one',
+                path: '/one',
                 view: 'one',
             },
             {
-                location: '/two',
+                path: '/two',
                 view: 'two',
             },
         ];
@@ -83,13 +83,13 @@ describe('Router', () => {
     });
 
     it('simple route - fragment', () => {
-        const routes: Route<any>[] = [
+        const routes: PluridRouterRoute<any>[] = [
             {
-                location: '/one',
+                path: '/one',
                 view: 'one',
             },
             {
-                location: '/two',
+                path: '/two',
                 view: 'two',
             },
         ];

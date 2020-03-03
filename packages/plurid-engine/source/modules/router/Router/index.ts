@@ -1,11 +1,11 @@
 import {
     Indexed,
+    PluridRouterRoute,
 } from '@plurid/plurid-data';
 
 import {
     RouterOptions,
     RouterPartialOptions,
-    Route,
 } from './interfaces';
 
 import {
@@ -17,13 +17,13 @@ import Matcher from '../Matcher';
 
 
 export default class Router<T> {
-    private routes: Route<T>[];
+    private routes: PluridRouterRoute<T>[];
     private options: RouterOptions;
     private cachedMatched: Indexed<MatcherResponse<T>>;
 
 
     constructor(
-        routes: Route<T>[],
+        routes: PluridRouterRoute<T>[],
         options?: RouterPartialOptions,
     ) {
         this.routes = routes;

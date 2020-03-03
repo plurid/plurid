@@ -1,4 +1,8 @@
 import {
+    PluridRouterRoute,
+} from '@plurid/plurid-data';
+
+import {
     ParserOptions,
     ParserPartialOptions,
     ParserResponse,
@@ -11,23 +15,23 @@ import {
     extractFragments,
 } from './logic';
 
-import {
-    Route,
-} from '../Router/interfaces';
+// import {
+//     Route,
+// } from '../Router/interfaces';
 
 
 
 export default class Parser<T> {
     /** properties */
     private location: string;
-    private route: Route<T>;
+    private route: PluridRouterRoute<T>;
     private options: ParserOptions;
 
 
     /** constructor */
     constructor(
         location: string,
-        route: Route<T>,
+        route: PluridRouterRoute<T>,
         options?: ParserPartialOptions,
     ) {
         this.location = location;
@@ -57,7 +61,7 @@ export default class Parser<T> {
     private extractParametersAndMatch() {
         const parametersAndMatch = extractParametersAndMatch(
             this.location,
-            this.route.location,
+            this.route.path,
         );
 
         return parametersAndMatch;

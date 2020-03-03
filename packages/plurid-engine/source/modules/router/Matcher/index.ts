@@ -1,12 +1,16 @@
 import {
+    PluridRouterRoute,
+} from '@plurid/plurid-data';
+
+import {
     MatcherOptions,
     MatcherPartialOptions,
     MatcherResponse,
 } from './interfaces';
 
-import {
-    Route,
-} from '../Router/interfaces';
+// import {
+//     Route,
+// } from '../Router/interfaces';
 
 import Parser from '../Parser';
 
@@ -18,14 +22,14 @@ import {
 
 export default class Matcher<T> {
     private location: string;
-    private route: Route<T>;
+    private route: PluridRouterRoute<T>;
     private options: MatcherOptions;
     private matchedData: MatcherResponse<T> | undefined;
 
 
     constructor(
         location: string,
-        route: Route<T>,
+        route: PluridRouterRoute<T>,
         options?: MatcherPartialOptions,
     ) {
         this.location = location;
