@@ -23,7 +23,10 @@ export interface View {
 
 
 // 5. Add const to the view object.
-export const view: View = {
+const view: View = {
     index: viewIndex,
     page: viewPage,
 }
+
+
+export default view;
