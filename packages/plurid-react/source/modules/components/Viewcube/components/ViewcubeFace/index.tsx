@@ -201,6 +201,7 @@ const zoneClickTransforms = {
 
 interface ViewcubeFaceOwnProperties {
     face: string;
+    faceText: string;
     mouseOver: boolean;
     hoveredZone: string;
     setHoveredZone: React.Dispatch<React.SetStateAction<string>>;
@@ -228,6 +229,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
     const {
         /** own */
         face,
+        faceText,
         mouseOver,
         hoveredZone,
         setHoveredZone,
@@ -325,7 +327,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
                 onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.middleCenter}`])}
                 transparentUI={transparentUI}
             >
-                {face}
+                {faceText}
             </StyledViewcubeFaceZone>
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
