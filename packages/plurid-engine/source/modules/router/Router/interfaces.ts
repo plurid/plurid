@@ -1,10 +1,7 @@
 import {
     Indexed,
-} from '@plurid/plurid-data';
-
-import {
     CompareType,
-} from '../CompareTypes';
+} from '@plurid/plurid-data';
 
 
 
