@@ -80,6 +80,11 @@ const japanese: Internationalization = {
     toolbarDrawerShortcutsScaleUp: '拡大する',
     toolbarDrawerShortcutsScaleDown: '縮小する',
     toolbarDrawerShortcutsToggleScale: 'トグルスケール',
+
+    toolbarDrawerShortcutsArrowOrScrollUp: '↑ または上にスクロールします',
+    toolbarDrawerShortcutsArrowOrScrollDown: '↓ または下にスクロールします',
+    toolbarDrawerShortcutsArrowOrScrollLeft: '← または左にスクロール',
+    toolbarDrawerShortcutsArrowOrScrollRight: '→ または右にスクロール',
 };
 
 

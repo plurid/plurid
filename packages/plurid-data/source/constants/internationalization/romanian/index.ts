@@ -80,6 +80,11 @@ const romanian: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'scalare în sus',
     toolbarDrawerShortcutsScaleDown: 'scalare în jos',
     toolbarDrawerShortcutsToggleScale: 'comutare scalare',
+
+    toolbarDrawerShortcutsArrowOrScrollUp: '↑ sau scroll sus',
+    toolbarDrawerShortcutsArrowOrScrollDown: '↓ sau scroll jos',
+    toolbarDrawerShortcutsArrowOrScrollLeft: '← sau scroll stânga',
+    toolbarDrawerShortcutsArrowOrScrollRight: '→ sau scroll dreapta',
 };
 
 

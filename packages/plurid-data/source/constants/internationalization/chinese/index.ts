@@ -80,6 +80,11 @@ const chinese: Internationalization = {
     toolbarDrawerShortcutsScaleUp: '放大',
     toolbarDrawerShortcutsScaleDown: '缩小',
     toolbarDrawerShortcutsToggleScale: '切换刻度',
+
+    toolbarDrawerShortcutsArrowOrScrollUp: '↑ 或向上滚动',
+    toolbarDrawerShortcutsArrowOrScrollDown: '↓ 或向下滚动',
+    toolbarDrawerShortcutsArrowOrScrollLeft: '← 或向左滚动',
+    toolbarDrawerShortcutsArrowOrScrollRight: '→ 或向右滚动',
 };
 
 

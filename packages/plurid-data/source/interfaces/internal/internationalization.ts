@@ -98,6 +98,11 @@ export type InternationalizationFieldToolbarDrawerShortcutsScaleUp = 'toolbarDra
 export type InternationalizationFieldToolbarDrawerShortcutsScaleDown = 'toolbarDrawerShortcutsScaleDown';
 export type InternationalizationFieldToolbarDrawerShortcutsToggleScale = 'toolbarDrawerShortcutsToggleScale';
 
+export type InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollUp = 'toolbarDrawerShortcutsArrowOrScrollUp';
+export type InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollDown = 'toolbarDrawerShortcutsArrowOrScrollDown';
+export type InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollLeft = 'toolbarDrawerShortcutsArrowOrScrollLeft';
+export type InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollRight = 'toolbarDrawerShortcutsArrowOrScrollRight';
+
 
 export type InternationalizationFieldType = InternationalizationFieldViewcubeFront
     | InternationalizationFieldViewcubeBack
@@ -173,85 +178,94 @@ export type InternationalizationFieldType = InternationalizationFieldViewcubeFro
     | InternationalizationFieldToolbarDrawerShortcutsToggleTranslate
     | InternationalizationFieldToolbarDrawerShortcutsScaleUp
     | InternationalizationFieldToolbarDrawerShortcutsScaleDown
-    | InternationalizationFieldToolbarDrawerShortcutsToggleScale;
+    | InternationalizationFieldToolbarDrawerShortcutsToggleScale
+    | InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollUp
+    | InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollDown
+    | InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollLeft
+    | InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollRight;
 
 
 export interface InternationalizationFields {
-    viewcubeFront: InternationalizationFieldViewcubeFront,
-    viewcubeBack: InternationalizationFieldViewcubeBack,
-    viewcubeLeft: InternationalizationFieldViewcubeLeft,
-    viewcubeRight: InternationalizationFieldViewcubeRight,
-    viewcubeTop: InternationalizationFieldViewcubeTop,
-    viewcubeBase: InternationalizationFieldViewcubeBase,
+    viewcubeFront: InternationalizationFieldViewcubeFront;
+    viewcubeBack: InternationalizationFieldViewcubeBack;
+    viewcubeLeft: InternationalizationFieldViewcubeLeft;
+    viewcubeRight: InternationalizationFieldViewcubeRight;
+    viewcubeTop: InternationalizationFieldViewcubeTop;
+    viewcubeBase: InternationalizationFieldViewcubeBase;
 
-    toolbarTransformRotate: InternationalizationFieldToolbarTransformRotate,
-    toolbarTransformScale: InternationalizationFieldToolbarTransformScale,
-    toolbarTransformTranslate: InternationalizationFieldToolbarTransformTranslate,
+    toolbarTransformRotate: InternationalizationFieldToolbarTransformRotate;
+    toolbarTransformScale: InternationalizationFieldToolbarTransformScale;
+    toolbarTransformTranslate: InternationalizationFieldToolbarTransformTranslate;
 
-    toolbarDrawerThemesTitle: InternationalizationFieldToolbarDrawerThemesTitle,
-    toolbarDrawerThemesGeneralTheme: InternationalizationFieldToolbarDrawerThemesGeneralTheme,
-    toolbarDrawerThemesInteractionTheme: InternationalizationFieldToolbarDrawerThemesInteractionTheme,
-    toolbarDrawerThemesLanguage: InternationalizationFieldToolbarDrawerThemesLanguage,
+    toolbarDrawerThemesTitle: InternationalizationFieldToolbarDrawerThemesTitle;
+    toolbarDrawerThemesGeneralTheme: InternationalizationFieldToolbarDrawerThemesGeneralTheme;
+    toolbarDrawerThemesInteractionTheme: InternationalizationFieldToolbarDrawerThemesInteractionTheme;
+    toolbarDrawerThemesLanguage: InternationalizationFieldToolbarDrawerThemesLanguage;
 
-    toolbarDrawerTransformTitle: InternationalizationFieldToolbarDrawerTransformTitle,
-    toolbarDrawerTransformMultiModeTransform: InternationalizationFieldToolbarDrawerTransformMultiModeTransform,
-    toolbarDrawerTransformAllowRotationX: InternationalizationFieldToolbarDrawerTransformAllowRotationX,
-    toolbarDrawerTransformAllowRotationY: InternationalizationFieldToolbarDrawerTransformAllowRotationY,
-    toolbarDrawerTransformAllowTranslationX: InternationalizationFieldToolbarDrawerTransformAllowTranslationX,
-    toolbarDrawerTransformAllowTranslationY: InternationalizationFieldToolbarDrawerTransformAllowTranslationY,
-    toolbarDrawerTransformAllowTranslationZ: InternationalizationFieldToolbarDrawerTransformAllowTranslationZ,
-    toolbarDrawerTransformAllowScale: InternationalizationFieldToolbarDrawerTransformAllowScale,
-    toolbarDrawerTransformTouchTransform: InternationalizationFieldToolbarDrawerTransformTouchTransform,
+    toolbarDrawerTransformTitle: InternationalizationFieldToolbarDrawerTransformTitle;
+    toolbarDrawerTransformMultiModeTransform: InternationalizationFieldToolbarDrawerTransformMultiModeTransform;
+    toolbarDrawerTransformAllowRotationX: InternationalizationFieldToolbarDrawerTransformAllowRotationX;
+    toolbarDrawerTransformAllowRotationY: InternationalizationFieldToolbarDrawerTransformAllowRotationY;
+    toolbarDrawerTransformAllowTranslationX: InternationalizationFieldToolbarDrawerTransformAllowTranslationX;
+    toolbarDrawerTransformAllowTranslationY: InternationalizationFieldToolbarDrawerTransformAllowTranslationY;
+    toolbarDrawerTransformAllowTranslationZ: InternationalizationFieldToolbarDrawerTransformAllowTranslationZ;
+    toolbarDrawerTransformAllowScale: InternationalizationFieldToolbarDrawerTransformAllowScale;
+    toolbarDrawerTransformTouchTransform: InternationalizationFieldToolbarDrawerTransformTouchTransform;
 
-    toolbarDrawerSpaceTitle: InternationalizationFieldToolbarDrawerSpaceTitle,
-    toolbarDrawerSpaceTransparentUserInterface: InternationalizationFieldToolbarDrawerSpaceTransparentUserInterface,
-    toolbarDrawerSpaceShowTransformOrigin: InternationalizationFieldToolbarDrawerSpaceShowTransformOrigin,
-    toolbarDrawerSpaceTransformOriginSize: InternationalizationFieldToolbarDrawerSpaceTransformOriginSize,
-    toolbarDrawerSpacePlaneOpacity: InternationalizationFieldToolbarDrawerSpacePlaneOpacity,
-    toolbarDrawerSpaceLayoutType: InternationalizationFieldToolbarDrawerSpaceLayoutType,
+    toolbarDrawerSpaceTitle: InternationalizationFieldToolbarDrawerSpaceTitle;
+    toolbarDrawerSpaceTransparentUserInterface: InternationalizationFieldToolbarDrawerSpaceTransparentUserInterface;
+    toolbarDrawerSpaceShowTransformOrigin: InternationalizationFieldToolbarDrawerSpaceShowTransformOrigin;
+    toolbarDrawerSpaceTransformOriginSize: InternationalizationFieldToolbarDrawerSpaceTransformOriginSize;
+    toolbarDrawerSpacePlaneOpacity: InternationalizationFieldToolbarDrawerSpacePlaneOpacity;
+    toolbarDrawerSpaceLayoutType: InternationalizationFieldToolbarDrawerSpaceLayoutType;
 
-    toolbarDrawerToolbarTitle: InternationalizationFieldToolbarDrawerToolbarTitle,
-    toolbarDrawerToolbarAlwaysOpaque: InternationalizationFieldToolbarDrawerToolbarAlwaysOpaque,
-    toolbarDrawerToolbarShowTransformIcons: InternationalizationFieldToolbarDrawerToolbarShowTransformIcons,
-    toolbarDrawerToolbarShowTransformArrows: InternationalizationFieldToolbarDrawerToolbarShowTransformArrows,
-    toolbarDrawerToolbarConcealToolbar: InternationalizationFieldToolbarDrawerToolbarConcealToolbar,
+    toolbarDrawerToolbarTitle: InternationalizationFieldToolbarDrawerToolbarTitle;
+    toolbarDrawerToolbarAlwaysOpaque: InternationalizationFieldToolbarDrawerToolbarAlwaysOpaque;
+    toolbarDrawerToolbarShowTransformIcons: InternationalizationFieldToolbarDrawerToolbarShowTransformIcons;
+    toolbarDrawerToolbarShowTransformArrows: InternationalizationFieldToolbarDrawerToolbarShowTransformArrows;
+    toolbarDrawerToolbarConcealToolbar: InternationalizationFieldToolbarDrawerToolbarConcealToolbar;
 
-    toolbarDrawerViewcubeTitle: InternationalizationFieldToolbarDrawerViewcubeTitle,
-    toolbarDrawerViewcubeShowViewcube: InternationalizationFieldToolbarDrawerViewcubeShowViewcube,
-    toolbarDrawerViewcubeShowTransformButtons: InternationalizationFieldToolbarDrawerViewcubeShowTransformButtons,
-    toolbarDrawerViewcubeAlwaysOpaque: InternationalizationFieldToolbarDrawerViewcubeAlwaysOpaque,
-    toolbarDrawerViewcubeConcealViewcube: InternationalizationFieldToolbarDrawerViewcubeConcealViewcube,
+    toolbarDrawerViewcubeTitle: InternationalizationFieldToolbarDrawerViewcubeTitle;
+    toolbarDrawerViewcubeShowViewcube: InternationalizationFieldToolbarDrawerViewcubeShowViewcube;
+    toolbarDrawerViewcubeShowTransformButtons: InternationalizationFieldToolbarDrawerViewcubeShowTransformButtons;
+    toolbarDrawerViewcubeAlwaysOpaque: InternationalizationFieldToolbarDrawerViewcubeAlwaysOpaque;
+    toolbarDrawerViewcubeConcealViewcube: InternationalizationFieldToolbarDrawerViewcubeConcealViewcube;
 
-    toolbarDrawerTechnicalTitle: InternationalizationFieldToolbarDrawerTechnicalTitle,
-    toolbarDrawerTechnicalCullingDistance: InternationalizationFieldToolbarDrawerTechnicalCullingDistance,
+    toolbarDrawerTechnicalTitle: InternationalizationFieldToolbarDrawerTechnicalTitle;
+    toolbarDrawerTechnicalCullingDistance: InternationalizationFieldToolbarDrawerTechnicalCullingDistance;
 
-    toolbarDrawerShortcutsTitle: InternationalizationFieldToolbarDrawerShortcutsTitle,
-    toolbarDrawerShortcutsToggleFirstPerson: InternationalizationFieldToolbarDrawerShortcutsToggleFirstPerson,
-    toolbarDrawerShortcutsMoveForward: InternationalizationFieldToolbarDrawerShortcutsMoveForward,
-    toolbarDrawerShortcutsMoveBackward: InternationalizationFieldToolbarDrawerShortcutsMoveBackward,
-    toolbarDrawerShortcutsMoveLeft: InternationalizationFieldToolbarDrawerShortcutsMoveLeft,
-    toolbarDrawerShortcutsMoveRight: InternationalizationFieldToolbarDrawerShortcutsMoveRight,
-    toolbarDrawerShortcutsMoveUp: InternationalizationFieldToolbarDrawerShortcutsMoveUp,
-    toolbarDrawerShortcutsMoveDown: InternationalizationFieldToolbarDrawerShortcutsMoveDown,
-    toolbarDrawerShortcutsTurnLeft: InternationalizationFieldToolbarDrawerShortcutsTurnLeft,
-    toolbarDrawerShortcutsTurnRight: InternationalizationFieldToolbarDrawerShortcutsTurnRight,
-    toolbarDrawerShortcutsTurnUp: InternationalizationFieldToolbarDrawerShortcutsTurnUp,
-    toolbarDrawerShortcutsTurnDown: InternationalizationFieldToolbarDrawerShortcutsTurnDown,
-    toolbarDrawerShortcutsRotateUp: InternationalizationFieldToolbarDrawerShortcutsRotateUp,
-    toolbarDrawerShortcutsRotateDown: InternationalizationFieldToolbarDrawerShortcutsRotateDown,
-    toolbarDrawerShortcutsRotateLeft: InternationalizationFieldToolbarDrawerShortcutsRotateLeft,
-    toolbarDrawerShortcutsRotateRight: InternationalizationFieldToolbarDrawerShortcutsRotateRight,
-    toolbarDrawerShortcutsToggleRotate: InternationalizationFieldToolbarDrawerShortcutsToggleRotate,
-    toolbarDrawerShortcutsTranslateUp: InternationalizationFieldToolbarDrawerShortcutsTranslateUp,
-    toolbarDrawerShortcutsTranslateDown: InternationalizationFieldToolbarDrawerShortcutsTranslateDown,
-    toolbarDrawerShortcutsTranslateLeft: InternationalizationFieldToolbarDrawerShortcutsTranslateLeft,
-    toolbarDrawerShortcutsTranslateRight: InternationalizationFieldToolbarDrawerShortcutsTranslateRight,
-    toolbarDrawerShortcutsTranslateIn: InternationalizationFieldToolbarDrawerShortcutsTranslateIn,
-    toolbarDrawerShortcutsTranslateOut: InternationalizationFieldToolbarDrawerShortcutsTranslateOut,
-    toolbarDrawerShortcutsToggleTranslate: InternationalizationFieldToolbarDrawerShortcutsToggleTranslate,
-    toolbarDrawerShortcutsScaleUp: InternationalizationFieldToolbarDrawerShortcutsScaleUp,
-    toolbarDrawerShortcutsScaleDown: InternationalizationFieldToolbarDrawerShortcutsScaleDown,
-    toolbarDrawerShortcutsToggleScale: InternationalizationFieldToolbarDrawerShortcutsToggleScale,
+    toolbarDrawerShortcutsTitle: InternationalizationFieldToolbarDrawerShortcutsTitle;
+    toolbarDrawerShortcutsToggleFirstPerson: InternationalizationFieldToolbarDrawerShortcutsToggleFirstPerson;
+    toolbarDrawerShortcutsMoveForward: InternationalizationFieldToolbarDrawerShortcutsMoveForward;
+    toolbarDrawerShortcutsMoveBackward: InternationalizationFieldToolbarDrawerShortcutsMoveBackward;
+    toolbarDrawerShortcutsMoveLeft: InternationalizationFieldToolbarDrawerShortcutsMoveLeft;
+    toolbarDrawerShortcutsMoveRight: InternationalizationFieldToolbarDrawerShortcutsMoveRight;
+    toolbarDrawerShortcutsMoveUp: InternationalizationFieldToolbarDrawerShortcutsMoveUp;
+    toolbarDrawerShortcutsMoveDown: InternationalizationFieldToolbarDrawerShortcutsMoveDown;
+    toolbarDrawerShortcutsTurnLeft: InternationalizationFieldToolbarDrawerShortcutsTurnLeft;
+    toolbarDrawerShortcutsTurnRight: InternationalizationFieldToolbarDrawerShortcutsTurnRight;
+    toolbarDrawerShortcutsTurnUp: InternationalizationFieldToolbarDrawerShortcutsTurnUp;
+    toolbarDrawerShortcutsTurnDown: InternationalizationFieldToolbarDrawerShortcutsTurnDown;
+    toolbarDrawerShortcutsRotateUp: InternationalizationFieldToolbarDrawerShortcutsRotateUp;
+    toolbarDrawerShortcutsRotateDown: InternationalizationFieldToolbarDrawerShortcutsRotateDown;
+    toolbarDrawerShortcutsRotateLeft: InternationalizationFieldToolbarDrawerShortcutsRotateLeft;
+    toolbarDrawerShortcutsRotateRight: InternationalizationFieldToolbarDrawerShortcutsRotateRight;
+    toolbarDrawerShortcutsToggleRotate: InternationalizationFieldToolbarDrawerShortcutsToggleRotate;
+    toolbarDrawerShortcutsTranslateUp: InternationalizationFieldToolbarDrawerShortcutsTranslateUp;
+    toolbarDrawerShortcutsTranslateDown: InternationalizationFieldToolbarDrawerShortcutsTranslateDown;
+    toolbarDrawerShortcutsTranslateLeft: InternationalizationFieldToolbarDrawerShortcutsTranslateLeft;
+    toolbarDrawerShortcutsTranslateRight: InternationalizationFieldToolbarDrawerShortcutsTranslateRight;
+    toolbarDrawerShortcutsTranslateIn: InternationalizationFieldToolbarDrawerShortcutsTranslateIn;
+    toolbarDrawerShortcutsTranslateOut: InternationalizationFieldToolbarDrawerShortcutsTranslateOut;
+    toolbarDrawerShortcutsToggleTranslate: InternationalizationFieldToolbarDrawerShortcutsToggleTranslate;
+    toolbarDrawerShortcutsScaleUp: InternationalizationFieldToolbarDrawerShortcutsScaleUp;
+    toolbarDrawerShortcutsScaleDown: InternationalizationFieldToolbarDrawerShortcutsScaleDown;
+    toolbarDrawerShortcutsToggleScale: InternationalizationFieldToolbarDrawerShortcutsToggleScale;
+
+    toolbarDrawerShortcutsArrowOrScrollUp: InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollUp;
+    toolbarDrawerShortcutsArrowOrScrollDown: InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollDown;
+    toolbarDrawerShortcutsArrowOrScrollLeft: InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollLeft;
+    toolbarDrawerShortcutsArrowOrScrollRight: InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollRight;
 }
 
 
@@ -332,4 +346,9 @@ export interface Internationalization {
     toolbarDrawerShortcutsScaleUp: string;
     toolbarDrawerShortcutsScaleDown: string;
     toolbarDrawerShortcutsToggleScale: string;
+
+    toolbarDrawerShortcutsArrowOrScrollUp: string;
+    toolbarDrawerShortcutsArrowOrScrollDown: string;
+    toolbarDrawerShortcutsArrowOrScrollLeft: string;
+    toolbarDrawerShortcutsArrowOrScrollRight: string;
 }

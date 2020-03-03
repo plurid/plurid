@@ -4,6 +4,10 @@ import {
 } from '../enumerations';
 
 import {
+    ShortcutNames,
+} from '../interfaces/internal/shortcuts';
+
+import {
     fields as internationalizationFields,
 } from './internationalization';
 
@@ -13,7 +17,7 @@ import {
 
 
 
-export const shortcutsNames: any = {
+export const shortcutsNames: ShortcutNames = {
     TOGGLE_FIRST_PERSON: {
         name: internationalizationFields.toolbarDrawerShortcutsToggleFirstPerson,
         key: 'f',
@@ -63,22 +67,26 @@ export const shortcutsNames: any = {
 
     ROTATE_UP: {
         name: internationalizationFields.toolbarDrawerShortcutsRotateUp,
-        key: '↑ or scroll up',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollUp,
         modifier: keyModifiers.SHIFT,
     },
     ROTATE_DOWN: {
         name: internationalizationFields.toolbarDrawerShortcutsRotateDown,
-        key: '↓ or scroll down',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollDown,
         modifier: keyModifiers.SHIFT,
     },
     ROTATE_LEFT: {
         name: internationalizationFields.toolbarDrawerShortcutsRotateLeft,
-        key: '← or scroll left',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollLeft,
         modifier: keyModifiers.SHIFT,
     },
     ROTATE_RIGHT: {
         name: internationalizationFields.toolbarDrawerShortcutsRotateRight,
-        key: '→ or scroll right',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollRight,
         modifier: keyModifiers.SHIFT,
     },
     TOGGLE_ROTATE: {
@@ -88,32 +96,38 @@ export const shortcutsNames: any = {
 
     TRANSLATE_UP: {
         name: internationalizationFields.toolbarDrawerShortcutsTranslateUp,
-        key: '↑ or scroll up',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollUp,
         modifier: keyModifiers.ALT,
     },
     TRANSLATE_DOWN: {
         name: internationalizationFields.toolbarDrawerShortcutsTranslateDown,
-        key: '↓ or scroll down',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollDown,
         modifier: keyModifiers.ALT,
     },
     TRANSLATE_LEFT: {
         name: internationalizationFields.toolbarDrawerShortcutsTranslateLeft,
-        key: '← or scroll left',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollLeft,
         modifier: keyModifiers.ALT,
     },
     TRANSLATE_RIGHT: {
         name: internationalizationFields.toolbarDrawerShortcutsTranslateRight,
-        key: '→ or scroll right',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollRight,
         modifier: keyModifiers.ALT,
     },
     TRANSLATE_IN: {
         name: internationalizationFields.toolbarDrawerShortcutsTranslateIn,
-        key: '↑ or scroll up',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollUp,
         modifier: [keyModifiers.SHIFT, keyModifiers.ALT],
     },
     TRANSLATE_OUT: {
         name: internationalizationFields.toolbarDrawerShortcutsTranslateOut,
-        key: '↓ or scroll down',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollDown,
         modifier: [keyModifiers.SHIFT, keyModifiers.ALT],
     },
     TOGGLE_TRANSLATE: {
@@ -123,12 +137,14 @@ export const shortcutsNames: any = {
 
     SCALE_UP: {
         name: internationalizationFields.toolbarDrawerShortcutsScaleUp,
-        key: '↑ or scroll up',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollUp,
         modifier: keyModifiers.CTRLMETA,
     },
     SCALE_DOWN: {
         name: internationalizationFields.toolbarDrawerShortcutsScaleDown,
-        key: '↓ or scroll down',
+        internationalizedKey: true,
+        key: internationalizationFields.toolbarDrawerShortcutsArrowOrScrollDown,
         modifier: keyModifiers.CTRLMETA,
     },
     TOGGLE_SCALE: {

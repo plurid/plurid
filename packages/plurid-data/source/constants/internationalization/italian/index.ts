@@ -80,6 +80,11 @@ const italian: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'scalare a su',
     toolbarDrawerShortcutsScaleDown: 'scalare a giù',
     toolbarDrawerShortcutsToggleScale: 'attiva / disattiva la scala',
+
+    toolbarDrawerShortcutsArrowOrScrollUp: '↑ o scorrere verso l\'alto',
+    toolbarDrawerShortcutsArrowOrScrollDown: '↓ o scorrere verso il basso',
+    toolbarDrawerShortcutsArrowOrScrollLeft: '← o scorrere verso sinistra',
+    toolbarDrawerShortcutsArrowOrScrollRight: '→ o scorrere verso destra',
 };
 
 
