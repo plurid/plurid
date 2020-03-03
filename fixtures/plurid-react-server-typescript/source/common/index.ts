@@ -1,7 +1,7 @@
-import * as router from './router';
+import * as routing from './routing';
 
 
 
 export {
-    router,
+    routing,
 }

@@ -17,6 +17,10 @@ import {
     STRIPE_API_KEY as stripeAPIKey,
 } from '../client/App/data/constants';
 
+import {
+    routing,
+} from '../common';
+
 
 
 const PORT = 33000;
