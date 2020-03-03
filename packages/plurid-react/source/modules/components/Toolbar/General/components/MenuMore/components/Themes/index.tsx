@@ -2,6 +2,7 @@ import React, {
     useState,
     useEffect,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -97,6 +98,12 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
         dispatchSetConfigurationThemeInteractionAction(selectedTheme);
     }
 
+    const setLanguage = (
+        selectedLanguage: any,
+    ) => {
+
+    }
+
     useEffect(() => {
         if (typeof selectedTheme === 'object') {
             setGeneralThemeName(selectedTheme.general);
@@ -125,15 +132,27 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
                 />
             </StyledMoreMenuItem>
 
-            <StyledMoreMenuItem
-                last={true}
-            >
+            <StyledMoreMenuItem>
                 {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerThemesInteractionTheme)}
 
                 <PluridDropdown
                     selectables={Object.keys(themes)}
                     selected={interactionThemeName}
                     atSelect={(selection) => setInteractionTheme(selection)}
+                    theme={interactionTheme}
+                    heightItems={3}
+                />
+            </StyledMoreMenuItem>
+
+            <StyledMoreMenuItem
+                last={true}
+            >
+                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerThemesLanguage)}
+
+                <PluridDropdown
+                    selectables={internationalization.languages}
+                    selected={stateLanguage}
+                    atSelect={(selection) => setLanguage(selection)}
                     theme={interactionTheme}
                     heightItems={3}
                 />
