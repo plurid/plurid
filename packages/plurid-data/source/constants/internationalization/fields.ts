@@ -16,10 +16,10 @@ const internationalizationFields: InternationalizationFields = {
     toolbarTransformScale: 'toolbarTransformScale',
     toolbarTransformTranslate: 'toolbarTransformTranslate',
 
-    toolbarDrawerThemesTitle: 'toolbarDrawerThemesTitle',
-    toolbarDrawerThemesGeneralTheme: 'toolbarDrawerThemesGeneralTheme',
-    toolbarDrawerThemesInteractionTheme: 'toolbarDrawerThemesInteractionTheme',
-    toolbarDrawerThemesLanguage: 'toolbarDrawerThemesLanguage',
+    toolbarDrawerGlobalTitle: 'toolbarDrawerGlobalTitle',
+    toolbarDrawerGlobalGeneralTheme: 'toolbarDrawerGlobalGeneralTheme',
+    toolbarDrawerGlobalInteractionTheme: 'toolbarDrawerGlobalInteractionTheme',
+    toolbarDrawerGlobalLanguage: 'toolbarDrawerGlobalLanguage',
 
     toolbarDrawerTransformTitle: 'toolbarDrawerTransformTitle',
     toolbarDrawerTransformMultiModeTransform: 'toolbarDrawerTransformMultiModeTransform',

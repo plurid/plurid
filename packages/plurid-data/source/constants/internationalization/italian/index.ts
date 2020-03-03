@@ -16,10 +16,10 @@ const italian: Internationalization = {
     toolbarTransformScale: 'scalare',
     toolbarTransformTranslate: 'trasferire',
 
-    toolbarDrawerThemesTitle: 'temi',
-    toolbarDrawerThemesGeneralTheme: 'tema generale',
-    toolbarDrawerThemesInteractionTheme: 'tema di interazione',
-    toolbarDrawerThemesLanguage: 'linguaggio',
+    toolbarDrawerGlobalTitle: 'globale',
+    toolbarDrawerGlobalGeneralTheme: 'tema generale',
+    toolbarDrawerGlobalInteractionTheme: 'tema di interazione',
+    toolbarDrawerGlobalLanguage: 'linguaggio',
 
     toolbarDrawerTransformTitle: 'trasformare',
     toolbarDrawerTransformMultiModeTransform: 'trasformazione multimodale',

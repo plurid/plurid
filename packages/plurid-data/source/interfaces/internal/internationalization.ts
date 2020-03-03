@@ -33,10 +33,10 @@ export type InternationalizationFieldToolbarTransformRotate = 'toolbarTransformR
 export type InternationalizationFieldToolbarTransformScale = 'toolbarTransformScale';
 export type InternationalizationFieldToolbarTransformTranslate = 'toolbarTransformTranslate';
 
-export type InternationalizationFieldToolbarDrawerThemesTitle = 'toolbarDrawerThemesTitle';
-export type InternationalizationFieldToolbarDrawerThemesGeneralTheme = 'toolbarDrawerThemesGeneralTheme';
-export type InternationalizationFieldToolbarDrawerThemesInteractionTheme = 'toolbarDrawerThemesInteractionTheme';
-export type InternationalizationFieldToolbarDrawerThemesLanguage = 'toolbarDrawerThemesLanguage';
+export type InternationalizationFieldToolbarDrawerGlobalTitle = 'toolbarDrawerGlobalTitle';
+export type InternationalizationFieldToolbarDrawerGlobalGeneralTheme = 'toolbarDrawerGlobalGeneralTheme';
+export type InternationalizationFieldToolbarDrawerGlobalInteractionTheme = 'toolbarDrawerGlobalInteractionTheme';
+export type InternationalizationFieldToolbarDrawerGlobalLanguage = 'toolbarDrawerGlobalLanguage';
 
 export type InternationalizationFieldToolbarDrawerTransformTitle = 'toolbarDrawerTransformTitle';
 export type InternationalizationFieldToolbarDrawerTransformMultiModeTransform = 'toolbarDrawerTransformMultiModeTransform';
@@ -115,10 +115,10 @@ export type InternationalizationFieldType = InternationalizationFieldViewcubeFro
     | InternationalizationFieldToolbarTransformScale
     | InternationalizationFieldToolbarTransformTranslate
 
-    | InternationalizationFieldToolbarDrawerThemesTitle
-    | InternationalizationFieldToolbarDrawerThemesGeneralTheme
-    | InternationalizationFieldToolbarDrawerThemesInteractionTheme
-    | InternationalizationFieldToolbarDrawerThemesLanguage
+    | InternationalizationFieldToolbarDrawerGlobalTitle
+    | InternationalizationFieldToolbarDrawerGlobalGeneralTheme
+    | InternationalizationFieldToolbarDrawerGlobalInteractionTheme
+    | InternationalizationFieldToolbarDrawerGlobalLanguage
 
     | InternationalizationFieldToolbarDrawerTransformTitle
     | InternationalizationFieldToolbarDrawerTransformMultiModeTransform
@@ -197,10 +197,10 @@ export interface InternationalizationFields {
     toolbarTransformScale: InternationalizationFieldToolbarTransformScale;
     toolbarTransformTranslate: InternationalizationFieldToolbarTransformTranslate;
 
-    toolbarDrawerThemesTitle: InternationalizationFieldToolbarDrawerThemesTitle;
-    toolbarDrawerThemesGeneralTheme: InternationalizationFieldToolbarDrawerThemesGeneralTheme;
-    toolbarDrawerThemesInteractionTheme: InternationalizationFieldToolbarDrawerThemesInteractionTheme;
-    toolbarDrawerThemesLanguage: InternationalizationFieldToolbarDrawerThemesLanguage;
+    toolbarDrawerGlobalTitle: InternationalizationFieldToolbarDrawerGlobalTitle;
+    toolbarDrawerGlobalGeneralTheme: InternationalizationFieldToolbarDrawerGlobalGeneralTheme;
+    toolbarDrawerGlobalInteractionTheme: InternationalizationFieldToolbarDrawerGlobalInteractionTheme;
+    toolbarDrawerGlobalLanguage: InternationalizationFieldToolbarDrawerGlobalLanguage;
 
     toolbarDrawerTransformTitle: InternationalizationFieldToolbarDrawerTransformTitle;
     toolbarDrawerTransformMultiModeTransform: InternationalizationFieldToolbarDrawerTransformMultiModeTransform;
@@ -282,10 +282,10 @@ export interface Internationalization {
     toolbarTransformScale: string;
     toolbarTransformTranslate: string;
 
-    toolbarDrawerThemesTitle: string;
-    toolbarDrawerThemesGeneralTheme: string;
-    toolbarDrawerThemesInteractionTheme: string;
-    toolbarDrawerThemesLanguage: string;
+    toolbarDrawerGlobalTitle: string;
+    toolbarDrawerGlobalGeneralTheme: string;
+    toolbarDrawerGlobalInteractionTheme: string;
+    toolbarDrawerGlobalLanguage: string;
 
     toolbarDrawerTransformTitle: string;
     toolbarDrawerTransformMultiModeTransform: string;

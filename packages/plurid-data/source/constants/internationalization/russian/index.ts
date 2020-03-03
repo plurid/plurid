@@ -16,10 +16,10 @@ const russian: Internationalization = {
     toolbarTransformScale: 'масштаб',
     toolbarTransformTranslate: 'перевести',
 
-    toolbarDrawerThemesTitle: 'темы',
-    toolbarDrawerThemesGeneralTheme: 'общая тема',
-    toolbarDrawerThemesInteractionTheme: 'тема взаимодействия',
-    toolbarDrawerThemesLanguage: 'язык',
+    toolbarDrawerGlobalTitle: 'Глобальный',
+    toolbarDrawerGlobalGeneralTheme: 'общая тема',
+    toolbarDrawerGlobalInteractionTheme: 'тема взаимодействия',
+    toolbarDrawerGlobalLanguage: 'язык',
 
     toolbarDrawerTransformTitle: 'преобразование',
     toolbarDrawerTransformMultiModeTransform: 'многорежимное преобразование',

@@ -16,10 +16,10 @@ const chinese: Internationalization = {
     toolbarTransformScale: '规模',
     toolbarTransformTranslate: '翻译',
 
-    toolbarDrawerThemesTitle: '主题',
-    toolbarDrawerThemesGeneralTheme: '一般主题',
-    toolbarDrawerThemesInteractionTheme: '互动主题',
-    toolbarDrawerThemesLanguage: '语言',
+    toolbarDrawerGlobalTitle: '全球',
+    toolbarDrawerGlobalGeneralTheme: '一般主题',
+    toolbarDrawerGlobalInteractionTheme: '互动主题',
+    toolbarDrawerGlobalLanguage: '语言',
 
     toolbarDrawerTransformTitle: '转变',
     toolbarDrawerTransformMultiModeTransform: '多模变换',

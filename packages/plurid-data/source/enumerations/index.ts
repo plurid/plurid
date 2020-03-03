@@ -74,7 +74,7 @@ export enum TRANSFORM_TOUCHES {
 
 export enum TOOLBAR_DRAWERS {
     ALL = 'ALL',
-    THEMES = 'THEMES',
+    GLOBAL = 'GLOBAL',
     TRANSFORM = 'TRANSFORM',
     SPACE = 'SPACE',
     TOOLBAR = 'TOOLBAR',
