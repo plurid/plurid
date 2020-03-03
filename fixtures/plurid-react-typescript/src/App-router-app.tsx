@@ -56,8 +56,9 @@ const App = () => {
     const [pluridView, setPluridView] = useState<string[]>([]);
 
 
-    const appConfiguration = {
+    const appConfiguration: any = {
         theme: 'plurid',
+        language: 'romanian',
         space: {
             layout: {
                 type: SPACE_LAYOUT.COLUMNS,
