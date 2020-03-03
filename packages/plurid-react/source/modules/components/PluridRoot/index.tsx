@@ -132,7 +132,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     ]);
 
     const activeDocument = documents[activeDocumentID];
-    console.log('activeDocument', activeDocument);
+    // console.log('activeDocument', activeDocument);
     if (!activeDocument) {
         return (<></>);
     }
