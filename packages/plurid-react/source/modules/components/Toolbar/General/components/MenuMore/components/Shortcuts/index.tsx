@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -8,11 +9,15 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    PluridConfiguration,
-
     defaultShortcuts,
     shortcutsNames,
+
+    PluridConfiguration,
 } from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
 
 import {
     StyledMoreMenuItem,
@@ -40,15 +45,24 @@ type MenuMoreShortcutsProperties = MenuMoreShortcutsOwnProperties
     & MenuMoreShortcutsStateProperties
     & MenuMoreShortcutsDispatchProperties;
 
-const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (properties) => {
+const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
         interactionTheme,
-        // configuration,
+        configuration,
 
         /** dispatch */
     } = properties;
 
+    const {
+        language,
+    } = configuration;
+
+
+    /** render */
     return (
         <>
             {defaultShortcuts.map((shortcut, index) => {
@@ -67,6 +81,8 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (properties) =>
                         ? modifier + ' +'
                         : '';
 
+                const internationalizedName = internatiolate(language, name);
+
                 return (
                     <StyledMoreMenuItem
                         key={name}
@@ -79,7 +95,7 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (properties) =>
                         last={index === defaultShortcuts.length - 1 ? true : false}
                     >
                         <div>
-                            {name}
+                            {internationalizedName}
                         </div>
 
                         <div>
