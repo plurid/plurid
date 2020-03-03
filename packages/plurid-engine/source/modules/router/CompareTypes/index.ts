@@ -4,21 +4,24 @@ export type CompareTypeLessThan = '<';
 export type CompareTypeEqualGreaterThan = '>=';
 export type CompareTypeGreaterThan = '>';
 
+
 export type CompareType = CompareTypeEqual
     | CompareTypeEqualLessThan
     | CompareTypeLessThan
     | CompareTypeEqualGreaterThan
     | CompareTypeGreaterThan;
 
-export interface ICompareTypes {
-    equal: '==',
-    equalLessThan: '<=',
-    lessThan: '<',
-    equalGreaterThan: '>=',
-    greaterThan: '>',
+
+export interface CompareTypes {
+    equal: CompareTypeEqual;
+    equalLessThan: CompareTypeEqualLessThan;
+    lessThan: CompareTypeLessThan;
+    equalGreaterThan: CompareTypeEqualGreaterThan;
+    greaterThan: CompareTypeGreaterThan;
 }
 
-export const compareTypes: ICompareTypes = {
+
+export const compareTypes: CompareTypes = {
     equal: '==',
     equalLessThan: '<=',
     lessThan: '<',
