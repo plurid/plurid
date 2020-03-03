@@ -23,6 +23,7 @@ import {
     Indexed,
     PluridInternalStateDocument,
     PluridConfiguration,
+    PluridRouterRoute,
 } from '@plurid/plurid-data';
 
 import {
@@ -193,9 +194,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
-        const routes: router.Route<any>[] = Object.values(pages).map(page => {
-            const route: router.Route<any> =  {
-                location: page.path,
+        const routes: PluridRouterRoute<any>[] = Object.values(pages).map(page => {
+            const route: PluridRouterRoute<any> =  {
+                path: page.path,
                 view: '',
             };
             return route;
@@ -210,7 +211,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         // const matchedPage: any = undefined;
 
         if (matchedRoute) {
-            const page = Object.values(pages).find(p => p.path === matchedRoute.route.location);
+            const page = Object.values(pages).find(p => p.path === matchedRoute.route.path);
             if (!page) {
                 return;
             }
