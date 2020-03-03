@@ -52,6 +52,7 @@ interface MenuMoreThemesDispatchProperties {
 
     dispatchSetConfigurationThemeGeneralAction: typeof actions.configuration.setConfigurationThemeGeneralAction;
     dispatchSetConfigurationThemeInteractionAction: typeof actions.configuration.setConfigurationThemeInteractionAction;
+    dispatchSetConfigurationLanguage: typeof actions.configuration.setConfigurationLanguageAction;
 }
 
 type MenuMoreThemesProperties = MenuMoreThemesOwnProperties
@@ -73,6 +74,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
         dispatchSetInteractionTheme,
         dispatchSetConfigurationThemeGeneralAction,
         dispatchSetConfigurationThemeInteractionAction,
+        dispatchSetConfigurationLanguage,
     } = properties;
 
     const selectedTheme = configuration.theme;
@@ -101,7 +103,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
     const setLanguage = (
         selectedLanguage: any,
     ) => {
-
+        dispatchSetConfigurationLanguage(selectedLanguage);
     }
 
     useEffect(() => {
@@ -179,6 +181,11 @@ const mapDispatchToProps = (
     ),
     dispatchSetConfigurationThemeInteractionAction: (theme: string) => dispatch(
         actions.configuration.setConfigurationThemeInteractionAction(theme)
+    ),
+    dispatchSetConfigurationLanguage: (
+        language,
+    ) => dispatch(
+        actions.configuration.setConfigurationLanguageAction(language)
     ),
 
     dispatchSetGeneralTheme: (theme: Theme) => dispatch(
