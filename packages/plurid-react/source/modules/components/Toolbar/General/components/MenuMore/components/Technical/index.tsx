@@ -9,6 +9,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import {
     internationalization,
 
+    PluridConfiguration,
     InternationalizationLanguageType,
 } from '@plurid/plurid-data';
 
@@ -40,6 +41,7 @@ interface MenuMoreTechnicalOwnProperties {
 
 interface MenuMoreTechnicalStateProperties {
     stateLanguage: InternationalizationLanguageType;
+    stateConfiguration: PluridConfiguration;
     stateInteractionTheme: Theme;
 }
 
@@ -57,14 +59,19 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
     const {
         /** state */
         stateLanguage,
+        stateConfiguration,
         stateInteractionTheme,
 
         /** dispatch */
     } = properties;
 
+    const {
+        cullingDistance,
+    } = stateConfiguration.space;
+
 
     /** state */
-    const [localCullingDistance, setLocalCullingDistance] = useState(10_500);
+    const [localCullingDistance, setLocalCullingDistance] = useState(cullingDistance);
 
 
     /** handlers */
@@ -88,8 +95,8 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
                     value={localCullingDistance}
                     atChange={handleCullingDistance}
                     min={1_000}
-                    max={20_000}
-                    defaultValue={10_500}
+                    max={5_000}
+                    defaultValue={1_500}
                 />
             </StyledMoreMenuItem>
         </>
@@ -101,6 +108,7 @@ const mapStateToProps = (
     state: AppState,
 ): MenuMoreTechnicalStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateConfiguration: selectors.configuration.getConfiguration(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
 });
 
