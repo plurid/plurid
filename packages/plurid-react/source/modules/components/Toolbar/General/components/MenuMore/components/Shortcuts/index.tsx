@@ -72,6 +72,7 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (
                 const shortcutData = shortcutsNames[type];
                 const {
                     name,
+                    internationalizedKey,
                     key,
                     modifier,
                 } = shortcutData;
@@ -82,6 +83,11 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (
                         : '';
 
                 const internationalizedName = internatiolate(language, name);
+
+                const keyAsAny: any = key;
+                const keyName = internationalizedKey
+                    ? internatiolate(language, keyAsAny)
+                    : key;
 
                 return (
                     <StyledMoreMenuItem
@@ -99,7 +105,7 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (
                         </div>
 
                         <div>
-                            {modifierString} {key}
+                            {modifierString} {keyName}
                         </div>
                     </StyledMoreMenuItem>
                 );
