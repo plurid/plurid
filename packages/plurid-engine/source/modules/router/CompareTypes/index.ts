@@ -1,24 +1,7 @@
-export type CompareTypeEqual = '==';
-export type CompareTypeEqualLessThan = '<=';
-export type CompareTypeLessThan = '<';
-export type CompareTypeEqualGreaterThan = '>=';
-export type CompareTypeGreaterThan = '>';
+import {
+    CompareTypes,
+} from '@plurid/plurid-data';
 
-
-export type CompareType = CompareTypeEqual
-    | CompareTypeEqualLessThan
-    | CompareTypeLessThan
-    | CompareTypeEqualGreaterThan
-    | CompareTypeGreaterThan;
-
-
-export interface CompareTypes {
-    equal: CompareTypeEqual;
-    equalLessThan: CompareTypeEqualLessThan;
-    lessThan: CompareTypeLessThan;
-    equalGreaterThan: CompareTypeEqualGreaterThan;
-    greaterThan: CompareTypeGreaterThan;
-}
 
 
 export const compareTypes: CompareTypes = {
