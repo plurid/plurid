@@ -12,8 +12,9 @@ import {
 } from '@plurid/plurid-icons-react';
 
 import {
-    TRANSFORM_MODES,
     internationalization,
+
+    TRANSFORM_MODES,
 
     InternationalizationLanguageType,
 } from '@plurid/plurid-data';
@@ -39,10 +40,6 @@ import selectors from '../../../../../services/state/selectors';
 import actions from '../../../../../services/state/actions';
 
 
-
-const {
-    internationalizationFields,
-} = internationalization;
 
 interface ToolbarRotateOwnProperties {
     showTransformButtons: boolean;
@@ -120,7 +117,7 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (properties) => {
                         </StyledIcon>
                     ) : (
                         <>
-                            {internatiolate(stateLanguage, internationalizationFields.toolbarTransformRotate)}
+                            {internatiolate(stateLanguage, internationalization.fields.toolbarTransformRotate)}
                         </>
                     )
                 }

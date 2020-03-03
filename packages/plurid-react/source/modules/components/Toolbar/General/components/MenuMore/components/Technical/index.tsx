@@ -7,6 +7,16 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
+    internationalization,
+
+    InternationalizationLanguageType,
+} from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
+
+import {
     Theme,
 } from '@plurid/plurid-themes';
 
@@ -29,6 +39,7 @@ interface MenuMoreTechnicalOwnProperties {
 }
 
 interface MenuMoreTechnicalStateProperties {
+    stateLanguage: InternationalizationLanguageType;
     stateInteractionTheme: Theme;
 }
 
@@ -45,6 +56,7 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
     /** properties */
     const {
         /** state */
+        stateLanguage,
         stateInteractionTheme,
 
         /** dispatch */
@@ -68,7 +80,7 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
         <>
             <StyledMoreMenuItem>
                 <div>
-                    culling distance
+                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTechnicalCullingDistance)}
                 </div>
 
                 <PluridSlider
@@ -88,6 +100,7 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): MenuMoreTechnicalStateProperties => ({
+    stateLanguage: selectors.configuration.getConfiguration(state).language,
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
 });
 

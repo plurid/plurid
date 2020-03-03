@@ -1,8 +1,13 @@
 import React from 'react';
 
 import {
+    internationalization,
+
     TOOLBAR_DRAWERS,
+
+    InternationalizationFieldType,
 } from '@plurid/plurid-data';
+
 
 import MenuMoreThemes from './components/Themes';
 import MenuMoreTransform from './components/Transform';
@@ -15,44 +20,44 @@ import MenuMoreShortcuts from './components/Shortcuts';
 
 
 interface MoreMenu {
-    name: string;
+    name: InternationalizationFieldType;
     drawer: keyof typeof TOOLBAR_DRAWERS,
     component: JSX.Element,
 }
 
 export const moreMenus: MoreMenu[] = [
     {
-        name: 'themes',
+        name: internationalization.fields.toolbarDrawerThemesTitle,
         drawer: TOOLBAR_DRAWERS.THEMES,
         component: (<MenuMoreThemes />),
     },
     {
-        name: 'transform',
+        name: internationalization.fields.toolbarDrawerTransformTitle,
         drawer: TOOLBAR_DRAWERS.TRANSFORM,
         component: (<MenuMoreTransform />),
     },
     {
-        name: 'space',
+        name: internationalization.fields.toolbarDrawerSpaceTitle,
         drawer: TOOLBAR_DRAWERS.SPACE,
         component: (<MenuMoreSpace />),
     },
     {
-        name: 'toolbar',
+        name: internationalization.fields.toolbarDrawerToolbarTitle,
         drawer: TOOLBAR_DRAWERS.TOOLBAR,
         component: (<MenuMoreToolbar />),
     },
     {
-        name: 'viewcube',
+        name: internationalization.fields.toolbarDrawerViewcubeTitle,
         drawer: TOOLBAR_DRAWERS.VIEWCUBE,
         component: (<MenuMoreViewcube />),
     },
     {
-        name: 'technical',
+        name: internationalization.fields.toolbarDrawerTechnicalTitle,
         drawer: TOOLBAR_DRAWERS.TECHNICAL,
         component: (<MenuMoreTechnical />),
     },
     {
-        name: 'shortcuts',
+        name: internationalization.fields.toolbarDrawerShortcutsTitle,
         drawer: TOOLBAR_DRAWERS.SHORTCUTS,
         component: (<MenuMoreShortcuts />),
     },

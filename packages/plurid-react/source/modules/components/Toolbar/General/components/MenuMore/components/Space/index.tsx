@@ -8,12 +8,18 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    PluridConfiguration,
+    internationalization,
     layoutNames,
 
     SIZES,
     LAYOUT_TYPES,
+
+    PluridConfiguration,
 } from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
 
 import {
     PluridDropdown,
@@ -53,7 +59,10 @@ type MenuMoreSpaceProperties = MenuMoreSpaceOwnProperties
     & MenuMoreSpaceStateProperties
     & MenuMoreSpaceDispatchProperties;
 
-const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
+const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
         interactionTheme,
@@ -72,6 +81,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
         transparentUI,
         space,
         elements,
+        language,
     } = configuration;
 
     const {
@@ -88,10 +98,12 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
 
     const planeOpacity = elements.plane.opacity;
 
+
+    /** render */
     return (
         <>
             <StyledMoreMenuItem>
-                transparent user interface
+                {internatiolate(language, internationalization.fields.toolbarDrawerSpaceTransparentUserInterface)}
 
                 <PluridSwitch
                     checked={transparentUI}
@@ -103,7 +115,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
             </StyledMoreMenuItem>
 
             <StyledMoreMenuItem>
-                show transform origin
+                {internatiolate(language, internationalization.fields.toolbarDrawerSpaceShowTransformOrigin)}
 
                 <PluridSwitch
                     checked={showTransformOrigin}
@@ -115,7 +127,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
             </StyledMoreMenuItem>
 
             <StyledMoreMenuItem>
-                transform origin size
+                {internatiolate(language, internationalization.fields.toolbarDrawerSpaceTransformOriginSize)}
 
                 <PluridDropdown
                     selectables={['small', 'normal', 'large']}
@@ -136,7 +148,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
             </StyledMoreMenuItem>
 
             <StyledMoreMenuItem>
-                plane opacity
+                {internatiolate(language, internationalization.fields.toolbarDrawerSpacePlaneOpacity)}
 
                 <PluridSlider
                     value={planeOpacity}
@@ -154,7 +166,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (properties) => {
             <StyledMoreMenuItem
                 last={true}
             >
-                layout type
+                {internatiolate(language, internationalization.fields.toolbarDrawerSpaceLayoutType)}
 
                 <PluridDropdown
                     selectables={[...Object.values(layoutNames)]}

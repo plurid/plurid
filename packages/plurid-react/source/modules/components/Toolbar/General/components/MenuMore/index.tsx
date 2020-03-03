@@ -14,7 +14,12 @@ import {
     TOOLBAR_DRAWERS,
 
     PluridConfiguration,
+    InternationalizationLanguageType,
 } from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
 
 import {
     useDebouncedCallback,
@@ -42,6 +47,7 @@ interface MoreMenuOwnProperties {
 }
 
 interface MoreMenuStateProperties {
+    stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
     toolbarMenuScrollPosition: number;
@@ -59,6 +65,7 @@ type MoreMenuProperties = MoreMenuOwnProperties
 const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
     const {
         /** state */
+        stateLanguage,
         interactionTheme,
         configuration,
         toolbarMenuScrollPosition,
@@ -128,10 +135,12 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                         component,
                     } = moreMenu;
 
+                    const internationalizedName = internatiolate(stateLanguage, name);
+
                     return (
                         <Drawer
                             key={name}
-                            heading={name}
+                            heading={internationalizedName}
                             items={(
                                 <>{component}</>
                             )}
@@ -149,6 +158,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): MoreMenuStateProperties => ({
+    stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
     toolbarMenuScrollPosition: selectors.ui.getToolbarScrollPosition(state),

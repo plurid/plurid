@@ -30,11 +30,6 @@ import selectors from '../../../../services/state/selectors';
 
 
 
-const {
-    internationalizationFields,
-} = internationalization;
-
-
 interface ViewcubeModelOwnProperties {
     mouseOver: boolean;
 }
@@ -98,7 +93,7 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                 >
                     <ViewcubeFace
                         face="front"
-                        faceText={internatiolate(stateLanguage, internationalizationFields.viewcubeFront)}
+                        faceText={internatiolate(stateLanguage, internationalization.fields.viewcubeFront)}
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
@@ -107,7 +102,7 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                     />
                     <ViewcubeFace
                         face="back"
-                        faceText={internatiolate(stateLanguage, internationalizationFields.viewcubeBack)}
+                        faceText={internatiolate(stateLanguage, internationalization.fields.viewcubeBack)}
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
@@ -116,7 +111,7 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                     />
                     <ViewcubeFace
                         face="left"
-                        faceText={internatiolate(stateLanguage, internationalizationFields.viewcubeLeft)}
+                        faceText={internatiolate(stateLanguage, internationalization.fields.viewcubeLeft)}
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
@@ -125,7 +120,7 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                     />
                     <ViewcubeFace
                         face="right"
-                        faceText={internatiolate(stateLanguage, internationalizationFields.viewcubeRight)}
+                        faceText={internatiolate(stateLanguage, internationalization.fields.viewcubeRight)}
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
@@ -134,7 +129,7 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                     />
                     <ViewcubeFace
                         face="top"
-                        faceText={internatiolate(stateLanguage, internationalizationFields.viewcubeTop)}
+                        faceText={internatiolate(stateLanguage, internationalization.fields.viewcubeTop)}
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}
@@ -143,7 +138,7 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
                     />
                     <ViewcubeFace
                         face="base"
-                        faceText={internatiolate(stateLanguage, internationalizationFields.viewcubeBase)}
+                        faceText={internatiolate(stateLanguage, internationalization.fields.viewcubeBase)}
                         mouseOver={mouseOver}
                         hoveredZone={hoveredZone}
                         setHoveredZone={setHoveredZone}

@@ -13,7 +13,14 @@ import {
 
 import {
     TRANSFORM_MODES,
+    internationalization,
+
+    InternationalizationLanguageType,
 } from '@plurid/plurid-data';
+
+import {
+    internatiolate,
+} from '@plurid/plurid-engine';
 
 import {
     StyledToolbarTranslate,
@@ -41,6 +48,7 @@ interface ToolbarTranslateOwnProperties {
 }
 
 interface ToolbarTranslateStateProperties {
+    stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
 }
 
@@ -64,6 +72,7 @@ const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (properties) => {
         toggleTransform,
 
         /** state */
+        stateLanguage,
         interactionTheme,
 
         /** dispatch */
@@ -106,7 +115,9 @@ const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (properties) => {
                             <PluridIconTranslate />
                         </StyledIcon>
                     ) : (
-                        <>translate</>
+                        <>
+                            {internatiolate(stateLanguage, internationalization.fields.toolbarTransformTranslate)}
+                        </>
                     )
                 }
             </StyledToolbarButton>
@@ -132,6 +143,7 @@ const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): ToolbarTranslateStateProperties => ({
+    stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 
