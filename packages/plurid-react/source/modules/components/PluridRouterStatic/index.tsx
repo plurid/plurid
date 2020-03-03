@@ -1,6 +1,10 @@
 import React from 'react';
 
 import {
+    PluridRouterRoute,
+} from '@plurid/plurid-data';
+
+import {
     router,
 } from '@plurid/plurid-engine';
 
@@ -17,7 +21,7 @@ interface RouteComponent<T> {
 
 interface PluridRouterStaticOwnProperties<T> {
     path: string;
-    routes: router.Route<T>[];
+    routes: PluridRouterRoute<T>[];
     components: RouteComponent<T>[];
 }
 

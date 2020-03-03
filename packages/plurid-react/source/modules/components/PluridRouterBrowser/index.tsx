@@ -6,6 +6,8 @@ import React, {
 
 import {
     PLURID_ROUTER_LOCATION_CHANGED,
+
+    PluridRouterRoute,
 } from '@plurid/plurid-data';
 
 import {
@@ -24,7 +26,7 @@ interface RouteComponent<T> {
 }
 
 interface PluridRouterBrowserOwnProperties<T> {
-    routes: router.Route<T>[];
+    routes: PluridRouterRoute<T>[];
     components: RouteComponent<T>[];
 }
 
