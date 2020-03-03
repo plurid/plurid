@@ -32,7 +32,7 @@ function PluridRouterStatic<T>(
     } = properties;
 
     const indexedComponents = indexing.create(components, 'view');
-    console.log('indexedComponents', indexedComponents);
+    // console.log('indexedComponents', indexedComponents);
     const pluridRouter = new router.default(routes);
 
     const matchedRoute = pluridRouter.match(path);
