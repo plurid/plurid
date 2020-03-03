@@ -11,6 +11,7 @@ import {
     TreePage,
     LinkCoordinates,
     PathParameters,
+    PluridRouterRoute,
 } from '@plurid/plurid-data';
 
 import {
@@ -33,9 +34,7 @@ import {
     getTreePageByPlaneID,
 } from '../utilities';
 
-import Router, {
-    Route,
-} from '../../router';
+import Router from '../../router';
 
 
 
@@ -157,9 +156,9 @@ export const assignPagesFromView = (
 
     const tree: TreePage[] = [];
 
-    const routes: Route<any>[] = pages.map(page => {
-        const route: Route<any> = {
-            location: page.path,
+    const routes: PluridRouterRoute<any>[] = pages.map(page => {
+        const route: PluridRouterRoute<any> = {
+            path: page.path,
             view: '',
         };
         return route;
@@ -175,7 +174,7 @@ export const assignPagesFromView = (
         const matchedPage = router.match(viewPagePath);
 
         if (matchedPage) {
-            const page = pages.find(p => p.path === matchedPage?.route.location);
+            const page = pages.find(p => p.path === matchedPage?.route.path);
             if (!page) {
                 break;
             }
