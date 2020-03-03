@@ -5,3 +5,4 @@ export * from './document';
 export * from './link';
 export * from './configuration';
 export * from './layout';
+export * from './router';
