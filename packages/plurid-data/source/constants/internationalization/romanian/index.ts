@@ -38,11 +38,11 @@ const romanian: Internationalization = {
     toolbarDrawerSpacePlaneOpacity: 'opacitate plan',
     toolbarDrawerSpaceLayoutType: 'tip amplasare',
 
-    toolbarDrawerToolbarTitle: 'unelte',
+    toolbarDrawerToolbarTitle: 'bară de unelte',
     toolbarDrawerToolbarAlwaysOpaque: 'mereu opac',
     toolbarDrawerToolbarShowTransformIcons: 'arată icoane transformare',
     toolbarDrawerToolbarShowTransformArrows: 'arată săgeți transformare',
-    toolbarDrawerToolbarConcealToolbar: 'ascunde unelte',
+    toolbarDrawerToolbarConcealToolbar: 'ascunde bara de unelte',
 
     toolbarDrawerViewcubeTitle: 'cub',
     toolbarDrawerViewcubeShowViewcube: 'arată cub',
