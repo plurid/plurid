@@ -1,10 +1,13 @@
 import {
+    CompareType,
+} from '@plurid/plurid-data';
+
+import {
     ParserResponse,
 } from '../interfaces';
 
 import {
     compareTypes,
-    CompareType,
 } from '../CompareTypes';
 
 
