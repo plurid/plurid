@@ -9,7 +9,7 @@ import romanian from './romanian';
 import russian from './russian';
 import spanish from './spanish';
 
-import internationalizationFields from './fields';
+import fields from './fields';
 
 
 
@@ -25,5 +25,5 @@ export {
     russian,
     spanish,
 
-    internationalizationFields,
+    fields,
 }
