@@ -33,8 +33,8 @@ export default class PluridProvider<T> extends Component<
         super(properties);
         this.properties = properties;
 
-        if (!PluridProvider.canUseDOM) {
-        }
+        // if (!PluridProvider.canUseDOM) {
+        // }
     }
 
     render() {
