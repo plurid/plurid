@@ -80,3 +80,9 @@ export interface PluridRouterRoute<T> {
      */
     lengthType?: CompareType | Indexed<CompareType>;
 }
+
+
+export interface PluridRouterRouting<T> {
+    routes: PluridRouterRoute<T>[];
+    components: PluridRouterComponent<T>[];
+}
