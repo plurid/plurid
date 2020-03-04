@@ -8,12 +8,12 @@ import {
 
 import paths from './paths';
 import view, {
-    // ViewType,
+    ViewType,
 } from './view';
 
 
 
-// const routes: PluridRouterRoute<any>[] = [
+// const routes: PluridRouterRoute<ViewType>[] = [
 //     {
 //         path: paths.index,
 //         view: view.index,
@@ -23,7 +23,7 @@ import view, {
 //         view: view.page,
 //     },
 // ];
-const routes: PluridRouterRoute<any>[] = mapPathsToRoutes(
+const routes: PluridRouterRoute<ViewType>[] = mapPathsToRoutes(
     paths,
     view,
 );
