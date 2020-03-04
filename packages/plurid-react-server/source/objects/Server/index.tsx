@@ -57,7 +57,7 @@ export default class PluridServer {
 
     private serverApplication: Express;
     private server: Server | undefined;
-    private port: number;
+    private port: number | string;
     private renderer: PluridRenderer | undefined;
 
     constructor(
@@ -112,6 +112,8 @@ export default class PluridServer {
         if (this.options.open) {
             open(serverlink);
         }
+
+        return this.server;
     }
 
     public stop() {
