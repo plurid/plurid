@@ -1,18 +1,16 @@
 import React from 'react';
 
+import {
+    PluridRouterComponent,
+} from '@plurid/plurid-data';
+
 import view, {
     ViewType,
 } from './view';
 
 
 
-interface RouteComponent<T> {
-    view: T;
-    component: React.FC<any>;
-}
-
-
-const components: RouteComponent<ViewType>[] = [
+const components: PluridRouterComponent<ViewType>[] = [
     {
         view: view.index,
         component: () => (<div>index</div>),

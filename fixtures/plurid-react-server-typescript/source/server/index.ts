@@ -58,7 +58,6 @@ const options: PluridServerPartialOptions = {
     open: true,
 };
 
-
 const pluridServer = new PluridServer({
     Application,
     routing,
