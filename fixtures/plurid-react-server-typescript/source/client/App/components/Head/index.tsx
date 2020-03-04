@@ -6,14 +6,43 @@ import {
 
 
 
-const Head = () => {
+interface HeadProperties {
+    title?: string;
+    description?: string;
+    ogTitle?: string;
+    ogImage?: string;
+    ogURL?: string;
+    ogDescription?: string;
+}
+
+const Head: React.FC<HeadProperties> = (
+    properties,
+) => {
+    /** properties */
+    const {
+        title,
+        description,
+        ogTitle,
+        ogImage,
+        ogURL,
+        ogDescription,
+    } = properties;
+
+    const titleValue = title || 'Plurid\' Application';
+    const descriptionValue = description || 'explore web content in three dimensions';
+    const ogTitleValue = ogTitle || title || 'Plurid\' Application';
+    const ogDescriptionValue = ogDescription || description || 'explore web content in three dimensions';
+    const ogImageValue = ogImage || '/icon-192x192.png';
+    const ogURLValue = ogURL || 'https://plurid.com';
+
+
     /** render */
     return (
         <Helmet>
             <meta charSet="utf-8" />
             <meta name="robots" content="index,follow" />
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-            <meta name="description" content="Plurid' Application" />
+            <meta name="description" content={descriptionValue} />
 
             <link rel="icon" href="/favicon.ico" />
             <link rel="shortcut icon" type="image/png" href="/icon-192x192.png" />
@@ -25,14 +54,14 @@ const Head = () => {
 
             <link rel="canonical" href="https://plurid.com." />
 
-            <title>Plurid' Application</title>
+            <title>{titleValue}</title>
 
             <meta property="og:type" content="website" />
-            <meta property="og:title" content="plurid" />
-            <meta property="og:image" content="/logo-192x192.png" />
+            <meta property="og:title" content={ogTitleValue} />
+            <meta property="og:image" content={ogImageValue} />
             <meta property="og:site_name" content="plurid" />
-            <meta property="og:url" content="https://plurid.com" />
-            <meta property="og:description" content="explore web content in three dimensions" />
+            <meta property="og:url" content={ogURLValue} />
+            <meta property="og:description" content={ogDescriptionValue} />
         </Helmet>
     );
 }
