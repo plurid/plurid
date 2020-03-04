@@ -56,8 +56,6 @@ function PluridRouterStatic<T>(
         )
     }
 
-    history.pushState(null, '', path);
-
 
     /** render */
     const Component = routeComponent.component;
