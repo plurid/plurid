@@ -23,6 +23,10 @@ const routes: PluridRouterRoute<ViewType>[] = [
         view: view.notFound,
     },
     {
+        path: paths.static,
+        view: view.static,
+    },
+    {
         path: paths.page,
         view: view.page,
     },

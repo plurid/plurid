@@ -12,7 +12,7 @@ import {
 
 import Head from '../../components/Head';
 
-import Page from '../../containers/Page';
+import Page from './containers/Page';
 
 
 
