@@ -28,7 +28,7 @@
         "@plurid/plurid-icons-react": "^0.1.18",
         "@plurid/plurid-pubsub": "^0.1.3",
         "@plurid/plurid-react": "^0.1.119",
-        "@plurid/plurid-react-server": "^0.1.16",
+        "@plurid/plurid-react-server": "^0.1.17",
         "@plurid/plurid-themes": "^0.1.26",
         "@plurid/plurid-ui-react": "^0.1.79",
         "apollo-cache-inmemory": "^1.6.5",
