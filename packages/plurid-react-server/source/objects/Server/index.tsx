@@ -136,66 +136,18 @@ export default class PluridServer {
             const route = router.match(url);
 
             if (!route) {
-                // render not found
-                const notFoundRoute = {
+                const notFoundRoute = router.match('/not-found');
+                if (!notFoundRoute) {
+                    response.send('Not Found');
+                    return;
+                }
 
-                };
-                // this.renderer = this.renderApplication(notFoundRoute);
-                // response.send(this.renderer?.html());
-
-                response.send('Not Found');
+                this.renderer = this.renderApplication(notFoundRoute);
+                response.send(this.renderer?.html());
                 return;
             }
 
             this.renderer = this.renderApplication(route);
-
-            // const {
-            //     content,
-            //     styles,
-            // } = this.getContentAndStyles(
-            //     route,
-            // );
-
-            // const stringedStyles = this.styles.reduce(
-            //     (accumulator, style) => accumulator + style,
-            //     '',
-            // );
-            // const mergedStyles = styles + stringedStyles;
-
-            // const {
-            //     helmet,
-            // } = this.helmet;
-
-            // const head = `
-            //     ${helmet.meta.toString()}
-            //     ${helmet.title.toString()}
-            //     ${helmet.link.toString()}
-            // `;
-
-            // const store = this.servicesData?.reduxStore ?
-            //     JSON.stringify(
-            //         this.servicesData?.reduxStore(
-            //             this.servicesData?.reduxStoreValue || {},
-            //         ).getState()
-            //     ) : '';
-
-            // const {
-            //     root,
-            //     script,
-            // } = this.options;
-
-            // const stripeScript = this.servicesData?.stripeScript;
-
-            // this.renderer = new PluridRenderer({
-            //     content,
-            //     head,
-            //     styles: mergedStyles,
-            //     store,
-            //     root,
-            //     script,
-            //     stripeScript,
-            // });
-
             response.send(this.renderer?.html());
         });
     }
