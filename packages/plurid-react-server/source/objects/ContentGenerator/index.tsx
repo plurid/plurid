@@ -32,6 +32,7 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
+    PluridProvider,
     PluridRouterStatic,
 } from '@plurid/plurid-react';
 
@@ -51,6 +52,7 @@ export default class PluridContentGenerator<T> {
     private helmet: Helmet;
     private matchedRoute: router.MatcherResponse<T>;
     private routing: PluridRouterRouting<T>;
+    private pluridContext: any;
 
     constructor(
         services: PluridServerService[],
@@ -59,6 +61,7 @@ export default class PluridContentGenerator<T> {
         helmet: Helmet,
         matchedRoute: router.MatcherResponse<T>,
         routing: PluridRouterRouting<T>,
+        pluridContext: any,
     ) {
         this.services = services;
         this.servicesData = servicesData;
@@ -66,14 +69,17 @@ export default class PluridContentGenerator<T> {
         this.helmet = helmet;
         this.matchedRoute = matchedRoute;
         this.routing = routing;
+        this.pluridContext = pluridContext;
     }
 
     render() {
         const RoutedApplication = () => (
-            <PluridRouterStatic<T>
-                path={this.matchedRoute.pathname}
-                routing={this.routing}
-            />
+            <PluridProvider context={this.pluridContext}>
+                <PluridRouterStatic<T>
+                    path={this.matchedRoute.pathname}
+                    routing={this.routing}
+                />
+            </PluridProvider>
         );
 
         const reduxStore = this.servicesData?.reduxStore;
