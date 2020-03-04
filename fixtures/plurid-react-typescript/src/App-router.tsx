@@ -109,15 +109,15 @@ const App = () => {
 
     const routes = [
         {
-            location: '/',
+            path: '/',
             view: 'index',
         },
         {
-            location: '/one',
+            path: '/one',
             view: 'oneC',
         },
         {
-            location: '/two',
+            path: '/two',
             view: 'twoC',
         },
     ];
@@ -186,8 +186,10 @@ const App = () => {
             /> */}
 
             <PluridRouterBrowser
-                routes={routes}
-                components={components}
+                routing={{
+                    routes,
+                    components
+                }}
             />
 
             {/* <PluridApp

@@ -111,15 +111,15 @@ const App = () => {
 
     const routes = [
         {
-            location: '/',
+            path: '/',
             view: 'index',
         },
         {
-            location: '/one',
+            path: '/one',
             view: 'oneC',
         },
         {
-            location: '/two',
+            path: '/two',
             view: 'twoC',
         },
     ];
@@ -187,16 +187,19 @@ const App = () => {
                 add page
             </StyledAdd> */}
 
-            <PluridRouterStatic
-                path={'/two'}
-                routes={routes}
-                components={components}
-            />
-
-            {/* <PluridRouterBrowser
-                routes={routes}
-                components={components}
+            {/* <PluridRouterStatic
+                routing={{
+                    routes,
+                    components
+                }}
             /> */}
+
+            <PluridRouterBrowser
+                routing={{
+                    routes,
+                    components
+                }}
+            />
         </div>
     );
 }
