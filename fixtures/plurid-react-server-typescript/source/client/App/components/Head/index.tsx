@@ -13,6 +13,7 @@ interface HeadProperties {
     ogImage?: string;
     ogURL?: string;
     ogDescription?: string;
+    canonicalURL?: string;
 }
 
 const Head: React.FC<HeadProperties> = (
@@ -26,6 +27,7 @@ const Head: React.FC<HeadProperties> = (
         ogImage,
         ogURL,
         ogDescription,
+        canonicalURL,
     } = properties;
 
     const titleValue = title || 'Plurid\' Application';
@@ -52,7 +54,9 @@ const Head: React.FC<HeadProperties> = (
 
             <link rel="manifest" href="/manifest.json" />
 
-            <link rel="canonical" href="https://plurid.com." />
+            {canonicalURL && (
+                <link rel="canonical" href={canonicalURL} />
+            )}
 
             <title>{titleValue}</title>
 
