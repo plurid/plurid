@@ -21,6 +21,12 @@ import {
     PluridRouterBrowser,
 } from '@plurid/plurid-react';
 
+import themes from '@plurid/plurid-themes';
+
+import {
+    GlobalStyle,
+} from './styled';
+
 import helmetContext from './App/services/helmet';
 
 import reduxStore from './App/services/state/store';
@@ -47,6 +53,10 @@ const Client: React.FC<any> = () => {
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
                         <PluridProvider context={{}}>
+                            <GlobalStyle
+                                theme={themes.plurid}
+                            />
+
                             <PluridRouterBrowser<ViewType>
                                 routing={routing}
                             />
