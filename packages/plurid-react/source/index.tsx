@@ -32,6 +32,8 @@ import PluridRouterStatic from './modules/components/PluridRouterStatic';
 import PluridRouterLink from './modules/components/PluridRouterLink';
 import PluridVirtualList from './modules/components/PluridVirtual/List';
 
+import PluridProvider from './modules/components/PluridProvider';
+
 import {
     serverComputeApplication,
 } from './modules/services/logic/server';
@@ -78,6 +80,7 @@ export {
     PluridRouterStatic,
     PluridRouterLink,
     PluridVirtualList,
+    PluridProvider,
 
     /** Logic */
     serverComputeApplication,

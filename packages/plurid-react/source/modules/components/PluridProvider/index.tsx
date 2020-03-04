@@ -12,6 +12,10 @@ const defaultValue = {};
 export const Context = React.createContext(defaultValue);
 
 
+// interface PluridProviderContext {
+//     pluridApps: any[];
+// }
+
 interface PluridProviderProperties<T> {
     context: T;
 }
