@@ -11,8 +11,8 @@ export const mapPathsToRoutes = <T>(
 ) => {
     const routes: PluridRouterRoute<T>[] = [];
 
-    for (const path of Object.values(paths)) {
-        const pathView = view[path];
+    for (const [key, path] of Object.entries(paths)) {
+        const pathView = view[key];
 
         if (pathView) {
             const route: PluridRouterRoute<T> = {
