@@ -8,6 +8,7 @@ import view, {
     ViewType,
 } from './view';
 
+import Index from '../../client/App/containers/Index';
 import NotFound from '../../client/App/containers/NotFound';
 
 
@@ -15,7 +16,7 @@ import NotFound from '../../client/App/containers/NotFound';
 const components: PluridRouterComponent<ViewType>[] = [
     {
         view: view.index,
-        component: () => (<div>index</div>),
+        component: Index,
     },
     {
         view: view.notFound,
