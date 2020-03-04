@@ -22,7 +22,7 @@ import {
 
 
 
-const PORT = 33000;
+const PORT = process.env.PORT || 33000;
 
 const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
 
