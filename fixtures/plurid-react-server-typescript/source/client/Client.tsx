@@ -17,6 +17,7 @@ import {
 // } from 'react-stripe-elements';
 
 import {
+    PluridProvider,
     PluridRouterBrowser,
 } from '@plurid/plurid-react';
 
@@ -45,9 +46,11 @@ const Client: React.FC<any> = () => {
             <ReduxProvider store={reduxStore(state)}>
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
-                        <PluridRouterBrowser<ViewType>
-                            routing={routing}
-                        />
+                        <PluridProvider context={{}}>
+                            <PluridRouterBrowser<ViewType>
+                                routing={routing}
+                            />
+                        </PluridProvider>
                     {/* </StripeProvider> */}
                 </ApolloProvider>
             </ReduxProvider>
