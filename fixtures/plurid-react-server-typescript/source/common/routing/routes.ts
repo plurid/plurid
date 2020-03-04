@@ -19,6 +19,10 @@ const routes: PluridRouterRoute<ViewType>[] = [
         view: view.index,
     },
     {
+        path: paths.notFound,
+        view: view.notFound,
+    },
+    {
         path: paths.page,
         view: view.page,
     },
