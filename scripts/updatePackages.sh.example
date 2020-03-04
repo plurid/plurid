@@ -1,0 +1,63 @@
+logicPackages=(
+    "plurid-data"
+    "plurid-engine"
+    "plurid-pubsub"
+    "plurid-react"
+    "plurid-react-server"
+)
+
+logicPackageLocation="/path/to/packages_directory"
+
+
+function updatePackage {
+    packageName="$1"
+    directory="$logicPackageLocation""$packageName"
+    SECONDS=0
+
+    echo
+    echo "Working on $packageName in $directory"
+
+    # change directory
+    echo "Changed directory to $directory"
+    cd "$directory"
+
+    echo "Looking for updates in $directory"
+    ncu -u --dep prod,dev
+
+    echo "Installing updates in $directory"
+    yarn install
+
+    echo "Adding to git in $directory"
+    git add .
+
+    echo "Commiting to git in $directory"
+    git commit -m "logic > ${packageName} > setup: package"
+
+    echo "Patching version in $directory"
+    npm version patch --no-git-tag-version
+
+    echo "Adding to git in $directory"
+    git add .
+
+    echo "Commiting to git in $directory"
+    git commit -m "logic > ${packageName} > setup: package"
+
+    echo "Publishing to npm in $directory"
+    npm publish
+
+    duration=$SECONDS
+
+    echo "Worked on $packageName for $(($duration % 60)) seconds"
+    echo
+
+    sleep 5
+
+    echo "Slept 5 seconds"
+    echo
+}
+
+
+for packageName in "${logicPackages[@]}"
+do
+    updatePackage "$packageName"
+done
