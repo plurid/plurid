@@ -1,6 +1,13 @@
 import React from 'react';
 
 import {
+    PluridSubApp,
+    PluridPage,
+    PluridView,
+    SPACE_LAYOUT,
+} from '@plurid/plurid-react';
+
+import {
     StyledNotFound,
 } from './styled';
 
@@ -12,17 +19,59 @@ interface NotFoundProperties {
 }
 
 const NotFound: React.FC<NotFoundProperties> = () => {
+    /** properties */
     const faceIndex = Math.floor(Math.random() * faces.length);
     const face = faces[faceIndex];
 
-    return (
-        <StyledNotFound>
-            <h1>{face}</h1>
+    const pluridConfiguration = {
+        theme: 'plurid',
+        space: {
+            layout: {
+                type: SPACE_LAYOUT.COLUMNS,
+                columns: 2,
+                gap: 0.1,
+            },
+            center: true,
+        },
+        elements: {
+            plane: {
+                width: 0.5,
+            },
+        },
+    };
 
-            <p>
-                you searched and it's not here
-            </p>
-        </StyledNotFound>
+    const pluridPages: PluridPage[] = [
+        {
+            path: '/not-found',
+            component: {
+                element: () => (
+                    <StyledNotFound>
+                        <h1>{face}</h1>
+
+                        <p>
+                            you searched and it's not here
+                        </p>
+                    </StyledNotFound>
+                ),
+                properties: {},
+            },
+        },
+    ];
+
+    const pluridView: PluridView[] = [
+        {
+            path: '/not-found',
+        },
+    ];
+
+    return (
+        <>
+            <PluridSubApp
+                configuration={pluridConfiguration}
+                pages={pluridPages}
+                view={pluridView}
+            />
+        </>
     );
 }
 
