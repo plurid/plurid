@@ -10,6 +10,10 @@ describe('Router', () => {
     it('simple route', () => {
         const routes: PluridRouterRoute<any>[] = [
             {
+                path: '/',
+                view: 'index',
+            },
+            {
                 path: '/one',
                 view: 'one',
             },
@@ -19,9 +23,9 @@ describe('Router', () => {
             },
         ];
         const router = new Router(routes);
-        const response = router.match('/one');
+        const response = router.match('/');
 
-        expect(response?.pathname).toBe('/one');
+        expect(response?.pathname).toBe('/');
     });
 
     it.only('simple route cached', () => {
