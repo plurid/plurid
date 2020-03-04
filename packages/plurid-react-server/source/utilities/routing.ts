@@ -5,9 +5,9 @@ import {
 
 
 
-export const mapPathsToRoutes = <T>(
+export const mapPathsToRoutes = <T, V>(
     paths: Indexed<string>,
-    view: T,
+    view: V,
 ) => {
     const routes: PluridRouterRoute<T>[] = [];
 
