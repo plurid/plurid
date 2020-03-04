@@ -13,6 +13,8 @@ import {
 
 import faces from './faces';
 
+import Head from '../../components/Head';
+
 
 
 interface NotFoundProperties {
@@ -71,6 +73,8 @@ const NotFound: React.FC<NotFoundProperties> = () => {
 
     return (
         <>
+            <Head />
+
             <PluridSubApp
                 configuration={pluridConfiguration}
                 pages={pluridPages}
