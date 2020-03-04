@@ -314,9 +314,12 @@ const generateReactServerApplication = async (
 
     const requiredDependencies = [
         '@plurid/generate-plurid-app',
+        '@plurid/plurid-data',
+        '@plurid/plurid-engine',
         '@plurid/plurid-functions',
         '@plurid/plurid-functions-react',
         '@plurid/plurid-icons-react',
+        '@plurid/plurid-pubsub',
         '@plurid/plurid-react',
         '@plurid/plurid-react-server',
         '@plurid/plurid-themes',
