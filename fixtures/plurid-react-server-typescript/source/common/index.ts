@@ -1,4 +1,4 @@
-import * as routing from './routing';
+import routing from './routing';
 
 
 
