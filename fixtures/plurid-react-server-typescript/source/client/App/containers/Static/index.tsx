@@ -19,7 +19,9 @@ const Static: React.FC<any> = () => {
     /** render */
     return (
         <StyledStatic>
-            <Head />
+            <Head
+                title="A Static Page"
+            />
 
             <div>
                 an example of a static page
