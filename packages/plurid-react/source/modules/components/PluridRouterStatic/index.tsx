@@ -14,6 +14,9 @@ import {
 
 
 
+const PluridRouter = router.default;
+
+
 interface PluridRouterStaticOwnProperties<T> {
     path: string;
     routing: PluridRouterRouting<T>;
@@ -35,7 +38,7 @@ function PluridRouterStatic<T>(
     } = routing;
 
     const indexedComponents = indexing.create(components, 'view');
-    const pluridRouter = new router.default(routes);
+    const pluridRouter = new PluridRouter(routes);
 
     const matchedRoute = pluridRouter.match(path);
     if (!matchedRoute) {
