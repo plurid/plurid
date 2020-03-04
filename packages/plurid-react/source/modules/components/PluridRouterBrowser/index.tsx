@@ -74,6 +74,7 @@ function PluridRouterBrowser<T>(
                 const routeComponent = indexedComponents.current[view as any];
 
                 if (routeComponent) {
+                    history.pushState(null, '', '/not-found');
                     setComponent(routeComponent.component);
                 }
             }
