@@ -20,7 +20,7 @@ const PluridRouter = router.default;
 interface PluridRouterStaticOwnProperties<T> {
     path: string;
     routing: PluridRouterRouting<T>;
-    children: React.ReactChildren;
+    children?: any;
 }
 
 function PluridRouterStatic<T>(

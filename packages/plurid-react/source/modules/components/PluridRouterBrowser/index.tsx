@@ -22,7 +22,7 @@ import {
 
 interface PluridRouterBrowserOwnProperties<T> {
     routing: PluridRouterRouting<T>;
-    children: React.ReactChildren;
+    children?: any;
 }
 
 function PluridRouterBrowser<T>(
