@@ -200,35 +200,6 @@ export default class PluridServer<T> {
         return renderer;
     }
 
-    private handleOptions(
-        partialOptions?: PluridServerPartialOptions,
-    ) {
-        const options: PluridServerOptions = {
-            quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
-            open: partialOptions?.open || false,
-            buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
-            root: partialOptions?.root || 'root',
-            script: partialOptions?.script || '/index.js',
-        };
-        return options;
-    }
-
-    private configureServer() {
-        this.serverApplication.disable('x-powered-by');
-
-        this.serverApplication.use(
-            express.static(this.options.buildDirectory),
-        );
-    }
-
-    private loadMiddleware() {
-        for (const middleware of this.middleware) {
-            this.serverApplication.use(
-                middleware,
-            );
-        }
-    }
-
     private getContentAndStyles<T>(
         route: router.MatcherResponse<T>,
     ) {
@@ -262,5 +233,34 @@ export default class PluridServer<T> {
             content,
             styles,
         };
+    }
+
+    private handleOptions(
+        partialOptions?: PluridServerPartialOptions,
+    ) {
+        const options: PluridServerOptions = {
+            quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
+            open: partialOptions?.open || false,
+            buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
+            root: partialOptions?.root || 'root',
+            script: partialOptions?.script || '/index.js',
+        };
+        return options;
+    }
+
+    private configureServer() {
+        this.serverApplication.disable('x-powered-by');
+
+        this.serverApplication.use(
+            express.static(this.options.buildDirectory),
+        );
+    }
+
+    private loadMiddleware() {
+        for (const middleware of this.middleware) {
+            this.serverApplication.use(
+                middleware,
+            );
+        }
     }
 }
