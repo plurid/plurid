@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-    PluridRouterRoute,
+    PluridRouterRouting,
 } from '@plurid/plurid-data';
 
 import {
@@ -14,15 +14,10 @@ import {
 
 
 
-interface RouteComponent<T> {
-    view: T;
-    component: React.FC<any>;
-}
-
 interface PluridRouterStaticOwnProperties<T> {
     path: string;
-    routes: PluridRouterRoute<T>[];
-    components: RouteComponent<T>[];
+    routing: PluridRouterRouting<T>;
+    children: React.ReactChildren;
 }
 
 function PluridRouterStatic<T>(
@@ -31,12 +26,15 @@ function PluridRouterStatic<T>(
     /** properties */
     const {
         path,
-        routes,
-        components,
+        routing,
     } = properties;
 
+    const {
+        routes,
+        components,
+    } = routing;
+
     const indexedComponents = indexing.create(components, 'view');
-    // console.log('indexedComponents', indexedComponents);
     const pluridRouter = new router.default(routes);
 
     const matchedRoute = pluridRouter.match(path);
