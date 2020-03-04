@@ -44,25 +44,25 @@ import wrapping from '../../utilities/wrapping';
 
 
 
-export default class PluridContentGenerator {
-    private Application: React.FC<any>;
+export default class PluridContentGenerator<T> {
+    // private Application: React.FC<any>;
     private services: PluridServerService[];
     private servicesData: PluridServerServicesData | undefined;
     private stylesheet: ServerStyleSheet;
     private helmet: Helmet;
-    private matchedRoute: router.MatcherResponse<any>;
-    private routing: PluridRouterRouting<any>;
+    private matchedRoute: router.MatcherResponse<T>;
+    private routing: PluridRouterRouting<T>;
 
     constructor(
-        Application: React.FC<any>,
+        // Application: React.FC<any>,
         services: PluridServerService[],
         servicesData: PluridServerServicesData | undefined,
         stylesheet: ServerStyleSheet,
         helmet: Helmet,
-        matchedRoute: router.MatcherResponse<any>,
-        routing: PluridRouterRouting<any>,
+        matchedRoute: router.MatcherResponse<T>,
+        routing: PluridRouterRouting<T>,
     ) {
-        this.Application = Application;
+        // this.Application = Application;
         this.services = services;
         this.servicesData = servicesData;
         this.stylesheet = stylesheet;
@@ -74,7 +74,7 @@ export default class PluridContentGenerator {
     render() {
         // const Application = this.Application;
         const RoutedApplication = () => (
-            <PluridRouterStatic<any>
+            <PluridRouterStatic<T>
                 path={this.matchedRoute.pathname}
                 routing={this.routing}
             />

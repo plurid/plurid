@@ -45,8 +45,8 @@ import PluridContentGenerator from '../ContentGenerator';
 const PluridRouter = router.default;
 
 
-export default class PluridServer {
-    private Application: React.FC<any>;
+export default class PluridServer<T> {
+    // private Application: React.FC<any>;
     private routing: PluridServerRouting;
     private helmet: Helmet;
     private styles: string[];
@@ -64,7 +64,7 @@ export default class PluridServer {
         configuration: PluridServerConfiguration,
     ) {
         const {
-            Application,
+            // Application,
             routing,
             helmet,
             styles,
@@ -74,7 +74,7 @@ export default class PluridServer {
             options,
         } = configuration;
 
-        this.Application = Application;
+        // this.Application = Application;
         this.routing = routing;
         this.helmet = helmet;
         this.styles = styles || [];
@@ -152,13 +152,13 @@ export default class PluridServer {
         });
     }
 
-    private renderApplication(
-        route: router.MatcherResponse<any>,
+    private renderApplication<T>(
+        route: router.MatcherResponse<T>,
     ) {
         const {
             content,
             styles,
-        } = this.getContentAndStyles(
+        } = this.getContentAndStyles<T>(
             route,
         );
 
@@ -234,16 +234,16 @@ export default class PluridServer {
         }
     }
 
-    private getContentAndStyles(
-        route: router.MatcherResponse<any>,
+    private getContentAndStyles<T>(
+        route: router.MatcherResponse<T>,
     ) {
         const sheet = new ServerStyleSheet();
         let content = '';
         let styles = '';
 
         try {
-            const contentHandler = new PluridContentGenerator(
-                this.Application,
+            const contentHandler = new PluridContentGenerator<T>(
+                // this.Application,
                 this.services,
                 this.servicesData,
                 sheet,
