@@ -3,7 +3,7 @@ import {
 } from '@plurid/plurid-data';
 
 // import {
-//     mapPathsToRoutes,
+//     router,
 // } from '@plurid/plurid-engine';
 
 import paths from './paths';
@@ -27,7 +27,7 @@ const routes: PluridRouterRoute<ViewType>[] = [
         view: view.page,
     },
 ];
-// const routes: PluridRouterRoute<ViewType>[] = mapPathsToRoutes(
+// const routes: PluridRouterRoute<ViewType>[] = router.mapPathsToRoutes(
 //     paths,
 //     view,
 // );
