@@ -1,5 +1,4 @@
 import PluridServer, {
-    PluridServerRoute,
     PluridServerMiddleware,
     PluridServerService,
     PluridServerServicesData,
@@ -17,6 +16,10 @@ import {
     STRIPE_API_KEY as stripeAPIKey,
 } from '../client/App/data/constants';
 
+import {
+    routing,
+} from '../common';
+
 
 
 const PORT = 33000;
@@ -24,10 +27,6 @@ const PORT = 33000;
 const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
 
 
-
-const routes: PluridServerRoute[] = [
-    // route objects
-];
 
 const styles: string[] = [
     // custom styles to be loaded into the template
@@ -59,10 +58,9 @@ const options: PluridServerPartialOptions = {
     open: true,
 };
 
-
 const pluridServer = new PluridServer({
     Application,
-    routes,
+    routing,
     helmet,
     styles,
     middleware,
