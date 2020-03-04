@@ -12,39 +12,28 @@ const defaultValue = {};
 export const Context = React.createContext(defaultValue);
 
 
-interface PluridProviderProperties {
-    context: any;
+interface PluridProviderProperties<T> {
+    context: T;
 }
 
-export default class PluridProvider extends Component<PluridProviderProperties> {
-    static canUseDOM = runtime.isBrowser;
+export default class PluridProvider<T> extends Component<
+    React.PropsWithChildren<
+        PluridProviderProperties<T>
+    >
+> {
     static displayName = 'PluridProvider';
+    static canUseDOM = runtime.isBrowser;
 
-    private instances: any[] = [];
-    private value = {
-        setPlurid: (serverState: any) => {
-            this.props.context.plurid = serverState;
-        },
-        pluridInstances: {
-            get: () => this.instances,
-            add: (instance: any) => {
-                this.instances.push(instance);
-            },
-            remove: (instance: any) => {
-                const index = this.instances.indexOf(instance);
-                this.instances.splice(index, 1);
-            },
-        },
-    };
+    private properties: React.PropsWithChildren<PluridProviderProperties<T>>;
+    private value = {};
 
     constructor(
-        props: any,
+        properties: React.PropsWithChildren<PluridProviderProperties<T>>,
     ) {
-        super(props);
+        super(properties);
+        this.properties = properties;
 
         if (!PluridProvider.canUseDOM) {
-            // props.context.helmet = mapStateOnServer({
-            // });
         }
     }
 
@@ -53,7 +42,7 @@ export default class PluridProvider extends Component<PluridProviderProperties> 
             <Context.Provider
                 value={this.value}
             >
-                {this.props.children}
+                {this.properties.children}
             </Context.Provider>
         );
     }
