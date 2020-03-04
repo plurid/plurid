@@ -217,6 +217,9 @@ export default class PluridServer<T> {
         let styles = '';
 
         try {
+            // based on the route get the specific plurids to be rendered
+            const pluridContext = {};
+
             const contentHandler = new PluridContentGenerator<T>(
                 this.services,
                 this.servicesData,
@@ -224,6 +227,7 @@ export default class PluridServer<T> {
                 this.helmet,
                 route,
                 this.routing,
+                pluridContext,
             );
 
             content = contentHandler.render();
