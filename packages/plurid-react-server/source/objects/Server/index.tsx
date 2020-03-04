@@ -136,59 +136,121 @@ export default class PluridServer {
             const route = router.match(url);
 
             if (!route) {
+                // render not found
+                const notFoundRoute = {
+
+                };
+                // this.renderer = this.renderApplication(notFoundRoute);
+                // response.send(this.renderer?.html());
+
                 response.send('Not Found');
                 return;
             }
 
-            const {
-                content,
-                styles,
-            } = this.getContentAndStyles(
-                route,
-            );
+            this.renderer = this.renderApplication(route);
 
-            const stringedStyles = this.styles.reduce(
-                (accumulator, style) => accumulator + style,
-                '',
-            );
-            const mergedStyles = styles + stringedStyles;
+            // const {
+            //     content,
+            //     styles,
+            // } = this.getContentAndStyles(
+            //     route,
+            // );
 
-            const {
-                helmet,
-            } = this.helmet;
+            // const stringedStyles = this.styles.reduce(
+            //     (accumulator, style) => accumulator + style,
+            //     '',
+            // );
+            // const mergedStyles = styles + stringedStyles;
 
-            const head = `
-                ${helmet.meta.toString()}
-                ${helmet.title.toString()}
-                ${helmet.link.toString()}
-            `;
+            // const {
+            //     helmet,
+            // } = this.helmet;
 
-            const store = this.servicesData?.reduxStore ?
-                JSON.stringify(
-                    this.servicesData?.reduxStore(
-                        this.servicesData?.reduxStoreValue || {},
-                    ).getState()
-                ) : '';
+            // const head = `
+            //     ${helmet.meta.toString()}
+            //     ${helmet.title.toString()}
+            //     ${helmet.link.toString()}
+            // `;
 
-            const {
-                root,
-                script,
-            } = this.options;
+            // const store = this.servicesData?.reduxStore ?
+            //     JSON.stringify(
+            //         this.servicesData?.reduxStore(
+            //             this.servicesData?.reduxStoreValue || {},
+            //         ).getState()
+            //     ) : '';
 
-            const stripeScript = this.servicesData?.stripeScript;
+            // const {
+            //     root,
+            //     script,
+            // } = this.options;
 
-            this.renderer = new PluridRenderer({
-                content,
-                head,
-                styles: mergedStyles,
-                store,
-                root,
-                script,
-                stripeScript,
-            });
+            // const stripeScript = this.servicesData?.stripeScript;
+
+            // this.renderer = new PluridRenderer({
+            //     content,
+            //     head,
+            //     styles: mergedStyles,
+            //     store,
+            //     root,
+            //     script,
+            //     stripeScript,
+            // });
 
             response.send(this.renderer?.html());
         });
+    }
+
+    private renderApplication(
+        route: router.MatcherResponse<any>,
+    ) {
+        const {
+            content,
+            styles,
+        } = this.getContentAndStyles(
+            route,
+        );
+
+        const stringedStyles = this.styles.reduce(
+            (accumulator, style) => accumulator + style,
+            '',
+        );
+        const mergedStyles = styles + stringedStyles;
+
+        const {
+            helmet,
+        } = this.helmet;
+
+        const head = `
+            ${helmet.meta.toString()}
+            ${helmet.title.toString()}
+            ${helmet.link.toString()}
+        `;
+
+        const store = this.servicesData?.reduxStore ?
+            JSON.stringify(
+                this.servicesData?.reduxStore(
+                    this.servicesData?.reduxStoreValue || {},
+                ).getState()
+            ) : '';
+
+        const {
+            root,
+            script,
+        } = this.options;
+
+        const stripeScript = this.servicesData?.stripeScript;
+
+        const renderer = new PluridRenderer({
+            content,
+            head,
+            styles: mergedStyles,
+            store,
+            root,
+            script,
+            stripeScript,
+        });
+
+        return renderer;
     }
 
     private handleOptions(
