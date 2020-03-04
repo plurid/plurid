@@ -1,5 +1,6 @@
 const paths = {
     index: '/',
+    notFound: '/not-found',
     page: '/page',
 };
 
