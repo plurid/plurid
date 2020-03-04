@@ -23,9 +23,9 @@ import {
     StripeProvider,
 } from 'react-stripe-elements';
 
-// import {
-
-// } from '@plurid/plurid-react';
+import {
+    PluridRouterStatic,
+} from '@plurid/plurid-react';
 
 import {
     PluridServerService,
@@ -62,6 +62,14 @@ export default class PluridContentGenerator {
 
     render() {
         const Application = this.Application;
+
+        // const RoutedApplication = () => (
+        //     <PluridRouterStatic
+
+        //     >
+
+        //     </PluridRouterStatic>
+        // );
 
         const reduxStore = this.servicesData?.reduxStore;
         const reduxStoreValue = this.servicesData?.reduxStoreValue || {};
