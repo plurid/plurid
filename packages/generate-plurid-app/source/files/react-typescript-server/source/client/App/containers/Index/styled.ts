@@ -2,5 +2,5 @@ import styled from 'styled-components';
 
 
 
-export const StyledApp = styled.div`
+export const StyledIndex = styled.div`
 `;

@@ -1,24 +1,30 @@
 import React from 'react';
 
-import PluridApp, {
+import {
+    PluridSubApp,
     PluridPage,
     PluridView,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
-import './index.css';
 import {
-    StyledApp,
+    StyledNotFound,
 } from './styled';
 
-import Head from './components/Head';
+import faces from './faces';
 
-import Page from './containers/Page';
+import Head from '../../components/Head';
 
 
 
-const App = () => {
+interface NotFoundProperties {
+}
+
+const NotFound: React.FC<NotFoundProperties> = () => {
     /** properties */
+    const faceIndex = Math.floor(Math.random() * faces.length);
+    const face = faces[faceIndex];
+
     const pluridConfiguration = {
         theme: 'plurid',
         space: {
@@ -31,6 +37,9 @@ const App = () => {
         },
         elements: {
             plane: {
+                controls: {
+                    show: false,
+                },
                 width: 0.5,
             },
         },
@@ -38,9 +47,19 @@ const App = () => {
 
     const pluridPages: PluridPage[] = [
         {
-            path: '/page',
+            path: '/not-found',
             component: {
-                element: Page,
+                element: () => (
+                    <StyledNotFound>
+                        <h1>
+                            {face}
+                        </h1>
+
+                        <p>
+                            you searched and it's not here
+                        </p>
+                    </StyledNotFound>
+                ),
                 properties: {},
             },
         },
@@ -48,24 +67,22 @@ const App = () => {
 
     const pluridView: PluridView[] = [
         {
-            path: '/page',
-        }
+            path: '/not-found',
+        },
     ];
 
-
-    /** render */
     return (
-        <StyledApp>
+        <>
             <Head />
 
-            <PluridApp
+            <PluridSubApp
                 configuration={pluridConfiguration}
                 pages={pluridPages}
                 view={pluridView}
             />
-        </StyledApp>
+        </>
     );
 }
 
 
-export default App;
+export default NotFound;

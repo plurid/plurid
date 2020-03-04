@@ -5,16 +5,14 @@ import PluridServer, {
     PluridServerPartialOptions,
 } from '@plurid/plurid-react-server';
 
-import Application from '../client/App';
-
 import helmet from '../client/App/services/helmet';
 
 /** uncomment to use services */
 import reduxStore from '../client/App/services/state/store';
 import graphqlClient from '../client/App/services/graphql/client';
-import {
-    STRIPE_API_KEY as stripeAPIKey,
-} from '../client/App/data/constants';
+// import {
+//     STRIPE_API_KEY as stripeAPIKey,
+// } from '../client/App/data/constants';
 
 import {
     routing,
@@ -22,7 +20,7 @@ import {
 
 
 
-const PORT = 33000;
+const PORT = process.env.PORT || 33000;
 
 const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
 
@@ -39,8 +37,8 @@ const middleware: PluridServerMiddleware[] = [
 const services: PluridServerService[] = [
     // services to be used in the application,
     /** uncomment to use services */
-    // 'Redux',
-    // 'GraphQL',
+    'Redux',
+    'GraphQL',
     // 'Stripe',
 ];
 
@@ -59,7 +57,6 @@ const options: PluridServerPartialOptions = {
 };
 
 const pluridServer = new PluridServer({
-    Application,
     routing,
     helmet,
     styles,
