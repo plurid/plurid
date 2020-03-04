@@ -124,7 +124,7 @@ export default class PluridServer<T> {
     private computeApplication() {
         this.loadMiddleware();
 
-        const router = new PluridRouter(this.routing.routes);
+        const router = new PluridRouter<T>(this.routing.routes);
 
         this.serverApplication.get('*', (request, response) => {
             const url = request.originalUrl || request.url;
@@ -238,7 +238,6 @@ export default class PluridServer<T> {
 
         try {
             const contentHandler = new PluridContentGenerator<T>(
-                // this.Application,
                 this.services,
                 this.servicesData,
                 sheet,

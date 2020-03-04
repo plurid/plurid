@@ -45,7 +45,6 @@ import wrapping from '../../utilities/wrapping';
 
 
 export default class PluridContentGenerator<T> {
-    // private Application: React.FC<any>;
     private services: PluridServerService[];
     private servicesData: PluridServerServicesData | undefined;
     private stylesheet: ServerStyleSheet;
@@ -54,7 +53,6 @@ export default class PluridContentGenerator<T> {
     private routing: PluridRouterRouting<T>;
 
     constructor(
-        // Application: React.FC<any>,
         services: PluridServerService[],
         servicesData: PluridServerServicesData | undefined,
         stylesheet: ServerStyleSheet,
@@ -62,7 +60,6 @@ export default class PluridContentGenerator<T> {
         matchedRoute: router.MatcherResponse<T>,
         routing: PluridRouterRouting<T>,
     ) {
-        // this.Application = Application;
         this.services = services;
         this.servicesData = servicesData;
         this.stylesheet = stylesheet;
@@ -72,7 +69,6 @@ export default class PluridContentGenerator<T> {
     }
 
     render() {
-        // const Application = this.Application;
         const RoutedApplication = () => (
             <PluridRouterStatic<T>
                 path={this.matchedRoute.pathname}
@@ -90,7 +86,7 @@ export default class PluridContentGenerator<T> {
             RoutedApplication,
             {
                 context: this.helmet,
-            }
+            },
         );
 
         for (const service of this.services) {
