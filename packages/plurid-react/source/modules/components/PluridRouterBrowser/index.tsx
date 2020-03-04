@@ -64,6 +64,20 @@ function PluridRouterBrowser<T>(
                 setComponent(routeComponent.component);
             }
         }
+
+        if (!matchedRoute) {
+            const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
+            if (notFoundMatchedRoute) {
+                setMatchedRoute(notFoundMatchedRoute);
+
+                const view = notFoundMatchedRoute.route.view;
+                const routeComponent = indexedComponents.current[view as any];
+
+                if (routeComponent) {
+                    setComponent(routeComponent.component);
+                }
+            }
+        }
     }
 
 
