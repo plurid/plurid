@@ -8,8 +8,6 @@ import express, {
 
 import open from 'open';
 
-import React from 'react';
-
 import {
     ServerStyleSheet,
 } from 'styled-components';
@@ -46,7 +44,6 @@ const PluridRouter = router.default;
 
 
 export default class PluridServer<T> {
-    // private Application: React.FC<any>;
     private routing: PluridServerRouting;
     private helmet: Helmet;
     private styles: string[];
@@ -64,7 +61,6 @@ export default class PluridServer<T> {
         configuration: PluridServerConfiguration,
     ) {
         const {
-            // Application,
             routing,
             helmet,
             styles,
@@ -74,7 +70,6 @@ export default class PluridServer<T> {
             options,
         } = configuration;
 
-        // this.Application = Application;
         this.routing = routing;
         this.helmet = helmet;
         this.styles = styles || [];
