@@ -71,7 +71,7 @@ export interface PluridServerServicesData {
 
 
 export interface PluridServerConfiguration {
-    Application: React.FC<any>;
+    // Application: React.FC<any>;
     routing: PluridServerRouting;
     helmet: Helmet;
     styles?: string[];
