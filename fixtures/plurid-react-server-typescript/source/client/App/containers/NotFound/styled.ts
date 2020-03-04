@@ -7,4 +7,7 @@ export const StyledNotFound = styled.div`
     height: 100%;
     display: grid;
     place-content: center;
+    min-height: 400px;
+    font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
 `;
