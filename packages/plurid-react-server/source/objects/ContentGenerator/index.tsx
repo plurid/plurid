@@ -74,13 +74,12 @@ export default class PluridContentGenerator {
     render() {
         const Application = this.Application;
 
-        // const RoutedApplication = () => (
-        //     <PluridRouterStatic<any>
-        //         path={this.matchedRoute.pathname}
-        //         routing={this.routing}
-        //     >
-        //     </PluridRouterStatic>
-        // );
+        const RoutedApplication = () => (
+            <PluridRouterStatic<any>
+                path={this.matchedRoute.pathname}
+                routing={this.routing}
+            />
+        );
 
         const reduxStore = this.servicesData?.reduxStore;
         const reduxStoreValue = this.servicesData?.reduxStoreValue || {};
