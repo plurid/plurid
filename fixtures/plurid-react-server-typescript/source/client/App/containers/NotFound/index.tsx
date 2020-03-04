@@ -35,6 +35,9 @@ const NotFound: React.FC<NotFoundProperties> = () => {
         },
         elements: {
             plane: {
+                controls: {
+                    show: false,
+                },
                 width: 0.5,
             },
         },
@@ -46,7 +49,9 @@ const NotFound: React.FC<NotFoundProperties> = () => {
             component: {
                 element: () => (
                     <StyledNotFound>
-                        <h1>{face}</h1>
+                        <h1>
+                            {face}
+                        </h1>
 
                         <p>
                             you searched and it's not here
