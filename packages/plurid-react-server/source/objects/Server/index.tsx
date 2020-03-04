@@ -297,6 +297,7 @@ export default class PluridServer {
                 sheet,
                 this.helmet,
                 route,
+                this.routing,
             );
 
             content = contentHandler.render();

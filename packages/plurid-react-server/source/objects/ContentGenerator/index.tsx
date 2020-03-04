@@ -24,6 +24,14 @@ import {
 } from 'react-stripe-elements';
 
 import {
+    PluridRouterRouting,
+} from '@plurid/plurid-data';
+
+import {
+    router,
+} from '@plurid/plurid-engine';
+
+import {
     PluridRouterStatic,
 } from '@plurid/plurid-react';
 
@@ -42,7 +50,8 @@ export default class PluridContentGenerator {
     private servicesData: PluridServerServicesData | undefined;
     private stylesheet: ServerStyleSheet;
     private helmet: Helmet;
-    private matchedRoute: any;
+    private matchedRoute: router.MatcherResponse<any>;
+    private routing: PluridRouterRouting<any>;
 
     constructor(
         Application: React.FC<any>,
@@ -50,7 +59,8 @@ export default class PluridContentGenerator {
         servicesData: PluridServerServicesData | undefined,
         stylesheet: ServerStyleSheet,
         helmet: Helmet,
-        matchedRoute: any,
+        matchedRoute: router.MatcherResponse<any>,
+        routing: PluridRouterRouting<any>,
     ) {
         this.Application = Application;
         this.services = services;
@@ -58,16 +68,17 @@ export default class PluridContentGenerator {
         this.stylesheet = stylesheet;
         this.helmet = helmet;
         this.matchedRoute = matchedRoute;
+        this.routing = routing;
     }
 
     render() {
         const Application = this.Application;
 
         // const RoutedApplication = () => (
-        //     <PluridRouterStatic
-
+        //     <PluridRouterStatic<any>
+        //         path={this.matchedRoute.pathname}
+        //         routing={this.routing}
         //     >
-
         //     </PluridRouterStatic>
         // );
 
