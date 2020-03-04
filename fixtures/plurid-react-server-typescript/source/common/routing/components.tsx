@@ -9,6 +9,7 @@ import view, {
 } from './view';
 
 import Index from '../../client/App/containers/Index';
+import Static from '../../client/App/containers/Static';
 import NotFound from '../../client/App/containers/NotFound';
 
 
@@ -23,8 +24,12 @@ const components: PluridRouterComponent<ViewType>[] = [
         component: NotFound,
     },
     {
+        view: view.static,
+        component: Static,
+    },
+    {
         view: view.page,
-        component: () => (<div>page</div>),
+        component: () => (<div style={{color: 'white', height: '400px'}}>page</div>),
     },
 ];
 
