@@ -1,9 +1,6 @@
 import {
-    PluridServerRoute,
-} from '@plurid/plurid-react-server';
-
-import {
     Indexed,
+    PluridRouterRoute,
 } from '@plurid/plurid-data';
 
 import paths from './paths';
@@ -11,17 +8,17 @@ import view from './view';
 
 
 
-const createRoutes = <T>(
+const mapPathsToRoutes = <T>(
     paths: Indexed<string>,
     view: T,
 ) => {
-    const routes: PluridServerRoute[] = [];
+    const routes: PluridRouterRoute<T>[] = [];
 
     for (const path of Object.values(paths)) {
         const pathView = view[path];
 
         if (pathView) {
-            const route: PluridServerRoute = {
+            const route: PluridRouterRoute<T> = {
                 path,
                 view: pathView,
             };
@@ -44,7 +41,7 @@ const createRoutes = <T>(
 //     },
 // ];
 
-const routes: PluridServerRoute[] = createRoutes(
+const routes: PluridRouterRoute<any>[] = mapPathsToRoutes(
     paths,
     view,
 );
