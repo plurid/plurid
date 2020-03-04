@@ -7,7 +7,7 @@ import React, {
 import {
     PLURID_ROUTER_LOCATION_CHANGED,
 
-    PluridRouterRoute,
+    PluridRouterRouting,
 } from '@plurid/plurid-data';
 
 import {
@@ -20,14 +20,9 @@ import {
 
 
 
-interface RouteComponent<T> {
-    view: T;
-    component: React.FC<any>;
-}
-
 interface PluridRouterBrowserOwnProperties<T> {
-    routes: PluridRouterRoute<T>[];
-    components: RouteComponent<T>[];
+    routing: PluridRouterRouting<T>;
+    children: React.ReactChildren;
 }
 
 function PluridRouterBrowser<T>(
@@ -35,9 +30,13 @@ function PluridRouterBrowser<T>(
 ) {
     /** properties */
     const {
+        routing,
+    } = properties;
+
+    const {
         routes,
         components,
-    } = properties;
+    } = routing;
 
 
     /** references */
