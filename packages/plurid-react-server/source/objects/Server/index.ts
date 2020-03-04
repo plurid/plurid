@@ -170,8 +170,15 @@ export default class PluridServer<T> {
         const head = `
             ${helmet.meta.toString()}
             ${helmet.title.toString()}
+            ${helmet.base.toString()}
             ${helmet.link.toString()}
+            ${helmet.style.toString()}
+            ${helmet.noscript.toString()}
+            ${helmet.script.toString()}
         `;
+
+        const htmlAttributes = helmet.htmlAttributes.toString();
+        const bodyAttributes = helmet.bodyAttributes.toString();
 
         const store = this.servicesData?.reduxStore ?
             JSON.stringify(
@@ -195,6 +202,8 @@ export default class PluridServer<T> {
             root,
             script,
             stripeScript,
+            htmlAttributes,
+            bodyAttributes,
         });
 
         return renderer;

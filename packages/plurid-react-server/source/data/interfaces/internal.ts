@@ -6,4 +6,6 @@ export interface PluridRendererConfiguration {
     root?: string;
     script?: string;
     stripeScript?: string;
+    htmlAttributes?: string;
+    bodyAttributes?: string;
 }

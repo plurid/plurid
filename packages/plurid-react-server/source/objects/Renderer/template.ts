@@ -16,10 +16,12 @@ const template = (
     root: string,
     script: string,
     stripeScript: string,
+    htmlAttributes: string,
+    bodyAttributes: string,
 ) => {
     const templateString = `
 <!DOCTYPE html>
-    <head>
+    <head ${htmlAttributes}>
         ${head}
 
         <style>
@@ -30,7 +32,7 @@ const template = (
 
         ${stripeScript}
     </head>
-    <body>
+    <body ${bodyAttributes}>
         <div id="${root}">${content}</div>
         <script>
             window.__PRELOADED_STATE__ = ${store}
