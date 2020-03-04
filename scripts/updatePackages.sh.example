@@ -31,7 +31,7 @@ function updatePackage {
     git add .
 
     echo "Commiting to git in $directory"
-    git commit -m "logic > ${packageName} > setup: package"
+    git commit -m "${packageName} > setup: package"
 
     echo "Patching version in $directory"
     npm version patch --no-git-tag-version
@@ -40,7 +40,7 @@ function updatePackage {
     git add .
 
     echo "Commiting to git in $directory"
-    git commit -m "logic > ${packageName} > setup: package"
+    git commit -m "${packageName} > setup: package"
 
     echo "Publishing to npm in $directory"
     npm publish
