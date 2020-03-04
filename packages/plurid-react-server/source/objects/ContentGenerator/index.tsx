@@ -72,8 +72,7 @@ export default class PluridContentGenerator {
     }
 
     render() {
-        const Application = this.Application;
-
+        // const Application = this.Application;
         const RoutedApplication = () => (
             <PluridRouterStatic<any>
                 path={this.matchedRoute.pathname}
@@ -88,7 +87,7 @@ export default class PluridContentGenerator {
 
         let Wrap = wrapping(
             HelmetProvider,
-            Application,
+            RoutedApplication,
             {
                 context: this.helmet,
             }
