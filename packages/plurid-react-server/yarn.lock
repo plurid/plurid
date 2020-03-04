@@ -477,15 +477,40 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.50.tgz#a69dbbf9d1e4822cad93c4dbd57d2e99957fee24"
   integrity sha512-AQMAP0JsCj97kIiHAbMqnQbraczHrqGqBtBxWb2bOo+3sxobcWB6MaBxxIUg6xJPD3+stsbQi2uZhfrbvHzWQw==
 
+"@plurid/plurid-functions-react@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-functions-react/-/plurid-functions-react-0.0.1.tgz#81f85b699726614ea80e00d1ee9f67f248218ca8"
+  integrity sha512-Xv90OCM18yectIYx2spwyF6+aD6L7aOZ1AAEmCj2CFx1WRY9vcH7XzQOSFXFmbmQQnUs4Wxggf3ZJCrglvO5bA==
+
 "@plurid/plurid-functions@^0.1.11":
   version "0.1.11"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.11.tgz#71b9c28a002375d259a740fa027f896648817720"
   integrity sha512-6uNuZiRqeMS1XxWw82nDpXg06J9DROYEE6+61GCpY4t1cSeDBbBSbSSMGYQTFDoJFB3hpmJIm2gCx4PvhKmn9A==
 
+"@plurid/plurid-icons-react@^0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-icons-react/-/plurid-icons-react-0.1.18.tgz#5399bf1199adfc9cde8a780912616d746182bbae"
+  integrity sha512-GOHPrylbPts3AhQbLwdDB5y2H94n60vEJ4d5URzWtqIiKfpwAjQBGRGljYVryJ7mgBTneEGs1V09OyHXWAnfAw==
+
 "@plurid/plurid-pubsub@^0.1.3":
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.3.tgz#f5014195a065f13c47f2895e4942ba1f3ec045a3"
   integrity sha512-mviWTVQhkIifQApuLa60jSVA+azeeKXYvNTFejzJJtEFG0s1h2a1BqtaH/Fj4wCzymivJsD47JqbaLfg7Xw4zA==
+
+"@plurid/plurid-react@^0.1.116":
+  version "0.1.116"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.116.tgz#a22acbb45fc1a019fbed7f5d4d83c888d2f9f7a1"
+  integrity sha512-JzTwbx6DIa5cIKysoO5MrnXHkFizJM0UtIOAiRS5DeSD16sLj4v9uRXjAihjGf1Dz39tA8mzjGXMMi1K5XbyTA==
+
+"@plurid/plurid-themes@^0.1.26":
+  version "0.1.26"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.1.26.tgz#696ec2b8a57d6d95027ac2dc2a954dda142bdb82"
+  integrity sha512-UOfta3WoTEC5p0ri11+7PM/hha5zGkxXQjYl8yhMho/uSRATyCal4Hpj49jSx4EjQoxfn65CPpRA8Z2SMRmRLQ==
+
+"@plurid/plurid-ui-react@^0.1.79":
+  version "0.1.79"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.79.tgz#927e8ace36bfbd2acdfd4a5b699f88c87d6ac70e"
+  integrity sha512-r1IVTon1Obq6TJdlJxVAuGbI6d0BadF+qJqLlE1iCjktIGp+ymm3JcjEiLNmRN2a2r5iKe72UVlg3J4tK3mvNA==
 
 "@rollup/plugin-commonjs@^11.0.2":
   version "11.0.2"
@@ -624,6 +649,11 @@
     "@types/body-parser" "*"
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
+
+"@types/hammerjs@^2.0.36":
+  version "2.0.36"
+  resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.36.tgz#17ce0a235e9ffbcdcdf5095646b374c2bf615a4c"
+  integrity sha512-7TUK/k2/QGpEAv/BCwSHlYu3NXZhQ9ZwBYpzr9tjlPIL2C5BeGhH3DmVavRx3ZNyELX5TLC91JTz/cen6AAtIQ==
 
 "@types/hoist-non-react-statics@*", "@types/hoist-non-react-statics@^3.3.0":
   version "3.3.1"
@@ -2734,6 +2764,11 @@ growly@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
+
+hammerjs@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
+  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
 
 har-schema@^2.0.0:
   version "2.0.0"
@@ -4926,6 +4961,11 @@ realpath-native@^1.1.0:
   integrity sha512-wlgPA6cCIIg9gKz0fgAPjnzh4yR/LnXovwuo9hvyGvx3h8nX4+/iLZplfUWasXpqD8BdnGnP5njOFjkUwPzvjA==
   dependencies:
     util.promisify "^1.0.0"
+
+redux-thunk@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
+  integrity sha512-km6dclyFnmcvxhAcrQV2AkZmPQjzPDjgVlQtR0EQjxZPyJ0BnMf3in1ryuR8A2qU0HldVRfxYXbFSKlI3N7Slw==
 
 redux@^4.0.0, redux@^4.0.5:
   version "4.0.5"
