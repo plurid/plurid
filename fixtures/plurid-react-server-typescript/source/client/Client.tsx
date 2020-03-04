@@ -20,8 +20,6 @@ import {
     PluridRouterBrowser,
 } from '@plurid/plurid-react';
 
-import App from './App';
-
 import helmetContext from './App/services/helmet';
 
 import reduxStore from './App/services/state/store';
@@ -32,6 +30,7 @@ import graphqlClient from './App/services/graphql/client';
 
 import {
     routing,
+    ViewType,
 } from '../common';
 
 
@@ -46,11 +45,9 @@ const Client: React.FC<any> = () => {
             <ReduxProvider store={reduxStore(state)}>
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
-                        <PluridRouterBrowser<any>
+                        <PluridRouterBrowser<ViewType>
                             routing={routing}
-                        >
-                            {/* <App /> */}
-                        </PluridRouterBrowser>
+                        />
                     {/* </StripeProvider> */}
                 </ApolloProvider>
             </ReduxProvider>
