@@ -497,10 +497,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.4.tgz#8e83001b85a9f74e1edf5d85f4efb796efd9daf8"
   integrity sha512-gV3iqiwoxSa2UTZZlPbWtvGBAoKwMr1ccd0KgpPoB1wauwPq8YXKv+vRQriC/dgHgUhq+6r2n87J44pYLaydnQ==
 
-"@plurid/plurid-react@^0.1.121":
-  version "0.1.121"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.121.tgz#97ef4ac073ac28649ae2986397e168024f4a5c20"
-  integrity sha512-193owM7GN6OMKxj/j/F/c1PjVaVZrgWKUb/T39SopN9kg3aG76TuJ9SXo73OeU4NVcjymHb7P61ukRHJf9mhsg==
+"@plurid/plurid-react@^0.1.122":
+  version "0.1.122"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.122.tgz#f042b188302456e70df84e0b7a05558f25a42db2"
+  integrity sha512-4/HQvgR1GgHXssFbns2HaEBVW6IhMK9WEVg5HBXnVeCXm9JjSTEHuZSDUEaCTXDTpG+fxABwxDrtukMeEZhP8w==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
