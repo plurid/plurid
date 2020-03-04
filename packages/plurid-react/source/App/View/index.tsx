@@ -36,7 +36,7 @@ import {
 
 import PluridPubSub, {
     TOPICS,
-} from '@plurid/plurid-pubsub'
+} from '@plurid/plurid-pubsub';
 
 // import {
 //     meta,
@@ -877,7 +877,7 @@ const View: React.FC<ViewProperties> = (
     /** PubSub Subscribe */
     useEffect(() => {
         if (pubsub) {
-            handlePubSubSubscribe(pubsub);
+            handlePubSubSubscribe(pubsub as any);
         }
     }, [
         pubsub,
@@ -886,7 +886,7 @@ const View: React.FC<ViewProperties> = (
     /** PubSub Publish */
     useEffect(() => {
         if (pubsub) {
-            handlePubSubPublish(pubsub);
+            handlePubSubPublish(pubsub as any);
         }
     }, [
         stateConfiguration,
