@@ -190,6 +190,7 @@ export default class PluridServer<T> {
         const {
             root,
             script,
+            vendorScript,
         } = this.options;
 
         const stripeScript = this.servicesData?.stripeScript;
@@ -201,6 +202,7 @@ export default class PluridServer<T> {
             store,
             root,
             script,
+            vendorScript,
             stripeScript,
             htmlAttributes,
             bodyAttributes,
@@ -257,6 +259,7 @@ export default class PluridServer<T> {
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
             root: partialOptions?.root || 'root',
             script: partialOptions?.script || '/index.js',
+            vendorScript: partialOptions?.vendorScript || '/vendor.js',
         };
         return options;
     }
