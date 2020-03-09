@@ -37,6 +37,11 @@ export interface PluridServerOptions {
     quiet: boolean;
 
     /**
+     * Use `gzip` compression for the response. Default `true`.
+     */
+    compression: boolean;
+
+    /**
      * Open in browser at start.
      */
     open: boolean;
