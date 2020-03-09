@@ -55,6 +55,14 @@ export interface PluridServerOptions {
      * The JavaScript filename to inject in the HTML template.
      */
     script: string;
+
+    /**
+     * The JavaScript vendor filepath to inject in the HTML template.
+     * Default `'/vendor.js'`.
+     *
+     * A CDN link can be used for better caching.
+     */
+    vendorScript: string;
 }
 
 export type PluridServerPartialOptions = Partial<PluridServerOptions>;

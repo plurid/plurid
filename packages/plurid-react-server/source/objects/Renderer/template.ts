@@ -15,6 +15,7 @@ const template = (
     store: string,
     root: string,
     script: string,
+    vendorScript: string,
     stripeScript: string,
     htmlAttributes: string,
     bodyAttributes: string,
@@ -32,7 +33,7 @@ const template = (
 
         ${stripeScript}
 
-        <script defer src="./vendor.js"></script>
+        <script defer src="${vendorScript}"></script>
         <script defer src="${script}"></script>
     </head>
     <body ${bodyAttributes}>
