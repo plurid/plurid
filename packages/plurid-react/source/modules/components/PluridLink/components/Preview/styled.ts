@@ -13,8 +13,8 @@ interface IStyledPreview {
 
 export const StyledPreview = styled.div<IStyledPreview>`
     position: absolute;
-    min-width: 300px;
-    min-height: 200px;
+    min-width: 600px;
+    min-height: 300px;
     z-index: 99999;
 
     top: ${(properties: IStyledPreview) => {
