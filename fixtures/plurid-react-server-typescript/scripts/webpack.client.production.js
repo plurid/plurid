@@ -4,15 +4,13 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const baseConfig = require('./webpack.client.base');
 
 
-
 const config = {
     mode: 'production',
-
     stats: {
         colors: false,
         hash: true,
@@ -23,8 +21,18 @@ const config = {
         modules: true,
         children: true,
     },
+    devtool: '',
 
     optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: "vendor",
+                    chunks: "initial",
+                },
+            },
+        },
         minimize: true,
         minimizer: [
             new TerserPlugin({
@@ -40,15 +48,17 @@ const config = {
         ],
     },
 
-    entry: './source/client/index.tsx',
+    entry: {
+        index: './source/client/index.tsx',
+    },
 
     output: {
-        filename: 'index.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, '../build'),
     },
 
     plugins: [
-        // new BundleAnalyzerPlugin(),
+        new BundleAnalyzerPlugin(),
         new CopyPlugin([
             { from: './source/public/', to: './' },
         ]),
