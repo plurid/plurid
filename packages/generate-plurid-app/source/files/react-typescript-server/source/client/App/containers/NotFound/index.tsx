@@ -73,7 +73,9 @@ const NotFound: React.FC<NotFoundProperties> = () => {
 
     return (
         <>
-            <Head />
+            <Head
+                title="Not Found | Plurid' Application"
+            />
 
             <PluridSubApp
                 configuration={pluridConfiguration}

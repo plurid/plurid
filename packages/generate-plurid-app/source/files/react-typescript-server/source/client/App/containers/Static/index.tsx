@@ -20,7 +20,7 @@ const Static: React.FC<any> = () => {
     return (
         <StyledStatic>
             <Head
-                title="A Static Page"
+                title="A Static Page | Plurid' Application"
             />
 
             <div>
