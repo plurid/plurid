@@ -31,13 +31,15 @@ const template = (
         ${styles}
 
         ${stripeScript}
+
+        <script defer src="./vendor.js"></script>
+        <script defer src="${script}"></script>
     </head>
     <body ${bodyAttributes}>
         <div id="${root}">${content}</div>
         <script>
             window.__PRELOADED_STATE__ = ${store}
         </script>
-        <script src="${script}"></script>
     </body>
 </html>
     `;
