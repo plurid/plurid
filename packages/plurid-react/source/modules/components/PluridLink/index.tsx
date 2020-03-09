@@ -390,6 +390,49 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         mouseOver,
     ]);
 
+    /** Set Page ID */
+    useEffect(() => {
+        const searchDocumentID = document ? document : stateActiveDocumentID;
+        const activeDocument = stateDocuments[searchDocumentID];
+
+        if (!activeDocument) {
+            return;
+        }
+
+        const {
+            pages,
+        } = activeDocument;
+
+        const routes: PluridRouterRoute<any>[] = Object.values(pages).map(page => {
+            const route: PluridRouterRoute<any> =  {
+                path: page.path,
+                view: '',
+            };
+            return route;
+        });
+
+        const pagesRouter = new Router(routes);
+
+        const matchedRoute = pagesRouter.match(pagePath);
+
+        if (!matchedRoute) {
+            return;
+        }
+
+        const page = Object.values(pages).find(p => p.path === matchedRoute.route.path);
+        if (!page) {
+            return;
+        }
+
+        setPageID(page.id);
+    }, []);
+
+    console.log('showPreview', showPreview);
+    console.log('showLink', showLink);
+    console.log('parentPlaneID', parentPlaneID);
+    console.log('linkCoordinates', linkCoordinates);
+    console.log('pageID', pageID);
+    console.log('-----');
 
     /** render */
     return (
