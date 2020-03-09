@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react-server",
-    "version": "0.1.22",
+    "version": "0.1.23",
     "description": "React implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
     "keywords": [
         "plurid",
@@ -75,7 +75,7 @@
         "@plurid/plurid-functions-react": "^0.0.1",
         "@plurid/plurid-icons-react": "^0.1.18",
         "@plurid/plurid-pubsub": "^0.1.5",
-        "@plurid/plurid-react": "^0.1.124",
+        "@plurid/plurid-react": "^0.1.125",
         "@plurid/plurid-themes": "^0.1.26",
         "@plurid/plurid-ui-react": "^0.1.79",
         "@rollup/plugin-commonjs": "^11.0.2",
