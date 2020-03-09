@@ -6,6 +6,8 @@ import express, {
     Express,
 } from 'express';
 
+import compression from 'compression';
+
 import open from 'open';
 
 import {
@@ -255,6 +257,7 @@ export default class PluridServer<T> {
     ) {
         const options: PluridServerOptions = {
             quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
+            compression: partialOptions?.compression || true,
             open: partialOptions?.open || false,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
             root: partialOptions?.root || 'root',
@@ -267,6 +270,12 @@ export default class PluridServer<T> {
     private configureServer() {
         this.serverApplication.disable('x-powered-by');
 
+        if (this.options.compression) {
+            this.serverApplication.use(
+                compression(),
+            );
+        }
+
         this.serverApplication.use(
             express.static(this.options.buildDirectory),
         );
@@ -275,7 +284,7 @@ export default class PluridServer<T> {
     private loadMiddleware() {
         for (const middleware of this.middleware) {
             this.serverApplication.use(
-                middleware,
+                (req, res, next) => middleware(req, res, next),
             );
         }
     }
