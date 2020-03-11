@@ -3,6 +3,7 @@ export interface Question {
     name: string;
     message: string;
     choices?: any[];
+    default?: boolean;
 }
 
 
