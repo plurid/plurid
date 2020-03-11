@@ -1,0 +1,82 @@
+{
+    "name": "@plurid/plurid-cli",
+    "version": "0.0.1",
+    "description": "plurid' application command line tool",
+    "keywords": [
+        "plurid",
+        "application"
+    ],
+    "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/plurid"
+    },
+    "bugs": {
+        "email": "feedback@plurid.com",
+        "url": "https://github.com/plurid/plurid/issues"
+    },
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-cli/README.md",
+    "publishConfig": {
+        "access": "public"
+    },
+    "engines": {
+        "node": ">=6.0.0"
+    },
+    "main": "distribution/index.js",
+    "module": "distribution/index.es.js",
+    "typings": "distribution/types/index.d.ts",
+    "bin": {
+        "plurid": "binary/plurid-cli"
+    },
+    "files": [
+        "distribution",
+        "binary"
+    ],
+    "preferGlobal": true,
+    "scripts": {
+        "spec": "jest --coverage",
+        "spec:watch": "jest --coverage --watch",
+        "spec:prod": "npm run lint && npm run spec -- --no-cache",
+        "report-coverage": "cat ./coverage/lcov.info | coveralls",
+        "documentation": "typedoc --out documentation --target es6 --theme minimal --mode file source",
+        "start": "rollup -c rollup.config.ts -w",
+        "build.removeSpecs": "rm -rf `find ./distribution/ -type d -name __specs__`",
+        "build.development": "rollup -c rollup.config.ts && yarn build.removeSpecs",
+        "build": "rollup -c rollup.config.ts && yarn build.removeSpecs",
+        "prebuild": "rimraf distribution",
+        "prepublishOnly": "yarn build"
+    },
+    "dependencies": {
+        "commander": "^4.1.1"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^11.0.2",
+        "@rollup/plugin-json": "^4.0.2",
+        "@rollup/plugin-node-resolve": "^7.1.1",
+        "@types/inquirer": "^6.5.0",
+        "@types/node": "^13.9.0",
+        "@typescript-eslint/eslint-plugin": "^2.23.0",
+        "@typescript-eslint/parser": "^2.23.0",
+        "colors": "^1.4.0",
+        "coveralls": "^3.0.9",
+        "cross-env": "^7.0.2",
+        "eslint": "^6.8.0",
+        "jest": "^25.1.0",
+        "jest-config": "^25.1.0",
+        "lodash.camelcase": "^4.3.0",
+        "prompt": "^1.0.0",
+        "replace-in-file": "^5.0.2",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.0.3",
+        "rollup-plugin-copy": "^3.3.0",
+        "rollup-plugin-peer-deps-external": "^2.2.2",
+        "rollup-plugin-sourcemaps": "^0.5.0",
+        "rollup-plugin-typescript2": "^0.26.0",
+        "shelljs": "^0.8.3",
+        "ts-jest": "^25.2.1",
+        "ts-node": "^8.6.2",
+        "typedoc": "^0.16.11",
+        "typescript": "^3.8.3"
+    }
+}
