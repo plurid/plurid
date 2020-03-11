@@ -74,6 +74,12 @@ const questions: Question[] = [
         message: 'Select services to use in the application:',
         choices: values.services,
     },
+    {
+        type: 'confirm',
+        name: 'pluridApp',
+        message: 'Deploy application to plurid.app',
+        default: true,
+    },
 ];
 
 
