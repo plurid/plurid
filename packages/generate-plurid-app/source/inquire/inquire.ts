@@ -22,6 +22,7 @@ const inquire = (
                 renderer,
                 manager,
                 services,
+                pluridApp,
             } = args;
 
             const answers: Answers = {
@@ -31,6 +32,7 @@ const inquire = (
                 renderer,
                 manager,
                 services,
+                pluridApp,
             };
             await processArguments(answers);
         });

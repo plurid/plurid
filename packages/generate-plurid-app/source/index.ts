@@ -41,6 +41,7 @@ async function main(program: CommanderStatic) {
                     renderer,
                     manager,
                     services,
+                    pluridApp,
                 } = program;
 
                 const answers: Answers = {
@@ -50,6 +51,7 @@ async function main(program: CommanderStatic) {
                     renderer,
                     manager,
                     services,
+                    pluridApp,
                 };
 
                 await processArguments(answers);

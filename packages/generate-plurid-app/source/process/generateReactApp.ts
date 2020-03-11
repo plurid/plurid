@@ -90,6 +90,14 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
 
+    if (app.pluridApp) {
+        await addScript({
+            name: 'deploy',
+            value: `${packageManagerRun} build.production && plurid deploy`,
+            path: packageJsonPath,
+        });
+    }
+
     await arrangePackageJSON(packageJsonPath);
 }
 

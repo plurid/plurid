@@ -104,6 +104,7 @@ const processArguments = async (
 
         const {
             services,
+            pluridApp,
         } = program;
 
         console.log('\n\tThe plurid\' application will be generated at:');
@@ -126,6 +127,12 @@ const processArguments = async (
             console.log('\tNo selected services.');
         }
 
+        if (pluridApp) {
+            console.log('\tDeploying application to plurid.app');
+        } else {
+            console.log('\tNot deploying to plurid.app');
+        }
+
         const application: Application = {
             directory,
             language,
@@ -133,6 +140,7 @@ const processArguments = async (
             renderer,
             manager,
             services,
+            pluridApp,
         };
         await generateApplication(application);
     } catch (error) {
