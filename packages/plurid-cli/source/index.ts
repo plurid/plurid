@@ -8,9 +8,24 @@ async function main(program: CommanderStatic) {
     program
         .version('0.1.0', '-v, --version');
 
-    if (process.argv.length > 2) {
+    program
+        .command('authenticate')
+        .action(() => {
+            console.log('authenticate');
+        });
 
-    }
+    program
+        .command('generate')
+        .action(() => {
+            console.log('generate');
+        });
+
+    program
+        .command('deploy')
+        .action(() => {
+            console.log('deploy');
+        });
+
 
     program.parse(process.argv);
 }
