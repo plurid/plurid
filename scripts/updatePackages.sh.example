@@ -1,7 +1,7 @@
 logicPackages=(
+    "plurid-pubsub"
     "plurid-data"
     "plurid-engine"
-    "plurid-pubsub"
     "plurid-react"
     "plurid-react-server"
     "generate-plurid-app"
