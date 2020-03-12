@@ -25,5 +25,5 @@ CLI tool for plurid' applications.
 
     plurid generate                 use generator from online registry
 
-    plurid deploy [directory]       deploy the plurid' application from the current folder
-                                    or from the target folder to plurid.app
+    plurid deploy [directory]       deploy the plurid' application from the current directory
+                                    or from the target directory to plurid.app
