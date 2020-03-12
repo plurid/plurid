@@ -29,6 +29,7 @@ const generateCommand = async (
         console.log(`\n\tLaunching generator program ${generatorName}...\n`);
         executeCommandSameTerminal(`npx ${generatorName}`);
     } catch (error) {
+        console.log('\n\n\tClosed plurid\' application generation process.\n');
     }
 }
 
