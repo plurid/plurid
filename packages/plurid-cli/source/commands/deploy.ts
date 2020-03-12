@@ -1,9 +1,15 @@
+import path from 'path';
+
+
+
 const deployCommand = async (
     directory: string | undefined,
 ) => {
     // check if user is loggedin
 
-    // resolve directory
+    const resolvedDirectory = directory
+        ? path.join(__dirname, directory)
+        : process.cwd();
 
     // check if there is a plurid.app.yaml file and parse it
 
