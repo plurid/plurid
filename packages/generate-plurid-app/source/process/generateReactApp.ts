@@ -116,13 +116,14 @@ export const setupPluridAppYaml = async (
 # <name>.plurid.app
 #
 # Can use only letters, numbers, and hyphens (-). Dots (.) will be converted to hyphens (-).
-#
 # Cannot contain more than 64 characters.
-#
 # Cannot coincide with internet protocols, such as www, ftp, dns, whois.
-#
 # Cannot start or end within hyphen (-).
 name: ${appName}
+
+# Environment in which to run the application.
+# Supported: node12, python, go.
+runtime: node12
 `;
 
     try {
