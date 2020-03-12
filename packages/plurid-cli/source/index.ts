@@ -32,9 +32,13 @@ async function main(
 
     program
         .command('generate')
+        .option('-o, --online', 'use generator from online registry')
         .description('generate a new plurid\' application')
-        .action(async () => {
-            await generateCommand();
+        .action(async (commandObject) => {
+            const options = {
+                online: commandObject.online,
+            };
+            await generateCommand(options);
         });
 
     program
