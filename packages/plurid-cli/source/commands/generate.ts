@@ -1,5 +1,11 @@
+import {
+    executeCommand,
+} from '../utilities';
+
+
+
 const generateCommand = async () => {
-    console.log('generate');
+    executeCommand('npx @plurid/generate-plurid-app');
 }
 
 
