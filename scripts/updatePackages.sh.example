@@ -4,6 +4,8 @@ logicPackages=(
     "plurid-pubsub"
     "plurid-react"
     "plurid-react-server"
+    "generate-plurid-app"
+    "plurid-cli"
 )
 
 logicPackageLocation="/path/to/packages_directory"
