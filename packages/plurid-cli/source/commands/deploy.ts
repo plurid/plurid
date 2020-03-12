@@ -1,11 +1,17 @@
 import path from 'path';
 
+import {
+    userLoggedIn,
+} from '../services/utilities/user';
+
 
 
 const deployCommand = async (
     directory: string | undefined,
 ) => {
-    // check if user is loggedin
+    if (!userLoggedIn()) {
+        console.log('\n\tCould not deploy, user not authenticated. Run the \'authenticate\' command.');
+    }
 
     const resolvedDirectory = directory
         ? path.join(__dirname, directory)
@@ -16,9 +22,6 @@ const deployCommand = async (
     // upload files
 
     // wait for deployment to finish
-
-    console.log('deploy');
-    console.log(directory);
 }
 
 
