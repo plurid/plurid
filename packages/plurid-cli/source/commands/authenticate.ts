@@ -2,6 +2,8 @@ import express from 'express';
 
 import open from 'open';
 
+import getPort from 'get-port';
+
 import store from '../services/store';
 
 
@@ -17,9 +19,9 @@ app.get('/access/:accessCode', (req, res) => {
 
 
 const authenticateCommand = async () => {
-    // start server on port 33800
-    // get useable port
-    const port = 33800;
+    const port = await getPort({
+        port: getPort.makeRange(33800, 33900),
+    });
     const server = app.listen(port);
 
 
