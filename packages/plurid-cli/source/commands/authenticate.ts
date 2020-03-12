@@ -92,7 +92,7 @@ const authenticateCommand = async () => {
             server.close();
             clearInterval(interval);
 
-            console.log('\n\tAuthentication session expired. Run the command again and authenticate.');
+            console.log('\n\tAuthentication session expired. Run the command again to authenticate.');
         }
     }, 1500);
 }
