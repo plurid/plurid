@@ -50,7 +50,7 @@ const authenticateCommand = async () => {
             // set user
 
             const username = 'username';
-            console.log(`\n\tSuccessfully logged in as ${username}.`);
+            console.log(`\n\tSuccessfully logged in as ${username}.\n`);
             return;
         }
 
