@@ -10,7 +10,7 @@ import {
 
 import {
     programHasCommand,
-} from './utilities';
+} from './services/utilities';
 
 
 

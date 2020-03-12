@@ -32,16 +32,10 @@ const authenticateCommand = async () => {
     });
     const server = app.listen(port);
 
-
-    // open account.plurid.com?cli=33800&cliAccess=true
-    // the user logins into account, creates an account
-    // the user is redirected to http://localhost:33800/access/<access-code>
     const accountLink = `https://account.plurid.com?cli=${port}&cliAccess=true`;
     open(accountLink);
     console.log(`\n\tOpened ${accountLink} in the default browser.`);
 
-
-    // listen for accessCode to be set in store
     const interval = setInterval(async () => {
         const accessCode = store.get('accessCode');
 
@@ -59,10 +53,11 @@ const authenticateCommand = async () => {
                     input,
                 },
             });
-            console.log(query);
 
             const response = query.data.getAccessCodeTokens;
             if (!response.status) {
+                console.log(`\n\tSomething went wrong. Could not login.\n`);
+
                 return;
             }
 
