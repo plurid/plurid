@@ -1,3 +1,5 @@
+import path from 'path';
+
 import express from 'express';
 
 import open from 'open';
@@ -9,12 +11,14 @@ import store from '../services/store';
 
 
 const app = express();
+app.use(express.static('server'));
 app.get('/access/:accessCode', (req, res) => {
     const accessCode = req.params.accessCode || '';
     store.set('accessCode', accessCode);
     console.log(`\n\tSet access code: ${accessCode}`);
 
-    res.send(accessCode);
+    // res.send(accessCode);
+    res.sendFile(path.join(__dirname, './server/', 'access.html'));
 });
 
 
