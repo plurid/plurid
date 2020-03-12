@@ -21,8 +21,9 @@ CLI tool for plurid' applications.
 
 ## Usage
 
-    plurid authenticate
+    plurid authenticate             login or create an user account on plurid.com
 
-    plurid generate
+    plurid generate                 use generator from online registry
 
-    plurid deploy
+    plurid deploy [directory]       deploy the plurid' application from the current folder
+                                    or from the target folder to plurid.app
