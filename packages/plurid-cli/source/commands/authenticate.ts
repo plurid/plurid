@@ -66,14 +66,19 @@ const authenticateCommand = async () => {
             } = response;
 
             const {
+                user,
                 token,
                 refreshToken,
             } = data;
 
+            const {
+                username,
+            } = user;
+
+            store.set('user', user);
             store.set('token', token);
             store.set('refreshToken', refreshToken);
 
-            const username = 'username';
             console.log(`\n\tSuccessfully logged in as ${username}.\n`);
             return;
         }
