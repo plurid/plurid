@@ -55,6 +55,7 @@
         "apollo-link-http": "^1.5.16",
         "commander": "^4.1.1",
         "configstore": "^5.0.1",
+        "cross-fetch": "^3.0.4",
         "express": "^4.17.1",
         "get-port": "^5.1.1",
         "graphql": "^14.6.0",
