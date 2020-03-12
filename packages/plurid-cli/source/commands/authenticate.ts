@@ -8,6 +8,11 @@ import getPort from 'get-port';
 
 import store from '../services/store';
 
+import client from '../services/graphql/client';
+import {
+    GET_ACCESS_CODE_TOKENS,
+} from '../services/graphql/query';
+
 
 
 const app = express();
@@ -45,9 +50,33 @@ const authenticateCommand = async () => {
             server.close();
             clearInterval(interval);
 
-            // queries api.plurid.com for the tokens
-            // set tokens
-            // set user
+            const input = {
+                value: accessCode,
+            };
+            const query = await client.query({
+                query: GET_ACCESS_CODE_TOKENS,
+                variables: {
+                    input,
+                },
+            });
+            console.log(query);
+
+            const response = query.data.getAccessCodeTokens;
+            if (!response.status) {
+                return;
+            }
+
+            const {
+                data,
+            } = response;
+
+            const {
+                token,
+                refreshToken,
+            } = data;
+
+            store.set('token', token);
+            store.set('refreshToken', refreshToken);
 
             const username = 'username';
             console.log(`\n\tSuccessfully logged in as ${username}.\n`);
