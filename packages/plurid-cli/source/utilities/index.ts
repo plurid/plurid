@@ -1,5 +1,6 @@
 import {
     exec,
+    execSync,
 } from 'child_process';
 
 
@@ -38,6 +39,22 @@ export const executeCommand = (
                     resolve(stdout? stdout : stderr);
                 },
             );
+        },
+    );
+}
+
+
+export const executeCommandSameTerminal = (
+    command: string,
+    options?: {
+        cwd: string;
+    },
+) => {
+    execSync(
+        command,
+        {
+            cwd: options?.cwd || process.cwd(),
+            stdio: 'inherit',
         },
     );
 }
