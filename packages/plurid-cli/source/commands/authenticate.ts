@@ -15,10 +15,9 @@ app.use(express.static('server'));
 app.get('/access/:accessCode', (req, res) => {
     const accessCode = req.params.accessCode || '';
     store.set('accessCode', accessCode);
-    console.log(`\n\tSet access code: ${accessCode}`);
+    console.log(`\n\tLogging in with access code: ${accessCode}`);
 
-    // res.send(accessCode);
-    res.sendFile(path.join(__dirname, './server/', 'access.html'));
+    res.sendFile(path.join(__dirname, './server/access.html'));
 });
 
 
