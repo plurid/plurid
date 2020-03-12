@@ -27,7 +27,7 @@ const generateCommand = async (
         }
 
         console.log(`\n\tLaunching generator program ${generatorName}...\n`);
-        executeCommandSameTerminal('npx @plurid/generate-plurid-app');
+        executeCommandSameTerminal(`npx ${generatorName}`);
     } catch (error) {
     }
 }
