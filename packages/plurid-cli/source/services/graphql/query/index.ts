@@ -12,6 +12,9 @@ export const GET_ACCESS_CODE_TOKENS = gql`
                 message
             }
             data {
+                user {
+                    username
+                }
                 token
                 refreshToken
             }
