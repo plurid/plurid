@@ -35,6 +35,7 @@
     ],
     "preferGlobal": true,
     "scripts": {
+        "copy.server": "cp -r ./source/server ./distribution/server/",
         "spec": "jest --coverage",
         "spec:watch": "jest --coverage --watch",
         "spec:prod": "npm run lint && npm run spec -- --no-cache",
@@ -42,8 +43,8 @@
         "documentation": "typedoc --out documentation --target es6 --theme minimal --mode file source",
         "start": "rollup -c rollup.config.ts -w",
         "build.removeSpecs": "rm -rf `find ./distribution/ -type d -name __specs__`",
-        "build.development": "rollup -c rollup.config.ts && yarn build.removeSpecs",
-        "build": "rollup -c rollup.config.ts && yarn build.removeSpecs",
+        "build.development": "rollup -c rollup.config.ts && yarn build.removeSpecs && yarn copy.server",
+        "build": "rollup -c rollup.config.ts && yarn build.removeSpecs && yarn copy.server",
         "prebuild": "rimraf distribution",
         "prepublishOnly": "yarn build"
     },
