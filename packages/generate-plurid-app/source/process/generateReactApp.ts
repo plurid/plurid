@@ -2,8 +2,6 @@ import path from 'path';
 
 import fs from 'fs';
 
-import yaml from 'js-yaml';
-
 import {
     exec,
 } from 'child_process';
