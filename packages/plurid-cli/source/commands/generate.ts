@@ -2,7 +2,7 @@ import {
     checkPackageInstalledGlobally,
     executeCommand,
     executeCommandSameTerminal,
-} from '../utilities';
+} from '../services/utilities';
 
 
 
