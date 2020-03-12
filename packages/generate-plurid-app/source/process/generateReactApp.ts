@@ -123,9 +123,8 @@ export const setupPluridAppYaml = async (
     const appName = path.relative(process.cwd(), app.directory);
 
     const yamlContents =
-`# The name of the application to be used as subdomain:
-# <name>.plurid.app
-#
+`---
+# The name of the application to be used as subdomain: <name>.plurid.app
 # The name needs to be unique across all plurid.app applications.
 #
 # Can use only letters, numbers, and hyphens (-). Dots (.) will be converted to hyphens (-).
