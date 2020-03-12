@@ -26,10 +26,13 @@ const generateCommand = async (
             }
         }
 
+        const onlineInstall = online
+            ? '--ignore-existing'
+            : '';
         console.log(`\n\tLaunching generator program ${generatorName}...\n`);
-        executeCommandSameTerminal(`npx ${generatorName}`);
+        executeCommandSameTerminal(`npx ${onlineInstall} ${generatorName}`);
     } catch (error) {
-        console.log('\n\n\tClosed plurid\' application generation process.\n');
+        console.log('\n\n\tClosed plurid\' application generator program.\n');
     }
 }
 
