@@ -136,7 +136,13 @@ name: ${appName}
 
 # Environment in which to run the application.
 # Supported: node12, python, go.
+# Default: node12.
 runtime: node12
+
+# Deployment region.
+# Supported: us, europe.
+# Default: us.
+region: us
 `;
 
     try {
