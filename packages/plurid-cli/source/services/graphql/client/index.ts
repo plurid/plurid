@@ -10,6 +10,20 @@ import {
 
 
 
+export const authenticationClient = (data: any) => new ApolloClient({
+    link: createHttpLink({
+        uri: PLURID_API_URL_GRPAHQL,
+        credentials: 'include',
+        fetch,
+        headers: {
+            'Authorization': 'Bearer ' + data.token,
+            'Authorization-Refresh': 'Bearer ' + data.refreshToken,
+        },
+    }),
+    cache: new InMemoryCache(),
+});
+
+
 const client = new ApolloClient({
     link: createHttpLink({
         uri: PLURID_API_URL_GRPAHQL,
