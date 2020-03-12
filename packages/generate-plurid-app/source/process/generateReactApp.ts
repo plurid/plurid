@@ -2,6 +2,8 @@ import path from 'path';
 
 import fs from 'fs';
 
+import yaml from 'js-yaml';
+
 import {
     exec,
 } from 'child_process';
@@ -99,6 +101,37 @@ export const setupPackageJSONReactServer = async (
     }
 
     await arrangePackageJSON(packageJsonPath);
+}
+
+
+export const setupPluridAppYaml = async (
+    app: Application,
+) => {
+    if (!app.pluridApp) {
+        return;
+    }
+
+    const appName = path.relative(process.cwd(), app.directory);
+
+    const yamlContents =
+`# The name of the application to be used as subdomain:
+# <name>.plurid.app
+#
+# Can use only letters, numbers, and hyphens (-). Dots (.) will be converted to hyphens (-).
+#
+# Cannot contain more than 64 characters.
+#
+# Cannot coincide with internet protocols, such as www, ftp, dns, whois.
+#
+# Cannot start or end within hyphen (-).
+name: ${appName}
+`;
+
+    try {
+        const pluridAppPath = path.join(app.directory, './plurid.app.yaml');
+        fs.writeFileSync(pluridAppPath, yamlContents);
+    } catch (error) {
+    }
 }
 
 
@@ -315,6 +348,8 @@ const generateReactServerApplication = async (
 ) => {
     console.log('\n\tGenerating server rendered plurid\' application.');
 
+    await setupPluridAppYaml(app);
+
     const initCommand = computeInitCommand(app);
 
     const graphqlService = app.services.includes(services.graphql);
@@ -444,6 +479,8 @@ const generateReactServerApplication = async (
 
 
     await setupPackageJSONReactServer(app);
+
+    await setupPluridAppYaml(app);
 
     await removeUnusedAddons(app);
 
