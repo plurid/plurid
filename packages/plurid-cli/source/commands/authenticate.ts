@@ -25,10 +25,10 @@ const authenticateCommand = async () => {
     const server = app.listen(port);
 
 
-    // open account.plurid.com?cli=33800
+    // open account.plurid.com?cli=33800&cliAccess=true
     // the user logins into account, creates an account
     // the user is redirected to http://localhost:33800/access/<access-code>
-    const accountLink = `https://account.plurid.com?cli=${port}`;
+    const accountLink = `https://account.plurid.com?cli=${port}&cliAccess=true`;
     open(accountLink);
     console.log(`\n\tOpened ${accountLink} in the default browser.`);
 
