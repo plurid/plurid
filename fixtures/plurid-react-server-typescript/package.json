@@ -18,7 +18,7 @@
         "build.server.production": "webpack --config scripts/webpack.server.production.js",
         "build.development": "yarn clean && yarn build.server.development && yarn build.client.development",
         "build.production": "yarn clean && yarn build.server.production && yarn build.client.production",
-        "deploy": "yarn build.production && plurid deploy"
+        "deploy": "plurid deploy"
     },
     "dependencies": {
         "@apollo/react-hooks": "^3.1.3",
