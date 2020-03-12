@@ -55,6 +55,7 @@
         "@rollup/plugin-commonjs": "^11.0.2",
         "@rollup/plugin-json": "^4.0.2",
         "@rollup/plugin-node-resolve": "^7.1.1",
+        "@types/configstore": "^4.0.0",
         "@types/inquirer": "^6.5.0",
         "@types/node": "^13.9.0",
         "@typescript-eslint/eslint-plugin": "^2.23.0",
