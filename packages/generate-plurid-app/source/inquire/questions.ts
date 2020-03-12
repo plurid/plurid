@@ -77,7 +77,7 @@ const questions: Question[] = [
     {
         type: 'confirm',
         name: 'pluridApp',
-        message: 'Deploy application to plurid.app',
+        message: 'Deploy the application to plurid.app',
         default: true,
     },
 ];
