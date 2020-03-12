@@ -35,7 +35,9 @@ const authenticateCommand = async () => {
     const accountLink = `https://account.plurid.com?cli=${port}&cliAccess=true`;
     open(accountLink);
     console.log(`\n\tOpened ${accountLink} in the default browser.`);
+    console.log(`\tAuthentication session expires in 5 minutes.`);
 
+    const startTime = Date.now();
     const interval = setInterval(async () => {
         const accessCode = store.get('accessCode');
 
@@ -83,7 +85,13 @@ const authenticateCommand = async () => {
             return;
         }
 
-        // check if more than 5 minutes have passed and close server
+        const currentTime = Date.now();
+        if (currentTime > startTime + 1000 * 60 * 5) {
+            server.close();
+            clearInterval(interval);
+
+            console.log('\n\tAuthentication session expired. Run the command again and authenticate.');
+        }
     }, 1500);
 }
 
