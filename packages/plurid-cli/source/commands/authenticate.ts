@@ -1,9 +1,17 @@
+import express from 'express';
+
 import store from '../services/store';
 
+
+const app = express();
+const port = 33800;
+
+app.get('/access/:accessCode', (req, res) => res.send(req.params.accessCode || ''));
 
 
 const authenticateCommand = async () => {
     // start server on port 33800
+    app.listen(port);
 
     // open account.plurid.com?cli=33800
 
