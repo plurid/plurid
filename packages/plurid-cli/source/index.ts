@@ -10,20 +10,24 @@ async function main(program: CommanderStatic) {
 
     program
         .command('authenticate')
+        .description('login or create account on plurid.com')
         .action(() => {
             console.log('authenticate');
         });
 
     program
         .command('generate')
+        .description('generate a plurid\' application')
         .action(() => {
             console.log('generate');
         });
 
     program
-        .command('deploy')
-        .action(() => {
+        .command('deploy [directory]')
+        .description('deploy the plurid\' application from the current folder or from the target folder to plurid.app')
+        .action((directory) => {
             console.log('deploy');
+            console.log(directory);
         });
 
 
