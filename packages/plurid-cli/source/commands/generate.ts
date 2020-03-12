@@ -1,15 +1,23 @@
 import {
+    checkPackageInstalledGlobally,
+    executeCommand,
     executeCommandSameTerminal,
 } from '../utilities';
 
 
 
 const generateCommand = async () => {
-    // check if @plurid/generate-plurid-app is installed globally
+    const generatorName = '@plurid/generate-plurid-app';
 
-    // install @plurid/generate-plurid-app
+    console.log(`\n\tSearching for generator program ${generatorName}...\n`);
+    const generatorInstalled = await checkPackageInstalledGlobally(generatorName);
 
-    console.log('\n\tLaunching generation program @plurid/generate-plurid-app...\n');
+    if (!generatorInstalled) {
+        console.log(`\tInstalling generator program ${generatorName}...\n`);
+        await executeCommand(`npm install -g ${generatorName}`);
+    }
+
+    console.log(`\tLaunching generator program ${generatorName}...\n`);
 
     executeCommandSameTerminal('npx @plurid/generate-plurid-app');
 }

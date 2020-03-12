@@ -31,11 +31,7 @@ export const executeCommand = (
                 {
                     cwd: options?.cwd || process.cwd(),
                 },
-                (error, stdout, stderr) => {
-                    if (error) {
-                        console.warn(error);
-                    }
-
+                (_, stdout, stderr) => {
                     resolve(stdout? stdout : stderr);
                 },
             );
@@ -57,4 +53,23 @@ export const executeCommandSameTerminal = (
             stdio: 'inherit',
         },
     );
+}
+
+
+
+export const checkPackageInstalledGlobally = async (
+    packageName: string,
+) => {
+    try {
+        const command = `npm ls -g ${packageName} --depth 0`;
+        const result = await executeCommand(command);
+
+        if ((result as string).includes('-- (empty)')) {
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        return false;
+    }
 }
