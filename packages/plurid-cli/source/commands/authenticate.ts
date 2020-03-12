@@ -32,17 +32,20 @@ const authenticateCommand = async () => {
 
 
     // listen for accessCode to be set in store
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
         const accessCode = store.get('accessCode');
 
         if (accessCode) {
-            // queries api.plurid.com for the tokens
-            const username = 'username';
-            console.log(`\n\tYou are now logged in as ${username}.`);
-
             store.set('accessCode', '');
             server.close();
             clearInterval(interval);
+
+            // queries api.plurid.com for the tokens
+            // set tokens
+            // set user
+
+            const username = 'username';
+            console.log(`\n\tSuccessfully logged in as ${username}.`);
             return;
         }
 
