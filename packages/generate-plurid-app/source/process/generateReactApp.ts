@@ -90,15 +90,26 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
 
-    if (app.pluridApp) {
-        await addScript({
-            name: 'deploy',
-            value: `plurid deploy`,
-            path: packageJsonPath,
-        });
-    }
+    await addScriptPluridApp(app);
 
     await arrangePackageJSON(packageJsonPath);
+}
+
+
+export const addScriptPluridApp = async (
+    app: Application,
+) => {
+    if (!app.pluridApp) {
+        return;
+    }
+
+    const packageJsonPath = path.join(app.directory, './package.json');
+
+    await addScript({
+        name: 'deploy',
+        value: `plurid deploy`,
+        path: packageJsonPath,
+    });
 }
 
 
@@ -278,6 +289,8 @@ const generatePluridReactApplication = async (
         copyDirectory(templateSourceDir, sourceDir);
 
         await setupPluridAppYaml(app);
+
+        await addScriptPluridApp(app);
 
         await removeGeneratePackage(app);
     });
