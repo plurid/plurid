@@ -222,7 +222,7 @@ export const removeUnusedAddons = async (
     }
 }
 
-const generatePluridReactApplication = (
+const generatePluridReactApplication = async (
     app: Application,
 ) => {
     console.log('\n\tAdding the plurid\' packages to the React Application...');
@@ -252,7 +252,7 @@ const generatePluridReactApplication = (
 
     exec(installCommand, {
         cwd: app.directory,
-    }, () => {
+    }, async () => {
         console.log('\tPlurid\' packages added succesfully.');
 
         console.log('\n\tSetting up the template files...');
@@ -277,7 +277,9 @@ const generatePluridReactApplication = (
         copyDirectory(templatePublicDir, publicDir);
         copyDirectory(templateSourceDir, sourceDir);
 
-        removeGeneratePackage(app);
+        await setupPluridAppYaml(app);
+
+        await removeGeneratePackage(app);
     });
 }
 
@@ -297,10 +299,10 @@ const generateReactClientApplication = async (
         ? yarnCreateCommand
         : npmCreateCommand;
 
-    exec(createCommand, () => {
+    exec(createCommand, async () => {
         console.log('\tReact Application generated successfully.');
 
-        generatePluridReactApplication(app);
+        await generatePluridReactApplication(app);
     });
 }
 
