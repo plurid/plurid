@@ -25,6 +25,8 @@ app.get('/access/:accessCode', (req, res) => {
     res.sendFile(path.join(__dirname, './server/access.html'));
 });
 
+const fiveMinutes = 1000 * 60 * 5;
+
 
 const authenticateCommand = async () => {
     const port = await getPort({
@@ -86,7 +88,7 @@ const authenticateCommand = async () => {
         }
 
         const currentTime = Date.now();
-        if (currentTime > startTime + 1000 * 60 * 5) {
+        if (currentTime > startTime + fiveMinutes) {
             server.close();
             clearInterval(interval);
 
