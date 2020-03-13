@@ -5,7 +5,7 @@
 # Cannot contain more than 64 characters.
 # Cannot coincide with internet protocols, such as www, ftp.
 # Cannot start or end with an hyphen (-).
-name: ${appName}
+name: app-name
 
 # Environment in which to run the application.
 # Supported: node12, python, go.
