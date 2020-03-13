@@ -80,6 +80,8 @@ const checkAvailableAppName = async (
 const deployCommand = async (
     directory: string | undefined,
 ) => {
+    console.log('\nStarting plurid\' application deployment...');
+
     if (!userLoggedIn()) {
         console.log('\n\tCould not deploy, user not authenticated. Run the \'authenticate\' command.');
         return;
@@ -108,10 +110,14 @@ const deployCommand = async (
     console.log(`\tApplication name ${checkedAppName} is available.`);
 
 
-    // upload files
+    console.log(`\n\tUploading files...`);
 
 
-    // wait for deployment to finish
+    console.log(`\n\tDeployment finished successfully.\n`);
+
+    console.log(`\n\tExplore the plurid' application at:`);
+    console.log(`\n\t\thttps://${checkedAppName}.plurid.app\n`);
+    console.log(`\tand enjoy.\n`);
 }
 
 
