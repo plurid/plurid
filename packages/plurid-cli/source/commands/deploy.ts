@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
+import yaml from 'js-yaml';
+
 import store from '../services/store';
 
 import {
@@ -13,16 +15,24 @@ import {
 
 
 
-const parsePluridFile = (
+const parseAppConfigurationFile = (
     directory: string,
 ) => {
     try {
         const pluridFile = path.join(directory, './plurid.app.yaml');
         const contents = fs.readFileSync(pluridFile, 'utf8');
-        return contents;
+        const data = yaml.safeLoad(contents);
+        return data;
     } catch (error) {
         return {};
     }
+}
+
+const computeAppName = (
+    pluridAppConfiguration: any,
+    resolvedDirectory: string,
+) => {
+    return pluridAppConfiguration.name || resolvedDirectory.split(path.sep).pop();
 }
 
 
@@ -33,10 +43,6 @@ const deployCommand = async (
         console.log('\n\tCould not deploy, user not authenticated. Run the \'authenticate\' command.');
     }
 
-    const resolvedDirectory = directory
-        ? path.join(__dirname, directory)
-        : process.cwd();
-
     const token = store.get('token');
     const refreshToken = store.get('refreshToken');
     const data = {
@@ -45,15 +51,21 @@ const deployCommand = async (
     };
     const authenticatedClient = authenticationClient(data);
 
-    const pluridAppConfiguration = parsePluridFile(resolvedDirectory);
-    console.log(pluridAppConfiguration);
 
-    // check if there is a plurid.app.yaml file and parse it
+    const resolvedDirectory = directory
+        ? path.join(__dirname, directory)
+        : process.cwd();
 
-    // check if an app already exists and if user has access to it
-    // or if app needs to be created
+    const appConfiguration = parseAppConfigurationFile(resolvedDirectory);
+
+    const appName = computeAppName(appConfiguration, resolvedDirectory);
+
+
+    // query checkAvailableAppName
+
 
     // upload files
+
 
     // wait for deployment to finish
 }
