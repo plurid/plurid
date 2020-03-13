@@ -15,7 +15,7 @@ const logoutCommand = async () => {
     store.delete('token');
     store.delete('refreshToken');
 
-    console.log(`\n\tLogged out from user ${user.username}.`);
+    console.log(`\n\tLogged out from user ${user.username}.\n`);
 }
 
 
