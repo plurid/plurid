@@ -6,6 +6,7 @@ import {
     authenticateCommand,
     generateCommand,
     deployCommand,
+    statusCommand,
     logoutCommand,
 } from './commands';
 
@@ -49,9 +50,16 @@ async function main(
         });
 
     program
+        .command('status')
+        .description('command-line interface application state')
+        .action(async () => {
+            await statusCommand();
+        });
+
+    program
         .command('logout')
         .description('logout from the current user')
-        .action(async (directory) => {
+        .action(async () => {
             await logoutCommand();
         });
 
