@@ -29,6 +29,14 @@ const fiveMinutes = 1000 * 60 * 5;
 
 
 const authenticateCommand = async () => {
+    const user = store.get('user');
+
+    if (user) {
+        console.log(`\n\tLogged in as ${user.username}. Run the \'logout\' command to log out:`);
+        console.log('\n\t\tplurid logout\n');
+        return;
+    }
+
     const port = await getPort({
         port: getPort.makeRange(33800, 33900),
     });
