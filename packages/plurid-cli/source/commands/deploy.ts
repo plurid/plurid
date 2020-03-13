@@ -86,7 +86,7 @@ const deployCommand = async (
         return;
     }
 
-    console.log('\nStarting plurid\' application deployment...');
+    console.log('\n\tStarting plurid\' application deployment...');
 
     const authenticatedClient = authenticateClient();
 
@@ -105,7 +105,7 @@ const deployCommand = async (
     console.log('\n\tChecking application name...');
     const checkedAppName = await checkAvailableAppName(appName, authenticatedClient);
     if (!checkedAppName) {
-        console.log('\n\tApp name is invalid or unavailable.');
+        console.log('\n\tApp name is invalid or unavailable.\n');
         return;
     }
     console.log(`\tApplication name ${checkedAppName} is available.`);
