@@ -80,12 +80,13 @@ const checkAvailableAppName = async (
 const deployCommand = async (
     directory: string | undefined,
 ) => {
-    console.log('\nStarting plurid\' application deployment...');
-
     if (!userLoggedIn()) {
-        console.log('\n\tCould not deploy, user not authenticated. Run the \'authenticate\' command.');
+        console.log('\n\tCould not deploy, user not authenticated. Run the \'authenticate\' command:');
+        console.log('\n\t\tplurid authenticate\n');
         return;
     }
+
+    console.log('\nStarting plurid\' application deployment...');
 
     const authenticatedClient = authenticateClient();
 
