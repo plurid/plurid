@@ -6,6 +6,7 @@ import {
     authenticateCommand,
     generateCommand,
     deployCommand,
+    logoutCommand,
 } from './commands';
 
 import {
@@ -45,6 +46,13 @@ async function main(
         .description('deploy the plurid\' application from the current folder or from the target folder to plurid.app')
         .action(async (directory) => {
             await deployCommand(directory);
+        });
+
+    program
+        .command('logout')
+        .description('logout from the current user')
+        .action(async (directory) => {
+            await logoutCommand();
         });
 
 
