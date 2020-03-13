@@ -130,7 +130,7 @@ export const setupPluridAppYaml = async (
 # Can use only letters, numbers, and hyphens (-). Dots (.) will be converted to hyphens (-).
 # Cannot contain more than 64 characters.
 # Cannot coincide with internet protocols, such as www, ftp.
-# Cannot start or end with an hyphen (-).
+# Cannot start or end with a hyphen (-).
 name: ${appName}
 
 # Environment in which to run the application.
