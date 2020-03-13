@@ -21,3 +21,20 @@ export const GET_ACCESS_CODE_TOKENS = gql`
         }
     }
 `;
+
+
+export const APP_CHECK_AVAILABLE_APP_NAME = gql`
+    query AppCheckAvailableAppName($input: InputValueString!) {
+        AppCheckAvailableAppName(input: $input) {
+            status
+            errors {
+                path
+                type
+                message
+            }
+            data {
+                value
+            }
+        }
+    }
+`;

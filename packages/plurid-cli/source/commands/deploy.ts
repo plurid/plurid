@@ -12,8 +12,23 @@ import {
 import {
     authenticationClient,
 } from '../services/graphql/client';
+import {
+    APP_CHECK_AVAILABLE_APP_NAME,
+} from '../services/graphql/query';
 
 
+
+const authenticateClient = () => {
+    const token = store.get('token');
+    const refreshToken = store.get('refreshToken');
+    const data = {
+        token,
+        refreshToken,
+    };
+    const authenticatedClient = authenticationClient(data);
+
+    return authenticatedClient;
+}
 
 const parseAppConfigurationFile = (
     directory: string,
@@ -35,33 +50,58 @@ const computeAppName = (
     return pluridAppConfiguration.name || resolvedDirectory.split(path.sep).pop();
 }
 
+const checkAvailableAppName = async (
+    appName: string,
+    authenticatedClient: any,
+): Promise<boolean | string> => {
+    const input = {
+        value: appName,
+    };
+    const query = await authenticatedClient.query({
+        query: APP_CHECK_AVAILABLE_APP_NAME,
+        variables: {
+            input,
+        },
+    });
+
+    const response = query.data.appCheckAvailableAppName;
+    if (!response.status) {
+        return false;
+    }
+
+    return response.data.value;
+}
+
 
 const deployCommand = async (
     directory: string | undefined,
 ) => {
     if (!userLoggedIn()) {
         console.log('\n\tCould not deploy, user not authenticated. Run the \'authenticate\' command.');
+        return;
     }
 
-    const token = store.get('token');
-    const refreshToken = store.get('refreshToken');
-    const data = {
-        token,
-        refreshToken,
-    };
-    const authenticatedClient = authenticationClient(data);
+    const authenticatedClient = authenticateClient();
 
 
     const resolvedDirectory = directory
         ? path.join(__dirname, directory)
         : process.cwd();
 
+
     const appConfiguration = parseAppConfigurationFile(resolvedDirectory);
+
 
     const appName = computeAppName(appConfiguration, resolvedDirectory);
 
 
-    // query checkAvailableAppName
+    console.log('\n\tChecking application name...');
+    const checkedAppName = await checkAvailableAppName(appName, authenticatedClient);
+    if (!checkedAppName) {
+        console.log('\n\tApp name is invalid or unavailable.');
+        return;
+    }
+    console.log(`\tApplication name ${checkedAppName} is available.`);
 
 
     // upload files
