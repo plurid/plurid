@@ -11,8 +11,7 @@ const statusCommand = async () => {
         return;
     }
 
-    console.log(`\n\tLogged in as ${user.username}`);
-    console.log('\n');
+    console.log(`\n\tLogged in as ${user.username}.\n`);
 }
 
 
