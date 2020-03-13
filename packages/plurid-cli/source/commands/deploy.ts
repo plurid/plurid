@@ -86,7 +86,6 @@ const deployCommand = async (
         return;
     }
 
-    console.log('\n\tStarting plurid\' application deployment...');
 
     const authenticatedClient = authenticateClient();
 
@@ -94,6 +93,8 @@ const deployCommand = async (
     const resolvedDirectory = directory
         ? path.join(__dirname, directory)
         : process.cwd();
+    console.log('\n\tStarting plurid\' application deployment for:');
+    console.log(`\n\t\t${resolvedDirectory}`);
 
 
     const appConfiguration = parseAppConfigurationFile(resolvedDirectory);
@@ -105,10 +106,10 @@ const deployCommand = async (
     console.log('\n\tChecking application name...');
     const checkedAppName = await checkAvailableAppName(appName, authenticatedClient);
     if (!checkedAppName) {
-        console.log('\n\tApp name is invalid or unavailable.\n');
+        console.log(`\n\tApplication name '${appName}' is invalid or unavailable.\n`);
         return;
     }
-    console.log(`\tApplication name ${checkedAppName} is available.`);
+    console.log(`\tApplication name '${checkedAppName}' is available.`);
 
 
     console.log(`\n\tUploading files...`);
