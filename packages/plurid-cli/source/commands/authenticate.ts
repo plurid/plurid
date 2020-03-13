@@ -32,7 +32,7 @@ const authenticateCommand = async () => {
     const user = store.get('user');
 
     if (user) {
-        console.log(`\n\tLogged in as ${user.username}. Run the \'logout\' command to log out:`);
+        console.log(`\n\tLogged in as ${user.username}. Run the \'logout\' command to log out and be able to change users:`);
         console.log('\n\t\tplurid logout\n');
         return;
     }
