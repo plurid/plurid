@@ -50,6 +50,7 @@
     },
     "dependencies": {
         "@types/express": "^4.17.3",
+        "@types/js-yaml": "^3.12.2",
         "apollo-cache-inmemory": "^1.6.5",
         "apollo-client": "^2.6.8",
         "apollo-link-http": "^1.5.16",
@@ -60,6 +61,7 @@
         "get-port": "^5.1.1",
         "graphql": "^14.6.0",
         "graphql-tag": "^2.10.3",
+        "js-yaml": "^3.13.1",
         "open": "^7.0.3"
     },
     "devDependencies": {
