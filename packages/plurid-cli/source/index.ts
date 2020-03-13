@@ -25,6 +25,13 @@ async function main(
         .version('0.1.0', '-v, --version');
 
     program
+        .command('status')
+        .description('command-line interface application state')
+        .action(async () => {
+            await statusCommand();
+        });
+
+    program
         .command('authenticate')
         .description('login or create an user account on plurid.com')
         .action(async () => {
@@ -47,13 +54,6 @@ async function main(
         .description('deploy the plurid\' application from the current folder or from the target folder to plurid.app')
         .action(async (directory) => {
             await deployCommand(directory);
-        });
-
-    program
-        .command('status')
-        .description('command-line interface application state')
-        .action(async () => {
-            await statusCommand();
         });
 
     program
