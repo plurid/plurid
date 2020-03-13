@@ -53,23 +53,27 @@ const computeAppName = (
 const checkAvailableAppName = async (
     appName: string,
     authenticatedClient: any,
-): Promise<boolean | string> => {
-    const input = {
-        value: appName,
-    };
-    const query = await authenticatedClient.query({
-        query: APP_CHECK_AVAILABLE_APP_NAME,
-        variables: {
-            input,
-        },
-    });
+): Promise<string | undefined> => {
+    try {
+        const input = {
+            value: appName,
+        };
+        const query = await authenticatedClient.query({
+            query: APP_CHECK_AVAILABLE_APP_NAME,
+            variables: {
+                input,
+            },
+        });
 
-    const response = query.data.appCheckAvailableAppName;
-    if (!response.status) {
-        return false;
+        const response = query.data.appCheckAvailableAppName;
+        if (!response.status) {
+            return;
+        }
+
+        return response.data.value;
+    } catch (error) {
+        return;
     }
-
-    return response.data.value;
 }
 
 
