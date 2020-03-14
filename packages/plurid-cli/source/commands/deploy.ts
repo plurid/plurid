@@ -94,12 +94,12 @@ const uploadArchive = (
     return new Promise((resolve, reject) => {
         try {
             const form = new FormData();
-            form.append('app', buffer);
+            form.append('archive', buffer);
 
             const options = {
                 hostname: UPLOAD_HOSTNAME,
                 port: UPLOAD_PORT,
-                path: '/app/deploy',
+                path: '/app/archive',
                 method: 'POST',
                 headers: form.getHeaders(),
             };
