@@ -121,6 +121,8 @@ const deployCommand = async (
         'build',
         'dist',
         'distribution',
+        'docs',
+        'documentation',
         'node_modules',
     ];
 
