@@ -95,12 +95,19 @@ const uploadArchive = async (
         const form = new FormData();
         form.append('archive', buffer, { filename : 'archive.zip' });
 
+        const token = store.get('token');
+        const refreshToken = store.get('refreshToken');
+        const cookies = `token=${token}; refreshToken=${refreshToken}`;
+
         const options = {
             hostname: UPLOAD_HOSTNAME,
             port: UPLOAD_PORT,
             path: '/app/archive',
             method: 'POST',
-            headers: form.getHeaders(),
+            headers: {
+                ...form.getHeaders(),
+                Cookie: cookies,
+            },
         };
 
         await new Promise((resolve, reject) => {
