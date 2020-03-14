@@ -88,38 +88,72 @@ const checkAvailableAppName = async (
     }
 }
 
-const uploadArchive = (
+const uploadArchive = async (
     buffer: Buffer,
 ): Promise<boolean> => {
-    return new Promise((resolve, reject) => {
-        try {
-            const form = new FormData();
-            form.append('archive', buffer);
+    try {
+        const form = new FormData();
+        form.append('archive', buffer);
 
-            const options = {
-                hostname: UPLOAD_HOSTNAME,
-                port: UPLOAD_PORT,
-                path: '/app/archive',
-                method: 'POST',
-                headers: form.getHeaders(),
-            };
+        const options = {
+            hostname: UPLOAD_HOSTNAME,
+            port: UPLOAD_PORT,
+            path: '/app/archive',
+            method: 'POST',
+            headers: form.getHeaders(),
+        };
+        console.log(options);
 
+        await new Promise((resolve, reject) => {
             const request = environment.local
-                ? http.request(options)
-                : https.request(options);
-            request.on('finish', () => {
+                ? http.request(options, (response) => {
+                    const {
+                        statusCode,
+                    } = response;
+                    if (!statusCode) {
+                        return reject(false);
+                    }
+                    if (statusCode < 200 || statusCode >= 300 ) {
+                        return reject(false);
+                    }
+
+                    resolve(true);
+                })
+                : https.request(options, (response) => {
+                    const {
+                        statusCode,
+                    } = response;
+                    if (!statusCode) {
+                        return reject(false);
+                    }
+                    if (statusCode < 200 || statusCode >= 300 ) {
+                        return reject(false);
+                    }
+
+                    resolve(true);
+                });
+
+            request.on('end', () => {
                 resolve(true);
             });
-            request.on('error', () => {
+            request.on('error', (error) => {
+                console.log(error);
                 reject(false);
             });
 
+            console.log(request);
+            console.log(form);
+
+
             form.pipe(request);
-        } catch (error) {
-            console.log(error);
-            reject(false);
-        }
-    });
+        });
+
+        return true;
+    } catch (error) {
+        console.log(error);
+
+        return false;
+    }
 }
 
 
