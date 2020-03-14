@@ -93,7 +93,7 @@ const uploadArchive = async (
 ): Promise<boolean> => {
     try {
         const form = new FormData();
-        form.append('archive', buffer);
+        form.append('archive', buffer, { filename : 'archive.zip' });
 
         const options = {
             hostname: UPLOAD_HOSTNAME,
@@ -102,56 +102,38 @@ const uploadArchive = async (
             method: 'POST',
             headers: form.getHeaders(),
         };
-        console.log(options);
 
         await new Promise((resolve, reject) => {
+            const response = (response: http.IncomingMessage) => {
+                const {
+                    statusCode,
+                } = response;
+                if (!statusCode) {
+                    return reject(false);
+                }
+                if (statusCode < 200 || statusCode >= 300 ) {
+                    return reject(false);
+                }
+
+                resolve(true);
+            }
+
             const request = environment.local
-                ? http.request(options, (response) => {
-                    const {
-                        statusCode,
-                    } = response;
-                    if (!statusCode) {
-                        return reject(false);
-                    }
-                    if (statusCode < 200 || statusCode >= 300 ) {
-                        return reject(false);
-                    }
+                ? http.request(options, response)
+                : https.request(options, response);
 
-                    resolve(true);
-                })
-                : https.request(options, (response) => {
-                    const {
-                        statusCode,
-                    } = response;
-                    if (!statusCode) {
-                        return reject(false);
-                    }
-                    if (statusCode < 200 || statusCode >= 300 ) {
-                        return reject(false);
-                    }
-
-                    resolve(true);
-                });
-
+            request.on('error', (error) => {
+                reject(error);
+            });
             request.on('end', () => {
                 resolve(true);
             });
-            request.on('error', (error) => {
-                console.log(error);
-                reject(false);
-            });
-
-            console.log(request);
-            console.log(form);
-
 
             form.pipe(request);
         });
 
         return true;
     } catch (error) {
-        console.log(error);
-
         return false;
     }
 }
