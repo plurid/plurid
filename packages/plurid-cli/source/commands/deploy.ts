@@ -1,11 +1,16 @@
 import fs from 'fs';
 import path from 'path';
+import http from 'http';
+import https from 'https';
 
+import FormData from 'form-data';
 import yaml from 'js-yaml';
 import Zip from 'adm-zip';
 import gitIgnore from 'parse-gitignore';
 
 import store from '../services/store';
+
+import environment from '../services/utilities/environment';
 
 import {
     userLoggedIn,
@@ -78,6 +83,39 @@ const checkAvailableAppName = async (
     }
 }
 
+const uploadArchive = (
+    buffer: Buffer,
+): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+        try {
+            const form = new FormData();
+            form.append('app', buffer);
+
+            const options = {
+                hostname: '',
+                port: environment.local ? 33000 : 443,
+                path: '/app/files',
+                method: 'POST',
+                headers: form.getHeaders(),
+            };
+
+            const request = environment.local
+                ? http.request(options)
+                : https.request(options);
+            request.on('finish', () => {
+                resolve(true);
+            });
+            request.on('error', () => {
+                reject(false);
+            });
+
+            form.pipe(request);
+        } catch (error) {
+            reject(false);
+        }
+    });
+}
+
 
 const deployCommand = async (
     directory: string | undefined,
@@ -114,7 +152,7 @@ const deployCommand = async (
     console.log(`\tApplication name '${checkedAppName}' is available.`);
 
 
-    console.log(`\n\tUploading files...`);
+    console.log(`\n\tUploading application files...`);
     const archive = new Zip();
 
     const banlist = [
@@ -145,9 +183,12 @@ const deployCommand = async (
     // archive.writeZip(path.join(resolvedDirectory, 'files.zip'));
     const archiveBuffer = archive.toBuffer();
 
-    // TODO
-    // upload archiveBuffer
+    const uploaded = await uploadArchive(archiveBuffer);
 
+    if (!uploaded) {
+        console.log(`\n\tApplication files upload failed.\n`);
+        return;
+    }
 
     console.log(`\n\tDeployment finished successfully.\n`);
 
