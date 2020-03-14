@@ -1,8 +1,17 @@
+const MODE_ENV = process.env.MODE_ENV || '';
+
+const environments: any = {
+    production: 'production',
+    development: 'development',
+    local: 'local',
+    localExternal: 'localExternal',
+}
+
 const environment = {
-    production: process.env.MODE_ENV === 'production',
-    development: process.env.MODE_ENV === 'development',
-    local: process.env.MODE_ENV === 'local',
-    localExternal: process.env.MODE_ENV === 'localexternal',
+    production: environments[MODE_ENV] === 'production',
+    development: environments[MODE_ENV] === 'development',
+    local: environments[MODE_ENV] === 'local',
+    localExternal: environments[MODE_ENV] === 'localexternal',
 }
 
 export default environment;

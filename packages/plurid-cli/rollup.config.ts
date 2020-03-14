@@ -1,3 +1,4 @@
+import replace from '@rollup/plugin-replace';
 import resolve from '@rollup/plugin-node-resolve';
 import external from 'rollup-plugin-peer-deps-external';
 import commonjs from '@rollup/plugin-commonjs';
@@ -40,6 +41,9 @@ export default {
         include: 'source/**',
     },
     plugins: [
+        replace({
+            'process.env.MODE_ENV': JSON.stringify(process.env.MODE_ENV),
+        }),
         json(),
         typescript({
             useTsconfigDeclarationDir: true,
