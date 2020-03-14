@@ -44,11 +44,12 @@
         "start": "rollup -c rollup.config.ts -w",
         "build.removeSpecs": "rm -rf `find ./distribution/ -type d -name __specs__`",
         "build.development": "rollup -c rollup.config.ts && yarn build.removeSpecs && yarn copy.server",
-        "build": "rollup -c rollup.config.ts && yarn build.removeSpecs && yarn copy.server",
+        "build": "MODE_ENV=local rollup -c rollup.config.ts && yarn build.removeSpecs && yarn copy.server",
         "prebuild": "rimraf distribution",
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
+        "@rollup/plugin-replace": "^2.3.1",
         "@types/express": "^4.17.3",
         "@types/js-yaml": "^3.12.2",
         "adm-zip": "^0.4.14",
