@@ -134,9 +134,9 @@ export const setupPluridAppYaml = async (
 name: ${appName}
 
 # Environment in which to run the application.
-# Supported: static, node12, python, go.
+# Supported: static, node, python, go.
 # Default: static.
-runtime: node12
+runtime: node
 
 # Deployment region.
 # Supported: us, europe.
