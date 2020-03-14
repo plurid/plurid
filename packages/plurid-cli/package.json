@@ -69,6 +69,7 @@
         "@rollup/plugin-commonjs": "^11.0.2",
         "@rollup/plugin-json": "^4.0.2",
         "@rollup/plugin-node-resolve": "^7.1.1",
+        "@types/adm-zip": "^0.4.32",
         "@types/configstore": "^4.0.0",
         "@types/inquirer": "^6.5.0",
         "@types/node": "^13.9.1",
