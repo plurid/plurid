@@ -3,6 +3,7 @@ import path from 'path';
 
 import yaml from 'js-yaml';
 import Zip from 'adm-zip';
+import gitIgnore from 'parse-gitignore';
 
 import store from '../services/store';
 
@@ -123,11 +124,13 @@ const deployCommand = async (
         'node_modules',
     ];
 
-    fs.readdirSync(resolvedDirectory).forEach(file => {
-        if (!banlist.includes(file)) {
-            // TODO
-            // handle .gitignore
+    const gitIgnorePath = path.join(resolvedDirectory, './.gitignore');
+    const gitIgnoreData = fs.existsSync(gitIgnorePath)
+        ? gitIgnore(fs.readFileSync(gitIgnorePath))
+        : [];
 
+    fs.readdirSync(resolvedDirectory).forEach(file => {
+        if (!banlist.includes(file) && !gitIgnoreData.includes(file)) {
             const isDirectory = fs.lstatSync(file).isDirectory();
             if (!isDirectory) {
                 archive.addLocalFile(path.join(resolvedDirectory, file));
