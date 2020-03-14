@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-cli",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "plurid' application command line tool",
     "keywords": [
         "plurid",
@@ -49,9 +49,6 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@rollup/plugin-replace": "^2.3.1",
-        "@types/express": "^4.17.3",
-        "@types/js-yaml": "^3.12.2",
         "adm-zip": "^0.4.14",
         "apollo-cache-inmemory": "^1.6.5",
         "apollo-client": "^2.6.8",
@@ -72,9 +69,12 @@
         "@rollup/plugin-commonjs": "^11.0.2",
         "@rollup/plugin-json": "^4.0.2",
         "@rollup/plugin-node-resolve": "^7.1.1",
+        "@rollup/plugin-replace": "^2.3.1",
         "@types/adm-zip": "^0.4.32",
         "@types/configstore": "^4.0.0",
+        "@types/express": "^4.17.3",
         "@types/inquirer": "^6.5.0",
+        "@types/js-yaml": "^3.12.2",
         "@types/node": "^13.9.1",
         "@typescript-eslint/eslint-plugin": "^2.23.0",
         "@typescript-eslint/parser": "^2.23.0",
