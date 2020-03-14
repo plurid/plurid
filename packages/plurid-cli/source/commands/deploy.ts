@@ -89,11 +89,13 @@ const checkAvailableAppName = async (
 }
 
 const uploadArchive = async (
+    appName: string,
     buffer: Buffer,
 ): Promise<boolean> => {
     try {
         const form = new FormData();
         form.append('archive', buffer, { filename : 'archive.zip' });
+        form.append('name', appName);
 
         const token = store.get('token');
         const refreshToken = store.get('refreshToken');
@@ -212,7 +214,10 @@ const deployCommand = async (
     // archive.writeZip(path.join(resolvedDirectory, 'files.zip'));
     const archiveBuffer = archive.toBuffer();
 
-    const uploaded = await uploadArchive(archiveBuffer);
+    const uploaded = await uploadArchive(
+        checkedAppName,
+        archiveBuffer,
+    );
 
     if (!uploaded) {
         console.log(`\n\tApplication files upload failed.\n`);
