@@ -14,5 +14,5 @@ export const UPLOAD_HOSTNAME = environment.local
     : 'upload.plurid.com';
 
 export const UPLOAD_PORT = environment.local
-    ? 33605
+    ? 33601
     : 443;
