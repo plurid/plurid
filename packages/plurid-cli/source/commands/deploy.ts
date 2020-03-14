@@ -8,6 +8,11 @@ import yaml from 'js-yaml';
 import Zip from 'adm-zip';
 import gitIgnore from 'parse-gitignore';
 
+import {
+    UPLOAD_HOSTNAME,
+    UPLOAD_PORT,
+} from '../data/constants';
+
 import store from '../services/store';
 
 import environment from '../services/utilities/environment';
@@ -92,9 +97,9 @@ const uploadArchive = (
             form.append('app', buffer);
 
             const options = {
-                hostname: '',
-                port: environment.local ? 33000 : 443,
-                path: '/app/files',
+                hostname: UPLOAD_HOSTNAME,
+                port: UPLOAD_PORT,
+                path: '/app/deploy',
                 method: 'POST',
                 headers: form.getHeaders(),
             };
