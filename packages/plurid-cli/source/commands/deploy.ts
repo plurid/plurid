@@ -194,6 +194,12 @@ const deployCommand = async (
         console.log(`\n\tApplication files upload failed.\n`);
         return;
     }
+    console.log(`\n\tApplication files uploaded successfully.\n`);
+
+
+    // TODO
+    // listen for finished deployment
+    console.log(`\n\tDeploying application...\n`);
 
     console.log(`\n\tDeployment finished successfully.\n`);
 
