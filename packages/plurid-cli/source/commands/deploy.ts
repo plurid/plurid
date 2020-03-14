@@ -116,6 +116,7 @@ const uploadArchive = (
 
             form.pipe(request);
         } catch (error) {
+            console.log(error);
             reject(false);
         }
     });
@@ -157,7 +158,7 @@ const deployCommand = async (
     console.log(`\tApplication name '${checkedAppName}' is available.`);
 
 
-    console.log(`\n\tUploading application files...`);
+    console.log(`\n\tUploading plurid' application files...`);
     const archive = new Zip();
 
     const banlist = [
@@ -194,14 +195,14 @@ const deployCommand = async (
         console.log(`\n\tApplication files upload failed.\n`);
         return;
     }
-    console.log(`\n\tApplication files uploaded successfully.\n`);
+    console.log(`\tApplication files uploaded successfully.`);
 
 
     // TODO
     // listen for finished deployment
-    console.log(`\n\tDeploying application...\n`);
+    console.log(`\n\tDeploying plurid' application...`);
 
-    console.log(`\n\tDeployment finished successfully.\n`);
+    console.log(`\tDeployment finished successfully.`);
 
     console.log(`\n\tExplore the plurid' application at:`);
     console.log(`\n\t\thttps://${checkedAppName}.plurid.app\n`);
