@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import yaml from 'js-yaml';
+import Zip from 'adm-zip';
 
 import store from '../services/store';
 
@@ -113,6 +114,34 @@ const deployCommand = async (
 
 
     console.log(`\n\tUploading files...`);
+    const archive = new Zip();
+
+    const banlist = [
+        'build',
+        'dist',
+        'distribution',
+        'node_modules',
+    ];
+
+    fs.readdirSync(resolvedDirectory).forEach(file => {
+        if (!banlist.includes(file)) {
+            // TODO
+            // handle .gitignore
+
+            const isDirectory = fs.lstatSync(file).isDirectory();
+            if (!isDirectory) {
+                archive.addLocalFile(path.join(resolvedDirectory, file));
+            } else {
+                archive.addLocalFolder(path.join(resolvedDirectory, file), file);
+            }
+        }
+    });
+
+    // archive.writeZip(path.join(resolvedDirectory, 'files.zip'));
+    const archiveBuffer = archive.toBuffer();
+
+    // TODO
+    // upload archiveBuffer
 
 
     console.log(`\n\tDeployment finished successfully.\n`);
