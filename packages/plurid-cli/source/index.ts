@@ -10,9 +10,9 @@ import {
     logoutCommand,
 } from './commands';
 
-import {
-    programHasCommand,
-} from './services/utilities';
+// import {
+//     programHasCommand,
+// } from './services/utilities';
 
 
 
@@ -64,9 +64,9 @@ async function main(
         });
 
 
-    if (!programHasCommand(process.argv)) {
-        program.outputHelp();
-    }
+    // if (!programHasCommand(process.argv)) {
+    //     program.outputHelp();
+    // }
 
     program.parseAsync(process.argv);
 }
