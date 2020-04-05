@@ -16,8 +16,11 @@
         "build.client.production": "webpack --config scripts/webpack.client.production.js",
         "build.server.development": "webpack --config scripts/webpack.server.development.js",
         "build.server.production": "webpack --config scripts/webpack.server.production.js",
+        "build.stills": "node ./scripts/stills.js",
         "build.development": "yarn clean && yarn build.server.development && yarn build.client.development",
+        "build.development.stills": "yarn build.development && yarn build.stills",
         "build.production": "yarn clean && yarn build.server.production && yarn build.client.production",
+        "build.production.stills": "yarn build.production && yarn build.stills",
         "deploy": "plurid deploy"
     },
     "dependencies": {
