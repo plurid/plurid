@@ -1,11 +1,11 @@
 const {
-    StillsGenerator,
+    PluridStillsGenerator,
 } = require('@plurid/plurid-react-server');
 
 
 
 const main = () => {
-    const stillsGenerator = new StillsGenerator();
+    const stillsGenerator = new PluridStillsGenerator();
     stillsGenerator.initialize();
 }
 
