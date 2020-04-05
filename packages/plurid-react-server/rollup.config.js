@@ -6,7 +6,7 @@ import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import minify from 'rollup-plugin-babel-minify';
+import terser from 'rollup-plugin-terser';
 
 import pkg from './package.json';
 
@@ -62,14 +62,7 @@ export default [
             },
         ],
         plugins: [
-            minify({
-                /**
-                 * HACK: avoids the bug:
-                 * Cannot read property 'add' of undefined
-                 * https://github.com/babel/minify/issues/556
-                 */
-                mangle: false,
-            }),
+            terser(),
         ],
     }
 ];
