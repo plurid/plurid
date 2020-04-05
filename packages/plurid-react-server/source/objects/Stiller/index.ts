@@ -15,7 +15,7 @@ import {
  * to serve the adequate plurid space structure when asked for the given route.
  */
 class Stiller {
-    private routes: string;
+    private routes: string[];
 
     constructor(
         options: StillerOptions,
@@ -27,8 +27,10 @@ class Stiller {
         this.routes = routes;
     }
 
-    * still () {
-
+    async * still () {
+        for (const route of this.routes) {
+            yield route;
+        }
     }
 }
 

@@ -20,7 +20,7 @@ export interface PluridRendererConfiguration {
 
 export interface StillerOptions {
     Application: any;
-    routes: string;
+    routes: string[];
 }
 
 export interface StilledSpace {
