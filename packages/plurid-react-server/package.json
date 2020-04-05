@@ -36,7 +36,7 @@
     },
     "scripts": {
         "clean": "rm -rf ./distribution",
-        "spec": "jest",
+        "spec": "jest ./source",
         "lint": "eslint ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c rollup.config.development.js -w --environment MODE_ENV:local",
         "build.development": "yarn clean && rollup -c rollup.config.development.js --environment MODE_ENV:development",
