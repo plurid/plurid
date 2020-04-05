@@ -1,7 +1,5 @@
 import path from 'path';
 
-import typescript from "typescript";
-
 import {
     StillsGeneratorOptions,
 } from '../../data/interfaces';
@@ -36,8 +34,6 @@ class StillsGenerator {
         console.log('serverSourcePath', serverSourcePath);
         console.log('serverBuildPath', serverBuildPath);
         console.log('buildDirectoryPath', buildDirectoryPath);
-
-        const program = typescript.createProgram([serverSourcePath], {});
     }
 }
 
