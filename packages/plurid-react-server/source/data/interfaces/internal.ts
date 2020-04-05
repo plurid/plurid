@@ -35,3 +35,11 @@ export interface StilledPage {
     html: string;
     space: string;
 }
+
+
+
+export interface StillsGeneratorOptions {
+    serverSource: string;
+    serverBuild: string;
+    buildDirectory: string;
+}
