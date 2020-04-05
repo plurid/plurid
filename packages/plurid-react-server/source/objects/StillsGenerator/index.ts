@@ -1,5 +1,7 @@
 import path from 'path';
 
+import typescript from "typescript";
+
 import {
     StillsGeneratorOptions,
 } from '../../data/interfaces';
@@ -27,13 +29,15 @@ class StillsGenerator {
         return stillsGeneratorOptions;
     }
 
-    initialize() {
+    async initialize() {
         const serverSourcePath = path.resolve(process.cwd(), this.options.serverSource);
         const serverBuildPath = path.resolve(process.cwd(), this.options.serverBuild);
         const buildDirectoryPath = path.resolve(process.cwd(), this.options.buildDirectory);
         console.log('serverSourcePath', serverSourcePath);
         console.log('serverBuildPath', serverBuildPath);
         console.log('buildDirectoryPath', buildDirectoryPath);
+
+        const program = typescript.createProgram([serverSourcePath], {});
     }
 }
 
