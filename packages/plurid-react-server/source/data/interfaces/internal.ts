@@ -1,3 +1,9 @@
+import {
+    Indexed,
+} from '@plurid/plurid-data';
+
+
+
 export interface PluridRendererConfiguration {
     head: string;
     styles: string;
@@ -9,4 +15,23 @@ export interface PluridRendererConfiguration {
     stripeScript?: string;
     htmlAttributes?: string;
     bodyAttributes?: string;
+}
+
+
+export interface StillerOptions {
+    Application: any;
+    routes: string;
+}
+
+export interface StilledSpace {
+    id: string;
+    html: string;
+    route: string;
+    pages: Indexed<StilledPage>
+}
+
+export interface StilledPage {
+    id: string;
+    html: string;
+    space: string;
 }
