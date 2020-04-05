@@ -10,18 +10,18 @@ class StillsGenerator {
     private options: StillsGeneratorOptions;
 
     constructor(
-        options: Partial<StillsGeneratorOptions>,
+        options?: Partial<StillsGeneratorOptions>,
     ) {
         this.options = this.resolveOptions(options);
     }
 
     resolveOptions(
-        options: Partial<StillsGeneratorOptions>,
+        options?: Partial<StillsGeneratorOptions>,
     ) {
         const stillsGeneratorOptions: StillsGeneratorOptions = {
-            serverSource: options.serverSource ?? './source/server/index.ts',
-            serverBuild: options.serverBuild ?? './build/server.js',
-            buildDirectory: options.buildDirectory ?? './build/',
+            serverSource: options?.serverSource ?? './source/server/index.ts',
+            serverBuild: options?.serverBuild ?? './build/server.js',
+            buildDirectory: options?.buildDirectory ?? './build/',
         };
 
         return stillsGeneratorOptions;
