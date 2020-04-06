@@ -15,6 +15,10 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
+    PluridRouterRoute,
+} from '@plurid/plurid-data';
+
+import {
     StillsGeneratorOptions,
 } from '../../data/interfaces';
 
@@ -64,7 +68,14 @@ class StillsGenerator {
         /**
          * Read the application routes.
          */
-        const stillRoutes = serverInformation.routing.routes;
+        const stillRoutes: PluridRouterRoute<any>[] = [];
+
+        for (const route of serverInformation.routing.routes) {
+            if (!route.path.includes('/:')) {
+                stillRoutes.push(route);
+            }
+        }
+
         const stillRoutesPaths = stillRoutes.map(stillRoute => stillRoute.path);
 
         console.log('\n\tParsed the following still routes:');
