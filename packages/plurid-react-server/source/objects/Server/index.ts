@@ -93,6 +93,12 @@ export default class PluridServer<T> {
         });
     }
 
+    static analysis(pluridServer: PluridServer<any>) {
+        return {
+            routing: pluridServer.routing,
+        };
+    }
+
     public start(
         port = this.port,
     ) {
@@ -121,12 +127,6 @@ export default class PluridServer<T> {
         if (this.server) {
             this.server.close();
         }
-    }
-
-    public analysis() {
-        return {
-            analysis: 'data',
-        };
     }
 
     private computeApplication() {
