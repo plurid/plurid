@@ -12,7 +12,10 @@
 </h1>
 
 
-Explore information as a 3D structure.
+<h3 align="center">
+    explore information as a 3D structure
+</h3>
+
 
 
 The monorepository contains packages implementing the `plurid'` technology to create a 3D browser-powered view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
