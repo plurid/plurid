@@ -40,7 +40,11 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
     <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/diagrams/plurid-generate.png" height="600px">
 </p>
 
-The `plurid'` web application, or any other web application can be easily deployed to `plurid.app` using the [plurid-cli][plurid-cli].
+The generated `plurid'` web application, or any other web application, can be easily deployed to [`plurid.app`](https://plurid.app) using the [`plurid-cli`][plurid-cli]: after installation and initialization, simply run
+
+``` bash
+plurid deploy
+```
 
 
 
