@@ -11,6 +11,10 @@ import {
 } from 'apollo-client';
 
 import {
+    NormalizedCacheObject,
+} from 'apollo-cache-inmemory';
+
+import {
     PluridRouterComponent,
     PluridRouterRoute,
 } from '@plurid/plurid-data';
@@ -77,7 +81,7 @@ export type PluridServerService = 'GraphQL' | 'Redux' | 'Stripe';
 export interface PluridServerServicesData {
     reduxStore?: any;
     reduxStoreValue?: any;
-    graphqlClient?: ApolloClient<any>;
+    graphqlClient?: ApolloClient<NormalizedCacheObject>;
     stripeAPIKey?: string;
     stripeScript?: string;
 }
