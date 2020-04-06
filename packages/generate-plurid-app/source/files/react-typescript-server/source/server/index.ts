@@ -24,8 +24,6 @@ const PORT = process.env.PORT || 33000;
 
 const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
 
-
-
 const styles: string[] = [
     // custom styles to be loaded into the template
 ]
@@ -53,7 +51,7 @@ const servicesData: PluridServerServicesData = {
 
 const options: PluridServerPartialOptions = {
     root: 'plurid-app',
-    open: true,
+    open: process.env.ENV_MODE === 'production' ? false : true,
 };
 
 const pluridServer = new PluridServer({
@@ -67,4 +65,9 @@ const pluridServer = new PluridServer({
 });
 
 
-pluridServer.start(PORT);
+if (require.main === module) {
+    pluridServer.start(PORT);
+}
+
+
+export default pluridServer;
