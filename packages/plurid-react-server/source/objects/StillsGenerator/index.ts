@@ -1,6 +1,10 @@
 import path from 'path';
 
 import {
+    promises as fs,
+} from 'fs'
+
+import {
     fork,
 } from 'child_process';
 
@@ -34,8 +38,8 @@ class StillsGenerator {
     }
 
     async initialize() {
-        const serverPath = path.resolve(process.cwd(), this.options.server);
-        const buildPath = path.resolve(process.cwd(), this.options.build);
+        const serverPath = path.join(process.cwd(), this.options.server);
+        const buildPath = path.join(process.cwd(), this.options.build);
 
         const pluridServer: PluridServer<any> = require(serverPath);
         const serverInformation = PluridServer.analysis(pluridServer);
@@ -79,20 +83,29 @@ class StillsGenerator {
         ) {
             stills.push(next.value);
         }
-        console.log(stills);
-
-
-        // start a server and create server routes
-
-        // loop the routes and generate stills
-        console.log('\n\tGenerated still for route <route>');
-
-        // generate the stills as .json so they can be loaded by the Plurid Server
 
         const endTime = Date.now();
         const duration = (endTime - startTime) / 1000;
         const plural = stills.length === 1 ? '' : 's';
         console.log(`\n\tGenerated ${stills.length} still${plural} in ${duration} seconds.\n`);
+
+
+        /** Generate the stills as .json so they can be loaded by the Plurid Server */
+        const stillsPath = path.join(buildPath, './stills');
+        await fs.mkdir(
+            stillsPath,
+            {
+                recursive: true,
+            },
+        );
+
+        for (const still of stills) {
+            const stillName = Math.random().toFixed(6) + '.json';
+            const stillJSON = JSON.stringify(still);
+            const stillFile = path.join(stillsPath, stillName);
+            await fs.writeFile(stillFile, stillJSON);
+        }
+
 
         /** Gracefully stop the server. */
         child.kill(2);
