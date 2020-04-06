@@ -6,6 +6,7 @@ import {
 } from 'fs';
 
 import {
+    PluridServerOptions,
     StilledPage,
     StilledMetadataEntry,
 } from '../../data/interfaces';
@@ -13,9 +14,13 @@ import {
 
 
 class StillsManager {
+    private options: PluridServerOptions;
     private stills: Map<string, StilledPage> = new Map();
 
-    constructor() {
+    constructor(
+        options: PluridServerOptions,
+    ) {
+        this.options = options;
         this.findStills();
     }
 
@@ -32,7 +37,13 @@ class StillsManager {
     }
 
     private async findStills () {
-        const stillsPath = path.join(process.cwd(), 'build/stills');
+        const {
+            buildDirectory,
+            stillsDirectory,
+        } = this.options;
+
+        const stillsLocation = `${buildDirectory}/${stillsDirectory}`;
+        const stillsPath = path.join(process.cwd(), stillsLocation);
 
         if (!existsSync(stillsPath)) {
             return;
@@ -59,7 +70,9 @@ class StillsManager {
                 this.stills.set(stillFileJSON.route, stillFileJSON);
             }
         } catch (error) {
-            console.log('Couldn\'t read stills.');
+            if (!this.options.quiet) {
+                console.log('Couldn\'t read stills.');
+            }
             return;
         }
     }

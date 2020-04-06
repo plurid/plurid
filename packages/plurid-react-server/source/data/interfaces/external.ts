@@ -1,7 +1,5 @@
 import express from 'express';
 
-import React from 'react';
-
 import {
     Helmet,
 } from 'react-helmet-async';
@@ -41,6 +39,14 @@ export interface PluridServerOptions {
     quiet: boolean;
 
     /**
+     * Debug levels.
+     *
+     * Production default: `error`.
+     * Development default: `info` and above.
+     */
+    debug: 'none' | 'error' | 'warn' | 'info';
+
+    /**
      * Use `gzip` compression for the response. Default `true`.
      */
     compression: boolean;
@@ -54,6 +60,11 @@ export interface PluridServerOptions {
      * Name of the directory where the files (server and client) are bundled.
      */
     buildDirectory: string;
+
+    /**
+     * Name of the directory where the stills are gathered.
+     */
+    stillsDirectory: string;
 
     /**
      * The ID of the root element in the HTML template.
