@@ -40,7 +40,7 @@ function PluridRouterBrowser<T>(
 
 
     /** references */
-    const indexedComponents = useRef(indexing.create(components, 'view'));
+    const indexedComponents = useRef(indexing.create(components, 'object', 'view'));
     const pluridRouter = useRef(new router.default(routes));
 
 
