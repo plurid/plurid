@@ -23,6 +23,7 @@ export interface StillerOptions {
     routes: string[];
 }
 
+
 export interface StilledSpace {
     id: string;
     html: string;
@@ -30,12 +31,23 @@ export interface StilledSpace {
     pages: Indexed<StilledPage>
 }
 
+
 export interface StilledPage {
-    id: string;
+    route: string;
     html: string;
-    space: string;
+    stilltime: number;
 }
 
+export interface StilledMetadataEntry {
+    route: string;
+    name: string;
+}
+
+// export interface StilledPage {
+//     id: string;
+//     html: string;
+//     space: string;
+// }
 
 
 export interface StillsGeneratorOptions {
