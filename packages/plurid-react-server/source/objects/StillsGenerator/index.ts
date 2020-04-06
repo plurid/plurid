@@ -44,6 +44,7 @@ class StillsGenerator {
             stdio: 'pipe',
             env: {
                 PORT: '9001',
+                PLURID_OPEN: 'false',
             },
         });
 
@@ -88,7 +89,7 @@ class StillsGenerator {
         // generate the stills as .json so they can be loaded by the Plurid Server
 
         const endTime = Date.now();
-        const duration = endTime - startTime;
+        const duration = (endTime - startTime) / 1000;
         const plural = stills.length === 1 ? '' : 's';
         console.log(`\n\tGenerated ${stills.length} still${plural} in ${duration} seconds.`);
 

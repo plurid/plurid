@@ -32,7 +32,7 @@ const render = async (
     await browser.close();
 
     const ttRenderMs = Date.now() - start;
-    console.info(`\tRendered ${url} in: ${ttRenderMs}ms`);
+    console.info(`\tRendered ${url} in: ${ttRenderMs / 1000} seconds.`);
 
     return {
         url,

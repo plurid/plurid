@@ -112,7 +112,8 @@ export default class PluridServer<T> {
 
         this.server = this.serverApplication.listen(port);
 
-        if (this.options.open) {
+        const openProcess = process.env.PLURID_OPEN === 'false' ? false : true;
+        if (this.options.open || openProcess) {
             open(serverlink);
         }
 
