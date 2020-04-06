@@ -7,7 +7,8 @@ import {
 
 
 const render = async (
-    url: string,
+    host: string,
+    route: string,
 ) => {
     const start = Date.now();
 
@@ -18,6 +19,7 @@ const render = async (
         /**
          * `networkidle0` waits for the network to be idle (no requests for 500ms).
          */
+        const url = host + route;
         await page.goto(
             url,
             {
@@ -25,17 +27,17 @@ const render = async (
             },
         );
     } catch (err) {
-        throw new Error(`${url} timed out.`);
+        throw new Error(`${route} timed out.`);
     }
 
     const html = await page.content();
     await browser.close();
 
     const ttRenderMs = Date.now() - start;
-    console.info(`\tRendered ${url} in: ${ttRenderMs / 1000} seconds.`);
+    console.info(`\tRendered ${route} in: ${ttRenderMs / 1000} seconds.`);
 
     return {
-        url,
+        route,
         html,
         ttRenderMs,
     };
@@ -53,21 +55,24 @@ const render = async (
  * to serve the adequate plurid space structure when asked for the given route.
  */
 class Stiller {
+    private host: string;
     private routes: string[];
 
     constructor(
         options: StillerOptions,
     ) {
         const {
+            host,
             routes,
         } = options;
 
+        this.host = host;
         this.routes = routes;
     }
 
     async * still() {
         for (const route of this.routes) {
-            yield await render(route);
+            yield await render(this.host, route);
         }
     }
 }
