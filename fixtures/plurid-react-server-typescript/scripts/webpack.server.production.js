@@ -22,6 +22,8 @@ const config = {
     output: {
         filename: 'server.js',
         path: path.resolve(__dirname, '../build'),
+        library: 'pluridServer',
+        libraryTarget: 'umd',
     },
 };
 
