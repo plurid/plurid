@@ -50,7 +50,8 @@ class StillsGenerator {
         /** Sleep 1.5 seconds to let the server spin up. */
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-        console.log('\n\tStarting to generate stills... (this may take a while)');
+        const estimatedDuration = 3 * serverInformation.routing.routes.length;
+        console.log(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
 
         const stiller = new Stiller({
             routes: [
@@ -60,14 +61,14 @@ class StillsGenerator {
         });
 
         const sequence = stiller.still();
-        const values = [];
+        const stills = [];
         let next;
         while (
             !(next = await sequence.next()).done
         ) {
-            values.push(next.value);
+            stills.push(next.value);
         }
-        console.log(values);
+        console.log(stills);
 
 
         // read the application

@@ -25,17 +25,17 @@ const render = async (
             },
         );
     } catch (err) {
-        console.error(err);
-        throw new Error('page timed out.');
+        throw new Error(`${url} timed out.`);
     }
 
     const html = await page.content();
     await browser.close();
 
     const ttRenderMs = Date.now() - start;
-    console.info(`Rendered ${url} in: ${ttRenderMs}ms`);
+    console.info(`\tRendered ${url} in: ${ttRenderMs}ms`);
 
     return {
+        url,
         html,
         ttRenderMs,
     };
