@@ -4,10 +4,11 @@ import Stiller from '../';
 describe('Stiller', () => {
     it.only('works', async () => {
         const routes = [
-            'https://plurid.com',
-            'https://plurid.com/products',
+            '/',
+            '/products',
         ];
         const stiller = new Stiller({
+            host: 'https://plurid.com',
             routes,
         });
 
