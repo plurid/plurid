@@ -50,7 +50,7 @@ class StillsGenerator {
         const pluridServer: PluridServer<any> = require(serverPath);
         const serverInformation = PluridServer.analysis(pluridServer);
 
-        const serverPort = '9900';
+        const serverPort = await detectPort(9900) + '';
 
         const child = fork(serverPath, [], {
             stdio: 'pipe',
