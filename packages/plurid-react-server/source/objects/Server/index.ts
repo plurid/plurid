@@ -23,6 +23,8 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
+    environment,
+
     DEFAULT_SERVER_PORT,
     DEFAULT_SERVER_OPTIONS,
 } from '../../data/constants';
@@ -134,7 +136,7 @@ export default class PluridServer<T> {
     private computeApplication() {
         this.loadMiddleware();
 
-        const stills = new PluridStillsManager();
+        const stills = new PluridStillsManager(this.options);
         const router = new PluridRouter<T>(this.routing.routes);
 
         this.serverApplication.get('*', (request, response) => {
@@ -254,7 +256,9 @@ export default class PluridServer<T> {
 
             styles = sheet.getStyleTags();
         } catch (error) {
-            console.log('Something went wrong in getContentAndStyles().', error);
+            if (!this.options.quiet) {
+                console.log('Something went wrong in getContentAndStyles().');
+            }
 
             return {
                 content: '',
@@ -275,9 +279,11 @@ export default class PluridServer<T> {
     ) {
         const options: PluridServerOptions = {
             quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
+            debug: partialOptions?.debug || environment.production ? 'error' : 'info',
             compression: partialOptions?.compression ?? true,
             open: partialOptions?.open ?? false,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
+            stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
             root: partialOptions?.root || 'root',
             script: partialOptions?.script || '/index.js',
             vendorScript: partialOptions?.vendorScript || '/vendor.js',
