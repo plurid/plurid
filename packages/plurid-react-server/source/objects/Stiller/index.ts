@@ -33,13 +33,13 @@ const render = async (
     const html = await page.content();
     await browser.close();
 
-    const ttRenderMs = Date.now() - start;
-    console.info(`\tRendered '${route}' in: ${ttRenderMs / 1000} seconds.`);
+    const stilltime = Date.now() - start;
+    console.info(`\tStilled '${route}' in: ${stilltime / 1000} seconds.`);
 
     return {
         route,
         html,
-        ttRenderMs,
+        stilltime,
     };
 }
 
