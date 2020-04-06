@@ -110,7 +110,7 @@ export default class PluridServer<T> {
         const serverlink = `http://localhost:${port}`;
 
         if (!this.options.quiet) {
-            console.log(`\n\tPlurid Server Started on Port ${port}: ${serverlink}\n`);
+            console.info(`\n\tPlurid Server Started on Port ${port}: ${serverlink}\n`);
         }
 
         this.server = this.serverApplication.listen(port);
@@ -122,7 +122,7 @@ export default class PluridServer<T> {
 
     public stop() {
         if (!this.options.quiet) {
-            console.log(`\n\tPlurid Server Closed on Port ${this.port}\n`);
+            console.info(`\n\tPlurid Server Closed on Port ${this.port}\n`);
         }
 
         if (this.server) {
@@ -256,7 +256,7 @@ export default class PluridServer<T> {
             if (this.options.debug !== 'none' && !this.options.quiet) {
                 const errorText = 'Plurid Server Error: Something went wrong in getContentAndStyles().'
                 if (this.options.debug === 'error') {
-                    console.log(errorText, error);
+                    console.error(errorText, error);
                 } else {
                     console.log(errorText);
                 }

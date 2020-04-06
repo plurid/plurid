@@ -73,7 +73,7 @@ class StillsManager {
             if (this.options.debug !== 'none' && !this.options.quiet) {
                 const errorText = 'Plurid Server Error: Could not read stills.'
                 if (this.options.debug === 'error') {
-                    console.log(errorText, error);
+                    console.error(errorText, error);
                 } else {
                     console.log(errorText);
                 }

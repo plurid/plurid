@@ -78,10 +78,10 @@ class StillsGenerator {
 
         const stillRoutesPaths = stillRoutes.map(stillRoute => stillRoute.path);
 
-        console.log('\n\tParsed the following still routes:');
+        console.info('\n\tParsed the following still routes:');
 
         for (const stillRoutePath of stillRoutesPaths) {
-            console.log(`\t  ${stillRoutePath}`);
+            console.info(`\t  ${stillRoutePath}`);
         }
 
 
@@ -92,7 +92,7 @@ class StillsGenerator {
 
         const startTime = Date.now();
         const estimatedDuration = 3 * serverInformation.routing.routes.length;
-        console.log(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
+        console.info(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
 
         const stiller = new Stiller({
             host: 'http://localhost:' + serverPort,
@@ -113,7 +113,7 @@ class StillsGenerator {
         const endTime = Date.now();
         const duration = (endTime - startTime) / 1000;
         const plural = stills.length === 1 ? '' : 's';
-        console.log(`\n\tGenerated ${stills.length} still${plural} in ${duration.toFixed(2)} seconds.\n`);
+        console.info(`\n\tGenerated ${stills.length} still${plural} in ${duration.toFixed(2)} seconds.\n`);
 
 
         /**
