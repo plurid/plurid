@@ -595,10 +595,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.114.tgz#e034c503779b564a39f768d57d63164e04f06f42"
   integrity sha512-ZDaOumhZjMHQNQeCL4kICLjK7PLFUOFopkKQmxuTChta7RVOEyd1xL0049eXBkw2BXMaBq6goiq2cVx6riRKIw==
 
-"@plurid/plurid-engine@^0.1.54":
-  version "0.1.54"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.54.tgz#fc7733d2091c6f9cea026bc634febae9f79b690e"
-  integrity sha512-GwaZp3zNTfJIzZooy46ogA8fqsL+prHHOeF6IeZ1JI2DNX9HQYKCtSf65HSjaJFBmCMW7O2FmuVQU8v3QdPCPw==
+"@plurid/plurid-engine@^0.1.55":
+  version "0.1.55"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.55.tgz#463faa1f60391c358b4843def3b94ba0e71a537d"
+  integrity sha512-9sDseKPJdRBva4OAHgnnuore0NB7fMh8EPTtZZg8uSN3zvjhIrWvaIY53AUamu5NydDEoT1osD20cPsK/hHr7A==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
