@@ -44,6 +44,15 @@ To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plu
 
 ### Generate
 
+<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-cli">
+    <img src="https://img.shields.io/npm/v/@plurid/plurid-cli.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
+</a>
+
+[@plurid/plurid-cli][plurid-cli] • `plurid'` application life-cycle management: generation, development, deployment
+
+[plurid-cli]: https://github.com/plurid/plurid/tree/master/packages/plurid-cli
+
+
 
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/generate-plurid-app">
     <img src="https://img.shields.io/npm/v/@plurid/generate-plurid-app.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
