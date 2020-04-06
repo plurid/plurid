@@ -37,7 +37,7 @@ function PluridRouterStatic<T>(
         components,
     } = routing;
 
-    const indexedComponents = indexing.create(components, 'view');
+    const indexedComponents = indexing.create(components, 'object', 'view');
     const pluridRouter = new PluridRouter(routes);
 
     const matchedRoute = pluridRouter.match(path);
