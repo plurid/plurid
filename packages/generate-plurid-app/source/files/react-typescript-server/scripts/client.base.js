@@ -1,4 +1,4 @@
-const rules = require('./webpack.rules');
+const rules = require('./client.rules');
 
 const {
     styleRule,

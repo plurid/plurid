@@ -38,7 +38,14 @@ const babelRule = {
     options: {
         presets: [
             '@babel/preset-react',
-            ['@babel/env', { targets: { browsers: ['last 2 versions'] } }],
+            [
+                '@babel/env',
+                {
+                    targets: {
+                        browsers: ['last 2 versions'],
+                    },
+                },
+            ],
         ],
     },
 };
