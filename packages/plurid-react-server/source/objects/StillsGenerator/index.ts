@@ -90,7 +90,12 @@ class StillsGenerator {
         console.log(`\n\tGenerated ${stills.length} still${plural} in ${duration} seconds.\n`);
 
 
-        /** Generate the stills as .json so they can be loaded by the Plurid Server */
+        /**
+         * Generate the stills as .json in the `/stills` build directory
+         * so they can be loaded by the Plurid Server
+         *
+         * Generate a metadata.json file.
+         * */
         const stillsPath = path.join(buildPath, './stills');
         await fs.mkdir(
             stillsPath,
@@ -99,12 +104,27 @@ class StillsGenerator {
             },
         );
 
+        const metadataFile = [];
+
         for (const still of stills) {
+            if (!still) {
+                continue;
+            }
+
             const stillName = Math.random().toFixed(6) + '.json';
+            const metadataItem = {
+                route: still.route,
+                name: stillName,
+            };
+            metadataFile.push(metadataItem);
             const stillJSON = JSON.stringify(still);
             const stillFile = path.join(stillsPath, stillName);
             await fs.writeFile(stillFile, stillJSON);
         }
+
+        const metadataFilePath = path.join(stillsPath, 'metadata.json');
+        const metadataJSON = JSON.stringify(metadataFile);
+        await fs.writeFile(metadataFilePath, metadataJSON);
 
 
         /** Gracefully stop the server. */
