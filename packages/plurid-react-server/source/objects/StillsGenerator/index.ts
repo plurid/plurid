@@ -66,7 +66,7 @@ class StillsGenerator {
         console.log('\n\tParsed the following still routes:');
 
         for (const stillRoutePath of stillRoutesPaths) {
-            console.log(`\t\t${stillRoutePath}`);
+            console.log(`\t  ${stillRoutePath}`);
         }
 
 
@@ -126,13 +126,13 @@ class StillsGenerator {
                 name: stillName,
             };
             metadataFile.push(metadataItem);
-            const stillJSON = JSON.stringify(still);
+            const stillJSON = JSON.stringify(still, null, 4);
             const stillFile = path.join(stillsPath, stillName);
             await fs.writeFile(stillFile, stillJSON);
         }
 
         const metadataFilePath = path.join(stillsPath, 'metadata.json');
-        const metadataJSON = JSON.stringify(metadataFile);
+        const metadataJSON = JSON.stringify(metadataFile, null, 4);
         await fs.writeFile(metadataFilePath, metadataJSON);
 
 
