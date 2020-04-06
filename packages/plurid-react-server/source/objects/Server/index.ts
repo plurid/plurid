@@ -245,6 +245,8 @@ export default class PluridServer<T> {
 
             styles = sheet.getStyleTags();
         } catch (error) {
+            console.log('Something went wrong in getContentAndStyles().', error);
+
             return {
                 content: '',
                 styles: '',
