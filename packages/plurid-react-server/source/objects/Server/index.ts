@@ -123,6 +123,12 @@ export default class PluridServer<T> {
         }
     }
 
+    public analysis() {
+        return {
+            analysis: 'data',
+        };
+    }
+
     private computeApplication() {
         this.loadMiddleware();
 

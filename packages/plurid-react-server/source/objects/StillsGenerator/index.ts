@@ -37,6 +37,10 @@ class StillsGenerator {
         // console.log('serverBuildPath', serverBuildPath);
         // console.log('buildDirectoryPath', buildDirectoryPath);
 
+        const pluridServer = require(serverBuildPath);
+        console.log(pluridServer);
+        // console.log(pluridServer.analyze());
+
         console.log('\n\tStarting to generate stills... (this may take a while)');
 
         // read the application
