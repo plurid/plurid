@@ -10,9 +10,6 @@ if ('serviceWorker' in navigator) {
 }
 
 const pluridApp = document.getElementById('plurid-app');
-if (pluridApp) {
-    pluridApp.style.visibility = 'pluridApp';
-}
 
 
 ReactDOM.hydrate(
