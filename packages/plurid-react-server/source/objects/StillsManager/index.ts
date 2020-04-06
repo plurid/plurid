@@ -36,7 +36,7 @@ class StillsManager {
         return still.html;
     }
 
-    private async findStills () {
+    private async findStills() {
         const {
             buildDirectory,
             stillsDirectory,
