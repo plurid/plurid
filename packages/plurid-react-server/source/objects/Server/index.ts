@@ -329,15 +329,17 @@ export default class PluridServer<T> {
     private open(
         serverlink: string,
     ) {
+        let opened = false;
         if (
             typeof process.env.PLURID_OPEN !== 'string'
             && this.options.open
         ) {
+            opened = true;
             open(serverlink);
         }
 
         const openProcess = process.env.PLURID_OPEN === 'false' ? false : true;
-        if (openProcess) {
+        if (openProcess && !opened) {
             open(serverlink);
         }
     }
