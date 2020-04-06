@@ -39,6 +39,7 @@ import {
 
 import PluridRenderer from '../Renderer';
 import PluridContentGenerator from '../ContentGenerator';
+import PluridStillsManager from '../StillsManager';
 
 
 
@@ -133,10 +134,18 @@ export default class PluridServer<T> {
     private computeApplication() {
         this.loadMiddleware();
 
+        const stills = new PluridStillsManager();
         const router = new PluridRouter<T>(this.routing.routes);
 
         this.serverApplication.get('*', (request, response) => {
             const url = request.originalUrl || request.url;
+
+            const still = stills.get(url);
+            if (still) {
+                response.send(still);
+                return;
+            }
+
             const route = router.match(url);
 
             if (!route) {
