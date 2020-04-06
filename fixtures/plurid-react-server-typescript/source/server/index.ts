@@ -70,9 +70,6 @@ const pluridServer = new PluridServer({
 
 if (require.main === module) {
     pluridServer.start(PORT);
-    console.log('called directly');
-} else {
-    console.log('required as a module');
 }
 
 
