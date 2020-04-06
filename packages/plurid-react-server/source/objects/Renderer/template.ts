@@ -18,7 +18,7 @@ const template = (
 ) => {
     const templateString = `
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head ${htmlAttributes}>
         ${head}
 
@@ -30,7 +30,7 @@ const template = (
 
         ${stripeScript}
 
-        <script defer src="${vendorScript}"></script>
+        <script src="${vendorScript}"></script>
         <script defer src="${script}"></script>
     </head>
     <body ${bodyAttributes}>
