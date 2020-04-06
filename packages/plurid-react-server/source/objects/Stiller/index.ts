@@ -34,7 +34,7 @@ const render = async (
     await browser.close();
 
     const ttRenderMs = Date.now() - start;
-    console.info(`\tRendered ${route} in: ${ttRenderMs / 1000} seconds.`);
+    console.info(`\tRendered '${route}' in: ${ttRenderMs / 1000} seconds.`);
 
     return {
         route,
