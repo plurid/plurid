@@ -32,6 +32,9 @@ export interface PluridServerRouting {
 }
 
 
+export type DebugLevels = 'none' | 'error' | 'warn' | 'info';
+
+
 export interface PluridServerOptions {
     /**
      * To log or not to log to the console.
@@ -44,7 +47,7 @@ export interface PluridServerOptions {
      * Production default: `error`.
      * Development default: `info` and above.
      */
-    debug: 'none' | 'error' | 'warn' | 'info';
+    debug: DebugLevels;
 
     /**
      * Use `gzip` compression for the response. Default `true`.
@@ -85,9 +88,12 @@ export interface PluridServerOptions {
     vendorScript: string;
 }
 
+
 export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 
+
 export type PluridServerService = 'GraphQL' | 'Redux' | 'Stripe';
+
 
 export interface PluridServerServicesData {
     reduxStore?: any;
