@@ -9,7 +9,6 @@ describe('Stiller', () => {
         ];
         const stiller = new Stiller({
             routes,
-            Application: '',
         });
 
         const sequence = stiller.still();

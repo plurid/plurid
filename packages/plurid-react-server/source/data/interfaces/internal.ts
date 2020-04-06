@@ -19,7 +19,6 @@ export interface PluridRendererConfiguration {
 
 
 export interface StillerOptions {
-    Application: any;
     routes: string[];
 }
 
