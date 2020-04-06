@@ -101,7 +101,7 @@ export default class PluridServer<T> {
         });
     }
 
-    static analysis(pluridServer: PluridServer<any>) {
+    static analysis<T>(pluridServer: PluridServer<T>) {
         return {
             routing: pluridServer.routing,
         };
