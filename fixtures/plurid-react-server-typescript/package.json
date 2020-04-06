@@ -45,6 +45,7 @@
         "graphql": "^14.6.0",
         "graphql-tag": "^2.10.3",
         "hammerjs": "^2.0.8",
+        "puppeteer": "^2.1.1",
         "react": "^16.13.0",
         "react-dom": "^16.13.0",
         "react-helmet-async": "^1.0.4",
