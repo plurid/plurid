@@ -40,18 +40,23 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
     await addScript({
+        name: 'run.development',
+        value: 'nodemon build/server.js',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'run.production',
+        value: 'node build/server.js',
+        path: packageJsonPath,
+    });
+    await addScript({
         name: 'start.client.development',
         value: 'webpack --watch --progress --config scripts/client.development.js',
         path: packageJsonPath,
     });
     await addScript({
         name: 'start.server.development',
-        value: `${packageManagerRun} build.server.development && nodemon build/server.js`,
-        path: packageJsonPath,
-    });
-    await addScript({
-        name: 'run.server.development',
-        value: 'nodemon build/server.js',
+        value: `${packageManagerRun} build.server.development && ${packageManagerRun} run.production`,
         path: packageJsonPath,
     });
     await addScript({
