@@ -34,7 +34,7 @@ const template = (
         <script defer src="${script}"></script>
     </head>
     <body ${bodyAttributes}>
-        <div id="${root}">${content}</div>
+        <div id="${root}" style="visibility:hidden;">${content}</div>
         <script>
             window.__PRELOADED_STATE__ = ${store}
         </script>
