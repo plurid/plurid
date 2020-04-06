@@ -1,11 +1,7 @@
-const cleanTemplate = (
-    template: string,
-) => {
-    const cleanNewLines = template.replace(/(?:\r\n|\r|\n)/g, ' ');
-    const cleanWhitespace = cleanNewLines.replace(/  +/g, ' ');
+import {
+    cleanTemplate,
+} from '../../utilities/template';
 
-    return cleanWhitespace;
-}
 
 
 const template = (
@@ -22,6 +18,7 @@ const template = (
 ) => {
     const templateString = `
 <!DOCTYPE html>
+<html>
     <head ${htmlAttributes}>
         ${head}
 

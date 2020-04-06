@@ -18,6 +18,10 @@ export const DEFAULT_RENDERER_STORE = '{}';
 export const DEFAULT_RENDERER_SCRIPT = '/index.js';
 
 
+export const NOT_FOUND_ROUTE = '/not-found';
+
+
+
 export const environment = {
     production: process.env.ENV_MODE === 'production',
     development: process.env.ENV_MODE === 'development',
