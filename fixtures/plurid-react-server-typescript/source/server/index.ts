@@ -53,7 +53,8 @@ const servicesData: PluridServerServicesData = {
 
 const options: PluridServerPartialOptions = {
     root: 'plurid-app',
-    open: true,
+    // open: process.env.ENV_MODE === 'production' ? false : true,
+    open: false,
 };
 
 const pluridServer = new PluridServer({
