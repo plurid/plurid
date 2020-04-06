@@ -10,18 +10,29 @@ const baseConfig = require('./client.base');
 const config = {
     mode: 'development',
 
-    entry: './source/client/index.tsx',
+    entry: {
+        index: './source/client/index.tsx',
+    },
 
     output: {
-        filename: 'index.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, '../build'),
     },
 
     optimization: {
         minimize: false,
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: "vendor",
+                    chunks: "initial",
+                },
+            },
+        },
     },
 
-    devtool: 'inline-source-map',
+    // devtool: 'inline-source-map',
 
     plugins: [
         new CopyPlugin([
