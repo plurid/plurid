@@ -5,9 +5,9 @@ import Client from './Client';
 
 
 
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js');
-}
+// if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.register('/service-worker.js');
+// }
 
 const pluridApp = document.getElementById('plurid-app');
 
