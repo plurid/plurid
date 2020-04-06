@@ -30,9 +30,9 @@ const Head: React.FC<HeadProperties> = (
         canonicalURL,
     } = properties;
 
-    const titleValue = title || 'Plurid\' Application';
+    const titleValue = title || `Plurid' Application`;
     const descriptionValue = description || 'explore web content in three dimensions';
-    const ogTitleValue = ogTitle || title || 'Plurid\' Application';
+    const ogTitleValue = ogTitle || title || `Plurid' Application`;
     const ogDescriptionValue = ogDescription || description || 'explore web content in three dimensions';
     const ogImageValue = ogImage || '/icon-192x192.png';
     const ogURLValue = ogURL || 'https://plurid.com';
@@ -49,7 +49,6 @@ const Head: React.FC<HeadProperties> = (
             <link rel="icon" href="/favicon.ico" />
             <link rel="shortcut icon" type="image/png" href="/icon-192x192.png" />
             <link rel="shortcut icon" sizes="192x192" href="/icon-192x192.png" />
-            <link rel="apple-touch-icon" href="/icon-192x192.png" />
             <meta name="theme-color" content="#000000" />
 
             <link rel="manifest" href="/manifest.json" />
@@ -60,12 +59,19 @@ const Head: React.FC<HeadProperties> = (
 
             <title>{titleValue}</title>
 
+            {/* OPEN GRAPH */}
             <meta property="og:type" content="website" />
             <meta property="og:title" content={ogTitleValue} />
             <meta property="og:image" content={ogImageValue} />
             <meta property="og:site_name" content="plurid" />
             <meta property="og:url" content={ogURLValue} />
             <meta property="og:description" content={ogDescriptionValue} />
+
+            {/* SAFARI */}
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+            <meta name="apple-mobile-web-app-title" content={titleValue} />
+            <link rel="apple-touch-icon" href="/icon-192x192.png" />
         </Helmet>
     );
 }
