@@ -9,8 +9,13 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js');
 }
 
+const pluridApp = document.getElementById('plurid-app');
+if (pluridApp) {
+    pluridApp.style.visibility = 'pluridApp';
+}
+
 
 ReactDOM.hydrate(
     <Client />,
-    document.getElementById('plurid-app'),
+    pluridApp,
 );
