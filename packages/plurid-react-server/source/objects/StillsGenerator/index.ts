@@ -87,7 +87,7 @@ class StillsGenerator {
         const endTime = Date.now();
         const duration = (endTime - startTime) / 1000;
         const plural = stills.length === 1 ? '' : 's';
-        console.log(`\n\tGenerated ${stills.length} still${plural} in ${duration} seconds.\n`);
+        console.log(`\n\tGenerated ${stills.length} still${plural} in ${duration.toFixed(2)} seconds.\n`);
 
 
         /**

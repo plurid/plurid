@@ -34,7 +34,7 @@ const render = async (
     await browser.close();
 
     const stilltime = Date.now() - start;
-    console.info(`\tStilled '${route}' in: ${stilltime / 1000} seconds.`);
+    console.info(`\tStilled '${route}' in ${(stilltime / 1000).toFixed(2)} seconds.`);
 
     return {
         route,
