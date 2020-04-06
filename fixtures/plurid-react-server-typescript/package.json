@@ -32,7 +32,7 @@
         "@plurid/plurid-icons-react": "^0.1.18",
         "@plurid/plurid-pubsub": "^0.1.6",
         "@plurid/plurid-react": "^0.1.127",
-        "@plurid/plurid-react-server": "^0.1.27",
+        "@plurid/plurid-react-server": "^0.1.28",
         "@plurid/plurid-themes": "^0.1.26",
         "@plurid/plurid-ui-react": "^0.1.79",
         "@rollup/plugin-commonjs": "^11.0.2",
