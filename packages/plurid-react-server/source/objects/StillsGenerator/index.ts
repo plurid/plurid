@@ -47,9 +47,18 @@ class StillsGenerator {
             },
         });
 
+
+        // read the application
+
+        console.log('\n\tParsed the following still routes:');
+
+        // list the routes
+
+
         /** Sleep 1.5 seconds to let the server spin up. */
         await new Promise(resolve => setTimeout(resolve, 1500));
 
+        const startTime = Date.now();
         const estimatedDuration = 3 * serverInformation.routing.routes.length;
         console.log(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
 
@@ -71,19 +80,17 @@ class StillsGenerator {
         console.log(stills);
 
 
-        // read the application
-
-        console.log('\n\tParsed the following still routes:');
-
-        // list the routes
-
-
         // start a server and create server routes
 
         // loop the routes and generate stills
         console.log('\n\tGenerated still for route <route>');
 
         // generate the stills as .json so they can be loaded by the Plurid Server
+
+        const endTime = Date.now();
+        const duration = endTime - startTime;
+        const plural = stills.length === 1 ? '' : 's';
+        console.log(`\n\tGenerated ${stills.length} still${plural} in ${duration} seconds.`);
 
         /** Gracefully stop the server. */
         child.kill(2);
