@@ -39,7 +39,6 @@ export interface StilledPage {
 
 
 export interface StillsGeneratorOptions {
-    serverSource: string;
-    serverBuild: string;
-    buildDirectory: string;
+    server: string;
+    build: string;
 }

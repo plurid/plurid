@@ -5,6 +5,7 @@ import {
 } from '../../data/interfaces';
 
 import Stiller from '../Stiller';
+import PluridServer from '../Server';
 
 
 
@@ -21,25 +22,21 @@ class StillsGenerator {
         options?: Partial<StillsGeneratorOptions>,
     ) {
         const stillsGeneratorOptions: StillsGeneratorOptions = {
-            serverSource: options?.serverSource ?? './source/server/index.ts',
-            serverBuild: options?.serverBuild ?? './build/server.js',
-            buildDirectory: options?.buildDirectory ?? './build/',
+            server: options?.server ?? './build/server.js',
+            build: options?.build ?? './build/',
         };
 
         return stillsGeneratorOptions;
     }
 
     async initialize() {
-        const serverSourcePath = path.resolve(process.cwd(), this.options.serverSource);
-        const serverBuildPath = path.resolve(process.cwd(), this.options.serverBuild);
-        const buildDirectoryPath = path.resolve(process.cwd(), this.options.buildDirectory);
-        // console.log('serverSourcePath', serverSourcePath);
-        // console.log('serverBuildPath', serverBuildPath);
-        // console.log('buildDirectoryPath', buildDirectoryPath);
+        const serverPath = path.resolve(process.cwd(), this.options.server);
+        const buildPath = path.resolve(process.cwd(), this.options.build);
 
-        const pluridServer = require(serverBuildPath);
-        console.log(pluridServer);
-        // console.log(pluridServer.analyze());
+        const pluridServer: PluridServer<any> = require(serverPath);
+        const serverInformation = PluridServer.analysis(pluridServer);
+        console.log(serverInformation);
+
 
         console.log('\n\tStarting to generate stills... (this may take a while)');
 
