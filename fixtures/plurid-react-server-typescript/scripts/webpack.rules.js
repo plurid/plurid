@@ -41,7 +41,6 @@ const babelRule = {
             [
                 '@babel/env',
                 {
-                    // modules: 'commonjs',
                     targets: {
                         browsers: ['last 2 versions'],
                     },

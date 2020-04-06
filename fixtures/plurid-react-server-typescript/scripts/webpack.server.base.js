@@ -16,7 +16,7 @@ module.exports = {
         rules: [
             fileRule,
             tsRule,
-            // babelRule,
+            babelRule,
         ],
     },
 };
