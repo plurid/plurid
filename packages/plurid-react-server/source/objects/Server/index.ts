@@ -25,9 +25,14 @@ import {
 import {
     environment,
 
+    NOT_FOUND_ROUTE,
     DEFAULT_SERVER_PORT,
     DEFAULT_SERVER_OPTIONS,
 } from '../../data/constants';
+
+import {
+    NOT_FOUND_TEMPLATE,
+} from '../../data/templates';
 
 import {
     PluridServerRouting,
@@ -148,9 +153,15 @@ export default class PluridServer<T> {
             const route = router.match(url);
 
             if (!route) {
-                const notFoundRoute = router.match('/not-found');
+                const notFoundStill = stills.get(NOT_FOUND_ROUTE);
+                if (notFoundStill) {
+                    response.status(404).send(notFoundStill);
+                    return;
+                }
+
+                const notFoundRoute = router.match(NOT_FOUND_ROUTE);
                 if (!notFoundRoute) {
-                    response.send('Not Found');
+                    response.status(404).send(NOT_FOUND_TEMPLATE);
                     return;
                 }
 
