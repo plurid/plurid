@@ -48,12 +48,6 @@ delete (window as any).__PRELOADED_STATE__;
 
 const Client: React.FC<any> = () => {
     return (
-        <div style={{color: 'white'}}>
-            test
-        </div>
-    );
-
-    return (
         <HelmetProvider context={helmetContext}>
             <ReduxProvider store={reduxStore(state)}>
                 <ApolloProvider client={graphqlClient}>
