@@ -115,10 +115,7 @@ export default class PluridServer<T> {
 
         this.server = this.serverApplication.listen(port);
 
-        const openProcess = process.env.PLURID_OPEN === 'false' ? false : true;
-        if (this.options.open || openProcess) {
-            open(serverlink);
-        }
+        this.open(serverlink);
 
         return this.server;
     }
@@ -315,6 +312,22 @@ export default class PluridServer<T> {
             this.serverApplication.use(
                 (req, res, next) => middleware(req, res, next),
             );
+        }
+    }
+
+    private open(
+        serverlink: string,
+    ) {
+        if (
+            typeof process.env.PLURID_OPEN !== 'string'
+            && this.options.open
+        ) {
+            open(serverlink);
+        }
+
+        const openProcess = process.env.PLURID_OPEN === 'false' ? false : true;
+        if (openProcess) {
+            open(serverlink);
         }
     }
 }
