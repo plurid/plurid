@@ -100,7 +100,7 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
     await addScript({
-        name: 'build.production',
+        name: 'build.production.stills',
         value: `${packageManagerRun} build.production && ${packageManagerRun} build.stills`,
         path: packageJsonPath,
     });
@@ -441,6 +441,8 @@ const generateReactServerApplication = async (
         '@babel/core',
         '@babel/preset-env',
         '@babel/preset-react',
+        '@rollup/plugin-commonjs',
+        '@rollup/plugin-node-resolve',
         'babel-loader',
         'copy-webpack-plugin',
         'css-loader',
@@ -449,6 +451,11 @@ const generateReactServerApplication = async (
         'open',
         'redux-devtools-extension',
         'rimraf',
+        'rollup',
+        'rollup-plugin-peer-deps-external',
+        'rollup-plugin-sourcemaps',
+        'rollup-plugin-svg',
+        'rollup-plugin-typescript2',
         'source-map-loader',
         'style-loader',
         'terser-webpack-plugin',
