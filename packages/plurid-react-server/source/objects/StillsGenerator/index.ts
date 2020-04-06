@@ -50,7 +50,6 @@ class StillsGenerator {
         /** Sleep 1.5 seconds to let the server spin up. */
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-
         console.log('\n\tStarting to generate stills... (this may take a while)');
 
         const stiller = new Stiller({
@@ -71,8 +70,6 @@ class StillsGenerator {
         console.log(values);
 
 
-
-
         // read the application
 
         console.log('\n\tParsed the following still routes:');
@@ -87,6 +84,7 @@ class StillsGenerator {
 
         // generate the stills as .json so they can be loaded by the Plurid Server
 
+        /** Gracefully stop the server. */
         child.kill(2);
     }
 }
