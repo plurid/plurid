@@ -85,7 +85,9 @@ class StillsGenerator {
         }
 
 
-        /** Sleep 1.5 seconds to let the server spin up. */
+        /**
+         * Sleep 1.5 seconds to let the server spin up.
+         */
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         const startTime = Date.now();
@@ -119,7 +121,7 @@ class StillsGenerator {
          * so they can be loaded by the Plurid Server
          *
          * Generate a metadata.json file.
-         * */
+         */
         const stillsPath = path.join(buildPath, './stills');
         await fs.mkdir(
             stillsPath,
@@ -151,7 +153,9 @@ class StillsGenerator {
         await fs.writeFile(metadataFilePath, metadataJSON);
 
 
-        /** Gracefully stop the server. */
+        /**
+         * Gracefully stop the server.
+         */
         child.kill(2);
     }
 }
