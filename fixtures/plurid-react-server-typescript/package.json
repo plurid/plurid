@@ -8,7 +8,7 @@
     "scripts": {
         "prestart": "yarn build.production",
         "start": "node build/server.js",
-        "start.client.development": "webpack --watch --progress --config scripts/webpack.client.development.js",
+        "start.client.development": "webpack --watch --progress --config scripts/client.development.js",
         "start.server.development": "yarn build.server.development && nodemon build/server.js",
         "run.server.development": "nodemon build/server.js",
         "clean": "rimraf ./build",
