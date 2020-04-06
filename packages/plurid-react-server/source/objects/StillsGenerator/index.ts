@@ -43,7 +43,7 @@ class StillsGenerator {
         const child = fork(serverPath, [], {
             stdio: 'pipe',
             env: {
-                PORT: '9001',
+                PORT: '9900',
                 PLURID_OPEN: 'false',
             },
         });
@@ -64,9 +64,10 @@ class StillsGenerator {
         console.log(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
 
         const stiller = new Stiller({
+            host: 'http://localhost:9900',
             routes: [
-                'http://localhost:9001/',
-                'http://localhost:9001/static',
+                '/',
+                '/static',
             ],
         });
 
@@ -91,7 +92,7 @@ class StillsGenerator {
         const endTime = Date.now();
         const duration = (endTime - startTime) / 1000;
         const plural = stills.length === 1 ? '' : 's';
-        console.log(`\n\tGenerated ${stills.length} still${plural} in ${duration} seconds.`);
+        console.log(`\n\tGenerated ${stills.length} still${plural} in ${duration} seconds.\n`);
 
         /** Gracefully stop the server. */
         child.kill(2);
