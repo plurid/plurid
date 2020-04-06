@@ -48,10 +48,12 @@ class StillsGenerator {
         const pluridServer: PluridServer<any> = require(serverPath);
         const serverInformation = PluridServer.analysis(pluridServer);
 
+        const serverPort = '9900';
+
         const child = fork(serverPath, [], {
             stdio: 'pipe',
             env: {
-                PORT: '9900',
+                PORT: serverPort,
                 PLURID_OPEN: 'false',
             },
         });
@@ -78,7 +80,7 @@ class StillsGenerator {
         console.log(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
 
         const stiller = new Stiller({
-            host: 'http://localhost:9900',
+            host: 'http://localhost:' + serverPort,
             routes: [
                 ...stillRoutesPaths,
             ],
