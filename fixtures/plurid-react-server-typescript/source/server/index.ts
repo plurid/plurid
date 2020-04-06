@@ -20,58 +20,54 @@ import {
 
 
 
-const main = () => {
-    const PORT = process.env.PORT || 33000;
+const PORT = process.env.PORT || 33000;
 
-    const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
+const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
 
-    const styles: string[] = [
-        // custom styles to be loaded into the template
-    ]
+const styles: string[] = [
+    // custom styles to be loaded into the template
+]
 
-    const middleware: PluridServerMiddleware[] = [
-        // express-like middleware
-    ];
+const middleware: PluridServerMiddleware[] = [
+    // express-like middleware
+];
 
-    const services: PluridServerService[] = [
-        // services to be used in the application,
-        /** uncomment to use services */
-        'Redux',
-        'GraphQL',
-        // 'Stripe',
-    ];
+const services: PluridServerService[] = [
+    // services to be used in the application,
+    /** uncomment to use services */
+    'Redux',
+    'GraphQL',
+    // 'Stripe',
+];
 
-    const servicesData: PluridServerServicesData = {
-        /** uncomment to use services */
-        reduxStore,
-        reduxStoreValue: {},
-        graphqlClient,
-        // stripeAPIKey,
-        // stripeScript,
-    };
+const servicesData: PluridServerServicesData = {
+    /** uncomment to use services */
+    reduxStore,
+    reduxStoreValue: {},
+    graphqlClient,
+    // stripeAPIKey,
+    // stripeScript,
+};
 
-    const options: PluridServerPartialOptions = {
-        root: 'plurid-app',
-        // open: process.env.ENV_MODE === 'production' ? false : true,
-        open: false,
-    };
+const options: PluridServerPartialOptions = {
+    root: 'plurid-app',
+    // open: process.env.ENV_MODE === 'production' ? false : true,
+    open: false,
+};
 
-    const pluridServer = new PluridServer({
-        routing,
-        helmet,
-        styles,
-        middleware,
-        services,
-        servicesData,
-        options,
-    });
-
-    pluridServer.start(PORT);
-}
+const pluridServer = new PluridServer({
+    routing,
+    helmet,
+    styles,
+    middleware,
+    services,
+    servicesData,
+    options,
+});
 
 
 if (require.main === module) {
-    main();
+    pluridServer.start(PORT);
 }
 
 
