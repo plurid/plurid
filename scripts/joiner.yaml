@@ -1,0 +1,19 @@
+---
+packages:
+  - ./packages/*
+
+package:
+  manager: yarn
+  publisher: npm
+
+yarnWorkspace: false
+
+commit:
+  engine: git
+  combine: true
+  root: ''
+  fullFolder: false
+  divider: ' > '
+  message: 'setup: package'
+
+runFrom: ../
