@@ -9,6 +9,10 @@ import {
 } from 'child_process';
 
 import {
+    uuid,
+} from '@plurid/plurid-functions';
+
+import {
     StillsGeneratorOptions,
 } from '../../data/interfaces';
 
@@ -53,11 +57,17 @@ class StillsGenerator {
         });
 
 
-        // read the application
+        /**
+         * Read the application routes.
+         */
+        const stillRoutes = serverInformation.routing.routes;
+        const stillRoutesPaths = stillRoutes.map(stillRoute => stillRoute.path);
 
         console.log('\n\tParsed the following still routes:');
 
-        // list the routes
+        for (const stillRoutePath of stillRoutesPaths) {
+            console.log(`\t\t${stillRoutePath}`);
+        }
 
 
         /** Sleep 1.5 seconds to let the server spin up. */
@@ -70,8 +80,7 @@ class StillsGenerator {
         const stiller = new Stiller({
             host: 'http://localhost:9900',
             routes: [
-                '/',
-                '/static',
+                ...stillRoutesPaths,
             ],
         });
 
@@ -111,7 +120,7 @@ class StillsGenerator {
                 continue;
             }
 
-            const stillName = Math.random().toFixed(6) + '.json';
+            const stillName = uuid.generate() + '.json';
             const metadataItem = {
                 route: still.route,
                 name: stillName,
