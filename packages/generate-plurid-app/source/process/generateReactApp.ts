@@ -41,7 +41,7 @@ export const setupPackageJSONReactServer = async (
     });
     await addScript({
         name: 'start.client.development',
-        value: 'webpack --watch --progress --config scripts/webpack.client.development.js',
+        value: 'webpack --watch --progress --config scripts/client.development.js',
         path: packageJsonPath,
     });
     await addScript({
@@ -50,7 +50,7 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
     await addScript({
-        name: 'start.server.development.run',
+        name: 'run.server.development',
         value: 'nodemon build/server.js',
         path: packageJsonPath,
     });
@@ -61,22 +61,27 @@ export const setupPackageJSONReactServer = async (
     });
     await addScript({
         name: 'build.client.development',
-        value: 'webpack --config scripts/webpack.client.development.js',
+        value: 'webpack --config scripts/client.development.js',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.client.production',
-        value: 'webpack --config scripts/webpack.client.production.js',
+        value: 'webpack --config scripts/client.production.js',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.server.development',
-        value: 'webpack --config scripts/webpack.server.development.js',
+        value: 'rollup -c ./scripts/server.development.ts',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.server.production',
-        value: 'webpack --config scripts/webpack.server.production.js',
+        value: 'rollup -c ./scripts/server.production.ts',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.stills',
+        value: 'node ./scripts/stills.js',
         path: packageJsonPath,
     });
     await addScript({
@@ -85,8 +90,18 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
     await addScript({
+        name: 'build.development.stills',
+        value: `${packageManagerRun} build.development && ${packageManagerRun} build.stills`,
+        path: packageJsonPath,
+    });
+    await addScript({
         name: 'build.production',
         value: `${packageManagerRun} clean && ${packageManagerRun} build.server.production && ${packageManagerRun} build.client.production`,
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.production',
+        value: `${packageManagerRun} build.production && ${packageManagerRun} build.stills`,
         path: packageJsonPath,
     });
 
