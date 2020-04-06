@@ -264,12 +264,8 @@ export default class PluridServer<T> {
     ) {
         const options: PluridServerOptions = {
             quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
-            compression: typeof partialOptions?.compression == 'boolean'
-                ? partialOptions?.compression
-                : true,
-            open: typeof partialOptions?.open == 'boolean'
-                ? partialOptions?.open
-                : false,
+            compression: partialOptions?.compression ?? true,
+            open: partialOptions?.open ?? false,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
             root: partialOptions?.root || 'root',
             script: partialOptions?.script || '/index.js',
