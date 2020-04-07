@@ -117,7 +117,9 @@ switch (command) {
             runCommand(commandBuildProductionStills);
         }
         console.log('\n\tStarting the Application Server...');
-        runCommand(commandStart);
+        runCommand(commandStart, {
+            stdio: 'inherit',
+        });
         break;
     case 'start.client.development':
         console.log('\n\tStarting the Client Development Process...');
