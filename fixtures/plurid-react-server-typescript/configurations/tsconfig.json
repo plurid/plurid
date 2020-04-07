@@ -10,7 +10,7 @@
         "rootDir": "../",
         "typeRoots": [
             "../node_modules/@types",
-            "../source/types"
+            "../source/types/typings.d.ts"
         ],
 
         "declaration": false,
