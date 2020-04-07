@@ -6,6 +6,19 @@ import {
 
 
 
+/**
+ * Replace the rendering viewport resolution in order to reduce the loading flash.
+ * @param html
+ */
+const replacePluridResolution = (
+    html: string,
+) => {
+    const normalResolution = 'width: 1366px; height: 768px;';
+    const zeroResolution = 'width: 0px; height: 0px;';
+    return html.replace(normalResolution, zeroResolution);
+}
+
+
 const render = async (
     host: string,
     route: string,
@@ -35,7 +48,9 @@ const render = async (
         throw new Error(`${route} timed out.`);
     }
 
-    const html = await page.content();
+    const html = replacePluridResolution(
+        await page.content()
+    );
     await browser.close();
 
     const stilltime = Date.now() - start;
