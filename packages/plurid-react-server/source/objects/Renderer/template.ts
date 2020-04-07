@@ -24,7 +24,7 @@ const template = (
 
         <style>
             body {
-                background: radial-gradient(ellipse at center, hsl(220, 10%, 18%) 0%, hsl(220, 10%, 32%) 100%);
+                background: radial-gradient(ellipse at center, hsl(220, 10%, 32%) 0%, hsl(220, 10%, 18%) 100%);
             }
         </style>
 
