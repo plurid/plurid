@@ -8,7 +8,7 @@
         "sourceMap": true,
         "allowJs": false,
         "forceConsistentCasingInFileNames": true,
-        "outDir": "build",
+        "outDir": "../build",
         "declaration": false,
         "strict": true,
         "noImplicitReturns": true,
@@ -24,15 +24,15 @@
         "esModuleInterop": true,
         "downlevelIteration": true,
         "typeRoots": [
-            "node_modules/@types",
-            "source/types"
+            "../node_modules/@types",
+            "../source/types"
         ]
     },
     "include": [
-        "source"
+        "../source"
     ],
     "exclude": [
-        "node_modules",
-        "build"
+        "../node_modules",
+        "../build"
     ]
 }
