@@ -151,9 +151,11 @@ switch (command) {
         console.log('\n\Finished the Server Production Build.\n');
         break;
     case 'build.stills':
+        console.log('\n\tStarting the Stilled Build Process...');
         runCommand(commandBuildStills, {
             stdio: 'inherit',
         });
+        console.log('\n\tFinished the Stilled Build Process.\n');
         break;
     case 'build.development':
         console.log('\n\tStarting the Development Build...');
