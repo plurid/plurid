@@ -5,7 +5,14 @@ import Client from './Client';
 
 
 
+// if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.register('/service-worker.js');
+// }
+
+const pluridApp = document.getElementById('plurid-app');
+
+
 ReactDOM.hydrate(
     <Client />,
-    document.getElementById('plurid-app'),
+    pluridApp,
 );

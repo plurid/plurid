@@ -1,23 +1,16 @@
 const path = require('path');
 
 const merge = require('webpack-merge');
-const CopyPlugin = require('copy-webpack-plugin');
 
-const baseConfig = require('./client.base');
+const {
+    plugins,
+    baseConfig,
+} = require('./client.base');
 
 
 
 const config = {
     mode: 'development',
-
-    entry: {
-        index: './source/client/index.tsx',
-    },
-
-    output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, '../build'),
-    },
 
     optimization: {
         minimize: false,
@@ -25,8 +18,8 @@ const config = {
             cacheGroups: {
                 commons: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: "vendor",
-                    chunks: "initial",
+                    name: 'vendor',
+                    chunks: 'initial',
                 },
             },
         },
@@ -35,11 +28,10 @@ const config = {
     // devtool: 'inline-source-map',
 
     plugins: [
-        new CopyPlugin([
-            { from: './source/public/', to: './' },
-        ]),
+        plugins.copyPlugin,
     ],
 };
+
 
 
 module.exports = merge(baseConfig, config);
