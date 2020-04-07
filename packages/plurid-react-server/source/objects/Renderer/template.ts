@@ -4,6 +4,33 @@ import {
 
 
 
+const resolveBackgroundStyle = (
+    store: string,
+) => {
+    const storeJSON = JSON.parse(store);
+    const generalPluridTheme = storeJSON?.themes?.general;
+
+    if (!generalPluridTheme) {
+        return {
+            gradientBackground: 'hsl(220, 10%, 32%)',
+            gradientForeground: 'hsl(220, 10%, 18%)',
+        };
+    }
+
+    const gradientBackground = generalPluridTheme.type === 'dark'
+        ? generalPluridTheme.backgroundColorTertiary
+        : generalPluridTheme.backgroundColorPrimary
+    const gradientForeground = generalPluridTheme.type === 'dark'
+        ? generalPluridTheme.backgroundColorPrimary
+        : generalPluridTheme.backgroundColorTertiary
+
+    return {
+        gradientBackground,
+        gradientForeground,
+    };
+}
+
+
 const template = (
     head: string,
     styles: string,
@@ -16,6 +43,11 @@ const template = (
     htmlAttributes: string,
     bodyAttributes: string,
 ) => {
+    const {
+        gradientBackground,
+        gradientForeground,
+    } = resolveBackgroundStyle(store);
+
     const templateString = `
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +56,7 @@ const template = (
 
         <style>
             body {
-                background: radial-gradient(ellipse at center, hsl(220, 10%, 32%) 0%, hsl(220, 10%, 18%) 100%);
+                background: radial-gradient(ellipse at center, ${gradientBackground} 0%, ${gradientForeground} 100%);
             }
         </style>
 
