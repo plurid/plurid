@@ -12,7 +12,12 @@ const render = async (
 ) => {
     const start = Date.now();
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        defaultViewport: {
+            width: 1366,
+            height: 768,
+        },
+    });
     const page = await browser.newPage();
 
     try {
