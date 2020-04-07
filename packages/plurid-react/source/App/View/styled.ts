@@ -18,7 +18,7 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
         height: 100%;
         width: 100%;
-        background-color: black;
+        /* background-color: black; */
         color: white;
         font-family: Ubuntu, -apple-system, BlinkMacSystemFont, Roboto,
             'Open Sans', 'Helvetica Neue', 'Lucida Sans', sans-serif;
