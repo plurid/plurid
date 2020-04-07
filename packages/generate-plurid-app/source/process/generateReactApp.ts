@@ -508,12 +508,12 @@ const generateReactServerApplication = async (
     );
 
 
-    console.log('\n\tInstalling dependencies...');
+    console.log('\n\tInstalling direct dependencies...');
     await executeCommand(
         installDependenciesCommand,
         { cwd: app.directory },
     );
-    console.log('\tDependencies installed.');
+    console.log('\tDirect Dependencies installed.');
 
 
     console.log('\n\tInstalling development dependencies...');
