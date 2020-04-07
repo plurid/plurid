@@ -182,7 +182,9 @@ switch (command) {
         break;
     case 'build.development':
         console.log('\n\tStarting the Development Build Process...');
-        runCommand(commandBuildDevelopment);
+        runCommand(commandBuildDevelopment, {
+            stdio: 'inherit',
+        });
         console.log('\n\tFinished the Development Build Process.\n');
         break;
     case 'build.development.stills':

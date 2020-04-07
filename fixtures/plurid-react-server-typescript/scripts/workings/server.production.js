@@ -12,6 +12,7 @@ export default {
     plugins: [
         plugins.svg(),
         plugins.typescript(),
+        plugins.babel(),
         plugins.external(),
         plugins.resolve(),
         plugins.commonjs(),

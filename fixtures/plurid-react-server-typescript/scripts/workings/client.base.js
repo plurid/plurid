@@ -78,6 +78,14 @@ const babelRule = {
                 },
             ],
         ],
+        plugins: [
+            [
+                'babel-plugin-styled-components',
+                {
+                    "ssr": true,
+                },
+            ],
+        ],
     },
 };
 
@@ -101,6 +109,10 @@ const baseConfig = {
         filename: '[name].js',
         path: outputPath,
     },
+
+    // externals: [
+    //     'styled-components',
+    // ],
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
