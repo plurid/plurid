@@ -1081,10 +1081,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.6.tgz#b864bf813fe2267b556aac69c4d6bc76f40e5d26"
   integrity sha512-TjJudcZLyg+o7OImniHmWg3Tp751Ui4qjqTN3cFPJPUreMzTGiHHlut/7QfQlsZ8HB0YPaY9hUCxhcOspXwnnQ==
 
-"@plurid/plurid-react-server@^0.1.32":
-  version "0.1.32"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.32.tgz#d1b7651146aed71be09701c0dda10d4b61c99571"
-  integrity sha512-iXp1HkiIasexKfSJ+ftgrb9FBWyyDGmiVOZNkX5zrUed8PG3swnW0n/psBC1HaRxGZB3YUv/YM87+QL/gYhtwQ==
+"@plurid/plurid-react-server@^0.1.33":
+  version "0.1.33"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.33.tgz#07e97657561344b1b33f911583f62540a2a80ee2"
+  integrity sha512-grg8Qf7kyam7buGQRnD5Hl1Sr1CjvKUjw5wszGgFNNOTN8/xKqzx5nsxsjOhEcaSFyaOe0nBxZdnnZ0epbqXlw==
   dependencies:
     compression "^1.7.4"
     detect-port "^1.3.0"
@@ -1092,10 +1092,10 @@
     open "^7.0.3"
     puppeteer "^2.1.1"
 
-"@plurid/plurid-react@^0.1.128":
-  version "0.1.128"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.128.tgz#436d885315e67242a525c67b8defe4ad1e4e9fa3"
-  integrity sha512-8THWuoMh5wH+KA825O/OdWlKZ8uhdfcioCnVCxR8d1hjMxjxWpFNCvDu+iL4KCr04IBZl9mjtJNrTXf9aYMFlw==
+"@plurid/plurid-react@^0.1.129":
+  version "0.1.129"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.129.tgz#1bfaebdbbec02e394a535db1ce358bab15ba2101"
+  integrity sha512-ayoIQQ6Oc6xEI/YjbsYP5TyHdOh3KFkyPnoC/7iGPlbKavACTIiXvi5h/wKt8jvb8mSJnua1fCiSvUW903+xUQ==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
