@@ -85,11 +85,17 @@ const commandBuildProductionStills = [
 /** FUNCTIONS */
 const runCommand = (
     command,
+    options = {
+        stdio: 'ignore'
+    },
 ) => {
     for (const subCommand of command) {
-        execSync(subCommand, {
-            stdio: 'inherit',
-        });
+        execSync(
+            subCommand,
+            {
+                stdio: options.stdio,
+            },
+        );
     }
 }
 
@@ -99,50 +105,74 @@ const runCommand = (
 switch (command) {
     case 'start':
         if (!existsSync(buildFolder)) {
+            console.log('\n\tBuild Required. Starting the Stilled Production Build Process...');
             runCommand(commandBuildProductionStills);
         }
+        console.log('\n\tStarting the Application Server...');
         runCommand(commandStart);
         break;
     case 'start.client.development':
+        console.log('\n\tStarting the Client Development Process...');
         runCommand(commandStartClientDevelopment);
         break;
     case 'start.server.development':
+        console.log('\n\tStarting the Server Development Process...');
         runCommand(commandStartServerDevelopment);
         break;
     case 'run.development':
+        console.log('\n\tRunning the Development Server...');
         runCommand(commandRunDevelopment);
         break;
     case 'run.production':
+        console.log('\n\tRunning the Production Server...');
         runCommand(commandRunProduction);
         break;
     case 'clean':
         runCommand(commandClean);
         break;
     case 'build.client.development':
+        console.log('\n\tStarting the Client Development Build...');
         runCommand(commandBuildClientDevelopment);
+        console.log('\n\Finished the Client Development Build.\n');
         break;
     case 'build.client.production':
+        console.log('\n\tStarting the Client Production Build...');
         runCommand(commandBuildClientProduction);
+        console.log('\n\Finished the Client Production Build.\n');
         break;
     case 'build.server.development':
+        console.log('\n\tStarting the Server Development Build...');
         runCommand(commandBuildServerDevelopment);
+        console.log('\n\Finished the Server Development Build.\n');
         break;
     case 'build.server.production':
+        console.log('\n\tStarting the Server Production Build...');
         runCommand(commandBuildServerProduction);
+        console.log('\n\Finished the Server Production Build.\n');
         break;
     case 'build.stills':
-        runCommand(commandBuildStills);
+        runCommand(commandBuildStills, {
+            stdio: 'inherit',
+        });
         break;
     case 'build.development':
+        console.log('\n\tStarting the Development Build...');
         runCommand(commandBuildDevelopment);
+        console.log('\n\tFinished the Development Build.\n');
         break;
     case 'build.development.stills':
+        console.log('\n\tStarting the Stilled Development Build...');
         runCommand(commandBuildDevelopmentStills);
+        console.log('\n\tFinished the Stilled Development Build.\n');
         break;
     case 'build.production':
+        console.log('\n\tStarting the Production Build...');
         runCommand(commandBuildProduction);
+        console.log('\n\tFinished the Production Build.\n');
         break;
     case 'build.production.stills':
+        console.log('\n\tStarting the Stilled Production Build...');
         runCommand(commandBuildProductionStills);
+        console.log('\n\tFinished the Stilled Production Build.\n');
         break;
 }
