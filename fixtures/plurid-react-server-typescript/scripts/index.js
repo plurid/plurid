@@ -13,6 +13,7 @@ const {
 /** CONSTANTS */
 const command = process.argv[2];
 const buildFolder = path.join(process.cwd(), 'build');
+const verbose = process.argv[3] === 'verbose' ? 'inherit' : undefined;
 
 
 
