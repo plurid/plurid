@@ -129,7 +129,10 @@ export default class PluridContentGenerator<T> {
 
         const content = renderToString(
             this.stylesheet.collectStyles(
-                <StyleSheetManager sheet={this.stylesheet.instance}>
+                <StyleSheetManager
+                    sheet={this.stylesheet.instance}
+                    disableCSSOMInjection={true}
+                >
                     <Wrap />
                 </StyleSheetManager>
             ),
