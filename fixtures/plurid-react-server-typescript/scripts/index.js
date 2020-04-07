@@ -33,26 +33,26 @@ const commandClean = [
 ];
 
 const commandBuildClientDevelopment = [
-    'node_modules/.bin/webpack --config scripts/client.development.js',
+    'node_modules/.bin/webpack --config ./scripts/workings/client.development.js',
 ];
 const commandBuildClientProduction = [
-    'node_modules/.bin/webpack --config scripts/client.production.js',
+    'node_modules/.bin/webpack --config ./scripts/workings/client.production.js',
 ];
 
 const commandBuildServerDevelopment = [
-    'node_modules/.bin/rollup -c ./scripts/server.development.ts',
+    'node_modules/.bin/rollup -c ./scripts/workings/server.development.ts',
 ];
 const commandBuildServerProduction = [
-    'node_modules/.bin/rollup -c ./scripts/server.production.ts',
+    'node_modules/.bin/rollup -c ./scripts/workings/server.production.ts',
 ];
 
 const commandBuildStills = [
-    'node ./scripts/stills.js',
+    'node ./scripts/workings/stills.js',
 ];
 
 
 const commandStartClientDevelopment = [
-    'node_modules/.bin/webpack --watch --progress --config scripts/client.development.js',
+    'node_modules/.bin/webpack --watch --progress --config ./scripts/workings/client.development.js',
 ];
 const commandStartServerDevelopment = [
     ...commandBuildServerDevelopment,
@@ -144,24 +144,3 @@ switch (command) {
         runCommand(commandBuildProductionStills);
         break;
 }
-
-
-
-/** LEGACY */
-
-// "start": "node build/server.js",
-// "start.client.development": "webpack --watch --progress --config scripts/client.development.js",
-// "start.server.development": "yarn build.server.development && nodemon build/server.js",
-// "run.development": "nodemon build/server.js",
-// "run.production": "node build/server.js",
-// "clean": "rimraf ./build",
-// "build.client.development": "webpack --config scripts/client.development.js",
-// "build.client.production": "webpack --config scripts/client.production.js",
-// "build.server.development": "rollup -c ./scripts/server.development.ts",
-// "build.server.production": "rollup -c ./scripts/server.production.ts",
-// "build.stills": "node ./scripts/stills.js",
-// "build.development": "yarn clean && yarn build.server.development && yarn build.client.development",
-// "build.development.stills": "yarn build.development && yarn build.stills",
-// "build.production": "yarn clean && yarn build.server.production && yarn build.client.production",
-// "build.production.stills": "yarn build.production && yarn build.stills",
-// "deploy": "plurid deploy"
