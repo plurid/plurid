@@ -198,7 +198,9 @@ switch (command) {
         break;
     case 'build.production.stills':
         console.log('\n\tStarting the Stilled Production Build Process...');
-        runCommand(commandBuildProductionStills);
+        runCommand(commandBuildProductionStills, {
+            stdio: 'inherit',
+        });
         console.log('\n\tFinished the Stilled Production Build Process.\n');
         break;
 }
