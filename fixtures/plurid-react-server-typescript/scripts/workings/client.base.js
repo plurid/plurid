@@ -1,7 +1,31 @@
 const path = require('path');
 
+const CopyPlugin = require('copy-webpack-plugin');
 
 
+
+/** CONSTANTS */
+const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
+const outputPath = path.resolve(__dirname, '../../build');
+
+
+
+/** PLUGINS */
+const copyPlugin = new CopyPlugin([
+    {
+        from: path.resolve(__dirname, '../../source/public'),
+        to: './',
+    },
+]);
+
+
+const plugins = {
+    copyPlugin,
+};
+
+
+
+/** RULES */
 const styleRule = {
     test: /\.css$/,
     use: [
@@ -58,7 +82,26 @@ const babelRule = {
 };
 
 
-module.exports = {
+const rules = {
+    styleRule,
+    fileRule,
+    tsRule,
+    babelRule,
+};
+
+
+
+/** CONFIGURATION */
+const baseConfig = {
+    entry: {
+        index: entryIndex,
+    },
+
+    output: {
+        filename: '[name].js',
+        path: outputPath,
+    },
+
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     },
@@ -71,10 +114,18 @@ module.exports = {
 
     module: {
         rules: [
-            styleRule,
-            fileRule,
-            tsRule,
-            babelRule,
+            rules.styleRule,
+            rules.fileRule,
+            rules.tsRule,
+            rules.babelRule,
         ],
     },
+};
+
+
+
+module.exports = {
+    plugins,
+    rules,
+    baseConfig,
 };
