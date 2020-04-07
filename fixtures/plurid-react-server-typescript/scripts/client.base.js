@@ -13,6 +13,12 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     },
 
+    stats: {
+        modules: false,
+        chunks: false,
+        assets: false,
+    },
+
     module: {
         rules: [
             styleRule,
