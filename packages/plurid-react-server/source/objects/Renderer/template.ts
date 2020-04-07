@@ -23,7 +23,9 @@ const template = (
         ${head}
 
         <style>
-            html { background:black; }
+            body {
+                background: radial-gradient(ellipse at center, hsl(220, 10%, 18%) 0%, hsl(220, 10%, 32%) 100%);
+            }
         </style>
 
         ${styles}
