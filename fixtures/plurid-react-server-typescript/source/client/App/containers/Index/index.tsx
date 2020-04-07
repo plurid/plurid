@@ -1,6 +1,7 @@
 import React from 'react';
 
 import PluridApp, {
+    PluridPartialConfiguration,
     PluridPage,
     PluridView,
     SPACE_LAYOUT,
@@ -18,7 +19,7 @@ import Page from './containers/Page';
 
 const Index: React.FC<any> = () => {
     /** properties */
-    const pluridConfiguration = {
+    const pluridConfiguration: PluridPartialConfiguration = {
         theme: 'plurid',
         space: {
             layout: {
