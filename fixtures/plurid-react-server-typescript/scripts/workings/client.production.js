@@ -3,18 +3,18 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const baseConfig = require('./client.base');
+const {
+    plugins,
+    baseConfig,
+} = require('./client.base');
 
-
-const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
-const outputPath = path.resolve(__dirname, '../../build');
 
 
 const config = {
     mode: 'production',
+
     stats: {
         colors: false,
         hash: true,
@@ -25,6 +25,7 @@ const config = {
         modules: true,
         children: true,
     },
+
     devtool: '',
 
     optimization: {
@@ -52,23 +53,9 @@ const config = {
         ],
     },
 
-    entry: {
-        index: entryIndex,
-    },
-
-    output: {
-        filename: '[name].js',
-        path: outputPath,
-    },
-
     plugins: [
         // new BundleAnalyzerPlugin(),
-        new CopyPlugin([
-            {
-                from: path.resolve(__dirname, '../../source/public'),
-                to: './',
-            },
-        ]),
+        plugins.copyPlugin,
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production'),
@@ -76,6 +63,7 @@ const config = {
         }),
     ],
 };
+
 
 
 module.exports = merge(baseConfig, config);
