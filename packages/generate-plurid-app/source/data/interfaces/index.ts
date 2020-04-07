@@ -14,7 +14,8 @@ export interface Answers {
     renderer: string;
     manager: string;
     services: string[];
-    pluridApp: boolean;
+    containerize: boolean;
+    deployment: boolean;
 }
 
 
@@ -81,7 +82,8 @@ export interface Application {
     renderer: Renderer;
     manager: Manager;
     services: string[];
-    pluridApp: boolean;
+    containerize: boolean;
+    deployment: boolean;
 }
 
 

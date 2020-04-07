@@ -104,7 +104,8 @@ const processArguments = async (
 
         const {
             services,
-            pluridApp,
+            containerize,
+            deployment,
         } = program;
 
         console.log('\n\tThe plurid\' application will be generated at:');
@@ -127,7 +128,13 @@ const processArguments = async (
             console.log('\tNo selected services.');
         }
 
-        if (pluridApp) {
+        if (containerize) {
+            console.log('\tUsing Docker to containerize the application.');
+        } else {
+            console.log('\tNot using Docker to containerize the application.');
+        }
+
+        if (deployment) {
             console.log('\tDeploying application to plurid.app');
         } else {
             console.log('\tNot deploying to plurid.app');
@@ -140,7 +147,8 @@ const processArguments = async (
             renderer,
             manager,
             services,
-            pluridApp,
+            containerize,
+            deployment,
         };
         await generateApplication(application);
     } catch (error) {

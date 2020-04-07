@@ -126,7 +126,7 @@ export const setupPackageJSONReactServer = async (
 export const addScriptPluridApp = async (
     app: Application,
 ) => {
-    if (!app.pluridApp) {
+    if (!app.deployment) {
         return;
     }
 
@@ -143,7 +143,7 @@ export const addScriptPluridApp = async (
 export const setupPluridAppYaml = async (
     app: Application,
 ) => {
-    if (!app.pluridApp) {
+    if (!app.deployment) {
         return;
     }
 
@@ -172,8 +172,39 @@ region: us
 `;
 
     try {
-        const pluridAppPath = path.join(app.directory, './plurid.app.yaml');
+        const pluridAppPath = path.join(app.directory, './configurations/plurid.app.yaml');
         fs.writeFileSync(pluridAppPath, yamlContents);
+    } catch (error) {
+    }
+}
+
+
+export const setupDocker = async (
+    app: Application,
+) => {
+    if (!app.containerize) {
+        return;
+    }
+
+    const appName = path.relative(process.cwd(), app.directory);
+
+    const dockerContents =
+`
+FROM mhart/alpine-node:12 AS builder
+WORKDIR /app
+COPY ../ .
+RUN yarn install
+RUN yarn run build.production.stills
+
+FROM mhart/alpine-node:12
+WORKDIR /app
+COPY --from=builder /app/build .
+CMD ["yarn", "start"]
+`;
+
+    try {
+        const dockerfilePath = path.join(app.directory, './configurations/production.dockerfile');
+        fs.writeFileSync(dockerfilePath, dockerContents);
     } catch (error) {
     }
 }
@@ -323,6 +354,7 @@ const generatePluridReactApplication = async (
         copyDirectory(templateSourceDir, sourceDir);
 
         await setupPluridAppYaml(app);
+        await setupDocker(app);
 
         await addScriptPluridApp(app);
 
@@ -542,6 +574,7 @@ const generateReactServerApplication = async (
     await setupPackageJSONReactServer(app);
 
     await setupPluridAppYaml(app);
+    await setupDocker(app);
 
     await removeUnusedAddons(app);
 

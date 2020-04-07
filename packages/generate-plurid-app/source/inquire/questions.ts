@@ -20,8 +20,8 @@ const values = {
         new inquirer.Separator('---- pick one ----'),
     ],
     renderer: [
-        'Client',
         'Server',
+        'Client',
         new inquirer.Separator('---- pick one ----'),
     ],
     manager: [
@@ -76,7 +76,13 @@ const questions: Question[] = [
     },
     {
         type: 'confirm',
-        name: 'pluridApp',
+        name: 'containerize',
+        message: 'Containerize the application using Docker',
+        default: true,
+    },
+    {
+        type: 'confirm',
+        name: 'deployment',
         message: 'Deploy the application to plurid.app',
         default: true,
     },

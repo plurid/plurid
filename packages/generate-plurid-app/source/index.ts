@@ -28,11 +28,14 @@ async function main(program: CommanderStatic) {
 
     if (process.argv.length > 2) {
         program
-            .option('-d, --directory <path>', 'set the application directory')
-            .option('-l, --language <language>', 'set language ("typescript" -> TypeScript || "javascript" -> JavaScript)')
-            .option('-u, --ui <ui-engine>', 'set UI engine ("html" -> HTML Custom Elements || "react" -> React || "vue" -> Vue || "angular" -> Angular)')
-            .option('-r, --renderer <renderer>', 'set the application rendering side ("client" -> Client-Side Rendering || "server" -> Server-Side Rendering)')
-            .option('-m, --manager <package-manager>', 'set the package manager ("npm" || "yarn")')
+            .option('-d, --directory <path>', 'set the application directory', 'plurid-app')
+            .option('-l, --language <language>', 'set language ("typescript" -> TypeScript || "javascript" -> JavaScript)', 'typescript')
+            .option('-u, --ui <ui-engine>', 'set UI engine ("html" -> HTML Custom Elements || "react" -> React || "vue" -> Vue || "angular" -> Angular)', 'react')
+            .option('-r, --renderer <renderer>', 'set the application rendering side ("client" -> Client-Side Rendering || "server" -> Server-Side Rendering)', 'server')
+            .option('-m, --manager <package-manager>', 'set the package manager ("npm" || "yarn")', 'yarn')
+            .option('-s, --services <service-list>', 'pass additional services as a comma-separated list (graphql, redux, stripe)', 'graphql,redux,stripe')
+            .option('-c, --containerize', 'use Docker to containerize the application', false)
+            .option('-p, --pluridapp', 'deploy the application to plurid.app', true)
             .action(async () => {
                 const {
                     directory,
@@ -41,7 +44,8 @@ async function main(program: CommanderStatic) {
                     renderer,
                     manager,
                     services,
-                    pluridApp,
+                    containerize,
+                    pluridapp: deployment,
                 } = program;
 
                 const answers: Answers = {
@@ -51,7 +55,8 @@ async function main(program: CommanderStatic) {
                     renderer,
                     manager,
                     services,
-                    pluridApp,
+                    containerize,
+                    deployment,
                 };
 
                 await processArguments(answers);
