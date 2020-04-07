@@ -41,6 +41,14 @@ const commandTest = [
     'jest -c ./configurations/jest.config.js ./source',
 ];
 
+const commandContainerizeProduction = [
+    'docker build -t pluridapp -f ./configurations/production.dockerfile .',
+];
+
+const commandContainerizeProductionStills = [
+    'docker build -t pluridapp -f ./configurations/production.stills.dockerfile .',
+];
+
 const commandBuildClientDevelopment = [
     'node_modules/.bin/webpack --config ./scripts/workings/client.development.js',
 ];
@@ -153,6 +161,16 @@ switch (command) {
         runCommand(commandTest, {
             stdio: 'inherit',
         });
+        break;
+    case 'containerize.production':
+        console.log('\n\tStarting the Production Containerization Process...');
+        runCommand(commandContainerizeProduction);
+        console.log('\n\tFinished the Production Containerization Process.');
+        break;
+    case 'containerize.production.stills':
+        console.log('\n\tStarting the Stilled Production Containerization Process...');
+        runCommand(commandContainerizeProductionStills);
+        console.log('\n\tFinished the Stilled Production Containerization Process.');
         break;
     case 'build.client.development':
         console.log('\n\tStarting the Client Development Build Process...');
