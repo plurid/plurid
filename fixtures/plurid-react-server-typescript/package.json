@@ -14,6 +14,8 @@
         "clean": "node scripts clean",
         "lint": "node scripts lint",
         "test": "node scripts test",
+        "containerize.production": "node scripts containerize.production",
+        "containerize.production.stills": "node scripts containerize.production.stills",
         "build.client.development": "node scripts build.client.development",
         "build.client.production": "node scripts build.client.production",
         "build.server.development": "node scripts build.server.development",
