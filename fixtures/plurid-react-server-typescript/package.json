@@ -78,6 +78,7 @@
         "jest": "^25.2.7",
         "nodemon": "^2.0.2",
         "open": "^7.0.3",
+        "puppeteer": "^2.1.1",
         "react-stripe-elements": "^6.1.1",
         "redux-devtools-extension": "^2.13.8",
         "rimraf": "^3.0.2",
