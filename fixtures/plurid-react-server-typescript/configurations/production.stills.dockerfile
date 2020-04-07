@@ -33,13 +33,21 @@ RUN apt-get update \
 #     && chown -R pptruser:pptruser /node_modules
 
 # # Run everything after as non-privileged user.
-# USER pptruser
 
 WORKDIR /app
 COPY . .
 ENV ENV_MODE=production
 RUN yarn install
-RUN yarn build.production.stills
+
+RUN yarn build.production.stills \
+    && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+    && mkdir -p /home/pptruser/Downloads \
+    && chown -R pptruser:pptruser /home/pptruser \
+    && chown -R pptruser:pptruser /app/node_modules \
+    && chown -R pptruser:pptruser /app/build
+
+USER pptruser
+
 
 
 FROM mhart/alpine-node:12
