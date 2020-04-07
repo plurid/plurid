@@ -55,7 +55,7 @@ const tsRule = {
         {
             loader: 'ts-loader',
             options: {
-                configFile: path.resolve(__dirname, '../../configurations/tsconfig.json'),
+                configFile: path.resolve(__dirname, '../../tsconfig.json'),
             },
         },
     ],
@@ -75,6 +75,14 @@ const babelRule = {
                     targets: {
                         browsers: ['last 2 versions'],
                     },
+                },
+            ],
+        ],
+        plugins: [
+            [
+                'babel-plugin-styled-components',
+                {
+                    "ssr": true,
                 },
             ],
         ],

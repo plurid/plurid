@@ -13,6 +13,7 @@ const {
 /** CONSTANTS */
 const command = process.argv[2];
 const buildFolder = path.join(process.cwd(), 'build');
+const verbose = process.argv[3] === 'verbose' ? 'inherit' : undefined;
 
 
 
@@ -136,7 +137,9 @@ switch (command) {
         break;
     case 'run.production':
         console.log('\n\tRunning the Production Server...');
-        runCommand(commandRunProduction);
+        runCommand(commandRunProduction, {
+            stdio: 'inherit',
+        });
         break;
     case 'clean':
         runCommand(commandClean);
