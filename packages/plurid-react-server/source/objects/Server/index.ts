@@ -344,6 +344,7 @@ export default class PluridServer<T> {
                 open(serverlink);
             }
         } catch (error) {
+            return;
         }
     }
 }
