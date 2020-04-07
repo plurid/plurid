@@ -29,84 +29,94 @@ export const setupPackageJSONReactServer = async (
     const packageManagerRun = app.manager === 'Yarn'
         ? 'yarn'
         : 'npm run';
-    await addScript({
-        name: 'prestart',
-        value: `${packageManagerRun} build.production`,
-        path: packageJsonPath,
-    });
+
     await addScript({
         name: 'start',
-        value: 'node build/server.js',
-        path: packageJsonPath,
-    });
-    await addScript({
-        name: 'run.development',
-        value: 'nodemon build/server.js',
-        path: packageJsonPath,
-    });
-    await addScript({
-        name: 'run.production',
-        value: 'node build/server.js',
+        value: 'node scripts start',
         path: packageJsonPath,
     });
     await addScript({
         name: 'start.client.development',
-        value: 'webpack --watch --progress --config scripts/client.development.js',
+        value: 'node scripts start.client.development',
         path: packageJsonPath,
     });
     await addScript({
         name: 'start.server.development',
-        value: `${packageManagerRun} build.server.development && ${packageManagerRun} run.production`,
+        value: 'node scripts start.server.development',
         path: packageJsonPath,
     });
+    await addScript({
+        name: 'run.development',
+        value: 'node scripts run.development',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'run.production',
+        value: 'node scripts run.production',
+        path: packageJsonPath,
+    });
+
     await addScript({
         name: 'clean',
-        value: 'rimraf ./build',
+        value: 'node scripts clean',
         path: packageJsonPath,
     });
     await addScript({
+        name: 'lint',
+        value: 'node scripts lint',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'test',
+        value: 'node scripts test',
+        path: packageJsonPath,
+    });
+
+    await addScript({
         name: 'build.client.development',
-        value: 'webpack --config scripts/client.development.js',
+        value: 'node scripts build.client.development',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.client.production',
-        value: 'webpack --config scripts/client.production.js',
+        value: 'node scripts build.client.production',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.server.development',
-        value: 'rollup -c ./scripts/server.development.ts',
+        value: 'node scripts build.server.development',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.server.production',
-        value: 'rollup -c ./scripts/server.production.ts',
+        value: 'node scripts build.server.production',
         path: packageJsonPath,
     });
+
     await addScript({
         name: 'build.stills',
-        value: 'node ./scripts/stills.js',
+        value: 'node scripts build.stills',
         path: packageJsonPath,
     });
+
     await addScript({
         name: 'build.development',
-        value: `${packageManagerRun} clean && ${packageManagerRun} build.server.development && ${packageManagerRun} build.client.development`,
+        value: 'node scripts build.development',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.development.stills',
-        value: `${packageManagerRun} build.development && ${packageManagerRun} build.stills`,
+        value: 'node scripts build.development.stills',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.production',
-        value: `${packageManagerRun} clean && ${packageManagerRun} build.server.production && ${packageManagerRun} build.client.production`,
+        value: 'node scripts build.production',
         path: packageJsonPath,
     });
     await addScript({
         name: 'build.production.stills',
-        value: `${packageManagerRun} build.production && ${packageManagerRun} build.stills`,
+        value: 'node scripts build.production.stills',
         path: packageJsonPath,
     });
 
@@ -451,7 +461,9 @@ const generateReactServerApplication = async (
         'babel-loader',
         'copy-webpack-plugin',
         'css-loader',
+        'eslint',
         'file-loader',
+        'jest',
         'nodemon',
         'open',
         'redux-devtools-extension',
@@ -477,7 +489,10 @@ const generateReactServerApplication = async (
         '@types/react-redux',
         '@types/styled-components',
         '@types/react-stripe-elements',
+        '@typescript-eslint/eslint-plugin',
+        '@typescript-eslint/parser',
         'ts-loader',
+        'ts-jest',
         'typescript',
     ];
     const requiredDevelopmentDependenciesPackages = app.language === 'TypeScript'
