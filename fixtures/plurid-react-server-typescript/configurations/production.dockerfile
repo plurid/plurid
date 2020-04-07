@@ -4,7 +4,6 @@ COPY . .
 ENV ENV_MODE=production
 RUN yarn install
 RUN yarn build.production
-# RUN yarn build.production.stills  ### https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
 
 
 FROM mhart/alpine-node:12
