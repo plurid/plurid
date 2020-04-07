@@ -483,6 +483,7 @@ const generateReactServerApplication = async (
         'webpack-node-externals',
     ];
     const requiredDevelopmentTypescriptDependencies = [
+        '@types/jest',
         '@types/node',
         '@types/react',
         '@types/react-dom',
