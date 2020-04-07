@@ -1,9 +1,6 @@
 const path = require('path');
 
 const CopyPlugin = require('copy-webpack-plugin');
-// const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
-
-// const styledComponentsTransformer = createStyledComponentsTransformer();
 
 
 
@@ -58,12 +55,7 @@ const tsRule = {
         {
             loader: 'ts-loader',
             options: {
-                configFile: path.resolve(__dirname, '../../configurations/tsconfig.json'),
-                // getCustomTransformers: () => ({
-                //     before: [
-                //         styledComponentsTransformer,
-                //     ],
-                // }),
+                configFile: path.resolve(__dirname, '../../tsconfig.json'),
             },
         },
     ],
@@ -117,10 +109,6 @@ const baseConfig = {
         filename: '[name].js',
         path: outputPath,
     },
-
-    // externals: [
-    //     'styled-components',
-    // ],
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],

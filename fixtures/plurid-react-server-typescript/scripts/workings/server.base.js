@@ -7,6 +7,7 @@ const commonjs = require('@rollup/plugin-commonjs');
 const sourceMaps = require('rollup-plugin-sourcemaps');
 
 
+
 const input = 'source/server/index.ts';
 
 const output = [
@@ -19,7 +20,7 @@ const output = [
 const plugins = {
     svg: () => svg(),
     typescript: () => typescript({
-        tsconfig: './configurations/tsconfig.json',
+        tsconfig: './tsconfig.json',
     }),
     babel: () => babel({
         plugins: [
