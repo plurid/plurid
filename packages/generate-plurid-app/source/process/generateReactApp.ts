@@ -26,9 +26,6 @@ export const setupPackageJSONReactServer = async (
     app: Application,
 ) => {
     const packageJsonPath = path.join(app.directory, './package.json');
-    const packageManagerRun = app.manager === 'Yarn'
-        ? 'yarn'
-        : 'npm run';
 
     await addScript({
         name: 'start',
