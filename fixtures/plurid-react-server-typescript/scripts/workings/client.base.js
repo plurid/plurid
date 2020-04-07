@@ -1,4 +1,4 @@
-const rules = require('./client.rules');
+const path = require('path');
 
 
 
@@ -30,6 +30,9 @@ const tsRule = {
     use: [
         {
             loader: 'ts-loader',
+            options: {
+                configFile: path.resolve(__dirname, '../../configurations/tsconfig.json'),
+            },
         },
     ],
 };

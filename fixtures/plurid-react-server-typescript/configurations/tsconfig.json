@@ -26,7 +26,8 @@
         "typeRoots": [
             "../node_modules/@types",
             "../source/types"
-        ]
+        ],
+        "rootDir": "../",
     },
     "include": [
         "../source"
