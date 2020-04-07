@@ -32,6 +32,14 @@ const commandClean = [
     'rimraf ./build',
 ];
 
+const commandLint = [
+    'eslint -c ./configurations/.eslintrc.js ./source',
+];
+
+const commandTest = [
+    'jest -c ./configurations/jest.config.js ./source',
+];
+
 const commandBuildClientDevelopment = [
     'node_modules/.bin/webpack --config ./scripts/workings/client.development.js',
 ];
@@ -129,6 +137,16 @@ switch (command) {
         break;
     case 'clean':
         runCommand(commandClean);
+        break;
+    case 'lint':
+        runCommand(commandLint, {
+            stdio: 'inherit',
+        });
+        break;
+    case 'test':
+        runCommand(commandTest, {
+            stdio: 'inherit',
+        });
         break;
     case 'build.client.development':
         console.log('\n\tStarting the Client Development Build...');
