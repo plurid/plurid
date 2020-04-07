@@ -149,24 +149,24 @@ switch (command) {
         });
         break;
     case 'build.client.development':
-        console.log('\n\tStarting the Client Development Build...');
+        console.log('\n\tStarting the Client Development Build Process...');
         runCommand(commandBuildClientDevelopment);
-        console.log('\n\Finished the Client Development Build.\n');
+        console.log('\n\Finished the Client Development Build Process.\n');
         break;
     case 'build.client.production':
-        console.log('\n\tStarting the Client Production Build...');
+        console.log('\n\tStarting the Client Production Build Process...');
         runCommand(commandBuildClientProduction);
-        console.log('\n\Finished the Client Production Build.\n');
+        console.log('\n\Finished the Client Production Build Process.\n');
         break;
     case 'build.server.development':
-        console.log('\n\tStarting the Server Development Build...');
+        console.log('\n\tStarting the Server Development Build Process...');
         runCommand(commandBuildServerDevelopment);
-        console.log('\n\Finished the Server Development Build.\n');
+        console.log('\n\Finished the Server Development Build Process.\n');
         break;
     case 'build.server.production':
-        console.log('\n\tStarting the Server Production Build...');
+        console.log('\n\tStarting the Server Production Build Process...');
         runCommand(commandBuildServerProduction);
-        console.log('\n\Finished the Server Production Build.\n');
+        console.log('\n\Finished the Server Production Build Process.\n');
         break;
     case 'build.stills':
         console.log('\n\tStarting the Stilled Build Process...');
@@ -176,23 +176,23 @@ switch (command) {
         console.log('\n\tFinished the Stilled Build Process.\n');
         break;
     case 'build.development':
-        console.log('\n\tStarting the Development Build...');
+        console.log('\n\tStarting the Development Build Process...');
         runCommand(commandBuildDevelopment);
-        console.log('\n\tFinished the Development Build.\n');
+        console.log('\n\tFinished the Development Build Process.\n');
         break;
     case 'build.development.stills':
-        console.log('\n\tStarting the Stilled Development Build...');
+        console.log('\n\tStarting the Stilled Development Build Process...');
         runCommand(commandBuildDevelopmentStills);
-        console.log('\n\tFinished the Stilled Development Build.\n');
+        console.log('\n\tFinished the Stilled Development Build Process.\n');
         break;
     case 'build.production':
-        console.log('\n\tStarting the Production Build...');
+        console.log('\n\tStarting the Production Build Process...');
         runCommand(commandBuildProduction);
-        console.log('\n\tFinished the Production Build.\n');
+        console.log('\n\tFinished the Production Build Process.\n');
         break;
     case 'build.production.stills':
-        console.log('\n\tStarting the Stilled Production Build...');
+        console.log('\n\tStarting the Stilled Production Build Process...');
         runCommand(commandBuildProductionStills);
-        console.log('\n\tFinished the Stilled Production Build.\n');
+        console.log('\n\tFinished the Stilled Production Build Process.\n');
         break;
 }
