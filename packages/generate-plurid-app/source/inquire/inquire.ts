@@ -22,7 +22,8 @@ const inquire = (
                 renderer,
                 manager,
                 services,
-                pluridApp,
+                containerize,
+                deployment,
             } = args;
 
             const answers: Answers = {
@@ -32,7 +33,8 @@ const inquire = (
                 renderer,
                 manager,
                 services,
-                pluridApp,
+                containerize,
+                deployment,
             };
             await processArguments(answers);
         });
