@@ -13,8 +13,7 @@ const {
 
 
 const config = {
-    // mode: 'production',
-    mode: 'development',
+    mode: 'production',
 
     stats: {
         colors: false,
