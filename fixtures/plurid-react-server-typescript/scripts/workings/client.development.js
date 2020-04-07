@@ -6,17 +6,20 @@ const CopyPlugin = require('copy-webpack-plugin');
 const baseConfig = require('./client.base');
 
 
+const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
+const outputPath = path.resolve(__dirname, '../../build');
+
 
 const config = {
     mode: 'development',
 
     entry: {
-        index: './source/client/index.tsx',
+        index: entryIndex,
     },
 
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, '../build'),
+        path: outputPath,
     },
 
     optimization: {
@@ -25,8 +28,8 @@ const config = {
             cacheGroups: {
                 commons: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: "vendor",
-                    chunks: "initial",
+                    name: 'vendor',
+                    chunks: 'initial',
                 },
             },
         },
@@ -36,7 +39,10 @@ const config = {
 
     plugins: [
         new CopyPlugin([
-            { from: './source/public/', to: './' },
+            {
+                from: path.resolve(__dirname, '../../source/public'),
+                to: './',
+            },
         ]),
     ],
 };

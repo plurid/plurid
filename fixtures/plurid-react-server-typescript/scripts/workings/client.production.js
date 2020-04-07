@@ -9,6 +9,10 @@ const CopyPlugin = require('copy-webpack-plugin');
 const baseConfig = require('./client.base');
 
 
+const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
+const outputPath = path.resolve(__dirname, '../../build');
+
+
 const config = {
     mode: 'production',
     stats: {
@@ -28,8 +32,8 @@ const config = {
             cacheGroups: {
                 commons: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: "vendor",
-                    chunks: "initial",
+                    name: 'vendor',
+                    chunks: 'initial',
                 },
             },
         },
@@ -49,18 +53,21 @@ const config = {
     },
 
     entry: {
-        index: './source/client/index.tsx',
+        index: entryIndex,
     },
 
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, '../build'),
+        path: outputPath,
     },
 
     plugins: [
         // new BundleAnalyzerPlugin(),
         new CopyPlugin([
-            { from: './source/public/', to: './' },
+            {
+                from: path.resolve(__dirname, '../../source/public'),
+                to: './',
+            },
         ]),
         new webpack.DefinePlugin({
             'process.env': {
