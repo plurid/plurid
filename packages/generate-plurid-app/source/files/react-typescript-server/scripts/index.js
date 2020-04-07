@@ -115,6 +115,7 @@ switch (command) {
         if (!existsSync(buildFolder)) {
             console.log('\n\tBuild Required. Starting the Stilled Production Build Process...');
             runCommand(commandBuildProductionStills);
+            console.log('\n\tFinished the Stilled Production Build Process.\n');
         }
         console.log('\n\tStarting the Application Server...');
         runCommand(commandStart, {
