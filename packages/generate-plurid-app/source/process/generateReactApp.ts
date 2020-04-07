@@ -192,9 +192,9 @@ export const setupDocker = async (
 `
 FROM mhart/alpine-node:12 AS builder
 WORKDIR /app
-COPY ../ .
+COPY . .
 RUN yarn install
-RUN yarn run build.production.stills
+RUN yarn build.production.stills
 
 FROM mhart/alpine-node:12
 WORKDIR /app
