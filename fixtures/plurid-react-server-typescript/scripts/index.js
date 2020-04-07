@@ -136,7 +136,9 @@ switch (command) {
         break;
     case 'run.production':
         console.log('\n\tRunning the Production Server...');
-        runCommand(commandRunProduction);
+        runCommand(commandRunProduction, {
+            stdio: 'inherit',
+        });
         break;
     case 'clean':
         runCommand(commandClean);
