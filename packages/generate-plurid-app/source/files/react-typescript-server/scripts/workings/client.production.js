@@ -3,14 +3,18 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const baseConfig = require('./client.base');
+const {
+    plugins,
+    baseConfig,
+} = require('./client.base');
+
 
 
 const config = {
     mode: 'production',
+
     stats: {
         colors: false,
         hash: true,
@@ -21,6 +25,7 @@ const config = {
         modules: true,
         children: true,
     },
+
     devtool: '',
 
     optimization: {
@@ -28,8 +33,8 @@ const config = {
             cacheGroups: {
                 commons: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: "vendor",
-                    chunks: "initial",
+                    name: 'vendor',
+                    chunks: 'initial',
                 },
             },
         },
@@ -48,20 +53,9 @@ const config = {
         ],
     },
 
-    entry: {
-        index: './source/client/index.tsx',
-    },
-
-    output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, '../build'),
-    },
-
     plugins: [
         // new BundleAnalyzerPlugin(),
-        new CopyPlugin([
-            { from: './source/public/', to: './' },
-        ]),
+        plugins.copyPlugin,
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production'),
@@ -69,6 +63,7 @@ const config = {
         }),
     ],
 };
+
 
 
 module.exports = merge(baseConfig, config);
