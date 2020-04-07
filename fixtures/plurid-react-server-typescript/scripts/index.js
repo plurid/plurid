@@ -40,10 +40,10 @@ const commandBuildClientProduction = [
 ];
 
 const commandBuildServerDevelopment = [
-    'node_modules/.bin/rollup -c ./scripts/workings/server.development.ts',
+    'node_modules/.bin/rollup -c ./scripts/workings/server.development.js',
 ];
 const commandBuildServerProduction = [
-    'node_modules/.bin/rollup -c ./scripts/workings/server.production.ts',
+    'node_modules/.bin/rollup -c ./scripts/workings/server.production.js',
 ];
 
 const commandBuildStills = [
@@ -87,7 +87,9 @@ const runCommand = (
     command,
 ) => {
     for (const subCommand of command) {
-        execSync(subCommand);
+        execSync(subCommand, {
+            stdio: 'inherit',
+        });
     }
 }
 
