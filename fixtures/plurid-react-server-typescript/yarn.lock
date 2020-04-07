@@ -1105,16 +1105,15 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.6.tgz#b864bf813fe2267b556aac69c4d6bc76f40e5d26"
   integrity sha512-TjJudcZLyg+o7OImniHmWg3Tp751Ui4qjqTN3cFPJPUreMzTGiHHlut/7QfQlsZ8HB0YPaY9hUCxhcOspXwnnQ==
 
-"@plurid/plurid-react-server@^0.1.34":
-  version "0.1.34"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.34.tgz#78e7cd6493de741d0e1a85a21a0430495ccb1fed"
-  integrity sha512-iZS6/vlcElzJ3hPZwzPoMSNdMSqy/pB49yACr05UKsYIBqDxTjGAJCWHP2YIESo9bslcGzVSdEOG3aWJ2MXjsA==
+"@plurid/plurid-react-server@^0.1.35":
+  version "0.1.35"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.35.tgz#d2e72e9ebe4a2f55b196b373380e1a8f3950e3c0"
+  integrity sha512-7cQja+fXGb0ccSOILxmS6iILDKbJaywquhihw5UlyPRm1WodwnfFmT1hmHa9y3miSMsrnfl12Gpx+H0dVlDqIg==
   dependencies:
     compression "^1.7.4"
     detect-port "^1.3.0"
     express "^4.17.1"
     open "^7.0.3"
-    puppeteer "^2.1.1"
 
 "@plurid/plurid-react@^0.1.129":
   version "0.1.129"
