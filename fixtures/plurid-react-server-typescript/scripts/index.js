@@ -67,7 +67,7 @@ const commandBuildDevelopment = [
 ];
 const commandBuildDevelopmentStills = [
     ...commandBuildDevelopment,
-    commandBuildStills,
+    ...commandBuildStills,
 ];
 
 const commandBuildProduction = [
@@ -77,7 +77,7 @@ const commandBuildProduction = [
 ];
 const commandBuildProductionStills = [
     ...commandBuildProduction,
-    commandBuildStills,
+    ...commandBuildStills,
 ];
 
 
