@@ -1105,10 +1105,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.6.tgz#b864bf813fe2267b556aac69c4d6bc76f40e5d26"
   integrity sha512-TjJudcZLyg+o7OImniHmWg3Tp751Ui4qjqTN3cFPJPUreMzTGiHHlut/7QfQlsZ8HB0YPaY9hUCxhcOspXwnnQ==
 
-"@plurid/plurid-react-server@^0.1.35":
-  version "0.1.35"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.35.tgz#d2e72e9ebe4a2f55b196b373380e1a8f3950e3c0"
-  integrity sha512-7cQja+fXGb0ccSOILxmS6iILDKbJaywquhihw5UlyPRm1WodwnfFmT1hmHa9y3miSMsrnfl12Gpx+H0dVlDqIg==
+"@plurid/plurid-react-server@^0.1.36":
+  version "0.1.36"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.36.tgz#5b321a80605587fc6049c13ac3634cb35d62f18e"
+  integrity sha512-XjWPmjUzPQJr/kz09kG7X0nil6PBRw11sUJx/VQ4ZDtM8posAdjkrt5Wvp/Ydidk40TX9Zh7fyp0+2ISRJBZLQ==
   dependencies:
     compression "^1.7.4"
     detect-port "^1.3.0"
