@@ -18,7 +18,7 @@
         "test":                             "node scripts test",
 
         "build.client.development":         "node scripts build.client.development",
-        "build.client.production":          "node scripts build.client.development",
+        "build.client.production":          "node scripts build.client.production",
         "build.server.development":         "node scripts build.server.development",
         "build.server.production":          "node scripts build.server.production",
         "build.stills":                     "node scripts build.stills",
