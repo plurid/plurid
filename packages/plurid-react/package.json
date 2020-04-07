@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react",
-    "version": "0.1.127",
+    "version": "0.1.128",
     "description": "React implementation of Plurid to explore the web in three dimensions",
     "keywords": [
         "plurid",
@@ -82,8 +82,8 @@
         "@types/react-dom": "^16.9.6",
         "@types/react-redux": "^7.1.7",
         "@types/styled-components": "^5.0.1",
-        "@typescript-eslint/eslint-plugin": "^2.26.0",
-        "@typescript-eslint/parser": "^2.26.0",
+        "@typescript-eslint/eslint-plugin": "^2.27.0",
+        "@typescript-eslint/parser": "^2.27.0",
         "babel-plugin-styled-components": "^1.10.7",
         "babel-runtime": "^6.26.0",
         "cross-env": "^7.0.2",
@@ -106,7 +106,7 @@
         "rollup-plugin-peer-deps-external": "^2.2.2",
         "rollup-plugin-postcss": "^2.5.0",
         "rollup-plugin-typescript2": "^0.27.0",
-        "styled-components": "^5.0.1",
+        "styled-components": "^5.1.0",
         "ts-jest": "^25.3.1",
         "ts-node": "^8.8.2",
         "typescript": "^3.8.3"
