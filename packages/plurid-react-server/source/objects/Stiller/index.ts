@@ -18,6 +18,13 @@ const replacePluridResolution = (
     return html.replace(normalResolution, zeroResolution);
 }
 
+/**
+ * https://techoverflow.net/2019/11/08/how-to-fix-puppetteer-running-as-root-without-no-sandbox-is-not-supported/
+ */
+const isCurrentUserRoot = () => {
+    // UID 0 is always root
+    return process.getuid() == 0;
+}
 
 const render = async (
     host: string,
@@ -30,6 +37,8 @@ const render = async (
             width: 1366,
             height: 768,
         },
+        headless: true,
+        args: isCurrentUserRoot() ? ['--no-sandbox'] : undefined,
     });
     const page = await browser.newPage();
 
