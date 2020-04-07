@@ -29,9 +29,9 @@ export const GlobalStyle = createGlobalStyle`
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         color: white;
-        background: ${(props: IGlobalStyle) => {
+        /* background: ${(props: IGlobalStyle) => {
             return props.theme.backgroundColorPrimary;
-        }};
+        }}; */
     }
 
     #root {
