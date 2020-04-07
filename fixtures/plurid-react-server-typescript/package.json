@@ -5,32 +5,26 @@
     "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com)",
     "private": true,
     "main": "build/index.js",
-
     "scripts": {
-        "start":                            "node scripts start",
-        "start.client.development":         "node scripts start.client.development",
-        "start.server.development":         "node scripts start.server.development",
-        "run.development":                  "node scripts run.development",
-        "run.production":                   "node scripts run.production",
-
-        "clean":                            "node scripts clean",
-        "lint":                             "node scripts lint",
-        "test":                             "node scripts test",
-
-        "build.client.development":         "node scripts build.client.development",
-        "build.client.production":          "node scripts build.client.production",
-        "build.server.development":         "node scripts build.server.development",
-        "build.server.production":          "node scripts build.server.production",
-        "build.stills":                     "node scripts build.stills",
-
-        "build.development":                "node scripts build.development",
-        "build.development.stills":         "node scripts build.development.stills",
-        "build.production":                 "node scripts build.production",
-        "build.production.stills":          "node scripts build.production.stills",
-
-        "deploy":                           "plurid deploy"
+        "start": "node scripts start",
+        "start.client.development": "node scripts start.client.development",
+        "start.server.development": "node scripts start.server.development",
+        "run.development": "node scripts run.development",
+        "run.production": "node scripts run.production",
+        "clean": "node scripts clean",
+        "lint": "node scripts lint",
+        "test": "node scripts test",
+        "build.client.development": "node scripts build.client.development",
+        "build.client.production": "node scripts build.client.production",
+        "build.server.development": "node scripts build.server.development",
+        "build.server.production": "node scripts build.server.production",
+        "build.stills": "node scripts build.stills",
+        "build.development": "node scripts build.development",
+        "build.development.stills": "node scripts build.development.stills",
+        "build.production": "node scripts build.production",
+        "build.production.stills": "node scripts build.production.stills",
+        "deploy": "plurid deploy"
     },
-
     "dependencies": {
         "@apollo/react-hooks": "^3.1.4",
         "@plurid/plurid-data": "^0.1.114",
@@ -81,6 +75,7 @@
         "@typescript-eslint/eslint-plugin": "^2.27.0",
         "@typescript-eslint/parser": "^2.27.0",
         "babel-loader": "^8.1.0",
+        "babel-plugin-styled-components": "^1.10.7",
         "copy-webpack-plugin": "^5.1.1",
         "css-loader": "^3.5.0",
         "eslint": "^6.8.0",
@@ -91,6 +86,7 @@
         "react-stripe-elements": "^6.1.1",
         "redux-devtools-extension": "^2.13.8",
         "rimraf": "^3.0.2",
+        "rollup-plugin-babel": "^4.4.0",
         "source-map-loader": "^0.2.4",
         "style-loader": "^1.1.3",
         "terser-webpack-plugin": "^2.3.5",
