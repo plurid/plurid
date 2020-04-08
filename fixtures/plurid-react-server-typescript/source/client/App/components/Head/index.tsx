@@ -74,7 +74,7 @@ const Head: React.FC<HeadProperties> = (
 
             {/* SAFARI */}
             <meta name="apple-mobile-web-app-capable" content="yes" />
-            <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+            <meta name="apple-mobile-web-app-status-bar-style" content="default" />
             <meta name="apple-mobile-web-app-title" content={titleValue} />
             <link rel="apple-touch-icon" href="/icon-192x192.png" />
         </Helmet>
