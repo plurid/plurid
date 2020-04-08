@@ -1,4 +1,6 @@
-import { createGlobalStyle } from 'styled-components';
+import {
+    createGlobalStyle,
+} from 'styled-components';
 
 import {
     Theme,
@@ -24,14 +26,11 @@ export const GlobalStyle = createGlobalStyle`
         overflow: hidden;
         margin: 0;
         padding: 0;
-        font-family: 'Ubuntu', 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-            'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        font-family: 'Ubuntu', 'Work Sans', -apple-system, BlinkMacSystemFont, 'Roboto',
+            'Droid Sans', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         color: white;
-        /* background: ${(props: IGlobalStyle) => {
-            return props.theme.backgroundColorPrimary;
-        }}; */
     }
 
     #root {
