@@ -70,6 +70,16 @@ export const setupPackageJSONReactServer = async (
     });
 
     await addScript({
+        name: 'containerize.production',
+        value: 'node scripts containerize.production',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'containerize.production.stills',
+        value: 'node scripts containerize.production.stills',
+        path: packageJsonPath,
+    });
+    await addScript({
         name: 'build.client.development',
         value: 'node scripts build.client.development',
         path: packageJsonPath,
