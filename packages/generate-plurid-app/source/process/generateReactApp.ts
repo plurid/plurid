@@ -604,6 +604,7 @@ const generateReactServerApplication = async (
         '@rollup/plugin-node-resolve',
         'babel-loader',
         'babel-plugin-styled-components',
+        'compression-webpack-plugin',
         'copy-webpack-plugin',
         'css-loader',
         'dotenv',

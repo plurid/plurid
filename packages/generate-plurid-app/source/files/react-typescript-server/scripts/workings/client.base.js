@@ -1,7 +1,7 @@
 const path = require('path');
 
 const CopyPlugin = require('copy-webpack-plugin');
-
+const CompressionPlugin = require('compression-webpack-plugin');
 
 
 /** CONSTANTS */
@@ -20,9 +20,25 @@ const copyPlugin = new CopyPlugin([
     },
 ]);
 
+const compressionPluginBrotli = new CompressionPlugin({
+    include: 'vendor.js',
+    filename: 'vendor.js.br',
+    algorithm: 'brotliCompress',
+    compressionOptions: { level: 11 },
+    threshold: 10240,
+    minRatio: 0.8,
+    deleteOriginalAssets: false,
+});
+const compressionPluginGzip = new CompressionPlugin({
+    include: 'vendor.js',
+    filename: 'vendor.js.gzip',
+});
+
 
 const plugins = {
     copyPlugin,
+    compressionPluginBrotli,
+    compressionPluginGzip,
 };
 
 
