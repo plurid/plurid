@@ -44,29 +44,16 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
     event.respondWith(async function() {
-        const cache = await caches.open(CACHE_NAME_STATIC);
-
-        const cachedResponse = await cache.match(event.request);
-        if (cachedResponse) {
-            return cachedResponse;
+        const cacheStatic = await caches.open(CACHE_NAME_STATIC);
+        const cachedStaticResponse = await cacheStatic.match(event.request);
+        if (cachedStaticResponse) {
+            return cachedStaticResponse;
         }
 
-        const networkResponse = await fetch(event.request);
-
-        /** Uncomment to add any other unspecified requests to cache. */
-        // event.waitUntil(
-        //     cache.put(event.request, networkResponse.clone())
-        // );
-
-        return networkResponse;
-    }());
-
-    event.respondWith(async function() {
-        const cache = await caches.open(CACHE_NAME_ROUTES);
-
-        const cachedResponse = await cache.match(event.request);
-        if (cachedResponse) {
-            return cachedResponse;
+        const cacheRoutes = await caches.open(CACHE_NAME_ROUTES);
+        const cachedRoutesResponse = await cacheRoutes.match(event.request);
+        if (cachedRoutesResponse) {
+            return cachedRoutesResponse;
         }
 
         const networkResponse = await fetch(event.request);
