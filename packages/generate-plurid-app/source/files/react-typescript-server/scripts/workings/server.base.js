@@ -8,11 +8,13 @@ const sourceMaps = require('rollup-plugin-sourcemaps');
 
 
 
+const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
+
 const input = 'source/server/index.ts';
 
 const output = [
     {
-        file: './build/server.js',
+        file: `./${BUILD_DIRECTORY}/server.js`,
         format: 'cjs',
     },
 ];
