@@ -20,25 +20,42 @@ import {
 
 
 
-const PORT = process.env.PORT || 33000;
+/** ENVIRONMENT */
+
+const isProduction = process.env.ENV_MODE === 'production';
+const buildDirectory = process.env.PLURID_BUILD_DIRECTORY || 'build';
+const port = process.env.PORT || 63000;
+
+
+
+/** CONSTANTS */
+
+const applicationRoot = 'plurid-app';
+const openAtStart = isProduction ? false : true;
 
 const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
 
+
+/** Custom styles to be loaded into the template. */
 const styles: string[] = [
-    // custom styles to be loaded into the template
+    //
 ]
 
+
+/** Express-like middleware. */
 const middleware: PluridServerMiddleware[] = [
-    // express-like middleware
+    //
 ];
 
+
+/** Services to be used in the application. */
 const services: PluridServerService[] = [
-    // services to be used in the application,
     /** uncomment to use services */
     'Redux',
     'GraphQL',
     // 'Stripe',
 ];
+
 
 const servicesData: PluridServerServicesData = {
     /** uncomment to use services */
@@ -50,10 +67,14 @@ const servicesData: PluridServerServicesData = {
 };
 
 const options: PluridServerPartialOptions = {
-    root: 'plurid-app',
-    open: process.env.ENV_MODE === 'production' ? false : true,
+    root: applicationRoot,
+    buildDirectory,
+    open: openAtStart,
 };
 
+
+
+/** SERVER */
 const pluridServer = new PluridServer({
     routing,
     helmet,
@@ -65,8 +86,16 @@ const pluridServer = new PluridServer({
 });
 
 
+
+/**
+ * If the file is called directly, as in `node build/server.js`,
+ * it will run the server.
+ *
+ * The check is in place so that the server can also be imported
+ * for programmatic usage.
+ */
 if (require.main === module) {
-    pluridServer.start(PORT);
+    pluridServer.start(port);
 }
 
 
