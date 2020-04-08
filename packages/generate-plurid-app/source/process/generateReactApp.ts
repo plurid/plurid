@@ -255,12 +255,19 @@ RUN yarn install --production
 CMD ["yarn", "start"]
 `;
 
+const dockerIgnoreContents =
+`node_modules
+`;
+
     try {
         const dockerfileProductionPath = path.join(app.directory, './configurations/production.dockerfile');
         fs.writeFileSync(dockerfileProductionPath, dockerProductionContents);
 
         const dockerfileProductionStillsPath = path.join(app.directory, './configurations/production.stills.dockerfile');
         fs.writeFileSync(dockerfileProductionStillsPath, dockerProductionStillsContents);
+
+        const dockerIgnorePath = path.join(app.directory, '.dockerignore');
+        fs.writeFileSync(dockerIgnorePath, dockerIgnoreContents);
     } catch (error) {
         return;
     }
