@@ -1139,20 +1139,20 @@
     express "^4.17.1"
     open "^7.0.3"
 
-"@plurid/plurid-react@^0.1.129":
-  version "0.1.129"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.129.tgz#1bfaebdbbec02e394a535db1ce358bab15ba2101"
-  integrity sha512-ayoIQQ6Oc6xEI/YjbsYP5TyHdOh3KFkyPnoC/7iGPlbKavACTIiXvi5h/wKt8jvb8mSJnua1fCiSvUW903+xUQ==
+"@plurid/plurid-react@^0.1.130":
+  version "0.1.130"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.130.tgz#4ad8ef8c5da1638880b39b02abaf6c8fc4b7dae7"
+  integrity sha512-XOXywVYcajc8ThgFUuy29vFbjW/c25XKBFSB/eTkzV8CvKGH9XcS/CFdqcFQcu/Xs5yneNid03+suPFDI6JLOA==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.1.26.tgz#696ec2b8a57d6d95027ac2dc2a954dda142bdb82"
   integrity sha512-UOfta3WoTEC5p0ri11+7PM/hha5zGkxXQjYl8yhMho/uSRATyCal4Hpj49jSx4EjQoxfn65CPpRA8Z2SMRmRLQ==
 
-"@plurid/plurid-ui-react@^0.1.79":
-  version "0.1.79"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.79.tgz#927e8ace36bfbd2acdfd4a5b699f88c87d6ac70e"
-  integrity sha512-r1IVTon1Obq6TJdlJxVAuGbI6d0BadF+qJqLlE1iCjktIGp+ymm3JcjEiLNmRN2a2r5iKe72UVlg3J4tK3mvNA==
+"@plurid/plurid-ui-react@^0.1.80":
+  version "0.1.80"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.80.tgz#3484240a54d243dc10062ab34e424aee6b3a97cc"
+  integrity sha512-VYzpVj2zc3MThsqS4OBPUxBBAB2h87s9L6A37BXXQT//bFna9TmQGvEbMn3cQyK7GbWciPbuWhjfjSjjlHXt4A==
 
 "@rollup/plugin-commonjs@^11.0.2":
   version "11.0.2"
