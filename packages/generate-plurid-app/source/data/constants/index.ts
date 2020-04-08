@@ -4,6 +4,7 @@ import {
     IRenderer,
     IManager,
     IServices,
+    IVersioning,
 } from '../interfaces';
 
 
@@ -51,4 +52,13 @@ export const services: IServices = {
     graphql: serviceGraphQL,
     redux: serviceRedux,
     stripe: serviceStripe,
+};
+
+
+
+export const versioningGit = 'Git';
+export const versioningNone = 'None';
+export const versioning: IVersioning = {
+    git: versioningGit,
+    none: versioningNone,
 };

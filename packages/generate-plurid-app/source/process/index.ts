@@ -12,6 +12,7 @@ import {
     UI,
     Renderer,
     Manager,
+    Versioning,
 } from '../data/interfaces';
 
 import {
@@ -19,6 +20,7 @@ import {
     ui as uiTypes,
     renderer as rendererTypes,
     manager as managerTypes,
+    versioning as versioningTypes,
 } from '../data/constants';
 
 
@@ -42,6 +44,7 @@ const processArguments = async (
         let ui: UI;
         let renderer: Renderer;
         let manager: Manager;
+        let versioning: Versioning;
 
         if (program.directory === undefined) {
             console.log('App directory (-a or --app) must be specified.');
@@ -102,6 +105,14 @@ const processArguments = async (
                 manager = managerTypes.yarn;
         }
 
+        switch (program.versioning.toLowerCase()) {
+            case versioningTypes.git.toLowerCase():
+                versioning = versioningTypes.git;
+                break;
+            default:
+                versioning = versioningTypes.none;
+        }
+
         const {
             services,
             containerize,
@@ -147,6 +158,7 @@ const processArguments = async (
             renderer,
             manager,
             services,
+            versioning,
             containerize,
             deployment,
         };

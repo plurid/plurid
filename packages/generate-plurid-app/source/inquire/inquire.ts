@@ -22,6 +22,7 @@ const inquire = (
                 renderer,
                 manager,
                 services,
+                versioning,
                 containerize,
                 deployment,
             } = args;
@@ -33,6 +34,7 @@ const inquire = (
                 renderer,
                 manager,
                 services,
+                versioning,
                 containerize,
                 deployment,
             };
