@@ -10,27 +10,41 @@ const {
 
 
 
+/** ENVIRONMENT */
+const inProduction = process.env.NODE_ENV === 'production';
+
+require('dotenv').config({
+    path: inProduction
+        ? './environment/.env.production'
+        : './environment/.env.local',
+});
+
+console.log(process.env);
+
+
 /** CONSTANTS */
+const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
+
 const command = process.argv[2];
-const buildFolder = path.join(process.cwd(), 'build');
+const buildFolder = path.join(process.cwd(), BUILD_DIRECTORY);
 const verbose = process.argv[3] === 'verbose' ? 'inherit' : undefined;
 
 
 
 /** COMMANDS */
 const commandStart = [
-    'node build/server.js',
+    `node ${BUILD_DIRECTORY}/server.js`,
 ];
 
 const commandRunDevelopment = [
-    'nodemon build/server.js',
+    `nodemon ${BUILD_DIRECTORY}/server.js`,
 ];
 const commandRunProduction = [
-    'node build/server.js',
+    `node ${BUILD_DIRECTORY}/server.js`,
 ];
 
 const commandClean = [
-    'rimraf ./build',
+    `rimraf ./${BUILD_DIRECTORY}`,
 ];
 
 const commandLint = [
@@ -73,7 +87,7 @@ const commandStartClientDevelopment = [
 ];
 const commandStartServerDevelopment = [
     ...commandBuildServerDevelopment,
-    'nodemon build/server.js',
+    `nodemon ${BUILD_DIRECTORY}/server.js`,
 ];
 
 
