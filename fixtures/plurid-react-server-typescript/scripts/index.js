@@ -19,7 +19,6 @@ require('dotenv').config({
         : './environment/.env.local',
 });
 
-console.log(process.env);
 
 
 /** CONSTANTS */
@@ -230,9 +229,7 @@ switch (command) {
         break;
     case 'build.production.stills':
         console.log('\n\tStarting the Stilled Production Build Process...');
-        runCommand(commandBuildProductionStills, {
-            stdio: 'inherit',
-        });
+        runCommand(commandBuildProductionStills);
         console.log('\n\tFinished the Stilled Production Build Process.\n');
         break;
 }
