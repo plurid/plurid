@@ -5,7 +5,9 @@ const CACHE_URLS_STATIC = [
     '/favicon.ico',
     '/icon-192x192.png',
     '/icon-512x512.png',
+    'manifest.json',
     '/vendor.js',
+    '/index.js',
 ];
 const CACHE_NAME_ROUTES = 'routes-v1';
 const CACHE_URLS_ROUTES = [
