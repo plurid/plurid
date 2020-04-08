@@ -677,7 +677,7 @@ const generateReactServerApplication = async (
     console.log('\tDevelopment dependencies installed.');
 
 
-    const templateFIlesSpinner = loadingSpinner('\tSetting up the template files...').start();
+    const templateFilesSpinner = loadingSpinner('\tSetting up the template files...').start();
     const templateTypeScript = 'react-typescript-server';
     const templateJavaScript = 'react-javascript-server';
     const templateFiles = app.language === 'TypeScript'
@@ -700,7 +700,7 @@ const generateReactServerApplication = async (
 
     await removeGeneratePackage(app);
 
-    templateFIlesSpinner.stopAndPersist();
+    templateFilesSpinner.stopAndPersist();
 }
 
 
