@@ -282,16 +282,14 @@ export const setupEnvFiles = async (
     }
 
     const envLocalContents =
-`
-ENV_MODE=local
+`ENV_MODE=local
 PORT=63000
 
 PLURID_BUILD_DIRECTORY=build
 `;
 
     const envProductionContents =
-`
-ENV_MODE=production
+`ENV_MODE=production
 PORT=8080
 
 PLURID_BUILD_DIRECTORY=build
