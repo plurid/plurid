@@ -88,7 +88,7 @@ const pluridServer = new PluridServer({
 
 
 /**
- * If the file is called directly, as in `node build/server.js`,
+ * If the file is called directly, as in `node build/index.js`,
  * it will run the server.
  *
  * The check is in place so that the server can also be imported
