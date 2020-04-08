@@ -26,7 +26,7 @@ const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
 
 const command = process.argv[2];
 const buildFolder = path.join(process.cwd(), BUILD_DIRECTORY);
-const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true'
+const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true' && !process.argv[3]
     ? 'inherit'
     : process.argv[3] === 'verbose'
         ? 'inherit'
