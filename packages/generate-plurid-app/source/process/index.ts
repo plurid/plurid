@@ -135,9 +135,9 @@ const processArguments = async (
         }
 
         if (deployment) {
-            console.log('\tDeploying application to plurid.app');
+            console.log('\tDeploying the application to plurid.app.');
         } else {
-            console.log('\tNot deploying to plurid.app');
+            console.log('\tNot deploying the application to plurid.app.');
         }
 
         const application: Application = {
