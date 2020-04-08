@@ -14,7 +14,7 @@ import {
 const routing: PluridRouterRouting<ViewType> = {
     components,
     routes,
-}
+};
 
 
 export default routing;
