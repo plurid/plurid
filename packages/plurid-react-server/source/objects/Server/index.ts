@@ -1,6 +1,7 @@
 import {
     Server,
 } from 'http';
+import fs from 'fs';
 import path from 'path';
 
 import express, {
@@ -318,6 +319,7 @@ export default class PluridServer<T> {
 
     private configureServer() {
         const clientPath = path.join(this.options.buildDirectory, './client');
+        const vendorBrotliExists = fs.existsSync(path.join(clientPath, 'vendor.js.br'));
 
         this.serverApplication.disable('x-powered-by');
 
@@ -329,8 +331,14 @@ export default class PluridServer<T> {
             this.serverApplication.get(
                 '/vendor.js',
                 (request, response, next) => {
-                    request.url = request.url + '.br';
-                    response.set('Content-Encoding', 'br');
+                    const acceptEncoding = request.header('Accept-Encoding');
+                    if (acceptEncoding?.includes('br') && vendorBrotliExists) {
+                        request.url += '.br';
+                        response.set('Content-Encoding', 'br');
+                        next();
+                        return;
+                    }
+
                     next();
                 },
             );
