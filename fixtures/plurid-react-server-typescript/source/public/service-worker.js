@@ -35,7 +35,7 @@ self.addEventListener('activate', (event) => {
                  * Return true to pass the filter check.
                  * Additional logic can be implemented.
                  */
-                return true;
+                // return true;
             }).map(cacheName => caches.delete(cacheName))
         );
     }());
