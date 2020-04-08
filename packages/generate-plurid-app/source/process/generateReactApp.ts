@@ -198,8 +198,7 @@ export const setupDocker = async (
     }
 
     const dockerProductionContents =
-`
-FROM mhart/alpine-node:12 AS builder
+`FROM mhart/alpine-node:12 AS builder
 WORKDIR /app
 COPY . .
 ENV ENV_MODE=production
@@ -217,8 +216,7 @@ CMD ["yarn", "start"]
 `;
 
     const dockerProductionStillsContents =
-`
-FROM node:10-slim AS builder
+`FROM node:10-slim AS builder
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
