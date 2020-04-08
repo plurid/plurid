@@ -285,6 +285,7 @@ export const setupEnvFiles = async (
 PORT=63000
 
 PLURID_BUILD_DIRECTORY=build
+PLURID_DEFAULT_VERBOSE=true
 `;
 
     const envProductionContents =
@@ -292,6 +293,7 @@ PLURID_BUILD_DIRECTORY=build
 PORT=8080
 
 PLURID_BUILD_DIRECTORY=build
+PLURID_DEFAULT_VERBOSE=false
 `;
 
     try {
