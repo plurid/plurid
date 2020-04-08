@@ -114,6 +114,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
                     text={path}
                     atChange={onPathInput}
                     atKeyDown={handleOnKeyDown}
+                    ariaLabel="Plurid Pathbar"
                 />
             </StyledPlaneControlsCenter>
 
