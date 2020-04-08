@@ -36,14 +36,14 @@ const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true' && !process.argv[3
 
 /** COMMANDS */
 const commandStart = [
-    `node ${BUILD_DIRECTORY}/server.js`,
+    `node ${BUILD_DIRECTORY}`,
 ];
 
 const commandRunDevelopment = [
-    `nodemon ${BUILD_DIRECTORY}/server.js`,
+    `nodemon ${BUILD_DIRECTORY}`,
 ];
 const commandRunProduction = [
-    `node ${BUILD_DIRECTORY}/server.js`,
+    `node ${BUILD_DIRECTORY}`,
 ];
 
 const commandClean = [
@@ -94,7 +94,7 @@ const commandStartClientDevelopment = [
 ];
 const commandStartServerDevelopment = [
     ...commandBuildServerDevelopment,
-    `nodemon ${BUILD_DIRECTORY}/server.js`,
+    `nodemon ${BUILD_DIRECTORY}`,
 ];
 
 
