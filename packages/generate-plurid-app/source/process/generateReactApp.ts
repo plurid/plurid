@@ -606,6 +606,7 @@ const generateReactServerApplication = async (
         'babel-plugin-styled-components',
         'copy-webpack-plugin',
         'css-loader',
+        'dotenv',
         'eslint',
         'file-loader',
         'jest',
