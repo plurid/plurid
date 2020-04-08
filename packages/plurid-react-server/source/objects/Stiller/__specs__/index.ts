@@ -22,7 +22,7 @@ describe('Stiller', () => {
         ) {
             values.push(next.value);
         }
-        console.log(values);
+        // console.log(values);
 
 
         // expect(values).toStrictEqual(routes);
