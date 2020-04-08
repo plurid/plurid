@@ -10,24 +10,24 @@ const CACHE_URLS_STATIC = [
 const CACHE_NAME_ROUTES = 'routes-v1';
 const CACHE_URLS_ROUTES = [
     /** Default routes */
-    // '/',
+    '/',
 ];
 
 
 
 self.addEventListener('install', (event) => {
-    event.waitUntil(async () => {
-        const cache = await caches.open(CACHE_NAME_STATIC);
-        await cache.addAll(CACHE_URLS_STATIC);
+    event.waitUntil(async function() {
+        const cacheStatic = await caches.open(CACHE_NAME_STATIC);
+        await cacheStatic.addAll(CACHE_URLS_STATIC);
 
-        const cache = await caches.open(CACHE_NAME_ROUTES);
-        await cache.addAll(CACHE_URLS_ROUTES);
+        const cacheRoutes = await caches.open(CACHE_NAME_ROUTES);
+        await cacheRoutes.addAll(CACHE_URLS_ROUTES);
     }());
 });
 
 
 self.addEventListener('activate', (event) => {
-    event.waitUntil(async () => {
+    event.waitUntil(async function() {
         const cacheNames = await caches.keys();
         await Promise.all(
             cacheNames.filter((cacheName) => {
@@ -43,7 +43,7 @@ self.addEventListener('activate', (event) => {
 
 
 self.addEventListener('fetch', (event) => {
-    event.respondWith(async () => {
+    event.respondWith(async function() {
         const cache = await caches.open(CACHE_NAME_STATIC);
 
         const cachedResponse = await cache.match(event.request);
@@ -61,7 +61,7 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
     }());
 
-    event.respondWith(async () => {
+    event.respondWith(async function() {
         const cache = await caches.open(CACHE_NAME_ROUTES);
 
         const cachedResponse = await cache.match(event.request);
