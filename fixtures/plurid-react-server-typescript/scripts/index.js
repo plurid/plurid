@@ -152,15 +152,21 @@ switch (command) {
         break;
     case 'start.client.development':
         console.log('\n\tStarting the Client Development Process...');
-        runCommand(commandStartClientDevelopment);
+        runCommand(commandStartClientDevelopment, {
+            stdio: 'inherit',
+        });
         break;
     case 'start.server.development':
         console.log('\n\tStarting the Server Development Process...');
-        runCommand(commandStartServerDevelopment);
+        runCommand(commandStartServerDevelopment, {
+            stdio: 'inherit',
+        });
         break;
     case 'run.development':
         console.log('\n\tRunning the Development Server...');
-        runCommand(commandRunDevelopment);
+        runCommand(commandRunDevelopment, {
+            stdio: 'inherit',
+        });
         break;
     case 'run.production':
         console.log('\n\tRunning the Production Server...');
@@ -193,7 +199,9 @@ switch (command) {
         break;
     case 'build.client.development':
         console.log('\n\tStarting the Client Development Build Process...');
-        runCommand(commandBuildClientDevelopment);
+        runCommand(commandBuildClientDevelopment, {
+            stdio: 'inherit',
+        });
         console.log('\n\Finished the Client Development Build Process.\n');
         break;
     case 'build.client.production':
@@ -203,7 +211,9 @@ switch (command) {
         break;
     case 'build.server.development':
         console.log('\n\tStarting the Server Development Build Process...');
-        runCommand(commandBuildServerDevelopment);
+        runCommand(commandBuildServerDevelopment, {
+            stdio: 'inherit',
+        });
         console.log('\n\Finished the Server Development Build Process.\n');
         break;
     case 'build.server.production':
@@ -220,12 +230,16 @@ switch (command) {
         break;
     case 'build.development':
         console.log('\n\tStarting the Development Build Process...');
-        runCommand(commandBuildDevelopment);
+        runCommand(commandBuildDevelopment, {
+            stdio: 'inherit',
+        });
         console.log('\n\tFinished the Development Build Process.\n');
         break;
     case 'build.development.stills':
         console.log('\n\tStarting the Stilled Development Build Process...');
-        runCommand(commandBuildDevelopmentStills);
+        runCommand(commandBuildDevelopmentStills, {
+            stdio: 'inherit',
+        });
         console.log('\n\tFinished the Stilled Development Build Process.\n');
         break;
     case 'build.production':
