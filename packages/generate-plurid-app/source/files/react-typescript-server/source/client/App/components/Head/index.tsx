@@ -37,6 +37,8 @@ const Head: React.FC<HeadProperties> = (
     const ogImageValue = ogImage || '/icon-192x192.png';
     const ogURLValue = ogURL || 'https://plurid.com';
 
+    const apiDomain = 'https://api.plurid.com/graphql';
+
 
     /** render */
     return (
@@ -45,6 +47,9 @@ const Head: React.FC<HeadProperties> = (
             <meta name="robots" content="index,follow" />
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
             <meta name="description" content={descriptionValue} />
+
+            <link rel="preconnect" href={apiDomain} />
+            <link rel="dns-prefetch" href={apiDomain} />
 
             <link rel="icon" href="/favicon.ico" sizes="64x64" />
             <link rel="shortcut icon" type="image/png" href="/icon-192x192.png" />
@@ -69,7 +74,7 @@ const Head: React.FC<HeadProperties> = (
 
             {/* SAFARI */}
             <meta name="apple-mobile-web-app-capable" content="yes" />
-            <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+            <meta name="apple-mobile-web-app-status-bar-style" content="default" />
             <meta name="apple-mobile-web-app-title" content={titleValue} />
             <link rel="apple-touch-icon" href="/icon-192x192.png" />
         </Helmet>
