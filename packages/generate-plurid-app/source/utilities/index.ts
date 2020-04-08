@@ -6,6 +6,8 @@ import {
     exec,
 } from 'child_process';
 
+import ora from 'ora';
+
 import {
     AddScriptConfiguration,
 } from '../data/interfaces';
@@ -115,4 +117,17 @@ export const addScript = async (
 
     let data = JSON.stringify(jsonFile, null, 4);
     fs.writeFileSync(path, data);
+}
+
+
+export const loadingSpinner = (
+    text: string,
+) => {
+    const spinner = ora({
+        text,
+        indent: 0,
+        color: 'white',
+    });
+
+    return spinner;
 }
