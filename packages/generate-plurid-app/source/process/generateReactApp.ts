@@ -274,7 +274,7 @@ const dockerIgnoreContents =
 }
 
 
-export const setupEnvFile = async (
+export const setupEnvFiles = async (
     app: Application,
 ) => {
     if (!app.deployment) {
@@ -284,6 +284,7 @@ export const setupEnvFile = async (
     const envLocalContents =
 `
 ENV_MODE=local
+PORT=63000
 
 PLURID_BUILD_DIRECTORY=build
 `;
@@ -291,6 +292,7 @@ PLURID_BUILD_DIRECTORY=build
     const envProductionContents =
 `
 ENV_MODE=production
+PORT=8080
 
 PLURID_BUILD_DIRECTORY=build
 `;
@@ -690,7 +692,7 @@ const generateReactServerApplication = async (
     await setupPluridAppYaml(app);
     await setupDocker(app);
     await setupVersioning(app);
-    await setupEnvFile(app);
+    await setupEnvFiles(app);
 
     await removeUnusedAddons(app);
 
