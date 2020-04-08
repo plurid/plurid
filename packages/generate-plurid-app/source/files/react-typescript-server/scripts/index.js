@@ -26,7 +26,11 @@ const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
 
 const command = process.argv[2];
 const buildFolder = path.join(process.cwd(), BUILD_DIRECTORY);
-const verbose = process.argv[3] === 'verbose' ? 'inherit' : undefined;
+const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true'
+    ? 'inherit'
+    : process.argv[3] === 'verbose'
+        ? 'inherit'
+        : 'ignore';
 
 
 
@@ -152,15 +156,21 @@ switch (command) {
         break;
     case 'start.client.development':
         console.log('\n\tStarting the Client Development Process...');
-        runCommand(commandStartClientDevelopment);
+        runCommand(commandStartClientDevelopment, {
+            stdio: verbose,
+        });
         break;
     case 'start.server.development':
         console.log('\n\tStarting the Server Development Process...');
-        runCommand(commandStartServerDevelopment);
+        runCommand(commandStartServerDevelopment, {
+            stdio: verbose,
+        });
         break;
     case 'run.development':
         console.log('\n\tRunning the Development Server...');
-        runCommand(commandRunDevelopment);
+        runCommand(commandRunDevelopment, {
+            stdio: verbose,
+        });
         break;
     case 'run.production':
         console.log('\n\tRunning the Production Server...');
@@ -183,59 +193,79 @@ switch (command) {
         break;
     case 'containerize.production':
         console.log('\n\tStarting the Production Containerization Process...');
-        runCommand(commandContainerizeProduction);
+        runCommand(commandContainerizeProduction, {
+            stdio: verbose,
+        });
         console.log('\n\tFinished the Production Containerization Process.');
         break;
     case 'containerize.production.stills':
         console.log('\n\tStarting the Stilled Production Containerization Process...');
-        runCommand(commandContainerizeProductionStills);
+        runCommand(commandContainerizeProductionStills, {
+            stdio: verbose,
+        });
         console.log('\n\tFinished the Stilled Production Containerization Process.');
         break;
     case 'build.client.development':
         console.log('\n\tStarting the Client Development Build Process...');
-        runCommand(commandBuildClientDevelopment);
+        runCommand(commandBuildClientDevelopment, {
+            stdio: verbose,
+        });
         console.log('\n\Finished the Client Development Build Process.\n');
         break;
     case 'build.client.production':
         console.log('\n\tStarting the Client Production Build Process...');
-        runCommand(commandBuildClientProduction);
+        runCommand(commandBuildClientProduction, {
+            stdio: verbose,
+        });
         console.log('\n\Finished the Client Production Build Process.\n');
         break;
     case 'build.server.development':
         console.log('\n\tStarting the Server Development Build Process...');
-        runCommand(commandBuildServerDevelopment);
+        runCommand(commandBuildServerDevelopment, {
+            stdio: verbose,
+        });
         console.log('\n\Finished the Server Development Build Process.\n');
         break;
     case 'build.server.production':
         console.log('\n\tStarting the Server Production Build Process...');
-        runCommand(commandBuildServerProduction);
+        runCommand(commandBuildServerProduction, {
+            stdio: verbose,
+        });
         console.log('\n\Finished the Server Production Build Process.\n');
         break;
     case 'build.stills':
         console.log('\n\tStarting the Stilled Build Process...');
         runCommand(commandBuildStills, {
-            stdio: 'inherit',
+            stdio: verbose,
         });
         console.log('\n\tFinished the Stilled Build Process.\n');
         break;
     case 'build.development':
         console.log('\n\tStarting the Development Build Process...');
-        runCommand(commandBuildDevelopment);
+        runCommand(commandBuildDevelopment, {
+            stdio: verbose,
+        });
         console.log('\n\tFinished the Development Build Process.\n');
         break;
     case 'build.development.stills':
         console.log('\n\tStarting the Stilled Development Build Process...');
-        runCommand(commandBuildDevelopmentStills);
+        runCommand(commandBuildDevelopmentStills, {
+            stdio: verbose,
+        });
         console.log('\n\tFinished the Stilled Development Build Process.\n');
         break;
     case 'build.production':
         console.log('\n\tStarting the Production Build Process...');
-        runCommand(commandBuildProduction);
+        runCommand(commandBuildProduction, {
+            stdio: verbose,
+        });
         console.log('\n\tFinished the Production Build Process.\n');
         break;
     case 'build.production.stills':
         console.log('\n\tStarting the Stilled Production Build Process...');
-        runCommand(commandBuildProductionStills);
+        runCommand(commandBuildProductionStills, {
+            stdio: verbose,
+        });
         console.log('\n\tFinished the Stilled Production Build Process.\n');
         break;
 }
