@@ -55,10 +55,14 @@ const commandTest = [
 ];
 
 const commandContainerizeProduction = [
+    ...commandLint,
+    ...commandTest,
     'docker build -t pluridapp -f ./configurations/production.dockerfile .',
 ];
 
 const commandContainerizeProductionStills = [
+    ...commandLint,
+    ...commandTest,
     'docker build -t pluridapp -f ./configurations/production.stills.dockerfile .',
 ];
 
@@ -102,6 +106,8 @@ const commandBuildDevelopmentStills = [
 
 const commandBuildProduction = [
     ...commandClean,
+    ...commandLint,
+    ...commandTest,
     ...commandBuildServerProduction,
     ...commandBuildClientProduction,
 ];
