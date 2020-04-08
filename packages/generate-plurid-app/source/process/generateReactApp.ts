@@ -657,20 +657,16 @@ const generateReactServerApplication = async (
         { cwd: app.directory },
     );
 
-    console.log();
     const directDependenciesSpinner = loadingSpinner('\tInstalling direct dependencies...').start();
-    // console.log('\n\tInstalling direct dependencies...');
     await executeCommand(
         installDependenciesCommand,
         { cwd: app.directory },
     );
     directDependenciesSpinner.stopAndPersist();
-    console.log('\tDirect Dependencies installed.');
+    console.log('\tDirect dependencies installed.');
 
 
-    console.log();
     const developmentDependenciesSpinner = loadingSpinner('\tInstalling development dependencies...').start();
-    // console.log('\n\tInstalling development dependencies...');
     await executeCommand(
         installDevelopmentDependenciesCommand,
         { cwd: app.directory },
@@ -679,9 +675,7 @@ const generateReactServerApplication = async (
     console.log('\tDevelopment dependencies installed.');
 
 
-    console.log();
     const templateFIlesSpinner = loadingSpinner('\tSetting up the template files...').start();
-    // console.log('\n\tSetting up the template files...');
     const templateTypeScript = 'react-typescript-server';
     const templateJavaScript = 'react-javascript-server';
     const templateFiles = app.language === 'TypeScript'
@@ -692,7 +686,6 @@ const generateReactServerApplication = async (
 
     const templateDirectory = path.join(app.directory, base);
     copyDirectory(templateDirectory, app.directory);
-    templateFIlesSpinner.stopAndPersist();
 
     await setupPackageJSONReactServer(app);
 
@@ -704,6 +697,8 @@ const generateReactServerApplication = async (
     await removeUnusedAddons(app);
 
     await removeGeneratePackage(app);
+
+    templateFIlesSpinner.stopAndPersist();
 }
 
 

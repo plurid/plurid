@@ -120,9 +120,18 @@ export const addScript = async (
 }
 
 
+const defaultLoadingSpinnerOptions = {
+    emptyline: true,
+};
+
 export const loadingSpinner = (
     text: string,
+    options = defaultLoadingSpinnerOptions,
 ) => {
+    if (options.emptyline) {
+        console.log();
+    }
+
     const spinner = ora({
         text,
         indent: 0,
