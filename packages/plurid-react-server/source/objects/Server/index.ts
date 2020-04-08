@@ -46,6 +46,7 @@ import {
 
 import PluridRenderer from '../Renderer';
 import PluridContentGenerator from '../ContentGenerator';
+import PluridsResponder from '../PluridsResponder';
 import PluridStillsManager from '../StillsManager';
 
 
@@ -140,9 +141,19 @@ export default class PluridServer<T> {
 
         const stills = new PluridStillsManager(this.options);
         const router = new PluridRouter<T>(this.routing.routes);
+        const pluridsResponder = new PluridsResponder();
 
         this.serverApplication.get('*', (request, response) => {
             const url = request.originalUrl || request.url;
+
+            if (pluridsResponder.search(url)) {
+                response.send(pluridsResponder);
+                return;
+            }
+
+            // check if the url is plurids
+            // http://example.com/plurids/<route>/<space>/<page>
+            // http://example.com/plurids/index/12345/54321
 
             const still = stills.get(url);
             if (still) {
