@@ -1,6 +1,7 @@
 import {
     Server,
 } from 'http';
+import path from 'path';
 
 import express, {
     Express,
@@ -324,8 +325,9 @@ export default class PluridServer<T> {
             );
         }
 
+        const clientPath = path.join(this.options.buildDirectory, './client');
         this.serverApplication.use(
-            express.static(this.options.buildDirectory),
+            express.static(clientPath),
         );
     }
 
