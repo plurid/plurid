@@ -553,6 +553,7 @@ const generateReactServerApplication = async (
         'jest',
         'nodemon',
         'open',
+        'puppeteer',
         'redux-devtools-extension',
         'rimraf',
         'rollup',
