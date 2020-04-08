@@ -19,7 +19,7 @@ const main = () => {
         return;
     }
 
-    const serverFile = `${buildDirectory}/server.js`;
+    const serverFile = `${buildDirectory}/index.js`;
     const serverFilePath = path.join(process.cwd(), serverFile);
     if (!existsSync(serverFilePath)) {
         console.log('\n\tServer not built. Run a server build process first, e.g. build.server.production.');
