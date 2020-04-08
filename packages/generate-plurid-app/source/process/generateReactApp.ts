@@ -540,7 +540,8 @@ const computeInstallDevelopmentDependenciesCommand = (
 const generateReactServerApplication = async (
     app: Application,
 ) => {
-    console.log('\n\tGenerating server rendered plurid\' application.');
+    console.log('\n\tGenerating the server rendered plurid\' application.');
+    console.log('\tThe generation process should take about 3 minutes.');
 
     const initCommand = computeInitCommand(app);
 
