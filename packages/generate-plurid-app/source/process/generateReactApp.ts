@@ -267,6 +267,38 @@ CMD ["yarn", "start"]
 }
 
 
+export const setupEnvFile = async (
+    app: Application,
+) => {
+    if (!app.deployment) {
+        return;
+    }
+
+    const envLocalContents =
+`
+ENV_MODE=local
+
+PLURID_BUILD_DIRECTORY=build
+`;
+
+    const envProductionContents =
+`
+ENV_MODE=production
+
+PLURID_BUILD_DIRECTORY=build
+`;
+
+    try {
+        const envLocalPath = path.join(app.directory, './environment/.env');
+        fs.writeFileSync(envLocalPath, envLocalContents);
+        const envProductionPath = path.join(app.directory, './environment/.env.production');
+        fs.writeFileSync(envProductionPath, envProductionContents);
+    } catch (error) {
+        return;
+    }
+}
+
+
 export const setupVersioning = async (
     app: Application,
 ) => {
@@ -651,6 +683,7 @@ const generateReactServerApplication = async (
     await setupPluridAppYaml(app);
     await setupDocker(app);
     await setupVersioning(app);
+    await setupEnvFile(app);
 
     await removeUnusedAddons(app);
 
