@@ -139,6 +139,14 @@ const processArguments = async (
             console.log('\tNo selected services.');
         }
 
+        switch (versioning) {
+            case 'Git':
+                console.log('\tUsing Git for version control.');
+                break;
+            default:
+                console.log('\tNot using a version control system.');
+        }
+
         if (containerize) {
             console.log('\tUsing Docker to containerize the application.');
         } else {
