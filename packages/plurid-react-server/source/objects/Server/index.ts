@@ -317,15 +317,25 @@ export default class PluridServer<T> {
     }
 
     private configureServer() {
+        const clientPath = path.join(this.options.buildDirectory, './client');
+
         this.serverApplication.disable('x-powered-by');
 
         if (this.options.compression) {
             this.serverApplication.use(
                 compression(),
             );
+
+            this.serverApplication.get(
+                '/vendor.js',
+                (request, response, next) => {
+                    request.url = request.url + '.br';
+                    response.set('Content-Encoding', 'br');
+                    next();
+                },
+            );
         }
 
-        const clientPath = path.join(this.options.buildDirectory, './client');
         this.serverApplication.use(
             express.static(clientPath),
         );
