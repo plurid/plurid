@@ -8,7 +8,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
 
 const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
-const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}`);
+const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}/client`);
 
 
 

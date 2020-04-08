@@ -14,7 +14,7 @@ const input = 'source/server/index.ts';
 
 const output = [
     {
-        file: `./${BUILD_DIRECTORY}/server.js`,
+        file: `./${BUILD_DIRECTORY}/index.js`,
         format: 'cjs',
     },
 ];
