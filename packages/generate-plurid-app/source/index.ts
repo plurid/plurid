@@ -44,6 +44,7 @@ async function main(program: CommanderStatic) {
                     renderer,
                     manager,
                     services,
+                    versioning,
                     containerize,
                     pluridapp: deployment,
                 } = program;
@@ -55,6 +56,7 @@ async function main(program: CommanderStatic) {
                     renderer,
                     manager,
                     services,
+                    versioning,
                     containerize,
                     deployment,
                 };

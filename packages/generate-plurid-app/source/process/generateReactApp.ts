@@ -267,6 +267,23 @@ CMD ["yarn", "start"]
 }
 
 
+export const setupVersioning = async (
+    app: Application,
+) => {
+    if (app.versioning === 'None') {
+        return;
+    }
+
+    if (app.versioning === 'Git') {
+        const gitInit = 'git init';
+        await executeCommand(
+            gitInit,
+            { cwd: app.directory },
+        );
+    }
+}
+
+
 export const arrangePackageJSON = async (
     packagePath: string,
 ) => {
@@ -633,6 +650,7 @@ const generateReactServerApplication = async (
 
     await setupPluridAppYaml(app);
     await setupDocker(app);
+    await setupVersioning(app);
 
     await removeUnusedAddons(app);
 

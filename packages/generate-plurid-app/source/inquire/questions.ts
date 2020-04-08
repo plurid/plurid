@@ -35,6 +35,11 @@ const values = {
         'Stripe',
         new inquirer.Separator('---- select services ----'),
     ],
+    versioning: [
+        'Git',
+        'None',
+        new inquirer.Separator('---- select version control ----'),
+    ],
 };
 
 
@@ -71,8 +76,14 @@ const questions: Question[] = [
     {
         type: 'checkbox',
         name: 'services',
-        message: 'Select services to use in the application:',
+        message: 'Select the services to use in the application:',
         choices: values.services,
+    },
+    {
+        type: 'list',
+        name: 'versioning',
+        message: 'Select the version control system to use for the application:',
+        choices: values.versioning,
     },
     {
         type: 'confirm',

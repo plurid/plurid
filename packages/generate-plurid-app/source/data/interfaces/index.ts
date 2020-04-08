@@ -14,6 +14,7 @@ export interface Answers {
     renderer: string;
     manager: string;
     services: string[];
+    versioning: string;
     containerize: boolean;
     deployment: boolean;
 }
@@ -63,6 +64,16 @@ export interface IManager {
 }
 
 
+export type VersioningGit = 'Git';
+export type VersioningNone = 'None';
+export type Versioning = VersioningGit | VersioningNone;
+
+export interface IVersioning {
+    git: VersioningGit;
+    none: VersioningNone;
+}
+
+
 export type ServiceGraphQL = 'GraphQL';
 export type ServiceRedux = 'Redux';
 export type ServiceStripe = 'Stripe';
@@ -82,6 +93,7 @@ export interface Application {
     renderer: Renderer;
     manager: Manager;
     services: string[];
+    versioning: Versioning;
     containerize: boolean;
     deployment: boolean;
 }
