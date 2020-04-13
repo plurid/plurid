@@ -1,5 +1,5 @@
 {
-  "name": "plurid-react-typescript",
+  "name": "@plurid/fixture-plurid-react-typescript",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
