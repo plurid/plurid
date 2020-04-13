@@ -34,16 +34,41 @@ export const mapPathsToRoutes = <T, V>(
 // const outerspatialControlledOriginExample = 'https://origin://route://space://page';
 // const outerspatialForeignOriginExample = 'http://origin://route://space://page';
 
-export const spatialPluridLinkParser = (
-    url: string,
-) => {
-    const split = url.split('://').filter(value => value !== '');
+interface PluridLinkURLDivisions {
+    protocol: string;
+    origin: string;
+    route: string;
+    space: string;
+    page: string;
+    valid: boolean;
+}
 
-    let protocol = 'https';
+export const pluridLinkURLDivider = (
+    link: string,
+): PluridLinkURLDivisions => {
+    const split = link.split('://').filter(value => value !== '');
+
+    let protocol = '';
     let origin = '';
     let route = '';
     let space = '';
     let page = '';
+    let valid = false;
+
+    if (
+        split.length === 0
+        || split.length > 5
+    ) {
+        const url = {
+            protocol,
+            origin,
+            route,
+            space,
+            page,
+            valid,
+        };
+        return url;
+    }
 
     switch (split.length) {
         case 1:
@@ -63,6 +88,7 @@ export const spatialPluridLinkParser = (
             space = split[2];
             route = split[1];
             origin = split[0];
+            protocol = 'https';
             break;
         case 5:
             page = split[4];
@@ -73,13 +99,14 @@ export const spatialPluridLinkParser = (
             break;
     }
 
-    const link = {
+    const url = {
         protocol,
         origin,
         route,
         space,
         page,
+        valid: true,
     };
 
-    return link;
+    return url;
 }
