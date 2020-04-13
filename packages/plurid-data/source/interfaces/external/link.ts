@@ -74,3 +74,48 @@ export interface PluridLink {
     style?: React.CSSProperties;
     className?: string;
 }
+
+
+/**
+ * A plurid link in the same space.
+ *
+ * `://page`
+ */
+export type PluridLinkIntraspatial = 'intraspatial';
+
+/**
+ * A plurid link to a difference space within the same route or on another route.
+ */
+export type PluridLinkInterspatial = 'interspatial';
+
+/**
+ * `://space://page`
+ */
+export type PluridLinkInterspatialSameRoute = 'interspatialSameRoute';
+
+/**
+ * `://route://space://page`
+ */
+export type PluridLinkInterspatialDifferentRoute = 'interspatialDifferentRoute';
+
+export type PluridLinkInterspatialKind =
+    | PluridLinkInterspatialSameRoute
+    | PluridLinkInterspatialDifferentRoute;
+
+
+
+export type PluridLinkOuterspatial = 'outerspatial';
+
+/**
+ * `https://controlled-origin://route://space://page`
+ */
+export type PluridLinkOuterspatialControlledOrigin = 'outerspatialControlledOrigin';
+
+/**
+ * `https://foreign-origin://route://space://page`
+ */
+export type PluridLinkOuterspatialForeignOrigin = 'outerspatialForeignOrigin';
+
+export type PluridLinkOuterspatialKind =
+    | PluridLinkOuterspatialControlledOrigin
+    | PluridLinkOuterspatialForeignOrigin;
