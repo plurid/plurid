@@ -1,0 +1,28 @@
+---
+packages:
+  - ./packages/*
+  - ./fixtures/*
+
+package:
+  manager: yarn
+  publisher: npm
+  ignore:
+    - packages/plurid-specification
+
+yarnWorkspace: false
+
+commit:
+  engine: git
+  combine: true
+  root: ''
+  fullFolder: false
+  divider: ' > '
+  message: 'setup: package'
+
+runFrom: ../
+
+development:
+  watchPackages: all
+  serverPort: 55000
+  watchDirectories: ['build', 'distribution', 'dist']
+  externalPackages: []
