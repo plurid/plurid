@@ -1,4 +1,8 @@
-import { getWheelDirection } from '../';
+import {
+    getWheelDirection,
+} from '../';
+
+
 
 xdescribe('getWheelDirection', () => {
     it('returns "left" direction', () => {

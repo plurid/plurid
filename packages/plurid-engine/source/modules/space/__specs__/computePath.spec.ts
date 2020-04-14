@@ -1,4 +1,8 @@
 import {
+    /** constants */
+    defaultTreePlane,
+
+    /** interfaces */
     TreePlane,
 } from '@plurid/plurid-data';
 
@@ -8,73 +12,22 @@ import {
 
 
 
-const location = {
-    translateX: 0,
-    translateY: 0,
-    translateZ: 0,
-    rotateX: 0,
-    rotateY: 0,
-};
-
-const pathDivisions = {
-    protocol: '',
-    origin: {
-        value: '',
-        controlled: false,
-    },
-    route: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    space: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    universe: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    cluster: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    plane: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    valid: false,
-};
-
-
 describe('computePath', () => {
     it('computes the path on the first child', () => {
         const targetPage = {
+            ...defaultTreePlane,
             sourceID: '1',
-            height: 0,
-            width: 0,
             planeID: 'aaa',
             path: '/aaa',
-            pathDivisions,
-            location,
-            children: [],
             show: true,
         };
         const tree: TreePlane[] = [
             targetPage,
             {
+                ...defaultTreePlane,
                 sourceID: '2',
                 planeID: 'bbb',
                 path: '/bbb',
-                pathDivisions,
-                location,
-                height: 0,
-                width: 0,
-                children: [],
                 show: true,
             },
         ];
@@ -87,25 +40,17 @@ describe('computePath', () => {
     it('computes the path on the first child - without finding any', () => {
         const tree: TreePlane[] = [
             {
+                ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
-                pathDivisions,
-                location,
-                height: 0,
-                width: 0,
-                children: [],
                 show: true,
             },
             {
+                ...defaultTreePlane,
                 sourceID: '2',
                 planeID: 'bbb',
                 path: '/bbb',
-                pathDivisions,
-                location,
-                height: 0,
-                width: 0,
-                children: [],
                 show: true,
             },
         ];
@@ -117,61 +62,44 @@ describe('computePath', () => {
 
     it('computes the path on the second child', () => {
         const targetPage_1 = {
+            ...defaultTreePlane,
             sourceID: '1',
             planeID: 'aaa',
             path: '/aaa',
-            location,
-            height: 0,
-            width: 0,
             show: true,
-            children: [],
         };
         const targetPage_2 = {
+            ...defaultTreePlane,
             sourceID: '2',
             planeID: 'bbb',
             parentPlaneID: 'aaa',
             path: '/aaa/bbb',
-            location,
-            height: 0,
-            width: 0,
             show: true,
-            children: [],
         };
         const tree: TreePlane[] = [
             {
+                ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
-                pathDivisions,
-                location,
-                height: 0,
-                width: 0,
                 show: true,
                 children: [
                     {
+                        ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
                         parentPlaneID: 'aaa',
                         path: '/aaa/bbb',
-                        location,
-                        pathDivisions,
-                        height: 0,
-                        width: 0,
                         show: true,
-                        children: [],
                     }
                 ],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
-                location,
-                pathDivisions,
-                height: 0,
-                width: 0,
                 show: true,
-                children: [],
             },
         ];
         const planeID = 'bbb';

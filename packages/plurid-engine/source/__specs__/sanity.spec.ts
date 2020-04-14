@@ -1,5 +1,5 @@
-describe('sanity test', () => {
-    it('works if true is truthy', () => {
+describe('Analysis:', () => {
+    it('doesn\'t seem like anything to me.', () => {
         expect(true).toBeTruthy();
     });
 });
