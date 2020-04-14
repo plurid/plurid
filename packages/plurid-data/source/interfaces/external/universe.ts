@@ -1,11 +1,14 @@
 import {
     PluridPlane,
-    PluridView,
 } from './plane';
 
 import {
     PluridCluster,
 } from './cluster';
+
+import {
+    PluridView,
+} from './view';
 
 
 
