@@ -91,12 +91,12 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
     );
 
     const setGeneralTheme = (selectedTheme: any) => {
-        dispatchSetGeneralTheme(themes[selectedTheme]);
+        dispatchSetGeneralTheme((themes as any)[selectedTheme]);
         dispatchSetConfigurationThemeGeneralAction(selectedTheme);
     }
 
     const setInteractionTheme = (selectedTheme: any) => {
-        dispatchSetInteractionTheme(themes[selectedTheme]);
+        dispatchSetInteractionTheme((themes as any)[selectedTheme]);
         dispatchSetConfigurationThemeInteractionAction(selectedTheme);
     }
 

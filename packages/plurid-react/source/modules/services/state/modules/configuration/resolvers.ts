@@ -428,10 +428,10 @@ export const setConfigurationSpaceTransformLocks = (
         ...state,
     };
 
-    const updatedTransformLocks = {
+    const updatedTransformLocks: any = {
         ...transformLocks,
     };
-    updatedTransformLocks[action.payload] = !transformLocks[action.payload];
+    updatedTransformLocks[action.payload] = !(transformLocks as any)[action.payload];
     newState.space.transformLocks = {
         ...updatedTransformLocks,
     };

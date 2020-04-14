@@ -258,8 +258,8 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
         type: string,
     ) => {
         const faceType = `${face}${type}`;
-        const zoneCode = zoneCodes[faceType];
-        const transform = faceTransform[zoneCode];
+        const zoneCode = (zoneCodes as any)[faceType];
+        const transform = (faceTransform as any)[zoneCode];
         // console.log(zoneCode);
         // console.log(transform);
         setActiveZone(zoneCode);
@@ -283,28 +283,28 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.topLeft}
-                active={activeZone === zoneCodes[`${face}${faceTypes.topLeft}`]}
-                hovered={hoveredZone === zoneCodes[`${face}${faceTypes.topLeft}`]}
+                active={activeZone === (zoneCodes as any)[`${face}${faceTypes.topLeft}`]}
+                hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.topLeft}`]}
                 onClick={() => handleClick(faceTypes.topLeft)}
-                onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.topLeft}`])}
+                onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.topLeft}`])}
                 transparentUI={transparentUI}
             />
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.topCenter}
-                active={activeZone === zoneCodes[`${face}${faceTypes.topCenter}`]}
-                hovered={hoveredZone === zoneCodes[`${face}${faceTypes.topCenter}`]}
+                active={activeZone === (zoneCodes as any)[`${face}${faceTypes.topCenter}`]}
+                hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.topCenter}`]}
                 onClick={() => handleClick(faceTypes.topCenter)}
-                onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.topCenter}`])}
+                onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.topCenter}`])}
                 transparentUI={transparentUI}
             />
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.topRight}
-                active={activeZone === zoneCodes[`${face}${faceTypes.topRight}`]}
-                hovered={hoveredZone === zoneCodes[`${face}${faceTypes.topRight}`]}
+                active={activeZone === (zoneCodes as any)[`${face}${faceTypes.topRight}`]}
+                hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.topRight}`]}
                 onClick={() => handleClick(faceTypes.topRight)}
-                onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.topRight}`])}
+                onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.topRight}`])}
                 transparentUI={transparentUI}
             />
 
@@ -312,19 +312,19 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.middleLeft}
-                active={activeZone === zoneCodes[`${face}${faceTypes.middleLeft}`]}
-                hovered={hoveredZone === zoneCodes[`${face}${faceTypes.middleLeft}`]}
+                active={activeZone === (zoneCodes as any)[`${face}${faceTypes.middleLeft}`]}
+                hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.middleLeft}`]}
                 onClick={() => handleClick(faceTypes.middleLeft)}
-                onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.middleLeft}`])}
+                onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.middleLeft}`])}
                 transparentUI={transparentUI}
             />
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.middleCenter}
-                active={activeZone === zoneCodes[`${face}${faceTypes.middleCenter}`]}
-                hovered={hoveredZone === zoneCodes[`${face}${faceTypes.middleCenter}`]}
+                active={activeZone === (zoneCodes as any)[`${face}${faceTypes.middleCenter}`]}
+                hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.middleCenter}`]}
                 onClick={() => handleClick(faceTypes.middleCenter)}
-                onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.middleCenter}`])}
+                onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.middleCenter}`])}
                 transparentUI={transparentUI}
             >
                 {faceText}
@@ -332,10 +332,10 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.middleRight}
-                active={activeZone === zoneCodes[`${face}${faceTypes.middleRight}`]}
-                hovered={hoveredZone === zoneCodes[`${face}${faceTypes.middleRight}`]}
+                active={activeZone === (zoneCodes as any)[`${face}${faceTypes.middleRight}`]}
+                hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.middleRight}`]}
                 onClick={() => handleClick(faceTypes.middleRight)}
-                onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.middleRight}`])}
+                onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.middleRight}`])}
                 transparentUI={transparentUI}
             />
 
@@ -343,28 +343,28 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.bottomLeft}
-                active={activeZone === zoneCodes[`${face}${faceTypes.bottomLeft}`]}
-                hovered={hoveredZone === zoneCodes[`${face}${faceTypes.bottomLeft}`]}
+                active={activeZone === (zoneCodes as any)[`${face}${faceTypes.bottomLeft}`]}
+                hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.bottomLeft}`]}
                 onClick={() => handleClick(faceTypes.bottomLeft)}
-                onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.bottomLeft}`])}
+                onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.bottomLeft}`])}
                 transparentUI={transparentUI}
             />
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.bottomCenter}
-                active={activeZone === zoneCodes[`${face}${faceTypes.bottomCenter}`]}
-                hovered={hoveredZone === zoneCodes[`${face}${faceTypes.bottomCenter}`]}
+                active={activeZone === (zoneCodes as any)[`${face}${faceTypes.bottomCenter}`]}
+                hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.bottomCenter}`]}
                 onClick={() => handleClick(faceTypes.bottomCenter)}
-                onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.bottomCenter}`])}
+                onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.bottomCenter}`])}
                 transparentUI={transparentUI}
             />
             <StyledViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.bottomRight}
-                active={activeZone === zoneCodes[`${face}${faceTypes.bottomRight}`]}
-                hovered={hoveredZone === zoneCodes[`${face}${faceTypes.bottomRight}`]}
+                active={activeZone === (zoneCodes as any)[`${face}${faceTypes.bottomRight}`]}
+                hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.bottomRight}`]}
                 onClick={() => handleClick(faceTypes.bottomRight)}
-                onMouseEnter={() => setHoveredZone(zoneCodes[`${face}${faceTypes.bottomRight}`])}
+                onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.bottomRight}`])}
                 transparentUI={transparentUI}
             />
         </StyledViewcubeFace>
