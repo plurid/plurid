@@ -87,8 +87,8 @@ const reducer = (
             return resolvers.setInitialTree(state, action);
         case Types.SET_TREE:
             return resolvers.setTree(state, action);
-        case Types.SET_ACTIVE_DOCUMENT:
-            return resolvers.setActiveDocument(state, action);
+        case Types.SET_ACTIVE_UNIVERSE:
+            return resolvers.setActiveUniverse(state, action);
         case Types.SPACE_RESET_TRANSFORM:
             return resolvers.spaceResetTransform(state);
         case Types.SET_VIEW_SIZE:

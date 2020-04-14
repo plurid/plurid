@@ -294,12 +294,12 @@ export const setTree = (
 }
 
 
-export const setActiveDocument = (
-    documentID: string,
-): Types.SetActiveDocumentAction => {
+export const setActiveUniverse = (
+    universeID: string,
+): Types.SetActiveUniverseAction => {
     return {
-        type: Types.SET_ACTIVE_DOCUMENT,
-        payload: documentID,
+        type: Types.SET_ACTIVE_UNIVERSE,
+        payload: universeID,
     };
 }
 

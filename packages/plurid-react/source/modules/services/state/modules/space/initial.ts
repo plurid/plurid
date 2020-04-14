@@ -13,7 +13,7 @@ const initialState: Types.State = {
     translationZ: 0,
     initialTree: [],
     tree: [],
-    activeDocumentID: '',
+    activeUniverseID: '',
     camera: {
         x: 0,
         y: 0,
