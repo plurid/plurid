@@ -45,9 +45,9 @@ export interface PluridPlane {
 
 export type PluridPlaneContext<T> = React.Context<T>;
 
-export interface PluridPlaneContextValue {
-    [key: string]: any;
-}
+// export interface PluridPlaneContextValue {
+//     [key: string]: any;
+// }
 
 
 export type PluridComponent = PluridComponentReact;
@@ -63,7 +63,7 @@ export interface PluridComponentReact {
     /**
      * The `properties` will be passed to the `element` at runtime.
      */
-    properties?: PluridComponentProperties;
+    properties?: Record<string, any>;
 }
 
 export interface WithPluridProperty {
@@ -72,22 +72,23 @@ export interface WithPluridProperty {
 
 export type ReactComponentWithPluridProperty<T> = T & WithPluridProperty;
 
-export interface PluridComponentProperties {
-    [key: string]: any;
-}
-
-
 export interface PluridProperty {
-    parameters: PluridComponentParameters;
-    query: PluridComponentQuery;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
 }
 
 
-export interface PluridComponentParameters {
-    [key: string]: string;
-}
+// export interface PluridComponentProperties {
+//     [key: string]: any;
+// }
 
 
-export interface PluridComponentQuery {
-    [key: string]: string;
-}
+
+// export interface PluridComponentParameters {
+//     [key: string]: string;
+// }
+
+
+// export interface PluridComponentQuery {
+//     [key: string]: string;
+// }
