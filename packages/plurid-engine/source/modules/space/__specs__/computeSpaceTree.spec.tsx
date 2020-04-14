@@ -58,7 +58,6 @@ describe('computeSpaceTree', () => {
             {
                 ...defaultTreePlane,
                 sourceID: '1',
-
                 path: '/page-1',
                 planeID: '',
                 show: true,
@@ -69,6 +68,13 @@ describe('computeSpaceTree', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 350,
+                    translateZ: 0,
+                },
             },
             {
                 ...defaultTreePlane,
@@ -76,6 +82,13 @@ describe('computeSpaceTree', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 700,
+                    translateZ: 0,
+                },
             },
         ];
 
@@ -142,6 +155,13 @@ describe('computeSpaceTree', () => {
                 path: '/page-2',
                 planeID: '',
                 show: true,
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 350,
+                    translateZ: 0,
+                },
             },
             {
                 ...defaultTreePlane,
@@ -149,6 +169,13 @@ describe('computeSpaceTree', () => {
                 path: '/page-3',
                 planeID: '',
                 show: true,
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 700,
+                    translateZ: 0,
+                },
             },
         ];
 
