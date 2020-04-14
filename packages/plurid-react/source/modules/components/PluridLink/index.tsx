@@ -54,6 +54,7 @@ import {
 
 const {
     default: Router,
+
 } = router;
 
 interface PluridLinkCoordinates {
@@ -95,8 +96,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const {
         /** own */
         children,
-        page: pagePath,
-        document,
+        path: planePath,
+        // document,
         devisible: _devisible,
         suffix: _suffix,
         atClick,
@@ -196,7 +197,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         } = space.tree.updateTreeWithNewPage(
             stateTree,
             parentPlaneID,
-            pagePath,
+            planePath,
             planeByID.id,
             linkCoordinates,
             {},
@@ -336,7 +337,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         const pagesRouter = new Router(routes);
 
-        const matchedRoute = pagesRouter.match(pagePath);
+        const matchedRoute = pagesRouter.match(planePath);
 
         if (!matchedRoute) {
             return;
