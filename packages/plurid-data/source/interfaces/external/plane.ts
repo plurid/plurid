@@ -1,9 +1,5 @@
 import React from 'react';
 
-import {
-    PluridLayout,
-} from './layout';
-
 
 
 export interface PluridPlane {
@@ -114,13 +110,4 @@ export interface PluridView {
      * 0-based.
      */
     ordinal?: number;
-}
-
-
-export interface PluridCluster {
-    id: string;
-    name?: string;
-    planes?: PluridPlane[];
-    clusters?: PluridCluster[];
-    layout?: PluridLayout;
 }
