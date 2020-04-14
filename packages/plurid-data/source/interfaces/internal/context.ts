@@ -1,19 +1,15 @@
 import {
-    PluridPageContext,
+    PluridPlaneContext,
 } from '../external';
 
 import {
-    Indexed,
-} from '../helpers';
-
-import {
-    PluridInternalContextDocument,
-} from './document';
+    PluridInternalContextUniverse,
+} from './universe';
 
 
 
 export interface PluridContext {
-    pageContext?: PluridPageContext<any>,
+    pageContext?: PluridPlaneContext<any>,
     pageContextValue?: any,
-    documents: Indexed<PluridInternalContextDocument>;
+    universes: Record<string, PluridInternalContextUniverse>;
 }

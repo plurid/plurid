@@ -1,12 +1,12 @@
 import {
-    PluridPage,
+    PluridPlane,
     PluridView,
     PluridCluster,
-} from './page';
+} from './plane';
 
 
 
-export interface PluridDocument {
+export interface PluridUniverse {
     /**
      * Optional, application-wide unique identifier.
      */
@@ -17,7 +17,7 @@ export interface PluridDocument {
      */
     name: string;
 
-    pages: PluridPage[];
+    planes: PluridPlane[];
 
     /**
      * By default, the order the documents are shown in is based on their index in the `documents[]`.

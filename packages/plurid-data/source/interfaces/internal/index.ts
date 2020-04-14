@@ -1,5 +1,5 @@
 export * from './context';
-export * from './document';
+export * from './universe';
 export * from './internationalization';
-export * from './page';
+export * from './plane';
 export * from './tree';

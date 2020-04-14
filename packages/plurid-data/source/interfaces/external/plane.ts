@@ -6,18 +6,18 @@ import {
 
 
 
-export interface PluridPage {
+export interface PluridPlane {
     /**
      * Custom HTML, React, Vue, or Angular component to be rendered in the PluridPlane.
      */
     component: PluridComponent;
 
     /**
-     * Path to the page, e.g. `/page-1`. By convention, it starts with an '/'.
+     * Path to the plane, e.g. `/plane-1`. By convention, it starts with an '/'.
      *
-     * If IDs not provided, the paths of all the pages within document must be unique.
+     * If IDs not provided, the paths of all the plane within space must be unique.
      *
-     * The path can have parameters, e.g. `/page/:id`.
+     * The path can have parameters, e.g. `/plane/:id`.
      *
      * The parameter, in the example `id`,
      * will be passed in the property `plurid.parameters` to the component,
@@ -30,9 +30,9 @@ export interface PluridPage {
     /**
      * Optional, application or document-wide unique identifier (if multiple documents).
      *
-     * If provided to one page, all the pages must have IDs.
+     * If provided to one plane, all the planes must have IDs.
      *
-     * Once provided, the pages can have similar paths,
+     * Once provided, the planes can have similar paths,
      * but the `PluridLink`s should be ID-based to ensure correct linking.
      */
     id?: string;
@@ -40,16 +40,16 @@ export interface PluridPage {
     /**
      * Optional, application or document-wide unique identifier (if multiple documents).
      *
-     * A cluster will ensure that all the pages it contains will be rendered together.
+     * A cluster will ensure that all the planes it contains will be rendered together.
      */
     cluster?: string;
 }
 
 
 
-export type PluridPageContext<T> = React.Context<T>;
+export type PluridPlaneContext<T> = React.Context<T>;
 
-export interface PluridPageContextValue {
+export interface PluridPlaneContextValue {
     [key: string]: any;
 }
 

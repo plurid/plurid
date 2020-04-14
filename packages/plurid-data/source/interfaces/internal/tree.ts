@@ -1,5 +1,5 @@
 export interface TreePage {
-    pageID: string;
+    // pageID: string;
     planeID: string;
     parentPlaneID?: string;
 
@@ -32,6 +32,7 @@ export interface PathDivisions {
     origin: string;
     route: PathRouteDivision;
     space: PathSpaceDivision;
+    universe: PathUniverseDivision;
     plane: PathPlaneDivision;
     valid: boolean;
 }
@@ -45,6 +46,13 @@ export interface PathRouteDivision {
 
 
 export interface PathSpaceDivision {
+    value: string;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
+}
+
+
+export interface PathUniverseDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
