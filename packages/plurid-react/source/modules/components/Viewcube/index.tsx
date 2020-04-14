@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
+    /** constants */
+    PLURID_ENTITY_VIEWCUBE,
+
+    /** interfaces */
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
@@ -37,8 +41,8 @@ interface ViewcubeOwnProperties {
 }
 
 interface ViewcubeStateProperties {
-    configuration: PluridConfiguration;
-    interactionTheme: Theme;
+    stateConfiguration: PluridConfiguration;
+    stateInteractionTheme: Theme;
 }
 
 interface ViewcubeDispatchProperties {
@@ -55,8 +59,8 @@ type ViewcubeProperties = ViewcubeOwnProperties
 const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
     const {
         /** state */
-        configuration,
-        interactionTheme,
+        stateConfiguration,
+        stateInteractionTheme,
 
         /** dispatch */
         dispatchRotateXWith,
@@ -67,7 +71,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
 
     const {
         elements,
-    } = configuration;
+    } = stateConfiguration;
 
     const {
         viewcube,
@@ -120,6 +124,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
             onMouseMove={() => !mouseOver ? setMouseOver(true) : null}
             conceal={conceal}
             mouseOver={mouseOver}
+            data-plurid-entity={PLURID_ENTITY_VIEWCUBE}
         >
             <ViewcubeModel
                 mouseOver={mouseOver}
@@ -134,7 +139,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                         }}
                     >
                         <StyledViewcubeArrowIcon
-                            theme={interactionTheme}
+                            theme={stateInteractionTheme}
                             onClick={() => animatedRotate('rotateX', -90.1)}
                         >
                             ▲
@@ -142,13 +147,13 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     </StyledViewcubeArrow>
 
                     <StyledViewcubeArrow
-                        theme={interactionTheme}
+                        theme={stateInteractionTheme}
                         style={{
                             gridArea: 'pluridViewcubeRotateDown',
                         }}
                     >
                         <StyledViewcubeArrowIcon
-                            theme={interactionTheme}
+                            theme={stateInteractionTheme}
                             onClick={() => animatedRotate('rotateX', 90.1)}
                         >
                             ▼
@@ -156,13 +161,13 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     </StyledViewcubeArrow>
 
                     <StyledViewcubeArrow
-                        theme={interactionTheme}
+                        theme={stateInteractionTheme}
                         style={{
                             gridArea: 'pluridViewcubeRotateLeft',
                         }}
                     >
                         <StyledViewcubeArrowIcon
-                            theme={interactionTheme}
+                            theme={stateInteractionTheme}
                             onClick={() => animatedRotate('rotateY', 90.1)}
                         >
                             ◀
@@ -170,13 +175,13 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
                     </StyledViewcubeArrow>
 
                     <StyledViewcubeArrow
-                        theme={interactionTheme}
+                        theme={stateInteractionTheme}
                         style={{
                             gridArea: 'pluridViewcubeRotateRight',
                         }}
                     >
                         <StyledViewcubeArrowIcon
-                            theme={interactionTheme}
+                            theme={stateInteractionTheme}
                             onClick={() => animatedRotate('rotateY', -90.1)}
                         >
                             ▶
@@ -198,8 +203,8 @@ const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
 const mapStateToProperties = (
     state: AppState,
 ): ViewcubeStateProperties => ({
-    configuration: selectors.configuration.getConfiguration(state),
-    interactionTheme: selectors.themes.getInteractionTheme(state),
+    stateConfiguration: selectors.configuration.getConfiguration(state),
+    stateInteractionTheme: selectors.themes.getInteractionTheme(state),
 });
 
 
