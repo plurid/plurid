@@ -28,12 +28,15 @@ export const mapPathsToRoutes = <T, V>(
 }
 
 
+// const interplanarExample = '://plane'; // or intraclusterial
+// const interclusterialExample = '://cluster://plane'; // or intrauniversal
+// const interuniversalExample = '://universe://cluster://plane'; // or intraspatial
+// const interspatialExample = '://space://universe://cluster://plane'; // or intraroutal
+// const interroutalExample = '://route://space://universe://cluster://plane';
+// const pluriversalExample = 'https://origin://route://space://universe://cluster://plane';
+// const pluriversalExampleControlledOrigin = 'https://corigin://route://space://universe://cluster://plane';
+// const pluriversalExampleForeignOrigin = 'https://forigin://route://space://universe://cluster://plane';
 
-// const intraspatialExample = '://page';
-// const interspatialSameRouteExample = '://space://page';
-// const interspatialDifferentRouteExample = '://route://space://page';
-// const outerspatialControlledOriginExample = 'https://origin://route://space://page';
-// const outerspatialForeignOriginExample = 'http://origin://route://space://page';
 
 export const pluridLinkPathDivider = (
     path: string,
