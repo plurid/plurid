@@ -3,7 +3,7 @@ import { Store, AnyAction } from 'redux';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import {
-    PluridApp as PluridAppProperties,
+    PluridApplication as PluridApplicationProperties,
 } from '@plurid/plurid-data';
 
 import View from '../View';
@@ -17,7 +17,7 @@ import StateContext from '../../modules/services/state/context';
 
 interface RootProperties {
     store: Store<AppState, AnyAction>;
-    appProperties: PluridAppProperties;
+    appProperties: PluridApplicationProperties;
 }
 
 const Root: React.FC<RootProperties> = (

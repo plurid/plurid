@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
-    PluridApp as PluridAppProperties,
+    PluridApplication as PluridApplicationProperties,
 } from '@plurid/plurid-data';
 
 import View from '../../View';
@@ -15,7 +15,7 @@ import StateContext from '../../../modules/services/state/context';
 
 
 interface SubAppRootOwnProperties {
-    appProperties: PluridAppProperties;
+    appProperties: PluridApplicationProperties;
 }
 
 interface SubAppRootStateProperties {

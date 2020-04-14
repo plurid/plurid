@@ -12,14 +12,14 @@ import {
 
 import {
     Indexed,
-    PluridInternalStateDocument,
+    PluridInternalStateUniverse,
 } from '@plurid/plurid-data';
 
 import {
     StyledMoreMenu,
     // StyledMoreMenuItem,
     StyledMoreMenuScroll,
-    StyledMenuDocumentsItemList,
+    StyledMenuUniversesItemList,
 } from './styled';
 
 import { AppState } from '../../../../../services/state/store';
@@ -34,12 +34,12 @@ interface MoreMenuOwnProperties {
 
 interface MoreMenuStateProperties {
     interactionTheme: Theme;
-    documents: Indexed<PluridInternalStateDocument>;
-    activeDocumentID: string;
+    documents: Indexed<PluridInternalStateUniverse>;
+    activeUniverseID: string;
 }
 
 interface MoreMenuDispatchProperties {
-    dispatchSetActiveDocument: typeof actions.space.setActiveDocument;
+    dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
 }
 
 type MoreMenuProperties = MoreMenuOwnProperties
@@ -51,10 +51,10 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         /** state */
         interactionTheme,
         documents,
-        activeDocumentID,
+        activeUniverseID,
 
         /** dispatch */
-        dispatchSetActiveDocument,
+        dispatchSetActiveUniverse,
     } = properties;
 
     return (
@@ -66,17 +66,17 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
                     {
                         Object.keys(documents).map(documentID => {
                             const document = documents[documentID];
-                            const active = documentID === activeDocumentID;
+                            const active = documentID === activeUniverseID;
 
                             return (
-                                <StyledMenuDocumentsItemList
+                                <StyledMenuUniversesItemList
                                     key={documentID}
                                     theme={interactionTheme}
-                                    onClick={() => !active ? dispatchSetActiveDocument(documentID) : null}
+                                    onClick={() => !active ? dispatchSetActiveUniverse(documentID) : null}
                                     active={active}
                                 >
                                     {document.name}
-                                </StyledMenuDocumentsItemList>
+                                </StyledMenuUniversesItemList>
                             )
                         })
                     }
@@ -91,16 +91,16 @@ const mapStateToProps = (
     state: AppState,
 ): MoreMenuStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
-    documents: selectors.data.getDocuments(state),
-    activeDocumentID: selectors.space.getActiveDocumentID(state),
+    documents: selectors.data.getUniverses(state),
+    activeUniverseID: selectors.space.getActiveUniverseID(state),
 });
 
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): MoreMenuDispatchProperties => ({
-    dispatchSetActiveDocument: (documentID: string) => dispatch(
-        actions.space.setActiveDocument(documentID)
+    dispatchSetActiveUniverse: (documentID: string) => dispatch(
+        actions.space.setActiveUniverse(documentID)
     )
 });
 
