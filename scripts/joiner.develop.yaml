@@ -8,6 +8,7 @@ package:
   publisher: npm
   ignore:
     - packages/plurid-specification
+    - node_modules
 
 yarnWorkspace: false
 
