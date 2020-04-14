@@ -30,6 +30,7 @@ import StateContext from '../../services/state/context';
 
 interface PluridPlaneConfiguratorOwnProperties {
     theme: keyof typeof themes;
+    style: React.CSSProperties;
 }
 
 interface PluridPlaneConfiguratorStateProperties {
@@ -58,6 +59,7 @@ const PluridPlaneConfigurator: React.FC<PluridPlaneConfiguratorPropertiesWithChi
     const {
         /** own */
         theme,
+        style,
 
         /** state */
 
