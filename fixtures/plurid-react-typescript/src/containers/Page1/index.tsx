@@ -4,6 +4,7 @@ import React, {
 
 import {
     PluridLink,
+    PluridPlaneConfigurator,
 } from '@plurid/plurid-react';
 
 
@@ -29,6 +30,8 @@ const Page1: React.FC<any> = (
                 // height: 300,
             }}
         >
+            <PluridPlaneConfigurator />
+
             <div
                 tabIndex={0}
                 contentEditable={true}
