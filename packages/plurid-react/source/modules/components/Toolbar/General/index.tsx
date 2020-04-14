@@ -12,9 +12,14 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    PluridConfiguration,
+    /** constants */
+    PLURID_ENTITY_TOOLBAR,
 
+    /** enumerations */
     TRANSFORM_MODES,
+
+    /** interfaces */
+    PluridConfiguration,
 } from '@plurid/plurid-data';
 
 import {
@@ -186,6 +191,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
             mouseIn={mouseIn}
             conceal={conceal}
             showMenu={showMenu}
+            data-plurid-entity={PLURID_ENTITY_TOOLBAR}
         >
             <StyledToolbarButtons
                 theme={theme}
