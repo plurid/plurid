@@ -75,5 +75,7 @@ export default class Router<T> {
                 return data;
             }
         }
+
+        return;
     }
 }
