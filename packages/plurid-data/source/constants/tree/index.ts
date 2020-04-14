@@ -8,6 +8,7 @@ export const defaultTreePlane: TreePlane = {
     sourceID: '',
     planeID: '',
     path: '',
+    children: [],
     pathDivisions: {
         protocol: '',
         origin: {
