@@ -82,9 +82,6 @@ const PluridPlaneConfigurator: React.FC<PluridPlaneConfiguratorPropertiesWithChi
     }, []);
 
 
-    console.log('planePlaneID', planePlaneID);
-
-
     /** render */
     return (
         <StyledPluridPlaneConfigurator
