@@ -9,7 +9,7 @@ import {
 
 
 export interface PluridContext {
-    pageContext?: PluridPlaneContext<any>,
-    pageContextValue?: any,
+    planeContext?: PluridPlaneContext<any>,
+    planeContextValue?: any,
     universes: Record<string, PluridInternalContextUniverse>;
 }
