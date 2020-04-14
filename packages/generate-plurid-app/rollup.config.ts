@@ -1,13 +1,10 @@
-import resolve from '@rollup/plugin-node-resolve';
-import external from 'rollup-plugin-peer-deps-external';
-import commonjs from '@rollup/plugin-commonjs';
-import sourceMaps from 'rollup-plugin-sourcemaps';
-import typescript from 'rollup-plugin-typescript2';
-import json from '@rollup/plugin-json';
 import copy from 'rollup-plugin-copy';
+import json from '@rollup/plugin-json';
 
+import plugins from '../rollup.plugins';
 
-const pkg = require('./package.json');
+import pkg from './package.json';
+
 
 
 const globals = {
@@ -15,21 +12,22 @@ const globals = {
     'inquirer': 'inquirer',
 };
 
-
 export default {
-    input: `source/index.ts`,
+    input: 'source/index.ts',
     output: [
         {
             file: pkg.main,
             format: 'cjs',
             globals,
             sourcemap: true,
+            exports: 'named',
         },
         {
             file: pkg.module,
             format: 'es',
             globals,
             sourcemap: true,
+            exports: 'named',
         },
     ],
     external: [
@@ -37,22 +35,9 @@ export default {
         'path',
         'fs',
     ],
-    watch: {
-        include: 'source/**',
-    },
     plugins: [
         json(),
-        typescript({
-            useTsconfigDeclarationDir: true,
-        }),
-        external({
-            includeDependencies: true,
-        }),
-        resolve({
-            preferBuiltins: true,
-        }),
-        commonjs(),
-        sourceMaps(),
+        ...plugins,
         copy({
             targets: [
                 { src: 'source/files/', dest: 'distribution/' },

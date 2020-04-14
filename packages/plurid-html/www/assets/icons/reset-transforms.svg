@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 866 870.97">
+    <defs>
+        <style>.cls-1{fill:#fff;stroke:#fff;stroke-miterlimit:10;}</style>
+    </defs>
+    <title>Reset Transforms</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Reset_Transforms" data-name="Reset Transforms">
+            <rect class="cls-1" x="31.05" y="418.97" width="796.17" height="43.32" transform="translate(-185.88 432.5) rotate(-45)"/>
+            <polygon class="cls-1" points="395.35 741.32 125.66 743.99 129.66 475.53 172.97 476.18 169.63 700.24 394.92 698.01 395.35 741.32"/>
+            <polygon class="cls-1" points="735.34 401.44 692.02 400.79 695.37 176.73 470.08 178.96 469.65 135.65 739.35 132.97 735.34 401.44"/>
+            <path class="cls-1" d="M865.5,870.47H.5V.5h865ZM44,827H822V44H44Z"/>
+        </g>
+    </g>
+</svg>

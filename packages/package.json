@@ -1,0 +1,15 @@
+{
+    "private": true,
+    "workspaces": [
+        "generate-plurid-app",
+        "plurid-cli",
+        "plurid-data",
+        "plurid-engine",
+        "plurid-html",
+        "plurid-pubsub",
+        "plurid-react",
+        "plurid-react-server"
+    ],
+    "dependencies": {
+    }
+}
