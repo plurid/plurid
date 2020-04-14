@@ -1,9 +1,9 @@
 import {
-    TreePage,
+    TreePlane,
 } from '@plurid/plurid-data';
 
 import {
-    updateTreePage,
+    updateTreePlane,
 } from '../tree';
 
 
@@ -17,9 +17,9 @@ const location = {
 };
 
 
-describe('updateTreePage', () => {
+describe('updateTreePlane', () => {
     it('updates the tree page on the first child', () => {
-        const tree: TreePage[] = [
+        const tree: TreePlane[] = [
             {
                 pageID: '1',
                 planeID: 'aaa',
@@ -41,7 +41,7 @@ describe('updateTreePage', () => {
                 children: [],
             },
         ];
-        const updatedPage: TreePage = {
+        const updatedPage: TreePlane = {
             pageID: '1',
             planeID: 'aaa',
             path: '/aaa',
@@ -62,7 +62,7 @@ describe('updateTreePage', () => {
                 }
             ],
         }
-        const updatedTree: TreePage[] = [
+        const updatedTree: TreePlane[] = [
             updatedPage,
             {
                 pageID: '3',
@@ -76,12 +76,12 @@ describe('updateTreePage', () => {
             },
         ];
 
-        const result = updateTreePage(tree, updatedPage);
+        const result = updateTreePlane(tree, updatedPage);
         expect(result).toMatchObject(updatedTree);
     });
 
     it('updates the tree page on the second child', () => {
-        const tree: TreePage[] = [
+        const tree: TreePlane[] = [
             {
                 pageID: '1',
                 planeID: 'aaa',
@@ -114,7 +114,7 @@ describe('updateTreePage', () => {
                 children: [],
             },
         ];
-        const updatedPage: TreePage = {
+        const updatedPage: TreePlane = {
             pageID: '2',
             planeID: 'bbb',
             path: '/aaa/bbb',
@@ -135,7 +135,7 @@ describe('updateTreePage', () => {
                 }
             ],
         }
-        const updatedTree: TreePage[] = [
+        const updatedTree: TreePlane[] = [
             {
                 pageID: '1',
                 planeID: 'aaa',
@@ -160,7 +160,7 @@ describe('updateTreePage', () => {
             },
         ];
 
-        const result = updateTreePage(tree, updatedPage);
+        const result = updateTreePlane(tree, updatedPage);
         expect(result).toMatchObject(updatedTree);
     });
 });

@@ -1,5 +1,5 @@
 import {
-    TreePage,
+    TreePlane,
 } from '@plurid/plurid-data';
 
 import {
@@ -19,7 +19,7 @@ const location = {
 
 describe('togglePageFromTree', () => {
     it('toggle page level one child', () => {
-        const tree: TreePage[] = [
+        const tree: TreePlane[] = [
             {
                 pageID: '1',
                 planeID: 'aaa',
@@ -53,7 +53,7 @@ describe('togglePageFromTree', () => {
             },
         ];
 
-        const updatedTree: TreePage[] = [
+        const updatedTree: TreePlane[] = [
             {
                 pageID: '1',
                 planeID: 'aaa',
@@ -94,7 +94,7 @@ describe('togglePageFromTree', () => {
     });
 
     it.only('toggle page', () => {
-        const tree: TreePage[] = [
+        const tree: TreePlane[] = [
             {
                 pageID: '1',
                 planeID: 'aaa',
@@ -138,7 +138,7 @@ describe('togglePageFromTree', () => {
             },
         ];
 
-        const updatedTree: TreePage[] = [
+        const updatedTree: TreePlane[] = [
             {
                 pageID: '1',
                 planeID: 'aaa',

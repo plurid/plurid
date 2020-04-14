@@ -1,5 +1,5 @@
 import {
-    TreePage,
+    TreePlane,
     PluridConfiguration,
 
     defaultConfiguration,
@@ -14,11 +14,11 @@ import {
 
 
 const computeZigZagLayout = (
-    pages: TreePage[],
+    pages: TreePlane[],
     angle: number = 45,
     configuration: PluridConfiguration = defaultConfiguration,
-): TreePage[] => {
-    const tree: TreePage[] = [];
+): TreePlane[] => {
+    const tree: TreePlane[] = [];
 
     const singleColumnedRoots = computeColumnLayout(pages, 1);
 

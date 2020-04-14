@@ -1,5 +1,5 @@
 import {
-    TreePage,
+    TreePlane,
     PluridConfiguration,
     PluridView,
     PluridCluster,
@@ -12,11 +12,11 @@ import {
 
 
 export interface TreeData {
-    pages: TreePage[],
+    pages: TreePlane[],
     clusters?: PluridCluster[],
     configuration?: PluridConfiguration,
     view?: string[] | PluridView[],
-    previousTree?: TreePage[],
+    previousTree?: TreePlane[],
 }
 
 export default class Tree {

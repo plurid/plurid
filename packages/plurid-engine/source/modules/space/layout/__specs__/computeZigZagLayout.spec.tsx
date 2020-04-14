@@ -1,9 +1,44 @@
 import {
-    TreePage,
+    TreePlane,
 } from '@plurid/plurid-data';
 
 import computeZigZagLayout from '../zigZag';
 
+
+
+const pathDivisions = {
+    protocol: '',
+    origin: {
+        value: '',
+        controlled: false,
+    },
+    route: {
+        value: '',
+        parameters: {},
+        query: {},
+    },
+    space: {
+        value: '',
+        parameters: {},
+        query: {},
+    },
+    universe: {
+        value: '',
+        parameters: {},
+        query: {},
+    },
+    cluster: {
+        value: '',
+        parameters: {},
+        query: {},
+    },
+    plane: {
+        value: '',
+        parameters: {},
+        query: {},
+    },
+    valid: false,
+};
 
 
 describe('computeZigZagLayout', () => {
@@ -21,9 +56,9 @@ describe('computeZigZagLayout', () => {
             innerHeight: 800,
         };
 
-        const treePages: TreePage[] = [
+        const treePages: TreePlane[] = [
             {
-                pageID: '1',
+                sourceID: '1',
                 height: 0,
                 width: 0,
                 location: {
@@ -34,12 +69,13 @@ describe('computeZigZagLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-1',
+                pathDivisions,
                 planeID: '',
                 show: true,
                 children: [],
             },
             {
-                pageID: '2',
+                sourceID: '2',
                 height: 0,
                 width: 0,
                 location: {
@@ -50,12 +86,13 @@ describe('computeZigZagLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-2',
+                pathDivisions,
                 planeID: '',
                 show: true,
                 children: [],
             },
             {
-                pageID: '3',
+                sourceID: '3',
                 height: 0,
                 width: 0,
                 location: {
@@ -66,15 +103,16 @@ describe('computeZigZagLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-3',
+                pathDivisions,
                 planeID: '',
                 show: true,
                 children: [],
             },
         ];
 
-        const locatedTree: TreePage[] = [
+        const locatedTree: TreePlane[] = [
             {
-                pageID: '1',
+                sourceID: '1',
                 height: 0,
                 width: 0,
                 location: {
@@ -85,12 +123,13 @@ describe('computeZigZagLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-1',
+                pathDivisions,
                 planeID: '',
                 show: true,
                 children: [],
             },
             {
-                pageID: '2',
+                sourceID: '2',
                 height: 0,
                 width: 0,
                 location: {
@@ -101,12 +140,13 @@ describe('computeZigZagLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-2',
+                pathDivisions,
                 planeID: '',
                 show: true,
                 children: [],
             },
             {
-                pageID: '3',
+                sourceID: '3',
                 height: 0,
                 width: 0,
                 location: {
@@ -117,6 +157,7 @@ describe('computeZigZagLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-3',
+                pathDivisions,
                 planeID: '',
                 show: true,
                 children: [],

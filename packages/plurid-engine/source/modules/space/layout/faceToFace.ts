@@ -1,5 +1,5 @@
 import {
-    TreePage,
+    TreePlane,
     PluridConfiguration,
 
     defaultConfiguration,
@@ -68,13 +68,13 @@ const computeFaceToFaceRotateY = (
 
 
 const computeFaceToFaceLayout = (
-    roots: TreePage[],
+    roots: TreePlane[],
     angle: number = 45,
     gap: number = 0,
     middle: number = 0,
     configuration: PluridConfiguration = defaultConfiguration,
-): TreePage[] => {
-    const tree: TreePage[] = [];
+): TreePlane[] => {
+    const tree: TreePlane[] = [];
     const width = mathematics.numbers.checkIntegerNonUnit(configuration.elements.plane.width)
         ? configuration.elements.plane.width
         : configuration.elements.plane.width * window.innerWidth;
@@ -112,7 +112,7 @@ const computeFaceToFaceLayout = (
                 last,
             );
 
-            const treePage: TreePage = {
+            const treePage: TreePlane = {
                 ...page,
                 location: {
                     translateX,

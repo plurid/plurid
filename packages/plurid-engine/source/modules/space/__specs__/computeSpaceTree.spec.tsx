@@ -1,6 +1,6 @@
 import {
     PluridConfiguration,
-    TreePage,
+    TreePlane,
     defaultConfiguration,
     LAYOUT_TYPES,
 } from '@plurid/plurid-data';
@@ -26,7 +26,7 @@ describe('computeSpaceTree', () => {
             innerHeight: 300,
         };
 
-        const treePages: TreePage[] = [
+        const treePages: TreePlane[] = [
             {
                 pageID: '1',
                 height: 0,
@@ -77,7 +77,7 @@ describe('computeSpaceTree', () => {
             },
         ];
 
-        const locatedTree: TreePage[] = [
+        const locatedTree: TreePlane[] = [
             {
                 pageID: '1',
                 height: 0,
@@ -153,7 +153,7 @@ describe('computeSpaceTree', () => {
             }
         };
 
-        const treePages: TreePage[] = [
+        const treePages: TreePlane[] = [
             {
                 pageID: '1',
                 height: 0,
@@ -204,7 +204,7 @@ describe('computeSpaceTree', () => {
             },
         ];
 
-        const locatedTree: TreePage[] = [
+        const locatedTree: TreePlane[] = [
             {
                 pageID: '1',
                 height: 0,

@@ -8,7 +8,7 @@ import {
     /** interfaces */
     PluridView,
     PluridConfiguration,
-    TreePage,
+    TreePlane,
     LinkCoordinates,
     PathParameters,
     PluridRouterRoute,
@@ -31,7 +31,7 @@ import {
 } from '../location';
 
 import {
-    getTreePageByPlaneID,
+    getTreePlaneByPlaneID,
 } from '../utilities';
 
 import Router from '../../router';
@@ -47,10 +47,10 @@ import Router from '../../router';
  * @param configuration
  */
 export const computeSpaceTree = (
-    pages: TreePage[],
+    pages: TreePlane[],
     configuration?: PluridConfiguration,
     view?: string[] | PluridView[],
-): TreePage[] => {
+): TreePlane[] => {
     if (!configuration) {
         const columnLayoutTree = computeColumnLayout(pages);
         return columnLayoutTree;
@@ -147,14 +147,14 @@ export const computeSpaceTree = (
 
 
 export const assignPagesFromView = (
-    pages: TreePage[],
+    pages: TreePlane[],
     view?: string[] | PluridView[],
-): TreePage[] => {
+): TreePlane[] => {
     if (!view) {
         return pages;
     }
 
-    const tree: TreePage[] = [];
+    const tree: TreePlane[] = [];
 
     const routes: PluridRouterRoute<any>[] = pages.map(page => {
         const route: PluridRouterRoute<any> = {
@@ -201,8 +201,8 @@ export const assignPagesFromView = (
 
                 do {
                     const nextIndex = pageIndex + 1;
-                    const nextTreePage = tree[nextIndex];
-                    if (typeof nextTreePage === 'undefined') {
+                    const nextTreePlane = tree[nextIndex];
+                    if (typeof nextTreePlane === 'undefined') {
                         tree[nextIndex] = newPage;
                         elementSet = true;
                     }
@@ -220,17 +220,17 @@ export const assignPagesFromView = (
 
 
 
-export const updateTreePage = (
-    tree: TreePage[],
-    updatedPage: TreePage,
-): TreePage[] => {
+export const updateTreePlane = (
+    tree: TreePlane[],
+    updatedPage: TreePlane,
+): TreePlane[] => {
     const updatedTree = tree.map(page => {
         if (page.planeID === updatedPage.planeID) {
             return updatedPage;
         }
 
         if (page.children) {
-            const pageTree = updateTreePage(page.children, updatedPage);
+            const pageTree = updateTreePlane(page.children, updatedPage);
             page.children = pageTree;
             return page;
         }
@@ -245,11 +245,11 @@ export const updateTreePage = (
 
 interface UpdatedTreeWithNewPage {
     pluridPlaneID: string;
-    updatedTree: TreePage[];
+    updatedTree: TreePlane[];
 }
 
 export const updateTreeWithNewPage = (
-    tree: TreePage[],
+    tree: TreePlane[],
     treePageParentPlaneID: string,
     pagePath: string,
     pageID: string,
@@ -258,7 +258,7 @@ export const updateTreeWithNewPage = (
 ): UpdatedTreeWithNewPage => {
     // to receive parameters and composePath from pagePath and parameters
 
-    const treePageParent = getTreePageByPlaneID(tree, treePageParentPlaneID);
+    const treePageParent = getTreePlaneByPlaneID(tree, treePageParentPlaneID);
     // console.log('tree page parent', treePageParent);
 
     if (treePageParent) {
@@ -273,11 +273,44 @@ export const updateTreeWithNewPage = (
         // );
 
         const planeID = uuid.generate();
-        const newTreePage: TreePage = {
-            pageID,
+        const newTreePlane: TreePlane = {
+            sourceID: pageID,
             path: pagePath,
+            pathDivisions: {
+                protocol: '',
+                origin: {
+                    value: '',
+                    controlled: false,
+                },
+                route: {
+                    value: '',
+                    parameters: {},
+                    query: {},
+                },
+                space: {
+                    value: '',
+                    parameters: {},
+                    query: {},
+                },
+                universe: {
+                    value: '',
+                    parameters: {},
+                    query: {},
+                },
+                cluster: {
+                    value: '',
+                    parameters: {},
+                    query: {},
+                },
+                plane: {
+                    value: '',
+                    parameters: {},
+                    query: {},
+                },
+                valid: false,
+            },
             // parameters: extractedParameters,
-            parameters: {},
+            // parameters: {},
             planeID,
             width: 0,
             height: 0,
@@ -295,14 +328,14 @@ export const updateTreeWithNewPage = (
             linkCoordinates,
         };
 
-        const updatedTreePageParent = {...treePageParent};
-        if (updatedTreePageParent.children) {
-            updatedTreePageParent.children.push(newTreePage);
+        const updatedTreePlaneParent = {...treePageParent};
+        if (updatedTreePlaneParent.children) {
+            updatedTreePlaneParent.children.push(newTreePlane);
         } else {
-            updatedTreePageParent.children = [newTreePage];
+            updatedTreePlaneParent.children = [newTreePlane];
         }
 
-        const updatedTree = updateTreePage(tree, updatedTreePageParent);
+        const updatedTree = updateTreePlane(tree, updatedTreePlaneParent);
 
         return {
             pluridPlaneID: planeID,
@@ -318,9 +351,9 @@ export const updateTreeWithNewPage = (
 
 
 export const removePageFromTree = (
-    tree: TreePage[],
+    tree: TreePlane[],
     pluridPlaneID: string,
-): TreePage[] => {
+): TreePlane[] => {
     const updatedTree = tree.filter(page => {
         if (page.planeID === pluridPlaneID) {
             return false;
@@ -340,8 +373,8 @@ export const removePageFromTree = (
 
 
 export const toggleChildren = (
-    children: TreePage[],
-): TreePage[] => {
+    children: TreePlane[],
+): TreePlane[] => {
     const updatedChildren = children.map(child => {
         if (child.children) {
             const updatedChild = {
@@ -352,7 +385,7 @@ export const toggleChildren = (
             return updatedChild;
         }
 
-        const updatedChild: TreePage = {
+        const updatedChild: TreePlane = {
             ...child,
             show: !child.show,
         };
@@ -364,14 +397,14 @@ export const toggleChildren = (
 
 
 export const togglePageFromTree = (
-    tree: TreePage[],
+    tree: TreePlane[],
     pluridPlaneID: string,
-): TreePage[] => {
-    const updatedTree: TreePage[] = [];
+): TreePlane[] => {
+    const updatedTree: TreePlane[] = [];
 
     for (const page of tree) {
         if (page.planeID === pluridPlaneID) {
-            const updatedPage: TreePage = {
+            const updatedPage: TreePlane = {
                 ...page,
                 show: !page.show,
                 children: [],

@@ -1,6 +1,6 @@
 import {
     PluridConfiguration,
-    TreePage,
+    TreePlane,
 
     ROOTS_GAP,
     defaultConfiguration,
@@ -17,13 +17,13 @@ import {
 
 
 const computeColumnLayout = (
-    roots: TreePage[],
+    roots: TreePlane[],
     columns: number = 1,
     columnLength?: number,
     gap: number = ROOTS_GAP,
     configuration: PluridConfiguration = defaultConfiguration,
-): TreePage[] => {
-    const tree: TreePage[] = [];
+): TreePlane[] => {
+    const tree: TreePlane[] = [];
     const configurationWidth = configuration.elements.plane.width;
     const width = mathematics.numbers.checkIntegerNonUnit(configurationWidth)
         ? configurationWidth
@@ -42,7 +42,7 @@ const computeColumnLayout = (
         const translateX = columnIndex * (width + gapValue);
         const translateY = rowIndex * (height + gapValue);
 
-        const treePage: TreePage = {
+        const treePage: TreePlane = {
             ...root,
             location: {
                 translateX,
