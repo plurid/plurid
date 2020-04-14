@@ -3,22 +3,22 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    PluridInternalStatePage,
+    PluridInternalStatePlane,
 
-    PagePath,
+    PlanePath,
     PathParameters,
 } from '@plurid/plurid-data';
 
 
 
 export const registerPaths = (
-    pages: PluridInternalStatePage[],
-): PagePath[] => {
-    const paths: PagePath[] = [];
+    pages: PluridInternalStatePlane[],
+): PlanePath[] => {
+    const paths: PlanePath[] = [];
 
     for (const page of pages) {
         const handledPath = handlePath(page.path);
-        const path: PagePath = {
+        const path: PlanePath = {
             id: uuid.generate(),
             pageID: page.id,
             address: page.path,
@@ -69,7 +69,7 @@ const handlePath = (
 
     // const composedRegex = composePathRegex(match);
 
-    // const parameters: PageParameter[] = [];
+    // const parameters: PlaneParameter[] = [];
 
     // for (const [index, subpath] of match.entries()) {
     //     if (

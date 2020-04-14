@@ -1,7 +1,7 @@
 import {
-    PluridInternalContextPage,
-    PluridInternalStatePage,
-    TreePage,
+    PluridInternalContextPlane,
+    PluridInternalStatePlane,
+    TreePlane,
     LinkCoordinates,
 } from '@plurid/plurid-data';
 
@@ -11,14 +11,47 @@ import {
 
 
 
-export const createTreePage = (
-    contextPage: PluridInternalContextPage,
-    documentPage: PluridInternalStatePage,
+export const createTreePlane = (
+    contextPlane: PluridInternalContextPlane,
+    documentPlane: PluridInternalStatePlane,
 ) => {
-    const treePage: TreePage = {
-        pageID: contextPage.id,
+    const treePlane: TreePlane = {
+        sourceID: contextPlane.id,
         planeID: uuid.generate(),
-        path: contextPage.path,
+        path: contextPlane.path,
+        pathDivisions: {
+            protocol: '',
+            origin: {
+                value: '',
+                controlled: false,
+            },
+            route: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            space: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            universe: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            cluster: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            plane: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            valid: false,
+        },
         height: 0,
         width: 0,
         location: {
@@ -28,32 +61,32 @@ export const createTreePage = (
             rotateX: 0,
             rotateY: 0,
         },
-        // show: documentPage.root,
+        // show: documentPlane.root,
         show: true,
     };
-    return treePage;
+    return treePlane;
 }
 
 
-export const updateTreePage = (
-    tree: TreePage[],
-    page: TreePage,
-): TreePage[] => {
-    const updatedTree = tree.map(treePage => {
-        if (treePage.planeID === page.planeID) {
+export const updateTreePlane = (
+    tree: TreePlane[],
+    page: TreePlane,
+): TreePlane[] => {
+    const updatedTree = tree.map(treePlane => {
+        if (treePlane.planeID === page.planeID) {
             return {
                 ...page,
             };
         }
 
-        if (treePage.children) {
+        if (treePlane.children) {
             return {
-                ...treePage,
-                children: updateTreePage(treePage.children, page),
+                ...treePlane,
+                children: updateTreePlane(treePlane.children, page),
             };
         }
 
-        return treePage;
+        return treePlane;
     });
 
     return updatedTree;
@@ -62,36 +95,36 @@ export const updateTreePage = (
 
 
 export const updateTreeByPlaneIDWithLinkCoordinates = (
-    tree: TreePage[],
+    tree: TreePlane[],
     planeID: string,
     linkCoordinates: LinkCoordinates,
-): TreePage[] => {
-    const updatedTree = tree.map(treePage => {
-        if (treePage.planeID === planeID) {
-            const updatedPage = {
-                ...treePage,
+): TreePlane[] => {
+    const updatedTree = tree.map(treePlane => {
+        if (treePlane.planeID === planeID) {
+            const updatedPlane = {
+                ...treePlane,
                 linkCoordinates,
             };
 
-            return updatedPage;
+            return updatedPlane;
         }
 
-        if (treePage.children) {
+        if (treePlane.children) {
             const updatedChildren = updateTreeByPlaneIDWithLinkCoordinates(
-                treePage.children,
+                treePlane.children,
                 planeID,
                 linkCoordinates,
             );
 
-            const updatedPage = {
-                ...treePage,
+            const updatedPlane = {
+                ...treePlane,
                 children: updatedChildren,
             };
 
-            return updatedPage;
+            return updatedPlane;
         }
 
-        return treePage;
+        return treePlane;
     });
 
     return updatedTree;
