@@ -46,49 +46,70 @@ export interface PluridLink {
      *
      * The syntax `/page` is used to reference only the plurid pages within the same plurid space.
      *
-     * In order to reference pages from other
+     * In order to reference
      *
-     * + spaces within the same route,
-     * + spaces within other routes,
-     * + spaces within other controlled origins,
-     * + spaces within other foreign origins,
+     * + planes within other clusters,
+     * + planes within other universes,
+     * + planes within other spaces of the same route,
+     * + planes within other spaces of a different route,
+     * + planes within other spaces of a different, controlled origin,
+     * + planes within other spaces of a different, foreign origins,
      *
      * the syntax `://` has to be used.
      *
      *
-     * A plurid link in the same space.
+     * A plurid link in the same space, same universe, same cluster.
      *
-     * `://page`
+     * `://plane`
      *
      * example: `://dashboard`
      *
      *
+     * A plurid link to another cluster in the same universe, in the same space.
+     *
+     * `://cluster://plane`
+     *
+     * example: `://two://dashboard`
+     *
+     *
+     * A plurid link to another universe in the same space.
+     *
+     * `://universe://cluster://page`
+     *
+     * example: `://one://two://dashboard`
+     *
+     *
      * A plurid link to a different space within the same route
      *
-     * `://space://page`
+     * `://space://universe://cluster://plane`
      *
      * example: `://user123://dashboard`
      *
      *
      * A plurid link to a different space within an another route.
      *
-     * `://route://space://page`
+     * `://route://space://universe://cluster://plane`
      *
      * example: `://payment://user123://dashboard`
      *
      *
      * A plurid link to a different space within a controlled origin.
      *
-     * `https://controlled-origin://route://space://page`
+     * `https://controlled-origin://route://space://universe://cluster://plane`
      *
      * example: `https://example-c.com://payment://user123://dashboard`
      *
      *
      * A plurid link to a different space within a foreign origin.
      *
-     * `https://foreign-origin://route://space://page`
+     * `https://foreign-origin://route://space://universe://cluster://plane`
      *
      * example: `https://example-f.com://payment://user123://dashboard`
+     *
+     *
+     * To handle clusters of clusters use the `|>` syntax, which shows a nesting of clusters,
+     * e.g. `://clusterC|>clusterB|>clusterA`,
+     * denotes that Cluster C includes Cluster B which includes Cluster A.
      *
      */
     page: string;
