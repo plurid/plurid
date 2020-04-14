@@ -5,10 +5,10 @@ import {
 
 
 export interface PluridLink {
-    /**
-     * The name of the document. If not specified defaults to the current one.
-     */
-    document?: string;
+    // /**
+    //  * The name of the document. If not specified defaults to the current one.
+    //  */
+    // document?: string;
 
     /**
      * The path of the page.
@@ -112,7 +112,7 @@ export interface PluridLink {
      * denotes that Cluster C includes Cluster B which includes Cluster A.
      *
      */
-    page: string;
+    path: string;
 
     /**
      * Format the link as a simple anchor element. Default `false`.
