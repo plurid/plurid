@@ -1,5 +1,5 @@
 import {
-    TreePage,
+    TreePlane,
     SpaceLocation,
     LinkCoordinates,
     PluridView,
@@ -203,14 +203,14 @@ export interface ScaleDownWithAction {
 export const SET_INITIAL_TREE = 'SET_INITIAL_TREE';
 export interface SetInitialTreeAction {
     type: typeof SET_INITIAL_TREE;
-    payload: TreePage[];
+    payload: TreePlane[];
 }
 
 
 export const SET_TREE = 'SET_TREE';
 export interface SetTreeAction {
     type: typeof SET_TREE;
-    payload: TreePage[];
+    payload: TreePlane[];
 }
 
 
@@ -255,10 +255,10 @@ export interface SetSpaceSizeAction {
 }
 
 
-export const UPDATE_SPACE_TREE_PAGE = 'UPDATE_SPACE_TREE_PAGE';
-export interface UpdateSpaceTreePageAction {
-    type: typeof UPDATE_SPACE_TREE_PAGE;
-    payload: TreePage;
+export const UPDATE_SPACE_TREE_PLANE = 'UPDATE_SPACE_TREE_PLANE';
+export interface UpdateSpaceTreePlaneAction {
+    type: typeof UPDATE_SPACE_TREE_PLANE;
+    payload: TreePlane;
 }
 
 
@@ -305,8 +305,8 @@ export interface State {
     translationX: number;
     translationY: number;
     translationZ: number;
-    initialTree: TreePage[];
-    tree: TreePage[];
+    initialTree: TreePlane[];
+    tree: TreePlane[];
     activeDocumentID: string;
     camera: Coordinates;
     viewSize: ViewSize;
@@ -355,7 +355,7 @@ export type Actions = SetSpaceLoadingAction
     | SpaceResetTransformAction
     | SetViewSizeAction
     | SetSpaceSizeAction
-    | UpdateSpaceTreePageAction
+    | UpdateSpaceTreePlaneAction
     | UpdateSpaceLinkCoordinatesAction
     | SpaceSetViewAction
     | SpaceSetCulledViewAction;

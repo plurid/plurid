@@ -1,13 +1,13 @@
 import {
-    /** interfaces */
-    PluridPage,
+    /** Interfaces */
+    PluridPlane,
     PluridView,
-    PluridDocument,
+    PluridUniverse,
     PluridConfiguration,
     PluridPartialConfiguration,
     RecursivePartial,
 
-    /** enumerations */
+    /** Enumerations */
     LAYOUT_TYPES as SPACE_LAYOUT,
     SIZES,
     TRANSFORM_MODES,
@@ -50,9 +50,9 @@ const {
 
 export {
     /** Interfaces */
-    PluridPage,
+    PluridPlane,
     PluridView,
-    PluridDocument,
+    PluridUniverse,
     PluridConfiguration,
     PluridPartialConfiguration,
     RecursivePartial,

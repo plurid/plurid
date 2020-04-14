@@ -6,8 +6,8 @@ import {
 
 import {
     PluridPartialConfiguration,
-    PluridPage,
-    PluridDocument,
+    PluridPlane,
+    PluridUniverse,
     PluridView,
 } from '@plurid/plurid-data';
 
@@ -21,9 +21,9 @@ import {
 
 
 export interface ServerApplicationData {
-    pages: PluridPage[],
+    planes: PluridPlane[],
     view: string[] | PluridView[],
-    documents: PluridDocument[],
+    universes: PluridUniverse[],
     configuration: PluridPartialConfiguration,
 }
 
@@ -40,9 +40,9 @@ export const serverComputeApplication = (
     data: ServerApplicationData,
 ): any => {
     const {
-        pages,
+        planes,
         view,
-        documents,
+        universes,
         configuration,
     } = data;
 
@@ -60,7 +60,7 @@ export const serverComputeApplication = (
     const commonConfiguration = generalEngine.configuration.default(configuration);
 
     const spaceTree = new space.tree.Tree({
-        pages: [],
+        planes: [],
         configuration: commonConfiguration,
         view,
     });
