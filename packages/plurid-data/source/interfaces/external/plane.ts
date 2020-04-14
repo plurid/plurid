@@ -120,6 +120,7 @@ export interface PluridView {
 export interface PluridCluster {
     id: string;
     name?: string;
+    planes?: PluridPlane[];
     clusters?: PluridCluster[];
     layout?: PluridLayout;
 }

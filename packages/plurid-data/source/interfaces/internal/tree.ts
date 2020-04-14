@@ -29,12 +29,19 @@ export interface TreePage {
 
 export interface PathDivisions {
     protocol: string;
-    origin: string;
+    origin: PathOriginDivision;
     route: PathRouteDivision;
     space: PathSpaceDivision;
     universe: PathUniverseDivision;
+    cluster: PathClusterDivision;
     plane: PathPlaneDivision;
     valid: boolean;
+}
+
+
+export interface PathOriginDivision {
+    value: string;
+    controlled: boolean;
 }
 
 
@@ -53,6 +60,13 @@ export interface PathSpaceDivision {
 
 
 export interface PathUniverseDivision {
+    value: string;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
+}
+
+
+export interface PathClusterDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;

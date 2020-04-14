@@ -54,6 +54,18 @@ export interface PluridApplication {
     universes?: PluridUniverse[];
 
     /**
+     * Controlled origins.
+     * Defaults to the one serving the application.
+     */
+    origins?: string[];
+
+    /**
+     * Origins which the plurid links can access.
+     * Default `controlled`.
+     */
+    allowedOrigins?: 'controlled' | 'all';
+
+    /**
      * Show or not the default Not Found component, or pass a custom component
      */
     notFound?: boolean | PluridComponent;
