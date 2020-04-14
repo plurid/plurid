@@ -95,8 +95,8 @@ const reducer = (
             return resolvers.setViewSize(state, action);
         case Types.SET_SPACE_SIZE:
             return resolvers.setSpaceSize(state, action);
-        case Types.UPDATE_SPACE_TREE_PAGE:
-            return resolvers.updateSpaceTreePage(state, action);
+        case Types.UPDATE_SPACE_TREE_PLANE:
+            return resolvers.updateSpaceTreePlane(state, action);
         case Types.UPDATE_SPACE_LINK_COORDINATES:
             return resolvers.updateSpaceLinkCoordinates(state, action);
 

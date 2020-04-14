@@ -8,7 +8,7 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    TreePage,
+    TreePlane,
     PluridConfiguration,
     SIZES,
     PLURID_ENTITY_ROOTS,
@@ -41,7 +41,7 @@ interface PluridRootsStateProperties {
     spaceTranslationX: number;
     spaceTranslationY: number;
     spaceTranslationZ: number;
-    stateTree: TreePage[];
+    stateTree: TreePlane[];
 }
 
 interface PluridRootsDispatchProperties {
@@ -148,11 +148,11 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                 />
             )}
 
-            {stateTree.map(page => {
+            {stateTree.map(plane => {
                 return (
                     <PluridRoot
-                        key={page.planeID}
-                        page={page}
+                        key={plane.planeID}
+                        plane={plane}
                     />
                 );
             })}

@@ -20,9 +20,9 @@ import {
 
     /** interfaces */
     PluridLink as PluridLinkOwnProperties,
-    TreePage,
+    TreePlane,
     Indexed,
-    PluridInternalStateDocument,
+    PluridInternalStateUniverse,
     PluridConfiguration,
     PluridRouterRoute,
 } from '@plurid/plurid-data';
@@ -71,10 +71,10 @@ const previewDisappearTime = 400;
 
 
 interface PluridLinkStateProperties {
-    stateTree: TreePage[];
+    stateTree: TreePlane[];
     stateGeneralTheme: Theme;
     stateActiveDocumentID: string;
-    stateDocuments: Indexed<PluridInternalStateDocument>;
+    stateDocuments: Indexed<PluridInternalStateUniverse>;
     stateConfiguration: PluridConfiguration,
     stateViewSize: ViewSize,
 }
@@ -129,7 +129,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [mouseOver, setMouseOver] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
     const [showLink, setShowLink] = useState(false);
-    const [pageID, setPageID] = useState('');
+    const [planeID, setPlaneID] = useState('');
     const [pluridPlaneID, setPluridPlaneID] = useState('');
     const [parentPlaneID, setParentPlaneID] = useState('');
     const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
@@ -169,7 +169,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const updateTreeWithLink = () => {
-        if (!pageID) {
+        if (!planeID) {
             return;
         }
 
@@ -182,11 +182,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
 
         const {
-            pages,
+            planes,
         } = activeDocument;
 
-        const pageByID = pages[pageID];
-        if (!pageByID) {
+        const planeByID = planes[planeID];
+        if (!planeByID) {
             return;
         }
 
@@ -197,7 +197,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             stateTree,
             parentPlaneID,
             pagePath,
-            pageByID.id,
+            planeByID.id,
             linkCoordinates,
             {},
         );
@@ -266,7 +266,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
      * Get Plurid Link Coordinates
      */
     useEffect(() => {
-        const parentPlaneID = generalEngine.plane.getPluridPlaneIDByData(linkElement.current);
+        const parentPlaneID = generalEngine.planes.getPluridPlaneIDByData(linkElement.current);
         setParentPlaneID(parentPlaneID);
 
         const linkCoordinates = getPluridLinkCoordinates();
@@ -320,12 +320,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
 
         const {
-            pages,
+            planes,
         } = activeDocument;
 
-        const routes: PluridRouterRoute<any>[] = Object.values(pages).map(page => {
+        const routes: PluridRouterRoute<any>[] = Object.values(planes).map(plane => {
             const route: PluridRouterRoute<any> =  {
-                path: page.path,
+                path: plane.path,
                 view: '',
             };
             return route;
@@ -339,12 +339,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
-        const page = Object.values(pages).find(p => p.path === matchedRoute.route.path);
+        const page = Object.values(planes).find(p => p.path === matchedRoute.route.path);
         if (!page) {
             return;
         }
 
-        setPageID(page.id);
+        setPlaneID(page.id);
     }, []);
 
 
@@ -375,7 +375,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 >
                     <Preview
                         document={document}
-                        pageID={pageID}
+                        planeID={planeID}
                         linkCoordinates={linkCoordinates}
                     />
                 </Portal>
@@ -401,7 +401,7 @@ const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridLinkDispatchProperties => ({
     dispatchSetTree: (
-        tree: TreePage[],
+        tree: TreePlane[],
     ) => dispatch(
         actions.space.setTree(tree),
     ),

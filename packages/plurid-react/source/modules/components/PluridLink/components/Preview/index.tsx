@@ -29,7 +29,7 @@ import selectors from '../../../../services/state/selectors';
 
 interface PreviewOwnProperties {
     document: string | undefined;
-    pageID: string;
+    planeID: string;
     linkCoordinates: any;
 }
 
@@ -52,7 +52,7 @@ const Preview: React.FC<PreviewProperties> = (
     const {
         /** own */
         document,
-        pageID,
+        planeID,
         linkCoordinates,
 
         /** state */
@@ -65,19 +65,19 @@ const Preview: React.FC<PreviewProperties> = (
     const context: PluridContext = useContext(Context);
 
     const {
-        documents,
+        universes,
     } = context;
 
     const documentID = document || 'default';
-    const activeDocument = documents[documentID];
-    const activePages = activeDocument.pages;
-    const pluridPage = activePages[pageID];
+    const activeUniverse = universes[documentID];
+    const activePlanes = activeUniverse.planes;
+    const pluridPlane = activePlanes[planeID];
 
-    if (!pluridPage) {
+    if (!pluridPlane) {
         return (<></>);
     }
 
-    const Element = pluridPage.component.element;
+    const Element = pluridPlane.component.element;
 
 
     /** render */

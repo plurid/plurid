@@ -505,11 +505,11 @@ export const setSpaceSize = (
 }
 
 
-export const updateSpaceTreePage = (
+export const updateSpaceTreePlane = (
     state: Types.State,
-    action: Types.UpdateSpaceTreePageAction,
+    action: Types.UpdateSpaceTreePlaneAction,
 ): Types.State => {
-    const updatedTree = generalEngine.tree.updateTreePage(state.tree, action.payload);
+    const updatedTree = generalEngine.tree.updateTreePlane(state.tree, action.payload);
 
     return {
         ...state,

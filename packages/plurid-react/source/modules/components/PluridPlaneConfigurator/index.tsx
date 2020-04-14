@@ -81,7 +81,7 @@ const PluridPlaneConfigurator: React.FC<PluridPlaneConfiguratorPropertiesWithChi
      * Get Plurid Link Coordinates
      */
     useEffect(() => {
-        const parentPlaneID = generalEngine.plane.getPluridPlaneIDByData(
+        const parentPlaneID = generalEngine.planes.getPluridPlaneIDByData(
             configuratorElement.current,
         );
         setParentPlaneID(parentPlaneID);

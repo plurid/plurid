@@ -18,7 +18,7 @@ import PluridPlane from '../PluridPlane';
 import {
     PLURID_ENTITY_ROOT,
 
-    TreePage,
+    TreePlane,
     PluridContext
 } from '@plurid/plurid-data';
 
@@ -30,7 +30,7 @@ import selectors from '../../services/state/selectors';
 
 
 export interface PluridRootOwnProperties {
-    page: TreePage;
+    plane: TreePlane;
 }
 
 interface PluridRootStateProperties {
@@ -51,12 +51,12 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     const {
         pageContext: PageContext,
         pageContextValue,
-        documents,
+        universes,
     } = context;
 
     const {
         /** own */
-        page,
+        plane,
 
         /** state */
         activeDocumentID,
@@ -64,14 +64,14 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
 
     const {
         location,
-    } = page;
+    } = plane;
 
     const [childrenPlanes, setChildrenPlanes] = useState<JSX.Element[]>([]);
 
-    const computeChildrenPlanes = (page: TreePage) => {
-        if (page.children) {
-            page.children.map(child => {
-                const _page = activePages[child.pageID];
+    const computeChildrenPlanes = (plane: TreePlane) => {
+        if (plane.children) {
+            plane.children.map(child => {
+                const _page = activePlanes[child.sourceID];
 
                 let plane = (<></>);
                 if (_page && child.show) {
@@ -80,15 +80,16 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                     const Page = _page.component.element;
                     const properties = _page.component.properties || {};
                     const pluridProperties = {
-                        parameters: child.parameters || {},
+                        paramters: {},
+                        // parameters: child.parameters || {},
                         query: {},
                     };
 
                     plane = (
                         <PluridPlane
                             key={child.planeID}
-                            page={_page}
-                            treePage={child}
+                            plane={_page}
+                            treePlane={child}
                             planeID={child.planeID}
                             location={child.location}
                         >
@@ -128,36 +129,37 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         // check if the plane is already in the array
         // or get a better dependency than the JSON stringification
         setChildrenPlanes([]);
-        computeChildrenPlanes(page);
+        computeChildrenPlanes(plane);
     }, [
-        JSON.stringify(page),
+        JSON.stringify(plane),
     ]);
 
-    const activeDocument = documents[activeDocumentID];
+    const activeDocument = universes[activeDocumentID];
     // console.log('activeDocument', activeDocument);
     if (!activeDocument) {
         return (<></>);
     }
     // console.log('activeDocument', activeDocument);
-    const activePages = activeDocument.pages;
-    if (!activePages) {
+    const activePlanes = activeDocument.planes;
+    if (!activePlanes) {
         return (<></>);
     }
     // console.log('activePages', activePages);
 
-    const pluridPage = activePages[page.pageID];
+    const pluridPlane = activePlanes[plane.sourceID];
     // console.log('pluridPage', pluridPage);
 
-    if (!pluridPage) {
+    if (!pluridPlane) {
         return (<></>);
     }
 
-    const Page = pluridPage.component.element;
+    const Page = pluridPlane.component.element;
     // console.log(Page);
 
-    const pageProperties = pluridPage.component.properties || {};
+    const pageProperties = pluridPlane.component.properties || {};
     const pluridProperties = {
-        parameters: page.parameters || {},
+        parameters: {},
+        // parameters: page.parameters || {},
         query: {},
     };
 
@@ -166,9 +168,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
             data-plurid-entity={PLURID_ENTITY_ROOT}
         >
             <PluridPlane
-                page={pluridPage}
-                treePage={page}
-                planeID={page.planeID}
+                plane={pluridPlane}
+                treePlane={plane}
+                planeID={plane.sourceID}
                 location={location}
             >
                 {!PageContext

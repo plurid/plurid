@@ -16,8 +16,8 @@ import PlaneControls from './components/PlaneControls';
 import PlaneContent from './components/PlaneContent';
 
 import {
-    PluridPage,
-    TreePage,
+    PluridPlane,
+    TreePlane,
     PluridConfiguration,
     PLURID_ENTITY_PLANE,
 } from '@plurid/plurid-data';
@@ -36,8 +36,8 @@ import actions from '../../services/state/actions';
 
 interface PluridPlaneOwnProperties {
     planeID: string;
-    page: PluridPage;
-    treePage: TreePage;
+    plane: PluridPlane;
+    treePlane: TreePlane;
     location: any;
 }
 
@@ -47,11 +47,11 @@ interface PluridPlaneStateProperties {
     generalTheme: Theme;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
-    tree: TreePage[];
+    tree: TreePlane[];
 }
 
 interface PluridPlaneDispatchProperties {
-    updateSpaceTreePage: typeof actions.space.updateSpaceTreePage;
+    updateSpaceTreePlane: typeof actions.space.updateSpaceTreePlane;
 }
 
 type PluridPlaneProperties = PluridPlaneOwnProperties
@@ -64,8 +64,8 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
     const {
         /** own */
         planeID,
-        page,
-        treePage,
+        plane,
+        treePlane,
         location,
 
         children,
@@ -77,7 +77,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
         // tree,
 
         /** dispatch */
-        updateSpaceTreePage,
+        updateSpaceTreePlane,
     } = properties;
 
     const {
@@ -104,13 +104,13 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
     const updatePlaneSize = (
         size: any,
     ) => {
-        const updatedTreePage = {
-            ...treePage,
+        const updatedTreePlane = {
+            ...treePlane,
         };
-        updatedTreePage.width = size.width;
-        updatedTreePage.height = size.height;
+        updatedTreePlane.width = size.width;
+        updatedTreePlane.height = size.height;
 
-        updateSpaceTreePage(updatedTreePage);
+        updateSpaceTreePlane(updatedTreePlane);
     }
 
     return (
@@ -118,7 +118,7 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
             theme={generalTheme}
             planeControls={showPlaneControls}
             planeOpacity={planeOpacity}
-            show={treePage.show}
+            show={treePlane.show}
             id={planeID}
             style={{
                 width,
@@ -137,14 +137,14 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
             data-plurid-plane={planeID}
             data-plurid-entity={PLURID_ENTITY_PLANE}
         >
-            {treePage.parentPlaneID && (
+            {treePlane.parentPlaneID && (
                 <PlaneBridge />
             )}
 
             {showPlaneControls && (
                 <PlaneControls
-                    page={page}
-                    treePage={treePage}
+                    plane={plane}
+                    treePlane={treePlane}
                     mouseOver={mouseOver}
                 />
             )}
@@ -174,8 +174,8 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridPlaneDispatchProperties => ({
-    updateSpaceTreePage: (treePage: TreePage) => dispatch(
-        actions.space.updateSpaceTreePage(treePage),
+    updateSpaceTreePlane: (treePlane: TreePlane) => dispatch(
+        actions.space.updateSpaceTreePlane(treePlane),
     ),
 });
 

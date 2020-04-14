@@ -15,8 +15,8 @@ import {
 } from './styled';
 
 import {
-    PluridPage,
-    TreePage,
+    PluridPlane,
+    TreePlane,
     PluridConfiguration,
 } from '@plurid/plurid-data';
 
@@ -32,8 +32,8 @@ import selectors from '../../../../services/state/selectors';
 
 
 interface PlaneControlsOwnProperties {
-    page: PluridPage;
-    treePage: TreePage;
+    plane: PluridPlane;
+    treePlane: TreePlane;
     mouseOver: boolean;
 }
 
@@ -53,8 +53,8 @@ type PlaneControlsProperties = PlaneControlsOwnProperties
 const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
     const {
         /** own */
-        page,
-        treePage,
+        plane,
+        treePlane,
         mouseOver,
 
         /** state */
@@ -81,20 +81,20 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
         }
     }
 
-    const [path, setPath] = useState(basePath + treePage.path);
+    const [path, setPath] = useState(basePath + treePlane.path);
 
     const onPathInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPath(event.target.value);
 
         if (pathbar.onChange) {
-            const id = page.id || page.path;
+            const id = plane.id || plane.path;
             pathbar.onChange(event, id);
         }
     }
 
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (pathbar.onKeyDown) {
-            const id = page.id || page.path;
+            const id = plane.id || plane.path;
             pathbar.onKeyDown(event, id);
         }
     }

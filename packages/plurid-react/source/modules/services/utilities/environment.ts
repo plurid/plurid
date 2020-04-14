@@ -1,4 +1,4 @@
-const MODE_ENV = process.env.MODE_ENV || '';
+const ENV_MODE = process.env.ENV_MODE || '';
 
 const environments = {
     production: 'production',
@@ -8,10 +8,10 @@ const environments = {
 }
 
 const environment = {
-    production: environments[MODE_ENV] == 'production' ? true : false,
-    development: environments[MODE_ENV] == 'development' ? true : false,
-    local: environments[MODE_ENV] == 'local' ? true : false,
-    localExternal: environments[MODE_ENV] == 'localexternal' ? true : false,
+    production: environments[ENV_MODE] == 'production' ? true : false,
+    development: environments[ENV_MODE] == 'development' ? true : false,
+    local: environments[ENV_MODE] == 'local' ? true : false,
+    localExternal: environments[ENV_MODE] == 'localexternal' ? true : false,
 }
 
 export default environment;

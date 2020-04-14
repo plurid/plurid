@@ -7,7 +7,7 @@ import {
 
 
 const defaultContext: PluridContext = {
-    documents: {},
+    universes: {},
 }
 
 const Context = React.createContext(defaultContext);

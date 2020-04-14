@@ -1,5 +1,5 @@
 import {
-    TreePage,
+    TreePlane,
     SpaceLocation,
     PluridView,
 } from '@plurid/plurid-data';
@@ -275,7 +275,7 @@ export const scaleDownWith = (
 
 
 export const setInitialTree = (
-    payload: TreePage[],
+    payload: TreePlane[],
 ): Types.SetInitialTreeAction => {
     return {
         type: Types.SET_INITIAL_TREE,
@@ -285,7 +285,7 @@ export const setInitialTree = (
 
 
 export const setTree = (
-    payload: TreePage[],
+    payload: TreePlane[],
 ): Types.SetTreeAction => {
     return {
         type: Types.SET_TREE,
@@ -333,11 +333,11 @@ export const setSpaceSize = (
 
 
 
-export const updateSpaceTreePage = (
-    payload: TreePage,
-): Types.UpdateSpaceTreePageAction => {
+export const updateSpaceTreePlane = (
+    payload: TreePlane,
+): Types.UpdateSpaceTreePlaneAction => {
     return {
-        type: Types.UPDATE_SPACE_TREE_PAGE,
+        type: Types.UPDATE_SPACE_TREE_PLANE,
         payload,
     };
 }
