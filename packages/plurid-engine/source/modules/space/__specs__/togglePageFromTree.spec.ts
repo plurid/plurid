@@ -1,4 +1,8 @@
 import {
+    /** constants */
+    defaultTreePlane,
+
+    /** interfaces */
     TreePlane,
 } from '@plurid/plurid-data';
 
@@ -8,82 +12,57 @@ import {
 
 
 
-const location = {
-    translateX: 0,
-    translateY: 0,
-    translateZ: 0,
-    rotateX: 0,
-    rotateY: 0,
-};
-
-
 describe('togglePageFromTree', () => {
     it('toggle page level one child', () => {
         const tree: TreePlane[] = [
             {
-                pageID: '1',
+                ...defaultTreePlane,
+                sourceID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
                 children: [
                     {
-                        pageID: '2',
+                        ...defaultTreePlane,
+                        sourceID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
-                        location,
-                        height: 0,
-                        width: 0,
                         show: true,
-                        children: [],
                     }
                 ],
             },
             {
-                pageID: '3',
+                ...defaultTreePlane,
+                sourceID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
-                children: [],
             },
         ];
 
         const updatedTree: TreePlane[] = [
             {
-                pageID: '1',
+                ...defaultTreePlane,
+                sourceID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
                 children: [
                     {
-                        pageID: '2',
+                        ...defaultTreePlane,
+                        sourceID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
-                        location,
-                        height: 0,
-                        width: 0,
                         show: false,
-                        children: [],
                     }
                 ],
             },
             {
-                pageID: '3',
+                ...defaultTreePlane,
+                sourceID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
-                children: [],
             },
         ];
 
@@ -96,89 +75,67 @@ describe('togglePageFromTree', () => {
     it.only('toggle page', () => {
         const tree: TreePlane[] = [
             {
-                pageID: '1',
+                ...defaultTreePlane,
+                sourceID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
                 children: [
                     {
-                        pageID: '2',
+                        ...defaultTreePlane,
+                        sourceID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
-                        location,
-                        height: 0,
-                        width: 0,
                         show: true,
-                        children: [],
                     }
                 ],
             },
             {
-                pageID: '3',
+                ...defaultTreePlane,
+                sourceID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
-                children: [],
             },
             {
-                pageID: '4',
+                ...defaultTreePlane,
+                sourceID: '4',
                 planeID: 'ddd',
                 path: '/ddd',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
-                children: [],
             },
         ];
 
         const updatedTree: TreePlane[] = [
             {
-                pageID: '1',
+                ...defaultTreePlane,
+                sourceID: '1',
                 planeID: 'aaa',
                 path: '/aaa',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
                 children: [
                     {
-                        pageID: '2',
+                        ...defaultTreePlane,
+                        sourceID: '2',
                         planeID: 'bbb',
                         path: '/aaa/bbb',
-                        location,
-                        height: 0,
-                        width: 0,
                         show: false,
-                        children: [],
                     }
                 ],
             },
             {
-                pageID: '3',
+                ...defaultTreePlane,
+                sourceID: '3',
                 planeID: 'ccc',
                 path: '/ccc',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
-                children: [],
             },
             {
-                pageID: '4',
+                ...defaultTreePlane,
+                sourceID: '4',
                 planeID: 'ddd',
                 path: '/ddd',
-                location,
-                height: 0,
-                width: 0,
                 show: true,
-                children: [],
             },
         ];
 

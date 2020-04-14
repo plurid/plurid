@@ -1,44 +1,13 @@
 import {
+    /** constants */
+    defaultTreePlane,
+
+    /** interfaces */
     TreePlane,
 } from '@plurid/plurid-data';
 
 import computeColumnLayout from '../column';
 
-
-
-const pathDivisions = {
-    protocol: '',
-    origin: {
-        value: '',
-        controlled: false,
-    },
-    route: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    space: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    universe: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    cluster: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    plane: {
-        value: '',
-        parameters: {},
-        query: {},
-    },
-    valid: false,
-};
 
 
 describe('computeColumnLayout', () => {
@@ -60,63 +29,32 @@ describe('computeColumnLayout', () => {
 
         const treePages: TreePlane[] = [
             {
+                ...defaultTreePlane,
                 sourceID: '1',
-                height: 0,
-                width: 0,
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                },
                 path: '/page-1',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '2',
-                height: 0,
-                width: 0,
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                },
                 path: '/page-2',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '3',
-                height: 0,
-                width: 0,
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                },
                 path: '/page-3',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
         ]
 
         const locatedTree: TreePlane[] = [
             {
+                ...defaultTreePlane,
                 sourceID: '1',
-                height: 0,
-                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -125,15 +63,12 @@ describe('computeColumnLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-1',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '2',
-                height: 0,
-                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -142,15 +77,12 @@ describe('computeColumnLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-2',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '3',
-                height: 0,
-                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -159,7 +91,6 @@ describe('computeColumnLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-3',
-                pathDivisions,
                 planeID: '',
                 show: true,
                 children: [],
@@ -182,97 +113,46 @@ describe('computeColumnLayout', () => {
 
         const treePages: TreePlane[] = [
             {
+                ...defaultTreePlane,
                 sourceID: '1',
-                height: 0,
-                width: 0,
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                },
                 path: '/page-1',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '2',
-                height: 0,
-                width: 0,
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                },
                 path: '/page-2',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '3',
-                height: 0,
-                width: 0,
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                },
                 path: '/page-3',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '4',
-                height: 0,
-                width: 0,
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                },
                 path: '/page-4',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '5',
-                height: 0,
-                width: 0,
-                location: {
-                    rotateX: 0,
-                    rotateY: 0,
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                },
                 path: '/page-5',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
         ];
 
         const locatedTree: TreePlane[] = [
             {
+                ...defaultTreePlane,
                 sourceID: '1',
-                height: 0,
-                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -281,15 +161,12 @@ describe('computeColumnLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-1',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '2',
-                height: 0,
-                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -298,15 +175,12 @@ describe('computeColumnLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-2',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '3',
-                height: 0,
-                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -315,15 +189,12 @@ describe('computeColumnLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-3',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '4',
-                height: 0,
-                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -332,15 +203,12 @@ describe('computeColumnLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-4',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
             {
+                ...defaultTreePlane,
                 sourceID: '5',
-                height: 0,
-                width: 0,
                 location: {
                     rotateX: 0,
                     rotateY: 0,
@@ -349,10 +217,8 @@ describe('computeColumnLayout', () => {
                     translateZ: 0,
                 },
                 path: '/page-5',
-                pathDivisions,
                 planeID: '',
                 show: true,
-                children: [],
             },
         ];
 
