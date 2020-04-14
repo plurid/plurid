@@ -1,11 +1,15 @@
-export interface TreePage {
-    // pageID: string;
+export interface TreePlane {
+    /**
+     * The application defined plane ID that is the source
+     */
+    sourceID: string;
+
     planeID: string;
     parentPlaneID?: string;
 
     /**
      * The full path string, adequately formatted
-     * <protocol>://<origin>://<route>://<space>://<plane>
+     * <protocol>://<origin>://<route>://<space>://universe://cluster://<plane>
      */
     path: string;
 
@@ -13,17 +17,17 @@ export interface TreePage {
      *
      */
     pathDivisions: PathDivisions;
+    // parameters?: PathParameters;
+    // query?: PathQuery;
 
-    parameters?: PathParameters;
-    query?: PathQuery;
+    linkCoordinates?: LinkCoordinates;
     height: number;
     width: number;
-    location: TreePageLocation;
+    location: TreePlaneLocation;
     show: boolean;
-    children?: TreePage[];
+    children?: TreePlane[];
     bridgeLength?: number;
     planeAngle?: number;
-    linkCoordinates?: LinkCoordinates;
 }
 
 
@@ -90,7 +94,7 @@ export interface PathQuery {
 }
 
 
-export interface TreePageLocation {
+export interface TreePlaneLocation {
     translateX: number;
     translateY: number;
     translateZ: number;

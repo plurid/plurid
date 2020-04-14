@@ -9,7 +9,9 @@ export type InternationalizationRomanian = 'romanian';
 export type InternationalizationRussian = 'russian';
 export type InternationalizationSpanish = 'spanish';
 
-export type InternationalizationLanguageType = InternationalizationChinese
+
+export type InternationalizationLanguageType =
+    | InternationalizationChinese
     | InternationalizationEnglish
     | InternationalizationFrench
     | InternationalizationGerman
@@ -104,7 +106,8 @@ export type InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollLeft = '
 export type InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollRight = 'toolbarDrawerShortcutsArrowOrScrollRight';
 
 
-export type InternationalizationFieldType = InternationalizationFieldViewcubeFront
+export type InternationalizationFieldType =
+    | InternationalizationFieldViewcubeFront
     | InternationalizationFieldViewcubeBack
     | InternationalizationFieldViewcubeLeft
     | InternationalizationFieldViewcubeRight
@@ -269,86 +272,4 @@ export interface InternationalizationFields {
 }
 
 
-
-export interface Internationalization {
-    viewcubeFront: string;
-    viewcubeBack: string;
-    viewcubeLeft: string;
-    viewcubeRight: string;
-    viewcubeTop: string;
-    viewcubeBase: string;
-
-    toolbarTransformRotate: string;
-    toolbarTransformScale: string;
-    toolbarTransformTranslate: string;
-
-    toolbarDrawerGlobalTitle: string;
-    toolbarDrawerGlobalGeneralTheme: string;
-    toolbarDrawerGlobalInteractionTheme: string;
-    toolbarDrawerGlobalLanguage: string;
-
-    toolbarDrawerTransformTitle: string;
-    toolbarDrawerTransformMultiModeTransform: string;
-    toolbarDrawerTransformAllowRotationX: string;
-    toolbarDrawerTransformAllowRotationY: string;
-    toolbarDrawerTransformAllowTranslationX: string;
-    toolbarDrawerTransformAllowTranslationY: string;
-    toolbarDrawerTransformAllowTranslationZ: string;
-    toolbarDrawerTransformAllowScale: string;
-    toolbarDrawerTransformTouchTransform: string;
-
-    toolbarDrawerSpaceTitle: string;
-    toolbarDrawerSpaceTransparentUserInterface: string;
-    toolbarDrawerSpaceShowTransformOrigin: string;
-    toolbarDrawerSpaceTransformOriginSize: string;
-    toolbarDrawerSpacePlaneOpacity: string;
-    toolbarDrawerSpaceLayoutType: string;
-
-    toolbarDrawerToolbarTitle: string;
-    toolbarDrawerToolbarAlwaysOpaque: string;
-    toolbarDrawerToolbarShowTransformIcons: string;
-    toolbarDrawerToolbarShowTransformArrows: string;
-    toolbarDrawerToolbarConcealToolbar: string;
-
-    toolbarDrawerViewcubeTitle: string;
-    toolbarDrawerViewcubeShowViewcube: string;
-    toolbarDrawerViewcubeShowTransformButtons: string;
-    toolbarDrawerViewcubeAlwaysOpaque: string;
-    toolbarDrawerViewcubeConcealViewcube: string;
-
-    toolbarDrawerTechnicalTitle: string;
-    toolbarDrawerTechnicalCullingDistance: string;
-
-    toolbarDrawerShortcutsTitle: string;
-    toolbarDrawerShortcutsToggleFirstPerson: string;
-    toolbarDrawerShortcutsMoveForward: string;
-    toolbarDrawerShortcutsMoveBackward: string;
-    toolbarDrawerShortcutsMoveLeft: string;
-    toolbarDrawerShortcutsMoveRight: string;
-    toolbarDrawerShortcutsMoveUp: string;
-    toolbarDrawerShortcutsMoveDown: string;
-    toolbarDrawerShortcutsTurnLeft: string;
-    toolbarDrawerShortcutsTurnRight: string;
-    toolbarDrawerShortcutsTurnUp: string;
-    toolbarDrawerShortcutsTurnDown: string;
-    toolbarDrawerShortcutsRotateUp: string;
-    toolbarDrawerShortcutsRotateDown: string;
-    toolbarDrawerShortcutsRotateLeft: string;
-    toolbarDrawerShortcutsRotateRight: string;
-    toolbarDrawerShortcutsToggleRotate: string;
-    toolbarDrawerShortcutsTranslateUp: string;
-    toolbarDrawerShortcutsTranslateDown: string;
-    toolbarDrawerShortcutsTranslateLeft: string;
-    toolbarDrawerShortcutsTranslateRight: string;
-    toolbarDrawerShortcutsTranslateIn: string;
-    toolbarDrawerShortcutsTranslateOut: string;
-    toolbarDrawerShortcutsToggleTranslate: string;
-    toolbarDrawerShortcutsScaleUp: string;
-    toolbarDrawerShortcutsScaleDown: string;
-    toolbarDrawerShortcutsToggleScale: string;
-
-    toolbarDrawerShortcutsArrowOrScrollUp: string;
-    toolbarDrawerShortcutsArrowOrScrollDown: string;
-    toolbarDrawerShortcutsArrowOrScrollLeft: string;
-    toolbarDrawerShortcutsArrowOrScrollRight: string;
-}
+export type Internationalization = Record<InternationalizationFieldType, string>;
