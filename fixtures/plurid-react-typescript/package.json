@@ -51,6 +51,7 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.0.1"
+    "@types/styled-components": "^5.0.1",
+    "redux-devtools-extension": "^2.13.8"
   }
 }
