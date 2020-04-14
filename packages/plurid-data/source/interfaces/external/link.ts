@@ -147,58 +147,60 @@ export interface PluridLink {
 }
 
 
-/**
- * A plurid link in the same space, same universe.
- *
- * `://page`
- */
-export type PluridLinkIntraspatial = 'intraspatial';
-
-/**
- * `://page`
- */
-export type PluridLinkIntraspatialSameUniverse = 'intraspatialSameUniverse';
-
-/**
- * `://universe://page`
- */
-export type PluridLinkIntraspatialDifferentUniverse = 'intraspatialDifferentUniverse';
 
 
+// /**
+//  * A plurid link in the same space, same universe.
+//  *
+//  * `://page`
+//  */
+// export type PluridLinkIntraspatial = 'intraspatial';
 
-/**
- * A plurid link to a different space within the same route or on another route.
- */
-export type PluridLinkInterspatial = 'interspatial';
+// /**
+//  * `://page`
+//  */
+// export type PluridLinkIntraspatialSameUniverse = 'intraspatialSameUniverse';
 
-/**
- * `://space://universe://page`
- */
-export type PluridLinkInterspatialSameRoute = 'interspatialSameRoute';
-
-/**
- * `://route://space://universe://page`
- */
-export type PluridLinkInterspatialDifferentRoute = 'interspatialDifferentRoute';
-
-export type PluridLinkInterspatialKind =
-    | PluridLinkInterspatialSameRoute
-    | PluridLinkInterspatialDifferentRoute;
+// /**
+//  * `://universe://page`
+//  */
+// export type PluridLinkIntraspatialDifferentUniverse = 'intraspatialDifferentUniverse';
 
 
 
-export type PluridLinkOuterspatial = 'outerspatial';
+// /**
+//  * A plurid link to a different space within the same route or on another route.
+//  */
+// export type PluridLinkInterspatial = 'interspatial';
 
-/**
- * `https://controlled-origin://route://space://universe://page`
- */
-export type PluridLinkOuterspatialControlledOrigin = 'outerspatialControlledOrigin';
+// /**
+//  * `://space://universe://page`
+//  */
+// export type PluridLinkInterspatialSameRoute = 'interspatialSameRoute';
 
-/**
- * `https://foreign-origin://route://space://universe://page`
- */
-export type PluridLinkOuterspatialForeignOrigin = 'outerspatialForeignOrigin';
+// /**
+//  * `://route://space://universe://page`
+//  */
+// export type PluridLinkInterspatialDifferentRoute = 'interspatialDifferentRoute';
 
-export type PluridLinkOuterspatialKind =
-    | PluridLinkOuterspatialControlledOrigin
-    | PluridLinkOuterspatialForeignOrigin;
+// export type PluridLinkInterspatialKind =
+//     | PluridLinkInterspatialSameRoute
+//     | PluridLinkInterspatialDifferentRoute;
+
+
+
+// export type PluridLinkOuterspatial = 'outerspatial';
+
+// /**
+//  * `https://controlled-origin://route://space://universe://page`
+//  */
+// export type PluridLinkOuterspatialControlledOrigin = 'outerspatialControlledOrigin';
+
+// /**
+//  * `https://foreign-origin://route://space://universe://page`
+//  */
+// export type PluridLinkOuterspatialForeignOrigin = 'outerspatialForeignOrigin';
+
+// export type PluridLinkOuterspatialKind =
+//     | PluridLinkOuterspatialControlledOrigin
+//     | PluridLinkOuterspatialForeignOrigin;

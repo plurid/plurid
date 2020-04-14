@@ -3,7 +3,6 @@ import PluridPubSub from '@plurid/plurid-pubsub';
 import {
     PluridPlane,
     PluridPlaneContext,
-    PluridPlaneContextValue,
     PluridComponent,
 } from './plane';
 
@@ -39,7 +38,7 @@ export interface PluridApplication {
     /**
      * Optional context initial value.
      */
-    planeContextValue?: PluridPlaneContextValue;
+    planeContextValue?: Record<string, any>;
 
     /**
      * Paths of the planes in view on the initial rendering.
