@@ -2,8 +2,18 @@ export interface TreePage {
     pageID: string;
     planeID: string;
     parentPlaneID?: string;
+
+    /**
+     * The full path string, adequately formatted
+     * <protocol>://<origin>://<route>://<space>://<plane>
+     */
     path: string;
+
+    /**
+     *
+     */
     pathDivisions: PathDivisions;
+
     parameters?: PathParameters;
     query?: PathQuery;
     height: number;
@@ -22,7 +32,7 @@ export interface PathDivisions {
     origin: string;
     route: PathRouteDivision;
     space: PathSpaceDivision;
-    page: PathPageDivision;
+    plane: PathPlaneDivision;
     valid: boolean;
 }
 
@@ -41,7 +51,7 @@ export interface PathSpaceDivision {
 }
 
 
-export interface PathPageDivision {
+export interface PathPlaneDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
