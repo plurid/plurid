@@ -24,7 +24,7 @@ import PluridPubSub, {
 
 import PluridApplication from './Application';
 
-import PluridSubApplication from './Application/SubApp';
+import PluridSingleApplication from './Application/SingleApplication';
 
 import PluridLink from './modules/components/PluridLink';
 import PluridRouterBrowser from './modules/components/PluridRouterBrowser';
@@ -72,8 +72,8 @@ export {
     PluridPubSub,
     TOPICS,
 
-    /** SubApplication */
-    PluridSubApplication,
+    /** SingleApplication */
+    PluridSingleApplication,
 
     /** Components */
     PluridLink,

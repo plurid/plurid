@@ -1,26 +1,46 @@
-import React from 'react';
+import React, {
+    Component,
+} from 'react';
+import {
+    Provider as ReduxProvider,
+} from 'react-redux';
+import {
+    createStore,
+} from 'redux';
+
 import {
     PluridApplication as PluridApplicationProperties,
 } from '@plurid/plurid-data';
 
 import Root from './Root';
 
-import store from '../modules/services/state/store';
+import reducer from '../modules/services/state/store/reducers';
+import StateContext from '../modules/services/state/context';
 
 
 
-const initialState = {};
-const initializedStore = store(initialState);
+class PluridApplication extends Component<PluridApplicationProperties, {}> {
+    private store: any;
 
-const PluridApplication: React.FC<PluridApplicationProperties> = (
-    properties,
-) => {
-    return (
-        <Root
-            store={initializedStore}
-            appProperties={properties}
-        />
-    );
+    constructor(
+        properties: PluridApplicationProperties,
+    ) {
+        super(properties);
+        this.store = createStore(reducer);
+    }
+
+    render() {
+        return (
+            <ReduxProvider
+                store={this.store}
+                context={StateContext}
+            >
+                <Root
+                    appProperties={{...this.props}}
+                />
+            </ReduxProvider>
+        );
+    }
 }
 
 
