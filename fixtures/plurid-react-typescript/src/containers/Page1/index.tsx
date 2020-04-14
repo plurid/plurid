@@ -33,6 +33,18 @@ const Page1: React.FC<any> = (
             <PluridPlaneConfigurator />
 
             <div
+                data-plurid-plane-element="aaaa1234"
+            >
+                the first plurid plane element with id "aaaa1234"
+            </div>
+
+            <div
+                data-plurid-plane-element="aaaa1234"
+            >
+                the second plurid plane element with id "aaaa1234"
+            </div>
+
+            <div
                 tabIndex={0}
                 contentEditable={true}
                 suppressContentEditableWarning={true}
