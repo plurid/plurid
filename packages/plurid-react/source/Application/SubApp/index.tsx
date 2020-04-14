@@ -9,7 +9,7 @@ import {
 } from 'redux';
 
 import {
-    PluridApp as PluridAppProperties,
+    PluridApplication as PluridApplicationProperties,
 } from '@plurid/plurid-data';
 
 import SubAppRoot from './SubAppRoot';
@@ -19,11 +19,13 @@ import StateContext from '../../modules/services/state/context';
 
 
 
-class PluridSubApp extends Component<PluridAppProperties, {}> {
+class PluridSubApplication extends Component<PluridApplicationProperties, {}> {
     private store: any;
 
-    constructor(props: PluridAppProperties) {
-        super(props);
+    constructor(
+        properties: PluridApplicationProperties,
+    ) {
+        super(properties);
         this.store = createStore(reducer);
     }
 
@@ -42,4 +44,4 @@ class PluridSubApp extends Component<PluridAppProperties, {}> {
 }
 
 
-export default PluridSubApp;
+export default PluridSubApplication;
