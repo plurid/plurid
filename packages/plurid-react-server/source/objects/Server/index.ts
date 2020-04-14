@@ -206,7 +206,7 @@ export default class PluridServer<T> {
 
         const {
             helmet,
-        } = this.helmet;
+        }: any = this.helmet;
 
         const head = `
             ${helmet.meta.toString()}

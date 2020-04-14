@@ -2,9 +2,7 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "rootDir": "source",
-        "outDir": "distribution",
-
-        "jsx": "react"
+        "outDir": "distribution"
     },
     "exclude": [
         "node_modules",
