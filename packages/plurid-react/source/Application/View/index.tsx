@@ -494,19 +494,19 @@ const View: React.FC<ViewProperties> = (
 
                 if (general) {
                     if (Object.keys(THEME_NAMES).includes(general)) {
-                        dispatchSetGeneralTheme(themes[general]);
+                        dispatchSetGeneralTheme((themes as any)[general]);
                     }
                 }
 
                 if (interaction) {
                     if (Object.keys(THEME_NAMES).includes(interaction)) {
-                        dispatchSetInteractionTheme(themes[interaction]);
+                        dispatchSetInteractionTheme((themes as any)[interaction]);
                     }
                 }
             } else {
                 if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
-                    dispatchSetGeneralTheme(themes[configuration.theme]);
-                    dispatchSetInteractionTheme(themes[configuration.theme]);
+                    dispatchSetGeneralTheme((themes as any)[configuration.theme]);
+                    dispatchSetInteractionTheme((themes as any)[configuration.theme]);
                 }
             }
         }
