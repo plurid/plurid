@@ -1,20 +1,25 @@
 import {
     SHORTCUTS,
     KEY_MODIFIERS,
-} from '../enumerations';
+} from '../../enumerations';
 
 import {
     ShortcutNames,
-} from '../interfaces/internal/shortcuts';
+} from '../../interfaces';
 
 import {
-    fields as internationalizationFields,
-} from './internationalization';
+    internationalization
+} from '../internationalization';
 
 import {
     keyModifiers,
-} from './keys';
+} from '../keys';
 
+
+
+const {
+    fields: internationalizationFields,
+} = internationalization;
 
 
 export const shortcutsNames: ShortcutNames = {

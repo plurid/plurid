@@ -1,6 +1,6 @@
 import {
     PluridComponentReact,
-} from '../external';
+} from '../../external';
 
 
 

@@ -1,10 +1,10 @@
 import {
     Indexed,
-} from '../helpers';
+} from '../../helpers';
 
 import {
     CompareType,
-} from './compareTypes';
+} from '../compare';
 
 
 

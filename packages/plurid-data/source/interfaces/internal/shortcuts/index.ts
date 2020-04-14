@@ -1,10 +1,10 @@
 import {
     SHORTCUTS,
-} from '../../enumerations';
+} from '../../../enumerations';
 
 import {
     InternationalizationFieldType,
-} from './internationalization';
+} from '../internationalization';
 
 
 
