@@ -12,7 +12,7 @@ import {
 
 
 export interface TreeData {
-    pages: TreePlane[],
+    planes: TreePlane[],
     clusters?: PluridCluster[],
     configuration?: PluridConfiguration,
     view?: string[] | PluridView[],
@@ -30,13 +30,13 @@ export default class Tree {
 
     public compute() {
         const {
-            pages,
+            planes,
             configuration,
             view,
         } = this.data;
 
         return computeSpaceTree(
-            pages,
+            planes,
             configuration,
             view,
         );
