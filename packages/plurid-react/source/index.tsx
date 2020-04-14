@@ -22,9 +22,9 @@ import PluridPubSub, {
     TOPICS,
 } from '@plurid/plurid-pubsub';
 
-import PluridApp from './App';
+import PluridApplication from './Application';
 
-import PluridSubApp from './App/SubApp';
+import PluridSubApplication from './Application/SubApp';
 
 import PluridLink from './modules/components/PluridLink';
 import PluridRouterBrowser from './modules/components/PluridRouterBrowser';
@@ -72,8 +72,8 @@ export {
     PluridPubSub,
     TOPICS,
 
-    /** SubApp */
-    PluridSubApp,
+    /** SubApplication */
+    PluridSubApplication,
 
     /** Components */
     PluridLink,
@@ -89,4 +89,4 @@ export {
 };
 
 
-export default PluridApp;
+export default PluridApplication;
