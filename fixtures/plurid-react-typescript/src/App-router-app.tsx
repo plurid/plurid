@@ -7,7 +7,7 @@ import React, {
 
 import PluridApp, {
     // PluridSubApp,
-    PluridPage,
+    PluridPlane,
     PluridRouterBrowser,
     // PluridRouterStatic,
     PluridRouterLink,
@@ -53,7 +53,7 @@ const multipleViews = oneHundred.map((val) => {
 // `;
 
 const App = () => {
-    const [pluridPages, setPluridPages] = useState<PluridPage[]>([]);
+    const [pluridPages, setPluridPages] = useState<PluridPlane[]>([]);
     const [pluridView, setPluridView] = useState<string[]>([]);
 
 
@@ -157,7 +157,7 @@ const App = () => {
 
                 <PluridApp
                     configuration={appConfiguration}
-                    pages={multiplePages}
+                    planes={multiplePages}
                     view={multipleViews}
                 />
             </div>
