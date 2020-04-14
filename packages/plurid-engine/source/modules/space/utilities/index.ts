@@ -1,12 +1,12 @@
 import {
     /** interfaces */
-    TreePage,
+    TreePlane,
 } from '@plurid/plurid-data';
 
 
 
 export const computeSpaceSize = (
-    tree: TreePage[],
+    tree: TreePlane[],
 ) => {
     let width = 0;
     let height = 0;
@@ -53,7 +53,7 @@ export const computeSpaceSize = (
 
 export const findPage = (
     view: string,
-    pages: TreePage[],
+    pages: TreePlane[],
 ) => {
     for (const page of pages) {
         if (page.path === view) {
@@ -79,10 +79,10 @@ export const splitIntoGroups = <T>(
 }
 
 
-export const getTreePageByPlaneID = (
-    tree: TreePage[],
+export const getTreePlaneByPlaneID = (
+    tree: TreePlane[],
     planeID: string
-): TreePage | null => {
+): TreePlane | null => {
     let _page = null;
 
     for (let page of tree) {
@@ -91,7 +91,7 @@ export const getTreePageByPlaneID = (
         }
 
         if (page.children && !_page) {
-            _page = getTreePageByPlaneID(page.children, planeID);
+            _page = getTreePlaneByPlaneID(page.children, planeID);
         }
 
         if (_page) {

@@ -1,7 +1,7 @@
 import {
     /** interfaces */
     PluridView,
-    TreePage,
+    TreePlane,
     SpaceLocation,
 } from '@plurid/plurid-data';
 
@@ -12,10 +12,10 @@ import {
 
 
 export const computeViewTree = (
-    pages: TreePage[],
+    pages: TreePlane[],
     view: string[] | PluridView[],
-): TreePage[] => {
-    const viewTree: TreePage[] = [];
+): TreePlane[] => {
+    const viewTree: TreePlane[] = [];
 
     for (const pageView of view) {
         const page = pages.find(p => p.path === pageView);
@@ -37,7 +37,7 @@ export const computeViewTree = (
  * @param location
  */
 export const computeCulledView = (
-    pages: TreePage[],
+    pages: TreePlane[],
     view: string[] | PluridView[],
     location: SpaceLocation,
     radius: number = 8000,
@@ -75,7 +75,7 @@ export const computeCulledView = (
 
 
 export const checkPageInView = (
-    page: TreePage,
+    page: TreePlane,
     location: SpaceLocation,
     radius: number,
 ) => {

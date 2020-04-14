@@ -5,7 +5,7 @@ import {
     /** interfaces */
     PluridPlane,
     PluridConfiguration,
-    TreePage,
+    TreePlane,
     SpaceLocation,
     LocationCoordinates,
     LinkCoordinates,
@@ -17,7 +17,7 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    getTreePageByPlaneID,
+    getTreePlaneByPlaneID,
 } from '../utilities';
 
 
@@ -26,11 +26,11 @@ const toRadians = mathematics.geometry.toRadians;
 
 
 export const computePath = (
-    tree: TreePage[],
+    tree: TreePlane[],
     planeID: string,
-): TreePage[] => {
-    let path: TreePage[] = [];
-    const page = getTreePageByPlaneID(tree, planeID);
+): TreePlane[] => {
+    let path: TreePlane[] = [];
+    const page = getTreePlaneByPlaneID(tree, planeID);
 
     if (page) {
         path.push( { ...page} );
@@ -41,7 +41,7 @@ export const computePath = (
         }
 
         while (parentID) {
-            const parentPage = getTreePageByPlaneID(tree, parentID);
+            const parentPage = getTreePlaneByPlaneID(tree, parentID);
             if (parentPage) {
                 const page = { ...parentPage };
                 page.children = [];
@@ -57,7 +57,7 @@ export const computePath = (
 
 export const computePluridPlaneLocation = (
     linkCoordinates: LinkCoordinates,
-    treePageParent: TreePage,
+    treePageParent: TreePlane,
     bridgeLength: number = 100,
     linkPlaneAngle: number = 90,
 ): LocationCoordinates => {
@@ -86,13 +86,13 @@ export const computePluridPlaneLocation = (
 
 
 export const recomputeChildrenLocation = (
-    page: TreePage,
-): TreePage[] => {
+    page: TreePlane,
+): TreePlane[] => {
     if (!page.children) {
         return [];
     }
 
-    const updatedChildren: TreePage[] = [];
+    const updatedChildren: TreePlane[] = [];
 
     for (const child of page.children) {
         if (child.linkCoordinates) {

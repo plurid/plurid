@@ -1,9 +1,9 @@
 import {
-    TreePage,
+    TreePlane,
 } from '@plurid/plurid-data';
 
 import {
-    getTreePageByPlaneID,
+    getTreePlaneByPlaneID,
 } from '../utilities';
 
 
@@ -16,7 +16,7 @@ const location = {
     rotateY: 0,
 };
 
-const tree: TreePage[] = [
+const tree: TreePlane[] = [
     {
         pageID: '1',
         planeID: 'aaa',
@@ -83,10 +83,10 @@ const tree: TreePage[] = [
 ];
 
 
-describe('getTreePageByPlaneID', () => {
+describe('getTreePlaneByPlaneID', () => {
     it('gets the tree page with id "aaa"', () => {
         const planeID = 'aaa';
-        const page = getTreePageByPlaneID(tree, planeID);
+        const page = getTreePlaneByPlaneID(tree, planeID);
         const path = '/aaa';
 
         expect(page).toBeTruthy();
@@ -97,7 +97,7 @@ describe('getTreePageByPlaneID', () => {
 
     it('gets the tree page with id "bbb"', () => {
         const planeID = 'bbb';
-        const page = getTreePageByPlaneID(tree, planeID);
+        const page = getTreePlaneByPlaneID(tree, planeID);
         const path = '/aaa/bbb';
 
         expect(page).toBeTruthy();
@@ -108,7 +108,7 @@ describe('getTreePageByPlaneID', () => {
 
     it('gets the tree page with id "ccc"', () => {
         const planeID = 'ccc';
-        const page = getTreePageByPlaneID(tree, planeID);
+        const page = getTreePlaneByPlaneID(tree, planeID);
         const path = '/aaa/bbb/ccc';
 
         expect(page).toBeTruthy();
@@ -119,7 +119,7 @@ describe('getTreePageByPlaneID', () => {
 
     it('gets the tree page with id "ddd"', () => {
         const planeID = 'ddd';
-        const page = getTreePageByPlaneID(tree, planeID);
+        const page = getTreePlaneByPlaneID(tree, planeID);
         const path = '/ddd';
 
         expect(page).toBeTruthy();
@@ -130,7 +130,7 @@ describe('getTreePageByPlaneID', () => {
 
     it('gets the tree page with id "eee"', () => {
         const planeID = 'eee';
-        const page = getTreePageByPlaneID(tree, planeID);
+        const page = getTreePlaneByPlaneID(tree, planeID);
         const path = '/eee';
 
         expect(page).toBeTruthy();
@@ -141,7 +141,7 @@ describe('getTreePageByPlaneID', () => {
 
     it('gets the tree page with id "fff"', () => {
         const planeID = 'fff';
-        const page = getTreePageByPlaneID(tree, planeID);
+        const page = getTreePlaneByPlaneID(tree, planeID);
         const path = '/eee/fff';
 
         expect(page).toBeTruthy();

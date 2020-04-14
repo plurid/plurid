@@ -1,5 +1,5 @@
 import {
-    TreePage,
+    TreePlane,
     PluridConfiguration,
 
     defaultConfiguration,
@@ -16,13 +16,13 @@ import {
 
 
 const computeSheavesLayout = (
-    roots: TreePage[],
+    roots: TreePlane[],
     depth: number = 0.3,
     offsetX: number = 0,
     offsetY: number = 0,
     configuration: PluridConfiguration = defaultConfiguration,
-): TreePage[] => {
-    const tree: TreePage[] = [];
+): TreePlane[] => {
+    const tree: TreePlane[] = [];
 
     const width = mathematics.numbers.checkIntegerNonUnit(configuration.elements.plane.width)
         ? configuration.elements.plane.width
@@ -33,7 +33,7 @@ const computeSheavesLayout = (
         const translateX = 0;
         const translateY = 0;
 
-        const treePage: TreePage = {
+        const treePage: TreePlane = {
             ...page,
             location: {
                 translateX,

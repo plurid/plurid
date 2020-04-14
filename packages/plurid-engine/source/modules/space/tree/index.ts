@@ -3,7 +3,7 @@ import Tree from './object';
 import {
     computeSpaceTree,
     togglePageFromTree,
-    updateTreePage,
+    updateTreePlane,
     updateTreeWithNewPage,
 } from './logic';
 
@@ -14,6 +14,6 @@ export {
 
     computeSpaceTree,
     togglePageFromTree,
-    updateTreePage,
+    updateTreePlane,
     updateTreeWithNewPage,
 }
