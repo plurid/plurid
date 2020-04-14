@@ -3,7 +3,7 @@ import {
     ROOTS_GAP,
 
     /** interfaces */
-    PluridPage,
+    PluridPlane,
     PluridConfiguration,
     TreePage,
     SpaceLocation,
@@ -144,7 +144,7 @@ export const recomputeChildrenLocation = (
  */
 export const computeRootLocationX = (
     configuration: PluridConfiguration | undefined,
-    root: PluridPage,
+    root: PluridPlane,
     index: number,
 ) => {
     let translateX = 0;
