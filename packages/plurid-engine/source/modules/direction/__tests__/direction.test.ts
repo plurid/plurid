@@ -1,6 +1,6 @@
 import {
     getWheelDirection,
-} from '../';
+} from '..';
 
 
 
