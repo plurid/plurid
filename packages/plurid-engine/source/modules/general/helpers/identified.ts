@@ -3,43 +3,43 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    PluridPage,
-    PluridDocument,
+    PluridPlane,
+    PluridUniverse,
 
     Identified,
-    IdentifiedPluridDocument,
+    IdentifiedPluridUniverse,
 } from '@plurid/plurid-data';
 
 
 
-export const identifyPages = (
-    pages: PluridPage[],
-): Identified<PluridPage>[] => {
-    return indexing.identify(pages) as Identified<PluridPage>[];
+export const identifyPlanes = (
+    pages: PluridPlane[],
+): Identified<PluridPlane>[] => {
+    return indexing.identify(pages) as Identified<PluridPlane>[];
 
-    // const identifiedPages = pages.map(page => {
-    //     const updatedPage: Identified<PluridPage> = {
+    // const identifiedPlanes = pages.map(page => {
+    //     const updatedPlane: Identified<PluridPlane> = {
     //         ...page,
     //         id: page.id || uuid(),
     //     };
-    //     return updatedPage;
+    //     return updatedPlane;
     // });
-    // return identifiedPages;
+    // return identifiedPlanes;
 }
 
 
-export const identifyDocuments = (
-    documents: PluridDocument[],
-): IdentifiedPluridDocument[] => {
-    return indexing.identify(documents) as IdentifiedPluridDocument[];
+export const identifyUniverses = (
+    documents: PluridUniverse[],
+): IdentifiedPluridUniverse[] => {
+    return indexing.identify(documents) as IdentifiedPluridUniverse[];
 
-    // const identifiedDocuments = documents.map(document => {
-    //     const updatedDocument: IdentifiedPluridDocument = {
+    // const identifiedUniverses = documents.map(document => {
+    //     const updatedUniverse: IdentifiedPluridUniverse = {
     //         ...document,
-    //         pages: identifyPages(document.pages),
+    //         pages: identifyPlanes(document.pages),
     //         id: document.id || uuid(),
     //     };
-    //     return updatedDocument;
+    //     return updatedUniverse;
     // });
-    // return identifiedDocuments;
+    // return identifiedUniverses;
 }
