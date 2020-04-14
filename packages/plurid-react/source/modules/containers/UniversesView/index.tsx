@@ -4,49 +4,49 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
-    StyledDocumentsView,
+    StyledUniversesView,
 } from './styled';
 
 import PluridSpace from '../../components/PluridSpace';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
+// import selectors from '../../services/state/selectors';
 // import actions from '../../services/state/actions';
 
 
 
-interface DocumentsViewOwnProperties {
+interface UniversesViewOwnProperties {
 }
 
-interface DocumentsViewStateProperties {
+interface UniversesViewStateProperties {
 }
 
-interface DocumentsViewDispatchProperties {
+interface UniversesViewDispatchProperties {
 }
 
-type DocumentsViewProperties = DocumentsViewOwnProperties
-    & DocumentsViewStateProperties
-    & DocumentsViewDispatchProperties;
+type UniversesViewProperties = UniversesViewOwnProperties
+    & UniversesViewStateProperties
+    & UniversesViewDispatchProperties;
 
-const DocumentsView: React.FC<DocumentsViewProperties> = () => {
+const UniversesView: React.FC<UniversesViewProperties> = () => {
     return (
-        <StyledDocumentsView>
+        <StyledUniversesView>
             <PluridSpace />
-        </StyledDocumentsView>
+        </StyledUniversesView>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): DocumentsViewStateProperties => ({
+): UniversesViewStateProperties => ({
 });
 
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): DocumentsViewDispatchProperties => ({
+): UniversesViewDispatchProperties => ({
 });
 
 
@@ -57,4 +57,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(DocumentsView);
+)(UniversesView);

@@ -34,7 +34,7 @@ export interface PluridRootOwnProperties {
 }
 
 interface PluridRootStateProperties {
-    activeDocumentID: string;
+    activeUniverseID: string;
 }
 
 interface PluridRootDispatchProperties {
@@ -49,8 +49,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     // console.log(context);
 
     const {
-        pageContext: PageContext,
-        pageContextValue,
+        planeContext: PageContext,
+        planeContextValue,
         universes,
     } = context;
 
@@ -59,7 +59,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         plane,
 
         /** state */
-        activeDocumentID,
+        activeUniverseID,
     } = properties;
 
     const {
@@ -101,7 +101,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                                     />
                                 ) : (
                                     <PageContext.Provider
-                                        value={pageContextValue}
+                                        value={planeContextValue}
                                     >
                                         <Page
                                             plurid={pluridProperties}
@@ -134,13 +134,13 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         JSON.stringify(plane),
     ]);
 
-    const activeDocument = universes[activeDocumentID];
-    // console.log('activeDocument', activeDocument);
-    if (!activeDocument) {
+    const activeUniverse = universes[activeUniverseID];
+    // console.log('activeUniverse', activeUniverse);
+    if (!activeUniverse) {
         return (<></>);
     }
-    // console.log('activeDocument', activeDocument);
-    const activePlanes = activeDocument.planes;
+    // console.log('activeUniverse', activeUniverse);
+    const activePlanes = activeUniverse.planes;
     if (!activePlanes) {
         return (<></>);
     }
@@ -181,7 +181,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
                         />
                     ) : (
                         <PageContext.Provider
-                            value={pageContextValue}
+                            value={planeContextValue}
                         >
                             <Page
                                 plurid={pluridProperties}
@@ -201,7 +201,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
 const mapStateToProps = (
     state: AppState,
 ): PluridRootStateProperties => ({
-    activeDocumentID: selectors.space.getActiveDocumentID(state),
+    activeUniverseID: selectors.space.getActiveUniverseID(state),
 });
 
 

@@ -1,35 +1,35 @@
 import React from 'react';
 
-import PagesView from '../../modules/containers/PagesView';
-import DocumentsView from '../../modules/containers/DocumentsView';
+import PlanesView from '../../modules/containers/PlanesView';
+import UniversesView from '../../modules/containers/UniversesView';
 import ErrorView from '../../modules/containers/ErrorView';
 
 import {
-    PluridPage,
-    PluridDocument,
+    PluridPlane,
+    PluridUniverse,
 } from '@plurid/plurid-data';
 
 
 
 const handleView = (
-    pages: PluridPage[] | undefined,
-    documents: PluridDocument[] | undefined,
+    planes: PluridPlane[] | undefined,
+    universes: PluridUniverse[] | undefined,
 ): JSX.Element => {
-    if (pages && !documents) {
+    if (planes && !universes) {
         return (
-            <PagesView />
+            <PlanesView />
         );
     }
 
-    if (documents && !pages) {
+    if (universes && !planes) {
         return (
-            <DocumentsView />
+            <UniversesView />
         );
     }
 
     return (
         <ErrorView
-            error="the plurid' application must be either documents or pages-based"
+            error="the plurid' application must be either universes or planes-based"
         />
     );
 }

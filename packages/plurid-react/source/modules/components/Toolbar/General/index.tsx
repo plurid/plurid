@@ -31,7 +31,7 @@ import {
     VIEW_SIZE_WIDTH_LIMIT,
 } from './data';
 
-import MenuDocuments from './components/MenuDocuments';
+import MenuUniverses from './components/MenuUniverses';
 import MenuMore from './components/MenuMore';
 
 import ToolbarRotate from './components/ToolbarRotate';
@@ -61,7 +61,7 @@ interface ToolbarStateProperties {
     theme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
-    documents: any;
+    universes: any;
 }
 
 interface ToolbarDispatchProperties {
@@ -82,7 +82,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         theme,
         configuration,
         viewSize,
-        documents,
+        universes,
 
         /** dispatch */
         dispatchToggleConfigurationSpaceFirstPerson,
@@ -111,7 +111,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         transformButtons,
     } = toolbar;
 
-    const documentsBased = Object.keys(documents).length > 1;
+    const universesBased = Object.keys(universes).length > 1;
 
     const [mouseIn, setMouseIn] = useState(false);
     const [showMenu, setShowMenu] = useState<keyof typeof MENUS>(MENUS.NONE);
@@ -191,7 +191,7 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 theme={theme}
                 showIcons={showIcons}
                 showTransformButtons={showTransformButtons}
-                documentsBased={documentsBased}
+                universesBased={universesBased}
                 mouseIn={mouseIn}
                 opaque={opaque}
                 transparentUI={transparentUI}
@@ -230,11 +230,11 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 />
 
 
-                {documentsBased && (
+                {universesBased && (
                     <StyledToolbarButton
                         theme={theme}
-                        onClick={() => handleShowMenu(MENUS.DOCUMENTS)}
-                        active={showMenu === MENUS.DOCUMENTS}
+                        onClick={() => handleShowMenu(MENUS.UNIVERSES)}
+                        active={showMenu === MENUS.UNIVERSES}
                         button={true}
                     >
                         <StyledIcon>
@@ -255,8 +255,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
                 </StyledToolbarButton>
             </StyledToolbarButtons>
 
-            {showMenu === MENUS.DOCUMENTS && (
-                <MenuDocuments />
+            {showMenu === MENUS.UNIVERSES && (
+                <MenuUniverses />
             )}
 
             {showMenu === MENUS.MORE && (
@@ -271,7 +271,7 @@ const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     theme: selectors.themes.getInteractionTheme(state),
     viewSize: selectors.space.getViewSize(state),
-    documents: selectors.data.getDocuments(state),
+    universes: selectors.data.getUniverses(state),
 });
 
 

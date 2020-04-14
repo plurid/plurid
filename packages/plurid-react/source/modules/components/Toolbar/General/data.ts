@@ -1,6 +1,6 @@
 export enum MENUS {
     NONE = 'NONE',
-    DOCUMENTS = 'DOCUMENTS',
+    UNIVERSES = 'UNIVERSES',
     MORE = 'MORE',
 }
 

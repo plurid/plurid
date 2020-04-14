@@ -78,7 +78,7 @@ export const StyledMoreMenuScroll = styled.div`
 `;
 
 
-export const StyledMenuDocumentsItemList: any = styled.li`
+export const StyledMenuUniversesItemList: any = styled.li`
     margin: 10px 0;
     padding: 10px 20px;
     border-radius: 100px;
