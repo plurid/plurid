@@ -4,14 +4,20 @@ import {
     PluridPlane,
     PluridPlaneContext,
     PluridPlaneContextValue,
-    PluridView,
-    PluridCluster,
     PluridComponent,
 } from './plane';
 
 import {
+    PluridCluster,
+} from './cluster';
+
+import {
     PluridUniverse,
 } from './universe';
+
+import {
+    PluridView,
+} from './view';
 
 import {
     PluridPartialConfiguration,
