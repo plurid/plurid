@@ -1,6 +1,7 @@
 import {
     Indexed,
     PluridRouterRoute,
+    PathDivisions,
 } from '@plurid/plurid-data';
 
 
@@ -34,37 +35,55 @@ export const mapPathsToRoutes = <T, V>(
 // const outerspatialControlledOriginExample = 'https://origin://route://space://page';
 // const outerspatialForeignOriginExample = 'http://origin://route://space://page';
 
-interface PluridLinkURLDivisions {
-    protocol: string;
-    origin: string;
-    route: string;
-    space: string;
-    page: string;
-    valid: boolean;
-}
+export const pluridLinkPathDivider = (
+    path: string,
+): PathDivisions => {
+    const split = path.split('://').filter(value => value !== '');
 
-export const pluridLinkURLDivider = (
-    link: string,
-): PluridLinkURLDivisions => {
-    const split = link.split('://').filter(value => value !== '');
-
-    let protocol = '';
-    let origin = '';
-    let route = '';
-    let space = '';
-    let page = '';
+    let protocol = 'https';
+    const origin = {
+        value: '',
+        controlled: false,
+    };
+    const route = {
+        value: '',
+        parameters: {},
+        query: {},
+    };
+    const space = {
+        value: '',
+        parameters: {},
+        query: {},
+    };
+    const universe = {
+        value: '',
+        parameters: {},
+        query: {},
+    };
+    const cluster = {
+        value: '',
+        parameters: {},
+        query: {},
+    };
+    const plane = {
+        value: '',
+        parameters: {},
+        query: {},
+    };
     let valid = false;
 
     if (
         split.length === 0
-        || split.length > 5
+        || split.length > 7
     ) {
         const url = {
             protocol,
             origin,
             route,
             space,
-            page,
+            universe,
+            cluster,
+            plane,
             valid,
         };
         return url;
@@ -72,30 +91,46 @@ export const pluridLinkURLDivider = (
 
     switch (split.length) {
         case 1:
-            page = split[0];
+            plane.value = split[0];
             break;
         case 2:
-            page = split[1];
-            space = split[0];
+            cluster.value = split[0];
+            plane.value = split[1];
             break;
         case 3:
-            page = split[2];
-            space = split[1];
-            route = split[0];
+            universe.value = split[0];
+            cluster.value = split[1];
+            plane.value = split[2];
             break;
         case 4:
-            page = split[3];
-            space = split[2];
-            route = split[1];
-            origin = split[0];
-            protocol = 'https';
+            space.value = split[0];
+            universe.value = split[1];
+            cluster.value = split[2];
+            plane.value = split[3];
             break;
         case 5:
-            page = split[4];
-            space = split[3];
-            route = split[2];
-            origin = split[1];
+            route.value = split[0];
+            space.value = split[1];
+            universe.value = split[2];
+            cluster.value = split[3];
+            plane.value = split[4];
+            break;
+        case 6:
+            origin.value = split[0];
+            route.value = split[1];
+            space.value = split[2];
+            universe.value = split[3];
+            cluster.value = split[4];
+            plane.value = split[5];
+            break;
+        case 7:
             protocol = split[0];
+            origin.value = split[1];
+            route.value = split[2];
+            space.value = split[3];
+            universe.value = split[4];
+            cluster.value = split[5];
+            plane.value = split[6];
             break;
     }
 
@@ -104,7 +139,9 @@ export const pluridLinkURLDivider = (
         origin,
         route,
         space,
-        page,
+        universe,
+        cluster,
+        plane,
         valid: true,
     };
 
