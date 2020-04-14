@@ -4,6 +4,7 @@ import RouteParser from './Parser';
 
 import {
     mapPathsToRoutes,
+    pluridLinkPathDivider,
 } from './utilities';
 
 
@@ -13,7 +14,10 @@ export default Router;
 export {
     RouteMatcher,
     RouteParser,
+
+    /** utilities */
     mapPathsToRoutes,
+    pluridLinkPathDivider,
 }
 
 export * from './CompareTypes';
