@@ -3,20 +3,21 @@ import React, {
     useEffect,
 } from 'react';
 
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
 import PluridApp, {
-    PluridSubApp,
+    // PluridSubApp,
     PluridPage,
     PluridRouterBrowser,
-    PluridRouterStatic,
+    // PluridRouterStatic,
     PluridRouterLink,
+    // PluridPlaneConfigurator,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
-import {
-    uuid,
-} from '@plurid/plurid-functions';
+// import {
+//     uuid,
+// } from '@plurid/plurid-functions';
 
 import Page1 from './containers/Page1';
 
@@ -42,14 +43,14 @@ const multipleViews = oneHundred.map((val) => {
 });
 
 
-const StyledAdd = styled.div`
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 9999;
-    cursor: pointer;
-    user-select: none;
-`;
+// const StyledAdd = styled.div`
+//     position: absolute;
+//     top: 20px;
+//     left: 20px;
+//     z-index: 9999;
+//     cursor: pointer;
+//     user-select: none;
+// `;
 
 const App = () => {
     const [pluridPages, setPluridPages] = useState<PluridPage[]>([]);
@@ -75,30 +76,30 @@ const App = () => {
     };
 
 
-    const addPage = () => {
-        const id = uuid.generate();
-        const page: PluridPage = {
-            id,
-            path: '/' + id,
-            component: {
-                element: Page1,
-                properties: {
-                    one: 'one',
-                },
-            },
-        };
-        const pages = [
-            ...pluridPages,
-            page,
-        ];
-        setPluridPages(pages);
+    // const addPage = () => {
+    //     const id = uuid.generate();
+    //     const page: PluridPage = {
+    //         id,
+    //         path: '/' + id,
+    //         component: {
+    //             element: Page1,
+    //             properties: {
+    //                 one: 'one',
+    //             },
+    //         },
+    //     };
+    //     const pages = [
+    //         ...pluridPages,
+    //         page,
+    //     ];
+    //     setPluridPages(pages);
 
-        const view = [
-            ...pluridView,
-            '/' + id,
-        ];
-        setPluridView(view);
-    }
+    //     const view = [
+    //         ...pluridView,
+    //         '/' + id,
+    //     ];
+    //     setPluridView(view);
+    // }
 
 
     useEffect(() => {
