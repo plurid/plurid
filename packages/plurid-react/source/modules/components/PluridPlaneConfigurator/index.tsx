@@ -89,6 +89,7 @@ const PluridPlaneConfigurator: React.FC<PluridPlaneConfiguratorPropertiesWithChi
     return (
         <StyledPluridPlaneConfigurator
             ref={configuratorElement}
+            data-plurid-entity="PlaneConfigurator"
         />
     );
 }
