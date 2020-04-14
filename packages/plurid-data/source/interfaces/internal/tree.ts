@@ -3,6 +3,7 @@ export interface TreePage {
     planeID: string;
     parentPlaneID?: string;
     path: string;
+    pathDivisions: PathDivisions;
     parameters?: PathParameters;
     query?: PathQuery;
     height: number;
@@ -13,6 +14,37 @@ export interface TreePage {
     bridgeLength?: number;
     planeAngle?: number;
     linkCoordinates?: LinkCoordinates;
+}
+
+
+export interface PathDivisions {
+    protocol: string;
+    origin: string;
+    route: PathRouteDivision;
+    space: PathSpaceDivision;
+    page: PathPageDivision;
+    valid: boolean;
+}
+
+
+export interface PathRouteDivision {
+    value: string;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
+}
+
+
+export interface PathSpaceDivision {
+    value: string;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
+}
+
+
+export interface PathPageDivision {
+    value: string;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
 }
 
 
