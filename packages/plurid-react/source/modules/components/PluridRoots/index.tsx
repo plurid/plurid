@@ -11,6 +11,7 @@ import {
     TreePage,
     PluridConfiguration,
     SIZES,
+    PLURID_ENTITY_ROOTS,
 } from '@plurid/plurid-data';
 
 import {
@@ -125,6 +126,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                     ${transformOriginZ}px
                 `,
             }}
+            data-plurid-entity={PLURID_ENTITY_ROOTS}
         >
             {showTransformOrigin && (
                 <StyledTransformOrigin

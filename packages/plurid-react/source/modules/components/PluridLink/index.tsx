@@ -16,6 +16,7 @@ import {
 import {
     /** constants */
     PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
+    PLURID_ENTITY_LINK,
 
     /** interfaces */
     PluridLink as PluridLinkOwnProperties,
@@ -361,6 +362,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 ...style,
             }}
             className={className}
+            data-plurid-entity={PLURID_ENTITY_LINK}
         >
             {children}
 

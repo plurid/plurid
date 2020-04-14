@@ -9,6 +9,7 @@ import {
 
 import {
     PluridConfiguration,
+    PLURID_ENTITY_SPACE,
 } from '@plurid/plurid-data';
 
 import {
@@ -67,6 +68,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
         <StyledPluridSpace
             theme={generalTheme}
             opaque={opaqueSpace}
+            data-plurid-entity={PLURID_ENTITY_SPACE}
         >
             <PluridRoots />
 

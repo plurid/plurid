@@ -14,6 +14,10 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
+    PLURID_ENTITY_PLANE_CONFIGURATOR,
+} from '@plurid/plurid-data';
+
+import {
     StyledPluridPlaneConfigurator,
 } from './styled';
 
@@ -86,7 +90,7 @@ const PluridPlaneConfigurator: React.FC<PluridPlaneConfiguratorPropertiesWithChi
     return (
         <StyledPluridPlaneConfigurator
             ref={configuratorElement}
-            data-plurid-entity="PlaneConfigurator"
+            data-plurid-entity={PLURID_ENTITY_PLANE_CONFIGURATOR}
         />
     );
 }

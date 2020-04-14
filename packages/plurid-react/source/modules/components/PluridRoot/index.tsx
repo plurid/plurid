@@ -16,6 +16,8 @@ import Context from '../../services/logic/context';
 import PluridPlane from '../PluridPlane';
 
 import {
+    PLURID_ENTITY_ROOT,
+
     TreePage,
     PluridContext
 } from '@plurid/plurid-data';
@@ -160,7 +162,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
     };
 
     return (
-        <StyledPluridRoot>
+        <StyledPluridRoot
+            data-plurid-entity={PLURID_ENTITY_ROOT}
+        >
             <PluridPlane
                 page={pluridPage}
                 treePage={page}

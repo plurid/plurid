@@ -19,6 +19,7 @@ import {
     PluridPage,
     TreePage,
     PluridConfiguration,
+    PLURID_ENTITY_PLANE,
 } from '@plurid/plurid-data';
 
 import {
@@ -119,7 +120,6 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
             planeOpacity={planeOpacity}
             show={treePage.show}
             id={planeID}
-            data-plurid-plane={planeID}
             style={{
                 width,
                 transform: `
@@ -134,6 +134,8 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
             onMouseLeave={() => setMouseOver(false)}
             transparentUI={transparentUI}
             mouseOver={mouseOver}
+            data-plurid-plane={planeID}
+            data-plurid-entity={PLURID_ENTITY_PLANE}
         >
             {treePage.parentPlaneID && (
                 <PlaneBridge />
