@@ -3,19 +3,19 @@ import {
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
     TOOLBAR_DRAWERS,
-} from '../../enumerations';
+} from '../../../enumerations';
 
 import {
     RecursivePartial,
-} from '../helpers';
+} from '../../helpers';
 
 import {
     PluridLayout,
-} from './layout';
+} from '../layout';
 
 import {
     InternationalizationLanguageType,
-} from '../internal/internationalization';
+} from '../../internal/internationalization';
 
 
 

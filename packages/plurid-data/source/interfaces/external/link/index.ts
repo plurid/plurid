@@ -1,6 +1,6 @@
 import {
     PluridComponent,
-} from './plane';
+} from '../plane';
 
 
 

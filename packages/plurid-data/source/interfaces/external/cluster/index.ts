@@ -1,10 +1,10 @@
 import {
     PluridPlane,
-} from './plane';
+} from '../plane';
 
 import {
     PluridLayout,
-} from './layout';
+} from '../layout';
 
 
 

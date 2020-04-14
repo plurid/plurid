@@ -1,21 +1,21 @@
 import {
     PluridUniverse,
     PluridPlane,
-} from '../external';
+} from '../../external';
 
 import {
     Identified,
-} from '../helpers';
+} from '../../helpers';
 
 import {
     PluridInternalStatePlane,
     PluridInternalContextPlane,
-} from './plane';
+} from '../plane';
 
 import {
     PathParameters,
     PathQuery,
-} from './tree';
+} from '../tree';
 
 
 

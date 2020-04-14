@@ -1,10 +1,10 @@
 import {
     PluridPlaneContext,
-} from '../external';
+} from '../../external';
 
 import {
     PluridInternalContextUniverse,
-} from './universe';
+} from '../universe';
 
 
 

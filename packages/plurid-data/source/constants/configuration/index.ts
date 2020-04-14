@@ -1,13 +1,13 @@
 import {
     PluridConfiguration,
-} from '../interfaces';
+} from '../../interfaces';
 
 import {
     LAYOUT_TYPES,
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
-} from '../enumerations';
+} from '../../enumerations';
 
 import {
     PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
@@ -17,7 +17,7 @@ import {
     PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
     PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_X,
     PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_Y,
-} from './defaults';
+} from '../defaults';
 
 
 

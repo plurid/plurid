@@ -1,6 +1,6 @@
 import {
     LAYOUT_TYPES,
-} from '../../enumerations';
+} from '../../../enumerations';
 
 
 

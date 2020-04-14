@@ -4,23 +4,23 @@ import {
     PluridPlane,
     PluridPlaneContext,
     PluridComponent,
-} from './plane';
+} from '../plane';
 
 import {
     PluridCluster,
-} from './cluster';
+} from '../cluster';
 
 import {
     PluridUniverse,
-} from './universe';
+} from '../universe';
 
 import {
     PluridView,
-} from './view';
+} from '../view';
 
 import {
     PluridPartialConfiguration,
-} from './configuration';
+} from '../configuration';
 
 
 

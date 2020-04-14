@@ -13,8 +13,7 @@ import fields from './fields';
 import languages from './languages';
 
 
-
-export {
+export const internationalization = {
     chinese,
     english,
     french,
@@ -28,4 +27,4 @@ export {
 
     fields,
     languages,
-}
+};
