@@ -66,7 +66,7 @@ const defaultLinkCoordinates: PluridLinkCoordinates = {
     y: 0,
 };
 
-const previewAppearTime = 400;
+const previewAppearTime = 800;
 const previewDisappearTime = 400;
 
 
