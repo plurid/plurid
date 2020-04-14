@@ -253,6 +253,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         _devisible,
     ]);
 
+    /**
+     * Update Link Coordinates
+     */
     useEffect(() => {
         if (showLink) {
             updateLinkCoordinates();
