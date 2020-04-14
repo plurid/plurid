@@ -73,8 +73,8 @@ const previewDisappearTime = 400;
 interface PluridLinkStateProperties {
     stateTree: TreePlane[];
     stateGeneralTheme: Theme;
-    stateActiveDocumentID: string;
-    stateDocuments: Indexed<PluridInternalStateUniverse>;
+    stateActiveUniverseID: string;
+    stateUniverses: Indexed<PluridInternalStateUniverse>;
     stateConfiguration: PluridConfiguration,
     stateViewSize: ViewSize,
 }
@@ -106,8 +106,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         /** state */
         stateTree,
         stateGeneralTheme,
-        stateActiveDocumentID,
-        stateDocuments,
+        stateActiveUniverseID,
+        stateUniverses,
         stateConfiguration,
         stateViewSize,
 
@@ -175,15 +175,15 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         const linkCoordinates = getPluridLinkCoordinates();
 
-        const searchDocumentID = document ? document : stateActiveDocumentID;
-        const activeDocument = stateDocuments[searchDocumentID];
-        if (!activeDocument) {
+        const searchUniverseID = document ? document : stateActiveUniverseID;
+        const activeUniverse = stateUniverses[searchUniverseID];
+        if (!activeUniverse) {
             return;
         }
 
         const {
             planes,
-        } = activeDocument;
+        } = activeUniverse;
 
         const planeByID = planes[planeID];
         if (!planeByID) {
@@ -312,16 +312,16 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** Set Page ID */
     useEffect(() => {
-        const searchDocumentID = document ? document : stateActiveDocumentID;
-        const activeDocument = stateDocuments[searchDocumentID];
+        const searchUniverseID = document ? document : stateActiveUniverseID;
+        const activeUniverse = stateUniverses[searchUniverseID];
 
-        if (!activeDocument) {
+        if (!activeUniverse) {
             return;
         }
 
         const {
             planes,
-        } = activeDocument;
+        } = activeUniverse;
 
         const routes: PluridRouterRoute<any>[] = Object.values(planes).map(plane => {
             const route: PluridRouterRoute<any> =  {
@@ -390,8 +390,8 @@ const mapStateToProperties = (
 ): PluridLinkStateProperties => ({
     stateTree: selectors.space.getTree(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
-    stateActiveDocumentID: selectors.space.getActiveDocumentID(state),
-    stateDocuments: selectors.data.getDocuments(state),
+    stateActiveUniverseID: selectors.space.getActiveUniverseID(state),
+    stateUniverses: selectors.data.getUniverses(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateViewSize: selectors.space.getViewSize(state),
 });

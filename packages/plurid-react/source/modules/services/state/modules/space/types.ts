@@ -214,9 +214,9 @@ export interface SetTreeAction {
 }
 
 
-export const SET_ACTIVE_DOCUMENT = 'SET_ACTIVE_DOCUMENT';
-export interface SetActiveDocumentAction {
-    type: typeof SET_ACTIVE_DOCUMENT;
+export const SET_ACTIVE_UNIVERSE = 'SET_ACTIVE_UNIVERSE';
+export interface SetActiveUniverseAction {
+    type: typeof SET_ACTIVE_UNIVERSE;
     payload: string;
 }
 
@@ -307,7 +307,7 @@ export interface State {
     translationZ: number;
     initialTree: TreePlane[];
     tree: TreePlane[];
-    activeDocumentID: string;
+    activeUniverseID: string;
     camera: Coordinates;
     viewSize: ViewSize;
     spaceSize: SpaceSize;
@@ -351,7 +351,7 @@ export type Actions = SetSpaceLoadingAction
     | ScaleDownWithAction
     | SetInitialTreeAction
     | SetTreeAction
-    | SetActiveDocumentAction
+    | SetActiveUniverseAction
     | SpaceResetTransformAction
     | SetViewSizeAction
     | SetSpaceSizeAction

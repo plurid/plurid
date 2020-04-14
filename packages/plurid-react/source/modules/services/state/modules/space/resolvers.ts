@@ -453,13 +453,13 @@ export const setTree = (
 }
 
 
-export const setActiveDocument = (
+export const setActiveUniverse = (
     state: Types.State,
-    action: Types.SetActiveDocumentAction,
+    action: Types.SetActiveUniverseAction,
 ): Types.State => {
     return {
         ...state,
-        activeDocumentID: action.payload,
+        activeUniverseID: action.payload,
     };
 }
 
