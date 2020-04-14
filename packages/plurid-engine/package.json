@@ -30,16 +30,15 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "clean": "rm -rf ./distribution",
-        "clean.specs": "find ./distribution -type d -name \"__specs__\" -prune -exec rm -rf {} +",
+        "clean": "rimraf ./distribution",
         "clean.performance": "find ./distribution -type d -name \"__performance__\" -prune -exec rm -rf {} +",
-        "spec": "jest",
-        "lint": "eslint ./source --ext .ts",
-        "typedoc": "typedoc --out documentation --target es6 --theme minimal --mode file source",
+        "test": "jest ./source --config ./jest.config.js --rootDir ./",
+        "lint": "eslint ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
-        "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
-        "build.prod": "yarn clean && rollup -c --environment MODE_ENV:production",
-        "build": "yarn clean && yarn lint && yarn spec && yarn typedoc && yarn build.prod && yarn clean.specs && yarn clean.performance",
+        "build.local": "yarn clean && rollup -c --environment ENV_MODE:local",
+        "build.development": "yarn clean && rollup -c --environment ENV_MODE:development",
+        "build.production": "yarn clean && rollup -c --environment ENV_MODE:production",
+        "build": "yarn lint && yarn test && yarn build.production",
         "prepublishOnly": "yarn build"
     },
     "peerDependencies": {
