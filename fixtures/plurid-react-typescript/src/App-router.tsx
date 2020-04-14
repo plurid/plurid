@@ -6,7 +6,7 @@ import React, {
 import styled from 'styled-components';
 
 import PluridApp, {
-    PluridPage,
+    PluridPlane,
     PluridRouterBrowser,
     PluridRouterStatic,
     PluridRouterLink,
@@ -51,7 +51,7 @@ const StyledAdd = styled.div`
 `;
 
 const App = () => {
-    const [pluridPages, setPluridPages] = useState<PluridPage[]>([]);
+    const [pluridPages, setPluridPages] = useState<PluridPlane[]>([]);
     const [pluridView, setPluridView] = useState<string[]>([]);
 
 
@@ -75,7 +75,7 @@ const App = () => {
 
     const addPage = () => {
         const id = uuid.generate();
-        const page: PluridPage = {
+        const page: PluridPlane = {
             id,
             path: '/' + id,
             component: {

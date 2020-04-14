@@ -6,7 +6,7 @@ import React, {
 import styled from 'styled-components';
 
 import PluridApp, {
-    PluridPage,
+    PluridPlane,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -48,7 +48,7 @@ const StyledAdd = styled.div`
 `;
 
 const App = () => {
-    const [pluridPages, setPluridPages] = useState<PluridPage[]>([]);
+    const [pluridPages, setPluridPages] = useState<PluridPlane[]>([]);
     const [pluridView, setPluridView] = useState<string[]>([]);
 
 
@@ -72,7 +72,7 @@ const App = () => {
 
     const addPage = () => {
         const id = uuid.generate();
-        const page: PluridPage = {
+        const page: PluridPlane = {
             id,
             path: '/' + id,
             component: {
@@ -115,7 +115,7 @@ const App = () => {
 
             <PluridApp
                 configuration={appConfiguration}
-                pages={pluridPages}
+                planes={pluridPages}
                 view={pluridView}
             />
         </div>
