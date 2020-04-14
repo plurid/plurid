@@ -1,6 +1,7 @@
 import React from 'react';
-import { Store, AnyAction } from 'redux';
-import { Provider as ReduxProvider } from 'react-redux';
+import { AnyAction } from 'redux';
+import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import {
     PluridApplication as PluridApplicationProperties,
@@ -8,40 +9,60 @@ import {
 
 import View from '../View';
 
-import {
-    AppState,
-} from '../../modules/services/state/store';
+import { AppState } from '../../modules/services/state/store';
 import StateContext from '../../modules/services/state/context';
 
 
 
-interface RootProperties {
-    store: Store<AppState, AnyAction>;
+interface RootOwnProperties {
     appProperties: PluridApplicationProperties;
 }
+
+interface RootStateProperties {
+}
+
+interface RootDispatchProperties {
+}
+
+type RootProperties = RootOwnProperties
+    & RootStateProperties
+    & RootDispatchProperties;
 
 const Root: React.FC<RootProperties> = (
     properties,
 ) => {
     /** properties */
     const {
-        store,
         appProperties,
     } = properties;
 
 
     /** render */
     return (
-        <ReduxProvider
-            store={store}
-            context={StateContext}
-        >
-            <View
-                appProperties={appProperties}
-            />
-        </ReduxProvider>
+        <View
+            appProperties={appProperties}
+        />
     );
 }
 
 
-export default Root;
+const mapStateToProps = (
+    state: AppState,
+): RootStateProperties => ({
+});
+
+
+const mapDispatchToProps = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): RootDispatchProperties => ({
+});
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    {
+        context: StateContext,
+    },
+)(Root);
