@@ -54,7 +54,7 @@ import {
 
 const {
     default: Router,
-
+    pluridLinkPathDivider,
 } = router;
 
 interface PluridLinkCoordinates {
@@ -119,6 +119,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const planeControls = stateConfiguration.elements.plane.controls.show;
 
+    const dividedPath = pluridLinkPathDivider(planePath);
+    console.log('dividedPath', dividedPath);
+
 
     /** references */
     const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
@@ -176,38 +179,47 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         const linkCoordinates = getPluridLinkCoordinates();
 
-        const searchUniverseID = document ? document : stateActiveUniverseID;
-        const activeUniverse = stateUniverses[searchUniverseID];
-        if (!activeUniverse) {
-            return;
-        }
+        // dividedPath.protocol;
+        // dividedPath.origin;
+        // dividedPath.route;
+        // dividedPath.space;
+        // dividedPath.universe;
+        // dividedPath.cluster;
+        // dividedPath.plane;
 
-        const {
-            planes,
-        } = activeUniverse;
 
-        const planeByID = planes[planeID];
-        if (!planeByID) {
-            return;
-        }
+        // const searchUniverseID = document ? document : stateActiveUniverseID;
+        // const activeUniverse = stateUniverses[searchUniverseID];
+        // if (!activeUniverse) {
+        //     return;
+        // }
 
-        const {
-            pluridPlaneID,
-            updatedTree,
-        } = space.tree.updateTreeWithNewPage(
-            stateTree,
-            parentPlaneID,
-            planePath,
-            planeByID.id,
-            linkCoordinates,
-            {},
-        );
+        // const {
+        //     planes,
+        // } = activeUniverse;
 
-        if (pluridPlaneID) {
-            dispatchSetTree(updatedTree);
-            setShowLink(true);
-            setPluridPlaneID(pluridPlaneID);
-        }
+        // const planeByID = planes[planeID];
+        // if (!planeByID) {
+        //     return;
+        // }
+
+        // const {
+        //     pluridPlaneID,
+        //     updatedTree,
+        // } = space.tree.updateTreeWithNewPage(
+        //     stateTree,
+        //     parentPlaneID,
+        //     planePath,
+        //     planeByID.id,
+        //     linkCoordinates,
+        //     {},
+        // );
+
+        // if (pluridPlaneID) {
+        //     dispatchSetTree(updatedTree);
+        //     setShowLink(true);
+        //     setPluridPlaneID(pluridPlaneID);
+        // }
     }
 
     const toggleLinkFromTree = () => {
@@ -316,39 +328,39 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** Set Page ID */
     useEffect(() => {
-        const searchUniverseID = document ? document : stateActiveUniverseID;
-        const activeUniverse = stateUniverses[searchUniverseID];
+        // const searchUniverseID = document ? document : stateActiveUniverseID;
+        // const activeUniverse = stateUniverses[searchUniverseID];
 
-        if (!activeUniverse) {
-            return;
-        }
+        // if (!activeUniverse) {
+        //     return;
+        // }
 
-        const {
-            planes,
-        } = activeUniverse;
+        // const {
+        //     planes,
+        // } = activeUniverse;
 
-        const routes: PluridRouterRoute<any>[] = Object.values(planes).map(plane => {
-            const route: PluridRouterRoute<any> =  {
-                path: plane.path,
-                view: '',
-            };
-            return route;
-        });
+        // const routes: PluridRouterRoute<any>[] = Object.values(planes).map(plane => {
+        //     const route: PluridRouterRoute<any> =  {
+        //         path: plane.path,
+        //         view: '',
+        //     };
+        //     return route;
+        // });
 
-        const pagesRouter = new Router(routes);
+        // const pagesRouter = new Router(routes);
 
-        const matchedRoute = pagesRouter.match(planePath);
+        // const matchedRoute = pagesRouter.match(planePath);
 
-        if (!matchedRoute) {
-            return;
-        }
+        // if (!matchedRoute) {
+        //     return;
+        // }
 
-        const page = Object.values(planes).find(p => p.path === matchedRoute.route.path);
-        if (!page) {
-            return;
-        }
+        // const page = Object.values(planes).find(p => p.path === matchedRoute.route.path);
+        // if (!page) {
+        //     return;
+        // }
 
-        setPlaneID(page.id);
+        // setPlaneID(page.id);
     }, []);
 
 
@@ -370,7 +382,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         >
             {children}
 
-            {showPreview
+            {/* {showPreview
             && !showLink
             && (
                 <Portal
@@ -383,7 +395,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                         linkCoordinates={linkCoordinates}
                     />
                 </Portal>
-            )}
+            )} */}
         </StyledPluridLink>
     );
 }
