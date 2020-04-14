@@ -2,9 +2,9 @@ import { AppState } from '../store';
 
 
 
-const getDocuments = (state: AppState) => state.data.documents;
+const getUniverses = (state: AppState) => state.data.universes;
 
 
 export default {
-    getDocuments,
+    getUniverses,
 };

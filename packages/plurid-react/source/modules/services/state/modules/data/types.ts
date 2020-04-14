@@ -1,21 +1,21 @@
 import {
     Indexed,
-    PluridInternalStateDocument,
+    PluridInternalStateUniverse,
 } from '@plurid/plurid-data';
 
 
 
-export const DATA_SET_DOCUMENTS = 'DATA_SET_DOCUMENTS';
-export interface DataSetDocumentsAction {
-    type: typeof DATA_SET_DOCUMENTS;
-    payload: Indexed<PluridInternalStateDocument>;
+export const DATA_SET_UNIVERSES = 'DATA_SET_UNIVERSES';
+export interface DataSetUniversesAction {
+    type: typeof DATA_SET_UNIVERSES;
+    payload: Indexed<PluridInternalStateUniverse>;
 }
 
 
 
 export interface State {
-    documents: Indexed<PluridInternalStateDocument>;
+    universes: Indexed<PluridInternalStateUniverse>;
 }
 
 
-export type Actions = DataSetDocumentsAction;
+export type Actions = DataSetUniversesAction;

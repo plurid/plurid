@@ -1,7 +1,7 @@
 import { AppState } from '../store';
 
 import {
-    TreePage,
+    TreePlane,
 } from '@plurid/plurid-data';
 
 
@@ -14,8 +14,8 @@ const getTranslationX = (state: AppState): number => state.space.translationX;
 const getTranslationY = (state: AppState): number => state.space.translationY;
 const getTranslationZ = (state: AppState): number => state.space.translationZ;
 const getScale = (state: AppState): number => state.space.scale;
-const getInitialTree = (state: AppState): TreePage[] => state.space.initialTree;
-const getTree = (state: AppState): TreePage[] => state.space.tree;
+const getInitialTree = (state: AppState): TreePlane[] => state.space.initialTree;
+const getTree = (state: AppState): TreePlane[] => state.space.tree;
 const getTransform = (state: AppState) => {
     return {
         rotationX: state.space.rotationX,
@@ -26,7 +26,7 @@ const getTransform = (state: AppState) => {
         scale: state.space.scale,
     }
 }
-const getActiveDocumentID = (state: AppState) => state.space.activeDocumentID;
+const getActiveUniverseID = (state: AppState) => state.space.activeUniverseID;
 const getViewSize = (state: AppState) => state.space.viewSize;
 const getCulledView = (state: AppState) => state.space.culledView;
 
@@ -47,7 +47,7 @@ export default {
     getInitialTree,
     getTree,
 
-    getActiveDocumentID,
+    getActiveUniverseID,
 
     getViewSize,
     getCulledView,

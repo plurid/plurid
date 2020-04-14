@@ -11,8 +11,8 @@ const reducer = (
     action: Types.Actions,
 ): Types.State => {
     switch(action.type) {
-        case Types.DATA_SET_DOCUMENTS:
-            return resolvers.setDocuments(state, action);
+        case Types.DATA_SET_UNIVERSES:
+            return resolvers.setUniverses(state, action);
         default:
             return {
                 ...state,
