@@ -15,17 +15,17 @@ import {
     TRANSFORM_TOUCHES,
 
     /** interfaces */
-    PluridApp as PluridAppProperties,
+    PluridApplication as PluridApplicationProperties,
     PluridConfiguration as PluridAppConfiguration,
     PluridPartialConfiguration,
     PluridContext,
-    PluridPage,
+    PluridPlane,
     PluridView,
     PluridCluster,
-    PluridDocument,
-    TreePage,
-    PluridInternalStateDocument,
-    PluridInternalContextDocument,
+    PluridUniverse,
+    TreePlane,
+    PluridInternalStateUniverse,
+    PluridInternalContextUniverse,
     Indexed,
 } from '@plurid/plurid-data';
 
@@ -67,18 +67,18 @@ import Context from '../../modules/services/logic/context';
 // import * as helpers from '../../modules/services/logic/helpers';
 
 // import {
-//     createInternalStateDocument,
-//     createInternalContextDocument,
-//     findActiveDocument,
-// } from '../../modules/services/logic/documents';
+//     createInternalStateUniverse,
+//     createInternalContextUniverse,
+//     findActiveUniverse,
+// } from '../../modules/services/logic/universes';
 
 // import {
-//     createInternalStatePage,
-//     createInternalContextPage,
-// } from '../../modules/services/logic/pages';
+//     createInternalStatePlane,
+//     createInternalContextPlane,
+// } from '../../modules/services/logic/planes';
 
 // import {
-//     createTreePage,
+//     createTreePlane,
 // } from '../../modules/services/logic/tree';
 
 // import {
@@ -108,25 +108,25 @@ import {
 
 
 
-export interface HandledDocuments {
-    stateDocuments: Indexed<PluridInternalStateDocument>;
-    contextDocuments: Indexed<PluridInternalContextDocument>;
+export interface HandledUniverses {
+    stateUniverses: Indexed<PluridInternalStateUniverse>;
+    contextUniverses: Indexed<PluridInternalContextUniverse>;
 }
 
 
 export interface ViewOwnProperties {
-    appProperties: PluridAppProperties;
+    appProperties: PluridApplicationProperties;
 }
 
 interface ViewStateProperties {
     configuration: PluridAppConfiguration;
-    stateDataDocuments: Indexed<PluridInternalStateDocument>;
+    stateDataUniverses: Indexed<PluridInternalStateUniverse>;
     viewSize: ViewSize;
     spaceLoading: boolean;
     transform: any;
-    initialTree: TreePage[];
-    stateTree: TreePage[];
-    activeDocumentID: string;
+    initialTree: TreePlane[];
+    stateTree: TreePlane[];
+    activeUniverseID: string;
     stateSpaceLocation: any;
     stateCulledView: any;
 }
@@ -137,7 +137,7 @@ interface ViewDispatchProperties {
     dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
     dispatchSetConfigurationMicro: typeof actions.configuration.setConfigurationMicro;
 
-    dispatchSetDocuments: typeof actions.data.setDocuments;
+    dispatchSetUniverses: typeof actions.data.setUniverses;
 
     dispatchSetViewSize: typeof actions.space.setViewSize;
     dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
@@ -157,7 +157,7 @@ interface ViewDispatchProperties {
     scaleUpWith: typeof actions.space.scaleUpWith;
     scaleDownWith: typeof actions.space.scaleDownWith;
 
-    dispatchSetActiveDocument: typeof actions.space.setActiveDocument;
+    dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
 
     dispatchSpaceSetView: typeof actions.space.spaceSetView;
     dispatchSpaceSetCulledView: typeof actions.space.spaceSetCulledView;
@@ -182,8 +182,8 @@ const View: React.FC<ViewProperties> = (
         stateTree,
         viewSize,
         transform,
-        stateDataDocuments,
-        activeDocumentID,
+        stateDataUniverses,
+        activeUniverseID,
         stateSpaceLocation,
         stateCulledView,
 
@@ -193,7 +193,7 @@ const View: React.FC<ViewProperties> = (
         dispatchSetConfiguration,
         dispatchSetConfigurationMicro,
 
-        dispatchSetDocuments,
+        dispatchSetUniverses,
         dispatchSetViewSize,
 
         dispatchSetSpaceLoading,
@@ -213,7 +213,7 @@ const View: React.FC<ViewProperties> = (
         scaleUpWith,
         scaleDownWith,
 
-        dispatchSetActiveDocument,
+        dispatchSetActiveUniverse,
 
         dispatchSpaceSetView,
         dispatchSpaceSetCulledView,
@@ -221,10 +221,10 @@ const View: React.FC<ViewProperties> = (
 
     const {
         configuration,
-        pages,
+        planes,
         view,
         clusters,
-        documents,
+        universes,
         pubsub,
     } = appProperties;
 
@@ -232,7 +232,7 @@ const View: React.FC<ViewProperties> = (
     /** references */
     const viewElement = useRef<HTMLDivElement>(null);
 
-    const contextDocumentsRef = useRef<Indexed<PluridInternalContextDocument>>({});
+    const contextUniversesRef = useRef<Indexed<PluridInternalContextUniverse>>({});
 
 
     // /** state */
@@ -283,97 +283,97 @@ const View: React.FC<ViewProperties> = (
 
 
     // /** handlers */
-    const handlePages = (
-        pages: PluridPage[],
-        stateDocuments: Indexed<PluridInternalStateDocument>,
+    const handlePlanes = (
+        planes: PluridPlane[],
+        stateUniverses: Indexed<PluridInternalStateUniverse>,
     ) => {
-        const identifiedPages = generalEngine.helpers.identifyPages(pages);
+        const identifiedPlanes = generalEngine.helpers.identifyPlanes(planes);
 
-        const statePages = identifiedPages.map(page => {
-            const statePage = generalEngine.pages.createInternalStatePage(page);
-            return statePage;
+        const statePlanes = identifiedPlanes.map(plane => {
+            const statePlane = generalEngine.planes.createInternalStatePlane(plane);
+            return statePlane;
         });
 
-        const contextPages = identifiedPages.map(page => {
-            const contextPage = generalEngine.pages.createInternalContextPage(page);
-            return contextPage;
+        const contextPlanes = identifiedPlanes.map(plane => {
+            const contextPlane = generalEngine.planes.createInternalContextPlane(plane);
+            return contextPlane;
         });
 
-        const indexedStatePages = generalEngine.helpers.createIndexed(statePages);
-        const indexedContextPages = generalEngine.helpers.createIndexed(contextPages);
+        const indexedStatePlanes = generalEngine.helpers.createIndexed(statePlanes);
+        const indexedContextPlanes = generalEngine.helpers.createIndexed(contextPlanes);
 
-        const paths = generalEngine.paths.registerPaths(statePages);
+        const paths = generalEngine.paths.registerPaths(statePlanes);
         const indexedPaths = generalEngine.helpers.createIndexed(paths);
 
-        const document: PluridInternalStateDocument = {
+        const document: PluridInternalStateUniverse = {
             id: 'default',
             name: 'default',
-            pages: indexedStatePages,
+            planes: indexedStatePlanes,
             paths: indexedPaths,
             ordinal: 0,
             active: true,
         };
-        const indexedStateDocuments: Indexed<PluridInternalStateDocument> = {
+        const indexedStateUniverses: Indexed<PluridInternalStateUniverse> = {
             default: document,
         };
 
-        const contextDocument = {
+        const contextUniverse = {
             id: 'default',
             name: 'default',
-            pages: indexedContextPages,
+            planes: indexedContextPlanes,
         };
-        const indexedContextDocuments: Indexed<PluridInternalContextDocument> = {
-            default: contextDocument,
+        const indexedContextUniverses: Indexed<PluridInternalContextUniverse> = {
+            default: contextUniverse,
         };
 
         return {
-            stateDocuments: indexedStateDocuments,
-            contextDocuments: indexedContextDocuments,
+            stateUniverses: indexedStateUniverses,
+            contextUniverses: indexedContextUniverses,
         };
     }
 
-    const handleDocuments = (
-        documents: PluridDocument[],
-        stateDocuments: Indexed<PluridInternalStateDocument>,
+    const handleUniverses = (
+        universes: PluridUniverse[],
+        stateUniverses: Indexed<PluridInternalStateUniverse>,
     ) => {
-        const identifiedDocuments = generalEngine.helpers.identifyDocuments(documents);
+        const identifiedUniverses = generalEngine.helpers.identifyUniverses(universes);
 
-        const identifiedStateDocuments = identifiedDocuments.map(document => {
-            const stateDocument = generalEngine.documents.createInternalStateDocument(document);
-            return stateDocument;
+        const identifiedStateUniverses = identifiedUniverses.map(document => {
+            const stateUniverse = generalEngine.universes.createInternalStateUniverse(document);
+            return stateUniverse;
         });
-        const identifiedContextDocuments = identifiedDocuments.map(document => {
-            const contextDocument = generalEngine.documents.createInternalContextDocument(document);
-            return contextDocument;
+        const identifiedContextUniverses = identifiedUniverses.map(document => {
+            const contextUniverse = generalEngine.universes.createInternalContextUniverse(document);
+            return contextUniverse;
         });
 
-        const indexedStateDocuments = generalEngine.helpers.createIndexed(identifiedStateDocuments);
-        const indexedContextDocuments = generalEngine.helpers.createIndexed(identifiedContextDocuments);
+        const indexedStateUniverses = generalEngine.helpers.createIndexed(identifiedStateUniverses);
+        const indexedContextUniverses = generalEngine.helpers.createIndexed(identifiedContextUniverses);
 
         return {
-            stateDocuments: indexedStateDocuments,
-            contextDocuments: indexedContextDocuments,
+            stateUniverses: indexedStateUniverses,
+            contextUniverses: indexedContextUniverses,
         };
     }
 
-    const createDocuments = (
-        pages: PluridPage[] | undefined,
-        documents: PluridDocument[] | undefined,
-        stateDocuments: Indexed<PluridInternalStateDocument>,
-    ): HandledDocuments | undefined => {
-        // To check against already loaded pages and documents
+    const createUniverses = (
+        planes: PluridPlane[] | undefined,
+        universes: PluridUniverse[] | undefined,
+        stateUniverses: Indexed<PluridInternalStateUniverse>,
+    ): HandledUniverses | undefined => {
+        // To check against already loaded planes and universes
         // and update only the changes
-        if (!documents && pages) {
-            return handlePages(
-                pages,
-                stateDocuments,
+        if (!universes && planes) {
+            return handlePlanes(
+                planes,
+                stateUniverses,
             );
         }
 
-        if (documents) {
-            return handleDocuments(
-                documents,
-                stateDocuments,
+        if (universes) {
+            return handleUniverses(
+                universes,
+                stateUniverses,
             );
         }
 
@@ -381,37 +381,37 @@ const View: React.FC<ViewProperties> = (
     }
 
     const computeTree = (
-        activeDocumentID: string,
-        documents: Indexed<PluridInternalStateDocument>,
+        activeUniverseID: string,
+        universes: Indexed<PluridInternalStateUniverse>,
         configuration: PluridAppConfiguration,
         view: string[] | PluridView[] | undefined,
         clusters: PluridCluster[] | undefined,
-        contextDocuments: Indexed<PluridInternalContextDocument>,
-        previousTree: TreePage[],
+        contextUniverses: Indexed<PluridInternalContextUniverse>,
+        previousTree: TreePlane[],
     ) => {
-        const activeDocument = documents[activeDocumentID];
-        const pages = activeDocument.pages;
+        const activeUniverse = universes[activeUniverseID];
+        const planes = activeUniverse.planes;
 
-        const activeContextDocument = contextDocuments[activeDocumentID];
-        const contextPages = activeContextDocument.pages;
+        const activeContextUniverse = contextUniverses[activeUniverseID];
+        const contextPlanes = activeContextUniverse.planes;
 
-        const treePages: TreePage[] = [];
-        for (const pageID in pages) {
-            const docPage = pages[pageID]
-            const contextPage = contextPages[pageID];
-            if (!contextPage) {
+        const treePlanes: TreePlane[] = [];
+        for (const planeID in planes) {
+            const docPlane = planes[planeID]
+            const contextPlane = contextPlanes[planeID];
+            if (!contextPlane) {
                 continue;
             }
 
-            const treePage = generalEngine.tree.createTreePage(
-                contextPage,
-                docPage,
+            const treePlane = generalEngine.tree.createTreePlane(
+                contextPlane,
+                docPlane,
             );
-            treePages.push(treePage);
+            treePlanes.push(treePlane);
         }
 
         const spaceTree = new space.tree.Tree({
-            pages: treePages,
+            planes: treePlanes,
             configuration,
             view,
         });
@@ -423,10 +423,10 @@ const View: React.FC<ViewProperties> = (
 
     const computeApplication = (
         configuration: PluridPartialConfiguration | undefined,
-        pages: PluridPage[] | undefined,
+        planes: PluridPlane[] | undefined,
         view: string[] | PluridView[] | undefined,
         clusters: PluridCluster[] | undefined,
-        documents: PluridDocument[] | undefined,
+        universes: PluridUniverse[] | undefined,
     ) => {
         /** computing */
 
@@ -435,31 +435,31 @@ const View: React.FC<ViewProperties> = (
 
         handleConfiguration(appConfiguration);
 
-        // create internal documents
-        const createdDocuments = createDocuments(
-            pages,
-            documents,
-            stateDataDocuments,
+        // create internal universes
+        const createdUniverses = createUniverses(
+            planes,
+            universes,
+            stateDataUniverses,
         );
 
-        if (!createdDocuments) {
+        if (!createdUniverses) {
             return;
         }
 
         const {
-            stateDocuments,
-            contextDocuments,
-        } = createdDocuments;
+            stateUniverses,
+            contextUniverses,
+        } = createdUniverses;
 
-        const activeDocument = generalEngine.documents.findActiveDocument(Object.values(stateDocuments));
+        const activeUniverse = generalEngine.universes.findActiveUniverse(Object.values(stateUniverses));
 
         const newTree = computeTree(
-            activeDocument,
-            stateDocuments,
+            activeUniverse,
+            stateUniverses,
             appConfiguration,
             view,
             clusters,
-            contextDocuments,
+            contextUniverses,
             stateTree,
         );
 
@@ -467,11 +467,11 @@ const View: React.FC<ViewProperties> = (
 
 
         /** assignments */
-        contextDocumentsRef.current = contextDocuments;
+        contextUniversesRef.current = contextUniverses;
 
         dispatchSetSpaceSize(spaceSize);
-        dispatchSetDocuments(stateDocuments);
-        dispatchSetActiveDocument(activeDocument);
+        dispatchSetUniverses(stateUniverses);
+        dispatchSetActiveUniverse(activeUniverse);
         dispatchSetConfiguration(appConfiguration);
         dispatchSetInitialTree(newTree);
         dispatchSetTree(newTree);
@@ -744,7 +744,7 @@ const View: React.FC<ViewProperties> = (
 
 
     // const computeTree = (
-    //     tree: TreePage[],
+    //     tree: TreePlane[],
     // ) => {
     //     // const computedTree = computeSpaceTree(
     //     //     tree,
@@ -760,17 +760,17 @@ const View: React.FC<ViewProperties> = (
     useEffect(() => {
         computeApplication(
             configuration,
-            pages,
+            planes,
             view,
             clusters,
-            documents,
+            universes,
         );
     }, [
         configuration,
-        pages,
+        planes,
         view,
         clusters,
-        documents,
+        universes,
     ]);
 
     /** Keydown, Wheel Listeners */
@@ -853,18 +853,18 @@ const View: React.FC<ViewProperties> = (
     //     viewSize,
     // ]);
 
-    // /** Pages, Documents */
+    // /** Planes, Universes */
     // useEffect(() => {
-    //     if (!documents && pages) {
-    //         handlePages(pages);
+    //     if (!universes && planes) {
+    //         handlePlanes(planes);
     //     }
 
-    //     if (documents) {
-    //         handleDocuments(documents);
+    //     if (universes) {
+    //         handleUniverses(universes);
     //     }
     // }, [
-    //     pages,
-    //     documents,
+    //     planes,
+    //     universes,
     // ]);
 
     // /** State Configuration Layout */
@@ -907,39 +907,39 @@ const View: React.FC<ViewProperties> = (
     //     dispatchSetTree(computedTree);
     // }, [
     //     initialTree,
-    //     activeDocumentID,
-    //     stateDataDocuments,
-    //     contextDocumentsRef.current,
+    //     activeUniverseID,
+    //     stateDataUniverses,
+    //     contextUniversesRef.current,
     //     stateCulledView,
     // ]);
 
     // /** Handle Initial Tree */
     // useEffect(() => {
     //     if (initialTree.length === 0) {
-    //         if (activeDocumentID && contextDocumentsRef.current) {
-    //             const activeDocument = stateDataDocuments[activeDocumentID];
-    //             const pages = activeDocument.pages;
+    //         if (activeUniverseID && contextUniversesRef.current) {
+    //             const activeUniverse = stateDataUniverses[activeUniverseID];
+    //             const planes = activeUniverse.planes;
 
-    //             const activeContextDocument = contextDocumentsRef.current[activeDocumentID];
-    //             const contextPages = activeContextDocument.pages;
+    //             const activeContextUniverse = contextUniversesRef.current[activeUniverseID];
+    //             const contextPlanes = activeContextUniverse.planes;
 
-    //             const treePages: TreePage[] = [];
-    //             for (const pageID in pages) {
-    //                 const docPage = pages[pageID]
-    //                 const contextPage = contextPages[pageID];
-    //                 if (!contextPage) {
+    //             const treePlanes: TreePlane[] = [];
+    //             for (const planeID in planes) {
+    //                 const docPlane = planes[planeID]
+    //                 const contextPlane = contextPlanes[planeID];
+    //                 if (!contextPlane) {
     //                     continue;
     //                 }
 
-    //                 const treePage = createTreePage(
-    //                     contextPage,
-    //                     docPage,
+    //                 const treePlane = createTreePlane(
+    //                     contextPlane,
+    //                     docPlane,
     //                 );
-    //                 treePages.push(treePage);
+    //                 treePlanes.push(treePlane);
     //             }
 
     //             const computedTree = space.computeSpaceTree(
-    //                 treePages,
+    //                 treePlanes,
     //                 stateConfiguration,
     //                 view,
     //             );
@@ -948,9 +948,9 @@ const View: React.FC<ViewProperties> = (
     //     }
     // }, [
     //     initialTree,
-    //     activeDocumentID,
-    //     stateDataDocuments,
-    //     contextDocumentsRef.current,
+    //     activeUniverseID,
+    //     stateDataUniverses,
+    //     contextUniversesRef.current,
     // ]);
 
     /** Touch */
@@ -1046,21 +1046,21 @@ const View: React.FC<ViewProperties> = (
 
     /** context */
     const pluridContext: PluridContext = {
-        pageContext: appProperties.pageContext,
-        pageContextValue: appProperties.pageContextValue,
-        documents: contextDocumentsRef.current,
+        planeContext: appProperties.planeContext,
+        planeContextValue: appProperties.planeContextValue,
+        universes: contextUniversesRef.current,
     };
 
     // console.log('Rendered');
     // console.log('configuration', configuration);
-    // console.log('pages', pages);
+    // console.log('planes', planes);
     // console.log('view', view);
-    // console.log('documents', documents);
+    // console.log('universes', universes);
     // console.log('---------------');
 
 
     /** render */
-    const viewContainer = handleView(pages, documents);
+    const viewContainer = handleView(planes, universes);
 
     return (
         <StyledView
@@ -1088,12 +1088,12 @@ const mapStateToProperties = (
     state: AppState,
 ): ViewStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
-    stateDataDocuments: selectors.data.getDocuments(state),
+    stateDataUniverses: selectors.data.getUniverses(state),
     viewSize: selectors.space.getViewSize(state),
     transform: selectors.space.getTransform(state),
     initialTree: selectors.space.getInitialTree(state),
     stateTree: selectors.space.getTree(state),
-    activeDocumentID: selectors.space.getActiveDocumentID(state),
+    activeUniverseID: selectors.space.getActiveUniverseID(state),
     spaceLoading: selectors.space.getLoading(state),
     stateSpaceLocation: selectors.space.getTransform(state),
     stateCulledView: selectors.space.getCulledView(state),
@@ -1112,8 +1112,8 @@ const mapDispatchToProperties = (
         actions.configuration.setConfigurationMicro()
     ),
 
-    dispatchSetDocuments: (documents: any) => dispatch(
-        actions.data.setDocuments(documents)
+    dispatchSetUniverses: (universes: any) => dispatch(
+        actions.data.setUniverses(universes)
     ),
     dispatchSetViewSize: (viewSize: ViewSize) => dispatch(
         actions.space.setViewSize(viewSize)
@@ -1129,12 +1129,12 @@ const mapDispatchToProperties = (
         actions.space.setSpaceLocation(spaceLocation)
     ),
     dispatchSetInitialTree: (
-        tree: TreePage[],
+        tree: TreePlane[],
     ) => dispatch(
         actions.space.setInitialTree(tree),
     ),
     dispatchSetTree: (
-        tree: TreePage[],
+        tree: TreePlane[],
     ) => dispatch(
         actions.space.setTree(tree),
     ),
@@ -1168,8 +1168,8 @@ const mapDispatchToProperties = (
         actions.space.scaleDownWith(value)
     ),
 
-    dispatchSetActiveDocument: (activeDocument: string) => dispatch(
-        actions.space.setActiveDocument(activeDocument)
+    dispatchSetActiveUniverse: (activeUniverse: string) => dispatch(
+        actions.space.setActiveUniverse(activeUniverse)
     ),
 
     dispatchSpaceSetView: (

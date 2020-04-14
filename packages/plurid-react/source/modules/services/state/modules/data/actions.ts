@@ -1,17 +1,17 @@
 import {
     Indexed,
-    PluridInternalStateDocument,
+    PluridInternalStateUniverse,
 } from '@plurid/plurid-data';
 
 import * as Types from './types';
 
 
 
-export const setDocuments = (
-    payload: Indexed<PluridInternalStateDocument>,
-): Types.DataSetDocumentsAction => {
+export const setUniverses = (
+    payload: Indexed<PluridInternalStateUniverse>,
+): Types.DataSetUniversesAction => {
     return {
-        type: Types.DATA_SET_DOCUMENTS,
+        type: Types.DATA_SET_UNIVERSES,
         payload,
     };
 }

@@ -2,13 +2,13 @@ import * as Types from './types';
 
 
 
-export const setDocuments = (
+export const setUniverses = (
     state: Types.State,
-    action: Types.DataSetDocumentsAction,
+    action: Types.DataSetUniversesAction,
 ): Types.State => {
     return {
         ...state,
-        documents: {
+        universes: {
             ...action.payload,
         },
     };
