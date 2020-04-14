@@ -40,6 +40,56 @@ export interface PluridLink {
      * where the fragment `#:~:element=123,[1]`
      * indicates the link to bring into view the second occurence `[1]`, if any,
      * of the element with the attribute `data-plurid-element=123`.
+     *
+     *
+     * ### Larger Syntax Structure
+     *
+     * The syntax `/page` is used to reference only the plurid pages within the same plurid space.
+     *
+     * In order to reference pages from other
+     *
+     * + spaces within the same route,
+     * + spaces within other routes,
+     * + spaces within other controlled origins,
+     * + spaces within other foreign origins,
+     *
+     * the syntax `://` has to be used.
+     *
+     *
+     * A plurid link in the same space.
+     *
+     * `://page`
+     *
+     * example: `://dashboard`
+     *
+     *
+     * A plurid link to a different space within the same route
+     *
+     * `://space://page`
+     *
+     * example: `://user123://dashboard`
+     *
+     *
+     * A plurid link to a different space within an another route.
+     *
+     * `://route://space://page`
+     *
+     * example: `://payment://user123://dashboard`
+     *
+     *
+     * A plurid link to a different space within a controlled origin.
+     *
+     * `https://controlled-origin://route://space://page`
+     *
+     * example: `https://example-c.com://payment://user123://dashboard`
+     *
+     *
+     * A plurid link to a different space within a foreign origin.
+     *
+     * `https://foreign-origin://route://space://page`
+     *
+     * example: `https://example-f.com://payment://user123://dashboard`
+     *
      */
     page: string;
 
@@ -84,7 +134,7 @@ export interface PluridLink {
 export type PluridLinkIntraspatial = 'intraspatial';
 
 /**
- * A plurid link to a difference space within the same route or on another route.
+ * A plurid link to a different space within the same route or on another route.
  */
 export type PluridLinkInterspatial = 'interspatial';
 
