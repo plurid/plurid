@@ -1,23 +1,11 @@
 {
+    "extends": "../tsconfig.json",
     "compilerOptions": {
-        "module": "esnext",
-        "moduleResolution": "node",
-        "target": "es6",
-        "lib": ["es6", "es2016", "es2017"],
-        "strict": true,
-        "sourceMap": true,
-        "allowSyntheticDefaultImports": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "outDir": "./distribution",
-        "typeRoots": [
-            "node_modules/@types"
-        ]
+        "rootDir": "source",
+        "outDir": "distribution"
     },
-    "include": [
-        "source"
-    ],
     "exclude": [
-        "source/files"
+        "node_modules",
+        "distribution"
     ]
 }
