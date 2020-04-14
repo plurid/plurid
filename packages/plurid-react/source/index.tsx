@@ -31,6 +31,7 @@ import PluridRouterBrowser from './modules/components/PluridRouterBrowser';
 import PluridRouterStatic from './modules/components/PluridRouterStatic';
 import PluridRouterLink from './modules/components/PluridRouterLink';
 import PluridVirtualList from './modules/components/PluridVirtual/List';
+import PluridPlaneConfigurator from './modules/components/PluridPlaneConfigurator';
 
 import PluridProvider from './modules/components/PluridProvider';
 
@@ -80,6 +81,7 @@ export {
     PluridRouterStatic,
     PluridRouterLink,
     PluridVirtualList,
+    PluridPlaneConfigurator,
     PluridProvider,
 
     /** Logic */
