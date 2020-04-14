@@ -4,16 +4,16 @@ import {
 
 
 
-export interface PluridInternalPage {
+export interface PluridInternalPlane {
     id: string;
     path: string;
 }
 
-export interface PluridInternalStatePage extends PluridInternalPage {
+export interface PluridInternalStatePlane extends PluridInternalPlane {
     // root: boolean;
     // ordinal: number;
 }
 
-export interface PluridInternalContextPage extends PluridInternalPage {
+export interface PluridInternalContextPlane extends PluridInternalPlane {
     component: PluridComponentReact;
 }

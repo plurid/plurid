@@ -1,17 +1,17 @@
 import PluridPubSub from '@plurid/plurid-pubsub';
 
 import {
-    PluridPage,
-    PluridPageContext,
-    PluridPageContextValue,
+    PluridPlane,
+    PluridPlaneContext,
+    PluridPlaneContextValue,
     PluridView,
     PluridCluster,
     PluridComponent,
-} from './page';
+} from './plane';
 
 import {
-    PluridDocument,
-} from './document';
+    PluridUniverse,
+} from './universe';
 
 import {
     PluridPartialConfiguration,
@@ -19,39 +19,39 @@ import {
 
 
 
-export interface PluridApp {
+export interface PluridApplication {
     /**
-     * A `PluridApp` must be either pages or documents based.
+     * A `PluridApplication` must be either planes or universes based.
      */
-    pages?: PluridPage[];
+    planes?: PluridPlane[];
 
     /**
-     * Optional context for the page to have access to.
+     * Optional context for the plane to have access to.
      */
-    pageContext?: PluridPageContext<any>;
+    planeContext?: PluridPlaneContext<any>;
 
     /**
      * Optional context initial value.
      */
-    pageContextValue?: PluridPageContextValue;
+    planeContextValue?: PluridPlaneContextValue;
 
     /**
-     * Paths to the pages in view on the initial rendering.
+     * Paths of the planes in view on the initial rendering.
      */
     view?: string[] | PluridView[];
 
     /**
-     * A cluster ensures the rendering of all the pages that it contains
+     * A cluster ensures the rendering of all the planes that reference it
      * in the same space zone.
      */
     clusters?: PluridCluster[];
 
     /**
-     * A `PluridApp` must be either pages or documents based.
+     * A `PluridApplication` must be either planes or universes based.
      *
-     * A `PluridDocument` is a collection of PluridPages (`PluridPage[]`).
+     * A `PluridUniverse` is a collection of PluridPlanes (`PluridPlane[]`).
      */
-    documents?: PluridDocument[];
+    universes?: PluridUniverse[];
 
     /**
      * Show or not the default Not Found component, or pass a custom component

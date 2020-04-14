@@ -1,6 +1,6 @@
 import {
     PluridComponent,
-} from './page';
+} from './plane';
 
 
 
@@ -127,11 +127,23 @@ export interface PluridLink {
 
 
 /**
- * A plurid link in the same space.
+ * A plurid link in the same space, same universe.
  *
  * `://page`
  */
 export type PluridLinkIntraspatial = 'intraspatial';
+
+/**
+ * `://page`
+ */
+export type PluridLinkIntraspatialSameUniverse = 'intraspatialSameUniverse';
+
+/**
+ * `://universe://page`
+ */
+export type PluridLinkIntraspatialDifferentUniverse = 'intraspatialDifferentUniverse';
+
+
 
 /**
  * A plurid link to a different space within the same route or on another route.
@@ -139,12 +151,12 @@ export type PluridLinkIntraspatial = 'intraspatial';
 export type PluridLinkInterspatial = 'interspatial';
 
 /**
- * `://space://page`
+ * `://space://universe://page`
  */
 export type PluridLinkInterspatialSameRoute = 'interspatialSameRoute';
 
 /**
- * `://route://space://page`
+ * `://route://space://universe://page`
  */
 export type PluridLinkInterspatialDifferentRoute = 'interspatialDifferentRoute';
 
@@ -157,12 +169,12 @@ export type PluridLinkInterspatialKind =
 export type PluridLinkOuterspatial = 'outerspatial';
 
 /**
- * `https://controlled-origin://route://space://page`
+ * `https://controlled-origin://route://space://universe://page`
  */
 export type PluridLinkOuterspatialControlledOrigin = 'outerspatialControlledOrigin';
 
 /**
- * `https://foreign-origin://route://space://page`
+ * `https://foreign-origin://route://space://universe://page`
  */
 export type PluridLinkOuterspatialForeignOrigin = 'outerspatialForeignOrigin';
 
