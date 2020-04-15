@@ -4,6 +4,9 @@ import React, {
 } from 'react';
 
 import PluridApp, {
+    PluridRouterBrowser,
+    PluridRouterRouting,
+
     // PluridConfiguration,
     PluridPlane,
     PluridView,
@@ -86,16 +89,41 @@ const App = () => {
         },
     ];
 
+    const routing: PluridRouterRouting<any> = {
+        routes: [
+            {
+                path: '/',
+                view: 'one',
+            },
+            {
+                path: '/one',
+                view: 'one',
+            },
+        ],
+        components: [
+            {
+                component: () => (<div>one</div>),
+                view: 'one',
+            }
+        ]
+    }
+
 
     return (
-        <div>
-            <PluridApp
-                configuration={appConfiguration}
-                planes={planes}
-                view={pluridView}
-            />
-        </div>
-    );
+        <PluridRouterBrowser
+            routing={routing}
+        />
+    )
+
+    // return (
+    //     <div>
+    //         <PluridApp
+    //             configuration={appConfiguration}
+    //             planes={planes}
+    //             view={pluridView}
+    //         />
+    //     </div>
+    // );
 }
 
 
