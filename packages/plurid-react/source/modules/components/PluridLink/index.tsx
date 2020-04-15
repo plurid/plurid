@@ -55,6 +55,7 @@ import {
 const {
     default: Router,
     pluridLinkPathDivider,
+    resolveAbsolutePluridLinkPath,
 } = router;
 
 interface PluridLinkCoordinates {
@@ -121,6 +122,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const dividedPath = pluridLinkPathDivider(planePath);
     console.log('dividedPath', dividedPath);
+    const absolutePath = resolveAbsolutePluridLinkPath(planePath);
+    console.log('absolutePath', absolutePath);
 
 
     /** references */
