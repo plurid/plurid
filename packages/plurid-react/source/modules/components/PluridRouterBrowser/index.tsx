@@ -22,12 +22,18 @@ import {
 
 interface PluridRouterBrowserOwnProperties<T> {
     routing: PluridRouterRouting<T>;
+
     /**
      * The gateway path is used to receive external routing requests.
      * e.g. https://example.com/gateway?plurid=https://subdomain.example.com://path/to/123://s://u://c://a-plane
      * will route to that specific host://route://space://universe://cluster://plane
      */
     gateway?: string;
+
+    /**
+     * API endpoint to request the elements for the paths not found in the initial routing.
+     */
+    api?: string;
     children?: any;
 }
 
