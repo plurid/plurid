@@ -168,6 +168,10 @@ export const resolveAbsolutePluridLinkPath = (
 
     const divisions = pluridLinkPathDivider(path);
 
+    const defaultPathname = window.location.pathname.length > 1
+        ? window.location.pathname.slice(1,)
+        : 'r';
+
     const protocol = divisions.protocol || window.location.protocol.replace(':', '');
     const origin = divisions.origin.value
         ? divisions.origin
@@ -178,7 +182,7 @@ export const resolveAbsolutePluridLinkPath = (
     const route = divisions.route.value
         ? divisions.route
         : {
-            value: window.location.pathname,
+            value: defaultPathname,
             parameters: {},
             query: {},
         };
