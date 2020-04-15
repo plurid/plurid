@@ -10,6 +10,9 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
+    /** constants */
+    PLURID_ENTITY_APPLICATION,
+
     /** enumerations */
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
@@ -1067,6 +1070,7 @@ const View: React.FC<ViewProperties> = (
             ref={viewElement}
             tabIndex={0}
             transformMode={stateConfiguration.space.transformMode}
+            data-plurid-entity={PLURID_ENTITY_APPLICATION}
         >
             {!spaceLoading && (
                 <>
