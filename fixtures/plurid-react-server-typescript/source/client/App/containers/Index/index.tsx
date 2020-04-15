@@ -2,7 +2,7 @@ import React from 'react';
 
 import PluridApp, {
     PluridPartialConfiguration,
-    PluridPage,
+    PluridPlane,
     PluridView,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
@@ -36,7 +36,7 @@ const Index: React.FC<any> = () => {
         },
     };
 
-    const pluridPages: PluridPage[] = [
+    const pluridPlanes: PluridPlane[] = [
         {
             path: '/page',
             component: {
@@ -60,7 +60,7 @@ const Index: React.FC<any> = () => {
 
             <PluridApp
                 configuration={pluridConfiguration}
-                pages={pluridPages}
+                planes={pluridPlanes}
                 view={pluridView}
             />
         </StyledIndex>
