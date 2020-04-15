@@ -1,3 +1,4 @@
+export const PLURID_ENTITY_APPLICATION = 'PluridApplication';
 export const PLURID_ENTITY_PLANE = 'PluridPlane';
 export const PLURID_ENTITY_PLANE_CONFIGURATOR = 'PluridPlaneConfigurator';
 export const PLURID_ENTITY_LINK = 'PluridLink';
