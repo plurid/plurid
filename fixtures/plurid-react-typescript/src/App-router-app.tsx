@@ -167,7 +167,8 @@ const App = () => {
     const components = [
         {
             view: 'index',
-            component: componentIndex,
+            component: component2,
+            // component: componentIndex,
         },
         {
             view: 'oneC',
