@@ -48,7 +48,7 @@ const Page: React.FC<any> = (
                 }}
             >
                 <PluridLink
-                    page="/page"
+                    path="/page"
                     style={{
                         color: '#ccc',
                     }}
