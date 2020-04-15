@@ -5,6 +5,7 @@ import RouteParser from './Parser';
 import {
     mapPathsToRoutes,
     pluridLinkPathDivider,
+    resolveAbsolutePluridLinkPath,
 } from './utilities';
 
 
@@ -18,6 +19,7 @@ export {
     /** utilities */
     mapPathsToRoutes,
     pluridLinkPathDivider,
+    resolveAbsolutePluridLinkPath,
 }
 
 export * from './CompareTypes';
