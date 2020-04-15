@@ -37,7 +37,7 @@
     "scripts": {
         "clean": "rm -rf ./distribution",
         "copy.server": "cp -r ./source/server ./distribution/server/",
-        "test": "jest ./source --config ../jest.config.js --rootDir ./",
+        "test": "jest ./source --config ./jest.config.js --rootDir ./",
         "lint": "eslint ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c rollup.config.js -w --environment ENV_MODE:local",
         "build.removeTests": "rm -rf `find ./distribution/ -type d -name __specs__`",
@@ -72,6 +72,7 @@
         "@types/configstore": "^4.0.0",
         "@types/express": "^4.17.6",
         "@types/inquirer": "^6.5.0",
+        "@types/jest": "^25.2.1",
         "@types/js-yaml": "^3.12.3",
         "@types/node": "^13.11.1",
         "@typescript-eslint/eslint-plugin": "^2.28.0",
