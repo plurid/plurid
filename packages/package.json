@@ -11,8 +11,8 @@
         "plurid-react-server"
     ],
     "dependencies": {
-        "@plurid/plurid-data": "0.0.0",
-        "@plurid/plurid-engine": "0.0.0",
+        "@plurid/plurid-data": "0.1.114",
+        "@plurid/plurid-engine": "0.1.55",
         "@plurid/plurid-functions": "0.1.12",
         "@plurid/plurid-functions-react": "0.0.1",
         "@plurid/plurid-icons-react": "0.1.18",
