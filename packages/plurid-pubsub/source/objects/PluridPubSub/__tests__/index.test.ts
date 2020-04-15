@@ -1,4 +1,4 @@
-import PluridPubSub from '../';
+import PluridPubSub from '..';
 
 
 

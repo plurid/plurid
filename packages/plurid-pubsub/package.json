@@ -31,13 +31,15 @@
         "npm": ">=6"
     },
     "scripts": {
-        "clean": "rm -rf ./distribution",
+        "clean": "rimraf ./distribution",
+        "clean.tests": "find ./distribution -type d -name \"__tests__\" -prune -exec rm -rf {} +",
+        "test": "jest ./source --config ./jest.config.js --rootDir ./",
         "lint": "eslint ./source --ext .ts,.tsx",
-        "spec": "jest",
         "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
-        "build.dev": "yarn clean && rollup -c --environment MODE_ENV:local",
-        "build.prod": "rollup -c --environment MODE_ENV:production",
-        "build": "yarn clean && yarn lint && yarn build.prod",
+        "build.local": "yarn clean && rollup -c --environment ENV_MODE:local",
+        "build.development": "yarn clean && rollup -c --environment ENV_MODE:development",
+        "build.production": "yarn clean && rollup -c --environment ENV_MODE:production",
+        "build": "yarn lint && yarn test && yarn build.production && yarn clean.tests",
         "prepublishOnly": "yarn build"
     },
     "devDependencies": {
