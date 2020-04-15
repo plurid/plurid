@@ -1,7 +1,6 @@
 import copy from 'rollup-plugin-copy';
 import json from '@rollup/plugin-json';
-
-import plugins from '../rollup.plugins';
+import typescript from 'rollup-plugin-typescript2';
 
 import pkg from './package.json';
 
@@ -37,7 +36,10 @@ export default {
     ],
     plugins: [
         json(),
-        ...plugins,
+        typescript({
+            rollupCommonJSResolveHack: true,
+            clean: true,
+        }),
         copy({
             targets: [
                 { src: 'source/files/', dest: 'distribution/' },
