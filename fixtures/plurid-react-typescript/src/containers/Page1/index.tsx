@@ -61,8 +61,17 @@ const Page1: React.FC<any> = (
             </div> */}
 
             <div>
-                <div>
+                {/* <div>
                     <PluridLink path="https://origin.com://route://a-space://a-universe://a-cluster://a-plane">full link</PluridLink>
+                </div> */}
+
+                <div>
+                    {/* <PluridLink path="://route://a-space://a-universe://a-cluster://a-plane">partial link</PluridLink> */}
+                    {/* <PluridLink path="://a-space://a-universe://a-cluster://a-plane">partial link</PluridLink> */}
+                    {/* <PluridLink path="://a-universe://a-cluster://a-plane">partial link</PluridLink> */}
+                    {/* <PluridLink path="://a-cluster://a-plane">partial link</PluridLink> */}
+                    {/* <PluridLink path="://a-plane">partial link</PluridLink> */}
+                    <PluridLink path="/a-plane">partial link</PluridLink>
                 </div>
 
 
