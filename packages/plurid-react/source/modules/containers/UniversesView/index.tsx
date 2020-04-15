@@ -3,10 +3,6 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    StyledUniversesView,
-} from './styled';
-
 import PluridSpace from '../../components/PluridSpace';
 
 import { AppState } from '../../services/state/store';
@@ -31,9 +27,9 @@ type UniversesViewProperties = UniversesViewOwnProperties
 
 const UniversesView: React.FC<UniversesViewProperties> = () => {
     return (
-        <StyledUniversesView>
+        <>
             <PluridSpace />
-        </StyledUniversesView>
+        </>
     );
 }
 
