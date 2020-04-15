@@ -10,7 +10,8 @@ import PluridApp, {
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
-import Page1 from './containers/Plane1';
+import Plane1 from './containers/Plane1';
+import Plane2 from './containers/Plane2';
 
 
 
@@ -46,41 +47,25 @@ const App = () => {
         },
     };
 
-    const oneHundred = [...new Array(1)].map((_, index) => index);
-
-    const multiplePages = oneHundred.map((val) => {
-        return {
-            path: '/' + val,
-            component: {
-                element: Page1,
-                properties: {},
-            },
-        };
-    });
-
-    const multipleViews = oneHundred.map((val) => {
-        return '/' + val;
-    });
-
-    const appPages: PluridPlane[] = [
+    const planes: PluridPlane[] = [
         {
             path: '/one',
             component: {
-                element: Page1,
+                element: Plane1,
                 properties: {},
             },
         },
         {
             path: '/two',
             component: {
-                element: Page1,
+                element: Plane2,
                 properties: {},
             },
         },
         {
             path: '/three',
             component: {
-                element: Page1,
+                element: Plane1,
                 properties: {},
             },
         },
@@ -106,8 +91,8 @@ const App = () => {
         <div>
             <PluridApp
                 configuration={appConfiguration}
-                planes={multiplePages}
-                view={multipleViews}
+                planes={planes}
+                view={pluridView}
             />
         </div>
     );

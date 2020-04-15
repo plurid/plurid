@@ -31,7 +31,7 @@ const Page1: React.FC<any> = (
             <PluridPlaneConfigurator />
 
             <h1>
-                Plane 1
+                Plane 2
             </h1>
 
             <div>
