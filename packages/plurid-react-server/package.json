@@ -36,12 +36,12 @@
     },
     "scripts": {
         "clean": "rm -rf ./distribution",
-        "spec": "jest ./source",
+        "test": "jest ./source",
         "lint": "eslint ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c rollup.config.development.js -w --environment MODE_ENV:local",
         "build.development": "yarn clean && rollup -c rollup.config.development.js --environment MODE_ENV:development",
         "build.production": "yarn clean && rollup -c --environment MODE_ENV:production",
-        "build": "yarn clean && yarn lint && yarn spec && yarn build.production",
+        "build": "yarn clean && yarn lint && yarn test && yarn build.production",
         "prepublishOnly": "yarn build"
     },
     "peerDependencies": {
@@ -73,12 +73,12 @@
     "devDependencies": {
         "@apollo/react-hooks": "^3.1.5",
         "@babel/core": "^7.9.0",
-        "@plurid/plurid-data": "^0.1.114",
-        "@plurid/plurid-engine": "^0.1.55",
+        "@plurid/plurid-data": "^0.1.115",
+        "@plurid/plurid-engine": "^0.1.56",
         "@plurid/plurid-functions": "^0.1.12",
         "@plurid/plurid-functions-react": "^0.0.1",
         "@plurid/plurid-icons-react": "^0.1.18",
-        "@plurid/plurid-pubsub": "^0.1.6",
+        "@plurid/plurid-pubsub": "^0.1.7",
         "@plurid/plurid-react": "^0.1.130",
         "@plurid/plurid-themes": "^0.1.26",
         "@plurid/plurid-ui-react": "^0.1.80",
