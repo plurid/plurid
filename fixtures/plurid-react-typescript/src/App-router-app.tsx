@@ -59,7 +59,7 @@ const App = () => {
 
     const appConfiguration: any = {
         theme: 'plurid',
-        language: 'romanian',
+        // language: 'romanian',
         space: {
             layout: {
                 type: SPACE_LAYOUT.COLUMNS,
