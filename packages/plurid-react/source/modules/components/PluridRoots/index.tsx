@@ -8,10 +8,16 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
+    /** constants */
+    PLURID_ENTITY_TRANSFORM_ORIGIN,
+    PLURID_ENTITY_ROOTS,
+
+    /** enumerations */
+    SIZES,
+
+    /** interfaces */
     TreePlane,
     PluridConfiguration,
-    SIZES,
-    PLURID_ENTITY_ROOTS,
 } from '@plurid/plurid-data';
 
 import {
@@ -145,6 +151,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                             ${transformOriginZ}px
                         `,
                     }}
+                    data-plurid-entity={PLURID_ENTITY_TRANSFORM_ORIGIN}
                 />
             )}
 
