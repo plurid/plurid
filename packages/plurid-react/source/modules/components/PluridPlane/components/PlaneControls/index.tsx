@@ -8,13 +8,10 @@ import { ThunkDispatch } from 'redux-thunk';
 import { Theme } from '@plurid/plurid-themes';
 
 import {
-    StyledPlaneControls,
-    StyledPlaneControlsLeft,
-    StyledPlaneControlsCenter,
-    StyledPlaneControlsRight,
-} from './styled';
+    /** constants */
+    PLURID_ENTITY_PLANE_CONTROLS,
 
-import {
+    /** interfaces */
     PluridPlane,
     TreePlane,
     PluridConfiguration,
@@ -23,6 +20,13 @@ import {
 import {
     PluridTextline,
 } from '@plurid/plurid-ui-react';
+
+import {
+    StyledPlaneControls,
+    StyledPlaneControlsLeft,
+    StyledPlaneControlsCenter,
+    StyledPlaneControlsRight,
+} from './styled';
 
 import { AppState } from '../../../../services/state/store';
 import StateContext from '../../../../services/state/context';
@@ -50,7 +54,9 @@ type PlaneControlsProperties = PlaneControlsOwnProperties
     & PlaneControlsStateProperties
     & PlaneControlsDispatchProperties;
 
-const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
+const PlaneControls: React.FC<PlaneControlsProperties> = (
+    properties,
+) => {
     const {
         /** own */
         plane,
@@ -104,6 +110,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
             theme={generalTheme}
             mouseOver={mouseOver}
             transparentUI={transparentUI}
+            data-plurid-entity={PLURID_ENTITY_PLANE_CONTROLS}
         >
             <StyledPlaneControlsLeft>
             </StyledPlaneControlsLeft>
@@ -125,14 +132,18 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (properties) => {
 }
 
 
-const mapStateToProps = (state: AppState): PlaneControlsStateProperties => ({
+const mapStateToProps = (
+    state: AppState,
+): PlaneControlsStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): PlaneControlsDispatchProperties => ({
+const mapDispatchToProps = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): PlaneControlsDispatchProperties => ({
 });
 
 
