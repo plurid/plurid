@@ -35,7 +35,7 @@
     },
     "scripts": {
         "clean": "rm -rf ./distribution",
-        "test": "jest ./source --config ../jest.config.js --rootDir ./",
+        "test": "jest ./source --config ./jest.config.js --rootDir ./",
         "lint": "eslint ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c rollup.config.development.js -w --environment ENV_MODE:local",
         "build.development": "yarn clean && rollup -c rollup.config.development.js --environment ENV_MODE:development",
@@ -62,12 +62,12 @@
     },
     "devDependencies": {
         "@babel/core": "^7.9.0",
-        "@plurid/plurid-data": "^0.1.114",
-        "@plurid/plurid-engine": "^0.1.55",
+        "@plurid/plurid-data": "^0.1.115",
+        "@plurid/plurid-engine": "^0.1.56",
         "@plurid/plurid-functions": "^0.1.12",
         "@plurid/plurid-functions-react": "^0.0.1",
         "@plurid/plurid-icons-react": "^0.1.18",
-        "@plurid/plurid-pubsub": "^0.1.6",
+        "@plurid/plurid-pubsub": "^0.1.7",
         "@plurid/plurid-themes": "^0.1.26",
         "@plurid/plurid-ui-react": "^0.1.80",
         "@rollup/plugin-commonjs": "^11.1.0",
@@ -110,8 +110,5 @@
         "ts-jest": "^25.3.1",
         "ts-node": "^8.8.2",
         "typescript": "^3.8.3"
-    },
-    "dependencies": {
-        "@plurid/plurid-pubsub": "^0.1.6"
     }
 }
