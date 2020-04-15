@@ -11,7 +11,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import {
     /** constants */
-    PLURID_ENTITY_APPLICATION,
+    PLURID_ENTITY_VIEW,
 
     /** enumerations */
     TRANSFORM_MODES,
@@ -107,7 +107,6 @@ import {
 import {
     SpaceSize,
 } from '../../modules/services/state/modules/space/types';
-
 
 
 
@@ -1070,7 +1069,7 @@ const View: React.FC<ViewProperties> = (
             ref={viewElement}
             tabIndex={0}
             transformMode={stateConfiguration.space.transformMode}
-            data-plurid-entity={PLURID_ENTITY_APPLICATION}
+            data-plurid-entity={PLURID_ENTITY_VIEW}
         >
             {!spaceLoading && (
                 <>
