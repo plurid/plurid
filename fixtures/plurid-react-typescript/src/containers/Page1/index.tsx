@@ -63,6 +63,10 @@ const Page1: React.FC<any> = (
             <div>
                 {/* <PluridLink path="/page-2/soo/loo">link to page 2</PluridLink> */}
                 <PluridLink path="://a-space://a-universe://a-cluster://a-plane">link to page 2</PluridLink>
+
+                {/* https://depict.plurid.com://imagelist/123456://default://default://default://a-plane
+
+                https://depict.plurid.com://imagelist/123456://s://u://c://a-plane */}
             </div>
 
             <div>
