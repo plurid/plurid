@@ -1,47 +1,3 @@
-// import copy from 'rollup-plugin-copy';
-// // import json from '@rollup/plugin-json';
-
-// import plugins from '../rollup.plugins';
-
-// import pkg from './package.json';
-
-
-
-// const globals = {
-//     'commander': 'program',
-// };
-
-// export default {
-//     input: 'source/index.ts',
-//     output: [
-//         {
-//             file: pkg.main,
-//             format: 'cjs',
-//             globals,
-//             sourcemap: true,
-//             exports: 'named',
-//         },
-//         {
-//             file: pkg.module,
-//             format: 'es',
-//             globals,
-//             sourcemap: true,
-//             exports: 'named',
-//         },
-//     ],
-//     plugins: [
-//         // json(),
-//         ...plugins,
-//         copy({
-//             targets: [
-//                 { src: 'source/files/', dest: 'distribution/' },
-//             ],
-//         }),
-//     ],
-// }
-
-
-
 import replace from '@rollup/plugin-replace';
 import resolve from '@rollup/plugin-node-resolve';
 import external from 'rollup-plugin-peer-deps-external';
@@ -61,7 +17,7 @@ const globals = {
 
 
 export default {
-    input: `source/index.ts`,
+    input: 'source/index.ts',
     output: [
         {
             file: pkg.main,
@@ -81,12 +37,9 @@ export default {
         'path',
         'fs',
     ],
-    watch: {
-        include: 'source/**',
-    },
     plugins: [
         replace({
-            'process.env.MODE_ENV': JSON.stringify(process.env.MODE_ENV),
+            'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
         }),
         json(),
         typescript({
