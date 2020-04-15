@@ -150,3 +150,64 @@ export const pluridLinkPathDivider = (
 
     return url;
 }
+
+
+/**
+ * Given a partial `path`, e.g. `/path`, or `://cluster://path`,
+ * it resolves it to the absolute form
+ * `protocol://origin://route://space://universe://cluster://plane`.
+ *
+ * @param path
+ */
+export const resolveAbsolutePluridLinkPath = (
+    path: string,
+) => {
+    if (!window) {
+        return;
+    }
+
+    const divisions = pluridLinkPathDivider(path);
+
+    const protocol = divisions.protocol || window.location.protocol.replace(':', '');
+    const origin = divisions.origin || {
+        value: window.location.host,
+        controlled: true,
+    };
+    const route = divisions.route || {
+        value: window.location.pathname,
+        parameters: {},
+        query: {},
+    };
+    const space = divisions.space || {
+        value: 's',
+        parameters: {},
+        query: {},
+    };
+    const universe = divisions.universe || {
+        value: 'u',
+        parameters: {},
+        query: {},
+    };
+    const cluster = divisions.cluster || {
+        value: 'c',
+        parameters: {},
+        query: {},
+    };
+    const plane = divisions.plane;
+
+    const separator = '://';
+
+    const resolvers = [
+        protocol,
+        origin.value,
+        route.value,
+        space.value,
+        universe.value,
+        cluster.value,
+        plane.value,
+    ];
+
+    const resolvedPath = resolvers.join(separator);
+
+    return resolvedPath;
+}
