@@ -4,8 +4,15 @@ import React, {
 } from 'react';
 
 import {
+    /** constants */
+    PLURID_ENTITY_PLANE_CONTENT,
+} from '@plurid/plurid-data';
+
+import {
     StyledPlaneContent,
 } from './styled';
+
+
 
 
 
@@ -48,6 +55,7 @@ const PlaneContent: React.FC<PlaneContentOwnProperties> = (properties) => {
     return (
         <StyledPlaneContent
             ref={planeContentElement}
+            data-plurid-entity={PLURID_ENTITY_PLANE_CONTENT}
         >
             {children}
         </StyledPlaneContent>

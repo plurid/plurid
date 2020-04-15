@@ -6,12 +6,16 @@ import { ThunkDispatch } from 'redux-thunk';
 import { Theme } from '@plurid/plurid-themes';
 
 import {
-    StyledPlaneBridge,
-} from './styled';
+    /** constants */
+    PLURID_ENTITY_PLANE_BRIDGE,
 
-import {
+    /** interfaces */
     PluridConfiguration,
 } from '@plurid/plurid-data';
+
+import {
+    StyledPlaneBridge,
+} from './styled';
 
 import { AppState } from '../../../../services/state/store';
 import StateContext from '../../../../services/state/context';
@@ -51,6 +55,7 @@ const PlaneBridge: React.FC<PlaneBridgeProperties> = (properties) => {
             theme={generalTheme}
             planeControls={controls.show}
             planeOpacity={opacity}
+            data-plurid-entity={PLURID_ENTITY_PLANE_BRIDGE}
         />
     );
 }
