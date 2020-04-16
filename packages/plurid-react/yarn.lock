@@ -556,6 +556,14 @@
     "@rollup/pluginutils" "^3.0.4"
     magic-string "^0.25.5"
 
+"@rollup/plugin-typescript@^4.1.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-4.1.1.tgz#bcb38ca4d89a35da2238a6f1136af460a1b2cb09"
+  integrity sha512-KYZCn1Iw9hZWkeEPqPs5YjlmvSjR7UdezVca8z0e8rm/29wU24UD9Y4IZHhnc9tm749hzsgBTiOUxA85gfShEQ==
+  dependencies:
+    "@rollup/pluginutils" "^3.0.1"
+    resolve "^1.14.1"
+
 "@rollup/plugin-url@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-url/-/plugin-url-4.0.2.tgz#af9e6ce8b26153843567bfb04e48843e72fc2dc4"
@@ -565,7 +573,7 @@
     make-dir "^3.0.0"
     mime "^2.4.4"
 
-"@rollup/pluginutils@^3.0.4", "@rollup/pluginutils@^3.0.8":
+"@rollup/pluginutils@^3.0.1", "@rollup/pluginutils@^3.0.4", "@rollup/pluginutils@^3.0.8":
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-3.0.9.tgz#aa6adca2c45e5a1b950103a999e3cddfe49fd775"
   integrity sha512-TLZavlfPAZYI7v33wQh4mTP6zojne14yok3DNSLcjoG/Hirxfkonn6icP5rrNWRn8nZsirJBFFpijVOJzkUHDg==
@@ -5252,6 +5260,13 @@ resolve@1.15.1, resolve@1.x, resolve@^1.11.0, resolve@^1.14.2, resolve@^1.15.1, 
   version "1.15.1"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.15.1.tgz#27bdcdeffeaf2d6244b95bb0f9f4b4653451f3e8"
   integrity sha512-84oo6ZTtoTUpjgNEr5SJyzQhzL72gaRodsSfyxC/AXRvwu0Yse9H8eF9IpGo7b8YetZhlI6v7ZQ6bKBFV/6S7w==
+  dependencies:
+    path-parse "^1.0.6"
+
+resolve@^1.14.1:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.16.0.tgz#063dc704fa3413e13ac1d0d1756a7cbfe95dd1a7"
+  integrity sha512-LarL/PIKJvc09k1jaeT4kQb/8/7P+qV4qSnN2K80AES+OHdfZELAKVOBjxsvtToT/uLOfFbvYvKfZmV8cee7nA==
   dependencies:
     path-parse "^1.0.6"
 
