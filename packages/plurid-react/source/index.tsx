@@ -6,13 +6,13 @@ import {
     PluridConfiguration,
     PluridPartialConfiguration,
     RecursivePartial,
-    PluridRouting,
-    PluridRoutingHost,
-    PluridRoutingPath,
-    PluridRoutingSpace,
-    PluridRoutingUniverse,
-    PluridRoutingCluster,
-    PluridRoutingPlane,
+    PluridRouter,
+    PluridRouterHost,
+    PluridRouterPath,
+    PluridRouterSpace,
+    PluridRouterUniverse,
+    PluridRouterCluster,
+    PluridRouterPlane,
 
     /** Enumerations */
     LAYOUT_TYPES as SPACE_LAYOUT,
@@ -49,7 +49,7 @@ import {
 
 
 const {
-    default: PluridRouter,
+    // default: PluridRouter,
     RouteMatcher: PluridRouteMatcher,
     RouteParser: PluridRouteParser,
 } = router;
@@ -61,13 +61,13 @@ export {
     PluridView,
     PluridUniverse,
 
-    PluridRouting,
-    PluridRoutingHost,
-    PluridRoutingPath,
-    PluridRoutingSpace,
-    PluridRoutingUniverse,
-    PluridRoutingCluster,
-    PluridRoutingPlane,
+    PluridRouter,
+    PluridRouterHost,
+    PluridRouterPath,
+    PluridRouterSpace,
+    PluridRouterUniverse,
+    PluridRouterCluster,
+    PluridRouterPlane,
 
     PluridConfiguration,
     PluridPartialConfiguration,
@@ -80,7 +80,7 @@ export {
     TRANSFORM_TOUCHES,
 
     /** Engine */
-    PluridRouter,
+    // PluridRouter,
     PluridRouteMatcher,
     PluridRouteParser,
 
