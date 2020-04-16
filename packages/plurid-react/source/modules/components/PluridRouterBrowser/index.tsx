@@ -62,11 +62,13 @@ const PluridRouterBrowser = (
     /** properties */
     const {
         paths,
+        gateway,
+        api,
     } = properties;
 
 
     /** references */
-    const pluridRouter = useRef(new Router(paths));
+    const pluridRouter = useRef(new Router(paths, {}));
 
 
     /** state */
