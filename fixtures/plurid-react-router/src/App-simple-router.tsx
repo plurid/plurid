@@ -70,9 +70,51 @@ const App = () => {
         },
     };
 
+    const pathWithStatic: PluridRouterPath = {
+        value: '/path-static',
+        exterior: {
+            kind: 'react',
+            element: () => (
+                <div style={{position: 'absolute', zIndex: 9999}}>
+                    with static
+                </div>
+            ),
+        },
+        spaces: [
+            defaultSpace,
+        ],
+    };
+
+    const slottedPath: PluridRouterPath = {
+        value: '/slotted',
+        exterior: {
+            kind: 'react',
+            element: (properties) => {
+                const Spaces = properties.spaces;
+                console.log('properties', properties);
+                return (
+                    <div>
+                        slotted
+
+                        <div style={{height: 400, width: 800}}>
+                            <Spaces />
+                        </div>
+                    </div>
+                );
+            },
+        },
+        spaces: [
+            defaultSpace,
+        ],
+        slottedSpaces: true,
+    };
+
+
     const paths: PluridRouterPath[] = [
         indexPath,
         staticPath,
+        pathWithStatic,
+        slottedPath,
     ];
 
     // const baseHost: PluridRouterHost = {
