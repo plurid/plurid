@@ -103,8 +103,8 @@ const PluridRouterBrowser = (
                         Exterior = exterior.element
                         // setComponent(exterior.element);
                 }
-                return;
             }
+            console.log('exterior', Exterior);
 
             let Spaces: React.FC<any> = () => (<></>);
             if (spaces) {
@@ -151,13 +151,13 @@ const PluridRouterBrowser = (
 
             const Component = (
                 <>
-                    {Exterior && (
+                    {exterior && (
                         <Exterior
                             spaces={slottedSpaces ? Spaces : undefined}
                         />
                     )}
 
-                    {Spaces && !slottedSpaces && (
+                    {spaces && !slottedSpaces && (
                         <Spaces />
                     )}
                 </>
