@@ -112,7 +112,7 @@ const App = () => {
         spaces: [
             defaultSpace,
         ],
-        slottedSpaces: true,
+        slotted: true,
     };
 
 
