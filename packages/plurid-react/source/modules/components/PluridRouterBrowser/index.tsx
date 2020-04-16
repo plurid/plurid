@@ -9,12 +9,15 @@ import {
 
     // PluridRouterRouting,
     // PluridRouting,
+    PluridPlane,
     PluridRouterPath,
 } from '@plurid/plurid-data';
 
 import {
     router,
 } from '@plurid/plurid-engine';
+
+import PluridApplication from '../../../Application';
 
 import {
     indexing,
@@ -67,7 +70,7 @@ const PluridRouterBrowser = (
 
 
     /** state */
-    // const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse<T>>();
+    const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse>();
     const [Component, setComponent] = useState<any>();
 
 
@@ -78,8 +81,69 @@ const PluridRouterBrowser = (
 
         console.log(matchedRoute);
 
-        // if (matchedRoute) {
-        //     setMatchedRoute(matchedRoute);
+        if (matchedRoute) {
+            setMatchedRoute(matchedRoute);
+
+            const {
+                path,
+            } = matchedRoute;
+
+            const {
+                exterior,
+                spaces,
+            } = path;
+
+            if (exterior) {
+                switch (exterior.kind) {
+                    case 'elementql':
+                        break;
+                    case 'react':
+                        setComponent(exterior.component);
+                }
+                return;
+            }
+
+            if (spaces) {
+                const Component = (
+                    <>
+                        {spaces.map(space => {
+                            const planes: PluridPlane[] = [];
+                            const view = [];
+                            for (const universe of space.universes) {
+                                for (const cluster of universe.clusters) {
+                                    for (const plane of cluster.planes) {
+                                        const {
+                                            component,
+                                            value,
+                                        } = plane;
+
+                                        if (component.kind === 'react') {
+                                            const pluridPlane: PluridPlane = {
+                                                component: {
+                                                    element: component.component,
+                                                },
+                                                path: value,
+                                            };
+
+                                            planes.push(pluridPlane);
+                                            view.push(value);
+                                        }
+                                    }
+                                }
+                            }
+
+                            return (
+                                <PluridApplication
+                                    key={Math.random() + ''}
+                                    planes={planes}
+                                    view={view}
+                                />
+                            );
+                        })}
+                    </>
+                );
+                setComponent(Component);
+            }
 
         //     const view = matchedRoute.route.view;
         //     const routeComponent = indexedComponents.current[view as any];
@@ -87,7 +151,7 @@ const PluridRouterBrowser = (
         //     if (routeComponent) {
         //         setComponent(routeComponent.component);
         //     }
-        // }
+        }
 
         // if (!matchedRoute) {
         //     const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
@@ -126,17 +190,15 @@ const PluridRouterBrowser = (
     /** render */
     return (
         <>
-            <div>
-                router
-            </div>
-
-            {/* {matchedRoute && Component && (
+            {matchedRoute && Component && (
                 <>
                     {Component}
                 </>
-            )} */}
+            )}
         </>
     );
+
+
 
 
     // const {
