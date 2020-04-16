@@ -99,6 +99,9 @@ export interface PluridRoutingHost {
     paths: PluridRoutingPath[];
 }
 
+/**
+ * A routing path can be spaces or exterior-based.
+ */
 export interface PluridRoutingPath {
     value: string;
 
@@ -107,7 +110,13 @@ export interface PluridRoutingPath {
      */
     exterior?: PluridRoutingComponent;
 
-    spaces: PluridRoutingSpace[];
+    spaces?: PluridRoutingSpace[];
+
+    /**
+     * Pass the rendered `spaces` components as a property to the `exterior` component
+     * to be rendered in their proper slot.
+     */
+    slottedSpaces?: boolean;
 }
 
 export interface PluridRoutingSpace {
