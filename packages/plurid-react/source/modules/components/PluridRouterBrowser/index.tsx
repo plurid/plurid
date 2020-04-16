@@ -22,6 +22,9 @@ import {
 
 
 
+const Router = router.default;
+
+
 interface PluridRouterBrowserOwnProperties {
     paths: PluridRouterPath[];
 
@@ -54,6 +57,88 @@ const PluridRouterBrowser = (
     properties: PluridRouterBrowserOwnProperties,
 ) => {
     /** properties */
+    const {
+        paths,
+    } = properties;
+
+
+    /** references */
+    const pluridRouter = useRef(new Router(paths));
+
+
+    /** state */
+    // const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse<T>>();
+    const [Component, setComponent] = useState<any>();
+
+
+    /** handlers */
+    const handlePopState = () => {
+        const path = window.location.pathname;
+        const matchedRoute = pluridRouter.current.match(path);
+
+        console.log(matchedRoute);
+
+        // if (matchedRoute) {
+        //     setMatchedRoute(matchedRoute);
+
+        //     const view = matchedRoute.route.view;
+        //     const routeComponent = indexedComponents.current[view as any];
+
+        //     if (routeComponent) {
+        //         setComponent(routeComponent.component);
+        //     }
+        // }
+
+        // if (!matchedRoute) {
+        //     const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
+        //     if (notFoundMatchedRoute) {
+        //         setMatchedRoute(notFoundMatchedRoute);
+
+        //         const view = notFoundMatchedRoute.route.view;
+        //         const routeComponent = indexedComponents.current[view as any];
+
+        //         if (routeComponent) {
+        //             history.pushState(null, '', '/not-found');
+        //             setComponent(routeComponent.component);
+        //         }
+        //     }
+        // }
+    }
+
+
+    /** effects */
+    useEffect(() => {
+        handlePopState();
+    }, []);
+
+
+    useEffect(() => {
+        window.addEventListener('popstate', handlePopState);
+        window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+            window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
+        };
+    }, []);
+
+
+    /** render */
+    return (
+        <>
+            <div>
+                router
+            </div>
+
+            {/* {matchedRoute && Component && (
+                <>
+                    {Component}
+                </>
+            )} */}
+        </>
+    );
+
+
     // const {
     //     routing,
     // } = properties;
@@ -72,11 +157,11 @@ const PluridRouterBrowser = (
 
     // console.log(routing);
 
-    return (
-        <div>
-            router
-        </div>
-    );
+    // return (
+    //     <div>
+    //         router
+    //     </div>
+    // );
 
     // const {
     //     routes,
