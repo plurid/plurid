@@ -91,20 +91,24 @@ const PluridRouterBrowser = (
             const {
                 exterior,
                 spaces,
+                slottedSpaces,
             } = path;
 
+            let Exterior: React.FC<any> = () => (<></>);
             if (exterior) {
                 switch (exterior.kind) {
                     case 'elementql':
                         break;
                     case 'react':
-                        setComponent(exterior.component);
+                        Exterior = exterior.element
+                        // setComponent(exterior.element);
                 }
                 return;
             }
 
+            let Spaces: React.FC<any> = () => (<></>);
             if (spaces) {
-                const Component = (
+                Spaces = () => (
                     <>
                         {spaces.map(space => {
                             const planes: PluridPlane[] = [];
@@ -120,7 +124,7 @@ const PluridRouterBrowser = (
                                         if (component.kind === 'react') {
                                             const pluridPlane: PluridPlane = {
                                                 component: {
-                                                    element: component.component,
+                                                    element: component.element,
                                                 },
                                                 path: value,
                                             };
@@ -142,8 +146,24 @@ const PluridRouterBrowser = (
                         })}
                     </>
                 );
-                setComponent(Component);
+                // setComponent(Component);
             }
+
+            const Component = (
+                <>
+                    {Exterior && (
+                        <Exterior
+                            spaces={slottedSpaces ? Spaces : undefined}
+                        />
+                    )}
+
+                    {Spaces && !slottedSpaces && (
+                        <Spaces />
+                    )}
+                </>
+            );
+
+            setComponent(Component);
 
         //     const view = matchedRoute.route.view;
         //     const routeComponent = indexedComponents.current[view as any];
