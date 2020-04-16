@@ -1,5 +1,5 @@
 import {
-    PluridRouterRoute,
+    PluridRouterPath,
 } from '@plurid/plurid-data';
 
 import Parser from '../';
@@ -8,9 +8,10 @@ import Parser from '../';
 
 describe('Parser', () => {
     it('simple string', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/one',
-            view: 'one',
+        const route: PluridRouterPath = {
+            value: '/one',
+            // path: '/one',
+            // view: 'one',
         };
         const parser = new Parser('/one', route);
         const response = parser.extract();
@@ -18,9 +19,10 @@ describe('Parser', () => {
     });
 
     it('with parameter', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/two/:id',
-            view: 'two',
+        const route: PluridRouterPath = {
+            value: '/two/:id',
+            // path: '/two/:id',
+            // view: 'two',
         };
         const parser = new Parser('/two/123', route);
         const response = parser.extract();
@@ -29,9 +31,10 @@ describe('Parser', () => {
     });
 
     it('with no parameter', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/two/:id',
-            view: 'two',
+        const route: PluridRouterPath = {
+            value: '/two/:id',
+            // path: '/two/:id',
+            // view: 'two',
         };
         const parser = new Parser('/twoB/123', route);
         const response = parser.extract();
@@ -39,9 +42,10 @@ describe('Parser', () => {
     });
 
     it('with query', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/three',
-            view: 'three',
+        const route: PluridRouterPath = {
+            value: '/three',
+            // path: '/three',
+            // view: 'three',
         };
         const parser = new Parser('/three?q=three', route);
         const response = parser.extract();
@@ -52,9 +56,10 @@ describe('Parser', () => {
     });
 
     it('with text fragment', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/four',
-            view: 'four',
+        const route: PluridRouterPath = {
+            value: '/four',
+            // path: '/four',
+            // view: 'four',
         };
         const parser = new Parser('/four#:~:text=fourStart,fourEnd,[1]', route);
         const response = parser.extract();
@@ -65,9 +70,10 @@ describe('Parser', () => {
     });
 
     it('with invalid text fragment', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/four',
-            view: 'four',
+        const route: PluridRouterPath = {
+            value: '/four',
+            // path: '/four',
+            // view: 'four',
         };
         const parser = new Parser('/four#:~:text=', route);
         const response = parser.extract();
@@ -76,9 +82,10 @@ describe('Parser', () => {
     });
 
     it('with incomplete text fragment', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/four',
-            view: 'four',
+        const route: PluridRouterPath = {
+            value: '/four',
+            // path: '/four',
+            // view: 'four',
         };
         const parser = new Parser('/four#:~:text=start', route);
         const response = parser.extract();
@@ -89,9 +96,10 @@ describe('Parser', () => {
     });
 
     it('with element fragment', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/five',
-            view: 'five',
+        const route: PluridRouterPath = {
+            value: '/five',
+            // path: '/five',
+            // view: 'five',
         };
         const parser = new Parser('/five#:~:element=555,[2]', route);
         const response = parser.extract();
@@ -102,9 +110,10 @@ describe('Parser', () => {
     });
 
     it('with invalid element fragment', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/five',
-            view: 'five',
+        const route: PluridRouterPath = {
+            value: '/five',
+            // path: '/five',
+            // view: 'five',
         };
         const parser = new Parser('/five#:~:element=,[2]', route);
         const response = parser.extract();
@@ -114,9 +123,10 @@ describe('Parser', () => {
 
 
     it('with parameter and query', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/three/:par',
-            view: 'three',
+        const route: PluridRouterPath = {
+            value: '/three/:par',
+            // path: '/three/:par',
+            // view: 'three',
         };
         const parser = new Parser('/three/fff?q=threePQ', route);
         const response = parser.extract();
@@ -131,9 +141,10 @@ describe('Parser', () => {
     });
 
     it('with parameter and query and text fragment', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/three/:par',
-            view: 'three',
+        const route: PluridRouterPath = {
+            value: '/three/:par',
+            // path: '/three/:par',
+            // view: 'three',
         };
         const parser = new Parser('/three/fff?q=threePQT#:~:text=threeStart,threeEnd,[45]', route);
         const response = parser.extract();
@@ -153,9 +164,10 @@ describe('Parser', () => {
     });
 
     it('with parameter and query and text fragment and element fragment', () => {
-        const route: PluridRouterRoute<any> = {
-            path: '/three/:par',
-            view: 'three',
+        const route: PluridRouterPath = {
+            value: '/three/:par',
+            // path: '/three/:par',
+            // view: 'three',
         };
         const parser = new Parser('/three/fff?q=threePQT#:~:text=threeStart,threeEnd,[45]&element=foo,[533]', route);
         const response = parser.extract();

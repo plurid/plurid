@@ -18,28 +18,28 @@ import {
  * @param pathElements
  * @param route
  */
-export const checkLengths = <T>(
-    parserResponse: ParserResponse<T>,
+export const checkLengths = (
+    parserResponse: ParserResponse,
 ): boolean => {
-    const {
-        route,
-        elements,
-    } = parserResponse;
+    // const {
+    //     path,
+    //     elements,
+    // } = parserResponse;
 
-    if (!route.length) {
-        return true;
-    }
+    // if (!path.length) {
+    //     return true;
+    // }
 
-    if (
-        typeof route.length === 'number'
-        && (typeof route.lengthType === 'string' || typeof route.lengthType === 'undefined')
-    ) {
-        return checkElementLength(
-            elements[0],
-            route.length,
-            route.lengthType,
-        );
-    }
+    // if (
+    //     typeof path.length === 'number'
+    //     && (typeof path.lengthType === 'string' || typeof path.lengthType === 'undefined')
+    // ) {
+    //     return checkElementLength(
+    //         elements[0],
+    //         path.length,
+    //         path.lengthType,
+    //     );
+    // }
 
     // TODO
     // handle the case where the length is an index

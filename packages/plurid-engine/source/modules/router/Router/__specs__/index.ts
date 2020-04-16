@@ -1,5 +1,5 @@
 import {
-    PluridRouterRoute,
+    PluridRouterPath,
 } from '@plurid/plurid-data';
 
 import Router from '../';
@@ -8,18 +8,21 @@ import Router from '../';
 
 describe('Router', () => {
     it('simple route', () => {
-        const routes: PluridRouterRoute<any>[] = [
+        const routes: PluridRouterPath[] = [
             {
-                path: '/',
-                view: 'index',
+                value: '/',
+                // path: '/',
+                // view: 'index',
             },
             {
-                path: '/one',
-                view: 'one',
+                value: '/one',
+                // path: '/one',
+                // view: 'one',
             },
             {
-                path: '/two',
-                view: 'two',
+                value: '/two',
+                // path: '/two',
+                // view: 'two',
             },
         ];
         const router = new Router(routes);
@@ -29,14 +32,16 @@ describe('Router', () => {
     });
 
     it.only('simple route cached', () => {
-        const routes: PluridRouterRoute<any>[] = [
+        const routes: PluridRouterPath[] = [
             {
-                path: '/one',
-                view: 'one',
+                value: '/one',
+                // path: '/one',
+                // view: 'one',
             },
             {
-                path: '/two',
-                view: 'two',
+                value: '/two',
+                // path: '/two',
+                // view: 'two',
             },
         ];
         const router = new Router(routes);
@@ -48,14 +53,16 @@ describe('Router', () => {
     });
 
     it('simple route - parametric', () => {
-        const routes: PluridRouterRoute<any>[] = [
+        const routes: PluridRouterPath[] = [
             {
-                path: '/one/:element',
-                view: 'one',
+                value: '/one/:element',
+                // path: '/one/:element',
+                // view: 'one',
             },
             {
-                path: '/two',
-                view: 'two',
+                value: '/two',
+                // path: '/two',
+                // view: 'two',
             },
         ];
         const router = new Router(routes);
@@ -65,14 +72,16 @@ describe('Router', () => {
     });
 
     it('simple route - query', () => {
-        const routes: PluridRouterRoute<any>[] = [
+        const routes: PluridRouterPath[] = [
             {
-                path: '/one',
-                view: 'one',
+                value: '/one',
+                // path: '/one',
+                // view: 'one',
             },
             {
-                path: '/two',
-                view: 'two',
+                value: '/two',
+                // path: '/two',
+                // view: 'two',
             },
         ];
         const router = new Router(routes);
@@ -87,14 +96,16 @@ describe('Router', () => {
     });
 
     it('simple route - fragment', () => {
-        const routes: PluridRouterRoute<any>[] = [
+        const routes: PluridRouterPath[] = [
             {
-                path: '/one',
-                view: 'one',
+                value: '/one',
+                // path: '/one',
+                // view: 'one',
             },
             {
-                path: '/two',
-                view: 'two',
+                value: '/two',
+                // path: '/two',
+                // view: 'two',
             },
         ];
         const router = new Router(routes);

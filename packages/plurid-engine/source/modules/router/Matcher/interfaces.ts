@@ -1,6 +1,6 @@
 import {
     Indexed,
-    PluridRouterRoute,
+    PluridRouterPath,
 } from '@plurid/plurid-data';
 
 import {
@@ -16,8 +16,8 @@ export interface MatcherOptions {
 }
 
 
-export interface MatcherResponse<T> {
-    route: PluridRouterRoute<T>;
+export interface MatcherResponse {
+    path: PluridRouterPath;
     pathname: string;
     parameters: Indexed<string>;
     query: Indexed<string>;
