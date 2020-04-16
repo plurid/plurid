@@ -37,6 +37,7 @@ export default class Router {
     ) {
         const routerOptions: RouterOptions = {
             cacheLimit: options?.cacheLimit || 1000,
+            gateway: options?.gateway,
         };
 
         return routerOptions;
@@ -66,6 +67,7 @@ export default class Router {
 
         for (const path of this.paths) {
             const matcher = new Matcher(location, path);
+            console.log('matcher', matcher);
             const data = matcher.data();
             if (data) {
                 this.cachedMatched[location] = {
