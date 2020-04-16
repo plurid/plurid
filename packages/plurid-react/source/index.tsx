@@ -6,8 +6,13 @@ import {
     PluridConfiguration,
     PluridPartialConfiguration,
     RecursivePartial,
-    PluridRouterRouting,
     PluridRouting,
+    PluridRoutingHost,
+    PluridRoutingPath,
+    PluridRoutingSpace,
+    PluridRoutingUniverse,
+    PluridRoutingCluster,
+    PluridRoutingPlane,
 
     /** Enumerations */
     LAYOUT_TYPES as SPACE_LAYOUT,
@@ -55,8 +60,15 @@ export {
     PluridPlane,
     PluridView,
     PluridUniverse,
-    PluridRouterRouting,
+
     PluridRouting,
+    PluridRoutingHost,
+    PluridRoutingPath,
+    PluridRoutingSpace,
+    PluridRoutingUniverse,
+    PluridRoutingCluster,
+    PluridRoutingPlane,
+
     PluridConfiguration,
     PluridPartialConfiguration,
     RecursivePartial,
