@@ -62,11 +62,21 @@ const App = () => {
         ],
     };
 
+    const staticPath: PluridRoutingPath = {
+        value: '/static',
+        exterior: {
+            kind: 'react',
+            component: () => <div>static</div>,
+        },
+        spaces: [],
+    };
+
     const baseHost: PluridRoutingHost = {
         protocol: 'http',
         hostname: 'localhost',
         paths: [
             indexPath,
+            staticPath,
         ],
     };
 
