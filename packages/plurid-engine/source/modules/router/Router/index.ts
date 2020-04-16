@@ -13,6 +13,15 @@ import {
 } from '../Matcher/interfaces';
 
 import Matcher from '../Matcher';
+import Parser from '../Parser';
+
+import {
+    extractQuery,
+} from '../Parser/logic';
+
+import {
+    pluridLinkPathDivider,
+} from '../utilities';
 
 
 
@@ -59,10 +68,18 @@ export default class Router {
     public match(
         location: string,
     ) {
-        console.log('LOCATION', location)
-        console.log('this.options.gateway', this.options.gateway)
+        // const parsed = new Parser(location, path);
+        // const query = extractQuery(location);
+
+        // console.log('query', query);
+        console.log('LOCATION', location);
+        console.log('this.options.gateway', this.options.gateway);
         if (location === this.options.gateway) {
+            const query = extractQuery(window.location.search);
+            const pathDivisions = pluridLinkPathDivider(query.plurid);
             console.log('GATEWAY');
+            console.log('query', query);
+            console.log('pathDivisions', pathDivisions);
         }
 
         const cached = this.cachedMatched[location];
