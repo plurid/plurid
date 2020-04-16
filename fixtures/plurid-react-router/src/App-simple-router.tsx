@@ -3,13 +3,13 @@ import React from 'react';
 import {
     PluridRouterBrowser,
 
-    PluridRouting,
-    PluridRoutingHost,
-    PluridRoutingPath,
-    PluridRoutingSpace,
-    PluridRoutingUniverse,
-    PluridRoutingCluster,
-    PluridRoutingPlane,
+    // PluridRouter,
+    // PluridRouterHost,
+    PluridRouterPath,
+    PluridRouterSpace,
+    PluridRouterUniverse,
+    PluridRouterCluster,
+    PluridRouterPlane,
 } from '@plurid/plurid-react';
 
 import Plane1 from './containers/Plane1';
@@ -18,14 +18,14 @@ import Plane2 from './containers/Plane2';
 
 
 const App = () => {
-    const planeOne: PluridRoutingPlane = {
+    const planeOne: PluridRouterPlane = {
         component: {
             kind: 'react',
             component: Plane1,
         },
         value: 'one',
     };
-    const planeTwo: PluridRoutingPlane = {
+    const planeTwo: PluridRouterPlane = {
         component: {
             kind: 'react',
             component: Plane2,
@@ -33,7 +33,7 @@ const App = () => {
         value: 'two',
     };
 
-    const defaultCluster: PluridRoutingCluster = {
+    const defaultCluster: PluridRouterCluster = {
         value: 'default',
         planes: [
             planeOne,
@@ -41,28 +41,28 @@ const App = () => {
         ],
     };
 
-    const defaultUniverse: PluridRoutingUniverse = {
+    const defaultUniverse: PluridRouterUniverse = {
         value: 'default',
         clusters: [
             defaultCluster,
         ],
     };
 
-    const defaultSpace: PluridRoutingSpace = {
+    const defaultSpace: PluridRouterSpace = {
         value: 'default',
         universes: [
             defaultUniverse,
         ],
     };
 
-    const indexPath: PluridRoutingPath = {
+    const indexPath: PluridRouterPath = {
         value: '/',
         spaces: [
             defaultSpace,
         ],
     };
 
-    const staticPath: PluridRoutingPath = {
+    const staticPath: PluridRouterPath = {
         value: '/static',
         exterior: {
             kind: 'react',
@@ -70,24 +70,26 @@ const App = () => {
         },
     };
 
-    const baseHost: PluridRoutingHost = {
-        protocol: 'http',
-        hostname: 'localhost',
-        paths: [
-            indexPath,
-            staticPath,
-        ],
-    };
+    const paths: PluridRouterPath[] = [
+        indexPath,
+        staticPath,
+    ];
 
-    const routing: PluridRouting = {
-        hosts: [
-            baseHost,
-        ],
-    };
+    // const baseHost: PluridRouterHost = {
+    //     protocol: 'http',
+    //     hostname: 'localhost',
+    //     paths,
+    // };
+
+    // const routing: PluridRouter = {
+    //     hosts: [
+    //         baseHost,
+    //     ],
+    // };
 
     return (
         <PluridRouterBrowser
-            routing={routing}
+            paths={paths}
         />
     );
 }
