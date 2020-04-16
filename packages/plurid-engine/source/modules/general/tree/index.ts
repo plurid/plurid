@@ -23,7 +23,7 @@ export const createTreePlane = (
         ...defaultTreePlane,
         sourceID: contextPlane.id,
         planeID: uuid.generate(),
-        path: contextPlane.path,
+        route: contextPlane.path,
         show: true,
     };
     return treePlane;
