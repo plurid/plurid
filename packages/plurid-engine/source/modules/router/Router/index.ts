@@ -59,8 +59,10 @@ export default class Router {
     public match(
         location: string,
     ) {
+        console.log('LOCATION', location)
+        console.log('this.options.gateway', this.options.gateway)
         if (location === this.options.gateway) {
-
+            console.log('GATEWAY');
         }
 
         const cached = this.cachedMatched[location];
