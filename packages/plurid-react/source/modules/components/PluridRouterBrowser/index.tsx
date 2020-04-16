@@ -8,7 +8,8 @@ import {
     PLURID_ROUTER_LOCATION_CHANGED,
 
     // PluridRouterRouting,
-    PluridRouting,
+    // PluridRouting,
+    PluridRouterPath,
 } from '@plurid/plurid-data';
 
 import {
@@ -21,9 +22,20 @@ import {
 
 
 
-interface PluridRouterBrowserOwnProperties<T> {
-    routing: PluridRouting;
-    // routing: PluridRouterRouting<T>;
+interface PluridRouterBrowserOwnProperties {
+    paths: PluridRouterPath[];
+
+    /**
+     * Development default: 'http'.
+     * Production default: 'https'.
+     */
+    protocol?: string;
+
+    /**
+     * Development default: 'localhost'.
+     * Production default: window.location.host.
+     */
+    host?: string;
 
     /**
      * The gateway path is used to receive external routing requests.
@@ -36,18 +48,29 @@ interface PluridRouterBrowserOwnProperties<T> {
      * API endpoint to request the elements for the paths not found in the initial routing.
      */
     api?: string;
-    children?: any;
 }
 
-function PluridRouterBrowser<T>(
-    properties: PluridRouterBrowserOwnProperties<T>,
-) {
+const PluridRouterBrowser = (
+    properties: PluridRouterBrowserOwnProperties,
+) => {
     /** properties */
-    const {
-        routing,
-    } = properties;
+    // const {
+    //     routing,
+    // } = properties;
 
-    console.log(routing);
+    // const {
+    //     hosts,
+    // } = routing;
+
+    // for (const host of hosts) {
+    //     const {
+    //         hostname,
+    //         paths,
+    //         protocol,
+    //     } = host;
+    // }
+
+    // console.log(routing);
 
     return (
         <div>
