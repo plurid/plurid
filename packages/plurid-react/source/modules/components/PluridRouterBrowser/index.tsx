@@ -7,7 +7,8 @@ import React, {
 import {
     PLURID_ROUTER_LOCATION_CHANGED,
 
-    PluridRouterRouting,
+    // PluridRouterRouting,
+    PluridRouting,
 } from '@plurid/plurid-data';
 
 import {
@@ -21,7 +22,8 @@ import {
 
 
 interface PluridRouterBrowserOwnProperties<T> {
-    routing: PluridRouterRouting<T>;
+    routing: PluridRouting;
+    // routing: PluridRouterRouting<T>;
 
     /**
      * The gateway path is used to receive external routing requests.
@@ -45,82 +47,90 @@ function PluridRouterBrowser<T>(
         routing,
     } = properties;
 
-    const {
-        routes,
-        components,
-    } = routing;
+    console.log(routing);
 
-
-    /** references */
-    const indexedComponents = useRef(indexing.create(components, 'object', 'view'));
-    const pluridRouter = useRef(new router.default(routes));
-
-
-    /** state */
-    const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse<T>>();
-    const [Component, setComponent] = useState<any>();
-
-
-    /** handlers */
-    const handlePopState = () => {
-        const path = window.location.pathname;
-        const matchedRoute = pluridRouter.current.match(path);
-
-        if (matchedRoute) {
-            setMatchedRoute(matchedRoute);
-
-            const view = matchedRoute.route.view;
-            const routeComponent = indexedComponents.current[view as any];
-
-            if (routeComponent) {
-                setComponent(routeComponent.component);
-            }
-        }
-
-        if (!matchedRoute) {
-            const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
-            if (notFoundMatchedRoute) {
-                setMatchedRoute(notFoundMatchedRoute);
-
-                const view = notFoundMatchedRoute.route.view;
-                const routeComponent = indexedComponents.current[view as any];
-
-                if (routeComponent) {
-                    history.pushState(null, '', '/not-found');
-                    setComponent(routeComponent.component);
-                }
-            }
-        }
-    }
-
-
-    /** effects */
-    useEffect(() => {
-        handlePopState();
-    }, []);
-
-
-    useEffect(() => {
-        window.addEventListener('popstate', handlePopState);
-        window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
-
-        return () => {
-            window.removeEventListener('popstate', handlePopState);
-            window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
-        };
-    }, []);
-
-
-    /** render */
     return (
-        <>
-            {matchedRoute && Component && (
-                <>
-                    {Component}
-                </>
-            )}
-        </>
+        <div>
+            router
+        </div>
     );
+
+    // const {
+    //     routes,
+    //     components,
+    // } = routing;
+
+
+    // /** references */
+    // const indexedComponents = useRef(indexing.create(components, 'object', 'view'));
+    // const pluridRouter = useRef(new router.default(routes));
+
+
+    // /** state */
+    // const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse<T>>();
+    // const [Component, setComponent] = useState<any>();
+
+
+    // /** handlers */
+    // const handlePopState = () => {
+    //     const path = window.location.pathname;
+    //     const matchedRoute = pluridRouter.current.match(path);
+
+    //     if (matchedRoute) {
+    //         setMatchedRoute(matchedRoute);
+
+    //         const view = matchedRoute.route.view;
+    //         const routeComponent = indexedComponents.current[view as any];
+
+    //         if (routeComponent) {
+    //             setComponent(routeComponent.component);
+    //         }
+    //     }
+
+    //     if (!matchedRoute) {
+    //         const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
+    //         if (notFoundMatchedRoute) {
+    //             setMatchedRoute(notFoundMatchedRoute);
+
+    //             const view = notFoundMatchedRoute.route.view;
+    //             const routeComponent = indexedComponents.current[view as any];
+
+    //             if (routeComponent) {
+    //                 history.pushState(null, '', '/not-found');
+    //                 setComponent(routeComponent.component);
+    //             }
+    //         }
+    //     }
+    // }
+
+
+    // /** effects */
+    // useEffect(() => {
+    //     handlePopState();
+    // }, []);
+
+
+    // useEffect(() => {
+    //     window.addEventListener('popstate', handlePopState);
+    //     window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
+
+    //     return () => {
+    //         window.removeEventListener('popstate', handlePopState);
+    //         window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
+    //     };
+    // }, []);
+
+
+    // /** render */
+    // return (
+    //     <>
+    //         {matchedRoute && Component && (
+    //             <>
+    //                 {Component}
+    //             </>
+    //         )}
+    //     </>
+    // );
 }
 
 
