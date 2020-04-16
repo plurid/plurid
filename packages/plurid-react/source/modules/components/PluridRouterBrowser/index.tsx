@@ -109,6 +109,43 @@ const PluridRouterBrowser = (
             let Spaces: React.FC<any> = () => (<></>);
             const spacesArray: any[] = [];
             if (spaces) {
+                for (const space of spaces) {
+                    const planes: PluridPlane[] = [];
+                    const view = [];
+
+                    for (const universe of space.universes) {
+                        for (const cluster of universe.clusters) {
+                            for (const plane of cluster.planes) {
+                                const {
+                                    component,
+                                    value,
+                                } = plane;
+
+                                if (component.kind === 'react') {
+                                    const pluridPlane: PluridPlane = {
+                                        component: {
+                                            element: component.element,
+                                        },
+                                        path: value,
+                                    };
+
+                                    planes.push(pluridPlane);
+                                    view.push(value);
+                                }
+                            }
+                        }
+
+                        const App = (
+                            <PluridApplication
+                                key={Math.random() + ''}
+                                planes={planes}
+                                view={view}
+                            />
+                        );
+                        spacesArray.push(App);
+                    }
+                }
+
                 Spaces = () => (
                     <>
                         {spaces.map(space => {
@@ -137,25 +174,19 @@ const PluridRouterBrowser = (
                                 }
                             }
 
-                            const App = (
+                            return (
                                 <PluridApplication
                                     key={Math.random() + ''}
                                     planes={planes}
                                     view={view}
                                 />
                             );
-                            spacesArray.push(App);
-
-                            return (
-                                <>
-                                    {App}
-                                </>
-                            );
                         })}
                     </>
                 );
                 // setComponent(Component);
             }
+            console.log('spacesArray', spacesArray);
 
             const Component = (
                 <>
