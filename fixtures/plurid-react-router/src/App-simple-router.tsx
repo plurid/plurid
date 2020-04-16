@@ -109,6 +109,35 @@ const App = () => {
     //     ]
     // }
 
+    const routing: PluridRouting = {
+        hosts: [
+            {
+                hostname: '',
+                protocol: 'http',
+                routes: [
+                    {
+                        value: '/',
+                        spaces: [
+                            {
+                                value: '',
+                                universes: [
+                                    {
+                                        value: '',
+                                        clusters: [
+                                            {
+                                                value: '',
+                                                planes: [],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    };
 
     return (
         <PluridRouterBrowser
