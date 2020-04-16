@@ -90,15 +90,21 @@ const App = () => {
         exterior: {
             kind: 'react',
             element: (properties) => {
-                const Spaces = properties.spaces;
                 console.log('properties', properties);
                 return (
                     <div>
                         slotted
 
-                        <div style={{height: 400, width: 800}}>
-                            <Spaces />
-                        </div>
+                        {properties.spaces.map((Space: any) => {
+                            return (
+                                <div
+                                    style={{height: 400, width: 800}}
+                                    key={Math.random() + ''}
+                                >
+                                    {Space}
+                                </div>
+                            );
+                        })}
                     </div>
                 );
             },
