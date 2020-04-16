@@ -113,10 +113,10 @@ export interface PluridRouterPath {
     spaces?: PluridRouterSpace[];
 
     /**
-     * Pass the rendered `spaces` components as a property to the `exterior` component
-     * to be rendered in their proper slot.
+     * Pass the rendered `spaces[]` components as a property to the `exterior` component
+     * to be rendered in particular slots.
      */
-    slottedSpaces?: boolean;
+    slotted?: boolean;
 }
 
 export interface PluridRouterSpace {
