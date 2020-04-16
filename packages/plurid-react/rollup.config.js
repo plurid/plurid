@@ -3,54 +3,77 @@ import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 import url from '@rollup/plugin-url';
 import babel from 'rollup-plugin-babel';
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import minify from 'rollup-plugin-babel-minify';
+import { terser } from "rollup-plugin-terser";
 
 import pkg from './package.json';
 
 
 
+const input = 'source/index.tsx';
+const plugins = [
+    replace({
+        'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
+    }),
+    external(),
+    postcss({
+        modules: true,
+    }),
+    url(),
+    babel({
+        exclude: 'node_modules/**',
+    }),
+    typescript(),
+    commonjs(),
+    resolve({
+        modulesOnly: true,
+    }),
+];
+
+
 export default [
     {
-        input: 'source/index.tsx',
-        output: [
-            {
-                file: pkg.main,
-                format: 'cjs',
-                exports: 'named',
-                sourcemap: true
-            },
-            {
-                file: pkg.module,
-                format: 'es',
-                exports: 'named',
-                sourcemap: true
-            }
-        ],
-        plugins: [
-            replace({
-                'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
-            }),
-            external(),
-            postcss({
-                modules: true,
-            }),
-            url(),
-            babel({
-                exclude: 'node_modules/**',
-            }),
-            typescript({
-                rollupCommonJSResolveHack: true,
-                clean: true,
-            }),
-            commonjs(),
-            resolve({
-                modulesOnly: true,
-            }),
-        ],
+        input,
+        output: {
+            file: pkg.main,
+            format: 'cjs',
+            exports: 'named',
+            sourcemap: true
+        },
+        plugins,
     },
+    // {
+    //     input,
+    //     plugins: [
+    //         replace({
+    //             'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
+    //         }),
+    //         external(),
+    //         postcss({
+    //             modules: true,
+    //         }),
+    //         url(),
+    //         babel({
+    //             exclude: 'node_modules/**',
+    //         }),
+    //         typescript({
+    //             declaration: true,
+    //             declarationDir: 'distribution',
+    //         }),
+    //         commonjs(),
+    //         resolve({
+    //             modulesOnly: true,
+    //         }),
+	// 	],
+	// 	output: [
+	// 		{
+    //             dir: 'distribution',
+    //             format: 'es',
+    //         }
+	// 	],
+    // },
     {
         input: pkg.main,
         output: [
@@ -62,14 +85,7 @@ export default [
             },
         ],
         plugins: [
-            minify({
-                /**
-                 * HACK: avoids the bug:
-                 * Cannot read property 'add' of undefined
-                 * https://github.com/babel/minify/issues/556
-                 */
-                mangle: false,
-            }),
+            terser(),
         ],
     }
 ];

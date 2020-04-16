@@ -1,6 +1,6 @@
 const ENV_MODE = process.env.ENV_MODE || '';
 
-const environments = {
+const environments: any = {
     production: 'production',
     development: 'development',
     local: 'local',
