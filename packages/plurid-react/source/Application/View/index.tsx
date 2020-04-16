@@ -412,12 +412,16 @@ const View: React.FC<ViewProperties> = (
             treePlanes.push(treePlane);
         }
 
+        console.log('treePlanes', treePlanes);
         const spaceTree = new space.tree.Tree({
             planes: treePlanes,
             configuration,
             view,
         });
+        console.log('spaceTree', spaceTree);
+
         const computedTree = spaceTree.compute();
+        console.log('computedTree', computedTree);
 
         return computedTree;
     }
@@ -443,6 +447,7 @@ const View: React.FC<ViewProperties> = (
             universes,
             stateDataUniverses,
         );
+        console.log('createdUniverses', createdUniverses);
 
         if (!createdUniverses) {
             return;
@@ -464,6 +469,7 @@ const View: React.FC<ViewProperties> = (
             contextUniverses,
             stateTree,
         );
+        console.log('newTree', newTree);
 
         const spaceSize = space.utilities.computeSpaceSize(newTree);
 
