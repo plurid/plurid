@@ -68,7 +68,6 @@ const App = () => {
             kind: 'react',
             component: () => <div>static</div>,
         },
-        spaces: [],
     };
 
     const baseHost: PluridRoutingHost = {
