@@ -86,3 +86,66 @@ export interface PluridRouterRouting<T> {
     routes: PluridRouterRoute<T>[];
     components: PluridRouterComponent<T>[];
 }
+
+
+
+export interface PluridRouting {
+    hosts: PluridRoutingHost[];
+}
+
+export interface PluridRoutingHost {
+    protocol: string;
+    hostname: string;
+    routes: PluridRoutingPath[];
+}
+
+export interface PluridRoutingPath {
+    value: string;
+
+    /**
+     * Accepts a component which will be rendered outside of the plurid applications
+     */
+    exterior?: PluridRoutingComponent;
+
+    spaces: PluridRoutingSpace[];
+}
+
+export interface PluridRoutingSpace {
+    value: string;
+    universes: PluridRoutingUniverse[];
+}
+
+export interface PluridRoutingUniverse {
+    value: string;
+    clusters: PluridRoutingCluster[];
+}
+
+export interface PluridRoutingCluster {
+    value: string;
+    planes: PluridRoutingPlane[];
+}
+
+export interface PluridRoutingPlane {
+    component: PluridRoutingComponent;
+    value: string;
+}
+
+
+export interface PluridRoutingComponentBase {
+    kind: 'elementql' | 'react';
+}
+
+export interface PluridRoutingComponentElementQL extends PluridRoutingComponentBase {
+    kind: 'elementql';
+    endpoint: string;
+    component: string;
+}
+
+export interface PluridRoutingComponentReact extends PluridRoutingComponentBase {
+    kind: 'react';
+    component: React.FC<any>;
+}
+
+export type PluridRoutingComponent =
+    | PluridRoutingComponentElementQL
+    | PluridRoutingComponentReact;
