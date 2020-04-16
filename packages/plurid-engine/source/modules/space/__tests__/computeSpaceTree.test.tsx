@@ -34,21 +34,21 @@ describe('computeSpaceTree', () => {
             {
                 ...defaultTreePlane,
                 sourceID: '1',
-                path: '/page-1',
+                route: '/page-1',
                 planeID: '',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '2',
-                path: '/page-2',
+                route: '/page-2',
                 planeID: '',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '3',
-                path: '/page-3',
+                route: '/page-3',
                 planeID: '',
                 show: true,
             },
@@ -58,14 +58,14 @@ describe('computeSpaceTree', () => {
             {
                 ...defaultTreePlane,
                 sourceID: '1',
-                path: '/page-1',
+                route: '/page-1',
                 planeID: '',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '2',
-                path: '/page-2',
+                route: '/page-2',
                 planeID: '',
                 show: true,
                 location: {
@@ -79,7 +79,7 @@ describe('computeSpaceTree', () => {
             {
                 ...defaultTreePlane,
                 sourceID: '3',
-                path: '/page-3',
+                route: '/page-3',
                 planeID: '',
                 show: true,
                 location: {
@@ -121,21 +121,21 @@ describe('computeSpaceTree', () => {
             {
                 ...defaultTreePlane,
                 sourceID: '1',
-                path: '/page-1',
+                route: '/page-1',
                 planeID: '',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '2',
-                path: '/page-2',
+                route: '/page-2',
                 planeID: '',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '3',
-                path: '/page-3',
+                route: '/page-3',
                 planeID: '',
                 show: true,
             },
@@ -145,14 +145,14 @@ describe('computeSpaceTree', () => {
             {
                 ...defaultTreePlane,
                 sourceID: '1',
-                path: '/page-1',
+                route: '/page-1',
                 planeID: '',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '2',
-                path: '/page-2',
+                route: '/page-2',
                 planeID: '',
                 show: true,
                 location: {
@@ -166,7 +166,7 @@ describe('computeSpaceTree', () => {
             {
                 ...defaultTreePlane,
                 sourceID: '3',
-                path: '/page-3',
+                route: '/page-3',
                 planeID: '',
                 show: true,
                 location: {

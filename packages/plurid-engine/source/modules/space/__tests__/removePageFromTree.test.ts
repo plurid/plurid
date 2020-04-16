@@ -19,14 +19,14 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
                         ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: true,
                     }
                 ],
@@ -35,7 +35,7 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '3',
                 planeID: 'ccc',
-                path: '/ccc',
+                route: '/ccc',
                 show: true,
             },
         ];
@@ -45,14 +45,14 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '3',
                 planeID: 'ccc',
-                path: '/ccc',
+                route: '/ccc',
                 show: true,
             },
         ];
@@ -68,21 +68,21 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
                         ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: true,
                         children: [
                             {
                                 ...defaultTreePlane,
                                 sourceID: '3',
                                 planeID: 'ccc',
-                                path: '/aaa/bbb/ccc',
+                                route: '/aaa/bbb/ccc',
                                 show: true,
                             },
                         ],
@@ -93,7 +93,7 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '4',
                 planeID: 'ddd',
-                path: '/ddd',
+                route: '/ddd',
                 show: true,
             },
         ];
@@ -102,14 +102,14 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
                         ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: true,
                     },
                 ],
@@ -118,7 +118,7 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '4',
                 planeID: 'ddd',
-                path: '/ddd',
+                route: '/ddd',
                 show: true,
             },
         ];
@@ -134,21 +134,21 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
                         ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: true,
                         children: [
                             {
                                 ...defaultTreePlane,
                                 sourceID: '3',
                                 planeID: 'ccc',
-                                path: '/aaa/bbb/ccc',
+                                route: '/aaa/bbb/ccc',
                                 show: true,
                             },
                         ],
@@ -159,7 +159,7 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '4',
                 planeID: 'ddd',
-                path: '/ddd',
+                route: '/ddd',
                 show: true,
             },
         ];
@@ -168,21 +168,21 @@ describe('removePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
                         ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: true,
                         children: [
                             {
                                 ...defaultTreePlane,
                                 sourceID: '3',
                                 planeID: 'ccc',
-                                path: '/aaa/bbb/ccc',
+                                route: '/aaa/bbb/ccc',
                                 show: true,
                             },
                         ],

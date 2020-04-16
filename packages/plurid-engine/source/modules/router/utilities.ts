@@ -1,7 +1,7 @@
 import {
     Indexed,
     PluridRouterPath,
-    PathDivisions,
+    RouteDivisions,
 } from '@plurid/plurid-data';
 
 
@@ -40,16 +40,16 @@ export const mapPathsToRoutes = <T, V>(
 
 
 export const pluridLinkPathDivider = (
-    path: string,
-): PathDivisions => {
-    const split = path.split('://').filter(value => value !== '');
+    route: string,
+): RouteDivisions => {
+    const split = route.split('://').filter(value => value !== '');
 
     let protocol = 'https';
-    const origin = {
+    const host = {
         value: '',
         controlled: false,
     };
-    const route = {
+    const path = {
         value: '',
         parameters: {},
         query: {},
@@ -82,8 +82,8 @@ export const pluridLinkPathDivider = (
     ) {
         const url = {
             protocol,
-            origin,
-            route,
+            host,
+            path,
             space,
             universe,
             cluster,
@@ -113,15 +113,15 @@ export const pluridLinkPathDivider = (
             plane.value = split[3];
             break;
         case 5:
-            route.value = split[0];
+            path.value = split[0];
             space.value = split[1];
             universe.value = split[2];
             cluster.value = split[3];
             plane.value = split[4];
             break;
         case 6:
-            origin.value = split[0];
-            route.value = split[1];
+            host.value = split[0];
+            path.value = split[1];
             space.value = split[2];
             universe.value = split[3];
             cluster.value = split[4];
@@ -129,8 +129,8 @@ export const pluridLinkPathDivider = (
             break;
         case 7:
             protocol = split[0];
-            origin.value = split[1];
-            route.value = split[2];
+            host.value = split[1];
+            path.value = split[2];
             space.value = split[3];
             universe.value = split[4];
             cluster.value = split[5];
@@ -140,8 +140,8 @@ export const pluridLinkPathDivider = (
 
     const url = {
         protocol,
-        origin,
-        route,
+        host,
+        path,
         space,
         universe,
         cluster,
@@ -161,27 +161,27 @@ export const pluridLinkPathDivider = (
  * @param path
  */
 export const resolveAbsolutePluridLinkPath = (
-    path: string,
+    route: string,
 ) => {
     if (!window) {
         return;
     }
 
-    const divisions = pluridLinkPathDivider(path);
+    const divisions = pluridLinkPathDivider(route);
 
     const defaultPathname = window.location.pathname.length > 1
         ? window.location.pathname.slice(1,)
         : 'r';
 
     const protocol = divisions.protocol || window.location.protocol.replace(':', '');
-    const origin = divisions.origin.value
-        ? divisions.origin
+    const host = divisions.host.value
+        ? divisions.host
         : {
             value: window.location.host,
             controlled: true,
         };
-    const route = divisions.route.value
-        ? divisions.route
+    const path = divisions.path.value
+        ? divisions.path
         : {
             value: defaultPathname,
             parameters: {},
@@ -214,8 +214,8 @@ export const resolveAbsolutePluridLinkPath = (
 
     const resolvers = [
         protocol,
-        origin.value,
-        route.value,
+        host.value,
+        path.value,
         space.value,
         universe.value,
         cluster.value,

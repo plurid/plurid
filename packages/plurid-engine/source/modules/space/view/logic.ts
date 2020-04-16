@@ -18,7 +18,7 @@ export const computeViewTree = (
     const viewTree: TreePlane[] = [];
 
     for (const pageView of view) {
-        const page = pages.find(p => p.path === pageView);
+        const page = pages.find(p => p.route === pageView);
 
         if (page) {
             viewTree.push(page);
@@ -65,7 +65,7 @@ export const computeCulledView = (
 
         if (pageInView) {
             culledView.push(
-                page.path,
+                page.route,
             );
         }
     }
