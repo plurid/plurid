@@ -158,7 +158,7 @@ export const assignPagesFromView = (
 
     const routes: PluridRouterPath[] = pages.map(page => {
         const route: PluridRouterPath = {
-            value: '',
+            value: page.path,
             // value: page.value,
             // view: '',
         };
