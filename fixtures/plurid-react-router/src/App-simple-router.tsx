@@ -21,14 +21,14 @@ const App = () => {
     const planeOne: PluridRouterPlane = {
         component: {
             kind: 'react',
-            component: Plane1,
+            element: Plane1,
         },
         value: '/one',
     };
     const planeTwo: PluridRouterPlane = {
         component: {
             kind: 'react',
-            component: Plane2,
+            element: Plane2,
         },
         value: '/two',
     };
@@ -66,7 +66,7 @@ const App = () => {
         value: '/static',
         exterior: {
             kind: 'react',
-            component: () => <div>static</div>,
+            element: () => <div>static</div>,
         },
     };
 
