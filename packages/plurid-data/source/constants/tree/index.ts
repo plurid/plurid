@@ -7,15 +7,15 @@ import {
 export const defaultTreePlane: TreePlane = {
     sourceID: '',
     planeID: '',
-    path: '',
+    route: '',
     children: [],
-    pathDivisions: {
+    routeDivisions: {
         protocol: '',
-        origin: {
+        host: {
             value: '',
             controlled: false,
         },
-        route: {
+        path: {
             value: '',
             parameters: {},
             query: {},
