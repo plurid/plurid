@@ -5,10 +5,10 @@ import React, {
 } from 'react';
 
 import {
+    /** constants */
     PLURID_ROUTER_LOCATION_CHANGED,
 
-    // PluridRouterRouting,
-    // PluridRouting,
+    /** interfaces */
     PluridPlane,
     PluridRouterPath,
 } from '@plurid/plurid-data';
@@ -19,9 +19,9 @@ import {
 
 import PluridApplication from '../../../Application';
 
-import {
-    indexing,
-} from '@plurid/plurid-functions';
+// import {
+//     indexing,
+// } from '@plurid/plurid-functions';
 
 
 
@@ -79,8 +79,6 @@ const PluridRouterBrowser = (
         const path = window.location.pathname;
         const matchedRoute = pluridRouter.current.match(path);
 
-        console.log(matchedRoute);
-
         if (matchedRoute) {
             setMatchedRoute(matchedRoute);
 
@@ -101,10 +99,8 @@ const PluridRouterBrowser = (
                         break;
                     case 'react':
                         Exterior = exterior.element
-                        // setComponent(exterior.element);
                 }
             }
-            console.log('exterior', Exterior);
 
             let Spaces: React.FC<any> = () => (<></>);
             const spacesArray: any[] = [];
@@ -184,7 +180,6 @@ const PluridRouterBrowser = (
                         })}
                     </>
                 );
-                // setComponent(Component);
             }
             console.log('spacesArray', spacesArray);
 
@@ -230,11 +225,13 @@ const PluridRouterBrowser = (
 
 
     /** effects */
+    /** handlePopState */
     useEffect(() => {
         handlePopState();
     }, []);
 
 
+    /** handle listeners */
     useEffect(() => {
         window.addEventListener('popstate', handlePopState);
         window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
@@ -247,110 +244,18 @@ const PluridRouterBrowser = (
 
 
     /** render */
+    if (!matchedRoute || !Component) {
+        return (
+            <></>
+        );
+    }
+
     return (
         <>
-            {matchedRoute && Component && (
-                <>
-                    {Component}
-                </>
-            )}
+            {Component}
         </>
     );
 
-
-
-
-    // const {
-    //     routing,
-    // } = properties;
-
-    // const {
-    //     hosts,
-    // } = routing;
-
-    // for (const host of hosts) {
-    //     const {
-    //         hostname,
-    //         paths,
-    //         protocol,
-    //     } = host;
-    // }
-
-    // console.log(routing);
-
-    // return (
-    //     <div>
-    //         router
-    //     </div>
-    // );
-
-    // const {
-    //     routes,
-    //     components,
-    // } = routing;
-
-
-    // /** references */
-    // const indexedComponents = useRef(indexing.create(components, 'object', 'view'));
-    // const pluridRouter = useRef(new router.default(routes));
-
-
-    // /** state */
-    // const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse<T>>();
-    // const [Component, setComponent] = useState<any>();
-
-
-    // /** handlers */
-    // const handlePopState = () => {
-    //     const path = window.location.pathname;
-    //     const matchedRoute = pluridRouter.current.match(path);
-
-    //     if (matchedRoute) {
-    //         setMatchedRoute(matchedRoute);
-
-    //         const view = matchedRoute.route.view;
-    //         const routeComponent = indexedComponents.current[view as any];
-
-    //         if (routeComponent) {
-    //             setComponent(routeComponent.component);
-    //         }
-    //     }
-
-    //     if (!matchedRoute) {
-    //         const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
-    //         if (notFoundMatchedRoute) {
-    //             setMatchedRoute(notFoundMatchedRoute);
-
-    //             const view = notFoundMatchedRoute.route.view;
-    //             const routeComponent = indexedComponents.current[view as any];
-
-    //             if (routeComponent) {
-    //                 history.pushState(null, '', '/not-found');
-    //                 setComponent(routeComponent.component);
-    //             }
-    //         }
-    //     }
-    // }
-
-
-    // /** effects */
-    // useEffect(() => {
-    //     handlePopState();
-    // }, []);
-
-
-    // useEffect(() => {
-    //     window.addEventListener('popstate', handlePopState);
-    //     window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
-
-    //     return () => {
-    //         window.removeEventListener('popstate', handlePopState);
-    //         window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
-    //     };
-    // }, []);
-
-
-    // /** render */
     // return (
     //     <>
     //         {matchedRoute && Component && (
