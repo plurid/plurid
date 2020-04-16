@@ -6,7 +6,12 @@ import React, {
 import PluridApp, {
     PluridRouterBrowser,
     PluridRouting,
-    // PluridRouterRouting,
+    PluridRoutingHost,
+    PluridRoutingPath,
+    PluridRoutingSpace,
+    PluridRoutingUniverse,
+    PluridRoutingCluster,
+    PluridRoutingPlane,
 
     // PluridConfiguration,
     PluridPlane,
@@ -109,35 +114,94 @@ const App = () => {
     //     ]
     // }
 
-    const routing: PluridRouting = {
-        hosts: [
-            {
-                hostname: '',
-                protocol: 'http',
-                routes: [
-                    {
-                        value: '/',
-                        spaces: [
-                            {
-                                value: '',
-                                universes: [
-                                    {
-                                        value: '',
-                                        clusters: [
-                                            {
-                                                value: '',
-                                                planes: [],
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                ],
-            },
+    // PluridRouting,
+    // PluridRoutingHost,
+    // PluridRoutingPath,
+    // PluridRoutingSpace,
+    // PluridRoutingUniverse,
+    // PluridRoutingCluster,
+    // PluridRoutingPlane,
+
+    const planeOne: PluridRoutingPlane = {
+        component: {
+            kind: 'react',
+            component: () => (<div>one</div>)
+        },
+        value: 'one',
+    };
+
+    const defaultCluster: PluridRoutingCluster = {
+        value: 'default',
+        planes: [
+            planeOne,
         ],
     };
+
+    const defaultUniverse: PluridRoutingUniverse = {
+        value: 'default',
+        clusters: [
+            defaultCluster,
+        ],
+    };
+
+    const defaultSpace: PluridRoutingSpace = {
+        value: 'default',
+        universes: [
+            defaultUniverse,
+        ],
+    };
+
+    const indexPath: PluridRoutingPath = {
+        value: '/',
+        spaces: [
+            defaultSpace,
+        ],
+    };
+
+    const baseHost: PluridRoutingHost = {
+        protocol: 'http',
+        hostname: 'localhost',
+        routes: [
+            indexPath,
+        ],
+    };
+
+    const routing: PluridRouting = {
+        hosts: [
+            baseHost,
+        ],
+    };
+
+
+    // const routing: PluridRouting = {
+    //     hosts: [
+    //         {
+    //             hostname: '',
+    //             protocol: 'http',
+    //             routes: [
+    //                 {
+    //                     value: '/',
+    //                     spaces: [
+    //                         {
+    //                             value: '',
+    //                             universes: [
+    //                                 {
+    //                                     value: '',
+    //                                     clusters: [
+    //                                         {
+    //                                             value: '',
+    //                                             planes: [],
+    //                                         },
+    //                                     ],
+    //                                 },
+    //                             ],
+    //                         },
+    //                     ],
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // };
 
     return (
         <PluridRouterBrowser
