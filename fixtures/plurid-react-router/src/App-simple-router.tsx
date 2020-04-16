@@ -23,14 +23,14 @@ const App = () => {
             kind: 'react',
             component: Plane1,
         },
-        value: 'one',
+        value: '/one',
     };
     const planeTwo: PluridRouterPlane = {
         component: {
             kind: 'react',
             component: Plane2,
         },
-        value: 'two',
+        value: '/two',
     };
 
     const defaultCluster: PluridRouterCluster = {
