@@ -96,7 +96,7 @@ export interface PluridRouting {
 export interface PluridRoutingHost {
     protocol: string;
     hostname: string;
-    routes: PluridRoutingPath[];
+    paths: PluridRoutingPath[];
 }
 
 export interface PluridRoutingPath {
