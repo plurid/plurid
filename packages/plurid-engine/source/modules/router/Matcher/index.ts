@@ -56,27 +56,45 @@ export default class Matcher<T> {
         const parserResponse = parsedLocation.extract();
 
         if (parserResponse.match) {
-            const checkedLength = checkLengths(parserResponse);
+            const {
+                path,
+                pathname,
+                parameters,
+                query,
+                fragments,
+            } = parserResponse;
 
-            if (checkedLength) {
-                const {
-                    path,
-                    pathname,
-                    parameters,
-                    query,
-                    fragments,
-                } = parserResponse;
+            const matcherResponse: MatcherResponse = {
+                path,
+                pathname,
+                parameters,
+                query,
+                fragments,
+            };
 
-                const matcherResponse: MatcherResponse = {
-                    path,
-                    pathname,
-                    parameters,
-                    query,
-                    fragments,
-                };
+            this.matchedData = matcherResponse;
 
-                this.matchedData = matcherResponse;
-            }
+            // const checkedLength = checkLengths(parserResponse);
+
+            // if (checkedLength) {
+            //     const {
+            //         path,
+            //         pathname,
+            //         parameters,
+            //         query,
+            //         fragments,
+            //     } = parserResponse;
+
+            //     const matcherResponse: MatcherResponse = {
+            //         path,
+            //         pathname,
+            //         parameters,
+            //         query,
+            //         fragments,
+            //     };
+
+            //     this.matchedData = matcherResponse;
+            // }
         }
     }
 
