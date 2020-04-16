@@ -91,7 +91,7 @@ const PluridRouterBrowser = (
             const {
                 exterior,
                 spaces,
-                slottedSpaces,
+                slotted,
             } = path;
 
             let Exterior: React.FC<any> = () => (<></>);
@@ -192,11 +192,11 @@ const PluridRouterBrowser = (
                 <>
                     {exterior && (
                         <Exterior
-                            spaces={slottedSpaces ? spacesArray : undefined}
+                            spaces={slotted ? spacesArray : undefined}
                         />
                     )}
 
-                    {spaces && !slottedSpaces && (
+                    {spaces && !slotted && (
                         <Spaces />
                     )}
                 </>
