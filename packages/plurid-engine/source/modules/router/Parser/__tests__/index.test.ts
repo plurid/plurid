@@ -2,7 +2,7 @@ import {
     PluridRouterPath,
 } from '@plurid/plurid-data';
 
-import Parser from '../';
+import Parser from '..';
 
 
 
@@ -189,5 +189,21 @@ describe('Parser', () => {
             { type: 'element', id: 'foo', occurence: 533 },
         ];
         expect(response.fragments.elements).toStrictEqual(fragmentsElements);
+    });
+
+    it.only('gateway', () => {
+        const path: PluridRouterPath = {
+            value: '/gateway',
+        };
+        const parser = new Parser(
+            '/gateway?plurid=https%3A%2F%2Fdomain.com%3A%2F%2Fr%3Fq%3D3%23%3A~%3At%3D2%3A%2F%2Fs%3A%2F%2Fu%3A%2F%2Fc%3A%2F%2F%2Fa-plane',
+            path,
+        );
+        const response = parser.extract();
+        const {
+            query,
+        } = response;
+
+        expect(query.plurid).toEqual('https://domain.com://r?q=3#:~:t=2://s://u://c:///a-plane');
     });
 });
