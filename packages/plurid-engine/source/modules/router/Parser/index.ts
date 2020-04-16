@@ -1,5 +1,5 @@
 import {
-    PluridRouterRoute,
+    PluridRouterPath,
 } from '@plurid/plurid-data';
 
 import {
@@ -24,18 +24,18 @@ import {
 export default class Parser<T> {
     /** properties */
     private location: string;
-    private route: PluridRouterRoute<T>;
+    private path: PluridRouterPath;
     private options: ParserOptions;
 
 
     /** constructor */
     constructor(
         location: string,
-        route: PluridRouterRoute<T>,
+        path: PluridRouterPath,
         options?: ParserPartialOptions,
     ) {
         this.location = location;
-        this.route = route;
+        this.path = path;
         this.options = this.handleOptions(options);
     }
 
@@ -61,7 +61,7 @@ export default class Parser<T> {
     private extractParametersAndMatch() {
         const parametersAndMatch = extractParametersAndMatch(
             this.location,
-            this.route.path,
+            this.path.value,
         );
 
         return parametersAndMatch;
@@ -96,8 +96,8 @@ export default class Parser<T> {
         const query = this.extractQuery();
         const fragments = this.extractFragments();
 
-        const parserResponse: ParserResponse<T> = {
-            route: this.route,
+        const parserResponse: ParserResponse = {
+            path: this.path,
             pathname,
             elements,
             match,

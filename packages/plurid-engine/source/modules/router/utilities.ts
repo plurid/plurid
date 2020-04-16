@@ -1,6 +1,6 @@
 import {
     Indexed,
-    PluridRouterRoute,
+    PluridRouterPath,
     PathDivisions,
 } from '@plurid/plurid-data';
 
@@ -10,15 +10,16 @@ export const mapPathsToRoutes = <T, V>(
     paths: Indexed<string>,
     view: V,
 ) => {
-    const routes: PluridRouterRoute<T>[] = [];
+    const routes: PluridRouterPath[] = [];
 
     for (const [key, path] of Object.entries(paths)) {
         const pathView = (view as any)[key];
 
         if (pathView) {
-            const route: PluridRouterRoute<T> = {
-                path,
-                view: pathView,
+            const route: PluridRouterPath = {
+                value: '',
+                // path,
+                // view: pathView,
             };
             routes.push(route);
         }

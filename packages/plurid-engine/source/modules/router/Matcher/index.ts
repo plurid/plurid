@@ -1,5 +1,5 @@
 import {
-    PluridRouterRoute,
+    PluridRouterPath,
 } from '@plurid/plurid-data';
 
 import {
@@ -22,18 +22,18 @@ import {
 
 export default class Matcher<T> {
     private location: string;
-    private route: PluridRouterRoute<T>;
+    private path: PluridRouterPath;
     private options: MatcherOptions;
-    private matchedData: MatcherResponse<T> | undefined;
+    private matchedData: MatcherResponse | undefined;
 
 
     constructor(
         location: string,
-        route: PluridRouterRoute<T>,
+        path: PluridRouterPath,
         options?: MatcherPartialOptions,
     ) {
         this.location = location;
-        this.route = route;
+        this.path = path;
         this.options = this.handleOptions(options);
 
         this.checkMatch();
@@ -51,7 +51,7 @@ export default class Matcher<T> {
     private checkMatch() {
         const parsedLocation = new Parser(
             this.location,
-            this.route,
+            this.path,
         );
         const parserResponse = parsedLocation.extract();
 
@@ -60,15 +60,15 @@ export default class Matcher<T> {
 
             if (checkedLength) {
                 const {
-                    route,
+                    path,
                     pathname,
                     parameters,
                     query,
                     fragments,
                 } = parserResponse;
 
-                const matcherResponse: MatcherResponse<T> = {
-                    route,
+                const matcherResponse: MatcherResponse = {
+                    path,
                     pathname,
                     parameters,
                     query,
