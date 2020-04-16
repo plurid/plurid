@@ -147,12 +147,12 @@ export interface PluridRouterComponentBase {
 export interface PluridRouterComponentElementQL extends PluridRouterComponentBase {
     kind: 'elementql';
     endpoint: string;
-    component: string;
+    element: string;
 }
 
 export interface PluridRouterComponentReact extends PluridRouterComponentBase {
     kind: 'react';
-    component: React.FC<any>;
+    element: React.FC<any>;
 }
 
 export type PluridRouterComponent =
