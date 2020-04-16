@@ -68,7 +68,9 @@ const PluridRouterBrowser = (
 
 
     /** references */
-    const pluridRouter = useRef(new Router(paths, {}));
+    const pluridRouter = useRef(new Router(paths, {
+        gateway,
+    }));
 
 
     /** state */
