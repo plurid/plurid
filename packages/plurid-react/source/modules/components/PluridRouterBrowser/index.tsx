@@ -107,6 +107,7 @@ const PluridRouterBrowser = (
             console.log('exterior', Exterior);
 
             let Spaces: React.FC<any> = () => (<></>);
+            const spacesArray: any[] = [];
             if (spaces) {
                 Spaces = () => (
                     <>
@@ -136,12 +137,19 @@ const PluridRouterBrowser = (
                                 }
                             }
 
-                            return (
+                            const App = (
                                 <PluridApplication
                                     key={Math.random() + ''}
                                     planes={planes}
                                     view={view}
                                 />
+                            );
+                            spacesArray.push(App);
+
+                            return (
+                                <>
+                                    {App}
+                                </>
                             );
                         })}
                     </>
@@ -153,7 +161,7 @@ const PluridRouterBrowser = (
                 <>
                     {exterior && (
                         <Exterior
-                            spaces={slottedSpaces ? Spaces : undefined}
+                            spaces={slottedSpaces ? spacesArray : undefined}
                         />
                     )}
 
