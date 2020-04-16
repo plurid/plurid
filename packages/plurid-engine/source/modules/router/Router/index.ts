@@ -59,6 +59,10 @@ export default class Router {
     public match(
         location: string,
     ) {
+        if (location === this.options.gateway) {
+
+        }
+
         const cached = this.cachedMatched[location];
         if (cached) {
             this.checkCacheReset();
@@ -67,7 +71,6 @@ export default class Router {
 
         for (const path of this.paths) {
             const matcher = new Matcher(location, path);
-            console.log('matcher', matcher);
             const data = matcher.data();
             if (data) {
                 this.cachedMatched[location] = {

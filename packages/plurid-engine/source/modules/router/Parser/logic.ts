@@ -190,7 +190,7 @@ export const extractQuery = (
         for (const item of queryItems) {
             const queryValue = item.split('=');
             const id = queryValue[0];
-            const value = queryValue[1];
+            const value = decodeURIComponent(queryValue[1]);
 
             queryValues[id] = value;
         }
