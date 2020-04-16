@@ -8,17 +8,12 @@ export interface TreePlane {
     parentPlaneID?: string;
 
     /**
-     * The full path string, adequately formatted
-     * <protocol>://<origin>://<route>://<space>://universe://cluster://<plane>
+     * The full route string, adequately formatted
+     * <protocol>://<host>://<path>://<space>://universe://cluster://<plane>
      */
-    path: string;
+    route: string;
 
-    /**
-     *
-     */
-    pathDivisions: PathDivisions;
-    // parameters?: PathParameters;
-    // query?: PathQuery;
+    routeDivisions: RouteDivisions;
 
     linkCoordinates?: LinkCoordinates;
     height: number;
@@ -31,53 +26,53 @@ export interface TreePlane {
 }
 
 
-export interface PathDivisions {
+export interface RouteDivisions {
     protocol: string;
-    origin: PathOriginDivision;
-    route: PathRouteDivision;
-    space: PathSpaceDivision;
-    universe: PathUniverseDivision;
-    cluster: PathClusterDivision;
-    plane: PathPlaneDivision;
+    host: RouteHostDivision;
+    path: RoutePathDivision;
+    space: RouteSpaceDivision;
+    universe: RouteUniverseDivision;
+    cluster: RouteClusterDivision;
+    plane: RoutePlaneDivision;
     valid: boolean;
 }
 
 
-export interface PathOriginDivision {
+export interface RouteHostDivision {
     value: string;
     controlled: boolean;
 }
 
 
-export interface PathRouteDivision {
+export interface RoutePathDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
 }
 
 
-export interface PathSpaceDivision {
+export interface RouteSpaceDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
 }
 
 
-export interface PathUniverseDivision {
+export interface RouteUniverseDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
 }
 
 
-export interface PathClusterDivision {
+export interface RouteClusterDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
 }
 
 
-export interface PathPlaneDivision {
+export interface RoutePlaneDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
