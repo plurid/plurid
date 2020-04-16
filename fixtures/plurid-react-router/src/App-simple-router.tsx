@@ -138,6 +138,7 @@ const App = () => {
     return (
         <PluridRouterBrowser
             paths={paths}
+            gateway="/gateway"
         />
     );
 }
