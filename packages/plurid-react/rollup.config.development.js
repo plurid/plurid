@@ -3,7 +3,8 @@ import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 import url from '@rollup/plugin-url';
 import babel from 'rollup-plugin-babel';
-import typescript from 'rollup-plugin-typescript2';
+// import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 
@@ -35,8 +36,8 @@ export default [
                 exclude: 'node_modules/**',
             }),
             typescript({
-                rollupCommonJSResolveHack: true,
-                clean: true,
+                // rollupCommonJSResolveHack: true,
+                // clean: false,
             }),
             commonjs(),
             resolve({
