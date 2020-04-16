@@ -5,7 +5,8 @@ import React, {
 
 import PluridApp, {
     PluridRouterBrowser,
-    PluridRouterRouting,
+    PluridRouting,
+    // PluridRouterRouting,
 
     // PluridConfiguration,
     PluridPlane,
@@ -89,24 +90,24 @@ const App = () => {
         },
     ];
 
-    const routing: PluridRouterRouting<any> = {
-        routes: [
-            {
-                path: '/',
-                view: 'one',
-            },
-            {
-                path: '/one',
-                view: 'one',
-            },
-        ],
-        components: [
-            {
-                component: () => (<div>one</div>),
-                view: 'one',
-            }
-        ]
-    }
+    // const routing: PluridRouterRouting<any> = {
+    //     routes: [
+    //         {
+    //             path: '/',
+    //             view: 'one',
+    //         },
+    //         {
+    //             path: '/one',
+    //             view: 'one',
+    //         },
+    //     ],
+    //     components: [
+    //         {
+    //             component: () => (<div>one</div>),
+    //             view: 'one',
+    //         }
+    //     ]
+    // }
 
 
     return (
