@@ -56,7 +56,7 @@ export const findPage = (
     pages: TreePlane[],
 ) => {
     for (const page of pages) {
-        if (page.path === view) {
+        if (page.route === view) {
             return page;
         }
     }

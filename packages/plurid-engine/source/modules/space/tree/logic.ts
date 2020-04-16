@@ -158,7 +158,7 @@ export const assignPagesFromView = (
 
     const routes: PluridRouterPath[] = pages.map(page => {
         const route: PluridRouterPath = {
-            value: page.path,
+            value: page.route,
             // value: page.value,
             // view: '',
         };
@@ -175,7 +175,7 @@ export const assignPagesFromView = (
         const matchedPage = router.match(viewPagePath);
 
         if (matchedPage) {
-            const page = pages.find(p => p.path === matchedPage?.path.value);
+            const page = pages.find(p => p.route === matchedPage?.path.value);
             if (!page) {
                 break;
             }
@@ -276,14 +276,14 @@ export const updateTreeWithNewPage = (
         const planeID = uuid.generate();
         const newTreePlane: TreePlane = {
             sourceID: pageID,
-            path: pagePath,
-            pathDivisions: {
+            route: pagePath,
+            routeDivisions: {
                 protocol: '',
-                origin: {
+                host: {
                     value: '',
                     controlled: false,
                 },
-                route: {
+                path: {
                     value: '',
                     parameters: {},
                     query: {},

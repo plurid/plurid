@@ -14,11 +14,11 @@ import {
 
 describe('computePath', () => {
     it('computes the path on the first child', () => {
-        const targetPage = {
+        const targetPage: TreePlane = {
             ...defaultTreePlane,
             sourceID: '1',
             planeID: 'aaa',
-            path: '/aaa',
+            route: '/aaa',
             show: true,
         };
         const tree: TreePlane[] = [
@@ -27,7 +27,7 @@ describe('computePath', () => {
                 ...defaultTreePlane,
                 sourceID: '2',
                 planeID: 'bbb',
-                path: '/bbb',
+                route: '/bbb',
                 show: true,
             },
         ];
@@ -43,14 +43,14 @@ describe('computePath', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '2',
                 planeID: 'bbb',
-                path: '/bbb',
+                route: '/bbb',
                 show: true,
             },
         ];
@@ -61,19 +61,19 @@ describe('computePath', () => {
     });
 
     it('computes the path on the second child', () => {
-        const targetPage_1 = {
+        const targetPage_1: TreePlane = {
             ...defaultTreePlane,
             sourceID: '1',
             planeID: 'aaa',
-            path: '/aaa',
+            route: '/aaa',
             show: true,
         };
-        const targetPage_2 = {
+        const targetPage_2: TreePlane = {
             ...defaultTreePlane,
             sourceID: '2',
             planeID: 'bbb',
             parentPlaneID: 'aaa',
-            path: '/aaa/bbb',
+            route: '/aaa/bbb',
             show: true,
         };
         const tree: TreePlane[] = [
@@ -81,7 +81,7 @@ describe('computePath', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
@@ -89,7 +89,7 @@ describe('computePath', () => {
                         sourceID: '2',
                         planeID: 'bbb',
                         parentPlaneID: 'aaa',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: true,
                     }
                 ],
@@ -98,7 +98,7 @@ describe('computePath', () => {
                 ...defaultTreePlane,
                 sourceID: '3',
                 planeID: 'ccc',
-                path: '/ccc',
+                route: '/ccc',
                 show: true,
             },
         ];

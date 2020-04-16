@@ -19,14 +19,14 @@ describe('togglePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
                         ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: true,
                     }
                 ],
@@ -35,7 +35,7 @@ describe('togglePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '3',
                 planeID: 'ccc',
-                path: '/ccc',
+                route: '/ccc',
                 show: true,
             },
         ];
@@ -45,14 +45,14 @@ describe('togglePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
                         ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: false,
                     }
                 ],
@@ -61,7 +61,7 @@ describe('togglePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '3',
                 planeID: 'ccc',
-                path: '/ccc',
+                route: '/ccc',
                 show: true,
             },
         ];
@@ -78,14 +78,14 @@ describe('togglePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
                         ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: true,
                     }
                 ],
@@ -94,14 +94,14 @@ describe('togglePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '3',
                 planeID: 'ccc',
-                path: '/ccc',
+                route: '/ccc',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '4',
                 planeID: 'ddd',
-                path: '/ddd',
+                route: '/ddd',
                 show: true,
             },
         ];
@@ -111,14 +111,14 @@ describe('togglePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '1',
                 planeID: 'aaa',
-                path: '/aaa',
+                route: '/aaa',
                 show: true,
                 children: [
                     {
                         ...defaultTreePlane,
                         sourceID: '2',
                         planeID: 'bbb',
-                        path: '/aaa/bbb',
+                        route: '/aaa/bbb',
                         show: false,
                     }
                 ],
@@ -127,14 +127,14 @@ describe('togglePageFromTree', () => {
                 ...defaultTreePlane,
                 sourceID: '3',
                 planeID: 'ccc',
-                path: '/ccc',
+                route: '/ccc',
                 show: true,
             },
             {
                 ...defaultTreePlane,
                 sourceID: '4',
                 planeID: 'ddd',
-                path: '/ddd',
+                route: '/ddd',
                 show: true,
             },
         ];
