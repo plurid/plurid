@@ -446,10 +446,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.12.tgz#044bbd45034501404d34dbb3b185a92229d4f43a"
   integrity sha512-7S12VrAWZtOYuadcuoyTKJM8xOxJhFIpo7AfbAlZneU4fI5xfs9e2fibWnhzvb1MjH5wCQ9aJgRCecEVmy6YdQ==
 
-"@plurid/plurid-pubsub@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.6.tgz#b864bf813fe2267b556aac69c4d6bc76f40e5d26"
-  integrity sha512-TjJudcZLyg+o7OImniHmWg3Tp751Ui4qjqTN3cFPJPUreMzTGiHHlut/7QfQlsZ8HB0YPaY9hUCxhcOspXwnnQ==
+"@plurid/plurid-pubsub@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.7.tgz#cb77e2be0463e7fb0314f3aa6d9db99132391b94"
+  integrity sha512-86a0eYFImjJ+szl+Z2aG+TwqVQMgGftCzLWoZ6LP5cOkBaqVaZjAm01oMBNTShl3Drp51lDU4pUncl7s3RGK7Q==
 
 "@rollup/plugin-commonjs@^11.1.0":
   version "11.1.0"
@@ -3983,10 +3983,10 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-ts-jest@^25.3.1:
-  version "25.3.1"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-25.3.1.tgz#58e2ed3506e4e4487c0b9b532846a5cade9656ba"
-  integrity sha512-O53FtKguoMUByalAJW+NWEv7c4tus5ckmhfa7/V0jBb2z8v5rDSLFC1Ate7wLknYPC1euuhY6eJjQq4FtOZrkg==
+ts-jest@^25.4.0:
+  version "25.4.0"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-25.4.0.tgz#5ad504299f8541d463a52e93e5e9d76876be0ba4"
+  integrity sha512-+0ZrksdaquxGUBwSdTIcdX7VXdwLIlSRsyjivVA9gcO+Cvr6ByqDhu/mi5+HCcb6cMkiQp5xZ8qRO7/eCqLeyw==
   dependencies:
     bs-logger "0.x"
     buffer-from "1.x"
