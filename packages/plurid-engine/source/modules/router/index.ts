@@ -8,6 +8,10 @@ import {
     resolveAbsolutePluridLinkPath,
 } from './utilities';
 
+import {
+    extractQuery,
+} from './Parser/logic';
+
 
 
 export default Router;
@@ -20,6 +24,8 @@ export {
     mapPathsToRoutes,
     pluridLinkPathDivider,
     resolveAbsolutePluridLinkPath,
+
+    extractQuery,
 }
 
 export * from './CompareTypes';
