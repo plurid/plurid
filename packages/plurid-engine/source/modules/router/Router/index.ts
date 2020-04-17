@@ -72,8 +72,8 @@ export default class Router {
         // const query = extractQuery(location);
 
         // console.log('query', query);
-        console.log('LOCATION', location);
-        console.log('this.options.gateway', this.options.gateway);
+        // console.log('LOCATION', location);
+        // console.log('this.options.gateway', this.options.gateway);
         if (location === this.options.gateway) {
             const query = extractQuery(window.location.search);
             const pathDivisions = pluridLinkPathDivider(query.plurid);
