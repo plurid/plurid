@@ -23,10 +23,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@plurid/plurid-pubsub@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.6.tgz#b864bf813fe2267b556aac69c4d6bc76f40e5d26"
-  integrity sha512-TjJudcZLyg+o7OImniHmWg3Tp751Ui4qjqTN3cFPJPUreMzTGiHHlut/7QfQlsZ8HB0YPaY9hUCxhcOspXwnnQ==
+"@plurid/plurid-pubsub@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.7.tgz#cb77e2be0463e7fb0314f3aa6d9db99132391b94"
+  integrity sha512-86a0eYFImjJ+szl+Z2aG+TwqVQMgGftCzLWoZ6LP5cOkBaqVaZjAm01oMBNTShl3Drp51lDU4pUncl7s3RGK7Q==
 
 "@rollup/pluginutils@^3.0.8":
   version "3.0.9"
