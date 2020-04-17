@@ -27,6 +27,7 @@ import {
 
 import {
     PluridIconCopy,
+    PluridIconLink,
 } from '@plurid/plurid-icons-react';
 
 import {
@@ -69,6 +70,7 @@ type PlaneControlsProperties = PlaneControlsOwnProperties
 const PlaneControls: React.FC<PlaneControlsProperties> = (
     properties,
 ) => {
+    /** properties */
     const {
         /** own */
         plane,
@@ -99,8 +101,17 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
         }
     }
 
-    const [path, setPath] = useState(basePath + treePlane.route);
+    const cleanRoute = utilities.cleanPathElement(treePlane.route);
+    const plurid = 'http://localhost:3000://p://s://u://c://' + cleanRoute;
+    const gatewayAddress = 'http://localhost:3000/gateway?plurid=' + encodeURIComponent(plurid);
 
+
+    /** state */
+    const [path, setPath] = useState(cleanRoute);
+    const [showAddress, setShowAddress] = useState(false);
+
+
+    /** handlers */
     const onPathInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPath(event.target.value);
 
@@ -118,9 +129,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     }
 
     const copyGatewayLink = () => {
-        const plurid = 'http://localhost:3000://p://s://u://c://' + utilities.cleanPathElement(treePlane.route);
-        const gatewayLink = 'http://localhost:3000/gateway?plurid=' + encodeURIComponent(plurid);
-        clipboard.copy(gatewayLink);
+        clipboard.copy(gatewayAddress);
     }
 
 
@@ -138,7 +147,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
             <StyledPlaneControlsCenter>
                 <PluridTextline
                     theme={interactionTheme}
-                    text={path}
+                    text={showAddress ? gatewayAddress : path}
                     atChange={onPathInput}
                     atKeyDown={handleOnKeyDown}
                     ariaLabel="Plurid Pathbar"
@@ -148,6 +157,10 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
             <StyledPlaneControlsRight>
                 <PluridIconCopy
                     atClick={copyGatewayLink}
+                />
+
+                <PluridIconLink
+                    atClick={() => setShowAddress(show => !show)}
                 />
             </StyledPlaneControlsRight>
         </StyledPlaneControls>
