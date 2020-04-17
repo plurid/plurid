@@ -79,152 +79,154 @@ const PluridRouterBrowser = (
 
 
     /** handlers */
-    const handlePopState = () => {
-        const path = window.location.pathname;
-        const matchedRoute = pluridRouter.current.match(path);
+    const handleMatchedRoute = (
+        matchedRoute: router.MatcherResponse,
+    ) => {
+        setMatchedRoute(matchedRoute);
 
-        if (matchedRoute) {
-            setMatchedRoute(matchedRoute);
+        const {
+            path,
+        } = matchedRoute;
 
-            const {
-                path,
-            } = matchedRoute;
+        const {
+            exterior,
+            spaces,
+            slotted,
+        } = path;
 
-            const {
-                exterior,
-                spaces,
-                slotted,
-            } = path;
+        let Exterior: React.FC<any> = () => (<></>);
+        if (exterior) {
+            switch (exterior.kind) {
+                case 'elementql':
+                    break;
+                case 'react':
+                    Exterior = exterior.element
+            }
+        }
 
-            let Exterior: React.FC<any> = () => (<></>);
-            if (exterior) {
-                switch (exterior.kind) {
-                    case 'elementql':
-                        break;
-                    case 'react':
-                        Exterior = exterior.element
+        let Spaces: React.FC<any> = () => (<></>);
+        const spacesArray: any[] = [];
+        if (spaces) {
+            for (const space of spaces) {
+                const planes: PluridPlane[] = [];
+                const view = [];
+
+                for (const universe of space.universes) {
+                    for (const cluster of universe.clusters) {
+                        for (const plane of cluster.planes) {
+                            const {
+                                component,
+                                value,
+                            } = plane;
+
+                            if (component.kind === 'react') {
+                                const pluridPlane: PluridPlane = {
+                                    component: {
+                                        element: component.element,
+                                    },
+                                    path: value,
+                                };
+
+                                planes.push(pluridPlane);
+                                view.push(value);
+                            }
+                        }
+                    }
+
+                    const App = (
+                        <PluridApplication
+                            key={Math.random() + ''}
+                            planes={planes}
+                            view={view}
+                        />
+                    );
+                    spacesArray.push(App);
                 }
             }
 
-            let Spaces: React.FC<any> = () => (<></>);
-            const spacesArray: any[] = [];
-            if (spaces) {
-                for (const space of spaces) {
-                    const planes: PluridPlane[] = [];
-                    const view = [];
+            Spaces = () => (
+                <>
+                    {spaces.map(space => {
+                        const planes: PluridPlane[] = [];
+                        const view = [];
+                        for (const universe of space.universes) {
+                            for (const cluster of universe.clusters) {
+                                for (const plane of cluster.planes) {
+                                    const {
+                                        component,
+                                        value,
+                                    } = plane;
 
-                    for (const universe of space.universes) {
-                        for (const cluster of universe.clusters) {
-                            for (const plane of cluster.planes) {
-                                const {
-                                    component,
-                                    value,
-                                } = plane;
+                                    if (component.kind === 'react') {
+                                        const pluridPlane: PluridPlane = {
+                                            component: {
+                                                element: component.element,
+                                            },
+                                            path: value,
+                                        };
 
-                                if (component.kind === 'react') {
-                                    const pluridPlane: PluridPlane = {
-                                        component: {
-                                            element: component.element,
-                                        },
-                                        path: value,
-                                    };
-
-                                    planes.push(pluridPlane);
-                                    view.push(value);
+                                        planes.push(pluridPlane);
+                                        view.push(value);
+                                    }
                                 }
                             }
                         }
 
-                        const App = (
+                        return (
                             <PluridApplication
                                 key={Math.random() + ''}
                                 planes={planes}
                                 view={view}
                             />
                         );
-                        spacesArray.push(App);
-                    }
-                }
-
-                Spaces = () => (
-                    <>
-                        {spaces.map(space => {
-                            const planes: PluridPlane[] = [];
-                            const view = [];
-                            for (const universe of space.universes) {
-                                for (const cluster of universe.clusters) {
-                                    for (const plane of cluster.planes) {
-                                        const {
-                                            component,
-                                            value,
-                                        } = plane;
-
-                                        if (component.kind === 'react') {
-                                            const pluridPlane: PluridPlane = {
-                                                component: {
-                                                    element: component.element,
-                                                },
-                                                path: value,
-                                            };
-
-                                            planes.push(pluridPlane);
-                                            view.push(value);
-                                        }
-                                    }
-                                }
-                            }
-
-                            return (
-                                <PluridApplication
-                                    key={Math.random() + ''}
-                                    planes={planes}
-                                    view={view}
-                                />
-                            );
-                        })}
-                    </>
-                );
-            }
-            console.log('spacesArray', spacesArray);
-
-            const Component = (
-                <>
-                    {exterior && (
-                        <Exterior
-                            spaces={slotted ? spacesArray : undefined}
-                        />
-                    )}
-
-                    {spaces && !slotted && (
-                        <Spaces />
-                    )}
+                    })}
                 </>
             );
+        }
 
-            setComponent(Component);
+        const Component = (
+            <>
+                {exterior && (
+                    <Exterior
+                        spaces={slotted ? spacesArray : undefined}
+                    />
+                )}
 
-        //     const view = matchedRoute.route.view;
+                {spaces && !slotted && (
+                    <Spaces />
+                )}
+            </>
+        );
+
+        setComponent(Component);
+        return;
+    }
+
+    const handleNoMatch = () => {
+        // const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
+        // if (notFoundMatchedRoute) {
+        //     setMatchedRoute(notFoundMatchedRoute);
+
+        //     const view = notFoundMatchedRoute.route.view;
         //     const routeComponent = indexedComponents.current[view as any];
 
         //     if (routeComponent) {
+        //         history.pushState(null, '', '/not-found');
         //         setComponent(routeComponent.component);
         //     }
+        // }
+    }
+
+    const handlePopState = () => {
+        const path = window.location.pathname;
+        const matchedRoute = pluridRouter.current.match(path);
+
+        if (!matchedRoute) {
+            handleNoMatch();
+            return;
         }
 
-        // if (!matchedRoute) {
-        //     const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
-        //     if (notFoundMatchedRoute) {
-        //         setMatchedRoute(notFoundMatchedRoute);
-
-        //         const view = notFoundMatchedRoute.route.view;
-        //         const routeComponent = indexedComponents.current[view as any];
-
-        //         if (routeComponent) {
-        //             history.pushState(null, '', '/not-found');
-        //             setComponent(routeComponent.component);
-        //         }
-        //     }
-        // }
+        handleMatchedRoute(matchedRoute);
     }
 
 
