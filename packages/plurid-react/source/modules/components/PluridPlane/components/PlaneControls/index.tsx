@@ -114,7 +114,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     }
 
     const copyGatewayLink = () => {
-        const plurid = 'http://localhost:3000://r://s://u://c://' + treePlane.route;
+        const plurid = 'http://localhost:3000://p://s://u://c://' + treePlane.route;
         const gatewayLink = 'http://localhost:3000/gateway?plurid=' + encodeURIComponent(plurid);
         clipboard.copy(gatewayLink);
     }
