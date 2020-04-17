@@ -239,13 +239,15 @@ const PluridRouterBrowser = (
     const handlePopState = (
         event?: any,
     ) => {
-        console.log(event);
         const path = event && event.detail?.path
             ? event.detail.path
-            : window.location.pathname;
-        // const path = cleanNavigation
-        //     ? view || ''
-        //     : window.location.pathname;
+            : cleanNavigation && view
+                ? view
+                : window.location.pathname;
+
+        if (cleanNavigation) {
+            window.history.replaceState(null, '', '/');
+        }
 
         const matchedRoute = pluridRouter.current.match(path);
 
