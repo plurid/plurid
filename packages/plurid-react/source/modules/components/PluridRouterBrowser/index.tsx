@@ -275,6 +275,7 @@ const PluridRouterBrowser = (
         }
 
         const matchedRoute = pluridRouter.current.match(path);
+        console.log('matchedRoute', matchedRoute);
 
         if (!matchedRoute) {
             handleNoMatch();
