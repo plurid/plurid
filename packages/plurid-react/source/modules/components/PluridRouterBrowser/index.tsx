@@ -11,6 +11,7 @@ import {
     /** interfaces */
     PluridPlane,
     PluridRouterPath,
+    PluridRouterComponent,
 } from '@plurid/plurid-data';
 
 import {
@@ -153,6 +154,11 @@ interface PluridRouterBrowserOwnProperties {
     gateway?: string;
 
     /**
+     * Component to be rendered on the gateway path, external to the plurid view.
+     */
+    gatewayExterior?: PluridRouterComponent;
+
+    /**
      * API endpoint to request the elements for the paths not found in the initial routing.
      */
     api?: string;
@@ -167,6 +173,7 @@ const PluridRouterBrowser = (
         view,
         cleanNavigation,
         gateway,
+        gatewayExterior,
         protocol: protocolProperty,
         api,
     } = properties;
@@ -464,11 +471,24 @@ const PluridRouterBrowser = (
         console.log('planes', planes);
         console.log('view', view);
 
+        let Exterior: React.FC<any> = () => (<></>);
+        if (gatewayExterior) {
+            switch (gatewayExterior.kind) {
+                case 'react':
+                    Exterior = gatewayExterior.element;
+                    break;
+            }
+        }
+
         const Component = (
-            <PluridApplication
-                planes={planes}
-                view={view}
-            />
+            <>
+                <Exterior />
+
+                <PluridApplication
+                    planes={planes}
+                    view={view}
+                />
+            </>
         );
 
         setComponent(Component);
