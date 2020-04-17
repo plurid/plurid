@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
     PluridRouterBrowser,
+    PluridRouterLink,
 
     // PluridRouter,
     // PluridRouterHost,
@@ -66,7 +67,11 @@ const App = () => {
         value: '/static',
         exterior: {
             kind: 'react',
-            element: () => <div>static</div>,
+            element: () => (
+                <div>
+                    static, <PluridRouterLink path="/path-static">to /path-static</PluridRouterLink>
+                </div>
+            ),
         },
     };
 
@@ -76,7 +81,9 @@ const App = () => {
             kind: 'react',
             element: () => (
                 <div style={{position: 'absolute', zIndex: 9999}}>
-                    with static
+                    with static,
+
+                    <PluridRouterLink path="static">to /static</PluridRouterLink>
                 </div>
             ),
         },
@@ -139,6 +146,7 @@ const App = () => {
         <PluridRouterBrowser
             paths={paths}
             gateway="/gateway"
+            cleanNavigation={true}
         />
     );
 }
