@@ -13,6 +13,7 @@ import {
 
 interface PluridRouterLinkOwnProperties {
     path: string;
+
     /**
      * Style as an anchor tag. Default `true`.
      */
@@ -34,9 +35,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         className,
     } = properties;
 
-    const anchor = typeof asAnchor === 'boolean'
-        ? asAnchor
-        : true;
+    const anchor = asAnchor ?? true;
 
 
     /** handlers */
@@ -45,7 +44,6 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     ) => {
         event.preventDefault();
 
-        history.pushState(null, '', path);
         emitLocationEvent();
     }
 
