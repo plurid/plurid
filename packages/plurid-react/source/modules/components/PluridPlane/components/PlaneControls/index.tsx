@@ -22,6 +22,14 @@ import {
 } from '@plurid/plurid-ui-react';
 
 import {
+    PluridIconCopy,
+} from '@plurid/plurid-icons-react';
+
+import {
+    clipboard,
+} from '@plurid/plurid-functions';
+
+import {
     StyledPlaneControls,
     StyledPlaneControlsLeft,
     StyledPlaneControlsCenter,
@@ -105,6 +113,14 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
         }
     }
 
+    const copyGatewayLink = () => {
+        const plurid = 'http://localhost:3000://r://s://u://c://' + treePlane.route;
+        const gatewayLink = 'http://localhost:3000/gateway?plurid=' + encodeURIComponent(plurid);
+        clipboard.copy(gatewayLink);
+    }
+
+
+    /** render */
     return (
         <StyledPlaneControls
             theme={generalTheme}
@@ -126,6 +142,9 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
             </StyledPlaneControlsCenter>
 
             <StyledPlaneControlsRight>
+                <PluridIconCopy
+                    atClick={copyGatewayLink}
+                />
             </StyledPlaneControlsRight>
         </StyledPlaneControls>
     );
