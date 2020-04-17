@@ -48,7 +48,14 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     }
 
     const emitLocationEvent = () => {
-        const event = new Event(PLURID_ROUTER_LOCATION_CHANGED);
+        const event = new CustomEvent(
+            PLURID_ROUTER_LOCATION_CHANGED,
+            {
+                detail: {
+                    path,
+                },
+            },
+        );
         window.dispatchEvent(event);
     }
 
