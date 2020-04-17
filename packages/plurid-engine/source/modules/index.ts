@@ -6,6 +6,7 @@ import * as quaternion from './quaternion';
 import * as router from './router';
 import * as transform from './transform';
 import * as space from './space';
+import * as utilities from './utilities';
 
 
 
@@ -18,4 +19,5 @@ export {
     router,
     transform,
     space,
+    utilities,
 }
