@@ -70,6 +70,8 @@ const App = () => {
             element: () => (
                 <div>
                     static, <PluridRouterLink path="/path-static">to /path-static</PluridRouterLink>
+                    <br />
+                    <PluridRouterLink path="/">to /</PluridRouterLink>
                 </div>
             ),
         },
@@ -146,7 +148,7 @@ const App = () => {
         <PluridRouterBrowser
             paths={paths}
             gateway="/gateway"
-            cleanNavigation={true}
+            // cleanNavigation={true}
         />
     );
 }
