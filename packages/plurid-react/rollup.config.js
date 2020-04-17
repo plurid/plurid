@@ -44,36 +44,36 @@ export default [
         },
         plugins,
     },
-    // {
-    //     input,
-    //     plugins: [
-    //         replace({
-    //             'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
-    //         }),
-    //         external(),
-    //         postcss({
-    //             modules: true,
-    //         }),
-    //         url(),
-    //         babel({
-    //             exclude: 'node_modules/**',
-    //         }),
-    //         typescript({
-    //             declaration: true,
-    //             declarationDir: 'distribution',
-    //         }),
-    //         commonjs(),
-    //         resolve({
-    //             modulesOnly: true,
-    //         }),
-	// 	],
-	// 	output: [
-	// 		{
-    //             dir: 'distribution',
-    //             format: 'es',
-    //         }
-	// 	],
-    // },
+    {
+        input,
+        plugins: [
+            replace({
+                'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
+            }),
+            external(),
+            postcss({
+                modules: true,
+            }),
+            url(),
+            babel({
+                exclude: 'node_modules/**',
+            }),
+            typescript({
+                declaration: true,
+                declarationDir: 'distribution',
+            }),
+            commonjs(),
+            resolve({
+                modulesOnly: true,
+            }),
+		],
+		output: [
+			{
+                dir: 'distribution',
+                format: 'es',
+            }
+		],
+    },
     {
         input: pkg.main,
         output: [
