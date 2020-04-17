@@ -18,6 +18,10 @@ import {
 } from '@plurid/plurid-data';
 
 import {
+    utilities,
+} from '@plurid/plurid-engine';
+
+import {
     PluridTextline,
 } from '@plurid/plurid-ui-react';
 
@@ -114,7 +118,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     }
 
     const copyGatewayLink = () => {
-        const plurid = 'http://localhost:3000://p://s://u://c://' + treePlane.route;
+        const plurid = 'http://localhost:3000://p://s://u://c://' + utilities.cleanPathElement(treePlane.route);
         const gatewayLink = 'http://localhost:3000/gateway?plurid=' + encodeURIComponent(plurid);
         clipboard.copy(gatewayLink);
     }
