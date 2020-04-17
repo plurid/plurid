@@ -32,6 +32,16 @@ interface PluridRouterBrowserOwnProperties {
     paths: PluridRouterPath[];
 
     /**
+     * Path to navigate to when using clean navigation.
+     */
+    view?: string;
+
+    /**
+     * Navigate without changing the browser URL.
+     */
+    cleanNavigation?: boolean;
+
+    /**
      * Development default: 'http'.
      * Production default: 'https'.
      */
@@ -62,15 +72,20 @@ const PluridRouterBrowser = (
     /** properties */
     const {
         paths,
+        view,
+        cleanNavigation,
         gateway,
         api,
     } = properties;
 
 
     /** references */
-    const pluridRouter = useRef(new Router(paths, {
-        gateway,
-    }));
+    const pluridRouter = useRef(new Router(
+        paths,
+        {
+            gateway,
+        },
+    ));
 
 
     /** state */
@@ -83,6 +98,10 @@ const PluridRouterBrowser = (
         matchedRoute: router.MatcherResponse,
     ) => {
         setMatchedRoute(matchedRoute);
+
+        if (!cleanNavigation) {
+            history.pushState(null, '', matchedRoute.path.value);
+        }
 
         const {
             path,
@@ -218,7 +237,9 @@ const PluridRouterBrowser = (
     }
 
     const handlePopState = () => {
-        const path = window.location.pathname;
+        const path = cleanNavigation
+            ? view || ''
+            : window.location.pathname;
         const matchedRoute = pluridRouter.current.match(path);
 
         if (!matchedRoute) {
@@ -239,11 +260,11 @@ const PluridRouterBrowser = (
 
     /** handle listeners */
     useEffect(() => {
-        window.addEventListener('popstate', handlePopState);
+        // window.addEventListener('popstate', handlePopState);
         window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
 
         return () => {
-            window.removeEventListener('popstate', handlePopState);
+            // window.removeEventListener('popstate', handlePopState);
             window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
         };
     }, []);
@@ -261,16 +282,6 @@ const PluridRouterBrowser = (
             {Component}
         </>
     );
-
-    // return (
-    //     <>
-    //         {matchedRoute && Component && (
-    //             <>
-    //                 {Component}
-    //             </>
-    //         )}
-    //     </>
-    // );
 }
 
 
