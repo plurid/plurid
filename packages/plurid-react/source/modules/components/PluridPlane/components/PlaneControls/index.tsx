@@ -87,7 +87,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
         }
     }
 
-    const [path, setPath] = useState(basePath + treePlane.path);
+    const [path, setPath] = useState(basePath + treePlane.route);
 
     const onPathInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPath(event.target.value);
