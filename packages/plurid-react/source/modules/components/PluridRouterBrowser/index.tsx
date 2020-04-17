@@ -263,13 +263,14 @@ const PluridRouterBrowser = (
     const handlePopState = (
         event?: any,
     ) => {
+        const pathname = window.location.pathname;
         const path = event && event.detail?.path
             ? event.detail.path
             : cleanNavigation && view
                 ? view
-                : window.location.pathname;
+                : pathname;
 
-        if (cleanNavigation) {
+        if (cleanNavigation && pathname !== gateway) {
             window.history.replaceState(null, '', '/');
         }
 
@@ -302,11 +303,13 @@ const PluridRouterBrowser = (
                 ? view
                 : pathname;
         }
-        const event = {
-            detail: {
-                path: actualPath,
-            },
-        };
+        const event = pathname === gateway
+            ? undefined
+            : {
+                detail: {
+                    path: actualPath,
+                },
+            };
 
         console.log('routerData', routerData);
         console.log('pathname', pathname);
