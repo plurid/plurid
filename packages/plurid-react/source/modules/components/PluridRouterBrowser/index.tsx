@@ -166,6 +166,7 @@ const PluridRouterBrowser = (
         view,
         cleanNavigation,
         gateway,
+        protocol: protocolProperty,
         api,
     } = properties;
 
@@ -177,6 +178,8 @@ const PluridRouterBrowser = (
             gateway,
         },
     ));
+
+    const protocol = protocolProperty || 'http';
 
 
     /** state */
@@ -375,32 +378,71 @@ const PluridRouterBrowser = (
         }
 
         console.log('gatewayView', gatewayView);
+        console.log('paths', paths);
 
         const planes: PluridPlane[] = [];
         const view: any[] = [];
 
-        // for (const universe of space.universes) {
-        //     for (const cluster of universe.clusters) {
-        //         for (const plane of cluster.planes) {
-        //             const {
-        //                 component,
-        //                 value,
-        //             } = plane;
+        for (const path of paths) {
+            if (!path.spaces) {
+                continue;
+            }
 
-        //             if (component.kind === 'react') {
-        //                 const pluridPlane: PluridPlane = {
-        //                     component: {
-        //                         element: component.element,
-        //                     },
-        //                     path: value,
-        //                 };
+            const pathName = path.value === '/'
+                ? 'p'
+                : path.value;
 
-        //                 planes.push(pluridPlane);
-        //                 view.push(value);
-        //             }
-        //         }
-        //     }
-        // }
+            for (const space of path.spaces) {
+                const spaceName = space.value === 'default'
+                    ? 's'
+                    : space.value;
+
+                for (const universe of space.universes) {
+                    const universeName = universe.value === 'default'
+                        ? 'u'
+                        : universe.value;
+
+                    for (const cluster of universe.clusters) {
+                        const clusterName = cluster.value === 'default'
+                            ? 'c'
+                            : cluster.value;
+
+                        for (const plane of cluster.planes) {
+                            const {
+                                component,
+                                value,
+                            } = plane;
+
+                            const planeAddressElements = [
+                                protocol,
+                                'localhost:3000',
+                                pathName,
+                                spaceName,
+                                universeName,
+                                clusterName,
+                                value,
+                            ];
+                            const planeAddress = planeAddressElements.join('://');
+                            console.log(planeAddress);
+
+                            if (gatewayView.includes(planeAddress)) {
+                                if (component.kind === 'react') {
+                                    const pluridPlane: PluridPlane = {
+                                        component: {
+                                            element: component.element,
+                                        },
+                                        path: value,
+                                    };
+
+                                    planes.push(pluridPlane);
+                                    view.push(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         const gatewayRoute: router.MatcherResponse = {
             path: {
@@ -415,6 +457,9 @@ const PluridRouterBrowser = (
             query: {},
         };
         setMatchedRoute(gatewayRoute);
+
+        console.log('planes', planes);
+        console.log('view', view);
 
         const Component = (
             <PluridApplication
