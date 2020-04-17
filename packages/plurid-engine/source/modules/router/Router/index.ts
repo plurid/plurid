@@ -103,7 +103,16 @@ export default class Router {
                                                             for (const plane of cluster.planes) {
                                                                 console.log('plane', plane);
                                                                 if (plane.value === pathDivisions.plane.value) {
-                                                                    console.log('planeaa', plane);
+                                                                    return {
+                                                                        path,
+                                                                        pathname: path.value,
+                                                                        parameters: {},
+                                                                        query: {},
+                                                                        fragments: {
+                                                                            texts: [],
+                                                                            elements: [],
+                                                                        },
+                                                                    };
                                                                 }
                                                             }
                                                         }
