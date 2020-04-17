@@ -113,6 +113,14 @@ const findPathByDivisions = (
     return;
 }
 
+const cleanPathElement = (
+    path: string
+) => {
+    if (path[0] === '/') {
+        return path.slice(1);
+    }
+    return path;
+}
 
 
 
@@ -390,28 +398,30 @@ const PluridRouterBrowser = (
 
             const pathName = path.value === '/'
                 ? 'p'
-                : path.value;
+                : cleanPathElement(path.value);
 
             for (const space of path.spaces) {
                 const spaceName = space.value === 'default'
                     ? 's'
-                    : space.value;
+                    : cleanPathElement(space.value);
 
                 for (const universe of space.universes) {
                     const universeName = universe.value === 'default'
                         ? 'u'
-                        : universe.value;
+                        : cleanPathElement(universe.value);
 
                     for (const cluster of universe.clusters) {
                         const clusterName = cluster.value === 'default'
                             ? 'c'
-                            : cluster.value;
+                            : cleanPathElement(cluster.value);
 
                         for (const plane of cluster.planes) {
                             const {
                                 component,
                                 value,
                             } = plane;
+
+                            const planeName = cleanPathElement(value);
 
                             const planeAddressElements = [
                                 protocol,
@@ -420,7 +430,7 @@ const PluridRouterBrowser = (
                                 spaceName,
                                 universeName,
                                 clusterName,
-                                value,
+                                planeName,
                             ];
                             const planeAddress = planeAddressElements.join('://');
                             console.log(planeAddress);
