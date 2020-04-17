@@ -148,7 +148,7 @@ const App = () => {
         <PluridRouterBrowser
             paths={paths}
             gateway="/gateway"
-            // cleanNavigation={true}
+            cleanNavigation={true}
         />
     );
 }
