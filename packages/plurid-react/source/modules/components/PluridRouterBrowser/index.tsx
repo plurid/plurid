@@ -23,6 +23,28 @@ import PluridApplication from '../../../Application';
 //     indexing,
 // } from '@plurid/plurid-functions';
 
+export const loadState = () => {
+    try {
+        const serializedState = localStorage.getItem('__PLURID_ROUTER__');
+        if (serializedState === null) {
+            return undefined;
+        }
+
+        return JSON.parse(serializedState);
+    } catch (error) {
+        return undefined;
+    }
+};
+
+
+
+export const saveState = (state: any) => {
+    try {
+        const serializedState = JSON.stringify(state);
+        localStorage.setItem('__PLURID_ROUTER__', serializedState);
+    } catch (error) {
+    }
+};
 
 
 const Router = router.default;
@@ -102,6 +124,8 @@ const PluridRouterBrowser = (
         if (!cleanNavigation) {
             history.pushState(null, '', matchedRoute.path.value);
         }
+
+        saveState(matchedRoute.path.value);
 
         const {
             path,
@@ -263,7 +287,32 @@ const PluridRouterBrowser = (
     /** effects */
     /** handlePopState */
     useEffect(() => {
-        handlePopState();
+        const routerData = loadState();
+        const pathname = window.location.pathname;
+        let actualPath;
+
+        if (pathname === '/') {
+            if (routerData !== pathname) {
+                actualPath = routerData;
+            } else {
+                actualPath = '/';
+            }
+        } else {
+            actualPath = cleanNavigation && view
+                ? view
+                : pathname;
+        }
+        const event = {
+            detail: {
+                path: actualPath,
+            },
+        };
+
+        console.log('routerData', routerData);
+        console.log('pathname', pathname);
+        console.log('actualPath', actualPath);
+
+        handlePopState(event);
     }, []);
 
 
