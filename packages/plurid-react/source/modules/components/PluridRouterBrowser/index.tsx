@@ -376,8 +376,45 @@ const PluridRouterBrowser = (
 
         console.log('gatewayView', gatewayView);
 
-        const planes: any[] = [];
+        const planes: PluridPlane[] = [];
         const view: any[] = [];
+
+        // for (const universe of space.universes) {
+        //     for (const cluster of universe.clusters) {
+        //         for (const plane of cluster.planes) {
+        //             const {
+        //                 component,
+        //                 value,
+        //             } = plane;
+
+        //             if (component.kind === 'react') {
+        //                 const pluridPlane: PluridPlane = {
+        //                     component: {
+        //                         element: component.element,
+        //                     },
+        //                     path: value,
+        //                 };
+
+        //                 planes.push(pluridPlane);
+        //                 view.push(value);
+        //             }
+        //         }
+        //     }
+        // }
+
+        const gatewayRoute: router.MatcherResponse = {
+            path: {
+                value: gateway || 'gateway',
+            },
+            pathname: '',
+            fragments: {
+                elements: [],
+                texts: [],
+            },
+            parameters: {},
+            query: {},
+        };
+        setMatchedRoute(gatewayRoute);
 
         const Component = (
             <PluridApplication
