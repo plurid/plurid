@@ -15,6 +15,7 @@ import {
 
 import {
     router,
+    utilities,
 } from '@plurid/plurid-engine';
 
 import PluridApplication from '../../../Application';
@@ -113,14 +114,6 @@ const findPathByDivisions = (
     return;
 }
 
-const cleanPathElement = (
-    path: string
-) => {
-    if (path[0] === '/') {
-        return path.slice(1);
-    }
-    return path;
-}
 
 
 
@@ -398,22 +391,22 @@ const PluridRouterBrowser = (
 
             const pathName = path.value === '/'
                 ? 'p'
-                : cleanPathElement(path.value);
+                : utilities.cleanPathElement(path.value);
 
             for (const space of path.spaces) {
                 const spaceName = space.value === 'default'
                     ? 's'
-                    : cleanPathElement(space.value);
+                    : utilities.cleanPathElement(space.value);
 
                 for (const universe of space.universes) {
                     const universeName = universe.value === 'default'
                         ? 'u'
-                        : cleanPathElement(universe.value);
+                        : utilities.cleanPathElement(universe.value);
 
                     for (const cluster of universe.clusters) {
                         const clusterName = cluster.value === 'default'
                             ? 'c'
-                            : cleanPathElement(cluster.value);
+                            : utilities.cleanPathElement(cluster.value);
 
                         for (const plane of cluster.planes) {
                             const {
@@ -421,7 +414,7 @@ const PluridRouterBrowser = (
                                 value,
                             } = plane;
 
-                            const planeName = cleanPathElement(value);
+                            const planeName = utilities.cleanPathElement(value);
 
                             const planeAddressElements = [
                                 protocol,
