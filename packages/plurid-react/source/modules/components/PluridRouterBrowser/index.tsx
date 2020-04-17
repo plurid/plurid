@@ -23,6 +23,8 @@ import PluridApplication from '../../../Application';
 //     indexing,
 // } from '@plurid/plurid-functions';
 
+
+
 export const loadState = () => {
     try {
         const serializedState = localStorage.getItem('__PLURID_ROUTER__');
@@ -37,7 +39,6 @@ export const loadState = () => {
 };
 
 
-
 export const saveState = (state: any) => {
     try {
         const serializedState = JSON.stringify(state);
@@ -45,6 +46,74 @@ export const saveState = (state: any) => {
     } catch (error) {
     }
 };
+
+
+const findPathByDivisions = (
+    paths: any[],
+    queryData: any,
+) => {
+    const pathDivisions = router.pluridLinkPathDivider(queryData);
+
+    for (const path of paths) {
+        if (
+            path.value === pathDivisions.path.value
+            || (path.value === '/' && pathDivisions.path.value === 'p')
+        ) {
+            console.log('path', path);
+            if (path.spaces) {
+                for (const space of path.spaces) {
+                    if (
+                        space.value === pathDivisions.space.value
+                        || (space.value === 'default' && pathDivisions.space.value === 's')
+                    ) {
+                        console.log('space', space);
+                        if (space.universes) {
+                            for (const universe of space.universes) {
+                                if (
+                                    universe.value === pathDivisions.universe.value
+                                    || (universe.value === 'default' && pathDivisions.universe.value === 'u')
+                                ) {
+                                    console.log('universe', universe);
+                                    if (universe.clusters) {
+                                        for (const cluster of universe.clusters) {
+                                            if (
+                                                cluster.value === pathDivisions.cluster.value
+                                                || (cluster.value === 'default' && pathDivisions.cluster.value === 'c')
+                                            ) {
+                                                console.log('cluster', cluster);
+                                                if (cluster.planes) {
+                                                    for (const plane of cluster.planes) {
+                                                        console.log('plane', plane);
+                                                        if (plane.value === pathDivisions.plane.value) {
+                                                            return {
+                                                                path,
+                                                                pathname: path.value,
+                                                                parameters: {},
+                                                                query: {},
+                                                                fragments: {
+                                                                    texts: [],
+                                                                    elements: [],
+                                                                },
+                                                            };
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return;
+}
+
+
 
 
 const Router = router.default;
@@ -260,10 +329,78 @@ const PluridRouterBrowser = (
         // }
     }
 
-    const handlePopState = (
+    const handleGateway = () => {
+        console.log('HANDLE GATEWAY');
+        console.log('window.location', window.location);
+
+        const query = router.extractQuery(window.location.search);
+
+        const gatewayView: string[] = [];
+
+        if (query.plurid) {
+            gatewayView.push(query.plurid);
+            // const path = findPathByDivisions(
+            //     paths,
+            //     query.plurid,
+            // );
+
+            // if (path) {
+            //     pathsFound.push(path);
+            // }
+
+            // console.log('GATEWAY');
+            // console.log('query', query);
+            // console.log('paths', paths);
+        }
+
+        if (query.plurids) {
+            const gatewayViews = query.plurids.split(',');
+            gatewayView.push(...gatewayViews);
+
+
+            // for (const plurid of split) {
+            //     const path = findPathByDivisions(
+            //         paths,
+            //         plurid,
+            //     );
+            //     if (path) {
+            //         pathsFound.push(path);
+            //     }
+            // }
+
+            // console.log('GATEWAY');
+            // console.log('query', query);
+            // console.log('paths', paths);
+            // console.log('paths', paths);
+        }
+
+        console.log('gatewayView', gatewayView);
+
+        const planes: any[] = [];
+        const view: any[] = [];
+
+        const Component = (
+            <PluridApplication
+                planes={planes}
+                view={view}
+            />
+        );
+
+        setComponent(Component);
+
+        return;
+    }
+
+    const handleLocation = (
         event?: any,
     ) => {
         const pathname = window.location.pathname;
+
+        if (pathname === gateway) {
+            handleGateway();
+            return;
+        }
+
         const path = event && event.detail?.path
             ? event.detail.path
             : cleanNavigation && view
@@ -312,22 +449,22 @@ const PluridRouterBrowser = (
                 },
             };
 
-        console.log('routerData', routerData);
-        console.log('pathname', pathname);
-        console.log('actualPath', actualPath);
+        // console.log('routerData', routerData);
+        // console.log('pathname', pathname);
+        // console.log('actualPath', actualPath);
 
-        handlePopState(event);
+        handleLocation(event);
     }, []);
 
 
     /** handle listeners */
     useEffect(() => {
-        window.addEventListener('popstate', handlePopState);
-        window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
+        window.addEventListener('popstate', handleLocation);
+        window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handleLocation);
 
         return () => {
-            window.removeEventListener('popstate', handlePopState);
-            window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
+            window.removeEventListener('popstate', handleLocation);
+            window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handleLocation);
         };
     }, []);
 
