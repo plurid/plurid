@@ -37,4 +37,7 @@ export const StyledPlaneControlsCenter = styled.div`
 
 
 export const StyledPlaneControlsRight = styled.div`
+    display: grid;
+    grid-template-columns: repeat(4, 30px);
+    padding: 0 1rem;
 `;
