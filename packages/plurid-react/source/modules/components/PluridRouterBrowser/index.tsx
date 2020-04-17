@@ -236,10 +236,17 @@ const PluridRouterBrowser = (
         // }
     }
 
-    const handlePopState = () => {
-        const path = cleanNavigation
-            ? view || ''
+    const handlePopState = (
+        event?: any,
+    ) => {
+        console.log(event);
+        const path = event && event.detail?.path
+            ? event.detail.path
             : window.location.pathname;
+        // const path = cleanNavigation
+        //     ? view || ''
+        //     : window.location.pathname;
+
         const matchedRoute = pluridRouter.current.match(path);
 
         if (!matchedRoute) {
@@ -260,11 +267,11 @@ const PluridRouterBrowser = (
 
     /** handle listeners */
     useEffect(() => {
-        // window.addEventListener('popstate', handlePopState);
+        window.addEventListener('popstate', handlePopState);
         window.addEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
 
         return () => {
-            // window.removeEventListener('popstate', handlePopState);
+            window.removeEventListener('popstate', handlePopState);
             window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handlePopState);
         };
     }, []);
