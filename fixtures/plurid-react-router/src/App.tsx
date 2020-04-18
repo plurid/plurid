@@ -1,10 +1,8 @@
-import React, {
-    // useState,
-    // useEffect,
-} from 'react';
+import React from 'react';
 
-import PluridApp, {
-    // PluridConfiguration,
+import PluridApplication, {
+    // PluridSingleApplication,
+    PluridPartialConfiguration,
     PluridPlane,
     PluridView,
     SPACE_LAYOUT,
@@ -15,9 +13,9 @@ import Plane1 from './containers/Plane1';
 
 
 const App = () => {
-    const appConfiguration = {
+    const appConfiguration: PluridPartialConfiguration = {
         // micro: true,
-        theme: 'plurid',
+        // theme: 'plurid',
         // transparentUI: true,
         space: {
             layout: {
@@ -88,7 +86,7 @@ const App = () => {
 
     return (
         <div>
-            <PluridApp
+            <PluridApplication
                 configuration={appConfiguration}
                 planes={planes}
                 view={pluridView}
