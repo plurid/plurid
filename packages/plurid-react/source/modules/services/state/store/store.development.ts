@@ -25,7 +25,7 @@ const store = (preloadedState: AppState | {}) => {
         rootReducer,
         preloadedState,
         composeWithDevTools
-            ? composeWithDevTools(applyMiddleware(...middleware))
+            ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(applyMiddleware(...middleware))
             : applyMiddleware(...middleware),
     );
 

@@ -4,9 +4,6 @@ import React, {
 import {
     Provider as ReduxProvider,
 } from 'react-redux';
-import {
-    createStore,
-} from 'redux';
 
 import {
     PluridApplication as PluridApplicationProperties,
@@ -14,7 +11,7 @@ import {
 
 import Root from './Root';
 
-import reducer from '../modules/services/state/store/reducers';
+import store from '../modules/services/state/store';
 import StateContext from '../modules/services/state/context';
 
 
@@ -26,7 +23,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         properties: PluridApplicationProperties,
     ) {
         super(properties);
-        this.store = createStore(reducer);
+        this.store = store({});
     }
 
     render() {
