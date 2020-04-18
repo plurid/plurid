@@ -5,7 +5,7 @@ import * as Types from './types';
 
 
 const initialState: Types.State = {
-    general: themes.depict,
+    general: themes.plurid,
     interaction: themes.plurid,
 };
 
