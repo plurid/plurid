@@ -115,7 +115,16 @@ const findPathByDivisions = (
     return;
 }
 
-
+interface IndexedPlane {
+    protocol: string;
+    host: string;
+    path: string;
+    space: string;
+    universe: string;
+    cluster: string;
+    plane: string;
+    component: any;
+}
 
 
 const Router = router.default;
@@ -180,6 +189,10 @@ const PluridRouterBrowser = (
 
 
     /** references */
+    console.log('paths', paths);
+    // create somekind of Map<string, Path> out of paths
+    const indexedPlanes = useRef<Map<string, IndexedPlane>>(new Map());
+
     const pluridRouter = useRef(new Router(
         paths,
         {
@@ -529,7 +542,7 @@ const PluridRouterBrowser = (
 
 
     /** effects */
-    /** handlePopState */
+    /** handleLocation */
     useEffect(() => {
         const routerData = loadState();
         const pathname = window.location.pathname;
@@ -572,6 +585,66 @@ const PluridRouterBrowser = (
             window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handleLocation);
         };
     }, []);
+
+
+    /** handle planes indexation */
+    useEffect(() => {
+        const pathsIndex = indexedPlanes.current;
+
+        for (const path of paths) {
+            if (!path.spaces) {
+                continue;
+            }
+
+            for (const space of path.spaces) {
+                for (const universe of space.universes) {
+                    for (const cluster of universe.clusters) {
+                        for (const plane of cluster.planes) {
+                            const indexedPlane: IndexedPlane = {
+                                protocol: '',
+                                host: '',
+                                path: '',
+                                space: '',
+                                universe: '',
+                                cluster: '',
+                                plane: '',
+                                component: plane.component,
+                            };
+
+                            const pathName = path.value === '/'
+                                ? 'p'
+                                : utilities.cleanPathElement(path.value);
+                            const spaceName = space.value === 'default'
+                                ? 's'
+                                : utilities.cleanPathElement(space.value);
+                            const universeName = universe.value === 'default'
+                                ? 'u'
+                                : utilities.cleanPathElement(universe.value);
+                            const clusterName = cluster.value === 'default'
+                                ? 'c'
+                                : utilities.cleanPathElement(cluster.value);
+                            const planeName = utilities.cleanPathElement(plane.value);
+
+                            const planeAddressElements = [
+                                protocol,
+                                'localhost:3000',
+                                pathName,
+                                spaceName,
+                                universeName,
+                                clusterName,
+                                planeName,
+                            ];
+                            const planeAddress = planeAddressElements.join('://');
+
+                            pathsIndex.set(planeAddress, indexedPlane);
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    console.log('indexedPlanes', indexedPlanes);
 
 
     /** render */
