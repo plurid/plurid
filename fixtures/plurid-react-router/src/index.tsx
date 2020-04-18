@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 
 import './index.css';
 
-// import App from './App-simple-router';
-import App from './App';
+import App from './App-simple-router';
+// import App from './App';
 
 
 
