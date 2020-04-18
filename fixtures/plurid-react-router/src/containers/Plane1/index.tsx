@@ -45,7 +45,10 @@ const Page1: React.FC<any> = (
                     {/* <PluridLink path="://a-universe://a-cluster://a-plane">partial link</PluridLink> */}
                     {/* <PluridLink path="://a-cluster://a-plane">partial link</PluridLink> */}
                     {/* <PluridLink path="://a-plane">partial link</PluridLink> */}
-                    <PluridLink path="/a-plane">partial link</PluridLink>
+                    {/* <PluridLink path="/a-plane">partial link</PluridLink> */}
+                    <PluridLink path="/one">one</PluridLink>
+
+                    <PluridLink path="/two">two</PluridLink>
                 </div>
             </div>
         </div>
