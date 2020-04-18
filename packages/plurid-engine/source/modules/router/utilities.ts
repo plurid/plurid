@@ -171,7 +171,7 @@ export const resolveAbsolutePluridLinkPath = (
 
     const defaultPathname = window.location.pathname.length > 1
         ? window.location.pathname.slice(1,)
-        : 'r';
+        : 'p';
 
     const protocol = divisions.protocol || window.location.protocol.replace(':', '');
     const host = divisions.host.value
