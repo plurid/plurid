@@ -103,4 +103,5 @@ export interface IndexedPluridPlane {
     cluster: string;
     plane: string;
     component: any;
+    route: string;
 }
