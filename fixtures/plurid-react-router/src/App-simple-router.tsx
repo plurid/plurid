@@ -42,6 +42,13 @@ const App = () => {
         ],
     };
 
+    const aCluster: PluridRouterCluster = {
+        value: 'a-cluster',
+        planes: [
+            planeOne,
+        ],
+    };
+
     const defaultUniverse: PluridRouterUniverse = {
         value: 'default',
         clusters: [
@@ -49,10 +56,24 @@ const App = () => {
         ],
     };
 
+    const aUniverse: PluridRouterUniverse = {
+        value: 'a-universe',
+        clusters: [
+            aCluster,
+        ],
+    };
+
     const defaultSpace: PluridRouterSpace = {
         value: 'default',
         universes: [
             defaultUniverse,
+        ],
+    };
+
+    const aSpace: PluridRouterSpace = {
+        value: 'a-space',
+        universes: [
+            aUniverse,
         ],
     };
 
@@ -124,25 +145,29 @@ const App = () => {
         slotted: true,
     };
 
+    const pathWithParameterOne: PluridRouterPath = {
+        value: '/path/:parameterOne',
+        spaces: [
+            aSpace,
+        ],
+    };
+
+    const pathWithParameterTwo: PluridRouterPath = {
+        value: '/path/:parameterTwo',
+        spaces: [
+            defaultSpace,
+        ],
+    };
 
     const paths: PluridRouterPath[] = [
         indexPath,
         staticPath,
         pathWithStatic,
         slottedPath,
+        pathWithParameterOne,
+        pathWithParameterTwo,
     ];
 
-    // const baseHost: PluridRouterHost = {
-    //     protocol: 'http',
-    //     hostname: 'localhost',
-    //     paths,
-    // };
-
-    // const routing: PluridRouter = {
-    //     hosts: [
-    //         baseHost,
-    //     ],
-    // };
 
     return (
         <PluridRouterBrowser
