@@ -52,7 +52,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     // console.log(context);
 
     const {
-        planeContext: PageContext,
+        planeContext: PlaneContext,
         planeContextValue,
         universes,
         indexedPlanes,
@@ -83,14 +83,14 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const computeChildrenPlanes = (plane: TreePlane) => {
         if (plane.children) {
             plane.children.map(child => {
-                const _page = activePlanes[child.sourceID];
+                const activePlane = activePlanes[child.sourceID];
 
                 let plane = (<></>);
-                if (_page && child.show) {
+                if (activePlane && child.show) {
                     // instead of forcing show here to pass it as prop
                     // and change the opacity
-                    const Page = _page.component.element;
-                    const properties = _page.component.properties || {};
+                    const Plane = activePlane.component.element;
+                    const properties = activePlane.component.properties || {};
                     const pluridProperties = {
                         paramters: {},
                         // parameters: child.parameters || {},
@@ -100,26 +100,26 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     plane = (
                         <PluridPlane
                             key={child.planeID}
-                            plane={_page}
+                            plane={activePlane}
                             treePlane={child}
                             planeID={child.planeID}
                             location={child.location}
                         >
-                            {!PageContext
+                            {!PlaneContext
                                 ? (
-                                    <Page
+                                    <Plane
                                         plurid={pluridProperties}
                                         {...properties}
                                     />
                                 ) : (
-                                    <PageContext.Provider
+                                    <PlaneContext.Provider
                                         value={planeContextValue}
                                     >
-                                        <Page
+                                        <Plane
                                             plurid={pluridProperties}
                                             {...properties}
                                         />
-                                    </PageContext.Provider>
+                                    </PlaneContext.Provider>
                                 )
                             }
                         </PluridPlane>
@@ -169,7 +169,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         return (<></>);
     }
 
-    const Page = pluridPlane.component.element;
+    const Plane = pluridPlane.component.element;
     // console.log(Page);
 
     const pageProperties = pluridPlane.component.properties || {};
@@ -189,21 +189,21 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 planeID={plane.planeID}
                 location={location}
             >
-                {!PageContext
+                {!PlaneContext
                     ? (
-                        <Page
+                        <Plane
                             plurid={pluridProperties}
                             {...pageProperties}
                         />
                     ) : (
-                        <PageContext.Provider
+                        <PlaneContext.Provider
                             value={planeContextValue}
                         >
-                            <Page
+                            <Plane
                                 plurid={pluridProperties}
                                 {...pageProperties}
                             />
-                        </PageContext.Provider>
+                        </PlaneContext.Provider>
                     )
                 }
             </PluridPlane>
