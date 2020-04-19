@@ -617,7 +617,6 @@ const PluridRouterBrowser = (
                 };
 
                 indexedPlanes.current.set(id, indexedPlane);
-                indexedPlanesSources.current.set(planeAddress, id);
 
                 continue;
             }
@@ -668,7 +667,6 @@ const PluridRouterBrowser = (
                             const id = uuid.generate();
 
                             indexedPlanes.current.set(id, indexedPlane);
-                            indexedPlanesSources.current.set(planeAddress, id);
                         }
                     }
                 }
