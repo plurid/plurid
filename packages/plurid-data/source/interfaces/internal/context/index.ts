@@ -13,5 +13,6 @@ export interface PluridContext {
     planeContext?: PluridPlaneContext<any>,
     planeContextValue?: any,
     universes: Record<string, PluridInternalContextUniverse>;
-    indexedPlanes: Map<string, IndexedPluridPlane>;
+    indexedPlanes?: Map<string, IndexedPluridPlane>;
+    indexedPlanesSources?: Map<string, string>;
 }
