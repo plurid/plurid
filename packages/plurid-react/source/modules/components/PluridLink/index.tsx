@@ -233,7 +233,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const toggleLinkFromTree = () => {
-        const updatedTree = space.tree.togglePageFromTree(stateTree, pluridPlaneID);
+        const updatedTree = space.tree.logic.togglePageFromTree(stateTree, pluridPlaneID);
         dispatchSetTree(updatedTree);
         setShowLink(show => !show);
         setShowPreview(false);
