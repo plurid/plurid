@@ -176,11 +176,25 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const updateTreeWithLink = () => {
-        if (!planeID) {
+        console.log(parentPlaneID, absolutePath);
+
+        if (!parentPlaneID || !absolutePath) {
             return;
         }
 
         const linkCoordinates = getPluridLinkCoordinates();
+
+        const {
+            pluridPlaneID,
+            updatedTree,
+        } = space.tree.logic.updateTreeWithNewPlane(
+            absolutePath,
+            parentPlaneID,
+            linkCoordinates,
+            stateTree,
+        );
+
+        console.log(pluridPlaneID, updatedTree);
 
         // given the absolute path of the link
         // look into the indexedPlanes
@@ -293,6 +307,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
      */
     useEffect(() => {
         const parentPlaneID = generalEngine.planes.getPluridPlaneIDByData(linkElement.current);
+        console.log('parentPlaneID', parentPlaneID);
         setParentPlaneID(parentPlaneID);
 
         const linkCoordinates = getPluridLinkCoordinates();
