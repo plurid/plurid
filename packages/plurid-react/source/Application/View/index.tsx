@@ -231,7 +231,7 @@ const View: React.FC<ViewProperties> = (
         pubsub,
     } = appProperties;
 
-    console.log('all planes', indexedPlanes);
+    // console.log('all planes', indexedPlanes);
 
 
     /** references */
