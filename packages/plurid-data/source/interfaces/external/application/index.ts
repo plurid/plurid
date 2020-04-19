@@ -22,6 +22,10 @@ import {
     PluridPartialConfiguration,
 } from '../configuration';
 
+import {
+    IndexedPluridPlane,
+} from '../plane';
+
 
 
 export interface PluridApplication {
@@ -29,6 +33,8 @@ export interface PluridApplication {
      * A `PluridApplication` must be either planes or universes based.
      */
     planes?: PluridPlane[];
+
+    indexedPlanes?: Map<string, IndexedPluridPlane>;
 
     /**
      * Optional context for the plane to have access to.

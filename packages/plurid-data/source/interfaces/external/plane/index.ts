@@ -92,3 +92,15 @@ export interface PluridProperty {
 // export interface PluridComponentQuery {
 //     [key: string]: string;
 // }
+
+
+export interface IndexedPluridPlane {
+    protocol: string;
+    host: string;
+    path: string;
+    space: string;
+    universe: string;
+    cluster: string;
+    plane: string;
+    component: any;
+}
