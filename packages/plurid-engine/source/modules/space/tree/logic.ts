@@ -244,7 +244,104 @@ export const updateTreePlane = (
 
 
 
-interface UpdatedTreeWithNewPage {
+
+export const updateTreeWithNewPlane = (
+    planePath: string,
+    parentPlaneID: string,
+    linkCoordinates: LinkCoordinates,
+    tree: TreePlane[],
+): UpdatedTreeWithNewPlane => {
+    const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
+
+    if (!parentPlane) {
+        return {
+            pluridPlaneID: '',
+            updatedTree: tree,
+        };
+    }
+
+    const location = computePluridPlaneLocation(
+        linkCoordinates,
+        parentPlane,
+    );
+
+    const planeID = uuid.generate();
+    const newPlane: TreePlane = {
+        sourceID: '',
+        route: planePath,
+        routeDivisions: {
+            protocol: '',
+            host: {
+                value: '',
+                controlled: false,
+            },
+            path: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            space: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            universe: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            cluster: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            plane: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            valid: false,
+        },
+        // parameters: extractedParameters,
+        // parameters: {},
+        planeID,
+        width: 0,
+        height: 0,
+        parentPlaneID,
+        location: {
+            translateX: location.x,
+            translateY: location.y,
+            translateZ: location.z,
+            rotateX: 0,
+            rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
+        },
+        show: true,
+        bridgeLength: 100,
+        planeAngle: 90,
+        linkCoordinates,
+    };
+
+    const updatedParentPlane: TreePlane = {
+        ...parentPlane,
+    };
+
+    if (updatedParentPlane.children) {
+        updatedParentPlane.children.push(newPlane);
+    } else {
+        updatedParentPlane.children = [newPlane];
+    }
+
+    const updatedTree = updateTreePlane(tree, updatedParentPlane);
+
+    return {
+        pluridPlaneID: planeID,
+        updatedTree,
+    };
+}
+
+
+
+interface UpdatedTreeWithNewPlane {
     pluridPlaneID: string;
     updatedTree: TreePlane[];
 }
@@ -256,7 +353,7 @@ export const updateTreeWithNewPage = (
     pageID: string,
     linkCoordinates: LinkCoordinates,
     parameters?: PathParameters,
-): UpdatedTreeWithNewPage => {
+): UpdatedTreeWithNewPlane => {
     // to receive parameters and composePath from pagePath and parameters
 
     const treePageParent = getTreePlaneByPlaneID(tree, treePageParentPlaneID);
