@@ -172,10 +172,12 @@ export const resolveAbsolutePluridLinkPath = (
     }
 
     const divisions = pluridLinkPathDivider(route);
+    console.log('DIVISIONS', divisions);
 
-    const defaultPathname = window.location.pathname.length > 1
-        ? window.location.pathname.slice(1,)
-        : 'p';
+    const defaultPathname = divisions.path.value || 'p';
+    // const defaultPathname = window.location.pathname.length > 1
+    //     ? window.location.pathname.slice(1,)
+    //     : 'p';
 
     const protocol = divisions.protocol || window.location.protocol.replace(':', '');
     const host = divisions.host.value
