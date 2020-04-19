@@ -44,7 +44,10 @@ type PluridRootProperties = PluridRootOwnProperties
     & PluridRootStateProperties
     & PluridRootDispatchProperties;
 
-const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
+const PluridRoot: React.FC<PluridRootProperties> = (
+    properties,
+) => {
+    /** context */
     const context: PluridContext = useContext(Context);
     // console.log(context);
 
@@ -52,8 +55,13 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         planeContext: PageContext,
         planeContextValue,
         universes,
+        indexedPlanes,
     } = context;
 
+    console.log('indexedPlanes indexedPlanes', indexedPlanes);
+
+
+    /** properties */
     const {
         /** own */
         plane,
@@ -66,8 +74,12 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         location,
     } = plane;
 
+
+    /** state */
     const [childrenPlanes, setChildrenPlanes] = useState<JSX.Element[]>([]);
 
+
+    /** handlers */
     const computeChildrenPlanes = (plane: TreePlane) => {
         if (plane.children) {
             plane.children.map(child => {
@@ -123,6 +135,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         }
     }
 
+
+    /** effects */
     /** Compute children planes */
     useEffect(() => {
         // TODO: explore for optimizations
@@ -134,6 +148,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (properties) => {
         JSON.stringify(plane),
     ]);
 
+
+    /** render */
     const activeUniverse = universes[activeUniverseID];
     // console.log('activeUniverse', activeUniverse);
     if (!activeUniverse) {
