@@ -196,6 +196,14 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         console.log(pluridPlaneID, updatedTree);
 
+        if (pluridPlaneID) {
+            dispatchSetTree(updatedTree);
+            setShowLink(true);
+            setPluridPlaneID(pluridPlaneID);
+        }
+
+
+
         // given the absolute path of the link
         // look into the indexedPlanes
         // get the targetted plane
