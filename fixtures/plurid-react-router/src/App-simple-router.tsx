@@ -146,14 +146,28 @@ const App = () => {
     };
 
     const pathWithParameterOne: PluridRouterPath = {
-        value: '/path/:parameterOne',
+        value: '/path1/:parameterOne',
+        // parameters: {
+        //     parameterOne: {
+        //         length: 12,
+        //         lengthType: '<=',
+        //         startsWith: '',
+        //         endsWith: '',
+        //     },
+        // },
         spaces: [
             aSpace,
         ],
     };
 
     const pathWithParameterTwo: PluridRouterPath = {
-        value: '/path/:parameterTwo',
+        value: '/path2/:parameterTwo',
+        // parameters: {
+        //     parameterOne: {
+        //         length: 12,
+        //         lengthType: '>',
+        //     },
+        // },
         spaces: [
             defaultSpace,
         ],
