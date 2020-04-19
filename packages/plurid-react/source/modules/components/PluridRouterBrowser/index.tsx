@@ -588,6 +588,30 @@ const PluridRouterBrowser = (
 
         for (const path of paths) {
             if (!path.spaces) {
+                const pathName = path.value === '/'
+                    ? 'p'
+                    : utilities.cleanPathElement(path.value);
+
+                const indexedPlane: IndexedPluridPlane = {
+                    protocol: '',
+                    host: '',
+                    path: '',
+                    space: '',
+                    universe: '',
+                    cluster: '',
+                    plane: '',
+                    component: path.exterior,
+                };
+
+                const planeAddressElements = [
+                    protocol,
+                    'localhost:3000',
+                    pathName,
+                ];
+                const planeAddress = planeAddressElements.join('://');
+
+                pathsIndex.set(planeAddress, indexedPlane);
+
                 continue;
             }
 
