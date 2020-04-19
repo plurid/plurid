@@ -52,33 +52,33 @@ import {
 //      */
 //     view: T;
 
-//     /**
-//      * Constrain the path to be of a certain length.
-//      * Generally, useful for parametric paths.
-//      *
-//      * The length refers to the length of the pathname,
-//      * and doesn't take into consideration query, or fragments.
-//      *
-//      * If a `Indexed<number>` type is used,
-//      * then the index must be the parameter name.
-//      */
-//     length?: number | Indexed<number>;
+    // /**
+    //  * Constrain the path to be of a certain length.
+    //  * Generally, useful for parametric paths.
+    //  *
+    //  * The length refers to the length of the pathname,
+    //  * and doesn't take into consideration query, or fragments.
+    //  *
+    //  * If a `Indexed<number>` type is used,
+    //  * then the index must be the parameter name.
+    //  */
+    // length?: number | Indexed<number>;
 
-//     /**
-//      * Ensure that the `length` of the path is of a certain type:
-//      *
-//      * * `'=='`     - equal,
-//      * * `'<='`     - equal or less than,
-//      * * `'<'`      - less than,
-//      * * `'>='`     - equal or greater than,
-//      * * `'>'`      - greater than.
-//      *
-//      * Default `'<='`, if a `length` is provided.
-//      *
-//      * If a `Indexed<CompareType>` type is used,
-//      * then the index must be the parameter name.
-//      */
-//     lengthType?: CompareType | Indexed<CompareType>;
+    // /**
+    //  * Ensure that the `length` of the path is of a certain type:
+    //  *
+    //  * * `'=='`     - equal,
+    //  * * `'<='`     - equal or less than,
+    //  * * `'<'`      - less than,
+    //  * * `'>='`     - equal or greater than,
+    //  * * `'>'`      - greater than.
+    //  *
+    //  * Default `'<='`, if a `length` is provided.
+    //  *
+    //  * If a `Indexed<CompareType>` type is used,
+    //  * then the index must be the parameter name.
+    //  */
+    // lengthType?: CompareType | Indexed<CompareType>;
 // }
 
 
@@ -103,7 +103,16 @@ export interface PluridRouterHost {
  * A routing path can be spaces or exterior-based.
  */
 export interface PluridRouterPath {
+    /**
+     * The path `value` can:
+     * + be a simple string, e.g. `'/path/to/page'`;
+     * + be a parametric location, e.g. `'/path/to/:page'`, where `:page` is the parameter name;
+     * + receive query `key=value` pairs,
+     * e.g. `'/path/to/page?id=1&show=true'`, where `id=1` and `show=true` are `key=value` pairs;
+     */
     value: string;
+
+    parameters?: Record<string, PluridRouterPathParameter>;
 
     /**
      * Accepts a component which will be rendered outside of the plurid applications
@@ -118,6 +127,30 @@ export interface PluridRouterPath {
      */
     slotted?: boolean;
 }
+
+export interface PluridRouterPathParameter {
+    /**
+     * Constrain the path parameter to be of a certain length.
+     */
+    length?: number;
+
+    /**
+     * Ensure that the `length` of the path is of a certain type:
+     *
+     * * `'=='`     - equal,
+     * * `'<='`     - equal or less than,
+     * * `'<'`      - less than,
+     * * `'>='`     - equal or greater than,
+     * * `'>'`      - greater than.
+     *
+     * Default `'<='`, if a `length` is provided.
+     */
+    lengthType?: CompareType;
+
+    startsWith?: string;
+    endsWith?: string;
+}
+
 
 export interface PluridRouterSpace {
     value: string;
