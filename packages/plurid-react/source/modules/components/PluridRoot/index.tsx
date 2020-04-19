@@ -93,6 +93,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 }
 
                 const planeID = indexedPlanesSources.get(child.route);
+                console.log('AAAAAA indexedPlanesSources', indexedPlanesSources);
                 console.log('planeID', planeID);
                 if (!planeID) {
                     return;
