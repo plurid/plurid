@@ -48,7 +48,7 @@ export const pluridLinkPathDivider = (
 ): RouteDivisions => {
     const split = route.split('://').filter(value => value !== '');
 
-    let protocol = 'https';
+    let protocol = 'http';
     const host = {
         value: '',
         controlled: false,
