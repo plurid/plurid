@@ -20,6 +20,10 @@ import {
     utilities,
 } from '@plurid/plurid-engine';
 
+import {
+    uuid,
+} from '@plurid/plurid-functions';
+
 import PluridApplication from '../../../Application';
 
 // import {
@@ -182,6 +186,7 @@ const PluridRouterBrowser = (
     console.log('paths', paths);
     // create somekind of Map<string, Path> out of paths
     const indexedPlanes = useRef<Map<string, IndexedPluridPlane>>(new Map());
+    const indexedPlanesSources = useRef<Map<string, string>>(new Map());
 
     const pluridRouter = useRef(new Router(
         paths,
@@ -584,13 +589,20 @@ const PluridRouterBrowser = (
 
     /** handle planes indexation */
     useEffect(() => {
-        const pathsIndex = indexedPlanes.current;
-
         for (const path of paths) {
             if (!path.spaces) {
                 const pathName = path.value === '/'
                     ? 'p'
                     : utilities.cleanPathElement(path.value);
+
+                const planeAddressElements = [
+                    protocol,
+                    'localhost:3000',
+                    pathName,
+                ];
+                const planeAddress = planeAddressElements.join('://');
+
+                const id = uuid.generate();
 
                 const indexedPlane: IndexedPluridPlane = {
                     protocol: '',
@@ -601,16 +613,11 @@ const PluridRouterBrowser = (
                     cluster: '',
                     plane: '',
                     component: path.exterior,
+                    route: planeAddress,
                 };
 
-                const planeAddressElements = [
-                    protocol,
-                    'localhost:3000',
-                    pathName,
-                ];
-                const planeAddress = planeAddressElements.join('://');
-
-                pathsIndex.set(planeAddress, indexedPlane);
+                indexedPlanes.current.set(id, indexedPlane);
+                indexedPlanesSources.current.set(planeAddress, id);
 
                 continue;
             }
@@ -619,17 +626,6 @@ const PluridRouterBrowser = (
                 for (const universe of space.universes) {
                     for (const cluster of universe.clusters) {
                         for (const plane of cluster.planes) {
-                            const indexedPlane: IndexedPluridPlane = {
-                                protocol: '',
-                                host: '',
-                                path: '',
-                                space: '',
-                                universe: '',
-                                cluster: '',
-                                plane: '',
-                                component: plane.component,
-                            };
-
                             const pathName = path.value === '/'
                                 ? 'p'
                                 : utilities.cleanPathElement(path.value);
@@ -644,9 +640,11 @@ const PluridRouterBrowser = (
                                 : utilities.cleanPathElement(cluster.value);
                             const planeName = utilities.cleanPathElement(plane.value);
 
+                            const host = 'localhost:3000';
+
                             const planeAddressElements = [
                                 protocol,
-                                'localhost:3000',
+                                host,
                                 pathName,
                                 spaceName,
                                 universeName,
@@ -655,7 +653,22 @@ const PluridRouterBrowser = (
                             ];
                             const planeAddress = planeAddressElements.join('://');
 
-                            pathsIndex.set(planeAddress, indexedPlane);
+                            const indexedPlane: IndexedPluridPlane = {
+                                protocol,
+                                host,
+                                path: pathName,
+                                space: spaceName,
+                                universe: universeName,
+                                cluster: clusterName,
+                                plane: planeName,
+                                component: plane.component,
+                                route: planeAddress,
+                            };
+
+                            const id = uuid.generate();
+
+                            indexedPlanes.current.set(id, indexedPlane);
+                            indexedPlanesSources.current.set(planeAddress, id);
                         }
                     }
                 }
@@ -663,7 +676,8 @@ const PluridRouterBrowser = (
         }
     });
 
-    // console.log('indexedPlanes', indexedPlanes);
+    console.log('indexedPlanes', indexedPlanes);
+    console.log('indexedPlanesSources', indexedPlanesSources);
 
 
     /** render */
