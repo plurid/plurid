@@ -8,6 +8,7 @@ import {
 
 const defaultContext: PluridContext = {
     universes: {},
+    indexedPlanes: new Map(),
 }
 
 const Context = React.createContext(defaultContext);

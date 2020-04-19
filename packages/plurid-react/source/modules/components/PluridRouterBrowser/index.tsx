@@ -12,6 +12,7 @@ import {
     PluridPlane,
     PluridRouterPath,
     PluridRouterComponent,
+    IndexedPluridPlane,
 } from '@plurid/plurid-data';
 
 import {
@@ -115,17 +116,6 @@ const findPathByDivisions = (
     return;
 }
 
-interface IndexedPlane {
-    protocol: string;
-    host: string;
-    path: string;
-    space: string;
-    universe: string;
-    cluster: string;
-    plane: string;
-    component: any;
-}
-
 
 const Router = router.default;
 
@@ -191,7 +181,7 @@ const PluridRouterBrowser = (
     /** references */
     console.log('paths', paths);
     // create somekind of Map<string, Path> out of paths
-    const indexedPlanes = useRef<Map<string, IndexedPlane>>(new Map());
+    const indexedPlanes = useRef<Map<string, IndexedPluridPlane>>(new Map());
 
     const pluridRouter = useRef(new Router(
         paths,
@@ -273,6 +263,7 @@ const PluridRouterBrowser = (
                         <PluridApplication
                             key={Math.random() + ''}
                             planes={planes}
+                            indexedPlanes={indexedPlanes.current}
                             view={view}
                         />
                     );
@@ -312,6 +303,7 @@ const PluridRouterBrowser = (
                             <PluridApplication
                                 key={Math.random() + ''}
                                 planes={planes}
+                                indexedPlanes={indexedPlanes.current}
                                 view={view}
                             />
                         );
@@ -499,6 +491,7 @@ const PluridRouterBrowser = (
 
                 <PluridApplication
                     planes={planes}
+                    indexedPlanes={indexedPlanes.current}
                     view={view}
                 />
             </>
@@ -602,7 +595,7 @@ const PluridRouterBrowser = (
                 for (const universe of space.universes) {
                     for (const cluster of universe.clusters) {
                         for (const plane of cluster.planes) {
-                            const indexedPlane: IndexedPlane = {
+                            const indexedPlane: IndexedPluridPlane = {
                                 protocol: '',
                                 host: '',
                                 path: '',
