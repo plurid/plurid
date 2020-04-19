@@ -224,11 +224,14 @@ const View: React.FC<ViewProperties> = (
     const {
         configuration,
         planes,
+        indexedPlanes,
         view,
         clusters,
         universes,
         pubsub,
     } = appProperties;
+
+    console.log('all planes', indexedPlanes);
 
 
     /** references */
@@ -1057,6 +1060,7 @@ const View: React.FC<ViewProperties> = (
         planeContext: appProperties.planeContext,
         planeContextValue: appProperties.planeContextValue,
         universes: contextUniversesRef.current,
+        indexedPlanes: indexedPlanes || new Map(),
     };
 
     // console.log('Rendered');
