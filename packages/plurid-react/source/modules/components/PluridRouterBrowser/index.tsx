@@ -183,8 +183,6 @@ const PluridRouterBrowser = (
 
 
     /** references */
-    // console.log('paths', paths);
-    // create somekind of Map<string, Path> out of paths
     const indexedPlanes = useRef<Map<string, IndexedPluridPlane>>(new Map());
 
     const pluridRouter = useRef(new Router(
@@ -604,9 +602,9 @@ const PluridRouterBrowser = (
                 const id = uuid.generate();
 
                 const indexedPlane: IndexedPluridPlane = {
-                    protocol: '',
-                    host: '',
-                    path: '',
+                    protocol,
+                    host: 'localhost:3000',
+                    path: pathName,
                     space: '',
                     universe: '',
                     cluster: '',
