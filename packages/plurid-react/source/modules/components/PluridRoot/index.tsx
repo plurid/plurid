@@ -83,8 +83,11 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
     /** handlers */
     const computeChildrenPlanes = (plane: TreePlane) => {
+        console.log('computeChildrenPlanes plane', plane);
         if (plane.children) {
             plane.children.map(child => {
+                console.log('child', child);
+
                 if (!indexedPlanesSources || !indexedPlanes) {
                     return;
                 }
