@@ -4,6 +4,10 @@ import {
     RouteDivisions,
 } from '@plurid/plurid-data';
 
+import {
+    cleanPathElement,
+} from '../utilities';
+
 
 
 export const mapPathsToRoutes = <T, V>(
@@ -219,7 +223,7 @@ export const resolveAbsolutePluridLinkPath = (
         space.value,
         universe.value,
         cluster.value,
-        plane.value,
+        cleanPathElement(plane.value),
     ];
 
     const resolvedPath = resolvers.join(separator);
