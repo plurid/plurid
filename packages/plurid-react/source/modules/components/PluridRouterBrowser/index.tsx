@@ -586,6 +586,8 @@ const PluridRouterBrowser = (
 
     /** handle planes indexation */
     useEffect(() => {
+        console.log('HANDLE PLANES INDEXATION');
+
         for (const path of paths) {
             if (!path.spaces) {
                 const pathName = path.value === '/'
@@ -669,7 +671,7 @@ const PluridRouterBrowser = (
                 }
             }
         }
-    });
+    }, []);
 
     // console.log('indexedPlanes', indexedPlanes);
     // console.log('indexedPlanesSources', indexedPlanesSources);
