@@ -231,7 +231,8 @@ const View: React.FC<ViewProperties> = (
         pubsub,
     } = appProperties;
 
-    // console.log('all planes', indexedPlanes);
+    console.log('all planes', indexedPlanes);
+    const indexedPlanesSources = useRef<Map<string, string>>(new Map());
 
 
     /** references */
@@ -1054,6 +1055,17 @@ const View: React.FC<ViewProperties> = (
     //     stateSpaceLocation,
     // ]);
 
+    /** indexedPlanesSources */
+    useEffect(() => {
+        if (indexedPlanes) {
+            for (const [id, indexedPlane] of indexedPlanes) {
+                indexedPlanesSources.current.set(indexedPlane.route, id);
+            }
+        }
+    }, [
+        indexedPlanes,
+    ]);
+
 
     /** context */
     const pluridContext: PluridContext = {
@@ -1061,6 +1073,7 @@ const View: React.FC<ViewProperties> = (
         planeContextValue: appProperties.planeContextValue,
         universes: contextUniversesRef.current,
         indexedPlanes: indexedPlanes || new Map(),
+        indexedPlanesSources: indexedPlanesSources.current || new Map(),
     };
 
     // console.log('Rendered');
