@@ -46,9 +46,12 @@ const Page1: React.FC<any> = (
                     {/* <PluridLink path="://a-cluster://a-plane">partial link</PluridLink> */}
                     {/* <PluridLink path="://a-plane">partial link</PluridLink> */}
                     {/* <PluridLink path="/a-plane">partial link</PluridLink> */}
-                    <PluridLink path="/one">one</PluridLink>
 
+                    <PluridLink path="/one">one</PluridLink>
+                    <br />
                     <PluridLink path="/two">two</PluridLink>
+                    <br />
+                    <PluridLink path="http://localhost:3000://slotted://s://u://c://two">external</PluridLink>
                 </div>
             </div>
         </div>
