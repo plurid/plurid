@@ -544,34 +544,36 @@ const PluridRouterBrowser = (
     /** effects */
     /** handleLocation */
     useEffect(() => {
-        const routerData = loadState();
-        const pathname = window.location.pathname;
-        let actualPath;
+        // const routerData = loadState();
+        // const pathname = window.location.pathname;
+        // let actualPath;
 
-        if (pathname === '/') {
-            if (routerData !== pathname) {
-                actualPath = routerData;
-            } else {
-                actualPath = '/';
-            }
-        } else {
-            actualPath = cleanNavigation && view
-                ? view
-                : pathname;
-        }
-        const event = pathname === gateway
-            ? undefined
-            : {
-                detail: {
-                    path: actualPath,
-                },
-            };
+        // if (pathname === '/') {
+        //     if (routerData !== pathname) {
+        //         actualPath = routerData;
+        //     } else {
+        //         actualPath = '/';
+        //     }
+        // } else {
+        //     actualPath = cleanNavigation && view
+        //         ? view
+        //         : pathname;
+        // }
+        // const event = pathname === gateway
+        //     ? undefined
+        //     : {
+        //         detail: {
+        //             path: actualPath,
+        //         },
+        //     };
 
         // console.log('routerData', routerData);
         // console.log('pathname', pathname);
         // console.log('actualPath', actualPath);
 
-        handleLocation(event);
+        // handleLocation(event);
+
+        handleLocation();
     }, []);
 
 
