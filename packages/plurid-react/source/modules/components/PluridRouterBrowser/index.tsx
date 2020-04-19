@@ -518,9 +518,9 @@ const PluridRouterBrowser = (
                 ? view
                 : pathname;
 
-        if (cleanNavigation && pathname !== gateway) {
-            window.history.replaceState(null, '', '/');
-        }
+        // if (cleanNavigation && pathname !== gateway) {
+        //     window.history.replaceState(null, '', '/');
+        // }
 
         const matchedRoute = pluridRouter.current.match(path);
         console.log('matchedRoute', matchedRoute);
@@ -663,7 +663,7 @@ const PluridRouterBrowser = (
         }
     });
 
-    console.log('indexedPlanes', indexedPlanes);
+    // console.log('indexedPlanes', indexedPlanes);
 
 
     /** render */

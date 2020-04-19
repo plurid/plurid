@@ -182,6 +182,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         const linkCoordinates = getPluridLinkCoordinates();
 
+        // given the absolute path of the link
+        // look into the indexedPlanes
+        // get the targetted plane
+        // update the tree
+
+
+
         // dividedPath.protocol;
         // dividedPath.origin;
         // dividedPath.route;
