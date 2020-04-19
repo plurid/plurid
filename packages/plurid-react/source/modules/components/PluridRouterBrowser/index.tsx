@@ -186,7 +186,6 @@ const PluridRouterBrowser = (
     // console.log('paths', paths);
     // create somekind of Map<string, Path> out of paths
     const indexedPlanes = useRef<Map<string, IndexedPluridPlane>>(new Map());
-    const indexedPlanesSources = useRef<Map<string, string>>(new Map());
 
     const pluridRouter = useRef(new Router(
         paths,
