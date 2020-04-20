@@ -22,4 +22,5 @@ export interface MatcherResponse {
     parameters: Indexed<string>;
     query: Indexed<string>;
     fragments: Fragments;
+    route: string;
 }
