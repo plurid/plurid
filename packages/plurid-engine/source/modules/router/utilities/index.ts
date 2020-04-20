@@ -33,6 +33,7 @@ export const mapPathsToRoutes = <T, V>(
 }
 
 
+
 // const interplanarExample = '://plane'; // or intraclusterial
 // const interclusterialExample = '://cluster://plane'; // or intrauniversal
 // const interuniversalExample = '://universe://cluster://plane'; // or intraspatial
@@ -50,7 +51,6 @@ export const pluridLinkPathDivider = (
         .split('://')
         .filter(value => value !== '')
         .map(value => cleanPathElement(value));
-    console.log('SPLIT', split);
 
     let protocol = 'http';
     const host = {
@@ -207,15 +207,12 @@ export const pluridLinkPathDivider = (
  */
 export const resolveAbsolutePluridLinkPath = (
     route: string,
-    // protocol = 'http',
-    // host = 'localhost:3000',
 ) => {
     if (!window) {
         return;
     }
 
     const divisions = pluridLinkPathDivider(route);
-    console.log('DIVISIONS', divisions);
 
     const defaultPathname = divisions.path.value || 'p';
 
