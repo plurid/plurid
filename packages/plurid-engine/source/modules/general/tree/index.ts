@@ -13,14 +13,22 @@ import {
     uuid,
 } from '@plurid/plurid-functions';
 
+import {
+    pluridLinkPathDivider,
+} from '../../router';
+
 
 
 export const createTreePlane = (
     contextPlane: PluridInternalContextPlane,
     documentPlane: PluridInternalStatePlane,
 ) => {
+    const routeDivisions = pluridLinkPathDivider(contextPlane.path);
+    console.log('routeDivisions', routeDivisions);
+
     const treePlane: TreePlane = {
         ...defaultTreePlane,
+        routeDivisions,
         sourceID: contextPlane.id,
         planeID: uuid.generate(),
         route: contextPlane.path,
