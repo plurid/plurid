@@ -71,6 +71,7 @@ const findPathByDivisions = (
                                                                     texts: [],
                                                                     elements: [],
                                                                 },
+                                                                route: '',
                                                             };
                                                         }
                                                     }
