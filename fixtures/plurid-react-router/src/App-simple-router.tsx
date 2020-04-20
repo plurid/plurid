@@ -186,8 +186,8 @@ const App = () => {
     return (
         <PluridRouterBrowser
             paths={paths}
-            gateway="/gateway"
-            cleanNavigation={true}
+            gatewayPath="/gateway"
+            // cleanNavigation={true}
         />
     );
 }
