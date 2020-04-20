@@ -368,8 +368,7 @@ const PluridRouterBrowser = (
         //     window.history.replaceState(null, '', '/');
         // }
 
-        const matchedRoute = pluridRouter.current.match(path);
-        console.log('matchedRoute', matchedRoute);
+        const matchedRoute = pluridRouter.current.match(path + window.location.search);
 
         if (!matchedRoute) {
             handleNoMatch();
