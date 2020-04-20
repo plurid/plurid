@@ -10,6 +10,9 @@ export const StyledPlaneControls: any = styled.div`
 
         return props.theme.backgroundColorDark;
     }};
+    box-shadow: ${(props: any) => {
+        return props.theme.boxShadowUmbraInset;
+    }};
 
     width: 100%;
     display: grid;
@@ -33,6 +36,7 @@ export const StyledPlaneControlsLeft = styled.div`
 export const StyledPlaneControlsCenter = styled.div`
     width: 100%;
     height: 38px;
+    position: relative;
 `;
 
 
@@ -40,4 +44,36 @@ export const StyledPlaneControlsRight = styled.div`
     display: grid;
     grid-template-columns: repeat(4, 30px);
     padding: 0 1rem;
+`;
+
+
+export const StyledSearch = styled.div`
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    border-radius: 15px;
+    z-index: 9999;
+
+    background-color: ${(props: any) => {
+        return props.theme.backgroundColorDark;
+    }};
+    box-shadow: ${(props: any) => {
+        return props.theme.boxShadowPenumbra;
+    }};
+
+    ul {
+        padding: 0;
+        list-style: none;
+    }
+
+    li {
+        padding: 0.7rem 1.4rem;
+    }
+
+    li:hover {
+        background-color: ${(props: any) => {
+            return props.theme.backgroundColorSecondary;
+        }};
+    }
 `;
