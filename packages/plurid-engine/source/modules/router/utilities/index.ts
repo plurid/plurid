@@ -169,6 +169,8 @@ export const pluridLinkPathDivider = (
  */
 export const resolveAbsolutePluridLinkPath = (
     route: string,
+    // protocol = 'http',
+    // host = 'localhost:3000',
 ) => {
     if (!window) {
         return;
