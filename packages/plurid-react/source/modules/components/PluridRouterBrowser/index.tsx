@@ -284,19 +284,24 @@ const PluridRouterBrowser = (
                                 planeName,
                             ];
                             const planeAddress = planeAddressElements.join('://');
-                            console.log(planeAddress);
+                            console.log('planeAddress', planeAddress);
 
-                            if (gatewayView.includes(planeAddress)) {
-                                if (component.kind === 'react') {
-                                    const pluridPlane: PluridPlane = {
-                                        component: {
-                                            element: component.element,
-                                        },
-                                        path: value,
-                                    };
+                            for (const gatewayViewPlane of gatewayView) {
+                                // check that the planeAddress is the same as gatewayViewPlane
+                                // considering parameters / query
 
-                                    planes.push(pluridPlane);
-                                    view.push(value);
+                                if (gatewayViewPlane === planeAddress) {
+                                    if (component.kind === 'react') {
+                                        const pluridPlane: PluridPlane = {
+                                            component: {
+                                                element: component.element,
+                                            },
+                                            path: value,
+                                        };
+
+                                        planes.push(pluridPlane);
+                                        view.push(value);
+                                    }
                                 }
                             }
                         }

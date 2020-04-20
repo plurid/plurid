@@ -101,9 +101,17 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
         }
     }
 
+    const protocol = 'http';
+    const host = 'localhost:3000';
+    const gateway = 'gateway';
+
+    const pathValue = treePlane.routeDivisions.path.value;
+    const space = treePlane.routeDivisions.space.value;
+    const universe = treePlane.routeDivisions.universe.value;
+    const cluster = treePlane.routeDivisions.cluster.value;
     const cleanRoute = utilities.cleanPathElement(treePlane.route);
-    const plurid = 'http://localhost:3000://p://s://u://c://' + cleanRoute;
-    const gatewayAddress = 'http://localhost:3000/gateway?plurid=' + encodeURIComponent(plurid);
+    const plurid = `${protocol}://${host}://${pathValue}://${space}://${universe}://${cluster}://${cleanRoute}`;
+    const gatewayAddress = `${protocol}://${host}/${gateway}?plurid=` + encodeURIComponent(plurid);
 
 
     /** state */
