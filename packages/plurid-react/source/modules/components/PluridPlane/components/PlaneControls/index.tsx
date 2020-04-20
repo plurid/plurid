@@ -93,13 +93,18 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     } = elements.plane.controls;
 
     const {
+        route,
+        routeDivisions
+    } = treePlane;
+
+    const {
         protocol,
         host,
-    } = treePlane.routeDivisions;
+    } = routeDivisions;
 
     const gateway = 'gateway';
 
-    const gatewayAddress = `${protocol}://${host}/${gateway}?plurid=` + encodeURIComponent(treePlane.route);
+    const gatewayAddress = `${protocol}://${host}/${gateway}?plurid=` + encodeURIComponent(route);
 
 
     /** state */
