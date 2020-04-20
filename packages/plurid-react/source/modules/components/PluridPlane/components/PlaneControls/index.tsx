@@ -105,17 +105,17 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     const host = 'localhost:3000';
     const gateway = 'gateway';
 
-    const pathValue = treePlane.routeDivisions.path.value;
-    const space = treePlane.routeDivisions.space.value;
-    const universe = treePlane.routeDivisions.universe.value;
-    const cluster = treePlane.routeDivisions.cluster.value;
-    const cleanRoute = utilities.cleanPathElement(treePlane.route);
-    const plurid = `${protocol}://${host}://${pathValue}://${space}://${universe}://${cluster}://${cleanRoute}`;
-    const gatewayAddress = `${protocol}://${host}/${gateway}?plurid=` + encodeURIComponent(plurid);
+    // const pathValue = treePlane.routeDivisions.path.value;
+    // const space = treePlane.routeDivisions.space.value;
+    // const universe = treePlane.routeDivisions.universe.value;
+    // const cluster = treePlane.routeDivisions.cluster.value;
+    // const cleanRoute = utilities.cleanPathElement(treePlane.route);
+    // const plurid = `${protocol}://${host}://${pathValue}://${space}://${universe}://${cluster}://${cleanRoute}`;
+    const gatewayAddress = `${protocol}://${host}/${gateway}?plurid=` + encodeURIComponent(treePlane.route);
 
 
     /** state */
-    const [path, setPath] = useState(cleanRoute);
+    const [path, setPath] = useState(treePlane.route);
     const [showAddress, setShowAddress] = useState(false);
 
 
@@ -164,7 +164,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
 
             <StyledPlaneControlsRight>
                 <PluridIconCopy
-                    atClick={copyGatewayLink}
+                    atClick={() => copyGatewayLink()}
                 />
 
                 <PluridIconLink
