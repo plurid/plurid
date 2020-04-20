@@ -12,88 +12,28 @@ import {
 
 
 
-/**
- * If a `route` has a length specification checks the length type.
- *
- * @param pathElements
- * @param route
- */
-export const checkLengths = (
-    parserResponse: ParserResponse,
-): boolean => {
-    // const {
-    //     path,
-    //     elements,
-    // } = parserResponse;
-
-    // if (!path.length) {
-    //     return true;
-    // }
-
-    // if (
-    //     typeof path.length === 'number'
-    //     && (typeof path.lengthType === 'string' || typeof path.lengthType === 'undefined')
-    // ) {
-    //     return checkElementLength(
-    //         elements[0],
-    //         path.length,
-    //         path.lengthType,
-    //     );
-    // }
-
-    // TODO
-    // handle the case where the length is an index
-    // with specific lengths for specific parameters
-
-    return false;
-}
-
-
-export const checkElementLength = (
-    element: string,
-    routeLength: number,
+export const checkParameterLength = (
+    parameter: string,
+    length: number,
     compareType?: CompareType,
 ) => {
-    const elementLength = element.length;
+    const parameterLength = parameter.length;
 
     switch (compareType) {
         case compareTypes.equal:
-            if (elementLength === routeLength) {
-                return true;
-            }
-            break;
+            return parameterLength === length;
         case compareTypes.equalLessThan:
-            if (elementLength <= routeLength) {
-                return true;
-            }
-            break;
+            return parameterLength <= length;
         case compareTypes.lessThan:
-            if (elementLength < routeLength) {
-                return true;
-            }
-            break;
+            return parameterLength < length;
         case compareTypes.equalGreaterThan:
-            if (elementLength >= routeLength) {
-                return true;
-            }
-            break;
+            return parameterLength >= length;
         case compareTypes.greaterThan:
-            if (elementLength > routeLength) {
-                return true;
-            }
-            break;
+            return parameterLength > length;
         default:
-            if (elementLength === routeLength) {
-                return true;
-            }
+            return parameterLength <= length;
     }
-
-    return false;
 }
-
-
-
-
 
 
 
@@ -104,7 +44,6 @@ export const checkValidPath = (
         path,
         parameters,
     } = data;
-    console.log('parser data', data);
 
     const {
         parameters: validationParameters,
@@ -120,7 +59,7 @@ export const checkValidPath = (
             } = parameterData;
 
             const paramaterValue = parameters[parameterKey];
-            console.log(parameterKey, parameterData, paramaterValue);
+
             if (!paramaterValue) {
                 return false;
             }
@@ -133,95 +72,16 @@ export const checkValidPath = (
                 return false;
             }
 
-            if (length && paramaterValue.length !== length) {
-                return false;
+            if (length) {
+                const validLength = checkParameterLength(
+                    paramaterValue,
+                    length,
+                    lengthType,
+                );
+                return validLength;
             }
         }
     }
 
     return true;
 }
-
-
-
-// /**
-//  * Matches the adequate `route` given the `path`, if any.
-//  *
-//  * @param path
-//  * @param routes
-//  */
-// export const match = <T extends TwithPath>(
-//     path: string,
-//     routes: T[],
-// ): MatchResponse<T> | undefined => {
-//     for (const route of routes) {
-//         if (route.path === '*') {
-//             return {
-//                 route,
-//                 parameters: {},
-//                 query: {},
-//             };
-//         }
-
-//         const parameters = extractParameters(route.path);
-//         // console.log('parameters', parameters);
-//         // console.log('path', path);
-//         // console.log('route.path', route.path);
-
-//         if (parameters.length === 0) {
-//             if (route.path === path) {
-//                 return {
-//                     route,
-//                     parameters: {},
-//                     query: {},
-//                 };
-//             }
-//         }
-
-//         if (parameters.length > 0) {
-//             const {
-//                 pathElements,
-//                 comparingPath,
-//             } = computeComparingPath(path, parameters);
-
-//             if (comparingPath === route.path) {
-//                 const parametersValues = extractParametersValues(
-//                     parameters,
-//                     pathElements,
-//                 );
-
-//                 const queryValues = extractQueryValues(
-//                     path
-//                 );
-
-//                 return {
-//                     route,
-//                     parameters: parametersValues,
-//                     query: queryValues,
-//                 };
-
-
-//                 // if (route.length) {
-//                 //     const handledRoute = handleRouteLength(pathElements, route);
-//                 //     if (handledRoute) {
-//                 //         const parametricRoute: ActiveRoute<T> = {
-//                 //             ...handledRoute,
-//                 //             parameters: parametersValues,
-//                 //         };
-//                 //         return parametricRoute;
-//                 //     }
-//                 // }
-
-//                 // if (!route.length) {
-//                 //     const parametricRoute: ActiveRoute<T> = {
-//                 //         ...route,
-//                 //         parameters: parametersValues,
-//                 //     };
-//                 //     return parametricRoute;
-//                 // }
-//             }
-//         }
-//     }
-
-//     return;
-// }
