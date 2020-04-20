@@ -115,7 +115,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
 
 
     /** state */
-    const [path, setPath] = useState(treePlane.route);
+    const [path, setPath] = useState(treePlane.routeDivisions.plane.value);
     const [showAddress, setShowAddress] = useState(false);
 
 
