@@ -112,7 +112,7 @@ const PluridRouterBrowser = (
         const spacesArray: any[] = [];
         if (spaces) {
             for (const space of spaces) {
-                console.log('SPACE', space);
+                // console.log('SPACE', space);
                 const planes: PluridPlane[] = [];
                 const view = [];
 
@@ -127,27 +127,30 @@ const PluridRouterBrowser = (
                             const pathDivisions = [
                                 protocol,
                                 host,
-                                path.value,
-                                space.value,
-                                universe.value,
-                                cluster.value,
-                                value,
+                                path.value === '/' ? 'p' : utilities.cleanPathElement(path.value),
+                                space.value === 'default' ? 's' : utilities.cleanPathElement(space.value),
+                                universe.value === 'default' ? 'u' : utilities.cleanPathElement(universe.value),
+                                cluster.value === 'default' ? 'c' : utilities.cleanPathElement(cluster.value),
+                                utilities.cleanPathElement(value),
                             ];
-                            console.log('pathDivisions', pathDivisions);
+                            const fullPath = pathDivisions.join('://');
+                            // console.log('pathDivisions', pathDivisions);
 
                             if (component.kind === 'react') {
                                 const pluridPlane: PluridPlane = {
                                     component: {
                                         element: component.element,
                                     },
-                                    path: pathDivisions.join('://'),
+                                    path: fullPath,
                                 };
 
                                 planes.push(pluridPlane);
-                                view.push(value);
+                                view.push(fullPath);
                             }
                         }
                     }
+
+                    console.log('PLANES', planes);
 
                     const App = (
                         <PluridApplication
@@ -163,7 +166,8 @@ const PluridRouterBrowser = (
 
             Spaces = () => (
                 <>
-                    {spaces.map(space => {
+                    {spacesArray}
+                    {/* {spaces.map(space => {
                         const planes: PluridPlane[] = [];
                         const view = [];
                         for (const universe of space.universes) {
@@ -197,7 +201,7 @@ const PluridRouterBrowser = (
                                 view={view}
                             />
                         );
-                    })}
+                    })} */}
                 </>
             );
         }
