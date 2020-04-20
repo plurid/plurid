@@ -56,7 +56,11 @@ const PluridRouterBrowser = (
         paths,
     ));
 
-    const protocol = protocolProperty || 'http';
+    const protocol = protocolProperty
+        ? protocolProperty
+        : environment.production
+            ? 'https'
+            : 'http';
     const host = hostProperty
         ? hostProperty
         : environment.production
@@ -120,20 +124,23 @@ const PluridRouterBrowser = (
                                 value,
                             } = plane;
 
-                            const planePath = {
-                                path: path.value,
-                                space: space.value,
-                                universe: universe.value,
-                                cluster: cluster.value,
-                            };
-                            console.log('planePath', planePath);
+                            const pathDivisions = [
+                                protocol,
+                                host,
+                                path.value,
+                                space.value,
+                                universe.value,
+                                cluster.value,
+                                value,
+                            ];
+                            console.log('pathDivisions', pathDivisions);
 
                             if (component.kind === 'react') {
                                 const pluridPlane: PluridPlane = {
                                     component: {
                                         element: component.element,
                                     },
-                                    path: value,
+                                    path: pathDivisions.join('://'),
                                 };
 
                                 planes.push(pluridPlane);
@@ -383,7 +390,8 @@ const PluridRouterBrowser = (
         //     window.history.replaceState(null, '', '/');
         // }
 
-        const matchedRoute = pluridRouter.current.match(path + window.location.search);
+        const fullPath = path + window.location.search;
+        const matchedRoute = pluridRouter.current.match(fullPath);
 
         if (!matchedRoute) {
             handleNoMatch();
