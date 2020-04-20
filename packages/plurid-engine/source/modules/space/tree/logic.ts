@@ -56,8 +56,9 @@ export const computeSpaceTree = (
         return columnLayoutTree;
     }
 
+    console.log('aaaaAAAA');
     const assignedPages = assignPagesFromView(pages, view);
-    // console.log('assignedPages', assignedPages);
+    console.log('assignedPages', assignedPages);
 
     switch(configuration.space.layout.type) {
         case LAYOUT_TYPES.COLUMNS:
@@ -147,70 +148,86 @@ export const computeSpaceTree = (
 
 
 export const assignPagesFromView = (
-    pages: TreePlane[],
+    planes: TreePlane[],
     view?: string[] | PluridView[],
 ): TreePlane[] => {
     if (!view) {
-        return pages;
+        return planes;
     }
 
     const tree: TreePlane[] = [];
 
-    const routes: PluridRouterPath[] = pages.map(page => {
-        const route: PluridRouterPath = {
-            value: page.route,
-            // value: page.value,
-            // view: '',
-        };
-        return route;
-    });
+    // const routes: PluridRouterPath[] = pages.map(page => {
+    //     const route: PluridRouterPath = {
+    //         value: page.route,
+    //         // value: page.value,
+    //         // view: '',
+    //     };
+    //     return route;
+    // });
 
-    const router = new Router(routes);
+    // const router = new Router(routes);
 
-    for (const [index, viewPage] of view.entries()) {
-        const viewPagePath = typeof viewPage === 'string'
-            ? viewPage
-            : viewPage.path;
+    console.log('planes', planes);
+    console.log('view', view);
 
-        const matchedPage = router.match(viewPagePath);
-
-        if (matchedPage) {
-            const page = pages.find(p => p.route === matchedPage?.path.value);
-            if (!page) {
-                break;
-            }
-
-            const newPage = {
-                ...page,
-                path: viewPagePath,
-                planeID: uuid.generate(),
-            };
-
-            const viewPageOrdinal = typeof viewPage === 'string'
-                ? index
-                : typeof viewPage.ordinal === 'number'
-                    ? viewPage.ordinal
-                    : index;
-
-            const treePage = tree[viewPageOrdinal];
-
-            if (typeof treePage === 'undefined') {
-                tree[viewPageOrdinal] = newPage;
-            } else {
-                let elementSet = false;
-                let pageIndex = viewPageOrdinal;
-
-                do {
-                    const nextIndex = pageIndex + 1;
-                    const nextTreePlane = tree[nextIndex];
-                    if (typeof nextTreePlane === 'undefined') {
-                        tree[nextIndex] = newPage;
-                        elementSet = true;
-                    }
-                } while (!elementSet);
+    for (const viewPlane of view) {
+        if (typeof viewPlane === 'string') {
+            for (const plane of planes) {
+                if (plane.route === viewPlane) {
+                    tree.push(plane);
+                }
             }
         }
     }
+
+
+    // for (const [index, viewPage] of view.entries()) {
+        // const viewPagePath = typeof viewPage === 'string'
+        //     ? viewPage
+        //     : viewPage.path;
+
+        // const matchedPage = router.match(viewPagePath);
+
+        // console.log('matchedPage', matchedPage);
+
+        // if (matchedPage) {
+        //     const page = pages.find(p => p.route === matchedPage?.path.value);
+        //     if (!page) {
+        //         break;
+        //     }
+
+        //     const newPage = {
+        //         ...page,
+        //         path: viewPagePath,
+        //         planeID: uuid.generate(),
+        //     };
+
+        //     const viewPageOrdinal = typeof viewPage === 'string'
+        //         ? index
+        //         : typeof viewPage.ordinal === 'number'
+        //             ? viewPage.ordinal
+        //             : index;
+
+        //     const treePage = tree[viewPageOrdinal];
+
+        //     if (typeof treePage === 'undefined') {
+        //         tree[viewPageOrdinal] = newPage;
+        //     } else {
+        //         let elementSet = false;
+        //         let pageIndex = viewPageOrdinal;
+
+        //         do {
+        //             const nextIndex = pageIndex + 1;
+        //             const nextTreePlane = tree[nextIndex];
+        //             if (typeof nextTreePlane === 'undefined') {
+        //                 tree[nextIndex] = newPage;
+        //                 elementSet = true;
+        //             }
+        //         } while (!elementSet);
+        //     }
+        // }
+    // }
 
     return tree;
 }
