@@ -24,12 +24,15 @@ describe('computeSpaceTree', () => {
         },
     });
 
-    it('computes the default spaceTree', () => {
-        (global as any).window = {
-            innerWidth: 1200,
-            innerHeight: 300,
-        };
+    Object.defineProperty(window, 'innerWidth', {
+        value: 1200,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+        value: 300,
+    });
 
+
+    it('computes the default spaceTree', () => {
         const treePages: TreePlane[] = [
             {
                 ...defaultTreePlane,
@@ -101,11 +104,6 @@ describe('computeSpaceTree', () => {
     });
 
     it('computes the spaceTree of 1 columns', () => {
-        (global as any).window = {
-            innerWidth: 1200,
-            innerHeight: 300,
-        };
-
         const configuration: PluridConfiguration = {
             ...defaultConfiguration,
             space: {

@@ -19,12 +19,15 @@ describe('computeZigZagLayout', () => {
         },
     });
 
-    it('computes the default zig zag layout', () => {
-        (global as any).window = {
-            innerWidth: 1200,
-            innerHeight: 800,
-        };
+    Object.defineProperty(window, 'innerWidth', {
+        value: 1200,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+        value: 800,
+    });
 
+
+    it('computes the default zig zag layout', () => {
         const treePages: TreePlane[] = [
             {
                 ...defaultTreePlane,

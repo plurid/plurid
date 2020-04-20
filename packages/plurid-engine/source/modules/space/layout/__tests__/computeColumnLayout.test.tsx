@@ -19,14 +19,15 @@ describe('computeColumnLayout', () => {
         },
     });
 
+    Object.defineProperty(window, 'innerWidth', {
+        value: 1200,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+        value: 800,
+    });
+
+
     it('computes the default column layout', () => {
-        const innerWidth = 1200;
-
-        (global as any).window = {
-            innerWidth,
-            innerHeight: 800,
-        };
-
         const treePages: TreePlane[] = [
             {
                 ...defaultTreePlane,
@@ -106,11 +107,6 @@ describe('computeColumnLayout', () => {
     });
 
     it('computes the column layout with 3 columns and 5 pages', () => {
-        (global as any).window = {
-            innerWidth: 1200,
-            innerHeight: 800,
-        };
-
         const treePages: TreePlane[] = [
             {
                 ...defaultTreePlane,
