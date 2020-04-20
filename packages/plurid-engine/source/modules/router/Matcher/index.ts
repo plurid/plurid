@@ -8,14 +8,10 @@ import {
     MatcherResponse,
 } from './interfaces';
 
-// import {
-//     Route,
-// } from '../Router/interfaces';
-
 import Parser from '../Parser';
 
 import {
-    checkLengths,
+    checkValidPath,
 } from './logic';
 
 
@@ -56,45 +52,16 @@ export default class Matcher<T> {
         const parserResponse = parsedLocation.extract();
 
         if (parserResponse.match) {
-            const {
-                path,
-                pathname,
-                parameters,
-                query,
-                fragments,
-            } = parserResponse;
+            const validPath = checkValidPath(parserResponse);
 
-            const matcherResponse: MatcherResponse = {
-                path,
-                pathname,
-                parameters,
-                query,
-                fragments,
-            };
-
-            this.matchedData = matcherResponse;
-
-            // const checkedLength = checkLengths(parserResponse);
-
-            // if (checkedLength) {
-            //     const {
-            //         path,
-            //         pathname,
-            //         parameters,
-            //         query,
-            //         fragments,
-            //     } = parserResponse;
-
-            //     const matcherResponse: MatcherResponse = {
-            //         path,
-            //         pathname,
-            //         parameters,
-            //         query,
-            //         fragments,
-            //     };
-
-            //     this.matchedData = matcherResponse;
-            // }
+            if (validPath) {
+                const matcherResponse: MatcherResponse = {
+                    ...parserResponse,
+                };
+                this.matchedData = matcherResponse;
+            } else {
+                this.matchedData = undefined;
+            }
         }
     }
 
