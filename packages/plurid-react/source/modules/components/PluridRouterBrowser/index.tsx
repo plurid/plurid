@@ -75,9 +75,9 @@ const PluridRouterBrowser = (
     ) => {
         setMatchedRoute(matchedRoute);
 
-        // if (!cleanNavigation) {
-        //     history.pushState(null, '', matchedRoute.path.value);
-        // }
+        if (!cleanNavigation) {
+            history.pushState(null, '', matchedRoute.path.value);
+        }
 
         storage.saveState(
             matchedRoute.path.value,
