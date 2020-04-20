@@ -94,11 +94,14 @@ export default class Parser<T> {
             elements,
         } = this.extractParametersAndMatch();
         const query = this.extractQuery();
-        const queryString = Object
+        const queryData = Object
             .entries(query)
             .map(([key, value]) => {
                 return key + '=' + value;
             }).join('&');
+        const queryString = queryData
+            ? '?' + queryData
+            : '';
         const fragments = this.extractFragments();
 
         const parserResponse: ParserResponse = {
