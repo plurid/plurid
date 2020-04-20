@@ -9,6 +9,6 @@ describe.only('pluridLinkPathDivider', () => {
         const link = '/plane-one';
         const result = pluridLinkPathDivider(link);
 
-        expect(result.plane.value).toEqual('plane-one');
+        expect(result.plane.value).toEqual('http://localhost://p://s://u://c://plane-one');
     });
 });

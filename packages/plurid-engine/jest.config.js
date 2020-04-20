@@ -2,7 +2,7 @@ module.exports = {
     transform: {
         '.(ts|tsx)': 'ts-jest',
     },
-    testEnvironment: 'node',
+    testEnvironment: 'jsdom',
     testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
     moduleFileExtensions: [
         'ts',
