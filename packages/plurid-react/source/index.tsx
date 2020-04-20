@@ -6,8 +6,7 @@ import {
     PluridConfiguration,
     PluridPartialConfiguration,
     RecursivePartial,
-    PluridRouter,
-    PluridRouterHost,
+
     PluridRouterPath,
     PluridRouterSpace,
     PluridRouterUniverse,
@@ -61,8 +60,6 @@ export {
     PluridView,
     PluridUniverse,
 
-    PluridRouter,
-    PluridRouterHost,
     PluridRouterPath,
     PluridRouterSpace,
     PluridRouterUniverse,
