@@ -50,6 +50,7 @@ export const pluridLinkPathDivider = (
         .split('://')
         .filter(value => value !== '')
         .map(value => cleanPathElement(value));
+    console.log('SPLIT', split);
 
     let protocol = 'http';
     const host = {
@@ -100,49 +101,86 @@ export const pluridLinkPathDivider = (
         return url;
     }
 
-    switch (split.length) {
-        case 1:
-            plane.value = split[0];
-            break;
-        case 2:
-            cluster.value = split[0];
-            plane.value = split[1];
-            break;
-        case 3:
-            universe.value = split[0];
-            cluster.value = split[1];
-            plane.value = split[2];
-            break;
-        case 4:
-            space.value = split[0];
-            universe.value = split[1];
-            cluster.value = split[2];
-            plane.value = split[3];
-            break;
-        case 5:
-            path.value = split[0];
-            space.value = split[1];
-            universe.value = split[2];
-            cluster.value = split[3];
-            plane.value = split[4];
-            break;
-        case 6:
-            host.value = split[0];
-            path.value = split[1];
-            space.value = split[2];
-            universe.value = split[3];
-            cluster.value = split[4];
-            plane.value = split[5];
-            break;
-        case 7:
-            protocol = split[0];
-            host.value = split[1];
-            path.value = split[2];
-            space.value = split[3];
-            universe.value = split[4];
-            cluster.value = split[5];
-            plane.value = split[6];
-            break;
+    if (
+        split[0] !== 'http'
+        && split[0] !== 'https'
+    ) {
+        switch (split.length) {
+            case 1:
+                plane.value = split[0];
+                break;
+            case 2:
+                cluster.value = split[0];
+                plane.value = split[1];
+                break;
+            case 3:
+                universe.value = split[0];
+                cluster.value = split[1];
+                plane.value = split[2];
+                break;
+            case 4:
+                space.value = split[0];
+                universe.value = split[1];
+                cluster.value = split[2];
+                plane.value = split[3];
+                break;
+            case 5:
+                path.value = split[0];
+                space.value = split[1];
+                universe.value = split[2];
+                cluster.value = split[3];
+                plane.value = split[4];
+                break;
+            case 6:
+                host.value = split[0];
+                path.value = split[1];
+                space.value = split[2];
+                universe.value = split[3];
+                cluster.value = split[4];
+                plane.value = split[5];
+                break;
+            default:
+                const url = {
+                    protocol,
+                    host,
+                    path,
+                    space,
+                    universe,
+                    cluster,
+                    plane,
+                    valid,
+                };
+                return url;
+        }
+    } else {
+        switch (split.length) {
+            case 3:
+                protocol = split[0];
+                host.value = split[1];
+                path.value = split[2];
+                break;
+            case 7:
+                protocol = split[0];
+                host.value = split[1];
+                path.value = split[2];
+                space.value = split[3];
+                universe.value = split[4];
+                cluster.value = split[5];
+                plane.value = split[6];
+                break;
+            default:
+                const url = {
+                    protocol,
+                    host,
+                    path,
+                    space,
+                    universe,
+                    cluster,
+                    plane,
+                    valid,
+                };
+                return url;
+        }
     }
 
     const url = {
@@ -220,6 +258,16 @@ export const resolveAbsolutePluridLinkPath = (
 
     const separator = '://';
 
+    if (!plane.value) {
+        const resolvers = [
+            protocol,
+            host.value,
+            path.value,
+        ];
+        const resolvedPath = resolvers.join(separator);
+        return resolvedPath;
+    }
+
     const resolvers = [
         protocol,
         host.value,
@@ -229,8 +277,6 @@ export const resolveAbsolutePluridLinkPath = (
         cluster.value,
         cleanPathElement(plane.value),
     ];
-
     const resolvedPath = resolvers.join(separator);
-
     return resolvedPath;
 }

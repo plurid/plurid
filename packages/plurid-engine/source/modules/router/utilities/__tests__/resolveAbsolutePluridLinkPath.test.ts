@@ -5,10 +5,19 @@ import {
 
 
 describe('resolveAbsolutePluridLinkPath', () => {
-    it('works', () => {
+    it('handles plane', () => {
         const link = '/plane-one';
         const result = resolveAbsolutePluridLinkPath(link);
+        console.log(result);
 
-        expect(result).toEqual('plane-one');
+        expect(result).toEqual('http://localhost://p://s://u://c://plane-one');
+    });
+
+    it('handles static path', () => {
+        const link = 'http://localhost:3000://static';
+        const result = resolveAbsolutePluridLinkPath(link);
+        console.log(result);
+
+        expect(result).toEqual('http://localhost:3000://static');
     });
 });
