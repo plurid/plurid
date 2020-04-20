@@ -39,6 +39,8 @@ import {
     StyledPlaneControlsLeft,
     StyledPlaneControlsCenter,
     StyledPlaneControlsRight,
+
+    StyledSearch
 } from './styled';
 
 import { AppState } from '../../../../services/state/store';
@@ -108,8 +110,9 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
 
 
     /** state */
-    const [path, setPath] = useState(treePlane.routeDivisions.plane.value);
+    const [path, setPath] = useState(routeDivisions.plane.value);
     const [showAddress, setShowAddress] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
 
 
     /** handlers */
@@ -123,6 +126,8 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     }
 
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        console.log(event.key);
+
         if (pathbar.onKeyDown) {
             const id = plane.id || plane.path;
             pathbar.onKeyDown(event, id);
@@ -153,6 +158,27 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
                     atKeyDown={handleOnKeyDown}
                     ariaLabel="Plurid Pathbar"
                 />
+
+                <StyledSearch
+                    theme={interactionTheme}
+                >
+                    <PluridTextline
+                        theme={interactionTheme}
+                        text={showAddress ? gatewayAddress : path}
+                        atChange={onPathInput}
+                        atKeyDown={handleOnKeyDown}
+                        ariaLabel="Plurid Pathbar"
+                    />
+
+                    <ul>
+                        <li>
+                            /one
+                        </li>
+                        <li>
+                            /two
+                        </li>
+                    </ul>
+                </StyledSearch>
             </StyledPlaneControlsCenter>
 
             <StyledPlaneControlsRight>
