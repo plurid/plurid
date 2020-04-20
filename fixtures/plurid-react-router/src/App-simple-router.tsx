@@ -147,14 +147,6 @@ const App = () => {
 
     const pathWithParameterOne: PluridRouterPath = {
         value: '/path1/:parameterOne',
-        // parameters: {
-        //     parameterOne: {
-        //         length: 12,
-        //         lengthType: '<=',
-        //         startsWith: '',
-        //         endsWith: '',
-        //     },
-        // },
         spaces: [
             aSpace,
         ],
@@ -162,12 +154,39 @@ const App = () => {
 
     const pathWithParameterTwo: PluridRouterPath = {
         value: '/path2/:parameterTwo',
-        // parameters: {
-        //     parameterOne: {
-        //         length: 12,
-        //         lengthType: '>',
-        //     },
-        // },
+        parameters: {
+            parameterTwo: {
+                length: 12,
+                lengthType: '<=',
+            },
+        },
+        spaces: [
+            aSpace,
+        ],
+    };
+
+    const pathWithParameterThree: PluridRouterPath = {
+        value: '/path3/:parameterThree',
+        parameters: {
+            parameterOne: {
+                length: 12,
+                lengthType: '>',
+            },
+        },
+        spaces: [
+            defaultSpace,
+        ],
+    };
+
+    const pathWithParameterFour: PluridRouterPath = {
+        value: '/path4/:parameterFour',
+        parameters: {
+            parameterOne: {
+                length: 12,
+                startsWith: 'on',
+                endsWith: 'no',
+            },
+        },
         spaces: [
             defaultSpace,
         ],
@@ -180,6 +199,8 @@ const App = () => {
         slottedPath,
         pathWithParameterOne,
         pathWithParameterTwo,
+        pathWithParameterThree,
+        pathWithParameterFour,
     ];
 
 
