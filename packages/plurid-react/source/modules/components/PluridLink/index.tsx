@@ -315,7 +315,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
      */
     useEffect(() => {
         const parentPlaneID = generalEngine.planes.getPluridPlaneIDByData(linkElement.current);
-        console.log('parentPlaneID', parentPlaneID);
+        // console.log('parentPlaneID', parentPlaneID);
         setParentPlaneID(parentPlaneID);
 
         const linkCoordinates = getPluridLinkCoordinates();
