@@ -36,6 +36,12 @@ export const StyledPluridPlane: any = styled.div`
         }
         return '1';
     }};
+    user-select: ${(props: any) => {
+        if (!props.show) {
+            return 'none';
+        }
+        return 'auto';
+    }};
 
     position: absolute;
     height: auto;
