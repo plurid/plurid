@@ -26,6 +26,8 @@ import {
 
 import PluridApplication from '../../../Application';
 
+import environment from '../../services/utilities/environment';
+
 // import {
 //     indexing,
 // } from '@plurid/plurid-functions';
@@ -144,17 +146,24 @@ interface PluridRouterBrowserOwnProperties {
     protocol?: string;
 
     /**
-     * Development default: 'localhost'.
-     * Production default: window.location.host.
+     * Development default: `'localhost:3000'`.
+     *
+     * Production default: `window.location.host`.
      */
     host?: string;
 
     /**
-     * The gateway path is used to receive external routing requests.
-     * e.g. https://example.com/gateway?plurid=https://subdomain.example.com://path/to/123://s://u://c://a-plane
-     * will route to that specific host://route://space://universe://cluster://plane
+     * The `gatewayPath` is used to receive external routing requests.
+     *
+     * e.g.
+     *
+     * `https://example.com/gateway?plurid=https://subdomain.example.com://path/to/123://s://u://c://a-plane`
+     *
+     * will route to that specific
+     *
+     * `host://path://space://universe://cluster://plane`
      */
-    gateway?: string;
+    gatewayPath?: string;
 
     /**
      * Component to be rendered on the gateway path, external to the plurid view.
@@ -175,9 +184,10 @@ const PluridRouterBrowser = (
         paths,
         view,
         cleanNavigation,
-        gateway,
-        gatewayExterior,
         protocol: protocolProperty,
+        host: hostProperty,
+        gatewayPath,
+        gatewayExterior,
         api,
     } = properties;
 
@@ -187,12 +197,14 @@ const PluridRouterBrowser = (
 
     const pluridRouter = useRef(new Router(
         paths,
-        {
-            gateway,
-        },
     ));
 
     const protocol = protocolProperty || 'http';
+    const host = hostProperty
+        ? hostProperty
+        : environment.production
+            ? window.location.host
+            : 'localhost:3000';
 
 
     /** state */
@@ -357,39 +369,11 @@ const PluridRouterBrowser = (
 
         if (query.plurid) {
             gatewayView.push(query.plurid);
-            // const path = findPathByDivisions(
-            //     paths,
-            //     query.plurid,
-            // );
-
-            // if (path) {
-            //     pathsFound.push(path);
-            // }
-
-            // console.log('GATEWAY');
-            // console.log('query', query);
-            // console.log('paths', paths);
         }
 
         if (query.plurids) {
             const gatewayViews = query.plurids.split(',');
             gatewayView.push(...gatewayViews);
-
-
-            // for (const plurid of split) {
-            //     const path = findPathByDivisions(
-            //         paths,
-            //         plurid,
-            //     );
-            //     if (path) {
-            //         pathsFound.push(path);
-            //     }
-            // }
-
-            // console.log('GATEWAY');
-            // console.log('query', query);
-            // console.log('paths', paths);
-            // console.log('paths', paths);
         }
 
         console.log('gatewayView', gatewayView);
@@ -432,7 +416,7 @@ const PluridRouterBrowser = (
 
                             const planeAddressElements = [
                                 protocol,
-                                'localhost:3000',
+                                host,
                                 pathName,
                                 spaceName,
                                 universeName,
@@ -463,7 +447,7 @@ const PluridRouterBrowser = (
 
         const gatewayRoute: router.MatcherResponse = {
             path: {
-                value: gateway || 'gateway',
+                value: gatewayPath || 'gateway',
             },
             pathname: '',
             fragments: {
@@ -509,7 +493,7 @@ const PluridRouterBrowser = (
     ) => {
         const pathname = window.location.pathname;
 
-        if (pathname === gateway) {
+        if (pathname === gatewayPath) {
             handleGateway();
             return;
         }
@@ -596,7 +580,7 @@ const PluridRouterBrowser = (
 
                 const planeAddressElements = [
                     protocol,
-                    'localhost:3000',
+                    host,
                     pathName,
                 ];
                 const planeAddress = planeAddressElements.join('://');
@@ -605,7 +589,7 @@ const PluridRouterBrowser = (
 
                 const indexedPlane: IndexedPluridPlane = {
                     protocol,
-                    host: 'localhost:3000',
+                    host,
                     path: pathName,
                     space: '',
                     universe: '',
@@ -637,8 +621,6 @@ const PluridRouterBrowser = (
                                 ? 'c'
                                 : utilities.cleanPathElement(cluster.value);
                             const planeName = utilities.cleanPathElement(plane.value);
-
-                            const host = 'localhost:3000';
 
                             const planeAddressElements = [
                                 protocol,
