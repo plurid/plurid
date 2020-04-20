@@ -94,6 +94,56 @@ export const checkElementLength = (
 
 
 
+
+
+
+export const checkValidPath = (
+    data: ParserResponse,
+) => {
+    const {
+        path,
+        parameters,
+    } = data;
+    console.log('parser data', data);
+
+    const {
+        parameters: validationParameters,
+    } = path;
+
+    if (validationParameters) {
+        for (const [parameterKey, parameterData] of Object.entries(validationParameters)) {
+            const {
+                length,
+                lengthType,
+                startsWith,
+                endsWith,
+            } = parameterData;
+
+            const paramaterValue = parameters[parameterKey];
+            console.log(parameterKey, parameterData, paramaterValue);
+            if (!paramaterValue) {
+                return false;
+            }
+
+            if (startsWith && !paramaterValue.startsWith(startsWith)) {
+                return false;
+            }
+
+            if (endsWith && !paramaterValue.endsWith(endsWith)) {
+                return false;
+            }
+
+            if (length && paramaterValue.length !== length) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+
+
 // /**
 //  * Matches the adequate `route` given the `path`, if any.
 //  *
