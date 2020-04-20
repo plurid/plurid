@@ -168,7 +168,7 @@ const App = () => {
     const pathWithParameterThree: PluridRouterPath = {
         value: '/path3/:parameterThree',
         parameters: {
-            parameterOne: {
+            parameterThree: {
                 length: 12,
                 lengthType: '>',
             },
@@ -181,7 +181,7 @@ const App = () => {
     const pathWithParameterFour: PluridRouterPath = {
         value: '/path4/:parameterFour',
         parameters: {
-            parameterOne: {
+            parameterFour: {
                 length: 12,
                 startsWith: 'on',
                 endsWith: 'no',
