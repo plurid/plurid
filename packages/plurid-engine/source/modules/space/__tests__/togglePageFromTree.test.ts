@@ -7,7 +7,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    togglePageFromTree,
+    logic,
 } from '../tree';
 
 
@@ -68,7 +68,7 @@ describe('togglePageFromTree', () => {
 
         const togglePageID = 'bbb';
 
-        const result = togglePageFromTree(tree, togglePageID);
+        const result = logic.togglePageFromTree(tree, togglePageID);
         expect(result).toMatchObject(updatedTree);
     });
 
@@ -141,7 +141,7 @@ describe('togglePageFromTree', () => {
 
         const togglePageID = 'bbb';
 
-        const result = togglePageFromTree(tree, togglePageID);
+        const result = logic.togglePageFromTree(tree, togglePageID);
 
         expect(result).toMatchObject(updatedTree);
     });
