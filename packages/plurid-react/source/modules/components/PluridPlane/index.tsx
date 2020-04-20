@@ -137,23 +137,27 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
             data-plurid-plane={planeID}
             data-plurid-entity={PLURID_ENTITY_PLANE}
         >
-            {treePlane.parentPlaneID && (
-                <PlaneBridge />
-            )}
+            {treePlane.show && (
+                <>
+                    {treePlane.parentPlaneID && (
+                        <PlaneBridge />
+                    )}
 
-            {showPlaneControls && (
-                <PlaneControls
-                    plane={plane}
-                    treePlane={treePlane}
-                    mouseOver={mouseOver}
-                />
-            )}
+                    {showPlaneControls && (
+                        <PlaneControls
+                            plane={plane}
+                            treePlane={treePlane}
+                            mouseOver={mouseOver}
+                        />
+                    )}
 
-            <PlaneContent
-                updatePlaneSize={updatePlaneSize}
-            >
-                {children}
-            </PlaneContent>
+                    <PlaneContent
+                        updatePlaneSize={updatePlaneSize}
+                    >
+                        {children}
+                    </PlaneContent>
+                </>
+            )}
         </StyledPluridPlane>
     );
 }
