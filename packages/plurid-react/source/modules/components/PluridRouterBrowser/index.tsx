@@ -108,6 +108,7 @@ const PluridRouterBrowser = (
         const spacesArray: any[] = [];
         if (spaces) {
             for (const space of spaces) {
+                console.log('SPACE', space);
                 const planes: PluridPlane[] = [];
                 const view = [];
 
@@ -118,6 +119,14 @@ const PluridRouterBrowser = (
                                 component,
                                 value,
                             } = plane;
+
+                            const planePath = {
+                                path: path.value,
+                                space: space.value,
+                                universe: universe.value,
+                                cluster: cluster.value,
+                            };
+                            console.log('planePath', planePath);
 
                             if (component.kind === 'react') {
                                 const pluridPlane: PluridPlane = {
