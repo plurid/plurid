@@ -430,7 +430,7 @@ const PluridRouterBrowser = (
 
     /** handle planes indexation */
     useEffect(() => {
-        console.log('HANDLE PLANES INDEXATION');
+        // console.log('HANDLE PLANES INDEXATION');
 
         for (const path of paths) {
             if (!path.spaces) {

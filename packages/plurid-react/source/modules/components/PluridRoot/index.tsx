@@ -59,8 +59,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         indexedPlanesSources,
     } = context;
 
-    console.log('indexedPlanes', indexedPlanes);
-    console.log('indexedPlanesSources', indexedPlanesSources);
+    // console.log('indexedPlanes', indexedPlanes);
+    // console.log('indexedPlanesSources', indexedPlanesSources);
 
 
     /** properties */
@@ -83,24 +83,24 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
     /** handlers */
     const computeChildrenPlanes = (plane: TreePlane) => {
-        console.log('computeChildrenPlanes plane', plane);
+        // console.log('computeChildrenPlanes plane', plane);
         if (plane.children) {
             plane.children.map(child => {
-                console.log('child', child);
+                // console.log('child', child);
 
                 if (!indexedPlanesSources || !indexedPlanes) {
                     return;
                 }
 
                 const planeID = indexedPlanesSources.get(child.route);
-                console.log('AAAAAA indexedPlanesSources', indexedPlanesSources);
-                console.log('planeID', planeID);
+                // console.log('AAAAAA indexedPlanesSources', indexedPlanesSources);
+                // console.log('planeID', planeID);
                 if (!planeID) {
                     return;
                 }
 
                 const activePlane = indexedPlanes.get(planeID);
-                console.log('activePlane', activePlane);
+                // console.log('activePlane', activePlane);
                 // const activePlane = activePlanes[child.sourceID];
 
                 let plane = (<></>);
