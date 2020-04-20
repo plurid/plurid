@@ -20,6 +20,7 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
+    storage,
     uuid,
 } from '@plurid/plurid-functions';
 
@@ -27,35 +28,6 @@ import PluridApplication from '../../../Application';
 
 import environment from '../../services/utilities/environment';
 
-
-
-export const loadState = (
-    name: string,
-) => {
-    try {
-        const serializedState = localStorage.getItem(name);
-        if (serializedState === null) {
-            return;
-        }
-
-        return JSON.parse(serializedState);
-    } catch (error) {
-        return;
-    }
-};
-
-
-export const saveState = (
-    state: any,
-    name: string,
-) => {
-    try {
-        const serializedState = JSON.stringify(state);
-        localStorage.setItem(name, serializedState);
-    } catch (error) {
-        return;
-    }
-};
 
 
 const Router = router.default;
@@ -107,7 +79,7 @@ const PluridRouterBrowser = (
         //     history.pushState(null, '', matchedRoute.path.value);
         // }
 
-        saveState(
+        storage.saveState(
             matchedRoute.path.value,
             '__PLURID_ROUTER__',
         );
@@ -411,7 +383,7 @@ const PluridRouterBrowser = (
     /** effects */
     /** handleLocation */
     useEffect(() => {
-        // const routerData = loadState('__PLURID_ROUTER__');
+        // const routerData = storage.loadState('__PLURID_ROUTER__');
         // const pathname = window.location.pathname;
         // let actualPath;
 
