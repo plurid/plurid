@@ -19,12 +19,15 @@ xdescribe('computeColumnLayout', () => {
         },
     });
 
-    it('computes the face to face layout', () => {
-        (global as any).window = {
-            innerWidth: 1200,
-            innerHeight: 800,
-        };
+    Object.defineProperty(window, 'innerWidth', {
+        value: 1200,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+        value: 800,
+    });
 
+
+    it('computes the face to face layout', () => {
         const treePages: TreePlane[] = [
             {
                 ...defaultTreePlane,
@@ -96,11 +99,6 @@ xdescribe('computeColumnLayout', () => {
     });
 
     it('computes the face to face layout', () => {
-        (global as any).window = {
-            innerWidth: 1200,
-            innerHeight: 800,
-        };
-
         const treePages: TreePlane[] = [
             {
                 ...defaultTreePlane,
