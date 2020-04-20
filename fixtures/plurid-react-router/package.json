@@ -26,7 +26,7 @@
     "dependencies": {
         "@plurid/plurid-data": "^0.1.116",
         "@plurid/plurid-engine": "^0.1.57",
-        "@plurid/plurid-functions": "^0.1.12",
+        "@plurid/plurid-functions": "^0.1.13",
         "@plurid/plurid-functions-react": "^0.0.1",
         "@plurid/plurid-icons-react": "^0.1.19",
         "@plurid/plurid-pubsub": "^0.1.7",
