@@ -7,7 +7,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    updateTreePlane,
+    logic,
 } from '../tree';
 
 
@@ -57,7 +57,7 @@ describe('updateTreePlane', () => {
             },
         ];
 
-        const result = updateTreePlane(tree, updatedPage);
+        const result = logic.updateTreePlane(tree, updatedPage);
         expect(result).toMatchObject(updatedTree);
     });
 
@@ -123,7 +123,7 @@ describe('updateTreePlane', () => {
             },
         ];
 
-        const result = updateTreePlane(tree, updatedPage);
+        const result = logic.updateTreePlane(tree, updatedPage);
         expect(result).toMatchObject(updatedTree);
     });
 });

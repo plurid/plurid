@@ -10,7 +10,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    computeSpaceTree,
+    logic,
 } from '../tree';
 
 
@@ -92,7 +92,7 @@ describe('computeSpaceTree', () => {
             },
         ];
 
-        const result = computeSpaceTree(treePages);
+        const result = logic.computeSpaceTree(treePages);
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });
@@ -179,7 +179,7 @@ describe('computeSpaceTree', () => {
             },
         ];
 
-        const result = computeSpaceTree(treePages, configuration);
+        const result = logic.computeSpaceTree(treePages, configuration);
         const resultWithEmptyIDs = result.map(page => {
             return { ...page, planeID: ''};
         });

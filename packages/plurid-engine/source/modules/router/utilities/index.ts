@@ -6,7 +6,7 @@ import {
 
 import {
     cleanPathElement,
-} from '../utilities';
+} from '../../utilities';
 
 
 
@@ -46,7 +46,10 @@ export const mapPathsToRoutes = <T, V>(
 export const pluridLinkPathDivider = (
     route: string,
 ): RouteDivisions => {
-    const split = route.split('://').filter(value => value !== '');
+    const split = route
+        .split('://')
+        .filter(value => value !== '')
+        .map(value => cleanPathElement(value));
 
     let protocol = 'http';
     const host = {
@@ -175,9 +178,6 @@ export const resolveAbsolutePluridLinkPath = (
     console.log('DIVISIONS', divisions);
 
     const defaultPathname = divisions.path.value || 'p';
-    // const defaultPathname = window.location.pathname.length > 1
-    //     ? window.location.pathname.slice(1,)
-    //     : 'p';
 
     const protocol = divisions.protocol || window.location.protocol.replace(':', '');
     const host = divisions.host.value
