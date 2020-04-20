@@ -513,7 +513,7 @@ export const toggleChildren = (
 }
 
 
-export const togglePageFromTree = (
+export const togglePlaneFromTree = (
     tree: TreePlane[],
     pluridPlaneID: string,
 ): TreePlane[] => {
@@ -535,7 +535,7 @@ export const togglePageFromTree = (
         }
 
         if (page.children) {
-            const pageTree = togglePageFromTree(page.children, pluridPlaneID);
+            const pageTree = togglePlaneFromTree(page.children, pluridPlaneID);
             page.children = [ ...pageTree ];
             updatedTree.push(page);
             continue;
