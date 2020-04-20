@@ -10,9 +10,8 @@ import {
 
     /** interfaces */
     PluridPlane,
-    PluridRouterPath,
-    PluridRouterComponent,
     IndexedPluridPlane,
+    PluridRouterProperties as PluridRouterBrowserOwnProperties,
 } from '@plurid/plurid-data';
 
 import {
@@ -28,153 +27,39 @@ import PluridApplication from '../../../Application';
 
 import environment from '../../services/utilities/environment';
 
-// import {
-//     indexing,
-// } from '@plurid/plurid-functions';
 
 
-
-export const loadState = () => {
+export const loadState = (
+    name: string,
+) => {
     try {
-        const serializedState = localStorage.getItem('__PLURID_ROUTER__');
+        const serializedState = localStorage.getItem(name);
         if (serializedState === null) {
-            return undefined;
+            return;
         }
 
         return JSON.parse(serializedState);
     } catch (error) {
-        return undefined;
+        return;
     }
 };
 
 
-export const saveState = (state: any) => {
+export const saveState = (
+    state: any,
+    name: string,
+) => {
     try {
         const serializedState = JSON.stringify(state);
-        localStorage.setItem('__PLURID_ROUTER__', serializedState);
+        localStorage.setItem(name, serializedState);
     } catch (error) {
+        return;
     }
 };
-
-
-const findPathByDivisions = (
-    paths: any[],
-    queryData: any,
-) => {
-    const pathDivisions = router.pluridLinkPathDivider(queryData);
-
-    for (const path of paths) {
-        if (
-            path.value === pathDivisions.path.value
-            || (path.value === '/' && pathDivisions.path.value === 'p')
-        ) {
-            console.log('path', path);
-            if (path.spaces) {
-                for (const space of path.spaces) {
-                    if (
-                        space.value === pathDivisions.space.value
-                        || (space.value === 'default' && pathDivisions.space.value === 's')
-                    ) {
-                        console.log('space', space);
-                        if (space.universes) {
-                            for (const universe of space.universes) {
-                                if (
-                                    universe.value === pathDivisions.universe.value
-                                    || (universe.value === 'default' && pathDivisions.universe.value === 'u')
-                                ) {
-                                    console.log('universe', universe);
-                                    if (universe.clusters) {
-                                        for (const cluster of universe.clusters) {
-                                            if (
-                                                cluster.value === pathDivisions.cluster.value
-                                                || (cluster.value === 'default' && pathDivisions.cluster.value === 'c')
-                                            ) {
-                                                console.log('cluster', cluster);
-                                                if (cluster.planes) {
-                                                    for (const plane of cluster.planes) {
-                                                        console.log('plane', plane);
-                                                        if (plane.value === pathDivisions.plane.value) {
-                                                            return {
-                                                                path,
-                                                                pathname: path.value,
-                                                                parameters: {},
-                                                                query: {},
-                                                                fragments: {
-                                                                    texts: [],
-                                                                    elements: [],
-                                                                },
-                                                            };
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    return;
-}
 
 
 const Router = router.default;
 
-
-interface PluridRouterBrowserOwnProperties {
-    paths: PluridRouterPath[];
-
-    /**
-     * Path to navigate to when using clean navigation.
-     */
-    view?: string;
-
-    /**
-     * Navigate without changing the browser URL.
-     */
-    cleanNavigation?: boolean;
-
-    /**
-     * Development default: 'http'.
-     * Production default: 'https'.
-     */
-    protocol?: string;
-
-    /**
-     * Development default: `'localhost:3000'`.
-     *
-     * Production default: `window.location.host`.
-     */
-    host?: string;
-
-    /**
-     * The `gatewayPath` is used to receive external routing requests.
-     *
-     * e.g.
-     *
-     * `https://example.com/gateway?plurid=https://subdomain.example.com://path/to/123://s://u://c://a-plane`
-     *
-     * will route to that specific
-     *
-     * `host://path://space://universe://cluster://plane`
-     */
-    gatewayPath?: string;
-
-    /**
-     * Component to be rendered on the gateway path, external to the plurid view.
-     */
-    gatewayExterior?: PluridRouterComponent;
-
-    /**
-     * API endpoint to request the elements for the paths not found in the initial routing.
-     */
-    api?: string;
-}
 
 const PluridRouterBrowser = (
     properties: PluridRouterBrowserOwnProperties,
@@ -222,7 +107,10 @@ const PluridRouterBrowser = (
         //     history.pushState(null, '', matchedRoute.path.value);
         // }
 
-        saveState(matchedRoute.path.value);
+        saveState(
+            matchedRoute.path.value,
+            '__PLURID_ROUTER__',
+        );
 
         const {
             path,
@@ -523,7 +411,7 @@ const PluridRouterBrowser = (
     /** effects */
     /** handleLocation */
     useEffect(() => {
-        // const routerData = loadState();
+        // const routerData = loadState('__PLURID_ROUTER__');
         // const pathname = window.location.pathname;
         // let actualPath;
 
