@@ -151,38 +151,35 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
             </StyledPlaneControlsLeft>
 
             <StyledPlaneControlsCenter>
-                {!showSearch && (
-                    <PluridTextline
-                        theme={interactionTheme}
-                        text={showAddress ? gatewayAddress : path}
-                        atChange={onPathInput}
-                        atKeyDown={handleOnKeyDown}
-                        atFocus={() => setShowSearch(true)}
-                        atBlur={() => setShowSearch(false)}
-                        ariaLabel="Plurid Pathbar"
-                    />
-                )}
+                <PluridTextline
+                    theme={interactionTheme}
+                    text={showAddress ? gatewayAddress : path}
+                    atChange={onPathInput}
+                    atKeyDown={handleOnKeyDown}
+                    atFocus={() => setShowSearch(true)}
+                    atBlur={() => setShowSearch(false)}
+                    ariaLabel="Plurid Pathbar"
+                />
 
                 {showSearch && (
                     <StyledSearch
                         theme={interactionTheme}
                     >
-                        <PluridTextline
-                            theme={interactionTheme}
-                            text={showAddress ? gatewayAddress : path}
-                            atChange={onPathInput}
-                            atKeyDown={handleOnKeyDown}
-                            atFocus={() => setShowSearch(true)}
-                            atBlur={() => setShowSearch(false)}
-                            ariaLabel="Plurid Pathbar"
-                        />
-
                         <ul>
                             <li>
                                 /one
                             </li>
                             <li>
                                 /two
+                            </li>
+                            <li>
+                                /three
+                            </li>
+                            <li>
+                                /four
+                            </li>
+                            <li>
+                                /five
                             </li>
                         </ul>
                     </StyledSearch>

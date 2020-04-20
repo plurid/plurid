@@ -51,7 +51,7 @@ export const StyledSearch = styled.div`
     position: absolute;
     left: 0;
     right: 0;
-    top: 0;
+    top: 36px;
     border-radius: 15px;
     z-index: 9999;
 
