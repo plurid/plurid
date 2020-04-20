@@ -518,10 +518,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.1.26.tgz#696ec2b8a57d6d95027ac2dc2a954dda142bdb82"
   integrity sha512-UOfta3WoTEC5p0ri11+7PM/hha5zGkxXQjYl8yhMho/uSRATyCal4Hpj49jSx4EjQoxfn65CPpRA8Z2SMRmRLQ==
 
-"@plurid/plurid-ui-react@^0.1.80":
-  version "0.1.80"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.80.tgz#3484240a54d243dc10062ab34e424aee6b3a97cc"
-  integrity sha512-VYzpVj2zc3MThsqS4OBPUxBBAB2h87s9L6A37BXXQT//bFna9TmQGvEbMn3cQyK7GbWciPbuWhjfjSjjlHXt4A==
+"@plurid/plurid-ui-react@^0.1.81":
+  version "0.1.81"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.81.tgz#eaae2b71f532d3defac8a90d8d1b7fc8440a2bcd"
+  integrity sha512-wVvUpo9JubBIMruOXoOgSKmhqgtEmDxdJS619pMMv3Ip39vcLOp4Eo/mJjhP1bestYZUARPdyzc26tNYEq9ayQ==
 
 "@rollup/plugin-commonjs@^11.1.0":
   version "11.1.0"
