@@ -92,25 +92,13 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
         pathbar,
     } = elements.plane.controls;
 
-    let basePath = '';
-    if (configuration) {
-        if (pathbar.domainURL) {
-            basePath = typeof window === 'undefined'
-                ? ''
-                : window.location.hostname;
-        }
-    }
+    const {
+        protocol,
+        host,
+    } = treePlane.routeDivisions;
 
-    const protocol = 'http';
-    const host = 'localhost:3000';
     const gateway = 'gateway';
 
-    // const pathValue = treePlane.routeDivisions.path.value;
-    // const space = treePlane.routeDivisions.space.value;
-    // const universe = treePlane.routeDivisions.universe.value;
-    // const cluster = treePlane.routeDivisions.cluster.value;
-    // const cleanRoute = utilities.cleanPathElement(treePlane.route);
-    // const plurid = `${protocol}://${host}://${pathValue}://${space}://${universe}://${cluster}://${cleanRoute}`;
     const gatewayAddress = `${protocol}://${host}/${gateway}?plurid=` + encodeURIComponent(treePlane.route);
 
 
