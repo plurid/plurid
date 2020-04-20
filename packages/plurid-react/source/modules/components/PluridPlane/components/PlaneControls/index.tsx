@@ -156,29 +156,33 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
                     text={showAddress ? gatewayAddress : path}
                     atChange={onPathInput}
                     atKeyDown={handleOnKeyDown}
+                    atFocus={() => setShowSearch(true)}
                     ariaLabel="Plurid Pathbar"
                 />
 
-                <StyledSearch
-                    theme={interactionTheme}
-                >
-                    <PluridTextline
+                {showSearch && (
+                    <StyledSearch
                         theme={interactionTheme}
-                        text={showAddress ? gatewayAddress : path}
-                        atChange={onPathInput}
-                        atKeyDown={handleOnKeyDown}
-                        ariaLabel="Plurid Pathbar"
-                    />
+                    >
+                        <PluridTextline
+                            theme={interactionTheme}
+                            text={showAddress ? gatewayAddress : path}
+                            atChange={onPathInput}
+                            atKeyDown={handleOnKeyDown}
+                            atBlur={() => setShowSearch(false)}
+                            ariaLabel="Plurid Pathbar"
+                        />
 
-                    <ul>
-                        <li>
-                            /one
-                        </li>
-                        <li>
-                            /two
-                        </li>
-                    </ul>
-                </StyledSearch>
+                        <ul>
+                            <li>
+                                /one
+                            </li>
+                            <li>
+                                /two
+                            </li>
+                        </ul>
+                    </StyledSearch>
+                )}
             </StyledPlaneControlsCenter>
 
             <StyledPlaneControlsRight>
