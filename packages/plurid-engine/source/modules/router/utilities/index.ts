@@ -126,7 +126,7 @@ export const pluridLinkPathDivider = (
             plane,
             valid: true,
         };
-        console.log('URL', url);
+        // console.log('URL', url);
 
         return url;
     }
