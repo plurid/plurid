@@ -106,7 +106,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
 
     const gateway = 'gateway';
 
-    const gatewayAddress = `${protocol}://${host}/${gateway}?plurid=` + encodeURIComponent(route);
+    const gatewayAddress = `${protocol}://${host.value}/${gateway}?plurid=` + encodeURIComponent(route);
 
 
     /** state */
