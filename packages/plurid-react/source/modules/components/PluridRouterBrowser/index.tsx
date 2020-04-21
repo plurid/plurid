@@ -175,41 +175,6 @@ const PluridRouterBrowser = (
             Spaces = () => (
                 <>
                     {spacesArray}
-                    {/* {spaces.map(space => {
-                        const planes: PluridPlane[] = [];
-                        const view = [];
-                        for (const universe of space.universes) {
-                            for (const cluster of universe.clusters) {
-                                for (const plane of cluster.planes) {
-                                    const {
-                                        component,
-                                        value,
-                                    } = plane;
-
-                                    if (component.kind === 'react') {
-                                        const pluridPlane: PluridPlane = {
-                                            component: {
-                                                element: component.element,
-                                            },
-                                            path: value,
-                                        };
-
-                                        planes.push(pluridPlane);
-                                        view.push(value);
-                                    }
-                                }
-                            }
-                        }
-
-                        return (
-                            <PluridApplication
-                                key={Math.random() + ''}
-                                planes={planes}
-                                indexedPlanes={indexedPlanes.current}
-                                view={view}
-                            />
-                        );
-                    })} */}
                 </>
             );
         }
@@ -387,7 +352,7 @@ const PluridRouterBrowser = (
     ) => {
         const pathname = window.location.pathname;
 
-        if (pathname === gatewayPath) {
+        if (!event && pathname === gatewayPath) {
             handleGateway();
             return;
         }
@@ -396,14 +361,13 @@ const PluridRouterBrowser = (
             ? event.detail.path
             : cleanNavigation && view
                 ? view
-                : pathname;
+                : pathname + window.location.search;
 
         // if (cleanNavigation && pathname !== gateway) {
         //     window.history.replaceState(null, '', '/');
         // }
 
-        const fullPath = path + window.location.search;
-        const matchedRoute = pluridRouter.current.match(fullPath);
+        const matchedRoute = pluridRouter.current.match(path);
 
         if (!matchedRoute) {
             handleNoMatch();
@@ -549,7 +513,7 @@ const PluridRouterBrowser = (
         }
     }, []);
 
-    console.log('indexedPlanes', indexedPlanes);
+    // console.log('indexedPlanes', indexedPlanes);
 
 
     /** render */
