@@ -101,6 +101,34 @@ export const pluridLinkPathDivider = (
         return url;
     }
 
+    if (route.startsWith('/://')) {
+        switch (split.length) {
+            case 1:
+                path.value = split[0];
+                break;
+            case 5:
+                path.value = split[0];
+                space.value = split[1];
+                universe.value = split[2];
+                cluster.value = split[3];
+                plane.value = split[4];
+                break;
+        }
+
+        const url = {
+            protocol,
+            host,
+            path,
+            space,
+            universe,
+            cluster,
+            plane,
+            valid: true,
+        };
+
+        return url;
+    }
+
     if (
         split[0] !== 'http'
         && split[0] !== 'https'
