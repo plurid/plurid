@@ -231,8 +231,8 @@ const View: React.FC<ViewProperties> = (
         pubsub,
     } = appProperties;
 
-    console.log('planes', planes);
-    console.log('all planes', indexedPlanes);
+    // console.log('planes', planes);
+    // console.log('all planes', indexedPlanes);
     const indexedPlanesSources = useRef<Map<string, string>>(new Map());
 
 
@@ -414,22 +414,22 @@ const View: React.FC<ViewProperties> = (
                 contextPlane,
                 docPlane,
             );
-            console.log('treePlane', treePlane);
+            // console.log('treePlane', treePlane);
             treePlanes.push(treePlane);
         }
 
-        console.log('treePlanes', treePlanes);
-        console.log('view', view);
+        // console.log('treePlanes', treePlanes);
+        // console.log('view', view);
 
         const spaceTree = new space.tree.Tree({
             planes: treePlanes,
             configuration,
             view,
         });
-        console.log('spaceTree', spaceTree);
+        // console.log('spaceTree', spaceTree);
 
         const computedTree = spaceTree.compute();
-        console.log('computedTree', computedTree);
+        // console.log('computedTree', computedTree);
 
         return computedTree;
     }
