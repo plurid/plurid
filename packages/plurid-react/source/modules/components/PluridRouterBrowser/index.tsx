@@ -56,7 +56,7 @@ const PluridRouterBrowser = (
         paths,
     ));
 
-    console.log('protocolProperty', protocolProperty);
+    // console.log('protocolProperty', protocolProperty);
     const protocol = protocolProperty
         ? protocolProperty
         : window.location.protocol.replace(':', '');
@@ -65,7 +65,7 @@ const PluridRouterBrowser = (
     //     : environment.production
     //         ? 'https'
     //         : 'http';
-    console.log('protocol', protocol);
+    // console.log('protocol', protocol);
 
     const host = hostProperty
         ? hostProperty
