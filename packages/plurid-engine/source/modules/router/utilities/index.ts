@@ -52,7 +52,7 @@ export const pluridLinkPathDivider = (
         .filter(value => value !== '')
         .map(value => cleanPathElement(value));
 
-    let protocol = 'http';
+    let protocol = window.location.protocol.replace(':', '');
     const host = {
         value: '',
         controlled: false,
