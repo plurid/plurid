@@ -167,8 +167,8 @@ export const assignPagesFromView = (
 
     // const router = new Router(routes);
 
-    console.log('planes', planes);
-    console.log('view', view);
+    // console.log('planes', planes);
+    // console.log('view', view);
 
     for (const viewPlane of view) {
         if (typeof viewPlane === 'string') {
