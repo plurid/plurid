@@ -120,10 +120,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const planeControls = stateConfiguration.elements.plane.controls.show;
 
+    console.log('planePath', planePath);
     const dividedPath = pluridLinkPathDivider(planePath);
-    // console.log('dividedPath', dividedPath);
+    console.log('dividedPath', dividedPath);
     const absolutePath = resolveAbsolutePluridLinkPath(planePath);
-    // console.log('absolutePath', absolutePath);
+    console.log('absolutePath', absolutePath);
 
 
     /** references */

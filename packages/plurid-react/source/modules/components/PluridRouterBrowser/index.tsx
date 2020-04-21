@@ -56,11 +56,17 @@ const PluridRouterBrowser = (
         paths,
     ));
 
+    console.log('protocolProperty', protocolProperty);
     const protocol = protocolProperty
         ? protocolProperty
-        : environment.production
-            ? 'https'
-            : 'http';
+        : window.location.protocol.replace(':', '');
+    // const protocol = protocolProperty
+    //     ? protocolProperty
+    //     : environment.production
+    //         ? 'https'
+    //         : 'http';
+    console.log('protocol', protocol);
+
     const host = hostProperty
         ? hostProperty
         : environment.production
@@ -541,8 +547,7 @@ const PluridRouterBrowser = (
         }
     }, []);
 
-    // console.log('indexedPlanes', indexedPlanes);
-    // console.log('indexedPlanesSources', indexedPlanesSources);
+    console.log('indexedPlanes', indexedPlanes);
 
 
     /** render */
