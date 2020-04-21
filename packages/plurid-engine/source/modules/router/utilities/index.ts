@@ -102,16 +102,17 @@ export const pluridLinkPathDivider = (
     }
 
     if (route.startsWith('/://')) {
-        switch (split.length) {
+        const routeSplit = split.slice(1);
+        switch (routeSplit.length) {
             case 1:
-                path.value = split[0];
+                path.value = routeSplit[0];
                 break;
             case 5:
-                path.value = split[0];
-                space.value = split[1];
-                universe.value = split[2];
-                cluster.value = split[3];
-                plane.value = split[4];
+                path.value = routeSplit[0];
+                space.value = routeSplit[1];
+                universe.value = routeSplit[2];
+                cluster.value = routeSplit[3];
+                plane.value = routeSplit[4];
                 break;
         }
 
@@ -125,6 +126,7 @@ export const pluridLinkPathDivider = (
             plane,
             valid: true,
         };
+        console.log('URL', url);
 
         return url;
     }
