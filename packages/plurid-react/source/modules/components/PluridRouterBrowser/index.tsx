@@ -86,7 +86,9 @@ const PluridRouterBrowser = (
         setMatchedRoute(matchedRoute);
 
         if (!cleanNavigation) {
-            history.pushState(null, '', matchedRoute.route);
+            if (window.location.pathname !== matchedRoute.route) {
+                history.pushState(null, '', matchedRoute.route);
+            }
         }
 
         storage.saveState(
