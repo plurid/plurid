@@ -52,7 +52,7 @@ const Page1: React.FC<any> = (
                     <PluridLink path="/two">two</PluridLink>
                     <br />
                     <PluridLink path="/://static">static relative</PluridLink>
-                    <PluridLink path="http://localhost:3000://static">static absolute</PluridLink>
+                    <PluridLink path={`${window.location.protocol}://${window.location.host}://static`}>static absolute</PluridLink>
                 </div>
             </div>
         </div>
