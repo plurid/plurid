@@ -209,6 +209,8 @@ const App = () => {
             paths={paths}
             gatewayPath="/gateway"
             // cleanNavigation={true}
+            // protocol="https"
+            // host="localhost"
         />
     );
 }
