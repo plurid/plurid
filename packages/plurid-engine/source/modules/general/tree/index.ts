@@ -24,7 +24,7 @@ export const createTreePlane = (
     documentPlane: PluridInternalStatePlane,
 ) => {
     const routeDivisions = pluridLinkPathDivider(contextPlane.path);
-    console.log('routeDivisions', routeDivisions);
+    // console.log('routeDivisions', routeDivisions);
 
     const treePlane: TreePlane = {
         ...defaultTreePlane,
