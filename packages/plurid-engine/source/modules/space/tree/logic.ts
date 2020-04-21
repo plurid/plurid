@@ -268,7 +268,7 @@ export const updateTreeWithNewPlane = (
     tree: TreePlane[],
 ): UpdatedTreeWithNewPlane => {
     const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
-    console.log('parentPlane', parentPlane);
+    // console.log('parentPlane', parentPlane);
 
     if (!parentPlane) {
         return {
@@ -337,7 +337,7 @@ export const updateTreeWithNewPlane = (
         planeAngle: 90,
         linkCoordinates,
     };
-    console.log('newPlane', newPlane);
+    // console.log('newPlane', newPlane);
 
     const updatedParentPlane: TreePlane = {
         ...parentPlane,
