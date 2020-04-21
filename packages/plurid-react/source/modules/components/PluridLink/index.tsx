@@ -176,7 +176,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const updateTreeWithLink = () => {
-        console.log(parentPlaneID, absolutePath);
+        // console.log(parentPlaneID, absolutePath);
 
         if (!parentPlaneID || !absolutePath) {
             return;
@@ -194,7 +194,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             stateTree,
         );
 
-        console.log(pluridPlaneID, updatedTree);
+        // console.log(pluridPlaneID, updatedTree);
 
         if (pluridPlaneID) {
             dispatchSetTree(updatedTree);

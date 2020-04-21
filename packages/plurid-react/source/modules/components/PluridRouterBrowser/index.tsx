@@ -150,7 +150,7 @@ const PluridRouterBrowser = (
                         }
                     }
 
-                    console.log('PLANES', planes);
+                    // console.log('PLANES', planes);
 
                     const App = (
                         <PluridApplication
@@ -240,8 +240,8 @@ const PluridRouterBrowser = (
     }
 
     const handleGateway = () => {
-        console.log('HANDLE GATEWAY');
-        console.log('window.location', window.location);
+        // console.log('HANDLE GATEWAY');
+        // console.log('window.location', window.location);
 
         const query = router.extractQuery(window.location.search);
 
@@ -256,8 +256,8 @@ const PluridRouterBrowser = (
             gatewayView.push(...gatewayViews);
         }
 
-        console.log('gatewayView', gatewayView);
-        console.log('paths', paths);
+        // console.log('gatewayView', gatewayView);
+        // console.log('paths', paths);
 
         const planes: PluridPlane[] = [];
         const view: any[] = [];
@@ -304,7 +304,7 @@ const PluridRouterBrowser = (
                                 planeName,
                             ];
                             const planeAddress = planeAddressElements.join('://');
-                            console.log('planeAddress', planeAddress);
+                            // console.log('planeAddress', planeAddress);
 
                             for (const gatewayViewPlane of gatewayView) {
                                 // check that the planeAddress is the same as gatewayViewPlane
@@ -345,8 +345,8 @@ const PluridRouterBrowser = (
         };
         setMatchedRoute(gatewayRoute);
 
-        console.log('planes', planes);
-        console.log('view', view);
+        // console.log('planes', planes);
+        // console.log('view', view);
 
         let Exterior: React.FC<any> = () => (<></>);
         if (gatewayExterior) {
