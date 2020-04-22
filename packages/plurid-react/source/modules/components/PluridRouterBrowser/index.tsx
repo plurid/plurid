@@ -46,13 +46,14 @@ const PluridRouterBrowser = (
         cleanNavigation,
         protocol: protocolProperty,
         host: hostProperty,
-        gatewayPath,
+        gatewayPath: gatewayPathProperty,
         gatewayExterior,
         notFoundPath: notFoundPathProperty,
         api,
     } = properties;
 
     const notFoundPath = notFoundPathProperty || '/not-found';
+    const gatewayPath = gatewayPathProperty || '/gateway';
 
     const protocol = protocolProperty
         ? protocolProperty
@@ -313,6 +314,13 @@ const PluridRouterBrowser = (
     /** effects */
     /** handleLocation */
     useEffect(() => {
+        console.log('gatewayPath', gatewayPath);
+        console.log('window.location.pathname', window.location.pathname);
+        if (gatewayPath === window.location.pathname) {
+            handleGateway();
+            return;
+        }
+
         handleLocation();
     }, []);
 

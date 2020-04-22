@@ -81,6 +81,10 @@ const PluridRouterStatic = (
 
     /** render */
     if (gateway) {
+        console.log('GATEWAY');
+        console.log('gatewayQueryProperty', gatewayQueryProperty);
+        console.log('gatewayEndpointProperty', gatewayEndpointProperty);
+
         const {
             Component,
         } = getGatewayView(
