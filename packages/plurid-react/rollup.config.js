@@ -40,7 +40,7 @@ export default [
             file: pkg.main,
             format: 'cjs',
             exports: 'named',
-            sourcemap: true
+            sourcemap: true,
         },
         plugins,
     },
@@ -60,7 +60,8 @@ export default [
             }),
             typescript({
                 declaration: true,
-                declarationDir: 'distribution',
+                outDir: 'distribution',
+                // declarationDir: 'distribution',
             }),
             commonjs(),
             resolve({
@@ -70,18 +71,27 @@ export default [
 		output: [
 			{
                 dir: 'distribution',
+                // file: pkg.module,
                 format: 'es',
-            }
+                exports: 'named',
+                sourcemap: true,
+            },
 		],
     },
     {
         input: pkg.main,
         output: [
             {
-                file: 'distribution/index.min.js',
+                file: 'distribution/index.cjs.min.js',
                 format: 'cjs',
                 exports: 'named',
-                sourcemap: true
+                sourcemap: false,
+            },
+            {
+                file: 'distribution/index.min.js',
+                format: 'es',
+                exports: 'named',
+                sourcemap: false,
             },
         ],
         plugins: [
