@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PluridApp, {
+import PluridApplication, {
     PluridPartialConfiguration,
     PluridPlane,
     PluridView,
@@ -58,7 +58,7 @@ const Index: React.FC<any> = () => {
         <StyledIndex>
             <Head />
 
-            <PluridApp
+            <PluridApplication
                 configuration={pluridConfiguration}
                 planes={pluridPlanes}
                 view={pluridView}
