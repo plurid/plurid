@@ -149,9 +149,14 @@ export default class PluridServer {
         const pluridsResponder = new PluridsResponder();
 
         this.serverApplication.get('*', (request, response) => {
-            const url = request.originalUrl || request.url;
+            const path = request.path;
+            // const url = request.originalUrl || request.url;
 
-            if (pluridsResponder.search(url)) {
+            if (path === this.options.gatewayEndpoint) {
+                console.log('handle gateway');
+            }
+
+            if (pluridsResponder.search(path)) {
                 response.send(pluridsResponder);
                 return;
             }
@@ -160,13 +165,13 @@ export default class PluridServer {
             // http://example.com/plurids/<route>/<space>/<page>
             // http://example.com/plurids/index/12345/54321
 
-            const still = stills.get(url);
+            const still = stills.get(path);
             if (still) {
                 response.send(still);
                 return;
             }
 
-            const route = router.match(url);
+            const route = router.match(path);
 
             if (!route) {
                 const notFoundStill = stills.get(NOT_FOUND_ROUTE);
@@ -280,7 +285,6 @@ export default class PluridServer {
 
             styles = sheet.getStyleTags();
         } catch (error) {
-            console.log(error);
             if (this.options.debug !== 'none' && !this.options.quiet) {
                 const errorText = 'Plurid Server Error: Something went wrong in getContentAndStyles().'
                 if (this.options.debug === 'error') {
@@ -317,6 +321,7 @@ export default class PluridServer {
             root: partialOptions?.root || 'root',
             script: partialOptions?.script || '/index.js',
             vendorScript: partialOptions?.vendorScript || '/vendor.js',
+            gatewayEndpoint: partialOptions?.gatewayEndpoint || '/gateway',
         };
         return options;
     }
