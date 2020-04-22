@@ -15,7 +15,7 @@ import graphqlClient from '../client/App/services/graphql/client';
 // } from '../client/App/data/constants';
 
 import {
-    routing,
+    paths,
 } from '../common';
 
 
@@ -76,7 +76,7 @@ const options: PluridServerPartialOptions = {
 
 /** SERVER */
 const pluridServer = new PluridServer({
-    routing,
+    paths,
     helmet,
     styles,
     middleware,
