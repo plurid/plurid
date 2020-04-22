@@ -1,9 +1,9 @@
 import React from 'react';
 
-import {
-    PluridSubApp,
-    PluridPage,
+import PluridApplication, {
+    PluridPlane,
     PluridView,
+    PluridPartialConfiguration,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -25,7 +25,7 @@ const NotFound: React.FC<NotFoundProperties> = () => {
     const faceIndex = Math.floor(Math.random() * faces.length);
     const face = faces[faceIndex];
 
-    const pluridConfiguration = {
+    const pluridConfiguration: PluridPartialConfiguration = {
         theme: 'plurid',
         space: {
             layout: {
@@ -45,7 +45,7 @@ const NotFound: React.FC<NotFoundProperties> = () => {
         },
     };
 
-    const pluridPages: PluridPage[] = [
+    const pluridPlanes: PluridPlane[] = [
         {
             path: '/not-found',
             component: {
@@ -77,9 +77,9 @@ const NotFound: React.FC<NotFoundProperties> = () => {
                 title="Not Found | Plurid' Application"
             />
 
-            <PluridSubApp
+            <PluridApplication
                 configuration={pluridConfiguration}
-                pages={pluridPages}
+                planes={pluridPlanes}
                 view={pluridView}
             />
         </>
