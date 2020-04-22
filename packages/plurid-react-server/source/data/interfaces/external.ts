@@ -79,6 +79,11 @@ export interface PluridServerOptions {
      * A CDN link can be used for better caching.
      */
     vendorScript: string;
+
+    /**
+     * Default: `/gateway`.
+     */
+    gatewayEndpoint: string;
 }
 
 
