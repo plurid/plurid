@@ -14,10 +14,8 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    StyledSearch
+    StyledSearchItem
 } from './styled';
-
-import SearchItem from '../SearchItem';
 
 import { AppState } from '../../../../../../services/state/store';
 import StateContext from '../../../../../../services/state/context';
@@ -26,30 +24,32 @@ import selectors from '../../../../../../services/state/selectors';
 
 
 
-interface SearchOwnProperties {
+interface SearchItemOwnProperties {
+    text: string;
     hideSearch: () => void;
 }
 
-interface SearchStateProperties {
+interface SearchItemStateProperties {
     stateConfiguration: PluridConfiguration;
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface SearchDispatchProperties {
+interface SearchItemDispatchProperties {
 }
 
-type SearchProperties = SearchOwnProperties
-    & SearchStateProperties
-    & SearchDispatchProperties;
+type SearchItemProperties = SearchItemOwnProperties
+    & SearchItemStateProperties
+    & SearchItemDispatchProperties;
 
 
-const Search: React.FC<SearchProperties> = (
+const SearchItem: React.FC<SearchItemProperties> = (
     properties,
 ) => {
     /** properties */
     const {
         /** own */
+        text,
         hideSearch,
 
         /** state */
@@ -57,41 +57,28 @@ const Search: React.FC<SearchProperties> = (
     } = properties;
 
 
+    /** handlers */
+    const handleClickSearch = () => {
+        hideSearch();
+        console.log('text', text);
+    }
+
+
     /** render */
     return (
-        <StyledSearch
+        <StyledSearchItem
             theme={stateInteractionTheme}
+            onClick={handleClickSearch}
         >
-            <ul>
-                <SearchItem
-                    text="/one"
-                    hideSearch={hideSearch}
-                />
-                <SearchItem
-                    text="/two"
-                    hideSearch={hideSearch}
-                />
-                <SearchItem
-                    text="/three"
-                    hideSearch={hideSearch}
-                />
-                <SearchItem
-                    text="/four"
-                    hideSearch={hideSearch}
-                />
-                <SearchItem
-                    text="/five"
-                    hideSearch={hideSearch}
-                />
-            </ul>
-        </StyledSearch>
+            {text}
+        </StyledSearchItem>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): SearchStateProperties => ({
+): SearchItemStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
@@ -100,7 +87,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): SearchDispatchProperties => ({
+): SearchItemDispatchProperties => ({
 });
 
 
@@ -111,4 +98,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(Search);
+)(SearchItem);

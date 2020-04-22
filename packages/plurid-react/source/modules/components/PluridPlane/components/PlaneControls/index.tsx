@@ -125,8 +125,6 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     }
 
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        console.log(event.key);
-
         if (pathbar.onKeyDown) {
             const id = plane.id || plane.path;
             pathbar.onKeyDown(event, id);
@@ -155,13 +153,15 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
                     text={showAddress ? gatewayAddress : path}
                     atChange={onPathInput}
                     atKeyDown={handleOnKeyDown}
-                    atFocus={() => setShowSearch(true)}
-                    atBlur={() => setShowSearch(false)}
+                    atFocus={() => setShowSearch(show => !show)}
+                    // atBlur={() => setShowSearch(false)}
                     ariaLabel="Plurid Pathbar"
                 />
 
                 {showSearch && (
-                    <Search />
+                    <Search
+                        hideSearch={() => setShowSearch(false)}
+                    />
                 )}
             </StyledPlaneControlsCenter>
 
