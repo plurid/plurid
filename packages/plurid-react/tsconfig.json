@@ -20,7 +20,8 @@
         "target": "es6",
         "module": "esnext",
         "moduleResolution": "node",
-        "declaration": false,
+        "declaration": true,
+        "declarationDir": "distribution",
 
         "rootDir": "source"
     },
