@@ -9,9 +9,7 @@ import {
     StyledPage,
 } from './styled';
 
-import Head from '../../../components/Head';
-
-import pluridLogo from './assets/plurid-logo.png';
+// import pluridLogo from './assets/plurid-logo.png';
 import pluridLogoSVG from './assets/plurid-logo.svg';
 
 
@@ -27,51 +25,47 @@ const Page: React.FC<any> = (
 
     /** render */
     return (
-        <>
-            <Head />
+        <StyledPage>
+            <div>
+                <a
+                    href="https://plurid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img src={pluridLogoSVG} alt="plurid logo" height={250} />
+                    {/* <img src={pluridLogo} alt="plurid logo" height={250} /> */}
+                </a>
+            </div>
 
-            <StyledPage>
-                <div>
-                    <a
-                        href="https://plurid.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <img src={pluridLogoSVG} alt="plurid logo" height={250} />
-                        {/* <img src={pluridLogo} alt="plurid logo" height={250} /> */}
-                    </a>
-                </div>
+            <h1>
+                enjoy the plurid' exploration
+            </h1>
 
-                <h1>
-                    enjoy the plurid' exploration
-                </h1>
-
-                <div
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                }}
+            >
+                <PluridLink
+                    path="/page"
                     style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
+                        color: '#ccc',
                     }}
                 >
-                    <PluridLink
-                        path="/page"
-                        style={{
-                            color: '#ccc',
-                        }}
-                    >
-                        plurid self link
-                    </PluridLink>
+                    plurid self link
+                </PluridLink>
 
-                    <PluridRouterLink
-                        path="/static"
-                        style={{
-                            color: '#ccc',
-                        }}
-                    >
-                        router link to static page
-                    </PluridRouterLink>
-                </div>
-            </StyledPage>
-        </>
+                <PluridRouterLink
+                    path="/static"
+                    style={{
+                        color: '#ccc',
+                    }}
+                >
+                    router link to static page
+                </PluridRouterLink>
+            </div>
+        </StyledPage>
     );
 }
 
