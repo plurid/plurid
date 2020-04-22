@@ -26,8 +26,6 @@ import {
 
 import PluridApplication from '../../../Application';
 
-import environment from '../../services/utilities/environment';
-
 import {
     getComponentFromRoute,
 } from '../../services/logic/router';
@@ -49,8 +47,19 @@ const PluridRouterBrowser = (
         host: hostProperty,
         gatewayPath,
         gatewayExterior,
+        notFoundPath: notFoundPathProperty,
         api,
     } = properties;
+
+    const notFoundPath = notFoundPathProperty || '/not-found';
+
+    const protocol = protocolProperty
+        ? protocolProperty
+        : window.location.protocol.replace(':', '');
+
+    const host = hostProperty
+        ? hostProperty
+        : window.location.host;
 
 
     /** references */
@@ -59,23 +68,6 @@ const PluridRouterBrowser = (
     const pluridRouter = useRef(new Router(
         paths,
     ));
-
-    // console.log('protocolProperty', protocolProperty);
-    const protocol = protocolProperty
-        ? protocolProperty
-        : window.location.protocol.replace(':', '');
-    // const protocol = protocolProperty
-    //     ? protocolProperty
-    //     : environment.production
-    //         ? 'https'
-    //         : 'http';
-    // console.log('protocol', protocol);
-
-    const host = hostProperty
-        ? hostProperty
-        : environment.production
-            ? window.location.host
-            : 'localhost:3000';
 
 
     /** state */
@@ -112,7 +104,7 @@ const PluridRouterBrowser = (
     }
 
     const handleNoMatch = () => {
-        const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
+        const notFoundMatchedRoute = pluridRouter.current.match(notFoundPath);
         if (notFoundMatchedRoute) {
             setMatchedRoute(notFoundMatchedRoute);
             const Component = getComponentFromRoute(
@@ -123,9 +115,13 @@ const PluridRouterBrowser = (
             );
 
             if (Component) {
-                history.pushState(null, '', '/not-found');
+                history.pushState(null, '', notFoundPath);
                 setComponent(Component);
             }
+        } else {
+            setComponent(
+                <>Not Found</>
+            );
         }
     }
 
@@ -298,35 +294,6 @@ const PluridRouterBrowser = (
     /** effects */
     /** handleLocation */
     useEffect(() => {
-        // const routerData = storage.loadState('__PLURID_ROUTER__');
-        // const pathname = window.location.pathname;
-        // let actualPath;
-
-        // if (pathname === '/') {
-        //     if (routerData !== pathname) {
-        //         actualPath = routerData;
-        //     } else {
-        //         actualPath = '/';
-        //     }
-        // } else {
-        //     actualPath = cleanNavigation && view
-        //         ? view
-        //         : pathname;
-        // }
-        // const event = pathname === gateway
-        //     ? undefined
-        //     : {
-        //         detail: {
-        //             path: actualPath,
-        //         },
-        //     };
-
-        // console.log('routerData', routerData);
-        // console.log('pathname', pathname);
-        // console.log('actualPath', actualPath);
-
-        // handleLocation(event);
-
         handleLocation();
     }, []);
 
