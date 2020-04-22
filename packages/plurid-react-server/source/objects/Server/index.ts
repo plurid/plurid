@@ -150,39 +150,43 @@ export default class PluridServer {
 
         this.serverApplication.get('*', (request, response) => {
             const path = request.path;
-            // const url = request.originalUrl || request.url;
 
-            if (path === this.options.gatewayEndpoint) {
-                console.log('handle gateway');
+            const {
+                gatewayEndpoint,
+            } = this.options;
 
+
+            if (path === gatewayEndpoint) {
                 const gatewayRoute = {
                     path: {
-                        value: '/gateway',
+                        value: gatewayEndpoint,
                     },
-                    pathname: '/gateway',
+                    pathname: gatewayEndpoint,
                     parameters: {},
                     query: {
-                        search: request.originalUrl,
+                        __gatewayQuery: request.originalUrl,
                     },
                     fragments: {
                         texts: [],
                         elements: [],
                     },
-                    route: '/gateway',
+                    route: gatewayEndpoint,
                 };
                 this.renderer = this.renderApplication(gatewayRoute);
                 response.send(this.renderer?.html());
                 return;
             }
 
-            if (pluridsResponder.search(path)) {
-                response.send(pluridsResponder);
-                return;
-            }
 
             // check if the url is plurids
             // http://example.com/plurids/<route>/<space>/<page>
             // http://example.com/plurids/index/12345/54321
+
+            // if (pluridsResponder.search(path)) {
+            //     response.send(pluridsResponder);
+            //     return;
+            // }
+
 
             const still = stills.get(path);
             if (still) {
@@ -190,8 +194,8 @@ export default class PluridServer {
                 return;
             }
 
-            const route = router.match(path);
 
+            const route = router.match(path);
             if (!route) {
                 const notFoundStill = stills.get(NOT_FOUND_ROUTE);
                 if (notFoundStill) {
@@ -290,7 +294,7 @@ export default class PluridServer {
             // based on the route get the specific plurids to be rendered
             const pluridContext = {};
             const gateway = matchedRoute.pathname === '/gateway';
-
+            const gatewayQuery = matchedRoute.query.__gatewayQuery;
             const {
                 gatewayEndpoint,
             } = this.options;
@@ -305,7 +309,7 @@ export default class PluridServer {
                 pluridContext,
                 gateway,
                 gatewayEndpoint,
-                gatewayQuery: matchedRoute.query.search,
+                gatewayQuery,
             });
 
             content = contentHandler.render();
