@@ -17,6 +17,7 @@ import {
 
 import {
     getComponentFromRoute,
+    getGatewayView,
     computeIndexedPlanes,
 } from '../../services/logic/router';
 
@@ -29,6 +30,9 @@ interface PluridRouterStaticOwnProperties {
     paths: PluridRouterPath[];
     protocol?: string;
     host?: string;
+    gateway?: boolean;
+    gatewayQuery?: string;
+    gatewayEndpoint?: string;
 }
 
 const PluridRouterStatic = (
@@ -41,10 +45,16 @@ const PluridRouterStatic = (
 
         protocol: protocolProperty,
         host: hostProperty,
+        gateway,
+        gatewayQuery: gatewayQueryProperty,
+        gatewayEndpoint: gatewayEndpointProperty,
     } = properties;
 
     const protocol = protocolProperty || 'http';
     const host = hostProperty || 'localhost:63000';
+    const gatewayQuery = gatewayQueryProperty || '';
+    const gatewayEndpoint = gatewayEndpointProperty || '/gateway';
+
     // const protocol = protocolProperty
     //     ? protocolProperty
     //     : window.location.protocol.replace(':', '');
@@ -70,6 +80,27 @@ const PluridRouterStatic = (
 
 
     /** render */
+    if (gateway) {
+        const {
+            Component,
+        } = getGatewayView(
+            gatewayQuery,
+            paths,
+            gatewayEndpoint,
+            undefined,
+            protocol,
+            host,
+            indexedPlanes.current,
+        );
+
+        return (
+            <>
+                {Component}
+            </>
+        );
+    }
+
+
     const matchedRoute = pluridRouter.current.match(path);
 
     if (!matchedRoute) {
@@ -91,24 +122,6 @@ const PluridRouterStatic = (
             {Component}
         </>
     );
-
-    // const view = matchedRoute.route.view;
-    // const routeComponent = indexedComponents[view as any];
-
-    // if (!routeComponent) {
-    //     return (
-    //         <></>
-    //     )
-    // }
-
-    // const Component = routeComponent.component;
-    // return (
-    //     <>
-    //         {matchedRoute && Component && (
-    //             <Component />
-    //         )}
-    //     </>
-    // );
 }
 
 

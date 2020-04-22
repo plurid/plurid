@@ -213,3 +213,145 @@ export const computeIndexedPlanes = (
 
     return indexedPlanes;
 }
+
+
+export const getGatewayView = (
+    queryString: string,
+    paths: PluridRouterPath[],
+    gatewayPath: string | undefined,
+    gatewayExterior: any,
+    protocol: string,
+    host: string,
+    indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
+) => {
+    const query = router.extractQuery(queryString);
+
+    const gatewayView: string[] = [];
+
+    if (query.plurid) {
+        gatewayView.push(query.plurid);
+    }
+
+    if (query.plurids) {
+        const gatewayViews = query.plurids.split(',');
+        gatewayView.push(...gatewayViews);
+    }
+
+    // console.log('gatewayView', gatewayView);
+    // console.log('paths', paths);
+
+    const planes: PluridPlane[] = [];
+    const view: any[] = [];
+
+    for (const path of paths) {
+        if (!path.spaces) {
+            continue;
+        }
+
+        const pathName = path.value === '/'
+            ? 'p'
+            : utilities.cleanPathElement(path.value);
+
+        for (const space of path.spaces) {
+            const spaceName = space.value === 'default'
+                ? 's'
+                : utilities.cleanPathElement(space.value);
+
+            for (const universe of space.universes) {
+                const universeName = universe.value === 'default'
+                    ? 'u'
+                    : utilities.cleanPathElement(universe.value);
+
+                for (const cluster of universe.clusters) {
+                    const clusterName = cluster.value === 'default'
+                        ? 'c'
+                        : utilities.cleanPathElement(cluster.value);
+
+                    for (const plane of cluster.planes) {
+                        const {
+                            component,
+                            value,
+                        } = plane;
+
+                        const planeName = utilities.cleanPathElement(value);
+
+                        const planeAddressElements = [
+                            protocol,
+                            host,
+                            pathName,
+                            spaceName,
+                            universeName,
+                            clusterName,
+                            planeName,
+                        ];
+                        const planeAddress = planeAddressElements.join('://');
+                        // console.log('planeAddress', planeAddress);
+
+                        for (const gatewayViewPlane of gatewayView) {
+                            // check that the planeAddress is the same as gatewayViewPlane
+                            // considering parameters / query
+
+                            if (gatewayViewPlane === planeAddress) {
+                                if (component.kind === 'react') {
+                                    const pluridPlane: PluridPlane = {
+                                        component: {
+                                            element: component.element,
+                                        },
+                                        path: value,
+                                    };
+
+                                    planes.push(pluridPlane);
+                                    view.push(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // console.log('planes', planes);
+    // console.log('view', view);
+
+    let Exterior: React.FC<any> = () => (<></>);
+    if (gatewayExterior) {
+        switch (gatewayExterior.kind) {
+            case 'react':
+                Exterior = gatewayExterior.element;
+                break;
+        }
+    }
+
+    const Component = (
+        <>
+            <Exterior />
+
+            <PluridApplication
+                planes={planes}
+                indexedPlanes={indexedPlanes}
+                view={view}
+            />
+        </>
+    );
+
+    const gatewayRoute: router.MatcherResponse = {
+        path: {
+            value: gatewayPath || 'gateway',
+        },
+        pathname: '',
+        fragments: {
+            elements: [],
+            texts: [],
+        },
+        parameters: {},
+        query: {},
+        route: '',
+    };
+
+
+    return {
+        Component,
+        gatewayRoute,
+    };
+}
