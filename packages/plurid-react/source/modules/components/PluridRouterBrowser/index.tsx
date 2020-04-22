@@ -24,8 +24,6 @@ import {
     uuid,
 } from '@plurid/plurid-functions';
 
-import PluridApplication from '../../../Application';
-
 import {
     getComponentFromRoute,
     getGatewayView,
@@ -33,7 +31,7 @@ import {
 
 
 
-const Router = router.default;
+const PluridRouter = router.default;
 
 
 const PluridRouterBrowser = (
@@ -67,7 +65,7 @@ const PluridRouterBrowser = (
     /** references */
     const indexedPlanes = useRef<Map<string, IndexedPluridPlane>>(new Map());
 
-    const pluridRouter = useRef(new Router(
+    const pluridRouter = useRef(new PluridRouter(
         paths,
     ));
 
@@ -94,12 +92,12 @@ const PluridRouterBrowser = (
             '__PLURID_ROUTER__',
         );
 
-        const Component = getComponentFromRoute(
+        const Component = getComponentFromRoute({
             matchedRoute,
             protocol,
             host,
-            indexedPlanes.current,
-        );
+            indexedPlanes: indexedPlanes.current,
+        });
 
         setComponent(Component);
         return;
@@ -109,12 +107,12 @@ const PluridRouterBrowser = (
         const notFoundMatchedRoute = pluridRouter.current.match(notFoundPath);
         if (notFoundMatchedRoute) {
             setMatchedRoute(notFoundMatchedRoute);
-            const Component = getComponentFromRoute(
-                notFoundMatchedRoute,
+            const Component = getComponentFromRoute({
+                matchedRoute: notFoundMatchedRoute,
                 protocol,
                 host,
-                indexedPlanes.current,
-            );
+                indexedPlanes: indexedPlanes.current,
+            });
 
             if (Component) {
                 history.pushState(null, '', notFoundPath);
@@ -131,152 +129,18 @@ const PluridRouterBrowser = (
         const {
             Component,
             gatewayRoute,
-        } = getGatewayView(
-            window.location.search,
+        } = getGatewayView({
+            queryString: window.location.search,
             paths,
             gatewayPath,
             gatewayExterior,
             protocol,
             host,
-            indexedPlanes.current,
-        );
+            indexedPlanes: indexedPlanes.current,
+        });
 
-        setMatchedRoute(gatewayRoute);
         setComponent(Component);
-
-
-
-        // console.log('HANDLE GATEWAY');
-        // console.log('window.location', window.location);
-
-        // const query = router.extractQuery(window.location.search);
-
-        // const gatewayView: string[] = [];
-
-        // if (query.plurid) {
-        //     gatewayView.push(query.plurid);
-        // }
-
-        // if (query.plurids) {
-        //     const gatewayViews = query.plurids.split(',');
-        //     gatewayView.push(...gatewayViews);
-        // }
-
-        // // console.log('gatewayView', gatewayView);
-        // // console.log('paths', paths);
-
-        // const planes: PluridPlane[] = [];
-        // const view: any[] = [];
-
-        // for (const path of paths) {
-        //     if (!path.spaces) {
-        //         continue;
-        //     }
-
-        //     const pathName = path.value === '/'
-        //         ? 'p'
-        //         : utilities.cleanPathElement(path.value);
-
-        //     for (const space of path.spaces) {
-        //         const spaceName = space.value === 'default'
-        //             ? 's'
-        //             : utilities.cleanPathElement(space.value);
-
-        //         for (const universe of space.universes) {
-        //             const universeName = universe.value === 'default'
-        //                 ? 'u'
-        //                 : utilities.cleanPathElement(universe.value);
-
-        //             for (const cluster of universe.clusters) {
-        //                 const clusterName = cluster.value === 'default'
-        //                     ? 'c'
-        //                     : utilities.cleanPathElement(cluster.value);
-
-        //                 for (const plane of cluster.planes) {
-        //                     const {
-        //                         component,
-        //                         value,
-        //                     } = plane;
-
-        //                     const planeName = utilities.cleanPathElement(value);
-
-        //                     const planeAddressElements = [
-        //                         protocol,
-        //                         host,
-        //                         pathName,
-        //                         spaceName,
-        //                         universeName,
-        //                         clusterName,
-        //                         planeName,
-        //                     ];
-        //                     const planeAddress = planeAddressElements.join('://');
-        //                     // console.log('planeAddress', planeAddress);
-
-        //                     for (const gatewayViewPlane of gatewayView) {
-        //                         // check that the planeAddress is the same as gatewayViewPlane
-        //                         // considering parameters / query
-
-        //                         if (gatewayViewPlane === planeAddress) {
-        //                             if (component.kind === 'react') {
-        //                                 const pluridPlane: PluridPlane = {
-        //                                     component: {
-        //                                         element: component.element,
-        //                                     },
-        //                                     path: value,
-        //                                 };
-
-        //                                 planes.push(pluridPlane);
-        //                                 view.push(value);
-        //                             }
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // const gatewayRoute: router.MatcherResponse = {
-        //     path: {
-        //         value: gatewayPath || 'gateway',
-        //     },
-        //     pathname: '',
-        //     fragments: {
-        //         elements: [],
-        //         texts: [],
-        //     },
-        //     parameters: {},
-        //     query: {},
-        //     route: '',
-        // };
-        // setMatchedRoute(gatewayRoute);
-
-        // // console.log('planes', planes);
-        // // console.log('view', view);
-
-        // let Exterior: React.FC<any> = () => (<></>);
-        // if (gatewayExterior) {
-        //     switch (gatewayExterior.kind) {
-        //         case 'react':
-        //             Exterior = gatewayExterior.element;
-        //             break;
-        //     }
-        // }
-
-        // const Component = (
-        //     <>
-        //         <Exterior />
-
-        //         <PluridApplication
-        //             planes={planes}
-        //             indexedPlanes={indexedPlanes.current}
-        //             view={view}
-        //         />
-        //     </>
-        // );
-
-        // setComponent(Component);
-
+        setMatchedRoute(gatewayRoute);
         return;
     }
 
@@ -314,9 +178,7 @@ const PluridRouterBrowser = (
     /** effects */
     /** handleLocation */
     useEffect(() => {
-        console.log('gatewayPath', gatewayPath);
-        console.log('window.location.pathname', window.location.pathname);
-        if (gatewayPath === window.location.pathname) {
+        if (window.location.pathname === gatewayPath) {
             handleGateway();
             return;
         }

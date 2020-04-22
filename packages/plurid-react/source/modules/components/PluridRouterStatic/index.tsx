@@ -55,16 +55,6 @@ const PluridRouterStatic = (
     const gatewayQuery = gatewayQueryProperty || '';
     const gatewayEndpoint = gatewayEndpointProperty || '/gateway';
 
-    // const protocol = protocolProperty
-    //     ? protocolProperty
-    //     : window.location.protocol.replace(':', '');
-
-    // const host = hostProperty
-    //     ? hostProperty
-    //     : environment.production
-    //         ? window.location.host
-    //         : 'localhost:3000';
-
 
     /** references */
     const indexedPlanes = useRef<Map<string, IndexedPluridPlane>>(
@@ -81,21 +71,17 @@ const PluridRouterStatic = (
 
     /** render */
     if (gateway) {
-        console.log('GATEWAY');
-        console.log('gatewayQueryProperty', gatewayQueryProperty);
-        console.log('gatewayEndpointProperty', gatewayEndpointProperty);
-
         const {
             Component,
-        } = getGatewayView(
-            gatewayQuery,
+        } = getGatewayView({
+            queryString: gatewayQuery,
             paths,
-            gatewayEndpoint,
-            undefined,
+            gatewayPath: gatewayEndpoint,
+            gatewayExterior: undefined,
             protocol,
             host,
-            indexedPlanes.current,
-        );
+            indexedPlanes: indexedPlanes.current,
+        });
 
         return (
             <>
@@ -113,13 +99,12 @@ const PluridRouterStatic = (
         );
     }
 
-    // const Component = handleMatchedRoute(matchedRoute);
-    const Component = getComponentFromRoute(
+    const Component = getComponentFromRoute({
         matchedRoute,
         protocol,
         host,
-        indexedPlanes.current,
-    );
+        indexedPlanes: indexedPlanes.current,
+    });
 
     return (
         <>

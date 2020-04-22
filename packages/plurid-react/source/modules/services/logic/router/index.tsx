@@ -20,12 +20,23 @@ import PluridApplication from '../../../../Application';
 
 
 
-export const getComponentFromRoute = (
+export interface GetComponentFromRouteData {
     matchedRoute: router.MatcherResponse,
     protocol: string,
     host: string,
     indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
+}
+
+export const getComponentFromRoute = (
+    data: GetComponentFromRouteData,
 ) => {
+    const {
+        matchedRoute,
+        protocol,
+        host,
+        indexedPlanes,
+    } = data;
+
     const {
         path,
     } = matchedRoute;
@@ -122,100 +133,7 @@ export const getComponentFromRoute = (
 }
 
 
-export const computeIndexedPlanes = (
-    paths: PluridRouterPath[],
-    protocol: string,
-    host: string,
-) => {
-    const indexedPlanes = new Map<string, IndexedPluridPlane>();
-
-    for (const path of paths) {
-        if (!path.spaces) {
-            const pathName = path.value === '/'
-                ? 'p'
-                : utilities.cleanPathElement(path.value);
-
-            const planeAddressElements = [
-                protocol,
-                host,
-                pathName,
-            ];
-            const planeAddress = planeAddressElements.join('://');
-
-            const id = uuid.generate();
-
-            const indexedPlane: IndexedPluridPlane = {
-                protocol,
-                host,
-                path: pathName,
-                space: '',
-                universe: '',
-                cluster: '',
-                plane: '',
-                component: path.exterior,
-                route: planeAddress,
-            };
-
-            indexedPlanes.set(id, indexedPlane);
-
-            continue;
-        }
-
-        for (const space of path.spaces) {
-            for (const universe of space.universes) {
-                for (const cluster of universe.clusters) {
-                    for (const plane of cluster.planes) {
-                        const pathName = path.value === '/'
-                            ? 'p'
-                            : utilities.cleanPathElement(path.value);
-                        const spaceName = space.value === 'default'
-                            ? 's'
-                            : utilities.cleanPathElement(space.value);
-                        const universeName = universe.value === 'default'
-                            ? 'u'
-                            : utilities.cleanPathElement(universe.value);
-                        const clusterName = cluster.value === 'default'
-                            ? 'c'
-                            : utilities.cleanPathElement(cluster.value);
-                        const planeName = utilities.cleanPathElement(plane.value);
-
-                        const planeAddressElements = [
-                            protocol,
-                            host,
-                            pathName,
-                            spaceName,
-                            universeName,
-                            clusterName,
-                            planeName,
-                        ];
-                        const planeAddress = planeAddressElements.join('://');
-
-                        const indexedPlane: IndexedPluridPlane = {
-                            protocol,
-                            host,
-                            path: pathName,
-                            space: spaceName,
-                            universe: universeName,
-                            cluster: clusterName,
-                            plane: planeName,
-                            component: plane.component,
-                            route: planeAddress,
-                        };
-
-                        const id = uuid.generate();
-
-                        indexedPlanes.set(id, indexedPlane);
-                    }
-                }
-            }
-        }
-    }
-
-    return indexedPlanes;
-}
-
-
-export const getGatewayView = (
+export interface GetGatewayViewData {
     queryString: string,
     paths: PluridRouterPath[],
     gatewayPath: string | undefined,
@@ -223,7 +141,21 @@ export const getGatewayView = (
     protocol: string,
     host: string,
     indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
+}
+
+export const getGatewayView = (
+    data: GetGatewayViewData,
 ) => {
+    const {
+        queryString,
+        paths,
+        gatewayPath,
+        gatewayExterior,
+        protocol,
+        host,
+        indexedPlanes,
+    } = data
+
     const query = router.extractQuery(queryString);
 
     const gatewayView: string[] = [];
@@ -354,4 +286,98 @@ export const getGatewayView = (
         Component,
         gatewayRoute,
     };
+}
+
+
+
+export const computeIndexedPlanes = (
+    paths: PluridRouterPath[],
+    protocol: string,
+    host: string,
+) => {
+    const indexedPlanes = new Map<string, IndexedPluridPlane>();
+
+    for (const path of paths) {
+        if (!path.spaces) {
+            const pathName = path.value === '/'
+                ? 'p'
+                : utilities.cleanPathElement(path.value);
+
+            const planeAddressElements = [
+                protocol,
+                host,
+                pathName,
+            ];
+            const planeAddress = planeAddressElements.join('://');
+
+            const id = uuid.generate();
+
+            const indexedPlane: IndexedPluridPlane = {
+                protocol,
+                host,
+                path: pathName,
+                space: '',
+                universe: '',
+                cluster: '',
+                plane: '',
+                component: path.exterior,
+                route: planeAddress,
+            };
+
+            indexedPlanes.set(id, indexedPlane);
+
+            continue;
+        }
+
+        for (const space of path.spaces) {
+            for (const universe of space.universes) {
+                for (const cluster of universe.clusters) {
+                    for (const plane of cluster.planes) {
+                        const pathName = path.value === '/'
+                            ? 'p'
+                            : utilities.cleanPathElement(path.value);
+                        const spaceName = space.value === 'default'
+                            ? 's'
+                            : utilities.cleanPathElement(space.value);
+                        const universeName = universe.value === 'default'
+                            ? 'u'
+                            : utilities.cleanPathElement(universe.value);
+                        const clusterName = cluster.value === 'default'
+                            ? 'c'
+                            : utilities.cleanPathElement(cluster.value);
+                        const planeName = utilities.cleanPathElement(plane.value);
+
+                        const planeAddressElements = [
+                            protocol,
+                            host,
+                            pathName,
+                            spaceName,
+                            universeName,
+                            clusterName,
+                            planeName,
+                        ];
+                        const planeAddress = planeAddressElements.join('://');
+
+                        const indexedPlane: IndexedPluridPlane = {
+                            protocol,
+                            host,
+                            path: pathName,
+                            space: spaceName,
+                            universe: universeName,
+                            cluster: clusterName,
+                            plane: planeName,
+                            component: plane.component,
+                            route: planeAddress,
+                        };
+
+                        const id = uuid.generate();
+
+                        indexedPlanes.set(id, indexedPlane);
+                    }
+                }
+            }
+        }
+    }
+
+    return indexedPlanes;
 }
