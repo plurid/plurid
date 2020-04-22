@@ -280,7 +280,7 @@ export default class PluridServer {
     }
 
     private getContentAndStyles(
-        route: router.MatcherResponse,
+        matchedRoute: router.MatcherResponse,
     ) {
         const stylesheet = new ServerStyleSheet();
         let content = '';
@@ -289,19 +289,23 @@ export default class PluridServer {
         try {
             // based on the route get the specific plurids to be rendered
             const pluridContext = {};
-            const gateway = route.pathname === '/gateway';
+            const gateway = matchedRoute.pathname === '/gateway';
+
+            const {
+                gatewayEndpoint,
+            } = this.options;
 
             const contentHandler = new PluridContentGenerator({
                 services: this.services,
                 servicesData: this.servicesData,
                 stylesheet,
                 helmet: this.helmet,
-                matchedRoute: route,
+                matchedRoute,
                 paths: this.paths,
                 pluridContext,
                 gateway,
-                gatewayEndpoint: this.options.gatewayEndpoint,
-                gatewayQuery: route.query.search,
+                gatewayEndpoint,
+                gatewayQuery: matchedRoute.query.search,
             });
 
             content = contentHandler.render();
