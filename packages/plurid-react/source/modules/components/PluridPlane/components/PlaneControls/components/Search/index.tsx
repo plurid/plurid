@@ -14,6 +14,10 @@ import {
 } from '@plurid/plurid-data';
 
 import {
+    uuid,
+} from '@plurid/plurid-functions';
+
+import {
     StyledSearch
 } from './styled';
 
@@ -56,6 +60,14 @@ const Search: React.FC<SearchProperties> = (
         stateInteractionTheme,
     } = properties;
 
+    const searchTerms = [
+        '/one',
+        '/two',
+        '/three',
+        '/four',
+        '/five',
+    ];
+
 
     /** render */
     return (
@@ -63,26 +75,15 @@ const Search: React.FC<SearchProperties> = (
             theme={stateInteractionTheme}
         >
             <ul>
-                <SearchItem
-                    text="/one"
-                    hideSearch={hideSearch}
-                />
-                <SearchItem
-                    text="/two"
-                    hideSearch={hideSearch}
-                />
-                <SearchItem
-                    text="/three"
-                    hideSearch={hideSearch}
-                />
-                <SearchItem
-                    text="/four"
-                    hideSearch={hideSearch}
-                />
-                <SearchItem
-                    text="/five"
-                    hideSearch={hideSearch}
-                />
+                {searchTerms.map(searchTerm => {
+                    return (
+                        <SearchItem
+                            key={uuid.generate()}
+                            text={searchTerm}
+                            hideSearch={hideSearch}
+                        />
+                    );
+                })}
             </ul>
         </StyledSearch>
     );
