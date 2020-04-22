@@ -53,6 +53,9 @@ export default class PluridContentGenerator {
     private matchedRoute: router.MatcherResponse;
     private paths: PluridRouterPath[];
     private pluridContext: any;
+    private gateway: boolean;
+    private gatewayEndpoint: string;
+    private gatewayQuery: string;
 
     constructor(
         services: PluridServerService[],
@@ -62,6 +65,9 @@ export default class PluridContentGenerator {
         matchedRoute: router.MatcherResponse,
         paths: PluridRouterPath[],
         pluridContext: any,
+        gateway: boolean,
+        gatewayEndpoint: string,
+        gatewayQuery: string,
     ) {
         this.services = services;
         this.servicesData = servicesData;
@@ -70,6 +76,9 @@ export default class PluridContentGenerator {
         this.matchedRoute = matchedRoute;
         this.paths = paths;
         this.pluridContext = pluridContext;
+        this.gateway = gateway;
+        this.gatewayEndpoint = gatewayEndpoint;
+        this.gatewayQuery = gatewayQuery;
     }
 
     render() {
@@ -78,6 +87,9 @@ export default class PluridContentGenerator {
                 <PluridRouterStatic
                     path={this.matchedRoute.pathname}
                     paths={this.paths}
+                    gateway={this.gateway}
+                    gatewayEndpoint={this.gatewayEndpoint}
+                    gatewayQuery={this.gatewayQuery}
                 />
             </PluridProvider>
         );

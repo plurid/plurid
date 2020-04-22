@@ -154,6 +154,25 @@ export default class PluridServer {
 
             if (path === this.options.gatewayEndpoint) {
                 console.log('handle gateway');
+
+                const gatewayRoute = {
+                    path: {
+                        value: '/gateway',
+                    },
+                    pathname: '/gateway',
+                    parameters: {},
+                    query: {
+                        search: request.originalUrl,
+                    },
+                    fragments: {
+                        texts: [],
+                        elements: [],
+                    },
+                    route: '/gateway',
+                };
+                this.renderer = this.renderApplication(gatewayRoute);
+                response.send(this.renderer?.html());
+                return;
             }
 
             if (pluridsResponder.search(path)) {
@@ -270,6 +289,7 @@ export default class PluridServer {
         try {
             // based on the route get the specific plurids to be rendered
             const pluridContext = {};
+            const isGateway = route.pathname === '/gateway';
 
             const contentHandler = new PluridContentGenerator(
                 this.services,
@@ -279,6 +299,9 @@ export default class PluridServer {
                 route,
                 this.paths,
                 pluridContext,
+                isGateway,
+                this.options.gatewayEndpoint,
+                route.query.search,
             );
 
             content = contentHandler.render();
