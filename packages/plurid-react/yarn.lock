@@ -483,15 +483,15 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@plurid/plurid-data@^0.1.117":
-  version "0.1.117"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.117.tgz#cc20eceab9cdeb3ede6d89c760893f1c824a91d5"
-  integrity sha512-omuD/HnC2c/vRMH0tjDJfv9Xm83nVe5zKaRMHi3NLjaCBr5uXD6eu9VXh+4+1blaPYOrlfeG3lemj8Y/MpqMOQ==
+"@plurid/plurid-data@^0.1.118":
+  version "0.1.118"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.118.tgz#fee2f94dcbdd84e92f8f5254596468424d46c3c9"
+  integrity sha512-O3OfQefj4gFkdTHsv1Q/rwoK7bYts3UbHnw+kikHPvn0m9+omDQeK6AB9gUvE+ABjyVfbr0ZQKjcg8yGFx5Q3g==
 
-"@plurid/plurid-engine@^0.1.59":
-  version "0.1.59"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.59.tgz#c0e610b8d52665d491448fd8ff82463c68370fe1"
-  integrity sha512-Q3JVOgrLgVoojhTZ/+zli3w4V3zSqVlOx650JeOwsQNGTE4YENNsvb9NaqEcCFrR8A5p48naBqADja45ws3Egw==
+"@plurid/plurid-engine@^0.1.60":
+  version "0.1.60"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.60.tgz#7cee2c0511beea1fab9eb781f60365f49130f661"
+  integrity sha512-8JybsWLJwAtkDb67GH6lDKNZq/HKyVT7xlEW1eAf3dcIu7G4czidKZ6cLNhPGzaClt2zPjuu9qlV82LTLeSe0A==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
@@ -5122,7 +5122,7 @@ resolve@1.x, resolve@^1.11.0, resolve@^1.14.2, resolve@^1.15.1, resolve@^1.3.2:
   dependencies:
     path-parse "^1.0.6"
 
-resolve@^1.10.0, resolve@^1.16.1:
+resolve@^1.10.0, resolve@^1.16.0:
   version "1.16.1"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.16.1.tgz#49fac5d8bacf1fd53f200fa51247ae736175832c"
   integrity sha512-rmAglCSqWWMrrBv/XM6sW0NuRFiKViw/W4d9EbC4pt+49H8JwHy+mcGmALTEg504AUDcLTvb1T2q3E9AnmY+ig==
@@ -5186,10 +5186,10 @@ rollup-plugin-peer-deps-external@^2.2.2:
   resolved "https://registry.yarnpkg.com/rollup-plugin-peer-deps-external/-/rollup-plugin-peer-deps-external-2.2.2.tgz#506cef67fb68f41cca3ec08ca6ff7936b190f568"
   integrity sha512-XcHH4UW9exRTAf73d8rk2dw2UgF//cWbilhRI4Ni/n+t0zA1eBtohKyJROn0fxa4/+WZ5R3onAyIDiwRQL+59A==
 
-rollup-plugin-postcss@^2.8.2:
-  version "2.8.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-postcss/-/rollup-plugin-postcss-2.8.2.tgz#6408bd9301edc8bc495ce0c9547acb339010a845"
-  integrity sha512-IZkOIlzWJLmMUS6EDbjUYZEwdhukdcM+39rmXKVl/WQ2rnMpQxF3ByDUzq9zYok6weT7rteuzVkV5nWjnrZrtw==
+rollup-plugin-postcss@^2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-postcss/-/rollup-plugin-postcss-2.9.0.tgz#e6ea0a1b8fdc4a49fc0385da58804e332750c282"
+  integrity sha512-Y7qDwlqjZMBexbB1kRJf+jKIQL8HR6C+ay53YzN+nNJ64hn1PNZfBE3c61hFUhD//zrMwmm7uBW30RuTi+CD0w==
   dependencies:
     chalk "^4.0.0"
     concat-with-sourcemaps "^1.1.0"
@@ -5201,7 +5201,7 @@ rollup-plugin-postcss@^2.8.2:
     postcss-load-config "^2.1.0"
     postcss-modules "^2.0.0"
     promise.series "^0.2.0"
-    resolve "^1.16.1"
+    resolve "^1.16.0"
     rollup-pluginutils "^2.8.2"
     safe-identifier "^0.4.1"
     style-inject "^0.3.0"
@@ -5224,10 +5224,10 @@ rollup-pluginutils@^2.8.1, rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.6.1.tgz#8354e67caa7b8bf24c2488d9e2f64da2be62eebe"
-  integrity sha512-1RhFDRJeg027YjBO6+JxmVWkEZY0ASztHhoEUEWxOwkh4mjO58TFD6Uo7T7Y3FbmDpRTfKhM5NVxJyimCn0Elg==
+rollup@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.7.1.tgz#d571e49a35b1c923fe9cf6f7290dba2482864fdc"
+  integrity sha512-c1FCjY8HK1nAq0bTZHaR72ZknpP7p0EjxbcVc6BcmtOosurK//P5jtwxX+f/4fgtbrjczqf0uvR+EdtxpriE8g==
   optionalDependencies:
     fsevents "~2.1.2"
 
