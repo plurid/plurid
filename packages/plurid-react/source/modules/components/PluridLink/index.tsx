@@ -56,7 +56,6 @@ import {
 
 const {
     default: Router,
-    pluridLinkPathDivider,
     resolveAbsolutePluridLinkPath,
 } = router;
 
@@ -106,8 +105,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         /** state */
         stateTree,
         stateGeneralTheme,
-        stateActiveUniverseID,
-        stateUniverses,
+        // stateActiveUniverseID,
+        // stateUniverses,
         stateConfiguration,
         stateViewSize,
 
@@ -175,8 +174,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const updateTreeWithLink = () => {
-        // console.log(parentPlaneID, absolutePath);
-
         if (!parentPlaneID || !absolutePath) {
             return;
         }
@@ -193,64 +190,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             stateTree,
         );
 
-        // console.log(pluridPlaneID, updatedTree);
-
         if (pluridPlaneID) {
             dispatchSetTree(updatedTree);
             setShowLink(true);
             setPluridPlaneID(pluridPlaneID);
         }
-
-
-
-        // given the absolute path of the link
-        // look into the indexedPlanes
-        // get the targetted plane
-        // update the tree
-
-
-
-        // dividedPath.protocol;
-        // dividedPath.origin;
-        // dividedPath.route;
-        // dividedPath.space;
-        // dividedPath.universe;
-        // dividedPath.cluster;
-        // dividedPath.plane;
-
-
-        // const searchUniverseID = document ? document : stateActiveUniverseID;
-        // const activeUniverse = stateUniverses[searchUniverseID];
-        // if (!activeUniverse) {
-        //     return;
-        // }
-
-        // const {
-        //     planes,
-        // } = activeUniverse;
-
-        // const planeByID = planes[planeID];
-        // if (!planeByID) {
-        //     return;
-        // }
-
-        // const {
-        //     pluridPlaneID,
-        //     updatedTree,
-        // } = space.tree.updateTreeWithNewPage(
-        //     stateTree,
-        //     parentPlaneID,
-        //     planePath,
-        //     planeByID.id,
-        //     linkCoordinates,
-        //     {},
-        // );
-
-        // if (pluridPlaneID) {
-        //     dispatchSetTree(updatedTree);
-        //     setShowLink(true);
-        //     setPluridPlaneID(pluridPlaneID);
-        // }
     }
 
     const toggleLinkFromTree = () => {
@@ -314,7 +258,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
      */
     useEffect(() => {
         const parentPlaneID = generalEngine.planes.getPluridPlaneIDByData(linkElement.current);
-        // console.log('parentPlaneID', parentPlaneID);
         setParentPlaneID(parentPlaneID);
 
         const linkCoordinates = getPluridLinkCoordinates();
