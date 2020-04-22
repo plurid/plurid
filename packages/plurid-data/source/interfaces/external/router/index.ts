@@ -49,6 +49,12 @@ export interface PluridRouterProperties {
     gatewayExterior?: PluridRouterComponent;
 
     /**
+     * Redirect not found paths to this path.
+     * Default: `/not-found`.
+     */
+    notFoundPath?: string;
+
+    /**
      * API endpoint to request the elements for the paths not found in the initial routing.
      */
     api?: string;
