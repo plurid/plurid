@@ -44,70 +44,56 @@ import {
 import wrapping from '../../utilities/wrapping';
 
 
+interface PluridContentGeneratorData {
+    services: PluridServerService[],
+    servicesData: PluridServerServicesData | undefined,
+    stylesheet: ServerStyleSheet,
+    helmet: Helmet,
+    matchedRoute: router.MatcherResponse,
+    paths: PluridRouterPath[],
+    pluridContext: any,
+    gateway: boolean,
+    gatewayEndpoint: string,
+    gatewayQuery: string,
+}
+
 
 export default class PluridContentGenerator {
-    private services: PluridServerService[];
-    private servicesData: PluridServerServicesData | undefined;
-    private stylesheet: ServerStyleSheet;
-    private helmet: Helmet;
-    private matchedRoute: router.MatcherResponse;
-    private paths: PluridRouterPath[];
-    private pluridContext: any;
-    private gateway: boolean;
-    private gatewayEndpoint: string;
-    private gatewayQuery: string;
+    private data: PluridContentGeneratorData;
 
     constructor(
-        services: PluridServerService[],
-        servicesData: PluridServerServicesData | undefined,
-        stylesheet: ServerStyleSheet,
-        helmet: Helmet,
-        matchedRoute: router.MatcherResponse,
-        paths: PluridRouterPath[],
-        pluridContext: any,
-        gateway: boolean,
-        gatewayEndpoint: string,
-        gatewayQuery: string,
+        data: PluridContentGeneratorData,
     ) {
-        this.services = services;
-        this.servicesData = servicesData;
-        this.stylesheet = stylesheet;
-        this.helmet = helmet;
-        this.matchedRoute = matchedRoute;
-        this.paths = paths;
-        this.pluridContext = pluridContext;
-        this.gateway = gateway;
-        this.gatewayEndpoint = gatewayEndpoint;
-        this.gatewayQuery = gatewayQuery;
+        this.data = data;
     }
 
     render() {
         const RoutedApplication = () => (
-            <PluridProvider context={this.pluridContext}>
+            <PluridProvider context={this.data.pluridContext}>
                 <PluridRouterStatic
-                    path={this.matchedRoute.pathname}
-                    paths={this.paths}
-                    gateway={this.gateway}
-                    gatewayEndpoint={this.gatewayEndpoint}
-                    gatewayQuery={this.gatewayQuery}
+                    path={this.data.matchedRoute.pathname}
+                    paths={this.data.paths}
+                    gateway={this.data.gateway}
+                    gatewayEndpoint={this.data.gatewayEndpoint}
+                    gatewayQuery={this.data.gatewayQuery}
                 />
             </PluridProvider>
         );
 
-        const reduxStore = this.servicesData?.reduxStore;
-        const reduxStoreValue = this.servicesData?.reduxStoreValue || {};
-        const graphqlClient = this.servicesData?.graphqlClient;
-        const stripeAPIKey = this.servicesData?.stripeAPIKey;
+        const reduxStore = this.data.servicesData?.reduxStore;
+        const reduxStoreValue = this.data.servicesData?.reduxStoreValue || {};
+        const graphqlClient = this.data.servicesData?.graphqlClient;
+        const stripeAPIKey = this.data.servicesData?.stripeAPIKey;
 
         let Wrap = wrapping(
             HelmetProvider,
             RoutedApplication,
             {
-                context: this.helmet,
+                context: this.data.helmet,
             },
         );
 
-        for (const service of this.services) {
+        for (const service of this.data.services) {
             switch (service) {
                 case 'Redux':
                     Wrap = wrapping(
@@ -140,9 +126,9 @@ export default class PluridContentGenerator {
         }
 
         const content = renderToString(
-            this.stylesheet.collectStyles(
+            this.data.stylesheet.collectStyles(
                 <StyleSheetManager
-                    sheet={this.stylesheet.instance}
+                    sheet={this.data.stylesheet.instance}
                     disableCSSOMInjection={true}
                 >
                     <Wrap />

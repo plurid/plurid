@@ -282,31 +282,31 @@ export default class PluridServer {
     private getContentAndStyles(
         route: router.MatcherResponse,
     ) {
-        const sheet = new ServerStyleSheet();
+        const stylesheet = new ServerStyleSheet();
         let content = '';
         let styles = '';
 
         try {
             // based on the route get the specific plurids to be rendered
             const pluridContext = {};
-            const isGateway = route.pathname === '/gateway';
+            const gateway = route.pathname === '/gateway';
 
-            const contentHandler = new PluridContentGenerator(
-                this.services,
-                this.servicesData,
-                sheet,
-                this.helmet,
-                route,
-                this.paths,
+            const contentHandler = new PluridContentGenerator({
+                services: this.services,
+                servicesData: this.servicesData,
+                stylesheet,
+                helmet: this.helmet,
+                matchedRoute: route,
+                paths: this.paths,
                 pluridContext,
-                isGateway,
-                this.options.gatewayEndpoint,
-                route.query.search,
-            );
+                gateway,
+                gatewayEndpoint: this.options.gatewayEndpoint,
+                gatewayQuery: route.query.search,
+            });
 
             content = contentHandler.render();
 
-            styles = sheet.getStyleTags();
+            styles = stylesheet.getStyleTags();
         } catch (error) {
             if (this.options.debug !== 'none' && !this.options.quiet) {
                 const errorText = 'Plurid Server Error: Something went wrong in getContentAndStyles().'
@@ -322,7 +322,7 @@ export default class PluridServer {
                 styles: '',
             };
         } finally {
-            sheet.seal();
+            stylesheet.seal();
         }
 
         return {
