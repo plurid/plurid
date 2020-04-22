@@ -57,6 +57,8 @@ const template = (
         <style>
             body {
                 background: radial-gradient(ellipse at center, ${gradientBackground} 0%, ${gradientForeground} 100%);
+                height: 100%;
+                margin: 0;
             }
         </style>
 
