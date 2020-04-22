@@ -28,6 +28,10 @@ import PluridApplication from '../../../Application';
 
 import environment from '../../services/utilities/environment';
 
+import {
+    getComponentFromRoute,
+} from '../../services/logic/router';
+
 
 
 const Router = router.default;
@@ -198,18 +202,21 @@ const PluridRouterBrowser = (
     }
 
     const handleNoMatch = () => {
-        // const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
-        // if (notFoundMatchedRoute) {
-        //     setMatchedRoute(notFoundMatchedRoute);
+        const notFoundMatchedRoute = pluridRouter.current.match('/not-found');
+        if (notFoundMatchedRoute) {
+            setMatchedRoute(notFoundMatchedRoute);
+            const Component = getComponentFromRoute(
+                notFoundMatchedRoute,
+                protocol,
+                host,
+                indexedPlanes.current,
+            );
 
-        //     const view = notFoundMatchedRoute.route.view;
-        //     const routeComponent = indexedComponents.current[view as any];
-
-        //     if (routeComponent) {
-        //         history.pushState(null, '', '/not-found');
-        //         setComponent(routeComponent.component);
-        //     }
-        // }
+            if (Component) {
+                history.pushState(null, '', '/not-found');
+                setComponent(Component);
+            }
+        }
     }
 
     const handleGateway = () => {
