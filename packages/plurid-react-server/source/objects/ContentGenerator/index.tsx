@@ -24,7 +24,7 @@ import {
 } from 'react-stripe-elements';
 
 import {
-    PluridRouterRouting,
+    PluridRouterPath,
 } from '@plurid/plurid-data';
 
 import {
@@ -45,13 +45,13 @@ import wrapping from '../../utilities/wrapping';
 
 
 
-export default class PluridContentGenerator<T> {
+export default class PluridContentGenerator {
     private services: PluridServerService[];
     private servicesData: PluridServerServicesData | undefined;
     private stylesheet: ServerStyleSheet;
     private helmet: Helmet;
-    private matchedRoute: router.MatcherResponse<T>;
-    private routing: PluridRouterRouting<T>;
+    private matchedRoute: router.MatcherResponse;
+    private paths: PluridRouterPath[];
     private pluridContext: any;
 
     constructor(
@@ -59,8 +59,8 @@ export default class PluridContentGenerator<T> {
         servicesData: PluridServerServicesData | undefined,
         stylesheet: ServerStyleSheet,
         helmet: Helmet,
-        matchedRoute: router.MatcherResponse<T>,
-        routing: PluridRouterRouting<T>,
+        matchedRoute: router.MatcherResponse,
+        paths: PluridRouterPath[],
         pluridContext: any,
     ) {
         this.services = services;
@@ -68,16 +68,16 @@ export default class PluridContentGenerator<T> {
         this.stylesheet = stylesheet;
         this.helmet = helmet;
         this.matchedRoute = matchedRoute;
-        this.routing = routing;
+        this.paths = paths;
         this.pluridContext = pluridContext;
     }
 
     render() {
         const RoutedApplication = () => (
             <PluridProvider context={this.pluridContext}>
-                <PluridRouterStatic<T>
+                <PluridRouterStatic
                     path={this.matchedRoute.pathname}
-                    routing={this.routing}
+                    paths={this.paths}
                 />
             </PluridProvider>
         );

@@ -15,7 +15,7 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    PluridRouterRoute,
+    PluridRouterPath,
 } from '@plurid/plurid-data';
 
 import {
@@ -51,7 +51,7 @@ class StillsGenerator {
         const serverPath = path.join(process.cwd(), this.options.server);
         const buildPath = path.join(process.cwd(), this.options.build);
 
-        const pluridServer: PluridServer<any> = require(serverPath);
+        const pluridServer: PluridServer = require(serverPath);
         const serverInformation = PluridServer.analysis(pluridServer);
 
         const serverPort = await detectPort(9900) + '';
@@ -68,15 +68,15 @@ class StillsGenerator {
         /**
          * Read the application routes.
          */
-        const stillRoutes: PluridRouterRoute<any>[] = [];
+        const stillRoutes: PluridRouterPath[] = [];
 
-        for (const route of serverInformation.routing.routes) {
-            if (!route.path.includes('/:')) {
-                stillRoutes.push(route);
+        for (const path of serverInformation.paths) {
+            if (!path.value.includes('/:')) {
+                stillRoutes.push(path);
             }
         }
 
-        const stillRoutesPaths = stillRoutes.map(stillRoute => stillRoute.path);
+        const stillRoutesPaths = stillRoutes.map(stillRoute => stillRoute.value);
 
         console.info('\n\tParsed the following still routes:');
 
@@ -91,7 +91,7 @@ class StillsGenerator {
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         const startTime = Date.now();
-        const estimatedDuration = 3 * serverInformation.routing.routes.length;
+        const estimatedDuration = 3 * serverInformation.paths.length;
         console.info(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
 
         const stiller = new Stiller({
