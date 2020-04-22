@@ -2,9 +2,9 @@ import {
     PluridRouterPath,
 } from '@plurid/plurid-data';
 
-import Index from '../../client/App/containers/Index';
-import Static from '../../client/App/containers/Static';
-import NotFound from '../../client/App/containers/NotFound';
+import IndexPagePlane from '../../client/App/planes/Index/Page';
+import NotFoundPlane from '../../client/App/planes/NotFound';
+import StaticPlane from '../../client/App/planes/Static';
 
 
 
@@ -21,10 +21,10 @@ const indexPath: PluridRouterPath = {
                             value: 'default',
                             planes: [
                                 {
-                                    value: '/',
+                                    value: '/page',
                                     component: {
                                         kind: 'react',
-                                        element: Index,
+                                        element: IndexPagePlane,
                                     },
                                 },
                             ],
@@ -52,7 +52,7 @@ const notFoundPath: PluridRouterPath = {
                                     value: '/',
                                     component: {
                                         kind: 'react',
-                                        element: NotFound,
+                                        element: NotFoundPlane,
                                     },
                                 },
                             ],
@@ -68,7 +68,7 @@ const staticPath: PluridRouterPath = {
     value: '/static',
     exterior: {
         kind: 'react',
-        element: Static,
+        element: StaticPlane,
     },
 };
 
