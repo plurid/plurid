@@ -280,6 +280,7 @@ export default class PluridServer {
 
             styles = sheet.getStyleTags();
         } catch (error) {
+            console.log(error);
             if (this.options.debug !== 'none' && !this.options.quiet) {
                 const errorText = 'Plurid Server Error: Something went wrong in getContentAndStyles().'
                 if (this.options.debug === 'error') {
