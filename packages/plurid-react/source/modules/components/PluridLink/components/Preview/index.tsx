@@ -28,7 +28,7 @@ import selectors from '../../../../services/state/selectors';
 
 
 interface PreviewOwnProperties {
-    document: string | undefined;
+    // document: string | undefined;
     planeID: string;
     linkCoordinates: any;
 }
@@ -51,7 +51,7 @@ const Preview: React.FC<PreviewProperties> = (
     /** properties */
     const {
         /** own */
-        document,
+        // document,
         planeID,
         linkCoordinates,
 
@@ -68,16 +68,16 @@ const Preview: React.FC<PreviewProperties> = (
         universes,
     } = context;
 
-    const documentID = document || 'default';
-    const activeUniverse = universes[documentID];
-    const activePlanes = activeUniverse.planes;
-    const pluridPlane = activePlanes[planeID];
+    // const documentID = document || 'default';
+    // const activeUniverse = universes[documentID];
+    // const activePlanes = activeUniverse.planes;
+    // const pluridPlane = activePlanes[planeID];
 
-    if (!pluridPlane) {
-        return (<></>);
-    }
+    // if (!pluridPlane) {
+    //     return (<></>);
+    // }
 
-    const Element = pluridPlane.component.element;
+    // const Element = pluridPlane.component.element;
 
 
     /** render */
@@ -86,12 +86,12 @@ const Preview: React.FC<PreviewProperties> = (
             theme={stateGeneralTheme}
             linkCoordinates={linkCoordinates}
         >
-            <Element
+            {/* <Element
                 plurid={{
                     parameters: {},
                     query: {},
                 }}
-            />
+            /> */}
         </StyledPreview>
     );
 }
