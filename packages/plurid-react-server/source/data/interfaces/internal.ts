@@ -43,12 +43,6 @@ export interface StilledMetadataEntry {
     name: string;
 }
 
-// export interface StilledPage {
-//     id: string;
-//     html: string;
-//     space: string;
-// }
-
 
 export interface StillsGeneratorOptions {
     server: string;

@@ -13,8 +13,7 @@ import {
 } from 'apollo-cache-inmemory';
 
 import {
-    PluridRouterComponent,
-    PluridRouterRoute,
+    PluridRouterPath,
 } from '@plurid/plurid-data';
 
 
@@ -24,12 +23,6 @@ export type PluridServerMiddleware = (
     response: express.Response,
     next: express.NextFunction,
 ) => void;
-
-
-export interface PluridServerRouting {
-    components: PluridRouterComponent<any>[];
-    routes: PluridRouterRoute<any>[];
-}
 
 
 export type DebugLevels = 'none' | 'error' | 'warn' | 'info';
@@ -105,8 +98,7 @@ export interface PluridServerServicesData {
 
 
 export interface PluridServerConfiguration {
-    // Application: React.FC<any>;
-    routing: PluridServerRouting;
+    paths: PluridRouterPath[];
     helmet: Helmet;
     styles?: string[];
     middleware?: PluridServerMiddleware[];

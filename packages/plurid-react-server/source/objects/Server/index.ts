@@ -21,6 +21,10 @@ import {
 } from 'react-helmet-async';
 
 import {
+    PluridRouterPath,
+} from '@plurid/plurid-data';
+
+import {
     router,
 } from '@plurid/plurid-engine';
 
@@ -37,7 +41,6 @@ import {
 } from '../../data/templates';
 
 import {
-    PluridServerRouting,
     PluridServerMiddleware,
     PluridServerService,
     PluridServerServicesData,
@@ -56,8 +59,8 @@ import PluridStillsManager from '../StillsManager';
 const PluridRouter = router.default;
 
 
-export default class PluridServer<T> {
-    private routing: PluridServerRouting;
+export default class PluridServer {
+    private paths: PluridRouterPath[];
     private helmet: Helmet;
     private styles: string[];
     private middleware: PluridServerMiddleware[];
@@ -74,7 +77,7 @@ export default class PluridServer<T> {
         configuration: PluridServerConfiguration,
     ) {
         const {
-            routing,
+            paths,
             helmet,
             styles,
             middleware,
@@ -83,7 +86,7 @@ export default class PluridServer<T> {
             options,
         } = configuration;
 
-        this.routing = routing;
+        this.paths = paths;
         this.helmet = helmet;
         this.styles = styles || [];
         this.middleware = middleware || [];
@@ -104,9 +107,9 @@ export default class PluridServer<T> {
         });
     }
 
-    static analysis<T>(pluridServer: PluridServer<T>) {
+    static analysis(pluridServer: PluridServer) {
         return {
-            routing: pluridServer.routing,
+            paths: pluridServer.paths,
         };
     }
 
@@ -142,7 +145,7 @@ export default class PluridServer<T> {
         this.loadMiddleware();
 
         const stills = new PluridStillsManager(this.options);
-        const router = new PluridRouter<T>(this.routing.routes);
+        const router = new PluridRouter(this.paths);
         const pluridsResponder = new PluridsResponder();
 
         this.serverApplication.get('*', (request, response) => {
@@ -188,13 +191,13 @@ export default class PluridServer<T> {
         });
     }
 
-    private renderApplication<T>(
-        route: router.MatcherResponse<T>,
+    private renderApplication(
+        route: router.MatcherResponse,
     ) {
         const {
             content,
             styles,
-        } = this.getContentAndStyles<T>(
+        } = this.getContentAndStyles(
             route,
         );
 
@@ -252,8 +255,8 @@ export default class PluridServer<T> {
         return renderer;
     }
 
-    private getContentAndStyles<T>(
-        route: router.MatcherResponse<T>,
+    private getContentAndStyles(
+        route: router.MatcherResponse,
     ) {
         const sheet = new ServerStyleSheet();
         let content = '';
@@ -263,13 +266,13 @@ export default class PluridServer<T> {
             // based on the route get the specific plurids to be rendered
             const pluridContext = {};
 
-            const contentHandler = new PluridContentGenerator<T>(
+            const contentHandler = new PluridContentGenerator(
                 this.services,
                 this.servicesData,
                 sheet,
                 this.helmet,
                 route,
-                this.routing,
+                this.paths,
                 pluridContext,
             );
 
