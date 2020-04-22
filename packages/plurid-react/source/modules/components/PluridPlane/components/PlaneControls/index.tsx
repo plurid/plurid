@@ -18,10 +18,6 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    utilities,
-} from '@plurid/plurid-engine';
-
-import {
     PluridTextline,
 } from '@plurid/plurid-ui-react';
 
@@ -42,6 +38,8 @@ import {
 
     StyledSearch
 } from './styled';
+
+import Search from './components/Search';
 
 import { AppState } from '../../../../services/state/store';
 import StateContext from '../../../../services/state/context';
@@ -107,6 +105,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     const gateway = 'gateway';
 
     const gatewayAddress = `${protocol}://${host.value}/${gateway}?plurid=` + encodeURIComponent(route);
+    console.log(route);
 
 
     /** state */
@@ -162,27 +161,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
                 />
 
                 {showSearch && (
-                    <StyledSearch
-                        theme={interactionTheme}
-                    >
-                        <ul>
-                            <li>
-                                /one
-                            </li>
-                            <li>
-                                /two
-                            </li>
-                            <li>
-                                /three
-                            </li>
-                            <li>
-                                /four
-                            </li>
-                            <li>
-                                /five
-                            </li>
-                        </ul>
-                    </StyledSearch>
+                    <Search />
                 )}
             </StyledPlaneControlsCenter>
 
