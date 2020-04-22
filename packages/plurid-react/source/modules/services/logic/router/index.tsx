@@ -169,11 +169,8 @@ export const getGatewayView = (
         gatewayView.push(...gatewayViews);
     }
 
-    // console.log('gatewayView', gatewayView);
-    // console.log('paths', paths);
-
     const planes: PluridPlane[] = [];
-    const view: any[] = [];
+    const view: string[] = [];
 
     for (const path of paths) {
         if (!path.spaces) {
@@ -217,7 +214,6 @@ export const getGatewayView = (
                             planeName,
                         ];
                         const planeAddress = planeAddressElements.join('://');
-                        // console.log('planeAddress', planeAddress);
 
                         for (const gatewayViewPlane of gatewayView) {
                             // check that the planeAddress is the same as gatewayViewPlane
@@ -229,11 +225,11 @@ export const getGatewayView = (
                                         component: {
                                             element: component.element,
                                         },
-                                        path: value,
+                                        path: planeAddress,
                                     };
 
                                     planes.push(pluridPlane);
-                                    view.push(value);
+                                    view.push(planeAddress);
                                 }
                             }
                         }
@@ -242,9 +238,6 @@ export const getGatewayView = (
             }
         }
     }
-
-    // console.log('planes', planes);
-    // console.log('view', view);
 
     let Exterior: React.FC<any> = () => (<></>);
     if (gatewayExterior) {
