@@ -40,8 +40,7 @@ import graphqlClient from './App/services/graphql/client';
 // } from './App/data/constants';
 
 import {
-    routing,
-    ViewType,
+    paths,
 } from '../common';
 
 
@@ -62,8 +61,8 @@ const Client: React.FC<any> = () => {
                                     theme={themes.plurid}
                                 />
 
-                                <PluridRouterBrowser<ViewType>
-                                    routing={routing}
+                                <PluridRouterBrowser
+                                    paths={paths}
                                 />
                             </PluridProvider>
                         </StyleSheetManager>
