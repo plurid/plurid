@@ -1,56 +1,55 @@
-import React from 'react';
+import React, {
+    useRef,
+} from 'react';
 
 import {
-    // PluridRouter,
+    PluridRouterPath,
+    IndexedPluridPlane,
 } from '@plurid/plurid-data';
 
 import {
     router,
 } from '@plurid/plurid-engine';
 
-import {
-    indexing,
-} from '@plurid/plurid-functions';
-
 
 
 const PluridRouter = router.default;
 
 
-interface PluridRouterStaticOwnProperties<T> {
+interface PluridRouterStaticOwnProperties {
     path: string;
-    // routing: PluridRouterRouting<T>;
-    children?: any;
+    paths: PluridRouterPath[];
 }
 
-function PluridRouterStatic<T>(
-    properties: PluridRouterStaticOwnProperties<T>,
-) {
+const PluridRouterStatic = (
+    properties: PluridRouterStaticOwnProperties,
+) => {
+    /** properties */
+    const {
+        path,
+        paths,
+    } = properties;
+
+
+    /** references */
+    const indexedPlanes = useRef<Map<string, IndexedPluridPlane>>(new Map());
+    const pluridRouter = useRef(new PluridRouter(
+        paths,
+    ));
+
+
+    /** render */
+    const matchedRoute = pluridRouter.current.match(path);
+
+    if (!matchedRoute) {
+        return (
+            <></>
+        );
+    }
+
     return (
-        <div>
-
-        </div>
+        <></>
     );
-    // /** properties */
-    // const {
-    //     path,
-    //     routing,
-    // } = properties;
-
-    // const {
-    //     routes,
-    //     components,
-    // } = routing;
-
-    // const indexedComponents = indexing.create(components, 'object', 'view');
-    // const pluridRouter = new PluridRouter(routes);
-
-    // const matchedRoute = pluridRouter.match(path);
-    // if (!matchedRoute) {
-    //     return (
-    //         <></>
-    //     )
-    // }
 
     // const view = matchedRoute.route.view;
     // const routeComponent = indexedComponents[view as any];
@@ -61,8 +60,6 @@ function PluridRouterStatic<T>(
     //     )
     // }
 
-
-    // /** render */
     // const Component = routeComponent.component;
     // return (
     //     <>
