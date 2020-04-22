@@ -17,6 +17,8 @@ import {
     /** constants */
     PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
     PLURID_ENTITY_LINK,
+    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
+    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
 
     /** interfaces */
     PluridLink as PluridLinkOwnProperties,
@@ -68,10 +70,6 @@ const defaultLinkCoordinates: PluridLinkCoordinates = {
     y: 0,
 };
 
-const previewAppearTime = 800;
-const previewDisappearTime = 400;
-
-
 interface PluridLinkStateProperties {
     stateTree: TreePlane[];
     stateGeneralTheme: Theme;
@@ -120,9 +118,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const planeControls = stateConfiguration.elements.plane.controls.show;
 
-    // console.log('planePath', planePath);
-    const dividedPath = pluridLinkPathDivider(planePath);
-    // console.log('dividedPath', dividedPath);
+    const previewAppearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
+    const previewDisappearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
+
     const absolutePath = resolveAbsolutePluridLinkPath(planePath);
     // console.log('absolutePath', absolutePath);
 
@@ -285,7 +283,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     /** effects */
-    /** Set Default suffix, devisible */
+    /** Set default suffix, devisible */
     useEffect(() => {
         if (_suffix !== undefined) {
             setSuffix(_suffix);
@@ -360,7 +358,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         mouseOver,
     ]);
 
-    /** Set Page ID */
+    /** Set plane ID */
     useEffect(() => {
         // const searchUniverseID = document ? document : stateActiveUniverseID;
         // const activeUniverse = stateUniverses[searchUniverseID];
@@ -416,7 +414,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         >
             {children}
 
-            {/* {showPreview
+            {showPreview
             && !showLink
             && (
                 <Portal
@@ -424,12 +422,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                     rootID={parentPlaneID}
                 >
                     <Preview
-                        document={document}
+                        // document={document}
                         planeID={planeID}
                         linkCoordinates={linkCoordinates}
                     />
                 </Portal>
-            )} */}
+            )}
         </StyledPluridLink>
     );
 }
