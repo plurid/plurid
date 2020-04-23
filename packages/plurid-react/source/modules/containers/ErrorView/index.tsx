@@ -10,7 +10,10 @@ interface ErrorViewProperties {
     error: string;
 }
 
-const ErrorView: React.FC<ErrorViewProperties> = (properties) => {
+
+const ErrorView: React.FC<ErrorViewProperties> = (
+    properties,
+) => {
     const {
         error,
     } = properties;

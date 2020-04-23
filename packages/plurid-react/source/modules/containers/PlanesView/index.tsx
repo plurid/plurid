@@ -7,6 +7,7 @@ import PluridSpace from '../../components/PluridSpace';
 interface PlanesViewProperties {
 }
 
+
 const PlanesView: React.FC<PlanesViewProperties> = () => {
     return (
         <>
