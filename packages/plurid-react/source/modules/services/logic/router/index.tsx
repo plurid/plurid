@@ -3,6 +3,7 @@ import React from 'react';
 import {
     /** interfaces */
     PluridRouterPath,
+    PluridRouterPlane,
     PluridPlane,
     IndexedPluridPlane,
 } from '@plurid/plurid-data';
@@ -64,7 +65,15 @@ export const getComponentFromRoute = (
             const planes: PluridPlane[] = [];
             const view = [];
 
+            if (!space.universes) {
+                continue;
+            }
+
             for (const universe of space.universes) {
+                if (!universe.clusters) {
+                    continue;
+                }
+
                 for (const cluster of universe.clusters) {
                     for (const plane of cluster.planes) {
                         const {
@@ -187,10 +196,18 @@ export const getGatewayView = (
                 ? 's'
                 : utilities.cleanPathElement(space.value);
 
+            if (!space.universes) {
+                continue;
+            }
+
             for (const universe of space.universes) {
                 const universeName = universe.value === 'default'
                     ? 'u'
                     : utilities.cleanPathElement(universe.value);
+
+                if (!universe.clusters) {
+                    continue;
+                }
 
                 for (const cluster of universe.clusters) {
                     const clusterName = cluster.value === 'default'
@@ -328,7 +345,15 @@ export const computeIndexedPlanes = (
         }
 
         for (const space of path.spaces) {
+            if (!space.universes) {
+                continue;
+            }
+
             for (const universe of space.universes) {
+                if (!universe.clusters) {
+                    continue;
+                }
+
                 for (const cluster of universe.clusters) {
                     for (const plane of cluster.planes) {
                         const pathName = path.value === '/'
@@ -371,6 +396,179 @@ export const computeIndexedPlanes = (
                         const id = uuid.generate();
 
                         indexedPlanes.set(id, indexedPlane);
+                    }
+                }
+            }
+        }
+    }
+
+    return indexedPlanes;
+}
+
+
+
+export const generateIndexedPlane = (
+    plane: PluridRouterPlane,
+    protocol: string,
+    host: string,
+    path: string,
+    space: string,
+    universe: string,
+    cluster: string,
+) => {
+    const pathName = path === '/'
+        ? 'p'
+        : utilities.cleanPathElement(path);
+    const spaceName = space === 'default'
+        ? 's'
+        : utilities.cleanPathElement(space);
+    const universeName = universe === 'default'
+        ? 'u'
+        : utilities.cleanPathElement(universe);
+    const clusterName = cluster === 'default'
+        ? 'c'
+        : utilities.cleanPathElement(cluster);
+    const planeName = utilities.cleanPathElement(plane.value);
+
+    const planeAddressElements = [
+        protocol,
+        host,
+        pathName,
+        spaceName,
+        universeName,
+        clusterName,
+        planeName,
+    ];
+    const planeAddress = planeAddressElements.join('://');
+
+    const indexedPlane: IndexedPluridPlane = {
+        protocol,
+        host,
+        path: pathName,
+        space: spaceName,
+        universe: universeName,
+        cluster: clusterName,
+        plane: planeName,
+        route: planeAddress,
+        component: plane.component,
+    };
+
+    const id = uuid.generate();
+
+    return {
+        id,
+        indexedPlane,
+    };
+}
+
+
+export interface GeneratedIndexedPlane {
+    id: string;
+    indexedPlane: IndexedPluridPlane;
+}
+
+export const generateIndexedPlanes = (
+    path: PluridRouterPath,
+    protocol: string,
+    host: string,
+) => {
+    const indexedPlanes: GeneratedIndexedPlane[] = [];
+
+    const defaultPathPlanes = path.planes || [];
+
+    for (const defaultPathPlane of defaultPathPlanes) {
+        const {
+            id,
+            indexedPlane,
+        } = generateIndexedPlane(
+            defaultPathPlane,
+            protocol,
+            host,
+            path.value,
+            's',
+            'u',
+            'c',
+        );
+
+        indexedPlanes.push({
+            id,
+            indexedPlane,
+        });
+    }
+
+    if (!path.spaces) {
+        return indexedPlanes;
+    }
+
+    for (const space of path.spaces) {
+        const defaultSpacePlanes = space.planes || [];
+
+        for (const defaultSpacePlane of defaultSpacePlanes) {
+            const {
+                id,
+                indexedPlane,
+            } = generateIndexedPlane(
+                defaultSpacePlane,
+                protocol,
+                host,
+                path.value,
+                space.value,
+                'u',
+                'c',
+            );
+
+            indexedPlanes.push({
+                id,
+                indexedPlane,
+            });
+        }
+
+        if (space.universes) {
+            for (const universe of space.universes) {
+                const defaultUniversePlanes = universe.planes || [];
+
+                for (const defaultUniversePlane of defaultUniversePlanes) {
+                    const {
+                        id,
+                        indexedPlane,
+                    } = generateIndexedPlane(
+                        defaultUniversePlane,
+                        protocol,
+                        host,
+                        path.value,
+                        space.value,
+                        universe.value,
+                        'c',
+                    );
+
+                    indexedPlanes.push({
+                        id,
+                        indexedPlane,
+                    });
+                }
+
+                if (universe.clusters) {
+                    for (const cluster of universe.clusters) {
+                        for (const plane of cluster.planes) {
+                            const {
+                                id,
+                                indexedPlane,
+                            } = generateIndexedPlane(
+                                plane,
+                                protocol,
+                                host,
+                                path.value,
+                                space.value,
+                                universe.value,
+                                cluster.value,
+                            );
+
+
+                            indexedPlanes.push({
+                                id,
+                                indexedPlane,
+                            });
+                        }
                     }
                 }
             }
