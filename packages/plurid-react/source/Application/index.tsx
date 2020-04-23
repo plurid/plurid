@@ -1,6 +1,7 @@
 import React, {
     Component,
 } from 'react';
+
 import {
     Provider as ReduxProvider,
 } from 'react-redux';
@@ -33,7 +34,9 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
                 context={StateContext}
             >
                 <Root
-                    appProperties={{...this.props}}
+                    pluridApplication={
+                        { ...this.props }
+                    }
                 />
             </ReduxProvider>
         );

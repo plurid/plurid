@@ -116,8 +116,8 @@ export interface HandledUniverses {
 }
 
 
-export interface ViewOwnProperties {
-    appProperties: PluridApplicationProperties;
+interface ViewOwnProperties {
+    pluridApplication: PluridApplicationProperties;
 }
 
 interface ViewStateProperties {
@@ -171,13 +171,14 @@ type ViewProperties = ViewOwnProperties
     & ViewStateProperties
     & ViewDispatchProperties;
 
+
 const View: React.FC<ViewProperties> = (
     properties,
 ) => {
     /** properties */
     const {
         /** own */
-        appProperties,
+        pluridApplication,
 
         /** state */
         configuration: stateConfiguration,
@@ -233,7 +234,7 @@ const View: React.FC<ViewProperties> = (
         clusters,
         universes,
         pubsub,
-    } = appProperties;
+    } = pluridApplication;
 
 
     /** references */
@@ -1076,10 +1077,9 @@ const View: React.FC<ViewProperties> = (
 
     /** context */
     const pluridContext: PluridContext = {
-        planeContext: appProperties.planeContext,
-        planeContextValue: appProperties.planeContextValue,
-        universes: contextUniversesRef.current,
-        indexedPlanes: indexedPlanes || new Map(),
+        planesMap: indexedPlanes || new Map(),
+        planeContext: pluridApplication.planeContext,
+        planeContextValue: pluridApplication.planeContextValue,
     };
 
     // console.log('indexedPlanes', indexedPlanes);
