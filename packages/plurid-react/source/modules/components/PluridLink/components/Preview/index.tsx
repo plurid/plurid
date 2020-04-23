@@ -66,7 +66,37 @@ const Preview: React.FC<PreviewProperties> = (
 
     const {
         universes,
+        indexedPlanes,
     } = context;
+
+    const plane = indexedPlanes?.get(planeID);
+
+
+    /** render */
+    if (!plane) {
+        return (<></>);
+    }
+
+    if (plane.component.kind !== 'react') {
+        return (<></>);
+    }
+
+    const Component = plane.component.element;
+
+    return (
+        <StyledPreview
+            theme={stateGeneralTheme}
+            linkCoordinates={linkCoordinates}
+        >
+            <Component />
+            {/* <Element
+                plurid={{
+                    parameters: {},
+                    query: {},
+                }}
+            /> */}
+        </StyledPreview>
+    );
 
     // const documentID = document || 'default';
     // const activeUniverse = universes[documentID];
@@ -78,22 +108,6 @@ const Preview: React.FC<PreviewProperties> = (
     // }
 
     // const Element = pluridPlane.component.element;
-
-
-    /** render */
-    return (
-        <StyledPreview
-            theme={stateGeneralTheme}
-            linkCoordinates={linkCoordinates}
-        >
-            {/* <Element
-                plurid={{
-                    parameters: {},
-                    query: {},
-                }}
-            /> */}
-        </StyledPreview>
-    );
 }
 
 
