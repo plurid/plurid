@@ -164,7 +164,7 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
                     text={showAddress ? gatewayAddress : path}
                     atChange={onPathInput}
                     atKeyDown={handleOnKeyDown}
-                    atFocus={() => setShowSearch(show => !show)}
+                    // atFocus={() => setShowSearch(show => !show)}
                     // atBlur={() => setShowSearch(false)}
                     ariaLabel="Plurid Pathbar"
                 />
