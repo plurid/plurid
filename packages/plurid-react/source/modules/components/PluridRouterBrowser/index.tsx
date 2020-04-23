@@ -204,83 +204,102 @@ const PluridRouterBrowser = (
 
         for (const path of paths) {
             if (!path.spaces) {
-                const pathName = path.value === '/'
-                    ? 'p'
-                    : utilities.cleanPathElement(path.value);
+                if (!path.planes) {
+                    // handle static path
+                    const pathName = path.value === '/'
+                        ? 'p'
+                        : utilities.cleanPathElement(path.value);
 
-                const planeAddressElements = [
-                    protocol,
-                    host,
-                    pathName,
-                ];
-                const planeAddress = planeAddressElements.join('://');
+                    const planeAddressElements = [
+                        protocol,
+                        host,
+                        pathName,
+                    ];
+                    const planeAddress = planeAddressElements.join('://');
 
-                const id = uuid.generate();
+                    const id = uuid.generate();
 
-                const indexedPlane: IndexedPluridPlane = {
-                    protocol,
-                    host,
-                    path: pathName,
-                    space: '',
-                    universe: '',
-                    cluster: '',
-                    plane: '',
-                    component: path.exterior || {
-                        kind: 'react',
-                        element: () => (<></>),
-                    },
-                    route: planeAddress,
-                };
+                    const indexedPlane: IndexedPluridPlane = {
+                        protocol,
+                        host,
+                        path: pathName,
+                        space: '',
+                        universe: '',
+                        cluster: '',
+                        plane: '',
+                        component: path.exterior || {
+                            kind: 'react',
+                            element: () => (<></>),
+                        },
+                        route: planeAddress,
+                    };
 
-                indexedPlanes.current.set(id, indexedPlane);
+                    indexedPlanes.current.set(id, indexedPlane);
 
-                continue;
+                    continue;
+                } else {
+                    // handle path only with planes in the default space
+
+                    continue;
+                }
             }
 
+            const defaultPathPlanes = path.planes || [];
+
             for (const space of path.spaces) {
-                for (const universe of space.universes) {
-                    for (const cluster of universe.clusters) {
-                        for (const plane of cluster.planes) {
-                            const pathName = path.value === '/'
-                                ? 'p'
-                                : utilities.cleanPathElement(path.value);
-                            const spaceName = space.value === 'default'
-                                ? 's'
-                                : utilities.cleanPathElement(space.value);
-                            const universeName = universe.value === 'default'
-                                ? 'u'
-                                : utilities.cleanPathElement(universe.value);
-                            const clusterName = cluster.value === 'default'
-                                ? 'c'
-                                : utilities.cleanPathElement(cluster.value);
-                            const planeName = utilities.cleanPathElement(plane.value);
+                const defaultSpacePlanes = space.planes || [];
 
-                            const planeAddressElements = [
-                                protocol,
-                                host,
-                                pathName,
-                                spaceName,
-                                universeName,
-                                clusterName,
-                                planeName,
-                            ];
-                            const planeAddress = planeAddressElements.join('://');
+                if (space.universes) {
+                    for (const universe of space.universes) {
+                        const defaultUniversePlanes = universe.planes || [];
 
-                            const indexedPlane: IndexedPluridPlane = {
-                                protocol,
-                                host,
-                                path: pathName,
-                                space: spaceName,
-                                universe: universeName,
-                                cluster: clusterName,
-                                plane: planeName,
-                                component: plane.component,
-                                route: planeAddress,
-                            };
+                        if (universe.clusters) {
+                            for (const cluster of universe.clusters) {
+                                const defaultClusterPlanes = cluster.planes || [];
 
-                            const id = uuid.generate();
+                                for (const plane of cluster.planes) {
+                                    const pathName = path.value === '/'
+                                        ? 'p'
+                                        : utilities.cleanPathElement(path.value);
+                                    const spaceName = space.value === 'default'
+                                        ? 's'
+                                        : utilities.cleanPathElement(space.value);
+                                    const universeName = universe.value === 'default'
+                                        ? 'u'
+                                        : utilities.cleanPathElement(universe.value);
+                                    const clusterName = cluster.value === 'default'
+                                        ? 'c'
+                                        : utilities.cleanPathElement(cluster.value);
+                                    const planeName = utilities.cleanPathElement(plane.value);
 
-                            indexedPlanes.current.set(id, indexedPlane);
+                                    const planeAddressElements = [
+                                        protocol,
+                                        host,
+                                        pathName,
+                                        spaceName,
+                                        universeName,
+                                        clusterName,
+                                        planeName,
+                                    ];
+                                    const planeAddress = planeAddressElements.join('://');
+
+                                    const indexedPlane: IndexedPluridPlane = {
+                                        protocol,
+                                        host,
+                                        path: pathName,
+                                        space: spaceName,
+                                        universe: universeName,
+                                        cluster: clusterName,
+                                        plane: planeName,
+                                        component: plane.component,
+                                        route: planeAddress,
+                                    };
+
+                                    const id = uuid.generate();
+
+                                    indexedPlanes.current.set(id, indexedPlane);
+                                }
+                            }
                         }
                     }
                 }
