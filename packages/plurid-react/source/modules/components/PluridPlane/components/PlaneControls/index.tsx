@@ -105,7 +105,6 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     const gateway = 'gateway';
 
     const gatewayAddress = `${protocol}://${host.value}/${gateway}?plurid=` + encodeURIComponent(route);
-    console.log(route);
 
 
     /** state */
@@ -115,7 +114,9 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
 
 
     /** handlers */
-    const onPathInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onPathInput = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
         setPath(event.target.value);
 
         if (pathbar.onChange) {
@@ -124,7 +125,9 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
         }
     }
 
-    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleOnKeyDown = (
+        event: React.KeyboardEvent<HTMLInputElement>,
+    ) => {
         if (!showSearch) {
             setShowSearch(true);
         }
