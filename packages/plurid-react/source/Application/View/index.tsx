@@ -1082,7 +1082,7 @@ const View: React.FC<ViewProperties> = (
         indexedPlanes: indexedPlanes || new Map(),
     };
 
-    console.log('indexedPlanes', indexedPlanes);
+    // console.log('indexedPlanes', indexedPlanes);
 
     // console.log('Rendered');
     // console.log('configuration', configuration);

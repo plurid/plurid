@@ -9,7 +9,6 @@ import {
     PLURID_ROUTER_LOCATION_CHANGED,
 
     /** interfaces */
-    PluridPlane,
     IndexedPluridPlane,
     PluridRouterProperties as PluridRouterBrowserOwnProperties,
 } from '@plurid/plurid-data';
