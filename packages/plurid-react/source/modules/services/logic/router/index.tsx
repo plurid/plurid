@@ -86,6 +86,7 @@ export const getComponentFromRoute = (
                         if (component.kind === 'react') {
                             const pluridPlane: PluridPlane = {
                                 component: {
+                                    kind: 'react',
                                     element: component.element,
                                 },
                                 path: fullPath,
@@ -223,6 +224,7 @@ export const getGatewayView = (
                                 if (component.kind === 'react') {
                                     const pluridPlane: PluridPlane = {
                                         component: {
+                                            kind: 'react',
                                             element: component.element,
                                         },
                                         path: planeAddress,
@@ -313,7 +315,10 @@ export const computeIndexedPlanes = (
                 universe: '',
                 cluster: '',
                 plane: '',
-                component: path.exterior,
+                component: path.exterior || {
+                    kind: 'react',
+                    element: () => (<></>),
+                },
                 route: planeAddress,
             };
 
