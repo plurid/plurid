@@ -35,6 +35,7 @@ interface PluridRouterStaticOwnProperties {
     gatewayEndpoint?: string;
 }
 
+
 const PluridRouterStatic = (
     properties: PluridRouterStaticOwnProperties,
 ) => {

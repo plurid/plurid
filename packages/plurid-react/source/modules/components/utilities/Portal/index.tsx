@@ -15,6 +15,7 @@ interface PortalProperties {
     rootID: string;
 }
 
+
 /**
  * @example
  * <Portal>

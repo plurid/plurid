@@ -45,6 +45,7 @@ type MenuMoreShortcutsProperties = MenuMoreShortcutsOwnProperties
     & MenuMoreShortcutsStateProperties
     & MenuMoreShortcutsDispatchProperties;
 
+
 const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (
     properties,
 ) => {

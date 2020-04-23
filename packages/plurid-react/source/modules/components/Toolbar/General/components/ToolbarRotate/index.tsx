@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -64,7 +65,11 @@ type ToolbarRotateProperties = ToolbarRotateOwnProperties
     & ToolbarRotateStateProperties
     & ToolbarRotateDispatchProperties;
 
-const ToolbarRotate: React.FC<ToolbarRotateProperties> = (properties) => {
+
+const ToolbarRotate: React.FC<ToolbarRotateProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** own */
         showTransformButtons,
@@ -84,6 +89,7 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (properties) => {
     } = properties;
 
 
+    /** render */
     return (
         <StyledToolbarRotate
             showTransformButtons={showTransformButtons}

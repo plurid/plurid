@@ -59,6 +59,7 @@ type MenuMoreThemesProperties = MenuMoreThemesOwnProperties
     & MenuMoreThemesStateProperties
     & MenuMoreThemesDispatchProperties;
 
+
 const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
     properties,
 ) => {

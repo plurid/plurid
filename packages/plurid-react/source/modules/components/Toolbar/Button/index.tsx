@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, {
+    useState,
+} from 'react';
 
 import {
     StyledToolbarButton,
@@ -21,9 +23,10 @@ interface ToolbarButtonProps {
 }
 
 
-const ToolbarButton: React.FC<ToolbarButtonProps> = (props) => {
-    const [mouseOver, setMouseOver] = useState(false);
-
+const ToolbarButton: React.FC<ToolbarButtonProps> = (
+    properties,
+) => {
+    /** properties */
     const {
         atClick,
         image,
@@ -35,8 +38,14 @@ const ToolbarButton: React.FC<ToolbarButtonProps> = (props) => {
         last,
         active,
         theme,
-    } = props;
+    } = properties;
 
+
+    /** state */
+    const [mouseOver, setMouseOver] = useState(false);
+
+
+    /** render */
     return (
         <StyledToolbarButton
             onMouseEnter={() => setMouseOver(true)}

@@ -23,6 +23,7 @@ interface PluridRouterLinkOwnProperties {
     className?: string;
 }
 
+
 const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     properties,
 ) => {

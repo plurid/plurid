@@ -2,6 +2,7 @@ import React, {
     useRef,
     useEffect,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -62,7 +63,11 @@ type MoreMenuProperties = MoreMenuOwnProperties
     & MoreMenuStateProperties
     & MoreMenuDispatchProperties;
 
-const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
+
+const MoreMenu: React.FC<MoreMenuProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
         stateLanguage,
@@ -74,8 +79,6 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchToggleConfigurationToolbarToggleDrawer,
         dispatchSetUIToolbarScrollPosition,
     } = properties;
-
-    const moreMenuScrollElement = useRef<HTMLDivElement>(null);
 
     const {
         transparentUI,
@@ -90,6 +93,12 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         toggledDrawers,
     } = toolbar;
 
+
+    /** references */
+    const moreMenuScrollElement = useRef<HTMLDivElement>(null);
+
+
+    /** handlers */
     const handleWheel = useDebouncedCallback((event: WheelEvent) => {
         if (moreMenuScrollElement.current) {
             const scrollPosition = moreMenuScrollElement.current.scrollTop;
@@ -97,6 +106,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         }
     }, 100);
 
+
+    /** effects */
     useEffect(() => {
         if (moreMenuScrollElement.current) {
             moreMenuScrollElement.current.addEventListener('wheel', handleWheel);
@@ -120,6 +131,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         moreMenuScrollElement.current,
     ]);
 
+
+    /** render */
     return (
         <StyledMoreMenu
             theme={interactionTheme}

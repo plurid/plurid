@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -63,7 +64,11 @@ type ToolbarTranslateProperties = ToolbarTranslateOwnProperties
     & ToolbarTranslateStateProperties
     & ToolbarTranslateDispatchProperties;
 
-const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (properties) => {
+
+const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** own */
         showTransformButtons,
@@ -83,6 +88,7 @@ const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (properties) => {
     } = properties;
 
 
+    /** render */
     return (
         <StyledToolbarTranslate
             showTransformButtons={showTransformButtons}

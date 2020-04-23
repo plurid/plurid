@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -39,7 +40,11 @@ type PlaneBridgeProperties = PlaneBridgeOwnProperties
     & PlaneBridgeStateProperties
     & PlaneBridgeDispatchProperties;
 
-const PlaneBridge: React.FC<PlaneBridgeProperties> = (properties) => {
+
+const PlaneBridge: React.FC<PlaneBridgeProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         generalTheme,
         configuration,
@@ -50,6 +55,8 @@ const PlaneBridge: React.FC<PlaneBridgeProperties> = (properties) => {
         opacity,
     } = configuration.elements.plane;
 
+
+    /** render */
     return (
         <StyledPlaneBridge
             theme={generalTheme}

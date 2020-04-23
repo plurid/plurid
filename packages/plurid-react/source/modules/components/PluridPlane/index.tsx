@@ -1,6 +1,7 @@
 import React, {
     useState,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -58,9 +59,11 @@ type PluridPlaneProperties = PluridPlaneOwnProperties
     & PluridPlaneStateProperties
     & PluridPlaneDispatchProperties;
 
-type PluridPlanePropertiesWithChildren = React.PropsWithChildren<PluridPlaneProperties>;
 
-const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) => {
+const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** own */
         planeID,
@@ -97,10 +100,14 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
         ? planeWidth
         : planeWidth * viewSize.width;
 
+
+    /** state */
     const [mouseOver, setMouseOver] = useState(false);
 
     // based on camera location and world position compute transform matrix
 
+
+    /** handlers */
     const updatePlaneSize = (
         size: any,
     ) => {
@@ -113,6 +120,8 @@ const PluridPlane: React.FC<PluridPlanePropertiesWithChildren> = (properties) =>
         updateSpaceTreePlane(updatedTreePlane);
     }
 
+
+    /** render */
     return (
         <StyledPluridPlane
             theme={generalTheme}

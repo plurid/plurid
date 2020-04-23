@@ -57,6 +57,7 @@ type MenuMoreTechnicalProperties = MenuMoreTechnicalOwnProperties
     & MenuMoreTechnicalStateProperties
     & MenuMoreTechnicalDispatchProperties;
 
+
 const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
     properties,
 ) => {

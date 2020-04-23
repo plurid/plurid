@@ -1,7 +1,5 @@
-import React, {
-    // useState,
-    // useEffect,
-} from 'react';
+import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -46,7 +44,11 @@ type MoreMenuProperties = MoreMenuOwnProperties
     & MoreMenuStateProperties
     & MoreMenuDispatchProperties;
 
-const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
+
+const MoreMenu: React.FC<MoreMenuProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
         interactionTheme,
@@ -57,6 +59,8 @@ const MoreMenu: React.FC<MoreMenuProperties> = (properties) => {
         dispatchSetActiveUniverse,
     } = properties;
 
+
+    /** render */
     return (
         <StyledMoreMenu
             theme={interactionTheme}
@@ -99,7 +103,9 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): MoreMenuDispatchProperties => ({
-    dispatchSetActiveUniverse: (documentID: string) => dispatch(
+    dispatchSetActiveUniverse: (
+        documentID: string,
+    ) => dispatch(
         actions.space.setActiveUniverse(documentID)
     )
 });

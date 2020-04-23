@@ -1,6 +1,7 @@
 import React, {
     useState,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -66,6 +67,7 @@ interface PlaneControlsDispatchProperties {
 type PlaneControlsProperties = PlaneControlsOwnProperties
     & PlaneControlsStateProperties
     & PlaneControlsDispatchProperties;
+
 
 const PlaneControls: React.FC<PlaneControlsProperties> = (
     properties,

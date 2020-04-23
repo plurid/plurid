@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -61,7 +62,11 @@ type ToolbarScaleProperties = ToolbarScaleOwnProperties
     & ToolbarScaleStateProperties
     & ToolbarScaleDispatchProperties;
 
-const ToolbarScale: React.FC<ToolbarScaleProperties> = (properties) => {
+
+const ToolbarScale: React.FC<ToolbarScaleProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** own */
         showTransformButtons,
@@ -78,6 +83,8 @@ const ToolbarScale: React.FC<ToolbarScaleProperties> = (properties) => {
         scaleDown,
     } = properties;
 
+
+    /** render */
     return (
         <StyledToolbarScale
             showTransformButtons={showTransformButtons}

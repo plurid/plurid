@@ -3,6 +3,7 @@ import React, {
     useEffect,
     useState,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -44,7 +45,11 @@ type PluridVirtualListProperties = PluridVirtualListOwnProperties
     & PluridVirtualListStateProperties
     & PluridVirtualListDispatchProperties;
 
-const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) => {
+
+const PluridVirtualList: React.FC<PluridVirtualListProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** own */
         items,
@@ -57,17 +62,23 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
 
     const _generalHeight = generalHeight || 100;
 
+
+    /** references */
     const listElement = useRef<HTMLDivElement>(null);
 
     const rows = useRef<any[]>([]);
     const heights = useRef<number[]>(Array(items.length).fill(_generalHeight));
 
+
+    /** state */
     const [start, setStart] = useState(0);
     const [end, setEnd] = useState(Math.floor(1000 / _generalHeight));
     const [elementHeight, setElementHeight] = useState(_generalHeight * (end - start));
 
     const [resizing, setResizing] = useState(false);
 
+
+    /** handlers */
     const setHeight = (
         value: number,
         index: number,
@@ -93,6 +104,8 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
         return rows.current;
     }
 
+
+    /** effects */
     useEffect(() => {
         if (heights.current) {
             const elementHeight = mathematics.arithmetic.sum(heights.current, heights.current.length);
@@ -142,6 +155,8 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (properties) =>
         viewSize,
     ]);
 
+
+    /** render */
     return (
         <div
             style={{

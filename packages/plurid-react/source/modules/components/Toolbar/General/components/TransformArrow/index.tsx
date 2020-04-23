@@ -3,6 +3,7 @@ import React, {
     useState,
     useEffect,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -28,7 +29,7 @@ import selectors from '../../../../../services/state/selectors';
 
 interface TransformArrowOwnProperties {
     direction: string;
-    transform(): void;
+    transform: () => void;
 }
 
 interface TransformArrowStateProperties {
@@ -42,10 +43,11 @@ type TransformArrowProperties = TransformArrowOwnProperties
     & TransformArrowStateProperties
     & TransformArrowDispatchProperties;
 
-const TransformArrow: React.FC<TransformArrowProperties> = (properties) => {
-    const pressingInterval = useRef(0);
-    const arrowElement = useRef<null | number>(null);
 
+const TransformArrow: React.FC<TransformArrowProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** own */
         direction,
@@ -57,9 +59,18 @@ const TransformArrow: React.FC<TransformArrowProperties> = (properties) => {
         /** dispatch */
     } = properties;
 
+
+    /** references */
+    const pressingInterval = useRef(0);
+    const arrowElement = useRef<null | number>(null);
+
+
+    /** state */
     const [arrowSign, setArrowSign] = useState('');
     const [pressed, setPressed] = useState(false);
 
+
+    /** handlers */
     const handleTouch = (
         event: HammerInput,
     ) => {
@@ -84,6 +95,8 @@ const TransformArrow: React.FC<TransformArrowProperties> = (properties) => {
         }
     }
 
+
+    /** effects */
     /** Direction */
     useEffect(() => {
         switch (direction) {
