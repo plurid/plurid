@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -24,6 +25,7 @@ interface UniversesViewDispatchProperties {
 type UniversesViewProperties = UniversesViewOwnProperties
     & UniversesViewStateProperties
     & UniversesViewDispatchProperties;
+
 
 const UniversesView: React.FC<UniversesViewProperties> = () => {
     return (
