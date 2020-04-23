@@ -125,6 +125,14 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
     }
 
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!showSearch) {
+            setShowSearch(true);
+        }
+
+        if (event.key === 'Escape') {
+            setShowSearch(false);
+        }
+
         if (pathbar.onKeyDown) {
             const id = plane.id || plane.path;
             pathbar.onKeyDown(event, id);
