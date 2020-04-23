@@ -1,6 +1,5 @@
 import React, {
     useRef,
-    // useState,
     useCallback,
     useEffect,
 } from 'react';
@@ -247,7 +246,7 @@ const View: React.FC<ViewProperties> = (
     // const [initialized, setInitialized] = useState(false);
 
 
-    // /** callbacks */
+    /** callbacks */
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         const {
             transformLocks,
@@ -290,7 +289,7 @@ const View: React.FC<ViewProperties> = (
     ]);
 
 
-    // /** handlers */
+    /** handlers */
     const handlePlanes = (
         planes: PluridPlane[],
         stateUniverses: Indexed<PluridInternalStateUniverse>,
