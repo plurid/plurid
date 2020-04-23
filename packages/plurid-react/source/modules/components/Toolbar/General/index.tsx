@@ -3,6 +3,7 @@ import React, {
     useState,
     useEffect,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -79,9 +80,11 @@ type ToolbarProperties = ToolbarOwnProperties
     & ToolbarStateProperties
     & ToolbarDispatchProperties;
 
-const Toolbar: React.FC<ToolbarProperties> = (properties) => {
-    const menuTimeout = useRef<null | number>(null);
 
+const Toolbar: React.FC<ToolbarProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
         theme,
@@ -118,12 +121,20 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 
     const universesBased = Object.keys(universes).length > 1;
 
+
+    /** references */
+    const menuTimeout = useRef<null | number>(null);
+
+
+    /** state */
     const [mouseIn, setMouseIn] = useState(false);
     const [showMenu, setShowMenu] = useState<keyof typeof MENUS>(MENUS.NONE);
 
     const [showIcons, setShowIcons] = useState(transformIcons);
     const [showTransformButtons, setShowTransformButtons] = useState(transformButtons);
 
+
+    /** handlers */
     const toggleTransform = (
         TYPE: keyof typeof TRANSFORM_MODES,
     ) => {
@@ -145,6 +156,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         }
     }
 
+
+    /** effects */
     /** ViewSize Update */
     useEffect(() => {
         if (viewSize.width < VIEW_SIZE_WIDTH_LIMIT) {
@@ -184,6 +197,8 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
         mouseIn,
     ]);
 
+
+    /** render */
     return (
         <StyledToolbar
             onMouseEnter={() => setMouseIn(true)}
@@ -273,7 +288,9 @@ const Toolbar: React.FC<ToolbarProperties> = (properties) => {
 }
 
 
-const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
+const mapStateToProps = (
+    state: AppState,
+): ToolbarStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     theme: selectors.themes.getInteractionTheme(state),
     viewSize: selectors.space.getViewSize(state),
@@ -281,7 +298,9 @@ const mapStateToProps = (state: AppState): ToolbarStateProperties => ({
 });
 
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>): ToolbarDispatchProperties => ({
+const mapDispatchToProps = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): ToolbarDispatchProperties => ({
     dispatchToggleConfigurationSpaceFirstPerson: () => dispatch(
         actions.configuration.toggleConfigurationSpaceFirstPerson(),
     ),

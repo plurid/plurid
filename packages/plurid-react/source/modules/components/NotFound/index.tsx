@@ -34,6 +34,7 @@ type NotFoundProperties = NotFoundOwnProperties
     & NotFoundStateProperties
     & NotFoundDispatchProperties;
 
+
 const NotFound: React.FC<NotFoundProperties> = (
     properties,
 ) => {

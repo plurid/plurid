@@ -3,6 +3,7 @@ import React, {
     useContext,
     useEffect,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -29,7 +30,7 @@ import selectors from '../../services/state/selectors';
 
 
 
-export interface PluridRootOwnProperties {
+interface PluridRootOwnProperties {
     plane: TreePlane;
 }
 
@@ -53,10 +54,11 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     // console.log(context);
 
     const {
+        planesMap,
         planeContext: PlaneContext,
         planeContextValue,
-        universes,
-        indexedPlanes,
+        // universes,
+        // indexedPlanes,
     } = context;
 
     // console.log('indexedPlanes', indexedPlanes);
@@ -89,7 +91,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             plane.children.map(child => {
                 // console.log('child', child);
 
-                if (!statePlaneSources || !indexedPlanes) {
+                if (!statePlaneSources || !planesMap) {
                     return;
                 }
 
@@ -100,7 +102,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     return;
                 }
 
-                const activePlane = indexedPlanes.get(planeID);
+                const activePlane = planesMap.get(planeID);
                 // console.log('activePlane', activePlane);
                 // const activePlane = activePlanes[child.sourceID];
 

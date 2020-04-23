@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -52,6 +53,7 @@ interface MenuMoreViewcubeDispatchProperties {
 type MenuMoreViewcubeProperties = MenuMoreViewcubeOwnProperties
     & MenuMoreViewcubeStateProperties
     & MenuMoreViewcubeDispatchProperties;
+
 
 const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (
     properties,

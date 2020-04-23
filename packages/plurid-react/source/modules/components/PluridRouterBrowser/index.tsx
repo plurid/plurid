@@ -225,7 +225,10 @@ const PluridRouterBrowser = (
                     universe: '',
                     cluster: '',
                     plane: '',
-                    component: path.exterior,
+                    component: path.exterior || {
+                        kind: 'react',
+                        element: () => (<></>),
+                    },
                     route: planeAddress,
                 };
 

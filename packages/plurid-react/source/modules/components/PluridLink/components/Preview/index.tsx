@@ -44,6 +44,7 @@ type PreviewProperties = PreviewOwnProperties
     & PreviewStateProperties
     & PreviewDispatchProperties;
 
+
 const Preview: React.FC<PreviewProperties> = (
     properties,
 ) => {
@@ -63,10 +64,10 @@ const Preview: React.FC<PreviewProperties> = (
     const context: PluridContext = useContext(Context);
 
     const {
-        indexedPlanes,
+        planesMap,
     } = context;
 
-    const plane = indexedPlanes?.get(planeID);
+    const plane = planesMap.get(planeID);
 
 
     /** render */

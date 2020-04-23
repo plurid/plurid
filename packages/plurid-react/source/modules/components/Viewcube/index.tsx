@@ -1,6 +1,7 @@
 import React, {
     useState,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -56,7 +57,10 @@ type ViewcubeProperties = ViewcubeOwnProperties
     & ViewcubeStateProperties
     & ViewcubeDispatchProperties;
 
-const Viewcube: React.FC<ViewcubeProperties> = (properties) => {
+
+const Viewcube: React.FC<ViewcubeProperties> = (
+    properties,
+) => {
     const {
         /** state */
         stateConfiguration,

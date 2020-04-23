@@ -3,6 +3,7 @@ import React, {
     useState,
     useEffect,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -43,8 +44,6 @@ type PluridPlaneConfiguratorProperties = PluridPlaneConfiguratorOwnProperties
     & PluridPlaneConfiguratorStateProperties
     & PluridPlaneConfiguratorDispatchProperties;
 
-type PluridPlaneConfiguratorPropertiesWithChildren = React.PropsWithChildren<PluridPlaneConfiguratorProperties>;
-
 
 /**
  * Goes up the tree to find the first plurid plane
@@ -52,7 +51,7 @@ type PluridPlaneConfiguratorPropertiesWithChildren = React.PropsWithChildren<Plu
  *
  * @param properties
  */
-const PluridPlaneConfigurator: React.FC<PluridPlaneConfiguratorPropertiesWithChildren> = (
+const PluridPlaneConfigurator: React.FC<React.PropsWithChildren<PluridPlaneConfiguratorProperties>> = (
     properties,
 ) => {
     /** properties */

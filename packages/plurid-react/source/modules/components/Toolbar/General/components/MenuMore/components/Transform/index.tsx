@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -53,6 +54,7 @@ interface MenuMoreTransformDispatchProperties {
 type MenuMoreTransformProperties = MenuMoreTransformOwnProperties
     & MenuMoreTransformStateProperties
     & MenuMoreTransformDispatchProperties;
+
 
 const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
     properties,

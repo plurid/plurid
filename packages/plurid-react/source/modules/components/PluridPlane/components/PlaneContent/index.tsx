@@ -14,23 +14,27 @@ import {
 
 
 
-
-
 interface PlaneContentOwnProperties {
     updatePlaneSize: any;
 }
 
-const PlaneContent: React.FC<PlaneContentOwnProperties> = (properties) => {
+
+const PlaneContent: React.FC<PlaneContentOwnProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         updatePlaneSize,
-    } = properties;
 
-    const planeContentElement = useRef<HTMLDivElement>(null);
-
-    const {
         children,
     } = properties;
 
+
+    /** references */
+    const planeContentElement = useRef<HTMLDivElement>(null);
+
+
+    /** effects */
     useEffect(() => {
         if (planeContentElement.current) {
             // TODO
@@ -52,6 +56,8 @@ const PlaneContent: React.FC<PlaneContentOwnProperties> = (properties) => {
         planeContentElement.current,
     ]);
 
+
+    /** render */
     return (
         <StyledPlaneContent
             ref={planeContentElement}

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -34,7 +35,7 @@ import selectors from '../../services/state/selectors';
 
 
 
-export interface PluridRootsOwnProperties {
+interface PluridRootsOwnProperties {
 }
 
 interface PluridRootsStateProperties {
@@ -56,6 +57,7 @@ interface PluridRootsDispatchProperties {
 type PluridRootsProperties = PluridRootsOwnProperties
     & PluridRootsStateProperties
     & PluridRootsDispatchProperties;
+
 
 const PluridRoots: React.FC<PluridRootsProperties> = (
     properties,

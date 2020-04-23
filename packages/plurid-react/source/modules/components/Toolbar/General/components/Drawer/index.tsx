@@ -1,6 +1,7 @@
 import React, {
     useState,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -49,7 +50,11 @@ type DrawerProperties = DrawerOwnProperties
     & DrawerStateProperties
     & DrawerDispatchProperties;
 
-const Drawer: React.FC<DrawerProperties> = (properties) => {
+
+const Drawer: React.FC<DrawerProperties> = (
+    properties
+) => {
+    /** properties */
     const {
         /** own */
         heading,
@@ -68,8 +73,12 @@ const Drawer: React.FC<DrawerProperties> = (properties) => {
         transparentUI,
     } = configuration;
 
+
+    /** state */
     const [mouseOver, setMouseOver] = useState(false);
 
+
+    /** render */
     return (
         <StyledDrawer
             theme={interactionTheme}
