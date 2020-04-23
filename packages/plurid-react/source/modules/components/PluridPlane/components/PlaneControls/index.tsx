@@ -36,11 +36,9 @@ import {
     StyledPlaneControlsLeft,
     StyledPlaneControlsCenter,
     StyledPlaneControlsRight,
-
-    StyledSearch
 } from './styled';
 
-import Search from './components/Search';
+import SearchList from './components/SearchList';
 
 import { AppState } from '../../../../services/state/store';
 import StateContext from '../../../../services/state/context';
@@ -166,13 +164,11 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
                     text={showAddress ? gatewayAddress : path}
                     atChange={onPathInput}
                     atKeyDown={handleOnKeyDown}
-                    // atFocus={() => setShowSearch(show => !show)}
-                    // atBlur={() => setShowSearch(false)}
                     ariaLabel="Plurid Pathbar"
                 />
 
                 {showSearch && (
-                    <Search
+                    <SearchList
                         hideSearch={() => setShowSearch(false)}
                     />
                 )}

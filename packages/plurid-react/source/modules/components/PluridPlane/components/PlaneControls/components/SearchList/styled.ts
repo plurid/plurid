@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledSearch = styled.div`
+export const StyledSearchList = styled.div`
     position: absolute;
     left: 0;
     right: 0;
@@ -39,4 +39,10 @@ export const StyledSearch = styled.div`
             return props.theme.backgroundColorPrimary;
         }};
     }
+`;
+
+
+export const StyledSearchFilters = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 `;

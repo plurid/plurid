@@ -18,7 +18,8 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    StyledSearch
+    StyledSearchList,
+    StyledSearchFilters,
 } from './styled';
 
 import SearchItem from '../SearchItem';
@@ -30,25 +31,25 @@ import selectors from '../../../../../../services/state/selectors';
 
 
 
-interface SearchOwnProperties {
+interface SearchListOwnProperties {
     hideSearch: () => void;
 }
 
-interface SearchStateProperties {
+interface SearchListStateProperties {
     stateConfiguration: PluridConfiguration;
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface SearchDispatchProperties {
+interface SearchListDispatchProperties {
 }
 
-type SearchProperties = SearchOwnProperties
-    & SearchStateProperties
-    & SearchDispatchProperties;
+type SearchListProperties = SearchListOwnProperties
+    & SearchListStateProperties
+    & SearchListDispatchProperties;
 
 
-const Search: React.FC<SearchProperties> = (
+const SearchList: React.FC<SearchListProperties> = (
     properties,
 ) => {
     /** properties */
@@ -71,10 +72,26 @@ const Search: React.FC<SearchProperties> = (
 
     /** render */
     return (
-        <StyledSearch
+        <StyledSearchList
             theme={stateInteractionTheme}
         >
             <ul>
+                <li>
+                    <StyledSearchFilters>
+                        <div>
+                            space - default
+                        </div>
+
+                        <div>
+                            universe - default
+                        </div>
+
+                        <div>
+                            cluster - default
+                        </div>
+                    </StyledSearchFilters>
+                </li>
+
                 {searchTerms.map(searchTerm => {
                     return (
                         <SearchItem
@@ -85,14 +102,14 @@ const Search: React.FC<SearchProperties> = (
                     );
                 })}
             </ul>
-        </StyledSearch>
+        </StyledSearchList>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): SearchStateProperties => ({
+): SearchListStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
@@ -101,7 +118,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): SearchDispatchProperties => ({
+): SearchListDispatchProperties => ({
 });
 
 
@@ -112,4 +129,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(Search);
+)(SearchList);
