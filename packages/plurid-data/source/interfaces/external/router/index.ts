@@ -81,10 +81,20 @@ export interface PluridRouterPath {
     parameters?: Record<string, PluridRouterPathParameter>;
 
     /**
-     * Accepts a component which will be rendered outside of the plurid applications
+     * Accepts a component which will be rendered outside of the `spaces`.
      */
     exterior?: PluridComponent;
 
+    /**
+     * A path can have planes and/or spaces.
+     *
+     * Planes will be assigned to the `default` space, `default` universe, `default` cluster.
+     */
+    planes?: PluridRouterPlane[];
+
+    /**
+     * A path can have planes and/or spaces.
+     */
     spaces?: PluridRouterSpace[];
 
     /**
@@ -121,13 +131,37 @@ export interface PluridRouterPathParameter {
 
 export interface PluridRouterSpace {
     value: string;
-    universes: PluridRouterUniverse[];
+
+    /**
+     * Accepts a component which will be rendered outside of the `space`.
+     */
+    exterior?: PluridComponent;
+
+    /**
+     * A space can have planes and/or universes.
+     *
+     * Planes will be assigned to the `default` universe, `default` cluster.
+     */
+    planes?: PluridRouterPlane[];
+
+    /**
+     * A space can have planes and/or universes.
+     */
+    universes?: PluridRouterUniverse[];
 }
 
 
 export interface PluridRouterUniverse {
     value: string;
-    clusters: PluridRouterCluster[];
+
+    /**
+     * An universe can have planes and/or clusters.
+     *
+     * Planes will be assigned to the `default` cluster.
+     */
+    planes?: PluridRouterPlane[];
+
+    clusters?: PluridRouterCluster[];
 }
 
 
