@@ -44,7 +44,11 @@ type PluridSpaceProperties = PluridSpaceOwnProperties
     & PluridSpaceStateProperties
     & PluridSpaceDispatchProperties;
 
-const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
+
+const PluridSpace: React.FC<PluridSpaceProperties> = (
+    properties,
+) => {
+    /** properties */
     const {
         /** state */
         configuration,
@@ -65,6 +69,8 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (properties) => {
     const showToolbar = toolbar.show;
     const showViewcube = viewcube.show;
 
+
+    /** render */
     return (
         <StyledPluridSpace
             theme={generalTheme}
