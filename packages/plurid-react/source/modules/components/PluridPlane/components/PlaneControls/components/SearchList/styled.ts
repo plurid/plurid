@@ -44,5 +44,6 @@ export const StyledSearchList = styled.div`
 
 export const StyledSearchFilters = styled.div`
     display: grid;
+    padding: 0.7rem;
     grid-template-columns: 1fr 1fr 1fr;
 `;

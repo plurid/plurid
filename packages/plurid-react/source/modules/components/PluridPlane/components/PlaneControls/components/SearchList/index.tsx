@@ -75,23 +75,21 @@ const SearchList: React.FC<SearchListProperties> = (
         <StyledSearchList
             theme={stateInteractionTheme}
         >
+            <StyledSearchFilters>
+                <div>
+                    space - default
+                </div>
+
+                <div>
+                    universe - default
+                </div>
+
+                <div>
+                    cluster - default
+                </div>
+            </StyledSearchFilters>
+
             <ul>
-                <li>
-                    <StyledSearchFilters>
-                        <div>
-                            space - default
-                        </div>
-
-                        <div>
-                            universe - default
-                        </div>
-
-                        <div>
-                            cluster - default
-                        </div>
-                    </StyledSearchFilters>
-                </li>
-
                 {searchTerms.map(searchTerm => {
                     return (
                         <SearchItem
