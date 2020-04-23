@@ -61,7 +61,11 @@ const Page1: React.FC<any> = (
                     </h2>
 
                     <p>
-                        <PluridLink path="/://path1/one">path1 one</PluridLink>
+                        <PluridLink path="/://path1/one://a-space://a-universe://a-cluster://one">path1 one - full</PluridLink>
+                    </p>
+
+                    <p>
+                        <PluridLink path="/://path1/one://one">path1 one - partial, will go to default</PluridLink>
                     </p>
 
                     <p>
