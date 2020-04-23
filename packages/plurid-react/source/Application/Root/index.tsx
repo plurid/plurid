@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -15,7 +16,7 @@ import StateContext from '../../modules/services/state/context';
 
 
 interface RootOwnProperties {
-    appProperties: PluridApplicationProperties;
+    pluridApplication: PluridApplicationProperties;
 }
 
 interface RootStateProperties {
@@ -28,19 +29,20 @@ type RootProperties = RootOwnProperties
     & RootStateProperties
     & RootDispatchProperties;
 
+
 const Root: React.FC<RootProperties> = (
     properties,
 ) => {
     /** properties */
     const {
-        appProperties,
+        pluridApplication,
     } = properties;
 
 
     /** render */
     return (
         <View
-            appProperties={appProperties}
+            pluridApplication={pluridApplication}
         />
     );
 }
