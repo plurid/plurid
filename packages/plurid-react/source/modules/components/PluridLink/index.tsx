@@ -72,8 +72,6 @@ const defaultLinkCoordinates: PluridLinkCoordinates = {
 interface PluridLinkStateProperties {
     stateTree: TreePlane[];
     stateGeneralTheme: Theme;
-    stateActiveUniverseID: string;
-    stateUniverses: Indexed<PluridInternalStateUniverse>;
     stateConfiguration: PluridConfiguration,
     stateViewSize: ViewSize,
     statePlaneSources: Record<string, string>;
@@ -96,7 +94,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         /** own */
         children,
         path: planePath,
-        // document,
         devisible: _devisible,
         suffix: _suffix,
         atClick,
@@ -106,8 +103,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         /** state */
         stateTree,
         stateGeneralTheme,
-        // stateActiveUniverseID,
-        // stateUniverses,
         stateConfiguration,
         stateViewSize,
         statePlaneSources,
@@ -122,8 +117,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const previewAppearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
     const previewDisappearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
 
-    const absolutePath = resolveAbsolutePluridLinkPath(planePath);
-    // console.log('absolutePath', absolutePath);
+    const absolutePlaneRoute = resolveAbsolutePluridLinkPath(planePath);
 
 
     /** references */
@@ -176,7 +170,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const updateTreeWithLink = () => {
-        if (!parentPlaneID || !absolutePath) {
+        if (!parentPlaneID || !absolutePlaneRoute) {
             return;
         }
 
@@ -186,7 +180,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             pluridPlaneID,
             updatedTree,
         } = space.tree.logic.updateTreeWithNewPlane(
-            absolutePath,
+            absolutePlaneRoute,
             parentPlaneID,
             linkCoordinates,
             stateTree,
@@ -305,11 +299,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** Set plane ID */
     useEffect(() => {
-        console.log('absolutePlaneRoute', absolutePath);
-        console.log('statePlaneRoutes', statePlaneSources);
-
-        if (absolutePath) {
-            const potentialPlaneRoute = statePlaneSources[absolutePath];
+        if (absolutePlaneRoute) {
+            const potentialPlaneRoute = statePlaneSources[absolutePlaneRoute];
 
             if (!potentialPlaneRoute) {
                 for (const planeRoute of Object.keys(statePlaneSources)) {
@@ -317,50 +308,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 }
             }
 
-            console.log('potentialPlaneRoute', potentialPlaneRoute);
             setPlaneID(potentialPlaneRoute);
         }
-
-
-        // given the absolutePlaneRoute and the statePlaneRoutes
-        // find the one matching
-
-
-
-
-        // const searchUniverseID = document ? document : stateActiveUniverseID;
-        // const activeUniverse = stateUniverses[searchUniverseID];
-
-        // if (!activeUniverse) {
-        //     return;
-        // }
-
-        // const {
-        //     planes,
-        // } = activeUniverse;
-
-        // const routes: PluridRouterRoute<any>[] = Object.values(planes).map(plane => {
-        //     const route: PluridRouterRoute<any> =  {
-        //         path: plane.path,
-        //         view: '',
-        //     };
-        //     return route;
-        // });
-
-        // const pagesRouter = new Router(routes);
-
-        // const matchedRoute = pagesRouter.match(planePath);
-
-        // if (!matchedRoute) {
-        //     return;
-        // }
-
-        // const page = Object.values(planes).find(p => p.path === matchedRoute.route.path);
-        // if (!page) {
-        //     return;
-        // }
-
-        // setPlaneID(page.id);
     }, []);
 
 
@@ -390,7 +339,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                     rootID={parentPlaneID}
                 >
                     <Preview
-                        // document={document}
                         planeID={planeID}
                         linkCoordinates={linkCoordinates}
                     />
@@ -406,8 +354,6 @@ const mapStateToProperties = (
 ): PluridLinkStateProperties => ({
     stateTree: selectors.space.getTree(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
-    stateActiveUniverseID: selectors.space.getActiveUniverseID(state),
-    stateUniverses: selectors.data.getUniverses(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateViewSize: selectors.space.getViewSize(state),
     statePlaneSources: selectors.data.getPlaneSources(state),
