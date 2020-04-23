@@ -76,6 +76,7 @@ interface PluridLinkStateProperties {
     stateUniverses: Indexed<PluridInternalStateUniverse>;
     stateConfiguration: PluridConfiguration,
     stateViewSize: ViewSize,
+    statePlaneSources: Record<string, string>;
 }
 
 interface PluridLinkDispatchProperties {
@@ -109,6 +110,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         // stateUniverses,
         stateConfiguration,
         stateViewSize,
+        statePlaneSources,
 
         /** dispatch */
         dispatchSetTree,
@@ -303,6 +305,29 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** Set plane ID */
     useEffect(() => {
+        console.log('absolutePlaneRoute', absolutePath);
+        console.log('statePlaneRoutes', statePlaneSources);
+
+        if (absolutePath) {
+            const potentialPlaneRoute = statePlaneSources[absolutePath];
+
+            if (!potentialPlaneRoute) {
+                for (const planeRoute of Object.keys(statePlaneSources)) {
+                    // check each one
+                }
+            }
+
+            console.log('potentialPlaneRoute', potentialPlaneRoute);
+            setPlaneID(potentialPlaneRoute);
+        }
+
+
+        // given the absolutePlaneRoute and the statePlaneRoutes
+        // find the one matching
+
+
+
+
         // const searchUniverseID = document ? document : stateActiveUniverseID;
         // const activeUniverse = stateUniverses[searchUniverseID];
 
@@ -385,6 +410,7 @@ const mapStateToProperties = (
     stateUniverses: selectors.data.getUniverses(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateViewSize: selectors.space.getViewSize(state),
+    statePlaneSources: selectors.data.getPlaneSources(state),
 });
 
 
