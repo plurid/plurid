@@ -48,6 +48,7 @@ const App = () => {
         {
             path: '/one',
             component: {
+                kind: 'react',
                 element: Plane1,
                 properties: {},
             },
@@ -55,6 +56,7 @@ const App = () => {
         {
             path: '/two',
             component: {
+                kind: 'react',
                 element: Plane1,
                 properties: {},
             },
@@ -62,6 +64,7 @@ const App = () => {
         {
             path: '/three',
             component: {
+                kind: 'react',
                 element: Plane1,
                 properties: {},
             },

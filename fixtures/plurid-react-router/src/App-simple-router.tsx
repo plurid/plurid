@@ -119,7 +119,7 @@ const App = () => {
         value: '/slotted',
         exterior: {
             kind: 'react',
-            element: (properties) => {
+            element: (properties: any) => {
                 console.log('properties', properties);
                 return (
                     <div>
