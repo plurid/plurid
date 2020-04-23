@@ -163,6 +163,8 @@ interface ViewDispatchProperties {
 
     dispatchSpaceSetView: typeof actions.space.spaceSetView;
     dispatchSpaceSetCulledView: typeof actions.space.spaceSetCulledView;
+
+    dispatchDataSetPlaneSources: typeof actions.data.setPlaneSources;
 }
 
 type ViewProperties = ViewOwnProperties
@@ -219,6 +221,8 @@ const View: React.FC<ViewProperties> = (
 
         dispatchSpaceSetView,
         dispatchSpaceSetCulledView,
+
+        dispatchDataSetPlaneSources,
     } = properties;
 
     const {
@@ -230,10 +234,6 @@ const View: React.FC<ViewProperties> = (
         universes,
         pubsub,
     } = appProperties;
-
-    // console.log('planes', planes);
-    // console.log('all planes', indexedPlanes);
-    const indexedPlanesSources = useRef<Map<string, string>>(new Map());
 
 
     /** references */
@@ -1059,12 +1059,15 @@ const View: React.FC<ViewProperties> = (
     //     stateSpaceLocation,
     // ]);
 
-    /** indexedPlanesSources */
+    /** Index planesSources */
     useEffect(() => {
         if (indexedPlanes) {
+            const planeSources: Record<string, string> = {};
             for (const [id, indexedPlane] of indexedPlanes) {
-                indexedPlanesSources.current.set(indexedPlane.route, id);
+                planeSources[indexedPlane.route] = id;
             }
+
+            dispatchDataSetPlaneSources(planeSources);
         }
     }, [
         indexedPlanes,
@@ -1077,11 +1080,9 @@ const View: React.FC<ViewProperties> = (
         planeContextValue: appProperties.planeContextValue,
         universes: contextUniversesRef.current,
         indexedPlanes: indexedPlanes || new Map(),
-        indexedPlanesSources: indexedPlanesSources.current || new Map(),
     };
 
     console.log('indexedPlanes', indexedPlanes);
-    console.log('indexedPlanesSources', indexedPlanesSources);
 
     // console.log('Rendered');
     // console.log('configuration', configuration);
@@ -1215,6 +1216,12 @@ const mapDispatchToProperties = (
     ) => dispatch(
         actions.space.spaceSetCulledView(culledView),
     ),
+
+    dispatchDataSetPlaneSources: (
+        planeSources,
+    ) => dispatch(
+        actions.data.setPlaneSources(planeSources),
+    )
 });
 
 
