@@ -5,21 +5,18 @@ import React, {
 import {
     PluridRouterPath,
     IndexedPluridPlane,
-    // PluridPlane,
 } from '@plurid/plurid-data';
 
 import {
     router,
-    // utilities,
 } from '@plurid/plurid-engine';
-
-// import PluridApplication from '../../../Application';
 
 import {
     getComponentFromRoute,
     getGatewayView,
     computeIndexedPlanes,
 } from '../../services/logic/router';
+
 
 
 const PluridRouter = router.default;
@@ -91,9 +88,7 @@ const PluridRouterStatic = (
         );
     }
 
-
     const matchedRoute = pluridRouter.current.match(path);
-
     if (!matchedRoute) {
         return (
             <></>
