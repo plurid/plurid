@@ -47,12 +47,26 @@ const Page1: React.FC<any> = (
                     {/* <PluridLink path="://a-plane">partial link</PluridLink> */}
                     {/* <PluridLink path="/a-plane">partial link</PluridLink> */}
 
-                    <PluridLink path="/one">one</PluridLink>
+                    {/* <PluridLink path="/one">one</PluridLink>
                     <br />
                     <PluridLink path="/two">two</PluridLink>
                     <br />
                     <PluridLink path="/://static">static relative</PluridLink>
-                    <PluridLink path={`${window.location.protocol}//${window.location.host}://static`}>static absolute</PluridLink>
+                    <PluridLink path={`${window.location.protocol}//${window.location.host}://static`}>static absolute</PluridLink> */}
+                </div>
+
+                <div>
+                    <h2>
+                        parametric links
+                    </h2>
+
+                    <p>
+                        <PluridLink path="/://path1/one">path1 one</PluridLink>
+                    </p>
+
+                    <p>
+                        <PluridLink path="/://path1/two">path1 two</PluridLink>
+                    </p>
                 </div>
             </div>
         </div>
