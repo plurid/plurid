@@ -3,7 +3,6 @@ import PluridPubSub from '@plurid/plurid-pubsub';
 import {
     PluridPlane,
     PluridPlaneContext,
-    PluridComponent,
 } from '../plane';
 
 import {
@@ -13,6 +12,10 @@ import {
 import {
     PluridUniverse,
 } from '../universe';
+
+import {
+    PluridComponent,
+} from '../component';
 
 import {
     PluridView,
@@ -29,12 +32,12 @@ import {
 
 
 export interface PluridApplication {
+    indexedPlanes?: Map<string, IndexedPluridPlane>;
+
     /**
      * A `PluridApplication` must be either planes or universes based.
      */
     planes?: PluridPlane[];
-
-    indexedPlanes?: Map<string, IndexedPluridPlane>;
 
     /**
      * Optional context for the plane to have access to.
@@ -77,7 +80,8 @@ export interface PluridApplication {
     allowedOrigins?: 'controlled' | 'all';
 
     /**
-     * Show or not the default Not Found component, or pass a custom component
+     * Show or not the default Not Found component, or pass a custom component.
+     * Default `true`.
      */
     notFound?: boolean | PluridComponent;
 

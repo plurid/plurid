@@ -1,4 +1,6 @@
-import React from 'react';
+import {
+    PluridComponent,
+} from '../component';
 
 
 
@@ -42,56 +44,7 @@ export interface PluridPlane {
 }
 
 
-
 export type PluridPlaneContext<T> = React.Context<T>;
-
-// export interface PluridPlaneContextValue {
-//     [key: string]: any;
-// }
-
-
-export type PluridComponent = PluridComponentReact;
-
-
-export interface PluridComponentReact {
-    /**
-     * The `element` will receive the properties, if any,
-     * and the `plurid` property.
-     */
-    element: React.FC<ReactComponentWithPluridProperty<any>>,
-
-    /**
-     * The `properties` will be passed to the `element` at runtime.
-     */
-    properties?: Record<string, any>;
-}
-
-export interface WithPluridProperty {
-    plurid: PluridProperty;
-}
-
-export type ReactComponentWithPluridProperty<T> = T & WithPluridProperty;
-
-export interface PluridProperty {
-    parameters: Record<string, string>;
-    query: Record<string, string>;
-}
-
-
-// export interface PluridComponentProperties {
-//     [key: string]: any;
-// }
-
-
-
-// export interface PluridComponentParameters {
-//     [key: string]: string;
-// }
-
-
-// export interface PluridComponentQuery {
-//     [key: string]: string;
-// }
 
 
 export interface IndexedPluridPlane {
@@ -102,6 +55,6 @@ export interface IndexedPluridPlane {
     universe: string;
     cluster: string;
     plane: string;
-    component: any;
     route: string;
+    component: PluridComponent;
 }

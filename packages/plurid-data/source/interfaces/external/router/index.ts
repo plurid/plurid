@@ -1,4 +1,8 @@
 import {
+    PluridComponent,
+} from '../component';
+
+import {
     CompareType,
 } from '../compare';
 
@@ -46,7 +50,7 @@ export interface PluridRouterProperties {
     /**
      * Component to be rendered on the gateway path, external to the plurid view.
      */
-    gatewayExterior?: PluridRouterComponent;
+    gatewayExterior?: PluridComponent;
 
     /**
      * Redirect not found paths to this path.
@@ -59,9 +63,6 @@ export interface PluridRouterProperties {
      */
     api?: string;
 }
-
-
-
 
 
 /**
@@ -82,7 +83,7 @@ export interface PluridRouterPath {
     /**
      * Accepts a component which will be rendered outside of the plurid applications
      */
-    exterior?: PluridRouterComponent;
+    exterior?: PluridComponent;
 
     spaces?: PluridRouterSpace[];
 
@@ -92,6 +93,7 @@ export interface PluridRouterPath {
      */
     slotted?: boolean;
 }
+
 
 export interface PluridRouterPathParameter {
     /**
@@ -122,42 +124,23 @@ export interface PluridRouterSpace {
     universes: PluridRouterUniverse[];
 }
 
+
 export interface PluridRouterUniverse {
     value: string;
     clusters: PluridRouterCluster[];
 }
+
 
 export interface PluridRouterCluster {
     value: string;
     planes: PluridRouterPlane[];
 }
 
+
 export interface PluridRouterPlane {
-    component: PluridRouterComponent;
+    component: PluridComponent;
     value: string;
 }
-
-
-export interface PluridRouterComponentBase {
-    kind: 'elementql' | 'react';
-}
-
-export interface PluridRouterComponentElementQL extends PluridRouterComponentBase {
-    kind: 'elementql';
-    endpoint: string;
-    element: string;
-}
-
-export interface PluridRouterComponentReact extends PluridRouterComponentBase {
-    kind: 'react';
-    element: React.FC<any>;
-}
-
-export type PluridRouterComponent =
-    | PluridRouterComponentElementQL
-    | PluridRouterComponentReact;
-
-
 
 
 
@@ -170,7 +153,6 @@ export type PluridRouterComponent =
 //     host: string;
 //     paths: PluridRouterPath[];
 // }
-
 
 
 

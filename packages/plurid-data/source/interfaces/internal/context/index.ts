@@ -1,17 +1,12 @@
 import {
-    PluridPlaneContext,
     IndexedPluridPlane,
+    PluridPlaneContext,
 } from '../../external';
-
-import {
-    PluridInternalContextUniverse,
-} from '../universe';
 
 
 
 export interface PluridContext {
+    planesMap: Map<string, IndexedPluridPlane>;
     planeContext?: PluridPlaneContext<any>,
     planeContextValue?: any,
-    universes: Record<string, PluridInternalContextUniverse>;
-    indexedPlanes?: Map<string, IndexedPluridPlane>;
 }

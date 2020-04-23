@@ -1,5 +1,5 @@
 import {
-    PluridComponentReact,
+    PluridComponent,
 } from '../../external';
 
 
@@ -15,5 +15,5 @@ export interface PluridInternalStatePlane extends PluridInternalPlane {
 }
 
 export interface PluridInternalContextPlane extends PluridInternalPlane {
-    component: PluridComponentReact;
+    component: PluridComponent;
 }
