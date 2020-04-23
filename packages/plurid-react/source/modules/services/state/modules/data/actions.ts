@@ -15,3 +15,13 @@ export const setUniverses = (
         payload,
     };
 }
+
+
+export const setPlaneSources = (
+    payload: Record<string, string>,
+): Types.DataSetPlaneSourcesAction => {
+    return {
+        type: Types.DATA_SET_PLANE_SOURCES,
+        payload,
+    };
+}

@@ -13,6 +13,8 @@ const reducer = (
     switch(action.type) {
         case Types.DATA_SET_UNIVERSES:
             return resolvers.setUniverses(state, action);
+        case Types.DATA_SET_PLANE_SOURCES:
+            return resolvers.setPlaneSources(state, action);
         default:
             return {
                 ...state,
