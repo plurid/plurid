@@ -1,6 +1,12 @@
 import React from 'react';
 
 import {
+    /** constants */
+    PLURID_ROUTE_DEFAULT_PATH,
+    PLURID_ROUTE_DEFAULT_SPACE,
+    PLURID_ROUTE_DEFAULT_UNIVERSE,
+    PLURID_ROUTE_DEFAULT_CLUSTER,
+
     /** interfaces */
     PluridRouterPath,
     PluridRouterPlane,
@@ -417,16 +423,16 @@ export const generateIndexedPlane = (
     cluster: string,
 ) => {
     const pathName = path === '/'
-        ? 'p'
+        ? PLURID_ROUTE_DEFAULT_PATH
         : utilities.cleanPathElement(path);
     const spaceName = space === 'default'
-        ? 's'
+        ? PLURID_ROUTE_DEFAULT_SPACE
         : utilities.cleanPathElement(space);
     const universeName = universe === 'default'
-        ? 'u'
+        ? PLURID_ROUTE_DEFAULT_UNIVERSE
         : utilities.cleanPathElement(universe);
     const clusterName = cluster === 'default'
-        ? 'c'
+        ? PLURID_ROUTE_DEFAULT_CLUSTER
         : utilities.cleanPathElement(cluster);
     const planeName = utilities.cleanPathElement(plane.value);
 
