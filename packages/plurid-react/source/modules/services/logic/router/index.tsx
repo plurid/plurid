@@ -198,7 +198,6 @@ export const getComponentFromRoute = (
         spacesArray.push(App);
     }
 
-
     Spaces = () => (
         <>
             {spacesArray}
@@ -213,9 +212,13 @@ export const getComponentFromRoute = (
                 />
             )}
 
-            {spaces && !slotted && (
-                <Spaces />
-            )}
+            {
+                (spaces || planes)
+                && !slotted
+                && (
+                    <Spaces />
+                )
+            }
         </>
     );
     return Component;
