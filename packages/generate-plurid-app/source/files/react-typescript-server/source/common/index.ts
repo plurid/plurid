@@ -1,10 +1,7 @@
-import routing from './routing';
+import paths from './paths';
 
-
-
-export * from './routing/view';
 
 
 export {
-    routing,
+    paths,
 }

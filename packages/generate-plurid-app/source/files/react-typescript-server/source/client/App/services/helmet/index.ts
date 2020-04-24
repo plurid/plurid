@@ -1,4 +1,4 @@
-const helmetContext = {};
+const helmetContext: any = {};
 
 
 export default helmetContext;

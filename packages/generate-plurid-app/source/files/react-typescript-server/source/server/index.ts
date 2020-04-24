@@ -15,7 +15,7 @@ import graphqlClient from '../client/App/services/graphql/client';
 // } from '../client/App/data/constants';
 
 import {
-    routing,
+    paths,
 } from '../common';
 
 
@@ -76,7 +76,7 @@ const options: PluridServerPartialOptions = {
 
 /** SERVER */
 const pluridServer = new PluridServer({
-    routing,
+    paths,
     helmet,
     styles,
     middleware,
@@ -88,7 +88,7 @@ const pluridServer = new PluridServer({
 
 
 /**
- * If the file is called directly, as in `node build/server.js`,
+ * If the file is called directly, as in `node build/index.js`,
  * it will run the server.
  *
  * The check is in place so that the server can also be imported

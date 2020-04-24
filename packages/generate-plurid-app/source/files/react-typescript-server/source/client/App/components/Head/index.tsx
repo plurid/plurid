@@ -54,7 +54,7 @@ const Head: React.FC<HeadProperties> = (
             <link rel="icon" href="/favicon.ico" sizes="64x64" />
             <link rel="shortcut icon" type="image/png" href="/icon-192x192.png" />
             <link rel="shortcut icon" sizes="192x192" href="/icon-192x192.png" />
-            <meta name="theme-color" content="#000000" />
+            <meta name="theme-color" content="#272A30" />
 
             <link rel="manifest" href="/manifest.json" />
 
