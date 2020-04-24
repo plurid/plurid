@@ -62,6 +62,8 @@ export interface PluridRouterProperties {
      * API endpoint to request the elements for the paths not found in the initial routing.
      */
     api?: string;
+
+    multispace?: PluridRouterMultispace;
 }
 
 
@@ -174,6 +176,12 @@ export interface PluridRouterCluster {
 export interface PluridRouterPlane {
     component: PluridComponent;
     value: string;
+}
+
+
+export interface PluridRouterMultispace {
+    alignment?: 'x' | 'y';
+    snapType?: 'none' | 'mandatory' | 'proximity';
 }
 
 
