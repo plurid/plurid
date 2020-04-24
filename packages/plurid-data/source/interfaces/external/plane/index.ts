@@ -13,6 +13,28 @@ export interface PluridPlane {
     /**
      * Path to the plane, e.g. `/plane-1`. By convention, it starts with an '/'.
      *
+     * The `path` can be
+     * + unassigned,
+     * + assigned,
+     * + absolute.
+     *
+     * The unassigned path respects the format
+     * `/path` and will be automatically assigned
+     * to the `default` space, `default` universe, `default` cluster.
+     *
+     * The assigned path respects the format
+     * `/://universe://cluster://plane`.
+     *
+     * The absolute path respects the format
+     * `protocol://host://path://space://universe://cluster://plane`.
+     */
+    path: string;
+
+
+    // old path comment
+    /**
+     * Path to the plane, e.g. `/plane-1`. By convention, it starts with an '/'.
+     *
      * If IDs not provided, the paths of all the plane within space must be unique.
      *
      * The path can have parameters, e.g. `/plane/:id`.
@@ -23,24 +45,24 @@ export interface PluridPlane {
      *
      * The path can be used by the `PluridLink`.
      */
-    path: string;
 
-    /**
-     * Optional, application or document-wide unique identifier (if multiple documents).
-     *
-     * If provided to one plane, all the planes must have IDs.
-     *
-     * Once provided, the planes can have similar paths,
-     * but the `PluridLink`s should be ID-based to ensure correct linking.
-     */
-    id?: string;
 
-    /**
-     * Optional, application or document-wide unique identifier (if multiple documents).
-     *
-     * A cluster will ensure that all the planes it contains will be rendered together.
-     */
-    cluster?: string;
+    // /**
+    //  * Optional, application or document-wide unique identifier (if multiple documents).
+    //  *
+    //  * If provided to one plane, all the planes must have IDs.
+    //  *
+    //  * Once provided, the planes can have similar paths,
+    //  * but the `PluridLink`s should be ID-based to ensure correct linking.
+    //  */
+    // id?: string;
+
+    // /**
+    //  * Optional, application or document-wide unique identifier (if multiple documents).
+    //  *
+    //  * A cluster will ensure that all the planes it contains will be rendered together.
+    //  */
+    // cluster?: string;
 }
 
 
