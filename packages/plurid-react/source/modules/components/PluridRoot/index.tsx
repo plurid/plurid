@@ -187,6 +187,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     }
 
     const pluridPlane = planesMap.get(pluridPlaneID);
+    console.log('pluridPlane', pluridPlane);
     if (!pluridPlane) {
         return (
             <></>
