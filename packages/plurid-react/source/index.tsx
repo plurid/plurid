@@ -1,6 +1,7 @@
 import {
     /** Interfaces */
     PluridPlane,
+    IndexedPluridPlane,
     PluridView,
     PluridUniverse,
     PluridConfiguration,
@@ -57,6 +58,7 @@ const {
 export {
     /** Interfaces */
     PluridPlane,
+    IndexedPluridPlane,
     PluridView,
     PluridUniverse,
 

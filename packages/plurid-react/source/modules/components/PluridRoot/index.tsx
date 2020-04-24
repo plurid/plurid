@@ -76,8 +76,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         // indexedPlanes,
     } = context;
 
-    // console.log('indexedPlanes', indexedPlanes);
-    // console.log('indexedPlanesSources', indexedPlanesSources);
+    // console.log('planesMap', planesMap);
+    // console.log('statePlaneSources', statePlaneSources);
 
 
     /** state */
