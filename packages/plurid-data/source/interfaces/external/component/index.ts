@@ -4,6 +4,11 @@ import React from 'react';
 
 export interface PluridComponentBase {
     kind: 'elementql' | 'react';
+
+    /**
+     * The `properties` will be passed to the `element` at runtime.
+     */
+    properties?: Record<string, any>;
 }
 
 
@@ -22,11 +27,6 @@ export interface PluridComponentReact extends PluridComponentBase {
      * and the `plurid` property.
      */
     element: React.FC<ReactComponentWithPluridProperty<any>>;
-
-    /**
-     * The `properties` will be passed to the `element` at runtime.
-     */
-    properties?: Record<string, any>;
 }
 
 
@@ -37,8 +37,10 @@ export interface WithPluridProperty {
 }
 
 export interface PluridProperty {
-    parameters: Record<string, string>;
-    query: Record<string, string>;
+    path: {
+        parameters: Record<string, string>;
+        query: Record<string, string>;
+    },
 }
 
 
