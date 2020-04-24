@@ -6,7 +6,7 @@ import {
 
 
 
-const Page2: React.FC<any> = (
+const Plane2: React.FC<any> = (
     properties,
 ) => {
     // console.log(properties.plurid);
@@ -29,4 +29,4 @@ const Page2: React.FC<any> = (
 }
 
 
-export default Page2;
+export default Plane2;
