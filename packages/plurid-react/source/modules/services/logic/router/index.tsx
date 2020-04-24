@@ -28,6 +28,10 @@ import {
     uuid,
 } from '@plurid/plurid-functions';
 
+import {
+    StyledSpaces,
+} from './styled';
+
 import PluridApplication from '../../../../Application';
 
 
@@ -281,9 +285,9 @@ export const getComponentFromRoute = (
     }
 
     Spaces = () => (
-        <>
+        <StyledSpaces>
             {spacesArray}
-        </>
+        </StyledSpaces>
     );
 
     const Component = (
