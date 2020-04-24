@@ -19,9 +19,14 @@ const App = () => {
         },
     ];
 
+    const pluridView: string[] = [
+        '/',
+    ];
+
     return (
         <PluridApplication
             planes={pluridPlanes}
+            view={pluridView}
         />
     );
 }
