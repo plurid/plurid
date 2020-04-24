@@ -2,10 +2,15 @@ import React from 'react';
 
 import {
     /** constants */
+    PLURID_ROUTE_DEFAULT_PATH_VALUE,
     PLURID_ROUTE_DEFAULT_PATH,
+    PLURID_ROUTE_DEFAULT_SPACE_VALUE,
     PLURID_ROUTE_DEFAULT_SPACE,
+    PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE,
     PLURID_ROUTE_DEFAULT_UNIVERSE,
+    PLURID_ROUTE_DEFAULT_CLUSTER_VALUE,
     PLURID_ROUTE_DEFAULT_CLUSTER,
+    PLURID_ROUTE_SEPARATOR,
 
     /** interfaces */
     PluridRouterPath,
@@ -90,10 +95,18 @@ export const getComponentFromRoute = (
                         const pathDivisions = [
                             protocol,
                             host,
-                            path.value === '/' ? 'p' : utilities.cleanPathElement(path.value),
-                            space.value === 'default' ? 's' : utilities.cleanPathElement(space.value),
-                            universe.value === 'default' ? 'u' : utilities.cleanPathElement(universe.value),
-                            cluster.value === 'default' ? 'c' : utilities.cleanPathElement(cluster.value),
+                            path.value === '/'
+                                ? 'p'
+                                : utilities.cleanPathElement(path.value),
+                            space.value === 'default'
+                                ? 's'
+                                : utilities.cleanPathElement(space.value),
+                            universe.value === 'default'
+                                ? 'u'
+                                : utilities.cleanPathElement(universe.value),
+                            cluster.value === 'default'
+                                ? 'c'
+                                : utilities.cleanPathElement(cluster.value),
                             utilities.cleanPathElement(value),
                         ];
                         const fullPath = pathDivisions.join('://');
@@ -422,16 +435,16 @@ export const generateIndexedPlane = (
     universe: string,
     cluster: string,
 ) => {
-    const pathName = path === '/'
+    const pathName = path === PLURID_ROUTE_DEFAULT_PATH_VALUE
         ? PLURID_ROUTE_DEFAULT_PATH
         : utilities.cleanPathElement(path);
-    const spaceName = space === 'default'
+    const spaceName = space === PLURID_ROUTE_DEFAULT_SPACE_VALUE
         ? PLURID_ROUTE_DEFAULT_SPACE
         : utilities.cleanPathElement(space);
-    const universeName = universe === 'default'
+    const universeName = universe === PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE
         ? PLURID_ROUTE_DEFAULT_UNIVERSE
         : utilities.cleanPathElement(universe);
-    const clusterName = cluster === 'default'
+    const clusterName = cluster === PLURID_ROUTE_DEFAULT_CLUSTER_VALUE
         ? PLURID_ROUTE_DEFAULT_CLUSTER
         : utilities.cleanPathElement(cluster);
     const planeName = utilities.cleanPathElement(plane.value);
@@ -445,7 +458,7 @@ export const generateIndexedPlane = (
         clusterName,
         planeName,
     ];
-    const planeAddress = planeAddressElements.join('://');
+    const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
 
     const indexedPlane: IndexedPluridPlane = {
         protocol,
@@ -491,9 +504,9 @@ export const generateIndexedPlanes = (
             protocol,
             host,
             path.value,
-            's',
-            'u',
-            'c',
+            PLURID_ROUTE_DEFAULT_SPACE,
+            PLURID_ROUTE_DEFAULT_UNIVERSE,
+            PLURID_ROUTE_DEFAULT_CLUSTER,
         );
 
         indexedPlanes.push({
@@ -519,8 +532,8 @@ export const generateIndexedPlanes = (
                 host,
                 path.value,
                 space.value,
-                'u',
-                'c',
+                PLURID_ROUTE_DEFAULT_UNIVERSE,
+                PLURID_ROUTE_DEFAULT_CLUSTER,
             );
 
             indexedPlanes.push({
@@ -544,7 +557,7 @@ export const generateIndexedPlanes = (
                         path.value,
                         space.value,
                         universe.value,
-                        'c',
+                        PLURID_ROUTE_DEFAULT_CLUSTER,
                     );
 
                     indexedPlanes.push({
@@ -568,7 +581,6 @@ export const generateIndexedPlanes = (
                                 universe.value,
                                 cluster.value,
                             );
-
 
                             indexedPlanes.push({
                                 id,
