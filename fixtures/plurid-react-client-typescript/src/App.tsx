@@ -2,7 +2,7 @@ import React from 'react';
 
 import PluridApp, {
     PluridPlane,
-    PluridView,
+    IndexedPluridPlane,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -31,7 +31,7 @@ const App = () => {
 
     const pluridPlanes: PluridPlane[] = [
         {
-            path: '/plane',
+            path: 'http://localhost:3000://p://s://u://c://plane',
             component: {
                 kind: 'react',
                 element: Plane,
@@ -40,11 +40,28 @@ const App = () => {
         },
     ];
 
-    const pluridView: PluridView[] = [
-        {
-            path: '/plane',
-        }
+    const pluridView: string[] = [
+        'http://localhost:3000://p://s://u://c://plane',
     ];
+
+    const indexedPlanes = new Map();
+
+    const id = Math.random() + '';
+    const indexedPlane: IndexedPluridPlane = {
+        protocol: 'http',
+        host: 'localhost:3000',
+        path: 'p',
+        space: 's',
+        universe: 'u',
+        cluster: 'c',
+        plane: 'plane',
+        route: 'http://localhost:3000://p://s://u://c://plane',
+        component: {
+            kind: 'react',
+            element: Plane,
+        },
+    };
+    indexedPlanes.set(id, indexedPlane);
 
 
     /** render */
@@ -54,6 +71,7 @@ const App = () => {
                 configuration={pluridConfiguration}
                 planes={pluridPlanes}
                 view={pluridView}
+                indexedPlanes={indexedPlanes}
             />
         </div>
     );
