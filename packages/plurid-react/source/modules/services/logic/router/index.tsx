@@ -56,7 +56,17 @@ export const getComponentFromRoute = (
 
     const {
         path,
+        parameters,
+        query,
     } = matchedRoute;
+
+    const pluridProperty = {
+        path: {
+            parameters,
+            query,
+        },
+    };
+    console.log('pluridProperty', pluridProperty);
 
     const {
         exterior,
@@ -117,6 +127,9 @@ export const getComponentFromRoute = (
                             component: {
                                 kind: 'react',
                                 element: component.element,
+                                properties: {
+                                    plurid: pluridProperty,
+                                },
                             },
                             path: fullPath,
                         };
@@ -166,6 +179,9 @@ export const getComponentFromRoute = (
                                         component: {
                                             kind: 'react',
                                             element: component.element,
+                                            properties: {
+                                                plurid: pluridProperty,
+                                            },
                                         },
                                         path: fullPath,
                                     };
@@ -211,6 +227,9 @@ export const getComponentFromRoute = (
                                     component: {
                                         kind: 'react',
                                         element: component.element,
+                                        properties: {
+                                            plurid: pluridProperty,
+                                        },
                                     },
                                     path: fullPath,
                                 };
@@ -268,6 +287,9 @@ export const getComponentFromRoute = (
                     component: {
                         kind: 'react',
                         element: component.element,
+                        properties: {
+                            plurid: pluridProperty,
+                        },
                     },
                     path: fullPath,
                 };
@@ -303,6 +325,7 @@ export const getComponentFromRoute = (
             {exterior && (
                 <Exterior
                     spaces={slotted ? spacesArray : undefined}
+                    plurid={pluridProperty}
                 />
             )}
 
