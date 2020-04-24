@@ -92,6 +92,8 @@ export interface PluridRouterPath {
      */
     planes?: PluridRouterPlane[];
 
+    view?: string[];
+
     /**
      * A path can have planes and/or spaces.
      */
@@ -145,6 +147,8 @@ export interface PluridRouterSpace {
      * Planes will be assigned to the `default` universe, `default` cluster.
      */
     planes?: PluridRouterPlane[];
+
+    view?: string[];
 
     /**
      * A space can have planes and/or universes.
