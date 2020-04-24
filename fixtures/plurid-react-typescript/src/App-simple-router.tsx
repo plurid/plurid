@@ -13,13 +13,39 @@ const App = () => {
     const paths: PluridRouterPath[] = [
         {
             value: '/',
-            planes: [
+            // planes: [
+            //     {
+            //         value: '/plane',
+            //         component: {
+            //             kind: 'react',
+            //             element: Plane1,
+            //         },
+            //     },
+            // ],
+            spaces: [
                 {
-                    value: '/plane',
-                    component: {
-                        kind: 'react',
-                        element: Plane1,
-                    },
+                    value: 'foo',
+                    planes: [
+                        {
+                            value: '/foo-plane',
+                            component: {
+                                kind: 'react',
+                                element: Plane1,
+                            },
+                        },
+                    ],
+                },
+                {
+                    value: 'boo',
+                    planes: [
+                        {
+                            value: '/boo-plane',
+                            component: {
+                                kind: 'react',
+                                element: Plane1,
+                            },
+                        },
+                    ],
                 },
             ],
             // spaces: [
