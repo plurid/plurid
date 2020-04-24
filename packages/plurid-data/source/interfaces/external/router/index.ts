@@ -62,8 +62,6 @@ export interface PluridRouterProperties {
      * API endpoint to request the elements for the paths not found in the initial routing.
      */
     api?: string;
-
-    multispace?: PluridRouterMultispace;
 }
 
 
@@ -104,6 +102,8 @@ export interface PluridRouterPath {
      * to be rendered in particular slots.
      */
     slotted?: boolean;
+
+    multispace?: PluridRouterPathMultispace;
 }
 
 
@@ -179,8 +179,15 @@ export interface PluridRouterPlane {
 }
 
 
-export interface PluridRouterMultispace {
+export interface PluridRouterPathMultispace {
+    /**
+     * Default: `y`.
+     */
     alignment?: 'x' | 'y';
+
+    /**
+     * Default: `mandatory`.
+     */
     snapType?: 'none' | 'mandatory' | 'proximity';
 }
 
