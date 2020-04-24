@@ -5,7 +5,7 @@ import {
 } from '@plurid/plurid-react';
 
 import {
-    StyledPage,
+    StyledPlane,
 } from './styled';
 
 import pluridLogo from '../../plurid-logo.png';
@@ -13,7 +13,7 @@ import pluridLogo from '../../plurid-logo.png';
 
 
 
-const Page: React.FC<any> = (
+const Plane: React.FC<any> = (
     properties,
 ) => {
     /** properties */
@@ -24,7 +24,7 @@ const Page: React.FC<any> = (
 
     /** render */
     return (
-        <StyledPage>
+        <StyledPlane>
             <div>
                 <a
                     href="https://plurid.com"
@@ -42,9 +42,9 @@ const Page: React.FC<any> = (
             <div>
                 <PluridLink page="/page">self link</PluridLink>
             </div>
-        </StyledPage>
+        </StyledPlane>
     );
 }
 
 
-export default Page;
+export default Plane;
