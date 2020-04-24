@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
     /** constants */
+    PLURID_ENTITY_MULTISPACE,
     PLURID_ROUTE_DEFAULT_PATH_VALUE,
     PLURID_ROUTE_DEFAULT_PATH,
     PLURID_ROUTE_DEFAULT_SPACE_VALUE,
@@ -285,7 +286,9 @@ export const getComponentFromRoute = (
     }
 
     Spaces = () => (
-        <StyledSpaces>
+        <StyledSpaces
+            data-plurid-entity={PLURID_ENTITY_MULTISPACE}
+        >
             {spacesArray}
         </StyledSpaces>
     );
