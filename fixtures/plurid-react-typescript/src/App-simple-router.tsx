@@ -13,30 +13,50 @@ const App = () => {
     const paths: PluridRouterPath[] = [
         {
             value: '/',
-            spaces: [
+            planes: [
                 {
-                    value: 'default',
-                    universes: [
-                        {
-                            value: 'default',
-                            clusters: [
-                                {
-                                    value: 'default',
-                                    planes: [
-                                        {
-                                            value: '/plane',
-                                            component: {
-                                                kind: 'react',
-                                                element: Plane1,
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    ],
+                    value: '/plane',
+                    component: {
+                        kind: 'react',
+                        element: Plane1,
+                    },
                 },
             ],
+            // spaces: [
+            //     {
+            //         value: 'default',
+            //         universes: [
+            //             {
+            //                 value: 'default',
+            //                 clusters: [
+            //                     {
+            //                         value: 'default',
+            //                         planes: [
+            //                             {
+            //                                 value: '/plane',
+            //                                 component: {
+            //                                     kind: 'react',
+            //                                     element: Plane1,
+            //                                 },
+            //                             },
+            //                         ],
+            //                     },
+            //                 ],
+            //             },
+            //         ],
+            //     },
+            // ],
+        },
+        {
+            value: '/planar',
+            exterior: {
+                kind: 'react',
+                element: () => (
+                    <div>
+                        planar route
+                    </div>
+                ),
+            },
         },
     ];
 
