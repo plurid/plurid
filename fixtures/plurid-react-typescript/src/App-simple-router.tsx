@@ -48,6 +48,10 @@ const App = () => {
                     ],
                 },
             ],
+            // multispace: {
+            //     alignment: 'x',
+            //     snapType: 'proximity',
+            // },
             // spaces: [
             //     {
             //         value: 'default',
