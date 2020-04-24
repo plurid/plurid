@@ -18,14 +18,14 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
         height: 100%;
         width: 100%;
-        /* background-color: black; */
-        color: white;
-        font-family: Ubuntu, -apple-system, BlinkMacSystemFont, Roboto,
-            'Open Sans', 'Helvetica Neue', 'Lucida Sans', sans-serif;
     }
 
     html {
         overflow: hidden;
+        background: black;
+        color: white;
+        font-family: Ubuntu, -apple-system, BlinkMacSystemFont, Roboto,
+            'Open Sans', 'Helvetica Neue', 'Lucida Sans', sans-serif;
 
         /*
          * HACK
@@ -43,6 +43,7 @@ export const StyledView: any = styled.div`
     height: 100%;
     width: 100%;
     position: relative;
+    scroll-snap-align: start;
 
     cursor: ${(props: any) => {
         if (
