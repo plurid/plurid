@@ -54,30 +54,30 @@ export interface PluridApplication {
      */
     view?: string[] | PluridView[];
 
-    /**
-     * A cluster ensures the rendering of all the planes that reference it
-     * in the same space zone.
-     */
-    clusters?: PluridCluster[];
+    // /**
+    //  * A cluster ensures the rendering of all the planes that reference it
+    //  * in the same space zone.
+    //  */
+    // clusters?: PluridCluster[];
 
-    /**
-     * A `PluridApplication` must be either planes or universes based.
-     *
-     * A `PluridUniverse` is a collection of PluridPlanes (`PluridPlane[]`).
-     */
-    universes?: PluridUniverse[];
+    // /**
+    //  * A `PluridApplication` must be either planes or universes based.
+    //  *
+    //  * A `PluridUniverse` is a collection of PluridPlanes (`PluridPlane[]`).
+    //  */
+    // universes?: PluridUniverse[];
 
-    /**
-     * Controlled origins.
-     * Defaults to the one serving the application.
-     */
-    origins?: string[];
+    // /**
+    //  * Controlled origins.
+    //  * Defaults to the one serving the application.
+    //  */
+    // origins?: string[];
 
-    /**
-     * Origins which the plurid links can access.
-     * Default `controlled`.
-     */
-    allowedOrigins?: 'controlled' | 'all';
+    // /**
+    //  * Origins which the plurid links can access.
+    //  * Default `controlled`.
+    //  */
+    // allowedOrigins?: 'controlled' | 'all';
 
     /**
      * Show or not the default Not Found component, or pass a custom component.
@@ -100,5 +100,5 @@ export interface PluridApplication {
 
 
 export interface PluridServerData {
-    view: any[];
+    planes?: PluridPlane[];
 }
