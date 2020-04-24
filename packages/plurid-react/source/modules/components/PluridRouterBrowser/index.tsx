@@ -7,6 +7,9 @@ import React, {
 import {
     /** constants */
     PLURID_ROUTER_LOCATION_CHANGED,
+    PLURID_ROUTE_DEFAULT_SPACE,
+    PLURID_ROUTE_DEFAULT_UNIVERSE,
+    PLURID_ROUTE_DEFAULT_CLUSTER,
 
     /** interfaces */
     IndexedPluridPlane,
@@ -247,9 +250,9 @@ const PluridRouterBrowser = (
                             protocol,
                             host,
                             path.value,
-                            'default',
-                            'default',
-                            'default',
+                            PLURID_ROUTE_DEFAULT_SPACE,
+                            PLURID_ROUTE_DEFAULT_UNIVERSE,
+                            PLURID_ROUTE_DEFAULT_CLUSTER,
                         );
                         indexedPlanes.current.set(id, indexedPlane);
                     }
