@@ -265,76 +265,114 @@ export const getGatewayView = (
     const view: string[] = [];
 
     for (const path of paths) {
-        if (!path.spaces) {
-            continue;
-        }
+        if (path.spaces) {
+            const pathName = path.value === PLURID_ROUTE_DEFAULT_PATH_VALUE
+                ? PLURID_ROUTE_DEFAULT_PATH
+                : utilities.cleanPathElement(path.value);
 
-        const pathName = path.value === PLURID_ROUTE_DEFAULT_PATH_VALUE
-            ? PLURID_ROUTE_DEFAULT_PATH
-            : utilities.cleanPathElement(path.value);
+            for (const space of path.spaces) {
+                const spaceName = space.value === PLURID_ROUTE_DEFAULT_SPACE_VALUE
+                    ? PLURID_ROUTE_DEFAULT_SPACE
+                    : utilities.cleanPathElement(space.value);
 
-        for (const space of path.spaces) {
-            const spaceName = space.value === PLURID_ROUTE_DEFAULT_SPACE_VALUE
-                ? PLURID_ROUTE_DEFAULT_SPACE
-                : utilities.cleanPathElement(space.value);
-
-            if (!space.universes) {
-                continue;
-            }
-
-            for (const universe of space.universes) {
-                const universeName = universe.value === PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE
-                    ? PLURID_ROUTE_DEFAULT_UNIVERSE
-                    : utilities.cleanPathElement(universe.value);
-
-                if (!universe.clusters) {
+                if (!space.universes) {
                     continue;
                 }
 
-                for (const cluster of universe.clusters) {
-                    const clusterName = cluster.value === PLURID_ROUTE_DEFAULT_CLUSTER_VALUE
-                        ? PLURID_ROUTE_DEFAULT_CLUSTER
-                        : utilities.cleanPathElement(cluster.value);
+                for (const universe of space.universes) {
+                    const universeName = universe.value === PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE
+                        ? PLURID_ROUTE_DEFAULT_UNIVERSE
+                        : utilities.cleanPathElement(universe.value);
 
-                    for (const plane of cluster.planes) {
-                        const {
-                            component,
-                            value,
-                        } = plane;
+                    if (!universe.clusters) {
+                        continue;
+                    }
 
-                        const planeName = utilities.cleanPathElement(value);
+                    for (const cluster of universe.clusters) {
+                        const clusterName = cluster.value === PLURID_ROUTE_DEFAULT_CLUSTER_VALUE
+                            ? PLURID_ROUTE_DEFAULT_CLUSTER
+                            : utilities.cleanPathElement(cluster.value);
 
-                        const planeAddressElements = [
-                            protocol,
-                            host,
-                            pathName,
-                            spaceName,
-                            universeName,
-                            clusterName,
-                            planeName,
-                        ];
-                        const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
+                        for (const plane of cluster.planes) {
+                            const {
+                                component,
+                                value,
+                            } = plane;
 
-                        for (const gatewayViewPlane of gatewayView) {
-                            // check that the planeAddress is the same as gatewayViewPlane
-                            // considering parameters / query
+                            const planeName = utilities.cleanPathElement(value);
 
-                            if (gatewayViewPlane === planeAddress) {
-                                if (component.kind === 'react') {
-                                    const pluridPlane: PluridPlane = {
-                                        component: {
-                                            kind: 'react',
-                                            element: component.element,
-                                        },
-                                        path: planeAddress,
-                                    };
+                            const planeAddressElements = [
+                                protocol,
+                                host,
+                                pathName,
+                                spaceName,
+                                universeName,
+                                clusterName,
+                                planeName,
+                            ];
+                            const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
 
-                                    planes.push(pluridPlane);
-                                    view.push(planeAddress);
+                            for (const gatewayViewPlane of gatewayView) {
+                                // check that the planeAddress is the same as gatewayViewPlane
+                                // considering parameters / query
+
+                                if (gatewayViewPlane === planeAddress) {
+                                    if (component.kind === 'react') {
+                                        const pluridPlane: PluridPlane = {
+                                            component: {
+                                                kind: 'react',
+                                                element: component.element,
+                                            },
+                                            path: planeAddress,
+                                        };
+
+                                        planes.push(pluridPlane);
+                                        view.push(planeAddress);
+                                    }
                                 }
                             }
                         }
                     }
+                }
+            }
+        }
+
+        if (path.planes) {
+            for (const plane of path.planes) {
+                const {
+                    component,
+                } = plane;
+
+                const pathName = path.value === PLURID_ROUTE_DEFAULT_PATH_VALUE
+                    ? PLURID_ROUTE_DEFAULT_PATH
+                    : utilities.cleanPathElement(path.value);
+                const spaceName = PLURID_ROUTE_DEFAULT_SPACE;
+                const universeName = PLURID_ROUTE_DEFAULT_UNIVERSE;
+                const clusterName = PLURID_ROUTE_DEFAULT_CLUSTER;
+                const planeName = utilities.cleanPathElement(plane.value);
+
+                const pathDivisions = [
+                    protocol,
+                    host,
+                    pathName,
+                    spaceName,
+                    universeName,
+                    clusterName,
+                    planeName,
+                ];
+                const planeAddress = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
+
+                if (component.kind === 'react') {
+                    const pluridPlane: PluridPlane = {
+                        component: {
+                            kind: 'react',
+                            element: component.element,
+                        },
+                        path: planeAddress,
+                    };
+
+                    planes.push(pluridPlane);
+                    view.push(planeAddress);
                 }
             }
         }
