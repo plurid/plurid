@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PluridApp, {
-    PluridPage,
+    PluridPlane,
     PluridView,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
@@ -29,10 +29,11 @@ const App = () => {
         },
     };
 
-    const pluridPages: PluridPage[] = [
+    const pluridPages: PluridPlane[] = [
         {
             path: '/page',
             component: {
+                kind: 'react',
                 element: Page,
                 properties: {},
             },
