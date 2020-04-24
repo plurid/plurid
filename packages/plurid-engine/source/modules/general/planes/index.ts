@@ -12,11 +12,11 @@ import {
 
 
 export const createInternalStatePlane = (
-    page: PluridPlane,
+    plane: PluridPlane,
 ): PluridInternalStatePlane => {
     const statePlane: PluridInternalStatePlane = {
-        id: page.id || uuid.generate(),
-        path: page.path,
+        id: plane.id || uuid.generate(),
+        path: plane.path,
         // root: page.root || false,
         // ordinal: page.ordinal || 0,
     };
