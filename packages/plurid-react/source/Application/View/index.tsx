@@ -1068,6 +1068,9 @@ const View: React.FC<ViewProperties> = (
             }
 
             dispatchDataSetPlaneSources(planeSources);
+        } else {
+            // handle planes
+            console.log(planes);
         }
     }, [
         indexedPlanes,
