@@ -1,6 +1,6 @@
 {
-  "name": "plurid-react-client-typescript",
-  "version": "0.1.0",
+  "name": "@plurid/fixture-plurid-react-typescript-client",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
     "@plurid/plurid-data": "^0.1.120",
