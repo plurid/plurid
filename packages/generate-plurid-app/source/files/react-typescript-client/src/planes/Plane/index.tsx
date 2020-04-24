@@ -12,7 +12,6 @@ import pluridLogo from '../../plurid-logo.png';
 
 
 
-
 const Plane: React.FC<any> = (
     properties,
 ) => {
@@ -40,7 +39,7 @@ const Plane: React.FC<any> = (
             </h1>
 
             <div>
-                <PluridLink page="/page">self link</PluridLink>
+                <PluridLink path="/plane">self link</PluridLink>
             </div>
         </StyledPlane>
     );
