@@ -33,10 +33,10 @@ import PluridApplication from '../../../../Application';
 
 
 export interface GetComponentFromRouteData {
-    matchedRoute: router.MatcherResponse,
-    protocol: string,
-    host: string,
-    indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
+    matchedRoute: router.MatcherResponse;
+    protocol: string;
+    host: string;
+    indexedPlanes: Map<string, IndexedPluridPlane> | undefined;
 }
 
 export const getComponentFromRoute = (
@@ -308,13 +308,13 @@ export const getComponentFromRoute = (
 
 
 export interface GetGatewayViewData {
-    queryString: string,
-    paths: PluridRouterPath[],
-    gatewayPath: string | undefined,
-    gatewayExterior: any,
-    protocol: string,
-    host: string,
-    indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
+    queryString: string;
+    paths: PluridRouterPath[];
+    gatewayPath: string | undefined;
+    gatewayExterior: any;
+    protocol: string;
+    host: string;
+    indexedPlanes: Map<string, IndexedPluridPlane> | undefined;
 }
 
 export const getGatewayView = (
