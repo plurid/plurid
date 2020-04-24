@@ -26,6 +26,7 @@ import {
 import {
     getComponentFromRoute,
     getGatewayView,
+    generateIndexedPlane,
     generateIndexedPlanes,
 } from '../../services/logic/router';
 
@@ -237,7 +238,21 @@ const PluridRouterBrowser = (
 
                     continue;
                 } else {
-                    // handle path only with planes in the default space
+                    for (const plane of path.planes) {
+                        const {
+                            id,
+                            indexedPlane,
+                        } = generateIndexedPlane(
+                            plane,
+                            protocol,
+                            host,
+                            path.value,
+                            'default',
+                            'default',
+                            'default',
+                        );
+                        indexedPlanes.current.set(id, indexedPlane);
+                    }
 
                     continue;
                 }
