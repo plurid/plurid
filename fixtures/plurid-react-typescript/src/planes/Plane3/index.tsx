@@ -6,7 +6,7 @@ import {
 
 
 
-const Page3: React.FC<any> = (
+const Plane3: React.FC<any> = (
     properties,
 ) => {
     return (
@@ -29,4 +29,4 @@ const Page3: React.FC<any> = (
 }
 
 
-export default Page3;
+export default Plane3;
