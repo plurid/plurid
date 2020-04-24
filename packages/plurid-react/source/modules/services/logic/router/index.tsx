@@ -275,60 +275,134 @@ export const getGatewayView = (
                     ? PLURID_ROUTE_DEFAULT_SPACE
                     : utilities.cleanPathElement(space.value);
 
-                if (!space.universes) {
-                    continue;
+                if (space.universes) {
+                    for (const universe of space.universes) {
+                        const universeName = universe.value === PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE
+                            ? PLURID_ROUTE_DEFAULT_UNIVERSE
+                            : utilities.cleanPathElement(universe.value);
+
+                        if (universe.clusters) {
+                            for (const cluster of universe.clusters) {
+                                const clusterName = cluster.value === PLURID_ROUTE_DEFAULT_CLUSTER_VALUE
+                                    ? PLURID_ROUTE_DEFAULT_CLUSTER
+                                    : utilities.cleanPathElement(cluster.value);
+
+                                for (const plane of cluster.planes) {
+                                    const {
+                                        component,
+                                        value,
+                                    } = plane;
+
+                                    const planeName = utilities.cleanPathElement(value);
+
+                                    const planeAddressElements = [
+                                        protocol,
+                                        host,
+                                        pathName,
+                                        spaceName,
+                                        universeName,
+                                        clusterName,
+                                        planeName,
+                                    ];
+                                    const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
+
+                                    for (const gatewayViewPlane of gatewayView) {
+                                        // check that the planeAddress is the same as gatewayViewPlane
+                                        // considering parameters / query
+
+                                        if (gatewayViewPlane === planeAddress) {
+                                            if (component.kind === 'react') {
+                                                const pluridPlane: PluridPlane = {
+                                                    component: {
+                                                        kind: 'react',
+                                                        element: component.element,
+                                                    },
+                                                    path: planeAddress,
+                                                };
+
+                                                planes.push(pluridPlane);
+                                                view.push(planeAddress);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (universe.planes) {
+                            for (const plane of universe.planes) {
+                                const {
+                                    component,
+                                    value,
+                                } = plane;
+
+                                const planeName = utilities.cleanPathElement(value);
+
+                                const planeAddressElements = [
+                                    protocol,
+                                    host,
+                                    pathName,
+                                    spaceName,
+                                    universeName,
+                                    PLURID_ROUTE_DEFAULT_CLUSTER,
+                                    planeName,
+                                ];
+                                const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
+
+                                for (const gatewayViewPlane of gatewayView) {
+                                    if (gatewayViewPlane === planeAddress) {
+                                        if (component.kind === 'react') {
+                                            const pluridPlane: PluridPlane = {
+                                                component: {
+                                                    kind: 'react',
+                                                    element: component.element,
+                                                },
+                                                path: planeAddress,
+                                            };
+
+                                            planes.push(pluridPlane);
+                                            view.push(planeAddress);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
-                for (const universe of space.universes) {
-                    const universeName = universe.value === PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE
-                        ? PLURID_ROUTE_DEFAULT_UNIVERSE
-                        : utilities.cleanPathElement(universe.value);
+                if (space.planes) {
+                    for (const plane of space.planes) {
+                        const {
+                            component,
+                            value,
+                        } = plane;
 
-                    if (!universe.clusters) {
-                        continue;
-                    }
+                        const planeName = utilities.cleanPathElement(value);
 
-                    for (const cluster of universe.clusters) {
-                        const clusterName = cluster.value === PLURID_ROUTE_DEFAULT_CLUSTER_VALUE
-                            ? PLURID_ROUTE_DEFAULT_CLUSTER
-                            : utilities.cleanPathElement(cluster.value);
+                        const planeAddressElements = [
+                            protocol,
+                            host,
+                            pathName,
+                            spaceName,
+                            PLURID_ROUTE_DEFAULT_UNIVERSE,
+                            PLURID_ROUTE_DEFAULT_CLUSTER,
+                            planeName,
+                        ];
+                        const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
 
-                        for (const plane of cluster.planes) {
-                            const {
-                                component,
-                                value,
-                            } = plane;
+                        for (const gatewayViewPlane of gatewayView) {
+                            if (gatewayViewPlane === planeAddress) {
+                                if (component.kind === 'react') {
+                                    const pluridPlane: PluridPlane = {
+                                        component: {
+                                            kind: 'react',
+                                            element: component.element,
+                                        },
+                                        path: planeAddress,
+                                    };
 
-                            const planeName = utilities.cleanPathElement(value);
-
-                            const planeAddressElements = [
-                                protocol,
-                                host,
-                                pathName,
-                                spaceName,
-                                universeName,
-                                clusterName,
-                                planeName,
-                            ];
-                            const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
-
-                            for (const gatewayViewPlane of gatewayView) {
-                                // check that the planeAddress is the same as gatewayViewPlane
-                                // considering parameters / query
-
-                                if (gatewayViewPlane === planeAddress) {
-                                    if (component.kind === 'react') {
-                                        const pluridPlane: PluridPlane = {
-                                            component: {
-                                                kind: 'react',
-                                                element: component.element,
-                                            },
-                                            path: planeAddress,
-                                        };
-
-                                        planes.push(pluridPlane);
-                                        view.push(planeAddress);
-                                    }
+                                    planes.push(pluridPlane);
+                                    view.push(planeAddress);
                                 }
                             }
                         }
