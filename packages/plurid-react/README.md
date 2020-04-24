@@ -36,19 +36,51 @@ or
 
 add the dependencies
 
-    npm install @plurid/plurid-functions @plurid/plurid-icons-react @plurid/plurid-themes @plurid/plurid-ui-react hammerjs redux react-redux redux-thunk styled-components
+    npm install \
+        @plurid/plurid-data \
+        @plurid/plurid-functions \
+        @plurid/plurid-engine \
+        @plurid/plurid-functions \
+        @plurid/plurid-functions-react \
+        @plurid/plurid-icons-react \
+        @plurid/plurid-pubsub \
+        @plurid/plurid-themes \
+        @plurid/plurid-ui-react \
+        hammerjs \
+        react-redux \
+        redux \
+        redux-thunk \
+        styled-components
 
 or
 
-    yarn add @plurid/plurid-functions @plurid/plurid-icons-react @plurid/plurid-themes @plurid/plurid-ui-react hammerjs redux react-redux redux-thunk styled-components
+    yarn add \
+        @plurid/plurid-data \
+        @plurid/plurid-functions \
+        @plurid/plurid-engine \
+        @plurid/plurid-functions \
+        @plurid/plurid-functions-react \
+        @plurid/plurid-icons-react \
+        @plurid/plurid-pubsub \
+        @plurid/plurid-themes \
+        @plurid/plurid-ui-react \
+        hammerjs \
+        react-redux \
+        redux \
+        redux-thunk \
+        styled-components
 
 add the types (if it is a TypeScript project)
 
-    npm install -D @types/styled-components @types/react-redux
+    npm install -D \
+        @types/styled-components \
+        @types/react-redux
 
 or
 
-    yarn add -D @types/styled-components @types/react-redux
+    yarn add -D \
+        @types/styled-components \
+        @types/react-redux
 
 
 A simple, rendering-test application component, could look like
