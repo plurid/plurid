@@ -235,6 +235,8 @@ const View: React.FC<ViewProperties> = (
         pubsub,
     } = pluridApplication;
 
+    console.log('PLANES', planes);
+
 
     /** references */
     const viewElement = useRef<HTMLDivElement>(null);
