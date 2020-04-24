@@ -212,18 +212,18 @@ export const getComponentFromRoute = (
                             }
                         }
                     }
-
-                    const App = (
-                        <PluridApplication
-                            key={Math.random() + ''}
-                            planes={planes}
-                            indexedPlanes={indexedPlanes}
-                            view={view}
-                        />
-                    );
-                    spacesArray.push(App);
                 }
             }
+
+            const App = (
+                <PluridApplication
+                    key={Math.random() + ''}
+                    planes={planes}
+                    indexedPlanes={indexedPlanes}
+                    view={view}
+                />
+            );
+            spacesArray.push(App);
         }
     }
 
