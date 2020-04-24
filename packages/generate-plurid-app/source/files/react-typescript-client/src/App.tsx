@@ -6,7 +6,7 @@ import PluridApp, {
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
-import Page from './containers/Page';
+import Plane from './containers/Plane';
 
 
 
@@ -29,12 +29,12 @@ const App = () => {
         },
     };
 
-    const pluridPages: PluridPlane[] = [
+    const pluridPlanes: PluridPlane[] = [
         {
-            path: '/page',
+            path: '/plane',
             component: {
                 kind: 'react',
-                element: Page,
+                element: Plane,
                 properties: {},
             },
         },
@@ -42,7 +42,7 @@ const App = () => {
 
     const pluridView: PluridView[] = [
         {
-            path: '/page',
+            path: '/plane',
         }
     ];
 
@@ -52,7 +52,7 @@ const App = () => {
         <div>
             <PluridApp
                 configuration={pluridConfiguration}
-                pages={pluridPages}
+                planes={pluridPlanes}
                 view={pluridView}
             />
         </div>
