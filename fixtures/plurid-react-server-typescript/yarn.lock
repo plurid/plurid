@@ -1100,15 +1100,15 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@plurid/plurid-data@^0.1.118":
-  version "0.1.118"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.118.tgz#fee2f94dcbdd84e92f8f5254596468424d46c3c9"
-  integrity sha512-O3OfQefj4gFkdTHsv1Q/rwoK7bYts3UbHnw+kikHPvn0m9+omDQeK6AB9gUvE+ABjyVfbr0ZQKjcg8yGFx5Q3g==
+"@plurid/plurid-data@^0.1.120":
+  version "0.1.120"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.120.tgz#fb77485d92f40e0af7a7866017302f959b2b9743"
+  integrity sha512-9CH+3huov9/zv+Lt5s/Dl+gQ4jcYgVk3/LMlXU/U6bdkDTfz1PpArws/prW72wHBgLXxiNTr8174gqq0CFqikQ==
 
-"@plurid/plurid-engine@^0.1.60":
-  version "0.1.60"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.60.tgz#7cee2c0511beea1fab9eb781f60365f49130f661"
-  integrity sha512-8JybsWLJwAtkDb67GH6lDKNZq/HKyVT7xlEW1eAf3dcIu7G4czidKZ6cLNhPGzaClt2zPjuu9qlV82LTLeSe0A==
+"@plurid/plurid-engine@^0.1.62":
+  version "0.1.62"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.62.tgz#e97a69e851d196d48f2f555736e5fb35797cea20"
+  integrity sha512-ZOXcO6Z5681OBIDOV8c/ToB4JaBeAx2V0v/MqpdT+LqlOyesND5AZDGjRH9Ay5vSMw6bRpt/LBhb3pgWW2KjFA==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
@@ -1140,10 +1140,10 @@
     express "^4.17.1"
     open "^7.0.3"
 
-"@plurid/plurid-react@^0.1.137":
-  version "0.1.137"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.137.tgz#313f65c3d2ef032241e4c1374c18252fc52103d8"
-  integrity sha512-nCpkrxO0fHkGQVMfki+gN+WvcN89b4Zk2vj6tZNgS6xhk4h5I1IRZDH/+LaKyagZAlS2Hym9EvUb8pJ1P/lUWw==
+"@plurid/plurid-react@^0.1.138":
+  version "0.1.138"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.138.tgz#01358a35dd954a8f11228ae0dce457907432bff5"
+  integrity sha512-wzTuVgz6tIPBK9QMtPvxNEgQVKkDzS17jMUbulWTyuNoFQEf7pDXl9OPGAqf2n+HCjktCt9YqBSaWsOZBb8Iwg==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
@@ -7044,10 +7044,10 @@ rollup@^0.63.4:
     "@types/estree" "0.0.39"
     "@types/node" "*"
 
-rollup@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.7.1.tgz#d571e49a35b1c923fe9cf6f7290dba2482864fdc"
-  integrity sha512-c1FCjY8HK1nAq0bTZHaR72ZknpP7p0EjxbcVc6BcmtOosurK//P5jtwxX+f/4fgtbrjczqf0uvR+EdtxpriE8g==
+rollup@^2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.7.2.tgz#0f8ee6216d33e83c0750116312c2c92b94cc7f72"
+  integrity sha512-SdtTZVMMVSPe7SNv4exUyPXARe5v/p3TeeG3LRA5WabLPJt4Usi3wVrvVlyAUTG40JJmqS6zbIHt2vWTss2prw==
   optionalDependencies:
     fsevents "~2.1.2"
 
