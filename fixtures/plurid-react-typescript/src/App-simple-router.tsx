@@ -22,59 +22,8 @@ const App = () => {
                     },
                 },
             ],
-            // spaces: [
-            //     {
-            //         value: 'foo',
-            //         planes: [
-            //             {
-            //                 value: '/foo-plane',
-            //                 component: {
-            //                     kind: 'react',
-            //                     element: Plane1,
-            //                 },
-            //             },
-            //         ],
-            //     },
-            //     {
-            //         value: 'boo',
-            //         planes: [
-            //             {
-            //                 value: '/boo-plane',
-            //                 component: {
-            //                     kind: 'react',
-            //                     element: Plane1,
-            //                 },
-            //             },
-            //         ],
-            //     },
-            // ],
-            // multispace: {
-            //     alignment: 'x',
-            //     snapType: 'proximity',
-            // },
-            // spaces: [
-            //     {
-            //         value: 'default',
-            //         universes: [
-            //             {
-            //                 value: 'default',
-            //                 clusters: [
-            //                     {
-            //                         value: 'default',
-            //                         planes: [
-            //                             {
-            //                                 value: '/plane',
-            //                                 component: {
-            //                                     kind: 'react',
-            //                                     element: Plane1,
-            //                                 },
-            //                             },
-            //                         ],
-            //                     },
-            //                 ],
-            //             },
-            //         ],
-            //     },
+            // view: [
+            //     '/plane',
             // ],
         },
         {
