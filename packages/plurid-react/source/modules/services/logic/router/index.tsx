@@ -65,6 +65,9 @@ export const getComponentFromRoute = (
         slotted,
     } = path;
 
+    const multispaceAlignment = path.multispace?.alignment || 'y';
+    const multispaceSnapType = path.multispace?.snapType || 'mandatory';
+
     let Exterior: React.FC<any> = () => (<></>);
     if (exterior) {
         switch (exterior.kind) {
@@ -287,6 +290,8 @@ export const getComponentFromRoute = (
 
     Spaces = () => (
         <StyledSpaces
+            alignment={multispaceAlignment}
+            snapType={multispaceSnapType}
             data-plurid-entity={PLURID_ENTITY_MULTISPACE}
         >
             {spacesArray}
