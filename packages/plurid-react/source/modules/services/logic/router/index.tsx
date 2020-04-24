@@ -55,6 +55,7 @@ export const getComponentFromRoute = (
 
     const {
         exterior,
+        planes,
         spaces,
         slotted,
     } = path;
@@ -142,13 +143,67 @@ export const getComponentFromRoute = (
                 spacesArray.push(App);
             }
         }
-
-        Spaces = () => (
-            <>
-                {spacesArray}
-            </>
-        );
     }
+
+    if (planes) {
+        const pluridPlanes: PluridPlane[] = [];
+        const view = [];
+
+        for (const plane of planes) {
+            const {
+                component,
+            } = plane;
+
+            const pathName = path.value === PLURID_ROUTE_DEFAULT_PATH_VALUE
+                ? PLURID_ROUTE_DEFAULT_PATH
+                : utilities.cleanPathElement(path.value);
+            const spaceName = PLURID_ROUTE_DEFAULT_SPACE;
+            const universeName = PLURID_ROUTE_DEFAULT_UNIVERSE;
+            const clusterName = PLURID_ROUTE_DEFAULT_CLUSTER;
+            const planeName = utilities.cleanPathElement(plane.value);
+
+            const pathDivisions = [
+                protocol,
+                host,
+                pathName,
+                spaceName,
+                universeName,
+                clusterName,
+                planeName,
+            ];
+            const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
+
+            if (component.kind === 'react') {
+                const pluridPlane: PluridPlane = {
+                    component: {
+                        kind: 'react',
+                        element: component.element,
+                    },
+                    path: fullPath,
+                };
+
+                pluridPlanes.push(pluridPlane);
+                view.push(fullPath);
+            }
+        }
+
+        const App = (
+            <PluridApplication
+                key={Math.random() + ''}
+                planes={pluridPlanes}
+                indexedPlanes={indexedPlanes}
+                view={view}
+            />
+        );
+        spacesArray.push(App);
+    }
+
+
+    Spaces = () => (
+        <>
+            {spacesArray}
+        </>
+    );
 
     const Component = (
         <>
