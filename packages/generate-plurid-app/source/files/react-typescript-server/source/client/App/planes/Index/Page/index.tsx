@@ -9,7 +9,7 @@ import {
     StyledPage,
 } from './styled';
 
-import pluridLogo from './assets/plurid-logo.png';
+// import pluridLogo from './assets/plurid-logo.png';
 import pluridLogoSVG from './assets/plurid-logo.svg';
 
 
@@ -48,7 +48,7 @@ const Page: React.FC<any> = (
                 }}
             >
                 <PluridLink
-                    page="/page"
+                    path="/page"
                     style={{
                         color: '#ccc',
                     }}
