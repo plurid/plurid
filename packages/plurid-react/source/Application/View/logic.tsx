@@ -13,23 +13,30 @@ import {
 
 const handleView = (
     planes: PluridPlane[] | undefined,
-    universes: PluridUniverse[] | undefined,
+    // universes: PluridUniverse[] | undefined,
 ): JSX.Element => {
-    if (planes && !universes) {
+    if (planes) {
         return (
             <PlanesView />
         );
     }
 
-    if (universes && !planes) {
-        return (
-            <UniversesView />
-        );
-    }
+    // if (planes && !universes) {
+    //     return (
+    //         <PlanesView />
+    //     );
+    // }
+
+    // if (universes && !planes) {
+    //     return (
+    //         <UniversesView />
+    //     );
+    // }
 
     return (
         <ErrorView
-            error="the plurid' application must be either universes or planes-based"
+            // error="the plurid' application must be either universes or planes-based"
+            error="the plurid' application must contain planes-based"
         />
     );
 }

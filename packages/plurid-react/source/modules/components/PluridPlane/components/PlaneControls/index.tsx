@@ -120,7 +120,8 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
         setPath(event.target.value);
 
         if (pathbar.onChange) {
-            const id = plane.id || plane.path;
+            // const id = plane.id || plane.path;
+            const id = plane.path;
             pathbar.onChange(event, id);
         }
     }
@@ -137,7 +138,8 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
         }
 
         if (pathbar.onKeyDown) {
-            const id = plane.id || plane.path;
+            // const id = plane.id || plane.path;
+            const id = plane.path;
             pathbar.onKeyDown(event, id);
         }
     }
