@@ -1,5 +1,6 @@
 import React, {
     useRef,
+    useState,
     useCallback,
     useEffect,
 } from 'react';
@@ -40,6 +41,10 @@ import {
 import PluridPubSub, {
     TOPICS,
 } from '@plurid/plurid-pubsub';
+
+import {
+    uuid,
+} from '@plurid/plurid-functions';
 
 // import {
 //     meta,
@@ -445,6 +450,7 @@ const View: React.FC<ViewProperties> = (
         view: string[] | PluridView[] | undefined,
         // clusters: PluridCluster[] | undefined,
         // contextUniverses: Indexed<PluridInternalContextUniverse>,
+        computedIndexedPlanes: IndexedPluridPlane[],
         previousTree: TreePlane[],
     ) => {
         // const activeUniverse = universes[activeUniverseID];
@@ -453,7 +459,16 @@ const View: React.FC<ViewProperties> = (
         // const activeContextUniverse = contextUniverses[activeUniverseID];
         // const contextPlanes = activeContextUniverse.planes;
 
-        // const treePlanes: TreePlane[] = [];
+        const treePlanes: TreePlane[] = [];
+
+        for (const computedIndexedPlane of computedIndexedPlanes) {
+            // const treePlane = generalEngine.tree.createTreePlane(
+            //     computedIndexedPlane,
+            // );
+            // treePlanes.push(treePlane);
+        }
+
+
         // for (const planeID in planes) {
         //     const docPlane = planes[planeID]
         //     const contextPlane = contextPlanes[planeID];
@@ -506,6 +521,33 @@ const View: React.FC<ViewProperties> = (
         console.log('indexedPlanes', indexedPlanes);
         console.log('-----');
         if (planes && !indexedPlanes) {
+            const computedIndexedPlanes: IndexedPluridPlane[] = [];
+
+            for (const plane of planes) {
+                const computedIndexedPlane: IndexedPluridPlane = {
+                    protocol: '',
+                    host: '',
+                    path: '',
+                    space: '',
+                    universe: '',
+                    cluster: '',
+                    plane: '',
+                    route: '',
+                    component: plane.component,
+                };
+                computedIndexedPlanes.push(computedIndexedPlane);
+
+                const id = uuid.generate();
+                indexedPlanesReference.current.set(id, computedIndexedPlane);
+            }
+
+            const newTree = computeTree(
+                appConfiguration,
+                view,
+                computedIndexedPlanes,
+                stateTree,
+            );
+
             // compute indexed planes
 
             // compute tree based on indexedPlanes, configuration, view
