@@ -11,3 +11,9 @@ export const PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_Y = 0;
 
 
 export const PLURID_ROUTE_SEPARATOR = '://';
+
+export const PLURID_ROUTE_DEFAULT = 'default';
+export const PLURID_ROUTE_DEFAULT_PATH = 'p';
+export const PLURID_ROUTE_DEFAULT_SPACE = 's';
+export const PLURID_ROUTE_DEFAULT_UNIVERSE = 'u';
+export const PLURID_ROUTE_DEFAULT_CLUSTER = 'c';
