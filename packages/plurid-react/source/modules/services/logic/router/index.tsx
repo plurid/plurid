@@ -89,27 +89,32 @@ export const getComponentFromRoute = (
                     for (const plane of cluster.planes) {
                         const {
                             component,
-                            value,
                         } = plane;
+
+                        const pathName = path.value === PLURID_ROUTE_DEFAULT_PATH_VALUE
+                            ? PLURID_ROUTE_DEFAULT_PATH
+                            : utilities.cleanPathElement(path.value);
+                        const spaceName = space.value === PLURID_ROUTE_DEFAULT_SPACE_VALUE
+                            ? PLURID_ROUTE_DEFAULT_SPACE
+                            : utilities.cleanPathElement(space.value);
+                        const universeName = universe.value === PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE
+                            ? PLURID_ROUTE_DEFAULT_UNIVERSE
+                            : utilities.cleanPathElement(universe.value);
+                        const clusterName = cluster.value === PLURID_ROUTE_DEFAULT_CLUSTER_VALUE
+                            ? PLURID_ROUTE_DEFAULT_CLUSTER
+                            : utilities.cleanPathElement(cluster.value);
+                        const planeName = utilities.cleanPathElement(plane.value);
 
                         const pathDivisions = [
                             protocol,
                             host,
-                            path.value === '/'
-                                ? 'p'
-                                : utilities.cleanPathElement(path.value),
-                            space.value === 'default'
-                                ? 's'
-                                : utilities.cleanPathElement(space.value),
-                            universe.value === 'default'
-                                ? 'u'
-                                : utilities.cleanPathElement(universe.value),
-                            cluster.value === 'default'
-                                ? 'c'
-                                : utilities.cleanPathElement(cluster.value),
-                            utilities.cleanPathElement(value),
+                            pathName,
+                            spaceName,
+                            universeName,
+                            clusterName,
+                            planeName,
                         ];
-                        const fullPath = pathDivisions.join('://');
+                        const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
                         if (component.kind === 'react') {
                             const pluridPlane: PluridPlane = {
@@ -206,13 +211,13 @@ export const getGatewayView = (
             continue;
         }
 
-        const pathName = path.value === '/'
-            ? 'p'
+        const pathName = path.value === PLURID_ROUTE_DEFAULT_PATH_VALUE
+            ? PLURID_ROUTE_DEFAULT_PATH
             : utilities.cleanPathElement(path.value);
 
         for (const space of path.spaces) {
-            const spaceName = space.value === 'default'
-                ? 's'
+            const spaceName = space.value === PLURID_ROUTE_DEFAULT_SPACE_VALUE
+                ? PLURID_ROUTE_DEFAULT_SPACE
                 : utilities.cleanPathElement(space.value);
 
             if (!space.universes) {
@@ -220,8 +225,8 @@ export const getGatewayView = (
             }
 
             for (const universe of space.universes) {
-                const universeName = universe.value === 'default'
-                    ? 'u'
+                const universeName = universe.value === PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE
+                    ? PLURID_ROUTE_DEFAULT_UNIVERSE
                     : utilities.cleanPathElement(universe.value);
 
                 if (!universe.clusters) {
@@ -229,8 +234,8 @@ export const getGatewayView = (
                 }
 
                 for (const cluster of universe.clusters) {
-                    const clusterName = cluster.value === 'default'
-                        ? 'c'
+                    const clusterName = cluster.value === PLURID_ROUTE_DEFAULT_CLUSTER_VALUE
+                        ? PLURID_ROUTE_DEFAULT_CLUSTER
                         : utilities.cleanPathElement(cluster.value);
 
                     for (const plane of cluster.planes) {
@@ -250,7 +255,7 @@ export const getGatewayView = (
                             clusterName,
                             planeName,
                         ];
-                        const planeAddress = planeAddressElements.join('://');
+                        const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
 
                         for (const gatewayViewPlane of gatewayView) {
                             // check that the planeAddress is the same as gatewayViewPlane
