@@ -13,41 +13,41 @@ const App = () => {
     const paths: PluridRouterPath[] = [
         {
             value: '/',
-            // planes: [
-            //     {
-            //         value: '/plane',
-            //         component: {
-            //             kind: 'react',
-            //             element: Plane1,
-            //         },
-            //     },
-            // ],
-            spaces: [
+            planes: [
                 {
-                    value: 'foo',
-                    planes: [
-                        {
-                            value: '/foo-plane',
-                            component: {
-                                kind: 'react',
-                                element: Plane1,
-                            },
-                        },
-                    ],
-                },
-                {
-                    value: 'boo',
-                    planes: [
-                        {
-                            value: '/boo-plane',
-                            component: {
-                                kind: 'react',
-                                element: Plane1,
-                            },
-                        },
-                    ],
+                    value: '/plane',
+                    component: {
+                        kind: 'react',
+                        element: Plane1,
+                    },
                 },
             ],
+            // spaces: [
+            //     {
+            //         value: 'foo',
+            //         planes: [
+            //             {
+            //                 value: '/foo-plane',
+            //                 component: {
+            //                     kind: 'react',
+            //                     element: Plane1,
+            //                 },
+            //             },
+            //         ],
+            //     },
+            //     {
+            //         value: 'boo',
+            //         planes: [
+            //             {
+            //                 value: '/boo-plane',
+            //                 component: {
+            //                     kind: 'react',
+            //                     element: Plane1,
+            //                 },
+            //             },
+            //         ],
+            //     },
+            // ],
             // multispace: {
             //     alignment: 'x',
             //     snapType: 'proximity',
