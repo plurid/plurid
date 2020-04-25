@@ -30,9 +30,9 @@ const values = {
         new inquirer.Separator('---- pick one ----'),
     ],
     services: [
-        'GraphQL',
-        'Redux',
-        'Stripe',
+        { name: 'GraphQL', value: 'GraphQL', checked: true },
+        { name: 'Redux', value: 'Redux', checked: true },
+        { name: 'Stripe', value: 'Stripe', checked: true },
         new inquirer.Separator('---- select services ----'),
     ],
     versioning: [
