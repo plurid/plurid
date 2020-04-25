@@ -24,63 +24,78 @@ React implementation of [Plurid](https://github.com/plurid/plurid) to view and e
 
 The simplest manner to setup a "batteries included" plurid' web application is to use [@plurid/generate-plurid-app](https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app)
 
-    npx @plurid/generate-plurid-app
+``` bash
+npx @plurid/generate-plurid-app
+```
 
 In order to setup a plurid' web application in a more specific manner, given a standard setup for a React-based web application (recommended [create-react-app](https://github.com/facebook/create-react-app) template), add the plurid' package
 
-    npm install @plurid/plurid-react
+``` bash
+npm install @plurid/plurid-react
+```
 
 or
 
-    yarn add @plurid/plurid-react
+``` bash
+yarn add @plurid/plurid-react
+```
+
 
 add the peer dependencies
 
-    npm install \
-        @plurid/plurid-data \
-        @plurid/plurid-functions \
-        @plurid/plurid-engine \
-        @plurid/plurid-functions \
-        @plurid/plurid-functions-react \
-        @plurid/plurid-icons-react \
-        @plurid/plurid-pubsub \
-        @plurid/plurid-themes \
-        @plurid/plurid-ui-react \
-        hammerjs \
-        react-redux \
-        redux \
-        redux-thunk \
-        styled-components
+``` bash
+npm install \
+    @plurid/plurid-data \
+    @plurid/plurid-functions \
+    @plurid/plurid-engine \
+    @plurid/plurid-functions \
+    @plurid/plurid-functions-react \
+    @plurid/plurid-icons-react \
+    @plurid/plurid-pubsub \
+    @plurid/plurid-themes \
+    @plurid/plurid-ui-react \
+    hammerjs \
+    react-redux \
+    redux \
+    redux-thunk \
+    styled-components
+```
 
 or
 
-    yarn add \
-        @plurid/plurid-data \
-        @plurid/plurid-functions \
-        @plurid/plurid-engine \
-        @plurid/plurid-functions \
-        @plurid/plurid-functions-react \
-        @plurid/plurid-icons-react \
-        @plurid/plurid-pubsub \
-        @plurid/plurid-themes \
-        @plurid/plurid-ui-react \
-        hammerjs \
-        react-redux \
-        redux \
-        redux-thunk \
-        styled-components
+``` bash
+yarn add \
+    @plurid/plurid-data \
+    @plurid/plurid-functions \
+    @plurid/plurid-engine \
+    @plurid/plurid-functions \
+    @plurid/plurid-functions-react \
+    @plurid/plurid-icons-react \
+    @plurid/plurid-pubsub \
+    @plurid/plurid-themes \
+    @plurid/plurid-ui-react \
+    hammerjs \
+    react-redux \
+    redux \
+    redux-thunk \
+    styled-components
+```
 
 add the types (if it is a TypeScript project)
 
-    npm install -D \
-        @types/styled-components \
-        @types/react-redux
+``` bash
+npm install -D \
+    @types/styled-components \
+    @types/react-redux
+```
 
 or
 
+``` bash
     yarn add -D \
         @types/styled-components \
         @types/react-redux
+```
 
 
 A simple, rendering-test application component, could look like
