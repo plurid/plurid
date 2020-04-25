@@ -5,8 +5,6 @@ import {
     PluridRouterPath,
 } from '@plurid/plurid-react';
 
-import Plane1 from './planes/Plane1';
-
 
 
 const App = () => {
@@ -18,7 +16,17 @@ const App = () => {
                     value: '/plane',
                     component: {
                         kind: 'react',
-                        element: Plane1,
+                        element: (properties) => {
+                            const {
+                                plurid,
+                            } = properties;
+
+                            return (
+                                <div>
+                                    plane with parameter: {plurid.path.parameters.parameter}
+                                </div>
+                            );
+                        },
                     },
                 },
             ],
