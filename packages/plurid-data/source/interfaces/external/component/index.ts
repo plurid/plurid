@@ -37,10 +37,14 @@ export interface WithPluridProperty {
 }
 
 export interface PluridProperty {
+    metadata: {
+        planeID: string;
+        // and other useful data for in plane manipulation
+    };
     path: {
         parameters: Record<string, string>;
         query: Record<string, string>;
-    },
+    };
 }
 
 
