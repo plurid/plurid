@@ -22,11 +22,11 @@ React implementation of [Plurid](https://github.com/plurid/plurid) to view and e
 
 # Install
 
-The most simple manner to setup a "batteries included" plurid' web application is to use [@plurid/generate-plurid-app](https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app)
+The simplest manner to setup a "batteries included" plurid' web application is to use [@plurid/generate-plurid-app](https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app)
 
     npx @plurid/generate-plurid-app
 
-In order to setup a plurid' web application in a more specific manner, given a standard setup for a React-based web application (recommended [create-react-app](https://github.com/facebook/create-react-app)), add the plurid' package
+In order to setup a plurid' web application in a more specific manner, given a standard setup for a React-based web application (recommended [create-react-app](https://github.com/facebook/create-react-app) template), add the plurid' package
 
     npm install @plurid/plurid-react
 
@@ -34,7 +34,7 @@ or
 
     yarn add @plurid/plurid-react
 
-add the dependencies
+add the peer dependencies
 
     npm install \
         @plurid/plurid-data \
@@ -89,34 +89,35 @@ A simple, rendering-test application component, could look like
 /** imports */
 import React from 'react';
 
-import PluridApp, {
-    PluridPage,
+import PluridApplication, {
+    PluridPlane,
 } from '@plurid/plurid-react';
 
 
 
 /** React Functional Component */
 const Application: React.FC<any> = () => {
-    /** plurid' pages */
-    const pages: PluridPage[] = [
+    /** plurid' planes */
+    const pluridPlanes: PluridPlane[] = [
         {
             path: '/',
             component: {
+                kind: 'react',
                 element: () => (<div>Plurid' Application</div>),
             },
         },
     ];
 
     /** plurid' view */
-    const view: string[] = [
+    const pluridView: string[] = [
         '/',
     ];
 
     /** render */
     return (
-        <PluridApp
-            pages={pages}
-            view={view}
+        <PluridApplication
+            planes={pluridPlanes}
+            view={pluridView}
         />
     );
 }
