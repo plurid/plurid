@@ -1,6 +1,6 @@
 {
     "name": "@plurid/generate-plurid-app",
-    "version": "0.1.49",
+    "version": "0.1.50",
     "description": "Generate a plurid' application with one command (and some choices)",
     "keywords": [
         "plurid",
@@ -51,7 +51,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "commander": "^5.0.0",
+        "commander": "^5.1.0",
         "inquirer": "^7.1.0",
         "ora": "^4.0.4"
     },
@@ -65,21 +65,21 @@
         "@typescript-eslint/eslint-plugin": "^2.29.0",
         "@typescript-eslint/parser": "^2.29.0",
         "colors": "^1.4.0",
-        "coveralls": "^3.0.14",
+        "coveralls": "^3.1.0",
         "cross-env": "^7.0.2",
         "eslint": "^6.8.0",
         "jest": "^25.4.0",
         "jest-config": "^25.4.0",
         "lodash.camelcase": "^4.3.0",
         "prompt": "^1.0.0",
-        "replace-in-file": "^5.0.2",
+        "replace-in-file": "^6.0.0",
         "rimraf": "^3.0.2",
         "rollup": "^2.7.2",
         "rollup-plugin-copy": "^3.3.0",
         "rollup-plugin-peer-deps-external": "^2.2.2",
         "rollup-plugin-sourcemaps": "^0.5.0",
         "rollup-plugin-typescript2": "^0.27.0",
-        "shelljs": "^0.8.3",
+        "shelljs": "^0.8.4",
         "ts-jest": "^25.4.0",
         "ts-node": "^8.9.0",
         "typedoc": "^0.17.4",
