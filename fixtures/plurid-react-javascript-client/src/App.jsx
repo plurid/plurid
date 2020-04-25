@@ -12,7 +12,7 @@ const App = () => {
         theme: 'plurid',
         space: {
             layout: {
-                type: 'columns',
+                type: 'COLUMNS',
                 columns: 2,
                 gap: 0.1,
             },
@@ -27,37 +27,17 @@ const App = () => {
 
     const pluridPlanes = [
         {
-            path: 'http://localhost:3000://p://s://u://c://plane',
+            path: '/plane',
             component: {
                 kind: 'react',
                 element: Plane,
-                properties: {},
             },
         },
     ];
 
     const pluridView = [
-        'http://localhost:3000://p://s://u://c://plane',
+        '/plane',
     ];
-
-    const indexedPlanes = new Map();
-
-    const id = Math.random() + '';
-    const indexedPlane: IndexedPluridPlane = {
-        protocol: 'http',
-        host: 'localhost:3000',
-        path: 'p',
-        space: 's',
-        universe: 'u',
-        cluster: 'c',
-        plane: 'plane',
-        route: 'http://localhost:3000://p://s://u://c://plane',
-        component: {
-            kind: 'react',
-            element: Plane,
-        },
-    };
-    indexedPlanes.set(id, indexedPlane);
 
 
     /** render */
@@ -67,7 +47,6 @@ const App = () => {
                 configuration={pluridConfiguration}
                 planes={pluridPlanes}
                 view={pluridView}
-                indexedPlanes={indexedPlanes}
             />
         </div>
     );
