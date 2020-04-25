@@ -1,6 +1,5 @@
 import React, {
     useRef,
-    useState,
     useCallback,
     useEffect,
 } from 'react';
@@ -26,8 +25,6 @@ import {
     PluridPlane,
     IndexedPluridPlane,
     PluridView,
-    PluridCluster,
-    PluridUniverse,
     TreePlane,
     PluridInternalStateUniverse,
     PluridInternalContextUniverse,
@@ -48,16 +45,6 @@ import {
     uuid,
 } from '@plurid/plurid-functions';
 
-// import {
-//     meta,
-//     arrays,
-// } from '@plurid/plurid-functions';
-
-// import {
-//     useDebouncedCallback,
-//     useThrottledCallback,
-// } from '@plurid/plurid-functions-react';
-
 import themes, {
     Theme,
     THEME_NAMES,
@@ -73,27 +60,6 @@ import {
 import handleView from './logic';
 
 import Context from '../../modules/services/logic/context';
-
-// import * as helpers from '../../modules/services/logic/helpers';
-
-// import {
-//     createInternalStateUniverse,
-//     createInternalContextUniverse,
-//     findActiveUniverse,
-// } from '../../modules/services/logic/universes';
-
-// import {
-//     createInternalStatePlane,
-//     createInternalContextPlane,
-// } from '../../modules/services/logic/planes';
-
-// import {
-//     createTreePlane,
-// } from '../../modules/services/logic/tree';
-
-// import {
-//     registerPaths,
-// } from '../../modules/services/logic/paths';
 
 import {
     handleGlobalShortcuts,
@@ -115,12 +81,6 @@ import {
     SpaceSize,
 } from '../../modules/services/state/modules/space/types';
 
-
-
-export interface HandledUniverses {
-    stateUniverses: Indexed<PluridInternalStateUniverse>;
-    contextUniverses: Indexed<PluridInternalContextUniverse>;
-}
 
 
 interface ViewOwnProperties {
@@ -190,14 +150,14 @@ const View: React.FC<ViewProperties> = (
         /** state */
         configuration: stateConfiguration,
         spaceLoading,
-        initialTree,
-        stateTree,
-        viewSize,
+        // initialTree,
+        // stateTree,
+        // viewSize,
         transform,
-        stateDataUniverses,
-        activeUniverseID,
-        stateSpaceLocation,
-        stateCulledView,
+        // stateDataUniverses,
+        // activeUniverseID,
+        // stateSpaceLocation,
+        // stateCulledView,
 
         /** dispatch */
         dispatch,
@@ -205,12 +165,12 @@ const View: React.FC<ViewProperties> = (
         dispatchSetConfiguration,
         dispatchSetConfigurationMicro,
 
-        dispatchSetUniverses,
-        dispatchSetViewSize,
+        // dispatchSetUniverses,
+        // dispatchSetViewSize,
 
         dispatchSetSpaceLoading,
         dispatchSetAnimatedTransform,
-        dispatchSetSpaceLocation,
+        // dispatchSetSpaceLocation,
         dispatchSetInitialTree,
         dispatchSetTree,
         dispatchSetSpaceSize,
@@ -225,10 +185,10 @@ const View: React.FC<ViewProperties> = (
         scaleUpWith,
         scaleDownWith,
 
-        dispatchSetActiveUniverse,
+        // dispatchSetActiveUniverse,
 
-        dispatchSpaceSetView,
-        dispatchSpaceSetCulledView,
+        // dispatchSpaceSetView,
+        // dispatchSpaceSetCulledView,
 
         dispatchDataSetPlaneSources,
     } = properties;
@@ -238,19 +198,13 @@ const View: React.FC<ViewProperties> = (
         planes,
         indexedPlanes,
         view,
-        // clusters,
-        // universes,
         pubsub,
     } = pluridApplication;
-
-    // console.log('PLANES', planes);
 
 
     /** references */
     const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(indexedPlanes || new Map());
     const viewElement = useRef<HTMLDivElement>(null);
-
-    // const contextUniversesRef = useRef<Indexed<PluridInternalContextUniverse>>({});
 
 
     // /** state */
@@ -672,7 +626,6 @@ const View: React.FC<ViewProperties> = (
     //         }, 450);
     //     }
     // }, 100);
-
 
     // const computedCulledFunction = () => {
     //     const culledView = space.computeCulledView(
