@@ -280,7 +280,7 @@ const PluridRouterBrowser = (
     /** render */
     if (!matchedRoute || !Component) {
         return (
-            <>Not Found</>
+            <></>
         );
     }
 
