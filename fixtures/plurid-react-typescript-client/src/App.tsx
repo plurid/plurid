@@ -34,7 +34,6 @@ const App = () => {
             component: {
                 kind: 'react',
                 element: Plane,
-                properties: {},
             },
         },
     ];
