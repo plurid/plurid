@@ -17,10 +17,13 @@ import Context from '../../services/logic/context';
 import PluridPlane from '../PluridPlane';
 
 import {
+    /** constants */
     PLURID_ENTITY_ROOT,
 
+    /** interfaces */
     TreePlane,
-    PluridContext
+    PluridContext,
+    PluridProperty,
 } from '@plurid/plurid-data';
 
 import { AppState } from '../../services/state/store';
@@ -204,9 +207,12 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
     const Plane = pluridPlane.component.element;
 
-    const pageProperties = pluridPlane.component.properties || {};
-    console.log('pluridPlaneProperties', pluridPlaneProperties);
-    const pluridProperties = {
+    const planeProperties = pluridPlane.component.properties || {};
+
+    const pluridProperties: PluridProperty = {
+        metadata: {
+            planeID: plane.planeID,
+        },
         ...pluridPlaneProperties.plurid,
     };
 
@@ -224,7 +230,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     ? (
                         <Plane
                             plurid={pluridProperties}
-                            {...pageProperties}
+                            {...planeProperties}
                         />
                     ) : (
                         <PlaneContext.Provider
@@ -232,7 +238,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         >
                             <Plane
                                 plurid={pluridProperties}
-                                {...pageProperties}
+                                {...planeProperties}
                             />
                         </PlaneContext.Provider>
                     )
