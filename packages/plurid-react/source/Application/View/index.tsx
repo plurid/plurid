@@ -12,6 +12,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import {
     /** constants */
     PLURID_ENTITY_VIEW,
+    defaultTreePlane,
 
     /** enumerations */
     TRANSFORM_MODES,
@@ -35,6 +36,7 @@ import {
 
 import {
     space,
+    router,
     general as generalEngine,
 } from '@plurid/plurid-engine';
 
@@ -299,102 +301,102 @@ const View: React.FC<ViewProperties> = (
 
 
     /** handlers */
-    const handlePlanes = (
-        planes: PluridPlane[],
-        stateUniverses: Indexed<PluridInternalStateUniverse>,
-    ) => {
-        const identifiedPlanes = generalEngine.helpers.identifyPlanes(planes);
+    // const handlePlanes = (
+    //     planes: PluridPlane[],
+    //     stateUniverses: Indexed<PluridInternalStateUniverse>,
+    // ) => {
+    //     const identifiedPlanes = generalEngine.helpers.identifyPlanes(planes);
 
-        const statePlanes = identifiedPlanes.map(plane => {
-            const statePlane = generalEngine.planes.createInternalStatePlane(plane);
-            return statePlane;
-        });
+    //     const statePlanes = identifiedPlanes.map(plane => {
+    //         const statePlane = generalEngine.planes.createInternalStatePlane(plane);
+    //         return statePlane;
+    //     });
 
-        const contextPlanes = identifiedPlanes.map(plane => {
-            const contextPlane = generalEngine.planes.createInternalContextPlane(plane);
-            return contextPlane;
-        });
+    //     const contextPlanes = identifiedPlanes.map(plane => {
+    //         const contextPlane = generalEngine.planes.createInternalContextPlane(plane);
+    //         return contextPlane;
+    //     });
 
-        const indexedStatePlanes = generalEngine.helpers.createIndexed(statePlanes);
-        const indexedContextPlanes = generalEngine.helpers.createIndexed(contextPlanes);
+    //     const indexedStatePlanes = generalEngine.helpers.createIndexed(statePlanes);
+    //     const indexedContextPlanes = generalEngine.helpers.createIndexed(contextPlanes);
 
-        const paths = generalEngine.paths.registerPaths(statePlanes);
-        const indexedPaths = generalEngine.helpers.createIndexed(paths);
+    //     const paths = generalEngine.paths.registerPaths(statePlanes);
+    //     const indexedPaths = generalEngine.helpers.createIndexed(paths);
 
-        const document: PluridInternalStateUniverse = {
-            id: 'default',
-            name: 'default',
-            planes: indexedStatePlanes,
-            paths: indexedPaths,
-            ordinal: 0,
-            active: true,
-        };
-        const indexedStateUniverses: Indexed<PluridInternalStateUniverse> = {
-            default: document,
-        };
+    //     const document: PluridInternalStateUniverse = {
+    //         id: 'default',
+    //         name: 'default',
+    //         planes: indexedStatePlanes,
+    //         paths: indexedPaths,
+    //         ordinal: 0,
+    //         active: true,
+    //     };
+    //     const indexedStateUniverses: Indexed<PluridInternalStateUniverse> = {
+    //         default: document,
+    //     };
 
-        const contextUniverse = {
-            id: 'default',
-            name: 'default',
-            planes: indexedContextPlanes,
-        };
-        const indexedContextUniverses: Indexed<PluridInternalContextUniverse> = {
-            default: contextUniverse,
-        };
+    //     const contextUniverse = {
+    //         id: 'default',
+    //         name: 'default',
+    //         planes: indexedContextPlanes,
+    //     };
+    //     const indexedContextUniverses: Indexed<PluridInternalContextUniverse> = {
+    //         default: contextUniverse,
+    //     };
 
-        return {
-            stateUniverses: indexedStateUniverses,
-            contextUniverses: indexedContextUniverses,
-        };
-    }
+    //     return {
+    //         stateUniverses: indexedStateUniverses,
+    //         contextUniverses: indexedContextUniverses,
+    //     };
+    // }
 
-    const handleUniverses = (
-        universes: PluridUniverse[],
-        stateUniverses: Indexed<PluridInternalStateUniverse>,
-    ) => {
-        const identifiedUniverses = generalEngine.helpers.identifyUniverses(universes);
+    // const handleUniverses = (
+    //     universes: PluridUniverse[],
+    //     stateUniverses: Indexed<PluridInternalStateUniverse>,
+    // ) => {
+    //     const identifiedUniverses = generalEngine.helpers.identifyUniverses(universes);
 
-        const identifiedStateUniverses = identifiedUniverses.map(document => {
-            const stateUniverse = generalEngine.universes.createInternalStateUniverse(document);
-            return stateUniverse;
-        });
-        const identifiedContextUniverses = identifiedUniverses.map(document => {
-            const contextUniverse = generalEngine.universes.createInternalContextUniverse(document);
-            return contextUniverse;
-        });
+    //     const identifiedStateUniverses = identifiedUniverses.map(document => {
+    //         const stateUniverse = generalEngine.universes.createInternalStateUniverse(document);
+    //         return stateUniverse;
+    //     });
+    //     const identifiedContextUniverses = identifiedUniverses.map(document => {
+    //         const contextUniverse = generalEngine.universes.createInternalContextUniverse(document);
+    //         return contextUniverse;
+    //     });
 
-        const indexedStateUniverses = generalEngine.helpers.createIndexed(identifiedStateUniverses);
-        const indexedContextUniverses = generalEngine.helpers.createIndexed(identifiedContextUniverses);
+    //     const indexedStateUniverses = generalEngine.helpers.createIndexed(identifiedStateUniverses);
+    //     const indexedContextUniverses = generalEngine.helpers.createIndexed(identifiedContextUniverses);
 
-        return {
-            stateUniverses: indexedStateUniverses,
-            contextUniverses: indexedContextUniverses,
-        };
-    }
+    //     return {
+    //         stateUniverses: indexedStateUniverses,
+    //         contextUniverses: indexedContextUniverses,
+    //     };
+    // }
 
-    const createUniverses = (
-        planes: PluridPlane[] | undefined,
-        universes: PluridUniverse[] | undefined,
-        stateUniverses: Indexed<PluridInternalStateUniverse>,
-    ): HandledUniverses | undefined => {
-        // // To check against already loaded planes and universes
-        // // and update only the changes
-        // if (!universes && planes) {
-        //     return handlePlanes(
-        //         planes,
-        //         stateUniverses,
-        //     );
-        // }
+    // const createUniverses = (
+    //     planes: PluridPlane[] | undefined,
+    //     universes: PluridUniverse[] | undefined,
+    //     stateUniverses: Indexed<PluridInternalStateUniverse>,
+    // ): HandledUniverses | undefined => {
+    //     // // To check against already loaded planes and universes
+    //     // // and update only the changes
+    //     // if (!universes && planes) {
+    //     //     return handlePlanes(
+    //     //         planes,
+    //     //         stateUniverses,
+    //     //     );
+    //     // }
 
-        // if (universes) {
-        //     return handleUniverses(
-        //         universes,
-        //         stateUniverses,
-        //     );
-        // }
+    //     // if (universes) {
+    //     //     return handleUniverses(
+    //     //         universes,
+    //     //         stateUniverses,
+    //     //     );
+    //     // }
 
-        return;
-    }
+    //     return;
+    // }
 
     // const computeTree = (
     //     activeUniverseID: string,
@@ -444,29 +446,34 @@ const View: React.FC<ViewProperties> = (
     // }
 
     const computeTree = (
-        // activeUniverseID: string,
-        // universes: Indexed<PluridInternalStateUniverse>,
         configuration: PluridAppConfiguration,
+        treePlanes: TreePlane[],
         view: string[] | PluridView[] | undefined,
-        // clusters: PluridCluster[] | undefined,
-        // contextUniverses: Indexed<PluridInternalContextUniverse>,
-        computedIndexedPlanes: IndexedPluridPlane[],
-        previousTree: TreePlane[],
     ) => {
+        const spaceTree = new space.tree.Tree({
+            planes: treePlanes,
+            configuration,
+            view,
+        });
+
+        const computedTree = spaceTree.compute();
+
+        return computedTree;
+
         // const activeUniverse = universes[activeUniverseID];
         // const planes = activeUniverse.planes;
 
         // const activeContextUniverse = contextUniverses[activeUniverseID];
         // const contextPlanes = activeContextUniverse.planes;
 
-        const treePlanes: TreePlane[] = [];
+        // const treePlanes: TreePlane[] = [];
 
-        for (const computedIndexedPlane of computedIndexedPlanes) {
-            // const treePlane = generalEngine.tree.createTreePlane(
-            //     computedIndexedPlane,
-            // );
-            // treePlanes.push(treePlane);
-        }
+        // for (const computedIndexedPlane of computedIndexedPlanes) {
+        //     // const treePlane = generalEngine.tree.createTreePlane(
+        //     //     computedIndexedPlane,
+        //     // );
+        //     // treePlanes.push(treePlane);
+        // }
 
 
         // for (const planeID in planes) {
@@ -517,47 +524,129 @@ const View: React.FC<ViewProperties> = (
         handleConfiguration(appConfiguration);
 
 
-        console.log('planes', planes);
-        console.log('indexedPlanes', indexedPlanes);
-        console.log('-----');
-        if (planes && !indexedPlanes) {
-            const computedIndexedPlanes: IndexedPluridPlane[] = [];
+        // merge computedIndexedPlanes
+        const computedIndexedPlanes = new Map<string, IndexedPluridPlane>(
+            indexedPlanes || new Map()
+        );
 
+        if (planes) {
             for (const plane of planes) {
+                const linkPath = router.resolveAbsolutePluridLinkPath(plane.path);
+                if (!linkPath) {
+                    continue;
+                }
+
+                const {
+                    protocol,
+                    host,
+                    path,
+                    space,
+                    universe,
+                    cluster,
+                    plane: planePath,
+                    resolvedPath,
+                } = linkPath;
+
                 const computedIndexedPlane: IndexedPluridPlane = {
-                    protocol: '',
-                    host: '',
-                    path: '',
-                    space: '',
-                    universe: '',
-                    cluster: '',
-                    plane: '',
-                    route: '',
+                    protocol,
+                    host: host.value,
+                    path: path.value,
+                    space: space.value,
+                    universe: universe.value,
+                    cluster: cluster.value,
+                    plane: planePath.value,
+                    route: resolvedPath,
                     component: plane.component,
                 };
-                computedIndexedPlanes.push(computedIndexedPlane);
-
                 const id = uuid.generate();
-                indexedPlanesReference.current.set(id, computedIndexedPlane);
+                computedIndexedPlanes.set(id, computedIndexedPlane);
             }
-
-            const newTree = computeTree(
-                appConfiguration,
-                view,
-                computedIndexedPlanes,
-                stateTree,
-            );
-
-            // compute indexed planes
-
-            // compute tree based on indexedPlanes, configuration, view
         }
 
-        if (!planes && indexedPlanes) {
-            // compute tree based on indexedPlanes, configuration, view
+        console.log('computedIndexedPlanes', computedIndexedPlanes);
+
+        const planeSources: Record<string, string> = {};
+        for (const [id, indexedPlane] of computedIndexedPlanes) {
+            planeSources[indexedPlane.route] = id;
         }
 
-        // if there are any indexed planes compute the application based on them
+
+        // create tree planes
+        const treePlanes: TreePlane[] = [];
+
+        for (const [id, computedIndexedPlane] of computedIndexedPlanes) {
+            const treePlane: TreePlane = {
+                ...defaultTreePlane,
+                sourceID: id,
+                route: computedIndexedPlane.route,
+            };
+            treePlanes.push(treePlane);
+        }
+
+        console.log('treePlanes', treePlanes);
+
+
+        // create tree
+        const newTree = computeTree(
+            appConfiguration,
+            treePlanes,
+            view,
+        );
+
+
+        /** assignments */
+        // dispatchSetSpaceSize(spaceSize);
+        // dispatchSetConfiguration(appConfiguration);
+        // dispatchSetInitialTree(newTree);
+        // dispatchSetTree(newTree);
+        // dispatchSetSpaceLoading(false);
+        dispatchDataSetPlaneSources(planeSources);
+
+
+
+
+
+        // console.log('planes', planes);
+        // console.log('indexedPlanes', indexedPlanes);
+        // console.log('-----');
+        // if (planes && !indexedPlanes) {
+        //     const computedIndexedPlanes: IndexedPluridPlane[] = [];
+
+        //     for (const plane of planes) {
+        //         const computedIndexedPlane: IndexedPluridPlane = {
+        //             protocol: '',
+        //             host: '',
+        //             path: '',
+        //             space: '',
+        //             universe: '',
+        //             cluster: '',
+        //             plane: '',
+        //             route: '',
+        //             component: plane.component,
+        //         };
+        //         computedIndexedPlanes.push(computedIndexedPlane);
+
+        //         const id = uuid.generate();
+        //         indexedPlanesReference.current.set(id, computedIndexedPlane);
+        //     }
+
+        //     const newTree = computeTree(
+        //         appConfiguration,
+        //         view,
+        //         computedIndexedPlanes,
+        //         stateTree,
+        //     );
+
+        //     // compute indexed planes
+
+        //     // compute tree based on indexedPlanes, configuration, view
+        // }
+
+        // if (!planes && indexedPlanes) {
+        //     // compute tree based on indexedPlanes, configuration, view
+        // }
+
+        // // if there are any indexed planes compute the application based on them
 
 
 
@@ -924,6 +1013,7 @@ const View: React.FC<ViewProperties> = (
         configuration,
         planes,
         view,
+        indexedPlanes,
         // clusters,
         // universes,
     ]);
@@ -1198,22 +1288,22 @@ const View: React.FC<ViewProperties> = (
     //     stateSpaceLocation,
     // ]);
 
-    /** Index planesSources */
-    useEffect(() => {
-        if (indexedPlanes) {
-            const planeSources: Record<string, string> = {};
-            for (const [id, indexedPlane] of indexedPlanes) {
-                planeSources[indexedPlane.route] = id;
-            }
+    // /** Index planesSources */
+    // useEffect(() => {
+    //     if (indexedPlanes) {
+    //         const planeSources: Record<string, string> = {};
+    //         for (const [id, indexedPlane] of indexedPlanes) {
+    //             planeSources[indexedPlane.route] = id;
+    //         }
 
-            dispatchDataSetPlaneSources(planeSources);
-        } else {
-            // handle planes
-            console.log(planes);
-        }
-    }, [
-        indexedPlanes,
-    ]);
+    //         dispatchDataSetPlaneSources(planeSources);
+    //     } else {
+    //         // handle planes
+    //         console.log(planes);
+    //     }
+    // }, [
+    //     indexedPlanes,
+    // ]);
 
 
     /** context */
