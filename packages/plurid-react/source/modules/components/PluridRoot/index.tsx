@@ -76,8 +76,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         // indexedPlanes,
     } = context;
 
-    console.log('planesMap', planesMap);
-    console.log('statePlaneSources', statePlaneSources);
+    // console.log('planesMap', planesMap);
+    // console.log('statePlaneSources', statePlaneSources);
 
 
     /** state */
@@ -187,7 +187,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     }
 
     const pluridPlane = planesMap.get(pluridPlaneID);
-    console.log('pluridPlane', pluridPlane);
+
     if (!pluridPlane) {
         return (
             <></>
