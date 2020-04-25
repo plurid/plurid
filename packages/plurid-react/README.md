@@ -92,9 +92,9 @@ npm install -D \
 or
 
 ``` bash
-    yarn add -D \
-        @types/styled-components \
-        @types/react-redux
+yarn add -D \
+    @types/styled-components \
+    @types/react-redux
 ```
 
 
