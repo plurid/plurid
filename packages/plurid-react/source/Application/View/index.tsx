@@ -243,7 +243,7 @@ const View: React.FC<ViewProperties> = (
         pubsub,
     } = pluridApplication;
 
-    console.log('PLANES', planes);
+    // console.log('PLANES', planes);
 
 
     /** references */
@@ -564,6 +564,7 @@ const View: React.FC<ViewProperties> = (
         }
 
         console.log('computedIndexedPlanes', computedIndexedPlanes);
+        indexedPlanesReference.current = new Map(computedIndexedPlanes);
 
         const planeSources: Record<string, string> = {};
         for (const [id, indexedPlane] of computedIndexedPlanes) {
@@ -588,11 +589,25 @@ const View: React.FC<ViewProperties> = (
         console.log('treePlanes', treePlanes);
 
 
+        const currentView = view || [];
+        const absoluteView = [];
+
+        for (const viewItem of currentView) {
+            if (typeof viewItem === 'string') {
+                const viewPath = router.resolveAbsolutePluridLinkPath(viewItem);
+                if (!viewPath) {
+                    continue;
+                }
+                absoluteView.push(viewPath.resolvedPath);
+            }
+        }
+
+
         // create tree
         const newTree = computeTree(
             appConfiguration,
             treePlanes,
-            view,
+            absoluteView,
         );
 
 
