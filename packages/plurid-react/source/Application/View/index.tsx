@@ -349,8 +349,33 @@ const View: React.FC<ViewProperties> = (
         const treePlanes: TreePlane[] = [];
 
         for (const [id, computedIndexedPlane] of computedIndexedPlanes) {
+            const linkPath = router.resolveAbsolutePluridLinkPath(computedIndexedPlane.path);
+            if (!linkPath) {
+                continue;
+            }
+
+            const {
+                protocol,
+                host,
+                path,
+                space,
+                universe,
+                cluster,
+                plane,
+            } = linkPath;
+
             const treePlane: TreePlane = {
                 ...defaultTreePlane,
+                routeDivisions: {
+                    protocol,
+                    host,
+                    path,
+                    space,
+                    universe,
+                    cluster,
+                    plane,
+                    valid: true,
+                },
                 sourceID: id,
                 route: computedIndexedPlane.route,
                 planeID: uuid.generate(),
