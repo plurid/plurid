@@ -1,8 +1,11 @@
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, {
+    createGlobalStyle,
+} from 'styled-components';
 
 import {
     TRANSFORM_MODES,
 } from '@plurid/plurid-data';
+
 
 
 export const GlobalStyle = createGlobalStyle`
