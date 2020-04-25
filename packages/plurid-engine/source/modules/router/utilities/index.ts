@@ -285,7 +285,7 @@ export const resolveAbsolutePluridLinkPath = (
 
     const separator = '://';
 
-    if (!plane.value) {
+    if (!plane.value && route !== '/') {
         const resolvers = [
             protocol,
             host.value,
