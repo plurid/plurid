@@ -83,7 +83,7 @@ const PluridRouterBrowser = (
     const handleMatchedRoute = (
         matchedRoute: router.MatcherResponse,
     ) => {
-        console.log('matchedRoute', matchedRoute);
+        // console.log('matchedRoute', matchedRoute);
         setMatchedRoute(matchedRoute);
 
         if (!cleanNavigation) {
@@ -110,6 +110,7 @@ const PluridRouterBrowser = (
 
     const handleNoMatch = () => {
         const notFoundMatchedRoute = pluridRouter.current.match(notFoundPath);
+
         if (notFoundMatchedRoute) {
             setMatchedRoute(notFoundMatchedRoute);
             const Component = getComponentFromRoute({
@@ -120,13 +121,8 @@ const PluridRouterBrowser = (
             });
 
             if (Component) {
-                history.pushState(null, '', notFoundPath);
                 setComponent(Component);
             }
-        } else {
-            setComponent(
-                <>Not Found</>
-            );
         }
     }
 
@@ -284,7 +280,7 @@ const PluridRouterBrowser = (
     /** render */
     if (!matchedRoute || !Component) {
         return (
-            <></>
+            <>Not Found</>
         );
     }
 
