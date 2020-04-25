@@ -292,7 +292,17 @@ export const resolveAbsolutePluridLinkPath = (
             path.value,
         ];
         const resolvedPath = resolvers.join(separator);
-        return resolvedPath;
+
+        return {
+            protocol,
+            host,
+            path,
+            space,
+            universe,
+            cluster,
+            plane,
+            resolvedPath,
+        };
     }
 
     const resolvers = [
@@ -305,5 +315,15 @@ export const resolveAbsolutePluridLinkPath = (
         cleanPathElement(plane.value),
     ];
     const resolvedPath = resolvers.join(separator);
-    return resolvedPath;
+
+    return {
+        protocol,
+        host,
+        path,
+        space,
+        universe,
+        cluster,
+        plane,
+        resolvedPath,
+    };
 }
