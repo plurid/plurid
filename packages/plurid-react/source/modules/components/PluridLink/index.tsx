@@ -175,13 +175,17 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
+        const {
+            resolvedPath,
+        } = absolutePlaneRoute;
+
         const linkCoordinates = getPluridLinkCoordinates();
 
         const {
             pluridPlaneID,
             updatedTree,
         } = space.tree.logic.updateTreeWithNewPlane(
-            absolutePlaneRoute,
+            resolvedPath,
             parentPlaneID,
             linkCoordinates,
             stateTree,
@@ -301,7 +305,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     /** Set plane ID */
     useEffect(() => {
         if (absolutePlaneRoute) {
-            const potentialPlaneRoute = statePlaneSources[absolutePlaneRoute];
+            const potentialPlaneRoute = statePlaneSources[absolutePlaneRoute.resolvedPath];
 
             if (!potentialPlaneRoute) {
                 for (const planeRoute of Object.keys(statePlaneSources)) {
