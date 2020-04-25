@@ -58,7 +58,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         plane,
 
         /** state */
-        activeUniverseID,
         statePlaneSources,
     } = properties;
 
@@ -76,8 +75,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         planesProperties,
         planeContext: PlaneContext,
         planeContextValue,
-        // universes,
-        // indexedPlanes,
     } = context;
 
     // console.log('planesMap', planesMap);
@@ -107,12 +104,14 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 }
 
                 const activePlane = planesMap.get(planeID);
+                const pluridPlaneProperties = planesProperties.get(planeID);
                 // console.log('activePlane', activePlane);
                 // const activePlane = activePlanes[child.sourceID];
 
                 let plane = (<></>);
                 if (
                     activePlane
+                    && pluridPlaneProperties
                     // && child.show
                 ) {
                     // instead of forcing show here to pass it as prop
@@ -123,11 +122,18 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         return;
                     }
 
-                    const properties = activePlane.component.properties || {};
                     const pluridProperties = {
-                        parameters: {},
-                        query: {},
-                        // parameters: child.parameters || {},
+                        ...pluridPlaneProperties.plurid,
+                        metadata: {
+                            planeID,
+                        },
+                    };
+
+                    const properties = {
+                        ...activePlane.component.properties,
+                        plurid: {
+                            ...pluridProperties,
+                        },
                     };
 
                     plane = (
@@ -141,7 +147,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                             {!PlaneContext
                                 ? (
                                     <Plane
-                                        plurid={pluridProperties}
                                         {...properties}
                                     />
                                 ) : (
@@ -149,7 +154,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                                         value={planeContextValue}
                                     >
                                         <Plane
-                                            plurid={pluridProperties}
                                             {...properties}
                                         />
                                     </PlaneContext.Provider>
@@ -207,13 +211,18 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
     const Plane = pluridPlane.component.element;
 
-    const planeProperties = pluridPlane.component.properties || {};
-
     const pluridProperties: PluridProperty = {
+        ...pluridPlaneProperties.plurid,
         metadata: {
             planeID: plane.planeID,
         },
-        ...pluridPlaneProperties.plurid,
+    };
+
+    const planeProperties = {
+        ...pluridPlane.component.properties,
+        plurid: {
+            ...pluridProperties,
+        },
     };
 
     return (
@@ -226,21 +235,19 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 planeID={plane.planeID}
                 location={location}
             >
-                {!PlaneContext
+                {PlaneContext
                     ? (
-                        <Plane
-                            plurid={pluridProperties}
-                            {...planeProperties}
-                        />
-                    ) : (
                         <PlaneContext.Provider
                             value={planeContextValue}
                         >
                             <Plane
-                                plurid={pluridProperties}
                                 {...planeProperties}
                             />
                         </PlaneContext.Provider>
+                    ) : (
+                        <Plane
+                            {...planeProperties}
+                        />
                     )
                 }
             </PluridPlane>
