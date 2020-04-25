@@ -37,6 +37,20 @@ const App = () => {
                 ),
             },
         },
+        {
+            value: '/not-found',
+            planes: [
+                {
+                    value: '/',
+                    component: {
+                        kind: 'react',
+                        element: () => (
+                            <div>Not Found</div>
+                        ),
+                    },
+                },
+            ],
+        }
     ];
 
     return (
