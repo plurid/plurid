@@ -13,15 +13,13 @@ const App = () => {
             value: '/:parameter',
             planes: [
                 {
-                    value: '/plane',
+                    value: '/plane-1',
                     component: {
                         kind: 'react',
                         element: (properties) => {
                             const {
                                 plurid,
                             } = properties;
-                            console.log('properties', properties);
-                            console.log('plurid', plurid);
 
                             return (
                                 <div>
@@ -31,6 +29,23 @@ const App = () => {
                         },
                     },
                 },
+                // {
+                //     value: '/plane-2',
+                //     component: {
+                //         kind: 'react',
+                //         element: (properties) => {
+                //             const {
+                //                 plurid,
+                //             } = properties;
+
+                //             return (
+                //                 <div>
+                //                     plane with parameter: {plurid.path.parameters.parameter}
+                //                 </div>
+                //             );
+                //         },
+                //     },
+                // },
             ],
         },
     ];
