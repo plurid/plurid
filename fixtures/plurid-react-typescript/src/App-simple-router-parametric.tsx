@@ -20,6 +20,8 @@ const App = () => {
                             const {
                                 plurid,
                             } = properties;
+                            console.log('properties', properties);
+                            console.log('plurid', plurid);
 
                             return (
                                 <div>
