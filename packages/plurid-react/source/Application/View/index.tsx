@@ -579,6 +579,8 @@ const View: React.FC<ViewProperties> = (
                 ...defaultTreePlane,
                 sourceID: id,
                 route: computedIndexedPlane.route,
+                planeID: uuid.generate(),
+                show: true,
             };
             treePlanes.push(treePlane);
         }
@@ -594,12 +596,15 @@ const View: React.FC<ViewProperties> = (
         );
 
 
+        const spaceSize = space.utilities.computeSpaceSize(newTree);
+
+
         /** assignments */
-        // dispatchSetSpaceSize(spaceSize);
-        // dispatchSetConfiguration(appConfiguration);
-        // dispatchSetInitialTree(newTree);
-        // dispatchSetTree(newTree);
-        // dispatchSetSpaceLoading(false);
+        dispatchSetSpaceSize(spaceSize);
+        dispatchSetConfiguration(appConfiguration);
+        dispatchSetInitialTree(newTree);
+        dispatchSetTree(newTree);
+        dispatchSetSpaceLoading(false);
         dispatchDataSetPlaneSources(planeSources);
 
 
