@@ -27,7 +27,7 @@ import {
     PluridView,
     TreePlane,
     PluridInternalStateUniverse,
-    PluridInternalContextUniverse,
+    // PluridInternalContextUniverse,
     Indexed,
 } from '@plurid/plurid-data';
 
@@ -88,7 +88,7 @@ interface ViewOwnProperties {
 }
 
 interface ViewStateProperties {
-    configuration: PluridAppConfiguration;
+    stateConfiguration: PluridAppConfiguration;
     stateDataUniverses: Indexed<PluridInternalStateUniverse>;
     viewSize: ViewSize;
     spaceLoading: boolean;
@@ -148,7 +148,7 @@ const View: React.FC<ViewProperties> = (
         pluridApplication,
 
         /** state */
-        configuration: stateConfiguration,
+        stateConfiguration,
         spaceLoading,
         // initialTree,
         // stateTree,
@@ -201,9 +201,13 @@ const View: React.FC<ViewProperties> = (
         pubsub,
     } = pluridApplication;
 
+    console.log('planes', planes);
+    console.log('indexedPlanes', indexedPlanes);
+
 
     /** references */
     const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(indexedPlanes || new Map());
+    const planesPropertiesReference = useRef<Map<string, any>>(new Map());
     const viewElement = useRef<HTMLDivElement>(null);
 
 
@@ -320,6 +324,12 @@ const View: React.FC<ViewProperties> = (
                     component: plane.component,
                 };
                 const id = uuid.generate();
+
+                const planeProperties = {
+                    ...plane.component.properties,
+                };
+                planesPropertiesReference.current.set(id, planeProperties);
+
                 computedIndexedPlanes.set(id, computedIndexedPlane);
             }
         }
@@ -926,6 +936,7 @@ const View: React.FC<ViewProperties> = (
     /** context */
     const pluridContext: PluridContext = {
         planesMap: indexedPlanesReference.current,
+        planesProperties: planesPropertiesReference.current,
         planeContext: pluridApplication.planeContext,
         planeContextValue: pluridApplication.planeContextValue,
     };
@@ -960,7 +971,7 @@ const View: React.FC<ViewProperties> = (
 const mapStateToProperties = (
     state: AppState,
 ): ViewStateProperties => ({
-    configuration: selectors.configuration.getConfiguration(state),
+    stateConfiguration: selectors.configuration.getConfiguration(state),
     stateDataUniverses: selectors.data.getUniverses(state),
     viewSize: selectors.space.getViewSize(state),
     transform: selectors.space.getTransform(state),

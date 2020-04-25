@@ -70,6 +70,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
     const {
         planesMap,
+        planesProperties,
         planeContext: PlaneContext,
         planeContextValue,
         // universes,
@@ -187,8 +188,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     }
 
     const pluridPlane = planesMap.get(pluridPlaneID);
+    const pluridPlaneProperties = planesProperties.get(pluridPlaneID);
 
-    if (!pluridPlane) {
+    if (!pluridPlane || !pluridPlaneProperties) {
         return (
             <></>
         );
@@ -203,9 +205,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const Plane = pluridPlane.component.element;
 
     const pageProperties = pluridPlane.component.properties || {};
+    console.log('pluridPlaneProperties', pluridPlaneProperties);
     const pluridProperties = {
-        parameters: {},
-        query: {},
+        ...pluridPlaneProperties.plurid,
     };
 
     return (
