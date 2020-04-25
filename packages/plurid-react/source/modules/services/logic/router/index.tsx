@@ -66,7 +66,7 @@ export const getComponentFromRoute = (
             query,
         },
     };
-    console.log('pluridProperty', pluridProperty);
+    // console.log('pluridProperty', pluridProperty);
 
     const {
         exterior,
@@ -764,7 +764,8 @@ export const generateIndexedPlane = (
         component: plane.component,
     };
 
-    const id = uuid.generate();
+    const id = planeAddress;
+    // const id = uuid.generate();
 
     return {
         id,

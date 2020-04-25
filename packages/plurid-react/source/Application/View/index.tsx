@@ -201,12 +201,13 @@ const View: React.FC<ViewProperties> = (
         pubsub,
     } = pluridApplication;
 
-    console.log('planes', planes);
-    console.log('indexedPlanes', indexedPlanes);
+    // console.log('planes', planes);
+    // console.log('indexedPlanes', indexedPlanes);
 
 
     /** references */
-    const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(indexedPlanes || new Map());
+    const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(new Map());
+    // const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(indexedPlanes || new Map());
     const planesPropertiesReference = useRef<Map<string, any>>(new Map());
     const viewElement = useRef<HTMLDivElement>(null);
 
@@ -288,6 +289,8 @@ const View: React.FC<ViewProperties> = (
 
         handleConfiguration(appConfiguration);
 
+        // console.log('PLANES', planes);
+        // console.log('--- indexedPlanes', indexedPlanes);
 
         // merge computedIndexedPlanes
         const computedIndexedPlanes = new Map<string, IndexedPluridPlane>(
@@ -323,7 +326,7 @@ const View: React.FC<ViewProperties> = (
                     route: resolvedPath,
                     component: plane.component,
                 };
-                const id = uuid.generate();
+                const id = resolvedPath;
 
                 const planeProperties = {
                     ...plane.component.properties,
@@ -659,6 +662,7 @@ const View: React.FC<ViewProperties> = (
     /** effects */
     /** Compute Application */
     useEffect(() => {
+        // console.log('COMPUTE APPLICATION EFFECT');
         computeApplication(
             configuration,
             planes,
