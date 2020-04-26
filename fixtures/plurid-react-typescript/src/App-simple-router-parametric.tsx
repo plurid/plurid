@@ -10,7 +10,7 @@ import {
 const App = () => {
     const paths: PluridRouterPath[] = [
         {
-            value: '/:parameter',
+            value: '/simple/:parameter',
             planes: [
                 {
                     value: '/plane-1',
@@ -46,6 +46,31 @@ const App = () => {
                 //         },
                 //     },
                 // },
+            ],
+        },
+        {
+            value: '/includes/:parameter',
+            parameters: {
+                parameter: {
+                    includes: ['one', 'two'],
+                },
+            },
+            planes: [
+                {
+                    value: '/',
+                    component: {
+                        kind: 'react',
+                        element: (properties) => {
+                            const {
+                                plurid,
+                            } = properties;
+
+                            return (
+                                <div>{plurid.path.parameters.parameter}</div>
+                            );
+                        }
+                    },
+                },
             ],
         },
     ];
