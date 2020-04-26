@@ -56,6 +56,7 @@ export const checkValidPath = (
                 lengthType,
                 startsWith,
                 endsWith,
+                includes,
             } = parameterData;
 
             const paramaterValue = parameters[parameterKey];
@@ -69,6 +70,10 @@ export const checkValidPath = (
             }
 
             if (endsWith && !paramaterValue.endsWith(endsWith)) {
+                return false;
+            }
+
+            if (includes && !includes.includes(paramaterValue)) {
                 return false;
             }
 
