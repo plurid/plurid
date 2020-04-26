@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.1.65",
+    "version": "0.1.66",
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
         "plurid",
@@ -47,7 +47,7 @@
         "@plurid/plurid-functions": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "^0.1.122",
+        "@plurid/plurid-data": "^0.1.123",
         "@plurid/plurid-functions": "^0.1.13",
         "@plurid/plurid-pubsub": "^0.1.7",
         "@rollup/plugin-commonjs": "^11.1.0",
@@ -73,7 +73,7 @@
         "rollup-plugin-typescript2": "^0.27.0",
         "shelljs": "^0.8.4",
         "ts-jest": "^25.4.0",
-        "ts-node": "^8.9.0",
+        "ts-node": "^8.9.1",
         "typedoc": "^0.17.4",
         "typescript": "^3.8.3"
     }
