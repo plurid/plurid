@@ -483,15 +483,15 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@plurid/plurid-data@^0.1.122":
-  version "0.1.122"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.122.tgz#26c9134501aaa7a44b8c5c595aa74c9e7dd662e4"
-  integrity sha512-V2QAnlBXRHdzPOVSWHWvg+gDdd8lYlOjdA5dq4LOz9U1fhrPq+Y+OMxH2pjLQREqSIrhyz+azPDCUTn0871GuA==
+"@plurid/plurid-data@^0.1.123":
+  version "0.1.123"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.123.tgz#88ad4233cd7fded4d24097000f30d19c0e884dc0"
+  integrity sha512-agmlmoM/laqi53ifccF+aTzY4LEsewFOIZYH/zGJBu5/wAK/CXNAnvPqL5jciJpC/9olVT7reVLgi3ElrNjgzQ==
 
-"@plurid/plurid-engine@^0.1.65":
-  version "0.1.65"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.65.tgz#a500ac41f26b7b5816863b3be1e1f338b742e955"
-  integrity sha512-WVjFk8RgT1xGUUiCnXcvsLYSNOCnP1T8M5zy0OXqtIGey1r1wu5xj68KHd5bNjP74bp/ySSvKrkrlwwTZ3QJSA==
+"@plurid/plurid-engine@^0.1.66":
+  version "0.1.66"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.66.tgz#9d345041893fd492922d2d1cb81351b9381ac40d"
+  integrity sha512-2yYDVwtQGfxeZVNHr7u8pUG9gxoU/Z68eNfjeHiB1NbWSr1FsBJ9BkjlAuTec6gxsKcYJjugp7688L9FbADD+g==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
@@ -5948,10 +5948,10 @@ ts-jest@^25.4.0:
     semver "6.x"
     yargs-parser "18.x"
 
-ts-node@^8.9.0:
-  version "8.9.0"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.9.0.tgz#d7bf7272dcbecd3a2aa18bd0b96c7d2f270c15d4"
-  integrity sha512-rwkXfOs9zmoHrV8xE++dmNd6ZIS+nmHHCxcV53ekGJrxFLMbp+pizpPS07ARvhwneCIECPppOwbZHvw9sQtU4w==
+ts-node@^8.9.1:
+  version "8.9.1"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.9.1.tgz#2f857f46c47e91dcd28a14e052482eb14cfd65a5"
+  integrity sha512-yrq6ODsxEFTLz0R3BX2myf0WBCSQh9A+py8PBo1dCzWIOcvisbyH6akNKqDHMgXePF2kir5mm5JXJTH3OUJYOQ==
   dependencies:
     arg "^4.1.0"
     diff "^4.0.1"
