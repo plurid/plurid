@@ -130,6 +130,8 @@ export interface PluridRouterPathParameter {
 
     startsWith?: string;
     endsWith?: string;
+
+    includes?: string[];
 }
 
 
