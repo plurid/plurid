@@ -187,7 +187,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
 
     /** render */
-    const pluridPlaneID = statePlaneSources[plane.route];
+    const pluridPlaneID = statePlaneSources[plane.sourceID];
     if (!pluridPlaneID) {
         return (
             <></>

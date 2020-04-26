@@ -349,8 +349,18 @@ const View: React.FC<ViewProperties> = (
         const treePlanes: TreePlane[] = [];
 
         for (const [id, computedIndexedPlane] of computedIndexedPlanes) {
-            const linkPath = router.resolveAbsolutePluridLinkPath(computedIndexedPlane.path);
-            if (!linkPath) {
+            const pathProperties = computedIndexedPlane.component.properties?.plurid?.path;
+
+            let planeRouteSource = computedIndexedPlane.route;
+
+            if (pathProperties) {
+                for (const [key, value] of Object.entries(pathProperties.parameters)) {
+                    planeRouteSource = planeRouteSource.replace(`:${key}`, value as string);
+                }
+            }
+
+            const planeRoute = router.resolveAbsolutePluridLinkPath(planeRouteSource);
+            if (!planeRoute) {
                 continue;
             }
 
@@ -362,7 +372,7 @@ const View: React.FC<ViewProperties> = (
                 universe,
                 cluster,
                 plane,
-            } = linkPath;
+            } = planeRoute;
 
             const treePlane: TreePlane = {
                 ...defaultTreePlane,
@@ -377,7 +387,7 @@ const View: React.FC<ViewProperties> = (
                     valid: true,
                 },
                 sourceID: id,
-                route: computedIndexedPlane.route,
+                route: planeRouteSource,
                 planeID: uuid.generate(),
                 show: true,
             };
