@@ -1,6 +1,6 @@
 {
     "name": "@plurid/generate-plurid-app",
-    "version": "0.1.53",
+    "version": "0.1.54",
     "description": "Generate a plurid' application with one command (and some choices)",
     "keywords": [
         "plurid",
@@ -81,7 +81,7 @@
         "rollup-plugin-typescript2": "^0.27.0",
         "shelljs": "^0.8.4",
         "ts-jest": "^25.4.0",
-        "ts-node": "^8.9.0",
+        "ts-node": "^8.9.1",
         "typedoc": "^0.17.4",
         "typescript": "^3.8.3"
     }
