@@ -61,12 +61,12 @@ const SearchList: React.FC<SearchListProperties> = (
         stateInteractionTheme,
     } = properties;
 
-    const searchTerms = [
-        '/one',
-        '/two',
-        '/three',
-        '/four',
-        '/five',
+    const searchTerms: any[] = [
+        // '/one',
+        // '/two',
+        // '/three',
+        // '/four',
+        // '/five',
     ];
 
 
