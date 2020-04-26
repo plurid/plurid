@@ -7,6 +7,7 @@ export const StyledPluridSpace: any = styled.div`
     height: 100%;
     overflow: hidden;
     perspective: 2000px;
+    outline: none;
     background: ${(props: any) => {
         if (props.opaque) {
             const foregroundGradient = props.theme.type === 'dark'
