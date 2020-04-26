@@ -344,7 +344,6 @@ const View: React.FC<ViewProperties> = (
             planeSources[indexedPlane.route] = id;
         }
 
-
         // create tree planes
         const treePlanes: TreePlane[] = [];
 
