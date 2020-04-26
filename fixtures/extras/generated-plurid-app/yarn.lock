@@ -1107,10 +1107,10 @@
     express "^4.17.1"
     open "^7.0.3"
 
-"@plurid/plurid-react@^0.1.144":
-  version "0.1.144"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.144.tgz#ae00811a355b197b735ebae8a09cd91a24a9b4d2"
-  integrity sha512-7+DKc0wTrfieBkR/LAE44N7fymoV90f2epk2BQ953Gn28wIYpYNY08FOWUWC71d3R/Pkxp/xcn/4C7fVyM41vA==
+"@plurid/plurid-react@^0.1.145":
+  version "0.1.145"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.145.tgz#3361e890afce7e2edb263d42b5b0f35cfcc7ca41"
+  integrity sha512-JRsLNuOkFuS2bNxxt5pgLRPkcSfW0MGtmnn8LU5GHQRmwJmQwyiSvGz0NWYbCEMIabJuEXuhebzwLkRP5eBYsQ==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
