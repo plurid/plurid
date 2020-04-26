@@ -177,13 +177,13 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
             </StyledPlaneControlsCenter>
 
             <StyledPlaneControlsRight>
-                <PluridIconCopy
+                {/* <PluridIconCopy
                     atClick={() => copyGatewayLink()}
                 />
 
                 <PluridIconLink
                     atClick={() => setShowAddress(show => !show)}
-                />
+                /> */}
             </StyledPlaneControlsRight>
         </StyledPlaneControls>
     );
