@@ -173,7 +173,7 @@ export const assignPagesFromView = (
     for (const viewPlane of view) {
         if (typeof viewPlane === 'string') {
             for (const plane of planes) {
-                if (plane.route === viewPlane) {
+                if (plane.sourceID === viewPlane) {
                     tree.push(plane);
                 }
             }
