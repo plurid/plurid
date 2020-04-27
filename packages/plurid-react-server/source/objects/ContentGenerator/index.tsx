@@ -129,7 +129,7 @@ export default class PluridContentGenerator {
             this.data.stylesheet.collectStyles(
                 <StyleSheetManager
                     sheet={this.data.stylesheet.instance}
-                    disableCSSOMInjection={true}
+                    // disableCSSOMInjection={true}
                 >
                     <Wrap />
                 </StyleSheetManager>
