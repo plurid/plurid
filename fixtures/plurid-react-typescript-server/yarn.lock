@@ -1100,15 +1100,15 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@plurid/plurid-data@^0.1.122":
-  version "0.1.122"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.122.tgz#26c9134501aaa7a44b8c5c595aa74c9e7dd662e4"
-  integrity sha512-V2QAnlBXRHdzPOVSWHWvg+gDdd8lYlOjdA5dq4LOz9U1fhrPq+Y+OMxH2pjLQREqSIrhyz+azPDCUTn0871GuA==
+"@plurid/plurid-data@^0.1.123":
+  version "0.1.123"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.123.tgz#88ad4233cd7fded4d24097000f30d19c0e884dc0"
+  integrity sha512-agmlmoM/laqi53ifccF+aTzY4LEsewFOIZYH/zGJBu5/wAK/CXNAnvPqL5jciJpC/9olVT7reVLgi3ElrNjgzQ==
 
-"@plurid/plurid-engine@^0.1.65":
-  version "0.1.65"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.65.tgz#a500ac41f26b7b5816863b3be1e1f338b742e955"
-  integrity sha512-WVjFk8RgT1xGUUiCnXcvsLYSNOCnP1T8M5zy0OXqtIGey1r1wu5xj68KHd5bNjP74bp/ySSvKrkrlwwTZ3QJSA==
+"@plurid/plurid-engine@^0.1.66":
+  version "0.1.66"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.66.tgz#9d345041893fd492922d2d1cb81351b9381ac40d"
+  integrity sha512-2yYDVwtQGfxeZVNHr7u8pUG9gxoU/Z68eNfjeHiB1NbWSr1FsBJ9BkjlAuTec6gxsKcYJjugp7688L9FbADD+g==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
@@ -1140,10 +1140,10 @@
     express "^4.17.1"
     open "^7.0.3"
 
-"@plurid/plurid-react@^0.1.142":
-  version "0.1.142"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.142.tgz#5354fbe651fc7758a74837d11b56ab5cf54bbac6"
-  integrity sha512-wJBJwzhaExStt0t4b1ztkc6TI25kTA//VH2FqTvEpGwpY0x1NmukvCKah+yGzSpsCCQtDkm0oWqvSGFkiOM6lw==
+"@plurid/plurid-react@^0.1.146":
+  version "0.1.146"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.146.tgz#51420ed2a46cf39cc5f788fe4b04ee57300ab589"
+  integrity sha512-LidBrFfxz+0aLOX+jz7FsK76GNapLIBb/HAC87OBbKqKKX5U19RCtV9A4BJWv2SLv2zdNj3Wb2y7CJjmws2WKA==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
@@ -1330,10 +1330,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.11.0.tgz#390ea202539c61c8fa6ba4428b57e05bc36dc47b"
   integrity sha512-uM4mnmsIIPK/yeO+42F2RQhGUIs39K2RFmugcJANppXe6J1nvH87PvzPZYpza7Xhhs8Yn9yIAVdLZ84z61+0xQ==
 
-"@types/node@^13.13.2":
-  version "13.13.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.2.tgz#160d82623610db590a64e8ca81784e11117e5a54"
-  integrity sha512-LB2R1Oyhpg8gu4SON/mfforE525+Hi/M1ineICEDftqNVTyFg1aRIeGuTvXAoWHc4nbrFncWtJgMmoyRvuGh7A==
+"@types/node@^13.13.4":
+  version "13.13.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.4.tgz#1581d6c16e3d4803eb079c87d4ac893ee7501c2c"
+  integrity sha512-x26ur3dSXgv5AwKS0lNfbjpCakGIduWU1DU91Zz58ONRWrIKGunmZBNv4P7N+e27sJkiGDsw/3fT4AtsqQBrBA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
