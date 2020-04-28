@@ -40,7 +40,7 @@ const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
 /** Custom styles to be loaded into the template. */
 const styles: string[] = [
     //
-]
+];
 
 
 /** Express-like middleware. */
