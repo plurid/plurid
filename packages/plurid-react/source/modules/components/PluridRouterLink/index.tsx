@@ -19,6 +19,11 @@ interface PluridRouterLinkOwnProperties {
      */
     asAnchor?: boolean;
 
+    /**
+     * Click handler. If it returns true it will exit preemptively.
+     */
+    atClick?: (event: React.MouseEvent<Element, MouseEvent>) => boolean | void;
+
     style?: React.CSSProperties;
     className?: string;
 }
@@ -31,6 +36,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     const {
         path,
         asAnchor,
+        atClick,
         children,
         style,
         className,
@@ -43,6 +49,14 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     const handleClick = (
         event: React.MouseEvent<Element, MouseEvent>,
     ) => {
+        if (atClick) {
+            const exit = atClick(event);
+
+            if (exit) {
+                return;
+            }
+        }
+
         event.preventDefault();
 
         emitLocationEvent();
