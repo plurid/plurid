@@ -55,7 +55,7 @@ const Client: React.FC<any> = () => {
             <ReduxProvider store={reduxStore(state)}>
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
-                        <StyleSheetManager disableCSSOMInjection={true}>
+                        <StyleSheetManager>
                             <PluridProvider context={{}}>
                                 <GlobalStyle
                                     theme={themes.plurid}
