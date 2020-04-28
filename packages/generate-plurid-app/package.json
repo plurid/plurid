@@ -1,6 +1,6 @@
 {
     "name": "@plurid/generate-plurid-app",
-    "version": "0.1.54",
+    "version": "0.1.55",
     "description": "Generate a plurid' application with one command (and some choices)",
     "keywords": [
         "plurid",
