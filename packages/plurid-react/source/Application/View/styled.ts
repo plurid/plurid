@@ -47,6 +47,7 @@ export const StyledView: any = styled.div`
     width: 100%;
     position: relative;
     scroll-snap-align: start;
+    outline: none;
 
     cursor: ${(props: any) => {
         if (
