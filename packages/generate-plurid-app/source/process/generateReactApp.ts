@@ -308,6 +308,14 @@ PLURID_BUILD_DIRECTORY=build
 PLURID_DEFAULT_VERBOSE=true
 `;
 
+    const envDevelopmentContents =
+`ENV_MODE=development
+PORT=8080
+
+PLURID_BUILD_DIRECTORY=build
+PLURID_DEFAULT_VERBOSE=false
+`;
+
     const envProductionContents =
 `ENV_MODE=production
 PORT=8080
@@ -317,8 +325,10 @@ PLURID_DEFAULT_VERBOSE=false
 `;
 
     try {
-        const envLocalPath = path.join(app.directory, './environment/.env');
+        const envLocalPath = path.join(app.directory, './environment/.env.local');
         fs.writeFileSync(envLocalPath, envLocalContents);
+        const envDevelopmentPath = path.join(app.directory, './environment/.env.development');
+        fs.writeFileSync(envDevelopmentPath, envDevelopmentContents);
         const envProductionPath = path.join(app.directory, './environment/.env.production');
         fs.writeFileSync(envProductionPath, envProductionContents);
     } catch (error) {
