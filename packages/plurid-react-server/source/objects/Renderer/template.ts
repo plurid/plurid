@@ -30,6 +30,8 @@ const resolveBackgroundStyle = (
     };
 }
 
+const htmlLanguage = "en";
+
 
 const template = (
     head: string,
@@ -51,8 +53,8 @@ const template = (
 
     const templateString = `
 <!DOCTYPE html>
-<html lang="en">
-    <head ${htmlAttributes}>
+<html lang="${htmlLanguage}" ${htmlAttributes}>
+    <head>
         ${head}
 
         <style>

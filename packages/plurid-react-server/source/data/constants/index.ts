@@ -19,15 +19,11 @@ export const DEFAULT_RENDERER_SCRIPT = '/index.js';
 
 export const DEFAULT_WINDOW_SIZER_SCRIPT = `
 /** PLURID WINDOW SIZER */
-document.body.style.visibility = 'hidden';
-
 const pluridRoots = document.querySelectorAll('[data-plurid-entity="PluridRoots"]');
 pluridRoots.forEach(pluridRoot => {
     pluridRoot.style.width = window.innerWidth + 'px';
     pluridRoot.style.height = window.innerHeight + 'px';
 });
-
-document.body.style.visibility = 'initial';
 `;
 
 
