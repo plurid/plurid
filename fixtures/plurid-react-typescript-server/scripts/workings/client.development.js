@@ -28,6 +28,7 @@ const config = {
     devtool: 'inline-source-map',
 
     plugins: [
+        plugins.processEnvModePlugin,
         plugins.copyPlugin,
     ],
 };

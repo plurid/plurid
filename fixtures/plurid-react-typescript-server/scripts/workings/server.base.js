@@ -1,3 +1,4 @@
+const replace = require('@rollup/plugin-replace');
 const svg = require('rollup-plugin-svg');
 const postcss = require('rollup-plugin-postcss');
 const image = require('@rollup/plugin-image');
@@ -23,6 +24,9 @@ const output = [
 ];
 
 const plugins = {
+    replace: () => replace({
+        'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
+    }),
     svg: () => svg(),
     postcss: () => postcss(),
     image: () => image(),
@@ -30,6 +34,7 @@ const plugins = {
         include: [
             '**/*.woff', '**/*.ttf', '**/*.wav', '**/*.mp3', '**/*.pdf', '**/*.mov', '**/*.mp4',
         ],
+        limit: 0,
     }),
     typescript: () => typescript({
         tsconfig: './tsconfig.json',

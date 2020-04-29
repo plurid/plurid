@@ -34,11 +34,16 @@ const compressionPluginGzip = new CompressionPlugin({
     filename: 'vendor.js.gzip',
 });
 
+const processEnvModePlugin = new webpack.DefinePlugin({
+    "process.env.ENV_MODE": JSON.stringify(process.env.ENV_MODE),
+});
+
 
 const plugins = {
     copyPlugin,
     compressionPluginBrotli,
     compressionPluginGzip,
+    processEnvModePlugin,
 };
 
 
