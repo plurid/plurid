@@ -57,9 +57,8 @@ const render = async (
         throw new Error(`${route} timed out.`);
     }
 
-    const html = replacePluridResolution(
-        await page.content()
-    );
+    const pageContent = await page.content();
+    const html = replacePluridResolution(pageContent);
     await browser.close();
 
     const stilltime = Date.now() - start;
