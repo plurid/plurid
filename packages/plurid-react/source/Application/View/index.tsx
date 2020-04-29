@@ -53,8 +53,9 @@ import themes, {
 import './index.css';
 
 import {
-    StyledView,
+    StyledEmpty,
     GlobalStyle,
+    StyledView,
 } from './styled';
 
 import handleView from './logic';
@@ -969,6 +970,26 @@ const View: React.FC<ViewProperties> = (
     //     view,
     //     stateSpaceLocation,
     // ]);
+
+
+    const [hasMounted, setHasMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setHasMounted(true);
+    }, []);
+
+    if (!hasMounted) {
+        return (
+            <StyledEmpty
+                style={{
+                    height: typeof window === 'object' ? window.innerHeight : '800px',
+                    width: typeof window === 'object' ? window.innerWidth : '100%',
+                }}
+            >
+                <GlobalStyle />
+            </StyledEmpty>
+        );
+    }
 
 
     /** context */
