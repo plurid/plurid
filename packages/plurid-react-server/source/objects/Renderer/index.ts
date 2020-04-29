@@ -1,6 +1,7 @@
 import {
     DEFAULT_RENDERER_STORE,
     DEFAULT_RENDERER_SCRIPT,
+    DEFAULT_WINDOW_SIZER_SCRIPT,
 } from '../../data/constants';
 
 import {
@@ -18,6 +19,7 @@ export default class PluridRenderer {
     private store: string;
     private root: string;
     private script: string;
+    private windowSizerScript: string;
     private vendorScript: string;
     private stripeScript: string;
     private htmlAttributes: string;
@@ -33,6 +35,7 @@ export default class PluridRenderer {
             store,
             root,
             script,
+            windowSizerScript,
             vendorScript,
             stripeScript,
             htmlAttributes,
@@ -45,6 +48,7 @@ export default class PluridRenderer {
         this.store = this.safeStore(store) || DEFAULT_RENDERER_STORE;
         this.root = root || 'root',
         this.script = script || DEFAULT_RENDERER_SCRIPT;
+        this.windowSizerScript = windowSizerScript || DEFAULT_WINDOW_SIZER_SCRIPT;
         this.vendorScript = vendorScript || '';
         this.stripeScript = stripeScript || '';
         this.htmlAttributes = htmlAttributes || '';
@@ -59,6 +63,7 @@ export default class PluridRenderer {
             this.store,
             this.root,
             this.script,
+            this.windowSizerScript,
             this.vendorScript,
             this.stripeScript,
             this.htmlAttributes,

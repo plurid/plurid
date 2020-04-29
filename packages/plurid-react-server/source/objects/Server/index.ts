@@ -262,6 +262,7 @@ export default class PluridServer {
         const {
             root,
             script,
+            windowSizerScript,
             vendorScript,
         } = this.options;
 
@@ -274,6 +275,7 @@ export default class PluridServer {
             store,
             root,
             script,
+            windowSizerScript,
             vendorScript,
             stripeScript,
             htmlAttributes,
@@ -351,6 +353,7 @@ export default class PluridServer {
             stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
             root: partialOptions?.root || 'root',
             script: partialOptions?.script || '/index.js',
+            windowSizerScript: partialOptions?.windowSizerScript || '',
             vendorScript: partialOptions?.vendorScript || '/vendor.js',
             gatewayEndpoint: partialOptions?.gatewayEndpoint || '/gateway',
         };
