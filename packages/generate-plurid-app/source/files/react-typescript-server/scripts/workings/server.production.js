@@ -10,6 +10,7 @@ export default {
     input,
     output,
     plugins: [
+        plugins.replace(),
         plugins.svg(),
         plugins.postcss(),
         plugins.image(),
