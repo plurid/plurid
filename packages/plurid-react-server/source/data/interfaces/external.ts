@@ -73,6 +73,13 @@ export interface PluridServerOptions {
     script: string;
 
     /**
+     * JavaScript code to handle plurid space window resizing on the client.
+     *
+     * Default https://manual.plurid.com/plurid/server/window-sizer-script
+     */
+    windowSizerScript?: string;
+
+    /**
      * The JavaScript vendor filepath to inject in the HTML template.
      * Default `'/vendor.js'`.
      *

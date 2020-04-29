@@ -30,19 +30,6 @@ const resolveBackgroundStyle = (
     };
 }
 
-const windowSizer = `
-/** PLURID WINDOW SIZER */
-document.body.style.visibility = 'hidden';
-
-const pluridRoots = document.querySelectorAll('[data-plurid-entity="PluridRoots"]');
-pluridRoots.forEach(pluridRoot => {
-    pluridRoot.style.width = window.innerWidth + 'px';
-    pluridRoot.style.height = window.innerHeight + 'px';
-});
-
-document.body.style.visibility = 'initial';
-`;
-
 
 const template = (
     head: string,
@@ -51,6 +38,7 @@ const template = (
     store: string,
     root: string,
     script: string,
+    windowSizerScript: string,
     vendorScript: string,
     stripeScript: string,
     htmlAttributes: string,
@@ -86,7 +74,7 @@ const template = (
         <div id="${root}">${content}</div>
 
         <script>
-            ${windowSizer}
+            ${windowSizerScript}
         </script>
         <script>
             window.__PRELOADED_STATE__ = ${store}
