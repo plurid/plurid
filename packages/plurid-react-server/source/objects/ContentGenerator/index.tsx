@@ -128,6 +128,7 @@ export default class PluridContentGenerator {
         const content = renderToString(
             <StyleSheetManager
                 sheet={this.data.stylesheet.instance}
+                // disableCSSOMInjection={true}
             >
                 <Wrap />
             </StyleSheetManager>
