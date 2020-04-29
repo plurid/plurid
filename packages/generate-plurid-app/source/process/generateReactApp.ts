@@ -608,6 +608,7 @@ const generateReactServerApplication = async (
         '@rollup/plugin-commonjs',
         '@rollup/plugin-image',
         '@rollup/plugin-node-resolve',
+        '@rollup/plugin-replace',
         '@rollup/plugin-url',
         'babel-loader',
         'babel-plugin-styled-components',
