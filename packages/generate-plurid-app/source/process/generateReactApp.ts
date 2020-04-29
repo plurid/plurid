@@ -81,6 +81,11 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
     await addScript({
+        name: 'build.client.local',
+        value: 'node scripts build.client.local',
+        path: packageJsonPath,
+    });
+    await addScript({
         name: 'build.client.development',
         value: 'node scripts build.client.development',
         path: packageJsonPath,
@@ -88,6 +93,11 @@ export const setupPackageJSONReactServer = async (
     await addScript({
         name: 'build.client.production',
         value: 'node scripts build.client.production',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.server.local',
+        value: 'node scripts build.server.local',
         path: packageJsonPath,
     });
     await addScript({
@@ -107,6 +117,16 @@ export const setupPackageJSONReactServer = async (
         path: packageJsonPath,
     });
 
+    await addScript({
+        name: 'build.local',
+        value: 'node scripts build.local',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'build.local.stills',
+        value: 'node scripts build.local.stills',
+        path: packageJsonPath,
+    });
     await addScript({
         name: 'build.development',
         value: 'node scripts build.development',
@@ -608,7 +628,6 @@ const generateReactServerApplication = async (
         '@rollup/plugin-commonjs',
         '@rollup/plugin-image',
         '@rollup/plugin-node-resolve',
-        '@rollup/plugin-replace',
         '@rollup/plugin-url',
         'babel-loader',
         'babel-plugin-styled-components',

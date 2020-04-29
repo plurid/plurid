@@ -1,5 +1,6 @@
 const path = require('path');
 
+const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
@@ -35,7 +36,7 @@ const compressionPluginGzip = new CompressionPlugin({
 });
 
 const processEnvModePlugin = new webpack.DefinePlugin({
-    "process.env.ENV_MODE": JSON.stringify(process.env.ENV_MODE),
+    'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
 });
 
 
