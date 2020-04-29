@@ -30,6 +30,19 @@ const resolveBackgroundStyle = (
     };
 }
 
+const windowSizer = `
+/** PLURID WINDOW SIZER */
+document.body.style.visibility = 'hidden';
+
+const pluridRoots = document.querySelectorAll('[data-plurid-entity="PluridRoots"]');
+pluridRoots.forEach(pluridRoot => {
+    pluridRoot.style.width = window.innerWidth + 'px';
+    pluridRoot.style.height = window.innerHeight + 'px';
+});
+
+document.body.style.visibility = 'initial';
+`;
+
 
 const template = (
     head: string,
@@ -71,6 +84,10 @@ const template = (
     </head>
     <body ${bodyAttributes}>
         <div id="${root}">${content}</div>
+
+        <script>
+            ${windowSizer}
+        </script>
         <script>
             window.__PRELOADED_STATE__ = ${store}
         </script>
