@@ -10,13 +10,22 @@ const {
 
 
 
+const command = process.argv[2];
+
+
 /** ENVIRONMENT */
-const inProduction = process.env.NODE_ENV === 'production';
+const environment = {
+    production: command.includes('production'),
+    development: command.includes('development'),
+    local: !command.includes('development') && !command.includes('production'),
+};
 
 require('dotenv').config({
-    path: inProduction
+    path: environment.production
         ? './environment/.env.production'
-        : './environment/.env.local',
+        : environment.development
+            ? './environment/.env.development'
+            : './environment/.env.local',
 });
 
 
@@ -24,7 +33,6 @@ require('dotenv').config({
 /** CONSTANTS */
 const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
 
-const command = process.argv[2];
 const buildFolder = path.join(process.cwd(), BUILD_DIRECTORY);
 const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true' && !process.argv[3]
     ? 'inherit'
@@ -205,6 +213,13 @@ switch (command) {
         });
         console.log('\n\tFinished the Stilled Production Containerization Process.');
         break;
+    case 'build.client.local':
+        console.log('\n\tStarting the Client Local Build Process...');
+        runCommand(commandBuildClientDevelopment, {
+            stdio: verbose,
+        });
+        console.log('\n\Finished the Client Local Build Process.\n');
+        break;
     case 'build.client.development':
         console.log('\n\tStarting the Client Development Build Process...');
         runCommand(commandBuildClientDevelopment, {
@@ -218,6 +233,13 @@ switch (command) {
             stdio: verbose,
         });
         console.log('\n\Finished the Client Production Build Process.\n');
+        break;
+    case 'build.server.local':
+        console.log('\n\tStarting the Server Local Build Process...');
+        runCommand(commandBuildServerDevelopment, {
+            stdio: verbose,
+        });
+        console.log('\n\Finished the Server Local Build Process.\n');
         break;
     case 'build.server.development':
         console.log('\n\tStarting the Server Development Build Process...');
@@ -239,6 +261,20 @@ switch (command) {
             stdio: verbose,
         });
         console.log('\n\tFinished the Stilled Build Process.\n');
+        break;
+    case 'build.local':
+        console.log('\n\tStarting the Local Build Process...');
+        runCommand(commandBuildDevelopment, {
+            stdio: verbose,
+        });
+        console.log('\n\tFinished the Local Build Process.\n');
+        break;
+    case 'build.local.stills':
+        console.log('\n\tStarting the Stilled Development Build Process...');
+        runCommand(commandBuildDevelopmentStills, {
+            stdio: verbose,
+        });
+        console.log('\n\tFinished the Stilled Development Build Process.\n');
         break;
     case 'build.development':
         console.log('\n\tStarting the Development Build Process...');
