@@ -41,29 +41,45 @@ const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true' && !process.argv[3
         : 'ignore';
 
 
+/**
+ * Windows (win32) requires full path to the bin command.
+ *
+ * @param {string} command
+ */
+const crossCommand = (
+    command,
+) => {
+    if (process.platform === 'win32') {
+        return path.join(process.cwd(), 'node_modules/.bin/', command + '.cmd');
+    }
+
+    return 'node_modules/.bin/' + command;
+}
+
+
 
 /** COMMANDS */
 const commandStart = [
-    `node ${BUILD_DIRECTORY}`,
+    `node ${buildFolder}`,
 ];
 
 const commandRunDevelopment = [
-    `nodemon ${BUILD_DIRECTORY}`,
+    `${crossCommand('nodemon')} ${buildFolder}`,
 ];
 const commandRunProduction = [
-    `node ${BUILD_DIRECTORY}`,
+    `node ${buildFolder}`,
 ];
 
 const commandClean = [
-    `rimraf ./${BUILD_DIRECTORY}`,
+    `${crossCommand('rimraf')} ${buildFolder}`,
 ];
 
 const commandLint = [
-    'eslint -c ./configurations/.eslintrc.js ./source',
+    `${crossCommand('eslint')} -c ./configurations/.eslintrc.js ./source`,
 ];
 
 const commandTest = [
-    'jest -c ./configurations/jest.config.js ./source',
+    `${crossCommand('jest')} -c ./configurations/jest.config.js ./source`,
 ];
 
 const commandContainerizeProduction = [
@@ -79,17 +95,17 @@ const commandContainerizeProductionStills = [
 ];
 
 const commandBuildClientDevelopment = [
-    'node_modules/.bin/webpack --config ./scripts/workings/client.development.js',
+    `${crossCommand('webpack')} --config ./scripts/workings/client.development.js`,
 ];
 const commandBuildClientProduction = [
-    'node_modules/.bin/webpack --config ./scripts/workings/client.production.js',
+    `${crossCommand('webpack')} --config ./scripts/workings/client.production.js`,
 ];
 
 const commandBuildServerDevelopment = [
-    'node_modules/.bin/rollup -c ./scripts/workings/server.development.js',
+    `${crossCommand('rollup')} -c ./scripts/workings/server.development.js`,
 ];
 const commandBuildServerProduction = [
-    'node_modules/.bin/rollup -c ./scripts/workings/server.production.js',
+    `${crossCommand('rollup')} -c ./scripts/workings/server.production.js`,
 ];
 
 const commandBuildStills = [
@@ -98,11 +114,11 @@ const commandBuildStills = [
 
 
 const commandStartClientDevelopment = [
-    'node_modules/.bin/webpack --watch --progress --config ./scripts/workings/client.development.js',
+    `${crossCommand('webpack')} --watch --progress --config ./scripts/workings/client.development.js`,
 ];
 const commandStartServerDevelopment = [
     ...commandBuildServerDevelopment,
-    `nodemon ${BUILD_DIRECTORY}`,
+    `${crossCommand('nodemon')} ${buildFolder}`,
 ];
 
 
@@ -137,13 +153,19 @@ const runCommand = (
         stdio: 'ignore'
     },
 ) => {
-    for (const subCommand of command) {
-        execSync(
-            subCommand,
-            {
-                stdio: options.stdio,
-            },
-        );
+    try {
+        for (const subCommand of command) {
+            execSync(
+                subCommand,
+                {
+                    stdio: options.stdio,
+                },
+            );
+        }
+    } catch (error) {
+        if (verbose === 'inherit') {
+            console.log(error);
+        }
     }
 }
 
@@ -183,20 +205,22 @@ switch (command) {
     case 'run.production':
         console.log('\n\tRunning the Production Server...');
         runCommand(commandRunProduction, {
-            stdio: 'inherit',
+            stdio: verbose,
         });
         break;
     case 'clean':
-        runCommand(commandClean);
+        runCommand(commandClean, {
+            stdio: verbose,
+        });
         break;
     case 'lint':
         runCommand(commandLint, {
-            stdio: 'inherit',
+            stdio: verbose,
         });
         break;
     case 'test':
         runCommand(commandTest, {
-            stdio: 'inherit',
+            stdio: verbose,
         });
         break;
     case 'containerize.production':
