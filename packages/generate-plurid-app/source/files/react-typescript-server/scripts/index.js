@@ -32,6 +32,8 @@ require('dotenv').config({
 
 /** CONSTANTS */
 const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
+const SOURCE_DIRECTORY = process.env.PLURID_SOURCE_DIRECTORY || 'source';
+const SERVER_DIRECTORY = process.env.PLURID_SERVER_DIRECTORY || 'source/server';
 
 const buildFolder = path.join(process.cwd(), BUILD_DIRECTORY);
 const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true' && !process.argv[3]
@@ -63,10 +65,10 @@ const commandStart = [
     `node ${buildFolder}`,
 ];
 
-const commandRunDevelopment = [
-    `${crossCommand('nodemon')} ${buildFolder}`,
+const commandRunServerDevelopment = [
+    `${crossCommand('nodemon')} --watch ${buildFolder + '/index.js'} ${buildFolder}`,
 ];
-const commandRunProduction = [
+const commandRunServerProduction = [
     `node ${buildFolder}`,
 ];
 
@@ -113,13 +115,13 @@ const commandBuildStills = [
 ];
 
 
-const commandStartClientDevelopment = [
-    `${crossCommand('webpack')} --watch --progress --config ./scripts/workings/client.development.js`,
+const commandWatchClientDevelopment = [
+    `${crossCommand('webpack')} --watch --config ./scripts/workings/client.development.js`,
 ];
-const commandStartServerDevelopment = [
-    ...commandBuildServerDevelopment,
-    `${crossCommand('nodemon')} ${buildFolder}`,
+const commandWatchServerDevelopment = [
+    `${crossCommand('rollup')} -w -c ./scripts/workings/server.development.js`,
 ];
+
 
 
 const commandBuildDevelopment = [
@@ -184,27 +186,27 @@ switch (command) {
             stdio: 'inherit',
         });
         break;
-    case 'start.client.development':
-        console.log('\n\tStarting the Client Development Process...');
-        runCommand(commandStartClientDevelopment, {
+    case 'watch.client.development':
+        console.log('\n\tStarting the Client Development Watching Process...');
+        runCommand(commandWatchClientDevelopment, {
             stdio: verbose,
         });
         break;
-    case 'start.server.development':
-        console.log('\n\tStarting the Server Development Process...');
-        runCommand(commandStartServerDevelopment, {
+    case 'watch.server.development':
+        console.log('\n\tStarting the Server Development Watching Process...');
+        runCommand(commandWatchServerDevelopment, {
             stdio: verbose,
         });
         break;
-    case 'run.development':
+    case 'run.server.development':
         console.log('\n\tRunning the Development Server...');
-        runCommand(commandRunDevelopment, {
+        runCommand(commandRunServerDevelopment, {
             stdio: verbose,
         });
         break;
-    case 'run.production':
+    case 'run.server.production':
         console.log('\n\tRunning the Production Server...');
-        runCommand(commandRunProduction, {
+        runCommand(commandRunServerProduction, {
             stdio: verbose,
         });
         break;
