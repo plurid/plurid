@@ -65,16 +65,29 @@ const commandStart = [
     `node ${buildFolder}`,
 ];
 
-const commandRunServerDevelopment = [
-    `${crossCommand('nodemon')} --watch ${buildFolder + '/index.js'} ${buildFolder}`,
+const commandWatchClient = [
+    `${crossCommand('webpack')} --watch --config ./scripts/workings/client.development.js`,
 ];
-const commandRunServerProduction = [
-    `node ${buildFolder}`,
+const commandWatchServer = [
+    `${crossCommand('rollup')} -w -c ./scripts/workings/server.development.js`,
 ];
+
+const commandStartLocal = [
+    `${crossCommand('rimraf')} ${path.join(buildFolder, '/stills')}`,
+    `${crossCommand('nodemon')} --watch ${path.join(buildFolder, '/index.js')} ${buildFolder}`,
+];
+
 
 const commandClean = [
     `${crossCommand('rimraf')} ${buildFolder}`,
 ];
+
+
+const commandWatch = [
+    ...commandClean,
+    `PLURID_WATCH_MODE=true concurrently \"yarn watch.client verbose\" \"yarn watch.server verbose\" \"yarn start.local verbose\"`,
+];
+
 
 const commandLint = [
     `${crossCommand('eslint')} -c ./configurations/.eslintrc.js ./source`,
@@ -113,15 +126,6 @@ const commandBuildServerProduction = [
 const commandBuildStills = [
     'node ./scripts/workings/stills.js',
 ];
-
-
-const commandWatchClientDevelopment = [
-    `${crossCommand('webpack')} --watch --config ./scripts/workings/client.development.js`,
-];
-const commandWatchServerDevelopment = [
-    `${crossCommand('rollup')} -w -c ./scripts/workings/server.development.js`,
-];
-
 
 
 const commandBuildDevelopment = [
@@ -186,27 +190,27 @@ switch (command) {
             stdio: 'inherit',
         });
         break;
-    case 'watch.client.development':
-        console.log('\n\tStarting the Client Development Watching Process...');
-        runCommand(commandWatchClientDevelopment, {
+    case 'start.local':
+        console.log('\n\tRunning the Local Server...');
+        runCommand(commandStartLocal, {
             stdio: verbose,
         });
         break;
-    case 'watch.server.development':
-        console.log('\n\tStarting the Server Development Watching Process...');
-        runCommand(commandWatchServerDevelopment, {
+    case 'watch.client':
+        console.log('\n\tStarting the Client Watching Process...');
+        runCommand(commandWatchClient, {
             stdio: verbose,
         });
         break;
-    case 'run.server.development':
-        console.log('\n\tRunning the Development Server...');
-        runCommand(commandRunServerDevelopment, {
+    case 'watch.server':
+        console.log('\n\tStarting the Server Watching Process...');
+        runCommand(commandWatchServer, {
             stdio: verbose,
         });
         break;
-    case 'run.server.production':
-        console.log('\n\tRunning the Production Server...');
-        runCommand(commandRunServerProduction, {
+    case 'watch':
+        console.log('\n\tRunning the Watching Process...');
+        runCommand(commandWatch, {
             stdio: verbose,
         });
         break;
