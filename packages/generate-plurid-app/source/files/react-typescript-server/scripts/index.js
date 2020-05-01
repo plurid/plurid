@@ -32,8 +32,6 @@ require('dotenv').config({
 
 /** CONSTANTS */
 const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
-const SOURCE_DIRECTORY = process.env.PLURID_SOURCE_DIRECTORY || 'source';
-const SERVER_DIRECTORY = process.env.PLURID_SERVER_DIRECTORY || 'source/server';
 
 const buildFolder = path.join(process.cwd(), BUILD_DIRECTORY);
 const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true' && !process.argv[3]
@@ -73,21 +71,18 @@ const commandWatchServer = [
 ];
 
 const commandStartLocal = [
-    `${crossCommand('rimraf')} ${path.join(buildFolder, '/stills')}`,
     `${crossCommand('nodemon')} --watch ${path.join(buildFolder, '/index.js')} ${buildFolder}`,
+];
+
+const commandWatch = [
+    `${crossCommand('rimraf')} ${path.join(buildFolder, '/stills')}`,
+    `PLURID_WATCH_MODE=true concurrently \"yarn watch.client verbose\" \"yarn watch.server verbose\" \"yarn start.local verbose\"`,
 ];
 
 
 const commandClean = [
     `${crossCommand('rimraf')} ${buildFolder}`,
 ];
-
-
-const commandWatch = [
-    ...commandClean,
-    `PLURID_WATCH_MODE=true concurrently \"yarn watch.client verbose\" \"yarn watch.server verbose\" \"yarn start.local verbose\"`,
-];
-
 
 const commandLint = [
     `${crossCommand('eslint')} -c ./configurations/.eslintrc.js ./source`,
