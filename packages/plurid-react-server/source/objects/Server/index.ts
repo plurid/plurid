@@ -404,17 +404,15 @@ export default class PluridServer {
         serverlink: string,
     ) {
         try {
-            let opened = false;
-            if (
-                typeof process.env.PLURID_OPEN !== 'string'
-                && this.options.open
-            ) {
-                opened = true;
-                open(serverlink);
+            const processDoNotOpen = process.env.PLURID_OPEN === 'false'
+                ? true
+                : false;
+
+            if (processDoNotOpen) {
+                return;
             }
 
-            const openProcess = process.env.PLURID_OPEN === 'false' ? false : true;
-            if (openProcess && !opened) {
+            if (this.options.open) {
                 open(serverlink);
             }
         } catch (error) {
