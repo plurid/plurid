@@ -45,7 +45,7 @@ const PluridRouterBrowser = (
     const {
         paths,
         globalExterior,
-        globalWrapper,
+        globalShell,
         view,
         cleanNavigation,
         protocol: protocolProperty,
@@ -293,14 +293,14 @@ const PluridRouterBrowser = (
         }
     }
 
-    let GlobalWrapper: React.FC<any> = ({children}) => (
+    let GlobalShell: React.FC<any> = ({children}) => (
         <>
             {children}
         </>
     );
-    if (globalWrapper) {
-        if (globalWrapper.kind === 'react') {
-            GlobalWrapper = globalWrapper.element;
+    if (globalShell) {
+        if (globalShell.kind === 'react') {
+            GlobalShell = globalShell.element;
         }
     }
 
@@ -308,9 +308,9 @@ const PluridRouterBrowser = (
         <>
             <GlobalExterior />
 
-            <GlobalWrapper>
+            <GlobalShell>
                 {Component}
-            </GlobalWrapper>
+            </GlobalShell>
         </>
     );
 }
