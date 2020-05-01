@@ -37,19 +37,19 @@ or
 
 ## Development
 
-For development, run the following command
+For local development with source watchers, run the following command
 
 ``` bash
-npm run start.development
+npm run watch
 ```
 
 or
 
 ``` bash
-yarn start.development
+yarn watch
 ```
 
-Now you can develop the files in `./source` and the application will recompile and reload at any file save.
+Now you can develop the files in `./source` and the application will recompile and reload at any file change and save.
 
 If there is no `./build` folder, the server watcher may crash, but it will reload as soon as the application compiler catches up.
 

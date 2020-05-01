@@ -35,28 +35,23 @@ export const setupPackageJSONReactServer = async (
     });
 
     await addScript({
-        name: 'watch.client.development',
-        value: 'node scripts watch.client.development verbose',
+        name: 'start.local',
+        value: 'node scripts start.local',
         path: packageJsonPath,
     });
     await addScript({
-        name: 'watch.server.development',
-        value: 'node scripts watch.server.development verbose',
+        name: 'watch.client',
+        value: 'node scripts watch.client',
         path: packageJsonPath,
     });
     await addScript({
-        name: 'run.server.development',
-        value: 'node scripts run.server.development verbose',
+        name: 'watch.server',
+        value: 'node scripts watch.server',
         path: packageJsonPath,
     });
     await addScript({
-        name: 'run.server.production',
-        value: 'node scripts run.server.production',
-        path: packageJsonPath,
-    });
-    await addScript({
-        name: 'start.development',
-        value: 'PLURID_WATCH_MODE=true concurrently \\"yarn watch.client.development\\" \\"yarn watch.server.development\\" \\"yarn run.server.development\\"',
+        name: 'watch',
+        value: 'node scripts watch',
         path: packageJsonPath,
     });
 
