@@ -33,24 +33,30 @@ export const setupPackageJSONReactServer = async (
         value: 'node scripts start',
         path: packageJsonPath,
     });
+
     await addScript({
-        name: 'start.client.development',
-        value: 'node scripts start.client.development',
+        name: 'watch.client.development',
+        value: 'node scripts watch.client.development verbose',
         path: packageJsonPath,
     });
     await addScript({
-        name: 'start.server.development',
-        value: 'node scripts start.server.development',
+        name: 'watch.server.development',
+        value: 'node scripts watch.server.development verbose',
         path: packageJsonPath,
     });
     await addScript({
-        name: 'run.development',
-        value: 'node scripts run.development',
+        name: 'run.server.development',
+        value: 'node scripts run.server.development verbose',
         path: packageJsonPath,
     });
     await addScript({
-        name: 'run.production',
-        value: 'node scripts run.production',
+        name: 'run.server.production',
+        value: 'node scripts run.server.production',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'start.development',
+        value: 'PLURID_WATCH_MODE=true concurrently \"yarn watch.client.development\" \"yarn watch.server.development\" \"yarn run.server.development\"',
         path: packageJsonPath,
     });
 
@@ -642,6 +648,7 @@ const generateReactServerApplication = async (
         'babel-loader',
         'babel-plugin-styled-components',
         'compression-webpack-plugin',
+        'concurrently',
         'copy-webpack-plugin',
         'css-loader',
         'eslint',
