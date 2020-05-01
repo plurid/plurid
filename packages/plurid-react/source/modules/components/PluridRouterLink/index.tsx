@@ -1,13 +1,13 @@
 import React from 'react';
 
 import {
-    PLURID_ROUTER_LOCATION_CHANGED,
-} from '@plurid/plurid-data';
-
-import {
     StyledPluridRouterLinkAnchor,
     StyledPluridRouterLinkDiv,
 } from './styled';
+
+import {
+    pluridRouterNavigate,
+} from '../../services/utilities/navigate';
 
 
 
@@ -59,19 +59,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 
         event.preventDefault();
 
-        emitLocationEvent();
-    }
-
-    const emitLocationEvent = () => {
-        const event = new CustomEvent(
-            PLURID_ROUTER_LOCATION_CHANGED,
-            {
-                detail: {
-                    path,
-                },
-            },
-        );
-        window.dispatchEvent(event);
+        pluridRouterNavigate(path);
     }
 
 
