@@ -32,6 +32,8 @@ require('dotenv').config({
 
 /** CONSTANTS */
 const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
+const SOURCE_DIRECTORY = process.env.PLURID_SOURCE_DIRECTORY || 'source';
+const SERVER_DIRECTORY = process.env.PLURID_SERVER_DIRECTORY || 'source/server';
 
 const buildFolder = path.join(process.cwd(), BUILD_DIRECTORY);
 const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true' && !process.argv[3]
@@ -64,7 +66,7 @@ const commandStart = [
 ];
 
 const commandRunDevelopment = [
-    `${crossCommand('nodemon')} ${buildFolder}`,
+    `${crossCommand('nodemon')} --watch ${buildFolder + '/index.js'} ${buildFolder}`,
 ];
 const commandRunProduction = [
     `node ${buildFolder}`,
@@ -114,12 +116,12 @@ const commandBuildStills = [
 
 
 const commandStartClientDevelopment = [
-    `${crossCommand('webpack')} --watch --progress --config ./scripts/workings/client.development.js`,
+    `${crossCommand('webpack')} --watch --config ./scripts/workings/client.development.js`,
 ];
 const commandStartServerDevelopment = [
-    ...commandBuildServerDevelopment,
-    `${crossCommand('nodemon')} ${buildFolder}`,
+    `${crossCommand('rollup')} -w -c ./scripts/workings/server.development.js`,
 ];
+
 
 
 const commandBuildDevelopment = [
