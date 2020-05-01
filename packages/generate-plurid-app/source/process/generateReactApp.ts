@@ -56,7 +56,7 @@ export const setupPackageJSONReactServer = async (
     });
     await addScript({
         name: 'start.development',
-        value: 'PLURID_WATCH_MODE=true concurrently \"yarn watch.client.development\" \"yarn watch.server.development\" \"yarn run.server.development\"',
+        value: 'PLURID_WATCH_MODE=true concurrently \\"yarn watch.client.development\\" \\"yarn watch.server.development\\" \\"yarn run.server.development\\"',
         path: packageJsonPath,
     });
 
