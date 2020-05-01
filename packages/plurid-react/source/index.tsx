@@ -46,6 +46,10 @@ import {
     serverComputeApplication,
 } from './modules/services/logic/server';
 
+import {
+    pluridRouterNavigate,
+} from './modules/services/utilities/navigate';
+
 
 
 const {
@@ -101,6 +105,9 @@ export {
 
     /** Logic */
     serverComputeApplication,
+
+    /** Utilities */
+    pluridRouterNavigate,
 };
 
 
