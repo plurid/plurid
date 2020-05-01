@@ -21,23 +21,24 @@ import {
 
 
 /** ENVIRONMENT */
-
 const watchMode = process.env.PLURID_WATCH_MODE === 'true';
 const isProduction = process.env.ENV_MODE === 'production';
 const buildDirectory = process.env.PLURID_BUILD_DIRECTORY || 'build';
 const port = process.env.PORT || 63000;
-const debug = isProduction ? 'info' : 'error';
 
 
 
 /** CONSTANTS */
-
 const applicationRoot = 'plurid-app';
 const openAtStart = watchMode
     ? false
     : isProduction
         ? false
         : true;
+const debug = isProduction
+    ? 'info'
+    : 'error';
+
 
 const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
 
