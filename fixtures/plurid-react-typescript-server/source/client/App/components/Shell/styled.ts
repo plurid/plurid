@@ -2,15 +2,7 @@ import {
     createGlobalStyle,
 } from 'styled-components';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
 
-
-
-interface IGlobalStyle {
-    theme: Theme;
-}
 
 export const GlobalStyle = createGlobalStyle`
     *, *::after, *::before {
@@ -33,10 +25,13 @@ export const GlobalStyle = createGlobalStyle`
         color: white;
     }
 
-    #root {
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    #plurid-app {
         height: 100%;
-        overflow: hidden;
-        display: grid;
-        align-items: center;
+        overflow: auto;
     }
 `;
