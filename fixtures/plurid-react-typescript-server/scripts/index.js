@@ -65,10 +65,10 @@ const commandStart = [
     `node ${buildFolder}`,
 ];
 
-const commandRunDevelopment = [
+const commandRunServerDevelopment = [
     `${crossCommand('nodemon')} --watch ${buildFolder + '/index.js'} ${buildFolder}`,
 ];
-const commandRunProduction = [
+const commandRunServerProduction = [
     `node ${buildFolder}`,
 ];
 
@@ -115,10 +115,10 @@ const commandBuildStills = [
 ];
 
 
-const commandStartClientDevelopment = [
+const commandWatchClientDevelopment = [
     `${crossCommand('webpack')} --watch --config ./scripts/workings/client.development.js`,
 ];
-const commandStartServerDevelopment = [
+const commandWatchServerDevelopment = [
     `${crossCommand('rollup')} -w -c ./scripts/workings/server.development.js`,
 ];
 
@@ -186,27 +186,27 @@ switch (command) {
             stdio: 'inherit',
         });
         break;
-    case 'start.client.development':
-        console.log('\n\tStarting the Client Development Process...');
-        runCommand(commandStartClientDevelopment, {
+    case 'watch.client.development':
+        console.log('\n\tStarting the Client Development Watching Process...');
+        runCommand(commandWatchClientDevelopment, {
             stdio: verbose,
         });
         break;
-    case 'start.server.development':
-        console.log('\n\tStarting the Server Development Process...');
-        runCommand(commandStartServerDevelopment, {
+    case 'watch.server.development':
+        console.log('\n\tStarting the Server Development Watching Process...');
+        runCommand(commandWatchServerDevelopment, {
             stdio: verbose,
         });
         break;
-    case 'run.development':
+    case 'run.server.development':
         console.log('\n\tRunning the Development Server...');
-        runCommand(commandRunDevelopment, {
+        runCommand(commandRunServerDevelopment, {
             stdio: verbose,
         });
         break;
-    case 'run.production':
+    case 'run.server.production':
         console.log('\n\tRunning the Production Server...');
-        runCommand(commandRunProduction, {
+        runCommand(commandRunServerProduction, {
             stdio: verbose,
         });
         break;
