@@ -14,6 +14,8 @@ import {
     PluridRouterCluster,
     PluridRouterPlane,
 
+    PluridComponent,
+
     /** Enumerations */
     LAYOUT_TYPES as SPACE_LAYOUT,
     SIZES,
@@ -71,6 +73,8 @@ export {
     PluridRouterUniverse,
     PluridRouterCluster,
     PluridRouterPlane,
+
+    PluridComponent,
 
     PluridConfiguration,
     PluridPartialConfiguration,
