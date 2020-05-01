@@ -1181,10 +1181,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@plurid/plurid-data@^0.1.124":
-  version "0.1.124"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.124.tgz#fea18c6e18b37612308f0c8ac7411804d6625711"
-  integrity sha512-mI/Y6DqON5RTd8k5K6fFJ9G6HktSR0n2mvQ9cmRi6j6tHb95LnLBtZpB8voOC4hEF16pzg63LHmJQ99n9GZeJw==
+"@plurid/plurid-data@^0.1.125":
+  version "0.1.125"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.125.tgz#817d0f4919e7f2f8bbfff84742166a12b7db90dc"
+  integrity sha512-6nF1t3lSYS3+5Uw9NG8lUoYg9lTSjRpiUCRmW/N8YsxK3l7MAbG9eT4ndmFvPDVaBb/2q+VXkWbvBDYgR4lzXQ==
 
 "@plurid/plurid-engine@^0.1.67":
   version "0.1.67"
@@ -1221,10 +1221,10 @@
     express "^4.17.1"
     open "^7.0.3"
 
-"@plurid/plurid-react@^0.1.150":
-  version "0.1.150"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.150.tgz#e941e3bc27ec948c923f40581ecfa98df9f16c06"
-  integrity sha512-X7voQMvOfgY0HGWgGG9DrKt+59JE+B/ddNQoRa6hxT60IX7JPC0V6zT9RQNQyyWosBZ5tWS0C1/G21M0lwrcUg==
+"@plurid/plurid-react@^0.1.152":
+  version "0.1.153"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.153.tgz#8d3ef788e9bab69dfcfcceb932498badd7149b7b"
+  integrity sha512-QXxcgF8YwRU5DOni0IG+3qJrXsZYKUAgRHQCpFAHaHFCbjk9KZw+xX8xqEAYnDlUyvMTi4uYTqeKJxscWoeeIA==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
