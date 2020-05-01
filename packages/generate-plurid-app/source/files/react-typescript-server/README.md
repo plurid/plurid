@@ -19,6 +19,7 @@
 + [Production](#production)
 + [Development](#development)
 + [Deployment](#deployment)
++ [Containerization](#containerization)
 
 
 
@@ -38,46 +39,19 @@ or
 
 For development, run the following command
 
-1. to clean the build folder
-
 ``` bash
-npm run clean
+npm run start.development
 ```
 
 or
 
 ``` bash
-yarn clean
-```
-
-then open two terminals and run in each the following commands
-
-
-2. terminal 1: to start the client listener
-
-``` bash
-npm run start.client.development
-```
-
-or
-
-``` bash
-yarn start.client.development
-```
-
-3. terminal 2: to start the server listener
-
-``` bash
-npm run start.server.development
-```
-
-or
-
-``` bash
-yarn start.server.development
+yarn start.development
 ```
 
 Now you can develop the files in `./source` and the application will recompile and reload at any file save.
+
+If there is no `./build` folder, the server watcher may crash, but it will reload as soon as the application compiler catches up.
 
 
 
@@ -88,3 +62,35 @@ The application can be deployed to plurid.app running
 ``` bash
 plurid deploy
 ```
+
+
+## Containerization
+
+The application can be containerized using Docker running the command
+
+
+``` bash
+npm run containerize.production
+```
+
+or
+
+``` bash
+yarn containerize.production
+```
+
+to create a client-server NodeJS application container or
+
+
+``` bash
+npm run containerize.production.stills
+```
+
+or
+
+``` bash
+yarn containerize.production.stills
+```
+
+
+to create a container with the stilling renderer, extracting the static HTML at compile time.
