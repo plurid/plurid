@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react-server",
-    "version": "0.1.46",
+    "version": "0.1.47",
     "description": "React implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
     "keywords": [
         "plurid",
@@ -72,7 +72,7 @@
     },
     "devDependencies": {
         "@apollo/react-hooks": "^3.1.5",
-        "@babel/core": "^7.9.0",
+        "@babel/core": "^7.9.6",
         "@plurid/plurid-data": "^0.1.123",
         "@plurid/plurid-engine": "^0.1.66",
         "@plurid/plurid-functions": "^0.1.13",
@@ -105,8 +105,8 @@
         "eslint": "^6.8.0",
         "graphql": "^15.0.0",
         "hammerjs": "^2.0.8",
-        "jest": "^25.5.1",
-        "jest-config": "^25.5.1",
+        "jest": "^25.5.3",
+        "jest-config": "^25.5.3",
         "puppeteer": "^3.0.2",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
@@ -115,7 +115,7 @@
         "react-stripe-elements": "^6.1.2",
         "redux": "^4.0.5",
         "redux-thunk": "^2.3.0",
-        "rollup": "^2.7.3",
+        "rollup": "^2.7.6",
         "rollup-plugin-babel": "^4.4.0",
         "rollup-plugin-peer-deps-external": "^2.2.2",
         "rollup-plugin-postcss": "^3.1.1",
