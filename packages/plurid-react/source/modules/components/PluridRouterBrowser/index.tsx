@@ -293,6 +293,7 @@ const PluridRouterBrowser = (
         }
     }
 
+    // GlobalShell receives the matchedRoute parameter
     let GlobalShell: React.FC<any> = ({children}) => (
         <>
             {children}
@@ -306,9 +307,13 @@ const PluridRouterBrowser = (
 
     return (
         <>
-            <GlobalExterior />
+            <GlobalExterior
+                matchedRoute={matchedRoute}
+            />
 
-            <GlobalShell>
+            <GlobalShell
+                matchedRoute={matchedRoute}
+            >
                 {Component}
             </GlobalShell>
         </>
