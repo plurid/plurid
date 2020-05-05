@@ -4,11 +4,11 @@ import {
     PluridRouterPath,
 } from '@plurid/plurid-data';
 
-import IndexPagePlane from '../../client/App/planes/Index/Page';
-import NotFoundPlane from '../../client/App/planes/NotFound';
-import StaticPlane from '../../client/App/planes/Static';
+import IndexPagePlane from '../kernel/planes/Index/Page';
+import NotFoundPlane from '../kernel/planes/NotFound';
+import StaticPlane from '../kernel/planes/Static';
 
-import Head from '../../client/App/components/Head';
+import Head from '../kernel/components/Head';
 
 
 
