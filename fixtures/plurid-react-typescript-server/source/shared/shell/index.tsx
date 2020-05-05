@@ -28,6 +28,8 @@ const Shell: React.FC<ShellProperties> = (
         <>
             <GlobalStyle />
 
+            shell
+
             {children}
         </>
     );

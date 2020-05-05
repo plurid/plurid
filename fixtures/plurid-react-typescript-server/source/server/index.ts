@@ -104,8 +104,9 @@ const options: PluridServerPartialOptions = {
 
 /** SERVER */
 const pluridServer = new PluridServer({
-    paths,
     helmet,
+    paths,
+    shell,
     styles,
     middleware,
     services,
