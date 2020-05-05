@@ -103,23 +103,23 @@ to create a container with the stilling renderer, extracting the static HTML at 
 
 The top level directories of the application are:
 
-+ configurations - files that are needed to configure various software packages, pre-build or at build time;
-+ environment - environment files;
-+ scripts - application building scripts; for simple uses there should be no need to modify any file in here, the common use cases being covered by default;
-+ source - the source code
++ `configurations` - files that are needed to configure various software packages, pre-build or at build time;
++ `environment` - environment files;
++ `scripts` - application building scripts; for simple uses there should be no need to modify any file in here, the common use cases being covered by default;
++ `source` - the source code
 
 
 The `source` directory contains:
 
-+ client - client bootloader, providers wrapping, root mounting;
-+ public - favicons, manifest, robots, service workers; the contents will be copied 'as is' at build time
-+ server - server bootloader
-+ shared - the application code
-+ types - typings for common files ('.jpg', '.svg', '.pdf', etc.)
++ `client` - client bootloader, providers wrapping, root mounting;
++ `public` - favicons, manifest, robots, service workers; the contents will be copied 'as is' at build time
++ `server` - server bootloader
++ `shared` - the application code
++ `types` - typings for common files ('.jpg', '.svg', '.pdf', etc.)
 
 
 The `shared` directory contains code which will be used both by the `server` and by the `client`. It's contents are
 
-+ kernel - application assets, components;
-+ paths - route mapping of planes, spaces, containers
-+ shell - kernel controller, authentication/authorization, rerouting, etc; the kernel will be wrapped by the shell
++ `kernel` - application assets, components, containers, data, services;
++ `paths` - route mapping of containers (planes, spaces);
++ `shell` - kernel controller, authentication/authorization, rerouting, etc; the kernel will be wrapped by the shell
