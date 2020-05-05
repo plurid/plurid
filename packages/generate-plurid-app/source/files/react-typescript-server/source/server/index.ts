@@ -5,18 +5,18 @@ import PluridServer, {
     PluridServerPartialOptions,
 } from '@plurid/plurid-react-server';
 
-import helmet from '../client/App/services/helmet';
+import helmet from '../shared/kernel/services/helmet';
 
 /** uncomment to use services */
-import reduxStore from '../client/App/services/state/store';
-import graphqlClient from '../client/App/services/graphql/client';
+import reduxStore from '../shared/kernel/services/state/store';
+import apolloClient from '../shared/kernel/services/graphql/client';
 // import {
 //     STRIPE_API_KEY as stripeAPIKey,
 // } from '../client/App/data/constants';
 
 import {
     paths,
-} from '../common';
+} from '../shared';
 
 
 
@@ -59,7 +59,7 @@ const middleware: PluridServerMiddleware[] = [
 const services: PluridServerService[] = [
     /** uncomment to use services */
     'Redux',
-    'GraphQL',
+    'Apollo',
     // 'Stripe',
 ];
 
@@ -68,7 +68,7 @@ const servicesData: PluridServerServicesData = {
     /** uncomment to use services */
     reduxStore,
     reduxStoreValue: {},
-    graphqlClient,
+    apolloClient,
     // stripeAPIKey,
     // stripeScript,
 };

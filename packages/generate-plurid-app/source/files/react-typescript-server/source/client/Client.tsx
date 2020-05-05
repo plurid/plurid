@@ -23,30 +23,31 @@ import {
 import {
     PluridProvider,
     PluridRouterBrowser,
+    PluridComponent,
 } from '@plurid/plurid-react';
 
-import themes from '@plurid/plurid-themes';
+import helmetContext from '../shared/kernel/services/helmet';
 
-import {
-    GlobalStyle,
-} from './styled';
-
-import helmetContext from './App/services/helmet';
-
-import reduxStore from './App/services/state/store';
-import graphqlClient from './App/services/graphql/client';
+import reduxStore from '../shared/kernel/services/state/store';
+import graphqlClient from '../shared/kernel/services/graphql/client';
 // import {
 //     STRIPE_API_KEY as stripeAPIKey,
 // } from './App/data/constants';
 
 import {
     paths,
-} from '../common';
+    Shell,
+} from '../shared';
 
 
 
 const state = (window as any).__PRELOADED_STATE__;
 delete (window as any).__PRELOADED_STATE__;
+
+const shell: PluridComponent = {
+    kind: 'react',
+    element: Shell,
+};
 
 
 const Client: React.FC<any> = () => {
@@ -57,11 +58,8 @@ const Client: React.FC<any> = () => {
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
                         <StyleSheetManager>
                             <PluridProvider context={{}}>
-                                <GlobalStyle
-                                    theme={themes.plurid}
-                                />
-
                                 <PluridRouterBrowser
+                                    shell={shell}
                                     paths={paths}
                                 />
                             </PluridProvider>
