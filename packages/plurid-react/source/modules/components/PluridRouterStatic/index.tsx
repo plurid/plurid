@@ -5,6 +5,7 @@ import React, {
 import {
     PluridRouterPath,
     IndexedPluridPlane,
+    PluridComponent,
 } from '@plurid/plurid-data';
 
 import {
@@ -24,6 +25,8 @@ const PluridRouter = router.default;
 
 interface PluridRouterStaticOwnProperties {
     path: string;
+    exterior?: PluridComponent;
+    shell?: PluridComponent;
     paths: PluridRouterPath[];
     protocol?: string;
     host?: string;
@@ -40,7 +43,8 @@ const PluridRouterStatic = (
     const {
         path,
         paths,
-
+        exterior,
+        shell,
         protocol: protocolProperty,
         host: hostProperty,
         gateway,
@@ -102,9 +106,37 @@ const PluridRouterStatic = (
         indexedPlanes: indexedPlanes.current,
     });
 
+
+    let Exterior: React.FC<any> = () => (<></>);
+    if (exterior) {
+        if (exterior.kind === 'react') {
+            Exterior = exterior.element;
+        }
+    }
+
+    // Shell receives the matchedRoute parameter
+    let Shell: React.FC<any> = ({children}) => (
+        <>
+            {children}
+        </>
+    );
+    if (shell) {
+        if (shell.kind === 'react') {
+            Shell = shell.element;
+        }
+    }
+
     return (
         <>
-            {Component}
+            <Exterior
+                matchedRoute={matchedRoute}
+            />
+
+            <Shell
+                matchedRoute={matchedRoute}
+            >
+                {Component}
+            </Shell>
         </>
     );
 }
