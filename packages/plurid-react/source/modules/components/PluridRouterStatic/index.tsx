@@ -104,6 +104,7 @@ const PluridRouterStatic = (
         protocol,
         host,
         indexedPlanes: indexedPlanes.current,
+        staticRender: true,
     });
 
 
