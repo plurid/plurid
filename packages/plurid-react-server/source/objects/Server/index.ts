@@ -22,6 +22,7 @@ import {
 
 import {
     PluridRouterPath,
+    PluridComponent,
 } from '@plurid/plurid-data';
 
 import {
@@ -64,6 +65,8 @@ export default class PluridServer {
     private helmet: Helmet;
     private styles: string[];
     private middleware: PluridServerMiddleware[];
+    private exterior: PluridComponent | undefined;
+    private shell: PluridComponent | undefined;
     private services: PluridServerService[];
     private servicesData: PluridServerServicesData | undefined;
     private options: PluridServerOptions;
@@ -81,6 +84,8 @@ export default class PluridServer {
             helmet,
             styles,
             middleware,
+            exterior,
+            shell,
             services,
             servicesData,
             options,
@@ -90,6 +95,8 @@ export default class PluridServer {
         this.helmet = helmet;
         this.styles = styles || [];
         this.middleware = middleware || [];
+        this.exterior = exterior;
+        this.shell = shell;
         this.services = services || [];
         this.servicesData = servicesData;
         this.options = this.handleOptions(options);
@@ -107,7 +114,9 @@ export default class PluridServer {
         });
     }
 
-    static analysis(pluridServer: PluridServer) {
+    static analysis(
+        pluridServer: PluridServer,
+    ) {
         return {
             paths: pluridServer.paths,
         };
@@ -305,6 +314,8 @@ export default class PluridServer {
                 services: this.services,
                 servicesData: this.servicesData,
                 stylesheet,
+                exterior: this.exterior,
+                shell: this.shell,
                 helmet: this.helmet,
                 matchedRoute,
                 paths: this.paths,
