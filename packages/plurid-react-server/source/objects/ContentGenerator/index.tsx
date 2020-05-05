@@ -5,31 +5,12 @@ import {
 } from 'react-dom/server';
 
 import {
-    ServerStyleSheet,
     StyleSheetManager,
 } from 'styled-components';
 
 import {
-    Helmet,
     HelmetProvider,
 } from 'react-helmet-async';
-// import {
-//     Provider as ReduxProvider,
-// } from 'react-redux';
-// import {
-//     ApolloProvider,
-// } from '@apollo/react-hooks';
-// import {
-//     StripeProvider,
-// } from 'react-stripe-elements';
-
-import {
-    PluridRouterPath,
-} from '@plurid/plurid-data';
-
-import {
-    router,
-} from '@plurid/plurid-engine';
 
 import {
     PluridProvider,
@@ -37,25 +18,11 @@ import {
 } from '@plurid/plurid-react';
 
 import {
-    PluridServerService,
-    PluridServerServicesData,
+    PluridContentGeneratorData,
 } from '../../data/interfaces';
 
 import wrapping from '../../utilities/wrapping';
 
-
-interface PluridContentGeneratorData {
-    services: PluridServerService[],
-    servicesData: PluridServerServicesData | undefined,
-    stylesheet: ServerStyleSheet,
-    helmet: Helmet,
-    matchedRoute: router.MatcherResponse,
-    paths: PluridRouterPath[],
-    pluridContext: any,
-    gateway: boolean,
-    gatewayEndpoint: string,
-    gatewayQuery: string,
-}
 
 
 export default class PluridContentGenerator {
@@ -68,34 +35,53 @@ export default class PluridContentGenerator {
     }
 
     public async render() {
+        const {
+            pluridContext,
+            matchedRoute,
+            paths,
+            exterior,
+            shell,
+            gateway,
+            gatewayEndpoint,
+            gatewayQuery,
+            servicesData,
+            helmet,
+            services,
+            stylesheet,
+        } = this.data;
+
         const RoutedApplication = () => (
-            <PluridProvider context={this.data.pluridContext}>
+            <PluridProvider
+                context={pluridContext}
+            >
                 <PluridRouterStatic
-                    path={this.data.matchedRoute.pathname}
-                    paths={this.data.paths}
-                    gateway={this.data.gateway}
-                    gatewayEndpoint={this.data.gatewayEndpoint}
-                    gatewayQuery={this.data.gatewayQuery}
+                    path={matchedRoute.pathname}
+                    paths={paths}
+                    exterior={exterior}
+                    shell={shell}
+                    gateway={gateway}
+                    gatewayEndpoint={gatewayEndpoint}
+                    gatewayQuery={gatewayQuery}
                 />
             </PluridProvider>
         );
 
-        const reduxStore = this.data.servicesData?.reduxStore;
-        const reduxStoreValue = this.data.servicesData?.reduxStoreValue || {};
-        const apolloClient = this.data.servicesData?.apolloClient;
-        const stripeAPIKey = this.data.servicesData?.stripeAPIKey;
+        const reduxStore = servicesData?.reduxStore;
+        const reduxStoreValue = servicesData?.reduxStoreValue || {};
+        const apolloClient = servicesData?.apolloClient;
+        const stripeAPIKey = servicesData?.stripeAPIKey;
 
         let Wrap = wrapping(
             HelmetProvider,
             RoutedApplication,
             {
-                context: this.data.helmet,
+                context: helmet,
             },
         );
 
         const providers = await this.importProviders();
 
-        for (const service of this.data.services) {
+        for (const service of services) {
             switch (service) {
                 case 'Redux':
                     Wrap = wrapping(
@@ -129,7 +115,7 @@ export default class PluridContentGenerator {
 
         const content = renderToString(
             <StyleSheetManager
-                sheet={this.data.stylesheet.instance}
+                sheet={stylesheet.instance}
             >
                 <Wrap />
             </StyleSheetManager>

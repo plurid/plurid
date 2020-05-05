@@ -1,6 +1,25 @@
 import {
+    Helmet,
+} from 'react-helmet-async';
+
+import {
+    ServerStyleSheet,
+} from 'styled-components';
+
+import {
     Indexed,
+    PluridRouterPath,
+    PluridComponent,
 } from '@plurid/plurid-data';
+
+import {
+    router,
+} from '@plurid/plurid-engine';
+
+import {
+    PluridServerService,
+    PluridServerServicesData,
+} from './external';
 
 
 
@@ -48,4 +67,20 @@ export interface StilledMetadataEntry {
 export interface StillsGeneratorOptions {
     server: string;
     build: string;
+}
+
+
+export interface PluridContentGeneratorData {
+    services: PluridServerService[];
+    servicesData: PluridServerServicesData | undefined;
+    stylesheet: ServerStyleSheet;
+    helmet: Helmet;
+    exterior: PluridComponent | undefined;
+    shell: PluridComponent | undefined;
+    matchedRoute: router.MatcherResponse;
+    paths: PluridRouterPath[];
+    pluridContext: any;
+    gateway: boolean;
+    gatewayEndpoint: string;
+    gatewayQuery: string;
 }
