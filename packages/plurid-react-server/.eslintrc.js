@@ -22,6 +22,7 @@ module.exports = {
     ],
     "rules": {
         "no-unused-vars": 0,
-        "no-empty": 0
+        "no-empty": 0,
+        "no-case-declarations": 0
     }
 };
