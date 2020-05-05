@@ -44,8 +44,8 @@ const PluridRouterBrowser = (
     /** properties */
     const {
         paths,
-        globalExterior,
-        globalShell,
+        exterior,
+        shell,
         view,
         cleanNavigation,
         protocol: protocolProperty,
@@ -286,36 +286,36 @@ const PluridRouterBrowser = (
         );
     }
 
-    let GlobalExterior: React.FC<any> = () => (<></>);
-    if (globalExterior) {
-        if (globalExterior.kind === 'react') {
-            GlobalExterior = globalExterior.element;
+    let Exterior: React.FC<any> = () => (<></>);
+    if (exterior) {
+        if (exterior.kind === 'react') {
+            Exterior = exterior.element;
         }
     }
 
-    // GlobalShell receives the matchedRoute parameter
-    let GlobalShell: React.FC<any> = ({children}) => (
+    // Shell receives the matchedRoute parameter
+    let Shell: React.FC<any> = ({children}) => (
         <>
             {children}
         </>
     );
-    if (globalShell) {
-        if (globalShell.kind === 'react') {
-            GlobalShell = globalShell.element;
+    if (shell) {
+        if (shell.kind === 'react') {
+            Shell = shell.element;
         }
     }
 
     return (
         <>
-            <GlobalExterior
+            <Exterior
                 matchedRoute={matchedRoute}
             />
 
-            <GlobalShell
+            <Shell
                 matchedRoute={matchedRoute}
             >
                 {Component}
-            </GlobalShell>
+            </Shell>
         </>
     );
 }
