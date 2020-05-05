@@ -6,6 +6,7 @@ import {
 
 import {
     PluridRouterPath,
+    PluridComponent,
 } from '@plurid/plurid-data';
 
 
@@ -113,6 +114,9 @@ export interface PluridServerConfiguration {
     helmet: Helmet;
     styles?: string[];
     middleware?: PluridServerMiddleware[];
+
+    exterior?: PluridComponent;
+    shell?: PluridComponent;
 
     /**
      * Services to be handled by the server.
