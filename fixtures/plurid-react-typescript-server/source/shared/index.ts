@@ -1,10 +1,10 @@
 import paths from './paths';
 
-import Shell from './shell';
+import shell from './shell';
 
 
 
 export {
     paths,
-    Shell,
+    shell,
 }

@@ -22,6 +22,7 @@ import apolloClient from '../shared/kernel/services/graphql/client';
 
 import {
     paths,
+    shell,
 } from '../shared';
 
 
