@@ -13,15 +13,15 @@ import {
     Helmet,
     HelmetProvider,
 } from 'react-helmet-async';
-import {
-    Provider as ReduxProvider,
-} from 'react-redux';
-import {
-    ApolloProvider,
-} from '@apollo/react-hooks';
-import {
-    StripeProvider,
-} from 'react-stripe-elements';
+// import {
+//     Provider as ReduxProvider,
+// } from 'react-redux';
+// import {
+//     ApolloProvider,
+// } from '@apollo/react-hooks';
+// import {
+//     StripeProvider,
+// } from 'react-stripe-elements';
 
 import {
     PluridRouterPath,
@@ -67,7 +67,7 @@ export default class PluridContentGenerator {
         this.data = data;
     }
 
-    render() {
+    public async render() {
         const RoutedApplication = () => (
             <PluridProvider context={this.data.pluridContext}>
                 <PluridRouterStatic
@@ -82,7 +82,7 @@ export default class PluridContentGenerator {
 
         const reduxStore = this.data.servicesData?.reduxStore;
         const reduxStoreValue = this.data.servicesData?.reduxStoreValue || {};
-        const graphqlClient = this.data.servicesData?.graphqlClient;
+        const apolloClient = this.data.servicesData?.apolloClient;
         const stripeAPIKey = this.data.servicesData?.stripeAPIKey;
 
         let Wrap = wrapping(
@@ -93,29 +93,31 @@ export default class PluridContentGenerator {
             },
         );
 
+        const providers = await this.importProviders();
+
         for (const service of this.data.services) {
             switch (service) {
                 case 'Redux':
                     Wrap = wrapping(
-                        ReduxProvider,
+                        providers.ReduxProvider,
                         Wrap,
                         {
                             store: reduxStore(reduxStoreValue),
                         },
                     );
                     break;
-                case 'GraphQL':
+                case 'Apollo':
                     Wrap = wrapping(
-                        ApolloProvider,
+                        providers.ApolloProvider,
                         Wrap,
                         {
-                            client: graphqlClient,
+                            client: apolloClient,
                         },
                     );
                     break;
                 case 'Stripe':
                     Wrap = wrapping(
-                        StripeProvider,
+                        providers.StripeProvider,
                         Wrap,
                         {
                             apiKey: stripeAPIKey,
@@ -134,5 +136,34 @@ export default class PluridContentGenerator {
         );
 
         return content;
+    }
+
+    private async importProviders() {
+        let ReduxProvider;
+        let StripeProvider;
+        let ApolloProvider;
+
+        for (const service of this.data.services) {
+            switch (service) {
+                case 'Redux':
+                    const redux = await import('react-redux');
+                    ReduxProvider = redux.Provider;
+                    break;
+                case 'Apollo':
+                    const apollo = await import('@apollo/react-hooks');
+                    ApolloProvider = apollo.ApolloProvider;
+                    break;
+                case 'Stripe':
+                    const stripe = await import('react-stripe-elements');
+                    StripeProvider = stripe.StripeProvider;
+                    break;
+            }
+        }
+
+        return {
+            ReduxProvider,
+            ApolloProvider,
+            StripeProvider,
+        };
     }
 }

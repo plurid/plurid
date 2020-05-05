@@ -5,14 +5,6 @@ import {
 } from 'react-helmet-async';
 
 import {
-    ApolloClient,
-} from 'apollo-client';
-
-import {
-    NormalizedCacheObject,
-} from 'apollo-cache-inmemory';
-
-import {
     PluridRouterPath,
 } from '@plurid/plurid-data';
 
@@ -25,7 +17,11 @@ export type PluridServerMiddleware = (
 ) => void;
 
 
-export type DebugLevels = 'none' | 'error' | 'warn' | 'info';
+export type DebugLevels =
+    | 'none'
+    | 'error'
+    | 'warn'
+    | 'info';
 
 
 export interface PluridServerOptions {
@@ -97,13 +93,16 @@ export interface PluridServerOptions {
 export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 
 
-export type PluridServerService = 'GraphQL' | 'Redux' | 'Stripe';
+export type PluridServerService =
+    | 'Apollo'
+    | 'Redux'
+    | 'Stripe';
 
 
 export interface PluridServerServicesData {
     reduxStore?: any;
     reduxStoreValue?: any;
-    graphqlClient?: ApolloClient<NormalizedCacheObject>;
+    apolloClient?: any;
     stripeAPIKey?: string;
     stripeScript?: string;
 }

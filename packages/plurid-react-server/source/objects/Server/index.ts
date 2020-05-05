@@ -141,14 +141,14 @@ export default class PluridServer {
         }
     }
 
-    private computeApplication() {
+    private async computeApplication() {
         this.loadMiddleware();
 
         const stills = new PluridStillsManager(this.options);
         const router = new PluridRouter(this.paths);
         const pluridsResponder = new PluridsResponder();
 
-        this.serverApplication.get('*', (request, response) => {
+        this.serverApplication.get('*', async (request, response) => {
             const path = request.path;
 
             const {
@@ -172,7 +172,7 @@ export default class PluridServer {
                     },
                     route: gatewayEndpoint,
                 };
-                this.renderer = this.renderApplication(gatewayRoute);
+                this.renderer = await this.renderApplication(gatewayRoute);
                 response.send(this.renderer?.html());
                 return;
             }
@@ -209,23 +209,23 @@ export default class PluridServer {
                     return;
                 }
 
-                this.renderer = this.renderApplication(notFoundRoute);
+                this.renderer = await this.renderApplication(notFoundRoute);
                 response.send(this.renderer?.html());
                 return;
             }
 
-            this.renderer = this.renderApplication(route);
+            this.renderer = await this.renderApplication(route);
             response.send(this.renderer?.html());
         });
     }
 
-    private renderApplication(
+    private async renderApplication(
         route: router.MatcherResponse,
     ) {
         const {
             content,
             styles,
-        } = this.getContentAndStyles(
+        } = await this.getContentAndStyles(
             route,
         );
 
@@ -252,12 +252,12 @@ export default class PluridServer {
         const htmlAttributes = helmet.htmlAttributes.toString();
         const bodyAttributes = helmet.bodyAttributes.toString();
 
-        const store = this.servicesData?.reduxStore ?
-            JSON.stringify(
+        const store = this.servicesData?.reduxStore
+            ? JSON.stringify(
                 this.servicesData?.reduxStore(
                     this.servicesData?.reduxStoreValue || {},
-                ).getState()
-            ) : '';
+                ).getState())
+            : '';
 
         const {
             root,
@@ -285,7 +285,7 @@ export default class PluridServer {
         return renderer;
     }
 
-    private getContentAndStyles(
+    private async getContentAndStyles(
         matchedRoute: router.MatcherResponse,
     ) {
         const stylesheet = new ServerStyleSheet();
@@ -314,7 +314,7 @@ export default class PluridServer {
                 gatewayQuery,
             });
 
-            content = contentHandler.render();
+            content = await contentHandler.render();
 
             styles = stylesheet.getStyleTags();
         } catch (error) {
