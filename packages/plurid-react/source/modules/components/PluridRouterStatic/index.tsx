@@ -114,7 +114,9 @@ const PluridRouterStatic = (
         }
     }
 
-    let Shell: React.FC<any> = ({children}) => (
+    let Shell: React.FC<any> = ({
+        children,
+    }) => (
         <>
             {children}
         </>

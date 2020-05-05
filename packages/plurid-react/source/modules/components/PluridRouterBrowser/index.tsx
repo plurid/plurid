@@ -293,8 +293,9 @@ const PluridRouterBrowser = (
         }
     }
 
-    // Shell receives the matchedRoute parameter
-    let Shell: React.FC<any> = ({children}) => (
+    let Shell: React.FC<any> = ({
+        children,
+    }) => (
         <>
             {children}
         </>
