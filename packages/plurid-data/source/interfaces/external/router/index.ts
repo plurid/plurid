@@ -12,14 +12,14 @@ export interface PluridRouterProperties {
     paths: PluridRouterPath[];
 
     /**
-     * Component to be rendered outside of all the paths and of the global shell.
+     * Component to be rendered outside of the current `path` component and of the `shell`.
      */
-    globalExterior?: PluridComponent;
+    exterior?: PluridComponent;
 
     /**
-     * Component to wrap around the paths.
+     * Component to wrap around the current path component.
      */
-    globalShell?: PluridComponent;
+    shell?: PluridComponent;
 
     /**
      * Path to navigate to when using clean navigation.
