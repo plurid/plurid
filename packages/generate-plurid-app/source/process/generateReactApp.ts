@@ -422,7 +422,7 @@ export const removeGeneratePackage = async (
 export const removeUnusedAddons = async (
     app: Application,
 ) => {
-    const graphqlService = app.services.includes(services.graphql);
+    const graphqlService = app.services.includes(services.apollo);
     if (!graphqlService) {
         const graphqlRelativeDirectory = './source/client/App/services/graphql';
         const graphqlDirectory = path.resolve(app.directory, graphqlRelativeDirectory);
@@ -580,7 +580,7 @@ const generateReactServerApplication = async (
 
     const initCommand = computeInitCommand(app);
 
-    const graphqlService = app.services.includes(services.graphql);
+    const graphqlService = app.services.includes(services.apollo);
     const stripeService = app.services.includes(services.stripe);
 
     const requiredDependencies = [

@@ -74,13 +74,16 @@ export interface IVersioning {
 }
 
 
-export type ServiceGraphQL = 'GraphQL';
+export type ServiceApollo = 'Apollo';
 export type ServiceRedux = 'Redux';
 export type ServiceStripe = 'Stripe';
-export type Services = ServiceGraphQL | ServiceRedux | ServiceStripe;
+export type Services =
+    | ServiceApollo
+    | ServiceRedux
+    | ServiceStripe;
 
 export interface IServices {
-    graphql: ServiceGraphQL;
+    apollo: ServiceApollo;
     redux: ServiceRedux;
     stripe: ServiceStripe;
 }

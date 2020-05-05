@@ -45,11 +45,11 @@ export const manager: IManager = {
 };
 
 
-export const serviceGraphQL = 'GraphQL';
+export const serviceApollo = 'Apollo';
 export const serviceRedux = 'Redux';
 export const serviceStripe = 'Stripe';
 export const services: IServices = {
-    graphql: serviceGraphQL,
+    apollo: serviceApollo,
     redux: serviceRedux,
     stripe: serviceStripe,
 };
