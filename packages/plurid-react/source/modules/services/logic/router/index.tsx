@@ -42,6 +42,7 @@ export interface GetComponentFromRouteData {
     protocol: string;
     host: string;
     indexedPlanes: Map<string, IndexedPluridPlane> | undefined;
+    staticRender?: boolean;
 }
 
 export const getComponentFromRoute = (
@@ -52,6 +53,7 @@ export const getComponentFromRoute = (
         protocol,
         host,
         indexedPlanes,
+        staticRender,
     } = data;
 
     const {
@@ -66,7 +68,6 @@ export const getComponentFromRoute = (
             query,
         },
     };
-    // console.log('pluridProperty', pluridProperty);
 
     const {
         exterior,
@@ -248,6 +249,7 @@ export const getComponentFromRoute = (
                     planes={planes}
                     indexedPlanes={indexedPlanes}
                     view={view}
+                    static={staticRender}
                 />
             );
             spacesArray.push(App);
@@ -305,6 +307,7 @@ export const getComponentFromRoute = (
                 planes={pluridPlanes}
                 indexedPlanes={indexedPlanes}
                 view={view}
+                static={staticRender}
             />
         );
         spacesArray.push(App);

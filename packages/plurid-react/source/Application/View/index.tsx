@@ -71,6 +71,8 @@ import {
     loadHammer,
 } from '../../modules/services/utilities/imports';
 
+import renderStatic from '../../modules/services/logic/static';
+
 import { AppState } from '../../modules/services/state/store';
 import selectors from '../../modules/services/state/selectors';
 import actions from '../../modules/services/state/actions';
@@ -200,10 +202,17 @@ const View: React.FC<ViewProperties> = (
         indexedPlanes,
         view,
         pubsub,
+        static: staticRender,
     } = pluridApplication;
 
-    // console.log('planes', planes);
-    // console.log('indexedPlanes', indexedPlanes);
+
+    console.log('staticRender', staticRender);
+    /** render */
+    if (staticRender) {
+        return renderStatic(
+            pluridApplication,
+        );
+    }
 
 
     /** references */

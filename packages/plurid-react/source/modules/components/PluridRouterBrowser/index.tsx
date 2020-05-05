@@ -85,7 +85,7 @@ const PluridRouterBrowser = (
     const handleMatchedRoute = (
         matchedRoute: router.MatcherResponse,
     ) => {
-        // console.log('matchedRoute', matchedRoute);
+        console.log('matchedRoute', matchedRoute);
         setMatchedRoute(matchedRoute);
 
         if (!cleanNavigation) {
@@ -104,6 +104,7 @@ const PluridRouterBrowser = (
             protocol,
             host,
             indexedPlanes: indexedPlanes.current,
+            staticRender: true,
         });
 
         setComponent(Component);
