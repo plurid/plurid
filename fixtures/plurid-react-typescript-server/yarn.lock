@@ -1209,20 +1209,20 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.7.tgz#cb77e2be0463e7fb0314f3aa6d9db99132391b94"
   integrity sha512-86a0eYFImjJ+szl+Z2aG+TwqVQMgGftCzLWoZ6LP5cOkBaqVaZjAm01oMBNTShl3Drp51lDU4pUncl7s3RGK7Q==
 
-"@plurid/plurid-react-server@^0.1.48":
-  version "0.1.48"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.48.tgz#31aa5fcf39036fd7585e3ec52b25ec1bab6e6ddf"
-  integrity sha512-/Pcl8+bSsSsaqcYTA1v8t1nDQ4N9D/T1zCcNAJOpqSDLLfNWsBBGhDR/n2fQ6B1jS8JMttvDbQiseTyAxQ7alw==
+"@plurid/plurid-react-server@^0.1.49":
+  version "0.1.49"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.49.tgz#1e524ec64b246b9784e8886df43af512133afd58"
+  integrity sha512-6dJWfvTzW4QfwNfQKrPLpkgSYO9lKH6ZqNcg7Ez+VP6sJtSpVJEl/vxI8MncgLih3/k4VgPT2kDukIHxXUcZ7A==
   dependencies:
     compression "^1.7.4"
     detect-port "^1.3.0"
     express "^4.17.1"
     open "^7.0.3"
 
-"@plurid/plurid-react@^0.1.155":
-  version "0.1.155"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.155.tgz#c70c160cb03f8fe4d74b3edf9da089342d8b402e"
-  integrity sha512-FAq+qiHauZ+eMlBDrq19pRtS2xLcekfRqJ8Er+eAz1AG2aaK4+IpHZ6s3EMReOwwpGjL45VQ/5f/In3Pj71qrw==
+"@plurid/plurid-react@^0.1.157":
+  version "0.1.157"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.157.tgz#95f1b033237551d7f7584b64197778fed759b7e2"
+  integrity sha512-FnA1gc+8Lf/jHIv0/rYerCnDdusQ5/43H9DGVZOrGUAoWMbEd3mA/mrSRIGipRL1irdfqK+C4Qjo7MG5zold6g==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
