@@ -8,11 +8,17 @@ import PluridServer, {
 import helmet from '../shared/kernel/services/helmet';
 
 /** uncomment to use services */
+// [START redux import]
 import reduxStore from '../shared/kernel/services/state/store';
+// [END redux import]
+// [START apollo import]
 import apolloClient from '../shared/kernel/services/graphql/client';
+// [END apollo import]
+// [START stripe import]
 // import {
 //     STRIPE_API_KEY as stripeAPIKey,
 // } from '../client/App/data/constants';
+// [END stripe import]
 
 import {
     paths,
@@ -39,8 +45,9 @@ const debug = isProduction
     ? 'info'
     : 'error';
 
-
+// [START stripe script]
 const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
+// [END stripe script]
 
 
 /** Custom styles to be loaded into the template. */
@@ -58,19 +65,31 @@ const middleware: PluridServerMiddleware[] = [
 /** Services to be used in the application. */
 const services: PluridServerService[] = [
     /** uncomment to use services */
-    'Redux',
+    // [START apollo service]
     'Apollo',
+    // [END apollo service]
+    // [START redux service]
+    'Redux',
+    // [END redux service]
+    // [START stripe service]
     // 'Stripe',
+    // [END stripe service]
 ];
 
 
 const servicesData: PluridServerServicesData = {
     /** uncomment to use services */
+    // [START apollo serviceData]
+    apolloClient,
+    // [END apollo serviceData]
+    // [START redux serviceData]
     reduxStore,
     reduxStoreValue: {},
-    apolloClient,
+    // [END redux serviceData]
+    // [START stripe serviceData]
     // stripeAPIKey,
     // stripeScript,
+    // [END stripe serviceData]
 };
 
 const options: PluridServerPartialOptions = {
