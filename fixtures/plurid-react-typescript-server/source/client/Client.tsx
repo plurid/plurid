@@ -4,17 +4,23 @@ import {
     HelmetProvider,
 } from 'react-helmet-async';
 
+// [START ReduxProvider]
 import {
     Provider as ReduxProvider,
 } from 'react-redux';
+// [END ReduxProvider]
 
+// [START ApolloProvider]
 import {
     ApolloProvider,
 } from '@apollo/react-hooks';
+// [END ApolloProvider]
 
+// [START StripeProvider]
 // import {
 //     StripeProvider,
 // } from 'react-stripe-elements';
+// [END StripeProvider]
 
 import {
     StyleSheetManager,
@@ -44,6 +50,7 @@ import {
 const state = (window as any).__PRELOADED_STATE__;
 delete (window as any).__PRELOADED_STATE__;
 
+
 const shell: PluridComponent = {
     kind: 'react',
     element: Shell,
@@ -52,6 +59,7 @@ const shell: PluridComponent = {
 
 const Client: React.FC<any> = () => {
     return (
+        // [START ClientReturn]
         <HelmetProvider context={helmetContext}>
             <ReduxProvider store={reduxStore(state)}>
                 <ApolloProvider client={graphqlClient}>
@@ -68,6 +76,7 @@ const Client: React.FC<any> = () => {
                 </ApolloProvider>
             </ReduxProvider>
         </HelmetProvider>
+        // [END ClientReturn]
     );
 }
 
