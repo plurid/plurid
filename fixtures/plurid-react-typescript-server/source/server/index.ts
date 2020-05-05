@@ -9,7 +9,7 @@ import helmet from '../shared/kernel/services/helmet';
 
 /** uncomment to use services */
 import reduxStore from '../shared/kernel/services/state/store';
-import graphqlClient from '../shared/kernel/services/graphql/client';
+import apolloClient from '../shared/kernel/services/graphql/client';
 // import {
 //     STRIPE_API_KEY as stripeAPIKey,
 // } from '../client/App/data/constants';
@@ -59,7 +59,7 @@ const middleware: PluridServerMiddleware[] = [
 const services: PluridServerService[] = [
     /** uncomment to use services */
     'Redux',
-    'GraphQL',
+    'Apollo',
     // 'Stripe',
 ];
 
@@ -68,7 +68,7 @@ const servicesData: PluridServerServicesData = {
     /** uncomment to use services */
     reduxStore,
     reduxStoreValue: {},
-    graphqlClient,
+    apolloClient,
     // stripeAPIKey,
     // stripeScript,
 };
