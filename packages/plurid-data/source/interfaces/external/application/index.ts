@@ -96,6 +96,11 @@ export interface PluridApplication {
     pubsub?: PluridPubSub;
 
     serverData?: PluridServerData;
+
+    /**
+     * Render the application statically.
+     */
+    static?: boolean;
 }
 
 
