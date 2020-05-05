@@ -79,7 +79,7 @@
         "@plurid/plurid-functions-react": "^0.0.1",
         "@plurid/plurid-icons-react": "^0.1.19",
         "@plurid/plurid-pubsub": "^0.1.7",
-        "@plurid/plurid-react": "^0.1.155",
+        "@plurid/plurid-react": "^0.1.156",
         "@plurid/plurid-themes": "^0.1.26",
         "@plurid/plurid-ui-react": "^0.1.81",
         "@rollup/plugin-commonjs": "^11.1.0",
