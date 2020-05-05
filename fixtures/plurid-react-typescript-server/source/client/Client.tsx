@@ -26,19 +26,18 @@ import {
     PluridComponent,
 } from '@plurid/plurid-react';
 
-import helmetContext from './App/services/helmet';
+import helmetContext from '../shared/kernel/services/helmet';
 
-import Shell from './App/components/Shell';
-
-import reduxStore from './App/services/state/store';
-import graphqlClient from './App/services/graphql/client';
+import reduxStore from '../shared/kernel/services/state/store';
+import graphqlClient from '../shared/kernel/services/graphql/client';
 // import {
 //     STRIPE_API_KEY as stripeAPIKey,
 // } from './App/data/constants';
 
 import {
     paths,
-} from '../common';
+    Shell,
+} from '../shared';
 
 
 
