@@ -42,19 +42,13 @@ import graphqlClient from '../shared/kernel/services/graphql/client';
 
 import {
     paths,
-    Shell,
+    shell,
 } from '../shared';
 
 
 
 const state = (window as any).__PRELOADED_STATE__;
 delete (window as any).__PRELOADED_STATE__;
-
-
-const shell: PluridComponent = {
-    kind: 'react',
-    element: Shell,
-};
 
 
 const Client: React.FC<any> = () => {

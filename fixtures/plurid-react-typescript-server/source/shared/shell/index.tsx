@@ -1,4 +1,8 @@
-import React from 'react'
+import React from 'react';
+
+import {
+    PluridComponent,
+} from '@plurid/plurid-react';
 
 import {
     GlobalStyle,
@@ -30,4 +34,10 @@ const Shell: React.FC<ShellProperties> = (
 }
 
 
-export default Shell;
+const shell: PluridComponent = {
+    kind: 'react',
+    element: Shell,
+};
+
+
+export default shell;
