@@ -44,7 +44,7 @@ import {
 const state = (window as any).__PRELOADED_STATE__;
 delete (window as any).__PRELOADED_STATE__;
 
-const globalShell: PluridComponent = {
+const shell: PluridComponent = {
     kind: 'react',
     element: Shell,
 };
@@ -59,7 +59,7 @@ const Client: React.FC<any> = () => {
                         <StyleSheetManager>
                             <PluridProvider context={{}}>
                                 <PluridRouterBrowser
-                                    globalShell={globalShell}
+                                    shell={shell}
                                     paths={paths}
                                 />
                             </PluridProvider>
