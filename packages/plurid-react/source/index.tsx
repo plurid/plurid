@@ -45,10 +45,6 @@ import PluridPlaneConfigurator from './modules/components/PluridPlaneConfigurato
 import PluridProvider from './modules/components/PluridProvider';
 
 import {
-    serverComputeApplication,
-} from './modules/services/logic/server';
-
-import {
     pluridRouterNavigate,
 } from './modules/services/utilities/navigate';
 
@@ -106,9 +102,6 @@ export {
     PluridVirtualList,
     PluridPlaneConfigurator,
     PluridProvider,
-
-    /** Logic */
-    serverComputeApplication,
 
     /** Utilities */
     pluridRouterNavigate,

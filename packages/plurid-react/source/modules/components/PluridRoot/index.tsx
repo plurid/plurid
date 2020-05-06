@@ -35,6 +35,10 @@ import selectors from '../../services/state/selectors';
 
 interface PluridRootOwnProperties {
     plane: TreePlane;
+
+    indexedPlanesReference?: any;
+    planesPropertiesReference?: any;
+    appConfiguration?: any;
 }
 
 interface PluridRootStateProperties {
@@ -56,6 +60,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const {
         /** own */
         plane,
+        planesPropertiesReference,
+        indexedPlanesReference,
+        appConfiguration,
 
         /** state */
         statePlaneSources,
@@ -64,6 +71,89 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const {
         location,
     } = plane;
+
+
+    if (typeof indexedPlanesReference !== 'undefined') {
+        const pluridPlaneID = plane.sourceID;
+        if (!pluridPlaneID) {
+            return (
+                <></>
+            );
+        }
+
+        const pluridPlane = indexedPlanesReference.get(pluridPlaneID);
+        const pluridPlaneProperties = planesPropertiesReference.get(pluridPlaneID);
+
+        if (!pluridPlane || !pluridPlaneProperties) {
+            return (
+                <></>
+            );
+        }
+
+        if (pluridPlane.component.kind !== 'react') {
+            return (
+                <></>
+            );
+        }
+
+        const Plane = pluridPlane.component.element;
+
+        const pluridProperties: PluridProperty = {
+            ...pluridPlaneProperties.plurid,
+            metadata: {
+                planeID: plane.planeID,
+            },
+        };
+
+        const planeProperties = {
+            ...pluridPlane.component.properties,
+            plurid: {
+                ...pluridProperties,
+            },
+        };
+
+        console.log(Plane, planeProperties, pluridPlane);
+
+        return (
+            <div>
+
+            </div>
+        );
+
+        // return (
+        //     <StyledPluridRoot
+        //         data-plurid-entity={PLURID_ENTITY_ROOT}
+        //     >
+        //         <PluridPlane
+        //             plane={pluridPlane}
+        //             treePlane={plane}
+        //             planeID={plane.planeID}
+        //             location={location}
+        //         >
+        //             <Plane
+        //                 {...planeProperties}
+        //             />
+        //             {/* {PlaneContext
+        //                 ? (
+        //                     <PlaneContext.Provider
+        //                         value={planeContextValue}
+        //                     >
+        //                         <Plane
+        //                             {...planeProperties}
+        //                         />
+        //                     </PlaneContext.Provider>
+        //                 ) : (
+        //                     <Plane
+        //                         {...planeProperties}
+        //                     />
+        //                 )
+        //             } */}
+        //         </PluridPlane>
+
+        //         {/* {childrenPlanes} */}
+        //     </StyledPluridRoot>
+        // );
+    }
 
 
     /** context */
