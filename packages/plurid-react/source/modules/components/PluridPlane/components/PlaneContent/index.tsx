@@ -35,26 +35,26 @@ const PlaneContent: React.FC<PlaneContentOwnProperties> = (
 
 
     /** effects */
-    useEffect(() => {
-        if (planeContentElement.current) {
-            // TODO
-            // Implement a resize observer
+    // useEffect(() => {
+    //     if (planeContentElement.current) {
+    //         // TODO
+    //         // Implement a resize observer
 
-            const {
-                offsetWidth,
-                offsetHeight,
-            } = planeContentElement.current;
+    //         const {
+    //             offsetWidth,
+    //             offsetHeight,
+    //         } = planeContentElement.current;
 
-            const size = {
-                width: offsetWidth,
-                height: offsetHeight
-            }
-            updatePlaneSize(size)
-            // console.log(offsetWidth, offsetHeight);
-        }
-    }, [
-        planeContentElement.current,
-    ]);
+    //         const size = {
+    //             width: offsetWidth,
+    //             height: offsetHeight
+    //         }
+    //         updatePlaneSize(size)
+    //         // console.log(offsetWidth, offsetHeight);
+    //     }
+    // }, [
+    //     planeContentElement.current,
+    // ]);
 
 
     /** render */
