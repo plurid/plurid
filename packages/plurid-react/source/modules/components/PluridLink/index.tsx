@@ -118,7 +118,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const previewAppearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
     const previewDisappearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
 
-    const planePathResolved = planePath.startsWith('/') && window
+    const planePathResolved = planePath.startsWith('/') && typeof window !== 'undefined'
         ? ':/' + window.location.pathname + '://s://u://c://' + planePath.slice(1)
         : planePath;
 
