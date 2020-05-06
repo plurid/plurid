@@ -206,7 +206,6 @@ const View: React.FC<ViewProperties> = (
     } = pluridApplication;
 
 
-    console.log('staticRender', staticRender);
     /** render */
     if (staticRender) {
         return renderStatic(

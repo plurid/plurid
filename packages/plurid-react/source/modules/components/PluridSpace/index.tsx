@@ -30,11 +30,15 @@ import selectors from '../../services/state/selectors';
 
 
 interface PluridSpaceOwnProperties {
+    computedTree?: any;
+    indexedPlanesReference?: any;
+    planesPropertiesReference?: any;
+    appConfiguration?: any;
 }
 
 interface PluridSpaceStateProperties {
-    configuration: PluridConfiguration,
-    generalTheme: Theme;
+    stateConfiguration: PluridConfiguration,
+    stateGeneralTheme: Theme;
 }
 
 interface PluridSpaceDispatchProperties {
@@ -50,15 +54,25 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
 ) => {
     /** properties */
     const {
+        /** own */
+        computedTree,
+        indexedPlanesReference,
+        planesPropertiesReference,
+        appConfiguration,
+
         /** state */
-        configuration,
-        generalTheme,
+        stateConfiguration,
+        stateGeneralTheme,
     } = properties;
+
+    const activeConfiguration = typeof computedTree === 'undefined'
+        ? appConfiguration
+        : stateConfiguration;
 
     const {
         elements,
         space,
-    } = configuration;
+    } = activeConfiguration;
 
     const {
         toolbar,
@@ -73,11 +87,22 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
     /** render */
     return (
         <StyledPluridSpace
-            theme={generalTheme}
+            theme={stateGeneralTheme}
             opaque={opaqueSpace}
             data-plurid-entity={PLURID_ENTITY_SPACE}
         >
-            <PluridRoots />
+            {typeof computedTree === 'undefined' && (
+                <PluridRoots />
+            )}
+
+            {typeof computedTree !== 'undefined' && (
+                <PluridRoots
+                    computedTree={computedTree}
+                    indexedPlanesReference={indexedPlanesReference}
+                    planesPropertiesReference={planesPropertiesReference}
+                    appConfiguration={appConfiguration}
+                />
+            )}
 
             {showToolbar && (
                 <ToolbarGeneral />
@@ -94,8 +119,8 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridSpaceStateProperties => ({
-    configuration: selectors.configuration.getConfiguration(state),
-    generalTheme: selectors.themes.getGeneralTheme(state),
+    stateConfiguration: selectors.configuration.getConfiguration(state),
+    stateGeneralTheme: selectors.themes.getGeneralTheme(state),
 });
 
 

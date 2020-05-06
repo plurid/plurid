@@ -36,10 +36,14 @@ import selectors from '../../services/state/selectors';
 
 
 interface PluridRootsOwnProperties {
+    computedTree?: any;
+    indexedPlanesReference?: any;
+    planesPropertiesReference?: any;
+    appConfiguration?: any;
 }
 
 interface PluridRootsStateProperties {
-    configuration: PluridConfiguration;
+    stateConfiguration: PluridConfiguration;
     interactionTheme: Theme;
     animatedTransform: boolean;
     spaceScale: number;
@@ -64,8 +68,14 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 ) => {
     /** properties */
     const {
+        /** own */
+        computedTree,
+        indexedPlanesReference,
+        planesPropertiesReference,
+        appConfiguration,
+
         /** state */
-        configuration,
+        stateConfiguration,
         interactionTheme,
         animatedTransform,
         spaceScale,
@@ -77,9 +87,13 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         stateTree,
     } = properties;
 
+    const activeConfiguration = typeof computedTree === 'undefined'
+        ? appConfiguration
+        : stateConfiguration;
+
     const {
         space,
-    } = configuration;
+    } = activeConfiguration;
 
     const {
         // firstPerson,
@@ -113,8 +127,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
     return (
         <StyledPluridRoots
             style={{
-                width: window.innerWidth + 'px',
-                height: window.innerHeight + 'px',
+                width: typeof window !== 'undefined' ? window.innerWidth + 'px' : '1440px',
+                height: typeof window !== 'undefined' ? window.innerHeight + 'px' : '820px',
                 transform: `
                     translateX(${spaceTranslationX}px)
                     translateY(${spaceTranslationY}px)
@@ -157,14 +171,34 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                 />
             )}
 
-            {stateTree.map(plane => {
-                return (
-                    <PluridRoot
-                        key={plane.planeID}
-                        plane={plane}
-                    />
-                );
-            })}
+            {typeof computedTree === 'undefined' && (
+                <>
+                    {stateTree.map(plane => {
+                        return (
+                            <PluridRoot
+                                key={plane.planeID}
+                                plane={plane}
+                            />
+                        );
+                    })}
+                </>
+            )}
+
+            {typeof computedTree !== 'undefined' && (
+                <>
+                    {computedTree.map((plane: any) => {
+                        return (
+                            <PluridRoot
+                                key={plane.planeID}
+                                plane={plane}
+                                indexedPlanesReference={indexedPlanesReference}
+                                planesPropertiesReference={planesPropertiesReference}
+                                appConfiguration={appConfiguration}
+                            />
+                        );
+                    })}
+                </>
+            )}
         </StyledPluridRoots>
     );
 }
@@ -173,7 +207,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridRootsStateProperties => ({
-    configuration: selectors.configuration.getConfiguration(state),
+    stateConfiguration: selectors.configuration.getConfiguration(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
     animatedTransform: selectors.space.getAnimatedTransform(state),
     spaceScale: selectors.space.getScale(state),
