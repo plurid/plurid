@@ -22,12 +22,19 @@ const computeSheavesLayout = (
     offsetY: number = 0,
     configuration: PluridConfiguration = defaultConfiguration,
 ): TreePlane[] => {
+    const windowInnerWidth = typeof window === 'undefined'
+        ? 1440
+        : window.innerWidth;
+    const windowInnerHeight = typeof window === 'undefined'
+        ? 840
+        : window.innerHeight;
+
     const tree: TreePlane[] = [];
 
     const width = mathematics.numbers.checkIntegerNonUnit(configuration.elements.plane.width)
         ? configuration.elements.plane.width
-        : configuration.elements.plane.width * window.innerWidth;
-    const height = window.innerHeight;
+        : configuration.elements.plane.width * windowInnerWidth;
+    const height = windowInnerHeight;
 
     for (const [index, page] of roots.entries()) {
         const translateX = 0;

@@ -238,7 +238,7 @@ export const pluridLinkPathDivider = (
 export const resolveAbsolutePluridLinkPath = (
     route: string,
 ) => {
-    if (!window) {
+    if (typeof window === 'undefined') {
         return;
     }
 
