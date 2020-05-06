@@ -47,12 +47,19 @@ export const mapPathsToRoutes = <T, V>(
 export const pluridLinkPathDivider = (
     route: string,
 ): RouteDivisions => {
+    let windowProtocol = typeof window === 'undefined'
+        ? 'http'
+        : window.location.protocol.replace(':', '');
+    let windowHost = typeof window === 'undefined'
+        ? 'localhost:63000'
+        : window.location.host;
+
     const split = route
         .split('://')
         .filter(value => value !== '')
         .map(value => cleanPathElement(value));
 
-    let protocol = window.location.protocol.replace(':', '');
+    let protocol = windowProtocol;
     const host = {
         value: '',
         controlled: false,
@@ -238,19 +245,22 @@ export const pluridLinkPathDivider = (
 export const resolveAbsolutePluridLinkPath = (
     route: string,
 ) => {
-    if (typeof window === 'undefined') {
-        return;
-    }
+    let windowProtocol = typeof window === 'undefined'
+        ? 'http'
+        : window.location.protocol.replace(':', '');
+    let windowHost = typeof window === 'undefined'
+        ? 'localhost:63000'
+        : window.location.host;
 
     const divisions = pluridLinkPathDivider(route);
 
     const defaultPathname = divisions.path.value || 'p';
 
-    const protocol = divisions.protocol || window.location.protocol.replace(':', '');
+    const protocol = divisions.protocol || windowProtocol;
     const host = divisions.host.value
         ? divisions.host
         : {
-            value: window.location.host,
+            value: windowHost,
             controlled: true,
         };
     const path = divisions.path.value
