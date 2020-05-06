@@ -125,6 +125,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const absolutePlaneRoute = resolveAbsolutePluridLinkPath(planePathResolved);
 
 
+    return (
+        <div>
+            {children}
+        </div>
+    );
+
+
     /** references */
     const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
     const hoverInTimeout = useRef<null | number>(null);

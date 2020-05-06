@@ -124,16 +124,18 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             <StyledPluridRoot
                 data-plurid-entity={PLURID_ENTITY_ROOT}
             >
-                <Plane />
+                {/* <Plane /> */}
 
-                {/* <PluridPlane
+                <PluridPlane
                     plane={pluridPlane}
                     treePlane={plane}
                     planeID={plane.planeID}
                     location={location}
                 >
-                    <Plane />
-                </PluridPlane> */}
+                    <Plane
+                        {...planeProperties}
+                    />
+                </PluridPlane>
 
                 {/* <PluridPlane
                     plane={pluridPlane}
