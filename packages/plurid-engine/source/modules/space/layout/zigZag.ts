@@ -18,6 +18,13 @@ const computeZigZagLayout = (
     angle: number = 45,
     configuration: PluridConfiguration = defaultConfiguration,
 ): TreePlane[] => {
+    const windowInnerWidth = typeof window === 'undefined'
+        ? 1440
+        : window.innerWidth;
+    const windowInnerHeight = typeof window === 'undefined'
+        ? 840
+        : window.innerHeight;
+
     const tree: TreePlane[] = [];
 
     const singleColumnedRoots = computeColumnLayout(pages, 1);

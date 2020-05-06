@@ -23,12 +23,19 @@ const computeRowLayout = (
     gap: number = ROOTS_GAP,
     configuration: PluridConfiguration = defaultConfiguration,
 ): TreePlane[] => {
+    const windowInnerWidth = typeof window === 'undefined'
+        ? 1440
+        : window.innerWidth;
+    const windowInnerHeight = typeof window === 'undefined'
+        ? 840
+        : window.innerHeight;
+
     const tree: TreePlane[] = [];
     const configurationWidth = configuration.elements.plane.width;
     const width = mathematics.numbers.checkIntegerNonUnit(configurationWidth)
         ? configurationWidth
-        : configurationWidth * window.innerWidth;
-    const height = window.innerHeight;
+        : configurationWidth * windowInnerWidth;
+    const height = windowInnerHeight;
     const gapValue = mathematics.numbers.checkIntegerNonUnit(gap)
         ? gap
         : gap * width;
