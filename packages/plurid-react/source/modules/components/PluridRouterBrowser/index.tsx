@@ -104,7 +104,7 @@ const PluridRouterBrowser = (
             protocol,
             host,
             indexedPlanes: indexedPlanes.current,
-            staticRender: true,
+            // staticRender: true,
         });
 
         setComponent(Component);

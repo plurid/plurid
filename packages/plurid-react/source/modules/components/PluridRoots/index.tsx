@@ -87,7 +87,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         stateTree,
     } = properties;
 
-    const activeConfiguration = typeof computedTree === 'undefined'
+    const activeConfiguration = computedTree
         ? appConfiguration
         : stateConfiguration;
 

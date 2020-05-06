@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {
+    PLURID_ENTITY_VIEW,
+
     PluridApplication,
 } from '@plurid/plurid-data';
 
@@ -9,6 +11,11 @@ import {
 } from '../computing';
 
 import PluridSpace from '../../../components/PluridSpace';
+
+import {
+    GlobalStyle,
+    StyledView,
+} from '../../../../Application/View/styled';
 
 
 
@@ -42,12 +49,20 @@ const renderStatic = (
 
     /** render */
     return (
-        <PluridSpace
-            computedTree={computedTree}
-            indexedPlanesReference={indexedPlanesReference}
-            planesPropertiesReference={planesPropertiesReference}
-            appConfiguration={appConfiguration}
-        />
+        <StyledView
+            tabIndex={0}
+            transformMode={appConfiguration.space.transformMode}
+            data-plurid-entity={PLURID_ENTITY_VIEW}
+        >
+            <GlobalStyle />
+
+            <PluridSpace
+                computedTree={computedTree}
+                indexedPlanesReference={indexedPlanesReference}
+                planesPropertiesReference={planesPropertiesReference}
+                appConfiguration={appConfiguration}
+            />
+        </StyledView>
     );
 };
 
