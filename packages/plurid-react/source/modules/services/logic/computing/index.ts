@@ -148,6 +148,9 @@ export const computeApplication = (
         }
     }
 
+    console.log('treePlanes', treePlanes);
+    console.log('currentView', currentView);
+    console.log('absoluteView', absoluteView);
 
     // create tree
     const spaceTree = new space.tree.Tree({
