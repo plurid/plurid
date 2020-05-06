@@ -125,11 +125,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const absolutePlaneRoute = resolveAbsolutePluridLinkPath(planePathResolved);
 
 
-    return (
-        <div>
-            {children}
-        </div>
-    );
+    // return (
+    //     <div>
+    //         {children}
+    //     </div>
+    // );
 
 
     /** references */

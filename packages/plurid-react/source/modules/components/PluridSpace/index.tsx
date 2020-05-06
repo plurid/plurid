@@ -65,7 +65,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
         stateGeneralTheme,
     } = properties;
 
-    const activeConfiguration = typeof computedTree === 'undefined'
+    const activeConfiguration = computedTree
         ? appConfiguration
         : stateConfiguration;
 

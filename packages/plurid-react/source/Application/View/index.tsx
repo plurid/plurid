@@ -206,6 +206,14 @@ const View: React.FC<ViewProperties> = (
     } = pluridApplication;
 
 
+    return (
+        <div>
+            rendering
+        </div>
+    );
+
+
+    console.log('staticRender', staticRender);
     /** render */
     if (staticRender) {
         return renderStatic(
@@ -987,16 +995,17 @@ const View: React.FC<ViewProperties> = (
     }, []);
 
     if (!hasMounted) {
-        return (
-            <StyledEmpty
-                style={{
-                    height: typeof window === 'object' ? window.innerHeight : '800px',
-                    width: typeof window === 'object' ? window.innerWidth : '100%',
-                }}
-            >
-                <GlobalStyle />
-            </StyledEmpty>
-        );
+        return null;
+        // return (
+        //     <StyledEmpty
+        //         style={{
+        //             height: typeof window === 'object' ? window.innerHeight : '800px',
+        //             width: typeof window === 'object' ? window.innerWidth : '100%',
+        //         }}
+        //     >
+        //         <GlobalStyle />
+        //     </StyledEmpty>
+        // );
     }
 
 
@@ -1011,6 +1020,7 @@ const View: React.FC<ViewProperties> = (
 
     /** render */
     const viewContainer = handleView(planes);
+
 
     return (
         <StyledView
