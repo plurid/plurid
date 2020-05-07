@@ -50,7 +50,7 @@ import themes, {
     THEME_NAMES,
 } from '@plurid/plurid-themes';
 
-import './index.css';
+// import './index.css';
 
 import {
     StyledEmpty,
@@ -206,11 +206,10 @@ const View: React.FC<ViewProperties> = (
     } = pluridApplication;
 
 
-    return (
-        <div>
-            rendering
-        </div>
-    );
+    // return null;
+    // return (
+    //     <></>
+    // );
 
 
     console.log('staticRender', staticRender);

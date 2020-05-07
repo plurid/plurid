@@ -18,6 +18,8 @@ import {
     computeIndexedPlanes,
 } from '../../services/logic/router';
 
+import PluridRouterBrowser from '../PluridRouterBrowser';
+
 
 
 const PluridRouter = router.default;
@@ -128,7 +130,7 @@ const PluridRouterStatic = (
         }
     }
 
-    return (
+    const StaticComponent = (
         <>
             <Exterior
                 matchedRoute={matchedRoute}
@@ -140,6 +142,19 @@ const PluridRouterStatic = (
                 {Component}
             </Shell>
         </>
+    );
+
+    console.log('aaaa', Component);
+
+    return (
+        <PluridRouterBrowser
+            paths={paths}
+            exterior={exterior}
+            shell={shell}
+            static={Component}
+            protocol={protocol}
+            host={host}
+        />
     );
 }
 
