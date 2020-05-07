@@ -52,6 +52,21 @@ delete (window as any).__PRELOADED_STATE__;
 
 
 const Client: React.FC<any> = () => {
+    // return (
+    //     <HelmetProvider context={helmetContext}>
+    //         <PluridRouterBrowser
+    //             shell={shell}
+    //             paths={paths}
+    //         />
+    //     </HelmetProvider>
+    // );
+    // return (
+    //     <div>
+    //         a
+    //     </div>
+    // );
+
+
     return (
         // [START ClientReturn]
         <HelmetProvider context={helmetContext}>
