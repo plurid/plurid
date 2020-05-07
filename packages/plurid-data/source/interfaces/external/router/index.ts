@@ -72,6 +72,11 @@ export interface PluridRouterProperties {
      * API endpoint to request the elements for the paths not found in the initial routing.
      */
     api?: string;
+
+    /**
+     * Static component
+     */
+    static?: any;
 }
 
 
