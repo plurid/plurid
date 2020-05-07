@@ -322,9 +322,7 @@ const PluridRouterBrowser = (
             <Shell
                 matchedRoute={matchedRoute}
             >
-                <div>
-                    aaa
-                </div>
+                {Component}
             </Shell>
         </>
     );
