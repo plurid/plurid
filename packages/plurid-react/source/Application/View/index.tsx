@@ -210,15 +210,24 @@ const View: React.FC<ViewProperties> = (
     // return (
     //     <></>
     // );
-
-
-    console.log('staticRender', staticRender);
-    /** render */
-    if (staticRender) {
+    const [hasMounted, setHasMounted] = React.useState(false);
+    React.useEffect(() => {
+      setHasMounted(true);
+    }, []);
+    if (!hasMounted) {
         return renderStatic(
             pluridApplication,
         );
     }
+
+
+    // console.log('staticRender', staticRender);
+    // /** render */
+    // if (staticRender) {
+    //     return renderStatic(
+    //         pluridApplication,
+    //     );
+    // }
 
 
     /** references */
@@ -987,25 +996,25 @@ const View: React.FC<ViewProperties> = (
     // ]);
 
 
-    const [hasMounted, setHasMounted] = React.useState(false);
+    // const [hasMounted, setHasMounted] = React.useState(false);
 
-    React.useEffect(() => {
-        setHasMounted(true);
-    }, []);
+    // React.useEffect(() => {
+    //     setHasMounted(true);
+    // }, []);
 
-    if (!hasMounted) {
-        return null;
-        // return (
-        //     <StyledEmpty
-        //         style={{
-        //             height: typeof window === 'object' ? window.innerHeight : '800px',
-        //             width: typeof window === 'object' ? window.innerWidth : '100%',
-        //         }}
-        //     >
-        //         <GlobalStyle />
-        //     </StyledEmpty>
-        // );
-    }
+    // if (!hasMounted) {
+    //     return null;
+    //     // return (
+    //     //     <StyledEmpty
+    //     //         style={{
+    //     //             height: typeof window === 'object' ? window.innerHeight : '800px',
+    //     //             width: typeof window === 'object' ? window.innerWidth : '100%',
+    //     //         }}
+    //     //     >
+    //     //         <GlobalStyle />
+    //     //     </StyledEmpty>
+    //     // );
+    // }
 
 
     /** context */
