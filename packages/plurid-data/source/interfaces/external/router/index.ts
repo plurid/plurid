@@ -121,6 +121,34 @@ export interface PluridRouterPath {
     slotted?: boolean;
 
     multispace?: PluridRouterPathMultispace;
+
+    /**
+     * The function will be executed and awaited before rendering the application on the server.
+     *
+     * The function can return one or more providers which will be passed to their appropriate consumers,
+     * can redirect to a different path, or can handle any cross-cutting concerns, such as eventing or logging.
+     */
+    preserve?: (
+        transmission: PluridPreserveTransmission,
+    ) => Promise<PluridPreserveResponse>;
+}
+
+
+export interface PluridPreserveTransmission {
+    request: any;
+    response: any;
+    context: any;
+}
+
+export interface PluridPreserveResponse {
+    providers?: PluridPreserveResponseProviders;
+    redirect?: string;
+}
+
+export interface PluridPreserveResponseProviders {
+    apollo?: any;
+    redux?: any;
+    plurid?: any;
 }
 
 
