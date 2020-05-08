@@ -79,7 +79,11 @@ const PluridRouterBrowser = (
 
     /** state */
     const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse>();
-    const [Component, setComponent] = useState<any>();
+    const [Component, setComponent] = useState<any>(
+        typeof StaticComponent === 'undefined'
+            ? (<></>)
+            : StaticComponent
+    );
 
 
     /** handlers */
@@ -312,7 +316,8 @@ const PluridRouterBrowser = (
             <Shell
                 matchedRoute={matchedRoute}
             >
-                {typeof StaticComponent !== 'undefined'
+                {Component}
+                {/* {typeof StaticComponent !== 'undefined'
                     ? (
                         <>
                             {StaticComponent}
@@ -329,7 +334,7 @@ const PluridRouterBrowser = (
                             }
                         </>
                     )
-                }
+                } */}
             </Shell>
         </>
     );
