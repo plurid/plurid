@@ -1,55 +1,39 @@
 import {
     cleanTemplate,
+    resolveBackgroundStyle,
 } from '../../utilities/template';
 
+import {
+    RendererTemplateData,
+} from '../../data/interfaces';
 
-
-const resolveBackgroundStyle = (
-    store: string,
-) => {
-    const storeJSON = JSON.parse(store);
-    const generalPluridTheme = storeJSON?.themes?.general;
-
-    if (!generalPluridTheme) {
-        return {
-            gradientBackground: 'hsl(220, 10%, 32%)',
-            gradientForeground: 'hsl(220, 10%, 18%)',
-        };
-    }
-
-    const gradientBackground = generalPluridTheme.type === 'dark'
-        ? generalPluridTheme.backgroundColorTertiary
-        : generalPluridTheme.backgroundColorPrimary
-    const gradientForeground = generalPluridTheme.type === 'dark'
-        ? generalPluridTheme.backgroundColorPrimary
-        : generalPluridTheme.backgroundColorTertiary
-
-    return {
-        gradientBackground,
-        gradientForeground,
-    };
-}
-
-const htmlLanguage = "en";
 
 
 const template = (
-    head: string,
-    styles: string,
-    content: string,
-    store: string,
-    root: string,
-    script: string,
-    windowSizerScript: string,
-    vendorScript: string,
-    stripeScript: string,
-    htmlAttributes: string,
-    bodyAttributes: string,
+    data: RendererTemplateData,
 ) => {
+    const {
+        head,
+        styles,
+        content,
+        reduxState,
+        pluridState,
+        root,
+        script,
+        windowSizerScript,
+        vendorScript,
+        stripeScript,
+        headScripts,
+        bodyScripts,
+        htmlLanguage,
+        htmlAttributes,
+        bodyAttributes,
+    } = data;
+
     const {
         gradientBackground,
         gradientForeground,
-    } = resolveBackgroundStyle(store);
+    } = resolveBackgroundStyle(reduxState);
 
     const templateString = `
 <!DOCTYPE html>
@@ -71,6 +55,8 @@ const template = (
 
         <script src="${vendorScript}"></script>
         <script defer src="${script}"></script>
+
+        ${headScripts}
     </head>
     <body ${bodyAttributes}>
         <div id="${root}">${content}</div>
@@ -79,9 +65,11 @@ const template = (
             ${windowSizerScript}
         </script>
         <script>
-            window.__PRELOADED_REDUX_STATE__ = ${store};
-            window.__PRELOADED_PLURID_STATE__ = ${JSON.stringify({configuration: 'plurid'})};
+            window.__PRELOADED_REDUX_STATE__ = ${reduxState};
+            window.__PRELOADED_PLURID_STATE__ = ${pluridState};
         </script>
+
+        ${bodyScripts}
     </body>
 </html>
     `;
