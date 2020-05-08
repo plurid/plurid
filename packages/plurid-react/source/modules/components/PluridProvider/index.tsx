@@ -45,7 +45,7 @@ class PluridProvider<T> extends Component<
             context,
         } = this.properties;
 
-        console.log('context', context);
+        // console.log('context', context);
 
         return (
             <Context.Provider
