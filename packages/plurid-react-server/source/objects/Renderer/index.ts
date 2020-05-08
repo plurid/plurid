@@ -9,6 +9,7 @@ import {
 
 import {
     PluridRendererConfiguration,
+    RendererTemplateData,
 } from '../../data/interfaces';
 
 import template from './template';
@@ -38,39 +39,46 @@ export default class PluridRenderer {
         configuration: PluridRendererConfiguration,
     ) {
         const {
-            head,
-            styles,
-            content,
-            store,
-            root,
-            script,
-            windowSizerScript,
-            vendorScript,
+            htmlLanguage,
             htmlAttributes,
+            head,
+            defaultStyle,
+            styles,
+            headScripts,
+            vendorScriptSource,
+            mainScriptSource,
             bodyAttributes,
+            content,
+            root,
+            windowSizerScript,
+            defaultPreloadedReduxState,
+            reduxState,
+            defaultPreloadedPluridState,
+            pluridState,
+            bodyScripts,
         } = configuration;
 
-        this.htmlLanguage = 'en';
+        this.htmlLanguage = htmlLanguage || 'en';
         this.htmlAttributes = htmlAttributes || '';
-        this.head = head;
-        this.defaultStyle = '';
+        this.head = head || '';
+        this.defaultStyle = defaultStyle || '';
         this.styles = styles;
-        this.headScripts = '';
-        this.vendorScriptSource = vendorScript || '';
-        this.mainScriptSource = script || DEFAULT_RENDERER_SCRIPT;
+        this.headScripts = headScripts || '';
+        this.vendorScriptSource = vendorScriptSource || '';
+        this.mainScriptSource = mainScriptSource || DEFAULT_RENDERER_SCRIPT;
         this.bodyAttributes = bodyAttributes || '';
-        this.root = root || 'root',
-        this.content = content;
+        this.root = root || 'root';
+        this.content = content || '';
         this.windowSizerScript = windowSizerScript || DEFAULT_WINDOW_SIZER_SCRIPT;
-        this.defaultPreloadedReduxState = DEFAULT__PRELOADED_REDUX_STATE__;
-        this.reduxState = this.safeStore(store) || DEFAULT_RENDERER_REDUX_STATE;
-        this.defaultPreloadedPluridState = DEFAULT__PRELOADED_PLURID_STATE__;
-        this.pluridState = DEFAULT_RENDERER_PLURID_STATE;
-        this.bodyScripts = '';
+        this.defaultPreloadedReduxState = defaultPreloadedReduxState || DEFAULT__PRELOADED_REDUX_STATE__;
+        this.reduxState = this.safeStore(reduxState) || DEFAULT_RENDERER_REDUX_STATE;
+        this.defaultPreloadedPluridState = defaultPreloadedPluridState || DEFAULT__PRELOADED_PLURID_STATE__;
+        this.pluridState = pluridState || DEFAULT_RENDERER_PLURID_STATE;
+        this.bodyScripts = bodyScripts || '';
     }
 
     public html() {
-        return template({
+        const data: RendererTemplateData = {
             htmlLanguage: this.htmlLanguage,
             htmlAttributes: this.htmlAttributes,
             head: this.head,
@@ -88,7 +96,9 @@ export default class PluridRenderer {
             defaultPreloadedPluridState: this.defaultPreloadedPluridState,
             pluridState: this.pluridState,
             bodyScripts: this.bodyScripts,
-        });
+        };
+
+        return template(data);
     }
 
     private safeStore(

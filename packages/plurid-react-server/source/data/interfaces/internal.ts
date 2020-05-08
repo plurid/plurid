@@ -24,17 +24,23 @@ import {
 
 
 export interface PluridRendererConfiguration {
+    htmlLanguage: string | undefined;
+    htmlAttributes: Record<string, string> | undefined;
     head: string;
+    defaultStyle: string | undefined;
     styles: string;
+    headScripts: string | undefined;
+    vendorScriptSource: string | undefined;
+    mainScriptSource: string | undefined;
+    bodyAttributes: string | undefined;
+    root: string | undefined;
     content: string;
-    store: string;
-    root?: string;
-    script?: string;
-    windowSizerScript?: string;
-    vendorScript?: string;
-    stripeScript?: string;
-    htmlAttributes?: string;
-    bodyAttributes?: string;
+    windowSizerScript: string | undefined;
+    defaultPreloadedReduxState: string | undefined;
+    reduxState: string;
+    defaultPreloadedPluridState: string | undefined;
+    pluridState: string;
+    bodyScripts: string | undefined;
 }
 
 

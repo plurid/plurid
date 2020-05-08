@@ -48,6 +48,7 @@ import {
     PluridServerOptions,
     PluridServerPartialOptions,
     PluridServerConfiguration,
+    PluridServerTemplateConfiguration,
 } from '../../data/interfaces';
 
 import PluridRenderer from '../Renderer';
@@ -70,6 +71,7 @@ export default class PluridServer {
     private services: PluridServerService[];
     private servicesData: PluridServerServicesData | undefined;
     private options: PluridServerOptions;
+    private template: PluridServerTemplateConfiguration | undefined;
 
     private serverApplication: Express;
     private server: Server | undefined;
@@ -89,6 +91,7 @@ export default class PluridServer {
             services,
             servicesData,
             options,
+            template,
         } = configuration;
 
         this.paths = paths;
@@ -100,6 +103,7 @@ export default class PluridServer {
         this.services = services || [];
         this.servicesData = servicesData;
         this.options = this.handleOptions(options);
+        this.template = template;
 
         this.serverApplication = express();
         this.port = DEFAULT_SERVER_PORT;
@@ -268,27 +272,26 @@ export default class PluridServer {
                 ).getState())
             : '';
 
-        const {
-            root,
-            script,
-            windowSizerScript,
-            vendorScript,
-        } = this.options;
-
         const stripeScript = this.servicesData?.stripeScript;
 
         const renderer = new PluridRenderer({
-            content,
+            htmlLanguage: this.template?.htmlLanguage,
+            htmlAttributes: this.template?.htmlAttributes,
             head,
+            defaultStyle: this.template?.defaultStyle,
             styles: mergedStyles,
-            store,
-            root,
-            script,
-            windowSizerScript,
-            vendorScript,
-            stripeScript,
-            htmlAttributes,
+            headScripts: this.template?.headScripts,
+            vendorScriptSource: this.template?.vendorScriptSource,
+            mainScriptSource: this.template?.mainScriptSource,
             bodyAttributes,
+            content,
+            root: this.template?.root,
+            windowSizerScript: this.template?.windowSizerScript,
+            defaultPreloadedReduxState: this.template?.defaultPreloadedReduxState,
+            reduxState: store,
+            defaultPreloadedPluridState: this.template?.defaultPreloadedPluridState,
+            pluridState: '',
+            bodyScripts: this.template?.bodyScripts,
         });
 
         return renderer;
@@ -362,10 +365,6 @@ export default class PluridServer {
             open: partialOptions?.open ?? false,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
             stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
-            root: partialOptions?.root || 'root',
-            script: partialOptions?.script || '/index.js',
-            windowSizerScript: partialOptions?.windowSizerScript || '',
-            vendorScript: partialOptions?.vendorScript || '/vendor.js',
             gatewayEndpoint: partialOptions?.gatewayEndpoint || '/gateway',
         };
         return options;
