@@ -13,17 +13,22 @@ import template from './template';
 
 
 export default class PluridRenderer {
-    private head: string;
-    private styles: string;
-    private content: string;
-    private store: string;
-    private root: string;
-    private script: string;
-    private windowSizerScript: string;
-    private vendorScript: string;
-    private stripeScript: string;
+    private htmlLanguage: string;
     private htmlAttributes: string;
+    private head: string;
+    private defaultStyle: string;
+    private styles: string;
+    private stripeScript: string;
+    private headScripts: string;
+    private vendorScriptSource: string;
+    private mainScriptSource: string;
     private bodyAttributes: string;
+    private root: string;
+    private content: string;
+    private windowSizerScript: string;
+    private reduxState: string;
+    private pluridState: string;
+    private bodyScripts: string;
 
     constructor(
         configuration: PluridRendererConfiguration,
@@ -42,36 +47,42 @@ export default class PluridRenderer {
             bodyAttributes,
         } = configuration;
 
-        this.head = head;
-        this.styles = styles;
-        this.content = content;
-        this.store = this.safeStore(store) || DEFAULT_RENDERER_STORE;
-        this.root = root || 'root',
-        this.script = script || DEFAULT_RENDERER_SCRIPT;
-        this.windowSizerScript = windowSizerScript || DEFAULT_WINDOW_SIZER_SCRIPT;
-        this.vendorScript = vendorScript || '';
-        this.stripeScript = stripeScript || '';
+        this.htmlLanguage = 'en';
         this.htmlAttributes = htmlAttributes || '';
+        this.head = head;
+        this.defaultStyle = '';
+        this.styles = styles;
+        this.stripeScript = stripeScript || '';
+        this.headScripts = '';
+        this.vendorScriptSource = vendorScript || '';
+        this.mainScriptSource = script || DEFAULT_RENDERER_SCRIPT;
         this.bodyAttributes = bodyAttributes || '';
+        this.root = root || 'root',
+        this.content = content;
+        this.windowSizerScript = windowSizerScript || DEFAULT_WINDOW_SIZER_SCRIPT;
+        this.reduxState = this.safeStore(store) || DEFAULT_RENDERER_STORE;
+        this.pluridState = '';
+        this.bodyScripts = '';
     }
 
     public html() {
         return template({
-            head: this.head,
-            styles: this.styles,
-            content: this.content,
-            reduxState: this.store,
-            pluridState: '',
-            root: this.root,
-            script: this.script,
-            windowSizerScript: this.windowSizerScript,
-            vendorScript: this.vendorScript,
-            stripeScript: this.stripeScript,
-            headScripts: '',
-            bodyScripts: '',
+            htmlLanguage: this.htmlLanguage,
             htmlAttributes: this.htmlAttributes,
-            htmlLanguage: 'en',
+            head: this.head,
+            defaultStyle: this.defaultStyle,
+            styles: this.styles,
+            stripeScript: this.stripeScript,
+            headScripts: this.headScripts,
+            vendorScriptSource: this.vendorScriptSource,
+            mainScriptSource: this.mainScriptSource,
             bodyAttributes: this.bodyAttributes,
+            root: this.root,
+            content: this.content,
+            windowSizerScript: this.windowSizerScript,
+            reduxState: this.reduxState,
+            pluridState: this.pluridState,
+            bodyScripts: this.bodyScripts,
         });
     }
 

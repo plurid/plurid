@@ -13,21 +13,22 @@ const template = (
     data: RendererTemplateData,
 ) => {
     const {
-        head,
-        styles,
-        content,
-        reduxState,
-        pluridState,
-        root,
-        script,
-        windowSizerScript,
-        vendorScript,
-        stripeScript,
-        headScripts,
-        bodyScripts,
         htmlLanguage,
         htmlAttributes,
+        head,
+        defaultStyle,
+        styles,
+        stripeScript,
+        vendorScriptSource,
+        mainScriptSource,
+        headScripts,
         bodyAttributes,
+        root,
+        content,
+        windowSizerScript,
+        reduxState,
+        pluridState,
+        bodyScripts,
     } = data;
 
     const {
@@ -35,28 +36,30 @@ const template = (
         gradientForeground,
     } = resolveBackgroundStyle(reduxState);
 
+    const defaultStyleBasic = `
+        body {
+            background: radial-gradient(ellipse at center, ${gradientBackground} 0%, ${gradientForeground} 100%);
+            height: 100%;
+            margin: 0;
+        }
+    `;
+
+
     const templateString = `
 <!DOCTYPE html>
 <html lang="${htmlLanguage}" ${htmlAttributes}>
     <head>
         ${head}
 
-        <style>
-            body {
-                background: radial-gradient(ellipse at center, ${gradientBackground} 0%, ${gradientForeground} 100%);
-                height: 100%;
-                margin: 0;
-            }
-        </style>
+        <style>${defaultStyle}</style>
 
         ${styles}
 
         ${stripeScript}
-
-        <script src="${vendorScript}"></script>
-        <script defer src="${script}"></script>
-
         ${headScripts}
+
+        <script src="${vendorScriptSource}"></script>
+        <script defer src="${mainScriptSource}"></script>
     </head>
     <body ${bodyAttributes}>
         <div id="${root}">${content}</div>

@@ -87,19 +87,20 @@ export interface PluridContentGeneratorData {
 
 
 export interface RendererTemplateData {
-    head: string;
-    styles: string;
-    content: string;
-    reduxState: string;
-    pluridState: string;
-    root: string;
-    script: string;
-    windowSizerScript: string;
-    vendorScript: string;
-    headScripts: string;
-    bodyScripts: string;
-    stripeScript: string;
     htmlLanguage: string;
     htmlAttributes: string;
+    head: string;
+    defaultStyle: string;
+    styles: string;
+    stripeScript: string;
+    headScripts: string;
+    vendorScriptSource: string;
+    mainScriptSource: string;
     bodyAttributes: string;
+    root: string;
+    content: string;
+    windowSizerScript: string;
+    reduxState: string;
+    pluridState: string;
+    bodyScripts: string;
 }
