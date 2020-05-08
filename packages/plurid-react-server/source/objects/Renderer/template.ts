@@ -18,15 +18,16 @@ const template = (
         head,
         defaultStyle,
         styles,
-        stripeScript,
+        headScripts,
         vendorScriptSource,
         mainScriptSource,
-        headScripts,
         bodyAttributes,
         root,
         content,
         windowSizerScript,
+        defaultPreloadedReduxState,
         reduxState,
+        defaultPreloadedPluridState,
         pluridState,
         bodyScripts,
     } = data;
@@ -51,11 +52,12 @@ const template = (
     <head>
         ${head}
 
-        <style>${defaultStyle}</style>
+        <style>
+            ${defaultStyle}
+        </style>
 
         ${styles}
 
-        ${stripeScript}
         ${headScripts}
 
         <script src="${vendorScriptSource}"></script>
@@ -68,8 +70,8 @@ const template = (
             ${windowSizerScript}
         </script>
         <script>
-            window.__PRELOADED_REDUX_STATE__ = ${reduxState};
-            window.__PRELOADED_PLURID_STATE__ = ${pluridState};
+            window.${defaultPreloadedReduxState} = ${reduxState};
+            window.${defaultPreloadedPluridState} = ${pluridState};
         </script>
 
         ${bodyScripts}
