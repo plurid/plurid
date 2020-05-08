@@ -206,30 +206,6 @@ const View: React.FC<ViewProperties> = (
     } = pluridApplication;
 
 
-    // return null;
-    // return (
-    //     <></>
-    // );
-    const [hasMounted, setHasMounted] = React.useState(false);
-    React.useEffect(() => {
-      setHasMounted(true);
-    }, []);
-    if (!hasMounted) {
-        return renderStatic(
-            pluridApplication,
-        );
-    }
-
-
-    // console.log('staticRender', staticRender);
-    // /** render */
-    // if (staticRender) {
-    //     return renderStatic(
-    //         pluridApplication,
-    //     );
-    // }
-
-
     /** references */
     const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(new Map());
     // const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(indexedPlanes || new Map());
@@ -1028,6 +1004,18 @@ const View: React.FC<ViewProperties> = (
 
     /** render */
     const viewContainer = handleView(planes);
+
+
+    const [hasMounted, setHasMounted] = React.useState(false);
+    React.useEffect(() => {
+      setHasMounted(true);
+    }, []);
+
+    if (!hasMounted) {
+        return renderStatic(
+            pluridApplication,
+        );
+    }
 
 
     return (

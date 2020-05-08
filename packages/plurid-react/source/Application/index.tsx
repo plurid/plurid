@@ -10,7 +10,8 @@ import {
     PluridApplication as PluridApplicationProperties,
 } from '@plurid/plurid-data';
 
-import Root from './Root';
+// import Root from './Root';
+import View from './View';
 
 import store from '../modules/services/state/store';
 import StateContext from '../modules/services/state/context';
@@ -33,7 +34,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
                 store={this.store}
                 context={StateContext}
             >
-                <Root
+                <View
                     pluridApplication={
                         { ...this.props }
                     }
