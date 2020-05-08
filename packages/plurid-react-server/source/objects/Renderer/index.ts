@@ -1,7 +1,10 @@
 import {
-    DEFAULT_RENDERER_STORE,
+    DEFAULT_RENDERER_REDUX_STATE,
+    DEFAULT_RENDERER_PLURID_STATE,
     DEFAULT_RENDERER_SCRIPT,
     DEFAULT_WINDOW_SIZER_SCRIPT,
+    DEFAULT__PRELOADED_REDUX_STATE__,
+    DEFAULT__PRELOADED_PLURID_STATE__,
 } from '../../data/constants';
 
 import {
@@ -18,7 +21,6 @@ export default class PluridRenderer {
     private head: string;
     private defaultStyle: string;
     private styles: string;
-    private stripeScript: string;
     private headScripts: string;
     private vendorScriptSource: string;
     private mainScriptSource: string;
@@ -26,7 +28,9 @@ export default class PluridRenderer {
     private root: string;
     private content: string;
     private windowSizerScript: string;
+    private defaultPreloadedReduxState: string;
     private reduxState: string;
+    private defaultPreloadedPluridState: string;
     private pluridState: string;
     private bodyScripts: string;
 
@@ -42,7 +46,6 @@ export default class PluridRenderer {
             script,
             windowSizerScript,
             vendorScript,
-            stripeScript,
             htmlAttributes,
             bodyAttributes,
         } = configuration;
@@ -52,7 +55,6 @@ export default class PluridRenderer {
         this.head = head;
         this.defaultStyle = '';
         this.styles = styles;
-        this.stripeScript = stripeScript || '';
         this.headScripts = '';
         this.vendorScriptSource = vendorScript || '';
         this.mainScriptSource = script || DEFAULT_RENDERER_SCRIPT;
@@ -60,8 +62,10 @@ export default class PluridRenderer {
         this.root = root || 'root',
         this.content = content;
         this.windowSizerScript = windowSizerScript || DEFAULT_WINDOW_SIZER_SCRIPT;
-        this.reduxState = this.safeStore(store) || DEFAULT_RENDERER_STORE;
-        this.pluridState = '';
+        this.defaultPreloadedReduxState = DEFAULT__PRELOADED_REDUX_STATE__;
+        this.reduxState = this.safeStore(store) || DEFAULT_RENDERER_REDUX_STATE;
+        this.defaultPreloadedPluridState = DEFAULT__PRELOADED_PLURID_STATE__;
+        this.pluridState = DEFAULT_RENDERER_PLURID_STATE;
         this.bodyScripts = '';
     }
 
@@ -72,7 +76,6 @@ export default class PluridRenderer {
             head: this.head,
             defaultStyle: this.defaultStyle,
             styles: this.styles,
-            stripeScript: this.stripeScript,
             headScripts: this.headScripts,
             vendorScriptSource: this.vendorScriptSource,
             mainScriptSource: this.mainScriptSource,
@@ -80,7 +83,9 @@ export default class PluridRenderer {
             root: this.root,
             content: this.content,
             windowSizerScript: this.windowSizerScript,
+            defaultPreloadedReduxState: this.defaultPreloadedReduxState,
             reduxState: this.reduxState,
+            defaultPreloadedPluridState: this.defaultPreloadedPluridState,
             pluridState: this.pluridState,
             bodyScripts: this.bodyScripts,
         });

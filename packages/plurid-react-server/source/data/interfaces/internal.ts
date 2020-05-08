@@ -92,7 +92,6 @@ export interface RendererTemplateData {
     head: string;
     defaultStyle: string;
     styles: string;
-    stripeScript: string;
     headScripts: string;
     vendorScriptSource: string;
     mainScriptSource: string;
@@ -100,7 +99,9 @@ export interface RendererTemplateData {
     root: string;
     content: string;
     windowSizerScript: string;
+    defaultPreloadedReduxState: string;
     reduxState: string;
+    defaultPreloadedPluridState: string;
     pluridState: string;
     bodyScripts: string;
 }
