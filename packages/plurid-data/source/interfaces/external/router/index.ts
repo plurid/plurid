@@ -121,6 +121,14 @@ export interface PluridRouterPath {
     slotted?: boolean;
 
     multispace?: PluridRouterPathMultispace;
+}
+
+
+export interface PluridPreserve {
+    /**
+     * Path value.
+     */
+    value: string;
 
     /**
      * The function will be executed and awaited before rendering the application on the server.
@@ -128,11 +136,10 @@ export interface PluridRouterPath {
      * The function can return one or more providers which will be passed to their appropriate consumers,
      * can redirect to a different path, or can handle any cross-cutting concerns, such as eventing or logging.
      */
-    preserve?: (
+    action: (
         transmission: PluridPreserveTransmission,
     ) => Promise<PluridPreserveResponse>;
 }
-
 
 export interface PluridPreserveTransmission {
     request: any;
