@@ -208,13 +208,8 @@ const View: React.FC<ViewProperties> = (
 
     /** references */
     const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(new Map());
-    // const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(indexedPlanes || new Map());
     const planesPropertiesReference = useRef<Map<string, any>>(new Map());
     const viewElement = useRef<HTMLDivElement>(null);
-
-
-    // /** state */
-    // const [initialized, setInitialized] = useState(false);
 
 
     /** callbacks */
@@ -1005,10 +1000,9 @@ const View: React.FC<ViewProperties> = (
     /** render */
     const viewContainer = handleView(planes);
 
-
     const [hasMounted, setHasMounted] = React.useState(false);
-    React.useEffect(() => {
-      setHasMounted(true);
+    useEffect(() => {
+        setHasMounted(true);
     }, []);
 
     if (!hasMounted) {
@@ -1016,7 +1010,6 @@ const View: React.FC<ViewProperties> = (
             pluridApplication,
         );
     }
-
 
     return (
         <StyledView

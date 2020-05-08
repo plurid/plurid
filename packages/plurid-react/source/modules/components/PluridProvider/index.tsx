@@ -13,14 +13,13 @@ export const Context = React.createContext(defaultValue);
 
 
 // interface PluridProviderContext {
-//     pluridApps: any[];
 // }
 
 interface PluridProviderProperties<T> {
     context: T;
 }
 
-export default class PluridProvider<T> extends Component<
+class PluridProvider<T> extends Component<
     React.PropsWithChildren<
         PluridProviderProperties<T>
     >
@@ -42,6 +41,12 @@ export default class PluridProvider<T> extends Component<
     }
 
     render() {
+        const {
+            context,
+        } = this.properties;
+
+        console.log('context', context);
+
         return (
             <Context.Provider
                 value={this.value}
@@ -51,3 +56,6 @@ export default class PluridProvider<T> extends Component<
         );
     }
 }
+
+
+export default PluridProvider;
