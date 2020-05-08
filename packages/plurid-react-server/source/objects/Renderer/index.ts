@@ -1,7 +1,8 @@
 import {
     DEFAULT_RENDERER_REDUX_STATE,
     DEFAULT_RENDERER_PLURID_STATE,
-    DEFAULT_RENDERER_SCRIPT,
+    DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE,
+    DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE,
     DEFAULT_WINDOW_SIZER_SCRIPT,
     DEFAULT__PRELOADED_REDUX_STATE__,
     DEFAULT__PRELOADED_PLURID_STATE__,
@@ -82,8 +83,8 @@ export default class PluridRenderer {
         this.defaultStyle = defaultStyle || defaultStyleBasic;
         this.styles = styles;
         this.headScripts = headScripts || '';
-        this.vendorScriptSource = vendorScriptSource || '';
-        this.mainScriptSource = mainScriptSource || DEFAULT_RENDERER_SCRIPT;
+        this.vendorScriptSource = vendorScriptSource || DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE;
+        this.mainScriptSource = mainScriptSource || DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE;
         this.bodyAttributes = bodyAttributes || '';
         this.root = root || 'root';
         this.content = content || '';

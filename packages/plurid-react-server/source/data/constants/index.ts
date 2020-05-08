@@ -16,7 +16,8 @@ export const DEFAULT_SERVER_OPTIONS = {
 
 export const DEFAULT_RENDERER_REDUX_STATE = '{}';
 export const DEFAULT_RENDERER_PLURID_STATE = '{}';
-export const DEFAULT_RENDERER_SCRIPT = '/index.js';
+export const DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE = '/vendor.js';
+export const DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE = '/index.js';
 export const DEFAULT__PRELOADED_REDUX_STATE__ = '__PRELOADED_REDUX_STATE__';
 export const DEFAULT__PRELOADED_PLURID_STATE__ = '__PRELOADED_PLURID_STATE__';
 
