@@ -56,19 +56,23 @@ export default class PluridRenderer {
     }
 
     public html() {
-        return template(
-            this.head,
-            this.styles,
-            this.content,
-            this.store,
-            this.root,
-            this.script,
-            this.windowSizerScript,
-            this.vendorScript,
-            this.stripeScript,
-            this.htmlAttributes,
-            this.bodyAttributes,
-        );
+        return template({
+            head: this.head,
+            styles: this.styles,
+            content: this.content,
+            reduxState: this.store,
+            pluridState: '',
+            root: this.root,
+            script: this.script,
+            windowSizerScript: this.windowSizerScript,
+            vendorScript: this.vendorScript,
+            stripeScript: this.stripeScript,
+            headScripts: '',
+            bodyScripts: '',
+            htmlAttributes: this.htmlAttributes,
+            htmlLanguage: 'en',
+            bodyAttributes: this.bodyAttributes,
+        });
     }
 
     private safeStore(

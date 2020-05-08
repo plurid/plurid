@@ -6,3 +6,36 @@ export const cleanTemplate = (
 
     return cleanWhitespace;
 }
+
+
+export const resolveBackgroundStyle = (
+    store: string,
+) => {
+    const defaultBackground = {
+        gradientBackground: 'hsl(220, 10%, 32%)',
+        gradientForeground: 'hsl(220, 10%, 18%)',
+    };
+
+    try {
+        const storeJSON = JSON.parse(store);
+        const generalPluridTheme = storeJSON?.themes?.general;
+
+        if (!generalPluridTheme) {
+            return defaultBackground;
+        }
+
+        const gradientBackground = generalPluridTheme.type === 'dark'
+            ? generalPluridTheme.backgroundColorTertiary
+            : generalPluridTheme.backgroundColorPrimary
+        const gradientForeground = generalPluridTheme.type === 'dark'
+            ? generalPluridTheme.backgroundColorPrimary
+            : generalPluridTheme.backgroundColorTertiary
+
+        return {
+            gradientBackground,
+            gradientForeground,
+        };
+    } catch (error) {
+        return defaultBackground;
+    }
+}

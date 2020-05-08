@@ -84,3 +84,22 @@ export interface PluridContentGeneratorData {
     gatewayEndpoint: string;
     gatewayQuery: string;
 }
+
+
+export interface RendererTemplateData {
+    head: string;
+    styles: string;
+    content: string;
+    reduxState: string;
+    pluridState: string;
+    root: string;
+    script: string;
+    windowSizerScript: string;
+    vendorScript: string;
+    headScripts: string;
+    bodyScripts: string;
+    stripeScript: string;
+    htmlLanguage: string;
+    htmlAttributes: string;
+    bodyAttributes: string;
+}
