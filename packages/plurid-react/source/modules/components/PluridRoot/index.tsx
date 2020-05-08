@@ -113,7 +113,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             },
         };
 
-        console.log(Plane, planeProperties, pluridPlane);
+        // console.log(Plane, planeProperties, pluridPlane);
 
         // return (
         //     <div>

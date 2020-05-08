@@ -10,7 +10,6 @@ import {
     PluridApplication as PluridApplicationProperties,
 } from '@plurid/plurid-data';
 
-// import Root from './Root';
 import View from './View';
 
 import store from '../modules/services/state/store';

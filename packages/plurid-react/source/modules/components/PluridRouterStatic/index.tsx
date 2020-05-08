@@ -109,41 +109,6 @@ const PluridRouterStatic = (
         staticRender: true,
     });
 
-
-    // let Exterior: React.FC<any> = () => (<></>);
-    // if (exterior) {
-    //     if (exterior.kind === 'react') {
-    //         Exterior = exterior.element;
-    //     }
-    // }
-
-    // let Shell: React.FC<any> = ({
-    //     children,
-    // }) => (
-    //     <>
-    //         {children}
-    //     </>
-    // );
-    // if (shell) {
-    //     if (shell.kind === 'react') {
-    //         Shell = shell.element;
-    //     }
-    // }
-
-    // const StaticComponent = (
-    //     <>
-    //         <Exterior
-    //             matchedRoute={matchedRoute}
-    //         />
-
-    //         <Shell
-    //             matchedRoute={matchedRoute}
-    //         >
-    //             {Component}
-    //         </Shell>
-    //     </>
-    // );
-
     return (
         <PluridRouterBrowser
             paths={paths}

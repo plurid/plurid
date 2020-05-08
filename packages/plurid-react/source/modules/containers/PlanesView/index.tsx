@@ -10,9 +10,7 @@ interface PlanesViewProperties {
 
 const PlanesView: React.FC<PlanesViewProperties> = () => {
     return (
-        <>
-            <PluridSpace />
-        </>
+        <PluridSpace />
     );
 }
 

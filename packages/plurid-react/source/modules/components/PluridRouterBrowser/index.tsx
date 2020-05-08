@@ -86,7 +86,7 @@ const PluridRouterBrowser = (
     const handleMatchedRoute = (
         matchedRoute: router.MatcherResponse,
     ) => {
-        console.log('matchedRoute', matchedRoute);
+        // console.log('matchedRoute', matchedRoute);
         setMatchedRoute(matchedRoute);
 
         if (!cleanNavigation) {
