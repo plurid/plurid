@@ -39,3 +39,20 @@ export const resolveBackgroundStyle = (
         return defaultBackground;
     }
 }
+
+
+export const templateTecordToString = (
+    record: Record<string, string> | undefined
+) => {
+    if (!record) {
+        return '';
+    }
+
+    let recordString = '';
+
+    for (const [key, value] of Object.entries(record)) {
+        recordString += `${key}="${value}"`;
+    }
+
+    return recordString;
+}

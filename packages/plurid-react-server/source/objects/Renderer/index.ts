@@ -12,6 +12,10 @@ import {
     RendererTemplateData,
 } from '../../data/interfaces';
 
+import {
+    templateTecordToString,
+} from '../../utilities/template';
+
 import template from './template';
 
 
@@ -59,7 +63,7 @@ export default class PluridRenderer {
         } = configuration;
 
         this.htmlLanguage = htmlLanguage || 'en';
-        this.htmlAttributes = htmlAttributes || '';
+        this.htmlAttributes = templateTecordToString(htmlAttributes) || '';
         this.head = head || '';
         this.defaultStyle = defaultStyle || '';
         this.styles = styles;
