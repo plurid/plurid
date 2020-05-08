@@ -14,6 +14,7 @@ import {
 
 import {
     templateTecordToString,
+    resolveBackgroundStyle,
 } from '../../utilities/template';
 
 import template from './template';
@@ -62,10 +63,23 @@ export default class PluridRenderer {
             bodyScripts,
         } = configuration;
 
+        const {
+            gradientBackground,
+            gradientForeground,
+        } = resolveBackgroundStyle(reduxState);
+
+        const defaultStyleBasic = `
+            body {
+                background: radial-gradient(ellipse at center, ${gradientBackground} 0%, ${gradientForeground} 100%);
+                height: 100%;
+                margin: 0;
+            }
+        `;
+
         this.htmlLanguage = htmlLanguage || 'en';
         this.htmlAttributes = templateTecordToString(htmlAttributes) || '';
         this.head = head || '';
-        this.defaultStyle = defaultStyle || '';
+        this.defaultStyle = defaultStyle || defaultStyleBasic;
         this.styles = styles;
         this.headScripts = headScripts || '';
         this.vendorScriptSource = vendorScriptSource || '';

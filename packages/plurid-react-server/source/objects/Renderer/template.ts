@@ -1,6 +1,5 @@
 import {
     cleanTemplate,
-    resolveBackgroundStyle,
 } from '../../utilities/template';
 
 import {
@@ -31,20 +30,6 @@ const template = (
         pluridState,
         bodyScripts,
     } = data;
-
-    const {
-        gradientBackground,
-        gradientForeground,
-    } = resolveBackgroundStyle(reduxState);
-
-    const defaultStyleBasic = `
-        body {
-            background: radial-gradient(ellipse at center, ${gradientBackground} 0%, ${gradientForeground} 100%);
-            height: 100%;
-            margin: 0;
-        }
-    `;
-
 
     const templateString = `
 <!DOCTYPE html>
