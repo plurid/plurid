@@ -41,9 +41,9 @@ const renderStatic = (
         view,
     );
 
-    console.log('computedTree', computedTree)
-    console.log('indexedPlanesReference', indexedPlanesReference)
-    console.log('planesPropertiesReference', planesPropertiesReference)
+    // console.log('computedTree', computedTree)
+    // console.log('indexedPlanesReference', indexedPlanesReference)
+    // console.log('planesPropertiesReference', planesPropertiesReference)
     // console.log('appConfiguration', appConfiguration)
 
 

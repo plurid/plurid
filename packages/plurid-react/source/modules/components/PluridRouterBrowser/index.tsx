@@ -57,16 +57,6 @@ const PluridRouterBrowser = (
         static: StaticComponent,
     } = properties;
 
-    console.log('aaabbbb', StaticComponent);
-
-    // if (typeof StaticComponent !== 'undefined') {
-    //     return (
-    //         <>
-    //             {StaticComponent}
-    //         </>
-    //     );
-    // }
-
     const notFoundPath = notFoundPathProperty || '/not-found';
     const gatewayPath = gatewayPathProperty || '/gateway';
 
@@ -322,72 +312,21 @@ const PluridRouterBrowser = (
             <Shell
                 matchedRoute={matchedRoute}
             >
-                {Component}
-            </Shell>
-        </>
-    );
-
-    console.log('StaticComponent', StaticComponent)
-
-    if (typeof StaticComponent !== 'undefined') {
-        return (
-            <>
-                <Exterior
-                    matchedRoute={matchedRoute}
-                />
-
-                <Shell
-                    matchedRoute={matchedRoute}
-                >
-                    {/* {Component} */}
-
-                    {typeof StaticComponent !== 'undefined'
-                        ? (
-                            <>
-                                {console.log('StaticComponent', StaticComponent)}
-                                {StaticComponent}
-                            </>
-                        ) : (
-                            <>
-                                {Component}
-                            </>
-                        )
-                    }
-                </Shell>
-                {/* {StaticComponent} */}
-            </>
-        );
-    }
-
-    if (!matchedRoute || !Component) {
-        return (
-            <></>
-        );
-    }
-
-    return (
-        <>
-            {/* <div>
-                aaa
-            </div> */}
-            <Exterior
-                matchedRoute={matchedRoute}
-            />
-
-            <Shell
-                matchedRoute={matchedRoute}
-            >
-                {/* {Component} */}
-
                 {typeof StaticComponent !== 'undefined'
                     ? (
                         <>
-                            {console.log('StaticComponent', StaticComponent)}
                             {StaticComponent}
                         </>
                     ) : (
                         <>
-                            {Component}
+                            {!Component
+                                ? (<></>)
+                                : (
+                                    <>
+                                        {Component}
+                                    </>
+                                )
+                            }
                         </>
                     )
                 }
