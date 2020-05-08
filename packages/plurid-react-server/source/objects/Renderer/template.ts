@@ -79,7 +79,8 @@ const template = (
             ${windowSizerScript}
         </script>
         <script>
-            window.__PRELOADED_STATE__ = ${store}
+            window.__PRELOADED_REDUX_STATE__ = ${store};
+            window.__PRELOADED_PLURID_STATE__ = ${JSON.stringify({configuration: 'plurid'})};
         </script>
     </body>
 </html>
