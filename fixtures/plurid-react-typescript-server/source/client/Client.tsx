@@ -47,8 +47,11 @@ import {
 
 
 
-const state = (window as any).__PRELOADED_STATE__;
-delete (window as any).__PRELOADED_STATE__;
+const reduxState = (window as any).__PRELOADED_REDUX_STATE__;
+delete (window as any).__PRELOADED_REDUX_STATE__;
+
+const pluridState = (window as any).__PRELOADED_PLURID_STATE__;
+delete (window as any).__PRELOADED_PLURID_STATE__;
 
 
 const Client: React.FC<any> = () => {
@@ -70,11 +73,11 @@ const Client: React.FC<any> = () => {
     return (
         // [START ClientReturn]
         <HelmetProvider context={helmetContext}>
-            <ReduxProvider store={reduxStore(state)}>
+            <ReduxProvider store={reduxStore(reduxState)}>
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
                         <StyleSheetManager>
-                            <PluridProvider context={{}}>
+                            <PluridProvider context={pluridState}>
                                 <PluridRouterBrowser
                                     shell={shell}
                                     paths={paths}
