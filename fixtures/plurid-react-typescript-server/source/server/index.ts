@@ -22,6 +22,7 @@ import apolloClient from '../shared/kernel/services/graphql/client';
 
 import {
     paths,
+    preserves,
     shell,
 } from '../shared';
 
@@ -106,6 +107,7 @@ const options: PluridServerPartialOptions = {
 const pluridServer = new PluridServer({
     helmet,
     paths,
+    preserves,
     shell,
     styles,
     middleware,
