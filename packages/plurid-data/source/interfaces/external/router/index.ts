@@ -150,6 +150,12 @@ export interface PluridPreserveTransmission {
 export interface PluridPreserveResponse {
     providers?: PluridPreserveResponseProviders;
     redirect?: string;
+
+    /**
+     * If `response` is handled within the preserve `action`, set the `responded` value to `true`,
+     * to prevent the server from sending a double response.
+     */
+    responded?: boolean;
 }
 
 export interface PluridPreserveResponseProviders {
