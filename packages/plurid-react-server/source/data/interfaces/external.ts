@@ -6,6 +6,7 @@ import {
 
 import {
     PluridRouterPath,
+    PluridPreserve,
     PluridComponent,
 } from '@plurid/plurid-data';
 
@@ -111,6 +112,7 @@ export interface PluridServerServicesData {
 
 export interface PluridServerConfiguration {
     paths: PluridRouterPath[];
+    preserves: PluridPreserve[];
     helmet: Helmet;
     styles?: string[];
     middleware?: PluridServerMiddleware[];
