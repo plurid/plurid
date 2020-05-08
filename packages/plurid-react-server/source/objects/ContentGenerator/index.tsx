@@ -121,25 +121,6 @@ export default class PluridContentGenerator {
             </StyleSheetManager>
         );
 
-        // const content2 = renderToString(
-        //     <div>
-        //         a
-        //     </div>
-        // );
-        // const content2 = renderToString(
-        //     <HelmetProvider context={helmet}>
-        //         <PluridRouterStatic
-        //             path={matchedRoute.pathname}
-        //             paths={paths}
-        //             exterior={exterior}
-        //             shell={shell}
-        //             gateway={gateway}
-        //             gatewayEndpoint={gatewayEndpoint}
-        //             gatewayQuery={gatewayQuery}
-        //         />
-        //     </HelmetProvider>
-        // );
-
         return content;
     }
 
