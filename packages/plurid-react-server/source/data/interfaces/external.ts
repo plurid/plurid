@@ -61,31 +61,6 @@ export interface PluridServerOptions {
     stillsDirectory: string;
 
     /**
-     * The ID of the root element in the HTML template.
-     */
-    root: string;
-
-    /**
-     * The JavaScript filename to inject in the HTML template.
-     */
-    script: string;
-
-    /**
-     * JavaScript code to handle plurid space window resizing on the client.
-     *
-     * Default https://manual.plurid.com/plurid/server/window-sizer-script
-     */
-    windowSizerScript?: string;
-
-    /**
-     * The JavaScript vendor filepath to inject in the HTML template.
-     * Default `'/vendor.js'`.
-     *
-     * A CDN link can be used for better caching.
-     */
-    vendorScript: string;
-
-    /**
      * Default: `/gateway`.
      */
     gatewayEndpoint: string;
@@ -129,4 +104,59 @@ export interface PluridServerConfiguration {
     servicesData?: PluridServerServicesData;
 
     options?: PluridServerPartialOptions;
+
+    template?: PluridServerTemplateConfiguration;
+}
+
+
+export interface PluridServerTemplateConfiguration {
+    htmlLanguage?: string;
+    htmlAttributes?: Record<string, string>;
+    defaultStyle?: string;
+    headScripts?: string;
+
+    /**
+     * The JavaScript vendor filepath to inject in the HTML template.
+     * Default `'/vendor.js'`.
+     *
+     * A CDN link can be used for better caching.
+     */
+    vendorScriptSource?: string;
+
+    /**
+     * The JavaScript filename to inject in the HTML template.
+     */
+    mainScriptSource?: string;
+
+    bodyAttributes?: Record<string, string>;
+
+    /**
+     * The ID of the root element in the HTML template.
+     */
+    root?: string;
+
+    /**
+     * Global variable name to be attached to window on the server-side
+     * to preload redux state.
+     *
+     * Default: `__PRELOADED_REDUX_STATE__`
+     */
+    defaultPreloadedReduxState?: string;
+
+    /**
+     * Global variable name to be attached to window on the server-side
+     * to prepload plurid state.
+     *
+     * Default: `__PRELOADED_PLURID_STATE__`
+     */
+    defaultPreloadedPluridState?: string;
+
+    /**
+     * JavaScript code to handle plurid space window resizing on the client.
+     *
+     * Default https://manual.plurid.com/plurid/server/window-sizer-script
+     */
+    windowSizerScript?: string;
+
+    bodyScripts?: string;
 }
