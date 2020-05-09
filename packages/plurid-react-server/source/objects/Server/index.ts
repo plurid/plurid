@@ -277,6 +277,7 @@ export default class PluridServer {
             : '';
 
         const stripeScript = this.servicesData?.stripeScript;
+        const pluridMetastate = serverComputeMetastate(route);
 
         const renderer = new PluridRenderer({
             htmlLanguage: this.template?.htmlLanguage,
@@ -294,7 +295,7 @@ export default class PluridServer {
             defaultPreloadedReduxState: this.template?.defaultPreloadedReduxState,
             reduxState: store,
             defaultPreloadedPluridMetastate: this.template?.defaultPreloadedPluridMetastate,
-            pluridMetastate: '',
+            pluridMetastate: JSON.stringify(pluridMetastate),
             bodyScripts: this.template?.bodyScripts,
         });
 
