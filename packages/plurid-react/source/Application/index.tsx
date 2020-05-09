@@ -15,16 +15,26 @@ import View from './View';
 import store from '../modules/services/state/store';
 import StateContext from '../modules/services/state/context';
 
+import PluridProviderContext from '../modules/components/PluridProvider/context';
+
 
 
 class PluridApplication extends Component<PluridApplicationProperties, {}> {
+    static contextType = PluridProviderContext;
+
+    public context!: React.ContextType<typeof PluridProviderContext>
     private store: any;
 
     constructor(
         properties: PluridApplicationProperties,
     ) {
         super(properties);
-        this.store = store({});
+
+        const defaultStore = this.context
+            ? {}
+            : {};
+
+        this.store = store(defaultStore);
     }
 
     render() {
