@@ -36,7 +36,7 @@ export default class PluridContentGenerator {
 
     public async render() {
         const {
-            pluridContext,
+            pluridMetastate,
             matchedRoute,
             paths,
             exterior,
@@ -52,7 +52,7 @@ export default class PluridContentGenerator {
 
         const RoutedApplication = () => (
             <PluridProvider
-                context={pluridContext}
+                metastate={pluridMetastate}
             >
                 <PluridRouterStatic
                     path={matchedRoute.pathname}

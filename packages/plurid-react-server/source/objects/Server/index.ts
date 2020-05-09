@@ -289,8 +289,8 @@ export default class PluridServer {
             windowSizerScript: this.template?.windowSizerScript,
             defaultPreloadedReduxState: this.template?.defaultPreloadedReduxState,
             reduxState: store,
-            defaultPreloadedPluridState: this.template?.defaultPreloadedPluridState,
-            pluridState: '',
+            defaultPreloadedPluridMetastate: this.template?.defaultPreloadedPluridMetastate,
+            pluridMetastate: '',
             bodyScripts: this.template?.bodyScripts,
         });
 
@@ -306,7 +306,7 @@ export default class PluridServer {
 
         try {
             // based on the route get the specific plurids to be rendered
-            const pluridContext = {};
+            const pluridMetastate = {};
             const gateway = matchedRoute.pathname === '/gateway';
             const gatewayQuery = matchedRoute.query.__gatewayQuery;
             const {
@@ -322,7 +322,7 @@ export default class PluridServer {
                 helmet: this.helmet,
                 matchedRoute,
                 paths: this.paths,
-                pluridContext,
+                pluridMetastate,
                 gateway,
                 gatewayEndpoint,
                 gatewayQuery,
