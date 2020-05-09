@@ -16,7 +16,7 @@ export const Context = React.createContext(defaultValue);
 // }
 
 interface PluridProviderProperties<T> {
-    context: T;
+    metastate: T;
 }
 
 class PluridProvider<T> extends Component<
@@ -42,10 +42,10 @@ class PluridProvider<T> extends Component<
 
     render() {
         const {
-            context,
+            metastate,
         } = this.properties;
 
-        // console.log('context', context);
+        // console.log('metastate', metastate);
 
         return (
             <Context.Provider
