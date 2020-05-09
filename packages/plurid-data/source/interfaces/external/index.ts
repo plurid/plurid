@@ -6,6 +6,7 @@ export * from './configuration';
 export * from './keys';
 export * from './layout';
 export * from './link';
+export * from './metastate';
 export * from './plane';
 export * from './router';
 export * from './universe';
