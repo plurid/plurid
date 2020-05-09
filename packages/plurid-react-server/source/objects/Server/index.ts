@@ -30,6 +30,10 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
+    serverComputeMetastate,
+} from '@plurid/plurid-react';
+
+import {
     environment,
 
     NOT_FOUND_ROUTE,
@@ -306,7 +310,8 @@ export default class PluridServer {
 
         try {
             // based on the route get the specific plurids to be rendered
-            const pluridMetastate = {};
+            // given the matchedRoute compute the metastate
+            const pluridMetastate = serverComputeMetastate(matchedRoute);
             const gateway = matchedRoute.pathname === '/gateway';
             const gatewayQuery = matchedRoute.query.__gatewayQuery;
             const {
