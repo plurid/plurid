@@ -238,6 +238,13 @@ export interface PluridRouterCluster {
 export interface PluridRouterPlane {
     component: PluridComponent;
     value: string;
+
+    /**
+     * Map a direct link for a specific plane.
+     *
+     * e.g. `/plane-one` will route in browser the path `protocol://host/plane-one`
+     */
+    link?: string;
 }
 
 
