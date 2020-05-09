@@ -1,86 +1,63 @@
-import React from 'react';
-
 import {
-    renderToString,
-} from 'react-dom/server';
+    defaultConfiguration,
 
-import {
-    PluridPartialConfiguration,
-    PluridPlane,
-    PluridUniverse,
-    PluridView,
+    PluridMetastate,
 } from '@plurid/plurid-data';
 
 import {
-    space,
-    general as generalEngine,
+    router,
 } from '@plurid/plurid-engine';
 
-// import PluridRoot from '../../../components/PluridRoot';
 
 
-
-export interface ServerApplicationData {
-    planes: PluridPlane[],
-    view: string[] | PluridView[],
-    universes: PluridUniverse[],
-    configuration: PluridPartialConfiguration,
-}
-
-
-/**
- * Render application state and string of elements for Server-Side Rendering.
- *
- * @param pages
- * @param view
- * @param documents
- * @param configuration
- */
-export const serverComputeApplication = (
-    data: ServerApplicationData,
-): any => {
-    const {
-        planes,
-        view,
-        universes,
-        configuration,
-    } = data;
-
-    // determine if pages or document based
-
-    // index pages
-
-    // create tree pages
-
-    // create tree
-
-    // render tree
-
-
-    const commonConfiguration = generalEngine.configuration.default(configuration);
-
-    const spaceTree = new space.tree.Tree({
-        planes: [],
-        configuration: commonConfiguration,
-        view,
-    });
-    const tree = spaceTree.compute();
-
-    const Roots = () => (
-        <>
-            render PluridRoot
-            {/* <PluridRoot
-                page={{}}
-            /> */}
-        </>
-    );
-
-    const renderedString = renderToString(<Roots />);
+export const serverComputeMetastate = (
+    matchedRoute: router.MatcherResponse,
+): PluridMetastate => {
 
     return {
-        state: {
-            tree,
+        states: {
+            'one': {
+                configuration: {
+                    ...defaultConfiguration,
+                },
+                ui: {
+                    toolbarScrollPosition: 0,
+                },
+                space: {
+                    loading: false,
+                    animatedTransform: false,
+                    scale: 0,
+                    rotationX: 0,
+                    rotationY: 0,
+                    translationX: 0,
+                    translationY: 0,
+                    translationZ: 0,
+                    initialTree: [],
+                    tree: [],
+                    activeUniverseID: '',
+                    camera: {
+                        x: 0,
+                        y: 0,
+                        z: 0,
+                    },
+                    viewSize: {
+                        width: 0,
+                        height: 0,
+                    },
+                    spaceSize: {
+                        width: 0,
+                        height: 0,
+                        depth: 0,
+                        topCorner: {
+                            x: 0,
+                            y: 0,
+                            z: 0,
+                        },
+                    },
+                    view: [],
+                    culledView: [],
+                },
+            },
         },
-        stringed: renderedString,
     };
 }
