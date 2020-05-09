@@ -29,7 +29,6 @@ import {
 import {
     PluridProvider,
     PluridRouterBrowser,
-    PluridComponent,
 } from '@plurid/plurid-react';
 
 import helmetContext from '../shared/kernel/services/helmet';
@@ -50,26 +49,11 @@ import {
 const reduxState = (window as any).__PRELOADED_REDUX_STATE__;
 delete (window as any).__PRELOADED_REDUX_STATE__;
 
-const pluridState = (window as any).__PRELOADED_PLURID_STATE__;
-delete (window as any).__PRELOADED_PLURID_STATE__;
+const pluridMetastate = (window as any).__PRELOADED_PLURID_METASTATE__;
+delete (window as any).__PRELOADED_PLURID_METASTATE__;
 
 
 const Client: React.FC<any> = () => {
-    // return (
-    //     <HelmetProvider context={helmetContext}>
-    //         <PluridRouterBrowser
-    //             shell={shell}
-    //             paths={paths}
-    //         />
-    //     </HelmetProvider>
-    // );
-    // return (
-    //     <div>
-    //         a
-    //     </div>
-    // );
-
-
     return (
         // [START ClientReturn]
         <HelmetProvider context={helmetContext}>
@@ -77,7 +61,7 @@ const Client: React.FC<any> = () => {
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
                         <StyleSheetManager>
-                            <PluridProvider context={pluridState}>
+                            <PluridProvider metastate={pluridMetastate}>
                                 <PluridRouterBrowser
                                     shell={shell}
                                     paths={paths}
