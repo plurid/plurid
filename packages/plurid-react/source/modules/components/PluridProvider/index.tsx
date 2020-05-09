@@ -3,56 +3,43 @@ import React, {
 } from 'react';
 
 import {
-    runtime,
-} from '@plurid/plurid-functions';
+    PluridMetastate,
+} from '@plurid/plurid-data';
+
+import PluridProviderContext from './context';
 
 
 
-const defaultValue = {};
-export const Context = React.createContext(defaultValue);
-
-
-// interface PluridProviderContext {
-// }
-
-interface PluridProviderProperties<T> {
-    metastate: T;
+interface PluridProviderProperties {
+    metastate: PluridMetastate;
 }
 
-class PluridProvider<T> extends Component<
-    React.PropsWithChildren<
-        PluridProviderProperties<T>
-    >
+class PluridProvider extends Component<
+    React.PropsWithChildren<PluridProviderProperties>
 > {
     static displayName = 'PluridProvider';
-    static canUseDOM = runtime.isBrowser;
 
-    private properties: React.PropsWithChildren<PluridProviderProperties<T>>;
-    private value = {};
+    private properties: React.PropsWithChildren<PluridProviderProperties>;
 
     constructor(
-        properties: React.PropsWithChildren<PluridProviderProperties<T>>,
+        properties: React.PropsWithChildren<PluridProviderProperties>,
     ) {
         super(properties);
         this.properties = properties;
-
-        // if (!PluridProvider.canUseDOM) {
-        // }
     }
 
     render() {
         const {
             metastate,
+            children,
         } = this.properties;
 
-        // console.log('metastate', metastate);
-
         return (
-            <Context.Provider
-                value={this.value}
+            <PluridProviderContext.Provider
+                value={metastate}
             >
-                {this.properties.children}
-            </Context.Provider>
+                {children}
+            </PluridProviderContext.Provider>
         );
     }
 }
