@@ -38,8 +38,8 @@ export interface PluridRendererConfiguration {
     windowSizerScript: string | undefined;
     defaultPreloadedReduxState: string | undefined;
     reduxState: string;
-    defaultPreloadedPluridState: string | undefined;
-    pluridState: string;
+    defaultPreloadedPluridMetastate: string | undefined;
+    pluridMetastate: string;
     bodyScripts: string | undefined;
 }
 
@@ -85,7 +85,7 @@ export interface PluridContentGeneratorData {
     shell: PluridComponent | undefined;
     matchedRoute: router.MatcherResponse;
     paths: PluridRouterPath[];
-    pluridContext: any;
+    pluridMetastate: any;
     gateway: boolean;
     gatewayEndpoint: string;
     gatewayQuery: string;
@@ -107,7 +107,7 @@ export interface RendererTemplateData {
     windowSizerScript: string;
     defaultPreloadedReduxState: string;
     reduxState: string;
-    defaultPreloadedPluridState: string;
-    pluridState: string;
+    defaultPreloadedPluridMetastate: string;
+    pluridMetastate: string;
     bodyScripts: string;
 }

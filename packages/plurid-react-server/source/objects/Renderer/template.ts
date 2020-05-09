@@ -26,8 +26,8 @@ const template = (
         windowSizerScript,
         defaultPreloadedReduxState,
         reduxState,
-        defaultPreloadedPluridState,
-        pluridState,
+        defaultPreloadedPluridMetastate,
+        pluridMetastate,
         bodyScripts,
     } = data;
 
@@ -56,7 +56,7 @@ const template = (
         </script>
         <script>
             window.${defaultPreloadedReduxState} = ${reduxState};
-            window.${defaultPreloadedPluridState} = ${pluridState};
+            window.${defaultPreloadedPluridMetastate} = ${pluridMetastate};
         </script>
 
         ${bodyScripts}

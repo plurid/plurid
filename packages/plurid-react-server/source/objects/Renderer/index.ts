@@ -5,7 +5,7 @@ import {
     DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE,
     DEFAULT_WINDOW_SIZER_SCRIPT,
     DEFAULT__PRELOADED_REDUX_STATE__,
-    DEFAULT__PRELOADED_PLURID_STATE__,
+    DEFAULT__PRELOADED_PLURID_METASTATE__,
 } from '../../data/constants';
 
 import {
@@ -37,8 +37,8 @@ export default class PluridRenderer {
     private windowSizerScript: string;
     private defaultPreloadedReduxState: string;
     private reduxState: string;
-    private defaultPreloadedPluridState: string;
-    private pluridState: string;
+    private defaultPreloadedPluridMetastate: string;
+    private pluridMetastate: string;
     private bodyScripts: string;
 
     constructor(
@@ -59,8 +59,8 @@ export default class PluridRenderer {
             windowSizerScript,
             defaultPreloadedReduxState,
             reduxState,
-            defaultPreloadedPluridState,
-            pluridState,
+            defaultPreloadedPluridMetastate,
+            pluridMetastate,
             bodyScripts,
         } = configuration;
 
@@ -91,8 +91,8 @@ export default class PluridRenderer {
         this.windowSizerScript = windowSizerScript || DEFAULT_WINDOW_SIZER_SCRIPT;
         this.defaultPreloadedReduxState = defaultPreloadedReduxState || DEFAULT__PRELOADED_REDUX_STATE__;
         this.reduxState = this.safeStore(reduxState) || DEFAULT_RENDERER_REDUX_STATE;
-        this.defaultPreloadedPluridState = defaultPreloadedPluridState || DEFAULT__PRELOADED_PLURID_STATE__;
-        this.pluridState = pluridState || DEFAULT_RENDERER_PLURID_STATE;
+        this.defaultPreloadedPluridMetastate = defaultPreloadedPluridMetastate || DEFAULT__PRELOADED_PLURID_METASTATE__;
+        this.pluridMetastate = pluridMetastate || DEFAULT_RENDERER_PLURID_STATE;
         this.bodyScripts = bodyScripts || '';
     }
 
@@ -112,8 +112,8 @@ export default class PluridRenderer {
             windowSizerScript: this.windowSizerScript,
             defaultPreloadedReduxState: this.defaultPreloadedReduxState,
             reduxState: this.reduxState,
-            defaultPreloadedPluridState: this.defaultPreloadedPluridState,
-            pluridState: this.pluridState,
+            defaultPreloadedPluridMetastate: this.defaultPreloadedPluridMetastate,
+            pluridMetastate: this.pluridMetastate,
             bodyScripts: this.bodyScripts,
         };
 

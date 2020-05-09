@@ -145,11 +145,11 @@ export interface PluridServerTemplateConfiguration {
 
     /**
      * Global variable name to be attached to window on the server-side
-     * to prepload plurid state.
+     * to preload plurid metastate.
      *
-     * Default: `__PRELOADED_PLURID_STATE__`
+     * Default: `__PRELOADED_PLURID_METASTATE__`
      */
-    defaultPreloadedPluridState?: string;
+    defaultPreloadedPluridMetastate?: string;
 
     /**
      * JavaScript code to handle plurid space window resizing on the client.
