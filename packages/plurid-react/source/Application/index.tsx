@@ -30,6 +30,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
     ) {
         super(properties);
 
+        console.log(this.context);
         const defaultStore = this.context
             ? {}
             : {};
