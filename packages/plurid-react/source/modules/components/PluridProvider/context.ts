@@ -1,9 +1,12 @@
 import React from 'react';
 
+import {
+    PluridMetastate,
+} from '@plurid/plurid-data';
 
 
-const defaultValue = {};
-const Context = React.createContext(defaultValue);
+
+const Context = React.createContext<PluridMetastate | null>(null);
 
 
 export default Context;
