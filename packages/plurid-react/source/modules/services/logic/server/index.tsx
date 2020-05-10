@@ -88,7 +88,7 @@ export const serverComputeMetastate = (
             space: {
                 loading: false,
                 animatedTransform: false,
-                scale: 0,
+                scale: 1,
                 rotationX: 0,
                 rotationY: 0,
                 translationX: 0,
@@ -103,12 +103,12 @@ export const serverComputeMetastate = (
                     z: 0,
                 },
                 viewSize: {
-                    width: 0,
-                    height: 0,
+                    width: 1440,
+                    height: 800,
                 },
                 spaceSize: {
-                    width: 0,
-                    height: 0,
+                    width: 1440,
+                    height: 800,
                     depth: 0,
                     topCorner: {
                         x: 0,
