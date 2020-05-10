@@ -32,6 +32,8 @@ import {
 
 
 export interface PluridApplication {
+    id?: string;
+
     indexedPlanes?: Map<string, IndexedPluridPlane>;
 
     /**
