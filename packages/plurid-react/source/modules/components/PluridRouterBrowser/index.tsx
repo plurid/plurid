@@ -31,6 +31,7 @@ import {
     getGatewayView,
     generateIndexedPlane,
     generateIndexedPlanes,
+    computeIndexedPlanes,
 } from '../../services/logic/router';
 
 
@@ -82,7 +83,11 @@ const PluridRouterBrowser = (
         matchedRoute: matchedInitialRoute,
         protocol,
         host,
-        indexedPlanes: indexedPlanes.current,
+        indexedPlanes: computeIndexedPlanes(
+            paths,
+            protocol,
+            host,
+        ),
         // staticRender: true,
     });
     console.log('initialComponent', initialComponent);
@@ -96,6 +101,7 @@ const PluridRouterBrowser = (
         //     ? (<></>)
         //     : StaticComponent
     );
+    console.log('Component', Component);
 
 
     /** handlers */
