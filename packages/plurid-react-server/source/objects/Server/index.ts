@@ -277,7 +277,10 @@ export default class PluridServer {
             : '';
 
         const stripeScript = this.servicesData?.stripeScript;
-        const pluridMetastate = serverComputeMetastate(route);
+        const pluridMetastate = serverComputeMetastate(
+            route,
+            this.paths,
+        );
 
         const renderer = new PluridRenderer({
             htmlLanguage: this.template?.htmlLanguage,
@@ -312,7 +315,10 @@ export default class PluridServer {
         try {
             // based on the route get the specific plurids to be rendered
             // given the matchedRoute compute the metastate
-            const pluridMetastate = serverComputeMetastate(matchedRoute);
+            const pluridMetastate = serverComputeMetastate(
+                matchedRoute,
+                this.paths,
+            );
             const gateway = matchedRoute.pathname === '/gateway';
             const gatewayQuery = matchedRoute.query.__gatewayQuery;
             const {
