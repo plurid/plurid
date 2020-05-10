@@ -1,7 +1,7 @@
 import React from 'react';
 
-import PlanesView from '../../modules/containers/PlanesView';
-import ErrorView from '../../modules/containers/ErrorView';
+import PluridPlanesView from '../../modules/containers/PlanesView';
+import PluridErrorView from '../../modules/containers/ErrorView';
 
 import {
     PluridPlane,
@@ -14,12 +14,12 @@ const handleView = (
 ): JSX.Element => {
     if (planes) {
         return (
-            <PlanesView />
+            <PluridPlanesView />
         );
     }
 
     return (
-        <ErrorView
+        <PluridErrorView
             error="the plurid' application must contain planes"
         />
     );
