@@ -35,13 +35,12 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         this.context = context;
         this.properties = properties;
 
-        // get applicationID from properties
-        // const {
-        // } = this.properties;
-        const applicationID = 'one';
+        const {
+            id,
+        } = this.properties;
 
-        const defaultStore = context && context.states[applicationID]
-            ? context.states[applicationID]
+        const defaultStore = context && id && context.states[id]
+            ? context.states[id]
             : {};
 
         this.store = store(defaultStore);

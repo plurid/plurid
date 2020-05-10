@@ -11,7 +11,7 @@ import PluridProviderContext from './context';
 
 
 interface PluridProviderProperties {
-    metastate: PluridMetastate;
+    metastate: PluridMetastate | undefined;
 }
 
 class PluridProvider extends Component<

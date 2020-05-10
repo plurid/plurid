@@ -6,7 +6,7 @@ import {
 
 
 
-const Context = React.createContext<PluridMetastate | null>(null);
+const Context = React.createContext<PluridMetastate | undefined>(undefined);
 
 
 export default Context;
