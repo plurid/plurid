@@ -302,12 +302,15 @@ export const getComponentFromRoute = (
             }
         }
 
+        const planesProperties = new Map();
+
         const App = (
             <PluridApplication
                 key={uuid.generate()}
                 id={path.value}
                 planes={pluridPlanes}
                 indexedPlanes={indexedPlanes}
+                planesProperties={planesProperties}
                 view={view}
                 static={staticRender}
             />
@@ -638,7 +641,7 @@ export const computeIndexedPlanes = (
             ];
             const planeAddress = planeAddressElements.join('://');
 
-            const id = uuid.generate();
+            // const id = uuid.generate();
 
             const indexedPlane: IndexedPluridPlane = {
                 protocol,
@@ -655,7 +658,7 @@ export const computeIndexedPlanes = (
                 route: planeAddress,
             };
 
-            indexedPlanes.set(id, indexedPlane);
+            indexedPlanes.set(planeAddress, indexedPlane);
 
             continue;
         }
@@ -709,9 +712,9 @@ export const computeIndexedPlanes = (
                             route: planeAddress,
                         };
 
-                        const id = uuid.generate();
+                        // const id = uuid.generate();
 
-                        indexedPlanes.set(id, indexedPlane);
+                        indexedPlanes.set(planeAddress, indexedPlane);
                     }
                 }
             }

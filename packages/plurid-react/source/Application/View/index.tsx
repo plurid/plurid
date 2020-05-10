@@ -209,7 +209,7 @@ const PluridView: React.FC<ViewProperties> = (
 
 
     /** references */
-    const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(new Map());
+    const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(indexedPlanes || new Map());
     const planesPropertiesReference = useRef<Map<string, any>>(new Map());
     const viewElement = useRef<HTMLDivElement>(null);
 

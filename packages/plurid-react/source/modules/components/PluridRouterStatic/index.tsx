@@ -106,7 +106,7 @@ const PluridRouterStatic = (
         protocol,
         host,
         indexedPlanes: indexedPlanes.current,
-        staticRender: true,
+        // staticRender: true,
     });
 
     return (
@@ -114,7 +114,7 @@ const PluridRouterStatic = (
             paths={paths}
             exterior={exterior}
             shell={shell}
-            // static={Component}
+            static={Component}
             protocol={protocol}
             host={host}
         />
