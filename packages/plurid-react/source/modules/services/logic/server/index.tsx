@@ -112,7 +112,7 @@ export const serverComputeMetastate = (
                         z: 0,
                     },
                 },
-                view: [],
+                view,
                 culledView: [],
             },
         };

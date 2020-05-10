@@ -74,104 +74,104 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     } = plane;
 
 
-    if (typeof indexedPlanesReference !== 'undefined') {
-        const pluridPlaneID = plane.sourceID;
-        if (!pluridPlaneID) {
-            return (
-                <></>
-            );
-        }
+    // if (typeof indexedPlanesReference !== 'undefined') {
+    //     const pluridPlaneID = plane.sourceID;
+    //     if (!pluridPlaneID) {
+    //         return (
+    //             <></>
+    //         );
+    //     }
 
-        const pluridPlane = indexedPlanesReference.get(pluridPlaneID);
-        const pluridPlaneProperties = planesPropertiesReference.get(pluridPlaneID);
+    //     const pluridPlane = indexedPlanesReference.get(pluridPlaneID);
+    //     const pluridPlaneProperties = planesPropertiesReference.get(pluridPlaneID);
 
-        if (!pluridPlane || !pluridPlaneProperties) {
-            return (
-                <></>
-            );
-        }
+    //     if (!pluridPlane || !pluridPlaneProperties) {
+    //         return (
+    //             <></>
+    //         );
+    //     }
 
-        if (pluridPlane.component.kind !== 'react') {
-            return (
-                <></>
-            );
-        }
+    //     if (pluridPlane.component.kind !== 'react') {
+    //         return (
+    //             <></>
+    //         );
+    //     }
 
-        const Plane = pluridPlane.component.element;
+    //     const Plane = pluridPlane.component.element;
 
-        const pluridProperties: PluridProperty = {
-            ...pluridPlaneProperties.plurid,
-            metadata: {
-                planeID: plane.planeID,
-            },
-        };
+    //     const pluridProperties: PluridProperty = {
+    //         ...pluridPlaneProperties.plurid,
+    //         metadata: {
+    //             planeID: plane.planeID,
+    //         },
+    //     };
 
-        const planeProperties = {
-            ...pluridPlane.component.properties,
-            plurid: {
-                ...pluridProperties,
-            },
-        };
+    //     const planeProperties = {
+    //         ...pluridPlane.component.properties,
+    //         plurid: {
+    //             ...pluridProperties,
+    //         },
+    //     };
 
-        // console.log(Plane, planeProperties, pluridPlane);
+    //     // console.log(Plane, planeProperties, pluridPlane);
 
-        // return (
-        //     <div>
-        //     </div>
-        // );
+    //     // return (
+    //     //     <div>
+    //     //     </div>
+    //     // );
 
-        return (
-            <StyledPluridRoot
-                data-plurid-entity={PLURID_ENTITY_ROOT}
-            >
-                {/* <Plane /> */}
+    //     return (
+    //         <StyledPluridRoot
+    //             data-plurid-entity={PLURID_ENTITY_ROOT}
+    //         >
+    //             {/* <Plane /> */}
 
-                <PluridPlane
-                    plane={pluridPlane}
-                    treePlane={plane}
-                    planeID={plane.planeID}
-                    location={location}
-                >
-                    <Plane
-                        {...planeProperties}
-                    />
-                </PluridPlane>
+    //             <PluridPlane
+    //                 plane={pluridPlane}
+    //                 treePlane={plane}
+    //                 planeID={plane.planeID}
+    //                 location={location}
+    //             >
+    //                 <Plane
+    //                     {...planeProperties}
+    //                 />
+    //             </PluridPlane>
 
-                {/* <PluridPlane
-                    plane={pluridPlane}
-                    treePlane={plane}
-                    planeID={plane.planeID}
-                    location={location}
-                >
-                    <Plane
-                        {...planeProperties}
-                    />
-                    {PlaneContext
-                        ? (
-                            <PlaneContext.Provider
-                                value={planeContextValue}
-                            >
-                                <Plane
-                                    {...planeProperties}
-                                />
-                            </PlaneContext.Provider>
-                        ) : (
-                            <Plane
-                                {...planeProperties}
-                            />
-                        )
-                    }
-                </PluridPlane> */}
+    //             {/* <PluridPlane
+    //                 plane={pluridPlane}
+    //                 treePlane={plane}
+    //                 planeID={plane.planeID}
+    //                 location={location}
+    //             >
+    //                 <Plane
+    //                     {...planeProperties}
+    //                 />
+    //                 {PlaneContext
+    //                     ? (
+    //                         <PlaneContext.Provider
+    //                             value={planeContextValue}
+    //                         >
+    //                             <Plane
+    //                                 {...planeProperties}
+    //                             />
+    //                         </PlaneContext.Provider>
+    //                     ) : (
+    //                         <Plane
+    //                             {...planeProperties}
+    //                         />
+    //                     )
+    //                 }
+    //             </PluridPlane> */}
 
-                {/* {childrenPlanes} */}
-            </StyledPluridRoot>
-        );
-    }
+    //             {/* {childrenPlanes} */}
+    //         </StyledPluridRoot>
+    //     );
+    // }
 
 
     /** context */
     const context: PluridContext = useContext(Context);
-    // console.log(context);
+    console.log('plurid root context', context);
 
     const {
         planesMap,
