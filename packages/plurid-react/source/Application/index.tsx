@@ -24,16 +24,26 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
 
     public context!: React.ContextType<typeof PluridProviderContext>
     private store: any;
+    private properties: React.PropsWithChildren<PluridApplicationProperties>;
 
     constructor(
         properties: PluridApplicationProperties,
+        context: React.ContextType<typeof PluridProviderContext>,
     ) {
-        super(properties);
+        super(properties, context);
 
-        console.log(this.context);
-        const defaultStore = this.context
-            ? {}
+        this.context = context;
+        this.properties = properties;
+
+        // get applicationID from properties
+        // const {
+        // } = this.properties;
+        const applicationID = 'one';
+
+        const defaultStore = context && context.states[applicationID]
+            ? context.states[applicationID]
             : {};
+        console.log('defaultStore', defaultStore);
 
         this.store = store(defaultStore);
     }
@@ -46,7 +56,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             >
                 <View
                     pluridApplication={
-                        { ...this.props }
+                        { ...this.properties }
                     }
                 />
             </ReduxProvider>
