@@ -286,14 +286,15 @@ const PluridRouterBrowser = (
 
 
     /** render */
-    let Exterior: React.FC<any> = () => (<></>);
+    let PluridRouterExterior: React.FC<any> = () => (<></>);
     if (exterior) {
         if (exterior.kind === 'react') {
-            Exterior = exterior.element;
+            PluridRouterExterior = exterior.element;
+            PluridRouterExterior.displayName = 'PluridRouterExterior';
         }
     }
 
-    let Shell: React.FC<any> = ({
+    let PluridRouterShell: React.FC<any> = ({
         children,
     }) => (
         <>
@@ -302,17 +303,18 @@ const PluridRouterBrowser = (
     );
     if (shell) {
         if (shell.kind === 'react') {
-            Shell = shell.element;
+            PluridRouterShell = shell.element;
+            PluridRouterShell.displayName = 'PluridRouterShell';
         }
     }
 
     return (
         <>
-            <Exterior
+            <PluridRouterExterior
                 matchedRoute={matchedRoute}
             />
 
-            <Shell
+            <PluridRouterShell
                 matchedRoute={matchedRoute}
             >
                 {!Component
@@ -324,7 +326,7 @@ const PluridRouterBrowser = (
                         </>
                     )
                 }
-            </Shell>
+            </PluridRouterShell>
         </>
     );
 }

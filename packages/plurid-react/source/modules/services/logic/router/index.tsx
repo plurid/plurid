@@ -79,17 +79,17 @@ export const getComponentFromRoute = (
     const multispaceAlignment = path.multispace?.alignment || 'y';
     const multispaceSnapType = path.multispace?.snapType || 'mandatory';
 
-    let Exterior: React.FC<any> = () => (<></>);
+    let PluridExterior: React.FC<any> = () => (<></>);
     if (exterior) {
         switch (exterior.kind) {
             case 'elementql':
                 break;
             case 'react':
-                Exterior = exterior.element
+                PluridExterior = exterior.element
         }
     }
 
-    let Spaces: React.FC<any> = () => (<></>);
+    let PluridSpaces: React.FC<any> = () => (<></>);
     const spacesArray: any[] = [];
     if (spaces) {
         for (const space of spaces) {
@@ -245,7 +245,7 @@ export const getComponentFromRoute = (
 
             const App = (
                 <PluridApplication
-                    key={Math.random() + ''}
+                    key={uuid.generate()}
                     planes={planes}
                     indexedPlanes={indexedPlanes}
                     view={view}
@@ -303,7 +303,7 @@ export const getComponentFromRoute = (
 
         const App = (
             <PluridApplication
-                key={Math.random() + ''}
+                key={uuid.generate()}
                 planes={pluridPlanes}
                 indexedPlanes={indexedPlanes}
                 view={view}
@@ -313,7 +313,7 @@ export const getComponentFromRoute = (
         spacesArray.push(App);
     }
 
-    Spaces = () => (
+    PluridSpaces = () => (
         <StyledSpaces
             alignment={multispaceAlignment}
             snapType={multispaceSnapType}
@@ -326,7 +326,7 @@ export const getComponentFromRoute = (
     const Component = (
         <>
             {exterior && (
-                <Exterior
+                <PluridExterior
                     spaces={slotted ? spacesArray : undefined}
                     plurid={pluridProperty}
                 />
@@ -336,7 +336,7 @@ export const getComponentFromRoute = (
                 (spaces || planes)
                 && !slotted
                 && (
-                    <Spaces />
+                    <PluridSpaces />
                 )
             }
         </>
