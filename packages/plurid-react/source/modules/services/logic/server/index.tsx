@@ -13,6 +13,10 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
+    uuid,
+} from '@plurid/plurid-functions';
+
+import {
     collectApplicationsFromPath,
     computeIndexedPlanes,
 } from '../router';
@@ -117,7 +121,9 @@ export const serverComputeMetastate = (
             },
         };
 
-        states.one = state;
+        const id = matchedRoute.path.value;
+
+        states[id] = state;
     }
 
 
