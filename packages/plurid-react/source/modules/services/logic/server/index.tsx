@@ -67,13 +67,18 @@ export const serverComputeMetastate = (
             view,
         );
 
+        const planeSources: any = {};
+        indexedPlanesReference.forEach(plane => {
+            planeSources[plane.route] = plane.route;
+        });
+
         const state = {
             configuration: {
                 ...appConfiguration,
             },
             data: {
                 universes: {},
-                planeSources: {},
+                planeSources,
             },
             shortcuts: {
                 global: true,

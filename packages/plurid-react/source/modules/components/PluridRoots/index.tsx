@@ -173,7 +173,16 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                 />
             )}
 
-            {typeof computedTree === 'undefined' && (
+            {stateTree.map(plane => {
+                return (
+                    <PluridRoot
+                        key={plane.planeID}
+                        plane={plane}
+                    />
+                );
+            })}
+
+            {/* {typeof computedTree === 'undefined' && (
                 <>
                     {stateTree.map(plane => {
                         return (
@@ -200,7 +209,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                         );
                     })}
                 </>
-            )}
+            )} */}
         </StyledPluridRoots>
     );
 }
