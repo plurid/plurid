@@ -35,6 +35,7 @@ export interface PluridApplication {
     id?: string;
 
     indexedPlanes?: Map<string, IndexedPluridPlane>;
+    planesProperties?: Map<string, any>;
 
     /**
      * A `PluridApplication` must be either planes or universes based.
