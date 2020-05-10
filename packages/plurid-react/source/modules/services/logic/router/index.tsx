@@ -246,6 +246,7 @@ export const getComponentFromRoute = (
             const App = (
                 <PluridApplication
                     key={uuid.generate()}
+                    id={path.value}
                     planes={planes}
                     indexedPlanes={indexedPlanes}
                     view={view}
@@ -304,6 +305,7 @@ export const getComponentFromRoute = (
         const App = (
             <PluridApplication
                 key={uuid.generate()}
+                id={path.value}
                 planes={pluridPlanes}
                 indexedPlanes={indexedPlanes}
                 view={view}

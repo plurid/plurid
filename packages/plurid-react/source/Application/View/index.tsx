@@ -205,6 +205,8 @@ const PluridView: React.FC<ViewProperties> = (
         static: staticRender,
     } = pluridApplication;
 
+    console.log('View stateTree', stateTree);
+
 
     /** references */
     const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(new Map());
@@ -419,8 +421,8 @@ const PluridView: React.FC<ViewProperties> = (
         /** assignments */
         dispatchSetSpaceSize(spaceSize);
         dispatchSetConfiguration(appConfiguration);
-        dispatchSetInitialTree(newTree);
-        dispatchSetTree(newTree);
+        // dispatchSetInitialTree(newTree);
+        // dispatchSetTree(newTree);
         dispatchSetSpaceLoading(false);
         dispatchDataSetPlaneSources(planeSources);
     }
