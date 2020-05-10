@@ -50,6 +50,7 @@ const reduxState = (window as any).__PRELOADED_REDUX_STATE__;
 delete (window as any).__PRELOADED_REDUX_STATE__;
 
 const pluridMetastate = (window as any).__PRELOADED_PLURID_METASTATE__;
+console.log('pluridMetastate', pluridMetastate);
 delete (window as any).__PRELOADED_PLURID_METASTATE__;
 
 
