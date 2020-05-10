@@ -76,13 +76,25 @@ const PluridRouterBrowser = (
         paths,
     ));
 
+    const matchedInitialRoute = (pluridRouter as any).current.match('/');
+    console.log('matchedInitialRoute', matchedInitialRoute);
+    const initialComponent = getComponentFromRoute({
+        matchedRoute: matchedInitialRoute,
+        protocol,
+        host,
+        indexedPlanes: indexedPlanes.current,
+        // staticRender: true,
+    });
+    console.log('initialComponent', initialComponent);
 
     /** state */
     const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse>();
     const [Component, setComponent] = useState<any>(
-        typeof StaticComponent === 'undefined'
-            ? (<></>)
-            : StaticComponent
+        initialComponent,
+
+        // typeof StaticComponent === 'undefined'
+        //     ? (<></>)
+        //     : StaticComponent
     );
 
 

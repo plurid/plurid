@@ -27,6 +27,10 @@ import {
     mathematics,
 } from '@plurid/plurid-functions';
 
+import {
+    cleanTemplate,
+} from '../../services/utilities/template';
+
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
 import { ViewSize } from '../../services/state/types/space';
@@ -131,13 +135,13 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             id={planeID}
             style={{
                 width,
-                transform: `
+                transform: cleanTemplate(`
                     translateX(${location.translateX}px)
                     translateY(${location.translateY}px)
                     translateZ(${location.translateZ}px)
                     rotateX(${location.rotateX}deg)
                     rotateY(${location.rotateY}deg)
-                `,
+                `),
             }}
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}

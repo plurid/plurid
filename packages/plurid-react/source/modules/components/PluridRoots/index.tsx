@@ -28,6 +28,10 @@ import {
 
 import PluridRoot from '../PluridRoot';
 
+import {
+    cleanTemplate,
+} from '../../services/utilities/template';
+
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
 import selectors from '../../services/state/selectors';
@@ -128,46 +132,48 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
     /** render */
     return (
         <StyledPluridRoots
+            suppressHydrationWarning={true}
             style={{
                 width: typeof window !== 'undefined' ? window.innerWidth + 'px' : '1440px',
-                height: typeof window !== 'undefined' ? window.innerHeight + 'px' : '820px',
-                transform: `
+                height: typeof window !== 'undefined' ? window.innerHeight + 'px' : '821px',
+                transform: cleanTemplate(`
                     translateX(${spaceTranslationX}px)
                     translateY(${spaceTranslationY}px)
                     translateZ(${spaceTranslationZ}px)
                     scale(${spaceScale})
                     rotateX(${spaceRotationX}deg)
                     rotateY(${spaceRotationY}deg)
-                `,
+                `),
                 transition: animatedTransform
                     ? 'transform 450ms ease-in-out'
                     // : firstPerson
                     //     ? 'transform 100ms linear'
                         : 'initial',
-                transformOrigin: `
+                transformOrigin: cleanTemplate(`
                     ${transformOriginX}px
                     ${transformOriginY}px
                     ${transformOriginZ}px
-                `,
+                `),
             }}
             data-plurid-entity={PLURID_ENTITY_ROOTS}
         >
             {showTransformOrigin && (
                 <StyledTransformOrigin
+                    suppressHydrationWarning={true}
                     theme={interactionTheme}
                     transformOriginSize={transformOriginSize}
                     style={{
-                        transform: `
+                        transform: cleanTemplate(`
                             rotateY(${-spaceRotationY}deg)
                             translateX(${transformOriginX - transformOriginSizeDifference}px)
                             translateY(${transformOriginY - transformOriginSizeDifference}px)
                             translateZ(${(transformOriginZ + 5)}px)
-                        `,
-                        transformOrigin: `
+                        `),
+                        transformOrigin: cleanTemplate(`
                             ${transformOriginX - transformOriginSizeDifference}px
                             ${transformOriginY - transformOriginSizeDifference}px
                             ${transformOriginZ}px
-                        `,
+                        `),
                     }}
                     data-plurid-entity={PLURID_ENTITY_TRANSFORM_ORIGIN}
                 />

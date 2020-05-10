@@ -114,7 +114,7 @@ const PluridRouterStatic = (
             paths={paths}
             exterior={exterior}
             shell={shell}
-            static={Component}
+            // static={Component}
             protocol={protocol}
             host={host}
         />

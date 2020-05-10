@@ -21,11 +21,11 @@ const initialState: Types.State = {
     },
     viewSize: {
         width: typeof window === 'undefined' ? 1440 : window.innerWidth,
-        height: typeof window === 'undefined' ? 800 : window.innerHeight,
+        height: typeof window === 'undefined' ? 821 : window.innerHeight,
     },
     spaceSize: {
         width: typeof window === 'undefined' ? 1440 : window.innerWidth,
-        height: typeof window === 'undefined' ? 800 : window.innerHeight,
+        height: typeof window === 'undefined' ? 821 : window.innerHeight,
         depth: 0,
         topCorner: {
             x: 0,
