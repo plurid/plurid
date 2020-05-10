@@ -109,11 +109,11 @@ export const serverComputeMetastate = (
                 },
                 viewSize: {
                     width: 1440,
-                    height: 800,
+                    height: 821,
                 },
                 spaceSize: {
                     width: 1440,
-                    height: 800,
+                    height: 821,
                     depth: 0,
                     topCorner: {
                         x: 0,

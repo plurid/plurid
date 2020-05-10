@@ -80,6 +80,7 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
         <StyledViewcubeModel>
             <StyleViewcubeModelContainer>
                 <StyledViewcubeModelCube
+                    suppressHydrationWarning={true}
                     style={{
                         transform: `
                             translateX(32px)
