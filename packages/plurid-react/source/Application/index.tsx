@@ -43,7 +43,6 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         const defaultStore = context && context.states[applicationID]
             ? context.states[applicationID]
             : {};
-        console.log('defaultStore', defaultStore);
 
         this.store = store(defaultStore);
     }
@@ -55,9 +54,9 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
                 context={StateContext}
             >
                 <PluridView
-                    pluridApplication={
-                        { ...this.properties }
-                    }
+                    pluridApplication={{
+                        ...this.properties,
+                    }}
                 />
             </ReduxProvider>
         );
