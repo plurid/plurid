@@ -154,7 +154,7 @@ const PluridView: React.FC<ViewProperties> = (
         stateConfiguration,
         spaceLoading,
         // initialTree,
-        // stateTree,
+        stateTree,
         // viewSize,
         transform,
         // stateDataUniverses,
@@ -1000,16 +1000,16 @@ const PluridView: React.FC<ViewProperties> = (
     /** render */
     const viewContainer = handleView(planes);
 
-    const [hasMounted, setHasMounted] = React.useState(false);
-    useEffect(() => {
-        setHasMounted(true);
-    }, []);
+    // const [hasMounted, setHasMounted] = React.useState(false);
+    // useEffect(() => {
+    //     setHasMounted(true);
+    // }, []);
 
-    if (!hasMounted) {
-        return renderStatic(
-            pluridApplication,
-        );
-    }
+    // if (!hasMounted) {
+    //     return renderStatic(
+    //         pluridApplication,
+    //     );
+    // }
 
     return (
         <StyledView
