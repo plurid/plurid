@@ -1127,7 +1127,7 @@ export const collectApplicationsFromPath = (
         }
 
         const pluridApplication = {
-            planes,
+            planes: pluridPlanes,
             view,
         };
         plurids.push(pluridApplication);

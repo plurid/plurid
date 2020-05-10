@@ -41,6 +41,8 @@ export const serverComputeMetastate = (
         host,
     );
 
+    const states: any = {};
+
     for (const application of pluridApplications) {
         const {
             planes,
@@ -59,54 +61,54 @@ export const serverComputeMetastate = (
             view,
         );
 
-        console.log('computedTree', computedTree);
-    }
-
-
-    return {
-        states: {
-            'one': {
-                configuration: {
-                    ...defaultConfiguration,
+        const state = {
+            configuration: {
+                ...appConfiguration,
+            },
+            ui: {
+                toolbarScrollPosition: 50,
+            },
+            space: {
+                loading: false,
+                animatedTransform: false,
+                scale: 0,
+                rotationX: 0,
+                rotationY: 0,
+                translationX: 0,
+                translationY: 0,
+                translationZ: 0,
+                initialTree: computedTree,
+                tree: computedTree,
+                activeUniverseID: '',
+                camera: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
                 },
-                ui: {
-                    toolbarScrollPosition: 50,
+                viewSize: {
+                    width: 0,
+                    height: 0,
                 },
-                space: {
-                    loading: false,
-                    animatedTransform: false,
-                    scale: 0,
-                    rotationX: 0,
-                    rotationY: 0,
-                    translationX: 0,
-                    translationY: 0,
-                    translationZ: 0,
-                    initialTree: [],
-                    tree: [],
-                    activeUniverseID: '',
-                    camera: {
+                spaceSize: {
+                    width: 0,
+                    height: 0,
+                    depth: 0,
+                    topCorner: {
                         x: 0,
                         y: 0,
                         z: 0,
                     },
-                    viewSize: {
-                        width: 0,
-                        height: 0,
-                    },
-                    spaceSize: {
-                        width: 0,
-                        height: 0,
-                        depth: 0,
-                        topCorner: {
-                            x: 0,
-                            y: 0,
-                            z: 0,
-                        },
-                    },
-                    view: [],
-                    culledView: [],
                 },
+                view: [],
+                culledView: [],
             },
-        },
+        };
+
+        states.one = state;
+    }
+
+
+    return {
+        states,
     };
 }
