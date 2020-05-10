@@ -21,7 +21,7 @@ export const serverComputeMetastate = (
                     ...defaultConfiguration,
                 },
                 ui: {
-                    toolbarScrollPosition: 0,
+                    toolbarScrollPosition: 50,
                 },
                 space: {
                     loading: false,
