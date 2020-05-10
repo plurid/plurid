@@ -2,17 +2,66 @@ import {
     defaultConfiguration,
 
     PluridMetastate,
+    PluridRouterPath,
+    PluridPlane,
 } from '@plurid/plurid-data';
 
 import {
     router,
 } from '@plurid/plurid-engine';
 
+import {
+    collectApplicationsFromPath,
+    computeIndexedPlanes,
+} from '../router';
+
+import {
+    computeApplication,
+} from '../computing';
+
+
 
 
 export const serverComputeMetastate = (
     matchedRoute: router.MatcherResponse,
+    paths: PluridRouterPath[],
 ): PluridMetastate => {
+    const protocol = 'http';
+    const host = 'localhost:63000';
+
+    const indexedPlanes = computeIndexedPlanes(
+        paths,
+        protocol,
+        host,
+    );
+
+    const pluridApplications = collectApplicationsFromPath(
+        matchedRoute,
+        protocol,
+        host,
+    );
+
+    for (const application of pluridApplications) {
+        const {
+            planes,
+            view,
+        } = application;
+
+        const {
+            computedTree,
+            indexedPlanesReference,
+            planesPropertiesReference,
+            appConfiguration,
+        } = computeApplication(
+            indexedPlanes,
+            planes,
+            defaultConfiguration,
+            view,
+        );
+
+        console.log('computedTree', computedTree);
+    }
+
 
     return {
         states: {
