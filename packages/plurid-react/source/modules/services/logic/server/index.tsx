@@ -1,3 +1,5 @@
+import themes from '@plurid/plurid-themes';
+
 import {
     defaultConfiguration,
 
@@ -64,6 +66,17 @@ export const serverComputeMetastate = (
         const state = {
             configuration: {
                 ...appConfiguration,
+            },
+            data: {
+                universes: {},
+                planeSources: {},
+            },
+            shortcuts: {
+                global: true,
+            },
+            themes: {
+                general: themes.plurid,
+                interaction: themes.plurid,
             },
             ui: {
                 toolbarScrollPosition: 50,

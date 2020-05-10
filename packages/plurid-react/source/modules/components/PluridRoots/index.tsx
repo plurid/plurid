@@ -87,6 +87,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         stateTree,
     } = properties;
 
+    console.log('stateTree', stateTree);
+
     const activeConfiguration = computedTree
         ? appConfiguration
         : stateConfiguration;
