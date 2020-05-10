@@ -421,8 +421,8 @@ const PluridView: React.FC<ViewProperties> = (
         /** assignments */
         dispatchSetSpaceSize(spaceSize);
         dispatchSetConfiguration(appConfiguration);
-        // dispatchSetInitialTree(newTree);
-        // dispatchSetTree(newTree);
+        dispatchSetInitialTree(newTree);
+        dispatchSetTree(newTree);
         dispatchSetSpaceLoading(false);
         dispatchDataSetPlaneSources(planeSources);
     }
