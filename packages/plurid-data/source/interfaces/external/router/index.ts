@@ -86,7 +86,7 @@ export interface PluridRouterProperties {
      * Execute an arbitrary function before rendering the application,
      * or a route within the client.
      */
-    preserves?: PluridPreserve<any>[];
+    preserves?: PluridPreserve<{}>[];
 
     /**
      * Entities will be passed into the `context` of the preserve.
@@ -146,7 +146,7 @@ export interface PluridRouterPath {
 }
 
 
-export interface PluridPreserve<C> {
+export interface PluridPreserve<C = undefined> {
     /**
      * Path value.
      */
@@ -159,34 +159,34 @@ export interface PluridPreserve<C> {
      * can redirect to a different path, or can handle any cross-cutting concerns, such as eventing or logging.
      */
     action: (
-        transmission: PluridPreserveTransmission<C>,
+        transmission: PluridPreserveTransmission<C | undefined>,
     ) => Promise<PluridPreserveResponse>;
 }
 
 
-export interface PluridPreserveTransmissionBase<C> {
+export interface PluridPreserveTransmissionBase<C = undefined> {
     kind: 'client' | 'server';
     context: PluridPreserveTransmissionContext<C>;
 }
 
-export interface PluridPreserveTransmissionContext<C> {
+export interface PluridPreserveTransmissionContext<C = undefined> {
     path: string;
-    contextualizers?: Record<string, C>;
+    contextualizers: C;
 }
 
-export interface PluridPreserveTransmissionServer<C> extends PluridPreserveTransmissionBase<C> {
+export interface PluridPreserveTransmissionServer<C = undefined> extends PluridPreserveTransmissionBase<C> {
     kind: 'server';
     request: any;
     response: any;
 }
 
-export interface PluridPreserveTransmissionClient<C> extends PluridPreserveTransmissionBase<C> {
+export interface PluridPreserveTransmissionClient<C = undefined> extends PluridPreserveTransmissionBase<C> {
     kind: 'client';
 }
 
-type PluridPreserveTransmission<C> =
-    | PluridPreserveTransmissionClient<C>
-    | PluridPreserveTransmissionServer<C>;
+export type PluridPreserveTransmission<C = undefined> =
+    | PluridPreserveTransmissionClient<C | undefined>
+    | PluridPreserveTransmissionServer<C | undefined>;
 
 
 export interface PluridPreserveResponse {
