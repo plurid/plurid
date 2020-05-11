@@ -18,7 +18,7 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint/eslint-recommended"
     ],
     "rules": {
         "no-case-declarations" : 0,
