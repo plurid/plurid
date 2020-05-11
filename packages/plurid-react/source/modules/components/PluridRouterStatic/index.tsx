@@ -101,20 +101,22 @@ const PluridRouterStatic = (
         );
     }
 
-    const Component = getComponentFromRoute({
-        matchedRoute,
-        protocol,
-        host,
-        indexedPlanes: indexedPlanes.current,
-        // staticRender: true,
-    });
+    // const Component = getComponentFromRoute({
+    //     matchedRoute,
+    //     protocol,
+    //     host,
+    //     indexedPlanes: indexedPlanes.current,
+    //     // staticRender: true,
+    // });
 
     return (
         <PluridRouterBrowser
             paths={paths}
             exterior={exterior}
             shell={shell}
-            // static={Component}
+            static={{
+                path,
+            }}
             protocol={protocol}
             host={host}
         />
