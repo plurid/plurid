@@ -155,22 +155,22 @@ export interface PluridPreserve {
 
 export interface PluridPreserveTransmissionBase {
     kind: 'client' | 'server';
+    context: PluridPreserveTransmissionContext;
 }
 
+export interface PluridPreserveTransmissionContext {
+    path: string;
+}
 
 export interface PluridPreserveTransmissionServer extends PluridPreserveTransmissionBase {
     kind: 'server';
     request: any;
     response: any;
-    context: any;
 }
-
 
 export interface PluridPreserveTransmissionClient extends PluridPreserveTransmissionBase {
     kind: 'client';
-    context: any;
 }
-
 
 type PluridPreserveTransmission =
     | PluridPreserveTransmissionClient
