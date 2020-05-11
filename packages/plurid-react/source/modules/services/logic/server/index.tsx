@@ -127,10 +127,12 @@ export const serverComputeMetastate = (
         };
 
         const id = matchedRoute.path.value;
+        console.log('matchedRoute id', id);
 
         states[id] = state;
     }
 
+    console.log(states);
 
     return {
         states,

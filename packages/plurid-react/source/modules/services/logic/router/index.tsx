@@ -76,6 +76,8 @@ export const getComponentFromRoute = (
         slotted,
     } = path;
 
+    console.log('path', path);
+
     const multispaceAlignment = path.multispace?.alignment || 'y';
     const multispaceSnapType = path.multispace?.snapType || 'mandatory';
 
@@ -243,6 +245,8 @@ export const getComponentFromRoute = (
                 }
             }
 
+            console.log('spaces path.value', path.value);
+
             const App = (
                 <PluridApplication
                     key={uuid.generate()}
@@ -304,6 +308,8 @@ export const getComponentFromRoute = (
 
         const planesProperties = new Map();
 
+        console.log('path.value', path.value);
+
         const App = (
             <PluridApplication
                 key={uuid.generate()}
@@ -317,6 +323,8 @@ export const getComponentFromRoute = (
         );
         spacesArray.push(App);
     }
+
+    console.log('spacesArray', spacesArray);
 
     PluridSpaces = () => (
         <StyledSpaces
@@ -629,6 +637,43 @@ export const computeIndexedPlanes = (
     const indexedPlanes = new Map<string, IndexedPluridPlane>();
 
     for (const path of paths) {
+        if (path.planes) {
+            for (const plane of path.planes) {
+                const pathName = path.value === '/'
+                    ? 'p'
+                    : utilities.cleanPathElement(path.value);
+                const spaceName = 's';
+                const universeName = 'u';
+                const clusterName = 'c';
+                const planeName = utilities.cleanPathElement(plane.value);
+
+                const planeAddressElements = [
+                    protocol,
+                    host,
+                    pathName,
+                    spaceName,
+                    universeName,
+                    clusterName,
+                    planeName,
+                ];
+                const planeAddress = planeAddressElements.join('://');
+
+                const indexedPlane: IndexedPluridPlane = {
+                    protocol,
+                    host,
+                    path: pathName,
+                    space: spaceName,
+                    universe: universeName,
+                    cluster: clusterName,
+                    plane: planeName,
+                    component: plane.component,
+                    route: planeAddress,
+                };
+
+                indexedPlanes.set(planeAddress, indexedPlane);
+            }
+        }
+
         if (!path.spaces) {
             const pathName = path.value === '/'
                 ? 'p'
@@ -640,8 +685,6 @@ export const computeIndexedPlanes = (
                 pathName,
             ];
             const planeAddress = planeAddressElements.join('://');
-
-            // const id = uuid.generate();
 
             const indexedPlane: IndexedPluridPlane = {
                 protocol,
@@ -711,8 +754,6 @@ export const computeIndexedPlanes = (
                             component: plane.component,
                             route: planeAddress,
                         };
-
-                        // const id = uuid.generate();
 
                         indexedPlanes.set(planeAddress, indexedPlane);
                     }
