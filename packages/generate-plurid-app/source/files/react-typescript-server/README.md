@@ -1,5 +1,7 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-p-logo.png" height="250px">
+    <a target="_blank" href="https://github.com/plurid/plurid">
+        <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-p-logo.png" height="250px">
+    </a>
     <br />
     <br />
     <a target="_blank" href="https://github.com/plurid/plurid/blob/master/LICENSE">
@@ -10,29 +12,23 @@
 
 
 <h1 align="center">
-    Plurid' React Server Rendered Web Application
+    Plurid' React Server Web Application
 </h1>
+
+
+<h3 align="center">
+    explore information as a 3D structure
+</h3>
+
 
 
 ### Contents
 
-+ [Production](#production)
 + [Development](#development)
++ [Production](#production)
 + [Deployment](#deployment)
 + [Containerization](#containerization)
 + [Architecture](#architecture)
-
-
-
-## Production
-
-To generate a production-ready application simply run the command
-
-    npm start
-
-or
-
-    yarn start
 
 
 
@@ -50,15 +46,45 @@ or
 yarn watch
 ```
 
-Now you can develop the files in `./source` and the application will recompile and reload at any file change and save.
+Develop the files in `./source` and the application will recompile at any file change and save.
 
-If there is no `./build` folder, the server watcher may crash, but it will reload as soon as the application compiler catches up.
+If there is no `./build` folder, the server watcher may crash, but it will recompile as soon as the application compiler catches up.
+
+
+
+## Production
+
+To generate a production-ready application simply run the command
+
+``` bash
+npm start
+```
+
+or
+
+``` bash
+yarn start
+```
+
+if there is no `/build` folder, or run the command
+
+``` bash
+npm run build.production
+```
+
+or
+
+``` bash
+yarn build.production
+```
+
+to force a clean new build.
 
 
 
 ## Deployment
 
-The application can be deployed to plurid.app running
+The application can be deployed (given that the [`plurid-cli`](https://github.com/plurid/plurid/tree/master/packages/plurid-cli) is installed) to [plurid.app](https://plurid.app) running the command
 
 ``` bash
 plurid deploy
@@ -105,7 +131,7 @@ The top level directories of the application are:
 
 + `configurations` - files that are needed to configure various software packages, pre-build or at build time;
 + `environment` - environment files;
-+ `scripts` - application building scripts; for simple uses there should be no need to modify any file in here, the common use cases being covered by default;
++ `scripts` - application building scripts; for common usage there should be no need to modify any file in here, the common use cases being covered by default;
 + `source` - the source code
 
 
@@ -122,4 +148,5 @@ The `shared` directory contains code which will be used both by the `server` and
 
 + `kernel` - application assets, components, containers, data, services;
 + `paths` - route mapping of containers (planes, spaces);
++ `preserves` - server route handlers at pre-serve time, before rendering the application;
 + `shell` - kernel controller, authentication/authorization, rerouting, etc; the kernel will be wrapped by the shell
