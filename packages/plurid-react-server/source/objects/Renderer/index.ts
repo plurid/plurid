@@ -14,8 +14,10 @@ import {
 } from '../../data/interfaces';
 
 import {
-    templateTecordToString,
+    recordToString,
     resolveBackgroundStyle,
+    assetsPathRewrite,
+    safeStore,
 } from '../../utilities/template';
 
 import template from './template';
@@ -78,7 +80,7 @@ export default class PluridRenderer {
         `;
 
         this.htmlLanguage = htmlLanguage || 'en';
-        this.htmlAttributes = templateTecordToString(htmlAttributes) || '';
+        this.htmlAttributes = recordToString(htmlAttributes) || '';
         this.head = head || '';
         this.defaultStyle = defaultStyle || defaultStyleBasic;
         this.styles = styles;
@@ -87,10 +89,10 @@ export default class PluridRenderer {
         this.mainScriptSource = mainScriptSource || DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE;
         this.bodyAttributes = bodyAttributes || '';
         this.root = root || 'root';
-        this.content = content || '';
+        this.content = assetsPathRewrite(content) || '';
         this.windowSizerScript = windowSizerScript || DEFAULT_WINDOW_SIZER_SCRIPT;
         this.defaultPreloadedReduxState = defaultPreloadedReduxState || DEFAULT__PRELOADED_REDUX_STATE__;
-        this.reduxState = this.safeStore(reduxState) || DEFAULT_RENDERER_REDUX_STATE;
+        this.reduxState = safeStore(reduxState) || DEFAULT_RENDERER_REDUX_STATE;
         this.defaultPreloadedPluridMetastate = defaultPreloadedPluridMetastate || DEFAULT__PRELOADED_PLURID_METASTATE__;
         this.pluridMetastate = pluridMetastate || DEFAULT_RENDERER_PLURID_STATE;
         this.bodyScripts = bodyScripts || '';
@@ -118,14 +120,5 @@ export default class PluridRenderer {
         };
 
         return template(data);
-    }
-
-    private safeStore(
-        store: string,
-    ): string {
-        return store.replace(
-            /</g,
-            '\\u003c'
-        );
     }
 }
