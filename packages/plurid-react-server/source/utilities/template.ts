@@ -1,8 +1,14 @@
 export const cleanTemplate = (
     template: string,
 ) => {
-    const cleanNewLines = template.replace(/(?:\r\n|\r|\n)/g, ' ');
-    const cleanWhitespace = cleanNewLines.replace(/  +/g, ' ');
+    const cleanNewLines = template.replace(
+        /(?:\r\n|\r|\n)/g,
+        ' ',
+    );
+    const cleanWhitespace = cleanNewLines.replace(
+        /  +/g,
+        ' ',
+    );
 
     return cleanWhitespace;
 }
@@ -42,7 +48,7 @@ export const resolveBackgroundStyle = (
 
 
 export const recordToString = (
-    record: Record<string, string> | undefined
+    record: Record<string, string> | undefined,
 ) => {
     if (!record) {
         return '';
@@ -61,7 +67,10 @@ export const recordToString = (
 export const assetsPathRewrite = (
     content: string,
 ) => {
-    return content.replace(/="client\//g, '="/');
+    return content.replace(
+        /="client\//g,
+        '="/',
+    );
 }
 
 
@@ -70,6 +79,6 @@ export const safeStore = (
 ) => {
     return store.replace(
         /</g,
-        '\\u003c'
+        '\\u003c',
     );
 }
