@@ -86,7 +86,7 @@ export interface PluridRouterProperties {
      * Execute an arbitrary function before rendering the application,
      * or a route within the client.
      */
-    preserves?: PluridPreserve[];
+    preserves?: PluridPreserve<any>[];
 
     /**
      * Entities will be passed into the `context` of the preserve.
@@ -146,7 +146,7 @@ export interface PluridRouterPath {
 }
 
 
-export interface PluridPreserve {
+export interface PluridPreserve<C> {
     /**
      * Path value.
      */
@@ -159,34 +159,34 @@ export interface PluridPreserve {
      * can redirect to a different path, or can handle any cross-cutting concerns, such as eventing or logging.
      */
     action: (
-        transmission: PluridPreserveTransmission,
+        transmission: PluridPreserveTransmission<C>,
     ) => Promise<PluridPreserveResponse>;
 }
 
 
-export interface PluridPreserveTransmissionBase {
+export interface PluridPreserveTransmissionBase<C> {
     kind: 'client' | 'server';
-    context: PluridPreserveTransmissionContext;
+    context: PluridPreserveTransmissionContext<C>;
 }
 
-export interface PluridPreserveTransmissionContext {
+export interface PluridPreserveTransmissionContext<C> {
     path: string;
-    contextualizers?: Record<string, any>;
+    contextualizers?: Record<string, C>;
 }
 
-export interface PluridPreserveTransmissionServer extends PluridPreserveTransmissionBase {
+export interface PluridPreserveTransmissionServer<C> extends PluridPreserveTransmissionBase<C> {
     kind: 'server';
     request: any;
     response: any;
 }
 
-export interface PluridPreserveTransmissionClient extends PluridPreserveTransmissionBase {
+export interface PluridPreserveTransmissionClient<C> extends PluridPreserveTransmissionBase<C> {
     kind: 'client';
 }
 
-type PluridPreserveTransmission =
-    | PluridPreserveTransmissionClient
-    | PluridPreserveTransmissionServer;
+type PluridPreserveTransmission<C> =
+    | PluridPreserveTransmissionClient<C>
+    | PluridPreserveTransmissionServer<C>;
 
 
 export interface PluridPreserveResponse {
