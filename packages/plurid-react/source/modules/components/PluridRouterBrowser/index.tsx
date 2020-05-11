@@ -77,7 +77,10 @@ const PluridRouterBrowser = (
         paths,
     ));
 
-    const matchedInitialRoute = (pluridRouter as any).current.match(staticContext?.path || '');
+    const windowLocation = typeof window !== 'undefined' ? window.location.pathname : '';
+    const matchedInitialRoute = (pluridRouter as any).current.match(
+        staticContext?.path || windowLocation
+    );
     console.log('matchedInitialRoute', matchedInitialRoute);
 
     const initialIndexedPlanes = computeIndexedPlanes(
