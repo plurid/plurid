@@ -55,7 +55,7 @@ const PluridRouterBrowser = (
         gatewayExterior,
         notFoundPath: notFoundPathProperty,
         api,
-        static: StaticComponent,
+        static: staticContext,
     } = properties;
 
     const notFoundPath = notFoundPathProperty || '/not-found';
@@ -77,7 +77,7 @@ const PluridRouterBrowser = (
         paths,
     ));
 
-    const matchedInitialRoute = (pluridRouter as any).current.match('/only-planes');
+    const matchedInitialRoute = (pluridRouter as any).current.match(staticContext?.path || '');
     console.log('matchedInitialRoute', matchedInitialRoute);
 
     const initialIndexedPlanes = computeIndexedPlanes(
