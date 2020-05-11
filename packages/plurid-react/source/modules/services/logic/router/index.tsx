@@ -255,6 +255,7 @@ export const getComponentFromRoute = (
                     indexedPlanes={indexedPlanes}
                     view={view}
                     static={staticRender}
+                    configuration={space.configuration}
                 />
             );
             spacesArray.push(App);
@@ -319,6 +320,7 @@ export const getComponentFromRoute = (
                 planesProperties={planesProperties}
                 view={view}
                 static={staticRender}
+                configuration={path.defaultConfiguration}
             />
         );
         spacesArray.push(App);
