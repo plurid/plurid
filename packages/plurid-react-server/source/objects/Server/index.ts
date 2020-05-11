@@ -22,6 +22,7 @@ import {
 
 import {
     PluridRouterPath,
+    PluridPreserve,
     PluridComponent,
 } from '@plurid/plurid-data';
 
@@ -67,6 +68,7 @@ const PluridRouter = router.default;
 
 export default class PluridServer {
     private paths: PluridRouterPath[];
+    private preserves: PluridPreserve[];
     private helmet: Helmet;
     private styles: string[];
     private middleware: PluridServerMiddleware[];
@@ -87,6 +89,7 @@ export default class PluridServer {
     ) {
         const {
             paths,
+            preserves,
             helmet,
             styles,
             middleware,
@@ -99,6 +102,7 @@ export default class PluridServer {
         } = configuration;
 
         this.paths = paths;
+        this.preserves = preserves;
         this.helmet = helmet;
         this.styles = styles || [];
         this.middleware = middleware || [];
@@ -166,6 +170,11 @@ export default class PluridServer {
         const pluridsResponder = new PluridsResponder();
 
         this.serverApplication.get('*', async (request, response) => {
+            // TODOs
+            // handle preserve
+            // handle plurids
+            // handle gatway
+
             const path = request.path;
 
             const {
