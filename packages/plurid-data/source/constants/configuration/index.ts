@@ -91,6 +91,7 @@ export const defaultConfiguration: PluridConfiguration = {
         firstPerson: false,
         cullingDistance: PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
     },
+    render: 'plurid',
 };
 
 
