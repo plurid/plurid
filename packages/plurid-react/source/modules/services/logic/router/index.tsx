@@ -76,7 +76,7 @@ export const getComponentFromRoute = (
         slotted,
     } = path;
 
-    console.log('path', path);
+    // console.log('path', path);
 
     const multispaceAlignment = path.multispace?.alignment || 'y';
     const multispaceSnapType = path.multispace?.snapType || 'mandatory';
@@ -308,7 +308,7 @@ export const getComponentFromRoute = (
 
         const planesProperties = new Map();
 
-        console.log('path.value', path.value);
+        // console.log('path.value', path.value);
 
         const App = (
             <PluridApplication
@@ -324,7 +324,7 @@ export const getComponentFromRoute = (
         spacesArray.push(App);
     }
 
-    console.log('spacesArray', spacesArray);
+    // console.log('spacesArray', spacesArray);
 
     PluridSpaces = () => (
         <StyledSpaces
