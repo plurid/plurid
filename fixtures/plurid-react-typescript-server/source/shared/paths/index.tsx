@@ -109,6 +109,9 @@ const onlyPlanesPath: PluridRouterPath = {
             },
         },
     ],
+    view: [
+        'plane-1',
+    ],
     defaultConfiguration: {
         theme: 'plurid',
         space: {
