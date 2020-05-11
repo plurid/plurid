@@ -248,11 +248,18 @@ export default class PluridServer {
     private async renderApplication(
         route: router.MatcherResponse,
     ) {
+        console.log('RENDER route', route);
+        const pluridMetastate = serverComputeMetastate(
+            route,
+            this.paths,
+        );
+
         const {
             content,
             styles,
         } = await this.getContentAndStyles(
             route,
+            pluridMetastate,
         );
 
         const stringedStyles = this.styles.reduce(
@@ -286,10 +293,6 @@ export default class PluridServer {
             : '';
 
         const stripeScript = this.servicesData?.stripeScript;
-        const pluridMetastate = serverComputeMetastate(
-            route,
-            this.paths,
-        );
 
         const renderer = new PluridRenderer({
             htmlLanguage: this.template?.htmlLanguage,
@@ -316,6 +319,7 @@ export default class PluridServer {
 
     private async getContentAndStyles(
         matchedRoute: router.MatcherResponse,
+        pluridMetastate: any,
     ) {
         const stylesheet = new ServerStyleSheet();
         let content = '';
@@ -324,10 +328,10 @@ export default class PluridServer {
         try {
             // based on the route get the specific plurids to be rendered
             // given the matchedRoute compute the metastate
-            const pluridMetastate = serverComputeMetastate(
-                matchedRoute,
-                this.paths,
-            );
+            // const pluridMetastate = serverComputeMetastate(
+            //     matchedRoute,
+            //     this.paths,
+            // );
             const gateway = matchedRoute.pathname === '/gateway';
             const gatewayQuery = matchedRoute.query.__gatewayQuery;
             const {
