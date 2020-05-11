@@ -12,7 +12,12 @@ const preserves: PluridPreserve[] = [
         ) => {
             const {
                 kind,
+                context,
             } = transmission;
+
+            const {
+                path,
+            } = context;
 
             switch (kind) {
                 case 'client':
