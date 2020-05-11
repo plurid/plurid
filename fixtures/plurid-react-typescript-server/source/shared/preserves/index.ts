@@ -11,12 +11,17 @@ const preserves: PluridPreserve[] = [
             transmission,
         ) => {
             const {
-                request,
-                response,
-                context,
+                kind,
             } = transmission;
 
-            // custom logic for the preserve of '/'
+            switch (kind) {
+                case 'client':
+                    // custom logic for the client preserve of '/'
+                    break;
+                case 'server':
+                    // custom logic for the server preserve of '/'
+                    break;
+            }
 
             return {
                 providers: {},
