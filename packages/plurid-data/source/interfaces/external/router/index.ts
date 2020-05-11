@@ -3,6 +3,10 @@ import {
 } from '../component';
 
 import {
+    PluridPartialConfiguration,
+} from '../configuration';
+
+import {
     CompareType,
 } from '../compare';
 
@@ -126,6 +130,8 @@ export interface PluridRouterPath {
     slotted?: boolean;
 
     multispace?: PluridRouterPathMultispace;
+
+    defaultConfiguration?: PluridPartialConfiguration;
 }
 
 
@@ -217,6 +223,8 @@ export interface PluridRouterSpace {
      * A space can have planes and/or universes.
      */
     universes?: PluridRouterUniverse[];
+
+    configuration?: PluridPartialConfiguration;
 }
 
 
