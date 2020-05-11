@@ -205,7 +205,7 @@ const PluridView: React.FC<ViewProperties> = (
         static: staticRender,
     } = pluridApplication;
 
-    console.log('View stateTree', stateTree);
+    // console.log('View stateTree', stateTree);
 
 
     /** references */

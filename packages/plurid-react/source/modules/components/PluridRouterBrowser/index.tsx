@@ -78,7 +78,7 @@ const PluridRouterBrowser = (
     ));
 
     const matchedInitialRoute = (pluridRouter as any).current.match('/');
-    console.log('matchedInitialRoute', matchedInitialRoute);
+    // console.log('matchedInitialRoute', matchedInitialRoute);
     const initialComponent = getComponentFromRoute({
         matchedRoute: matchedInitialRoute,
         protocol,
@@ -90,7 +90,7 @@ const PluridRouterBrowser = (
         ),
         // staticRender: true,
     });
-    console.log('initialComponent', initialComponent);
+    // console.log('initialComponent', initialComponent);
 
     /** state */
     const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse>();
@@ -101,7 +101,7 @@ const PluridRouterBrowser = (
         //     ? (<></>)
         //     : StaticComponent
     );
-    console.log('Component', Component);
+    // console.log('Component', Component);
 
 
     /** handlers */
