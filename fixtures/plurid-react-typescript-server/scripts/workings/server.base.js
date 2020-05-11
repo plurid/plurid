@@ -1,6 +1,6 @@
-const svg = require('rollup-plugin-svg');
+const path = require('path');
+
 const postcss = require('rollup-plugin-postcss');
-const image = require('@rollup/plugin-image');
 const url = require('@rollup/plugin-url');
 const typescript = require('rollup-plugin-typescript2');
 const babel = require('rollup-plugin-babel');
@@ -23,14 +23,19 @@ const output = [
 ];
 
 const plugins = {
-    svg: () => svg(),
     postcss: () => postcss(),
-    image: () => image(),
     url: () => url({
         include: [
-            '**/*.woff', '**/*.ttf', '**/*.wav', '**/*.mp3', '**/*.pdf', '**/*.mov', '**/*.mp4',
+            '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.svg',
+            '**/*.woff', '**/*.ttf',
+            '**/*.wav', '**/*.mp3',
+            '**/*.pdf',
+            '**/*.mov', '**/*.mp4',
         ],
         limit: 0,
+        emitFiles: true,
+        fileName: 'client/assets/[name][extname]',
+        sourceDir: path.join(__dirname, 'source'),
     }),
     typescript: () => typescript({
         tsconfig: './tsconfig.json',

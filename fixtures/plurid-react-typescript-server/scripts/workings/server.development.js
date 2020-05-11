@@ -10,9 +10,7 @@ export default {
     input,
     output,
     plugins: [
-        plugins.svg(),
         plugins.postcss(),
-        plugins.image(),
         plugins.url(),
         plugins.typescript(),
         plugins.babel(),
