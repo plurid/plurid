@@ -92,7 +92,7 @@ const staticPath: PluridRouterPath = {
 
 
 const onlyPlanesPath: PluridRouterPath = {
-    value: '/only-planes',
+    value: '/planes',
     planes: [
         {
             value: '/plane-1',
@@ -107,10 +107,11 @@ const onlyPlanesPath: PluridRouterPath = {
                 kind: 'react',
                 element: () => (<div>plane 2</div>),
             },
+            link: '/planes/plane-2',
         },
     ],
     view: [
-        'plane-1',
+        '/plane-1',
     ],
     defaultConfiguration: {
         theme: 'plurid',
