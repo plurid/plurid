@@ -1,4 +1,5 @@
 export const PLURID_ENTITY_VIEW = 'PluridView';
+export const PLURID_ENTITY_APPLICATION_CONFIGURATOR = 'PluridApplicationConfigurator';
 export const PLURID_ENTITY_TRANSFORM_ORIGIN = 'PluridTransformOrigin';
 export const PLURID_ENTITY_PLANE = 'PluridPlane';
 export const PLURID_ENTITY_PLANE_BRIDGE = 'PluridPlaneBridge';
