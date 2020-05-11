@@ -49,6 +49,12 @@ export interface PluridConfiguration {
     elements: PluridConfigurationElements;
 
     space: PluridConfigurationSpace;
+
+    /**
+     * Render the view as a `plurid` space, or as a `legacy` web page.
+     * Default: `render`.
+     */
+    render: 'plurid' | 'legacy';
 }
 
 

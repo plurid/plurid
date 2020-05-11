@@ -289,6 +289,12 @@ export interface PluridRouterPlane {
      * e.g. `/plane-one` will route in browser the path `protocol://host/plane-one`
      */
     link?: string;
+
+    /**
+     * On direct link access, show the plane in a `plurid` space,
+     * or as the legacy view of an web page.
+     */
+    linkView?: 'plurid' | 'legacy';
 }
 
 
