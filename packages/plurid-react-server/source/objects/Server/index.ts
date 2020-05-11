@@ -248,7 +248,7 @@ export default class PluridServer {
     private async renderApplication(
         route: router.MatcherResponse,
     ) {
-        console.log('RENDER route', route);
+        // console.log('RENDER route', route);
         const pluridMetastate = serverComputeMetastate(
             route,
             this.paths,

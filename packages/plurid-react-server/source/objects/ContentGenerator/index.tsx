@@ -50,7 +50,7 @@ export default class PluridContentGenerator {
             stylesheet,
         } = this.data;
 
-        console.log('ContentGenerator pluridMetastate', pluridMetastate);
+        // console.log('ContentGenerator pluridMetastate', pluridMetastate);
 
         const RoutedApplication = () => (
             <PluridProvider
