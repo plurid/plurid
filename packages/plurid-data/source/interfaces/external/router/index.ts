@@ -86,7 +86,7 @@ export interface PluridRouterProperties {
      * Execute an arbitrary function before rendering the application,
      * or a route within the client.
      */
-    preserves?: PluridPreserve<{}>[];
+    preserves?: PluridPreserve<any>[];
 
     /**
      * Entities will be passed into the `context` of the preserve.
