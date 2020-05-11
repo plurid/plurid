@@ -1,6 +1,6 @@
 import {
     PluridPreserve,
-} from '@plurid/plurid-data';
+} from '@plurid/plurid-react';
 
 
 
