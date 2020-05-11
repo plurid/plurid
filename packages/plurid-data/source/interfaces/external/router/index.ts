@@ -74,9 +74,14 @@ export interface PluridRouterProperties {
     api?: string;
 
     /**
-     * Static component
+     * Static context.
      */
-    static?: any;
+    static?: PluridRouterStatic;
+}
+
+
+export interface PluridRouterStatic {
+    path: string;
 }
 
 
