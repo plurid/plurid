@@ -81,6 +81,17 @@ export interface PluridRouterProperties {
      * Static context.
      */
     static?: PluridRouterStatic;
+
+    /**
+     * Execute an arbitrary function before rendering the application,
+     * or a route within the client.
+     */
+    preserves?: PluridPreserve[];
+
+    /**
+     * Entities will be passed into the `context` of the preserve.
+     */
+    preserveContextualizers?: Record<string, any>;
 }
 
 
@@ -160,6 +171,7 @@ export interface PluridPreserveTransmissionBase {
 
 export interface PluridPreserveTransmissionContext {
     path: string;
+    contextualizers?: Record<string, any>;
 }
 
 export interface PluridPreserveTransmissionServer extends PluridPreserveTransmissionBase {
