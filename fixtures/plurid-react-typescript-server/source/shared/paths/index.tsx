@@ -109,6 +109,28 @@ const onlyPlanesPath: PluridRouterPath = {
             },
         },
     ],
+    defaultConfiguration: {
+        theme: 'plurid',
+        space: {
+            opaque: false,
+            center: true,
+        },
+        elements: {
+            plane: {
+                controls: {
+                    show: false,
+                },
+                width: typeof window !== 'undefined'
+                    ? window.innerWidth < 800 ? 1 : 0.5
+                    : undefined,
+            },
+            viewcube: {
+                show: typeof window !== 'undefined'
+                    ? window.innerWidth < 800 ? false
+                    : true : undefined,
+            },
+        },
+    }
 };
 
 
