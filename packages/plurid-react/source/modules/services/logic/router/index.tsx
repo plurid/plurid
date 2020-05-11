@@ -190,7 +190,14 @@ export const getComponentFromRoute = (
                                     };
 
                                     planes.push(pluridPlane);
-                                    view.push(fullPath);
+
+                                    if (!path.view) {
+                                        view.push(fullPath);
+                                    } else {
+                                        if (path.view.includes(plane.value)) {
+                                            view.push(fullPath);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -303,7 +310,14 @@ export const getComponentFromRoute = (
                 };
 
                 pluridPlanes.push(pluridPlane);
-                view.push(fullPath);
+
+                if (!path.view) {
+                    view.push(fullPath);
+                } else {
+                    if (path.view.includes(plane.value)) {
+                        view.push(fullPath);
+                    }
+                }
             }
         }
 
