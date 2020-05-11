@@ -245,7 +245,7 @@ export const getComponentFromRoute = (
                 }
             }
 
-            console.log('spaces path.value', path.value);
+            // console.log('spaces path.value', path.value);
 
             const App = (
                 <PluridApplication
