@@ -16,6 +16,9 @@ import {
 
     PluridComponent,
 
+    PluridPreserve,
+    PluridPreserveTransmission,
+
     /** Enumerations */
     LAYOUT_TYPES as SPACE_LAYOUT,
     SIZES,
@@ -75,6 +78,9 @@ export {
     PluridRouterPlane,
 
     PluridComponent,
+
+    PluridPreserve,
+    PluridPreserveTransmission,
 
     PluridConfiguration,
     PluridPartialConfiguration,
