@@ -152,11 +152,30 @@ export interface PluridPreserve {
     ) => Promise<PluridPreserveResponse>;
 }
 
-export interface PluridPreserveTransmission {
+
+export interface PluridPreserveTransmissionBase {
+    kind: 'client' | 'server';
+}
+
+
+export interface PluridPreserveTransmissionServer extends PluridPreserveTransmissionBase {
+    kind: 'server';
     request: any;
     response: any;
     context: any;
 }
+
+
+export interface PluridPreserveTransmissionClient extends PluridPreserveTransmissionBase {
+    kind: 'client';
+    context: any;
+}
+
+
+type PluridPreserveTransmission =
+    | PluridPreserveTransmissionClient
+    | PluridPreserveTransmissionServer;
+
 
 export interface PluridPreserveResponse {
     providers?: PluridPreserveResponseProviders;
