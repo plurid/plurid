@@ -562,10 +562,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@plurid/plurid-data@^0.1.128":
-  version "0.1.128"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.128.tgz#b9f7a681ac7d78ec7349871c776f9e1b8c4dc8f1"
-  integrity sha512-uzEtsw3Mo3YpBv6cW5TnsuQMcBhkfqe5/fovQf9dvr4MZR+H6HQz3LkpkHLhOpNSOBh+V0RR3sPFSYGYVjPs7A==
+"@plurid/plurid-data@^0.1.129":
+  version "0.1.129"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.129.tgz#a4f8cff23beb9c36da7ca1bed41df93eacccfae8"
+  integrity sha512-X13yQM2VKuqQGe9VwVDIysEYQh2ICJThukVq7d5CynQiHmga/ibMppICB4m8pl1EQ6uv9+LQ840bZQ6GkJaqbw==
 
 "@plurid/plurid-engine@^0.1.69":
   version "0.1.69"
