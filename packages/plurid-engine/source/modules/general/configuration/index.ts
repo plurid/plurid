@@ -44,13 +44,10 @@ const mergeConfiguration = (
 
     const mergedConfiguration: PluridConfiguration = {
         ...defaultConfiguration,
-        micro: typeof configuration.micro === 'boolean'
-            ? configuration.micro
-            : defaultConfiguration.micro,
-        transparentUI: typeof configuration.transparentUI === 'boolean'
-            ? configuration.transparentUI
-            : defaultConfiguration.transparentUI,
+        micro: configuration.micro ?? defaultConfiguration.micro,
+        transparentUI: configuration.transparentUI ?? defaultConfiguration.transparentUI,
         language: configuration.language ?? defaultConfiguration.language,
+        render: configuration.render ?? defaultConfiguration.render,
         theme: {
             general: typeof configuration.theme === 'string'
                 ? configuration.theme
@@ -238,7 +235,6 @@ const mergeConfiguration = (
                 configuration,
             ),
         },
-        render: configuration.render ?? defaultConfiguration.render
     };
 
     return mergedConfiguration;
