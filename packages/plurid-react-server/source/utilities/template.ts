@@ -41,7 +41,7 @@ export const resolveBackgroundStyle = (
 }
 
 
-export const templateTecordToString = (
+export const recordToString = (
     record: Record<string, string> | undefined
 ) => {
     if (!record) {
@@ -55,4 +55,21 @@ export const templateTecordToString = (
     }
 
     return recordString;
+}
+
+
+export const assetsPathRewrite = (
+    content: string,
+) => {
+    return content.replace(/="client\//g, '="/');
+}
+
+
+export const safeStore = (
+    store: string,
+) => {
+    return store.replace(
+        /</g,
+        '\\u003c'
+    );
 }
