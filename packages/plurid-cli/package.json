@@ -27,11 +27,11 @@
     "module": "distribution/index.es.js",
     "typings": "distribution/types/index.d.ts",
     "bin": {
-        "plurid": "binary/plurid-cli"
+        "plurid": "binder/plurid-cli"
     },
     "files": [
         "distribution",
-        "binary"
+        "binder"
     ],
     "preferGlobal": true,
     "scripts": {
