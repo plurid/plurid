@@ -142,7 +142,7 @@ type ViewProperties = ViewOwnProperties
     & ViewDispatchProperties;
 
 
-const PluridView: React.FC<ViewProperties> = (
+const View: React.FC<ViewProperties> = (
     properties,
 ) => {
     /** properties */
@@ -1150,4 +1150,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(PluridView);
+)(View);
