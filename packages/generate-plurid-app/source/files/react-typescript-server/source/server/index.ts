@@ -3,6 +3,7 @@ import PluridServer, {
     PluridServerService,
     PluridServerServicesData,
     PluridServerPartialOptions,
+    PluridServerTemplateConfiguration,
 } from '@plurid/plurid-react-server';
 
 import helmet from '../shared/kernel/services/helmet';
@@ -22,6 +23,7 @@ import apolloClient from '../shared/kernel/services/graphql/client';
 
 import {
     paths,
+    preserves,
     shell,
 } from '../shared';
 
@@ -94,10 +96,13 @@ const servicesData: PluridServerServicesData = {
 };
 
 const options: PluridServerPartialOptions = {
-    root: applicationRoot,
     buildDirectory,
     open: openAtStart,
     debug,
+};
+
+const template: PluridServerTemplateConfiguration = {
+    root: applicationRoot,
 };
 
 
@@ -106,12 +111,14 @@ const options: PluridServerPartialOptions = {
 const pluridServer = new PluridServer({
     helmet,
     paths,
+    preserves,
     shell,
     styles,
     middleware,
     services,
     servicesData,
     options,
+    template,
 });
 
 
