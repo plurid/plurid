@@ -17,7 +17,7 @@ import PlaneControls from './components/PlaneControls';
 import PlaneContent from './components/PlaneContent';
 
 import {
-    PluridPlane,
+    PluridPlane as IPluridPlane,
     TreePlane,
     PluridConfiguration,
     PLURID_ENTITY_PLANE,
@@ -41,7 +41,7 @@ import actions from '../../services/state/actions';
 
 interface PluridPlaneOwnProperties {
     planeID: string;
-    plane: PluridPlane;
+    plane: IPluridPlane;
     treePlane: TreePlane;
     location: any;
 }
