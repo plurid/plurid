@@ -5,16 +5,11 @@ import {
 
     PluridMetastate,
     PluridRouterPath,
-    PluridPlane,
 } from '@plurid/plurid-data';
 
 import {
     router,
 } from '@plurid/plurid-engine';
-
-import {
-    uuid,
-} from '@plurid/plurid-functions';
 
 import {
     collectApplicationsFromPath,
@@ -127,12 +122,12 @@ export const serverComputeMetastate = (
         };
 
         const id = matchedRoute.path.value;
-        console.log('matchedRoute id', id);
+        // console.log('matchedRoute id', id);
 
         states[id] = state;
     }
 
-    console.log(states);
+    // console.log(states);
 
     return {
         states,
