@@ -154,7 +154,7 @@ const View: React.FC<ViewProperties> = (
         stateConfiguration,
         spaceLoading,
         // initialTree,
-        stateTree,
+        // stateTree,
         // viewSize,
         transform,
         // stateDataUniverses,
@@ -202,7 +202,6 @@ const View: React.FC<ViewProperties> = (
         indexedPlanes,
         view,
         pubsub,
-        static: staticRender,
     } = pluridApplication;
 
     // console.log('View stateTree', stateTree);
