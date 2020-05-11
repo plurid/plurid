@@ -1179,10 +1179,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@plurid/plurid-data@^0.1.128":
-  version "0.1.128"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.128.tgz#b9f7a681ac7d78ec7349871c776f9e1b8c4dc8f1"
-  integrity sha512-uzEtsw3Mo3YpBv6cW5TnsuQMcBhkfqe5/fovQf9dvr4MZR+H6HQz3LkpkHLhOpNSOBh+V0RR3sPFSYGYVjPs7A==
+"@plurid/plurid-data@^0.1.129":
+  version "0.1.129"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.129.tgz#a4f8cff23beb9c36da7ca1bed41df93eacccfae8"
+  integrity sha512-X13yQM2VKuqQGe9VwVDIysEYQh2ICJThukVq7d5CynQiHmga/ibMppICB4m8pl1EQ6uv9+LQ840bZQ6GkJaqbw==
 
 "@plurid/plurid-engine@^0.1.69":
   version "0.1.69"
@@ -1209,20 +1209,20 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.7.tgz#cb77e2be0463e7fb0314f3aa6d9db99132391b94"
   integrity sha512-86a0eYFImjJ+szl+Z2aG+TwqVQMgGftCzLWoZ6LP5cOkBaqVaZjAm01oMBNTShl3Drp51lDU4pUncl7s3RGK7Q==
 
-"@plurid/plurid-react-server@^0.1.50":
-  version "0.1.50"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.50.tgz#328029543f94c8815e167818c5f1f839c6a89e14"
-  integrity sha512-TINt7Bj4AS6hLgww37t58lXo690ki9/hG8VnlVqQt4aM90qqVYnFDCjF7pytRAgnhP5AM1Z9RtviergEfl57Ng==
+"@plurid/plurid-react-server@^0.1.51":
+  version "0.1.51"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react-server/-/plurid-react-server-0.1.51.tgz#60567a838084719a7703a0356dd27f1658c09d29"
+  integrity sha512-ZQx0FOVnP0vO/ZrdkOWiF45OTvLleHvc9IR59X8MuuKL9S9YexOvusw/flg9fEq2R3BTjwpwjpJuIR7xxvDPoQ==
   dependencies:
     compression "^1.7.4"
     detect-port "^1.3.0"
     express "^4.17.1"
     open "^7.0.3"
 
-"@plurid/plurid-react@^0.1.158":
-  version "0.1.158"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.158.tgz#c9fd92a44f1183ffb698f360e5b35b9e4335f24c"
-  integrity sha512-A8cCIcwVx4BWwf9ThqfklvdOUHwBj+AO89ZY+/ZH+zcpQ2rx4/zLK9NkFz3MJ7peXgW6yQFNZG1kHxwSspzoAA==
+"@plurid/plurid-react@^0.1.159":
+  version "0.1.159"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.159.tgz#edc72b9ae8fc3133ad0567b7b62729820d8c24e8"
+  integrity sha512-HeqTAAeqD0+8wUIuIgjVJrPGs2NvtlISnx2HrT8LdmS7e+yxc+j2+pnfYei9WTwKMod+/R8nL3emaJ4SWvFF/w==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
