@@ -17,6 +17,7 @@ const preserves: PluridPreserve[] = [
 
             const {
                 path,
+                contextualizers,
             } = context;
 
             switch (kind) {
