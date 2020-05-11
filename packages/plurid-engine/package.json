@@ -47,7 +47,7 @@
         "@plurid/plurid-functions": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "^0.1.129",
+        "@plurid/plurid-data": "^0.1.131",
         "@plurid/plurid-functions": "^0.1.13",
         "@plurid/plurid-pubsub": "^0.1.7",
         "@rollup/plugin-commonjs": "^11.1.0",
