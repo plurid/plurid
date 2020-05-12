@@ -78,26 +78,31 @@ const PluridRouterBrowser = (
     ));
 
     const windowLocation = typeof window !== 'undefined' ? window.location.pathname : '';
+    console.log('windowLocation', windowLocation);
+    console.log('staticContext?.path', staticContext?.path);
     const matchedInitialRoute = (pluridRouter as any).current.match(
         staticContext?.path || windowLocation
     );
-    // console.log('matchedInitialRoute', matchedInitialRoute);
+    console.log('matchedInitialRoute', matchedInitialRoute);
+    const actualMatchedInitialRoute = !matchedInitialRoute
+        ? (pluridRouter as any).current.match('/not-found')
+        : matchedInitialRoute;
 
     const initialIndexedPlanes = computeIndexedPlanes(
         paths,
         protocol,
         host,
     );
-    // console.log('initialIndexedPlanes', initialIndexedPlanes);
+    console.log('initialIndexedPlanes', initialIndexedPlanes);
 
     const initialComponent = getComponentFromRoute({
-        matchedRoute: matchedInitialRoute,
+        matchedRoute: actualMatchedInitialRoute,
         protocol,
         host,
         indexedPlanes: initialIndexedPlanes,
         // staticRender: true,
     });
-    // console.log('initialComponent', initialComponent);
+    console.log('initialComponent', initialComponent);
 
     /** state */
     const [matchedRoute, setMatchedRoute] = useState<router.MatcherResponse>();
