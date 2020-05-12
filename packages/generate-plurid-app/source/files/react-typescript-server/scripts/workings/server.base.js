@@ -3,7 +3,7 @@ const path = require('path');
 const postcss = require('rollup-plugin-postcss');
 const url = require('@rollup/plugin-url');
 const typescript = require('rollup-plugin-typescript2');
-const babel = require('rollup-plugin-babel');
+const babel = require('@rollup/plugin-babel').default;
 const external = require('rollup-plugin-peer-deps-external');
 const resolve = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
@@ -41,6 +41,7 @@ const plugins = {
         tsconfig: './tsconfig.json',
     }),
     babel: () => babel({
+        babelHelpers: 'bundled',
         plugins: [
             [
                 'babel-plugin-styled-components',
