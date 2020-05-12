@@ -22,9 +22,6 @@ import {
 
 import PluridRoots from '../PluridRoots';
 
-import ToolbarGeneral from '../Toolbar/General';
-import Viewcube from '../Viewcube';
-
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
 import selectors from '../../services/state/selectors';
@@ -57,34 +54,16 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
 ) => {
     /** properties */
     const {
-        /** own */
-        computedTree,
-        indexedPlanesReference,
-        planesPropertiesReference,
-        appConfiguration,
-
         /** state */
         stateConfiguration,
         stateGeneralTheme,
     } = properties;
 
-    const activeConfiguration = computedTree
-        ? appConfiguration
-        : stateConfiguration;
-
     const {
-        elements,
         space,
-    } = activeConfiguration;
-
-    const {
-        toolbar,
-        viewcube,
-    } = elements;
+    } = stateConfiguration;
 
     const opaqueSpace = space.opaque;
-    const showToolbar = toolbar.show;
-    const showViewcube = viewcube.show;
 
 
     /** state */
@@ -105,26 +84,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
             data-plurid-entity={PLURID_ENTITY_SPACE}
             isMounted={isMounted}
         >
-            {typeof computedTree === 'undefined' && (
-                <PluridRoots />
-            )}
-
-            {typeof computedTree !== 'undefined' && (
-                <PluridRoots
-                    computedTree={computedTree}
-                    indexedPlanesReference={indexedPlanesReference}
-                    planesPropertiesReference={planesPropertiesReference}
-                    appConfiguration={appConfiguration}
-                />
-            )}
-
-            {showToolbar && (
-                <ToolbarGeneral />
-            )}
-
-            {showViewcube && (
-                <Viewcube />
-            )}
+            <PluridRoots />
         </StyledPluridSpace>
     );
 }
