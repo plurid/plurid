@@ -633,15 +633,9 @@ const generateReactServerApplication = async (
     );
 
     const requiredDevelopmentDependencies = [
-        '@babel/core',
-        '@babel/preset-env',
-        '@babel/preset-react',
         '@rollup/plugin-commonjs',
-        "@rollup/plugin-babel",
         '@rollup/plugin-node-resolve',
         '@rollup/plugin-url',
-        'babel-loader',
-        'babel-plugin-styled-components',
         'compression-webpack-plugin',
         'concurrently',
         'copy-webpack-plugin',
@@ -658,7 +652,6 @@ const generateReactServerApplication = async (
         'rollup-plugin-peer-deps-external',
         'rollup-plugin-sourcemaps',
         'rollup-plugin-postcss',
-        'rollup-plugin-typescript2',
         'source-map-loader',
         'style-loader',
         'terser-webpack-plugin',
@@ -678,9 +671,11 @@ const generateReactServerApplication = async (
         '@types/react-stripe-elements',
         '@typescript-eslint/eslint-plugin',
         '@typescript-eslint/parser',
+        'rollup-plugin-typescript2',
         'ts-loader',
         'ts-jest',
         'typescript',
+        'typescript-plugin-styled-components',
     ];
     const requiredDevelopmentDependenciesPackages = app.language === 'TypeScript'
         ? [ ...requiredDevelopmentDependencies, ...requiredDevelopmentTypescriptDependencies].join(' ')
