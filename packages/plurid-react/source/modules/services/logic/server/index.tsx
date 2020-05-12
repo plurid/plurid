@@ -58,7 +58,7 @@ export const serverComputeMetastate = (
         } = computeApplication(
             indexedPlanes,
             planes,
-            defaultConfiguration,
+            matchedRoute.path.defaultConfiguration,
             view,
         );
 
