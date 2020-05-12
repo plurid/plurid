@@ -55,7 +55,7 @@ const config = {
 
     plugins: [
         // new BundleAnalyzerPlugin(),
-        plugins.processEnvModePlugin,
+        plugins.processEnvironmentPlugin,
         plugins.copyPlugin,
         plugins.compressionPluginBrotli,
         plugins.compressionPluginGzip,
