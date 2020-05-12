@@ -1,12 +1,35 @@
-import styled from 'styled-components';
+import styled, {
+    css,
+    keyframes,
+} from 'styled-components';
 
 import {
     SIZES,
 } from '@plurid/plurid-data';
 
 
-export const StyledPluridRoots = styled.div`
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0%;
+    }
+
+    to {
+        opacity: 100%;
+    }
+`;
+
+export const StyledPluridRoots: any = styled.div`
     transform-style: preserve-3d;
+
+    opacity: 0%;
+    animation: ${(props: any) => {
+        if (props.isMounted) {
+            return css`${fadeIn} 250ms linear forwards`;
+        }
+
+        return '';
+    }};
 `;
 
 

@@ -167,9 +167,9 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                     ${transformOriginY}px
                     ${transformOriginZ}px
                 `),
-                visibility: isMounted ? 'visible' : 'hidden',
             }}
             data-plurid-entity={PLURID_ENTITY_ROOTS}
+            isMounted={isMounted}
         >
             {showTransformOrigin && (
                 <StyledTransformOrigin
