@@ -4,13 +4,22 @@ const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
+
+
 
 /** CONSTANTS */
 const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
 
+const isProduction = process.env.ENV_MODE === 'production';
+
 const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
 const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}/client`);
 
+const styledComponentsTransformer = createStyledComponentsTransformer({
+    ssr: true,
+    displayName: isProduction ? false : true,
+});
 
 
 /** PLUGINS */
@@ -35,7 +44,7 @@ const compressionPluginGzip = new CompressionPlugin({
     filename: 'vendor.js.gzip',
 });
 
-const processEnvModePlugin = new webpack.DefinePlugin({
+const processEnvironmentPlugin = new webpack.DefinePlugin({
     'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
     'process.env.SC_DISABLE_SPEEDY': true, /** HACK: styled components not rendering in production */
 });
@@ -45,7 +54,7 @@ const plugins = {
     copyPlugin,
     compressionPluginBrotli,
     compressionPluginGzip,
-    processEnvModePlugin,
+    processEnvironmentPlugin,
 };
 
 
@@ -81,37 +90,12 @@ const tsRule = {
             loader: 'ts-loader',
             options: {
                 configFile: path.resolve(__dirname, '../../tsconfig.json'),
+                getCustomTransformers: () => ({
+                    before: [styledComponentsTransformer]
+                }),
             },
         },
     ],
-};
-
-
-const babelRule = {
-    test: /\.js$/,
-    loader: 'babel-loader',
-    exclude: /node_modules/,
-    options: {
-        presets: [
-            '@babel/preset-react',
-            [
-                '@babel/env',
-                {
-                    targets: {
-                        browsers: ['last 2 versions'],
-                    },
-                },
-            ],
-        ],
-        plugins: [
-            [
-                'babel-plugin-styled-components',
-                {
-                    "ssr": true,
-                },
-            ],
-        ],
-    },
 };
 
 
@@ -119,7 +103,6 @@ const rules = {
     styleRule,
     fileRule,
     tsRule,
-    babelRule,
 };
 
 
@@ -150,7 +133,6 @@ const baseConfig = {
             rules.styleRule,
             rules.fileRule,
             rules.tsRule,
-            rules.babelRule,
         ],
     },
 };

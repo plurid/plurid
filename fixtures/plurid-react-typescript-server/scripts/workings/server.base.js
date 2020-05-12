@@ -3,15 +3,17 @@ const path = require('path');
 const postcss = require('rollup-plugin-postcss');
 const url = require('@rollup/plugin-url');
 const typescript = require('rollup-plugin-typescript2');
-const babel = require('@rollup/plugin-babel').default;
 const external = require('rollup-plugin-peer-deps-external');
 const resolve = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const sourceMaps = require('rollup-plugin-sourcemaps');
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
 
 
 
 const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
+
+const isProduction = process.env.ENV_MODE === 'production';
 
 const input = 'source/server/index.ts';
 
@@ -21,6 +23,12 @@ const output = [
         format: 'cjs',
     },
 ];
+
+const styledComponentsTransformer = createStyledComponentsTransformer({
+    ssr: true,
+    displayName: isProduction ? false : true,
+});
+
 
 const plugins = {
     postcss: () => postcss(),
@@ -39,16 +47,10 @@ const plugins = {
     }),
     typescript: () => typescript({
         tsconfig: './tsconfig.json',
-    }),
-    babel: () => babel({
-        babelHelpers: 'bundled',
-        plugins: [
-            [
-                'babel-plugin-styled-components',
-                {
-                    "ssr": true,
-                },
-            ],
+        transformers: [
+            () => ({
+                before: [styledComponentsTransformer],
+            }),
         ],
     }),
     external: () => external({

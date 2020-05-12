@@ -41,11 +41,11 @@ const config = {
         errors: true,
         errorDetails: false,
         warnings: false,
-        publicPath: false
+        publicPath: false,
     },
 
     plugins: [
-        plugins.processEnvModePlugin,
+        plugins.processEnvironmentPlugin,
         plugins.copyPlugin,
     ],
 };
