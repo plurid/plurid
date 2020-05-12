@@ -146,6 +146,9 @@ const mergeConfiguration = (
                     },
                 },
             },
+            switch: {
+                show: configuration?.elements?.switch?.show ?? false,
+            },
         },
         space: {
             ...defaultConfiguration.space,
