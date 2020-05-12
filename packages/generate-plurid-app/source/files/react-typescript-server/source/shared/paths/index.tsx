@@ -44,6 +44,7 @@ const indexPath: PluridRouterPath = {
     ],
 }
 
+
 const notFoundPath: PluridRouterPath = {
     value: '/not-found',
     exterior: {
@@ -80,6 +81,7 @@ const notFoundPath: PluridRouterPath = {
     ],
 };
 
+
 const staticPath: PluridRouterPath = {
     value: '/static',
     exterior: {
@@ -89,10 +91,58 @@ const staticPath: PluridRouterPath = {
 };
 
 
+const onlyPlanesPath: PluridRouterPath = {
+    value: '/planes',
+    planes: [
+        {
+            value: '/plane-1',
+            component: {
+                kind: 'react',
+                element: () => (<div>plane 1</div>),
+            },
+        },
+        {
+            value: '/plane-2',
+            component: {
+                kind: 'react',
+                element: () => (<div>plane 2</div>),
+            },
+            link: '/planes/plane-2',
+        },
+    ],
+    view: [
+        '/plane-1',
+    ],
+    defaultConfiguration: {
+        theme: 'plurid',
+        space: {
+            opaque: false,
+            center: true,
+        },
+        elements: {
+            plane: {
+                controls: {
+                    show: false,
+                },
+                width: typeof window !== 'undefined'
+                    ? window.innerWidth < 800 ? 1 : 0.5
+                    : undefined,
+            },
+            viewcube: {
+                show: typeof window !== 'undefined'
+                    ? window.innerWidth < 800 ? false
+                    : true : undefined,
+            },
+        },
+    }
+};
+
+
 const paths: PluridRouterPath[] = [
     indexPath,
     notFoundPath,
     staticPath,
+    onlyPlanesPath,
 ];
 
 

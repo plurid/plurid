@@ -1,6 +1,6 @@
 import {
     PluridPreserve,
-} from '@plurid/plurid-data';
+} from '@plurid/plurid-react';
 
 
 
@@ -11,12 +11,23 @@ const preserves: PluridPreserve[] = [
             transmission,
         ) => {
             const {
-                request,
-                response,
+                kind,
                 context,
             } = transmission;
 
-            // custom logic for the preserve of '/'
+            const {
+                path,
+                contextualizers,
+            } = context;
+
+            switch (kind) {
+                case 'client':
+                    // custom logic for the client preserve of '/'
+                    break;
+                case 'server':
+                    // custom logic for the server preserve of '/'
+                    break;
+            }
 
             return {
                 providers: {},
