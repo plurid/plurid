@@ -91,8 +91,16 @@ const staticPath: PluridRouterPath = {
 };
 
 
-const onlyPlanesPath: PluridRouterPath = {
+const planesPath: PluridRouterPath = {
     value: '/planes',
+    exterior: {
+        kind: 'react',
+        element: () => (
+            <Head
+                title="Planes | Plurid' Application"
+            />
+        ),
+    },
     planes: [
         {
             value: '/plane-1',
@@ -134,7 +142,7 @@ const onlyPlanesPath: PluridRouterPath = {
                     : true : undefined,
             },
         },
-    }
+    },
 };
 
 
@@ -142,7 +150,7 @@ const paths: PluridRouterPath[] = [
     indexPath,
     notFoundPath,
     staticPath,
-    onlyPlanesPath,
+    planesPath,
 ];
 
 
