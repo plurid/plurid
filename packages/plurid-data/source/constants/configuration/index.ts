@@ -64,6 +64,9 @@ export const defaultConfiguration: PluridConfiguration = {
                 offsetY: PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_Y,
             },
         },
+        switch: {
+            show: false,
+        },
     },
     space: {
         layout: {
