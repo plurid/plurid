@@ -145,6 +145,7 @@ export interface PluridConfigurationElements {
     viewcube: PluridConfigurationElementsViewcube;
     plane: PluridConfigurationElementsPlane;
     link: PluridConfigurationElementsLink;
+    switch: PluridConfigurationElementsSwitch;
 }
 
 
@@ -224,4 +225,10 @@ export interface PluridConfigurationElementsLink {
         offsetX: number;
         offsetY: number;
     };
+}
+
+
+export interface PluridConfigurationElementsSwitch {
+    show: boolean;
+    // position: 'top left' | 'top right' | 'bottom left' | 'bottom right';
 }
