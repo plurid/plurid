@@ -580,15 +580,15 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@plurid/plurid-data@^0.1.132":
-  version "0.1.132"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.132.tgz#ebef172dacfa07d321625c830119a1cfa1a3631a"
-  integrity sha512-H/sh06mGEKUr/0KMEHTRv6llP2c2N4feHehpTTRPHm5Sv53YPFK1QBjJQLOTOKwsd6CniyTlgrx4RvkFqDxb2A==
+"@plurid/plurid-data@^0.1.134":
+  version "0.1.134"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.134.tgz#fad10d093730c0279319230827ca11dc427f3135"
+  integrity sha512-FpOmkhcHw5Vx/KdFtV8ZYa1uO7BHA95Xu9Jc8uQFA3yhCWatJ7plC+1lyxL+G6E91N7GcA7RmtLz2XeVagkXwA==
 
-"@plurid/plurid-engine@^0.1.71":
-  version "0.1.71"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.71.tgz#32aeb5394690421282a1ca0cc3a5db24f65acb4b"
-  integrity sha512-2KA879Yb7MHdHHGBY81NtzOEYHBWbXzaoOKOcnXgRkTuPiB9uon24ve4ZmE51PkkIprM0wRoHCnBOX28pX34Mg==
+"@plurid/plurid-engine@^0.1.73":
+  version "0.1.73"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.73.tgz#f1962c4c7480620fa889dbf116b674c8faab3202"
+  integrity sha512-7K/o1yTiHtBTqes/YT3EgEwqmE7YugMwWqvx596ly6QFBVNvMbDCIViEgDtqB8HYOZbo0pUOeL+ORpUpyTQ5BQ==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
@@ -610,10 +610,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.7.tgz#cb77e2be0463e7fb0314f3aa6d9db99132391b94"
   integrity sha512-86a0eYFImjJ+szl+Z2aG+TwqVQMgGftCzLWoZ6LP5cOkBaqVaZjAm01oMBNTShl3Drp51lDU4pUncl7s3RGK7Q==
 
-"@plurid/plurid-react@^0.1.161":
-  version "0.1.161"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.161.tgz#0c796ab230d4f5eb76910e270f0badfa7f06a39f"
-  integrity sha512-kbH4ggKFhfeAG8ObwqjPLRrz1CcvhinWOPsyy/VbKtOqGC9XGPvYS9eZJrEBZc6K5snEYv/jqY+GZfULaqcvJw==
+"@plurid/plurid-react@^0.1.163":
+  version "0.1.163"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.163.tgz#382396a3d108d85cb436d150848e892aa7041a12"
+  integrity sha512-1nIy4znB4X+80yHhfOt7nTNrV6Sx3jgawpTZY/5JBCq8eUNY9j8k6jUU7GYNUkEhv6Zn42iBuH0V/0wjNyL5UA==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
