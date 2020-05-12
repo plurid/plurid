@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {
+    useState,
+    useEffect,
+} from 'react';
 
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
@@ -84,12 +87,23 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
     const showViewcube = viewcube.show;
 
 
+    /** state */
+    const [isMounted, setIsMounted] = useState(false);
+
+
+    /** effects */
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+
     /** render */
     return (
         <StyledPluridSpace
             theme={stateGeneralTheme}
             opaque={opaqueSpace}
             data-plurid-entity={PLURID_ENTITY_SPACE}
+            isMounted={isMounted}
         >
             {typeof computedTree === 'undefined' && (
                 <PluridRoots />

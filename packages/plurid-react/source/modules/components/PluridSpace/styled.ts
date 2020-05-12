@@ -1,5 +1,19 @@
-import styled from 'styled-components';
+import styled, {
+    css,
+    keyframes,
+} from 'styled-components';
 
+
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0%;
+    }
+
+    to {
+        opacity: 100%;
+    }
+`;
 
 
 export const StyledPluridSpace: any = styled.div`
@@ -25,5 +39,14 @@ export const StyledPluridSpace: any = styled.div`
         }
 
         return 'transparent';
+    }};
+
+    opacity: 0%;
+    animation: ${(props: any) => {
+        if (props.isMounted) {
+            return css`${fadeIn} 250ms linear forwards`;
+        }
+
+        return '';
     }};
 `;

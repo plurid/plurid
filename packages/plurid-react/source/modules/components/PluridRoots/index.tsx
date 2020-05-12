@@ -1,7 +1,4 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
+import React from 'react';
 
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
@@ -132,16 +129,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
             : 7.5;
 
 
-    /** state */
-    const [isMounted, setIsMounted] = useState(false);
-
-
-    /** effects */
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-
     /** render */
     return (
         <StyledPluridRoots
@@ -169,7 +156,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                 `),
             }}
             data-plurid-entity={PLURID_ENTITY_ROOTS}
-            isMounted={isMounted}
         >
             {showTransformOrigin && (
                 <StyledTransformOrigin
