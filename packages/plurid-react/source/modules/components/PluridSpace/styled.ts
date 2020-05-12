@@ -44,7 +44,7 @@ export const StyledPluridSpace: any = styled.div`
     opacity: 0%;
     animation: ${(props: any) => {
         if (props.isMounted) {
-            return css`${fadeIn} 250ms linear forwards`;
+            return css`${fadeIn} 350ms linear 100ms forwards`;
         }
 
         return '';
