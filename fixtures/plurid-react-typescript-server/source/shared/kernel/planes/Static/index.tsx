@@ -15,8 +15,6 @@ import Head from '../../components/Head';
 const Static: React.FC<any> = () => {
     /** properties */
 
-    console.log('StyledStatic', StyledStatic);
-
 
     /** render */
     return (
