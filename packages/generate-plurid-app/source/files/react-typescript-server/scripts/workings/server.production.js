@@ -13,7 +13,6 @@ export default {
         plugins.postcss(),
         plugins.url(),
         plugins.typescript(),
-        plugins.babel(),
         plugins.external(),
         plugins.resolve(),
         plugins.commonjs(),

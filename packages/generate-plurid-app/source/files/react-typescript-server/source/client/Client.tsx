@@ -61,15 +61,13 @@ const Client: React.FC<any> = () => {
             <ReduxProvider store={reduxStore(reduxState)}>
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
-                        <StyleSheetManager>
-                            <PluridProvider metastate={pluridMetastate}>
-                                <PluridRouterBrowser
-                                    shell={shell}
-                                    paths={paths}
-                                    preserves={preserves}
-                                />
-                            </PluridProvider>
-                        </StyleSheetManager>
+                        <PluridProvider metastate={pluridMetastate}>
+                            <PluridRouterBrowser
+                                shell={shell}
+                                paths={paths}
+                                preserves={preserves}
+                            />
+                        </PluridProvider>
                     {/* </StripeProvider> */}
                 </ApolloProvider>
             </ReduxProvider>
