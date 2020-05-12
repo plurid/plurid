@@ -303,6 +303,7 @@ export const setupEnvFiles = async (
 
     const envLocalContents =
 `ENV_MODE=local
+NODE_ENV=development
 PORT=63000
 
 PLURID_BUILD_DIRECTORY=build
@@ -311,6 +312,7 @@ PLURID_DEFAULT_VERBOSE=true
 
     const envDevelopmentContents =
 `ENV_MODE=development
+NODE_ENV=development
 PORT=8080
 
 PLURID_BUILD_DIRECTORY=build
@@ -319,6 +321,7 @@ PLURID_DEFAULT_VERBOSE=false
 
     const envProductionContents =
 `ENV_MODE=production
+NODE_ENV=production
 PORT=8080
 
 PLURID_BUILD_DIRECTORY=build
