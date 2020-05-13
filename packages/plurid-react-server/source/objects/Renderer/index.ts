@@ -82,20 +82,20 @@ export default class PluridRenderer {
         this.htmlLanguage = htmlLanguage || 'en';
         this.htmlAttributes = recordToString(htmlAttributes) || '';
         this.head = head || '';
-        this.defaultStyle = defaultStyle || defaultStyleBasic;
+        this.defaultStyle = defaultStyle ?? defaultStyleBasic;
         this.styles = styles;
-        this.headScripts = headScripts || '';
+        this.headScripts = headScripts ?? '';
         this.vendorScriptSource = vendorScriptSource || DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE;
         this.mainScriptSource = mainScriptSource || DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE;
         this.bodyAttributes = bodyAttributes || '';
         this.root = root || 'root';
         this.content = assetsPathRewrite(content) || '';
-        this.windowSizerScript = windowSizerScript || DEFAULT_WINDOW_SIZER_SCRIPT;
+        this.windowSizerScript = windowSizerScript ?? DEFAULT_WINDOW_SIZER_SCRIPT;
         this.defaultPreloadedReduxState = defaultPreloadedReduxState || DEFAULT__PRELOADED_REDUX_STATE__;
         this.reduxState = safeStore(reduxState) || DEFAULT_RENDERER_REDUX_STATE;
         this.defaultPreloadedPluridMetastate = defaultPreloadedPluridMetastate || DEFAULT__PRELOADED_PLURID_METASTATE__;
         this.pluridMetastate = pluridMetastate || DEFAULT_RENDERER_PLURID_STATE;
-        this.bodyScripts = bodyScripts || '';
+        this.bodyScripts = bodyScripts ?? '';
     }
 
     public html() {
