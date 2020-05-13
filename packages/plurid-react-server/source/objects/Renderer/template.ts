@@ -37,9 +37,11 @@ const template = (
     <head>
         ${head}
 
-        <style>
-            ${defaultStyle}
-        </style>
+        ${defaultStyle && (
+            `<style>
+                ${defaultStyle}
+            </style>`
+        )}
 
         ${styles}
 
