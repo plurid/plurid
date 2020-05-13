@@ -26,7 +26,7 @@ const output = [
 
 const styledComponentsTransformer = createStyledComponentsTransformer({
     ssr: true,
-    displayName: isProduction ? false : true,
+    displayName: !isProduction,
 });
 
 
