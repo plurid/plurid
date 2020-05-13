@@ -18,7 +18,7 @@ const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}/client`);
 
 const styledComponentsTransformer = createStyledComponentsTransformer({
     ssr: true,
-    displayName: isProduction ? false : true,
+    displayName: !isProduction,
 });
 
 
