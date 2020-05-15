@@ -122,6 +122,16 @@ const pluridServer = new PluridServer({
 });
 
 
+pluridServer.post('/api/v1/status', (request, response, next) => {
+    response.setHeader('Content-Type', 'application/json');
+    response.end(
+        JSON.stringify(
+            { status: true },
+        ),
+    );
+});
+
+
 
 /**
  * If the file is called directly, as in `node build/index.js`,
