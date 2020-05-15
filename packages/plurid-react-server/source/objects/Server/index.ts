@@ -162,6 +162,15 @@ export default class PluridServer {
         }
     }
 
+    public post(
+        path: string,
+        ...handlers: express.RequestHandler[]
+    ) {
+        this.serverApplication.post(path, handlers);
+
+        return this.serverApplication;
+    }
+
     public instance() {
         return this.serverApplication;
     }
