@@ -162,6 +162,10 @@ export default class PluridServer {
         }
     }
 
+    public instance() {
+        return this.serverApplication;
+    }
+
     private async computeApplication() {
         this.loadMiddleware();
 
