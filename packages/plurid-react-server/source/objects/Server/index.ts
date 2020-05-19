@@ -162,40 +162,41 @@ export default class PluridServer {
         }
     }
 
-    public post(
-        path: string,
-        ...handlers: express.RequestHandler[]
-    ) {
-        this.serverApplication.post(path, handlers);
+    public handle() {
+        return {
+            post: (
+                path: string,
+                ...handlers: express.RequestHandler[]
+            ) => {
+                this.serverApplication.post(path, handlers);
 
-        return this.serverApplication;
-    }
+                return this.serverApplication;
+            },
+            patch: (
+                path: string,
+                ...handlers: express.RequestHandler[]
+            ) => {
+                this.serverApplication.patch(path, handlers);
 
-    public patch(
-        path: string,
-        ...handlers: express.RequestHandler[]
-    ) {
-        this.serverApplication.patch(path, handlers);
+                return this.serverApplication;
+            },
+            put: (
+                path: string,
+                ...handlers: express.RequestHandler[]
+            ) => {
+                this.serverApplication.put(path, handlers);
 
-        return this.serverApplication;
-    }
+                return this.serverApplication;
+            },
+            delete: (
+                path: string,
+                ...handlers: express.RequestHandler[]
+            ) => {
+                this.serverApplication.delete(path, handlers);
 
-    public put(
-        path: string,
-        ...handlers: express.RequestHandler[]
-    ) {
-        this.serverApplication.put(path, handlers);
-
-        return this.serverApplication;
-    }
-
-    public delete(
-        path: string,
-        ...handlers: express.RequestHandler[]
-    ) {
-        this.serverApplication.delete(path, handlers);
-
-        return this.serverApplication;
+                return this.serverApplication;
+            },
+        };
     }
 
     public instance() {
