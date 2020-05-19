@@ -20,7 +20,7 @@ import {
     StyledPluridSpace,
 } from './styled';
 
-import PluridRoots from '../PluridRoots';
+import PluridRoots from '../Roots';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';

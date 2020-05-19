@@ -10,7 +10,7 @@ import {
     computeApplication,
 } from '../computing';
 
-import PluridSpace from '../../../components/PluridSpace';
+import PluridSpace from '../../../components/Space';
 
 import {
     GlobalStyle,

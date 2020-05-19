@@ -38,14 +38,15 @@ import PluridApplication from './Application';
 
 import PluridSingleApplication from './Application/SingleApplication';
 
-import PluridLink from './modules/components/PluridLink';
-import PluridRouterBrowser from './modules/components/PluridRouterBrowser';
-import PluridRouterStatic from './modules/components/PluridRouterStatic';
-import PluridRouterLink from './modules/components/PluridRouterLink';
-import PluridVirtualList from './modules/components/PluridVirtual/List';
-import PluridPlaneConfigurator from './modules/components/PluridPlaneConfigurator';
+import PluridLink from './modules/components/Link';
+import PluridRouterBrowser from './modules/components/RouterBrowser';
+import PluridRouterStatic from './modules/components/RouterStatic';
+import PluridRouterLink from './modules/components/RouterLink';
+import PluridVirtualList from './modules/components/Virtual/List';
+import PluridPlaneConfigurator from './modules/components/PlaneConfigurator';
+import PluridApplicationConfigurator from './modules/components/ApplicationConfigurator';
 
-import PluridProvider from './modules/components/PluridProvider';
+import PluridProvider from './modules/components/Provider';
 
 import {
     serverComputeMetastate,
@@ -111,6 +112,7 @@ export {
     PluridRouterLink,
     PluridVirtualList,
     PluridPlaneConfigurator,
+    PluridApplicationConfigurator,
     PluridProvider,
 
     /** Server */
