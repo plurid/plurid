@@ -84,6 +84,7 @@ export default class PluridServer {
     private port: number | string;
     private renderer: PluridRenderer | undefined;
 
+
     constructor(
         configuration: PluridServerConfiguration,
     ) {
@@ -133,6 +134,7 @@ export default class PluridServer {
             paths: pluridServer.paths,
         };
     }
+
 
     public start(
         port = this.port,
@@ -203,6 +205,7 @@ export default class PluridServer {
         return this.serverApplication;
     }
 
+
     private async computeApplication() {
         this.loadMiddleware();
 
@@ -211,6 +214,19 @@ export default class PluridServer {
         const pluridsResponder = new PluridsResponder();
 
         this.serverApplication.get('*', async (request, response) => {
+            // const preserve = this.preserves[0];
+            // if (preserve) {
+            //     preserve.action({
+            //         request,
+            //         response,
+            //         context: {
+            //             contextualizers: undefined,
+            //             path: '',
+            //         },
+            //         kind: 'server',
+            //     });
+            // }
+
             // TODOs
             // handle preserve
             // handle plurids
@@ -426,19 +442,18 @@ export default class PluridServer {
     ) {
         const options: PluridServerOptions = {
             quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
-            debug: partialOptions?.debug || environment.production ? 'error' : 'info',
-            compression: partialOptions?.compression ?? true,
-            open: partialOptions?.open ?? false,
+            debug: (partialOptions?.debug || environment.production) ? 'error' : 'info',
+            compression: partialOptions?.compression ?? DEFAULT_SERVER_OPTIONS.COMPRESSION,
+            open: partialOptions?.open ?? DEFAULT_SERVER_OPTIONS.OPEN,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
             stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
-            gatewayEndpoint: partialOptions?.gatewayEndpoint || '/gateway',
+            gatewayEndpoint: partialOptions?.gatewayEndpoint || DEFAULT_SERVER_OPTIONS.GATEWAY,
         };
         return options;
     }
 
     private configureServer() {
         const clientPath = path.join(this.options.buildDirectory, './client');
-        const vendorBrotliExists = fs.existsSync(path.join(clientPath, 'vendor.js.br'));
 
         this.serverApplication.disable('x-powered-by');
 
@@ -450,7 +465,11 @@ export default class PluridServer {
             this.serverApplication.get(
                 '/vendor.js',
                 (request, response, next) => {
+                    const vendorBrotliExists = fs.existsSync(
+                        path.join(clientPath, 'vendor.js.br')
+                    );
                     const acceptEncoding = request.header('Accept-Encoding');
+
                     if (acceptEncoding?.includes('br') && vendorBrotliExists) {
                         request.url += '.br';
                         response.set('Content-Encoding', 'br');
