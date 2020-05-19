@@ -8,7 +8,7 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import PluridSpace from '../../components/PluridSpace';
+import PluridSpace from '../../components/Space';
 import PluridToolbar from '../../components/Toolbar/General';
 import PluridViewcube from '../../components/Viewcube';
 

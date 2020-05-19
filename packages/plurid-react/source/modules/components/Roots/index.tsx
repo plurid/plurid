@@ -26,7 +26,7 @@ import {
     StyledTransformOrigin,
 } from './styled';
 
-import PluridRoot from '../PluridRoot';
+import PluridRoot from '../Root';
 
 import {
     cleanTemplate,

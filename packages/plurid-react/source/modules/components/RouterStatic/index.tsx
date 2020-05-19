@@ -5,7 +5,7 @@ import {
     PluridComponent,
 } from '@plurid/plurid-data';
 
-import PluridRouterBrowser from '../PluridRouterBrowser';
+import PluridRouterBrowser from '../RouterBrowser';
 
 
 

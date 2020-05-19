@@ -14,7 +14,7 @@ import {
 
 import Context from '../../services/logic/context';
 
-import PluridPlane from '../PluridPlane';
+import PluridPlane from '../Plane';
 
 import {
     /** constants */

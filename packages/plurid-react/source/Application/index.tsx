@@ -15,7 +15,7 @@ import PluridView from './View';
 import store from '../modules/services/state/store';
 import StateContext from '../modules/services/state/context';
 
-import PluridProviderContext from '../modules/components/PluridProvider/context';
+import PluridProviderContext from '../modules/components/Provider/context';
 
 
 
