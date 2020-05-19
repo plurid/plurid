@@ -1,6 +1,7 @@
 import {
     ProcessedPath,
     processPath,
+    matchPath,
 } from './logic';
 
 
@@ -17,8 +18,17 @@ class URLRouter {
     public match(
         path: string,
     ) {
-        // check if path is a parametric match
-        const matchedPath = this.paths[path];
+        if (this.paths[path]) {
+            return {
+                path,
+                parameters: {},
+            };
+        }
+
+        const matchedPath = matchPath(
+            path,
+            this.paths,
+        );
 
         if (matchedPath) {
             return matchedPath;
