@@ -6,6 +6,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import {
     /** constants */
+    PLURID_ENTITY_UNIVERSE_EXPLORER,
 
     /** interfaces */
     PluridConfiguration,
@@ -17,6 +18,7 @@ import {
 
 import {
     StyledUniverseExplorer,
+    StyledUniverseExplorerClustersWindow,
 } from './styled';
 
 import { AppState } from '../../services/state/store';
@@ -56,15 +58,15 @@ const Viewcube: React.FC<ViewcubeProperties> = (
 
     return (
         <StyledUniverseExplorer
-            // data-plurid-entity={PLURID_ENTITY_UNIVERSE_EXPLORER}
+            data-plurid-entity={PLURID_ENTITY_UNIVERSE_EXPLORER}
         >
-            <div>
+            <StyledUniverseExplorerClustersWindow>
                 <div>
                     view zone
                 </div>
 
                 clusters window
-            </div>
+            </StyledUniverseExplorerClustersWindow>
 
             <div>
                 reset
