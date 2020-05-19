@@ -171,6 +171,33 @@ export default class PluridServer {
         return this.serverApplication;
     }
 
+    public patch(
+        path: string,
+        ...handlers: express.RequestHandler[]
+    ) {
+        this.serverApplication.patch(path, handlers);
+
+        return this.serverApplication;
+    }
+
+    public put(
+        path: string,
+        ...handlers: express.RequestHandler[]
+    ) {
+        this.serverApplication.put(path, handlers);
+
+        return this.serverApplication;
+    }
+
+    public delete(
+        path: string,
+        ...handlers: express.RequestHandler[]
+    ) {
+        this.serverApplication.delete(path, handlers);
+
+        return this.serverApplication;
+    }
+
     public instance() {
         return this.serverApplication;
     }
