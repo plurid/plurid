@@ -27,6 +27,10 @@ import {
     shell,
 } from '../shared';
 
+import {
+    setRouteHandlers,
+} from './handlers';
+
 
 
 /** ENVIRONMENT */
@@ -108,6 +112,7 @@ const template: PluridServerTemplateConfiguration = {
 
 
 /** SERVER */
+// generate server
 const pluridServer = new PluridServer({
     helmet,
     paths,
@@ -122,14 +127,8 @@ const pluridServer = new PluridServer({
 });
 
 
-pluridServer.post('/api/v1/status', (request, response, next) => {
-    response.setHeader('Content-Type', 'application/json');
-    response.end(
-        JSON.stringify(
-            { status: true },
-        ),
-    );
-});
+// handle non-GET or custom routes (such as API requests, or anything else)
+setRouteHandlers(pluridServer);
 
 
 
