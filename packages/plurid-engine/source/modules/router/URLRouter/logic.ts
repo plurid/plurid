@@ -1,18 +1,14 @@
 import {
     splitPath,
+    computeComparingPath,
+    extractParametersValues,
 } from '../Parser/logic';
 
 
 
-export interface ProcessedParameter {
-    position: number;
-}
-
-export type ProcessedParameters = Record<string, ProcessedParameter>;
-
 export interface ProcessedPath {
     path: string;
-    parameters: ProcessedParameters;
+    parameters: string[];
 }
 
 
@@ -20,13 +16,13 @@ export const processPath = (
     path: string,
 ): ProcessedPath => {
     const routeElements = splitPath(path);
-    const parameters: ProcessedParameters = {};
+    const parameters: string[] = [];
 
-    routeElements.map((routeElement, index) => {
+    routeElements.map(routeElement => {
         if (routeElement[0] === ':') {
-            parameters[routeElement] = {
-                position: index,
-            };
+            parameters.push(routeElement);
+        } else {
+            parameters.push('');
         }
     });
 
@@ -34,4 +30,35 @@ export const processPath = (
         path,
         parameters,
     };
+}
+
+
+export const matchPath = (
+    path: string,
+    paths: Record<string, ProcessedPath>,
+) => {
+    for (const processedPath of Object.values(paths)) {
+        const {
+            locationElements,
+            comparingPath,
+        } = computeComparingPath(
+            path,
+            processedPath.parameters,
+        );
+
+        if (comparingPath !== processedPath.path) {
+            return;
+        }
+
+        const parametersValues = extractParametersValues(
+            processedPath.parameters,
+            locationElements,
+        );
+        return {
+            path,
+            parameters: parametersValues,
+        };
+    }
+
+    return;
 }
