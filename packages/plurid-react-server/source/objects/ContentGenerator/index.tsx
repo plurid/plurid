@@ -71,7 +71,6 @@ export default class PluridContentGenerator {
         const reduxStore = servicesData?.reduxStore;
         const reduxStoreValue = servicesData?.reduxStoreValue || {};
         const apolloClient = servicesData?.apolloClient;
-        const stripeAPIKey = servicesData?.stripeAPIKey;
 
         let Wrap = wrapping(
             HelmetProvider,
@@ -108,7 +107,7 @@ export default class PluridContentGenerator {
                         providers.StripeProvider,
                         Wrap,
                         {
-                            apiKey: stripeAPIKey,
+                            stripe: null,
                         },
                     );
                     break;

@@ -80,7 +80,6 @@ export interface PluridServerServicesData {
     reduxStore?: any;
     reduxStoreValue?: any;
     apolloClient?: any;
-    stripeAPIKey?: string;
     stripeScript?: string;
 }
 
