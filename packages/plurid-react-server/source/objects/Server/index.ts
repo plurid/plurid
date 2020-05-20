@@ -349,7 +349,9 @@ export default class PluridServer {
                 ).getState())
             : '';
 
-        const stripeScript = this.servicesData?.stripeScript;
+        const headScripts = this.template?.headScripts || '';
+        const stripeScript = this.servicesData?.stripeScript || '';
+        const mergedHeadScripts = headScripts + '\n' + stripeScript;
 
         const renderer = new PluridRenderer({
             htmlLanguage: this.template?.htmlLanguage,
@@ -357,7 +359,7 @@ export default class PluridServer {
             head,
             defaultStyle: this.template?.defaultStyle,
             styles: mergedStyles,
-            headScripts: this.template?.headScripts,
+            headScripts: mergedHeadScripts,
             vendorScriptSource: this.template?.vendorScriptSource,
             mainScriptSource: this.template?.mainScriptSource,
             bodyAttributes,
