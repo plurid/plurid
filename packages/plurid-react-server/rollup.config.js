@@ -29,6 +29,15 @@ export default [
                 sourcemap: true
             }
         ],
+        external: [
+            'path',
+            'fs',
+            'child_process',
+            'detect-port',
+            'express',
+            'open',
+            'compression',
+        ],
         plugins: [
             replace({
                 'process.env.MODE_ENV': JSON.stringify(process.env.MODE_ENV),
