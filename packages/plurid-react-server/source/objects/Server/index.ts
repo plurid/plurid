@@ -24,6 +24,7 @@ import {
     PluridRouterPath,
     PluridPreserve,
     PluridPreserveAction,
+    PluridPreserveResponse,
     PluridComponent,
 } from '@plurid/plurid-data';
 
@@ -221,24 +222,6 @@ export default class PluridServer {
         const pluridsResponder = new PluridsResponder();
 
         this.serverApplication.get('*', async (request, response) => {
-            // const preserve = this.preserves[0];
-            // if (preserve) {
-            //     preserve.action({
-            //         request,
-            //         response,
-            //         context: {
-            //             contextualizers: undefined,
-            //             path: '',
-            //         },
-            //         kind: 'server',
-            //     });
-            // }
-
-            // TODOs
-            // handle preserve
-            // handle plurids
-            // handle gatway
-
             const path = request.path;
 
             const urlMatch = urlRouter.match(path);
@@ -254,9 +237,9 @@ export default class PluridServer {
                 }
             }
 
-            console.log('preserveAction', preserveAction);
+            let preserveResult: undefined | PluridPreserveResponse;
             if (preserveAction) {
-                const preserveResult = await preserveAction({
+                preserveResult = await preserveAction({
                     kind: 'server',
                     request,
                     response,
@@ -267,10 +250,11 @@ export default class PluridServer {
                 });
             }
 
+
+            // HANDLE GATEWAY
             const {
                 gatewayEndpoint,
             } = this.options;
-
 
             if (path === gatewayEndpoint) {
                 const gatewayRoute = {
@@ -294,6 +278,7 @@ export default class PluridServer {
             }
 
 
+            // HANDLE PLURIDS ???
             // check if the url is plurids
             // http://example.com/plurids/<route>/<space>/<page>
             // http://example.com/plurids/index/12345/54321
@@ -304,14 +289,22 @@ export default class PluridServer {
             // }
 
 
-            const still = stills.get(path);
-            if (still) {
-                response.send(still);
-                return;
+            // HANDLE STILLS
+            // const still = stills.get(path);
+            // if (still) {
+            //     response.send(still);
+            //     return;
+            // }
+
+
+            let redirect: undefined | string;
+            if (preserveResult) {
+                redirect = preserveResult.redirect;
             }
 
+            const matchingPath = redirect || path;
 
-            const route = router.match(path);
+            const route = router.match(matchingPath);
             if (!route) {
                 const notFoundStill = stills.get(NOT_FOUND_ROUTE);
                 if (notFoundStill) {
