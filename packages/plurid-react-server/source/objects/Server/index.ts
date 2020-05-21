@@ -63,7 +63,10 @@ import PluridStillsManager from '../StillsManager';
 
 
 
-const PluridRouter = router.default;
+const {
+    default: PluridRouter,
+    URLRouter: PluridURLRouter,
+} = router;
 
 
 export default class PluridServer {
@@ -209,6 +212,9 @@ export default class PluridServer {
     private async computeApplication() {
         this.loadMiddleware();
 
+        const pathsValues = this.paths.map(path => path.value);
+        const urlRouter = new PluridURLRouter(pathsValues);
+
         const stills = new PluridStillsManager(this.options);
         const router = new PluridRouter(this.paths);
         const pluridsResponder = new PluridsResponder();
@@ -233,6 +239,16 @@ export default class PluridServer {
             // handle gatway
 
             const path = request.path;
+
+            const urlMatch = urlRouter.match(path);
+            console.log('urlMatch', urlMatch);
+
+            if (urlMatch?.path) {
+                const preserve = this.preserves.find(
+                    preserve => preserve.value === urlMatch.path
+                );
+                console.log('preserve', preserve);
+            }
 
             const {
                 gatewayEndpoint,
