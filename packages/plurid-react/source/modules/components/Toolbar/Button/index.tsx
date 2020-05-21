@@ -9,7 +9,7 @@ import {
 
 
 
-interface ToolbarButtonProps {
+export interface ToolbarButtonProps {
     atClick: any;
     image: any;
     scaleImage?: boolean;

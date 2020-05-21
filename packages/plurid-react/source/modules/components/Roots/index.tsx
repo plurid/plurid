@@ -39,14 +39,14 @@ import selectors from '../../services/state/selectors';
 
 
 
-interface PluridRootsOwnProperties {
+export interface PluridRootsOwnProperties {
     computedTree?: any;
     indexedPlanesReference?: any;
     planesPropertiesReference?: any;
     appConfiguration?: any;
 }
 
-interface PluridRootsStateProperties {
+export interface PluridRootsStateProperties {
     stateConfiguration: PluridConfiguration;
     interactionTheme: Theme;
     animatedTransform: boolean;
@@ -59,10 +59,10 @@ interface PluridRootsStateProperties {
     stateTree: TreePlane[];
 }
 
-interface PluridRootsDispatchProperties {
+export interface PluridRootsDispatchProperties {
 }
 
-type PluridRootsProperties = PluridRootsOwnProperties
+export type PluridRootsProperties = PluridRootsOwnProperties
     & PluridRootsStateProperties
     & PluridRootsDispatchProperties;
 

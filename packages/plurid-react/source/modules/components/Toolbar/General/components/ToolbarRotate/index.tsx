@@ -42,26 +42,26 @@ import actions from '../../../../../services/state/actions';
 
 
 
-interface ToolbarRotateOwnProperties {
+export interface ToolbarRotateOwnProperties {
     showTransformButtons: boolean;
     showIcons: boolean;
     transformMode: keyof typeof TRANSFORM_MODES;
     toggleTransform(TYPE: keyof typeof TRANSFORM_MODES): void;
 }
 
-interface ToolbarRotateStateProperties {
+export interface ToolbarRotateStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
 }
 
-interface ToolbarRotateDispatchProperties {
+export interface ToolbarRotateDispatchProperties {
     rotateUp: typeof actions.space.rotateUp;
     rotateDown: typeof actions.space.rotateDown;
     rotateLeft: typeof actions.space.rotateLeft;
     rotateRight: typeof actions.space.rotateRight;
 }
 
-type ToolbarRotateProperties = ToolbarRotateOwnProperties
+export type ToolbarRotateProperties = ToolbarRotateOwnProperties
     & ToolbarRotateStateProperties
     & ToolbarRotateDispatchProperties;
 

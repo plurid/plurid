@@ -29,22 +29,22 @@ import selectors from '../../services/state/selectors';
 
 
 
-interface PluridSpaceOwnProperties {
+export interface PluridSpaceOwnProperties {
     computedTree?: any;
     indexedPlanesReference?: any;
     planesPropertiesReference?: any;
     appConfiguration?: any;
 }
 
-interface PluridSpaceStateProperties {
+export interface PluridSpaceStateProperties {
     stateConfiguration: PluridConfiguration,
     stateGeneralTheme: Theme;
 }
 
-interface PluridSpaceDispatchProperties {
+export interface PluridSpaceDispatchProperties {
 }
 
-type PluridSpaceProperties = PluridSpaceOwnProperties
+export type PluridSpaceProperties = PluridSpaceOwnProperties
     & PluridSpaceStateProperties
     & PluridSpaceDispatchProperties;
 

@@ -14,7 +14,7 @@ import {
 
 
 
-interface PlaneContentOwnProperties {
+export interface PlaneContentOwnProperties {
     updatePlaneSize: any;
 }
 

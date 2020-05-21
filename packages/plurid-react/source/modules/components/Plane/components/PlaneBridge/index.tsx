@@ -25,18 +25,18 @@ import selectors from '../../../../services/state/selectors';
 
 
 
-interface PlaneBridgeOwnProperties {
+export interface PlaneBridgeOwnProperties {
 }
 
-interface PlaneBridgeStateProperties {
+export interface PlaneBridgeStateProperties {
     generalTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-interface PlaneBridgeDispatchProperties {
+export interface PlaneBridgeDispatchProperties {
 }
 
-type PlaneBridgeProperties = PlaneBridgeOwnProperties
+export type PlaneBridgeProperties = PlaneBridgeOwnProperties
     & PlaneBridgeStateProperties
     & PlaneBridgeDispatchProperties;
 

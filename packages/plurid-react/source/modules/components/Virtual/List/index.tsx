@@ -28,20 +28,20 @@ import {
 
 
 
-interface PluridVirtualListOwnProperties {
+export interface PluridVirtualListOwnProperties {
     items: JSX.Element[];
     generalHeight?: number;
 }
 
-interface PluridVirtualListStateProperties {
+export interface PluridVirtualListStateProperties {
     translationY: number,
     viewSize: ViewSize;
 }
 
-interface PluridVirtualListDispatchProperties {
+export interface PluridVirtualListDispatchProperties {
 }
 
-type PluridVirtualListProperties = PluridVirtualListOwnProperties
+export type PluridVirtualListProperties = PluridVirtualListOwnProperties
     & PluridVirtualListStateProperties
     & PluridVirtualListDispatchProperties;
 

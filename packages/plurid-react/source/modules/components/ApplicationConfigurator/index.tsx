@@ -23,16 +23,16 @@ import StateContext from '../../services/state/context';
 
 
 
-interface PluridApplicationConfiguratorOwnProperties {
+export interface PluridApplicationConfiguratorOwnProperties {
 }
 
-interface PluridApplicationConfiguratorStateProperties {
+export interface PluridApplicationConfiguratorStateProperties {
 }
 
-interface PluridApplicationConfiguratorDispatchProperties {
+export interface PluridApplicationConfiguratorDispatchProperties {
 }
 
-type PluridApplicationConfiguratorProperties = PluridApplicationConfiguratorOwnProperties
+export type PluridApplicationConfiguratorProperties = PluridApplicationConfiguratorOwnProperties
     & PluridApplicationConfiguratorStateProperties
     & PluridApplicationConfiguratorDispatchProperties;
 

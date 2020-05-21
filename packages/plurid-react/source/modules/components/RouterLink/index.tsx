@@ -11,7 +11,7 @@ import {
 
 
 
-interface PluridRouterLinkOwnProperties {
+export interface PluridRouterLinkOwnProperties {
     path: string;
 
     /**

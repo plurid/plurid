@@ -27,19 +27,19 @@ import selectors from '../../../../../services/state/selectors';
 
 
 
-interface TransformArrowOwnProperties {
+export interface TransformArrowOwnProperties {
     direction: string;
     transform: () => void;
 }
 
-interface TransformArrowStateProperties {
+export interface TransformArrowStateProperties {
     interactionTheme: Theme;
 }
 
-interface TransformArrowDispatchProperties {
+export interface TransformArrowDispatchProperties {
 }
 
-type TransformArrowProperties = TransformArrowOwnProperties
+export type TransformArrowProperties = TransformArrowOwnProperties
     & TransformArrowStateProperties
     & TransformArrowDispatchProperties;
 

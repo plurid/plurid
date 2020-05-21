@@ -34,23 +34,23 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-interface MenuMoreViewcubeOwnProperties {
+export interface MenuMoreViewcubeOwnProperties {
 }
 
-interface MenuMoreViewcubeStateProperties {
+export interface MenuMoreViewcubeStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-interface MenuMoreViewcubeDispatchProperties {
+export interface MenuMoreViewcubeDispatchProperties {
     dispatchToggleConfigurationViewcubeHide: typeof actions.configuration.toggleConfigurationViewcubeHide;
     dispatchToggleConfigurationViewcubeButtons: typeof actions.configuration.toggleConfigurationViewcubeButtons;
     dispatchToggleConfigurationViewcubeOpaque: typeof actions.configuration.toggleConfigurationViewcubeOpaque;
     dispatchToggleConfigurationViewcubeConceal: typeof actions.configuration.toggleConfigurationViewcubeConceal;
 }
 
-type MenuMoreViewcubeProperties = MenuMoreViewcubeOwnProperties
+export type MenuMoreViewcubeProperties = MenuMoreViewcubeOwnProperties
     & MenuMoreViewcubeStateProperties
     & MenuMoreViewcubeDispatchProperties;
 

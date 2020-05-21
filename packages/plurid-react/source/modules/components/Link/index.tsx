@@ -69,7 +69,7 @@ const defaultLinkCoordinates: PluridLinkCoordinates = {
     y: 0,
 };
 
-interface PluridLinkStateProperties {
+export interface PluridLinkStateProperties {
     stateTree: TreePlane[];
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration,
@@ -77,12 +77,12 @@ interface PluridLinkStateProperties {
     statePlaneSources: Record<string, string>;
 }
 
-interface PluridLinkDispatchProperties {
+export interface PluridLinkDispatchProperties {
     dispatchSetTree: typeof actions.space.setTree;
     dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
 }
 
-type PluridLinkProperties = PluridLinkOwnProperties
+export type PluridLinkProperties = PluridLinkOwnProperties
     & PluridLinkStateProperties
     & PluridLinkDispatchProperties;
 

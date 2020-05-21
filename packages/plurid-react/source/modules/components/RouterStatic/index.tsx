@@ -9,7 +9,7 @@ import PluridRouterBrowser from '../RouterBrowser';
 
 
 
-interface PluridRouterStaticOwnProperties {
+export interface PluridRouterStaticOwnProperties {
     path: string;
     exterior?: PluridComponent;
     shell?: PluridComponent;

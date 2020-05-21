@@ -40,24 +40,24 @@ import {
 
 
 
-interface MenuMoreToolbarOwnProperties {
+export interface MenuMoreToolbarOwnProperties {
 }
 
-interface MenuMoreToolbarStateProperties {
+export interface MenuMoreToolbarStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
 }
 
-interface MenuMoreToolbarDispatchProperties {
+export interface MenuMoreToolbarDispatchProperties {
     dispatchToggleConfigurationToolbarConceal: typeof actions.configuration.toggleConfigurationToolbarConceal;
     dispatchToggleConfigurationToolbarTransformIcons: typeof actions.configuration.toggleConfigurationToolbarTransformIcons;
     dispatchToggleConfigurationToolbarTransformButtons: typeof actions.configuration.toggleConfigurationToolbarTransformButtons;
     dispatchToggleConfigurationToolbarOpaque: typeof actions.configuration.toggleConfigurationToolbarOpaque
 }
 
-type MenuMoreToolbarProperties = MenuMoreToolbarOwnProperties
+export type MenuMoreToolbarProperties = MenuMoreToolbarOwnProperties
     & MenuMoreToolbarStateProperties
     & MenuMoreToolbarDispatchProperties;
 

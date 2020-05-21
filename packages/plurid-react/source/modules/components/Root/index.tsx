@@ -33,7 +33,7 @@ import selectors from '../../services/state/selectors';
 
 
 
-interface PluridRootOwnProperties {
+export interface PluridRootOwnProperties {
     plane: TreePlane;
 
     indexedPlanesReference?: any;
@@ -41,15 +41,15 @@ interface PluridRootOwnProperties {
     appConfiguration?: any;
 }
 
-interface PluridRootStateProperties {
+export interface PluridRootStateProperties {
     activeUniverseID: string;
     statePlaneSources: Record<string, string>;
 }
 
-interface PluridRootDispatchProperties {
+export interface PluridRootDispatchProperties {
 }
 
-type PluridRootProperties = PluridRootOwnProperties
+export type PluridRootProperties = PluridRootOwnProperties
     & PluridRootStateProperties
     & PluridRootDispatchProperties;
 

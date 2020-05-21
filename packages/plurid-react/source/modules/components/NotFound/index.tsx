@@ -19,18 +19,18 @@ import selectors from '../../services/state/selectors';
 
 
 
-interface NotFoundOwnProperties {
+export interface NotFoundOwnProperties {
 }
 
-interface NotFoundStateProperties {
+export interface NotFoundStateProperties {
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface NotFoundDispatchProperties {
+export interface NotFoundDispatchProperties {
 }
 
-type NotFoundProperties = NotFoundOwnProperties
+export type NotFoundProperties = NotFoundOwnProperties
     & NotFoundStateProperties
     & NotFoundDispatchProperties;
 

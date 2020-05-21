@@ -29,18 +29,18 @@ import StateContext from '../../services/state/context';
 
 
 
-interface PluridPlaneConfiguratorOwnProperties {
+export interface PluridPlaneConfiguratorOwnProperties {
     theme: keyof typeof themes;
     style: React.CSSProperties;
 }
 
-interface PluridPlaneConfiguratorStateProperties {
+export interface PluridPlaneConfiguratorStateProperties {
 }
 
-interface PluridPlaneConfiguratorDispatchProperties {
+export interface PluridPlaneConfiguratorDispatchProperties {
 }
 
-type PluridPlaneConfiguratorProperties = PluridPlaneConfiguratorOwnProperties
+export type PluridPlaneConfiguratorProperties = PluridPlaneConfiguratorOwnProperties
     & PluridPlaneConfiguratorStateProperties
     & PluridPlaneConfiguratorDispatchProperties;
 

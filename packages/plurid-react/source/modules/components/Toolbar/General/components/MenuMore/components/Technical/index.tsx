@@ -40,20 +40,20 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-interface MenuMoreTechnicalOwnProperties {
+export interface MenuMoreTechnicalOwnProperties {
 }
 
-interface MenuMoreTechnicalStateProperties {
+export interface MenuMoreTechnicalStateProperties {
     stateLanguage: InternationalizationLanguageType;
     stateConfiguration: PluridConfiguration;
     stateInteractionTheme: Theme;
 }
 
-interface MenuMoreTechnicalDispatchProperties {
+export interface MenuMoreTechnicalDispatchProperties {
     dispatchSetConfigurationSpaceCullingDistance: typeof actions.configuration.setConfigurationSpaceCullingDistance;
 }
 
-type MenuMoreTechnicalProperties = MenuMoreTechnicalOwnProperties
+export type MenuMoreTechnicalProperties = MenuMoreTechnicalOwnProperties
     & MenuMoreTechnicalStateProperties
     & MenuMoreTechnicalDispatchProperties;
 

@@ -31,20 +31,20 @@ import selectors from '../../../../../../services/state/selectors';
 
 
 
-interface SearchListOwnProperties {
+export interface SearchListOwnProperties {
     hideSearch: () => void;
 }
 
-interface SearchListStateProperties {
+export interface SearchListStateProperties {
     stateConfiguration: PluridConfiguration;
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface SearchListDispatchProperties {
+export interface SearchListDispatchProperties {
 }
 
-type SearchListProperties = SearchListOwnProperties
+export type SearchListProperties = SearchListOwnProperties
     & SearchListStateProperties
     & SearchListDispatchProperties;
 

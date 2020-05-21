@@ -31,22 +31,22 @@ import selectors from '../../../../../services/state/selectors';
 
 
 
-interface DrawerOwnProperties {
+export interface DrawerOwnProperties {
     heading: string;
     items: JSX.Element;
     toggled: boolean;
     toggle(): void;
 }
 
-interface DrawerStateProperties {
+export interface DrawerStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-interface DrawerDispatchProperties {
+export interface DrawerDispatchProperties {
 }
 
-type DrawerProperties = DrawerOwnProperties
+export type DrawerProperties = DrawerOwnProperties
     & DrawerStateProperties
     & DrawerDispatchProperties;
 

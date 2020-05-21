@@ -60,23 +60,23 @@ import {
 
 
 
-interface ToolbarOwnProperties {
+export interface ToolbarOwnProperties {
 }
 
-interface ToolbarStateProperties {
+export interface ToolbarStateProperties {
     theme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
     universes: any;
 }
 
-interface ToolbarDispatchProperties {
+export interface ToolbarDispatchProperties {
     dispatchToggleConfigurationSpaceFirstPerson: typeof actions.configuration.toggleConfigurationSpaceFirstPerson;
 
     dispatchSetConfigurationSpaceTransformMode: typeof actions.configuration.setConfigurationSpaceTransformMode;
 }
 
-type ToolbarProperties = ToolbarOwnProperties
+export type ToolbarProperties = ToolbarOwnProperties
     & ToolbarStateProperties
     & ToolbarDispatchProperties;
 

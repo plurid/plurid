@@ -38,22 +38,22 @@ import actions from '../../services/state/actions';
 
 
 
-interface ViewcubeOwnProperties {
+export interface ViewcubeOwnProperties {
 }
 
-interface ViewcubeStateProperties {
+export interface ViewcubeStateProperties {
     stateConfiguration: PluridConfiguration;
     stateInteractionTheme: Theme;
 }
 
-interface ViewcubeDispatchProperties {
+export interface ViewcubeDispatchProperties {
     dispatchRotateXWith: typeof actions.space.rotateXWith;
     dispatchRotateYWith: typeof actions.space.rotateYWith;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     dispatchSpaceResetTransform: typeof actions.space.spaceResetTransform;
 }
 
-type ViewcubeProperties = ViewcubeOwnProperties
+export type ViewcubeProperties = ViewcubeOwnProperties
     & ViewcubeStateProperties
     & ViewcubeDispatchProperties;
 
