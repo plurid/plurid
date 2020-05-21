@@ -36,22 +36,22 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-interface MenuMoreTransformOwnProperties {
+export interface MenuMoreTransformOwnProperties {
 }
 
-interface MenuMoreTransformStateProperties {
+export interface MenuMoreTransformStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-interface MenuMoreTransformDispatchProperties {
+export interface MenuMoreTransformDispatchProperties {
     dispatchToggleConfigurationSpaceTransformMultimode: typeof actions.configuration.toggleConfigurationSpaceTransformMultimode;
     dispatchSetConfigurationSpaceTransformTouch: typeof actions.configuration.setConfigurationSpaceTransformTouch;
     dispatchSetConfigurationSpaceTransformLocks: typeof actions.configuration.setConfigurationSpaceTransformLocks;
 }
 
-type MenuMoreTransformProperties = MenuMoreTransformOwnProperties
+export type MenuMoreTransformProperties = MenuMoreTransformOwnProperties
     & MenuMoreTransformStateProperties
     & MenuMoreTransformDispatchProperties;
 

@@ -39,14 +39,14 @@ import actions from '../../services/state/actions';
 
 
 
-interface PluridPlaneOwnProperties {
+export interface PluridPlaneOwnProperties {
     planeID: string;
     plane: IPluridPlane;
     treePlane: TreePlane;
     location: any;
 }
 
-interface PluridPlaneStateProperties {
+export interface PluridPlaneStateProperties {
     viewSize: ViewSize;
     spaceScale: number;
     generalTheme: Theme;
@@ -55,11 +55,11 @@ interface PluridPlaneStateProperties {
     tree: TreePlane[];
 }
 
-interface PluridPlaneDispatchProperties {
+export interface PluridPlaneDispatchProperties {
     updateSpaceTreePlane: typeof actions.space.updateSpaceTreePlane;
 }
 
-type PluridPlaneProperties = PluridPlaneOwnProperties
+export type PluridPlaneProperties = PluridPlaneOwnProperties
     & PluridPlaneStateProperties
     & PluridPlaneDispatchProperties;
 

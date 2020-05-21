@@ -24,21 +24,21 @@ import selectors from '../../../../../../services/state/selectors';
 
 
 
-interface SearchItemOwnProperties {
+export interface SearchItemOwnProperties {
     text: string;
     hideSearch: () => void;
 }
 
-interface SearchItemStateProperties {
+export interface SearchItemStateProperties {
     stateConfiguration: PluridConfiguration;
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface SearchItemDispatchProperties {
+export interface SearchItemDispatchProperties {
 }
 
-type SearchItemProperties = SearchItemOwnProperties
+export type SearchItemProperties = SearchItemOwnProperties
     & SearchItemStateProperties
     & SearchItemDispatchProperties;
 

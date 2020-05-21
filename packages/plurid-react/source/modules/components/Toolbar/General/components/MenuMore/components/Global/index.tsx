@@ -37,16 +37,16 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-interface MenuMoreThemesOwnProperties {
+export interface MenuMoreThemesOwnProperties {
 }
 
-interface MenuMoreThemesStateProperties {
+export interface MenuMoreThemesStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-interface MenuMoreThemesDispatchProperties {
+export interface MenuMoreThemesDispatchProperties {
     dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
     dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
 
@@ -55,7 +55,7 @@ interface MenuMoreThemesDispatchProperties {
     dispatchSetConfigurationLanguage: typeof actions.configuration.setConfigurationLanguageAction;
 }
 
-type MenuMoreThemesProperties = MenuMoreThemesOwnProperties
+export type MenuMoreThemesProperties = MenuMoreThemesOwnProperties
     & MenuMoreThemesStateProperties
     & MenuMoreThemesDispatchProperties;
 

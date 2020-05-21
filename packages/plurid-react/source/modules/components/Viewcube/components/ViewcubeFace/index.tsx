@@ -199,7 +199,7 @@ const zoneClickTransforms = {
 };
 
 
-interface ViewcubeFaceOwnProperties {
+export interface ViewcubeFaceOwnProperties {
     face: string;
     faceText: string;
     mouseOver: boolean;
@@ -209,23 +209,25 @@ interface ViewcubeFaceOwnProperties {
     setActiveZone: React.Dispatch<React.SetStateAction<string>>;
 }
 
-interface ViewcubeFaceStateProperties {
+export interface ViewcubeFaceStateProperties {
     generalTheme: Theme;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-interface ViewcubeFaceDispatchProperties {
+export interface ViewcubeFaceDispatchProperties {
     dispatchRotateX: typeof actions.space.rotateX;
     dispatchRotateY: typeof actions.space.rotateY;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
 }
 
-type ViewcubeFaceProperties = ViewcubeFaceOwnProperties
+export type ViewcubeFaceProperties = ViewcubeFaceOwnProperties
     & ViewcubeFaceStateProperties
     & ViewcubeFaceDispatchProperties;
 
-const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (properties) => {
+const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
+    properties,
+) => {
     const {
         /** own */
         face,

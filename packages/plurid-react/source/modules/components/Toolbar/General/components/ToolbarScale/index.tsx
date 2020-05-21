@@ -41,24 +41,24 @@ import actions from '../../../../../services/state/actions';
 
 
 
-interface ToolbarScaleOwnProperties {
+export interface ToolbarScaleOwnProperties {
     showTransformButtons: boolean;
     showIcons: boolean;
     transformMode: keyof typeof TRANSFORM_MODES;
     toggleTransform(TYPE: keyof typeof TRANSFORM_MODES): void;
 }
 
-interface ToolbarScaleStateProperties {
+export interface ToolbarScaleStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
 }
 
-interface ToolbarScaleDispatchProperties {
+export interface ToolbarScaleDispatchProperties {
     scaleUp: typeof actions.space.scaleUp;
     scaleDown: typeof actions.space.scaleDown;
 }
 
-type ToolbarScaleProperties = ToolbarScaleOwnProperties
+export type ToolbarScaleProperties = ToolbarScaleOwnProperties
     & ToolbarScaleStateProperties
     & ToolbarScaleDispatchProperties;
 

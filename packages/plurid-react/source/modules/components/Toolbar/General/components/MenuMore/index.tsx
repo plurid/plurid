@@ -44,22 +44,22 @@ import actions from '../../../../../services/state/actions';
 
 
 
-interface MoreMenuOwnProperties {
+export interface MoreMenuOwnProperties {
 }
 
-interface MoreMenuStateProperties {
+export interface MoreMenuStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
     toolbarMenuScrollPosition: number;
 }
 
-interface MoreMenuDispatchProperties {
+export interface MoreMenuDispatchProperties {
     dispatchToggleConfigurationToolbarToggleDrawer: typeof actions.configuration.toggleConfigurationToolbarToggleDrawer;
     dispatchSetUIToolbarScrollPosition: typeof actions.ui.setUIToolbarScrollPosition;
 }
 
-type MoreMenuProperties = MoreMenuOwnProperties
+export type MoreMenuProperties = MoreMenuOwnProperties
     & MoreMenuStateProperties
     & MoreMenuDispatchProperties;
 

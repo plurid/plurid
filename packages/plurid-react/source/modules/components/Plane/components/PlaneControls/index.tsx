@@ -47,22 +47,22 @@ import selectors from '../../../../services/state/selectors';
 
 
 
-interface PlaneControlsOwnProperties {
+export interface PlaneControlsOwnProperties {
     plane: PluridPlane;
     treePlane: TreePlane;
     mouseOver: boolean;
 }
 
-interface PlaneControlsStateProperties {
+export interface PlaneControlsStateProperties {
     configuration: PluridConfiguration;
     generalTheme: Theme;
     interactionTheme: Theme;
 }
 
-interface PlaneControlsDispatchProperties {
+export interface PlaneControlsDispatchProperties {
 }
 
-type PlaneControlsProperties = PlaneControlsOwnProperties
+export type PlaneControlsProperties = PlaneControlsOwnProperties
     & PlaneControlsStateProperties
     & PlaneControlsDispatchProperties;
 

@@ -5,14 +5,16 @@ import React, {
 
 
 
-interface VirtualListItemOwnProperties {
+export interface VirtualListItemOwnProperties {
     top: number;
     index: number;
     element: JSX.Element;
     setHeight(value: number, index: number): void;
 }
 
-const VirtualListItem: React.FC<VirtualListItemOwnProperties> = (properties) => {
+const VirtualListItem: React.FC<VirtualListItemOwnProperties> = (
+    properties,
+) => {
     const {
         top,
         index,

@@ -10,7 +10,7 @@ import PluridProviderContext from './context';
 
 
 
-interface PluridProviderProperties {
+export interface PluridProviderProperties {
     metastate: PluridMetastate | undefined;
 }
 

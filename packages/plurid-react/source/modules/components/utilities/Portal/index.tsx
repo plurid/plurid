@@ -10,7 +10,7 @@ import {
 
 
 
-interface PortalProperties {
+export interface PortalProperties {
     elementID: string;
     rootID: string;
 }

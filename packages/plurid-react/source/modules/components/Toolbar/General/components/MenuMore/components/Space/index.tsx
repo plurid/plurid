@@ -39,15 +39,15 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-interface MenuMoreSpaceOwnProperties {
+export interface MenuMoreSpaceOwnProperties {
 }
 
-interface MenuMoreSpaceStateProperties {
+export interface MenuMoreSpaceStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-interface MenuMoreSpaceDispatchProperties {
+export interface MenuMoreSpaceDispatchProperties {
     dispatchSetConfigurationPlaneOpacity: typeof actions.configuration.setConfigurationPlaneOpacity;
 
     dispatchToggleConfigurationSpaceTransparentUI: typeof actions.configuration.toggleConfigurationSpaceTransparentUI;
@@ -56,7 +56,7 @@ interface MenuMoreSpaceDispatchProperties {
     dispatchSetConfigurationSpaceLayoutType: typeof actions.configuration.setConfigurationSpaceLayoutType;
 }
 
-type MenuMoreSpaceProperties = MenuMoreSpaceOwnProperties
+export type MenuMoreSpaceProperties = MenuMoreSpaceOwnProperties
     & MenuMoreSpaceStateProperties
     & MenuMoreSpaceDispatchProperties;
 

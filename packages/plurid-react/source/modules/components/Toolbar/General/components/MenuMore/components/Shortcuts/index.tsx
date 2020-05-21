@@ -30,18 +30,18 @@ import selectors from '../../../../../../../services/state/selectors';
 
 
 
-interface MenuMoreShortcutsOwnProperties {
+export interface MenuMoreShortcutsOwnProperties {
 }
 
-interface MenuMoreShortcutsStateProperties {
+export interface MenuMoreShortcutsStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-interface MenuMoreShortcutsDispatchProperties {
+export interface MenuMoreShortcutsDispatchProperties {
 }
 
-type MenuMoreShortcutsProperties = MenuMoreShortcutsOwnProperties
+export type MenuMoreShortcutsProperties = MenuMoreShortcutsOwnProperties
     & MenuMoreShortcutsStateProperties
     & MenuMoreShortcutsDispatchProperties;
 

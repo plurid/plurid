@@ -30,24 +30,26 @@ import selectors from '../../../../services/state/selectors';
 
 
 
-interface ViewcubeModelOwnProperties {
+export interface ViewcubeModelOwnProperties {
     mouseOver: boolean;
 }
 
-interface ViewcubeModelStateProperties {
+export interface ViewcubeModelStateProperties {
     stateLanguage: InternationalizationLanguageType;
     spaceRotationX: number;
     spaceRotationY: number;
 }
 
-interface ViewcubeModelDispatchProperties {
+export interface ViewcubeModelDispatchProperties {
 }
 
-type ViewcubeModelProperties = ViewcubeModelOwnProperties
+export type ViewcubeModelProperties = ViewcubeModelOwnProperties
     & ViewcubeModelStateProperties
     & ViewcubeModelDispatchProperties;
 
-const ViewcubeModel: React.FC<ViewcubeModelProperties> = (properties) => {
+const ViewcubeModel: React.FC<ViewcubeModelProperties> = (
+    properties,
+) => {
     const {
         /** own */
         mouseOver,

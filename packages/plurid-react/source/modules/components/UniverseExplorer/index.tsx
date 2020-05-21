@@ -28,18 +28,18 @@ import selectors from '../../services/state/selectors';
 
 
 
-interface ViewcubeOwnProperties {
+export interface ViewcubeOwnProperties {
 }
 
-interface ViewcubeStateProperties {
+export interface ViewcubeStateProperties {
     stateConfiguration: PluridConfiguration;
     stateInteractionTheme: Theme;
 }
 
-interface ViewcubeDispatchProperties {
+export interface ViewcubeDispatchProperties {
 }
 
-type ViewcubeProperties = ViewcubeOwnProperties
+export type ViewcubeProperties = ViewcubeOwnProperties
     & ViewcubeStateProperties
     & ViewcubeDispatchProperties;
 

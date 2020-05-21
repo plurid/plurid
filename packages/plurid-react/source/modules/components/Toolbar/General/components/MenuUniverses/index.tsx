@@ -27,20 +27,20 @@ import actions from '../../../../../services/state/actions';
 
 
 
-interface MoreMenuOwnProperties {
+export interface MoreMenuOwnProperties {
 }
 
-interface MoreMenuStateProperties {
+export interface MoreMenuStateProperties {
     interactionTheme: Theme;
     documents: Indexed<PluridInternalStateUniverse>;
     activeUniverseID: string;
 }
 
-interface MoreMenuDispatchProperties {
+export interface MoreMenuDispatchProperties {
     dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
 }
 
-type MoreMenuProperties = MoreMenuOwnProperties
+export type MoreMenuProperties = MoreMenuOwnProperties
     & MoreMenuStateProperties
     & MoreMenuDispatchProperties;
 

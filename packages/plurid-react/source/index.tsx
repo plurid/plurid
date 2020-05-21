@@ -64,6 +64,42 @@ const {
     RouteParser: PluridRouteParser,
 } = router;
 
+const Plurid = {
+    /** Enumerations */
+    SPACE_LAYOUT,
+    SIZES,
+    TRANSFORM_MODES,
+    TRANSFORM_TOUCHES,
+
+    /** Engine */
+    Router: router.default,
+    RouteMatcher: router.RouteMatcher,
+    RouteParser: router.RouteParser,
+
+    /** PubSub */
+    PubSub: PluridPubSub,
+    TOPICS,
+
+    /** Components */
+    Application: PluridApplication,
+    SingleApplication: PluridSingleApplication,
+
+    Link: PluridLink,
+    RouterBrowser: PluridRouterBrowser,
+    RouterStatic: PluridRouterStatic,
+    RouterLink: PluridRouterLink,
+    VirtualList: PluridVirtualList,
+    PlaneConfigurator: PluridPlaneConfigurator,
+    ApplicationConfigurator: PluridApplicationConfigurator,
+    Provider: PluridProvider,
+
+    /** Server */
+    serverComputeMetastate,
+
+    /** Utilities */
+    pluridRouterNavigate,
+};
+
 
 export {
     /** Interfaces */
@@ -103,6 +139,7 @@ export {
     TOPICS,
 
     /** SingleApplication */
+    PluridApplication,
     PluridSingleApplication,
 
     /** Components */
@@ -123,4 +160,4 @@ export {
 };
 
 
-export default PluridApplication;
+export default Plurid;
