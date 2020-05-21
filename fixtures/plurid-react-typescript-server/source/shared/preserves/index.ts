@@ -26,11 +26,18 @@ const preserves: PluridPreserve[] = [
                     break;
                 case 'server':
                     // custom logic for the server preserve of '/'
+
+                    // const {
+                    //     response,
+                    //     request,
+                    // } = transmission as any;
+
                     break;
             }
 
             return {
                 providers: {},
+                // redirect: '/static',
             };
         },
     },
