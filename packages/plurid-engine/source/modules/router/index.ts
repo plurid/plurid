@@ -1,4 +1,5 @@
 import Router from './Router';
+import URLRouter from './URLRouter';
 import RouteMatcher from './Matcher';
 import RouteParser from './Parser';
 
@@ -17,6 +18,7 @@ import {
 export default Router;
 
 export {
+    URLRouter,
     RouteMatcher,
     RouteParser,
 
