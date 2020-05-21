@@ -256,7 +256,7 @@ export default class PluridServer {
 
             console.log('preserveAction', preserveAction);
             if (preserveAction) {
-                preserveAction({
+                const preserveResult = await preserveAction({
                     kind: 'server',
                     request,
                     response,
