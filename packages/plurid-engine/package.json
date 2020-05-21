@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.1.74",
+    "version": "0.1.75",
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
         "plurid",
@@ -50,7 +50,7 @@
         "@plurid/plurid-data": "^0.1.135",
         "@plurid/plurid-functions": "^0.1.13",
         "@plurid/plurid-pubsub": "^0.1.7",
-        "@rollup/plugin-commonjs": "^11.1.0",
+        "@rollup/plugin-commonjs": "^12.0.0",
         "@types/jest": "^25.2.3",
         "@types/lodash.camelcase": "^4.3.6",
         "@types/node": "^14.0.4",
