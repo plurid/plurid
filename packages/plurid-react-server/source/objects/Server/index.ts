@@ -23,6 +23,7 @@ import {
 import {
     PluridRouterPath,
     PluridPreserve,
+    PluridPreserveAction,
     PluridComponent,
 } from '@plurid/plurid-data';
 
@@ -241,13 +242,29 @@ export default class PluridServer {
             const path = request.path;
 
             const urlMatch = urlRouter.match(path);
-            console.log('urlMatch', urlMatch);
 
+            let preserveAction: undefined | PluridPreserveAction<any>;
             if (urlMatch?.path) {
                 const preserve = this.preserves.find(
                     preserve => preserve.value === urlMatch.path
                 );
-                console.log('preserve', preserve);
+
+                if (preserve) {
+                    preserveAction = preserve.action;
+                }
+            }
+
+            console.log('preserveAction', preserveAction);
+            if (preserveAction) {
+                preserveAction({
+                    kind: 'server',
+                    request,
+                    response,
+                    context: {
+                        contextualizers: undefined,
+                        path,
+                    },
+                });
             }
 
             const {
