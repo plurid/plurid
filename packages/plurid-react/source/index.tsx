@@ -64,23 +64,12 @@ const {
     RouteParser: PluridRouteParser,
 } = router;
 
+
+/**
+ * Components and utilities.
+ */
 const Plurid = {
-    /** Enumerations */
-    SPACE_LAYOUT,
-    SIZES,
-    TRANSFORM_MODES,
-    TRANSFORM_TOUCHES,
-
-    /** Engine */
-    Router: router.default,
-    RouteMatcher: router.RouteMatcher,
-    RouteParser: router.RouteParser,
-
-    /** PubSub */
-    PubSub: PluridPubSub,
-    TOPICS,
-
-    /** Components */
+    /** COMPONENTS */
     Application: PluridApplication,
     SingleApplication: PluridSingleApplication,
 
@@ -93,15 +82,42 @@ const Plurid = {
     ApplicationConfigurator: PluridApplicationConfigurator,
     Provider: PluridProvider,
 
+
+    /** UTILITIES */
+    /** Enumerations */
+    SPACE_LAYOUT,
+    SIZES,
+    TRANSFORM_MODES,
+    TRANSFORM_TOUCHES,
+
+    /** PubSub */
+    PubSub: PluridPubSub,
+    TOPICS,
+
     /** Server */
     serverComputeMetastate,
 
-    /** Utilities */
-    pluridRouterNavigate,
+    /** Router */
+    routerNavigate: pluridRouterNavigate,
 };
 
 
 export {
+    /** Components */
+    PluridApplication,
+    PluridSingleApplication,
+
+    PluridLink,
+    PluridRouterBrowser,
+    PluridRouterStatic,
+    PluridRouterLink,
+    PluridVirtualList,
+    PluridPlaneConfigurator,
+    PluridApplicationConfigurator,
+    PluridProvider,
+
+
+    /** UTILITIES */
     /** Interfaces */
     PluridPlane,
     IndexedPluridPlane,
@@ -138,24 +154,10 @@ export {
     PluridPubSub,
     TOPICS,
 
-    /** SingleApplication */
-    PluridApplication,
-    PluridSingleApplication,
-
-    /** Components */
-    PluridLink,
-    PluridRouterBrowser,
-    PluridRouterStatic,
-    PluridRouterLink,
-    PluridVirtualList,
-    PluridPlaneConfigurator,
-    PluridApplicationConfigurator,
-    PluridProvider,
-
     /** Server */
     serverComputeMetastate,
 
-    /** Utilities */
+    /** Router */
     pluridRouterNavigate,
 };
 
