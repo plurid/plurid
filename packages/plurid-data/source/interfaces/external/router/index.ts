@@ -158,10 +158,13 @@ export interface PluridPreserve<C = undefined> {
      * The function can return one or more providers which will be passed to their appropriate consumers,
      * can redirect to a different path, or can handle any cross-cutting concerns, such as eventing or logging.
      */
-    action: (
-        transmission: PluridPreserveTransmission<C | undefined>,
-    ) => Promise<PluridPreserveResponse>;
+    action: PluridPreserveAction<C>;
 }
+
+
+export type PluridPreserveAction<C> = (
+    transmission: PluridPreserveTransmission<C | undefined>,
+) => Promise<PluridPreserveResponse>;
 
 
 export interface PluridPreserveTransmissionBase<C = undefined> {
