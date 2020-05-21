@@ -248,6 +248,10 @@ export default class PluridServer {
                         path,
                     },
                 });
+
+                if (preserveResult.responded) {
+                    return;
+                }
             }
 
 
