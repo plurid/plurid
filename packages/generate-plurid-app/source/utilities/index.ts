@@ -40,8 +40,8 @@ export const copyFile = (
     src: any,
     dest: any,
 ) => {
-	var oldFile = fs.createReadStream(src);
-	var newFile = fs.createWriteStream(dest);
+	const oldFile = fs.createReadStream(src);
+	const newFile = fs.createWriteStream(dest);
     oldFile.pipe(newFile);
 };
 
@@ -115,7 +115,7 @@ export const addScript = async (
 
     jsonFile.scripts[name] = value;
 
-    let data = JSON.stringify(jsonFile, null, 4);
+    const data = JSON.stringify(jsonFile, null, 4);
     fs.writeFileSync(path, data);
 }
 

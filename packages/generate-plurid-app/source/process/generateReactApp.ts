@@ -386,7 +386,7 @@ export const arrangePackageJSON = async (
         devDependencies,
     };
 
-    let data = JSON.stringify(updatedFile, null, 4);
+    const data = JSON.stringify(updatedFile, null, 4);
     fs.writeFileSync(packagePath, data);
 }
 
