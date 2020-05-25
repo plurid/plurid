@@ -92,7 +92,7 @@ export const findActiveUniverse = (
 
     let activeUniverseID = universes[0].id;
 
-    for (let universe of universes) {
+    for (const universe of universes) {
         if (universe.active) {
             activeUniverseID = universe.id;
             break;

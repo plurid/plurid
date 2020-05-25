@@ -11,7 +11,7 @@ export const computeSpaceSize = (
     let width = 0;
     let height = 0;
     let depth = 0;
-    let topCorner = {
+    const topCorner = {
         x: 0,
         y: 0,
         z: 0,
@@ -87,7 +87,7 @@ export const getTreePlaneByPlaneID = (
 ): TreePlane | null => {
     let _page = null;
 
-    for (let page of tree) {
+    for (const page of tree) {
         if (page.planeID === planeID) {
             _page = page;
         }
