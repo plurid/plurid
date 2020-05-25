@@ -39,7 +39,6 @@ const processArguments = async (
     program: Answers,
 ) => {
     try {
-        let directory: string;
         let language: Language;
         let ui: UI;
         let renderer: Renderer;
@@ -51,8 +50,7 @@ const processArguments = async (
             process.exit(1);
         }
 
-        directory = resolveAppDirectory(program.directory);
-
+        const directory = resolveAppDirectory(program.directory);
         makeDirectory(directory);
 
         switch(program.language.toLowerCase()) {
