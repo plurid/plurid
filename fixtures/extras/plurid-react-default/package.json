@@ -2,7 +2,7 @@
     "name": "@plurid/fixture-plurid-react-default",
     "version": "0.0.0",
     "description": "React implementation of Plurid to view and explore the web in three dimensions.",
-    "author": "Jan Cavel <mail@caveljan.com> (https://caveljan.com/)",
+    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
     "license": "MIT",
     "private": true,
     "dependencies": {
