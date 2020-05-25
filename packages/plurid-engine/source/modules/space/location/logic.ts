@@ -29,7 +29,7 @@ export const computePath = (
     tree: TreePlane[],
     planeID: string,
 ): TreePlane[] => {
-    let path: TreePlane[] = [];
+    const path: TreePlane[] = [];
     const page = getTreePlaneByPlaneID(tree, planeID);
 
     if (page) {
