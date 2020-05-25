@@ -90,7 +90,7 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (
         rows.current = [];
 
         for (let i = start; i <= end; i++) {
-            let item = items[i];
+            const item = items[i];
             rows.current.push(
                 <PluridVirtualListItem
                     key={i + Math.random()}
@@ -119,7 +119,7 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (
 
     useEffect(() => {
         let sum = 0;
-        for (let [index, value] of heights.current.entries()) {
+        for (const [index, value] of heights.current.entries()) {
             sum += value;
             if (translationY < 0) {
                 if (sum < Math.abs(translationY)) {
