@@ -227,6 +227,7 @@ export default class PluridServer {
             const urlMatch = urlRouter.match(path);
 
             let preserveAction: undefined | PluridPreserveAction<any>;
+            let preserveOnError: undefined;
             if (urlMatch?.path) {
                 const preserve = this.preserves.find(
                     preserve => preserve.value === urlMatch.path
@@ -234,22 +235,33 @@ export default class PluridServer {
 
                 if (preserve) {
                     preserveAction = preserve.action;
+                    // preserveOnError = preserve.onError;
                 }
             }
 
             let preserveResult: undefined | PluridPreserveResponse;
             if (preserveAction) {
-                preserveResult = await preserveAction({
-                    kind: 'server',
-                    request,
-                    response,
-                    context: {
-                        contextualizers: undefined,
-                        path,
-                    },
-                });
+                try {
+                    preserveResult = await preserveAction({
+                        kind: 'server',
+                        request,
+                        response,
+                        context: {
+                            contextualizers: undefined,
+                            path,
+                        },
+                    });
 
-                if (preserveResult.responded) {
+                    if (preserveResult.responded) {
+                        return;
+                    }
+                } catch (error) {
+                    console.log(error);
+
+                    if (preserveOnError) {
+                        // handle on error
+                    }
+
                     return;
                 }
             }
