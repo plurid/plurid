@@ -73,7 +73,7 @@
     "devDependencies": {
         "@apollo/react-hooks": "^3.1.5",
         "@babel/core": "^7.10.0",
-        "@plurid/plurid-data": "^0.1.138",
+        "@plurid/plurid-data": "^0.1.140",
         "@plurid/plurid-engine": "^0.1.78",
         "@plurid/plurid-functions": "^0.1.13",
         "@plurid/plurid-functions-react": "^0.0.1",
