@@ -166,13 +166,13 @@ export interface PluridPreserve<C = undefined> {
 
 export type PluridPreserveAction<C> = (
     transmission: PluridPreserveTransmission<C | undefined>,
-) => Promise<PluridPreserveResponse | undefined>;
+) => Promise<PluridPreserveResponse | void>;
 
 
 export type PluridPreserveOnError<C> = (
     error: any,
     transmission: PluridPreserveTransmission<C | undefined>,
-) => Promise<PluridPreserveResponse | undefined>;
+) => Promise<PluridPreserveResponse | void>;
 
 
 export interface PluridPreserveTransmissionBase<C = undefined> {
