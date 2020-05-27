@@ -159,12 +159,20 @@ export interface PluridPreserve<C = undefined> {
      * can redirect to a different path, or can handle any cross-cutting concerns, such as eventing or logging.
      */
     action: PluridPreserveAction<C>;
+
+    onError?: PluridPreserveOnError<C>;
 }
 
 
 export type PluridPreserveAction<C> = (
     transmission: PluridPreserveTransmission<C | undefined>,
-) => Promise<PluridPreserveResponse>;
+) => Promise<PluridPreserveResponse | undefined>;
+
+
+export type PluridPreserveOnError<C> = (
+    error: any,
+    transmission: PluridPreserveTransmission<C | undefined>,
+) => Promise<PluridPreserveResponse | undefined>;
 
 
 export interface PluridPreserveTransmissionBase<C = undefined> {
