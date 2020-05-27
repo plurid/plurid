@@ -213,7 +213,7 @@ export default class PluridServer {
     }
 
 
-    private async computeApplication() {
+    private computeApplication() {
         this.loadMiddleware();
 
         const pathsValues = this.paths.map(path => path.value);
@@ -237,7 +237,7 @@ export default class PluridServer {
 
                 if (preserve) {
                     preserveAction = preserve.action;
-                    // preserveOnError = preserve.onError;
+                    preserveOnError = preserve.onError;
                 }
             }
 
