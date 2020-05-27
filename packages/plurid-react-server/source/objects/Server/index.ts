@@ -24,7 +24,9 @@ import {
     PluridRouterPath,
     PluridPreserve,
     PluridPreserveAction,
+    PluridPreserveOnError,
     PluridPreserveResponse,
+    PluridPreserveTransmission,
     PluridComponent,
 } from '@plurid/plurid-data';
 
@@ -227,7 +229,7 @@ export default class PluridServer {
             const urlMatch = urlRouter.match(path);
 
             let preserveAction: undefined | PluridPreserveAction<any>;
-            let preserveOnError: undefined;
+            let preserveOnError: undefined | PluridPreserveOnError<any>;
             if (urlMatch?.path) {
                 const preserve = this.preserves.find(
                     preserve => preserve.value === urlMatch.path
@@ -239,18 +241,20 @@ export default class PluridServer {
                 }
             }
 
-            let preserveResult: undefined | PluridPreserveResponse;
+            let preserveResult: void | PluridPreserveResponse;
             if (preserveAction) {
+                const transmission: PluridPreserveTransmission<any> = {
+                    kind: 'server',
+                    request,
+                    response,
+                    context: {
+                        contextualizers: undefined,
+                        path,
+                    },
+                };
+
                 try {
-                    preserveResult = await preserveAction({
-                        kind: 'server',
-                        request,
-                        response,
-                        context: {
-                            contextualizers: undefined,
-                            path,
-                        },
-                    });
+                    preserveResult = await preserveAction(transmission);
 
                     if (preserveResult) {
                         if (preserveResult.responded) {
@@ -258,13 +262,22 @@ export default class PluridServer {
                         }
                     }
                 } catch (error) {
-                    console.log(error);
-
                     if (preserveOnError) {
-                        // handle on error
-                    }
+                        const onErrorResponse = await preserveOnError(
+                            error,
+                            transmission,
+                        );
 
-                    return;
+                        if (onErrorResponse) {
+                            if (onErrorResponse.responded) {
+                                return;
+                            }
+
+                            if (!onErrorResponse.depreserve) {
+                                return;
+                            }
+                        }
+                    }
                 }
             }
 
