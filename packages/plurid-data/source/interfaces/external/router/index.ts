@@ -209,6 +209,11 @@ export interface PluridPreserveResponse {
      * to prevent the server from sending a double response.
      */
     responded?: boolean;
+
+    /**
+     * Handle the server response without taking into account the preserve.
+     */
+    depreserve?: boolean;
 }
 
 export interface PluridPreserveResponseProviders {
