@@ -252,8 +252,10 @@ export default class PluridServer {
                         },
                     });
 
-                    if (preserveResult.responded) {
-                        return;
+                    if (preserveResult) {
+                        if (preserveResult.responded) {
+                            return;
+                        }
                     }
                 } catch (error) {
                     console.log(error);
