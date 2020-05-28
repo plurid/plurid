@@ -23,9 +23,10 @@ import apolloClient from '../shared/kernel/services/graphql/client';
 
 import {
     paths,
-    preserves,
     shell,
 } from '../shared';
+
+import preserves from './preserves';
 
 import {
     setRouteHandlers,
