@@ -158,15 +158,28 @@ export interface PluridPreserve<C = undefined> {
      * The function can return one or more providers which will be passed to their appropriate consumers,
      * can redirect to a different path, or can handle any cross-cutting concerns, such as eventing or logging.
      */
-    action: PluridPreserveAction<C>;
+    onServe: PluridPreserveOnServe<C>;
 
+    /**
+     * Function called after route is served.
+     */
+    afterServe?: PluridPreserveAfterServe<C>;
+
+    /**
+     * Function called if `onServe` throws an error.
+     */
     onError?: PluridPreserveOnError<C>;
 }
 
 
-export type PluridPreserveAction<C> = (
+export type PluridPreserveOnServe<C> = (
     transmission: PluridPreserveTransmission<C | undefined>,
 ) => Promise<PluridPreserveResponse | void>;
+
+
+export type PluridPreserveAfterServe<C> = (
+    transmission: PluridPreserveTransmission<C | undefined>,
+) => Promise<void>;
 
 
 export type PluridPreserveOnError<C> = (
@@ -175,8 +188,9 @@ export type PluridPreserveOnError<C> = (
 ) => Promise<PluridPreserveResponse | void>;
 
 
-export interface PluridPreserveTransmissionBase<C = undefined> {
-    kind: 'client' | 'server';
+export interface PluridPreserveTransmission<C = undefined> {
+    request: any;
+    response: any;
     context: PluridPreserveTransmissionContext<C>;
 }
 
@@ -184,20 +198,6 @@ export interface PluridPreserveTransmissionContext<C = undefined> {
     path: string;
     contextualizers: C;
 }
-
-export interface PluridPreserveTransmissionServer<C = undefined> extends PluridPreserveTransmissionBase<C> {
-    kind: 'server';
-    request: any;
-    response: any;
-}
-
-export interface PluridPreserveTransmissionClient<C = undefined> extends PluridPreserveTransmissionBase<C> {
-    kind: 'client';
-}
-
-export type PluridPreserveTransmission<C = undefined> =
-    | PluridPreserveTransmissionClient<C | undefined>
-    | PluridPreserveTransmissionServer<C | undefined>;
 
 
 export interface PluridPreserveResponse {
