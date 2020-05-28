@@ -412,10 +412,16 @@ export default class PluridServer {
         const htmlAttributes = helmet.htmlAttributes.toString();
         const bodyAttributes = helmet.bodyAttributes.toString();
 
+
+        let reduxPreserveValue;
+        if (preserveResult) {
+            reduxPreserveValue = preserveResult.providers?.redux;
+        }
+
         const store = this.servicesData?.reduxStore
             ? JSON.stringify(
                 this.servicesData?.reduxStore(
-                    this.servicesData?.reduxStoreValue || {},
+                    reduxPreserveValue ?? this.servicesData?.reduxStoreValue ?? {},
                 ).getState())
             : '';
 

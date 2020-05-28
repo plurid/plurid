@@ -75,7 +75,8 @@ export default class PluridContentGenerator {
         }
 
         const reduxStore = servicesData?.reduxStore;
-        const reduxStoreValue = reduxPreserveValue || servicesData?.reduxStoreValue || {};
+        const reduxStoreValue = reduxPreserveValue ?? servicesData?.reduxStoreValue ?? {};
+
         const apolloClient = servicesData?.apolloClient;
 
         let Wrap = wrapping(
