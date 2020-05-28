@@ -23,7 +23,8 @@ import {
 import {
     PluridRouterPath,
     PluridPreserve,
-    PluridPreserveAction,
+    PluridPreserveOnServe,
+    PluridPreserveAfterServe,
     PluridPreserveOnError,
     PluridPreserveResponse,
     PluridPreserveTransmission,
@@ -228,7 +229,8 @@ export default class PluridServer {
 
             const urlMatch = urlRouter.match(path);
 
-            let preserveAction: undefined | PluridPreserveAction<any>;
+            let preserveOnServe: undefined | PluridPreserveOnServe<any>;
+            let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
             let preserveOnError: undefined | PluridPreserveOnError<any>;
             if (urlMatch?.path) {
                 const preserve = this.preserves.find(
@@ -236,15 +238,15 @@ export default class PluridServer {
                 );
 
                 if (preserve) {
-                    preserveAction = preserve.action;
+                    preserveOnServe = preserve.onServe;
+                    preserveAfterServe = preserve.afterServe;
                     preserveOnError = preserve.onError;
                 }
             }
 
             let preserveResult: void | PluridPreserveResponse;
-            if (preserveAction) {
+            if (preserveOnServe) {
                 const transmission: PluridPreserveTransmission<any> = {
-                    kind: 'server',
                     request,
                     response,
                     context: {
@@ -254,7 +256,7 @@ export default class PluridServer {
                 };
 
                 try {
-                    preserveResult = await preserveAction(transmission);
+                    preserveResult = await preserveOnServe(transmission);
 
                     if (preserveResult) {
                         if (preserveResult.responded) {
@@ -303,7 +305,10 @@ export default class PluridServer {
                     },
                     route: gatewayEndpoint,
                 };
-                this.renderer = await this.renderApplication(gatewayRoute);
+                this.renderer = await this.renderApplication(
+                    gatewayRoute,
+                    preserveResult,
+                );
                 response.send(this.renderer?.html());
                 return;
             }
@@ -349,18 +354,25 @@ export default class PluridServer {
                     return;
                 }
 
-                this.renderer = await this.renderApplication(notFoundRoute);
+                this.renderer = await this.renderApplication(
+                    notFoundRoute,
+                    preserveResult,
+                );
                 response.send(this.renderer?.html());
                 return;
             }
 
-            this.renderer = await this.renderApplication(route);
+            this.renderer = await this.renderApplication(
+                route,
+                preserveResult,
+            );
             response.send(this.renderer?.html());
         });
     }
 
     private async renderApplication(
         route: router.MatcherResponse,
+        preserveResult: any,
     ) {
         // console.log('RENDER route', route);
         const pluridMetastate = serverComputeMetastate(
@@ -374,6 +386,7 @@ export default class PluridServer {
         } = await this.getContentAndStyles(
             route,
             pluridMetastate,
+            preserveResult,
         );
 
         const stringedStyles = this.styles.reduce(
@@ -436,6 +449,7 @@ export default class PluridServer {
     private async getContentAndStyles(
         matchedRoute: router.MatcherResponse,
         pluridMetastate: any,
+        preserveResult: any,
     ) {
         const stylesheet = new ServerStyleSheet();
         let content = '';
@@ -467,6 +481,7 @@ export default class PluridServer {
                 gateway,
                 gatewayEndpoint,
                 gatewayQuery,
+                preserveResult,
             });
 
             content = await contentHandler.render();

@@ -89,6 +89,7 @@ export interface PluridContentGeneratorData {
     gateway: boolean;
     gatewayEndpoint: string;
     gatewayQuery: string;
+    preserveResult: any;
 }
 
 

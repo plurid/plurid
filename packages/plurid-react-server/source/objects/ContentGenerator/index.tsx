@@ -48,6 +48,7 @@ export default class PluridContentGenerator {
             helmet,
             services,
             stylesheet,
+            preserveResult,
         } = this.data;
 
         // console.log('ContentGenerator pluridMetastate', pluridMetastate);
@@ -68,8 +69,13 @@ export default class PluridContentGenerator {
             </PluridProvider>
         );
 
+        let reduxPreserveValue;
+        if (preserveResult) {
+            reduxPreserveValue = preserveResult.providers?.redux;
+        }
+
         const reduxStore = servicesData?.reduxStore;
-        const reduxStoreValue = servicesData?.reduxStoreValue || {};
+        const reduxStoreValue = reduxPreserveValue || servicesData?.reduxStoreValue || {};
         const apolloClient = servicesData?.apolloClient;
 
         let Wrap = wrapping(
