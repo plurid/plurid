@@ -76,22 +76,6 @@ export interface PluridRouterProperties {
      * API endpoint to request the elements for the paths not found in the initial routing.
      */
     api?: string;
-
-    /**
-     * Static context.
-     */
-    static?: PluridRouterStatic;
-
-    /**
-     * Execute an arbitrary function before rendering the application,
-     * or a route within the client.
-     */
-    preserves?: PluridPreserve<any>[];
-
-    /**
-     * Entities will be passed into the `context` of the preserve.
-     */
-    preserveContextualizers?: Record<string, any>;
 }
 
 
