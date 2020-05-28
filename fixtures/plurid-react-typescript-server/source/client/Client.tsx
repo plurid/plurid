@@ -44,7 +44,6 @@ import graphqlClient from '../shared/kernel/services/graphql/client';
 import {
     paths,
     shell,
-    preserves,
 } from '../shared';
 
 
@@ -67,7 +66,6 @@ const Client: React.FC<any> = () => {
                             <PluridRouterBrowser
                                 shell={shell}
                                 paths={paths}
-                                preserves={preserves}
                             />
                         </PluridProvider>
                     {/* </StripeProvider> */}
