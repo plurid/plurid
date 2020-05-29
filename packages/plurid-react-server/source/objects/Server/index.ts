@@ -545,6 +545,10 @@ export default class PluridServer {
             this.serverApplication.get(
                 '/vendor.js',
                 (request, response, next) => {
+                    response.setHeader(
+                        'Content-Type', 'application/javascript',
+                    );
+
                     const vendorBrotliExists = fs.existsSync(
                         path.join(clientPath, 'vendor.js.br')
                     );
