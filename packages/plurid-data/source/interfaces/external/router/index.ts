@@ -134,9 +134,9 @@ export interface PluridRouterPath {
 
 export interface PluridPreserve<C = undefined> {
     /**
-     * Path value.
+     * Served path value.
      */
-    value: string;
+    serve: string;
 
     /**
      * The function will be executed and awaited before rendering the application on the server.
@@ -147,7 +147,7 @@ export interface PluridPreserve<C = undefined> {
     onServe: PluridPreserveOnServe<C>;
 
     /**
-     * Function called after route is served.
+     * Function called after route is served successfully.
      */
     afterServe?: PluridPreserveAfterServe<C>;
 
