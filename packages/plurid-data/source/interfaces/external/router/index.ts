@@ -310,6 +310,9 @@ export interface PluridRouterPathMultispace {
      * Default: `mandatory`.
      */
     snapType?: 'none' | 'mandatory' | 'proximity';
+
+    header?: PluridComponent;
+    footer?: PluridComponent;
 }
 
 
