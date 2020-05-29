@@ -6,7 +6,7 @@ import {
 
 const preserves: PluridPreserve<any>[] = [
     {
-        value: '/',
+        serve: '/',
         onServe: async (
             transmission,
         ) => {
