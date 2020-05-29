@@ -234,7 +234,7 @@ export default class PluridServer {
             let preserveOnError: undefined | PluridPreserveOnError<any>;
             if (urlMatch?.path) {
                 const preserve = this.preserves.find(
-                    preserve => preserve.value === urlMatch.path
+                    preserve => preserve.serve === urlMatch.path
                 );
 
                 if (preserve) {
