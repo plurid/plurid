@@ -108,6 +108,9 @@ const PluridRouterBrowser = (
     const [Component, setComponent] = useState<any>(
         initialComponent,
     );
+    const [routerHistory, setRouterHistory] = useState({
+        path: staticContext ? staticContext.path : '',
+    });
     // console.log('Component', Component);
 
 
