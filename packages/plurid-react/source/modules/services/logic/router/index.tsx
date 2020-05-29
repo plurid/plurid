@@ -341,20 +341,20 @@ export const getComponentFromRoute = (
     }
 
 
-    let multispaceHeader: React.FC<any>;
-    let multispaceFooter: React.FC<any>;
+    let MultispaceHeader: React.FC<any>;
+    let MultispaceFooter: React.FC<any>;
     if (path.multispace?.header) {
         const header = path.multispace.header;
 
         if (header.kind === 'react') {
-            multispaceHeader = header.element;
+            MultispaceHeader = header.element;
         }
     }
     if (path.multispace?.footer) {
         const footer = path.multispace.footer;
 
         if (footer.kind === 'react') {
-            multispaceFooter = footer.element;
+            MultispaceFooter = footer.element;
         }
     }
 
@@ -364,14 +364,14 @@ export const getComponentFromRoute = (
             snapType={multispaceSnapType}
             data-plurid-entity={PLURID_ENTITY_MULTISPACE}
         >
-            {multispaceHeader && (
-                <>{multispaceHeader}</>
+            {MultispaceHeader && (
+                <MultispaceHeader />
             )}
 
             {spacesArray}
 
-            {multispaceFooter && (
-                <>{multispaceFooter}</>
+            {MultispaceFooter && (
+                <MultispaceFooter />
             )}
         </StyledSpaces>
     );
