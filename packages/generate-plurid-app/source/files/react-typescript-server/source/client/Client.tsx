@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+    useRef,
+} from 'react';
 
 import {
     HelmetProvider,
@@ -23,26 +25,27 @@ import {
 // [END StripeProvider]
 
 import {
-    StyleSheetManager,
-} from 'styled-components';
-
-import {
     PluridProvider,
     PluridRouterBrowser,
 } from '@plurid/plurid-react';
 
 import helmetContext from '../shared/kernel/services/helmet';
 
+// [START ReduxStore]
 import reduxStore from '../shared/kernel/services/state/store';
+// [START ReduxStore]
+// [START GraphqlClient]
 import graphqlClient from '../shared/kernel/services/graphql/client';
+// [START GraphqlClient]
+// [START StripeAPIKey]
 // import {
 //     STRIPE_API_KEY as stripeAPIKey,
 // } from './App/data/constants';
+// [END StripeAPIKey]
 
 import {
     paths,
     shell,
-    preserves,
 } from '../shared';
 
 
@@ -55,17 +58,21 @@ delete (window as any).__PRELOADED_PLURID_METASTATE__;
 
 
 const Client: React.FC<any> = () => {
+    /** references */
+    const store = useRef(reduxStore(reduxState));
+
+
+    /** render */
     return (
         // [START ClientReturn]
         <HelmetProvider context={helmetContext}>
-            <ReduxProvider store={reduxStore(reduxState)}>
+            <ReduxProvider store={store.current}>
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
                         <PluridProvider metastate={pluridMetastate}>
                             <PluridRouterBrowser
                                 shell={shell}
                                 paths={paths}
-                                preserves={preserves}
                             />
                         </PluridProvider>
                     {/* </StripeProvider> */}

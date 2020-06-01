@@ -4,15 +4,16 @@ import {
 
 
 
-const preserves: PluridPreserve[] = [
+const preserves: PluridPreserve<any>[] = [
     {
-        value: '/',
-        action: async (
+        serve: '/',
+        onServe: async (
             transmission,
         ) => {
             const {
-                kind,
                 context,
+                // response,
+                // request,
             } = transmission;
 
             const {
@@ -20,14 +21,7 @@ const preserves: PluridPreserve[] = [
                 contextualizers,
             } = context;
 
-            switch (kind) {
-                case 'client':
-                    // custom logic for the client preserve of '/'
-                    break;
-                case 'server':
-                    // custom logic for the server preserve of '/'
-                    break;
-            }
+            // custom logic for the server preserve of '/'
 
             return {
                 providers: {},

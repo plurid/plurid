@@ -23,12 +23,14 @@ const styledComponentsTransformer = createStyledComponentsTransformer({
 
 
 /** PLUGINS */
-const copyPlugin = new CopyPlugin([
-    {
-        from: path.resolve(__dirname, '../../source/public'),
-        to: './',
-    },
-]);
+const copyPlugin = new CopyPlugin({
+    patterns: [
+        {
+            from: path.resolve(__dirname, '../../source/public'),
+            to: './',
+        },
+    ],
+});
 
 const compressionPluginBrotli = new CompressionPlugin({
     include: 'vendor.js',
