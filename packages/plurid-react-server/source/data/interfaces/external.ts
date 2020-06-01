@@ -79,6 +79,7 @@ export type PluridServerService =
 export interface PluridServerServicesData {
     reduxStore?: any;
     reduxStoreValue?: any;
+    reduxContext?: any;
     apolloClient?: any;
     stripeScript?: string;
 }
