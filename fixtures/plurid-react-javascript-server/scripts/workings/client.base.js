@@ -4,8 +4,6 @@ const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
-const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
-
 
 
 /** CONSTANTS */
@@ -13,13 +11,8 @@ const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
 
 const isProduction = process.env.ENV_MODE === 'production';
 
-const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
+const entryIndex = path.resolve(__dirname, '../../source/client/index.jsx');
 const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}/client`);
-
-const styledComponentsTransformer = createStyledComponentsTransformer({
-    ssr: true,
-    displayName: !isProduction,
-});
 
 
 /** PLUGINS */
@@ -84,27 +77,9 @@ const fileRule = {
 };
 
 
-const tsRule = {
-    test: /\.ts(x?)$/,
-    exclude: /node_modules/,
-    use: [
-        {
-            loader: 'ts-loader',
-            options: {
-                configFile: path.resolve(__dirname, '../../tsconfig.json'),
-                getCustomTransformers: () => ({
-                    before: [styledComponentsTransformer]
-                }),
-            },
-        },
-    ],
-};
-
-
 const rules = {
     styleRule,
     fileRule,
-    tsRule,
 };
 
 
@@ -121,7 +96,7 @@ const baseConfig = {
     },
 
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+        extensions: ['.js', '.jsx', '.json'],
     },
 
     stats: {
@@ -134,7 +109,6 @@ const baseConfig = {
         rules: [
             rules.styleRule,
             rules.fileRule,
-            rules.tsRule,
         ],
     },
 };
