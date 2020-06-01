@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+    useRef,
+} from 'react';
 
 import {
     HelmetProvider,
@@ -56,10 +58,15 @@ delete (window as any).__PRELOADED_PLURID_METASTATE__;
 
 
 const Client: React.FC<any> = () => {
+    /** references */
+    const store = useRef(reduxStore(reduxState));
+
+
+    /** render */
     return (
         // [START ClientReturn]
         <HelmetProvider context={helmetContext}>
-            <ReduxProvider store={reduxStore(reduxState)}>
+            <ReduxProvider store={store.current}>
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
                         <PluridProvider metastate={pluridMetastate}>
