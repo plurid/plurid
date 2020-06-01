@@ -1,22 +1,35 @@
 import PluridServer from '@plurid/plurid-react-server';
 
-import helmet from '../client/App/services/helmet';
+import helmet from '../shared/kernel/services/helmet';
 
 /** uncomment to use services */
-import reduxStore from '../client/App/services/state/store';
-import graphqlClient from '../client/App/services/graphql/client';
+// [START redux import]
+import reduxStore from '../shared/kernel/services/state/store';
+// [END redux import]
+// [START apollo import]
+import apolloClient from '../shared/kernel/services/graphql/client';
+// [END apollo import]
+// [START stripe import]
 // import {
 //     STRIPE_API_KEY as stripeAPIKey,
 // } from '../client/App/data/constants';
+// [END stripe import]
 
 import {
     paths,
-} from '../common';
+    shell,
+} from '../shared';
+
+import preserves from './preserves';
+
+import {
+    setRouteHandlers,
+} from './handlers';
 
 
 
 /** ENVIRONMENT */
-
+const watchMode = process.env.PLURID_WATCH_MODE === 'true';
 const isProduction = process.env.ENV_MODE === 'production';
 const buildDirectory = process.env.PLURID_BUILD_DIRECTORY || 'build';
 const port = process.env.PORT || 63000;
@@ -24,17 +37,25 @@ const port = process.env.PORT || 63000;
 
 
 /** CONSTANTS */
-
 const applicationRoot = 'plurid-app';
-const openAtStart = isProduction ? false : true;
+const openAtStart = watchMode
+    ? false
+    : isProduction
+        ? false
+        : true;
+const debug = isProduction
+    ? 'info'
+    : 'error';
 
+// [START stripe script]
 const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
+// [END stripe script]
 
 
 /** Custom styles to be loaded into the template. */
 const styles = [
     //
-]
+];
 
 
 /** Express-like middleware. */
@@ -46,39 +67,63 @@ const middleware = [
 /** Services to be used in the application. */
 const services = [
     /** uncomment to use services */
+    // [START apollo service]
+    'Apollo',
+    // [END apollo service]
+    // [START redux service]
     'Redux',
-    'GraphQL',
+    // [END redux service]
+    // [START stripe service]
     // 'Stripe',
+    // [END stripe service]
 ];
 
 
 const servicesData = {
     /** uncomment to use services */
+    // [START apollo serviceData]
+    apolloClient,
+    // [END apollo serviceData]
+    // [START redux serviceData]
     reduxStore,
     reduxStoreValue: {},
-    graphqlClient,
+    // [END redux serviceData]
+    // [START stripe serviceData]
     // stripeAPIKey,
     // stripeScript,
+    // [END stripe serviceData]
 };
 
 const options = {
-    root: applicationRoot,
     buildDirectory,
     open: openAtStart,
+    debug,
+};
+
+const template = {
+    root: applicationRoot,
 };
 
 
 
 /** SERVER */
+// generate server
 const pluridServer = new PluridServer({
-    paths,
     helmet,
+    paths,
+    preserves,
+    shell,
     styles,
     middleware,
     services,
     servicesData,
     options,
+    template,
 });
+
+
+// handle non-GET or custom routes (such as API requests, or anything else)
+setRouteHandlers(pluridServer);
 
 
 

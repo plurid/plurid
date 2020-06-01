@@ -1,6 +1,8 @@
 import React from 'react';
 
-import PluridApp from '@plurid/plurid-react';
+import {
+    PluridApplication,
+} from '@plurid/plurid-react';
 
 import Plane from './planes/Plane';
 
@@ -42,13 +44,13 @@ const App = () => {
 
     /** render */
     return (
-        <div>
-            <PluridApp
+        <>
+            <PluridApplication
                 configuration={pluridConfiguration}
                 planes={pluridPlanes}
                 view={pluridView}
             />
-        </div>
+        </>
     );
 }
 

@@ -10,13 +10,22 @@ const {
 
 
 
+const command = process.argv[2];
+
+
 /** ENVIRONMENT */
-const inProduction = process.env.NODE_ENV === 'production';
+const environment = {
+    production: command.includes('production'),
+    development: command.includes('development'),
+    local: !command.includes('development') && !command.includes('production'),
+};
 
 require('dotenv').config({
-    path: inProduction
+    path: environment.production
         ? './environment/.env.production'
-        : './environment/.env.local',
+        : environment.development
+            ? './environment/.env.development'
+            : './environment/.env.local',
 });
 
 
@@ -24,7 +33,6 @@ require('dotenv').config({
 /** CONSTANTS */
 const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
 
-const command = process.argv[2];
 const buildFolder = path.join(process.cwd(), BUILD_DIRECTORY);
 const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true' && !process.argv[3]
     ? 'inherit'
@@ -33,29 +41,55 @@ const verbose = process.env.PLURID_DEFAULT_VERBOSE === 'true' && !process.argv[3
         : 'ignore';
 
 
+/**
+ * Windows (win32) requires full path to the bin command.
+ *
+ * @param {string} command
+ */
+const crossCommand = (
+    command,
+) => {
+    if (process.platform === 'win32') {
+        return path.join(process.cwd(), 'node_modules/.bin/', command + '.cmd');
+    }
+
+    return 'node_modules/.bin/' + command;
+}
+
+
 
 /** COMMANDS */
 const commandStart = [
-    `node ${BUILD_DIRECTORY}`,
+    `node ${buildFolder}`,
 ];
 
-const commandRunDevelopment = [
-    `nodemon ${BUILD_DIRECTORY}`,
+const commandWatchClient = [
+    `${crossCommand('webpack')} --watch --config ./scripts/workings/client.development.js`,
 ];
-const commandRunProduction = [
-    `node ${BUILD_DIRECTORY}`,
+const commandWatchServer = [
+    `${crossCommand('rollup')} -w -c ./scripts/workings/server.development.js`,
 ];
+
+const commandStartLocal = [
+    `${crossCommand('nodemon')} --watch ${path.join(buildFolder, '/index.js')} ${buildFolder}`,
+];
+
+const commandWatch = [
+    `${crossCommand('rimraf')} ${path.join(buildFolder, '/stills')}`,
+    `PLURID_WATCH_MODE=true concurrently \"yarn watch.client verbose\" \"yarn watch.server verbose\" \"yarn start.local verbose\"`,
+];
+
 
 const commandClean = [
-    `rimraf ./${BUILD_DIRECTORY}`,
+    `${crossCommand('rimraf')} ${buildFolder}`,
 ];
 
 const commandLint = [
-    'eslint -c ./configurations/.eslintrc.js ./source',
+    `${crossCommand('eslint')} -c ./configurations/.eslintrc.js ./source`,
 ];
 
 const commandTest = [
-    'jest -c ./configurations/jest.config.js ./source',
+    `${crossCommand('jest')} -c ./configurations/jest.config.js ./source`,
 ];
 
 const commandContainerizeProduction = [
@@ -71,30 +105,21 @@ const commandContainerizeProductionStills = [
 ];
 
 const commandBuildClientDevelopment = [
-    'node_modules/.bin/webpack --config ./scripts/workings/client.development.js',
+    `${crossCommand('webpack')} --config ./scripts/workings/client.development.js`,
 ];
 const commandBuildClientProduction = [
-    'node_modules/.bin/webpack --config ./scripts/workings/client.production.js',
+    `${crossCommand('webpack')} --config ./scripts/workings/client.production.js`,
 ];
 
 const commandBuildServerDevelopment = [
-    'node_modules/.bin/rollup -c ./scripts/workings/server.development.js',
+    `${crossCommand('rollup')} -c ./scripts/workings/server.development.js`,
 ];
 const commandBuildServerProduction = [
-    'node_modules/.bin/rollup -c ./scripts/workings/server.production.js',
+    `${crossCommand('rollup')} -c ./scripts/workings/server.production.js`,
 ];
 
 const commandBuildStills = [
     'node ./scripts/workings/stills.js',
-];
-
-
-const commandStartClientDevelopment = [
-    'node_modules/.bin/webpack --watch --progress --config ./scripts/workings/client.development.js',
-];
-const commandStartServerDevelopment = [
-    ...commandBuildServerDevelopment,
-    `nodemon ${BUILD_DIRECTORY}`,
 ];
 
 
@@ -129,13 +154,19 @@ const runCommand = (
         stdio: 'ignore'
     },
 ) => {
-    for (const subCommand of command) {
-        execSync(
-            subCommand,
-            {
-                stdio: options.stdio,
-            },
-        );
+    try {
+        for (const subCommand of command) {
+            execSync(
+                subCommand,
+                {
+                    stdio: options.stdio,
+                },
+            );
+        }
+    } catch (error) {
+        if (verbose === 'inherit') {
+            console.log(error);
+        }
     }
 }
 
@@ -154,41 +185,43 @@ switch (command) {
             stdio: 'inherit',
         });
         break;
-    case 'start.client.development':
-        console.log('\n\tStarting the Client Development Process...');
-        runCommand(commandStartClientDevelopment, {
+    case 'start.local':
+        console.log('\n\tRunning the Local Server...');
+        runCommand(commandStartLocal, {
             stdio: verbose,
         });
         break;
-    case 'start.server.development':
-        console.log('\n\tStarting the Server Development Process...');
-        runCommand(commandStartServerDevelopment, {
+    case 'watch.client':
+        console.log('\n\tStarting the Client Watching Process...');
+        runCommand(commandWatchClient, {
             stdio: verbose,
         });
         break;
-    case 'run.development':
-        console.log('\n\tRunning the Development Server...');
-        runCommand(commandRunDevelopment, {
+    case 'watch.server':
+        console.log('\n\tStarting the Server Watching Process...');
+        runCommand(commandWatchServer, {
             stdio: verbose,
         });
         break;
-    case 'run.production':
-        console.log('\n\tRunning the Production Server...');
-        runCommand(commandRunProduction, {
-            stdio: 'inherit',
+    case 'watch':
+        console.log('\n\tRunning the Watching Process...');
+        runCommand(commandWatch, {
+            stdio: verbose,
         });
         break;
     case 'clean':
-        runCommand(commandClean);
+        runCommand(commandClean, {
+            stdio: verbose,
+        });
         break;
     case 'lint':
         runCommand(commandLint, {
-            stdio: 'inherit',
+            stdio: verbose,
         });
         break;
     case 'test':
         runCommand(commandTest, {
-            stdio: 'inherit',
+            stdio: verbose,
         });
         break;
     case 'containerize.production':
@@ -205,6 +238,13 @@ switch (command) {
         });
         console.log('\n\tFinished the Stilled Production Containerization Process.');
         break;
+    case 'build.client.local':
+        console.log('\n\tStarting the Client Local Build Process...');
+        runCommand(commandBuildClientDevelopment, {
+            stdio: verbose,
+        });
+        console.log('\n\Finished the Client Local Build Process.\n');
+        break;
     case 'build.client.development':
         console.log('\n\tStarting the Client Development Build Process...');
         runCommand(commandBuildClientDevelopment, {
@@ -218,6 +258,13 @@ switch (command) {
             stdio: verbose,
         });
         console.log('\n\Finished the Client Production Build Process.\n');
+        break;
+    case 'build.server.local':
+        console.log('\n\tStarting the Server Local Build Process...');
+        runCommand(commandBuildServerDevelopment, {
+            stdio: verbose,
+        });
+        console.log('\n\Finished the Server Local Build Process.\n');
         break;
     case 'build.server.development':
         console.log('\n\tStarting the Server Development Build Process...');
@@ -239,6 +286,20 @@ switch (command) {
             stdio: verbose,
         });
         console.log('\n\tFinished the Stilled Build Process.\n');
+        break;
+    case 'build.local':
+        console.log('\n\tStarting the Local Build Process...');
+        runCommand(commandBuildDevelopment, {
+            stdio: verbose,
+        });
+        console.log('\n\tFinished the Local Build Process.\n');
+        break;
+    case 'build.local.stills':
+        console.log('\n\tStarting the Stilled Development Build Process...');
+        runCommand(commandBuildDevelopmentStills, {
+            stdio: verbose,
+        });
+        console.log('\n\tFinished the Stilled Development Build Process.\n');
         break;
     case 'build.development':
         console.log('\n\tStarting the Development Build Process...');
