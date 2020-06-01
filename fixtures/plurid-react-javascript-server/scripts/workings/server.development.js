@@ -10,15 +10,13 @@ export default {
     input,
     output,
     plugins: [
-        plugins.svg(),
         plugins.postcss(),
-        plugins.image(),
         plugins.url(),
-        plugins.typescript(),
-        plugins.babel(),
         plugins.external(),
         plugins.resolve(),
         plugins.commonjs(),
+        /** typescript and sourcemaps in this order to allow for styled components transfomer (?) */
+        plugins.typescript(),
         plugins.sourceMaps(),
     ],
 }
