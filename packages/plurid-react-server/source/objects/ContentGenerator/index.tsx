@@ -97,6 +97,7 @@ export default class PluridContentGenerator {
                         Wrap,
                         {
                             store: reduxStore(reduxStoreValue),
+                            context: servicesData?.reduxContext,
                         },
                     );
                     break;
