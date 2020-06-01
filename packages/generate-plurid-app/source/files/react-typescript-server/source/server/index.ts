@@ -23,9 +23,14 @@ import apolloClient from '../shared/kernel/services/graphql/client';
 
 import {
     paths,
-    preserves,
     shell,
 } from '../shared';
+
+import preserves from './preserves';
+
+import {
+    setRouteHandlers,
+} from './handlers';
 
 
 
@@ -108,6 +113,7 @@ const template: PluridServerTemplateConfiguration = {
 
 
 /** SERVER */
+// generate server
 const pluridServer = new PluridServer({
     helmet,
     paths,
@@ -120,6 +126,10 @@ const pluridServer = new PluridServer({
     options,
     template,
 });
+
+
+// handle non-GET or custom routes (such as API requests, or anything else)
+setRouteHandlers(pluridServer);
 
 
 
