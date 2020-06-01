@@ -1,24 +1,29 @@
 const path = require('path');
 
+const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+
 
 
 /** CONSTANTS */
 const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
 
-const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
+const isProduction = process.env.ENV_MODE === 'production';
+
+const entryIndex = path.resolve(__dirname, '../../source/client/index.jsx');
 const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}/client`);
 
 
-
 /** PLUGINS */
-const copyPlugin = new CopyPlugin([
-    {
-        from: path.resolve(__dirname, '../../source/public'),
-        to: './',
-    },
-]);
+const copyPlugin = new CopyPlugin({
+    patterns: [
+        {
+            from: path.resolve(__dirname, '../../source/public'),
+            to: './',
+        },
+    ],
+});
 
 const compressionPluginBrotli = new CompressionPlugin({
     include: 'vendor.js',
@@ -34,11 +39,17 @@ const compressionPluginGzip = new CompressionPlugin({
     filename: 'vendor.js.gzip',
 });
 
+const processEnvironmentPlugin = new webpack.DefinePlugin({
+    'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
+    'process.env.SC_DISABLE_SPEEDY': true, /** HACK: styled components not rendering in production */
+});
+
 
 const plugins = {
     copyPlugin,
     compressionPluginBrotli,
     compressionPluginGzip,
+    processEnvironmentPlugin,
 };
 
 
@@ -59,60 +70,16 @@ const fileRule = {
         {
             loader: 'file-loader',
             options: {
-                name: '/assets/[name].[hash].[ext]',
+                name: '/assets/[name].[ext]',
             },
         },
     ],
-};
-
-
-const tsRule = {
-    test: /\.ts(x?)$/,
-    exclude: /node_modules/,
-    use: [
-        {
-            loader: 'ts-loader',
-            options: {
-                configFile: path.resolve(__dirname, '../../tsconfig.json'),
-            },
-        },
-    ],
-};
-
-
-const babelRule = {
-    test: /\.js$/,
-    loader: 'babel-loader',
-    exclude: /node_modules/,
-    options: {
-        presets: [
-            '@babel/preset-react',
-            [
-                '@babel/env',
-                {
-                    targets: {
-                        browsers: ['last 2 versions'],
-                    },
-                },
-            ],
-        ],
-        plugins: [
-            [
-                'babel-plugin-styled-components',
-                {
-                    "ssr": true,
-                },
-            ],
-        ],
-    },
 };
 
 
 const rules = {
     styleRule,
     fileRule,
-    tsRule,
-    babelRule,
 };
 
 
@@ -129,7 +96,7 @@ const baseConfig = {
     },
 
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+        extensions: ['.js', '.jsx', '.json'],
     },
 
     stats: {
@@ -142,8 +109,6 @@ const baseConfig = {
         rules: [
             rules.styleRule,
             rules.fileRule,
-            rules.tsRule,
-            rules.babelRule,
         ],
     },
 };
