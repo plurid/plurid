@@ -37,6 +37,7 @@ import PluridPubSub, {
 import PluridApplication from './Application';
 
 import PluridSingleApplication from './Application/SingleApplication';
+import PluridExposedApplication from './Application/ExposedApplication';
 
 import PluridLink from './modules/components/Link';
 import PluridRouterBrowser from './modules/components/RouterBrowser';
@@ -47,6 +48,8 @@ import PluridPlaneConfigurator from './modules/components/PlaneConfigurator';
 import PluridApplicationConfigurator from './modules/components/ApplicationConfigurator';
 
 import PluridProvider from './modules/components/Provider';
+
+import pluridStateModules from './modules/services/state/modules';
 
 import {
     serverComputeMetastate,
@@ -106,6 +109,7 @@ export {
     /** Components */
     PluridApplication,
     PluridSingleApplication,
+    PluridExposedApplication,
 
     PluridLink,
     PluridRouterBrowser,
@@ -159,6 +163,9 @@ export {
 
     /** Router */
     pluridRouterNavigate,
+
+    /** state */
+    pluridStateModules,
 };
 
 
