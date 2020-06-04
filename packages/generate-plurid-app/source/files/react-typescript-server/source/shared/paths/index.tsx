@@ -45,43 +45,6 @@ const indexPath: PluridRouterPath = {
 }
 
 
-const notFoundPath: PluridRouterPath = {
-    value: '/not-found',
-    exterior: {
-        kind: 'react',
-        element: () => (
-            <Head
-                title="Not Found | Plurid' Application"
-            />
-        ),
-    },
-    spaces: [
-        {
-            value: 'default',
-            universes: [
-                {
-                    value: 'default',
-                    clusters: [
-                        {
-                            value: 'default',
-                            planes: [
-                                {
-                                    value: '/',
-                                    component: {
-                                        kind: 'react',
-                                        element: NotFoundPlane,
-                                    },
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
-        },
-    ],
-};
-
-
 const staticPath: PluridRouterPath = {
     value: '/static',
     exterior: {
@@ -146,11 +109,64 @@ const planesPath: PluridRouterPath = {
 };
 
 
+const parametricPath: PluridRouterPath = {
+    value: '/parametric/:parameter',
+    parameters: {
+        parameter: {
+            length: 10,
+            lengthType: '==',
+        },
+    },
+    exterior: {
+        kind: 'react',
+        element: StaticPlane,
+    },
+};
+
+
+const notFoundPath: PluridRouterPath = {
+    value: '/not-found',
+    exterior: {
+        kind: 'react',
+        element: () => (
+            <Head
+                title="Not Found | Plurid' Application"
+            />
+        ),
+    },
+    spaces: [
+        {
+            value: 'default',
+            universes: [
+                {
+                    value: 'default',
+                    clusters: [
+                        {
+                            value: 'default',
+                            planes: [
+                                {
+                                    value: '/',
+                                    component: {
+                                        kind: 'react',
+                                        element: NotFoundPlane,
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+};
+
+
 const paths: PluridRouterPath[] = [
     indexPath,
-    notFoundPath,
     staticPath,
     planesPath,
+    parametricPath,
+    notFoundPath,
 ];
 
 
