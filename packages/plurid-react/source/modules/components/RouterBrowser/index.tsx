@@ -37,6 +37,7 @@ import {
 
 
 const PluridRouter = router.default;
+const PluridURLRouter = router.URLRouter;
 
 
 const PluridRouterBrowser = (
@@ -73,11 +74,35 @@ const PluridRouterBrowser = (
     /** references */
     const indexedPlanes = useRef<Map<string, IndexedPluridPlane>>(new Map());
 
+    const indexedPaths = useRef<any>({});
+
+    const urlRoutes = useRef(paths.map(path => {
+        indexedPaths.current[path.value] = {
+            ...path,
+        };
+
+        const {
+            value,
+            parameters,
+        } = path;
+
+        return {
+            value,
+            parameters,
+        };
+    }));
+
+    const pluridURLRouter = useRef(new PluridURLRouter(
+        urlRoutes.current,
+    ));
+
     const pluridRouter = useRef(new PluridRouter(
         paths,
     ));
 
-    const windowLocation = typeof window !== 'undefined' ? window.location.pathname : '';
+    const windowLocation = typeof window !== 'undefined'
+        ? window.location.pathname
+        : '';
     // console.log('windowLocation', windowLocation);
     // console.log('staticContext?.path', staticContext?.path);
     const matchedInitialRoute = (pluridRouter as any).current.match(
@@ -202,6 +227,8 @@ const PluridRouterBrowser = (
         // }
 
         const matchedRoute = pluridRouter.current.match(path);
+
+        const matchedURL = pluridURLRouter.current.match(path);
 
         if (!matchedRoute) {
             handleNoMatch();
