@@ -97,7 +97,8 @@ export const matchRoute = (
     }
 
     const internalMatchedRoute: InternalMatchedRoute = {
-        value: processedRoute.value,
+        target: processedRoute.value,
+        source: route,
         parameters: parametersValues,
     };
 

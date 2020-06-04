@@ -15,7 +15,8 @@ export interface URLRoute {
 
 
 export interface MatchedRoute {
-    value: string;
+    target: string;
+    source: string;
     elements: RouteElements;
     parameters?: Record<string, string>;
 }
@@ -29,7 +30,8 @@ export interface ProcessedRoute {
 
 
 export interface InternalMatchedRoute {
-    value: string;
+    target: string;
+    source: string;
     parameters: Record<string, string>;
 }
 

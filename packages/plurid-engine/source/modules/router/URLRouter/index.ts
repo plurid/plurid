@@ -44,13 +44,15 @@ class URLRouter {
 
             if (matchedRoute) {
                 const {
-                    value,
+                    target,
+                    source,
                     parameters,
                 } = matchedRoute;
 
                 return {
                     elements: routeElements,
-                    value,
+                    target,
+                    source,
                     parameters,
                 };
             }
@@ -66,13 +68,15 @@ class URLRouter {
 
         if (matchedRoute) {
             const {
-                value,
+                target,
+                source,
                 parameters,
             } = matchedRoute;
 
             return {
                 elements: routeElements,
-                value,
+                target,
+                source,
                 parameters,
             };
         }
@@ -88,13 +92,15 @@ class URLRouter {
 
             if (matchedRoute) {
                 const {
-                    value,
+                    target,
+                    source,
                     parameters,
                 } = matchedRoute;
 
                 return {
                     elements: routeElements,
-                    value,
+                    target,
+                    source,
                     parameters,
                 };
             }
