@@ -7,28 +7,29 @@ import {
 export const CATCH_ALL_ROUTE = '*';
 
 
-export interface MatchedRoute {
-    elements: RouteElements;
-    route: string;
-    parameters?: Record<string, string>;
-}
-
 
 export interface URLRoute {
-    route: string;
+    value: string;
     parameters?: Record<string, PluridRouterParameter>;
 }
 
 
+export interface MatchedRoute {
+    value: string;
+    elements: RouteElements;
+    parameters?: Record<string, string>;
+}
+
+
 export interface ProcessedRoute {
-    route: string;
+    value: string;
     parametersValues: string[];
     parameters?: Record<string, PluridRouterParameter>;
 }
 
 
 export interface InternalMatchedRoute {
-    route: string;
+    value: string;
     parameters: Record<string, string>;
 }
 

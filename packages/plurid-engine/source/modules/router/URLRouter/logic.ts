@@ -1,4 +1,12 @@
 import {
+    PluridRouterParameter,
+} from '@plurid/plurid-data';
+
+import {
+    checkParameterLength,
+} from '../Matcher/logic';
+
+import {
     splitPath,
     computeComparingPath,
     extractParametersValues,
@@ -16,7 +24,7 @@ import {
 export const processRoute = (
     route: URLRoute,
 ): ProcessedRoute => {
-    const routeElements = splitPath(route.route);
+    const routeElements = splitPath(route.value);
     const parametersValues: string[] = [];
 
     routeElements.map(routeElement => {
@@ -27,11 +35,13 @@ export const processRoute = (
         }
     });
 
-    return {
-        route: route.route,
+    const processedRoute: ProcessedRoute = {
+        value: route.value,
         parametersValues,
         parameters: route.parameters,
     };
+
+    return processedRoute;
 }
 
 
@@ -68,7 +78,7 @@ export const matchRoute = (
         processedRoute.parametersValues,
     );
 
-    if (comparingPath !== processedRoute.route) {
+    if (comparingPath !== processedRoute.value) {
         return;
     }
 
@@ -77,10 +87,21 @@ export const matchRoute = (
         locationElements,
     );
 
-    return {
-        route: processedRoute.route,
+    const validPath = checkValidPath(
+        parametersValues,
+        processedRoute.parameters,
+    );
+
+    if (!validPath) {
+        return;
+    }
+
+    const internalMatchedRoute: InternalMatchedRoute = {
+        value: processedRoute.value,
         parameters: parametersValues,
     };
+
+    return internalMatchedRoute;
 }
 
 
@@ -100,9 +121,59 @@ export const extractRouteElements = (
     const query = splitQuery[0] || '';
     const fragment = splitQuery[1] || '';
 
-    return {
+    const routeElements: RouteElements = {
         path,
         query,
         fragment,
     };
+
+    return routeElements;
+}
+
+
+
+export const checkValidPath = (
+    parameters: Record<string, string>,
+    validationParameters: Record<string, PluridRouterParameter> | undefined,
+) => {
+    if (validationParameters) {
+        for (const [parameterKey, parameterData] of Object.entries(validationParameters)) {
+            const {
+                length,
+                lengthType,
+                startsWith,
+                endsWith,
+                includes,
+            } = parameterData;
+
+            const paramaterValue = parameters[parameterKey];
+
+            if (!paramaterValue) {
+                return false;
+            }
+
+            if (startsWith && !paramaterValue.startsWith(startsWith)) {
+                return false;
+            }
+
+            if (endsWith && !paramaterValue.endsWith(endsWith)) {
+                return false;
+            }
+
+            if (includes && !includes.includes(paramaterValue)) {
+                return false;
+            }
+
+            if (length) {
+                const validLength = checkParameterLength(
+                    paramaterValue,
+                    length,
+                    lengthType,
+                );
+                return validLength;
+            }
+        }
+    }
+
+    return true;
 }
