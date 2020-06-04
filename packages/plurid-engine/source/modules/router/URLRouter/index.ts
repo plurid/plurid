@@ -1,51 +1,117 @@
 import {
-    ProcessedPath,
-    processPath,
-    matchPath,
+    processRoute,
+    matchRoute,
+    matchRoutes,
+    extractRouteElements,
 } from './logic';
+
+import {
+    CATCH_ALL_ROUTE,
+
+    ProcessedRoute,
+    URLRouterRoute,
+    MatchedRoute,
+} from './data';
 
 
 
 class URLRouter {
-    private paths: Record<string, ProcessedPath>;
+    private routes: Record<string, ProcessedRoute>;
 
     constructor(
-        paths: string[],
+        routes: URLRouterRoute[],
     ) {
-        this.paths = this.processPaths(paths);
+        this.routes = this.processRoutes(routes);
     }
 
     public match(
-        path: string,
-    ) {
-        if (this.paths[path]) {
-            return {
+        route: string,
+    ): MatchedRoute | undefined {
+        const routeElements = extractRouteElements(route);
+
+        const {
+            path,
+        } = routeElements;
+
+        /**
+         * Direct match
+         */
+        if (this.routes[path]) {
+            const matchedRoute = matchRoute(
                 path,
-                parameters: {},
+                this.routes[path],
+            );
+
+            if (matchedRoute) {
+                const {
+                    route,
+                    parameters,
+                } = matchedRoute;
+
+                return {
+                    elements: routeElements,
+                    route,
+                    parameters,
+                };
+            }
+        }
+
+        /**
+         * Parametric match
+         */
+        const matchedRoute = matchRoutes(
+            path,
+            this.routes,
+        );
+
+        if (matchedRoute) {
+            const {
+                route,
+                parameters,
+            } = matchedRoute;
+
+            return {
+                elements: routeElements,
+                route,
+                parameters,
             };
         }
 
-        const matchedPath = matchPath(
-            path,
-            this.paths,
-        );
+        /**
+         * Catch-all match
+         */
+        if (this.routes[CATCH_ALL_ROUTE]) {
+            const matchedRoute = matchRoute(
+                path,
+                this.routes[CATCH_ALL_ROUTE],
+            );
 
-        if (matchedPath) {
-            return matchedPath;
+            if (matchedRoute) {
+                const {
+                    route,
+                    parameters,
+                } = matchedRoute;
+
+                return {
+                    elements: routeElements,
+                    route,
+                    parameters,
+                };
+            }
         }
 
         return;
     }
 
-    private processPaths(
-        paths: string[],
+    private processRoutes(
+        routes: URLRouterRoute[],
     ) {
-        const index: Record<string, ProcessedPath> = {};
+        const index: Record<string, ProcessedRoute> = {};
 
-        for (const path of paths) {
-            const processedPath = processPath(path);
-            index[processedPath.path] = {
-                ...processedPath,
+        for (const route of routes) {
+            const processedRoute = processRoute(route);
+            index[processedRoute.route] = {
+                ...processedRoute,
             };
         }
 

@@ -103,8 +103,8 @@ export const extractParametersAndMatch = (
 export const extractParametersValues = (
     parameters: string[],
     pathElements: string[],
-): Indexed<string> => {
-    const parametersValues: Indexed<string> = {};
+): Record<string, string> => {
+    const parametersValues: Record<string, string> = {};
 
     parameters.forEach(
         (parameter, index) => {
