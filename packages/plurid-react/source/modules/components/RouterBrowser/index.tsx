@@ -91,6 +91,22 @@ const PluridRouterBrowser = (
             parameters,
         };
     }));
+    // const urlRoutes = paths.map(path => {
+    //     indexedPaths.current[path.value] = {
+    //         ...path,
+    //     };
+
+    //     const {
+    //         value,
+    //         parameters,
+    //     } = path;
+
+    //     return {
+    //         value,
+    //         parameters,
+    //     };
+    // });
+    console.log('urlRoutes', urlRoutes);
 
     const pluridURLRouter = useRef(new PluridURLRouter(
         urlRoutes.current,
@@ -229,6 +245,7 @@ const PluridRouterBrowser = (
         const matchedRoute = pluridRouter.current.match(path);
 
         const matchedURL = pluridURLRouter.current.match(path);
+        // console.log('matchedURL', matchedURL);
 
         if (!matchedRoute) {
             handleNoMatch();
