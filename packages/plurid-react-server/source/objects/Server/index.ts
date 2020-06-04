@@ -217,8 +217,18 @@ export default class PluridServer {
     private computeApplication() {
         this.loadMiddleware();
 
-        const pathsValues = this.paths.map(path => path.value);
-        const urlRouter = new PluridURLRouter(pathsValues);
+        const urlRoutes = this.paths.map(path => {
+            const {
+                value,
+                parameters,
+            } = path;
+
+            return {
+                value,
+                parameters,
+            };
+        });
+        const urlRouter = new PluridURLRouter(urlRoutes);
 
         const stills = new PluridStillsManager(this.options);
         const router = new PluridRouter(this.paths);
@@ -232,9 +242,9 @@ export default class PluridServer {
             let preserveOnServe: undefined | PluridPreserveOnServe<any>;
             let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
             let preserveOnError: undefined | PluridPreserveOnError<any>;
-            if (urlMatch?.path) {
+            if (urlMatch?.target) {
                 const preserve = this.preserves.find(
-                    preserve => preserve.serve === urlMatch.path
+                    preserve => preserve.serve === urlMatch.target
                 );
 
                 if (preserve) {
