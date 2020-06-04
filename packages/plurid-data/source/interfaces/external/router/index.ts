@@ -99,7 +99,7 @@ export interface PluridRouterPath {
      */
     value: string;
 
-    parameters?: Record<string, PluridRouterPathParameter>;
+    parameters?: Record<string, PluridRouterParameter>;
 
     /**
      * Accepts a component which will be rendered outside of the `spaces`.
@@ -188,6 +188,10 @@ export interface PluridPreserveTransmissionContext<C = undefined> {
 
 export interface PluridPreserveResponse {
     providers?: PluridPreserveResponseProviders;
+
+    /**
+     * Redirect to another route.
+     */
     redirect?: string;
 
     /**
@@ -198,8 +202,15 @@ export interface PluridPreserveResponse {
 
     /**
      * Handle the server response without taking into account the preserve.
+     * Considers only the first match.
      */
     depreserve?: boolean;
+
+    /**
+     * Ignore the preserve computation, but continue to try to find a match in the preserves array.
+     * To be used with the catch-all matcher `'*'` or with complex routing with overlapping parameters.
+     */
+    pass?: boolean;
 }
 
 export interface PluridPreserveResponseProviders {
@@ -209,7 +220,7 @@ export interface PluridPreserveResponseProviders {
 }
 
 
-export interface PluridRouterPathParameter {
+export interface PluridRouterParameter {
     /**
      * Constrain the path parameter to be of a certain length.
      */
