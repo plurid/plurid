@@ -4,18 +4,19 @@ import {
     extractParametersValues,
 } from '../Parser/logic';
 
+import {
+    ProcessedRoute,
+    URLRouterRoute,
+    InternalMatchedRoute,
+    RouteElements,
+} from './data';
 
 
-export interface ProcessedPath {
-    path: string;
-    parameters: string[];
-}
 
-
-export const processPath = (
-    path: string,
-): ProcessedPath => {
-    const routeElements = splitPath(path);
+export const processRoute = (
+    route: URLRouterRoute,
+): ProcessedRoute => {
+    const routeElements = splitPath(route.route);
     const parameters: string[] = [];
 
     routeElements.map(routeElement => {
@@ -27,38 +28,80 @@ export const processPath = (
     });
 
     return {
-        path,
+        route: route.route,
         parameters,
     };
 }
 
 
-export const matchPath = (
-    path: string,
-    paths: Record<string, ProcessedPath>,
-) => {
-    for (const processedPath of Object.values(paths)) {
-        const {
-            locationElements,
-            comparingPath,
-        } = computeComparingPath(
-            path,
-            processedPath.parameters,
+export const matchRoutes = (
+    route: string,
+    routes: Record<string, ProcessedRoute>,
+): InternalMatchedRoute | undefined => {
+    for (const processedRoute of Object.values(routes)) {
+        const match = matchRoute(
+            route,
+            processedRoute,
         );
 
-        if (comparingPath !== processedPath.path) {
-            return;
+        if (!match) {
+            continue;
         }
 
-        const parametersValues = extractParametersValues(
-            processedPath.parameters,
-            locationElements,
-        );
-        return {
-            path: processedPath.path,
-            parameters: parametersValues,
-        };
+        return match;
     }
 
     return;
+}
+
+
+export const matchRoute = (
+    route: string,
+    processedRoute: ProcessedRoute,
+): InternalMatchedRoute | undefined => {
+    const {
+        locationElements,
+        comparingPath,
+    } = computeComparingPath(
+        route,
+        processedRoute.parameters,
+    );
+
+    if (comparingPath !== processedRoute.route) {
+        return;
+    }
+
+    const parametersValues = extractParametersValues(
+        processedRoute.parameters,
+        locationElements,
+    );
+
+    return {
+        route: processedRoute.route,
+        parameters: parametersValues,
+    };
+}
+
+
+/**
+ * Separate the route into the path, the query, and the fragment.
+ *
+ * @param route
+ */
+export const extractRouteElements = (
+    route: string,
+): RouteElements => {
+    const splitPath = route.split('?');
+    const path = splitPath[0] || '';
+
+    const queryAndFragment = splitPath[1] || '';
+    const splitQuery = queryAndFragment.split('#');
+    const query = splitQuery[0] || '';
+    const fragment = splitQuery[1] || '';
+
+    return {
+        path,
+        query,
+        fragment,
+    };
 }
