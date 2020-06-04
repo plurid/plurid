@@ -6,7 +6,7 @@ import {
 
 import {
     ProcessedRoute,
-    URLRouterRoute,
+    URLRoute,
     InternalMatchedRoute,
     RouteElements,
 } from './data';
@@ -14,7 +14,7 @@ import {
 
 
 export const processRoute = (
-    route: URLRouterRoute,
+    route: URLRoute,
 ): ProcessedRoute => {
     const routeElements = splitPath(route.route);
     const parameters: string[] = [];
