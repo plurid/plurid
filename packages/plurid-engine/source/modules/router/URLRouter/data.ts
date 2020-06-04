@@ -1,16 +1,22 @@
+import {
+    PluridRouterParameter,
+} from '@plurid/plurid-data';
+
+
+
 export const CATCH_ALL_ROUTE = '*';
 
 
 export interface MatchedRoute {
     elements: RouteElements;
     route: string;
-    parameters?: any;
+    parameters?: Record<string, string>;
 }
 
 
-export interface URLRouterRoute {
+export interface URLRoute {
     route: string;
-    parameters?: any;
+    parameters?: Record<string, PluridRouterParameter>;
 }
 
 

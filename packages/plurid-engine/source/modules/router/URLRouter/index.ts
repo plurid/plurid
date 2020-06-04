@@ -9,7 +9,7 @@ import {
     CATCH_ALL_ROUTE,
 
     ProcessedRoute,
-    URLRouterRoute,
+    URLRoute,
     MatchedRoute,
 } from './data';
 
@@ -19,7 +19,7 @@ class URLRouter {
     private routes: Record<string, ProcessedRoute>;
 
     constructor(
-        routes: URLRouterRoute[],
+        routes: URLRoute[],
     ) {
         this.routes = this.processRoutes(routes);
     }
@@ -104,7 +104,7 @@ class URLRouter {
     }
 
     private processRoutes(
-        routes: URLRouterRoute[],
+        routes: URLRoute[],
     ) {
         const index: Record<string, ProcessedRoute> = {};
 
