@@ -22,7 +22,8 @@ export interface URLRoute {
 
 export interface ProcessedRoute {
     route: string;
-    parameters: string[];
+    parametersValues: string[];
+    parameters?: Record<string, PluridRouterParameter>;
 }
 
 
