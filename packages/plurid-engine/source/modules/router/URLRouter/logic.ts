@@ -29,7 +29,8 @@ export const processRoute = (
 
     return {
         route: route.route,
-        parameters,
+        parametersValues: parameters,
+        parameters: route.parameters,
     };
 }
 
@@ -64,7 +65,7 @@ export const matchRoute = (
         comparingPath,
     } = computeComparingPath(
         route,
-        processedRoute.parameters,
+        processedRoute.parametersValues,
     );
 
     if (comparingPath !== processedRoute.route) {
@@ -72,7 +73,7 @@ export const matchRoute = (
     }
 
     const parametersValues = extractParametersValues(
-        processedRoute.parameters,
+        processedRoute.parametersValues,
         locationElements,
     );
 
