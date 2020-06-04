@@ -44,13 +44,13 @@ class URLRouter {
 
             if (matchedRoute) {
                 const {
-                    route,
+                    value,
                     parameters,
                 } = matchedRoute;
 
                 return {
                     elements: routeElements,
-                    route,
+                    value,
                     parameters,
                 };
             }
@@ -66,13 +66,13 @@ class URLRouter {
 
         if (matchedRoute) {
             const {
-                route,
+                value,
                 parameters,
             } = matchedRoute;
 
             return {
                 elements: routeElements,
-                route,
+                value,
                 parameters,
             };
         }
@@ -88,13 +88,13 @@ class URLRouter {
 
             if (matchedRoute) {
                 const {
-                    route,
+                    value,
                     parameters,
                 } = matchedRoute;
 
                 return {
                     elements: routeElements,
-                    route,
+                    value,
                     parameters,
                 };
             }
@@ -110,7 +110,7 @@ class URLRouter {
 
         for (const route of routes) {
             const processedRoute = processRoute(route);
-            index[processedRoute.route] = {
+            index[processedRoute.value] = {
                 ...processedRoute,
             };
         }
