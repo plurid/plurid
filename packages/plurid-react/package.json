@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react",
-    "version": "0.1.171",
+    "version": "0.1.172",
     "description": "React implementation of Plurid to explore the web in three dimensions",
     "keywords": [
         "plurid",
@@ -59,9 +59,9 @@
         "styled-components": ">=4"
     },
     "devDependencies": {
-        "@babel/core": "^7.10.1",
-        "@plurid/plurid-data": "^0.1.147",
-        "@plurid/plurid-engine": "^0.1.81",
+        "@babel/core": "^7.10.2",
+        "@plurid/plurid-data": "^0.1.148",
+        "@plurid/plurid-engine": "^0.1.82",
         "@plurid/plurid-functions": "^0.1.13",
         "@plurid/plurid-functions-react": "^0.0.1",
         "@plurid/plurid-icons-react": "^0.1.19",
@@ -81,8 +81,8 @@
         "@types/react-dom": "^16.9.8",
         "@types/react-redux": "^7.1.9",
         "@types/styled-components": "^5.1.0",
-        "@typescript-eslint/eslint-plugin": "^3.0.2",
-        "@typescript-eslint/parser": "^3.0.2",
+        "@typescript-eslint/eslint-plugin": "^3.1.0",
+        "@typescript-eslint/parser": "^3.1.0",
         "babel-plugin-styled-components": "^1.10.7",
         "babel-runtime": "^6.26.0",
         "cross-env": "^7.0.2",
@@ -99,13 +99,13 @@
         "redux": "^4.0.5",
         "redux-devtools-extension": "^2.13.8",
         "redux-thunk": "^2.3.0",
-        "rollup": "^2.11.2",
+        "rollup": "^2.13.1",
         "rollup-plugin-babel": "^4.4.0",
         "rollup-plugin-peer-deps-external": "^2.2.2",
         "rollup-plugin-postcss": "^3.1.1",
         "rollup-plugin-terser": "^6.1.0",
         "styled-components": "^5.1.1",
-        "ts-jest": "^26.0.0",
+        "ts-jest": "^26.1.0",
         "ts-node": "^8.10.2",
         "tslib": "^2.0.0",
         "typescript": "^3.9.3"
