@@ -19,7 +19,7 @@ describe('URLRouter', () => {
         const urlRouter = new URLRouter(routes);
         const match = urlRouter.match('/one');
 
-        expect(match?.value).toBe('/one');
+        expect(match?.target).toBe('/one');
     });
 
     it('does not find a basic route', () => {
@@ -49,7 +49,7 @@ describe('URLRouter', () => {
         const urlRouter = new URLRouter(routes);
         const match = urlRouter.match('/one/an-item');
 
-        expect(match?.value).toBe('/one/:item');
+        expect(match?.target).toBe('/one/:item');
     });
 
     it('finds a length constrained (==) parametric route', () => {
@@ -59,6 +59,7 @@ describe('URLRouter', () => {
                 parameters: {
                     item: {
                         length: 10,
+                        lengthType: '==',
                     },
                 },
             },
@@ -69,7 +70,7 @@ describe('URLRouter', () => {
         const urlRouter = new URLRouter(routes);
         const match = urlRouter.match('/one/0123456789');
 
-        expect(match?.value).toBe('/one/:item');
+        expect(match?.target).toBe('/one/:item');
     });
 
     it('does not find a length constrained (==) parametric route', () => {
@@ -91,5 +92,26 @@ describe('URLRouter', () => {
         const match = urlRouter.match('/one/012345678');
 
         expect(match).toBe(undefined);
+    });
+
+    it('finds a length constrained (>) parametric route', () => {
+        const routes: URLRoute[] = [
+            {
+                value: '/one/:item',
+                parameters: {
+                    item: {
+                        length: 10,
+                        lengthType: '>',
+                    },
+                },
+            },
+            {
+                value: '/two',
+            },
+        ];
+        const urlRouter = new URLRouter(routes);
+        const match = urlRouter.match('/one/0123456789123');
+
+        expect(match?.target).toBe('/one/:item');
     });
 });
