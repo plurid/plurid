@@ -17,19 +17,19 @@ export const processRoute = (
     route: URLRoute,
 ): ProcessedRoute => {
     const routeElements = splitPath(route.route);
-    const parameters: string[] = [];
+    const parametersValues: string[] = [];
 
     routeElements.map(routeElement => {
         if (routeElement[0] === ':') {
-            parameters.push(routeElement);
+            parametersValues.push(routeElement);
         } else {
-            parameters.push('');
+            parametersValues.push('');
         }
     });
 
     return {
         route: route.route,
-        parametersValues: parameters,
+        parametersValues,
         parameters: route.parameters,
     };
 }
