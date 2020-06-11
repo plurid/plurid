@@ -1,6 +1,7 @@
 import React from 'react';
 
-import PluridApplication, {
+import {
+    PluridApplication,
     PluridPlane,
     PluridLink,
 } from '@plurid/plurid-react';
