@@ -31,6 +31,7 @@ const App = () => {
 
     const pluridView: string[] = [
         '/one',
+        // '/two',
     ];
 
     return (
