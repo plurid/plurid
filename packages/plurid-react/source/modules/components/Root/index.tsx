@@ -331,9 +331,12 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     };
 
     const planeProperties = {
-        ...pluridPlane.component.properties,
+        // ...pluridPlane.component.properties,
         plurid: {
             ...pluridProperties,
+            path: {
+                ...plane.routeDivisions.plane,
+            },
         },
     };
 

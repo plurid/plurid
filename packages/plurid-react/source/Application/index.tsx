@@ -38,7 +38,6 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         const {
             id,
         } = this.properties;
-
         // console.log('id', id);
 
         const defaultStore = context && id && context.states[id]
