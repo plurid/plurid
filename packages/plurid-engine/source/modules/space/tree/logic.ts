@@ -146,6 +146,14 @@ export const computeSpaceTree = (
 }
 
 
+export const isParametric = (
+    viewRoute: string,
+    planeRoute: string,
+) => {
+    return true;
+}
+
+
 export const assignPagesFromView = (
     planes: TreePlane[],
     view?: string[] | PluridView[],
@@ -167,14 +175,24 @@ export const assignPagesFromView = (
 
     // const router = new Router(routes);
 
-    // console.log('planes', planes);
-    // console.log('view', view);
+    console.log('planes', planes);
+    console.log('view', view);
 
     for (const viewPlane of view) {
         if (typeof viewPlane === 'string') {
             for (const plane of planes) {
-                if (plane.sourceID === viewPlane) {
+                if (viewPlane === plane.sourceID) {
                     tree.push(plane);
+                }
+
+                if (isParametric(viewPlane, plane.sourceID)) {
+                    const parametricPlane = {
+                        ...plane,
+                    };
+                    parametricPlane.routeDivisions.plane.parameters.id = 'one';
+                    parametricPlane.routeDivisions.plane.value = 'one';
+                    parametricPlane.route = viewPlane;
+                    tree.push(parametricPlane);
                 }
             }
         }
