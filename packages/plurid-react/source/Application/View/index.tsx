@@ -297,6 +297,7 @@ const View: React.FC<ViewProperties> = (
         if (planes) {
             for (const plane of planes) {
                 const linkPath = router.resolveAbsolutePluridLinkPath(plane.path);
+                console.log('linkPath', linkPath);
                 if (!linkPath) {
                     continue;
                 }
@@ -335,11 +336,13 @@ const View: React.FC<ViewProperties> = (
         }
 
         indexedPlanesReference.current = new Map(computedIndexedPlanes);
+        console.log('indexedPlanesReference', indexedPlanesReference);
 
         const planeSources: Record<string, string> = {};
         for (const [id, indexedPlane] of computedIndexedPlanes) {
             planeSources[indexedPlane.route] = id;
         }
+        console.log('planeSources', planeSources);
 
         // create tree planes
         const treePlanes: TreePlane[] = [];
@@ -397,10 +400,18 @@ const View: React.FC<ViewProperties> = (
 
         for (const viewItem of currentView) {
             if (typeof viewItem === 'string') {
+                console.log('viewItem', viewItem);
+                console.log('treePlanes', treePlanes);
+
                 const viewPath = router.resolveAbsolutePluridLinkPath(viewItem);
                 if (!viewPath) {
                     continue;
                 }
+
+                // check if parametric
+
+                console.log('viewPath', viewPath);
+
                 absoluteView.push(viewPath.resolvedPath);
             }
         }
@@ -412,6 +423,7 @@ const View: React.FC<ViewProperties> = (
             treePlanes,
             absoluteView,
         );
+        console.log('newTree', newTree);
 
 
         const spaceSize = space.utilities.computeSpaceSize(newTree);
