@@ -28,23 +28,23 @@ import selectors from '../../services/state/selectors';
 
 
 
-export interface ViewcubeOwnProperties {
+export interface PluridUniverseExplorerOwnProperties {
 }
 
-export interface ViewcubeStateProperties {
+export interface PluridUniverseExplorerStateProperties {
     stateConfiguration: PluridConfiguration;
     stateInteractionTheme: Theme;
 }
 
-export interface ViewcubeDispatchProperties {
+export interface PluridUniverseExplorerDispatchProperties {
 }
 
-export type ViewcubeProperties = ViewcubeOwnProperties
-    & ViewcubeStateProperties
-    & ViewcubeDispatchProperties;
+export type PluridUniverseExplorerProperties = PluridUniverseExplorerOwnProperties
+    & PluridUniverseExplorerStateProperties
+    & PluridUniverseExplorerDispatchProperties;
 
 
-const Viewcube: React.FC<ViewcubeProperties> = (
+const PluridUniverseExplorer: React.FC<PluridUniverseExplorerProperties> = (
     properties,
 ) => {
     const {
@@ -82,7 +82,7 @@ const Viewcube: React.FC<ViewcubeProperties> = (
 
 const mapStateToProperties = (
     state: AppState,
-): ViewcubeStateProperties => ({
+): PluridUniverseExplorerStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
 });
@@ -90,7 +90,7 @@ const mapStateToProperties = (
 
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): ViewcubeDispatchProperties => ({
+): PluridUniverseExplorerDispatchProperties => ({
 });
 
 
@@ -101,4 +101,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(Viewcube);
+)(PluridUniverseExplorer);

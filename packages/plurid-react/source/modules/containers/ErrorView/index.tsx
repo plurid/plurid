@@ -6,12 +6,11 @@ import {
 
 
 
-interface ErrorViewProperties {
+export interface PluridErrorViewProperties {
     error: string;
 }
 
-
-const ErrorView: React.FC<ErrorViewProperties> = (
+const PluridErrorView: React.FC<PluridErrorViewProperties> = (
     properties,
 ) => {
     const {
@@ -26,4 +25,4 @@ const ErrorView: React.FC<ErrorViewProperties> = (
 }
 
 
-export default ErrorView;
+export default PluridErrorView;

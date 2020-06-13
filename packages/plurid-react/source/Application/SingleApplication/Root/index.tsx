@@ -7,7 +7,7 @@ import {
     PluridApplication as PluridApplicationProperties,
 } from '@plurid/plurid-data';
 
-import View from '../../View';
+import PluridView from '../../View';
 
 import {
     AppState,
@@ -38,7 +38,7 @@ const Root: React.FC<RootProperties> = (
             store={store}
             context={StateContext}
         >
-            <View
+            <PluridView
                 pluridApplication={pluridApplication}
             />
         </ReduxProvider>

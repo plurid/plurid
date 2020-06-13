@@ -9,7 +9,7 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    StyledNotFound,
+    StyledPluridNotFound,
 } from './styled';
 
 import { AppState } from '../../services/state/store';
@@ -19,23 +19,23 @@ import selectors from '../../services/state/selectors';
 
 
 
-export interface NotFoundOwnProperties {
+export interface PluridNotFoundOwnProperties {
 }
 
-export interface NotFoundStateProperties {
+export interface PluridNotFoundStateProperties {
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-export interface NotFoundDispatchProperties {
+export interface PluridNotFoundDispatchProperties {
 }
 
-export type NotFoundProperties = NotFoundOwnProperties
-    & NotFoundStateProperties
-    & NotFoundDispatchProperties;
+export type PluridNotFoundProperties = PluridNotFoundOwnProperties
+    & PluridNotFoundStateProperties
+    & PluridNotFoundDispatchProperties;
 
 
-const NotFound: React.FC<NotFoundProperties> = (
+const PluridNotFound: React.FC<PluridNotFoundProperties> = (
     properties,
 ) => {
     /** properties */
@@ -48,16 +48,16 @@ const NotFound: React.FC<NotFoundProperties> = (
 
     /** render */
     return (
-        <StyledNotFound>
-            Plurid' Page Not Found
-        </StyledNotFound>
+        <StyledPluridNotFound>
+            Plurid' Plane Not Found
+        </StyledPluridNotFound>
     );
 }
 
 
 const mapStateToProperties = (
     state: AppState,
-): NotFoundStateProperties => ({
+): PluridNotFoundStateProperties => ({
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
 });
@@ -65,7 +65,7 @@ const mapStateToProperties = (
 
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): NotFoundDispatchProperties => ({
+): PluridNotFoundDispatchProperties => ({
 });
 
 
@@ -76,4 +76,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(NotFound);
+)(PluridNotFound);

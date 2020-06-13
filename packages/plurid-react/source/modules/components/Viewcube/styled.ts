@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledViewcube: any = styled.div`
+export const StyledPluridViewcube: any = styled.div`
     position: absolute;
     @media (max-width: 800px) {
         top: ${(props: any) => {
@@ -30,11 +30,11 @@ export const StyledViewcube: any = styled.div`
     z-index: 9998;
     height: 165px;
     display: grid;
-    grid-template-areas: "pluridViewcubeScale           pluridViewcubeScale         pluridViewcubeScale          pluridViewcubeScale"
-                         "pluridViewcubeEmptyOne        pluridViewcubeRotateUp      pluridViewcubeEmptyTwo       pluridViewcubeTranslateY"
-                         "pluridViewcubeRotateLeft      pluridViewcubeModel         pluridViewcubeRotateRight    pluridViewcubeTranslateY"
-                         "pluridViewcubeEmptyThree      pluridViewcubeRotateDown    pluridViewcubeFitview        pluridViewcubeTranslateY"
-                         "pluridViewcubeTranslateX      pluridViewcubeTranslateX    pluridViewcubeTranslateX     pluridViewcubeTranslateX";
+    grid-template-areas: "pluridPluridViewcubeScale           pluridPluridViewcubeScale         pluridPluridViewcubeScale          pluridPluridViewcubeScale"
+                         "pluridPluridViewcubeEmptyOne        pluridPluridViewcubeRotateUp      pluridPluridViewcubeEmptyTwo       pluridPluridViewcubeTranslateY"
+                         "pluridPluridViewcubeRotateLeft      pluridPluridViewcubeModel         pluridPluridViewcubeRotateRight    pluridPluridViewcubeTranslateY"
+                         "pluridPluridViewcubeEmptyThree      pluridPluridViewcubeRotateDown    pluridPluridViewcubeFitview        pluridPluridViewcubeTranslateY"
+                         "pluridPluridViewcubeTranslateX      pluridPluridViewcubeTranslateX    pluridPluridViewcubeTranslateX     pluridPluridViewcubeTranslateX";
     grid-template-rows: 20px 15px 95px 15px 20px;
     grid-template-columns: 15px 115px 15px 20px;
 
@@ -44,13 +44,13 @@ export const StyledViewcube: any = styled.div`
 `;
 
 
-export const StyledViewcubeArrow: any = styled.div`
+export const StyledPluridViewcubeArrow: any = styled.div`
     display: grid;
     place-content: center;
 `;
 
 
-export const StyledViewcubeArrowIcon: any = styled.div`
+export const StyledPluridViewcubeArrowIcon: any = styled.div`
     user-select: none;
     font-size: 0.6rem;
     width: 1.2rem;
@@ -69,7 +69,7 @@ export const StyledViewcubeArrowIcon: any = styled.div`
 
 
 export const StyledFitView: any = styled.div`
-    grid-area: pluridViewcubeFitview;
+    grid-area: pluridPluridViewcubeFitview;
     display: grid;
     place-content: center;
     cursor: pointer;
