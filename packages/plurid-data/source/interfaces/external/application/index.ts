@@ -5,13 +5,13 @@ import {
     PluridPlaneContext,
 } from '../plane';
 
-import {
-    PluridCluster,
-} from '../cluster';
+// import {
+//     PluridCluster,
+// } from '../cluster';
 
-import {
-    PluridUniverse,
-} from '../universe';
+// import {
+//     PluridUniverse,
+// } from '../universe';
 
 import {
     PluridComponent,
@@ -83,7 +83,7 @@ export interface PluridApplication {
     // allowedOrigins?: 'controlled' | 'all';
 
     /**
-     * Show or not the default Not Found component, or pass a custom component.
+     * Show or not the default Plane Not Found component, or pass a custom component.
      * Default `true`.
      */
     notFound?: boolean | PluridComponent;
@@ -98,7 +98,7 @@ export interface PluridApplication {
      */
     pubsub?: PluridPubSub;
 
-    serverData?: PluridServerData;
+    // serverData?: PluridServerData;
 
     /**
      * Render the application statically.
@@ -107,6 +107,6 @@ export interface PluridApplication {
 }
 
 
-export interface PluridServerData {
-    planes?: PluridPlane[];
-}
+// export interface PluridServerData {
+//     planes?: PluridPlane[];
+// }
