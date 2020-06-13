@@ -15,14 +15,13 @@ export interface PortalProperties {
     rootID: string;
 }
 
-
 /**
  * @example
  * <Portal>
  *   <p>elements</p>
  * </Portal>
  */
-const Portal: React.FC<PortalProperties> = (
+const PluridPortal: React.FC<PortalProperties> = (
     properties,
 ) => {
     const {
@@ -40,4 +39,4 @@ const Portal: React.FC<PortalProperties> = (
 };
 
 
-export default Portal;
+export default PluridPortal;

@@ -40,8 +40,8 @@ import {
 } from './styled';
 
 
-import Preview from './components/Preview';
-import Portal from '../utilities/Portal';
+import PluridPlanePreview from './components/Preview';
+import PluridPortal from '../utilities/Portal';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
@@ -350,15 +350,15 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             {showPreview
             && !showLink
             && (
-                <Portal
+                <PluridPortal
                     elementID={`preview-${parentPlaneID}`}
                     rootID={parentPlaneID}
                 >
-                    <Preview
+                    <PluridPlanePreview
                         planeID={planeID}
                         linkCoordinates={linkCoordinates}
                     />
-                </Portal>
+                </PluridPortal>
             )}
         </StyledPluridLink>
     );

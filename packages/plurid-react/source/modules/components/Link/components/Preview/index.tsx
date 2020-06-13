@@ -15,7 +15,7 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    StyledPreview,
+    StyledPluridPlanePreview,
 } from './styled';
 
 import Context from '../../../../services/logic/context';
@@ -27,25 +27,25 @@ import selectors from '../../../../services/state/selectors';
 
 
 
-interface PreviewOwnProperties {
+interface PluridPlanePreviewOwnProperties {
     planeID: string;
     linkCoordinates: any;
 }
 
-interface PreviewStateProperties {
+interface PluridPlanePreviewStateProperties {
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface PreviewDispatchProperties {
+interface PluridPlanePreviewDispatchProperties {
 }
 
-type PreviewProperties = PreviewOwnProperties
-    & PreviewStateProperties
-    & PreviewDispatchProperties;
+type PluridPlanePreviewProperties = PluridPlanePreviewOwnProperties
+    & PluridPlanePreviewStateProperties
+    & PluridPlanePreviewDispatchProperties;
 
 
-const Preview: React.FC<PreviewProperties> = (
+const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
     properties,
 ) => {
     /** properties */
@@ -82,19 +82,19 @@ const Preview: React.FC<PreviewProperties> = (
     const Component = plane.component.element;
 
     return (
-        <StyledPreview
+        <StyledPluridPlanePreview
             theme={stateGeneralTheme}
             linkCoordinates={linkCoordinates}
         >
             <Component />
-        </StyledPreview>
+        </StyledPluridPlanePreview>
     );
 }
 
 
 const mapStateToProperties = (
     state: AppState,
-): PreviewStateProperties => ({
+): PluridPlanePreviewStateProperties => ({
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
 });
@@ -102,7 +102,7 @@ const mapStateToProperties = (
 
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): PreviewDispatchProperties => ({
+): PluridPlanePreviewDispatchProperties => ({
 });
 
 
@@ -113,4 +113,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(Preview);
+)(PluridPlanePreview);
