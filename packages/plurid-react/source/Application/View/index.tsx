@@ -106,8 +106,8 @@ export interface ViewStateProperties {
 export interface ViewDispatchProperties {
     // dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
-    // dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
-    // dispatchSetConfigurationMicro: typeof actions.configuration.setConfigurationMicro;
+    dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
+    dispatchSetConfigurationMicro: typeof actions.configuration.setConfigurationMicro;
 
     // dispatchSetUniverses: typeof actions.data.setUniverses;
 
@@ -119,8 +119,8 @@ export interface ViewDispatchProperties {
     // dispatchSetTree: typeof actions.space.setTree;
     // dispatchSetSpaceSize: typeof actions.space.setSpaceSize;
 
-    // dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
-    // dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
+    dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
+    dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
 
     // rotateXWith: typeof actions.space.rotateXWith;
     // rotateYWith: typeof actions.space.rotateYWith;
@@ -144,14 +144,154 @@ export type ViewProperties = ViewOwnProperties
 const PluridView: React.FC<ViewProperties> = (
     properties,
 ) => {
+    /** properties */
+    const {
+        /** own */
+        application,
+
+        /** dispatch */
+        dispatchSetConfigurationMicro,
+        dispatchSetGeneralTheme,
+        dispatchSetInteractionTheme,
+    } = properties;
+
+    const {
+        configuration,
+        id: applicationID,
+        indexedPlanes,
+        pubsub,
+        static: staticProperty,
+        planes,
+        view,
+    } = application;
+
 
     console.log(properties);
 
+
+    /** handlers */
+    const handleConfiguration = (
+        configuration: PluridAppConfiguration,
+    ) => {
+        // if (configuration.micro) {
+        //     dispatchSetConfigurationMicro();
+        // }
+
+        // if (configuration.theme) {
+        //     if (typeof configuration.theme === 'object') {
+        //         const {
+        //             general,
+        //             interaction,
+        //         } = configuration.theme;
+
+        //         if (general) {
+        //             if (Object.keys(THEME_NAMES).includes(general)) {
+        //                 dispatchSetGeneralTheme((themes as any)[general]);
+        //             }
+        //         }
+
+        //         if (interaction) {
+        //             if (Object.keys(THEME_NAMES).includes(interaction)) {
+        //                 dispatchSetInteractionTheme((themes as any)[interaction]);
+        //             }
+        //         }
+        //     } else {
+        //         if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
+        //             dispatchSetGeneralTheme((themes as any)[configuration.theme]);
+        //             dispatchSetInteractionTheme((themes as any)[configuration.theme]);
+        //         }
+        //     }
+        // }
+
+        // if (configuration.space) {
+        //     const spaceLocation = space.computeSpaceLocation(configuration);
+        //     dispatchSetSpaceLocation(spaceLocation);
+        // }
+
+        // if (configuration.space.center && !configuration.space.camera) {
+        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
+        //     translateXWith(x);
+
+        //     // to get plane height;
+        //     const planeHeight = 300;
+        //     const y = window.innerHeight / 2 - planeHeight/2;
+        //     translateYWith(y);
+        // }
+    }
+
+
+    const computeApplication = (
+        configuration: PluridPartialConfiguration | undefined,
+        planes: PluridPlane[] | undefined,
+        view: string[] | PluridView[] | undefined,
+        indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
+    ) => {
+        const appConfiguration = generalEngine.configuration.default(configuration);
+        handleConfiguration(appConfiguration);
+
+        if (planes) {
+            for (const plane of planes) {
+                // loop over PluridPlanes and generate ...?
+                const {
+                    component,
+                    path,
+                } = plane;
+
+                const {
+                    kind,
+                    element,
+                    properties,
+                } = component;
+
+                // obtain from path the absolute path
+                const linkPath = router.resolveAbsolutePluridLinkPath(plane.path);
+
+                const {
+                    protocol,
+                    host,
+                    path: routePath,
+                    space,
+                    universe,
+                    cluster,
+                    plane: planePath,
+                    resolvedPath,
+                } = linkPath;
+
+
+            }
+        }
+    }
+
+
+    /** effects */
+    /** Compute Application */
+    useEffect(() => {
+        computeApplication(
+            configuration,
+            planes,
+            view,
+            indexedPlanes,
+        );
+    }, [
+        configuration,
+        planes,
+        view,
+        indexedPlanes,
+    ]);
+
+
+    console.log('RENDER');
+
+    /** render */
     return (
         <div>
 
         </div>
     );
+
+
+
+
 
     // /** properties */
     // const {
@@ -444,55 +584,6 @@ const PluridView: React.FC<ViewProperties> = (
     //     dispatchSetTree(newTree);
     //     dispatchSetSpaceLoading(false);
     //     dispatchDataSetPlaneSources(planeSources);
-    // }
-
-    // const handleConfiguration = (
-    //     configuration: PluridAppConfiguration,
-    // ) => {
-    //     if (configuration.micro) {
-    //         dispatchSetConfigurationMicro();
-    //     }
-
-    //     if (configuration.theme) {
-    //         if (typeof configuration.theme === 'object') {
-    //             const {
-    //                 general,
-    //                 interaction,
-    //             } = configuration.theme;
-
-    //             if (general) {
-    //                 if (Object.keys(THEME_NAMES).includes(general)) {
-    //                     dispatchSetGeneralTheme((themes as any)[general]);
-    //                 }
-    //             }
-
-    //             if (interaction) {
-    //                 if (Object.keys(THEME_NAMES).includes(interaction)) {
-    //                     dispatchSetInteractionTheme((themes as any)[interaction]);
-    //                 }
-    //             }
-    //         } else {
-    //             if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
-    //                 dispatchSetGeneralTheme((themes as any)[configuration.theme]);
-    //                 dispatchSetInteractionTheme((themes as any)[configuration.theme]);
-    //             }
-    //         }
-    //     }
-
-    //     // if (configuration.space) {
-    //     //     const spaceLocation = space.computeSpaceLocation(configuration);
-    //     //     dispatchSetSpaceLocation(spaceLocation);
-    //     // }
-
-    //     // if (configuration.space.center && !configuration.space.camera) {
-    //     //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
-    //     //     translateXWith(x);
-
-    //     //     // to get plane height;
-    //     //     const planeHeight = 300;
-    //     //     const y = window.innerHeight / 2 - planeHeight/2;
-    //     //     translateYWith(y);
-    //     // }
     // }
 
     // const handlePubSubSubscribe = (
@@ -1076,12 +1167,12 @@ const mapDispatchToProperties = (
 ): ViewDispatchProperties => ({
     // dispatch,
 
-    // dispatchSetConfiguration: (configuration: PluridAppConfiguration) => dispatch(
-    //     actions.configuration.setConfiguration(configuration)
-    // ),
-    // dispatchSetConfigurationMicro: () => dispatch(
-    //     actions.configuration.setConfigurationMicro()
-    // ),
+    dispatchSetConfiguration: (configuration: PluridAppConfiguration) => dispatch(
+        actions.configuration.setConfiguration(configuration)
+    ),
+    dispatchSetConfigurationMicro: () => dispatch(
+        actions.configuration.setConfigurationMicro()
+    ),
 
     // dispatchSetUniverses: (universes: any) => dispatch(
     //     actions.data.setUniverses(universes)
@@ -1113,12 +1204,12 @@ const mapDispatchToProperties = (
     //     actions.space.setSpaceSize(payload)
     // ),
 
-    // dispatchSetGeneralTheme: (theme: Theme) => dispatch(
-    //     actions.themes.setGeneralTheme(theme)
-    // ),
-    // dispatchSetInteractionTheme: (theme: Theme) => dispatch(
-    //     actions.themes.setInteractionTheme(theme)
-    // ),
+    dispatchSetGeneralTheme: (theme: Theme) => dispatch(
+        actions.themes.setGeneralTheme(theme)
+    ),
+    dispatchSetInteractionTheme: (theme: Theme) => dispatch(
+        actions.themes.setInteractionTheme(theme)
+    ),
 
     // rotateXWith: (value: number) => dispatch(
     //     actions.space.rotateXWith(value)
