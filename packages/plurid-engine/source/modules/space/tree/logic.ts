@@ -153,6 +153,20 @@ export const isParametric = (
     return true;
 }
 
+export const matchForParameters = (
+    viewRoute: string,
+    planeRoute: string,
+) => {
+    const splitViewRoute = viewRoute.split('://');
+    const splitPlaneRoute = planeRoute.split('://');
+    // "http://localhost:3000://p://s://u://c://one"
+    // "http://localhost:3000://p://s://u://c://:id"
+
+    const pathViewRoute = splitViewRoute[2];
+    const pathPlaneRoute = splitPlaneRoute[2];
+
+}
+
 
 export const assignPagesFromView = (
     planes: TreePlane[],
