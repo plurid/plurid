@@ -9,7 +9,7 @@ import {
     quaternionMultiply,
     rotatePointViaQuaternion,
     makeRotationMatrixFromQuaternion
-} from '../';
+} from '..';
 
 
 

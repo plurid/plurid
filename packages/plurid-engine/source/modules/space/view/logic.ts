@@ -47,7 +47,7 @@ export const computeCulledView = (
     for (const viewPage of view) {
         const path = typeof viewPage === 'string'
             ? viewPage
-            : viewPage.path;
+            : viewPage.plane;
 
         const page = findPage(
             path,

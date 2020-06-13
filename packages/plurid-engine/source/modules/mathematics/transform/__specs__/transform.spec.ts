@@ -4,7 +4,7 @@ import {
     getTranslationMatrix,
     getScalationValue,
     getTransformRotate,
-} from '../';
+} from '..';
 
 
 

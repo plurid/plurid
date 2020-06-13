@@ -5,7 +5,7 @@ import {
     multiplyMatrices,
     multiplyArrayOfMatrices,
     matrixArrayToCSSMatrix,
-} from '../';
+} from '..';
 
 
 
