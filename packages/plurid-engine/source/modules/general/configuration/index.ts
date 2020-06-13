@@ -238,6 +238,18 @@ const mergeConfiguration = (
                 configuration,
             ),
         },
+        development: {
+            planeDebugger: specifiedOrDefault(
+                'development.planeDebugger',
+                'boolean',
+                configuration,
+            ),
+            spaceDebugger: specifiedOrDefault(
+                'development.spaceDebugger',
+                'boolean',
+                configuration,
+            ),
+        },
     };
 
     return mergedConfiguration;
