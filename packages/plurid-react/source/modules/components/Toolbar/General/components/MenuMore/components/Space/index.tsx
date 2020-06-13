@@ -29,7 +29,7 @@ import {
 } from '@plurid/plurid-ui-react';
 
 import {
-    StyledMoreMenuItem,
+    StyledPluridMoreMenuItem,
 } from '../../styled';
 
 import { AppState } from '../../../../../../../services/state/store';
@@ -39,15 +39,15 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-export interface MenuMoreSpaceOwnProperties {
+export interface PluridMenuMoreSpaceOwnProperties {
 }
 
-export interface MenuMoreSpaceStateProperties {
+export interface PluridMenuMoreSpaceStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-export interface MenuMoreSpaceDispatchProperties {
+export interface PluridMenuMoreSpaceDispatchProperties {
     dispatchSetConfigurationPlaneOpacity: typeof actions.configuration.setConfigurationPlaneOpacity;
 
     dispatchToggleConfigurationSpaceTransparentUI: typeof actions.configuration.toggleConfigurationSpaceTransparentUI;
@@ -56,12 +56,12 @@ export interface MenuMoreSpaceDispatchProperties {
     dispatchSetConfigurationSpaceLayoutType: typeof actions.configuration.setConfigurationSpaceLayoutType;
 }
 
-export type MenuMoreSpaceProperties = MenuMoreSpaceOwnProperties
-    & MenuMoreSpaceStateProperties
-    & MenuMoreSpaceDispatchProperties;
+export type PluridMenuMoreSpaceProperties = PluridMenuMoreSpaceOwnProperties
+    & PluridMenuMoreSpaceStateProperties
+    & PluridMenuMoreSpaceDispatchProperties;
 
 
-const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (
+const PluridMenuMoreSpace: React.FC<PluridMenuMoreSpaceProperties> = (
     properties,
 ) => {
     /** properties */
@@ -104,7 +104,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (
     /** render */
     return (
         <>
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 {internatiolate(language, internationalization.fields.toolbarDrawerSpaceTransparentUserInterface)}
 
                 <PluridSwitch
@@ -114,9 +114,9 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (
                     level={2}
                     theme={interactionTheme}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 {internatiolate(language, internationalization.fields.toolbarDrawerSpaceShowTransformOrigin)}
 
                 <PluridSwitch
@@ -126,9 +126,9 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (
                     level={2}
                     theme={interactionTheme}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 {internatiolate(language, internationalization.fields.toolbarDrawerSpaceTransformOriginSize)}
 
                 <PluridDropdown
@@ -147,9 +147,9 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (
                     heightItems={3}
                     theme={interactionTheme}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 {internatiolate(language, internationalization.fields.toolbarDrawerSpacePlaneOpacity)}
 
                 <PluridSlider
@@ -163,9 +163,9 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (
                     level={2}
                     theme={interactionTheme}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem
+            <StyledPluridMoreMenuItem
                 last={true}
             >
                 {internatiolate(language, internationalization.fields.toolbarDrawerSpaceLayoutType)}
@@ -181,7 +181,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (
                     theme={interactionTheme}
                     width={100}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
         </>
     );
 }
@@ -189,7 +189,7 @@ const MenuMoreSpace: React.FC<MenuMoreSpaceProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): MenuMoreSpaceStateProperties => ({
+): PluridMenuMoreSpaceStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });
@@ -197,7 +197,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): MenuMoreSpaceDispatchProperties => ({
+): PluridMenuMoreSpaceDispatchProperties => ({
     dispatchSetConfigurationPlaneOpacity: (value: number) => dispatch(
         actions.configuration.setConfigurationPlaneOpacity(value)
     ),
@@ -228,4 +228,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(MenuMoreSpace);
+)(PluridMenuMoreSpace);

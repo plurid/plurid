@@ -24,7 +24,7 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
-    StyledToolbarTranslate,
+    StyledPluridToolbarTranslate,
 } from './styled';
 
 import {
@@ -32,7 +32,7 @@ import {
     StyledIcon,
 } from '../../styled';
 
-import TransformArrow from '../TransformArrow';
+import PluridTransformArrow from '../TransformArrow';
 
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
@@ -41,31 +41,30 @@ import actions from '../../../../../services/state/actions';
 
 
 
-export interface ToolbarTranslateOwnProperties {
+export interface PluridToolbarTranslateOwnProperties {
     showTransformButtons: boolean;
     showIcons: boolean;
     transformMode: keyof typeof TRANSFORM_MODES;
     toggleTransform(TYPE: keyof typeof TRANSFORM_MODES): void;
 }
 
-export interface ToolbarTranslateStateProperties {
+export interface PluridToolbarTranslateStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
 }
 
-export interface ToolbarTranslateDispatchProperties {
+export interface PluridToolbarTranslateDispatchProperties {
     translateUp: typeof actions.space.translateUp;
     translateDown: typeof actions.space.translateDown;
     translateLeft: typeof actions.space.translateLeft;
     translateRight: typeof actions.space.translateRight;
 }
 
-export type ToolbarTranslateProperties = ToolbarTranslateOwnProperties
-    & ToolbarTranslateStateProperties
-    & ToolbarTranslateDispatchProperties;
+export type PluridToolbarTranslateProperties = PluridToolbarTranslateOwnProperties
+    & PluridToolbarTranslateStateProperties
+    & PluridToolbarTranslateDispatchProperties;
 
-
-const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (
+const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
     properties,
 ) => {
     /** properties */
@@ -90,17 +89,17 @@ const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (
 
     /** render */
     return (
-        <StyledToolbarTranslate
+        <StyledPluridToolbarTranslate
             showTransformButtons={showTransformButtons}
         >
             {showTransformButtons && (
                 <>
-                    <TransformArrow
+                    <PluridTransformArrow
                         direction="left"
                         transform={() => translateLeft()}
                     />
 
-                    <TransformArrow
+                    <PluridTransformArrow
                         direction="up"
                         transform={() => translateUp()}
                     />
@@ -130,25 +129,25 @@ const ToolbarTranslate: React.FC<ToolbarTranslateProperties> = (
 
             {showTransformButtons && (
                 <>
-                    <TransformArrow
+                    <PluridTransformArrow
                         direction="down"
                         transform={() => translateDown()}
                     />
 
-                    <TransformArrow
+                    <PluridTransformArrow
                         direction="right"
                         transform={() => translateRight()}
                     />
                 </>
             )}
-        </StyledToolbarTranslate>
+        </StyledPluridToolbarTranslate>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): ToolbarTranslateStateProperties => ({
+): PluridToolbarTranslateStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
@@ -156,11 +155,19 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): ToolbarTranslateDispatchProperties => ({
-    translateUp: () => dispatch(actions.space.translateUp()),
-    translateDown: () => dispatch(actions.space.translateDown()),
-    translateLeft: () => dispatch(actions.space.translateLeft()),
-    translateRight: () => dispatch(actions.space.translateRight()),
+): PluridToolbarTranslateDispatchProperties => ({
+    translateUp: () => dispatch(
+        actions.space.translateUp(),
+    ),
+    translateDown: () => dispatch(
+        actions.space.translateDown(),
+    ),
+    translateLeft: () => dispatch(
+        actions.space.translateLeft(),
+    ),
+    translateRight: () => dispatch(
+        actions.space.translateRight(),
+    ),
 });
 
 
@@ -171,4 +178,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(ToolbarTranslate);
+)(PluridToolbarTranslate);

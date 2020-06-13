@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledTransformArrow: any = styled.div`
+export const StyledPluridTransformArrow: any = styled.div`
     user-select: none;
     cursor: pointer;
     border-radius: 50px;

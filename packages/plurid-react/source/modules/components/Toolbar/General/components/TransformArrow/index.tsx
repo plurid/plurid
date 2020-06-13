@@ -13,7 +13,7 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    StyledTransformArrow,
+    StyledPluridTransformArrow,
 } from './styled';
 
 import {
@@ -27,24 +27,24 @@ import selectors from '../../../../../services/state/selectors';
 
 
 
-export interface TransformArrowOwnProperties {
+export interface PluridTransformArrowOwnProperties {
     direction: string;
     transform: () => void;
 }
 
-export interface TransformArrowStateProperties {
+export interface PluridTransformArrowStateProperties {
     interactionTheme: Theme;
 }
 
-export interface TransformArrowDispatchProperties {
+export interface PluridTransformArrowDispatchProperties {
 }
 
-export type TransformArrowProperties = TransformArrowOwnProperties
-    & TransformArrowStateProperties
-    & TransformArrowDispatchProperties;
+export type PluridTransformArrowProperties = PluridTransformArrowOwnProperties
+    & PluridTransformArrowStateProperties
+    & PluridTransformArrowDispatchProperties;
 
 
-const TransformArrow: React.FC<TransformArrowProperties> = (
+const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
     properties,
 ) => {
     /** properties */
@@ -147,27 +147,27 @@ const TransformArrow: React.FC<TransformArrowProperties> = (
 
     /** render */
     return (
-        <StyledTransformArrow
+        <StyledPluridTransformArrow
             ref={arrowElement}
             theme={interactionTheme}
             pressed={pressed}
         >
             {arrowSign}
-        </StyledTransformArrow>
+        </StyledPluridTransformArrow>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): TransformArrowStateProperties => ({
+): PluridTransformArrowStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): TransformArrowDispatchProperties => ({
+): PluridTransformArrowDispatchProperties => ({
 });
 
 
@@ -178,4 +178,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(TransformArrow);
+)(PluridTransformArrow);

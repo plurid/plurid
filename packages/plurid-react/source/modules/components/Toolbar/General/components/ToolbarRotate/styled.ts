@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledToolbarRotate: any = styled.div`
+export const StyledPluridToolbarRotate: any = styled.div`
     display: grid;
     align-items: center;
     justify-items: center;

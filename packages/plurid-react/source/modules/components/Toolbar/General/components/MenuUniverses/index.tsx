@@ -14,9 +14,9 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    StyledMoreMenu,
-    // StyledMoreMenuItem,
-    StyledMoreMenuScroll,
+    StyledPluridMenuUniverses,
+    // StyledPluridMenuUniversesItem,
+    StyledPluridMenuUniversesScroll,
     StyledMenuUniversesItemList,
 } from './styled';
 
@@ -27,25 +27,25 @@ import actions from '../../../../../services/state/actions';
 
 
 
-export interface MoreMenuOwnProperties {
+export interface PluridMenuUniversesOwnProperties {
 }
 
-export interface MoreMenuStateProperties {
+export interface PluridMenuUniversesStateProperties {
     interactionTheme: Theme;
     documents: Indexed<PluridInternalStateUniverse>;
     activeUniverseID: string;
 }
 
-export interface MoreMenuDispatchProperties {
+export interface PluridMenuUniversesDispatchProperties {
     dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
 }
 
-export type MoreMenuProperties = MoreMenuOwnProperties
-    & MoreMenuStateProperties
-    & MoreMenuDispatchProperties;
+export type PluridMenuUniversesProperties = PluridMenuUniversesOwnProperties
+    & PluridMenuUniversesStateProperties
+    & PluridMenuUniversesDispatchProperties;
 
 
-const MoreMenu: React.FC<MoreMenuProperties> = (
+const PluridMenuUniverses: React.FC<PluridMenuUniversesProperties> = (
     properties,
 ) => {
     /** properties */
@@ -62,10 +62,10 @@ const MoreMenu: React.FC<MoreMenuProperties> = (
 
     /** render */
     return (
-        <StyledMoreMenu
+        <StyledPluridMenuUniverses
             theme={interactionTheme}
         >
-            <StyledMoreMenuScroll>
+            <StyledPluridMenuUniversesScroll>
                 <ul>
                     {
                         Object.keys(documents).map(documentID => {
@@ -85,15 +85,15 @@ const MoreMenu: React.FC<MoreMenuProperties> = (
                         })
                     }
                 </ul>
-            </StyledMoreMenuScroll>
-        </StyledMoreMenu>
+            </StyledPluridMenuUniversesScroll>
+        </StyledPluridMenuUniverses>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): MoreMenuStateProperties => ({
+): PluridMenuUniversesStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
     documents: selectors.data.getUniverses(state),
     activeUniverseID: selectors.space.getActiveUniverseID(state),
@@ -102,7 +102,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): MoreMenuDispatchProperties => ({
+): PluridMenuUniversesDispatchProperties => ({
     dispatchSetActiveUniverse: (
         documentID: string,
     ) => dispatch(
@@ -118,4 +118,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(MoreMenu);
+)(PluridMenuUniverses);

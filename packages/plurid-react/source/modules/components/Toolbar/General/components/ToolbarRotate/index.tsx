@@ -25,7 +25,7 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
-    StyledToolbarRotate,
+    StyledPluridToolbarRotate,
 } from './styled';
 
 import {
@@ -33,7 +33,7 @@ import {
     StyledIcon,
 } from '../../styled';
 
-import TransformArrow from '../TransformArrow';
+import PluridTransformArrow from '../TransformArrow';
 
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
@@ -42,31 +42,30 @@ import actions from '../../../../../services/state/actions';
 
 
 
-export interface ToolbarRotateOwnProperties {
+export interface PluridToolbarRotateOwnProperties {
     showTransformButtons: boolean;
     showIcons: boolean;
     transformMode: keyof typeof TRANSFORM_MODES;
     toggleTransform(TYPE: keyof typeof TRANSFORM_MODES): void;
 }
 
-export interface ToolbarRotateStateProperties {
+export interface PluridToolbarRotateStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
 }
 
-export interface ToolbarRotateDispatchProperties {
+export interface PluridToolbarRotateDispatchProperties {
     rotateUp: typeof actions.space.rotateUp;
     rotateDown: typeof actions.space.rotateDown;
     rotateLeft: typeof actions.space.rotateLeft;
     rotateRight: typeof actions.space.rotateRight;
 }
 
-export type ToolbarRotateProperties = ToolbarRotateOwnProperties
-    & ToolbarRotateStateProperties
-    & ToolbarRotateDispatchProperties;
+export type PluridToolbarRotateProperties = PluridToolbarRotateOwnProperties
+    & PluridToolbarRotateStateProperties
+    & PluridToolbarRotateDispatchProperties;
 
-
-const ToolbarRotate: React.FC<ToolbarRotateProperties> = (
+const PluridToolbarRotate: React.FC<PluridToolbarRotateProperties> = (
     properties,
 ) => {
     /** properties */
@@ -91,17 +90,17 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (
 
     /** render */
     return (
-        <StyledToolbarRotate
+        <StyledPluridToolbarRotate
             showTransformButtons={showTransformButtons}
         >
             {showTransformButtons && (
                 <>
-                    <TransformArrow
+                    <PluridTransformArrow
                         direction="left"
                         transform={() => rotateRight()}
                     />
 
-                    <TransformArrow
+                    <PluridTransformArrow
                         direction="up"
                         transform={() => rotateUp()}
                     />
@@ -131,25 +130,25 @@ const ToolbarRotate: React.FC<ToolbarRotateProperties> = (
 
             {showTransformButtons && (
                 <>
-                    <TransformArrow
+                    <PluridTransformArrow
                         direction="down"
                         transform={() => rotateDown()}
                     />
 
-                    <TransformArrow
+                    <PluridTransformArrow
                         direction="right"
                         transform={() => rotateLeft()}
                     />
                 </>
             )}
-        </StyledToolbarRotate>
+        </StyledPluridToolbarRotate>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): ToolbarRotateStateProperties => ({
+): PluridToolbarRotateStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
@@ -157,11 +156,19 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): ToolbarRotateDispatchProperties => ({
-    rotateUp: () => dispatch(actions.space.rotateUp()),
-    rotateDown: () => dispatch(actions.space.rotateDown()),
-    rotateLeft: () => dispatch(actions.space.rotateLeft()),
-    rotateRight: () => dispatch(actions.space.rotateRight()),
+): PluridToolbarRotateDispatchProperties => ({
+    rotateUp: () => dispatch(
+        actions.space.rotateUp(),
+    ),
+    rotateDown: () => dispatch(
+        actions.space.rotateDown(),
+    ),
+    rotateLeft: () => dispatch(
+        actions.space.rotateLeft(),
+    ),
+    rotateRight: () => dispatch(
+        actions.space.rotateRight(),
+    ),
 });
 
 
@@ -172,4 +179,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(ToolbarRotate);
+)(PluridToolbarRotate);

@@ -27,11 +27,11 @@ import {
 } from '@plurid/plurid-functions-react';
 
 import {
-    StyledMoreMenu,
-    StyledMoreMenuScroll,
+    StyledPluridMoreMenu,
+    StyledPluridMoreMenuScroll,
 } from './styled';
 
-import Drawer from '../Drawer';
+import PluridDrawer from '../Drawer';
 
 import {
     moreMenus,
@@ -44,27 +44,27 @@ import actions from '../../../../../services/state/actions';
 
 
 
-export interface MoreMenuOwnProperties {
+export interface PluridMoreMenuOwnProperties {
 }
 
-export interface MoreMenuStateProperties {
+export interface PluridMoreMenuStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
     toolbarMenuScrollPosition: number;
 }
 
-export interface MoreMenuDispatchProperties {
+export interface PluridMoreMenuDispatchProperties {
     dispatchToggleConfigurationToolbarToggleDrawer: typeof actions.configuration.toggleConfigurationToolbarToggleDrawer;
     dispatchSetUIToolbarScrollPosition: typeof actions.ui.setUIToolbarScrollPosition;
 }
 
-export type MoreMenuProperties = MoreMenuOwnProperties
-    & MoreMenuStateProperties
-    & MoreMenuDispatchProperties;
+export type PluridMoreMenuProperties = PluridMoreMenuOwnProperties
+    & PluridMoreMenuStateProperties
+    & PluridMoreMenuDispatchProperties;
 
 
-const MoreMenu: React.FC<MoreMenuProperties> = (
+const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
     properties,
 ) => {
     /** properties */
@@ -134,11 +134,11 @@ const MoreMenu: React.FC<MoreMenuProperties> = (
 
     /** render */
     return (
-        <StyledMoreMenu
+        <StyledPluridMoreMenu
             theme={interactionTheme}
             transparentUI={transparentUI}
         >
-            <StyledMoreMenuScroll
+            <StyledPluridMoreMenuScroll
                 ref={moreMenuScrollElement}
             >
                 {moreMenus.map(moreMenu => {
@@ -151,7 +151,7 @@ const MoreMenu: React.FC<MoreMenuProperties> = (
                     const internationalizedName = internatiolate(stateLanguage, name);
 
                     return (
-                        <Drawer
+                        <PluridDrawer
                             key={name}
                             heading={internationalizedName}
                             items={(
@@ -162,15 +162,15 @@ const MoreMenu: React.FC<MoreMenuProperties> = (
                         />
                     )
                 })}
-            </StyledMoreMenuScroll>
-        </StyledMoreMenu>
+            </StyledPluridMoreMenuScroll>
+        </StyledPluridMoreMenu>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): MoreMenuStateProperties => ({
+): PluridMoreMenuStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
@@ -180,7 +180,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): MoreMenuDispatchProperties => ({
+): PluridMoreMenuDispatchProperties => ({
     dispatchToggleConfigurationToolbarToggleDrawer: (
         drawer: keyof typeof TOOLBAR_DRAWERS,
     ) => dispatch(
@@ -201,4 +201,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(MoreMenu);
+)(PluridMoreMenu);

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledMoreMenu: any = styled.div`
+export const StyledPluridMoreMenu: any = styled.div`
     position: absolute;
     bottom: 75px;
     height: 280px;
@@ -27,7 +27,7 @@ export const StyledMoreMenu: any = styled.div`
 `;
 
 
-export const StyledMoreMenuItem: any = styled.div`
+export const StyledPluridMoreMenuItem: any = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -64,7 +64,7 @@ export const StyledMoreMenuItem: any = styled.div`
 `;
 
 
-export const StyledMoreMenuScroll = styled.div`
+export const StyledPluridMoreMenuScroll = styled.div`
     height: 240px;
     overflow: scroll;
     padding: 0 5px;

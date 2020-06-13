@@ -2,6 +2,7 @@ import React, {
     useState,
     useEffect,
 } from 'react';
+
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -16,9 +17,9 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
-    StyledViewcubeModel,
-    StyleViewcubeModelContainer,
-    StyledViewcubeModelCube,
+    StyledPluridViewcubeModel,
+    StyledPluridViewcubeModelContainer,
+    StyledPluridViewcubeModelCube,
 } from './styled';
 
 import ViewcubeFace from '../ViewcubeFace';
@@ -30,24 +31,24 @@ import selectors from '../../../../services/state/selectors';
 
 
 
-export interface ViewcubeModelOwnProperties {
+export interface PluridViewcubeModelOwnProperties {
     mouseOver: boolean;
 }
 
-export interface ViewcubeModelStateProperties {
+export interface PluridViewcubeModelStateProperties {
     stateLanguage: InternationalizationLanguageType;
     spaceRotationX: number;
     spaceRotationY: number;
 }
 
-export interface ViewcubeModelDispatchProperties {
+export interface PluridViewcubeModelDispatchProperties {
 }
 
-export type ViewcubeModelProperties = ViewcubeModelOwnProperties
-    & ViewcubeModelStateProperties
-    & ViewcubeModelDispatchProperties;
+export type PluridViewcubeModelProperties = PluridViewcubeModelOwnProperties
+    & PluridViewcubeModelStateProperties
+    & PluridViewcubeModelDispatchProperties;
 
-const ViewcubeModel: React.FC<ViewcubeModelProperties> = (
+const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
     properties,
 ) => {
     const {
@@ -79,9 +80,9 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (
     ]);
 
     return (
-        <StyledViewcubeModel>
-            <StyleViewcubeModelContainer>
-                <StyledViewcubeModelCube
+        <StyledPluridViewcubeModel>
+            <StyledPluridViewcubeModelContainer>
+                <StyledPluridViewcubeModelCube
                     suppressHydrationWarning={true}
                     style={{
                         transform: `
@@ -148,16 +149,16 @@ const ViewcubeModel: React.FC<ViewcubeModelProperties> = (
                         activeZone={activeZone}
                         setActiveZone={setActiveZone}
                     />
-                </StyledViewcubeModelCube>
-            </StyleViewcubeModelContainer>
-        </StyledViewcubeModel>
+                </StyledPluridViewcubeModelCube>
+            </StyledPluridViewcubeModelContainer>
+        </StyledPluridViewcubeModel>
     );
 }
 
 
 const mapStateToProperties = (
     state: AppState,
-): ViewcubeModelStateProperties => ({
+): PluridViewcubeModelStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     spaceRotationX: selectors.space.getRotationX(state),
     spaceRotationY: selectors.space.getRotationY(state),
@@ -166,7 +167,7 @@ const mapStateToProperties = (
 
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): ViewcubeModelDispatchProperties => ({
+): PluridViewcubeModelDispatchProperties => ({
 });
 
 
@@ -177,4 +178,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(ViewcubeModel);
+)(PluridViewcubeModel);

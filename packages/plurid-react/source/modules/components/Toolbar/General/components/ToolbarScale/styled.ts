@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledToolbarScale: any = styled.div`
+export const StyledPluridToolbarScale: any = styled.div`
     display: grid;
     align-items: center;
     justify-items: center;

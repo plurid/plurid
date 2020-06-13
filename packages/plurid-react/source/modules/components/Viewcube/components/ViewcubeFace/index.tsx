@@ -12,8 +12,8 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    StyledViewcubeFace,
-    StyledViewcubeFaceZone,
+    StyledPluridViewcubeFace,
+    StyledPluridViewcubeFaceZone,
 } from './styled';
 
 import { AppState } from '../../../../services/state/store';
@@ -199,7 +199,7 @@ const zoneClickTransforms = {
 };
 
 
-export interface ViewcubeFaceOwnProperties {
+export interface PluridViewcubeFaceOwnProperties {
     face: string;
     faceText: string;
     mouseOver: boolean;
@@ -209,23 +209,23 @@ export interface ViewcubeFaceOwnProperties {
     setActiveZone: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export interface ViewcubeFaceStateProperties {
+export interface PluridViewcubeFaceStateProperties {
     generalTheme: Theme;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-export interface ViewcubeFaceDispatchProperties {
+export interface PluridViewcubeFaceDispatchProperties {
     dispatchRotateX: typeof actions.space.rotateX;
     dispatchRotateY: typeof actions.space.rotateY;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
 }
 
-export type ViewcubeFaceProperties = ViewcubeFaceOwnProperties
-    & ViewcubeFaceStateProperties
-    & ViewcubeFaceDispatchProperties;
+export type PluridViewcubeFaceProperties = PluridViewcubeFaceOwnProperties
+    & PluridViewcubeFaceStateProperties
+    & PluridViewcubeFaceDispatchProperties;
 
-const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
+const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
     properties,
 ) => {
     const {
@@ -275,14 +275,14 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
     }
 
     return (
-        <StyledViewcubeFace
+        <StyledPluridViewcubeFace
             theme={generalTheme}
             face={face}
             opaque={opaqueFace}
             mouseOver={mouseOver}
             transparentUI={transparentUI}
         >
-            <StyledViewcubeFaceZone
+            <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.topLeft}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.topLeft}`]}
@@ -291,7 +291,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
                 onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.topLeft}`])}
                 transparentUI={transparentUI}
             />
-            <StyledViewcubeFaceZone
+            <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.topCenter}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.topCenter}`]}
@@ -300,7 +300,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
                 onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.topCenter}`])}
                 transparentUI={transparentUI}
             />
-            <StyledViewcubeFaceZone
+            <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.topRight}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.topRight}`]}
@@ -311,7 +311,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
             />
 
 
-            <StyledViewcubeFaceZone
+            <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.middleLeft}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.middleLeft}`]}
@@ -320,7 +320,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
                 onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.middleLeft}`])}
                 transparentUI={transparentUI}
             />
-            <StyledViewcubeFaceZone
+            <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.middleCenter}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.middleCenter}`]}
@@ -330,8 +330,8 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
                 transparentUI={transparentUI}
             >
                 {faceText}
-            </StyledViewcubeFaceZone>
-            <StyledViewcubeFaceZone
+            </StyledPluridViewcubeFaceZone>
+            <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.middleRight}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.middleRight}`]}
@@ -342,7 +342,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
             />
 
 
-            <StyledViewcubeFaceZone
+            <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.bottomLeft}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.bottomLeft}`]}
@@ -351,7 +351,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
                 onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.bottomLeft}`])}
                 transparentUI={transparentUI}
             />
-            <StyledViewcubeFaceZone
+            <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.bottomCenter}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.bottomCenter}`]}
@@ -360,7 +360,7 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
                 onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.bottomCenter}`])}
                 transparentUI={transparentUI}
             />
-            <StyledViewcubeFaceZone
+            <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
                 type={faceTypes.bottomRight}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.bottomRight}`]}
@@ -369,14 +369,14 @@ const ViewcubeFace: React.FC<ViewcubeFaceProperties> = (
                 onMouseEnter={() => setHoveredZone((zoneCodes as any)[`${face}${faceTypes.bottomRight}`])}
                 transparentUI={transparentUI}
             />
-        </StyledViewcubeFace>
+        </StyledPluridViewcubeFace>
     );
 };
 
 
 const mapStateToProperties = (
     state: AppState,
-): ViewcubeFaceStateProperties => ({
+): PluridViewcubeFaceStateProperties => ({
     generalTheme: selectors.themes.getGeneralTheme(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
@@ -385,7 +385,7 @@ const mapStateToProperties = (
 
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): ViewcubeFaceDispatchProperties => ({
+): PluridViewcubeFaceDispatchProperties => ({
     dispatchRotateX: (angleX: number) => dispatch(
         actions.space.rotateX(angleX),
     ),
@@ -405,4 +405,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(ViewcubeFace);
+)(PluridViewcubeFace);

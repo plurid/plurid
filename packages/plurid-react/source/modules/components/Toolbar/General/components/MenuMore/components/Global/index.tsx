@@ -27,7 +27,7 @@ import {
 } from '@plurid/plurid-ui-react';
 
 import {
-    StyledMoreMenuItem,
+    StyledPluridMoreMenuItem,
 } from '../../styled';
 
 import { AppState } from '../../../../../../../services/state/store';
@@ -37,16 +37,16 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-export interface MenuMoreThemesOwnProperties {
+export interface PluridMenuMoreGlobalOwnProperties {
 }
 
-export interface MenuMoreThemesStateProperties {
+export interface PluridMenuMoreGlobalStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-export interface MenuMoreThemesDispatchProperties {
+export interface PluridMenuMoreGlobalDispatchProperties {
     dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
     dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
 
@@ -55,12 +55,12 @@ export interface MenuMoreThemesDispatchProperties {
     dispatchSetConfigurationLanguage: typeof actions.configuration.setConfigurationLanguageAction;
 }
 
-export type MenuMoreThemesProperties = MenuMoreThemesOwnProperties
-    & MenuMoreThemesStateProperties
-    & MenuMoreThemesDispatchProperties;
+export type PluridMenuMoreGlobalProperties = PluridMenuMoreGlobalOwnProperties
+    & PluridMenuMoreGlobalStateProperties
+    & PluridMenuMoreGlobalDispatchProperties;
 
 
-const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
+const PluridMenuMoreGlobal: React.FC<PluridMenuMoreGlobalProperties> = (
     properties,
 ) => {
     /** properties */
@@ -123,7 +123,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
     /** render */
     return (
         <>
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalGeneralTheme)}
 
                 <PluridDropdown
@@ -138,9 +138,9 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
                         fontSize: '0.8rem',
                     }}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalInteractionTheme)}
 
                 <PluridDropdown
@@ -155,9 +155,9 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
                         fontSize: '0.8rem',
                     }}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem
+            <StyledPluridMoreMenuItem
                 last={true}
             >
                 {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalLanguage)}
@@ -173,7 +173,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
                         fontSize: '0.8rem',
                     }}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
         </>
     );
 }
@@ -181,7 +181,7 @@ const MenuMoreThemes: React.FC<MenuMoreThemesProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): MenuMoreThemesStateProperties => ({
+): PluridMenuMoreGlobalStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
@@ -190,7 +190,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): MenuMoreThemesDispatchProperties => ({
+): PluridMenuMoreGlobalDispatchProperties => ({
     dispatchSetConfigurationThemeGeneralAction: (theme: string) => dispatch(
         actions.configuration.setConfigurationThemeGeneralAction(theme)
     ),
@@ -219,4 +219,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(MenuMoreThemes);
+)(PluridMenuMoreGlobal);

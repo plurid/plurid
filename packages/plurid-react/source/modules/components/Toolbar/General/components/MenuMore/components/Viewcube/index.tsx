@@ -24,7 +24,7 @@ import {
 } from '@plurid/plurid-ui-react';
 
 import {
-    StyledMoreMenuItem,
+    StyledPluridMoreMenuItem,
 } from '../../styled';
 
 import { AppState } from '../../../../../../../services/state/store';
@@ -34,28 +34,28 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-export interface MenuMoreViewcubeOwnProperties {
+export interface PluridMenuMoreViewcubeOwnProperties {
 }
 
-export interface MenuMoreViewcubeStateProperties {
+export interface PluridMenuMoreViewcubeStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-export interface MenuMoreViewcubeDispatchProperties {
+export interface PluridMenuMoreViewcubeDispatchProperties {
     dispatchToggleConfigurationViewcubeHide: typeof actions.configuration.toggleConfigurationViewcubeHide;
     dispatchToggleConfigurationViewcubeButtons: typeof actions.configuration.toggleConfigurationViewcubeButtons;
     dispatchToggleConfigurationViewcubeOpaque: typeof actions.configuration.toggleConfigurationViewcubeOpaque;
     dispatchToggleConfigurationViewcubeConceal: typeof actions.configuration.toggleConfigurationViewcubeConceal;
 }
 
-export type MenuMoreViewcubeProperties = MenuMoreViewcubeOwnProperties
-    & MenuMoreViewcubeStateProperties
-    & MenuMoreViewcubeDispatchProperties;
+export type PluridMenuMoreViewcubeProperties = PluridMenuMoreViewcubeOwnProperties
+    & PluridMenuMoreViewcubeStateProperties
+    & PluridMenuMoreViewcubeDispatchProperties;
 
 
-const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (
+const PluridMenuMoreViewcube: React.FC<PluridMenuMoreViewcubeProperties> = (
     properties,
 ) => {
     /** properties */
@@ -87,7 +87,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (
     /** render */
     return (
         <>
-            <StyledMoreMenuItem
+            <StyledPluridMoreMenuItem
                 last={!show ? true : false}
             >
                 <div>
@@ -101,11 +101,11 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
             {show && (
                 <>
-                    <StyledMoreMenuItem>
+                    <StyledPluridMoreMenuItem>
                         <div>
                             {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerViewcubeShowTransformButtons)}
                         </div>
@@ -117,9 +117,9 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (
                             exclusive={true}
                             level={2}
                         />
-                    </StyledMoreMenuItem>
+                    </StyledPluridMoreMenuItem>
 
-                    <StyledMoreMenuItem>
+                    <StyledPluridMoreMenuItem>
                         <div>
                             {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerViewcubeAlwaysOpaque)}
                         </div>
@@ -131,9 +131,9 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (
                             exclusive={true}
                             level={2}
                         />
-                    </StyledMoreMenuItem>
+                    </StyledPluridMoreMenuItem>
 
-                    <StyledMoreMenuItem
+                    <StyledPluridMoreMenuItem
                         last={true}
                     >
                         <div>
@@ -147,7 +147,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (
                             exclusive={true}
                             level={2}
                         />
-                    </StyledMoreMenuItem>
+                    </StyledPluridMoreMenuItem>
                 </>
             )}
         </>
@@ -157,7 +157,7 @@ const MenuMoreViewcube: React.FC<MenuMoreViewcubeProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): MenuMoreViewcubeStateProperties => ({
+): PluridMenuMoreViewcubeStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
@@ -166,7 +166,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): MenuMoreViewcubeDispatchProperties => ({
+): PluridMenuMoreViewcubeDispatchProperties => ({
     dispatchToggleConfigurationViewcubeHide: (toggle: boolean) => dispatch(
         actions.configuration.toggleConfigurationViewcubeHide(toggle)
     ),
@@ -189,4 +189,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(MenuMoreViewcube);
+)(PluridMenuMoreViewcube);

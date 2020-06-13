@@ -26,7 +26,7 @@ import {
 } from '@plurid/plurid-ui-react';
 
 import {
-    StyledMoreMenuItem,
+    StyledPluridMoreMenuItem,
 } from '../../styled';
 
 import { AppState } from '../../../../../../../services/state/store';
@@ -36,27 +36,27 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-export interface MenuMoreTransformOwnProperties {
+export interface PluridMenuMoreTransformOwnProperties {
 }
 
-export interface MenuMoreTransformStateProperties {
+export interface PluridMenuMoreTransformStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-export interface MenuMoreTransformDispatchProperties {
+export interface PluridMenuMoreTransformDispatchProperties {
     dispatchToggleConfigurationSpaceTransformMultimode: typeof actions.configuration.toggleConfigurationSpaceTransformMultimode;
     dispatchSetConfigurationSpaceTransformTouch: typeof actions.configuration.setConfigurationSpaceTransformTouch;
     dispatchSetConfigurationSpaceTransformLocks: typeof actions.configuration.setConfigurationSpaceTransformLocks;
 }
 
-export type MenuMoreTransformProperties = MenuMoreTransformOwnProperties
-    & MenuMoreTransformStateProperties
-    & MenuMoreTransformDispatchProperties;
+export type PluridMenuMoreTransformProperties = PluridMenuMoreTransformOwnProperties
+    & PluridMenuMoreTransformStateProperties
+    & PluridMenuMoreTransformDispatchProperties;
 
 
-const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
+const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
     properties,
 ) => {
     /** properties */
@@ -82,7 +82,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
     /** render */
     return (
         <>
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformMultiModeTransform)}
                 </div>
@@ -94,9 +94,9 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowRotationX)}
                 </div>
@@ -108,9 +108,9 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowRotationY)}
                 </div>
@@ -122,9 +122,9 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowTranslationX)}
                 </div>
@@ -136,9 +136,9 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowTranslationY)}
                 </div>
@@ -150,9 +150,9 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowTranslationZ)}
                 </div>
@@ -164,9 +164,9 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowScale)}
                 </div>
@@ -178,9 +178,9 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem
+            <StyledPluridMoreMenuItem
                 last={true}
             >
                 <div>
@@ -200,7 +200,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
                     }
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
         </>
     );
 }
@@ -208,7 +208,7 @@ const MenuMoreTransform: React.FC<MenuMoreTransformProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): MenuMoreTransformStateProperties => ({
+): PluridMenuMoreTransformStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
@@ -217,7 +217,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): MenuMoreTransformDispatchProperties => ({
+): PluridMenuMoreTransformDispatchProperties => ({
     dispatchToggleConfigurationSpaceTransformMultimode: (
         multimode,
     ) => dispatch(
@@ -243,4 +243,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(MenuMoreTransform);
+)(PluridMenuMoreTransform);
