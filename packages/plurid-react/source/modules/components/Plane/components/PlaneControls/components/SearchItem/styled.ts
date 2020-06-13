@@ -2,5 +2,5 @@ import styled from 'styled-components';
 
 
 
-export const StyledSearchItem = styled.li`
+export const StyledPluridSearchItem = styled.li`
 `;

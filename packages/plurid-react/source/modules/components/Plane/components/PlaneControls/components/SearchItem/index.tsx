@@ -14,7 +14,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    StyledSearchItem
+    PluridStyledSearchItem
 } from './styled';
 
 import { AppState } from '../../../../../../services/state/store';
@@ -24,26 +24,26 @@ import selectors from '../../../../../../services/state/selectors';
 
 
 
-export interface SearchItemOwnProperties {
+export interface PluridSearchItemOwnProperties {
     text: string;
     hideSearch: () => void;
 }
 
-export interface SearchItemStateProperties {
+export interface PluridSearchItemStateProperties {
     stateConfiguration: PluridConfiguration;
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-export interface SearchItemDispatchProperties {
+export interface PluridSearchItemDispatchProperties {
 }
 
-export type SearchItemProperties = SearchItemOwnProperties
-    & SearchItemStateProperties
-    & SearchItemDispatchProperties;
+export type PluridSearchItemProperties = PluridSearchItemOwnProperties
+    & PluridSearchItemStateProperties
+    & PluridSearchItemDispatchProperties;
 
 
-const SearchItem: React.FC<SearchItemProperties> = (
+const PluridSearchItem: React.FC<PluridSearchItemProperties> = (
     properties,
 ) => {
     /** properties */
@@ -66,19 +66,19 @@ const SearchItem: React.FC<SearchItemProperties> = (
 
     /** render */
     return (
-        <StyledSearchItem
+        <PluridStyledSearchItem
             theme={stateInteractionTheme}
             onClick={handleClickSearch}
         >
             {text}
-        </StyledSearchItem>
+        </PluridStyledSearchItem>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): SearchItemStateProperties => ({
+): PluridSearchItemStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
@@ -87,7 +87,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): SearchItemDispatchProperties => ({
+): PluridSearchItemDispatchProperties => ({
 });
 
 
@@ -98,4 +98,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(SearchItem);
+)(PluridSearchItem);

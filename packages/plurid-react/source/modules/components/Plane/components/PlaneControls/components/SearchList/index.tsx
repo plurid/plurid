@@ -18,7 +18,7 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    StyledSearchList,
+    StyledPluridSearchList,
     StyledSearchFilters,
 } from './styled';
 
@@ -31,25 +31,25 @@ import selectors from '../../../../../../services/state/selectors';
 
 
 
-export interface SearchListOwnProperties {
+export interface PluridSearchListOwnProperties {
     hideSearch: () => void;
 }
 
-export interface SearchListStateProperties {
+export interface PluridSearchListStateProperties {
     stateConfiguration: PluridConfiguration;
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-export interface SearchListDispatchProperties {
+export interface PluridSearchListDispatchProperties {
 }
 
-export type SearchListProperties = SearchListOwnProperties
-    & SearchListStateProperties
-    & SearchListDispatchProperties;
+export type PluridSearchListProperties = PluridSearchListOwnProperties
+    & PluridSearchListStateProperties
+    & PluridSearchListDispatchProperties;
 
 
-const SearchList: React.FC<SearchListProperties> = (
+const PluridSearchList: React.FC<PluridSearchListProperties> = (
     properties,
 ) => {
     /** properties */
@@ -72,7 +72,7 @@ const SearchList: React.FC<SearchListProperties> = (
 
     /** render */
     return (
-        <StyledSearchList
+        <StyledPluridSearchList
             theme={stateInteractionTheme}
         >
             <StyledSearchFilters>
@@ -100,14 +100,14 @@ const SearchList: React.FC<SearchListProperties> = (
                     );
                 })}
             </ul>
-        </StyledSearchList>
+        </StyledPluridSearchList>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): SearchListStateProperties => ({
+): PluridSearchListStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
@@ -116,7 +116,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): SearchListDispatchProperties => ({
+): PluridSearchListDispatchProperties => ({
 });
 
 
@@ -127,4 +127,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(SearchList);
+)(PluridSearchList);

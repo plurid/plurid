@@ -32,10 +32,10 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    StyledPlaneControls,
-    StyledPlaneControlsLeft,
-    StyledPlaneControlsCenter,
-    StyledPlaneControlsRight,
+    StyledPluridPlaneControls,
+    StyledPluridPlaneControlsLeft,
+    StyledPluridPlaneControlsCenter,
+    StyledPluridPlaneControlsRight,
 } from './styled';
 
 import SearchList from './components/SearchList';
@@ -47,27 +47,27 @@ import selectors from '../../../../services/state/selectors';
 
 
 
-export interface PlaneControlsOwnProperties {
+export interface PluridPlaneControlsOwnProperties {
     plane: PluridPlane;
     treePlane: TreePlane;
     mouseOver: boolean;
 }
 
-export interface PlaneControlsStateProperties {
+export interface PluridPlaneControlsStateProperties {
     configuration: PluridConfiguration;
     generalTheme: Theme;
     interactionTheme: Theme;
 }
 
-export interface PlaneControlsDispatchProperties {
+export interface PluridPlaneControlsDispatchProperties {
 }
 
-export type PlaneControlsProperties = PlaneControlsOwnProperties
-    & PlaneControlsStateProperties
-    & PlaneControlsDispatchProperties;
+export type PluridPlaneControlsProperties = PluridPlaneControlsOwnProperties
+    & PluridPlaneControlsStateProperties
+    & PluridPlaneControlsDispatchProperties;
 
 
-const PlaneControls: React.FC<PlaneControlsProperties> = (
+const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     properties,
 ) => {
     /** properties */
@@ -151,16 +151,16 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
 
     /** render */
     return (
-        <StyledPlaneControls
+        <StyledPluridPlaneControls
             theme={generalTheme}
             mouseOver={mouseOver}
             transparentUI={transparentUI}
             data-plurid-entity={PLURID_ENTITY_PLANE_CONTROLS}
         >
-            <StyledPlaneControlsLeft>
-            </StyledPlaneControlsLeft>
+            <StyledPluridPlaneControlsLeft>
+            </StyledPluridPlaneControlsLeft>
 
-            <StyledPlaneControlsCenter>
+            <StyledPluridPlaneControlsCenter>
                 <PluridTextline
                     theme={interactionTheme}
                     text={showAddress ? gatewayAddress : path}
@@ -174,9 +174,9 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
                         hideSearch={() => setShowSearch(false)}
                     />
                 )}
-            </StyledPlaneControlsCenter>
+            </StyledPluridPlaneControlsCenter>
 
-            <StyledPlaneControlsRight>
+            <StyledPluridPlaneControlsRight>
                 {/* <PluridIconCopy
                     atClick={() => copyGatewayLink()}
                 />
@@ -184,15 +184,15 @@ const PlaneControls: React.FC<PlaneControlsProperties> = (
                 <PluridIconLink
                     atClick={() => setShowAddress(show => !show)}
                 /> */}
-            </StyledPlaneControlsRight>
-        </StyledPlaneControls>
+            </StyledPluridPlaneControlsRight>
+        </StyledPluridPlaneControls>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): PlaneControlsStateProperties => ({
+): PluridPlaneControlsStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     generalTheme: selectors.themes.getGeneralTheme(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
@@ -201,7 +201,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): PlaneControlsDispatchProperties => ({
+): PluridPlaneControlsDispatchProperties => ({
 });
 
 
@@ -212,4 +212,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(PlaneControls);
+)(PluridPlaneControls);

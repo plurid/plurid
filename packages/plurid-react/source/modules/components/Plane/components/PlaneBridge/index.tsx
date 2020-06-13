@@ -15,7 +15,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    StyledPlaneBridge,
+    StyledPluridPlaneBridge,
 } from './styled';
 
 import { AppState } from '../../../../services/state/store';
@@ -25,23 +25,22 @@ import selectors from '../../../../services/state/selectors';
 
 
 
-export interface PlaneBridgeOwnProperties {
+export interface PluridPlaneBridgeOwnProperties {
 }
 
-export interface PlaneBridgeStateProperties {
+export interface PluridPlaneBridgeStateProperties {
     generalTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-export interface PlaneBridgeDispatchProperties {
+export interface PluridPlaneBridgeDispatchProperties {
 }
 
-export type PlaneBridgeProperties = PlaneBridgeOwnProperties
-    & PlaneBridgeStateProperties
-    & PlaneBridgeDispatchProperties;
+export type PluridPlaneBridgeProperties = PluridPlaneBridgeOwnProperties
+    & PluridPlaneBridgeStateProperties
+    & PluridPlaneBridgeDispatchProperties;
 
-
-const PlaneBridge: React.FC<PlaneBridgeProperties> = (
+const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
     properties,
 ) => {
     /** properties */
@@ -58,7 +57,7 @@ const PlaneBridge: React.FC<PlaneBridgeProperties> = (
 
     /** render */
     return (
-        <StyledPlaneBridge
+        <StyledPluridPlaneBridge
             theme={generalTheme}
             planeControls={controls.show}
             planeOpacity={opacity}
@@ -70,7 +69,7 @@ const PlaneBridge: React.FC<PlaneBridgeProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): PlaneBridgeStateProperties => ({
+): PluridPlaneBridgeStateProperties => ({
     generalTheme: selectors.themes.getGeneralTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });
@@ -78,7 +77,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): PlaneBridgeDispatchProperties => ({
+): PluridPlaneBridgeDispatchProperties => ({
 });
 
 
@@ -89,4 +88,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(PlaneBridge);
+)(PluridPlaneBridge);

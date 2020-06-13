@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledPlaneBridge: any = styled.div`
+export const StyledPluridPlaneBridge: any = styled.div`
     background-color: ${(props: any) => {
         if (props.planeOpacity === 0) {
             return 'transparent';
