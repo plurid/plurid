@@ -9,17 +9,16 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    StyledPlaneContent,
+    StyledPluridPlaneContent,
 } from './styled';
 
 
 
-export interface PlaneContentOwnProperties {
+export interface PluridPlaneContentOwnProperties {
     updatePlaneSize: any;
 }
 
-
-const PlaneContent: React.FC<PlaneContentOwnProperties> = (
+const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
     properties,
 ) => {
     /** properties */
@@ -59,14 +58,14 @@ const PlaneContent: React.FC<PlaneContentOwnProperties> = (
 
     /** render */
     return (
-        <StyledPlaneContent
+        <StyledPluridPlaneContent
             ref={planeContentElement}
             data-plurid-entity={PLURID_ENTITY_PLANE_CONTENT}
         >
             {children}
-        </StyledPlaneContent>
+        </StyledPluridPlaneContent>
     );
 }
 
 
-export default PlaneContent;
+export default PluridPlaneContent;

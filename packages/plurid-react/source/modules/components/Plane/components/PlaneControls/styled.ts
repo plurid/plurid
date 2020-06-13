@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledPlaneControls: any = styled.div`
+export const StyledPluridPlaneControls: any = styled.div`
     background-color: ${(props: any) => {
         if (props.transparentUI && !props.mouseOver) {
             return 'transparent';
@@ -29,18 +29,18 @@ export const StyledPlaneControls: any = styled.div`
 
 
 
-export const StyledPlaneControlsLeft = styled.div`
+export const StyledPluridPlaneControlsLeft = styled.div`
 `;
 
 
-export const StyledPlaneControlsCenter = styled.div`
+export const StyledPluridPlaneControlsCenter = styled.div`
     width: 100%;
     height: 38px;
     position: relative;
 `;
 
 
-export const StyledPlaneControlsRight = styled.div`
+export const StyledPluridPlaneControlsRight = styled.div`
     display: grid;
     grid-template-columns: repeat(4, 30px);
     padding: 0 1rem;

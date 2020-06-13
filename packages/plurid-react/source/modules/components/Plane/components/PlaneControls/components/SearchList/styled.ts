@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledSearchList = styled.div`
+export const StyledPluridSearchList = styled.div`
     position: absolute;
     left: 0;
     right: 0;
