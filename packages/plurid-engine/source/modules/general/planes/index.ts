@@ -17,7 +17,7 @@ export const createInternalStatePlane = (
     const statePlane: PluridInternalStatePlane = {
         // id: plane.id || uuid.generate(),
         id: uuid.generate(),
-        path: plane.path,
+        path: plane.route,
         // root: page.root || false,
         // ordinal: page.ordinal || 0,
     };
@@ -31,14 +31,14 @@ export const createInternalContextPlane = (
 ): PluridInternalContextPlane => {
     const {
         // id,
-        path,
+        route,
         component,
     } = plane;
 
     const contextPlane: PluridInternalContextPlane = {
         id: uuid.generate(),
         // id: id || uuid.generate(),
-        path,
+        path: route,
         component,
     };
 
