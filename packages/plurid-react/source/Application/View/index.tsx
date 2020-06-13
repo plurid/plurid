@@ -86,11 +86,11 @@ import {
 
 
 
-interface ViewOwnProperties {
+export interface ViewOwnProperties {
     pluridApplication: PluridApplicationProperties;
 }
 
-interface ViewStateProperties {
+export interface ViewStateProperties {
     stateConfiguration: PluridAppConfiguration;
     stateDataUniverses: Indexed<PluridInternalStateUniverse>;
     viewSize: ViewSize;
@@ -103,7 +103,7 @@ interface ViewStateProperties {
     stateCulledView: any;
 }
 
-interface ViewDispatchProperties {
+export interface ViewDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
     dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
@@ -137,10 +137,9 @@ interface ViewDispatchProperties {
     dispatchDataSetPlaneSources: typeof actions.data.setPlaneSources;
 }
 
-type ViewProperties = ViewOwnProperties
+export type ViewProperties = ViewOwnProperties
     & ViewStateProperties
     & ViewDispatchProperties;
-
 
 const PluridView: React.FC<ViewProperties> = (
     properties,

@@ -14,18 +14,18 @@ const initialState = {};
 const initializedStore = store(initialState);
 
 
-const PluridApplication: React.FC<PluridApplicationProperties> = (
+const PluridSingleApplication: React.FC<PluridApplicationProperties> = (
     properties,
 ) => {
     return (
         <Root
             store={initializedStore}
-            pluridApplication={
-                { ...properties }
-            }
+            pluridApplication={{
+                ...properties,
+            }}
         />
     );
 }
 
 
-export default PluridApplication;
+export default PluridSingleApplication;

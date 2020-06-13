@@ -16,13 +16,12 @@ import StateContext from '../../../modules/services/state/context';
 
 
 
-interface RootProperties {
+export interface PluridRootProperties {
     store: Store<AppState, AnyAction>;
     pluridApplication: PluridApplicationProperties;
 }
 
-
-const Root: React.FC<RootProperties> = (
+const PluridRoot: React.FC<PluridRootProperties> = (
     properties,
 ) => {
     /** properties */
@@ -46,4 +45,4 @@ const Root: React.FC<RootProperties> = (
 }
 
 
-export default Root;
+export default PluridRoot;
