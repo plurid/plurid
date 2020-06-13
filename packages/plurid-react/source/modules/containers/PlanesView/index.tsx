@@ -19,22 +19,22 @@ import selectors from '../../services/state/selectors';
 
 
 
-interface PlanesViewOwnProperties {
+export interface PluridPlanesViewOwnProperties {
 }
 
-interface PlanesViewStateProperties {
+export interface PluridPlanesViewStateProperties {
     stateConfiguration: PluridConfiguration,
 }
 
-interface PlanesViewDispatchProperties {
+export interface PluridPlanesViewDispatchProperties {
 }
 
-type PlanesViewProperties = PlanesViewOwnProperties
-    & PlanesViewStateProperties
-    & PlanesViewDispatchProperties;
+export type PluridPlanesViewProperties = PluridPlanesViewOwnProperties
+    & PluridPlanesViewStateProperties
+    & PluridPlanesViewDispatchProperties;
 
 
-const PlanesView: React.FC<PlanesViewProperties> = (
+const PluridPlanesView: React.FC<PluridPlanesViewProperties> = (
     properties,
 ) => {
     /** properties */
@@ -75,14 +75,14 @@ const PlanesView: React.FC<PlanesViewProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): PlanesViewStateProperties => ({
+): PluridPlanesViewStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
 });
 
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): PlanesViewDispatchProperties => ({
+): PluridPlanesViewDispatchProperties => ({
 });
 
 
@@ -93,4 +93,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(PlanesView);
+)(PluridPlanesView);

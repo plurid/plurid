@@ -2,5 +2,5 @@ import styled from 'styled-components';
 
 
 
-export const StyledNotFound = styled.div`
+export const StyledPluridNotFound = styled.div`
 `;

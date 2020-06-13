@@ -9,7 +9,7 @@ import {
 
 
 
-export interface ToolbarButtonProps {
+export interface PluridToolbarButtonProperties {
     atClick: any;
     image: any;
     scaleImage?: boolean;
@@ -22,8 +22,7 @@ export interface ToolbarButtonProps {
     theme?: any;
 }
 
-
-const ToolbarButton: React.FC<ToolbarButtonProps> = (
+const PluridToolbarButton: React.FC<PluridToolbarButtonProperties> = (
     properties,
 ) => {
     /** properties */
@@ -71,4 +70,4 @@ const ToolbarButton: React.FC<ToolbarButtonProps> = (
 }
 
 
-export default ToolbarButton;
+export default PluridToolbarButton;

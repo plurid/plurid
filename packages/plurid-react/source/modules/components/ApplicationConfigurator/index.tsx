@@ -10,6 +10,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import {
     PLURID_ENTITY_APPLICATION_CONFIGURATOR,
+    PluridPartialConfiguration,
 } from '@plurid/plurid-data';
 
 import {
@@ -24,6 +25,7 @@ import StateContext from '../../services/state/context';
 
 
 export interface PluridApplicationConfiguratorOwnProperties {
+    configuration?: PluridPartialConfiguration;
 }
 
 export interface PluridApplicationConfiguratorStateProperties {
@@ -47,13 +49,14 @@ const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridAppl
     properties,
 ) => {
     /** properties */
-    // const {
-    //     /** own */
+    const {
+        /** own */
+        configuration,
 
-    //     /** state */
+        /** state */
 
-    //     /** dispatch */
-    // } = properties;
+        /** dispatch */
+    } = properties;
 
 
     /** references */

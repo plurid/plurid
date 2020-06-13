@@ -60,28 +60,28 @@ import {
 
 
 
-export interface ToolbarOwnProperties {
+export interface PluridToolbarOwnProperties {
 }
 
-export interface ToolbarStateProperties {
+export interface PluridToolbarStateProperties {
     theme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
     universes: any;
 }
 
-export interface ToolbarDispatchProperties {
+export interface PluridToolbarDispatchProperties {
     dispatchToggleConfigurationSpaceFirstPerson: typeof actions.configuration.toggleConfigurationSpaceFirstPerson;
 
     dispatchSetConfigurationSpaceTransformMode: typeof actions.configuration.setConfigurationSpaceTransformMode;
 }
 
-export type ToolbarProperties = ToolbarOwnProperties
-    & ToolbarStateProperties
-    & ToolbarDispatchProperties;
+export type PluridToolbarProperties = PluridToolbarOwnProperties
+    & PluridToolbarStateProperties
+    & PluridToolbarDispatchProperties;
 
 
-const Toolbar: React.FC<ToolbarProperties> = (
+const PluridToolbar: React.FC<PluridToolbarProperties> = (
     properties,
 ) => {
     /** properties */
@@ -290,7 +290,7 @@ const Toolbar: React.FC<ToolbarProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): ToolbarStateProperties => ({
+): PluridToolbarStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
     theme: selectors.themes.getInteractionTheme(state),
     viewSize: selectors.space.getViewSize(state),
@@ -300,7 +300,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): ToolbarDispatchProperties => ({
+): PluridToolbarDispatchProperties => ({
     dispatchToggleConfigurationSpaceFirstPerson: () => dispatch(
         actions.configuration.toggleConfigurationSpaceFirstPerson(),
     ),
@@ -320,4 +320,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(Toolbar);
+)(PluridToolbar);
