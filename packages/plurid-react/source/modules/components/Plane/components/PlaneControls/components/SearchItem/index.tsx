@@ -14,7 +14,7 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    PluridStyledSearchItem
+    StyledPluridSearchItem
 } from './styled';
 
 import { AppState } from '../../../../../../services/state/store';
@@ -66,12 +66,12 @@ const PluridSearchItem: React.FC<PluridSearchItemProperties> = (
 
     /** render */
     return (
-        <PluridStyledSearchItem
+        <StyledPluridSearchItem
             theme={stateInteractionTheme}
             onClick={handleClickSearch}
         >
             {text}
-        </PluridStyledSearchItem>
+        </StyledPluridSearchItem>
     );
 }
 
