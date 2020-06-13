@@ -11,7 +11,7 @@ interface IStyledPreview {
     linkCoordinates: any;
 }
 
-export const StyledPreview = styled.div<IStyledPreview>`
+export const StyledPluridPlanePreview = styled.div<IStyledPreview>`
     position: absolute;
     min-width: 600px;
     min-height: 300px;
