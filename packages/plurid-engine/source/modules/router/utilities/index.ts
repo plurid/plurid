@@ -236,14 +236,16 @@ export const pluridLinkPathDivider = (
 
 
 /**
- * Given a partial `path`, e.g. `/path`, or `://cluster://path`,
+ * Given a partial `route`, e.g. `/route`, or `://cluster://route`,
  * it resolves it to the absolute form
  * `protocol://origin://route://space://universe://cluster://plane`.
  *
  * @param path
  */
-export const resolveAbsolutePluridLinkPath = (
+export const resolveRoute = (
     route: string,
+    protocol?: string,
+    host?: string,
 ) => {
     const windowProtocol = typeof window === 'undefined'
         ? 'http'
@@ -256,8 +258,8 @@ export const resolveAbsolutePluridLinkPath = (
 
     const defaultPathname = divisions.path.value || 'p';
 
-    const protocol = divisions.protocol || windowProtocol;
-    const host = divisions.host.value
+    const protocolDivision = divisions.protocol || windowProtocol;
+    const hostDivision = divisions.host.value
         ? divisions.host
         : {
             value: windowHost,
@@ -297,14 +299,14 @@ export const resolveAbsolutePluridLinkPath = (
 
     if (!plane.value && route !== '/') {
         const resolvers = [
-            protocol,
-            host.value,
+            protocolDivision,
+            hostDivision.value,
             path.value,
         ];
         const resolvedPath = resolvers.join(separator);
 
         return {
-            protocol,
+            protocol: protocolDivision,
             host,
             path,
             space,
@@ -316,8 +318,8 @@ export const resolveAbsolutePluridLinkPath = (
     }
 
     const resolvers = [
-        protocol,
-        host.value,
+        protocolDivision,
+        hostDivision.value,
         path.value,
         space.value,
         universe.value,
@@ -327,7 +329,7 @@ export const resolveAbsolutePluridLinkPath = (
     const resolvedPath = resolvers.join(separator);
 
     return {
-        protocol,
+        protocol: protocolDivision,
         host,
         path,
         space,
