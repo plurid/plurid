@@ -150,7 +150,7 @@ export const computeRootLocationX = (
     let translateX = 0;
     if (configuration && configuration.space) {
         if (Array.isArray(configuration.space.layout)) {
-            const layoutIndex = configuration.space.layout.indexOf(root.path);
+            const layoutIndex = configuration.space.layout.indexOf(root.route);
             translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
         }
     } else {
