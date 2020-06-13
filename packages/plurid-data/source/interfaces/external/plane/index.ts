@@ -11,24 +11,27 @@ export interface PluridPlane {
     component: PluridComponent;
 
     /**
-     * Path to the plane, e.g. `/plane-1`. By convention, it starts with an '/'.
+     * Route to the plane, e.g. `/plane-1`. By convention, it starts with an '/'.
      *
-     * The `path` can be
+     * The `route` can be
      * + unassigned,
      * + assigned,
      * + absolute.
      *
-     * The unassigned path respects the format
-     * `/path` and will be automatically assigned
+     * The unassigned route respects the format
+     * `/plane` and will be automatically assigned
      * to the `default` space, `default` universe, `default` cluster.
      *
      * The assigned path respects the format
-     * `/://universe://cluster://plane`.
+     * `/path://space://universe://cluster://plane`
+     * and it presupposes the given `protocol` and `host`.
      *
      * The absolute path respects the format
-     * `protocol://host://path://space://universe://cluster://plane`.
+     * `protocol://host://path://space://universe://cluster://plane`
+     * and is useful for cross-origins requests.
+     *
      */
-    path: string;
+    route: string;
 
 
     // old path comment
