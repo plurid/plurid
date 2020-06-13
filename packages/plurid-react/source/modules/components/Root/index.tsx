@@ -23,7 +23,7 @@ import {
     /** interfaces */
     TreePlane,
     PluridContext,
-    PluridProperty,
+    PluridComponentProperty,
 } from '@plurid/plurid-data';
 
 import { AppState } from '../../services/state/store';
@@ -319,10 +319,13 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const Plane = pluridPlane.component.element;
     // console.log('Root Plane', Plane);
 
-    const pluridProperties: PluridProperty = {
-        path: {
-            parameters: {},
-            query: {},
+    const pluridProperties: PluridComponentProperty = {
+        route: {
+            plane: {
+                parameters: {},
+                query: {},
+                value: '',
+            },
         },
         // ...pluridPlaneProperties.plurid,
         metadata: {
