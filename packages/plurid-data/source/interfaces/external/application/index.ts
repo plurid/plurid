@@ -38,7 +38,7 @@ export interface PluridApplication {
     planesProperties?: Map<string, any>;
 
     /**
-     * A `PluridApplication` must be either planes or universes based.
+     * The planes which will be rendered by the `PluridApplication`.
      */
     planes?: PluridPlane[];
 
@@ -53,7 +53,7 @@ export interface PluridApplication {
     planeContextValue?: Record<string, any>;
 
     /**
-     * Paths of the planes in view on the initial rendering.
+     * Routes of the planes in view on the initial rendering.
      */
     view?: string[] | PluridView[];
 
