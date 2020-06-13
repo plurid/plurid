@@ -3,13 +3,18 @@ import React from 'react';
 
 
 export interface PluridComponentBase {
-    kind: 'elementql' | 'react';
+    kind: PluridComponentKind;
 
     /**
      * The `properties` will be passed to the `element` at runtime.
      */
     properties?: Record<string, any>;
 }
+
+
+export type PluridComponentKind =
+    | 'elementql'
+    | 'react';
 
 
 export interface PluridComponentElementQL extends PluridComponentBase {
@@ -26,24 +31,34 @@ export interface PluridComponentReact extends PluridComponentBase {
      * The `element` will receive the properties, if any,
      * and the `plurid` property.
      */
-    element: React.FC<ReactComponentWithPluridProperty<any>>;
+    element: React.FC<ReactComponentWithPlurid<any>>;
 }
 
 
-export type ReactComponentWithPluridProperty<T> = T & WithPluridProperty;
+export type ReactComponentWithPlurid<T> = T & WithPluridComponentProperty;
 
-export interface WithPluridProperty {
-    plurid: PluridProperty;
+
+export interface WithPluridComponentProperty {
+    plurid: PluridComponentProperty;
 }
 
-export interface PluridProperty {
+
+export interface PluridComponentProperty {
     metadata: {
         planeID: string;
+        // location: any;
         // and other useful data for in plane manipulation
+        // data taken from TreePlane (?)
     };
-    path: {
-        parameters: Record<string, string>;
-        query: Record<string, string>;
+    route: {
+        // details about the plane route:
+        // protocol - origin - path - space - universe - cluster - plane
+        // RouteDivions (?)
+        plane: {
+            parameters: Record<string, string>;
+            query: Record<string, string>;
+            value: string;
+        };
     };
 }
 
