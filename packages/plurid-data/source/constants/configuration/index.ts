@@ -95,6 +95,10 @@ export const defaultConfiguration: PluridConfiguration = {
         cullingDistance: PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
     },
     render: 'plurid',
+    development: {
+        planeDebugger: false,
+        spaceDebugger: false,
+    },
 };
 
 
