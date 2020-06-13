@@ -234,7 +234,7 @@ const PluridView: React.FC<ViewProperties> = (
                 // loop over PluridPlanes and generate ...?
                 const {
                     component,
-                    path,
+                    route,
                 } = plane;
 
                 const {
@@ -244,7 +244,7 @@ const PluridView: React.FC<ViewProperties> = (
                 } = component;
 
                 // obtain from path the absolute path
-                const linkPath = router.resolveAbsolutePluridLinkPath(plane.path);
+                const linkPath = router.resolveRoute(route);
 
                 const {
                     protocol,
