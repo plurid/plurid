@@ -53,7 +53,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
                 context={StateContext}
             >
                 <PluridView
-                    pluridApplication={{
+                    application={{
                         ...this.properties,
                     }}
                 />
