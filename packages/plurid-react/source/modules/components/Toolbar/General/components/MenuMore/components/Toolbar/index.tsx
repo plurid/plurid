@@ -27,7 +27,7 @@ import {
 } from '@plurid/plurid-ui-react';
 
 import {
-    StyledMoreMenuItem,
+    StyledPluridMoreMenuItem,
 } from '../../styled';
 
 import { AppState } from '../../../../../../../services/state/store';
@@ -40,29 +40,29 @@ import {
 
 
 
-export interface MenuMoreToolbarOwnProperties {
+export interface PluridMenuMoreToolbarOwnProperties {
 }
 
-export interface MenuMoreToolbarStateProperties {
+export interface PluridMenuMoreToolbarStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
 }
 
-export interface MenuMoreToolbarDispatchProperties {
+export interface PluridMenuMoreToolbarDispatchProperties {
     dispatchToggleConfigurationToolbarConceal: typeof actions.configuration.toggleConfigurationToolbarConceal;
     dispatchToggleConfigurationToolbarTransformIcons: typeof actions.configuration.toggleConfigurationToolbarTransformIcons;
     dispatchToggleConfigurationToolbarTransformButtons: typeof actions.configuration.toggleConfigurationToolbarTransformButtons;
     dispatchToggleConfigurationToolbarOpaque: typeof actions.configuration.toggleConfigurationToolbarOpaque
 }
 
-export type MenuMoreToolbarProperties = MenuMoreToolbarOwnProperties
-    & MenuMoreToolbarStateProperties
-    & MenuMoreToolbarDispatchProperties;
+export type PluridMenuMoreToolbarProperties = PluridMenuMoreToolbarOwnProperties
+    & PluridMenuMoreToolbarStateProperties
+    & PluridMenuMoreToolbarDispatchProperties;
 
 
-const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (
+const PluridMenuMoreToolbar: React.FC<PluridMenuMoreToolbarProperties> = (
     properties,
 ) => {
     /** properties */
@@ -107,7 +107,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (
     /** render */
     return (
         <>
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerToolbarAlwaysOpaque)}
                 </div>
@@ -119,9 +119,9 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerToolbarShowTransformIcons)}
                 </div>
@@ -133,10 +133,10 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
 
             {!viewSizeSmall && (
-                <StyledMoreMenuItem>
+                <StyledPluridMoreMenuItem>
                     <div>
                         {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerToolbarShowTransformArrows)}
                     </div>
@@ -148,10 +148,10 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (
                         exclusive={true}
                         level={2}
                     />
-                </StyledMoreMenuItem>
+                </StyledPluridMoreMenuItem>
             )}
 
-            <StyledMoreMenuItem
+            <StyledPluridMoreMenuItem
                 last={true}
             >
                 <div>
@@ -165,7 +165,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (
                     exclusive={true}
                     level={2}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
         </>
     );
 }
@@ -173,7 +173,7 @@ const MenuMoreToolbar: React.FC<MenuMoreToolbarProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): MenuMoreToolbarStateProperties => ({
+): PluridMenuMoreToolbarStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
@@ -183,7 +183,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): MenuMoreToolbarDispatchProperties => ({
+): PluridMenuMoreToolbarDispatchProperties => ({
     dispatchToggleConfigurationToolbarConceal: () => dispatch(
         actions.configuration.toggleConfigurationToolbarConceal()
     ),
@@ -206,4 +206,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(MenuMoreToolbar);
+)(PluridMenuMoreToolbar);

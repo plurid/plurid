@@ -19,9 +19,9 @@ import {
 } from '@plurid/plurid-ui-react';
 
 import {
-    StyledDrawer,
-    StyledDrawerHeading,
-    StyledDrawerItems,
+    StyledPluridDrawer,
+    StyledPluridDrawerHeading,
+    StyledPluridDrawerItems,
 } from './styled';
 
 import { AppState } from '../../../../../services/state/store';
@@ -31,27 +31,26 @@ import selectors from '../../../../../services/state/selectors';
 
 
 
-export interface DrawerOwnProperties {
+export interface PluridDrawerOwnProperties {
     heading: string;
     items: JSX.Element;
     toggled: boolean;
     toggle(): void;
 }
 
-export interface DrawerStateProperties {
+export interface PluridDrawerStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-export interface DrawerDispatchProperties {
+export interface PluridDrawerDispatchProperties {
 }
 
-export type DrawerProperties = DrawerOwnProperties
-    & DrawerStateProperties
-    & DrawerDispatchProperties;
+export type PluridDrawerProperties = PluridDrawerOwnProperties
+    & PluridDrawerStateProperties
+    & PluridDrawerDispatchProperties;
 
-
-const Drawer: React.FC<DrawerProperties> = (
+const PluridDrawer: React.FC<PluridDrawerProperties> = (
     properties
 ) => {
     /** properties */
@@ -80,7 +79,7 @@ const Drawer: React.FC<DrawerProperties> = (
 
     /** render */
     return (
-        <StyledDrawer
+        <StyledPluridDrawer
             theme={interactionTheme}
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
@@ -88,7 +87,7 @@ const Drawer: React.FC<DrawerProperties> = (
             mouseOver={mouseOver}
             toggled={toggled}
         >
-            <StyledDrawerHeading
+            <StyledPluridDrawerHeading
                 theme={interactionTheme}
                 onClick={() => toggle()}
             >
@@ -98,21 +97,21 @@ const Drawer: React.FC<DrawerProperties> = (
                 >
                     {heading}
                 </PluridHeading>
-            </StyledDrawerHeading>
+            </StyledPluridDrawerHeading>
 
             {toggled && (
-                <StyledDrawerItems>
+                <StyledPluridDrawerItems>
                     {items}
-                </StyledDrawerItems>
+                </StyledPluridDrawerItems>
             )}
-        </StyledDrawer>
+        </StyledPluridDrawer>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): DrawerStateProperties => ({
+): PluridDrawerStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });
@@ -120,7 +119,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): DrawerDispatchProperties => ({
+): PluridDrawerDispatchProperties => ({
 });
 
 
@@ -131,4 +130,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(Drawer);
+)(PluridDrawer);

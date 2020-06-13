@@ -20,7 +20,7 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
-    StyledMoreMenuItem,
+    StyledPluridMoreMenuItem,
 } from '../../styled';
 
 import { AppState } from '../../../../../../../services/state/store';
@@ -30,23 +30,23 @@ import selectors from '../../../../../../../services/state/selectors';
 
 
 
-export interface MenuMoreShortcutsOwnProperties {
+export interface PluridMenuMoreShortcutsOwnProperties {
 }
 
-export interface MenuMoreShortcutsStateProperties {
+export interface PluridMenuMoreShortcutsStateProperties {
     interactionTheme: Theme;
     configuration: PluridConfiguration;
 }
 
-export interface MenuMoreShortcutsDispatchProperties {
+export interface PluridMenuMoreShortcutsDispatchProperties {
 }
 
-export type MenuMoreShortcutsProperties = MenuMoreShortcutsOwnProperties
-    & MenuMoreShortcutsStateProperties
-    & MenuMoreShortcutsDispatchProperties;
+export type PluridMenuMoreShortcutsProperties = PluridMenuMoreShortcutsOwnProperties
+    & PluridMenuMoreShortcutsStateProperties
+    & PluridMenuMoreShortcutsDispatchProperties;
 
 
-const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (
+const PluridMenuMoreShortcuts: React.FC<PluridMenuMoreShortcutsProperties> = (
     properties,
 ) => {
     /** properties */
@@ -91,7 +91,7 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (
                     : key;
 
                 return (
-                    <StyledMoreMenuItem
+                    <StyledPluridMoreMenuItem
                         key={name}
                         theme={interactionTheme}
                         afterline={
@@ -108,7 +108,7 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (
                         <div>
                             {modifierString} {keyName}
                         </div>
-                    </StyledMoreMenuItem>
+                    </StyledPluridMoreMenuItem>
                 );
             })}
         </>
@@ -118,7 +118,7 @@ const MenuMoreShortcuts: React.FC<MenuMoreShortcutsProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): MenuMoreShortcutsStateProperties => ({
+): PluridMenuMoreShortcutsStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });
@@ -126,7 +126,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): MenuMoreShortcutsDispatchProperties => ({
+): PluridMenuMoreShortcutsDispatchProperties => ({
 });
 
 
@@ -137,4 +137,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(MenuMoreShortcuts);
+)(PluridMenuMoreShortcuts);

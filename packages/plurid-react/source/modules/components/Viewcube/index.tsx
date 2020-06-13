@@ -139,7 +139,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                 <>
                     <StyledPluridViewcubeArrow
                         style={{
-                            gridArea: 'pluridPluridViewcubeRotateUp',
+                            gridArea: 'PVRotateUp',
                         }}
                     >
                         <StyledPluridViewcubeArrowIcon
@@ -153,7 +153,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                     <StyledPluridViewcubeArrow
                         theme={stateInteractionTheme}
                         style={{
-                            gridArea: 'pluridPluridViewcubeRotateDown',
+                            gridArea: 'PVRotateDown',
                         }}
                     >
                         <StyledPluridViewcubeArrowIcon
@@ -167,7 +167,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                     <StyledPluridViewcubeArrow
                         theme={stateInteractionTheme}
                         style={{
-                            gridArea: 'pluridPluridViewcubeRotateLeft',
+                            gridArea: 'PVRotateLeft',
                         }}
                     >
                         <StyledPluridViewcubeArrowIcon
@@ -181,7 +181,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                     <StyledPluridViewcubeArrow
                         theme={stateInteractionTheme}
                         style={{
-                            gridArea: 'pluridPluridViewcubeRotateRight',
+                            gridArea: 'PVRotateRight',
                         }}
                     >
                         <StyledPluridViewcubeArrowIcon

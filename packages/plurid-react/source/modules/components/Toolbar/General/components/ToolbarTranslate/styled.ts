@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledToolbarTranslate: any = styled.div`
+export const StyledPluridToolbarTranslate: any = styled.div`
     display: grid;
     align-items: center;
     justify-items: center;

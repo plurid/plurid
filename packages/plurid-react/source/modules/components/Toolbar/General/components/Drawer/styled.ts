@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledDrawer: any = styled.div`
+export const StyledPluridDrawer: any = styled.div`
     h5 {
         font-size: 1rem;
         margin: 0;
@@ -36,7 +36,7 @@ export const StyledDrawer: any = styled.div`
 `;
 
 
-export const StyledDrawerHeading: any = styled.div`
+export const StyledPluridDrawerHeading: any = styled.div`
     user-select: none;
     cursor: pointer;
     padding: 0.5rem;
@@ -52,5 +52,5 @@ export const StyledDrawerHeading: any = styled.div`
 `;
 
 
-export const StyledDrawerItems = styled.div`
+export const StyledPluridDrawerItems = styled.div`
 `;

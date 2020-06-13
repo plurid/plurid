@@ -24,7 +24,7 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
-    StyledToolbarScale,
+    StyledPluridToolbarScale,
 } from './styled';
 
 import {
@@ -32,7 +32,7 @@ import {
     StyledIcon,
 } from '../../styled';
 
-import TransformArrow from '../TransformArrow';
+import PluridTransformArrow from '../TransformArrow';
 
 import { AppState } from '../../../../../services/state/store';
 import StateContext from '../../../../../services/state/context';
@@ -41,29 +41,29 @@ import actions from '../../../../../services/state/actions';
 
 
 
-export interface ToolbarScaleOwnProperties {
+export interface PluridToolbarScaleOwnProperties {
     showTransformButtons: boolean;
     showIcons: boolean;
     transformMode: keyof typeof TRANSFORM_MODES;
     toggleTransform(TYPE: keyof typeof TRANSFORM_MODES): void;
 }
 
-export interface ToolbarScaleStateProperties {
+export interface PluridToolbarScaleStateProperties {
     stateLanguage: InternationalizationLanguageType;
     interactionTheme: Theme;
 }
 
-export interface ToolbarScaleDispatchProperties {
+export interface PluridToolbarScaleDispatchProperties {
     scaleUp: typeof actions.space.scaleUp;
     scaleDown: typeof actions.space.scaleDown;
 }
 
-export type ToolbarScaleProperties = ToolbarScaleOwnProperties
-    & ToolbarScaleStateProperties
-    & ToolbarScaleDispatchProperties;
+export type PluridToolbarScaleProperties = PluridToolbarScaleOwnProperties
+    & PluridToolbarScaleStateProperties
+    & PluridToolbarScaleDispatchProperties;
 
 
-const ToolbarScale: React.FC<ToolbarScaleProperties> = (
+const PluridToolbarScale: React.FC<PluridToolbarScaleProperties> = (
     properties,
 ) => {
     /** properties */
@@ -86,11 +86,11 @@ const ToolbarScale: React.FC<ToolbarScaleProperties> = (
 
     /** render */
     return (
-        <StyledToolbarScale
+        <StyledPluridToolbarScale
             showTransformButtons={showTransformButtons}
         >
             {showTransformButtons && (
-                <TransformArrow
+                <PluridTransformArrow
                     direction="up"
                     transform={() => scaleUp()}
                 />
@@ -118,19 +118,19 @@ const ToolbarScale: React.FC<ToolbarScaleProperties> = (
             </StyledToolbarButton>
 
             {showTransformButtons && (
-                <TransformArrow
+                <PluridTransformArrow
                     direction="down"
                     transform={() => scaleDown()}
                 />
             )}
-        </StyledToolbarScale>
+        </StyledPluridToolbarScale>
     );
 }
 
 
 const mapStateToProps = (
     state: AppState,
-): ToolbarScaleStateProperties => ({
+): PluridToolbarScaleStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
@@ -138,7 +138,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): ToolbarScaleDispatchProperties => ({
+): PluridToolbarScaleDispatchProperties => ({
     scaleUp: () => dispatch(actions.space.scaleUp()),
     scaleDown: () => dispatch(actions.space.scaleDown()),
 });
@@ -151,4 +151,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(ToolbarScale);
+)(PluridToolbarScale);

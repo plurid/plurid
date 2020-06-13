@@ -30,7 +30,7 @@ import {
 } from '@plurid/plurid-functions-react';
 
 import {
-    StyledMoreMenuItem,
+    StyledPluridMoreMenuItem,
 } from '../../styled';
 
 import { AppState } from '../../../../../../../services/state/store';
@@ -40,25 +40,25 @@ import actions from '../../../../../../../services/state/actions';
 
 
 
-export interface MenuMoreTechnicalOwnProperties {
+export interface PluridMenuMoreTechnicalOwnProperties {
 }
 
-export interface MenuMoreTechnicalStateProperties {
+export interface PluridMenuMoreTechnicalStateProperties {
     stateLanguage: InternationalizationLanguageType;
     stateConfiguration: PluridConfiguration;
     stateInteractionTheme: Theme;
 }
 
-export interface MenuMoreTechnicalDispatchProperties {
+export interface PluridMenuMoreTechnicalDispatchProperties {
     dispatchSetConfigurationSpaceCullingDistance: typeof actions.configuration.setConfigurationSpaceCullingDistance;
 }
 
-export type MenuMoreTechnicalProperties = MenuMoreTechnicalOwnProperties
-    & MenuMoreTechnicalStateProperties
-    & MenuMoreTechnicalDispatchProperties;
+export type PluridMenuMoreTechnicalProperties = PluridMenuMoreTechnicalOwnProperties
+    & PluridMenuMoreTechnicalStateProperties
+    & PluridMenuMoreTechnicalDispatchProperties;
 
 
-const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
+const PluridMenuMoreTechnical: React.FC<PluridMenuMoreTechnicalProperties> = (
     properties,
 ) => {
     /** properties */
@@ -106,7 +106,7 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
     /** render */
     return (
         <>
-            <StyledMoreMenuItem>
+            <StyledPluridMoreMenuItem>
                 <div>
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTechnicalCullingDistance)}
                 </div>
@@ -119,7 +119,7 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
                     max={5_000}
                     defaultValue={1_500}
                 />
-            </StyledMoreMenuItem>
+            </StyledPluridMoreMenuItem>
         </>
     );
 }
@@ -127,7 +127,7 @@ const MenuMoreTechnical: React.FC<MenuMoreTechnicalProperties> = (
 
 const mapStateToProps = (
     state: AppState,
-): MenuMoreTechnicalStateProperties => ({
+): PluridMenuMoreTechnicalStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).language,
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
@@ -136,7 +136,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
-): MenuMoreTechnicalDispatchProperties => ({
+): PluridMenuMoreTechnicalDispatchProperties => ({
     dispatchSetConfigurationSpaceCullingDistance: (
         value,
     ) => dispatch(
@@ -152,4 +152,4 @@ export default connect(
     {
         context: StateContext,
     },
-)(MenuMoreTechnical);
+)(PluridMenuMoreTechnical);

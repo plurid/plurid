@@ -30,11 +30,11 @@ export const StyledPluridViewcube: any = styled.div`
     z-index: 9998;
     height: 165px;
     display: grid;
-    grid-template-areas: "pluridPluridViewcubeScale           pluridPluridViewcubeScale         pluridPluridViewcubeScale          pluridPluridViewcubeScale"
-                         "pluridPluridViewcubeEmptyOne        pluridPluridViewcubeRotateUp      pluridPluridViewcubeEmptyTwo       pluridPluridViewcubeTranslateY"
-                         "pluridPluridViewcubeRotateLeft      pluridPluridViewcubeModel         pluridPluridViewcubeRotateRight    pluridPluridViewcubeTranslateY"
-                         "pluridPluridViewcubeEmptyThree      pluridPluridViewcubeRotateDown    pluridPluridViewcubeFitview        pluridPluridViewcubeTranslateY"
-                         "pluridPluridViewcubeTranslateX      pluridPluridViewcubeTranslateX    pluridPluridViewcubeTranslateX     pluridPluridViewcubeTranslateX";
+    grid-template-areas: "PVScale           PVScale         PVScale          PVScale"
+                         "PVEmptyOne        PVRotateUp      PVEmptyTwo       PVTranslateY"
+                         "PVRotateLeft      PVModel         PVRotateRight    PVTranslateY"
+                         "PVEmptyThree      PVRotateDown    PVFitview        PVTranslateY"
+                         "PVTranslateX      PVTranslateX    PVTranslateX     PVTranslateX";
     grid-template-rows: 20px 15px 95px 15px 20px;
     grid-template-columns: 15px 115px 15px 20px;
 
@@ -69,7 +69,7 @@ export const StyledPluridViewcubeArrowIcon: any = styled.div`
 
 
 export const StyledFitView: any = styled.div`
-    grid-area: pluridPluridViewcubeFitview;
+    grid-area: PVFitview;
     display: grid;
     place-content: center;
     cursor: pointer;

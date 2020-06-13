@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 
-export const StyledViewcubeFace: any = styled.div`
+export const StyledPluridViewcubeFace: any = styled.div`
     font-size: 0.6rem;
     position: absolute;
     height: 50px;
@@ -10,9 +10,9 @@ export const StyledViewcubeFace: any = styled.div`
     pointer-events: none;
     display: grid;
     transform-style: preserve-3d;
-    grid-template-areas: "pluridViewcubeFaceTopLeft         pluridViewcubeFaceTopCenter         pluridViewcubeFaceTopRight"
-                         "pluridViewcubeFaceMiddleLeft      pluridViewcubeFaceMiddleCenter      pluridViewcubeFaceMiddleRight"
-                         "pluridViewcubeFaceBottomLeft      pluridViewcubeFaceBottomCenter      pluridViewcubeFaceBottomRight";
+    grid-template-areas: "PVFTopLeft         PVFTopCenter         PVFTopRight"
+                         "PVFMiddleLeft      PVFMiddleCenter      PVFMiddleRight"
+                         "PVFBottomLeft      PVFBottomCenter      PVFBottomRight";
     grid-template-rows: 10px 30px 10px;
     grid-template-columns: 10px 30px 10px;
     box-sizing: content-box;
@@ -62,13 +62,13 @@ export const StyledViewcubeFace: any = styled.div`
 `;
 
 
-export const StyledViewcubeFaceZone: any = styled.div`
+export const StyledPluridViewcubeFaceZone: any = styled.div`
     display: grid;
     place-content: center;
     cursor: pointer;
     pointer-events: all;
 
-    grid-area: ${(props:any) => `pluridViewcubeFace${props.type}`};
+    grid-area: ${(props:any) => `PVF${props.type}`};
     color: ${(props: any) => {
         if (props.hovered) {
             return props.theme.colorPrimary;
