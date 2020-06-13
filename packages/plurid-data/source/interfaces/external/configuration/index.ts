@@ -55,6 +55,8 @@ export interface PluridConfiguration {
      * Default: `render`.
      */
     render: 'plurid' | 'legacy';
+
+    development: PluridConfigurationDevelopment;
 }
 
 
@@ -231,4 +233,17 @@ export interface PluridConfigurationElementsLink {
 export interface PluridConfigurationElementsSwitch {
     show: boolean;
     // position: 'top left' | 'top right' | 'bottom left' | 'bottom right';
+}
+
+
+export interface PluridConfigurationDevelopment {
+    /**
+     * Show debugging information for each plane.
+     */
+    planeDebugger: boolean;
+
+    /**
+     * Show debugging information for the space.
+     */
+    spaceDebugger: boolean;
 }
