@@ -56,7 +56,7 @@ import {
 
 const {
     default: Router,
-    resolveAbsolutePluridLinkPath,
+    resolveRoute,
 } = router;
 
 interface PluridLinkCoordinates {
@@ -122,7 +122,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         ? ':/' + window.location.pathname + '://s://u://c://' + planePath.slice(1)
         : planePath;
 
-    const absolutePlaneRoute = resolveAbsolutePluridLinkPath(planePathResolved);
+    const absolutePlaneRoute = resolveRoute(planePathResolved);
 
 
     // return (

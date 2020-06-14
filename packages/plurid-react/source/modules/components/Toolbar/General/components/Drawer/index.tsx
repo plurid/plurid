@@ -69,8 +69,12 @@ const PluridDrawer: React.FC<PluridDrawerProperties> = (
     } = properties;
 
     const {
-        transparentUI,
+        global,
     } = configuration;
+
+    const {
+        transparentUI,
+    } = global;
 
 
     /** state */

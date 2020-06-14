@@ -158,7 +158,7 @@ const PluridMenuMoreViewcube: React.FC<PluridMenuMoreViewcubeProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridMenuMoreViewcubeStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });

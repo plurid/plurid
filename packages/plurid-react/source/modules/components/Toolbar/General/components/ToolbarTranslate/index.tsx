@@ -148,7 +148,7 @@ const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridToolbarTranslateStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 

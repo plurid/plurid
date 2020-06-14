@@ -209,7 +209,7 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridMenuMoreTransformStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });

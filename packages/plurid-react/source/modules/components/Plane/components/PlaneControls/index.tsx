@@ -84,9 +84,13 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     } = properties;
 
     const {
-        transparentUI,
+        global,
         elements,
     } = configuration;
+
+    const {
+        transparentUI,
+    } = global;
 
     const {
         pathbar,
@@ -121,7 +125,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
 
         if (pathbar.onChange) {
             // const id = plane.id || plane.path;
-            const id = plane.path;
+            const id = plane.route;
             pathbar.onChange(event, id);
         }
     }
@@ -139,7 +143,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
 
         if (pathbar.onKeyDown) {
             // const id = plane.id || plane.path;
-            const id = plane.path;
+            const id = plane.route;
             pathbar.onKeyDown(event, id);
         }
     }

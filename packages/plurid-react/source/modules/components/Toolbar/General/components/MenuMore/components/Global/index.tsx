@@ -78,7 +78,7 @@ const PluridMenuMoreGlobal: React.FC<PluridMenuMoreGlobalProperties> = (
         dispatchSetConfigurationLanguage,
     } = properties;
 
-    const selectedTheme = configuration.theme;
+    const selectedTheme = configuration.global.theme;
 
     const [generalThemeName, setGeneralThemeName] = useState(
         typeof selectedTheme === 'object'
@@ -128,7 +128,7 @@ const PluridMenuMoreGlobal: React.FC<PluridMenuMoreGlobalProperties> = (
 
                 <PluridDropdown
                     selectables={Object.keys(themes)}
-                    selected={generalThemeName}
+                    selected={typeof generalThemeName === 'string' ? generalThemeName : ''}
                     atSelect={(selection) => setGeneralTheme(selection)}
                     theme={interactionTheme}
                     filterable={true}
@@ -145,7 +145,7 @@ const PluridMenuMoreGlobal: React.FC<PluridMenuMoreGlobalProperties> = (
 
                 <PluridDropdown
                     selectables={Object.keys(themes)}
-                    selected={interactionThemeName}
+                    selected={typeof interactionThemeName === 'string' ? interactionThemeName : ''}
                     atSelect={(selection) => setInteractionTheme(selection)}
                     theme={interactionTheme}
                     heightItems={3}
@@ -182,7 +182,7 @@ const PluridMenuMoreGlobal: React.FC<PluridMenuMoreGlobalProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridMenuMoreGlobalStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
 });

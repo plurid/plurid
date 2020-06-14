@@ -159,7 +159,7 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
 const mapStateToProperties = (
     state: AppState,
 ): PluridViewcubeModelStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     spaceRotationX: selectors.space.getRotationX(state),
     spaceRotationY: selectors.space.getRotationY(state),
 });

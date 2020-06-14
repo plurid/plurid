@@ -76,16 +76,19 @@ export const setConfigurationThemeGeneral = (
         ...state,
     };
 
-    const updatedTheme = {
+    const updatedTheme: any = {
         general: action.payload,
-        interaction: typeof newState.theme === 'object'
-            ? newState.theme.interaction
+        interaction: typeof newState.global.theme === 'object'
+            ? newState.global.theme.interaction
             : 'plurid',
     }
 
     return {
         ...newState,
-        theme: updatedTheme,
+        global: {
+            ...newState.global,
+            theme: updatedTheme,
+        },
     };
 }
 
@@ -98,16 +101,19 @@ export const setConfigurationThemeInteraction = (
         ...state,
     };
 
-    const updatedTheme = {
-        general: typeof newState.theme === 'object'
-            ? newState.theme.general
+    const updatedTheme: any = {
+        general: typeof newState.global.theme === 'object'
+            ? newState.global.theme.general
             : 'plurid',
         interaction: action.payload,
     }
 
     return {
         ...newState,
-        theme: updatedTheme,
+        global: {
+            ...newState.global,
+            theme: updatedTheme,
+        },
     };
 }
 
@@ -118,7 +124,10 @@ export const setConfigurationLanguage = (
 ): Types.State => {
     return {
         ...state,
-        language: action.payload,
+        global: {
+            ...state.global,
+            language: action.payload,
+        },
     };
 }
 
@@ -292,7 +301,7 @@ export const toggleConfigurationSpaceTransparentUI = (
         ...state,
     };
 
-    newState.transparentUI = !state.transparentUI;
+    newState.global.transparentUI = !state.global.transparentUI;
 
     return {
         ...newState,

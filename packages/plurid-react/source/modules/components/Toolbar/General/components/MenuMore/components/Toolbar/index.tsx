@@ -174,7 +174,7 @@ const PluridMenuMoreToolbar: React.FC<PluridMenuMoreToolbarProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridMenuMoreToolbarStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
     viewSize: selectors.space.getViewSize(state),

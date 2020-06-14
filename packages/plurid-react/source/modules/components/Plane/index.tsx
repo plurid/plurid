@@ -88,9 +88,13 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     } = properties;
 
     const {
-        transparentUI,
+        global,
         elements,
     } = configuration;
+
+    const {
+        transparentUI,
+    } = global;
 
     const {
         controls,

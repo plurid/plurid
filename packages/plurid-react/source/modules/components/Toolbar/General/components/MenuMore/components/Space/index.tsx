@@ -80,11 +80,15 @@ const PluridMenuMoreSpace: React.FC<PluridMenuMoreSpaceProperties> = (
     } = properties;
 
     const {
-        transparentUI,
+        global,
         space,
         elements,
-        language,
     } = configuration;
+
+    const {
+        transparentUI,
+        language,
+    } = global;
 
     const {
         layout,

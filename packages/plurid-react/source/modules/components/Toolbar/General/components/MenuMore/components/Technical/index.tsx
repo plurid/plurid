@@ -128,7 +128,7 @@ const PluridMenuMoreTechnical: React.FC<PluridMenuMoreTechnicalProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridMenuMoreTechnicalStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
 });
