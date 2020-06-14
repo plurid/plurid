@@ -1,4 +1,8 @@
 import {
+    Theme,
+} from '@plurid/plurid-themes';
+
+import {
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
@@ -23,46 +27,71 @@ export type PluridPartialConfiguration = RecursivePartial<PluridConfiguration>;
 
 
 export interface PluridConfiguration {
-    /**
-     * If true, renders the application without toolbar, viewcube, plane controls.
-     */
-    micro: boolean;
+    global: PluridConfigurationGlobal;
 
-    /**
-     * A theme name, `string`, based on plurid themes, https://meta.plurid.com/themes,
-     * or specific theme names for `general` and `interaction` elements.
-     */
-    theme: string | PluridConfigurationTheme;
-
-    language: InternationalizationLanguageType;
-
-    /**
-     * Set the User Interface transparent.
-     *
-     * Default `false`.
-     */
-    transparentUI: boolean;
-
-    /**
-     * `toolbar`, `viewcube`, and `plane` configuration.
-     */
     elements: PluridConfigurationElements;
 
     space: PluridConfigurationSpace;
 
-    /**
-     * Render the view as a `plurid` space, or as a `legacy` web page.
-     * Default: `render`.
-     */
-    render: 'plurid' | 'legacy';
+    network: PluridConfigurationNetwork;
 
     development: PluridConfigurationDevelopment;
 }
 
 
+export interface PluridConfigurationGlobal {
+    /**
+     * Renders the application without any elements
+     * (toolbar, viewcube, plane controls, switch, etc.).
+     */
+    micro: boolean;
+
+    /**
+     * A theme name, `string`, based on plurid themes, https://meta.plurid.com/themes,
+     * or specific theme names/objects for `general` and `interaction` elements.
+     */
+    theme: string | PluridConfigurationTheme;
+
+    /**
+     * Supported languages:
+     *
+     * + `chinese`
+     * + `english`
+     * + `french`
+     * + `german`
+     * + `hindi`
+     * + `italian`
+     * + `japanese`
+     * + `romanian`
+     * + `russian`
+     * + `spanish`
+     *
+     */
+    language: InternationalizationLanguageType;
+
+    /**
+     * Render the elements transparent.
+     *
+     * Default: `false`.
+     */
+    transparentUI: boolean;
+
+    /**
+     * Render the view as a `plurid` space, or as a `legacy` web page.
+     *
+     * When setting to `legacy`, the `switch` configuration element (`elements.switch.show`)
+     * should also be set to `true`, allowing the user to switch from rendering types
+     * through the interface.
+     *
+     * Default: `plurid`.
+     */
+    render: 'plurid' | 'legacy';
+}
+
+
 export interface PluridConfigurationTheme {
-    general: string;
-    interaction: string;
+    general: string | Theme;
+    interaction: string | Theme;
 }
 
 
@@ -231,8 +260,25 @@ export interface PluridConfigurationElementsLink {
 
 
 export interface PluridConfigurationElementsSwitch {
+    /**
+     * Default: `false`.
+     */
     show: boolean;
     // position: 'top left' | 'top right' | 'bottom left' | 'bottom right';
+}
+
+
+export interface PluridConfigurationNetwork {
+    /**
+     * Default `'https'`.
+     */
+    protocol: 'http' | 'https';
+
+    /**
+     * Defaults to the host serving the application (`window.location.host`)
+     * for the browser environment, and to `'originhost'` for server environments.
+     */
+    host: string;
 }
 
 

@@ -21,3 +21,6 @@ export const PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE = 'default';
 export const PLURID_ROUTE_DEFAULT_UNIVERSE = 'u';
 export const PLURID_ROUTE_DEFAULT_CLUSTER_VALUE = 'default';
 export const PLURID_ROUTE_DEFAULT_CLUSTER = 'c';
+
+
+export const PLURID_DEFAULT_CONFIGURATION_NETWORK_HOST = 'originhost';
