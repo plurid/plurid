@@ -1,4 +1,4 @@
-import {
+import themes, {
     Theme,
 } from '@plurid/plurid-themes';
 
@@ -47,10 +47,10 @@ export interface PluridConfigurationGlobal {
     micro: boolean;
 
     /**
-     * A theme name, `string`, based on plurid themes, https://meta.plurid.com/themes,
-     * or specific theme names/objects for `general` and `interaction` elements.
+     * A theme name based on plurid themes, https://meta.plurid.com/themes,
+     * or specific theme names/objects for `general` and for the `interaction` elements.
      */
-    theme: string | PluridConfigurationTheme;
+    theme: keyof typeof themes | PluridConfigurationTheme;
 
     /**
      * Supported languages:
@@ -90,8 +90,8 @@ export interface PluridConfigurationGlobal {
 
 
 export interface PluridConfigurationTheme {
-    general: string | Theme;
-    interaction: string | Theme;
+    general: keyof typeof themes | Theme;
+    interaction: keyof typeof themes  | Theme;
 }
 
 
