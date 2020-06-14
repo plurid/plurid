@@ -269,7 +269,11 @@ const PluridView: React.FC<ViewProperties> = (
 
                 // obtain from path the absolute route
                 // /plane -> Fully Qualified Route
-                const resolvedRoute = router.resolveRoute(route);
+                const resolvedRoute = router.resolveRoute(
+                    route,
+                    appConfiguration.network.protocol,
+                    appConfiguration.network.host,
+                );
                 console.log('resolvedRoute', resolvedRoute);
 
                 const {
