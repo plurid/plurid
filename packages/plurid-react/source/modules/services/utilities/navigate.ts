@@ -15,5 +15,6 @@ export const pluridRouterNavigate = (
             },
         },
     );
+
     window.dispatchEvent(event);
 }
