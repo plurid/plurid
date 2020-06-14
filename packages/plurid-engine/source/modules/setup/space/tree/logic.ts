@@ -8,6 +8,7 @@ import {
     /** interfaces */
     PluridView,
     PluridConfiguration,
+    RegisteredPluridPlane,
     TreePlane,
     LinkCoordinates,
     PathParameters,
@@ -38,26 +39,110 @@ import Router from '../../router';
 
 
 
+/**
+ * Given a view resolve it to an absolute view
+ * and compute a TreePlane if there is a RegisteredPluridPlane
+ * for that absolute view.
+ *
+ * @param view
+ */
+export const resolveViewItem = (
+    planes: Map<string, RegisteredPluridPlane>,
+    view: string | PluridView,
+    configuration: PluridConfiguration,
+): TreePlane | undefined => {
+    const {
+        protocol,
+        host,
+    } = configuration.network;
+
+    const treePlane: TreePlane = {
+        sourceID: '',
+
+        planeID: '',
+
+        route: '',
+
+        routeDivisions: {
+            protocol: '',
+            host: {
+                value: '',
+                controlled: true,
+            },
+            path: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            space: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            universe: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            cluster: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            plane: {
+                value: '',
+                parameters: {},
+                query: {},
+            },
+            valid: true,
+        },
+
+        height: 0,
+        width: 0,
+        location: {
+            translateX: 0,
+            translateY: 0,
+            translateZ: 0,
+            rotateX: 0,
+            rotateY: 0,
+        },
+        show: true,
+    }
+
+    return treePlane;
+}
+
 
 /**
  * Compute the space based on the layout.
  * If there is no configuration.space.layout, it uses the default '2 COLUMNS' layout.
  *
- * @param pages
+ * @param planes
  * @param configuration
  */
 export const computeSpaceTree = (
-    pages: TreePlane[],
-    configuration?: PluridConfiguration,
-    view?: string[] | PluridView[],
+    planes: Map<string, RegisteredPluridPlane>,
+    view: string[] | PluridView[],
+    configuration: PluridConfiguration,
 ): TreePlane[] => {
-    if (!configuration) {
-        const columnLayoutTree = computeColumnLayout(pages);
-        return columnLayoutTree;
-    }
+    console.log('computeSpaceTree');
+    console.log('planes', planes);
+    console.log('configuration', configuration);
+    console.log('view', view);
 
-    const assignedPages = assignPagesFromView(pages, view);
-    // console.log('assignedPages', assignedPages);
+    const treePlanes: TreePlane[] = [];
+
+    for (const viewItem of view) {
+        const treePlane = resolveViewItem(
+            planes,
+            viewItem,
+            configuration,
+        );
+
+        if (treePlane) {
+            treePlanes.push(treePlane);
+        }
+    }
 
     switch(configuration.space.layout.type) {
         case LAYOUT_TYPES.COLUMNS:
@@ -68,7 +153,7 @@ export const computeSpaceTree = (
                     gap,
                 } = configuration.space.layout;
                 const columnLayoutTree = computeColumnLayout(
-                    assignedPages,
+                    treePlanes,
                     columns,
                     columnLength,
                     gap,
@@ -84,7 +169,7 @@ export const computeSpaceTree = (
                     gap,
                 } = configuration.space.layout;
                 const rowLayoutTree = computeRowLayout(
-                    assignedPages,
+                    treePlanes,
                     rows,
                     rowLength,
                     gap,
@@ -98,7 +183,7 @@ export const computeSpaceTree = (
                     angle,
                 } = configuration.space.layout;
                 const zigzagLayoutTree = computeZigZagLayout(
-                    assignedPages,
+                    treePlanes,
                     angle,
                     configuration,
                 );
@@ -112,7 +197,7 @@ export const computeSpaceTree = (
                     middle,
                 } = configuration.space.layout;
                 const faceToFaceLayoutTree = computeFaceToFaceLayout(
-                    assignedPages,
+                    treePlanes,
                     angle,
                     gap,
                     middle,
@@ -128,7 +213,7 @@ export const computeSpaceTree = (
                     offsetY,
                 } = configuration.space.layout;
                 const sheavesLayoutTree = computeSheavesLayout(
-                    assignedPages,
+                    treePlanes,
                     depth,
                     offsetX,
                     offsetY,
