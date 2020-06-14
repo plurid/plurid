@@ -35,7 +35,9 @@ import {
     getTreePlaneByPlaneID,
 } from '../utilities';
 
-import Router from '../../router';
+import Router, {
+    resolveRoute,
+} from '../../router';
 
 
 
@@ -55,6 +57,24 @@ export const resolveViewItem = (
         protocol,
         host,
     } = configuration.network;
+
+    const viewData = typeof view === 'string'
+        ? view
+        : view.plane;
+
+    const resolvedView = resolveRoute(
+        viewData,
+        protocol,
+        host,
+    );
+    console.log('resolvedView', resolvedView);
+
+    for (const [route, plane] of planes) {
+        // check if resolvedView.route matches with the route
+        // check if parametric
+        // extract parameters
+    }
+
 
     const treePlane: TreePlane = {
         sourceID: '',

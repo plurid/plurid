@@ -247,12 +247,16 @@ export const resolveRoute = (
     protocol?: string,
     host?: string,
 ) => {
-    const windowProtocol = typeof window === 'undefined'
-        ? 'http'
-        : window.location.protocol.replace(':', '');
-    const windowHost = typeof window === 'undefined'
-        ? 'localhost:63000'
-        : window.location.host;
+    const windowProtocol = protocol
+        ? protocol
+        : typeof window === 'undefined'
+            ? 'http'
+            : window.location.protocol.replace(':', '');
+    const windowHost = host
+        ? host
+        : typeof window === 'undefined'
+            ? 'localhost:63000'
+            : window.location.host;
 
     const divisions = pluridLinkPathDivider(route);
 
@@ -303,7 +307,7 @@ export const resolveRoute = (
             hostDivision.value,
             path.value,
         ];
-        const resolvedPath = resolvers.join(separator);
+        const absoluteRoute = resolvers.join(separator);
 
         return {
             protocol: protocolDivision,
@@ -313,7 +317,7 @@ export const resolveRoute = (
             universe,
             cluster,
             plane,
-            resolvedPath,
+            route: absoluteRoute,
         };
     }
 
@@ -326,7 +330,7 @@ export const resolveRoute = (
         cluster.value,
         cleanPathElement(plane.value),
     ];
-    const resolvedPath = resolvers.join(separator);
+    const absoluteRoute = resolvers.join(separator);
 
     return {
         protocol: protocolDivision,
@@ -336,6 +340,6 @@ export const resolveRoute = (
         universe,
         cluster,
         plane,
-        resolvedPath,
+        route: absoluteRoute,
     };
 }
