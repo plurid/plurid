@@ -67,7 +67,7 @@ export interface PluridToolbarStateProperties {
     theme: Theme;
     configuration: PluridConfiguration;
     viewSize: ViewSize;
-    universes: any;
+    // universes: any;
 }
 
 export interface PluridToolbarDispatchProperties {
@@ -90,7 +90,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
         theme,
         configuration,
         viewSize,
-        universes,
+        // universes,
 
         /** dispatch */
         dispatchToggleConfigurationSpaceFirstPerson,
@@ -123,7 +123,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
         transformButtons,
     } = toolbar;
 
-    const universesBased = Object.keys(universes).length > 1;
+    // const universesBased = Object.keys(universes).length > 1;
 
 
     /** references */
@@ -216,7 +216,8 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                 theme={theme}
                 showIcons={showIcons}
                 showTransformButtons={showTransformButtons}
-                universesBased={universesBased}
+                universesBased={false}
+                // universesBased={universesBased}
                 mouseIn={mouseIn}
                 opaque={opaque}
                 transparentUI={transparentUI}
@@ -255,7 +256,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                 />
 
 
-                {universesBased && (
+                {/* {universesBased && (
                     <StyledToolbarButton
                         theme={theme}
                         onClick={() => handleShowMenu(MENUS.UNIVERSES)}
@@ -266,7 +267,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                             <PluridIconDocuments />
                         </StyledIcon>
                     </StyledToolbarButton>
-                )}
+                )} */}
 
                 <StyledToolbarButton
                     theme={theme}
@@ -298,7 +299,7 @@ const mapStateToProps = (
     configuration: selectors.configuration.getConfiguration(state),
     theme: selectors.themes.getInteractionTheme(state),
     viewSize: selectors.space.getViewSize(state),
-    universes: selectors.data.getUniverses(state),
+    // universes: selectors.data.getUniverses(state),
 });
 
 

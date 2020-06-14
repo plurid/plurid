@@ -74,7 +74,7 @@ export interface PluridLinkStateProperties {
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration,
     stateViewSize: ViewSize,
-    statePlaneSources: Record<string, string>;
+    // statePlaneSources: Record<string, string>;
 }
 
 export interface PluridLinkDispatchProperties {
@@ -106,7 +106,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         stateGeneralTheme,
         stateConfiguration,
         stateViewSize,
-        statePlaneSources,
+        // statePlaneSources,
 
         /** dispatch */
         dispatchSetTree,
@@ -316,15 +316,15 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     /** Set plane ID */
     useEffect(() => {
         if (absolutePlaneRoute) {
-            const potentialPlaneRoute = statePlaneSources[absolutePlaneRoute.resolvedPath];
+            // const potentialPlaneRoute = statePlaneSources[absolutePlaneRoute.resolvedPath];
 
-            if (!potentialPlaneRoute) {
-                for (const planeRoute of Object.keys(statePlaneSources)) {
-                    // check each one
-                }
-            }
+            // if (!potentialPlaneRoute) {
+            //     for (const planeRoute of Object.keys(statePlaneSources)) {
+            //         // check each one
+            //     }
+            // }
 
-            setPlaneID(potentialPlaneRoute);
+            // setPlaneID(potentialPlaneRoute);
         }
     }, []);
 
@@ -372,7 +372,7 @@ const mapStateToProperties = (
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateViewSize: selectors.space.getViewSize(state),
-    statePlaneSources: selectors.data.getPlaneSources(state),
+    // statePlaneSources: selectors.data.getPlaneSources(state),
 });
 
 
