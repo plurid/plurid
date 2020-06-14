@@ -228,7 +228,7 @@ const PluridView: React.FC<ViewProperties> = (
     const computeTree = (
         configuration: PluridAppConfiguration,
         planes: Map<string, RegisteredPluridPlane>,
-        view: string[] | PluridView[] | undefined,
+        view: string[] | PluridView[],
     ) => {
         const spaceTree = new space.tree.Tree({
             planes,
@@ -306,7 +306,7 @@ const PluridView: React.FC<ViewProperties> = (
             const spaceTree = computeTree(
                 appConfiguration,
                 planesRegistry.current,
-                view,
+                view || [],
             );
             console.log('spaceTree', spaceTree);
 
