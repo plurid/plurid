@@ -24,6 +24,7 @@ import {
     PluridContext,
     PluridPlane,
     IndexedPluridPlane,
+    RegisteredPluridPlane,
     PluridView,
     TreePlane,
     PluridInternalStateUniverse,
@@ -145,6 +146,7 @@ const PluridView: React.FC<ViewProperties> = (
     properties,
 ) => {
     /** properties */
+    console.log(properties);
     const {
         /** own */
         application,
@@ -166,7 +168,11 @@ const PluridView: React.FC<ViewProperties> = (
     } = application;
 
 
-    console.log(properties);
+    /** references */
+    const planesRegistry = useRef<Map<string, RegisteredPluridPlane>>(
+        // indexedPlanes || new Map(),
+        new Map(),
+    );
 
 
     /** handlers */
@@ -219,6 +225,21 @@ const PluridView: React.FC<ViewProperties> = (
         // }
     }
 
+    const computeTree = (
+        configuration: PluridAppConfiguration,
+        planes: Map<string, RegisteredPluridPlane>,
+        view: string[] | PluridView[] | undefined,
+    ) => {
+        const spaceTree = new space.tree.Tree({
+            planes,
+            configuration,
+            view,
+        });
+
+        const computedTree = spaceTree.compute();
+
+        return computedTree;
+    }
 
     const computeApplication = (
         configuration: PluridPartialConfiguration | undefined,
@@ -231,7 +252,10 @@ const PluridView: React.FC<ViewProperties> = (
 
         if (planes) {
             for (const plane of planes) {
-                // loop over PluridPlanes and generate ...?
+                // loop over PluridPlanes and generate the Fully Qualified Route
+                // given the FQR
+                // store the component in an index by route
+
                 const {
                     component,
                     route,
@@ -246,6 +270,7 @@ const PluridView: React.FC<ViewProperties> = (
                 // obtain from path the absolute route
                 // /plane -> Fully Qualified Route
                 const resolvedRoute = router.resolveRoute(route);
+                console.log('resolvedRoute', resolvedRoute);
 
                 const {
                     protocol,
@@ -258,19 +283,45 @@ const PluridView: React.FC<ViewProperties> = (
                     resolvedPath,
                 } = resolvedRoute;
 
+                const registeredPluridPlane: RegisteredPluridPlane = {
+                    component,
+                    route: {
+                        protocol: {},
+                        host: {},
+                        path: {},
+                        space: {},
+                        universe: {},
+                        cluster: {},
+                        plane: {},
+                        absolute: resolvedPath,
+                    },
+                };
 
-                // given the FQR
-                // store the component in an index by route
-                // prepare the view
-
-                // check if view routes have a parametric match
-
-
-                // create the view tree - including layout
-
-
-                // handle space computations
+                planesRegistry.current.set(
+                    resolvedPath,
+                    registeredPluridPlane,
+                );
             }
+
+            const spaceTree = computeTree(
+                appConfiguration,
+                planesRegistry.current,
+                view,
+            );
+            console.log('spaceTree', spaceTree);
+
+
+
+
+            // prepare the view
+
+            // check if view routes have a parametric match
+
+
+            // create the view tree - including layout
+
+
+            // handle space computations
         }
     }
 
@@ -293,6 +344,7 @@ const PluridView: React.FC<ViewProperties> = (
 
 
     console.log('RENDER');
+    console.log('planesRegistry', planesRegistry);
 
     /** render */
     return (
@@ -505,7 +557,6 @@ const PluridView: React.FC<ViewProperties> = (
     //     console.log('planeSources', planeSources);
 
     //     // create tree planes
-    //     const treePlanes: TreePlane[] = [];
 
     //     for (const [id, computedIndexedPlane] of computedIndexedPlanes) {
     //         const pathProperties = computedIndexedPlane.component.properties?.plurid?.path;
