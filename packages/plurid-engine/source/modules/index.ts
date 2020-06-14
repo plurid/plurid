@@ -1,11 +1,11 @@
-import * as direction from './direction';
-import internatiolate from './internationalization';
-import * as general from './general';
-import * as matrix from './mathematics/matrix';
-import * as quaternion from './mathematics/quaternion';
-import * as router from './router';
-import * as transform from './mathematics/transform';
-import * as space from './space';
+import * as direction from './interaction/direction';
+import internatiolate from './setup/internationalization';
+import * as general from './setup/general';
+import * as matrix from './interaction/mathematics/matrix';
+import * as quaternion from './interaction/mathematics/quaternion';
+import * as router from './setup/router';
+import * as transform from './interaction/mathematics/transform';
+import * as space from './setup/space';
 import * as utilities from './utilities';
 
 
