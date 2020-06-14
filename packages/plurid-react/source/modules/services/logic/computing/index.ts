@@ -39,7 +39,7 @@ export const computeApplication = (
 
     if (planes) {
         for (const plane of planes) {
-            const linkPath = router.resolveAbsolutePluridLinkPath(plane.path);
+            const linkPath = router.resolveRoute(plane.route);
             if (!linkPath) {
                 continue;
             }
@@ -98,7 +98,7 @@ export const computeApplication = (
             }
         }
 
-        const planeRoute = router.resolveAbsolutePluridLinkPath(planeRouteSource);
+        const planeRoute = router.resolveRoute(planeRouteSource);
         if (!planeRoute) {
             continue;
         }
@@ -140,7 +140,7 @@ export const computeApplication = (
 
     for (const viewItem of currentView) {
         if (typeof viewItem === 'string') {
-            const viewPath = router.resolveAbsolutePluridLinkPath(viewItem);
+            const viewPath = router.resolveRoute(viewItem);
             if (!viewPath) {
                 continue;
             }

@@ -134,7 +134,7 @@ export const getComponentFromRoute = (
                                     plurid: pluridProperty,
                                 },
                             },
-                            path: fullPath,
+                            route: fullPath,
                         };
 
                         planes.push(pluridPlane);
@@ -186,7 +186,7 @@ export const getComponentFromRoute = (
                                                 plurid: pluridProperty,
                                             },
                                         },
-                                        path: fullPath,
+                                        route: fullPath,
                                     };
 
                                     planes.push(pluridPlane);
@@ -241,7 +241,7 @@ export const getComponentFromRoute = (
                                             plurid: pluridProperty,
                                         },
                                     },
-                                    path: fullPath,
+                                    route: fullPath,
                                 };
 
                                 planes.push(pluridPlane);
@@ -306,7 +306,7 @@ export const getComponentFromRoute = (
                             plurid: pluridProperty,
                         },
                     },
-                    path: fullPath,
+                    route: fullPath,
                 };
 
                 pluridPlanes.push(pluridPlane);
@@ -490,7 +490,7 @@ export const getGatewayView = (
                                                         kind: 'react',
                                                         element: component.element,
                                                     },
-                                                    path: planeAddress,
+                                                    route: planeAddress,
                                                 };
 
                                                 planes.push(pluridPlane);
@@ -530,7 +530,7 @@ export const getGatewayView = (
                                                     kind: 'react',
                                                     element: component.element,
                                                 },
-                                                path: planeAddress,
+                                                route: planeAddress,
                                             };
 
                                             planes.push(pluridPlane);
@@ -571,7 +571,7 @@ export const getGatewayView = (
                                             kind: 'react',
                                             element: component.element,
                                         },
-                                        path: planeAddress,
+                                        route: planeAddress,
                                     };
 
                                     planes.push(pluridPlane);
@@ -615,7 +615,7 @@ export const getGatewayView = (
                             kind: 'react',
                             element: component.element,
                         },
-                        path: planeAddress,
+                        route: planeAddress,
                     };
 
                     planes.push(pluridPlane);
@@ -1048,7 +1048,7 @@ export const collectApplicationsFromPath = (
                                     plurid: pluridProperty,
                                 },
                             },
-                            path: fullPath,
+                            route: fullPath,
                         };
 
                         planes.push(pluridPlane);
@@ -1100,7 +1100,7 @@ export const collectApplicationsFromPath = (
                                                 plurid: pluridProperty,
                                             },
                                         },
-                                        path: fullPath,
+                                        route: fullPath,
                                     };
 
                                     planes.push(pluridPlane);
@@ -1148,7 +1148,7 @@ export const collectApplicationsFromPath = (
                                             plurid: pluridProperty,
                                         },
                                     },
-                                    path: fullPath,
+                                    route: fullPath,
                                 };
 
                                 planes.push(pluridPlane);
@@ -1204,7 +1204,7 @@ export const collectApplicationsFromPath = (
                             plurid: pluridProperty,
                         },
                     },
-                    path: fullPath,
+                    route: fullPath,
                 };
 
                 pluridPlanes.push(pluridPlane);
