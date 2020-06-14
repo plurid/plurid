@@ -1253,15 +1253,15 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@plurid/plurid-data@^0.1.149":
-  version "0.1.149"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.149.tgz#9a6052e4202ebb04f287906730b772bca6df8a21"
-  integrity sha512-dQjy4x4CIiHHvKdzyoib5PMgpQZKjYEOgIYHTj+A75zH8j4ZDjnFq6l+d3J91iIa/3bU088V4aaZHvfOVpYLVw==
+"@plurid/plurid-data@^0.1.151":
+  version "0.1.151"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.151.tgz#6f15228b4d4287da4b9b320e0e0a968bba23771b"
+  integrity sha512-ScRSfFDWIfzj2oH6EcHkJSPA0e9FDeyXDcuP/X6VbiJghSDgEfdi2uJCbOQN+bXP+OJqLAzYhd66uSPKfzVrwQ==
 
-"@plurid/plurid-engine@^0.1.83":
-  version "0.1.83"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.83.tgz#47640ee52e350a1576bfbfddb9d52cc5f1269dba"
-  integrity sha512-gy2KmWrU+t605ieJ6bcTPIlNmad2KO9CMP8UxyAadWdhh0EgtpwPjNJ3e1Iix5XKseHG3ZwfUr8p/W2L7lsmIg==
+"@plurid/plurid-engine@^0.1.85":
+  version "0.1.85"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.85.tgz#888d5899fba62c93889bd7b0b21cc2c66410a429"
+  integrity sha512-smTfXjlpMEztGNX2oJha35cfMicbd8ElxF13IKiB2XFYnT3Kp4Qn4nJ0oYbCR8lDCfbEcxX+QnibFeE7KkHWAg==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
@@ -1283,10 +1283,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.8.tgz#0a63976f8d45e51b9e75e5445e4d70b210d568de"
   integrity sha512-CO+/lD2XbLAvjUFogG9CKUK7cVr5nZJuJ4mLssEtoiaA8u1MKWxJcPWn/SpKLXNTFDi7gj1bOCdK1OFxyWXKHw==
 
-"@plurid/plurid-react@^0.1.175":
-  version "0.1.175"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.175.tgz#fed6c24687c2d162b05e48109a816e792fcc3c40"
-  integrity sha512-9vDUdaa7cUN3jqumkQv9Q8YPeAZzPagVCctPo7oTtPM6wt0rj9lG0yelqHpOVaZHxnThO4oJ2+FjbedrBiyGvg==
+"@plurid/plurid-react@^0.1.178":
+  version "0.1.178"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.178.tgz#9c9561af9cffefd52e37c006d42169f8c226d45d"
+  integrity sha512-m0amK605zMwEfwCEikhX4jB9agYUceEoUVnmH/go9hGb/wKFoENhsCVQnsZhUouQp+4TBOX2xMPx7hQeN1i5yw==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
@@ -1411,13 +1411,13 @@
     dom-accessibility-api "^0.4.5"
     pretty-format "^25.5.0"
 
-"@testing-library/jest-dom@^5.9.0":
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-5.9.0.tgz#86464c66cbe75e632b8adb636f539bfd0efc2c9c"
-  integrity sha512-uZ68dyILuM2VL13lGz4ehFEAgxzvLKRu8wQxyAZfejWnyMhmipJ60w4eG81NQikJHBfaYXx+Or8EaPQTDwGfPA==
+"@testing-library/jest-dom@^5.10.1":
+  version "5.10.1"
+  resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-5.10.1.tgz#6508a9f007bd74e5d3c0b3135b668027ab663989"
+  integrity sha512-uv9lLAnEFRzwUTN/y9lVVXVXlEzazDkelJtM5u92PsGkEasmdI+sfzhZHxSDzlhZVTrlLfuMh2safMr8YmzXLg==
   dependencies:
     "@babel/runtime" "^7.9.2"
-    "@types/testing-library__jest-dom" "^5.0.2"
+    "@types/testing-library__jest-dom" "^5.9.1"
     chalk "^3.0.0"
     css "^2.2.4"
     css.escape "^1.5.1"
@@ -1434,10 +1434,10 @@
     "@babel/runtime" "^7.10.2"
     "@testing-library/dom" "^7.9.0"
 
-"@testing-library/user-event@^11.4.1":
-  version "11.4.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-11.4.1.tgz#2134e4cbbb345dbc49001123ff9a036f09259464"
-  integrity sha512-ZaK+3AmocU2WjJ7UyrlnmdPecYt4fridqMwrniENCqoy/Pj2Nc9tTnpjCvMN/Ql/DQ0eRqfBoZdKNqYPBMZFhA==
+"@testing-library/user-event@^11.4.2":
+  version "11.4.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-11.4.2.tgz#90d98fd18455ae81d008e9b26e94d25e8d5bf846"
+  integrity sha512-Kut7G1L+ffozEhYTDNjV9C6RFbUfsKA05rGr1arwbSUoDZQ82OMmsyaXEDznT22Qc0PtZ1Hz3soX0pPosu8+Sw==
   dependencies:
     "@babel/runtime" "^7.10.2"
 
@@ -1632,10 +1632,10 @@
     "@types/react-native" "*"
     csstype "^2.2.0"
 
-"@types/testing-library__jest-dom@^5.0.2":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@types/testing-library__jest-dom/-/testing-library__jest-dom-5.0.3.tgz#8efef348eeedc62e7de21acbe455a779936417c4"
-  integrity sha512-NdbKc6yseg6uq4UJFwimPws0iwsGugVbPoOTP2EH+PJMJKiZsoSg5F2H3XYweOyytftCOuIMuXifBUrF9CSvaQ==
+"@types/testing-library__jest-dom@^5.9.1":
+  version "5.9.1"
+  resolved "https://registry.yarnpkg.com/@types/testing-library__jest-dom/-/testing-library__jest-dom-5.9.1.tgz#aba5ee062b7880f69c212ef769389f30752806e5"
+  integrity sha512-yYn5EKHO3MPEMSOrcAb1dLWY+68CG29LiXKsWmmpVHqoP5+ZRiAVLyUHvPNrO2dABDdUGZvavMsaGpWNjM6N2g==
   dependencies:
     "@types/jest" "*"
 
