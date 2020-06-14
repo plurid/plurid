@@ -11,7 +11,7 @@ import {
 const App = () => {
     const pluridPlanes: PluridPlane[] = [
         {
-            path: '/:id',
+            route: '/:id',
             component: {
                 kind: 'react',
                 element: ({ plurid} ) => {

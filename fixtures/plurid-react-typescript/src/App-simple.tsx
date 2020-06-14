@@ -12,7 +12,7 @@ import Plane1 from './planes/Plane1';
 const App = () => {
     const pluridPlanes: PluridPlane[] = [
         {
-            path: '/',
+            route: '/',
             component: {
                 kind: 'react',
                 element: Plane1,
