@@ -6,7 +6,7 @@ import {
 
 import {
     cleanPathElement,
-} from '../../utilities';
+} from '../../../utilities';
 
 
 

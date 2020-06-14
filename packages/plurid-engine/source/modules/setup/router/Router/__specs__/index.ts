@@ -2,7 +2,7 @@ import {
     PluridRouterPath,
 } from '@plurid/plurid-data';
 
-import Router from '../';
+import Router from '..';
 
 
 

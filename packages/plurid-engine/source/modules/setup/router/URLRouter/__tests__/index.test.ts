@@ -1,4 +1,4 @@
-import URLRouter from '../';
+import URLRouter from '..';
 
 import {
     URLRoute,
