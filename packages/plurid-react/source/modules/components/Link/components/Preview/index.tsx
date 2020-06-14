@@ -64,10 +64,10 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
     const context: PluridContext = useContext(Context);
 
     const {
-        planesMap,
+        planesRegistry,
     } = context;
 
-    const plane = planesMap.get(planeID);
+    const plane = planesRegistry.get(planeID);
 
 
     /** render */
