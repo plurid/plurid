@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.1.87",
+    "version": "0.1.88",
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
         "plurid",
@@ -47,7 +47,7 @@
         "@plurid/plurid-functions": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "^0.1.152",
+        "@plurid/plurid-data": "^0.1.153",
         "@plurid/plurid-functions": "^0.1.13",
         "@plurid/plurid-pubsub": "^0.1.8",
         "@rollup/plugin-commonjs": "^13.0.0",
