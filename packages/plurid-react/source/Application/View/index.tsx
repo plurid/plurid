@@ -92,10 +92,10 @@ export interface ViewOwnProperties {
 }
 
 export interface ViewStateProperties {
-    // stateConfiguration: PluridAppConfiguration;
+    stateConfiguration: PluridAppConfiguration;
     // stateDataUniverses: Indexed<PluridInternalStateUniverse>;
     // viewSize: ViewSize;
-    // spaceLoading: boolean;
+    stateSpaceLoading: boolean;
     // transform: any;
     // initialTree: TreePlane[];
     // stateTree: TreePlane[];
@@ -113,11 +113,11 @@ export interface ViewDispatchProperties {
     // dispatchSetUniverses: typeof actions.data.setUniverses;
 
     // dispatchSetViewSize: typeof actions.space.setViewSize;
-    // dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
+    dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
     // dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     // dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
-    // dispatchSetInitialTree: typeof actions.space.setInitialTree;
-    // dispatchSetTree: typeof actions.space.setTree;
+    dispatchSetInitialTree: typeof actions.space.setInitialTree;
+    dispatchSetTree: typeof actions.space.setTree;
     // dispatchSetSpaceSize: typeof actions.space.setSpaceSize;
 
     dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
@@ -151,10 +151,19 @@ const PluridView: React.FC<ViewProperties> = (
         /** own */
         application,
 
+        /** state */
+        stateConfiguration,
+        stateSpaceLoading,
+
         /** dispatch */
+        dispatchSetConfiguration,
         dispatchSetConfigurationMicro,
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
+
+        dispatchSetSpaceLoading,
+        dispatchSetInitialTree,
+        dispatchSetTree,
     } = properties;
 
     const {
@@ -173,6 +182,7 @@ const PluridView: React.FC<ViewProperties> = (
         // indexedPlanes || new Map(),
         new Map(),
     );
+    const viewElement = useRef<HTMLDivElement>(null);
 
 
     /** handlers */
@@ -326,6 +336,15 @@ const PluridView: React.FC<ViewProperties> = (
 
 
             // handle space computations
+
+
+
+            // dispatchSetSpaceSize(spaceSize);
+            dispatchSetConfiguration(appConfiguration);
+            dispatchSetInitialTree(spaceTree);
+            dispatchSetTree(spaceTree);
+            dispatchSetSpaceLoading(false);
+            // dispatchDataSetPlaneSources(planeSources);
         }
     }
 
@@ -350,14 +369,43 @@ const PluridView: React.FC<ViewProperties> = (
     // console.log('RENDER');
     // console.log('planesRegistry', planesRegistry);
 
+    /** context */
+    const pluridContext: PluridContext = {
+        planesRegistry: planesRegistry.current,
+        // planesMap: indexedPlanesReference.current,
+        // planesProperties: planesPropertiesReference.current,
+        // planeContext: pluridApplication.planeContext,
+        // planeContextValue: pluridApplication.planeContextValue,
+    };
+
     /** render */
+    // return (
+    //     <div>
+
+    //     </div>
+    // );
+    const viewContainer = handleView(planes);
+
     return (
-        <div>
+        <StyledView
+            ref={viewElement}
+            tabIndex={0}
+            transformMode={stateConfiguration.space.transformMode}
+            data-plurid-entity={PLURID_ENTITY_VIEW}
+        >
+            {!stateSpaceLoading && (
+                <>
+                    <GlobalStyle />
 
-        </div>
+                    <Context.Provider
+                        value={pluridContext}
+                    >
+                        {viewContainer}
+                    </Context.Provider>
+                </>
+            )}
+        </StyledView>
     );
-
-
 
 
 
@@ -1216,14 +1264,14 @@ const PluridView: React.FC<ViewProperties> = (
 const mapStateToProperties = (
     state: AppState,
 ): ViewStateProperties => ({
-    // stateConfiguration: selectors.configuration.getConfiguration(state),
+    stateConfiguration: selectors.configuration.getConfiguration(state),
     // stateDataUniverses: selectors.data.getUniverses(state),
     // viewSize: selectors.space.getViewSize(state),
     // transform: selectors.space.getTransform(state),
     // initialTree: selectors.space.getInitialTree(state),
     // stateTree: selectors.space.getTree(state),
     // activeUniverseID: selectors.space.getActiveUniverseID(state),
-    // spaceLoading: selectors.space.getLoading(state),
+    stateSpaceLoading: selectors.space.getLoading(state),
     // stateSpaceLocation: selectors.space.getTransform(state),
     // stateCulledView: selectors.space.getCulledView(state),
 });
@@ -1248,25 +1296,25 @@ const mapDispatchToProperties = (
     //     actions.space.setViewSize(viewSize)
     // ),
 
-    // dispatchSetSpaceLoading: (loading: boolean) => dispatch(
-    //     actions.space.setSpaceLoading(loading)
-    // ),
+    dispatchSetSpaceLoading: (loading: boolean) => dispatch(
+        actions.space.setSpaceLoading(loading)
+    ),
     // dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
     //     actions.space.setAnimatedTransform(animated)
     // ),
     // dispatchSetSpaceLocation: (spaceLocation: any) => dispatch(
     //     actions.space.setSpaceLocation(spaceLocation)
     // ),
-    // dispatchSetInitialTree: (
-    //     tree: TreePlane[],
-    // ) => dispatch(
-    //     actions.space.setInitialTree(tree),
-    // ),
-    // dispatchSetTree: (
-    //     tree: TreePlane[],
-    // ) => dispatch(
-    //     actions.space.setTree(tree),
-    // ),
+    dispatchSetInitialTree: (
+        tree: TreePlane[],
+    ) => dispatch(
+        actions.space.setInitialTree(tree),
+    ),
+    dispatchSetTree: (
+        tree: TreePlane[],
+    ) => dispatch(
+        actions.space.setTree(tree),
+    ),
     // dispatchSetSpaceSize: (payload: SpaceSize) => dispatch(
     //     actions.space.setSpaceSize(payload)
     // ),

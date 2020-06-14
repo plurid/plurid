@@ -174,8 +174,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     // console.log('plurid root context', context);
 
     const {
-        planesMap,
-        planesProperties,
+        planesRegistry,
+        // planesProperties,
         planeContext: PlaneContext,
         planeContextValue,
     } = context;
@@ -195,7 +195,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             plane.children.map(child => {
                 // console.log('child', child);
 
-                if (!planesMap) {
+                if (!planesRegistry) {
                     return;
                 }
                 // if (!statePlaneSources || !planesMap) {
@@ -209,15 +209,15 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     return;
                 }
 
-                const activePlane = planesMap.get(planeID);
-                const pluridPlaneProperties = planesProperties.get(planeID);
+                const activePlane = planesRegistry.get(planeID);
+                // const pluridPlaneProperties = planesProperties.get(planeID);
                 // console.log('activePlane', activePlane);
                 // const activePlane = activePlanes[child.sourceID];
 
                 let plane = (<></>);
                 if (
                     activePlane
-                    && pluridPlaneProperties
+                    // && pluridPlaneProperties
                     // && child.show
                 ) {
                     // instead of forcing show here to pass it as prop
@@ -229,7 +229,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     }
 
                     const pluridProperties = {
-                        ...pluridPlaneProperties.plurid,
+                        // ...pluridPlaneProperties.plurid,
                         metadata: {
                             planeID,
                         },
@@ -303,7 +303,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         );
     }
 
-    const pluridPlane = planesMap.get(pluridPlaneID);
+    const pluridPlane = planesRegistry.get(pluridPlaneID);
     // const pluridPlaneProperties = planesProperties.get(pluridPlaneID);
     // console.log('Root pluridPlane', pluridPlane);
 

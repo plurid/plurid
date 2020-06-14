@@ -14,6 +14,7 @@ import {
 
     /** interfaces */
     PluridPlane,
+    RegisteredPluridPlane,
     TreePlane,
     PluridConfiguration,
 } from '@plurid/plurid-data';
@@ -48,7 +49,7 @@ import selectors from '../../../../services/state/selectors';
 
 
 export interface PluridPlaneControlsOwnProperties {
-    plane: PluridPlane;
+    plane: RegisteredPluridPlane;
     treePlane: TreePlane;
     mouseOver: boolean;
 }
@@ -143,7 +144,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
 
         if (pathbar.onKeyDown) {
             // const id = plane.id || plane.path;
-            const id = plane.route;
+            const id = plane.route.absolute;
             pathbar.onKeyDown(event, id);
         }
     }
