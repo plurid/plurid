@@ -146,7 +146,7 @@ const PluridView: React.FC<ViewProperties> = (
     properties,
 ) => {
     /** properties */
-    console.log(properties);
+    // console.log(properties);
     const {
         /** own */
         application,
@@ -274,7 +274,7 @@ const PluridView: React.FC<ViewProperties> = (
                     appConfiguration.network.protocol,
                     appConfiguration.network.host,
                 );
-                console.log('resolvedRoute', resolvedRoute);
+                // console.log('resolvedRoute', resolvedRoute);
 
                 const {
                     protocol,
@@ -312,7 +312,7 @@ const PluridView: React.FC<ViewProperties> = (
                 planesRegistry.current,
                 view || [],
             );
-            console.log('spaceTree', spaceTree);
+            // console.log('spaceTree', spaceTree);
 
 
 
@@ -347,8 +347,8 @@ const PluridView: React.FC<ViewProperties> = (
     ]);
 
 
-    console.log('RENDER');
-    console.log('planesRegistry', planesRegistry);
+    // console.log('RENDER');
+    // console.log('planesRegistry', planesRegistry);
 
     /** render */
     return (
