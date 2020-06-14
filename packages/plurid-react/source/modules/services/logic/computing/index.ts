@@ -153,16 +153,16 @@ export const computeApplication = (
     // console.log('absoluteView', absoluteView);
 
     // create tree
-    const spaceTree = new space.tree.Tree({
-        planes: treePlanes,
-        configuration: appConfiguration,
-        view: absoluteView,
-    });
-    const computedTree = spaceTree.compute();
+    // const spaceTree = new space.tree.Tree({
+    //     planes: treePlanes,
+    //     configuration: appConfiguration,
+    //     view: absoluteView,
+    // });
+    // const computedTree = spaceTree.compute();
 
 
     const data = {
-        computedTree,
+        computedTree: [],
         indexedPlanesReference,
         planesPropertiesReference,
         appConfiguration,
