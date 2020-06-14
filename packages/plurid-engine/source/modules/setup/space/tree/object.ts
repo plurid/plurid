@@ -1,5 +1,6 @@
 import {
     TreePlane,
+    RegisteredPluridPlane,
     PluridConfiguration,
     PluridView,
     PluridCluster,
@@ -12,10 +13,10 @@ import {
 
 
 export interface TreeData {
-    planes: TreePlane[],
+    planes: Map<string, RegisteredPluridPlane>,
+    view: string[] | PluridView[],
+    configuration: PluridConfiguration,
     clusters?: PluridCluster[],
-    configuration?: PluridConfiguration,
-    view?: string[] | PluridView[],
     previousTree?: TreePlane[],
 }
 
@@ -31,14 +32,14 @@ export default class Tree {
     public compute() {
         const {
             planes,
-            configuration,
             view,
+            configuration,
         } = this.data;
 
         return computeSpaceTree(
             planes,
-            configuration,
             view,
+            configuration,
         );
     }
 }
