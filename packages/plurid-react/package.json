@@ -60,7 +60,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.10.2",
-        "@plurid/plurid-data": "^0.1.151",
+        "@plurid/plurid-data": "^0.1.152",
         "@plurid/plurid-engine": "^0.1.85",
         "@plurid/plurid-functions": "^0.1.13",
         "@plurid/plurid-functions-react": "^0.0.1",

@@ -691,10 +691,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@plurid/plurid-data@^0.1.151":
-  version "0.1.151"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.151.tgz#6f15228b4d4287da4b9b320e0e0a968bba23771b"
-  integrity sha512-ScRSfFDWIfzj2oH6EcHkJSPA0e9FDeyXDcuP/X6VbiJghSDgEfdi2uJCbOQN+bXP+OJqLAzYhd66uSPKfzVrwQ==
+"@plurid/plurid-data@^0.1.152":
+  version "0.1.152"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.152.tgz#8f21992e0f4142c80aea0061339e91900c05e0e9"
+  integrity sha512-ph0yRZGgzSqBScqbXwpknWDb6M7H6ofMeuoRU3YijurR3fCmjG0mIVHC2+Niy/zwXiAzJSqFPaGNpGdheaYAtw==
 
 "@plurid/plurid-engine@^0.1.85":
   version "0.1.85"
