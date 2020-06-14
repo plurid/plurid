@@ -52,7 +52,7 @@ export const computeApplication = (
                 universe,
                 cluster,
                 plane: planePath,
-                resolvedPath,
+                route,
             } = linkPath;
 
             const computedIndexedPlane: IndexedPluridPlane = {
@@ -63,10 +63,10 @@ export const computeApplication = (
                 universe: universe.value,
                 cluster: cluster.value,
                 plane: planePath.value,
-                route: resolvedPath,
+                route,
                 component: plane.component,
             };
-            const id = resolvedPath;
+            const id = route;
 
             const planeProperties = {
                 ...plane.component.properties,
@@ -144,7 +144,7 @@ export const computeApplication = (
             if (!viewPath) {
                 continue;
             }
-            absoluteView.push(viewPath.resolvedPath);
+            absoluteView.push(viewPath.route);
         }
     }
 

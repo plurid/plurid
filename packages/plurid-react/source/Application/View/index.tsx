@@ -280,7 +280,7 @@ const PluridView: React.FC<ViewProperties> = (
                     universe,
                     cluster,
                     plane: planePath,
-                    resolvedPath,
+                    route: absoluteRoute,
                 } = resolvedRoute;
 
                 const registeredPluridPlane: RegisteredPluridPlane = {
@@ -293,12 +293,12 @@ const PluridView: React.FC<ViewProperties> = (
                         universe: {},
                         cluster: {},
                         plane: {},
-                        absolute: resolvedPath,
+                        absolute: absoluteRoute,
                     },
                 };
 
                 planesRegistry.current.set(
-                    resolvedPath,
+                    absoluteRoute,
                     registeredPluridPlane,
                 );
             }
