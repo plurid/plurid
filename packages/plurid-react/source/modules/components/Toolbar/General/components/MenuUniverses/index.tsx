@@ -32,7 +32,7 @@ export interface PluridMenuUniversesOwnProperties {
 
 export interface PluridMenuUniversesStateProperties {
     interactionTheme: Theme;
-    documents: Indexed<PluridInternalStateUniverse>;
+    // documents: Indexed<PluridInternalStateUniverse>;
     activeUniverseID: string;
 }
 
@@ -52,7 +52,7 @@ const PluridMenuUniverses: React.FC<PluridMenuUniversesProperties> = (
     const {
         /** state */
         interactionTheme,
-        documents,
+        // documents,
         activeUniverseID,
 
         /** dispatch */
@@ -66,7 +66,7 @@ const PluridMenuUniverses: React.FC<PluridMenuUniversesProperties> = (
             theme={interactionTheme}
         >
             <StyledPluridMenuUniversesScroll>
-                <ul>
+                {/* <ul>
                     {
                         Object.keys(documents).map(documentID => {
                             const document = documents[documentID];
@@ -84,7 +84,7 @@ const PluridMenuUniverses: React.FC<PluridMenuUniversesProperties> = (
                             )
                         })
                     }
-                </ul>
+                </ul> */}
             </StyledPluridMenuUniversesScroll>
         </StyledPluridMenuUniverses>
     );
@@ -95,7 +95,7 @@ const mapStateToProps = (
     state: AppState,
 ): PluridMenuUniversesStateProperties => ({
     interactionTheme: selectors.themes.getInteractionTheme(state),
-    documents: selectors.data.getUniverses(state),
+    // documents: selectors.data.getUniverses(state),
     activeUniverseID: selectors.space.getActiveUniverseID(state),
 });
 

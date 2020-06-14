@@ -43,7 +43,7 @@ export interface PluridRootOwnProperties {
 
 export interface PluridRootStateProperties {
     activeUniverseID: string;
-    statePlaneSources: Record<string, string>;
+    // statePlaneSources: Record<string, string>;
 }
 
 export interface PluridRootDispatchProperties {
@@ -66,7 +66,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         appConfiguration,
 
         /** state */
-        statePlaneSources,
+        // statePlaneSources,
     } = properties;
 
     const {
@@ -195,11 +195,14 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             plane.children.map(child => {
                 // console.log('child', child);
 
-                if (!statePlaneSources || !planesMap) {
+                if (!planesMap) {
                     return;
                 }
+                // if (!statePlaneSources || !planesMap) {
+                //     return;
+                // }
 
-                const planeID = statePlaneSources[child.route];
+                const planeID = child.route;
                 // console.log('AAAAAA indexedPlanesSources', indexedPlanesSources);
                 // console.log('planeID', planeID);
                 if (!planeID) {
@@ -290,7 +293,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
 
     /** render */
-    const pluridPlaneID = statePlaneSources[plane.sourceID];
+    const pluridPlaneID = plane.sourceID;
+    // const pluridPlaneID = statePlaneSources[plane.sourceID];
     // console.log('Root pluridPlaneID', pluridPlaneID);
 
     if (!pluridPlaneID) {
@@ -380,7 +384,7 @@ const mapStateToProps = (
     state: AppState,
 ): PluridRootStateProperties => ({
     activeUniverseID: selectors.space.getActiveUniverseID(state),
-    statePlaneSources: selectors.data.getPlaneSources(state),
+    // statePlaneSources: selectors.data.getPlaneSources(state),
 });
 
 
