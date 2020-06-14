@@ -280,10 +280,10 @@ export const computeSpaceTree = (
     view: string[] | PluridView[],
     configuration: PluridConfiguration,
 ): TreePlane[] => {
-    console.log('computeSpaceTree');
-    console.log('planes', planes);
-    console.log('configuration', configuration);
-    console.log('view', view);
+    // console.log('computeSpaceTree');
+    // console.log('planes', planes);
+    // console.log('configuration', configuration);
+    // console.log('view', view);
 
     const treePlanes: TreePlane[] = [];
 
