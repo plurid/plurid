@@ -247,16 +247,12 @@ export const resolveRoute = (
     protocol?: string,
     host?: string,
 ) => {
-    const windowProtocol = protocol
-        ? protocol
-        : typeof window === 'undefined'
-            ? 'http'
-            : window.location.protocol.replace(':', '');
-    const windowHost = host
-        ? host
-        : typeof window === 'undefined'
-            ? 'localhost:63000'
-            : window.location.host;
+    const windowProtocol = typeof window === 'undefined'
+        ? protocol || 'http'
+        : window.location.protocol.replace(':', '');
+    const windowHost = typeof window === 'undefined'
+        ? host || 'localhost:63000'
+        : window.location.host;
 
     const divisions = pluridLinkPathDivider(route);
 

@@ -41,6 +41,18 @@ import Router, {
 
 
 
+
+const matchRouteToView = (
+    route: string,
+    view: string,
+): undefined | any => {
+    // route http://originhost://p://s://u://c://:id
+    // view  http://originhost://p://s://u://c://one
+
+    return true;
+}
+
+
 /**
  * Given a view resolve it to an absolute view
  * and compute a TreePlane if there is a RegisteredPluridPlane
@@ -69,67 +81,76 @@ export const resolveViewItem = (
     );
     console.log('resolvedView', resolvedView);
 
-    for (const [route, plane] of planes) {
-        // check if resolvedView.route matches with the route
-        // check if parametric
-        // extract parameters
+    for (const [route, _] of planes) {
+        const routeMatch = matchRouteToView(
+            route,
+            resolvedView.route,
+        );
+
+        if (routeMatch) {
+            // check if resolvedView.route matches with the route
+            // check if parametric
+            // extract parameters
+            // generate a tree plane
+
+            const treePlane: TreePlane = {
+                sourceID: route,
+
+                planeID: '',
+
+                route: resolvedView.route,
+
+                routeDivisions: {
+                    protocol: '',
+                    host: {
+                        value: '',
+                        controlled: true,
+                    },
+                    path: {
+                        value: '',
+                        parameters: {},
+                        query: {},
+                    },
+                    space: {
+                        value: '',
+                        parameters: {},
+                        query: {},
+                    },
+                    universe: {
+                        value: '',
+                        parameters: {},
+                        query: {},
+                    },
+                    cluster: {
+                        value: '',
+                        parameters: {},
+                        query: {},
+                    },
+                    plane: {
+                        value: '',
+                        parameters: {},
+                        query: {},
+                    },
+                    valid: true,
+                },
+
+                height: 0,
+                width: 0,
+                location: {
+                    translateX: 0,
+                    translateY: 0,
+                    translateZ: 0,
+                    rotateX: 0,
+                    rotateY: 0,
+                },
+                show: true,
+            }
+
+            return treePlane;
+        }
     }
 
-
-    const treePlane: TreePlane = {
-        sourceID: '',
-
-        planeID: '',
-
-        route: '',
-
-        routeDivisions: {
-            protocol: '',
-            host: {
-                value: '',
-                controlled: true,
-            },
-            path: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            space: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            universe: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            cluster: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            plane: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            valid: true,
-        },
-
-        height: 0,
-        width: 0,
-        location: {
-            translateX: 0,
-            translateY: 0,
-            translateZ: 0,
-            rotateX: 0,
-            rotateY: 0,
-        },
-        show: true,
-    }
-
-    return treePlane;
+    return;
 }
 
 
