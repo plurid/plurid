@@ -307,7 +307,7 @@ export const resolveRoute = (
 
         return {
             protocol: protocolDivision,
-            host,
+            host: hostDivision,
             path,
             space,
             universe,
@@ -330,7 +330,7 @@ export const resolveRoute = (
 
     return {
         protocol: protocolDivision,
-        host,
+        host: hostDivision,
         path,
         space,
         universe,
