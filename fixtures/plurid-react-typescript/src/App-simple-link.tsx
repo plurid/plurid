@@ -11,7 +11,7 @@ import {
 const App = () => {
     const pluridPlanes: PluridPlane[] = [
         {
-            path: '/plane-1',
+            route: '/plane-1',
             component: {
                 kind: 'react',
                 element: () => (
@@ -24,7 +24,7 @@ const App = () => {
             },
         },
         {
-            path: '/plane-2',
+            route: '/plane-2',
             component: {
                 kind: 'react',
                 element: () => (<h1>Plane 2</h1>),
