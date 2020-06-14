@@ -243,8 +243,9 @@ const PluridView: React.FC<ViewProperties> = (
                     properties,
                 } = component;
 
-                // obtain from path the absolute path
-                const linkPath = router.resolveRoute(route);
+                // obtain from path the absolute route
+                // /plane -> Fully Qualified Route
+                const resolvedRoute = router.resolveRoute(route);
 
                 const {
                     protocol,
@@ -255,9 +256,20 @@ const PluridView: React.FC<ViewProperties> = (
                     cluster,
                     plane: planePath,
                     resolvedPath,
-                } = linkPath;
+                } = resolvedRoute;
 
 
+                // given the FQR
+                // store the component in an index by route
+                // prepare the view
+
+                // check if view routes have a parametric match
+
+
+                // create the view tree - including layout
+
+
+                // handle space computations
             }
         }
     }
