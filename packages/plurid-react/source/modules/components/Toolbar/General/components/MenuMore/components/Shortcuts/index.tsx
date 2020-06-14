@@ -45,7 +45,6 @@ export type PluridMenuMoreShortcutsProperties = PluridMenuMoreShortcutsOwnProper
     & PluridMenuMoreShortcutsStateProperties
     & PluridMenuMoreShortcutsDispatchProperties;
 
-
 const PluridMenuMoreShortcuts: React.FC<PluridMenuMoreShortcutsProperties> = (
     properties,
 ) => {
@@ -59,8 +58,12 @@ const PluridMenuMoreShortcuts: React.FC<PluridMenuMoreShortcutsProperties> = (
     } = properties;
 
     const {
-        language,
+        global,
     } = configuration;
+
+    const {
+        language,
+    } = global;
 
 
     /** render */

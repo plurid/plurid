@@ -131,7 +131,7 @@ const PluridToolbarScale: React.FC<PluridToolbarScaleProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridToolbarScaleStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 

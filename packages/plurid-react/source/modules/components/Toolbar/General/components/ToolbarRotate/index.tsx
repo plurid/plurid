@@ -149,7 +149,7 @@ const PluridToolbarRotate: React.FC<PluridToolbarRotateProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridToolbarRotateStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
 });
 

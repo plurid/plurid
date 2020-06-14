@@ -81,9 +81,13 @@ const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
     } = properties;
 
     const {
-        transparentUI,
+        global,
         elements,
     } = configuration;
+
+    const {
+        transparentUI,
+    } = global;
 
     const {
         toolbar,
@@ -171,7 +175,7 @@ const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridMoreMenuStateProperties => ({
-    stateLanguage: selectors.configuration.getConfiguration(state).language,
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     interactionTheme: selectors.themes.getInteractionTheme(state),
     configuration: selectors.configuration.getConfiguration(state),
     toolbarMenuScrollPosition: selectors.ui.getToolbarScrollPosition(state),

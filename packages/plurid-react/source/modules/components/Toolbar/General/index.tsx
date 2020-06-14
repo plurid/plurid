@@ -98,10 +98,14 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
     } = properties;
 
     const {
-        transparentUI,
+        global,
         elements,
         space,
     } = configuration;
+
+    const {
+        transparentUI,
+    } = global;
 
     const {
         firstPerson,

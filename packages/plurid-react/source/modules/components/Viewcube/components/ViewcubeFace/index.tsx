@@ -250,9 +250,13 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
     } = properties;
 
     const {
-        transparentUI,
+        global,
         elements,
     } = configuration;
+
+    const {
+        transparentUI,
+    } = global;
 
     const opaqueFace = elements.viewcube.opaque;
 
