@@ -83,3 +83,23 @@ export interface IndexedPluridPlane {
     route: string;
     component: PluridComponent;
 }
+
+
+export interface RouteSegment {
+    [key: string]: any;
+}
+
+
+export interface RegisteredPluridPlane {
+    route: {
+        protocol: RouteSegment;
+        host: RouteSegment;
+        path: RouteSegment;
+        space: RouteSegment;
+        universe: RouteSegment;
+        cluster: RouteSegment;
+        plane: RouteSegment;
+        absolute: string;
+    };
+    component: PluridComponent;
+}
