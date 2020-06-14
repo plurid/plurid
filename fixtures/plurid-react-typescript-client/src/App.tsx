@@ -2,7 +2,10 @@ import React from 'react';
 
 import {
     PluridApplication,
+
+    PluridPartialConfiguration,
     PluridPlane,
+
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -12,8 +15,10 @@ import Plane from './planes/Plane';
 
 const App = () => {
     /** properties */
-    const pluridConfiguration = {
-        theme: 'plurid',
+    const pluridConfiguration: PluridPartialConfiguration = {
+        global: {
+            theme: 'plurid',
+        },
         space: {
             layout: {
                 type: SPACE_LAYOUT.COLUMNS,
@@ -31,7 +36,7 @@ const App = () => {
 
     const pluridPlanes: PluridPlane[] = [
         {
-            path: '/plane',
+            route: '/plane',
             component: {
                 kind: 'react',
                 element: Plane,
