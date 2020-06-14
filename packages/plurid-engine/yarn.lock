@@ -456,10 +456,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@plurid/plurid-data@^0.1.150":
-  version "0.1.150"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.150.tgz#b6edb46460e391fa373726aa9cd1393931609e8c"
-  integrity sha512-SEp/O6oD8h4+VJuGeMOtK8+kaw6H2LuPo4XkVM63X/+MlS5JbiTsHGYZCMkq+M+we0sPGu08WyQfakrJkzJG0A==
+"@plurid/plurid-data@^0.1.151":
+  version "0.1.151"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.151.tgz#6f15228b4d4287da4b9b320e0e0a968bba23771b"
+  integrity sha512-ScRSfFDWIfzj2oH6EcHkJSPA0e9FDeyXDcuP/X6VbiJghSDgEfdi2uJCbOQN+bXP+OJqLAzYhd66uSPKfzVrwQ==
 
 "@plurid/plurid-functions@^0.1.13":
   version "0.1.13"
@@ -3672,10 +3672,10 @@ rollup@^0.63.4:
     "@types/estree" "0.0.39"
     "@types/node" "*"
 
-rollup@^2.16.0:
-  version "2.16.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.16.0.tgz#f45ed04a2cafdb4d1b71a2a77b5673334d811a32"
-  integrity sha512-95NglykUQAhl+mTFZqVvGUWDoGHV4/XanOZBbR7LOwTKODde5yFNHfVDZEnERBMuQViDuYaxOlFW87i1GQMihA==
+rollup@^2.16.1:
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.16.1.tgz#97805e88071e2c6727bd0b64904976d14495c873"
+  integrity sha512-UYupMcbFtoWLB6ZtL4hPZNUTlkXjJfGT33Mmhz3hYLNmRj/cOvX2B26ZxDQuEpwtLdcyyyraBGQ7EfzmMJnXXg==
   optionalDependencies:
     fsevents "~2.1.2"
 
