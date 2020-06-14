@@ -7,8 +7,8 @@ import {
 
 
 const defaultContext: PluridContext = {
-    planesMap: new Map(),
-    planesProperties: new Map(),
+    planesRegistry: new Map(),
+    // planesProperties: new Map(),
 }
 
 const Context = React.createContext(defaultContext);

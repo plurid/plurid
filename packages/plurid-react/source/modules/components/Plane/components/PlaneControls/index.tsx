@@ -126,7 +126,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
 
         if (pathbar.onChange) {
             // const id = plane.id || plane.path;
-            const id = plane.route;
+            const id = plane.route.absolute;
             pathbar.onChange(event, id);
         }
     }
