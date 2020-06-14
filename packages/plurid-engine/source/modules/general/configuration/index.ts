@@ -29,7 +29,9 @@ const mergeConfiguration = (
     configuration?: PluridPartialConfiguration,
 ): PluridConfiguration => {
     if (!configuration) {
-        return { ...defaultConfiguration };
+        return {
+            ...defaultConfiguration,
+        };
     }
 
     /**
@@ -44,25 +46,43 @@ const mergeConfiguration = (
 
     const mergedConfiguration: PluridConfiguration = {
         ...defaultConfiguration,
-        micro: configuration.micro ?? defaultConfiguration.micro,
-        transparentUI: configuration.transparentUI ?? defaultConfiguration.transparentUI,
-        language: configuration.language ?? defaultConfiguration.language,
-        render: configuration.render ?? defaultConfiguration.render,
-        theme: {
-            general: typeof configuration.theme === 'string'
-                ? configuration.theme
-                : typeof configuration.theme === 'object' && configuration.theme.general
-                    ? configuration.theme.general
-                    : typeof defaultConfiguration.theme === 'object'
-                        ? defaultConfiguration.theme.general
-                        : 'plurid',
-            interaction: typeof configuration.theme === 'string'
-                ? configuration.theme
-                : typeof configuration.theme === 'object' && configuration.theme.interaction
-                    ? configuration.theme.interaction
-                    : typeof defaultConfiguration.theme === 'object'
-                        ? defaultConfiguration.theme.interaction
-                        : 'plurid',
+        global: {
+            micro: specifiedOrDefault(
+                'configuration.global.micro',
+                'boolean',
+                configuration,
+            ),
+            transparentUI: specifiedOrDefault(
+                'configuration.global.transparentUI',
+                'boolean',
+                configuration,
+            ),
+            language: specifiedOrDefault(
+                'configuration.global.language',
+                'string',
+                configuration,
+            ),
+            render: specifiedOrDefault(
+                'configuration.global.render',
+                'string',
+                configuration,
+            ),
+            theme: {
+                general: typeof configuration.global?.theme === 'string'
+                    ? configuration.global.theme
+                    : typeof configuration.global?.theme === 'object' && configuration.global.theme.general
+                        ? configuration.global.theme.general
+                        : typeof defaultConfiguration.global.theme === 'object'
+                            ? defaultConfiguration.global.theme.general
+                            : 'plurid',
+                interaction: typeof configuration.global?.theme === 'string'
+                    ? configuration.global?.theme
+                    : typeof configuration.global?.theme === 'object' && configuration.global.theme.interaction
+                        ? configuration.global.theme.interaction
+                        : typeof defaultConfiguration.global.theme === 'object'
+                            ? defaultConfiguration.global.theme.interaction
+                            : 'plurid',
+            },
         },
         elements: {
             ...defaultConfiguration.elements,
@@ -235,6 +255,18 @@ const mergeConfiguration = (
             firstPerson: specifiedOrDefault(
                 'space.firstPerson',
                 'boolean',
+                configuration,
+            ),
+        },
+        network: {
+            host: specifiedOrDefault(
+                'network.host',
+                'string',
+                configuration,
+            ),
+            protocol: specifiedOrDefault(
+                'network.protocol',
+                'string',
                 configuration,
             ),
         },
