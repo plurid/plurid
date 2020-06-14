@@ -1,6 +1,7 @@
 import {
     /** constants */
     PLANE_DEFAULT_ANGLE,
+    PLURID_ROUTE_SEPARATOR,
 
     /** enumerations */
     LAYOUT_TYPES,
@@ -39,17 +40,149 @@ import Router, {
     resolveRoute,
 } from '../../router';
 
+import {
+    computeComparingPath,
+    extractParametersValues,
+} from '../../router/Parser/logic';
 
+
+
+
+const matchRouteElements = (
+    routePath: string,
+    viewPath: string,
+) => {
+    if (routePath === viewPath) {
+        return {
+            value: viewPath,
+            parameters: {},
+            query: {},
+        };
+    }
+
+
+    // check if viewPath is a parametrization of routePath
+    const parameters: string[] = [];
+    const routeSplit = routePath.split('/');
+    // console.log('routeSplit', routeSplit);
+
+    routeSplit.forEach(routeElement => {
+        if (routeElement[0] === ':') {
+            parameters.push(routeElement);
+        } else {
+            parameters.push('');
+        }
+    });
+    // console.log('parameters', parameters);
+
+    const {
+        locationElements,
+        comparingPath,
+    } = computeComparingPath(viewPath, parameters);
+    // console.log('comparingPath', comparingPath);
+    // console.log('routePath', routePath);
+
+    if (comparingPath !== '/' + routePath) {
+        return;
+    }
+
+    const parametersValues = extractParametersValues(
+        parameters,
+        locationElements,
+    );
+    // console.log('parametersValues', parametersValues);
+    return {
+        value: viewPath,
+        parameters: parametersValues,
+        query: {},
+    };
+}
 
 
 const matchRouteToView = (
     route: string,
     view: string,
 ): undefined | any => {
-    // route http://originhost://p://s://u://c://:id
-    // view  http://originhost://p://s://u://c://one
+    const routeSplit = route.split(PLURID_ROUTE_SEPARATOR);
+    const viewSplit = view.split(PLURID_ROUTE_SEPARATOR);
 
-    return true;
+
+    const routePath = routeSplit[2];
+    const viewPath = viewSplit[2];
+    const pathMatch = matchRouteElements(
+        routePath,
+        viewPath,
+    );
+    // console.log('pathMatch', pathMatch);
+    if (!pathMatch) {
+        return;
+    }
+
+
+    const routeSpace = routeSplit[3];
+    const viewSpace = viewSplit[3];
+    const spaceMatch = matchRouteElements(
+        routeSpace,
+        viewSpace,
+    );
+    // console.log('spaceMatch', spaceMatch);
+    if (!spaceMatch) {
+        return;
+    }
+
+
+    const routeUniverse = routeSplit[4];
+    const viewUniverse = viewSplit[4];
+    const universeMatch = matchRouteElements(
+        routeUniverse,
+        viewUniverse,
+    );
+    // console.log('universeMatch', universeMatch);
+    if (!universeMatch) {
+        return;
+    }
+
+
+    const routeCluster = routeSplit[5];
+    const viewCluster = viewSplit[5];
+    const clusterMatch = matchRouteElements(
+        routeCluster,
+        viewCluster,
+    );
+    // console.log('clusterMatch', clusterMatch);
+    if (!clusterMatch) {
+        return;
+    }
+
+
+    const routePlane = routeSplit[6];
+    const viewPlane = viewSplit[6];
+    const planeMatch = matchRouteElements(
+        routePlane,
+        viewPlane,
+    );
+    // console.log('planeMatch', planeMatch);
+    if (!planeMatch) {
+        return;
+    }
+
+    return {
+        path: {
+            ...pathMatch,
+        },
+        space: {
+            ...spaceMatch,
+        },
+        universe: {
+            ...universeMatch,
+        },
+        cluster: {
+            ...clusterMatch,
+        },
+        plane: {
+            ...planeMatch,
+        },
+    };
 }
 
 
@@ -79,13 +212,14 @@ export const resolveViewItem = (
         protocol,
         host,
     );
-    console.log('resolvedView', resolvedView);
+    // console.log('resolvedView', resolvedView);
 
     for (const [route, _] of planes) {
         const routeMatch = matchRouteToView(
             route,
             resolvedView.route,
         );
+        // console.log('routeMatch', routeMatch);
 
         if (routeMatch) {
             // check if resolvedView.route matches with the route
@@ -96,41 +230,21 @@ export const resolveViewItem = (
             const treePlane: TreePlane = {
                 sourceID: route,
 
-                planeID: '',
+                planeID: uuid.generate(),
 
                 route: resolvedView.route,
 
                 routeDivisions: {
-                    protocol: '',
+                    protocol,
                     host: {
-                        value: '',
+                        value: host,
                         controlled: true,
                     },
-                    path: {
-                        value: '',
-                        parameters: {},
-                        query: {},
-                    },
-                    space: {
-                        value: '',
-                        parameters: {},
-                        query: {},
-                    },
-                    universe: {
-                        value: '',
-                        parameters: {},
-                        query: {},
-                    },
-                    cluster: {
-                        value: '',
-                        parameters: {},
-                        query: {},
-                    },
-                    plane: {
-                        value: '',
-                        parameters: {},
-                        query: {},
-                    },
+                    path: routeMatch.path,
+                    space: routeMatch.space,
+                    universe: routeMatch.universe,
+                    cluster: routeMatch.cluster,
+                    plane: routeMatch.plane,
                     valid: true,
                 },
 
