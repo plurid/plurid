@@ -28,6 +28,11 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.8.tgz#0a63976f8d45e51b9e75e5445e4d70b210d568de"
   integrity sha512-CO+/lD2XbLAvjUFogG9CKUK7cVr5nZJuJ4mLssEtoiaA8u1MKWxJcPWn/SpKLXNTFDi7gj1bOCdK1OFxyWXKHw==
 
+"@plurid/plurid-themes@^0.1.26":
+  version "0.1.26"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.1.26.tgz#696ec2b8a57d6d95027ac2dc2a954dda142bdb82"
+  integrity sha512-UOfta3WoTEC5p0ri11+7PM/hha5zGkxXQjYl8yhMho/uSRATyCal4Hpj49jSx4EjQoxfn65CPpRA8Z2SMRmRLQ==
+
 "@rollup/pluginutils@^3.0.8":
   version "3.0.10"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-3.0.10.tgz#a659b9025920378494cd8f8c59fbf9b3a50d5f12"
