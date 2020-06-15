@@ -228,20 +228,40 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         return;
                     }
 
-                    const pluridProperties = {
-                        // ...pluridPlaneProperties.plurid,
+                    const pluridProperty: PluridComponentProperty = {
+                        route: {
+                            protocol: {
+                                ...child.routeDivisions.protocol,
+                            },
+                            host: {
+                                ...child.routeDivisions.host,
+                            },
+                            path: {
+                                ...child.routeDivisions.path,
+                            },
+                            space: {
+                                ...child.routeDivisions.space,
+                            },
+                            universe: {
+                                ...child.routeDivisions.universe,
+                            },
+                            cluster: {
+                                ...child.routeDivisions.cluster,
+                            },
+                            plane: {
+                                ...child.routeDivisions.plane,
+                            },
+                        },
                         metadata: {
                             planeID: child.planeID,
+                            parentPlaneID: child.parentPlaneID,
                         },
                     };
 
                     const properties = {
                         ...activePlane.component.properties,
                         plurid: {
-                            ...pluridProperties,
-                            path: {
-                                ...child.routeDivisions.plane,
-                            },
+                            ...pluridProperty,
                         },
                     };
 
@@ -326,29 +346,43 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const Plane = pluridPlane.component.element;
     // console.log('Root Plane', Plane);
 
-    const pluridProperties: PluridComponentProperty = {
+    const pluridProperty: PluridComponentProperty = {
         route: {
+            protocol: {
+                ...plane.routeDivisions.protocol,
+            },
+            host: {
+                ...plane.routeDivisions.host,
+            },
+            path: {
+                ...plane.routeDivisions.path,
+            },
+            space: {
+                ...plane.routeDivisions.space,
+            },
+            universe: {
+                ...plane.routeDivisions.universe,
+            },
+            cluster: {
+                ...plane.routeDivisions.cluster,
+            },
             plane: {
-                parameters: {},
-                query: {},
-                value: '',
+                ...plane.routeDivisions.plane,
             },
         },
-        // ...pluridPlaneProperties.plurid,
         metadata: {
             planeID: plane.planeID,
+            parentPlaneID: plane.parentPlaneID,
         },
     };
 
     const planeProperties = {
-        // ...pluridPlane.component.properties,
+        ...pluridPlane.component.properties,
         plurid: {
-            ...pluridProperties,
-            path: {
-                ...plane.routeDivisions.plane,
-            },
+            ...pluridProperty,
         },
     };
+
 
     return (
         <StyledPluridRoot

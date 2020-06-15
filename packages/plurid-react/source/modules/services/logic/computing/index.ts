@@ -56,7 +56,7 @@ export const computeApplication = (
             } = linkPath;
 
             const computedIndexedPlane: IndexedPluridPlane = {
-                protocol,
+                protocol: protocol.value,
                 host: host.value,
                 path: path.value,
                 space: space.value,
