@@ -310,7 +310,8 @@ const PluridView: React.FC<ViewProperties> = (
         view: string[] | PluridView[] | undefined,
         indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
     ) => {
-        const appConfiguration = generalEngine.configuration.default(configuration);
+        const appConfiguration = generalEngine.configuration.merge(configuration);
+        console.log('appConfiguration', appConfiguration);
         handleConfiguration(appConfiguration);
 
         if (planes) {

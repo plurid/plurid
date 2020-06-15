@@ -34,7 +34,7 @@ export const computeApplication = (
         indexedPlanes || new Map()
     );
 
-    const appConfiguration = generalEngine.configuration.default(configuration);
+    const appConfiguration = generalEngine.configuration.merge(configuration);
 
 
     if (planes) {
