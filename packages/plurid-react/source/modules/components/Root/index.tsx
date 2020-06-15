@@ -202,7 +202,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 //     return;
                 // }
 
-                const planeID = child.route;
+                const planeID = child.sourceID;
                 // console.log('AAAAAA indexedPlanesSources', indexedPlanesSources);
                 // console.log('planeID', planeID);
                 if (!planeID) {
@@ -231,7 +231,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     const pluridProperties = {
                         // ...pluridPlaneProperties.plurid,
                         metadata: {
-                            planeID,
+                            planeID: child.planeID,
                         },
                     };
 
@@ -239,6 +239,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         ...activePlane.component.properties,
                         plurid: {
                             ...pluridProperties,
+                            path: {
+                                ...child.routeDivisions.plane,
+                            },
                         },
                     };
 
