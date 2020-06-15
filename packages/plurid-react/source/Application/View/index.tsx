@@ -96,7 +96,7 @@ export interface ViewStateProperties {
     // stateDataUniverses: Indexed<PluridInternalStateUniverse>;
     // viewSize: ViewSize;
     stateSpaceLoading: boolean;
-    // transform: any;
+    stateTransform: any;
     // initialTree: TreePlane[];
     // stateTree: TreePlane[];
     // activeUniverseID: string;
@@ -105,7 +105,7 @@ export interface ViewStateProperties {
 }
 
 export interface ViewDispatchProperties {
-    // dispatch: ThunkDispatch<{}, {}, AnyAction>;
+    dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
     dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
     dispatchSetConfigurationMicro: typeof actions.configuration.setConfigurationMicro;
@@ -114,7 +114,7 @@ export interface ViewDispatchProperties {
 
     // dispatchSetViewSize: typeof actions.space.setViewSize;
     dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
-    // dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
+    dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     // dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
     dispatchSetInitialTree: typeof actions.space.setInitialTree;
     dispatchSetTree: typeof actions.space.setTree;
@@ -123,12 +123,12 @@ export interface ViewDispatchProperties {
     dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
     dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
 
-    // rotateXWith: typeof actions.space.rotateXWith;
-    // rotateYWith: typeof actions.space.rotateYWith;
-    // translateXWith: typeof actions.space.translateXWith;
-    // translateYWith: typeof actions.space.translateYWith;
-    // scaleUpWith: typeof actions.space.scaleUpWith;
-    // scaleDownWith: typeof actions.space.scaleDownWith;
+    dispatchRotateXWith: typeof actions.space.rotateXWith;
+    dispatchRotateYWith: typeof actions.space.rotateYWith;
+    dispatchTranslateXWith: typeof actions.space.translateXWith;
+    dispatchTranslateYWith: typeof actions.space.translateYWith;
+    dispatchScaleUpWith: typeof actions.space.scaleUpWith;
+    dispatchScaleDownWith: typeof actions.space.scaleDownWith;
 
     // dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
 
@@ -154,16 +154,26 @@ const PluridView: React.FC<ViewProperties> = (
         /** state */
         stateConfiguration,
         stateSpaceLoading,
+        stateTransform,
 
         /** dispatch */
+        dispatch,
         dispatchSetConfiguration,
         dispatchSetConfigurationMicro,
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
 
         dispatchSetSpaceLoading,
+        dispatchSetAnimatedTransform,
         dispatchSetInitialTree,
         dispatchSetTree,
+
+        dispatchRotateXWith,
+        dispatchRotateYWith,
+        dispatchTranslateXWith,
+        dispatchTranslateYWith,
+        dispatchScaleUpWith,
+        dispatchScaleDownWith,
     } = properties;
 
     const {
@@ -183,6 +193,49 @@ const PluridView: React.FC<ViewProperties> = (
         new Map(),
     );
     const viewElement = useRef<HTMLDivElement>(null);
+
+
+    /** callbacks */
+    const shortcutsCallback = useCallback((event: KeyboardEvent) => {
+        const {
+            transformLocks,
+        } = stateConfiguration.space;
+
+        handleGlobalShortcuts(
+            dispatch,
+            event,
+            stateConfiguration.space.firstPerson,
+            transformLocks,
+        );
+    }, [
+        stateConfiguration.space.firstPerson,
+        stateConfiguration.space.transformLocks,
+        dispatch,
+    ]);
+
+    const wheelCallback = useCallback((event: WheelEvent) => {
+        const {
+            transformMode,
+            transformLocks,
+        } = stateConfiguration.space;
+
+        const transformModes = {
+            rotation: transformMode === TRANSFORM_MODES.ROTATION,
+            translation: transformMode === TRANSFORM_MODES.TRANSLATION,
+            scale: transformMode === TRANSFORM_MODES.SCALE,
+        };
+
+        handleGlobalWheel(
+            dispatch,
+            event,
+            transformModes,
+            transformLocks,
+        );
+    }, [
+        dispatch,
+        stateConfiguration.space.transformMode,
+        stateConfiguration.space.transformLocks,
+    ]);
 
 
     /** handlers */
@@ -349,6 +402,188 @@ const PluridView: React.FC<ViewProperties> = (
     }
 
 
+    const handlePubSubSubscribe = (
+        pubsub: PluridPubSub,
+    ) => {
+        pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
+            const {
+                value,
+            } = data;
+            dispatchRotateXWith(value);
+        });
+
+        pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
+            const {
+                value,
+            } = data;
+            dispatchRotateYWith(value);
+        });
+    }
+
+    const handlePubSubPublish = (
+        pubsub: PluridPubSub,
+    ) => {
+        pubsub.publish(TOPICS.SPACE_TRANSFORM, stateTransform);
+
+        pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
+    }
+
+    const handleSwipe = (
+        event: HammerInput,
+    ) => {
+        const {
+            transformMode,
+        } = stateConfiguration.space;
+
+        const {
+            velocity,
+            distance,
+            direction,
+        } = event;
+
+        if (transformMode === TRANSFORM_MODES.ALL) {
+            return;
+        }
+
+        const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+        const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+        const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
+
+        dispatchSetAnimatedTransform(true);
+        switch (direction) {
+            case 2:
+                /** right */
+                if (rotationMode) {
+                    dispatchRotateYWith(velocity * 60);
+                }
+
+                if (translationMode) {
+                    dispatchTranslateXWith(-1 * distance);
+                }
+                break;
+            case 4:
+                /** left */
+                if (rotationMode) {
+                    dispatchRotateYWith(velocity * 60);
+                }
+
+                if (translationMode) {
+                    dispatchTranslateXWith(distance);
+                }
+                break;
+            case 8:
+                /** top */
+                if (rotationMode) {
+                    dispatchRotateXWith(velocity * 60);
+                }
+
+                if (translationMode) {
+                    dispatchTranslateYWith(-1 * distance);
+                }
+
+                if (scalationMode) {
+                    dispatchScaleUpWith(velocity);
+                }
+                break;
+            case 16:
+                /** down */
+                if (rotationMode) {
+                    dispatchRotateXWith(velocity * 60);
+                }
+
+                if (translationMode) {
+                    dispatchTranslateYWith(distance);
+                }
+
+                if (scalationMode) {
+                    dispatchScaleDownWith(velocity);
+                }
+                break;
+        }
+        setTimeout(() => {
+            dispatchSetAnimatedTransform(false);
+        }, 450);
+    }
+
+    const handlePan = (
+        event: HammerInput,
+    ) => {
+        const {
+            transformMode,
+        } = stateConfiguration.space;
+
+        const {
+            velocity,
+            distance,
+            direction,
+        } = event;
+
+        if (transformMode === TRANSFORM_MODES.ALL) {
+            return;
+        }
+
+        const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+        const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+        const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
+
+        const rotationVelocity = velocity * 20;
+        const translationVelocity = distance / 5;
+        const scaleVelocity = velocity / 4;
+
+        switch (direction) {
+            case 2:
+                /** right */
+                if (rotationMode) {
+                    dispatchRotateYWith(rotationVelocity);
+                }
+
+                if (translationMode) {
+                    dispatchTranslateXWith(-1 * translationVelocity);
+                }
+                break;
+            case 4:
+                /** left */
+                if (rotationMode) {
+                    dispatchRotateYWith(rotationVelocity);
+                }
+
+                if (translationMode) {
+                    dispatchTranslateXWith(translationVelocity);
+                }
+                break;
+            case 8:
+                /** top */
+                if (rotationMode) {
+                    dispatchRotateXWith(rotationVelocity);
+                }
+
+                if (translationMode) {
+                    dispatchTranslateYWith(-1 * translationVelocity);
+                }
+
+                if (scalationMode) {
+                    dispatchScaleUpWith(scaleVelocity);
+                }
+                break;
+            case 16:
+                /** down */
+                if (rotationMode) {
+                    dispatchRotateXWith(rotationVelocity);
+                }
+
+                if (translationMode) {
+                    dispatchTranslateYWith(translationVelocity);
+                }
+
+                if (scalationMode) {
+                    dispatchScaleDownWith(scaleVelocity);
+                }
+                break;
+        }
+    }
+
+
+
     /** effects */
     /** Compute Application */
     useEffect(() => {
@@ -364,6 +599,145 @@ const PluridView: React.FC<ViewProperties> = (
         view,
         indexedPlanes,
     ]);
+
+    /** Keydown, Wheel Listeners */
+    useEffect(() => {
+        if (viewElement.current) {
+            viewElement.current.addEventListener(
+                'keydown',
+                shortcutsCallback,
+                {
+                    passive: false,
+                },
+            );
+            viewElement.current.addEventListener(
+                'wheel',
+                wheelCallback,
+                {
+                    passive: false,
+                },
+            );
+        }
+
+        return () => {
+            if (viewElement.current) {
+                viewElement.current.removeEventListener(
+                    'keydown',
+                    shortcutsCallback,
+                );
+                viewElement.current.removeEventListener(
+                    'wheel',
+                    wheelCallback,
+                );
+            }
+        }
+    }, [
+        viewElement.current,
+        stateConfiguration.space.transformMode,
+        stateConfiguration.space.firstPerson,
+    ]);
+
+    /** Resize Listener */
+    // useEffect(() => {
+    //     const handleResize = meta.debounce(() => {
+    //         if (viewElement && viewElement.current) {
+    //             const width = viewElement.current.offsetWidth;
+    //             const height = viewElement.current.offsetHeight;
+    //             dispatchSetViewSize({
+    //                 width,
+    //                 height,
+    //             });
+    //         }
+    //     }, 150);
+
+    //     window.addEventListener('resize', handleResize);
+
+    //     return () => {
+    //         window.removeEventListener('resize', handleResize);
+    //     }
+    // }, []);
+
+    /** Touch */
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        let touch: HammerManager;
+
+        const handleTouch = async () => {
+            const HammerImport = await loadHammer();
+            const Hammer = HammerImport.default;
+
+            const {
+                transformTouch,
+            } = stateConfiguration.space;
+
+            /**
+             * Remove Hammerjs default css properties to add them only when in Lock Mode.
+             * https://stackoverflow.com/a/37896547
+             */
+            delete Hammer.defaults.cssProps.userSelect;
+            delete Hammer.defaults.cssProps.userDrag;
+            delete Hammer.defaults.cssProps.tapHighlightColor;
+            delete Hammer.defaults.cssProps.touchSelect;
+
+            if (!viewElement.current) {
+                return;
+            }
+
+            touch = new Hammer(viewElement.current);
+            touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+            touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+
+            if (transformTouch === TRANSFORM_TOUCHES.PAN) {
+                touch.on('pan', handlePan);
+            } else {
+                touch.on('swipe', handleSwipe);
+            }
+        }
+
+        handleTouch();
+
+        return () => {
+            const {
+                transformTouch,
+            } = stateConfiguration.space;
+
+            if (transformTouch === TRANSFORM_TOUCHES.PAN) {
+                if (touch) {
+                    touch.off('pan', handlePan);
+                }
+            } else {
+                if (touch) {
+                    touch.off('swipe', handleSwipe);
+                }
+            }
+        }
+    }, [
+        viewElement.current,
+        stateConfiguration.space.transformTouch,
+    ]);
+
+    /** PubSub Subscribe */
+    useEffect(() => {
+        if (pubsub) {
+            handlePubSubSubscribe(pubsub as any);
+        }
+    }, [
+        pubsub,
+    ]);
+
+    /** PubSub Publish */
+    useEffect(() => {
+        if (pubsub) {
+            handlePubSubPublish(pubsub);
+        }
+    }, [
+        stateConfiguration,
+        stateTransform,
+    ]);
+
 
 
     // console.log('RENDER');
@@ -475,49 +849,6 @@ const PluridView: React.FC<ViewProperties> = (
     // const indexedPlanesReference = useRef<Map<string, IndexedPluridPlane>>(indexedPlanes || new Map());
     // const planesPropertiesReference = useRef<Map<string, any>>(new Map());
     // const viewElement = useRef<HTMLDivElement>(null);
-
-
-    // /** callbacks */
-    // const shortcutsCallback = useCallback((event: KeyboardEvent) => {
-    //     const {
-    //         transformLocks,
-    //     } = stateConfiguration.space;
-
-    //     handleGlobalShortcuts(
-    //         dispatch,
-    //         event,
-    //         stateConfiguration.space.firstPerson,
-    //         transformLocks,
-    //     );
-    // }, [
-    //     stateConfiguration.space.firstPerson,
-    //     stateConfiguration.space.transformLocks,
-    //     dispatch,
-    // ]);
-
-    // const wheelCallback = useCallback((event: WheelEvent) => {
-    //     const {
-    //         transformMode,
-    //         transformLocks,
-    //     } = stateConfiguration.space;
-
-    //     const transformModes = {
-    //         rotation: transformMode === TRANSFORM_MODES.ROTATION,
-    //         translation: transformMode === TRANSFORM_MODES.TRANSLATION,
-    //         scale: transformMode === TRANSFORM_MODES.SCALE,
-    //     };
-
-    //     handleGlobalWheel(
-    //         dispatch,
-    //         event,
-    //         transformModes,
-    //         transformLocks,
-    //     );
-    // }, [
-    //     dispatch,
-    //     stateConfiguration.space.transformMode,
-    //     stateConfiguration.space.transformLocks,
-    // ]);
 
 
     // /** handlers */
@@ -701,185 +1032,8 @@ const PluridView: React.FC<ViewProperties> = (
     //     dispatchDataSetPlaneSources(planeSources);
     // }
 
-    // const handlePubSubSubscribe = (
-    //     pubsub: PluridPubSub,
-    // ) => {
-    //     pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
-    //         const {
-    //             value,
-    //         } = data;
-    //         rotateXWith(value);
-    //     });
 
-    //     pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
-    //         const {
-    //             value,
-    //         } = data;
-    //         rotateYWith(value);
-    //     });
-    // }
 
-    // const handlePubSubPublish = (
-    //     pubsub: PluridPubSub,
-    // ) => {
-    //     pubsub.publish(TOPICS.SPACE_TRANSFORM, transform);
-
-    //     pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
-    // }
-
-    // const handleSwipe = (
-    //     event: HammerInput,
-    // ) => {
-    //     const {
-    //         transformMode,
-    //     } = stateConfiguration.space;
-
-    //     const {
-    //         velocity,
-    //         distance,
-    //         direction,
-    //     } = event;
-
-    //     if (transformMode === TRANSFORM_MODES.ALL) {
-    //         return;
-    //     }
-
-    //     const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
-    //     const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
-    //     const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
-
-    //     dispatchSetAnimatedTransform(true);
-    //     switch (direction) {
-    //         case 2:
-    //             /** right */
-    //             if (rotationMode) {
-    //                 rotateYWith(velocity * 60);
-    //             }
-
-    //             if (translationMode) {
-    //                 translateXWith(-1 * distance);
-    //             }
-    //             break;
-    //         case 4:
-    //             /** left */
-    //             if (rotationMode) {
-    //                 rotateYWith(velocity * 60);
-    //             }
-
-    //             if (translationMode) {
-    //                 translateXWith(distance);
-    //             }
-    //             break;
-    //         case 8:
-    //             /** top */
-    //             if (rotationMode) {
-    //                 rotateXWith(velocity * 60);
-    //             }
-
-    //             if (translationMode) {
-    //                 translateYWith(-1 * distance);
-    //             }
-
-    //             if (scalationMode) {
-    //                 scaleUpWith(velocity);
-    //             }
-    //             break;
-    //         case 16:
-    //             /** down */
-    //             if (rotationMode) {
-    //                 rotateXWith(velocity * 60);
-    //             }
-
-    //             if (translationMode) {
-    //                 translateYWith(distance);
-    //             }
-
-    //             if (scalationMode) {
-    //                 scaleDownWith(velocity);
-    //             }
-    //             break;
-    //     }
-    //     setTimeout(() => {
-    //         dispatchSetAnimatedTransform(false);
-    //     }, 450);
-    // }
-
-    // const handlePan = (
-    //     event: HammerInput,
-    // ) => {
-    //     const {
-    //         transformMode,
-    //     } = stateConfiguration.space;
-
-    //     const {
-    //         velocity,
-    //         distance,
-    //         direction,
-    //     } = event;
-
-    //     if (transformMode === TRANSFORM_MODES.ALL) {
-    //         return;
-    //     }
-
-    //     const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
-    //     const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
-    //     const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
-
-    //     const rotationVelocity = velocity * 20;
-    //     const translationVelocity = distance / 5;
-    //     const scaleVelocity = velocity / 4;
-
-    //     switch (direction) {
-    //         case 2:
-    //             /** right */
-    //             if (rotationMode) {
-    //                 rotateYWith(rotationVelocity);
-    //             }
-
-    //             if (translationMode) {
-    //                 translateXWith(-1 * translationVelocity);
-    //             }
-    //             break;
-    //         case 4:
-    //             /** left */
-    //             if (rotationMode) {
-    //                 rotateYWith(rotationVelocity);
-    //             }
-
-    //             if (translationMode) {
-    //                 translateXWith(translationVelocity);
-    //             }
-    //             break;
-    //         case 8:
-    //             /** top */
-    //             if (rotationMode) {
-    //                 rotateXWith(rotationVelocity);
-    //             }
-
-    //             if (translationMode) {
-    //                 translateYWith(-1 * translationVelocity);
-    //             }
-
-    //             if (scalationMode) {
-    //                 scaleUpWith(scaleVelocity);
-    //             }
-    //             break;
-    //         case 16:
-    //             /** down */
-    //             if (rotationMode) {
-    //                 rotateXWith(rotationVelocity);
-    //             }
-
-    //             if (translationMode) {
-    //                 translateYWith(translationVelocity);
-    //             }
-
-    //             if (scalationMode) {
-    //                 scaleDownWith(scaleVelocity);
-    //             }
-    //             break;
-    //     }
-    // }
 
     // // const centerSpaceSize = useDebouncedCallback((
     // //     spaceSize: any,
@@ -937,62 +1091,6 @@ const PluridView: React.FC<ViewProperties> = (
     //     // universes,
     // ]);
 
-    // /** Keydown, Wheel Listeners */
-    // useEffect(() => {
-    //     if (viewElement.current) {
-    //         viewElement.current.addEventListener(
-    //             'keydown',
-    //             shortcutsCallback,
-    //             {
-    //                 passive: false,
-    //             },
-    //         );
-    //         viewElement.current.addEventListener(
-    //             'wheel',
-    //             wheelCallback,
-    //             {
-    //                 passive: false,
-    //             },
-    //         );
-    //     }
-
-    //     return () => {
-    //         if (viewElement.current) {
-    //             viewElement.current.removeEventListener(
-    //                 'keydown',
-    //                 shortcutsCallback,
-    //             );
-    //             viewElement.current.removeEventListener(
-    //                 'wheel',
-    //                 wheelCallback,
-    //             );
-    //         }
-    //     }
-    // }, [
-    //     viewElement.current,
-    //     stateConfiguration.space.transformMode,
-    //     stateConfiguration.space.firstPerson,
-    // ]);
-
-    // // /** Resize Listener */
-    // // useEffect(() => {
-    // //     const handleResize = meta.debounce(() => {
-    // //         if (viewElement && viewElement.current) {
-    // //             const width = viewElement.current.offsetWidth;
-    // //             const height = viewElement.current.offsetHeight;
-    // //             dispatchSetViewSize({
-    // //                 width,
-    // //                 height,
-    // //             });
-    // //         }
-    // //     }, 150);
-
-    // //     window.addEventListener('resize', handleResize);
-
-    // //     return () => {
-    // //         window.removeEventListener('resize', handleResize);
-    // //     }
-    // // }, []);
 
     // // /** Set View Size */
     // // useEffect(() => {
@@ -1024,24 +1122,6 @@ const PluridView: React.FC<ViewProperties> = (
     // //     stateConfiguration.space.layout,
     // // ]);
 
-    // /** PubSub Subscribe */
-    // useEffect(() => {
-    //     if (pubsub) {
-    //         handlePubSubSubscribe(pubsub as any);
-    //     }
-    // }, [
-    //     pubsub,
-    // ]);
-
-    // /** PubSub Publish */
-    // useEffect(() => {
-    //     if (pubsub) {
-    //         handlePubSubPublish(pubsub as any);
-    //     }
-    // }, [
-    //     stateConfiguration,
-    //     transform,
-    // ]);
 
     // // /** Handle Tree */
     // // useEffect(() => {
@@ -1103,67 +1183,6 @@ const PluridView: React.FC<ViewProperties> = (
     // //     contextUniversesRef.current,
     // // ]);
 
-    // /** Touch */
-    // useEffect(() => {
-    //     if (typeof window === 'undefined') {
-    //         return;
-    //     }
-
-    //     let touch: HammerManager;
-
-    //     const handleTouch = async () => {
-    //         const HammerImport = await loadHammer();
-    //         const Hammer = HammerImport.default;
-
-    //         const {
-    //             transformTouch,
-    //         } = stateConfiguration.space;
-
-    //         /**
-    //          * Remove Hammerjs default css properties to add them only when in Lock Mode.
-    //          * https://stackoverflow.com/a/37896547
-    //          */
-    //         delete Hammer.defaults.cssProps.userSelect;
-    //         delete Hammer.defaults.cssProps.userDrag;
-    //         delete Hammer.defaults.cssProps.tapHighlightColor;
-    //         delete Hammer.defaults.cssProps.touchSelect;
-
-    //         if (!viewElement.current) {
-    //             return;
-    //         }
-
-    //         touch = new Hammer(viewElement.current);
-    //         touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-    //         touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-
-    //         if (transformTouch === TRANSFORM_TOUCHES.PAN) {
-    //             touch.on('pan', handlePan);
-    //         } else {
-    //             touch.on('swipe', handleSwipe);
-    //         }
-    //     }
-
-    //     handleTouch();
-
-    //     return () => {
-    //         const {
-    //             transformTouch,
-    //         } = stateConfiguration.space;
-
-    //         if (transformTouch === TRANSFORM_TOUCHES.PAN) {
-    //             if (touch) {
-    //                 touch.off('pan', handlePan);
-    //             }
-    //         } else {
-    //             if (touch) {
-    //                 touch.off('swipe', handleSwipe);
-    //             }
-    //         }
-    //     }
-    // }, [
-    //     viewElement.current,
-    //     stateConfiguration.space.transformTouch,
-    // ]);
 
     // // /** Space Size */
     // // useEffect(() => {
@@ -1267,7 +1286,7 @@ const mapStateToProperties = (
     stateConfiguration: selectors.configuration.getConfiguration(state),
     // stateDataUniverses: selectors.data.getUniverses(state),
     // viewSize: selectors.space.getViewSize(state),
-    // transform: selectors.space.getTransform(state),
+    stateTransform: selectors.space.getTransform(state),
     // initialTree: selectors.space.getInitialTree(state),
     // stateTree: selectors.space.getTree(state),
     // activeUniverseID: selectors.space.getActiveUniverseID(state),
@@ -1280,7 +1299,7 @@ const mapStateToProperties = (
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): ViewDispatchProperties => ({
-    // dispatch,
+    dispatch,
 
     dispatchSetConfiguration: (configuration: PluridAppConfiguration) => dispatch(
         actions.configuration.setConfiguration(configuration)
@@ -1299,9 +1318,9 @@ const mapDispatchToProperties = (
     dispatchSetSpaceLoading: (loading: boolean) => dispatch(
         actions.space.setSpaceLoading(loading)
     ),
-    // dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
-    //     actions.space.setAnimatedTransform(animated)
-    // ),
+    dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
+        actions.space.setAnimatedTransform(animated)
+    ),
     // dispatchSetSpaceLocation: (spaceLocation: any) => dispatch(
     //     actions.space.setSpaceLocation(spaceLocation)
     // ),
@@ -1326,24 +1345,24 @@ const mapDispatchToProperties = (
         actions.themes.setInteractionTheme(theme)
     ),
 
-    // rotateXWith: (value: number) => dispatch(
-    //     actions.space.rotateXWith(value)
-    // ),
-    // rotateYWith: (value: number) => dispatch(
-    //     actions.space.rotateYWith(value)
-    // ),
-    // translateXWith: (value: number) => dispatch(
-    //     actions.space.translateXWith(value)
-    // ),
-    // translateYWith: (value: number) => dispatch(
-    //     actions.space.translateYWith(value)
-    // ),
-    // scaleUpWith: (value: number) => dispatch(
-    //     actions.space.scaleUpWith(value)
-    // ),
-    // scaleDownWith: (value: number) => dispatch(
-    //     actions.space.scaleDownWith(value)
-    // ),
+    dispatchRotateXWith: (value: number) => dispatch(
+        actions.space.rotateXWith(value)
+    ),
+    dispatchRotateYWith: (value: number) => dispatch(
+        actions.space.rotateYWith(value)
+    ),
+    dispatchTranslateXWith: (value: number) => dispatch(
+        actions.space.translateXWith(value)
+    ),
+    dispatchTranslateYWith: (value: number) => dispatch(
+        actions.space.translateYWith(value)
+    ),
+    dispatchScaleUpWith: (value: number) => dispatch(
+        actions.space.scaleUpWith(value)
+    ),
+    dispatchScaleDownWith: (value: number) => dispatch(
+        actions.space.scaleDownWith(value)
+    ),
 
     // dispatchSetActiveUniverse: (activeUniverse: string) => dispatch(
     //     actions.space.setActiveUniverse(activeUniverse)
