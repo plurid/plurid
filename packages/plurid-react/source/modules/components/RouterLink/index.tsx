@@ -12,7 +12,7 @@ import {
 
 
 export interface PluridRouterLinkOwnProperties {
-    path: string;
+    route: string;
 
     /**
      * Style as an anchor tag. Default `true`.
@@ -34,7 +34,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 ) => {
     /** properties */
     const {
-        path,
+        route,
         asAnchor,
         atClick,
         children,
@@ -59,7 +59,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 
         event.preventDefault();
 
-        pluridRouterNavigate(path);
+        pluridRouterNavigate(route);
     }
 
 
@@ -80,7 +80,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 
     return (
         <StyledPluridRouterLinkAnchor
-            href={path}
+            href={route}
             onClick={handleClick}
             style={{
                 ...style,
