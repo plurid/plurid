@@ -30,6 +30,4 @@ export {
     extractQuery,
 }
 
-export * from './CompareTypes';
-
 export * from './interfaces';

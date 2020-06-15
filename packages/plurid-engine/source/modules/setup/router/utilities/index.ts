@@ -88,6 +88,10 @@ export const pluridLinkPathDivider = (
         value: '',
         parameters: {},
         query: {},
+        fragments: {
+            texts: [],
+            elements: [],
+        },
     };
     const valid = false;
 
@@ -96,7 +100,10 @@ export const pluridLinkPathDivider = (
         || split.length > 7
     ) {
         const url = {
-            protocol,
+            protocol: {
+                value: protocol,
+                secure: true,
+            },
             host,
             path,
             space,
@@ -124,7 +131,10 @@ export const pluridLinkPathDivider = (
         }
 
         const url = {
-            protocol,
+            protocol: {
+                value: protocol,
+                secure: true,
+            },
             host,
             path,
             space,
@@ -178,7 +188,10 @@ export const pluridLinkPathDivider = (
                 break;
             default:
                 const url = {
-                    protocol,
+                    protocol: {
+                        value: protocol,
+                        secure: true,
+                    },
                     host,
                     path,
                     space,
@@ -207,7 +220,10 @@ export const pluridLinkPathDivider = (
                 break;
             default:
                 const url = {
-                    protocol,
+                    protocol: {
+                        value: protocol,
+                        secure: true,
+                    },
                     host,
                     path,
                     space,
@@ -221,7 +237,10 @@ export const pluridLinkPathDivider = (
     }
 
     const url = {
-        protocol,
+        protocol: {
+            value: protocol,
+            secure: true,
+        },
         host,
         path,
         space,
