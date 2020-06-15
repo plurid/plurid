@@ -573,6 +573,7 @@ export const updateTreeWithNewPlane = (
 
     const updatedTreePlane = {
         ...treePlane,
+        parentPlaneID,
         location: {
             translateX: location.x,
             translateY: location.y,
