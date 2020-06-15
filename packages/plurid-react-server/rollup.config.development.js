@@ -2,7 +2,7 @@ import replace from '@rollup/plugin-replace';
 import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 import url from '@rollup/plugin-url';
-import babel from 'rollup-plugin-babel';
+import babel from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
@@ -22,6 +22,7 @@ export default [
                 sourcemap: true
             },
         ],
+        inlineDynamicImports: true,
         plugins: [
             replace({
                 'process.env.MODE_ENV': JSON.stringify(process.env.MODE_ENV),
@@ -32,6 +33,7 @@ export default [
             }),
             url(),
             babel({
+                babelHelpers: 'bundled',
                 exclude: 'node_modules/**',
             }),
             typescript({
