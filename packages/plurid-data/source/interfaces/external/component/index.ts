@@ -3,6 +3,7 @@ import React from 'react';
 import {
     RouteHostDivision,
     RouteDivision,
+    RouteHostProtocol,
     RoutePlaneDivision,
 } from '../../internal/tree';
 
@@ -60,7 +61,7 @@ export interface PluridComponentPropertyMetadata {
 }
 
 export interface PluridComponentPropertyRoute {
-    protocol: string;
+    protocol: RouteHostProtocol;
     host: RouteHostDivision;
     path: RouteDivision;
     space: RouteDivision;
