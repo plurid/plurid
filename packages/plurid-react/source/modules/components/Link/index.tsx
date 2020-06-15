@@ -97,7 +97,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const {
         /** own */
         children,
-        path: planePath,
+        route: planeRoute,
         devisible: _devisible,
         suffix: _suffix,
         atClick,
@@ -121,11 +121,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const previewAppearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
     const previewDisappearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
 
-    const planePathResolved = planePath.startsWith('/') && typeof window !== 'undefined'
-        ? ':/' + window.location.pathname + '://s://u://c://' + planePath.slice(1)
-        : planePath;
+    const planeRouteResolved = planeRoute.startsWith('/') && typeof window !== 'undefined'
+        ? ':/' + window.location.pathname + '://s://u://c://' + planeRoute.slice(1)
+        : planeRoute;
 
-    const absolutePlaneRoute = resolveRoute(planePathResolved);
+    const absolutePlaneRoute = resolveRoute(planeRouteResolved);
 
 
     /** context */
