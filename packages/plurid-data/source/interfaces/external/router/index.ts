@@ -406,3 +406,27 @@ export interface PluridRouterPathMultispace {
     //  */
     // lengthType?: CompareType | Indexed<CompareType>;
 // }
+
+
+
+export interface RouterFragments {
+    texts: RouterFragmentText[];
+    elements: RouterFragmentElement[];
+}
+
+export interface RouterFragment {
+    type: string;
+}
+
+export interface RouterFragmentText extends RouterFragment {
+    type: 'text';
+    start: string;
+    end: string;
+    occurence: number;
+}
+
+export interface RouterFragmentElement extends RouterFragment {
+    type: 'element';
+    id: string;
+    occurence: number;
+}

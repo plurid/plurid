@@ -5,38 +5,33 @@ import {
 
 
 export interface PluridLink {
-    // /**
-    //  * The name of the document. If not specified defaults to the current one.
-    //  */
-    // document?: string;
-
     /**
-     * The path of the page.
+     * The route of the plane.
      *
-     * If IDs are provided to the pages, the id of the page.
+     * If IDs are provided to the planes, the id of the plane.
      *
-     * The page path can:
+     * The route path can:
      *
      * * be a simple string,
-     * e.g. `'/path/to/page'` or `'/d71b21673037485a'`,
-     * where `d71b21673037485a` is a generated page ID;
+     * e.g. `'/route/to/plane'` or `'/d71b21673037485a'`,
+     * where `d71b21673037485a` is a generated plane ID;
      *
      * * be a parametric route,
-     * e.g. `'/path/to/:page'`, where `:page` is the parameter value
+     * e.g. `'/route/to/:plane'`, where `:plane` is the parameter value
      * for the parameter defined in the `PluridPage[]`;
      *
      * * receive query `key=value` pairs,
-     * e.g. `'/path/to/page?id=1&show=true'`, where `id=1` and `show=true` are `key=value` pairs
+     * e.g. `'/route/to/plane?id=1&show=true'`, where `id=1` and `show=true` are `key=value` pairs
      *
      * * specify a text fragment,
-     * e.g. `'/path/to/page#:~:text=A%20door,is%20opened.,[0]'`,
+     * e.g. `'/route/to/plane#:~:text=A%20door,is%20opened.,[0]'`,
      * where the fragment `#:~:text=A%20door,is%20opened.,[0]`
      * is loosely based on the https://github.com/WICG/ScrollToTextFragment specification,
      * and indicates the link to bring into view the first occurence `[0]`, if any,
      * of the text fragment starting with `A door` and ending with `is opened.`.
      *
      * * specify a page element,
-     * e.g. `'/path/to/page#:~:element=123,[1]'`,
+     * e.g. `'/route/to/plane#:~:element=123,[1]'`,
      * where the fragment `#:~:element=123,[1]`
      * indicates the link to bring into view the second occurence `[1]`, if any,
      * of the element with the attribute `data-plurid-element=123`.
@@ -44,7 +39,7 @@ export interface PluridLink {
      *
      * ### Larger Syntax Structure
      *
-     * The syntax `/page` is used to reference only the plurid pages within the same plurid space.
+     * The syntax `/plane` is used to reference only the plurid planes within the same plurid space.
      *
      * In order to reference
      *
@@ -112,7 +107,7 @@ export interface PluridLink {
      * denotes that Cluster C includes Cluster B which includes Cluster A.
      *
      */
-    path: string;
+    route: string;
 
     /**
      * Format the link as a simple anchor element. Default `false`.
@@ -146,62 +141,3 @@ export interface PluridLink {
     style?: React.CSSProperties;
     className?: string;
 }
-
-
-
-
-// /**
-//  * A plurid link in the same space, same universe.
-//  *
-//  * `://page`
-//  */
-// export type PluridLinkIntraspatial = 'intraspatial';
-
-// /**
-//  * `://page`
-//  */
-// export type PluridLinkIntraspatialSameUniverse = 'intraspatialSameUniverse';
-
-// /**
-//  * `://universe://page`
-//  */
-// export type PluridLinkIntraspatialDifferentUniverse = 'intraspatialDifferentUniverse';
-
-
-
-// /**
-//  * A plurid link to a different space within the same route or on another route.
-//  */
-// export type PluridLinkInterspatial = 'interspatial';
-
-// /**
-//  * `://space://universe://page`
-//  */
-// export type PluridLinkInterspatialSameRoute = 'interspatialSameRoute';
-
-// /**
-//  * `://route://space://universe://page`
-//  */
-// export type PluridLinkInterspatialDifferentRoute = 'interspatialDifferentRoute';
-
-// export type PluridLinkInterspatialKind =
-//     | PluridLinkInterspatialSameRoute
-//     | PluridLinkInterspatialDifferentRoute;
-
-
-
-// export type PluridLinkOuterspatial = 'outerspatial';
-
-// /**
-//  * `https://controlled-origin://route://space://universe://page`
-//  */
-// export type PluridLinkOuterspatialControlledOrigin = 'outerspatialControlledOrigin';
-
-// /**
-//  * `https://foreign-origin://route://space://universe://page`
-//  */
-// export type PluridLinkOuterspatialForeignOrigin = 'outerspatialForeignOrigin';
-
-// export type PluridLinkOuterspatialKind =
-//     | PluridLinkOuterspatialControlledOrigin
-//     | PluridLinkOuterspatialForeignOrigin;

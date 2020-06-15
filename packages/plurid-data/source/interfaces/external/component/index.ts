@@ -1,5 +1,11 @@
 import React from 'react';
 
+import {
+    RouteHostDivision,
+    RouteDivision,
+    RoutePlaneDivision,
+} from '../../internal/tree';
+
 
 
 export interface PluridComponentBase {
@@ -44,23 +50,25 @@ export interface WithPluridComponentProperty {
 
 
 export interface PluridComponentProperty {
-    metadata: {
-        planeID: string;
-        // location: any;
-        // and other useful data for in plane manipulation
-        // data taken from TreePlane (?)
-    };
-    route: {
-        // details about the plane route:
-        // protocol - origin - path - space - universe - cluster - plane
-        // RouteDivions (?)
-        plane: {
-            parameters: Record<string, string>;
-            query: Record<string, string>;
-            value: string;
-        };
-    };
+    metadata: PluridComponentPropertyMetadata;
+    route: PluridComponentPropertyRoute;
 }
+
+export interface PluridComponentPropertyMetadata {
+    planeID: string;
+    parentPlaneID?: string;
+}
+
+export interface PluridComponentPropertyRoute {
+    protocol: string;
+    host: RouteHostDivision;
+    path: RouteDivision;
+    space: RouteDivision;
+    universe: RouteDivision;
+    cluster: RouteDivision;
+    plane: RoutePlaneDivision;
+}
+
 
 
 export type PluridComponent =

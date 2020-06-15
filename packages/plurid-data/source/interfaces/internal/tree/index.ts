@@ -1,3 +1,9 @@
+import {
+    RouterFragments,
+} from '../../external/router';
+
+
+
 export interface TreePlane {
     /**
      * The application defined plane ID that is the source
@@ -27,7 +33,7 @@ export interface TreePlane {
 
 
 export interface RouteDivisions {
-    protocol: string;
+    protocol: RouteHostProtocol;
     host: RouteHostDivision;
     path: RoutePathDivision;
     space: RouteSpaceDivision;
@@ -35,6 +41,19 @@ export interface RouteDivisions {
     cluster: RouteClusterDivision;
     plane: RoutePlaneDivision;
     valid: boolean;
+}
+
+
+export interface RouteDivision {
+    value: string;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
+}
+
+
+export interface RouteHostProtocol {
+    value: string;
+    secure: boolean;
 }
 
 
@@ -76,6 +95,7 @@ export interface RoutePlaneDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
+    fragments: RouterFragments;
 }
 
 
