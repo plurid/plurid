@@ -57,7 +57,7 @@ const Page: React.FC<any> = (
                 </PluridLink>
 
                 <PluridRouterLink
-                    path="/static"
+                    route="/static"
                     style={{
                         color: '#ccc',
                     }}

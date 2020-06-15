@@ -29,7 +29,7 @@ const Static: React.FC<any> = () => {
 
             <div>
                 <PluridRouterLink
-                    path="/"
+                    route="/"
                 >
                     back to home
                 </PluridRouterLink>
