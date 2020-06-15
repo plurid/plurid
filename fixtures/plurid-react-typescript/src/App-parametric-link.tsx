@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+    useRef,
+} from 'react';
 
 import {
     PluridApplication,
@@ -6,6 +8,30 @@ import {
     PluridLink,
 } from '@plurid/plurid-react';
 
+import {
+    ReactComponentWithPlurid,
+} from '@plurid/plurid-data';
+
+
+
+const ParametricPlane: React.FC<ReactComponentWithPlurid<any>> = (
+    properties,
+) => {
+    const {
+        plurid,
+    } = properties;
+    console.log(properties);
+
+    const id = useRef((Math.random() + '').slice(2));
+
+    return (
+        <div>
+            <h1>Plane with id {plurid.metadata.planeID}</h1>
+            <br />
+            <PluridLink path={id.current}>link to plane with route {id.current}</PluridLink>
+        </div>
+    );
+}
 
 
 const App = () => {
@@ -14,24 +40,13 @@ const App = () => {
             route: '/:id',
             component: {
                 kind: 'react',
-                element: ({ plurid} ) => {
-                    console.log('plurid', plurid);
-
-                    return (
-                        <div>
-                            <h1>Plane 1</h1>
-                            <br />
-                            <PluridLink path="/plane-2">link to plane 2</PluridLink>
-                        </div>
-                    );
-                },
+                element: ParametricPlane,
             },
         },
     ];
 
     const pluridView: string[] = [
-        '/one',
-        // '/two',
+        '/parametric',
     ];
 
     return (
