@@ -30,24 +30,14 @@ export interface PluridPlane {
      * `protocol://host://path://space://universe://cluster://plane`
      * and is useful for cross-origins requests.
      *
-     */
-    route: string;
-
-
-    // old path comment
-    /**
-     * Path to the plane, e.g. `/plane-1`. By convention, it starts with an '/'.
-     *
-     * If IDs not provided, the paths of all the plane within space must be unique.
-     *
-     * The path can have parameters, e.g. `/plane/:id`.
+     * The route can have parameters, e.g. `/plane/:id`.
      *
      * The parameter, in the example `id`,
      * will be passed in the property `plurid.parameters` to the component,
-     * e.g. `componentProperties.plurid.parameters.id`.
+     * e.g. `componentProperties.plurid.route.plane.parameters.id`.
      *
-     * The path can be used by the `PluridLink`.
      */
+    route: string;
 
 
     // /**
