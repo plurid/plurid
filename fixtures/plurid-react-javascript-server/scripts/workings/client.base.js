@@ -65,7 +65,7 @@ const styleRule = {
 
 
 const fileRule = {
-    test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3|pdf|mov|mp4)$/i,
+    test: /\.(jpe?g|gif|png|svg|eof|otf|woff|ttf|wav|mp3|pdf|mov|mp4)$/i,
     use: [
         {
             loader: 'file-loader',
@@ -77,9 +77,25 @@ const fileRule = {
 };
 
 
+const babelRule = {
+    test: /\.jsx?$/,
+    exclude: /node_modules/,
+    use: {
+        loader: 'babel-loader',
+        options: {
+            presets: [
+                '@babel/preset-env',
+                '@babel/preset-react',
+            ],
+        },
+    },
+};
+
+
 const rules = {
     styleRule,
     fileRule,
+    babelRule,
 };
 
 
@@ -109,6 +125,7 @@ const baseConfig = {
         rules: [
             rules.styleRule,
             rules.fileRule,
+            rules.babelRule,
         ],
     },
 };

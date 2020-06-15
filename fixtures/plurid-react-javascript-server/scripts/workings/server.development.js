@@ -12,10 +12,10 @@ export default {
     plugins: [
         plugins.postcss(),
         plugins.url(),
+        plugins.babel(),
         plugins.external(),
         plugins.resolve(),
         plugins.commonjs(),
-        /** typescript and sourcemaps in this order to allow for styled components transfomer (?) */
         plugins.sourceMaps(),
     ],
 }
