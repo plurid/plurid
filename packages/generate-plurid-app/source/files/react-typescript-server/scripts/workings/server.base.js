@@ -34,8 +34,8 @@ const plugins = {
     postcss: () => postcss(),
     url: () => url({
         include: [
-            '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.svg',
-            '**/*.woff', '**/*.ttf',
+            '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.svg',  '**/*.gif',
+            '**/*.woff', '**/*.ttf', '**/*.otf', '**/*.eof',
             '**/*.wav', '**/*.mp3',
             '**/*.pdf',
             '**/*.mov', '**/*.mp4',

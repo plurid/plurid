@@ -85,7 +85,9 @@ const planesPath: PluridRouterPath = {
         '/plane-1',
     ],
     defaultConfiguration: {
-        theme: 'plurid',
+        global: {
+            theme: 'plurid',
+        },
         space: {
             opaque: false,
             center: true,

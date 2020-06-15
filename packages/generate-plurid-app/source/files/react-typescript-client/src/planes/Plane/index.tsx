@@ -39,7 +39,7 @@ const Plane: React.FC<any> = (
             </h1>
 
             <div>
-                <PluridLink path="/plane">self link</PluridLink>
+                <PluridLink route="/plane">self link</PluridLink>
             </div>
         </StyledPlane>
     );

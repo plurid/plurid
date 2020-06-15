@@ -50,14 +50,14 @@ import {
 
 
 
-const reduxState = (window as any).__PRELOADED_REDUX_STATE__;
-delete (window as any).__PRELOADED_REDUX_STATE__;
+const reduxState = window.__PRELOADED_REDUX_STATE__;
+delete window.__PRELOADED_REDUX_STATE__;
 
-const pluridMetastate = (window as any).__PRELOADED_PLURID_METASTATE__;
-delete (window as any).__PRELOADED_PLURID_METASTATE__;
+const pluridMetastate = window.__PRELOADED_PLURID_METASTATE__;
+delete window.__PRELOADED_PLURID_METASTATE__;
 
 
-const Client: React.FC<any> = () => {
+const Client = () => {
     /** references */
     const store = useRef(reduxStore(reduxState));
 
