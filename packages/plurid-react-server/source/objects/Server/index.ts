@@ -178,7 +178,7 @@ export default class PluridServer {
                 path: string,
                 ...handlers: express.RequestHandler[]
             ) => {
-                this.serverApplication.post(path, handlers);
+                this.serverApplication.post(path, ...handlers);
 
                 return this.serverApplication;
             },
@@ -186,7 +186,7 @@ export default class PluridServer {
                 path: string,
                 ...handlers: express.RequestHandler[]
             ) => {
-                this.serverApplication.patch(path, handlers);
+                this.serverApplication.patch(path, ...handlers);
 
                 return this.serverApplication;
             },
@@ -194,7 +194,7 @@ export default class PluridServer {
                 path: string,
                 ...handlers: express.RequestHandler[]
             ) => {
-                this.serverApplication.put(path, handlers);
+                this.serverApplication.put(path, ...handlers);
 
                 return this.serverApplication;
             },
@@ -202,7 +202,7 @@ export default class PluridServer {
                 path: string,
                 ...handlers: express.RequestHandler[]
             ) => {
-                this.serverApplication.delete(path, handlers);
+                this.serverApplication.delete(path, ...handlers);
 
                 return this.serverApplication;
             },
