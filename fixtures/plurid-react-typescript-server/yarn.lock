@@ -578,10 +578,10 @@
     express "^4.17.1"
     open "^7.0.4"
 
-"@plurid/plurid-react@^0.1.181":
-  version "0.1.181"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.181.tgz#a7bf87d881e3876791d275703e09813069857898"
-  integrity sha512-R4N0e6N+5jHPNr/EgDsnDq38lAiALUigqsPuk2eD+ZdG7MY5sj6TA8kzQQF4Z8Dc6BJajr6dJAfw2Iui85uncA==
+"@plurid/plurid-react@^0.1.182":
+  version "0.1.182"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.182.tgz#70a18abbfd8bf6609940f908ad619f0ecdc10579"
+  integrity sha512-+DpT6fdk7FxKMj6MCjIyHozvS+qkw1eFXJi3aKYAjJvGDfAmk5SoAFkHCtTPROiae83Esa5h0nd1Eu1ENFxNmg==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
