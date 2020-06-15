@@ -1,8 +1,4 @@
-export const loadHammer = async () => loadPackage('hammerjs');
-
-
-export const loadPackage = async (
-    packageName: string,
-) => {
-    return await import(packageName);
-}
+export const loadHammer = async () => {
+    const hammer = await import('hammerjs');
+    return hammer;
+};

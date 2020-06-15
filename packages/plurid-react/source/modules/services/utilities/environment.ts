@@ -12,6 +12,7 @@ const environment = {
     development: environments[ENV_MODE] === 'development' ? true : false,
     local: environments[ENV_MODE] === 'local' ? true : false,
     localExternal: environments[ENV_MODE] === 'localexternal' ? true : false,
-}
+};
+
 
 export default environment;
