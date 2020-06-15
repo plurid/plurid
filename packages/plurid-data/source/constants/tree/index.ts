@@ -10,7 +10,10 @@ export const defaultTreePlane: TreePlane = {
     route: '',
     children: [],
     routeDivisions: {
-        protocol: '',
+        protocol: {
+            value: 'http',
+            secure: false,
+        },
         host: {
             value: '',
             controlled: false,
@@ -39,6 +42,10 @@ export const defaultTreePlane: TreePlane = {
             value: '',
             parameters: {},
             query: {},
+            fragments: {
+                elements: [],
+                texts: [],
+            },
         },
         valid: false,
     },
