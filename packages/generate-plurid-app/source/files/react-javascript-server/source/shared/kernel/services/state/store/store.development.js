@@ -12,7 +12,7 @@ import rootReducer from './reducers';
 
 
 
-const store = (preloadedState: any) => {
+const store = (preloadedState) => {
     const middleware = [ thunk ];
 
     // const localState = localStorage.loadState();

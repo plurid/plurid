@@ -29,7 +29,7 @@ const Static = () => {
 
             <div>
                 <PluridRouterLink
-                    path="/"
+                    route="/"
                 >
                     back to home
                 </PluridRouterLink>
