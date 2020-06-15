@@ -8,27 +8,3 @@ export interface RouterOptions {
     cacheLimit: number;
     gateway: string | undefined;
 }
-
-
-
-export interface Fragments {
-    texts: FragmentText[];
-    elements: FragmentElement[];
-}
-
-export interface Fragment {
-    type: string;
-}
-
-export interface FragmentText extends Fragment {
-    type: 'text';
-    start: string;
-    end: string;
-    occurence: number;
-}
-
-export interface FragmentElement extends Fragment {
-    type: 'element';
-    id: string;
-    occurence: number;
-}

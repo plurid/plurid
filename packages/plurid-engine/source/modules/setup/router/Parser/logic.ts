@@ -1,12 +1,9 @@
 import {
     Indexed,
+    RouterFragments,
+    RouterFragmentElement,
+    RouterFragmentText,
 } from '@plurid/plurid-data';
-
-import {
-    Fragments,
-    FragmentElement,
-    FragmentText,
-} from '../Router/interfaces';
 
 import {
     ParserParametersAndMatch,
@@ -204,7 +201,7 @@ export const extractQuery = (
 
 export const extractFragments = (
     location?: string,
-): Fragments => {
+): RouterFragments => {
     if (!location) {
         return {
             texts: [],
@@ -224,8 +221,8 @@ export const extractFragments = (
 
     const fragmentItems = fragmentsValues.split('&');
 
-    const textFragments: FragmentText[] = [];
-    const elementFragments: FragmentElement[] = [];
+    const textFragments: RouterFragmentText[] = [];
+    const elementFragments: RouterFragmentElement[] = [];
 
     for (const item of fragmentItems) {
         const parsedFragment = parseFragment(item);
@@ -250,7 +247,7 @@ export const extractFragments = (
 
 export const parseFragment = (
     fragment: string,
-): FragmentText | FragmentElement | undefined => {
+): RouterFragmentText | RouterFragmentElement | undefined => {
     const fragmentData = fragment.split('=');
     const fragmentType = fragmentData[0];
     const fragmentValues = fragmentData[1];

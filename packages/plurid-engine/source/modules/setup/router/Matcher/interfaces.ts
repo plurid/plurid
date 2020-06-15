@@ -1,11 +1,7 @@
 import {
-    Indexed,
     PluridRouterPath,
+    RouterFragments,
 } from '@plurid/plurid-data';
-
-import {
-    Fragments,
-} from '../Router/interfaces';
 
 
 
@@ -19,8 +15,8 @@ export interface MatcherOptions {
 export interface MatcherResponse {
     path: PluridRouterPath;
     pathname: string;
-    parameters: Indexed<string>;
-    query: Indexed<string>;
-    fragments: Fragments;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
+    fragments: RouterFragments;
     route: string;
 }
