@@ -1,4 +1,5 @@
 import React, {
+    useContext,
     useState,
     useRef,
     useCallback,
@@ -23,6 +24,7 @@ import {
     /** interfaces */
     PluridLink as PluridLinkOwnProperties,
     TreePlane,
+    PluridContext,
     Indexed,
     PluridInternalStateUniverse,
     PluridConfiguration,
@@ -39,6 +41,7 @@ import {
     StyledPluridLink,
 } from './styled';
 
+import Context from '../../services/logic/context';
 
 import PluridPlanePreview from './components/Preview';
 import PluridPortal from '../utilities/Portal';
@@ -125,11 +128,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const absolutePlaneRoute = resolveRoute(planePathResolved);
 
 
-    // return (
-    //     <div>
-    //         {children}
-    //     </div>
-    // );
+    /** context */
+    const context: PluridContext = useContext(Context);
+
+    const {
+        planesRegistry,
+    } = context;
 
 
     /** references */
@@ -200,6 +204,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             parentPlaneID,
             linkCoordinates,
             stateTree,
+            planesRegistry,
+            stateConfiguration,
         );
 
         if (pluridPlaneID) {
