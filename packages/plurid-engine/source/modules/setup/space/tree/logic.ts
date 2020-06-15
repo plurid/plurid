@@ -532,15 +532,16 @@ export const updateTreePlane = (
 
 
 
-
 export const updateTreeWithNewPlane = (
-    planePath: string,
+    planeRoute: string,
     parentPlaneID: string,
     linkCoordinates: LinkCoordinates,
     tree: TreePlane[],
+    planesRegistry: Map<string, RegisteredPluridPlane>,
+    configuration: PluridConfiguration,
 ): UpdatedTreeWithNewPlane => {
     const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
-    // console.log('parentPlane', parentPlane);
+    console.log('parentPlane', parentPlane);
 
     if (!parentPlane) {
         return {
@@ -553,50 +554,25 @@ export const updateTreeWithNewPlane = (
         linkCoordinates,
         parentPlane,
     );
+    console.log('location', location);
 
-    const planeID = uuid.generate();
-    const newPlane: TreePlane = {
-        sourceID: '',
-        route: planePath,
-        routeDivisions: {
-            protocol: '',
-            host: {
-                value: '',
-                controlled: false,
-            },
-            path: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            space: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            universe: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            cluster: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            plane: {
-                value: '',
-                parameters: {},
-                query: {},
-            },
-            valid: false,
-        },
-        // parameters: extractedParameters,
-        // parameters: {},
-        planeID,
-        width: 0,
-        height: 0,
-        parentPlaneID,
+
+    const treePlane = resolveViewItem(
+        planesRegistry,
+        planeRoute,
+        configuration,
+    );
+    console.log('treePlane', treePlane);
+
+    if (!treePlane) {
+        return {
+            pluridPlaneID: '',
+            updatedTree: tree,
+        };
+    }
+
+    const updatedTreePlane = {
+        ...treePlane,
         location: {
             translateX: location.x,
             translateY: location.y,
@@ -604,11 +580,67 @@ export const updateTreeWithNewPlane = (
             rotateX: 0,
             rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
         },
-        show: true,
         bridgeLength: 100,
         planeAngle: 90,
         linkCoordinates,
     };
+    console.log('updatedTreePlane', updatedTreePlane);
+
+
+    // const newPlane: TreePlane = {
+    //     sourceID: '',
+    //     route: planePath,
+    //     routeDivisions: {
+    //         protocol: '',
+    //         host: {
+    //             value: '',
+    //             controlled: false,
+    //         },
+    //         path: {
+    //             value: '',
+    //             parameters: {},
+    //             query: {},
+    //         },
+    //         space: {
+    //             value: '',
+    //             parameters: {},
+    //             query: {},
+    //         },
+    //         universe: {
+    //             value: '',
+    //             parameters: {},
+    //             query: {},
+    //         },
+    //         cluster: {
+    //             value: '',
+    //             parameters: {},
+    //             query: {},
+    //         },
+    //         plane: {
+    //             value: '',
+    //             parameters: {},
+    //             query: {},
+    //         },
+    //         valid: false,
+    //     },
+    //     // parameters: extractedParameters,
+    //     // parameters: {},
+    //     planeID,
+    //     width: 0,
+    //     height: 0,
+    //     parentPlaneID,
+    //     location: {
+    //         translateX: location.x,
+    //         translateY: location.y,
+    //         translateZ: location.z,
+    //         rotateX: 0,
+    //         rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
+    //     },
+    //     show: true,
+    //     bridgeLength: 100,
+    //     planeAngle: 90,
+    //     linkCoordinates,
+    // };
     // console.log('newPlane', newPlane);
 
     const updatedParentPlane: TreePlane = {
@@ -616,15 +648,15 @@ export const updateTreeWithNewPlane = (
     };
 
     if (updatedParentPlane.children) {
-        updatedParentPlane.children.push(newPlane);
+        updatedParentPlane.children.push(updatedTreePlane);
     } else {
-        updatedParentPlane.children = [newPlane];
+        updatedParentPlane.children = [updatedTreePlane];
     }
 
     const updatedTree = updateTreePlane(tree, updatedParentPlane);
 
     return {
-        pluridPlaneID: planeID,
+        pluridPlaneID: updatedTreePlane.planeID,
         updatedTree,
     };
 }
