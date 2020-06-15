@@ -11,7 +11,9 @@ import Plane from './planes/Plane';
 const App = () => {
     /** properties */
     const pluridConfiguration = {
-        theme: 'plurid',
+        global: {
+            theme: 'plurid',
+        },
         space: {
             layout: {
                 type: 'COLUMNS',
