@@ -544,7 +544,7 @@ export const updateTreeWithNewPlane = (
     configuration: PluridConfiguration,
 ): UpdatedTreeWithNewPlane => {
     const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
-    console.log('parentPlane', parentPlane);
+    // console.log('parentPlane', parentPlane);
 
     if (!parentPlane) {
         return {
@@ -557,8 +557,8 @@ export const updateTreeWithNewPlane = (
         linkCoordinates,
         parentPlane,
     );
-    console.log('location', location);
-    console.log('planeRoute', planeRoute);
+    // console.log('location', location);
+    // console.log('planeRoute', planeRoute);
 
 
     const treePlane = resolveViewItem(
@@ -566,7 +566,7 @@ export const updateTreeWithNewPlane = (
         planeRoute,
         configuration,
     );
-    console.log('treePlane', treePlane);
+    // console.log('treePlane', treePlane);
 
     if (!treePlane) {
         return {
@@ -589,7 +589,7 @@ export const updateTreeWithNewPlane = (
         planeAngle: 90,
         linkCoordinates,
     };
-    console.log('updatedTreePlane', updatedTreePlane);
+    // console.log('updatedTreePlane', updatedTreePlane);
 
 
     // const newPlane: TreePlane = {
