@@ -28,7 +28,7 @@ const ParametricPlane: React.FC<ReactComponentWithPlurid<any>> = (
         <div>
             <h1>Plane with id {plurid.metadata.planeID}</h1>
             <br />
-            <PluridLink path={id.current}>link to plane with route {id.current}</PluridLink>
+            <PluridLink route={id.current}>link to plane with route {id.current}</PluridLink>
         </div>
     );
 }
