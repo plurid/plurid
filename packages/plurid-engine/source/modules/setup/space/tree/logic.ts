@@ -235,7 +235,10 @@ export const resolveViewItem = (
                 route: resolvedView.route,
 
                 routeDivisions: {
-                    protocol,
+                    protocol: {
+                        value: '',
+                        secure: false,
+                    },
                     host: {
                         value: host,
                         controlled: true,
@@ -698,7 +701,10 @@ export const updateTreeWithNewPage = (
             sourceID: pageID,
             route: pagePath,
             routeDivisions: {
-                protocol: '',
+                protocol: {
+                    value: '',
+                    secure: false,
+                },
                 host: {
                     value: '',
                     controlled: false,
@@ -727,6 +733,10 @@ export const updateTreeWithNewPage = (
                     value: '',
                     parameters: {},
                     query: {},
+                    fragments: {
+                        texts: [],
+                        elements: [],
+                    },
                 },
                 valid: false,
             },
