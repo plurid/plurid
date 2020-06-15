@@ -20,7 +20,7 @@ const ParametricPlane: React.FC<ReactComponentWithPlurid<any>> = (
     const {
         plurid,
     } = properties;
-    console.log(properties);
+    // console.log(properties);
 
     const id = useRef((Math.random() + '').slice(2));
 
