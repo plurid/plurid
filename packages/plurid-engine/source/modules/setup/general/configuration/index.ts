@@ -25,7 +25,7 @@ const specifiedOrDefault = <T>(
 }
 
 
-const mergeConfiguration = (
+export const merge = (
     configuration?: PluridPartialConfiguration,
 ): PluridConfiguration => {
     if (!configuration) {
@@ -48,22 +48,22 @@ const mergeConfiguration = (
         ...defaultConfiguration,
         global: {
             micro: specifiedOrDefault(
-                'configuration.global.micro',
+                'global.micro',
                 'boolean',
                 configuration,
             ),
             transparentUI: specifiedOrDefault(
-                'configuration.global.transparentUI',
+                'global.transparentUI',
                 'boolean',
                 configuration,
             ),
             language: specifiedOrDefault(
-                'configuration.global.language',
+                'global.language',
                 'string',
                 configuration,
             ),
             render: specifiedOrDefault(
-                'configuration.global.render',
+                'global.render',
                 'string',
                 configuration,
             ),
@@ -286,6 +286,3 @@ const mergeConfiguration = (
 
     return mergedConfiguration;
 }
-
-
-export default mergeConfiguration;
