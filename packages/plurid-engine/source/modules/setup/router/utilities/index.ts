@@ -277,7 +277,7 @@ export const resolveRoute = (
 
     const defaultPathname = divisions.path.value || 'p';
 
-    const protocolDivision = divisions.protocol || windowProtocol;
+    const protocolDivision = divisions.protocol.value || windowProtocol;
     const hostDivision = divisions.host.value
         ? divisions.host
         : {

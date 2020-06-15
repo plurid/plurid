@@ -558,6 +558,7 @@ export const updateTreeWithNewPlane = (
         parentPlane,
     );
     console.log('location', location);
+    console.log('planeRoute', planeRoute);
 
 
     const treePlane = resolveViewItem(
