@@ -1,3 +1,4 @@
+export * from './compare';
 export * from './configuration';
 export * from './defaults';
 export * from './entities';
