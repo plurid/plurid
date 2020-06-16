@@ -47,6 +47,8 @@ export const mapPathsToRoutes = <T, V>(
 export const pluridLinkPathDivider = (
     route: string,
 ): RouteDivisions => {
+    console.log('pluridLinkPathDivider route', route);
+
     const windowProtocol = typeof window === 'undefined'
         ? 'http'
         : window.location.protocol.replace(':', '');
@@ -58,10 +60,11 @@ export const pluridLinkPathDivider = (
         .split('://')
         .filter(value => value !== '')
         .map(value => cleanPathElement(value));
+    console.log('SPLIT', split);
 
     let protocol = windowProtocol;
     const host = {
-        value: '',
+        value: windowHost,
         controlled: false,
     };
     const path = {
@@ -151,6 +154,7 @@ export const pluridLinkPathDivider = (
     if (
         split[0] !== 'http'
         && split[0] !== 'https'
+        && split[0] !== 'chrome-extension'
     ) {
         switch (split.length) {
             case 1:
@@ -274,12 +278,13 @@ export const resolveRoute = (
         : window.location.host;
 
     const divisions = pluridLinkPathDivider(route);
+    console.log('divisions', divisions);
 
     const defaultPathname = divisions.path.value
         || typeof window !== 'undefined'
             ? window.location.pathname === '/'
                 ? 'p'
-                : window.location.pathname
+                : window.location.pathname.slice(1)
             : 'p';
 
     const protocolDivision = divisions.protocol.value || windowProtocol;
