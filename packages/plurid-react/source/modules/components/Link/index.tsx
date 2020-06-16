@@ -126,7 +126,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         : planeRoute;
     console.log('planeRouteResolved', planeRouteResolved);
 
-    const absolutePlaneRoute = resolveRoute(planeRouteResolved);
+    const absolutePlaneRoute = resolveRoute(
+        planeRouteResolved,
+        stateConfiguration.network.protocol,
+        stateConfiguration.network.host,
+    );
     console.log('absolutePlaneRoute', absolutePlaneRoute);
 
 
