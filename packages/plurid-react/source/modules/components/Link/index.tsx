@@ -124,8 +124,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const planeRouteResolved = planeRoute.startsWith('/') && typeof window !== 'undefined'
         ? ':/' + window.location.pathname + '://s://u://c://' + planeRoute.slice(1)
         : planeRoute;
+    console.log('planeRouteResolved', planeRouteResolved);
 
     const absolutePlaneRoute = resolveRoute(planeRouteResolved);
+    console.log('absolutePlaneRoute', absolutePlaneRoute);
 
 
     /** context */
