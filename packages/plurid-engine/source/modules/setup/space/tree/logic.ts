@@ -53,8 +53,8 @@ const matchRouteElements = (
     viewPath: string,
 ) => {
 
-    console.log('viewPath', viewPath);
-    console.log('routePath', routePath);
+    // console.log('viewPath', viewPath);
+    // console.log('routePath', routePath);
 
     if (routePath === viewPath) {
         return {
@@ -64,14 +64,14 @@ const matchRouteElements = (
         };
     }
 
-    console.log('viewPath', viewPath);
-    console.log('routePath', routePath);
+    // console.log('viewPath', viewPath);
+    // console.log('routePath', routePath);
 
 
     // check if viewPath is a parametrization of routePath
     const parameters: string[] = [];
     const routeSplit = routePath.split('/');
-    console.log('routeSplit', routeSplit);
+    // console.log('routeSplit', routeSplit);
 
     routeSplit.forEach(routeElement => {
         if (routeElement[0] === ':') {
@@ -80,7 +80,7 @@ const matchRouteElements = (
             parameters.push('');
         }
     });
-    console.log('parameters', parameters);
+    // console.log('parameters', parameters);
 
     const {
         locationElements,
@@ -113,18 +113,18 @@ const matchRouteToView = (
     const routeSplit = route.split(PLURID_ROUTE_SEPARATOR);
     const viewSplit = view.split(PLURID_ROUTE_SEPARATOR);
 
-    console.log('route', route);
-    console.log('view', view);
-    console.log('viewSplit', viewSplit);
+    // console.log('route', route);
+    // console.log('view', view);
+    // console.log('viewSplit', viewSplit);
 
     const routePath = routeSplit[2];
     const viewPath = viewSplit[2];
-    console.log('viewPath', viewPath);
+    // console.log('viewPath', viewPath);
     const pathMatch = matchRouteElements(
         routePath,
         viewPath,
     );
-    console.log('pathMatch', pathMatch);
+    // console.log('pathMatch', pathMatch);
     if (!pathMatch) {
         return;
     }
@@ -217,14 +217,14 @@ export const resolveViewItem = (
     const viewData = typeof view === 'string'
         ? view
         : view.plane;
-    console.log('viewData', viewData);
+    // console.log('viewData', viewData);
 
     const resolvedView = resolveRoute(
         viewData,
         protocol,
         host,
     );
-    console.log('resolvedView', resolvedView);
+    // console.log('resolvedView', resolvedView);
 
     for (const [route, _] of planes) {
         const routeMatch = matchRouteToView(
