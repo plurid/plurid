@@ -24,6 +24,7 @@ import {
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
+    PLURID_ROUTER_LOCATION_CHANGED,
 } from '@plurid/plurid-data';
 
 import {
@@ -148,6 +149,7 @@ export {
     SIZES,
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
+    PLURID_ROUTER_LOCATION_CHANGED,
 
     /** Engine */
     // PluridRouter,
