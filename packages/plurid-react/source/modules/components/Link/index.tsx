@@ -163,6 +163,14 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** handlers */
     const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
+        /**
+         * TODO
+         * get the link coordinates from the relative parent
+         * until reaching the PluridPlane
+         * LeftLocation = LinkWidth + LinkLeft + RelativeParentLeft + ...
+         * TopLocation = LinkTop + RelativeParentTop + ...
+         */
+
         const link = linkElement.current;
 
         if (!link) {
