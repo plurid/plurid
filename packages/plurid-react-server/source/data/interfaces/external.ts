@@ -64,6 +64,14 @@ export interface PluridServerOptions {
      * Default: `/gateway`.
      */
     gatewayEndpoint: string;
+
+    /**
+     * Provide a `max-age` in milliseconds for http caching of the static serves.
+     * This can also be a string accepted by the `ms` module.
+     *
+     * Default: 0.
+     */
+    staticCache: number | string;
 }
 
 

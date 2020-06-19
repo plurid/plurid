@@ -538,6 +538,7 @@ export default class PluridServer {
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
             stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
             gatewayEndpoint: partialOptions?.gatewayEndpoint || DEFAULT_SERVER_OPTIONS.GATEWAY,
+            staticCache: partialOptions?.staticCache || 0,
         };
         return options;
     }
@@ -577,7 +578,9 @@ export default class PluridServer {
         }
 
         this.serverApplication.use(
-            express.static(clientPath),
+            express.static(clientPath, {
+                maxAge: this.options.staticCache,
+            }),
         );
     }
 
