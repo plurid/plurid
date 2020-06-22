@@ -1,8 +1,6 @@
 import themes from '@plurid/plurid-themes';
 
 import {
-    defaultConfiguration,
-
     PluridMetastate,
     PluridRoute,
 } from '@plurid/plurid-data';
@@ -52,8 +50,6 @@ export const serverComputeMetastate = (
 
         const {
             computedTree,
-            indexedPlanesReference,
-            planesPropertiesReference,
             appConfiguration,
         } = computeApplication(
             indexedPlanes,
@@ -62,18 +58,9 @@ export const serverComputeMetastate = (
             view,
         );
 
-        const planeSources: any = {};
-        indexedPlanesReference.forEach(plane => {
-            planeSources[plane.route] = plane.route;
-        });
-
         const state = {
             configuration: {
                 ...appConfiguration,
-            },
-            data: {
-                universes: {},
-                planeSources,
             },
             shortcuts: {
                 global: true,
