@@ -21,7 +21,7 @@ import {
 } from 'react-helmet-async';
 
 import {
-    PluridRouterPath,
+    PluridRoute,
     PluridPreserve,
     PluridPreserveOnServe,
     PluridPreserveAfterServe,
@@ -75,7 +75,7 @@ const {
 
 
 export default class PluridServer {
-    private paths: PluridRouterPath[];
+    private routes: PluridRoute[];
     private preserves: PluridPreserve[];
     private helmet: Helmet;
     private styles: string[];
@@ -97,7 +97,7 @@ export default class PluridServer {
         configuration: PluridServerConfiguration,
     ) {
         const {
-            paths,
+            routes,
             preserves,
             helmet,
             styles,
@@ -110,7 +110,7 @@ export default class PluridServer {
             template,
         } = configuration;
 
-        this.paths = paths;
+        this.routes = routes;
         this.preserves = preserves;
         this.helmet = helmet;
         this.styles = styles || [];
@@ -139,7 +139,7 @@ export default class PluridServer {
         pluridServer: PluridServer,
     ) {
         return {
-            paths: pluridServer.paths,
+            routes: pluridServer.routes,
         };
     }
 
@@ -217,11 +217,11 @@ export default class PluridServer {
     private computeApplication() {
         this.loadMiddleware();
 
-        const urlRoutes = this.paths.map(path => {
+        const urlRoutes = this.routes.map(route => {
             const {
                 value,
                 parameters,
-            } = path;
+            } = route;
 
             return {
                 value,
@@ -231,7 +231,7 @@ export default class PluridServer {
         const urlRouter = new PluridURLRouter(urlRoutes);
 
         const stills = new PluridStillsManager(this.options);
-        const router = new PluridRouter(this.paths);
+        const router = new PluridRouter(this.routes);
         const pluridsResponder = new PluridsResponder();
 
         this.serverApplication.get('*', async (request, response) => {
@@ -387,7 +387,7 @@ export default class PluridServer {
         // console.log('RENDER route', route);
         const pluridMetastate = serverComputeMetastate(
             route,
-            this.paths,
+            this.routes,
         );
 
         const {
@@ -492,7 +492,7 @@ export default class PluridServer {
                 shell: this.shell,
                 helmet: this.helmet,
                 matchedRoute,
-                paths: this.paths,
+                routes: this.routes,
                 pluridMetastate,
                 gateway,
                 gatewayEndpoint,

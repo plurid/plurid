@@ -38,7 +38,7 @@ export default class PluridContentGenerator {
         const {
             pluridMetastate,
             matchedRoute,
-            paths,
+            routes,
             exterior,
             shell,
             gateway,
@@ -59,7 +59,7 @@ export default class PluridContentGenerator {
             >
                 <PluridRouterStatic
                     path={matchedRoute.pathname}
-                    paths={paths}
+                    routes={routes}
                     exterior={exterior}
                     shell={shell}
                     gateway={gateway}

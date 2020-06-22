@@ -8,7 +8,7 @@ import {
 
 import {
     Indexed,
-    PluridRouterPath,
+    PluridRoute,
     PluridComponent,
 } from '@plurid/plurid-data';
 
@@ -84,7 +84,7 @@ export interface PluridContentGeneratorData {
     exterior: PluridComponent | undefined;
     shell: PluridComponent | undefined;
     matchedRoute: router.MatcherResponse;
-    paths: PluridRouterPath[];
+    routes: PluridRoute[];
     pluridMetastate: any;
     gateway: boolean;
     gatewayEndpoint: string;
