@@ -278,14 +278,14 @@ export const resolveRoute = (
         : window.location.host;
 
     const divisions = pluridLinkPathDivider(route);
-    // console.log('divisions', divisions);
 
-    const defaultPathname = divisions.path.value
-        || typeof window !== 'undefined'
+    const defaultPathname = typeof window !== 'undefined'
             ? window.location.pathname === '/'
                 ? 'p'
                 : window.location.pathname.slice(1)
-            : 'p';
+            : divisions.path.value
+                ? divisions.path.value
+                : 'p';
 
     const protocolDivision = divisions.protocol.value || windowProtocol;
     const hostDivision = divisions.host.value
