@@ -8,7 +8,7 @@ import Head from '../kernel/components/Head';
 
 
 
-const indexPath = {
+const indexRoute = {
     value: '/',
     exterior: {
         kind: 'react',
@@ -40,7 +40,7 @@ const indexPath = {
     ],
 }
 
-const notFoundPath = {
+const notFoundRoute = {
     value: '/not-found',
     exterior: {
         kind: 'react',
@@ -76,7 +76,7 @@ const notFoundPath = {
     ],
 };
 
-const staticPath = {
+const staticRoute = {
     value: '/static',
     exterior: {
         kind: 'react',
@@ -85,11 +85,11 @@ const staticPath = {
 };
 
 
-const paths = [
-    indexPath,
-    notFoundPath,
-    staticPath,
+const routes = [
+    indexRoute,
+    notFoundRoute,
+    staticRoute,
 ];
 
 
-export default paths;
+export default routes;

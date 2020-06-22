@@ -1,9 +1,9 @@
-import paths from './paths';
+import routes from './routes';
 import shell from './shell';
 
 
 
 export {
-    paths,
+    routes,
     shell,
 }
