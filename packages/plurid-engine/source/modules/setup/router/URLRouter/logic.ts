@@ -1,5 +1,5 @@
 import {
-    PluridRouterParameter,
+    PluridRouteParameter,
 } from '@plurid/plurid-data';
 
 import {
@@ -135,7 +135,7 @@ export const extractRouteElements = (
 
 export const checkValidPath = (
     parameters: Record<string, string>,
-    validationParameters: Record<string, PluridRouterParameter> | undefined,
+    validationParameters: Record<string, PluridRouteParameter> | undefined,
 ) => {
     if (validationParameters) {
         for (const [parameterKey, parameterData] of Object.entries(validationParameters)) {

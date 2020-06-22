@@ -1,5 +1,5 @@
 import {
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-data';
 
 import Router from '..';
@@ -8,7 +8,7 @@ import Router from '..';
 
 describe('Router', () => {
     it('simple route', () => {
-        const routes: PluridRouterPath[] = [
+        const routes: PluridRoute[] = [
             {
                 value: '/',
                 // path: '/',
@@ -32,7 +32,7 @@ describe('Router', () => {
     });
 
     it.only('simple route cached', () => {
-        const routes: PluridRouterPath[] = [
+        const routes: PluridRoute[] = [
             {
                 value: '/one',
                 // path: '/one',
@@ -53,7 +53,7 @@ describe('Router', () => {
     });
 
     it('simple route - parametric', () => {
-        const routes: PluridRouterPath[] = [
+        const routes: PluridRoute[] = [
             {
                 value: '/one/:element',
                 // path: '/one/:element',
@@ -72,7 +72,7 @@ describe('Router', () => {
     });
 
     it('simple route - query', () => {
-        const routes: PluridRouterPath[] = [
+        const routes: PluridRoute[] = [
             {
                 value: '/one',
                 // path: '/one',
@@ -96,7 +96,7 @@ describe('Router', () => {
     });
 
     it('simple route - fragment', () => {
-        const routes: PluridRouterPath[] = [
+        const routes: PluridRoute[] = [
             {
                 value: '/one',
                 // path: '/one',

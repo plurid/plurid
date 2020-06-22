@@ -13,7 +13,7 @@ import {
     TreePlane,
     LinkCoordinates,
     PathParameters,
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-data';
 
 import {
@@ -433,8 +433,8 @@ export const assignPagesFromView = (
 
     const tree: TreePlane[] = [];
 
-    // const routes: PluridRouterPath[] = pages.map(page => {
-    //     const route: PluridRouterPath = {
+    // const routes: PluridRoute[] = pages.map(page => {
+    //     const route: PluridRoute = {
     //         value: page.route,
     //         // value: page.value,
     //         // view: '',

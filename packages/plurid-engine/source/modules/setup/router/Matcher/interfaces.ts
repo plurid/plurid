@@ -1,6 +1,6 @@
 import {
-    PluridRouterPath,
-    RouterFragments,
+    PluridRoute,
+    PluridRouteFragments,
 } from '@plurid/plurid-data';
 
 
@@ -13,10 +13,10 @@ export interface MatcherOptions {
 
 
 export interface MatcherResponse {
-    path: PluridRouterPath;
+    path: PluridRoute;
     pathname: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
-    fragments: RouterFragments;
+    fragments: PluridRouteFragments;
     route: string;
 }

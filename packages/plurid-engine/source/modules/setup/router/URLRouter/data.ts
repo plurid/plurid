@@ -1,5 +1,5 @@
 import {
-    PluridRouterParameter,
+    PluridRouteParameter,
 } from '@plurid/plurid-data';
 
 
@@ -10,7 +10,7 @@ export const CATCH_ALL_ROUTE = '*';
 
 export interface URLRoute {
     value: string;
-    parameters?: Record<string, PluridRouterParameter>;
+    parameters?: Record<string, PluridRouteParameter>;
 }
 
 
@@ -25,7 +25,7 @@ export interface MatchedRoute {
 export interface ProcessedRoute {
     value: string;
     parametersValues: string[];
-    parameters?: Record<string, PluridRouterParameter>;
+    parameters?: Record<string, PluridRouteParameter>;
 }
 
 

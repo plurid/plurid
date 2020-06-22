@@ -1,5 +1,5 @@
 import {
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-data';
 
 import {
@@ -18,14 +18,14 @@ import {
 
 export default class Matcher<T> {
     private location: string;
-    private path: PluridRouterPath;
+    private path: PluridRoute;
     private options: MatcherOptions;
     private matchedData: MatcherResponse | undefined;
 
 
     constructor(
         location: string,
-        path: PluridRouterPath,
+        path: PluridRoute,
         options?: MatcherPartialOptions,
     ) {
         this.location = location;

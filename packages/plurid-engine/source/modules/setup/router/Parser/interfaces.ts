@@ -1,7 +1,7 @@
 import {
     Indexed,
-    PluridRouterPath,
-    RouterFragments,
+    PluridRoute,
+    PluridRouteFragments,
 } from '@plurid/plurid-data';
 
 
@@ -18,13 +18,13 @@ export interface ParserOptions {
 
 
 export interface ParserResponse {
-    path: PluridRouterPath;
+    path: PluridRoute;
     pathname: string;
     elements: string[];
     match: boolean;
     parameters: Indexed<string>;
     query: Indexed<string>;
-    fragments: RouterFragments;
+    fragments: PluridRouteFragments;
     route: string;
 }
 
