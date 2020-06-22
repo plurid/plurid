@@ -35,9 +35,13 @@ RUN apt-get update \
 # # Run everything after as non-privileged user.
 
 WORKDIR /app
+
 COPY . .
-ENV ENV_MODE=production
-RUN yarn install
+
+ENV ENV_MODE production
+ENV NODE_ENV production
+
+RUN yarn install --production false
 
 RUN yarn build.production.stills \
     && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
@@ -51,9 +55,17 @@ USER pptruser
 
 
 FROM mhart/alpine-node:12
+
 WORKDIR /app
+
+ENV ENV_MODE production
+ENV NODE_ENV production
+ENV PORT=8080
+
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/scripts ./scripts
+
 RUN yarn install --production
+
 CMD ["yarn", "start"]
