@@ -8,11 +8,11 @@ import {
     PluridPartialConfiguration,
     RecursivePartial,
 
-    PluridRouterPath,
-    PluridRouterSpace,
-    PluridRouterUniverse,
-    PluridRouterCluster,
-    PluridRouterPlane,
+    PluridRoute,
+    PluridRouteSpace,
+    PluridRouteUniverse,
+    PluridRouteCluster,
+    PluridRoutePlane,
 
     PluridComponent,
 
@@ -129,11 +129,11 @@ export {
     PluridView,
     PluridUniverse,
 
-    PluridRouterPath,
-    PluridRouterSpace,
-    PluridRouterUniverse,
-    PluridRouterCluster,
-    PluridRouterPlane,
+    PluridRoute,
+    PluridRouteSpace,
+    PluridRouteUniverse,
+    PluridRouteCluster,
+    PluridRoutePlane,
 
     PluridComponent,
 

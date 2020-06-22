@@ -14,8 +14,8 @@ import {
     PLURID_ROUTE_SEPARATOR,
 
     /** interfaces */
-    PluridRouterPath,
-    PluridRouterPlane,
+    PluridRoute,
+    PluridRoutePlane,
     PluridPlane,
     IndexedPluridPlane,
 } from '@plurid/plurid-data';
@@ -400,7 +400,7 @@ export const getComponentFromRoute = (
 
 export interface GetGatewayViewData {
     queryString: string;
-    paths: PluridRouterPath[];
+    routes: PluridRoute[];
     gatewayPath: string | undefined;
     gatewayExterior: any;
     protocol: string;
@@ -413,7 +413,7 @@ export const getGatewayView = (
 ) => {
     const {
         queryString,
-        paths,
+        routes,
         gatewayPath,
         gatewayExterior,
         protocol,
@@ -437,7 +437,7 @@ export const getGatewayView = (
     const planes: PluridPlane[] = [];
     const view: string[] = [];
 
-    for (const path of paths) {
+    for (const path of routes) {
         if (path.spaces) {
             const pathName = path.value === PLURID_ROUTE_DEFAULT_PATH_VALUE
                 ? PLURID_ROUTE_DEFAULT_PATH
@@ -670,13 +670,13 @@ export const getGatewayView = (
 
 
 export const computeIndexedPlanes = (
-    paths: PluridRouterPath[],
+    routes: PluridRoute[],
     protocol: string,
     host: string,
 ) => {
     const indexedPlanes = new Map<string, IndexedPluridPlane>();
 
-    for (const path of paths) {
+    for (const path of routes) {
         if (path.planes) {
             for (const plane of path.planes) {
                 const pathName = path.value === '/'
@@ -808,7 +808,7 @@ export const computeIndexedPlanes = (
 
 
 export const generateIndexedPlane = (
-    plane: PluridRouterPlane,
+    plane: PluridRoutePlane,
     protocol: string,
     host: string,
     path: string,
@@ -869,7 +869,7 @@ export interface GeneratedIndexedPlane {
 }
 
 export const generateIndexedPlanes = (
-    path: PluridRouterPath,
+    path: PluridRoute,
     protocol: string,
     host: string,
 ) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-    PluridRouterPath,
+    PluridRoute,
     PluridComponent,
 } from '@plurid/plurid-data';
 
@@ -13,7 +13,7 @@ export interface PluridRouterStaticOwnProperties {
     path: string;
     exterior?: PluridComponent;
     shell?: PluridComponent;
-    paths: PluridRouterPath[];
+    routes: PluridRoute[];
     protocol?: string;
     host?: string;
     gateway?: boolean;
@@ -28,7 +28,7 @@ const PluridRouterStatic = (
     /** properties */
     const {
         path,
-        paths,
+        routes,
         exterior,
         shell,
         protocol: protocolProperty,
@@ -47,7 +47,7 @@ const PluridRouterStatic = (
     /** render */
     return (
         <PluridRouterBrowser
-            paths={paths}
+            routes={routes}
             exterior={exterior}
             shell={shell}
             static={{

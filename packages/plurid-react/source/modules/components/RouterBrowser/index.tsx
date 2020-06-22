@@ -45,7 +45,7 @@ const PluridRouterBrowser = (
 ) => {
     /** properties */
     const {
-        paths,
+        routes,
         exterior,
         shell,
         view,
@@ -76,7 +76,7 @@ const PluridRouterBrowser = (
 
     const indexedPaths = useRef<any>({});
 
-    const urlRoutes = useRef(paths.map(path => {
+    const urlRoutes = useRef(routes.map(path => {
         indexedPaths.current[path.value] = {
             ...path,
         };
@@ -98,7 +98,7 @@ const PluridRouterBrowser = (
     ));
 
     const pluridRouter = useRef(new PluridRouter(
-        paths,
+        routes,
     ));
 
     const windowLocation = typeof window !== 'undefined'
@@ -115,7 +115,7 @@ const PluridRouterBrowser = (
         : matchedInitialRoute;
 
     const initialIndexedPlanes = computeIndexedPlanes(
-        paths,
+        routes,
         protocol,
         host,
     );
@@ -194,7 +194,7 @@ const PluridRouterBrowser = (
             gatewayRoute,
         } = getGatewayView({
             queryString: window.location.search,
-            paths,
+            routes,
             gatewayPath,
             gatewayExterior,
             protocol,
@@ -267,7 +267,7 @@ const PluridRouterBrowser = (
 
     /** handle planes indexation */
     useEffect(() => {
-        for (const path of paths) {
+        for (const path of routes) {
             if (!path.spaces) {
                 if (!path.planes) {
                     // handle static path
@@ -338,7 +338,7 @@ const PluridRouterBrowser = (
             }
         }
     }, [
-        paths,
+        routes,
     ]);
 
 

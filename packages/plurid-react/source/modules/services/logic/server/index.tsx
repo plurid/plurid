@@ -4,7 +4,7 @@ import {
     defaultConfiguration,
 
     PluridMetastate,
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-data';
 
 import {
@@ -25,7 +25,7 @@ import {
 
 export const serverComputeMetastate = (
     matchedRoute: router.MatcherResponse,
-    paths: PluridRouterPath[],
+    paths: PluridRoute[],
 ): PluridMetastate => {
     const protocol = 'http';
     const host = 'localhost:63000';
