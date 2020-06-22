@@ -44,7 +44,7 @@ import graphqlClient from '../shared/kernel/services/graphql/client';
 // [END StripeAPIKey]
 
 import {
-    paths,
+    routes,
     shell,
 } from '../shared';
 
@@ -72,7 +72,7 @@ const Client: React.FC<any> = () => {
                         <PluridProvider metastate={pluridMetastate}>
                             <PluridRouterBrowser
                                 shell={shell}
-                                paths={paths}
+                                routes={routes}
                             />
                         </PluridProvider>
                     {/* </StripeProvider> */}

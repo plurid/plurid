@@ -16,7 +16,7 @@ import apolloClient from '../shared/kernel/services/graphql/client';
 // [END stripe import]
 
 import {
-    paths,
+    routes,
     shell,
 } from '../shared';
 
@@ -110,7 +110,7 @@ const template = {
 // generate server
 const pluridServer = new PluridServer({
     helmet,
-    paths,
+    routes,
     preserves,
     shell,
     styles,
