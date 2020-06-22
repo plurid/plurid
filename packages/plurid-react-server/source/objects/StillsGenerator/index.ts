@@ -15,7 +15,7 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-data';
 
 import {
@@ -68,11 +68,11 @@ class StillsGenerator {
         /**
          * Read the application routes.
          */
-        const stillRoutes: PluridRouterPath[] = [];
+        const stillRoutes: PluridRoute[] = [];
 
-        for (const path of serverInformation.paths) {
-            if (!path.value.includes('/:')) {
-                stillRoutes.push(path);
+        for (const route of serverInformation.routes) {
+            if (!route.value.includes('/:')) {
+                stillRoutes.push(route);
             }
         }
 
@@ -91,7 +91,7 @@ class StillsGenerator {
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         const startTime = Date.now();
-        const estimatedDuration = 3 * serverInformation.paths.length;
+        const estimatedDuration = 3 * serverInformation.routes.length;
         console.info(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
 
         const stiller = new Stiller({

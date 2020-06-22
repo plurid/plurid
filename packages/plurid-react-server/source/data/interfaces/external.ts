@@ -5,7 +5,7 @@ import {
 } from 'react-helmet-async';
 
 import {
-    PluridRouterPath,
+    PluridRoute,
     PluridPreserve,
     PluridComponent,
 } from '@plurid/plurid-data';
@@ -94,7 +94,7 @@ export interface PluridServerServicesData {
 
 
 export interface PluridServerConfiguration {
-    paths: PluridRouterPath[];
+    routes: PluridRoute[];
     preserves: PluridPreserve[];
     helmet: Helmet;
     styles?: string[];
