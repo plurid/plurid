@@ -1,5 +1,5 @@
 import {
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-data';
 
 import {
@@ -24,14 +24,14 @@ import {
 export default class Parser<T> {
     /** properties */
     private location: string;
-    private path: PluridRouterPath;
+    private path: PluridRoute;
     private options: ParserOptions;
 
 
     /** constructor */
     constructor(
         location: string,
-        path: PluridRouterPath,
+        path: PluridRoute,
         options?: ParserPartialOptions,
     ) {
         this.location = location;

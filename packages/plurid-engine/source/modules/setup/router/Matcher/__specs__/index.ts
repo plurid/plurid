@@ -1,5 +1,5 @@
 import {
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-data';
 
 import Matcher from '..';
@@ -8,7 +8,7 @@ import Matcher from '..';
 
 describe('Matcher', () => {
     it('simple route match', () => {
-        const route: PluridRouterPath = {
+        const route: PluridRoute = {
             value: '/one',
             // path: '/one',
             // view: 'one',
@@ -20,7 +20,7 @@ describe('Matcher', () => {
     });
 
     it('simple route no match', () => {
-        const route: PluridRouterPath = {
+        const route: PluridRoute = {
             value: '/one',
             // path: '/one',
             // view: 'one',

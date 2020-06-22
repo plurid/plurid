@@ -1,6 +1,6 @@
 import {
     Indexed,
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-data';
 
 import {
@@ -93,13 +93,13 @@ const findPathByDivisions = (
 
 
 export default class Router {
-    private paths: PluridRouterPath[];
+    private paths: PluridRoute[];
     private options: RouterOptions;
     private cachedMatched: Indexed<MatcherResponse>;
 
 
     constructor(
-        paths: PluridRouterPath[],
+        paths: PluridRoute[],
         options?: RouterPartialOptions,
     ) {
         this.paths = paths;

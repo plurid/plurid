@@ -1,6 +1,6 @@
 import {
     resolveRoute,
-} from '..';
+} from '../';
 
 
 
