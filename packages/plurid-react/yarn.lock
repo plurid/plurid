@@ -757,10 +757,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.155.tgz#857202b2015a9271a875d58db0c036f877e1d7c4"
   integrity sha512-5UVSKghnR/dai0IV2qIv2fcigWhfyT/b/78UtCaIl2ruaq5Bb9cSczYCwAYPA2Op9MSicMd7DRIMVH2qp8Q7mg==
 
-"@plurid/plurid-engine@^0.1.92":
-  version "0.1.92"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.92.tgz#e413710f59bb7ca97f11f1b3d75819aff1fb562c"
-  integrity sha512-0ZiXJ2z/fRxs4aU3U5zlDFqgbrlAm5Wu5z+TbQv3eqkYkMMrbFJhhYbVS8aagPv12TgeWiiCQc/VkH1sXrSguA==
+"@plurid/plurid-engine@^0.1.93":
+  version "0.1.93"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.93.tgz#f4dc4db76c00506a265e4cd971b33c33de038241"
+  integrity sha512-sFZjfnYKz5/P9DkdKHiyDBWscMYR3oNFbaEXjqGjI/ddBE0khz4k6CNRmoEaZRcZQdvBaviSybiy2dKRgAwUiA==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
@@ -805,10 +805,10 @@
     magic-string "^0.25.2"
     resolve "^1.11.0"
 
-"@rollup/plugin-node-resolve@^8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-8.0.1.tgz#364b5938808ee6b5164dea5ef7291be3f7395199"
-  integrity sha512-KIeAmueDDaYMqMBnUngLVVZhURwxA12nq/YB6nGm5/JpVyOMwI1fCVU3oL/dAnnLBG7oiPXntO5LHOiMrfNXCA==
+"@rollup/plugin-node-resolve@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-8.1.0.tgz#1da5f3d0ccabc8f66f5e3c74462aad76cfd96c47"
+  integrity sha512-ovq7ZM3JJYUUmEjjO+H8tnUdmQmdQudJB7xruX8LFZ1W2q8jXdPUS6SsIYip8ByOApu4RR7729Am9WhCeCMiHA==
   dependencies:
     "@rollup/pluginutils" "^3.0.8"
     "@types/resolve" "0.0.8"
@@ -826,10 +826,10 @@
     "@rollup/pluginutils" "^3.0.8"
     magic-string "^0.25.5"
 
-"@rollup/plugin-typescript@^4.1.2":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-4.1.2.tgz#6f910430276ae3e53a47a12ad65820627e7b6ad9"
-  integrity sha512-+7UlGat/99e2JbmGNnIauxwEhYLwrL7adO/tSJxUN57xrrS3Ps+ZzYpLCDGPZJ57j+ZJTZLLN89KXW9JMEB+jg==
+"@rollup/plugin-typescript@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-5.0.0.tgz#4e7f9d8c32dfa144bf090c6a69105d32c76381af"
+  integrity sha512-ixgeJXTBArPyJnjP85/8SLYJrPdbOmpRqJ5ICmDERrHAKtiVejl4ybqpw/bEtwycOdBlRH3BaePMTavLt+afVA==
   dependencies:
     "@rollup/pluginutils" "^3.0.1"
     resolve "^1.14.1"
