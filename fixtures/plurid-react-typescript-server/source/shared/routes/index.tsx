@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-data';
 
 import IndexPagePlane from '../kernel/planes/Index/Page';
@@ -12,7 +12,7 @@ import Head from '../kernel/components/Head';
 
 
 
-const indexPath: PluridRouterPath = {
+const indexPath: PluridRoute = {
     value: '/',
     exterior: {
         kind: 'react',
@@ -45,7 +45,7 @@ const indexPath: PluridRouterPath = {
 }
 
 
-const staticPath: PluridRouterPath = {
+const staticPath: PluridRoute = {
     value: '/static',
     exterior: {
         kind: 'react',
@@ -54,7 +54,7 @@ const staticPath: PluridRouterPath = {
 };
 
 
-const planesPath: PluridRouterPath = {
+const planesPath: PluridRoute = {
     value: '/planes',
     exterior: {
         kind: 'react',
@@ -111,7 +111,7 @@ const planesPath: PluridRouterPath = {
 };
 
 
-const parametricPath: PluridRouterPath = {
+const parametricPath: PluridRoute = {
     value: '/parametric/:parameter',
     parameters: {
         parameter: {
@@ -126,7 +126,7 @@ const parametricPath: PluridRouterPath = {
 };
 
 
-const notFoundPath: PluridRouterPath = {
+const notFoundPath: PluridRoute = {
     value: '/not-found',
     exterior: {
         kind: 'react',
@@ -163,7 +163,7 @@ const notFoundPath: PluridRouterPath = {
 };
 
 
-const paths: PluridRouterPath[] = [
+const paths: PluridRoute[] = [
     indexPath,
     staticPath,
     planesPath,
