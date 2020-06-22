@@ -1,5 +1,5 @@
 import {
-    RouterFragments,
+    PluridRouteFragments,
 } from '../../external/router';
 
 
@@ -95,7 +95,7 @@ export interface RoutePlaneDivision {
     value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
-    fragments: RouterFragments;
+    fragments: PluridRouteFragments;
 }
 
 
