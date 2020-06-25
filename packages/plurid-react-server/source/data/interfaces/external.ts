@@ -72,6 +72,8 @@ export interface PluridServerOptions {
      * Default: 0.
      */
     staticCache: number | string;
+
+    stiller: PluridStillerOptions;
 }
 
 
@@ -167,4 +169,26 @@ export interface PluridServerTemplateConfiguration {
     windowSizerScript?: string;
 
     bodyScripts?: string;
+}
+
+
+export interface PluridStillerOptions {
+    /**
+     * Recommended: `'networkidle0'` | `'networkidle2'` | `'load'`.
+     *
+     * Default: `'networkidle0'`.
+     */
+    waitUntil: 'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2';
+
+    /**
+     * Maximum navigation time in milliseconds, pass 0 to disable timeout.
+     *
+     * Default: 30000.
+     */
+    timeout: number;
+
+    /**
+     * Routes to be ignored by the stilling process.
+     */
+    ignore: string[];
 }

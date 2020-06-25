@@ -42,6 +42,8 @@ import {
 import {
     environment,
 
+    defaultStillerOptions,
+
     NOT_FOUND_ROUTE,
     DEFAULT_SERVER_PORT,
     DEFAULT_SERVER_OPTIONS,
@@ -140,6 +142,7 @@ export default class PluridServer {
     ) {
         return {
             routes: pluridServer.routes,
+            options: pluridServer.options,
         };
     }
 
@@ -539,6 +542,7 @@ export default class PluridServer {
             stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
             gatewayEndpoint: partialOptions?.gatewayEndpoint || DEFAULT_SERVER_OPTIONS.GATEWAY,
             staticCache: partialOptions?.staticCache || 0,
+            stiller: partialOptions?.stiller || defaultStillerOptions,
         };
         return options;
     }

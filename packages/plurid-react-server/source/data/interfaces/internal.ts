@@ -19,6 +19,7 @@ import {
 import {
     PluridServerService,
     PluridServerServicesData,
+    PluridStillerOptions,
 } from './external';
 
 
@@ -47,7 +48,10 @@ export interface PluridRendererConfiguration {
 export interface StillerOptions {
     host: string;
     routes: string[];
+    configuration: StillerConfiguration;
 }
+
+export type StillerConfiguration = Pick<PluridStillerOptions, 'timeout' | 'waitUntil'>;
 
 
 export interface StilledSpace {
