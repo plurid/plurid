@@ -237,10 +237,11 @@ export default class PluridServer {
         const router = new PluridRouter(this.routes);
         const pluridsResponder = new PluridsResponder();
 
-        this.serverApplication.get('*', async (request, response) => {
+        this.serverApplication.get('*', async (request, response, next) => {
             const path = request.path;
 
             if (this.options.ignore.includes(path)) {
+                next();
                 return;
             }
 
