@@ -56,11 +56,6 @@ export interface PluridServerOptions {
     buildDirectory: string;
 
     /**
-     * Name of the directory where the stills are gathered.
-     */
-    stillsDirectory: string;
-
-    /**
      * Default: `/gateway`.
      */
     gatewayEndpoint: string;
@@ -72,6 +67,16 @@ export interface PluridServerOptions {
      * Default: 0.
      */
     staticCache: number | string;
+
+    /**
+     * Routes to be ignored when serving the application (`GET`).
+     */
+    ignore: string[];
+
+    /**
+     * Name of the directory where the stills are gathered.
+     */
+    stillsDirectory: string;
 
     stiller: PluridStillerOptions;
 }
