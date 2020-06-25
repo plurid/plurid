@@ -240,6 +240,10 @@ export default class PluridServer {
         this.serverApplication.get('*', async (request, response) => {
             const path = request.path;
 
+            if (this.options.ignore.includes(path)) {
+                return;
+            }
+
             const urlMatch = urlRouter.match(path);
 
             let preserveOnServe: undefined | PluridPreserveOnServe<any>;
@@ -539,9 +543,10 @@ export default class PluridServer {
             compression: partialOptions?.compression ?? DEFAULT_SERVER_OPTIONS.COMPRESSION,
             open: partialOptions?.open ?? DEFAULT_SERVER_OPTIONS.OPEN,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
-            stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
             gatewayEndpoint: partialOptions?.gatewayEndpoint || DEFAULT_SERVER_OPTIONS.GATEWAY,
             staticCache: partialOptions?.staticCache || 0,
+            ignore: partialOptions?.ignore || [],
+            stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
             stiller: partialOptions?.stiller || defaultStillerOptions,
         };
         return options;
