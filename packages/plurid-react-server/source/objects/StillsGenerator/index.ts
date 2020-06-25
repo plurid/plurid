@@ -54,6 +54,8 @@ class StillsGenerator {
         const pluridServer: PluridServer = require(serverPath);
         const serverInformation = PluridServer.analysis(pluridServer);
 
+        const stillerOptions = serverInformation.options.stiller;
+
         const serverPort = await detectPort(9900) + '';
 
         const child = fork(serverPath, [], {
@@ -71,9 +73,15 @@ class StillsGenerator {
         const stillRoutes: PluridRoute[] = [];
 
         for (const route of serverInformation.routes) {
-            if (!route.value.includes('/:')) {
-                stillRoutes.push(route);
+            if (route.value.includes('/:')) {
+                continue;
             }
+
+            if (stillerOptions.ignore.includes(route.value)) {
+                continue;
+            }
+
+            stillRoutes.push(route);
         }
 
         const stillRoutesPaths = stillRoutes.map(stillRoute => stillRoute.value);
@@ -99,6 +107,10 @@ class StillsGenerator {
             routes: [
                 ...stillRoutesPaths,
             ],
+            configuration: {
+                waitUntil: stillerOptions.waitUntil,
+                timeout: stillerOptions.timeout,
+            },
         });
 
         const sequence = stiller.still();

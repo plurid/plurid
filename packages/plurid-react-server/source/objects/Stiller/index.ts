@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer';
 
 import {
     StillerOptions,
+    StillerConfiguration,
 } from '../../data/interfaces';
 
 
@@ -29,6 +30,7 @@ const isCurrentUserRoot = () => {
 const render = async (
     host: string,
     route: string,
+    configuration: StillerConfiguration,
 ) => {
     const start = Date.now();
 
@@ -50,7 +52,8 @@ const render = async (
         await page.goto(
             url,
             {
-                waitUntil: 'networkidle0',
+                waitUntil: configuration.waitUntil,
+                timeout: configuration.timeout,
             },
         );
     } catch (err) {
@@ -85,6 +88,7 @@ const render = async (
 class Stiller {
     private host: string;
     private routes: string[];
+    private configuration: StillerConfiguration;
 
     constructor(
         options: StillerOptions,
@@ -92,15 +96,21 @@ class Stiller {
         const {
             host,
             routes,
+            configuration,
         } = options;
 
         this.host = host;
         this.routes = routes;
+        this.configuration = configuration;
     }
 
     async * still() {
         for (const route of this.routes) {
-            yield await render(this.host, route);
+            yield await render(
+                this.host,
+                route,
+                this.configuration,
+            );
         }
     }
 }
