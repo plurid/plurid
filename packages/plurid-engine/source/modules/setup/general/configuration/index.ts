@@ -1,6 +1,9 @@
 import {
     PluridPartialConfiguration,
+    PluridConfigurationTheme,
     PluridConfiguration,
+    RecursivePartial,
+
     defaultConfiguration,
 } from '@plurid/plurid-data';
 
@@ -22,6 +25,38 @@ const specifiedOrDefault = <T>(
     }
 
     return objects.getNested(defaultConfiguration, path);
+}
+
+const resolveTheme = (
+    theme: string | number | symbol | RecursivePartial<PluridConfigurationTheme> | undefined,
+    type: 'general' | 'interaction',
+) => {
+    if (!theme) {
+        return 'plurid';
+    }
+
+    if (typeof theme === 'string') {
+        return theme;
+    }
+
+    if (typeof theme !== 'object') {
+        return 'plurid';
+    }
+
+    const {
+        general,
+        interaction,
+    } = theme;
+
+    if (type === 'general' && general) {
+        return general;
+    }
+
+    if (type === 'interaction' && interaction) {
+        return interaction;
+    }
+
+    return 'plurid';
 }
 
 
@@ -68,20 +103,8 @@ export const merge = (
                 configuration,
             ),
             theme: {
-                general: typeof configuration.global?.theme === 'string'
-                    ? configuration.global.theme
-                    : typeof configuration.global?.theme === 'object' && configuration.global.theme.general
-                        ? configuration.global.theme.general
-                        : typeof defaultConfiguration.global.theme === 'object'
-                            ? defaultConfiguration.global.theme.general
-                            : 'plurid',
-                interaction: typeof configuration.global?.theme === 'string'
-                    ? configuration.global?.theme
-                    : typeof configuration.global?.theme === 'object' && configuration.global.theme.interaction
-                        ? configuration.global.theme.interaction
-                        : typeof defaultConfiguration.global.theme === 'object'
-                            ? defaultConfiguration.global.theme.interaction
-                            : 'plurid',
+                general: resolveTheme(configuration.global?.theme, 'general'),
+                interaction: resolveTheme(configuration.global?.theme, 'interaction'),
             },
         },
         elements: {
