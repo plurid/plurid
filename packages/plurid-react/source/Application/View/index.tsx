@@ -248,31 +248,26 @@ const PluridView: React.FC<ViewProperties> = (
         //     dispatchSetConfigurationMicro();
         // }
 
-        // if (configuration.theme) {
-        //     if (typeof configuration.theme === 'object') {
-        //         const {
-        //             general,
-        //             interaction,
-        //         } = configuration.theme;
+        if (configuration.global.theme) {
+            if (typeof configuration.global.theme === 'object') {
+                const {
+                    general,
+                    interaction,
+                } = configuration.global.theme;
 
-        //         if (general) {
-        //             if (Object.keys(THEME_NAMES).includes(general)) {
-        //                 dispatchSetGeneralTheme((themes as any)[general]);
-        //             }
-        //         }
+                if (typeof general === 'string') {
+                    if (Object.keys(THEME_NAMES).includes(general)) {
+                        dispatchSetGeneralTheme((themes as any)[general]);
+                    }
+                }
 
-        //         if (interaction) {
-        //             if (Object.keys(THEME_NAMES).includes(interaction)) {
-        //                 dispatchSetInteractionTheme((themes as any)[interaction]);
-        //             }
-        //         }
-        //     } else {
-        //         if (Object.keys(THEME_NAMES).includes(configuration.theme)) {
-        //             dispatchSetGeneralTheme((themes as any)[configuration.theme]);
-        //             dispatchSetInteractionTheme((themes as any)[configuration.theme]);
-        //         }
-        //     }
-        // }
+                if (typeof interaction === 'string') {
+                    if (Object.keys(THEME_NAMES).includes(interaction)) {
+                        dispatchSetInteractionTheme((themes as any)[interaction]);
+                    }
+                }
+            }
+        }
 
         // if (configuration.space) {
         //     const spaceLocation = space.computeSpaceLocation(configuration);
