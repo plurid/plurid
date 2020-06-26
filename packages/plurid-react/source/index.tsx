@@ -15,6 +15,7 @@ import {
     PluridRoutePlane,
 
     PluridComponent,
+    PluridComponentProperty,
 
     PluridPreserve,
     PluridPreserveTransmission,
@@ -136,6 +137,7 @@ export {
     PluridRoutePlane,
 
     PluridComponent,
+    PluridComponentProperty,
 
     PluridPreserve,
     PluridPreserveTransmission,
