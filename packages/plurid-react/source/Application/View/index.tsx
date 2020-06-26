@@ -146,7 +146,6 @@ const PluridView: React.FC<ViewProperties> = (
     properties,
 ) => {
     /** properties */
-    // console.log(properties);
     const {
         /** own */
         application,
@@ -187,12 +186,14 @@ const PluridView: React.FC<ViewProperties> = (
     } = application;
 
 
+
     /** references */
     const planesRegistry = useRef<Map<string, RegisteredPluridPlane>>(
         // indexedPlanes || new Map(),
         new Map(),
     );
     const viewElement = useRef<HTMLDivElement>(null);
+
 
 
     /** callbacks */
@@ -236,6 +237,7 @@ const PluridView: React.FC<ViewProperties> = (
         stateConfiguration.space.transformMode,
         stateConfiguration.space.transformLocks,
     ]);
+
 
 
     /** handlers */
@@ -310,6 +312,8 @@ const PluridView: React.FC<ViewProperties> = (
         view: string[] | PluridView[] | undefined,
         indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
     ) => {
+        console.log('view', view);
+
         const appConfiguration = generalEngine.configuration.merge(configuration);
         handleConfiguration(appConfiguration);
 
@@ -740,9 +744,6 @@ const PluridView: React.FC<ViewProperties> = (
 
 
 
-    // console.log('RENDER');
-    // console.log('planesRegistry', planesRegistry);
-
     /** context */
     const pluridContext: PluridContext = {
         planesRegistry: planesRegistry.current,
@@ -752,14 +753,9 @@ const PluridView: React.FC<ViewProperties> = (
         // planeContextValue: pluridApplication.planeContextValue,
     };
 
-    // console.log('pluridContext', pluridContext);
+
 
     /** render */
-    // return (
-    //     <div>
-
-    //     </div>
-    // );
     const viewContainer = handleView(planes);
 
     return (

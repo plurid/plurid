@@ -24,7 +24,6 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
 
     public context!: React.ContextType<typeof PluridProviderContext>
     private store: any;
-    private properties: React.PropsWithChildren<PluridApplicationProperties>;
 
     constructor(
         properties: PluridApplicationProperties,
@@ -33,11 +32,10 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         super(properties, context);
 
         this.context = context;
-        this.properties = properties;
 
         const {
             id,
-        } = this.properties;
+        } = properties;
 
         const defaultStore = context && id && context.states[id]
             ? context.states[id]
@@ -54,7 +52,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             >
                 <PluridView
                     application={{
-                        ...this.properties,
+                        ...this.props,
                     }}
                 />
             </ReduxProvider>
