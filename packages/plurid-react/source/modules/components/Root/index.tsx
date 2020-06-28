@@ -384,6 +384,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     };
 
 
+    // console.log('render root');
+
     return (
         <StyledPluridRoot
             data-plurid-entity={PLURID_ENTITY_ROOT}
