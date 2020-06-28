@@ -130,6 +130,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     }
 
 
+    // console.log('render plane');
+
     /** render */
     return (
         <StyledPluridPlane
@@ -171,7 +173,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                     )}
 
                     <PlaneContent
-                        updatePlaneSize={updatePlaneSize}
+                        // updatePlaneSize={updatePlaneSize}
                     >
                         {children}
                     </PlaneContent>

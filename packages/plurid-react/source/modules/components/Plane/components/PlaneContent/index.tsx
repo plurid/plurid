@@ -1,6 +1,6 @@
 import React, {
     useRef,
-    useEffect,
+    // useEffect,
 } from 'react';
 
 import {
@@ -15,7 +15,8 @@ import {
 
 
 export interface PluridPlaneContentOwnProperties {
-    updatePlaneSize: any;
+    // updatePlaneSize: any;
+    children: any;
 }
 
 const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
@@ -23,7 +24,7 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
 ) => {
     /** properties */
     const {
-        updatePlaneSize,
+        // updatePlaneSize,
 
         children,
     } = properties;
@@ -55,6 +56,8 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
     //     planeContentElement.current,
     // ]);
 
+
+    // console.log('render content');
 
     /** render */
     return (
