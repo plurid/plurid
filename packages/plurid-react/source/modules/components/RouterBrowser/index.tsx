@@ -368,11 +368,11 @@ const PluridRouterBrowser = (
     return (
         <>
             <PluridRouterExterior
-                matchedRoute={matchedRoute}
+                matchedRoute={actualMatchedInitialRoute || matchedRoute}
             />
 
             <PluridRouterShell
-                matchedRoute={matchedRoute}
+                matchedRoute={actualMatchedInitialRoute || matchedRoute}
             >
                 {!Component
                     ? (
