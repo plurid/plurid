@@ -637,6 +637,7 @@ const generateReactServerApplication = async (
 
     const requiredDevelopmentDependencies = [
         '@rollup/plugin-commonjs',
+        '@rollup/plugin-json',
         '@rollup/plugin-node-resolve',
         '@rollup/plugin-url',
         'compression-webpack-plugin',
