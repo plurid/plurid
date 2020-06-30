@@ -61,7 +61,11 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
 
 
     /** context */
-    const context: PluridContext = useContext(Context);
+    const context = useContext(Context);
+
+    if (!context) {
+        return (<></>);
+    }
 
     const {
         planesRegistry,
