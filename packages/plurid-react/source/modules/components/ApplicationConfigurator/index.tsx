@@ -1,7 +1,6 @@
 import React, {
     useRef,
     useContext,
-    useState,
     useEffect,
 } from 'react';
 
@@ -9,12 +8,17 @@ import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import PluridPubSub from '@plurid/plurid-pubsub';
+
 import {
     PLURID_ENTITY_APPLICATION_CONFIGURATOR,
+    PluridConfiguration,
     PluridPartialConfiguration,
 } from '@plurid/plurid-data';
 
-import PluridPubSub from '@plurid/plurid-pubsub';
+import {
+    general as generalEngine,
+} from '@plurid/plurid-engine';
 
 import {
     StyledPluridApplicationConfigurator,
@@ -25,7 +29,7 @@ import Context from '../../services/logic/context';
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
 // import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+import actions from '../../services/state/actions';
 
 
 
@@ -38,12 +42,12 @@ export interface PluridApplicationConfiguratorStateProperties {
 }
 
 export interface PluridApplicationConfiguratorDispatchProperties {
+    dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
 }
 
 export type PluridApplicationConfiguratorProperties = PluridApplicationConfiguratorOwnProperties
     & PluridApplicationConfiguratorStateProperties
     & PluridApplicationConfiguratorDispatchProperties;
-
 
 /**
  * Goes up the tree to find the first plurid application
@@ -75,6 +79,7 @@ const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridAppl
         /** state */
 
         /** dispatch */
+        dispatchSetConfiguration,
     } = properties;
 
 
@@ -82,18 +87,20 @@ const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridAppl
     const configuratorElement: React.RefObject<HTMLDivElement> = useRef(null);
 
 
-    /** state */
-    const [applicationID, setApplicationID] = useState('');
-
-
     /** effects */
     /**
-     * Get applicationID
+     *
      */
-    // useEffect(() => {
+    useEffect(() => {
+        const computedConfiguration = generalEngine.configuration.merge(configuration);
+        dispatchSetConfiguration(computedConfiguration);
+    }, [
+        configuration,
+    ]);
 
-    // }, []);
-
+    /**
+     * Handle Publish/Subscribe.
+     */
     useEffect(() => {
         if (pubsub) {
             registerPubSub(pubsub);
@@ -123,7 +130,11 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridApplicationConfiguratorDispatchProperties => ({
-
+    dispatchSetConfiguration: (
+        configuration: PluridConfiguration,
+    ) => dispatch(
+        actions.configuration.setConfiguration(configuration)
+    ),
 });
 
 
