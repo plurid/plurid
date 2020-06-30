@@ -818,7 +818,7 @@ const PluridView: React.FC<ViewProperties> = (
         // planeContextValue: pluridApplication.planeContextValue,
     };
 
-    console.log('pluridPubSub', pluridPubSub);
+    // console.log('pluridPubSub', pluridPubSub);
 
 
 
