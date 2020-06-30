@@ -28,7 +28,7 @@ import Context from '../../services/logic/context';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
-// import selectors from '../../services/state/selectors';
+import selectors from '../../services/state/selectors';
 import actions from '../../services/state/actions';
 
 
@@ -39,6 +39,7 @@ export interface PluridApplicationConfiguratorOwnProperties {
 }
 
 export interface PluridApplicationConfiguratorStateProperties {
+    stateConfiguration: PluridConfiguration;
 }
 
 export interface PluridApplicationConfiguratorDispatchProperties {
@@ -77,6 +78,7 @@ const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridAppl
         pubsub,
 
         /** state */
+        stateConfiguration,
 
         /** dispatch */
         dispatchSetConfiguration,
@@ -92,7 +94,10 @@ const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridAppl
      * Handle configuration.
      */
     useEffect(() => {
-        const computedConfiguration = generalEngine.configuration.merge(configuration);
+        const computedConfiguration = generalEngine.configuration.merge(
+            configuration,
+            stateConfiguration,
+        );
         dispatchSetConfiguration(computedConfiguration);
     }, [
         configuration,
@@ -123,7 +128,7 @@ const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridAppl
 const mapStateToProps = (
     state: AppState,
 ): PluridApplicationConfiguratorStateProperties => ({
-
+    stateConfiguration: selectors.configuration.getConfiguration(state),
 });
 
 
