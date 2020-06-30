@@ -8,6 +8,8 @@ import {
 
 const getLoading = (state: AppState): boolean => state.space.loading;
 const getAnimatedTransform = (state: AppState): boolean => state.space.animatedTransform;
+const getTransformTime = (state: AppState): number => state.space.transformTime;
+
 const getRotationX = (state: AppState): number => state.space.rotationX;
 const getRotationY = (state: AppState): number => state.space.rotationY;
 const getTranslationX = (state: AppState): number => state.space.translationX;
@@ -35,6 +37,7 @@ export default {
     getLoading,
 
     getAnimatedTransform,
+    getTransformTime,
 
     getRotationX,
     getRotationY,

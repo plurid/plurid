@@ -50,6 +50,7 @@ export interface PluridRootsStateProperties {
     stateConfiguration: PluridConfiguration;
     interactionTheme: Theme;
     animatedTransform: boolean;
+    transformTime: number;
     spaceScale: number;
     spaceRotationX: number;
     spaceRotationY: number;
@@ -82,6 +83,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         stateConfiguration,
         interactionTheme,
         animatedTransform,
+        transformTime,
         spaceScale,
         spaceRotationX,
         spaceRotationY,
@@ -145,7 +147,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                     rotateY(${spaceRotationY}deg)
                 `),
                 transition: animatedTransform
-                    ? 'transform 450ms ease-in-out'
+                    ? `transform ${transformTime}ms ease-in-out`
                     // : firstPerson
                     //     ? 'transform 100ms linear'
                         : 'initial',
@@ -227,6 +229,7 @@ const mapStateToProps = (
     stateConfiguration: selectors.configuration.getConfiguration(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
     animatedTransform: selectors.space.getAnimatedTransform(state),
+    transformTime: selectors.space.getTransformTime(state),
     spaceScale: selectors.space.getScale(state),
     spaceRotationX: selectors.space.getRotationX(state),
     spaceRotationY: selectors.space.getRotationY(state),
