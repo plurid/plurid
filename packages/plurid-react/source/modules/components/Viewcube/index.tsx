@@ -44,6 +44,7 @@ export interface PluridViewcubeOwnProperties {
 export interface PluridViewcubeStateProperties {
     stateConfiguration: PluridConfiguration;
     stateInteractionTheme: Theme;
+    stateTransformTime: number;
 }
 
 export interface PluridViewcubeDispatchProperties {
@@ -61,10 +62,12 @@ export type PluridViewcubeProperties = PluridViewcubeOwnProperties
 const PluridViewcube: React.FC<PluridViewcubeProperties> = (
     properties,
 ) => {
+    /** properties */
     const {
         /** state */
         stateConfiguration,
         stateInteractionTheme,
+        stateTransformTime,
 
         /** dispatch */
         dispatchRotateXWith,
@@ -87,8 +90,12 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
         conceal,
     } = viewcube;
 
+
+    /** state */
     const [mouseOver, setMouseOver] = useState(false);
 
+
+    /** handlers */
     const animatedRotate = (
         type: string,
         value: number,
@@ -104,7 +111,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
         }
         setTimeout(() => {
             dispatchSetAnimatedTransform(false);
-        }, 450);
+        }, stateTransformTime);
     }
 
     const animatedReset = (event: React.MouseEvent) => {
@@ -118,9 +125,11 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
         dispatchSpaceResetTransform();
         setTimeout(() => {
             dispatchSetAnimatedTransform(false);
-        }, 450);
+        }, stateTransformTime);
     }
 
+
+    /** render */
     return (
         <StyledPluridViewcube
             onMouseEnter={() => setMouseOver(true)}
@@ -209,6 +218,7 @@ const mapStateToProperties = (
 ): PluridViewcubeStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
+    stateTransformTime: selectors.space.getTransformTime(state),
 });
 
 
