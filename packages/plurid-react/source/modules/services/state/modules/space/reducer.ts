@@ -15,6 +15,8 @@ const reducer = (
             return resolvers.setSpaceLoading(state, action);
         case Types.SET_ANIMATED_TRANSFORM:
             return resolvers.setAnimatedTransform(state, action);
+        case Types.SET_TRANSFORM_TIME:
+            return resolvers.setTransformTime(state, action);
         case Types.SET_SPACE_LOCATION:
             return resolvers.setSpaceLocation(state, action);
 

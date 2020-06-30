@@ -47,6 +47,17 @@ export const setAnimatedTransform = (
 }
 
 
+export const setTransformTime = (
+    state: Types.State,
+    action: Types.SetTransformTimeAction,
+): Types.State => {
+    return {
+        ...state,
+        transformTime: action.payload,
+    };
+}
+
+
 export const setSpaceLocation = (
     state: Types.State,
     action: Types.SetSpaceLocationAction,

@@ -28,6 +28,16 @@ export const setAnimatedTransform = (
 }
 
 
+export const setTransformTime = (
+    payload: number,
+): Types.SetTransformTimeAction => {
+    return {
+        type: Types.SET_TRANSFORM_TIME,
+        payload,
+    };
+}
+
+
 export const setSpaceLocation = (
     payload: SpaceLocation,
 ): Types.SetSpaceLocationAction => {
