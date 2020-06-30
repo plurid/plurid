@@ -3,6 +3,7 @@ import React from 'react';
 import {
     PluridApplication,
     PluridPlane,
+    PluridPartialConfiguration,
 } from '@plurid/plurid-react';
 
 import {
@@ -38,10 +39,24 @@ const App = () => {
         '/plane',
     ];
 
+    const configuration: PluridPartialConfiguration = {
+        elements: {
+            plane: {
+                width: 0.5,
+            },
+        },
+        space: {
+            center: true,
+        },
+    };
+
+
+    /** render */
     return (
         <PluridApplication
             planes={pluridPlanes}
             view={pluridView}
+            configuration={configuration}
         />
     );
 }
