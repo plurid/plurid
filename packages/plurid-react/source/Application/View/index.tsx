@@ -419,7 +419,12 @@ const PluridView: React.FC<ViewProperties> = (
         pubsub.subscribe(TOPICS.SPACE_TRANSFORM, (data: any) => {
             const {
                 value,
+                internal,
             } = data;
+
+            if (internal) {
+                return;
+            }
 
             dispatchSetSpaceLocation(value);
         });
@@ -456,7 +461,13 @@ const PluridView: React.FC<ViewProperties> = (
     const handlePubSubPublish = (
         pubsub: PluridPubSub,
     ) => {
-        // pubsub.publish(TOPICS.SPACE_TRANSFORM, stateTransform);
+        const internalTransform = {
+            value: {
+                ...stateTransform,
+            },
+            internal: true,
+        };
+        pubsub.publish(TOPICS.SPACE_TRANSFORM, internalTransform);
 
         // pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
     }
