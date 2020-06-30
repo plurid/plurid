@@ -244,45 +244,56 @@ const PluridView: React.FC<ViewProperties> = (
     const handleConfiguration = (
         configuration: PluridAppConfiguration,
     ) => {
-        // if (configuration.micro) {
-        //     dispatchSetConfigurationMicro();
-        // }
+        handleGlobalMicro(configuration);
+        handleGlobalTheme(configuration);
 
-        if (configuration.global.theme) {
-            if (typeof configuration.global.theme === 'object') {
-                const {
-                    general,
-                    interaction,
-                } = configuration.global.theme;
+        handleSpaceCenter(configuration);
+    }
 
-                if (typeof general === 'string') {
-                    if (Object.keys(THEME_NAMES).includes(general)) {
-                        dispatchSetGeneralTheme((themes as any)[general]);
-                    }
+    const handleGlobalMicro = (
+        configuration: PluridAppConfiguration,
+    ) => {
+        if (configuration.global.micro) {
+            // dispatchSetConfigurationMicro();
+        }
+    }
+
+    const handleGlobalTheme = (
+        configuration: PluridAppConfiguration,
+    ) => {
+        if (typeof configuration.global.theme === 'object') {
+            const {
+                general,
+                interaction,
+            } = configuration.global.theme;
+
+            if (typeof general === 'string') {
+                if (Object.keys(THEME_NAMES).includes(general)) {
+                    dispatchSetGeneralTheme((themes as any)[general]);
                 }
+            }
 
-                if (typeof interaction === 'string') {
-                    if (Object.keys(THEME_NAMES).includes(interaction)) {
-                        dispatchSetInteractionTheme((themes as any)[interaction]);
-                    }
+            if (typeof interaction === 'string') {
+                if (Object.keys(THEME_NAMES).includes(interaction)) {
+                    dispatchSetInteractionTheme((themes as any)[interaction]);
                 }
             }
         }
+    }
 
-        // if (configuration.space) {
-        //     const spaceLocation = space.computeSpaceLocation(configuration);
-        //     dispatchSetSpaceLocation(spaceLocation);
-        // }
+    const handleSpaceCenter = (
+        configuration: PluridAppConfiguration,
+    ) => {
+        if (configuration.space.center && !configuration.space.camera) {
+            // const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
+            const x = window.innerWidth / 2 - (window.innerWidth / 2 * configuration.elements.plane.width);
+            dispatchTranslateXWith(x);
 
-        // if (configuration.space.center && !configuration.space.camera) {
-        //     const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
-        //     translateXWith(x);
-
-        //     // to get plane height;
-        //     const planeHeight = 300;
-        //     const y = window.innerHeight / 2 - planeHeight/2;
-        //     translateYWith(y);
-        // }
+            // to get plane height;
+            const planeHeight = 300;
+            const y = window.innerHeight / 2 - planeHeight/2;
+            dispatchTranslateYWith(y);
+        }
     }
 
     const computeTree = (
