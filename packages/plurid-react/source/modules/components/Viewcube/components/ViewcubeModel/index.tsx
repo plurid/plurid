@@ -39,6 +39,8 @@ export interface PluridViewcubeModelStateProperties {
     stateLanguage: InternationalizationLanguageType;
     spaceRotationX: number;
     spaceRotationY: number;
+    stateAnimatedTransform: boolean;
+    stateTransformTime: number;
 }
 
 export interface PluridViewcubeModelDispatchProperties {
@@ -51,6 +53,7 @@ export type PluridViewcubeModelProperties = PluridViewcubeModelOwnProperties
 const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
     properties,
 ) => {
+    /** properties */
     const {
         /** own */
         mouseOver,
@@ -59,13 +62,19 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
         stateLanguage,
         spaceRotationX,
         spaceRotationY,
+        stateAnimatedTransform,
+        stateTransformTime,
 
         /** dispatch */
     } = properties;
 
+
+    /** state */
     const [hoveredZone, setHoveredZone] = useState('');
     const [activeZone, setActiveZone] = useState('');
 
+
+    /** handler */
     const handleMouseLeave = () => {
         setHoveredZone('');
     }
@@ -79,6 +88,8 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
         spaceRotationY,
     ]);
 
+
+    /** render */
     return (
         <StyledPluridViewcubeModel>
             <StyledPluridViewcubeModelContainer>
@@ -91,7 +102,9 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
                             rotateX(${spaceRotationX}deg)
                             rotateY(${spaceRotationY}deg)
                         `,
-                        transition: mouseOver ? 'transform 450ms ease-in-out' : '',
+                        transition: mouseOver || stateAnimatedTransform
+                            ? `transform ${stateTransformTime}ms ease-in-out`
+                            : '',
                     }}
                     onMouseLeave={() => handleMouseLeave()}
                 >
@@ -162,6 +175,8 @@ const mapStateToProperties = (
     stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     spaceRotationX: selectors.space.getRotationX(state),
     spaceRotationY: selectors.space.getRotationY(state),
+    stateAnimatedTransform: selectors.space.getAnimatedTransform(state),
+    stateTransformTime: selectors.space.getTransformTime(state),
 });
 
 

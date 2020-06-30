@@ -782,7 +782,6 @@ const PluridView: React.FC<ViewProperties> = (
 
     /** PubSub Subscribe */
     useEffect(() => {
-        console.log('AAAA subscribe', pluridPubSub);
         for (const pubsub of pluridPubSub) {
             if (pubsub) {
                 handlePubSubSubscribe(pubsub as any);
@@ -794,7 +793,6 @@ const PluridView: React.FC<ViewProperties> = (
 
     /** PubSub Publish */
     useEffect(() => {
-        console.log('BBB publish', pluridPubSub);
         for (const pubsub of pluridPubSub) {
             if (pubsub) {
                 handlePubSubPublish(pubsub);
@@ -817,8 +815,6 @@ const PluridView: React.FC<ViewProperties> = (
         // planeContext: pluridApplication.planeContext,
         // planeContextValue: pluridApplication.planeContextValue,
     };
-
-    // console.log('pluridPubSub', pluridPubSub);
 
 
 
