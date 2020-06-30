@@ -2,7 +2,7 @@ import React from 'react';
 
 import {
     PluridRouterBrowser,
-    PluridRouterPath,
+    PluridRoute,
 } from '@plurid/plurid-react';
 
 import Plane1 from './planes/Plane1';
@@ -10,7 +10,7 @@ import Plane1 from './planes/Plane1';
 
 
 const App = () => {
-    const paths: PluridRouterPath[] = [
+    const routes: PluridRoute[] = [
         {
             value: '/',
             planes: [
@@ -55,7 +55,7 @@ const App = () => {
 
     return (
         <PluridRouterBrowser
-            paths={paths}
+            routes={routes}
         />
     );
 }

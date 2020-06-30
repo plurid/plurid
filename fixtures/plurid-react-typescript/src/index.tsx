@@ -8,7 +8,8 @@ import './index.css';
 // import App from './App-simple-router-parametric';
 // import App from './App-simple';
 // import App from './App-simple-link';
-import App from './App-parametric-link';
+// import App from './App-parametric-link';
+import App from './App-transform';
 
 import * as serviceWorker from './serviceWorker';
 
