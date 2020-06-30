@@ -21,6 +21,13 @@ export interface SetAnimatedTransformAction {
 }
 
 
+export const SET_TRANSFORM_TIME = 'SET_TRANSFORM_TIME';
+export interface SetTransformTimeAction {
+    type: typeof SET_TRANSFORM_TIME;
+    payload: number;
+}
+
+
 export const SET_SPACE_LOCATION = 'SET_SPACE_LOCATION';
 export interface SetSpaceLocationAction {
     type: typeof SET_SPACE_LOCATION;
@@ -299,6 +306,7 @@ export interface Coordinates {
 export interface State {
     loading: boolean;
     animatedTransform: boolean;
+    transformTime: number;
     scale: number;
     rotationX: number;
     rotationY: number;
@@ -318,6 +326,7 @@ export interface State {
 
 export type Actions = SetSpaceLoadingAction
     | SetAnimatedTransformAction
+    | SetTransformTimeAction
     | SetSpaceLocationAction
     | ViewCameraMoveForwardAction
     | ViewCameraMoveBackwardAction

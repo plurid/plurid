@@ -5,6 +5,7 @@ import * as Types from './types';
 const initialState: Types.State = {
     loading: true,
     animatedTransform: false,
+    transformTime: 450,
     scale: 1,
     rotationX: 0,
     rotationY: 0,
