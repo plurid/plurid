@@ -1,6 +1,7 @@
 import React, {
     useRef,
     useCallback,
+    useState,
     useEffect,
 } from 'react';
 
@@ -191,13 +192,16 @@ const PluridView: React.FC<ViewProperties> = (
 
 
     /** references */
-    const pluridPubSub = useRef<(PluridPubSub | undefined)[]>([pubsub]);
+    // const pluridPubSub = useRef<(PluridPubSub | undefined)[]>(pubsub ? [pubsub] : []);
     const planesRegistry = useRef<Map<string, RegisteredPluridPlane>>(
         // indexedPlanes || new Map(),
         new Map(),
     );
     const viewElement = useRef<HTMLDivElement>(null);
 
+
+    /** state */
+    const [pluridPubSub, setPluridPubSub] = useState<(PluridPubSub | undefined)[]>(pubsub ? [pubsub] : []);
 
 
     /** callbacks */
@@ -476,7 +480,12 @@ const PluridView: React.FC<ViewProperties> = (
     const registerPubSub = (
         pubsub: PluridPubSub,
     ) => {
-        pluridPubSub.current.push(pubsub);
+        const pluridPubSubs = [
+            ...pluridPubSub,
+            pubsub,
+        ];
+
+        setPluridPubSub(pluridPubSubs);
     }
 
 
@@ -773,23 +782,26 @@ const PluridView: React.FC<ViewProperties> = (
 
     /** PubSub Subscribe */
     useEffect(() => {
-        for (const pubsub of pluridPubSub.current) {
+        console.log('AAAA subscribe', pluridPubSub);
+        for (const pubsub of pluridPubSub) {
             if (pubsub) {
                 handlePubSubSubscribe(pubsub as any);
             }
         }
     }, [
-        pluridPubSub.current.length,
+        pluridPubSub.length,
     ]);
 
     /** PubSub Publish */
     useEffect(() => {
-        for (const pubsub of pluridPubSub.current) {
+        console.log('BBB publish', pluridPubSub);
+        for (const pubsub of pluridPubSub) {
             if (pubsub) {
                 handlePubSubPublish(pubsub);
             }
         }
     }, [
+        pluridPubSub.length,
         stateConfiguration,
         stateTransform,
     ]);
@@ -805,6 +817,8 @@ const PluridView: React.FC<ViewProperties> = (
         // planeContext: pluridApplication.planeContext,
         // planeContextValue: pluridApplication.planeContextValue,
     };
+
+    console.log('pluridPubSub', pluridPubSub);
 
 
 
