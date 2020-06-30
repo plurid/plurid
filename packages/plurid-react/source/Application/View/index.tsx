@@ -292,7 +292,6 @@ const PluridView: React.FC<ViewProperties> = (
     const handleSpaceCenter = (
         configuration: PluridAppConfiguration,
     ) => {
-        console.log('render');
         if (configuration.space.center && !configuration.space.camera) {
             // const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
             const x = window.innerWidth / 2 - (window.innerWidth / 2 * configuration.elements.plane.width);
@@ -806,11 +805,11 @@ const PluridView: React.FC<ViewProperties> = (
     ]);
 
     /** Handle configuration. */
-    // useEffect(() => {
-    //     handleSpaceCenter(stateConfiguration);
-    // }, [
-    //     stateConfiguration,
-    // ]);
+    useEffect(() => {
+        handleSpaceCenter(stateConfiguration);
+    }, [
+        stateConfiguration.space.center,
+    ]);
 
 
     /** context */
