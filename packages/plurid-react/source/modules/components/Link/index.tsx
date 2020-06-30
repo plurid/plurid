@@ -135,7 +135,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     /** context */
-    const context: PluridContext = useContext(Context);
+    const context = useContext(Context);
+
+    if (!context) {
+        return (<></>);
+    }
 
     const {
         planesRegistry,

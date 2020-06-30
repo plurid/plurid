@@ -1,5 +1,6 @@
 import React, {
     useRef,
+    useContext,
     useState,
     useEffect,
 } from 'react';
@@ -13,9 +14,13 @@ import {
     PluridPartialConfiguration,
 } from '@plurid/plurid-data';
 
+import PluridPubSub from '@plurid/plurid-pubsub';
+
 import {
     StyledPluridApplicationConfigurator,
 } from './styled';
+
+import Context from '../../services/logic/context';
 
 import { AppState } from '../../services/state/store';
 import StateContext from '../../services/state/context';
@@ -26,6 +31,7 @@ import StateContext from '../../services/state/context';
 
 export interface PluridApplicationConfiguratorOwnProperties {
     configuration?: PluridPartialConfiguration;
+    pubsub?: PluridPubSub;
 }
 
 export interface PluridApplicationConfiguratorStateProperties {
@@ -48,10 +54,23 @@ export type PluridApplicationConfiguratorProperties = PluridApplicationConfigura
 const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridApplicationConfiguratorProperties>> = (
     properties,
 ) => {
+    /** context */
+    const context = useContext(Context);
+
+    if (!context) {
+        return (<></>);
+    }
+
+    const {
+        registerPubSub,
+    } = context;
+
+
     /** properties */
     const {
         /** own */
         configuration,
+        pubsub,
 
         /** state */
 
@@ -71,9 +90,17 @@ const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridAppl
     /**
      * Get applicationID
      */
-    useEffect(() => {
+    // useEffect(() => {
 
-    }, []);
+    // }, []);
+
+    useEffect(() => {
+        if (pubsub) {
+            registerPubSub(pubsub);
+        }
+    }, [
+        pubsub,
+    ]);
 
 
     /** render */
