@@ -115,6 +115,7 @@ export interface ViewDispatchProperties {
     // dispatchSetViewSize: typeof actions.space.setViewSize;
     dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
+    dispatchSetTransformTime: typeof actions.space.setTransformTime;
     dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
     dispatchSetInitialTree: typeof actions.space.setInitialTree;
     dispatchSetTree: typeof actions.space.setTree;
@@ -165,6 +166,7 @@ const PluridView: React.FC<ViewProperties> = (
         dispatchSetSpaceLoading,
         dispatchSetSpaceLocation,
         dispatchSetAnimatedTransform,
+        dispatchSetTransformTime,
         dispatchSetInitialTree,
         dispatchSetTree,
 
@@ -428,6 +430,12 @@ const PluridView: React.FC<ViewProperties> = (
             } = data;
 
             dispatchSetAnimatedTransform(value.active);
+
+            if (value.time) {
+                dispatchSetTransformTime(value.time);
+            } else {
+                dispatchSetTransformTime(450);
+            }
         });
 
         pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
@@ -1339,6 +1347,11 @@ const mapDispatchToProperties = (
     ),
     dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
         actions.space.setAnimatedTransform(animated)
+    ),
+    dispatchSetTransformTime: (
+        value,
+    ) => dispatch(
+        actions.space.setTransformTime(value)
     ),
     dispatchSetSpaceLocation: (spaceLocation: any) => dispatch(
         actions.space.setSpaceLocation(spaceLocation)
