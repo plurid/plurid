@@ -6,9 +6,16 @@ import {
 
 
 class PluridPubSub implements IPluridPubSub {
+    /**
+     * TODO
+     * Have a map of maps for each Topic and their Callbacks.
+     */
     private subscriptions: Subscription[] = [];
 
-    public subscribe(topic: string, callback: any) {
+    public subscribe(
+        topic: string,
+        callback: any,
+    ) {
         const subscription = {
             topic,
             callback,
@@ -16,15 +23,20 @@ class PluridPubSub implements IPluridPubSub {
         this.subscriptions.push(subscription);
     }
 
-    public publish(topic: string, data: any) {
-        this.subscriptions.map(subscription => {
+    public publish(
+        topic: string,
+        data: any,
+    ) {
+        for (const subscription of this.subscriptions) {
             if (topic === subscription.topic) {
                 subscription.callback(data);
             }
-        });
+        }
     }
 
-    public unsubscribe(topic: string) {
+    public unsubscribe(
+        topic: string,
+    ) {
         let unsubscribed = false;
 
         this.subscriptions = this.subscriptions.filter(subscription => {
