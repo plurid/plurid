@@ -9,7 +9,8 @@ import './index.css';
 // import App from './App-simple';
 // import App from './App-simple-link';
 // import App from './App-parametric-link';
-import App from './App-transform';
+// import App from './App-transform';
+import App from './App-configurator';
 
 import * as serviceWorker from './serviceWorker';
 
