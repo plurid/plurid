@@ -17,6 +17,8 @@ import {
     PluridComponent,
     PluridComponentProperty,
 
+    ReactComponentWithPlurid,
+
     PluridPreserve,
     PluridPreserveTransmission,
 
@@ -138,6 +140,8 @@ export {
 
     PluridComponent,
     PluridComponentProperty,
+
+    ReactComponentWithPlurid,
 
     PluridPreserve,
     PluridPreserveTransmission,
