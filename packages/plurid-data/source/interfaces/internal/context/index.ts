@@ -1,3 +1,5 @@
+import PluridPubSub from '@plurid/plurid-pubsub';
+
 import {
     PluridPlaneContext,
 } from '../../external';
@@ -12,4 +14,8 @@ export interface PluridContext {
     planesRegistry: Map<string, RegisteredPluridPlane>;
     planeContext?: PluridPlaneContext<any>;
     planeContextValue?: any;
+
+    registerPubSub: (
+        pubsub: PluridPubSub,
+    ) => void;
 }
