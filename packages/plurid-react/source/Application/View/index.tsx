@@ -422,6 +422,14 @@ const PluridView: React.FC<ViewProperties> = (
             dispatchSetSpaceLocation(value);
         });
 
+        pubsub.subscribe(TOPICS.SPACE_ANIMATED_TRANSFORM, (data: any) => {
+            const {
+                value,
+            } = data;
+
+            dispatchSetAnimatedTransform(value.active);
+        });
+
         pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
             const {
                 value,
