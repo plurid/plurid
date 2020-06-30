@@ -115,7 +115,7 @@ export interface ViewDispatchProperties {
     // dispatchSetViewSize: typeof actions.space.setViewSize;
     dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
-    // dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
+    dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
     dispatchSetInitialTree: typeof actions.space.setInitialTree;
     dispatchSetTree: typeof actions.space.setTree;
     // dispatchSetSpaceSize: typeof actions.space.setSpaceSize;
@@ -163,6 +163,7 @@ const PluridView: React.FC<ViewProperties> = (
         dispatchSetInteractionTheme,
 
         dispatchSetSpaceLoading,
+        dispatchSetSpaceLocation,
         dispatchSetAnimatedTransform,
         dispatchSetInitialTree,
         dispatchSetTree,
@@ -413,6 +414,14 @@ const PluridView: React.FC<ViewProperties> = (
     const handlePubSubSubscribe = (
         pubsub: PluridPubSub,
     ) => {
+        pubsub.subscribe(TOPICS.SPACE_TRANSFORM, (data: any) => {
+            const {
+                value,
+            } = data;
+
+            dispatchSetSpaceLocation(value);
+        });
+
         pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
             const {
                 value,
@@ -431,9 +440,9 @@ const PluridView: React.FC<ViewProperties> = (
     const handlePubSubPublish = (
         pubsub: PluridPubSub,
     ) => {
-        pubsub.publish(TOPICS.SPACE_TRANSFORM, stateTransform);
+        // pubsub.publish(TOPICS.SPACE_TRANSFORM, stateTransform);
 
-        pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
+        // pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
     }
 
     const handleSwipe = (
@@ -1323,9 +1332,9 @@ const mapDispatchToProperties = (
     dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
         actions.space.setAnimatedTransform(animated)
     ),
-    // dispatchSetSpaceLocation: (spaceLocation: any) => dispatch(
-    //     actions.space.setSpaceLocation(spaceLocation)
-    // ),
+    dispatchSetSpaceLocation: (spaceLocation: any) => dispatch(
+        actions.space.setSpaceLocation(spaceLocation)
+    ),
     dispatchSetInitialTree: (
         tree: TreePlane[],
     ) => dispatch(
