@@ -804,6 +804,12 @@ const PluridView: React.FC<ViewProperties> = (
         stateTransform,
     ]);
 
+    /** Handle configuration. */
+    useEffect(() => {
+        handleConfiguration(stateConfiguration);
+    }, [
+        stateConfiguration,
+    ]);
 
 
     /** context */

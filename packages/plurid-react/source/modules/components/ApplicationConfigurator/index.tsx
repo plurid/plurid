@@ -89,7 +89,7 @@ const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridAppl
 
     /** effects */
     /**
-     *
+     * Handle configuration.
      */
     useEffect(() => {
         const computedConfiguration = generalEngine.configuration.merge(configuration);
