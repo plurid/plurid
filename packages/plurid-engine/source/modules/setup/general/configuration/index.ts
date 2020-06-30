@@ -62,10 +62,16 @@ const resolveTheme = (
 
 export const merge = (
     configuration?: PluridPartialConfiguration,
+    target?: PluridConfiguration,
 ): PluridConfiguration => {
+    const targetConfiguration = {
+        ...defaultConfiguration,
+        ...target,
+    };
+
     if (!configuration) {
         return {
-            ...defaultConfiguration,
+            ...targetConfiguration,
         };
     }
 
@@ -77,10 +83,10 @@ export const merge = (
         && configuration.space
         && typeof configuration.space.layout === 'object'
             ? configuration.space.layout
-            : defaultConfiguration.space.layout;
+            : targetConfiguration.space.layout;
 
     const mergedConfiguration: PluridConfiguration = {
-        ...defaultConfiguration,
+        ...targetConfiguration,
         global: {
             micro: specifiedOrDefault(
                 'global.micro',
@@ -108,7 +114,7 @@ export const merge = (
             },
         },
         elements: {
-            ...defaultConfiguration.elements,
+            ...targetConfiguration.elements,
             toolbar: {
                 show: specifiedOrDefault(
                     'elements.toolbar.show',
@@ -139,7 +145,7 @@ export const merge = (
                     && configuration.elements.toolbar
                     && configuration.elements.toolbar.toggledDrawers
                         ? configuration.elements.toolbar.toggledDrawers
-                        : defaultConfiguration.elements.toolbar.toggledDrawers,
+                        : targetConfiguration.elements.toolbar.toggledDrawers,
             },
             viewcube: {
                 show: specifiedOrDefault(
@@ -194,7 +200,7 @@ export const merge = (
             },
         },
         space: {
-            ...defaultConfiguration.space,
+            ...targetConfiguration.space,
             layout,
             camera: specifiedOrDefault(
                 'space.camera',
