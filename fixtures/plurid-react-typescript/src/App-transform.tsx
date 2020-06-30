@@ -63,7 +63,7 @@ const App = () => {
         pluridPubSub.publish(TOPICS.SPACE_ANIMATED_TRANSFORM, {
             value: {
                 active: true,
-                time: 300,
+                time: 2000,
             },
         });
 
@@ -88,7 +88,7 @@ const App = () => {
                     active: false,
                 },
             });
-        }, 600);
+        }, 2100);
     }, []);
 
 
