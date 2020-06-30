@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.1.94",
+    "version": "0.1.95",
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
         "plurid",
@@ -47,17 +47,17 @@
         "@plurid/plurid-functions": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "^0.1.155",
-        "@plurid/plurid-functions": "^0.1.14",
-        "@plurid/plurid-pubsub": "^0.1.8",
+        "@plurid/plurid-data": "^0.1.156",
+        "@plurid/plurid-functions": "^0.1.15",
+        "@plurid/plurid-pubsub": "^0.1.9",
         "@rollup/plugin-commonjs": "^13.0.0",
         "@types/jest": "^26.0.3",
         "@types/lodash.camelcase": "^4.3.6",
         "@types/node": "^14.0.14",
         "@types/react": "^16.9.41",
         "@types/rollup-plugin-sourcemaps": "^0.4.2",
-        "@typescript-eslint/eslint-plugin": "^3.4.0",
-        "@typescript-eslint/parser": "^3.4.0",
+        "@typescript-eslint/eslint-plugin": "^3.5.0",
+        "@typescript-eslint/parser": "^3.5.0",
         "colors": "^1.4.0",
         "coveralls": "^3.1.0",
         "eslint": "^7.3.1",
@@ -68,13 +68,13 @@
         "react": "^16.13.1",
         "replace-in-file": "^6.1.0",
         "rimraf": "^3.0.2",
-        "rollup": "^2.18.0",
+        "rollup": "^2.18.1",
         "rollup-plugin-sourcemaps": "^0.6.2",
         "rollup-plugin-typescript2": "^0.27.1",
         "shelljs": "^0.8.4",
         "ts-jest": "^26.1.1",
         "ts-node": "^8.10.2",
-        "typedoc": "^0.17.7",
+        "typedoc": "^0.17.8",
         "typescript": "^3.9.5"
     }
 }
