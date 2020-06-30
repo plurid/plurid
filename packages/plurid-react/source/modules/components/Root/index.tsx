@@ -170,8 +170,12 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
 
     /** context */
-    const context: PluridContext = useContext(Context);
+    const context = useContext(Context);
     // console.log('plurid root context', context);
+
+    if (!context) {
+        return (<></>);
+    }
 
     const {
         planesRegistry,

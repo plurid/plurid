@@ -6,12 +6,7 @@ import {
 
 
 
-const defaultContext: PluridContext = {
-    planesRegistry: new Map(),
-    // planesProperties: new Map(),
-}
-
-const Context = React.createContext(defaultContext);
+const Context = React.createContext<PluridContext | null>(null);
 
 
 export default Context;

@@ -191,6 +191,7 @@ const PluridView: React.FC<ViewProperties> = (
 
 
     /** references */
+    const pluridPubSub = useRef<(PluridPubSub | undefined)[]>([pubsub]);
     const planesRegistry = useRef<Map<string, RegisteredPluridPlane>>(
         // indexedPlanes || new Map(),
         new Map(),
@@ -471,6 +472,13 @@ const PluridView: React.FC<ViewProperties> = (
 
         // pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
     }
+
+    const registerPubSub = (
+        pubsub: PluridPubSub,
+    ) => {
+        pluridPubSub.current.push(pubsub);
+    }
+
 
     const handleSwipe = (
         event: HammerInput,
@@ -765,17 +773,21 @@ const PluridView: React.FC<ViewProperties> = (
 
     /** PubSub Subscribe */
     useEffect(() => {
-        if (pubsub) {
-            handlePubSubSubscribe(pubsub as any);
+        for (const pubsub of pluridPubSub.current) {
+            if (pubsub) {
+                handlePubSubSubscribe(pubsub as any);
+            }
         }
     }, [
-        pubsub,
+        pluridPubSub.current.length,
     ]);
 
     /** PubSub Publish */
     useEffect(() => {
-        if (pubsub) {
-            handlePubSubPublish(pubsub);
+        for (const pubsub of pluridPubSub.current) {
+            if (pubsub) {
+                handlePubSubPublish(pubsub);
+            }
         }
     }, [
         stateConfiguration,
@@ -787,6 +799,7 @@ const PluridView: React.FC<ViewProperties> = (
     /** context */
     const pluridContext: PluridContext = {
         planesRegistry: planesRegistry.current,
+        registerPubSub,
         // planesMap: indexedPlanesReference.current,
         // planesProperties: planesPropertiesReference.current,
         // planeContext: pluridApplication.planeContext,
