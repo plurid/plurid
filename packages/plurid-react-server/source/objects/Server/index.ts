@@ -240,9 +240,20 @@ export default class PluridServer {
         this.serverApplication.get('*', async (request, response, next) => {
             const path = request.path;
 
-            if (this.options.ignore.includes(path)) {
-                next();
-                return;
+            for (const ignore of this.options.ignore) {
+                if (path === ignore) {
+                    next();
+                    return;
+                }
+
+                if (ignore.includes('/*')) {
+                    const curatedIgnore = ignore.replace('/*', '');
+
+                    if (path.startsWith(curatedIgnore)) {
+                        next();
+                        return;
+                    }
+                }
             }
 
             const urlMatch = urlRouter.match(path);
