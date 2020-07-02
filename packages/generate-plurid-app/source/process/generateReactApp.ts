@@ -679,6 +679,7 @@ const generateReactServerApplication = async (
         'rollup-plugin-typescript2',
         'ts-loader',
         'ts-jest',
+        'tsconfig-paths-webpack-plugin',
         'typescript',
         'typescript-plugin-styled-components',
     ];
