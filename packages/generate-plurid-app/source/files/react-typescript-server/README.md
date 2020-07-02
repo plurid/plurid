@@ -132,21 +132,35 @@ The top level directories of the application are:
 + `configurations` - files that are needed to configure various software packages, pre-build or at build time;
 + `environment` - environment files;
 + `scripts` - application building scripts; for common usage there should be no need to modify any file in here, the common use cases being covered by default;
-+ `source` - the source code
++ `source` - the source code;
 
 
 The `source` directory contains:
 
 + `client` - client bootloader, providers wrapping, root mounting;
-+ `public` - favicons, manifest, robots, service workers; the contents will be copied 'as is' at build time
-+ `server` - server bootloader
-+ `shared` - the application code
-+ `types` - typings for common files ('.jpg', '.svg', '.pdf', etc.)
++ `public` - favicons, manifest, robots, service workers; the contents will be copied 'as is' at build time;
++ `server` - server bootloader;
++ `shared` - the application code;
++ `types` - typings for common files ('.jpg', '.svg', '.pdf', etc.);
 
 
-The `shared` directory contains code which will be used both by the `server` and by the `client`. It's contents are
+The `server` directory contains:
++ `handlers` - custom server route handlers (for handling POST, PUT, etc.);
++ `preserves` - server route handlers at pre-serve time, before rendering the application;
+
+
+The `shared` directory contains code which will be used both by the `server` and by the `client`. It's contents are:
 
 + `kernel` - application assets, components, containers, data, services;
 + `paths` - route mapping of containers (planes, spaces);
-+ `preserves` - server route handlers at pre-serve time, before rendering the application;
-+ `shell` - kernel controller, authentication/authorization, rerouting, etc; the kernel will be wrapped by the shell
++ `shell` - kernel controller, authentication/authorization, rerouting, etc; the kernel will be wrapped by the shell;
+
+
+The `kernel` directory contains:
+
++ `assets` - fonts, images, 3D models, etc.;
++ `components` - ready-to-use components;
++ `containers` - wrappers responding to a specific route;
++ `planes` - plurid planes for global composition;
++ `data` - constants, interfaces, enumerations;
++ `services` - state, logic, and utility functions;
