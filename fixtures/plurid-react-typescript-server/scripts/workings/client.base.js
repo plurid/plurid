@@ -5,6 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
 const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 
 
@@ -122,6 +123,12 @@ const baseConfig = {
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+
+        plugins: [
+            new TsconfigPathsPlugin({
+                configFile: path.resolve(__dirname, '../../tsconfig.json'),
+            }),
+        ],
     },
 
     stats: {
