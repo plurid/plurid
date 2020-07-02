@@ -6,14 +6,14 @@ import PluridServer, {
     PluridServerTemplateConfiguration,
 } from '@plurid/plurid-react-server';
 
-import helmet from '../shared/kernel/services/helmet';
+import helmet from '#kernel-services/helmet';
 
 /** uncomment to use services */
 // [START redux import]
-import reduxStore from '../shared/kernel/services/state/store';
+import reduxStore from '#kernel-services/state/store';
 // [END redux import]
 // [START apollo import]
-import apolloClient from '../shared/kernel/services/graphql/client';
+import apolloClient from '#kernel-services/graphql/client';
 // [END apollo import]
 // [START stripe import]
 // import {
