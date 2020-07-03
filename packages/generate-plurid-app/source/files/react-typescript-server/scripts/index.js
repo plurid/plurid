@@ -191,6 +191,12 @@ switch (command) {
             stdio: verbose,
         });
         break;
+    case 'start.development':
+        console.log('\n\tRunning the Development Server...');
+        runCommand(commandStartLocal, {
+            stdio: verbose,
+        });
+        break;
     case 'watch.client':
         console.log('\n\tStarting the Client Watching Process...');
         runCommand(commandWatchClient, {
