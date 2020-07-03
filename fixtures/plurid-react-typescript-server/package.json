@@ -8,6 +8,7 @@
     "scripts": {
         "start": "node scripts start",
         "start.local": "node scripts start.local",
+        "start.development": "node scripts start.development",
         "watch.client": "node scripts watch.client",
         "watch.server": "node scripts watch.server",
         "watch": "node scripts watch",
