@@ -2,7 +2,6 @@ const path = require('path');
 
 const postcss = require('rollup-plugin-postcss');
 const url = require('@rollup/plugin-url');
-const json = require('@rollup/plugin-json');
 const typescript = require('rollup-plugin-typescript2');
 const external = require('rollup-plugin-peer-deps-external');
 const resolve = require('@rollup/plugin-node-resolve').default;
@@ -46,7 +45,6 @@ const plugins = {
         fileName: 'client/assets/[name][extname]',
         sourceDir: path.join(__dirname, 'source'),
     }),
-    json: () => json(),
     typescript: () => typescript({
         tsconfig: './tsconfig.json',
         transformers: [
