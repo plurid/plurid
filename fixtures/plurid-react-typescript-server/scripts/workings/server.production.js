@@ -12,6 +12,7 @@ export default {
     plugins: [
         plugins.postcss(),
         plugins.url(),
+        plugins.json(),
         plugins.external(),
         plugins.resolve(),
         plugins.commonjs(),
