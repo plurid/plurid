@@ -24,3 +24,6 @@ export const PLURID_ROUTE_DEFAULT_CLUSTER = 'c';
 
 
 export const PLURID_DEFAULT_CONFIGURATION_NETWORK_HOST = 'originhost';
+
+
+export const PLURID_ROUTER_STORAGE = '__PLURID_ROUTER__';
