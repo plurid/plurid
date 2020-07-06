@@ -262,9 +262,15 @@ export default class PluridServer {
             let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
             let preserveOnError: undefined | PluridPreserveOnError<any>;
             if (urlMatch?.target) {
-                const preserve = this.preserves.find(
-                    preserve => preserve.serve === urlMatch.target
+                const catchAll = this.preserves.find(
+                    preserve => preserve.serve === '*'
                 );
+
+                const preserve = catchAll
+                    ? catchAll
+                    : this.preserves.find(
+                        preserve => preserve.serve === urlMatch.target
+                    );
 
                 if (preserve) {
                     preserveOnServe = preserve.onServe;
