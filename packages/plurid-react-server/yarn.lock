@@ -706,10 +706,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.15.tgz#4900bf02bb36240e8d2cafd1d27c0e9712ac3ebf"
   integrity sha512-gTzhFlbK6G5jE+KBpcT4UlnO9poUOLLihXS3qwAYtu3ldSvGbu4g+bKJgaAwTBmS+t8B6vWntU5qXyi4pdX/7A==
 
-"@plurid/plurid-icons-react@^0.1.22":
-  version "0.1.22"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-icons-react/-/plurid-icons-react-0.1.22.tgz#d1552f526ad8c5575477c91fee7ab59aeff10adb"
-  integrity sha512-hwEbcHLC4IOI/lIaSWQKr0T9Ns0ViTyNtXnuWS5qlNBr2flQ3yqCzTav0sVHYJwNu6J/0m2Q/Mex0O/AqsIWOw==
+"@plurid/plurid-icons-react@^0.1.23":
+  version "0.1.23"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-icons-react/-/plurid-icons-react-0.1.23.tgz#09840c895ff6caa1161594fd92764ad62e8317b7"
+  integrity sha512-jqOIO3yhlK4LdFV7FYhHDr6aUonYyKHAwnM0xLfZik5QnV7TmtNCbrNvU9CjNhyolKcCJLthxBIneynOpIpPwA==
 
 "@plurid/plurid-pubsub@^0.1.9":
   version "0.1.9"
@@ -726,10 +726,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.1.26.tgz#696ec2b8a57d6d95027ac2dc2a954dda142bdb82"
   integrity sha512-UOfta3WoTEC5p0ri11+7PM/hha5zGkxXQjYl8yhMho/uSRATyCal4Hpj49jSx4EjQoxfn65CPpRA8Z2SMRmRLQ==
 
-"@plurid/plurid-ui-react@^0.1.82":
-  version "0.1.82"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.82.tgz#4927c7aecee0c9eb119a88f44c213ebf7d1dcd9e"
-  integrity sha512-so18PXGMraVvqoH69VPixT+Qwp/cvlvi61qWRZJSYtC0XcMpI/KhrQOzzJeOj63DRH49d8AEJxdnqs+nkQIbLw==
+"@plurid/plurid-ui-react@^0.1.83":
+  version "0.1.83"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-ui-react/-/plurid-ui-react-0.1.83.tgz#e995414e1d5a03ccafc2f2f1f0ec47b1347aa849"
+  integrity sha512-eHAJqYty7Joh/sNYwJxG8ou93ccRXECss1ocLB2FxjXeIXZcDpOSkK5HCXNA0UteSTP+J4IpkqHG+hui0jDITw==
 
 "@rollup/plugin-babel@^5.0.4":
   version "5.0.4"
@@ -2528,10 +2528,10 @@ eslint-visitor-keys@^1.1.0, eslint-visitor-keys@^1.2.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.2.0.tgz#74415ac884874495f78ec2a97349525344c981fa"
   integrity sha512-WFb4ihckKil6hu3Dp798xdzSfddwKKU3+nGniKF6HfeW6OLd2OUDEPP7TcHtB5+QXOKg2s6B2DaMPE1Nn/kxKQ==
 
-eslint@^7.3.1:
-  version "7.3.1"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.3.1.tgz#76392bd7e44468d046149ba128d1566c59acbe19"
-  integrity sha512-cQC/xj9bhWUcyi/RuMbRtC3I0eW8MH0jhRELSvpKYkWep3C6YZ2OkvcvJVUeO6gcunABmzptbXBuDoXsjHmfTA==
+eslint@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.4.0.tgz#4e35a2697e6c1972f9d6ef2b690ad319f80f206f"
+  integrity sha512-gU+lxhlPHu45H3JkEGgYhWhkR9wLHHEXC9FbWFnTlEkbKyZKWgWRLgf61E8zWmBuI6g5xKBph9ltg3NtZMVF8g==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.10.0"
@@ -3050,10 +3050,10 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphql@^15.2.0:
-  version "15.2.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.2.0.tgz#d9c655a523a3196d4b23657ec6ec5963b3bd4970"
-  integrity sha512-tsceRyHfgzZo+ee0YK3o8f0CR0cXAXxRlxoORWFo/CoM1bVy3UXGWeyzBcf+Y6oqPvO27BDmOEVATcunOO/MrQ==
+graphql@^15.3.0:
+  version "15.3.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.3.0.tgz#3ad2b0caab0d110e3be4a5a9b2aa281e362b5278"
+  integrity sha512-GTCJtzJmkFLWRfFJuoo9RWWa/FfamUHgiFosxi/X1Ani4AVWbeyBenZTNX6dM+7WSbbFfTo/25eh0LLkwHMw2w==
 
 growly@^1.3.0:
   version "1.3.0"
@@ -5317,16 +5317,17 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-puppeteer@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-4.0.1.tgz#ebc2ee61157ed1aa25be3843fda97807df1d51f5"
-  integrity sha512-LIiSWTRqpTnnm3R2yAoMBx1inSeKwVZy66RFSkgSTDINzheJZPd5z5mMbPM0FkvwWAZ27a+69j5nZf+Fpyhn3Q==
+puppeteer@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-5.0.0.tgz#7cf1b1a5c5b6ce5d7abe4d9c9f206d4c52e214ff"
+  integrity sha512-JnZcgRQnfowRSJoSHteKU7G9fP/YYGB/juPn8m4jNqtzvR0h8GOoFmdjTBesJFfzhYkPU1FosHXnBVUB++xgaA==
   dependencies:
     debug "^4.1.0"
     extract-zip "^2.0.0"
     https-proxy-agent "^4.0.0"
     mime "^2.0.3"
     mitt "^2.0.1"
+    pkg-dir "^4.2.0"
     progress "^2.0.1"
     proxy-from-env "^1.0.0"
     rimraf "^3.0.2"
@@ -5714,10 +5715,10 @@ rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.18.1:
-  version "2.18.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.18.1.tgz#1662c679da5dfc89ec6fda75951a2bcca1a4f77d"
-  integrity sha512-w4X77ADA+WTGlapC8Z6yggdJtODw3SBl6R2LSkA7ZW5MtdkgcB7sfaSD1UWyx8diXbMcGIb0eI9gCx/dyqOgNQ==
+rollup@^2.19.0:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.19.0.tgz#6484868882281552b0dc33aa5bc5b36a9c920452"
+  integrity sha512-nny5Vs4jwY3vbQAXgOyU4ZDZqLvMKm/umnsVry/demVL6ve8ke1XhdpYE0eiWencASmx/qFPw6pP8P7MLJl9XA==
   optionalDependencies:
     fsevents "~2.1.2"
 
@@ -6536,10 +6537,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^3.9.5:
-  version "3.9.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.5.tgz#586f0dba300cde8be52dd1ac4f7e1009c1b13f36"
-  integrity sha512-hSAifV3k+i6lEoCJ2k6R2Z/rp/H3+8sdmcn5NrS3/3kE7+RyZXm9aqvxWqjEXHAd8b0pShatpcdMTvEdvAJltQ==
+typescript@^3.9.6:
+  version "3.9.6"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.6.tgz#8f3e0198a34c3ae17091b35571d3afd31999365a"
+  integrity sha512-Pspx3oKAPJtjNwE92YS05HQoY7z2SFyOpHo9MqJor3BXAGNaPUs83CuVp9VISFkSjyRfiTpmKuAYGJB7S7hOxw==
 
 unbzip2-stream@^1.3.3:
   version "1.4.3"
