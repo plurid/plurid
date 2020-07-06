@@ -256,7 +256,7 @@ export default class PluridServer {
                 }
             }
 
-            const urlMatch = urlRouter.match(path);
+            const urlMatch = urlRouter.match(request.originalUrl);
 
             let preserveOnServe: undefined | PluridPreserveOnServe<any>;
             let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
@@ -286,7 +286,7 @@ export default class PluridServer {
                     response,
                     context: {
                         contextualizers: undefined,
-                        path,
+                        path: request.originalUrl,
                         match: urlMatch,
                     },
                 };
