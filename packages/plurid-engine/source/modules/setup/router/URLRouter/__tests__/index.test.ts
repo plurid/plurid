@@ -114,4 +114,16 @@ describe('URLRouter', () => {
 
         expect(match?.target).toBe('/one/:item');
     });
+
+    it('handles query', () => {
+        const routes: URLRoute[] = [
+            {
+                value: '/one',
+            },
+        ];
+        const urlRouter = new URLRouter(routes);
+        const match = urlRouter.match('/one?q=one');
+
+        expect(match?.elements.query).toBe('q=one');
+    });
 });
