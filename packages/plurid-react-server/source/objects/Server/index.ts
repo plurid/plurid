@@ -280,13 +280,14 @@ export default class PluridServer {
             }
 
             let preserveResult: void | PluridPreserveResponse;
-            if (preserveOnServe) {
+            if (preserveOnServe && urlMatch) {
                 const transmission: PluridPreserveTransmission<any> = {
                     request,
                     response,
                     context: {
                         contextualizers: undefined,
                         path,
+                        match: urlMatch,
                     },
                 };
 
