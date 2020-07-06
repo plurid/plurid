@@ -66,7 +66,7 @@ import {
 
 import {
     usePluridRouter,
-} from './modules/services/hooks/router';
+} from './modules/services/hooks';
 
 
 

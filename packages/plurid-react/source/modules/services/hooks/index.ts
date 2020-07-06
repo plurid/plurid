@@ -5,6 +5,10 @@ import {
     useElementEvent,
 } from './event';
 
+import {
+    usePluridRouter,
+} from './router';
+
 
 
 export {
@@ -12,4 +16,5 @@ export {
     useGlobalKeyDown,
     useGlobalWheel,
     useElementEvent,
+    usePluridRouter,
 }
