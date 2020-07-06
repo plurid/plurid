@@ -28,6 +28,7 @@ import {
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
     PLURID_ROUTER_LOCATION_CHANGED,
+    PLURID_ROUTER_LOCATION_STORED,
 } from '@plurid/plurid-data';
 
 import {
@@ -62,6 +63,10 @@ import {
 import {
     pluridRouterNavigate,
 } from './modules/services/utilities/navigate';
+
+import {
+    usePluridRouter,
+} from './modules/services/hooks/router';
 
 
 
@@ -156,6 +161,7 @@ export {
     TRANSFORM_MODES,
     TRANSFORM_TOUCHES,
     PLURID_ROUTER_LOCATION_CHANGED,
+    PLURID_ROUTER_LOCATION_STORED,
 
     /** Engine */
     // PluridRouter,
@@ -171,6 +177,7 @@ export {
 
     /** Router */
     pluridRouterNavigate,
+    usePluridRouter,
 
     /** state */
     pluridStateModules,
