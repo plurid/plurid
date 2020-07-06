@@ -7,6 +7,8 @@ import React, {
 import {
     /** constants */
     PLURID_ROUTER_LOCATION_CHANGED,
+    PLURID_ROUTER_LOCATION_STORED,
+
     PLURID_ROUTE_DEFAULT_SPACE,
     PLURID_ROUTE_DEFAULT_UNIVERSE,
     PLURID_ROUTE_DEFAULT_CLUSTER,
@@ -157,6 +159,16 @@ const PluridRouterBrowser = (
             matchedRoute.path.value,
             '__PLURID_ROUTER__',
         );
+
+        const event = new CustomEvent(
+            PLURID_ROUTER_LOCATION_STORED,
+            {
+                detail: {
+                    path: matchedRoute.path.value,
+                },
+            },
+        );
+        window.dispatchEvent(event);
 
         const Component = getComponentFromRoute({
             matchedRoute,
