@@ -168,7 +168,9 @@ const PluridRouterBrowser = (
                 },
             },
         );
-        window.dispatchEvent(event);
+        if (window) {
+            window.dispatchEvent(event);
+        }
 
         const Component = getComponentFromRoute({
             matchedRoute,
