@@ -182,6 +182,13 @@ export interface PluridPreserveTransmission<C = undefined> {
 
 export interface PluridPreserveTransmissionContext<C = undefined> {
     path: string;
+    /** URL Router `MatchedRoute` */
+    match: {
+        target: string;
+        source: string;
+        elements: any;
+        parameters?: Record<string, string>;
+    };
     contextualizers: C;
 }
 
