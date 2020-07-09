@@ -64,8 +64,8 @@ const matchRouteElements = (
         };
     }
 
-    // console.log('viewPath', viewPath);
-    // console.log('routePath', routePath);
+    console.log('viewPath', viewPath);
+    console.log('routePath', routePath);
 
 
     // check if viewPath is a parametrization of routePath
@@ -115,10 +115,17 @@ const matchRouteToView = (
 
     // console.log('route', route);
     // console.log('view', view);
+    // console.log('routeSplit', routeSplit);
     // console.log('viewSplit', viewSplit);
 
+    if (routeSplit.length !== viewSplit.length) {
+        return;
+    }
+
     const routePath = routeSplit[2];
+    // if (!routePath) return;
     const viewPath = viewSplit[2];
+    // if (!viewPath) return;
     // console.log('viewPath', viewPath);
     const pathMatch = matchRouteElements(
         routePath,
@@ -131,7 +138,9 @@ const matchRouteToView = (
 
 
     const routeSpace = routeSplit[3];
+    // if (!routeSpace) return;
     const viewSpace = viewSplit[3];
+    // if (!viewSpace) return;
     const spaceMatch = matchRouteElements(
         routeSpace,
         viewSpace,
@@ -143,7 +152,9 @@ const matchRouteToView = (
 
 
     const routeUniverse = routeSplit[4];
+    // if (!routeUniverse) return;
     const viewUniverse = viewSplit[4];
+    // if (!viewUniverse) return;
     const universeMatch = matchRouteElements(
         routeUniverse,
         viewUniverse,
@@ -155,7 +166,9 @@ const matchRouteToView = (
 
 
     const routeCluster = routeSplit[5];
+    // if (!routeCluster) return;
     const viewCluster = viewSplit[5];
+    // if (!viewCluster) return;
     const clusterMatch = matchRouteElements(
         routeCluster,
         viewCluster,
@@ -167,7 +180,9 @@ const matchRouteToView = (
 
 
     const routePlane = routeSplit[6];
+    // if (!routePlane) return;
     const viewPlane = viewSplit[6];
+    // if (!viewPlane) return;
     const planeMatch = matchRouteElements(
         routePlane,
         viewPlane,
@@ -444,8 +459,8 @@ export const assignPagesFromView = (
 
     // const router = new Router(routes);
 
-    console.log('planes', planes);
-    console.log('view', view);
+    // console.log('planes', planes);
+    // console.log('view', view);
 
     for (const viewPlane of view) {
         if (typeof viewPlane === 'string') {
