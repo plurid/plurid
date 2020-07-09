@@ -353,7 +353,7 @@ const PluridView: React.FC<ViewProperties> = (
                     appConfiguration.network.protocol,
                     appConfiguration.network.host,
                 );
-                // console.log('resolvedRoute', resolvedRoute);
+                console.log('resolvedRoute', resolvedRoute);
 
                 const {
                     protocol,
@@ -821,6 +821,8 @@ const PluridView: React.FC<ViewProperties> = (
         // planeContext: pluridApplication.planeContext,
         // planeContextValue: pluridApplication.planeContextValue,
     };
+
+    // console.log('planesRegistry', planesRegistry)
 
 
 
