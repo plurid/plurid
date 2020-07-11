@@ -672,10 +672,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.159.tgz#e07dc2a8eb4508b4438226ac8cc6d23ea8457abb"
   integrity sha512-slAwwmj+LdBY0V2Gwxn79fOemdm4Tk1dylb4DnM8ny1Buunn51Qz9rPrxxLJXqJJLnM9yMRn/xZjlU5IzJWxFQ==
 
-"@plurid/plurid-engine@^0.1.97":
-  version "0.1.97"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.97.tgz#c0ad4b38d08396c8ebfde629bbf5cb20b73a0118"
-  integrity sha512-XddN85tfsKPxxmovagzF6dGK0kGVANH5mJ5xmcZYsXY0tH7m2K6u15kGm2TsfkOCaoNCUh9trSpPsbXmDEB0OA==
+"@plurid/plurid-engine@^0.1.98":
+  version "0.1.98"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.98.tgz#0ce0fabf75381fe6cc6645fd27ff1f8ae9fd4fae"
+  integrity sha512-sIIP3n/dcb/rKI72KaRQuBFGKY09Gg/nDMqB4NH+xVrEXmrMKANUhBHbsqE8U+icy5RdGrk5dMaNFlTEnbZN1Q==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
@@ -972,10 +972,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@^16.9.41":
-  version "16.9.41"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.41.tgz#925137ee4d2ff406a0ecf29e8e9237390844002e"
-  integrity sha512-6cFei7F7L4wwuM+IND/Q2cV1koQUvJ8iSV+Gwn0c3kvABZ691g7sp3hfEQHOUBJtccl1gPi+EyNjMIl9nGA0ug==
+"@types/react@^16.9.42":
+  version "16.9.42"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.42.tgz#9776508d59c1867bbf9bd7f036dab007fdaa1cb7"
+  integrity sha512-iGy6HwfVfotqJ+PfRZ4eqPHPP5NdPZgQlr0lTs8EfkODRBV9cYy8QMKcC9qPCe1JrESC1Im6SrCFR6tQgg74ag==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
