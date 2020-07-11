@@ -64,8 +64,8 @@ const matchRouteElements = (
         };
     }
 
-    console.log('viewPath', viewPath);
-    console.log('routePath', routePath);
+    // console.log('viewPath', viewPath);
+    // console.log('routePath', routePath);
 
 
     // check if viewPath is a parametrization of routePath
