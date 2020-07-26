@@ -1,8 +1,8 @@
 const environment = {
-    local: process.env.REACT_APP_MODE_ENV === 'local',
-    localExternal: process.env.REACT_APP_MODE_ENV === 'localExternal',
-    development: process.env.REACT_APP_MODE_ENV === 'development',
-    production: process.env.REACT_APP_MODE_ENV === 'production',
+    local: process.env.ENV_MODE === 'local',
+    localExternal: process.env.ENV_MODE === 'localExternal',
+    development: process.env.ENV_MODE === 'development',
+    production: process.env.ENV_MODE === 'production',
 }
 
 

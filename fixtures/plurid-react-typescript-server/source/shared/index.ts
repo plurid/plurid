@@ -6,4 +6,4 @@ import shell from './shell';
 export {
     routes,
     shell,
-}
+};

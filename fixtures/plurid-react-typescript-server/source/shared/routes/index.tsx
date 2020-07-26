@@ -12,7 +12,7 @@ import Head from '../kernel/components/Head';
 
 
 
-const indexPath: PluridRoute = {
+const indexRoute: PluridRoute = {
     value: '/',
     exterior: {
         kind: 'react',
@@ -45,7 +45,7 @@ const indexPath: PluridRoute = {
 }
 
 
-const staticPath: PluridRoute = {
+const staticRoute: PluridRoute = {
     value: '/static',
     exterior: {
         kind: 'react',
@@ -54,7 +54,7 @@ const staticPath: PluridRoute = {
 };
 
 
-const planesPath: PluridRoute = {
+const planesRoute: PluridRoute = {
     value: '/planes',
     exterior: {
         kind: 'react',
@@ -111,7 +111,7 @@ const planesPath: PluridRoute = {
 };
 
 
-const parametricPath: PluridRoute = {
+const parametricRoute: PluridRoute = {
     value: '/parametric/:parameter',
     parameters: {
         parameter: {
@@ -126,7 +126,7 @@ const parametricPath: PluridRoute = {
 };
 
 
-const notFoundPath: PluridRoute = {
+const notFoundRoute: PluridRoute = {
     value: '/not-found',
     exterior: {
         kind: 'react',
@@ -163,13 +163,13 @@ const notFoundPath: PluridRoute = {
 };
 
 
-const paths: PluridRoute[] = [
-    indexPath,
-    staticPath,
-    planesPath,
-    parametricPath,
-    notFoundPath,
+const routes: PluridRoute[] = [
+    indexRoute,
+    staticRoute,
+    planesRoute,
+    parametricRoute,
+    notFoundRoute,
 ];
 
 
-export default paths;
+export default routes;
