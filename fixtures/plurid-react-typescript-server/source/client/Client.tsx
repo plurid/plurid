@@ -15,7 +15,7 @@ import {
 // [START ApolloProvider]
 import {
     ApolloProvider,
-} from '@apollo/react-hooks';
+} from '@apollo/client';
 // [END ApolloProvider]
 
 // [START StripeProvider]
