@@ -34,7 +34,6 @@
     },
     "dependencies": {
         "@apollo/client": "^3.0.2",
-        "@apollo/react-hooks": "^4.0.0",
         "@plurid/plurid-data": "^0.1.159",
         "@plurid/plurid-engine": "^0.1.98",
         "@plurid/plurid-functions": "^0.1.15",
@@ -42,7 +41,7 @@
         "@plurid/plurid-icons-react": "^0.1.27",
         "@plurid/plurid-pubsub": "^0.1.9",
         "@plurid/plurid-react": "^0.1.199",
-        "@plurid/plurid-react-server": "^0.1.82",
+        "@plurid/plurid-react-server": "^0.1.83",
         "@plurid/plurid-themes": "^0.1.26",
         "@plurid/plurid-ui-react": "^0.1.83",
         "@rollup/plugin-commonjs": "^14.0.0",
