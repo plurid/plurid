@@ -65,7 +65,7 @@
         "open": "^7.0.4"
     },
     "devDependencies": {
-        "@apollo/react-hooks": "^3.1.5",
+        "@apollo/client": "^3.0.2",
         "@babel/core": "^7.10.4",
         "@plurid/plurid-data": "^0.1.159",
         "@plurid/plurid-engine": "^0.1.96",
@@ -94,9 +94,6 @@
         "@types/styled-components": "^5.1.0",
         "@typescript-eslint/eslint-plugin": "^3.6.0",
         "@typescript-eslint/parser": "^3.6.0",
-        "apollo-cache-inmemory": "^1.6.6",
-        "apollo-client": "^2.6.10",
-        "apollo-utilities": "^1.3.4",
         "eslint": "^7.4.0",
         "graphql": "^15.3.0",
         "hammerjs": "^2.0.8",

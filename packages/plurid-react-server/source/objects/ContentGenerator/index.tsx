@@ -145,7 +145,7 @@ export default class PluridContentGenerator {
                     ReduxProvider = redux.Provider;
                     break;
                 case 'Apollo':
-                    const apollo = await import('@apollo/react-hooks');
+                    const apollo = await import('@apollo/client');
                     ApolloProvider = apollo.ApolloProvider;
                     break;
                 case 'Stripe':
