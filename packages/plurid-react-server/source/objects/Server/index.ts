@@ -155,7 +155,7 @@ export default class PluridServer {
         const serverlink = `http://localhost:${port}`;
 
         if (!this.options.quiet) {
-            console.info(`\n\tPlurid Server Started on Port ${port}: ${serverlink}\n`);
+            console.info(`\n\t${this.options.serverName} Started on Port ${port}: ${serverlink}\n`);
         }
 
         this.server = this.serverApplication.listen(port);
@@ -167,7 +167,7 @@ export default class PluridServer {
 
     public stop() {
         if (!this.options.quiet) {
-            console.info(`\n\tPlurid Server Closed on Port ${this.port}\n`);
+            console.info(`\n\t${this.options.serverName} Closed on Port ${this.port}\n`);
         }
 
         if (this.server) {
@@ -531,7 +531,7 @@ export default class PluridServer {
             styles = stylesheet.getStyleTags();
         } catch (error) {
             if (this.options.debug !== 'none' && !this.options.quiet) {
-                const errorText = 'Plurid Server Error: Something went wrong in getContentAndStyles().'
+                const errorText = `${this.options.serverName} Error: Something went wrong in getContentAndStyles().`
                 if (this.options.debug === 'error') {
                     console.error(errorText, error);
                 } else {
@@ -557,6 +557,7 @@ export default class PluridServer {
         partialOptions?: PluridServerPartialOptions,
     ) {
         const options: PluridServerOptions = {
+            serverName: partialOptions?.serverName || DEFAULT_SERVER_OPTIONS.SERVER_NAME,
             quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
             debug: (partialOptions?.debug || environment.production) ? 'error' : 'info',
             compression: partialOptions?.compression ?? DEFAULT_SERVER_OPTIONS.COMPRESSION,

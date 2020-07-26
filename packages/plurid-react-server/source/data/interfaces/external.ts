@@ -27,6 +27,9 @@ export type DebugLevels =
 
 
 export interface PluridServerOptions {
+    /** To be used for logging. Default `Plurid Server` */
+    serverName: string;
+
     /**
      * To log or not to log to the console.
      */
