@@ -32,4 +32,8 @@ export const TOPICS = {
     SPACE_SCALE_WITH: 'space.scaleWith',
 
     SPACE_TRANSFORM: 'space.transform',
+
+    VIEW_ADD_PLANE: 'view.addPlane',
+    VIEW_SET_PLANES: 'view.setPlanes',
+    VIEW_REMOVE_PLANE: 'view.removePlane',
 }
