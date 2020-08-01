@@ -134,7 +134,7 @@ export interface ViewDispatchProperties {
 
     // dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
 
-    // dispatchSpaceSetView: typeof actions.space.spaceSetView;
+    dispatchSpaceSetView: typeof actions.space.spaceSetView;
     // dispatchSpaceSetCulledView: typeof actions.space.spaceSetCulledView;
 
     // dispatchDataSetPlaneSources: typeof actions.data.setPlaneSources;
@@ -177,6 +177,8 @@ const PluridView: React.FC<ViewProperties> = (
         dispatchTranslateYWith,
         dispatchScaleUpWith,
         dispatchScaleDownWith,
+
+        dispatchSpaceSetView,
     } = properties;
 
     const {
@@ -460,6 +462,34 @@ const PluridView: React.FC<ViewProperties> = (
                 value,
             } = data;
             dispatchRotateYWith(value);
+        });
+
+        pubsub.subscribe(TOPICS.VIEW_ADD_PLANE, (data: any) => {
+            const {
+                plane,
+            } = data;
+
+            // const updatedView = [
+            //     ...view,
+            //     plane,
+            // ];
+            // dispatchSpaceSetView(updatedView);
+        });
+
+        pubsub.subscribe(TOPICS.VIEW_SET_PLANES, (data: any) => {
+            const {
+                view,
+            } = data;
+
+            // dispatchSpaceSetView([
+            //     ...view,
+            // ]);
+        });
+
+        pubsub.subscribe(TOPICS.VIEW_REMOVE_PLANE, (data: any) => {
+            const {
+                plane,
+            } = data;
         });
     }
 
@@ -1442,11 +1472,11 @@ const mapDispatchToProperties = (
     //     actions.space.setActiveUniverse(activeUniverse)
     // ),
 
-    // dispatchSpaceSetView: (
-    //     view,
-    // ) => dispatch(
-    //     actions.space.spaceSetView(view),
-    // ),
+    dispatchSpaceSetView: (
+        view,
+    ) => dispatch(
+        actions.space.spaceSetView(view),
+    ),
     // dispatchSpaceSetCulledView: (
     //     culledView,
     // ) => dispatch(
