@@ -297,14 +297,17 @@ const PluridView: React.FC<ViewProperties> = (
         configuration: PluridAppConfiguration,
     ) => {
         if (configuration.space.center && !configuration.space.camera) {
-            // const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
-            const x = window.innerWidth / 2 - (window.innerWidth / 2 * configuration.elements.plane.width);
-            dispatchTranslateXWith(x);
+            // center the camera within the space
 
-            // to get plane height;
-            const planeHeight = 300;
-            const y = window.innerHeight / 2 - planeHeight/2;
-            dispatchTranslateYWith(y);
+
+            // // const x = window.innerWidth / 2 - viewSize.width / 2 * configuration.elements.plane.width;
+            // const x = window.innerWidth / 2 - (window.innerWidth / 2 * configuration.elements.plane.width);
+            // dispatchTranslateXWith(x);
+
+            // // to get plane height;
+            // const planeHeight = 300;
+            // const y = window.innerHeight / 2 - planeHeight/2;
+            // dispatchTranslateYWith(y);
         }
     }
 
@@ -478,6 +481,19 @@ const PluridView: React.FC<ViewProperties> = (
             const {
                 plane,
             } = data;
+
+            /** TODO
+             * a less naive filtering
+             */
+            const updatedView = stateSpaceView.filter(view => {
+                if (typeof view === 'string') {
+                    return view === plane;
+                }
+
+                return true;
+            });
+
+            dispatchSpaceSetView(updatedView);
         });
     }
 
