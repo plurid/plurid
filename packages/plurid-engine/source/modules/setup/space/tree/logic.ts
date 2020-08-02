@@ -246,52 +246,51 @@ export const resolveViewItem = (
             route,
             resolvedView.route,
         );
+        // console.log('route', route);
+        // console.log('resolvedView.route', resolvedView.route);
         // console.log('routeMatch', routeMatch);
 
-        if (routeMatch) {
-            // check if resolvedView.route matches with the route
-            // check if parametric
-            // extract parameters
-            // generate a tree plane
-
-            const treePlane: TreePlane = {
-                sourceID: route,
-
-                planeID: uuid.generate(),
-
-                route: resolvedView.route,
-
-                routeDivisions: {
-                    protocol: {
-                        value: '',
-                        secure: false,
-                    },
-                    host: {
-                        value: host,
-                        controlled: true,
-                    },
-                    path: routeMatch.path,
-                    space: routeMatch.space,
-                    universe: routeMatch.universe,
-                    cluster: routeMatch.cluster,
-                    plane: routeMatch.plane,
-                    valid: true,
-                },
-
-                height: 0,
-                width: 0,
-                location: {
-                    translateX: 0,
-                    translateY: 0,
-                    translateZ: 0,
-                    rotateX: 0,
-                    rotateY: 0,
-                },
-                show: true,
-            }
-
-            return treePlane;
+        if (!routeMatch) {
+            continue;
         }
+
+        const treePlane: TreePlane = {
+            sourceID: route,
+
+            planeID: uuid.generate(),
+
+            route: resolvedView.route,
+
+            routeDivisions: {
+                protocol: {
+                    value: '',
+                    secure: false,
+                },
+                host: {
+                    value: host,
+                    controlled: true,
+                },
+                path: routeMatch.path,
+                space: routeMatch.space,
+                universe: routeMatch.universe,
+                cluster: routeMatch.cluster,
+                plane: routeMatch.plane,
+                valid: true,
+            },
+
+            height: 0,
+            width: 0,
+            location: {
+                translateX: 0,
+                translateY: 0,
+                translateZ: 0,
+                rotateX: 0,
+                rotateY: 0,
+            },
+            show: true,
+        };
+
+        return treePlane;
     }
 
     return;
@@ -313,7 +312,7 @@ export const computeSpaceTree = (
     // console.log('computeSpaceTree');
     // console.log('planes', planes);
     // console.log('configuration', configuration);
-    // console.log('view', view);
+    // console.log('computeSpaceTree view', view);
 
     const treePlanes: TreePlane[] = [];
 
