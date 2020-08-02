@@ -9,15 +9,59 @@ import {
     ReactComponentWithPlurid,
     PluridPartialConfiguration,
     PluridApplicationConfigurator,
+    PluridPubSub,
+
+    TOPICS,
 } from '@plurid/plurid-react';
 
+import {
+    PluridPureButton,
+} from '@plurid/plurid-ui-react';
+
+
+
+const pluridPubSub = new PluridPubSub();
 
 
 const Plane: React.FC<ReactComponentWithPlurid<any>> = (
     properties,
 ) => {
     /** state */
-    const [configuration, setConfiguration] = useState<PluridPartialConfiguration>({});
+    const [
+        configuration,
+        setConfiguration,
+    ] = useState<PluridPartialConfiguration>({});
+
+
+    /** handlers */
+    const addView = () => {
+        pluridPubSub.publish(
+            TOPICS.VIEW_ADD_PLANE,
+            {
+                plane: '/plane-2',
+            },
+        );
+    }
+
+    const setView = () => {
+        pluridPubSub.publish(
+            TOPICS.VIEW_SET_PLANES,
+            {
+                view: [
+                    '/plane-2',
+                ],
+            },
+        );
+    }
+
+    const removePlane = () => {
+        pluridPubSub.publish(
+            TOPICS.VIEW_REMOVE_PLANE,
+            {
+                plane: '/plane-2',
+            },
+        );
+    }
 
 
     /** effects */
@@ -43,9 +87,37 @@ const Plane: React.FC<ReactComponentWithPlurid<any>> = (
         <div>
             <PluridApplicationConfigurator
                 configuration={configuration}
+                pubsub={pluridPubSub}
             />
 
             A plane
+
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr 1fr',
+                    gridGap: '3rem',
+                    margin: '30px',
+                }}
+            >
+                <PluridPureButton
+                    text="add plane"
+                    atClick={() => addView()}
+                    level={2}
+                />
+
+                <PluridPureButton
+                    text="set view"
+                    atClick={() => setView()}
+                    level={2}
+                />
+
+                <PluridPureButton
+                    text="remove plane"
+                    atClick={() => removePlane()}
+                    level={2}
+                />
+            </div>
         </div>
     );
 }
@@ -57,7 +129,14 @@ const App = () => {
             value: '/',
             planes: [
                 {
-                    value: '/plane',
+                    value: '/plane-1',
+                    component: {
+                        kind: 'react',
+                        element: Plane,
+                    },
+                },
+                {
+                    value: '/plane-2',
                     component: {
                         kind: 'react',
                         element: Plane,
@@ -65,7 +144,7 @@ const App = () => {
                 },
             ],
             view: [
-                '/plane',
+                '/plane-1',
             ],
         },
         {
