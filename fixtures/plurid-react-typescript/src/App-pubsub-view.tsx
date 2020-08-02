@@ -139,7 +139,11 @@ const App = () => {
                     value: '/plane-2',
                     component: {
                         kind: 'react',
-                        element: Plane,
+                        element: () => (
+                            <div>
+                                Plane 2
+                            </div>
+                        ),
                     },
                 },
             ],
