@@ -29,6 +29,8 @@ const getTransform = (state: AppState) => {
     }
 }
 const getActiveUniverseID = (state: AppState) => state.space.activeUniverseID;
+
+const getView = (state: AppState) => state.space.view;
 const getViewSize = (state: AppState) => state.space.viewSize;
 const getCulledView = (state: AppState) => state.space.culledView;
 
@@ -52,6 +54,7 @@ export default {
 
     getActiveUniverseID,
 
+    getView,
     getViewSize,
     getCulledView,
 };

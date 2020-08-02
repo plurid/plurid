@@ -47,6 +47,8 @@ export const StyledPluridPlane: any = styled.div`
     height: auto;
     width: 100%;
     font-size: 0.9rem;
+    font-family: Ubuntu, -apple-system, BlinkMacSystemFont, Roboto,
+        'Open Sans', 'Helvetica Neue', 'Lucida Sans', sans-serif;
     transition: background-color 300ms linear;
 
     display: grid;

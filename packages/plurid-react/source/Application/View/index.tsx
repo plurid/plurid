@@ -103,6 +103,7 @@ export interface ViewStateProperties {
     // activeUniverseID: string;
     // stateSpaceLocation: any;
     // stateCulledView: any;
+    stateSpaceView: any[];
 }
 
 export interface ViewDispatchProperties {
@@ -156,6 +157,7 @@ const PluridView: React.FC<ViewProperties> = (
         stateConfiguration,
         stateSpaceLoading,
         stateTransform,
+        stateSpaceView,
 
         /** dispatch */
         dispatch,
@@ -395,27 +397,13 @@ const PluridView: React.FC<ViewProperties> = (
             );
             // console.log('spaceTree', spaceTree);
 
-
-
-
-            // prepare the view
-
-            // check if view routes have a parametric match
-
-
-            // create the view tree - including layout
-
-
-            // handle space computations
-
-
-
+            // dispatchDataSetPlaneSources(planeSources);
             // dispatchSetSpaceSize(spaceSize);
             dispatchSetConfiguration(appConfiguration);
             dispatchSetInitialTree(spaceTree);
             dispatchSetTree(spaceTree);
+            dispatchSpaceSetView(view || []);
             dispatchSetSpaceLoading(false);
-            // dispatchDataSetPlaneSources(planeSources);
         }
     }
 
@@ -469,11 +457,11 @@ const PluridView: React.FC<ViewProperties> = (
                 plane,
             } = data;
 
-            // const updatedView = [
-            //     ...view,
-            //     plane,
-            // ];
-            // dispatchSpaceSetView(updatedView);
+            const updatedView = [
+                ...stateSpaceView,
+                plane,
+            ];
+            dispatchSpaceSetView(updatedView);
         });
 
         pubsub.subscribe(TOPICS.VIEW_SET_PLANES, (data: any) => {
@@ -481,9 +469,9 @@ const PluridView: React.FC<ViewProperties> = (
                 view,
             } = data;
 
-            // dispatchSpaceSetView([
-            //     ...view,
-            // ]);
+            dispatchSpaceSetView([
+                ...view,
+            ]);
         });
 
         pubsub.subscribe(TOPICS.VIEW_REMOVE_PLANE, (data: any) => {
@@ -678,18 +666,29 @@ const PluridView: React.FC<ViewProperties> = (
     /** effects */
     /** Compute Application */
     useEffect(() => {
-        computeApplication(
-            configuration,
-            planes,
-            view,
-            indexedPlanes,
-        );
+        if (stateSpaceView.length == 0) {
+            computeApplication(
+                configuration,
+                planes,
+                view,
+                indexedPlanes,
+            );
+        } else {
+            computeApplication(
+                configuration,
+                planes,
+                stateSpaceView,
+                indexedPlanes,
+            );
+        }
     }, [
         configuration,
         planes,
         view,
+        stateSpaceView,
         indexedPlanes,
     ]);
+
 
     /** Keydown, Wheel Listeners */
     useEffect(() => {
@@ -1392,6 +1391,7 @@ const mapStateToProperties = (
     stateSpaceLoading: selectors.space.getLoading(state),
     // stateSpaceLocation: selectors.space.getTransform(state),
     // stateCulledView: selectors.space.getCulledView(state),
+    stateSpaceView: selectors.space.getView(state),
 });
 
 
