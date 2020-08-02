@@ -28,9 +28,6 @@ import {
     RegisteredPluridPlane,
     PluridView,
     TreePlane,
-    PluridInternalStateUniverse,
-    // PluridInternalContextUniverse,
-    Indexed,
 } from '@plurid/plurid-data';
 
 import {
@@ -44,7 +41,7 @@ import PluridPubSub, {
 } from '@plurid/plurid-pubsub';
 
 import {
-    uuid,
+    meta,
 } from '@plurid/plurid-functions';
 
 import themes, {
@@ -114,7 +111,6 @@ export interface ViewDispatchProperties {
 
     // dispatchSetUniverses: typeof actions.data.setUniverses;
 
-    // dispatchSetViewSize: typeof actions.space.setViewSize;
     dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     dispatchSetTransformTime: typeof actions.space.setTransformTime;
@@ -135,6 +131,7 @@ export interface ViewDispatchProperties {
 
     // dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
 
+    dispatchSpaceSetViewSize: typeof actions.space.setViewSize;
     dispatchSpaceSetView: typeof actions.space.spaceSetView;
     // dispatchSpaceSetCulledView: typeof actions.space.spaceSetCulledView;
 
@@ -180,6 +177,7 @@ const PluridView: React.FC<ViewProperties> = (
         dispatchScaleUpWith,
         dispatchScaleDownWith,
 
+        dispatchSpaceSetViewSize,
         dispatchSpaceSetView,
     } = properties;
 
@@ -744,24 +742,24 @@ const PluridView: React.FC<ViewProperties> = (
     ]);
 
     /** Resize Listener */
-    // useEffect(() => {
-    //     const handleResize = meta.debounce(() => {
-    //         if (viewElement && viewElement.current) {
-    //             const width = viewElement.current.offsetWidth;
-    //             const height = viewElement.current.offsetHeight;
-    //             dispatchSetViewSize({
-    //                 width,
-    //                 height,
-    //             });
-    //         }
-    //     }, 150);
+    useEffect(() => {
+        const handleResize = meta.debounce(() => {
+            if (viewElement && viewElement.current) {
+                const width = viewElement.current.offsetWidth;
+                const height = viewElement.current.offsetHeight;
+                dispatchSpaceSetViewSize({
+                    width,
+                    height,
+                });
+            }
+        }, 150);
 
-    //     window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', handleResize);
 
-    //     return () => {
-    //         window.removeEventListener('resize', handleResize);
-    //     }
-    // }, []);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        }
+    }, []);
 
     /** Touch */
     useEffect(() => {
@@ -1426,9 +1424,9 @@ const mapDispatchToProperties = (
     // dispatchSetUniverses: (universes: any) => dispatch(
     //     actions.data.setUniverses(universes)
     // ),
-    // dispatchSetViewSize: (viewSize: ViewSize) => dispatch(
-    //     actions.space.setViewSize(viewSize)
-    // ),
+    dispatchSpaceSetViewSize: (viewSize: ViewSize) => dispatch(
+        actions.space.setViewSize(viewSize)
+    ),
 
     dispatchSetSpaceLoading: (loading: boolean) => dispatch(
         actions.space.setSpaceLoading(loading)
