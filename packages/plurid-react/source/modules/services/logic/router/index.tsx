@@ -326,7 +326,7 @@ export const getComponentFromRoute = (
 
         // console.log('path.value', path.value);
 
-        console.log('getComponentFromRoute planes view', view);
+        // console.log('getComponentFromRoute planes view', view);
 
         const App = (
             <PluridApplication
