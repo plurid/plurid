@@ -191,6 +191,8 @@ const PluridView: React.FC<ViewProperties> = (
         view,
     } = application;
 
+    // console.log('APPLICATION view', view);
+
 
 
     /** references */
@@ -314,6 +316,7 @@ const PluridView: React.FC<ViewProperties> = (
         planes: Map<string, RegisteredPluridPlane>,
         view: string[] | PluridView[],
     ) => {
+        // console.log('computeTree view', view);
         const spaceTree = new space.tree.Tree({
             planes,
             configuration,
@@ -403,6 +406,7 @@ const PluridView: React.FC<ViewProperties> = (
             dispatchSetConfiguration(appConfiguration);
             dispatchSetInitialTree(spaceTree);
             dispatchSetTree(spaceTree);
+            // console.log('dispatchSpaceSetView view', view);
             dispatchSpaceSetView(view || []);
             dispatchSetSpaceLoading(false);
         }
@@ -680,7 +684,10 @@ const PluridView: React.FC<ViewProperties> = (
     /** effects */
     /** Compute Application */
     useEffect(() => {
-        if (stateSpaceView.length == 0) {
+        // console.log('USE EFFECT view', view);
+        // console.log('USE EFFECT stateSpaceView', stateSpaceView);
+
+        if (stateSpaceView.length === 0) {
             computeApplication(
                 configuration,
                 planes,

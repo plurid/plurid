@@ -47,6 +47,7 @@ export const serverComputeMetastate = (
             planes,
             view,
         } = application;
+        // console.log('serverComputeMetastate view', view);
 
         const {
             computedTree,

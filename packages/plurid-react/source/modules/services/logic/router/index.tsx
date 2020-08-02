@@ -253,6 +253,7 @@ export const getComponentFromRoute = (
             }
 
             // console.log('spaces path.value', path.value);
+            // console.log('getComponentFromRoute spaces view', view);
 
             const App = (
                 <PluridApplication
@@ -324,6 +325,8 @@ export const getComponentFromRoute = (
         const planesProperties = new Map();
 
         // console.log('path.value', path.value);
+
+        console.log('getComponentFromRoute planes view', view);
 
         const App = (
             <PluridApplication
@@ -994,6 +997,7 @@ export const collectApplicationsFromPath = (
     const {
         planes,
         spaces,
+        view,
     } = path;
 
     const pluridProperty = {
@@ -1169,7 +1173,7 @@ export const collectApplicationsFromPath = (
 
     if (planes) {
         const pluridPlanes: PluridPlane[] = [];
-        const view = [];
+        // const view = [];
 
         for (const plane of planes) {
             const {
@@ -1208,13 +1212,13 @@ export const collectApplicationsFromPath = (
                 };
 
                 pluridPlanes.push(pluridPlane);
-                view.push(fullPath);
+                // view.push(fullPath);
             }
         }
 
         const pluridApplication = {
             planes: pluridPlanes,
-            view,
+            view: view || [],
         };
         plurids.push(pluridApplication);
     }
