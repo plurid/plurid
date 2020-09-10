@@ -18,30 +18,42 @@ const indexRoute: PluridRoute = {
         kind: 'react',
         element: Head,
     },
-    spaces: [
+    planes: [
         {
-            value: 'default',
-            universes: [
-                {
-                    value: 'default',
-                    clusters: [
-                        {
-                            value: 'default',
-                            planes: [
-                                {
-                                    value: '/page',
-                                    component: {
-                                        kind: 'react',
-                                        element: IndexPagePlane,
-                                    },
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
+            value: '/plane',
+            component: {
+                kind: 'react',
+                element: IndexPagePlane,
+            },
         },
     ],
+    view: [
+        '/plane',
+    ],
+    // spaces: [
+    //     {
+    //         value: 'default',
+    //         universes: [
+    //             {
+    //                 value: 'default',
+    //                 clusters: [
+    //                     {
+    //                         value: 'default',
+    //                         planes: [
+    //                             {
+    //                                 value: '/page',
+    //                                 component: {
+    //                                     kind: 'react',
+    //                                     element: IndexPagePlane,
+    //                                 },
+    //                             },
+    //                         ],
+    //                     },
+    //                 ],
+    //             },
+    //         ],
+    //     },
+    // ],
 }
 
 
