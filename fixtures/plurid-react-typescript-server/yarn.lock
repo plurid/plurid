@@ -587,10 +587,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.159.tgz#e07dc2a8eb4508b4438226ac8cc6d23ea8457abb"
   integrity sha512-slAwwmj+LdBY0V2Gwxn79fOemdm4Tk1dylb4DnM8ny1Buunn51Qz9rPrxxLJXqJJLnM9yMRn/xZjlU5IzJWxFQ==
 
-"@plurid/plurid-engine@^0.1.99":
-  version "0.1.99"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.99.tgz#1735e62bd56d3e0249f5e40855c85a1a224830f6"
-  integrity sha512-c0RV3d4bC6dsw4YNZ3dK6V4bUZyiilxASg/QW0pMo5NY4hkkP8lh+XD2X6iLNVGnVOo/ZV/FhJG/aqwnMkDOhw==
+"@plurid/plurid-engine@^0.1.100":
+  version "0.1.100"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-engine/-/plurid-engine-0.1.100.tgz#aeeb5cb6e4d97311600e58629100d8eeae9027e0"
+  integrity sha512-GAuu4N2tAzxlcXDEIOrpy2vo7nt/T2C2TJpDTJsv5K/87fmNL7RRa6lD1IrScoo0OrEcnqCBr/dPatZRNx/rcw==
 
 "@plurid/plurid-functions-react@^0.0.1":
   version "0.0.1"
@@ -622,10 +622,10 @@
     express "^4.17.1"
     open "^7.1.0"
 
-"@plurid/plurid-react@^0.1.201":
-  version "0.1.201"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.201.tgz#06fa15e9dcb99d5c13d86244bebda9f7891e8e36"
-  integrity sha512-wOlFcWNc5G3dCFPmG7CyycLw53GW+rbn3K4+MeBoYJPDXLfiNpS1O7pk+pVJM+P62Afg4TCAU2LzsMazVx9jqw==
+"@plurid/plurid-react@^0.1.202":
+  version "0.1.202"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-react/-/plurid-react-0.1.202.tgz#361248453de637c016f3db48d7d551cd18d0b596"
+  integrity sha512-pSXa/gFrAQ0kCaerSBmhytbwGsQIWsplTfHhYEDHZB9IVIiJ6ebllseMci90TSEvhYKOWiPbDwwv8lvuazLbmg==
 
 "@plurid/plurid-themes@^0.1.26":
   version "0.1.26"
