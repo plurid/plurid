@@ -337,6 +337,8 @@ const PluridView: React.FC<ViewProperties> = (
         const appConfiguration = generalEngine.configuration.merge(configuration);
         handleConfiguration(appConfiguration);
 
+        // console.log('planes', planes);
+
         if (planes) {
             for (const plane of planes) {
                 // loop over PluridPlanes and generate the Fully Qualified Route
