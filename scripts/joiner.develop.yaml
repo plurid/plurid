@@ -1,13 +1,13 @@
 ---
 packages:
-  - ./packages/*
+  - ./packages/plurid-cli
+  - ./packages/plurid-web/*
   - ./fixtures/*
 
 package:
   manager: yarn
   publisher: npm
   ignore:
-    - packages/plurid-specification
     - fixtures/extras
     - node_modules
 

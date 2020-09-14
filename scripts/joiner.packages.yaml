@@ -1,12 +1,11 @@
 ---
 packages:
-  - ./packages/*
+  - ./packages/plurid-cli
+  - ./packages/plurid-web/*
 
 package:
   manager: yarn
   publisher: npm
-  ignore:
-    - packages/plurid-specification
 
 yarnWorkspace: false
 

@@ -69,7 +69,7 @@ plurid deploy
 
 [@plurid/generate-plurid-app][generate-plurid-app] • generate a `plurid'` application with one command (and some choices)
 
-[generate-plurid-app]: https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app
+[generate-plurid-app]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/generate-plurid-app
 
 
 
@@ -82,7 +82,7 @@ plurid deploy
 
 [@plurid/plurid-data][plurid-data] • constants, enumerations, interfaces
 
-[plurid-data]: https://github.com/plurid/plurid/tree/master/packages/plurid-data
+[plurid-data]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-data
 
 
 
@@ -92,7 +92,7 @@ plurid deploy
 
 [@plurid/plurid-engine][plurid-engine] • 3D and utility functions
 
-[plurid-engine]: https://github.com/plurid/plurid/tree/master/packages/plurid-engine
+[plurid-engine]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-engine
 
 
 
@@ -102,7 +102,7 @@ plurid deploy
 
 [@plurid/plurid-pubsub][plurid-pubsub] • publish/subscribe message bus
 
-[plurid-pubsub]: https://github.com/plurid/plurid/tree/master/packages/plurid-pubsub
+[plurid-pubsub]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-pubsub
 
 
 
@@ -159,7 +159,7 @@ plurid deploy
 
 [@plurid/plurid-html][plurid-html] • implementation for HTML Custom Elements
 
-[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid-html
+[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-html
 
 
 
@@ -179,7 +179,7 @@ plurid deploy
 
 [@plurid/plurid-react][plurid-react] • implementation for React
 
-[plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid-react
+[plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react
 
 
 
@@ -189,7 +189,7 @@ plurid deploy
 
 [@plurid/plurid-react-server][plurid-react-server] • server for the React implementation
 
-[plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-react-server
+[plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react-server
 
 
 
