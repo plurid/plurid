@@ -8,9 +8,9 @@
 name: appName
 
 # Environment in which to run the application.
-# Supported: static, node, python, go.
+# Supported: static, nodejs, python, go.
 # Default: static.
-runtime: node
+runtime: nodejs
 
 # Deployment region.
 # Supported: us, europe.
