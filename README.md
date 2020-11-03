@@ -18,7 +18,7 @@
 
 
 
-The monorepository contains packages implementing the `plurid'` technology to create a 3D browser-powered view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
+The monorepository contains packages implementing the `plurid'` technology to transform information into a 3D explorable structure based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
 
 With `plurid'`, the content of a web page (or any kind of information) can now reside on a `plane of content` (a `Plurid Plane`) in a three-dimensional space (a `Plurid Space`). The space can be transformed, rotated, scaled, translated, in order to get a better grasp of the displayed information (text, images, videos, and so forth).
 
@@ -51,6 +51,11 @@ plurid deploy
 ## Packages
 
 
+[@plurid/plurid-specification][plurid-specification] • plurid' specification
+
+[plurid-specification]: https://github.com/plurid/plurid/tree/master/packages/plurid-specification
+
+
 ### Generate
 
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-cli">
@@ -73,8 +78,10 @@ plurid deploy
 
 
 
-### Tools
+### Shared
 
+
+#### Web
 
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-data">
     <img src="https://img.shields.io/npm/v/@plurid/plurid-data.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
@@ -106,50 +113,6 @@ plurid deploy
 
 
 
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-renderer">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-renderer.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-renderer][plurid-renderer] • rendering engine
-
-[plurid-renderer]: https://github.com/plurid/plurid/tree/master/packages/plurid-renderer -->
-
-
-
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-scripts">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-scripts.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-scripts][plurid-scripts] • build/development utility functions
-
-[plurid-scripts]: https://github.com/plurid/plurid/tree/master/packages/plurid-scripts -->
-
-
-
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-server">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-server][plurid-server] • server for server-side rendering and application serving
-
-[plurid-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-server -->
-
-
-[@plurid/plurid-specification][plurid-specification] • plurid' specification
-
-[plurid-specification]: https://github.com/plurid/plurid/tree/master/packages/plurid-specification
-
-
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-state">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-state.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-state][plurid-state] • state management for a plurid application
-
-[plurid-state]: https://github.com/plurid/plurid/tree/master/packages/plurid-state -->
-
-
-
 ### Implementations
 
 
@@ -160,16 +123,6 @@ plurid deploy
 [@plurid/plurid-html][plurid-html] • implementation for HTML Custom Elements
 
 [plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-html
-
-
-
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html-server">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-html-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-html-server][plurid-html-server] • server for the HTML Custom Elements implementation
-
-[plurid-html-server]: https://github.com/plurid/plurid/tree/master/packages/plurid-html-server -->
 
 
 
@@ -190,23 +143,3 @@ plurid deploy
 [@plurid/plurid-react-server][plurid-react-server] • server for the React implementation
 
 [plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react-server
-
-
-
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-vue">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-vue.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-vue][plurid-vue] • implementation for Vue
-
-[plurid-vue]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue -->
-
-
-
-<!-- <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-vue-ssr">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-vue-ssr.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-vue-ssr][plurid-vue-ssr] • server for the Vue implementation
-
-[plurid-vue-ssr]: https://github.com/plurid/plurid/tree/master/packages/plurid-vue-ssr -->
