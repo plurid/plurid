@@ -13,7 +13,7 @@ commit:
   engine: git
   combine: true
   root: ''
-  fullFolder: false
+  fullFolder: true
   divider: ' > '
   message: 'setup: package'
 
