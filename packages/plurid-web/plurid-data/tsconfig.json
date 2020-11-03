@@ -25,7 +25,8 @@
             "source/types/typings.d.ts"
         ],
 
-        "declaration": false,
+        "declaration": true,
+        "declarationDir": "distribution",
         "sourceMap": true,
         "allowJs": false,
         "esModuleInterop": true,
