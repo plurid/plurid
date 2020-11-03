@@ -34,8 +34,8 @@
         "clean": "rimraf ./distribution",
         "clean.tests": "find ./distribution -type d -name \"__tests__\" -prune -exec rm -rf {} +",
         "clean.performance": "find ./distribution -type d -name \"__performance__\" -prune -exec rm -rf {} +",
-        "test": "jest ./source --config ./jest.config.js --rootDir ./",
-        "lint": "eslint ./source --ext .ts,.tsx",
+        "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
+        "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
         "build.local": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:local",
         "build.development": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:development",
@@ -49,9 +49,9 @@
         "@plurid/plurid-themes": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "^0.1.160",
+        "@plurid/plurid-data": "^0.1.161",
         "@plurid/plurid-functions": "^0.1.17",
-        "@plurid/plurid-pubsub": "^0.1.10",
+        "@plurid/plurid-pubsub": "^0.1.11",
         "@plurid/plurid-themes": "^0.1.27",
         "@rollup/plugin-commonjs": "^16.0.0",
         "@types/jest": "^26.0.15",
