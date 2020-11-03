@@ -8,7 +8,7 @@ import json from '@rollup/plugin-json';
 import copy from 'rollup-plugin-copy';
 
 
-const pkg = require('./package.json');
+const pkg = require('../package.json');
 
 
 const globals = {
