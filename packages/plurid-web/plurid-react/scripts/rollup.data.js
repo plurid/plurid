@@ -11,6 +11,9 @@ import resolve from '@rollup/plugin-node-resolve';
 
 export const input = 'source/index.tsx';
 export const plugins = [
+    typescript({
+        tsconfig: './tsconfig.json',
+    }),
     replace({
         'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
     }),
@@ -22,7 +25,6 @@ export const plugins = [
     babel({
         exclude: 'node_modules/**',
     }),
-    typescript(),
     commonjs(),
     resolve({
         modulesOnly: true,

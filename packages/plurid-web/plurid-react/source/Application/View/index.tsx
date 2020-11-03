@@ -790,10 +790,10 @@ const PluridView: React.FC<ViewProperties> = (
              * Remove Hammerjs default css properties to add them only when in Lock Mode.
              * https://stackoverflow.com/a/37896547
              */
-            delete Hammer.defaults.cssProps.userSelect;
-            delete Hammer.defaults.cssProps.userDrag;
-            delete Hammer.defaults.cssProps.tapHighlightColor;
-            delete Hammer.defaults.cssProps.touchSelect;
+            delete (Hammer as any).defaults.cssProps.userSelect;
+            delete (Hammer as any).defaults.cssProps.userDrag;
+            delete (Hammer as any).defaults.cssProps.tapHighlightColor;
+            delete (Hammer as any).defaults.cssProps.touchSelect;
 
             if (!viewElement.current) {
                 return;
