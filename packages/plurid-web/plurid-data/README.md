@@ -5,7 +5,7 @@
     <a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-data">
         <img src="https://img.shields.io/npm/v/@plurid/plurid-data.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
     </a>
-    <a target="_blank" href="https://github.com/plurid/plurid-data/blob/master/LICENSE">
+    <a target="_blank" href="https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-data/LICENSE">
         <img src="https://img.shields.io/badge/license-MIT-blue.svg?colorB=1380C3&style=for-the-badge" alt="License: MIT">
     </a>
 </p>
