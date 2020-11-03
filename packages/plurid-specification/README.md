@@ -22,7 +22,14 @@
 
 The specification details the manner and the general conventions regarding the transformation of displayed information into a 3D explorable structure.
 
-The specification is implemented as [`plurid`](https://github.com/plurid/plurid).
+The specification is implemented for
+
++ native
+    + [`plurid-react-native`](https://github.com/plurid/plurid/tree/master/packages/plurid-native/plurid-react-native) - in progress
+    + [`plurid-swift`](https://github.com/plurid/plurid/tree/master/packages/plurid-native/plurid-swift) - in progress
++ web
+    + [`plurid-html`](https://github.com/plurid/plurid/tree/master/packages/plurid-web/plurid-html) - in progress
+    + [`plurid-react`](https://github.com/plurid/plurid/tree/master/packages/plurid-web/plurid-react)
 
 
 
@@ -36,7 +43,7 @@ The specification is implemented as [`plurid`](https://github.com/plurid/plurid)
 
 ## Scope
 
-To generate a three-dimensional space within the information-viewing device where each relevant grouping of information is a plane of content and transform the information navigational experience into a 3D exploration.
+To generate a three-dimensional space within the general information-viewing software/device (e.g., a browser) where each relevant grouping of information (e.g., a /web/page) is a plane of content and transform the information navigational experience into a 3D exploration.
 
 <div align="center">
     <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-demo.png" height="600px">
