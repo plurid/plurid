@@ -8,7 +8,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
-import pkg from './package.json';
+import pkg from '../package.json';
 
 
 
@@ -37,6 +37,10 @@ export default [
             'express',
             'open',
             'compression',
+            'react-stripe-elements',
+            'graphql-tag',
+            'fast-json-stable-stringify',
+            'zen-observable',
         ],
         inlineDynamicImports: true,
         plugins: [
