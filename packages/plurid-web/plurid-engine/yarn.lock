@@ -524,20 +524,20 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@plurid/plurid-data@^0.1.160":
-  version "0.1.160"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.160.tgz#35621681e0338b8dfbb170f918a2740df5208ee2"
-  integrity sha512-F0LCNGReUotljURaRANcfb2tSQ6IPFId2MJVKHsh7FbiUwSi7UVSatMvn5PLGgW08rSQjfzGLB5ZkEkvG4JEEA==
+"@plurid/plurid-data@^0.1.161":
+  version "0.1.161"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.1.161.tgz#5544a224792b248d6d0a26c0241a0b8b1da20877"
+  integrity sha512-zyRLrvgxiHq8R2qOEk+bmEEjE6HPenOU4ZGR25B8nZmPnA2Mac5ECYE5X/fSEHM79KQBTmGCTmZ3smgbf99R0g==
 
 "@plurid/plurid-functions@^0.1.17":
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.17.tgz#ebe547b515cd11e89f61566d62353fc644e96db1"
   integrity sha512-XwB53JVVr7T14FZqiMpLe6Lz1arqbuKuuWYoe3wZ03WcDptAFTX9s0aQYofGqoVMgVYSFx9rMtysrFv72Lqg1Q==
 
-"@plurid/plurid-pubsub@^0.1.10":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.10.tgz#61974ada305c758b0fcdb1eab9db9703814f37be"
-  integrity sha512-UJrQD/B65SAudyPL0TddW2KVGmpt1rdWHP0m6vlPeuD769zZh5vYA2Wm7/Ke88h46pTIrxmvRBoaxtC9LfTVeA==
+"@plurid/plurid-pubsub@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.1.11.tgz#b62a9312903e4aea85ef82d354158386ee4d713c"
+  integrity sha512-SfKZ8VrHoc1zb2QU8uASpWsTu6Fh02wa3pSWwqlRJmRvTAl6+CzueRbdQNAZ/SKyReoRXOpQCRj8+hbn0+qk2g==
 
 "@plurid/plurid-themes@^0.1.27":
   version "0.1.27"
