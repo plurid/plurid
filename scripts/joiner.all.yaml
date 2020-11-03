@@ -1,5 +1,6 @@
 ---
 packages:
+  - ./packages/plurid-cli
   - ./packages/plurid-web/*
 
 package:
@@ -11,7 +12,7 @@ yarnWorkspace: false
 commit:
   engine: git
   combine: true
-  root: 'plurid-web/'
+  root: ''
   fullFolder: false
   divider: ' > '
   message: 'setup: package'
