@@ -22,7 +22,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-data/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-data",
     "files": [
         "distribution/"
     ],
@@ -47,7 +47,7 @@
         "@plurid/plurid-themes": ">=0"
     },
     "devDependencies": {
-        "@plurid/plurid-pubsub": "^0.1.10",
+        "@plurid/plurid-pubsub": "^0.1.11",
         "@plurid/plurid-themes": "^0.1.27",
         "@types/react": "^16.9.55",
         "@typescript-eslint/eslint-plugin": "^4.6.1",

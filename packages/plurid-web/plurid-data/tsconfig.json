@@ -19,7 +19,7 @@
             ]
         },
 
-        "outDir": "build",
+        "outDir": "distribution",
         "typeRoots": [
             "node_modules/@types",
             "source/types/typings.d.ts"
