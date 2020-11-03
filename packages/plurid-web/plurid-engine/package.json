@@ -13,10 +13,10 @@
         "url": "https://github.com/plurid/plurid"
     },
     "bugs": {
-        "email": "feedback@plurid.com",
+        "email": "source@plurid.com",
         "url": "https://github.com/plurid/plurid/issues"
     },
-    "homepage": "https://github.com/plurid/plurid/tree/master/packages/plurid-engine",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-engine",
     "publishConfig": {
         "access": "public"
     },
@@ -27,7 +27,8 @@
     "module": "distribution/index.es.js",
     "typings": "distribution/index.d.ts",
     "engines": {
-        "node": ">=8.0.0"
+        "node": ">=12",
+        "npm": ">=6"
     },
     "scripts": {
         "clean": "rimraf ./distribution",
@@ -35,46 +36,48 @@
         "clean.performance": "find ./distribution -type d -name \"__performance__\" -prune -exec rm -rf {} +",
         "test": "jest ./source --config ./jest.config.js --rootDir ./",
         "lint": "eslint ./source --ext .ts,.tsx",
-        "start": "yarn clean && rollup -c -w --environment MODE_ENV:local",
-        "build.local": "yarn clean && rollup -c --environment ENV_MODE:local",
-        "build.development": "yarn clean && rollup -c --environment ENV_MODE:development",
-        "build.production": "yarn clean && rollup -c --environment ENV_MODE:production",
+        "start": "yarn clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
+        "build.local": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:local",
+        "build.development": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:development",
+        "build.production": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
         "build": "yarn lint && yarn test && yarn build.production && yarn clean.tests && yarn clean.performance",
         "prepublishOnly": "yarn build"
     },
     "peerDependencies": {
         "@plurid/plurid-data": "*",
-        "@plurid/plurid-functions": "*"
+        "@plurid/plurid-functions": "*",
+        "@plurid/plurid-themes": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "^0.1.159",
-        "@plurid/plurid-functions": "^0.1.15",
+        "@plurid/plurid-data": "^0.1.160",
+        "@plurid/plurid-functions": "^0.1.17",
         "@plurid/plurid-pubsub": "^0.1.10",
-        "@rollup/plugin-commonjs": "^15.0.0",
-        "@types/jest": "^26.0.13",
+        "@plurid/plurid-themes": "^0.1.27",
+        "@rollup/plugin-commonjs": "^16.0.0",
+        "@types/jest": "^26.0.15",
         "@types/lodash.camelcase": "^4.3.6",
-        "@types/node": "^14.6.4",
-        "@types/react": "^16.9.49",
+        "@types/node": "^14.14.6",
+        "@types/react": "^16.9.55",
         "@types/rollup-plugin-sourcemaps": "^0.4.2",
-        "@typescript-eslint/eslint-plugin": "^4.1.0",
-        "@typescript-eslint/parser": "^4.1.0",
+        "@typescript-eslint/eslint-plugin": "^4.6.1",
+        "@typescript-eslint/parser": "^4.6.1",
         "colors": "^1.4.0",
         "coveralls": "^3.1.0",
-        "eslint": "^7.8.1",
-        "jest": "^26.4.2",
-        "jest-config": "^26.4.2",
+        "eslint": "^7.12.1",
+        "jest": "^26.6.2",
+        "jest-config": "^26.6.2",
         "lodash.camelcase": "^4.3.0",
         "prompt": "^1.0.0",
-        "react": "^16.13.1",
+        "react": "^17.0.1",
         "replace-in-file": "^6.1.0",
         "rimraf": "^3.0.2",
-        "rollup": "^2.26.11",
-        "rollup-plugin-sourcemaps": "^0.6.2",
-        "rollup-plugin-typescript2": "^0.27.2",
+        "rollup": "^2.33.1",
+        "rollup-plugin-sourcemaps": "^0.6.3",
+        "rollup-plugin-typescript2": "^0.29.0",
         "shelljs": "^0.8.4",
-        "ts-jest": "^26.3.0",
+        "ts-jest": "^26.4.3",
         "ts-node": "^9.0.0",
-        "typedoc": "^0.19.1",
-        "typescript": "^4.0.2"
+        "typedoc": "^0.19.2",
+        "typescript": "^4.0.5"
     }
 }

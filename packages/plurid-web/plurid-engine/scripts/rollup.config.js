@@ -5,7 +5,7 @@ import typescript from 'rollup-plugin-typescript2';
 
 
 
-const pkg = require('./package.json');
+const pkg = require('../package.json');
 const libraryName = 'plurid-engine';
 const globals = {
     '@plurid/plurid-data': 'pluridData',
