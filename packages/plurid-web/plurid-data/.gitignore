@@ -42,15 +42,9 @@ bower_components
 # Build
 build
 
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
-
 # Dependency directories
 node_modules/
 jspm_packages/
-
-# TypeScript v1 declaration files
-typings/
 
 # TypeScript cache
 *.tsbuildinfo
@@ -73,32 +67,20 @@ typings/
 # dotenv environment variables file
 .env
 .env.sh
-.env.test
+.env.local
+.env.development
+.env.production
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
-
-# next.js build output
-.next
-
-# nuxt.js build output
-.nuxt
 
 # rollup.js default build output
 dist/
 distribution/
 
-# Uncomment the public line if your project uses Gatsby
-# https://nextjs.org/blog/next-9-1#public-directory-support
-# https://create-react-app.dev/docs/using-the-public-folder/#docsNav
-# public
-
 # Storybook build outputs
 .out
 .storybook-out
-
-# vuepress build output
-.vuepress/dist
 
 # Serverless directories
 .serverless/

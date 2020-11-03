@@ -16,13 +16,13 @@
         "url": "https://github.com/plurid/plurid"
     },
     "bugs": {
-        "email": "feedback@plurid.com",
+        "email": "source@plurid.com",
         "url": "https://github.com/plurid/plurid/issues"
     },
     "publishConfig": {
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-data/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-data/README.md",
     "files": [
         "distribution/"
     ],
@@ -30,15 +30,15 @@
     "module": "distribution/index.es.js",
     "jsnext:main": "distribution/index.es.js",
     "engines": {
-        "node": ">=8",
+        "node": ">=12",
         "npm": ">=6"
     },
     "scripts": {
         "clean": "rm -rf ./distribution",
         "lint": "eslint ./source --ext .ts,.tsx",
-        "start": "yarn clean && rollup -c -w --environment ENV_MODE:local",
-        "build.development": "yarn clean && rollup -c --environment ENV_MODE:local",
-        "build.production": "rollup -c --environment ENV_MODE:production",
+        "start": "yarn clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
+        "build.development": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:local",
+        "build.production": "rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
         "build": "yarn clean && yarn build.production",
         "prepublishOnly": "yarn build"
     },
