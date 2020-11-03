@@ -109,8 +109,10 @@ export const merge = (
                 configuration,
             ),
             theme: {
-                general: resolveTheme(configuration.global?.theme, 'general'),
-                interaction: resolveTheme(configuration.global?.theme, 'interaction'),
+                // TODO
+                // fix the Theme type
+                general: resolveTheme(configuration.global?.theme, 'general') as any,
+                interaction: resolveTheme(configuration.global?.theme, 'interaction') as any,
             },
         },
         elements: {
