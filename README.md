@@ -20,9 +20,16 @@
 
 The monorepository contains packages implementing the `plurid'` technology to transform information into a 3D explorable structure based on the [plurid specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
 
-With `plurid'`, a grouping of related information (such as a web page, or a fragment of one) can now reside on a `plane of content` (a `Plurid Plane`) in a three-dimensional space (a `Plurid Space`). The content of one `Plurid Plane` can be linked to another through the `Plurid Link`. The `Plurid Space` can be transformed, rotated, scaled, translated, in order to get a better grasp of the contextual links of the displayed information (text, images, videos, and so forth).
+With `plurid'`, a grouping of related information (such as a web page, or a fragment of one) can now reside on a `plane of content` (a `Plurid Plane`) in a three-dimensional space (a `Plurid Space`).
 
-`plurid'` is being used extensively in the <a target="_blank" href="https://plurid.com/products">`plurid' ∂products`</a>. New applications leveraging the `plurid'` technology can be easily generated through the [`plurid.app`](https://plurid.app/assembler) assembler or [programatically](#plurid-application).
+The content of one `Plurid Plane` can be linked to another through the `Plurid Link` which at action (click, tap, hover) effectively generates a new `plane of content` in the same space.
+
+The `Plurid Space` can be transformed, rotated, scaled, translated, in order to get a better grasp of the contextual links of the displayed information (text, images, videos, and so forth).
+
+`plurid'` is being used extensively in the <a target="_blank" href="https://plurid.com/products">`plurid' ∂products`</a>.
+
+New applications leveraging the `plurid'` technology can be easily generated through the [`plurid.app`](https://plurid.app/assembler) assembler or [programatically](#plurid-application).
+
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-demo.png" height="600px">
