@@ -23,11 +23,6 @@
 The specification details the manner and the general conventions regarding the transformation of displayed information into a 3D explorable structure.
 
 
-<p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
-</p>
-
-
 The specification is implemented for
 
 + web
@@ -38,12 +33,10 @@ The specification is implemented for
     + [`plurid-react-native`](https://github.com/plurid/plurid/tree/master/packages/plurid-native/plurid-react-native) - in progress
 
 
-
 ### Contents
 
 + [Scope](#scope)
-+ [Use](#use)
-+ [Description](#description)
++ [General Description](#general-description)
 
 
 
@@ -57,25 +50,30 @@ To generate a three-dimensional space within the general information-viewing sof
 
 
 
-## Use
+## General Description
 
 Concepts will be detailed using `HTML Custom Elements` pseudo-code.
 
-The content of the web page will be placed in a `<plurid-page>` tag, which is inside the `<plurid-app>`, inside the `<body>`
+The content of the web page will be placed in a `<plurid-plane>` tag, which is inside the `<plurid-application>`, inside the `<body>`
 
-    <body>
-        <plurid-app>
-            <plurid-page>
-                <div>
-                    The content of the web page
-                </div>
-            </plurid-page>
-        <plurid-app>
-    </body>
+``` html
+<body>
+    <plurid-application>
+        <plurid-plane>
+            <div>
+                The content of the web plane
+            </div>
+        </plurid-plane>
+    <plurid-application>
+</body>
+```
 
-The `<plurid-app>` will, by default, span over the full `width` and `height` of the browser window, and it will provide all the context required for the transformation of the 2D browser window into a 3D explorable space.
+The `<plurid-application>` will, by default, span over the full `width` and `height` of the view window, and it will provide all the context required for the transformation of the 2D window view into a 3D explorable space. The most important is the wrapping of the `<plurid-plane>`s into a `<plurid-space>`.
 
+The `<plurid-plane>` is an entity with a certain `width` and `height` which can be configured by the application developer, or let free to be modified by the user at runtime.
 
-## Description
+The `<plurid-plane>` has a specified `route` attribute. The `route` is unique across the entire `<plurid-space>`.
 
-For general design & architecture, features, and more: see `./about/notes/`.
+A `<plurid-plane>` can contain none, one, or more `<plurid-link>`s. A `<plurid-link>` will trigger at action (click, tap, hover) a rendering of the targeted `<plurid-plane>` inside the same `<plurid-space>`. The `<plurid-link>` specifies the targeted `<plurid-plane>` through the `route` attribute.
+
+A `<plurid-application>` has one ore more `<plurid-plane>`s in view, actually rendered in the view window, one or more `<plurid-plane>`s definitions, on the basis of which new `<plurid-planes>` will be resolved into view, and a function to resolve `<plurid-plane>`s not defined.
