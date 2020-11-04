@@ -31,8 +31,8 @@ The specification details the manner and the general conventions regarding the t
 The specification is implemented for
 
 + native
+    + [`plurid-electron`](https://github.com/plurid/plurid/tree/master/packages/plurid-native/plurid-electron) - in progress
     + [`plurid-react-native`](https://github.com/plurid/plurid/tree/master/packages/plurid-native/plurid-react-native) - in progress
-    + [`plurid-swift`](https://github.com/plurid/plurid/tree/master/packages/plurid-native/plurid-swift) - in progress
 + web
     + [`plurid-html`](https://github.com/plurid/plurid/tree/master/packages/plurid-web/plurid-html) - in progress
     + [`plurid-react`](https://github.com/plurid/plurid/tree/master/packages/plurid-web/plurid-react)
