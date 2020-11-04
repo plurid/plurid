@@ -18,11 +18,11 @@
 
 
 
-The monorepository contains packages implementing the `plurid'` technology to transform information into a 3D explorable structure based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
+The monorepository contains packages implementing the `plurid'` technology to transform information into a 3D explorable structure based on the [plurid specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
 
-With `plurid'`, the content of a web page (or any kind of information) can now reside on a `plane of content` (a `Plurid Plane`) in a three-dimensional space (a `Plurid Space`). The space can be transformed, rotated, scaled, translated, in order to get a better grasp of the displayed information (text, images, videos, and so forth).
+With `plurid'`, a grouping of related information (such as a web page, or a fragment of one) can now reside on a `plane of content` (a `Plurid Plane`) in a three-dimensional space (a `Plurid Space`). The content of one `Plurid Plane` can be linked to another through the `Plurid Link`. The `Plurid Space` can be transformed, rotated, scaled, translated, in order to get a better grasp of the contextual links of the displayed information (text, images, videos, and so forth).
 
-`plurid'` is being used extensively in the <a target="_blank" href="https://plurid.com/products">`plurid' ∂products`</a>, however, new applications can be [easily created](#plurid-application).
+`plurid'` is being used extensively in the <a target="_blank" href="https://plurid.com/products">`plurid' ∂products`</a>. New applications leveraging the `plurid'` technology can be easily generated through the [`plurid.app`](https://plurid.app/assembler) assembler or [programatically](#plurid-application).
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-demo.png" height="600px">
@@ -32,15 +32,30 @@ With `plurid'`, the content of a web page (or any kind of information) can now r
 
 ## Plurid' Application
 
-To generate a `plurid'` web application use the `CLI` tool `@plurid/generate-plurid-app` by running the command (provided you have [`NodeJS`](https://nodejs.org/en/) installed on your machine):
+To generate a `plurid'` web application programatically use the `Command-Line Interface` tool `@plurid/generate-plurid-app` (provided the [`NodeJS`](https://nodejs.org/en/) runtime is installed on the machine) by running the command
 
-    npx @plurid/generate-plurid-app
+``` bash
+npx @plurid/generate-plurid-app
+```
+
+or install the `Command-Line Interface` tool `@plurid/plurid-cli`
+
+``` bash
+npm install -g @plurid/plurid-cli
+```
+
+and run
+
+```
+plurid generate
+```
+
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/diagrams/plurid-generate.png" height="600px">
 </p>
 
-The generated `plurid'` web application, or any other web application, can be easily deployed to [`plurid.app`](https://plurid.app) using the [`plurid-cli`][plurid-cli]: after installation and initialization, simply run
+The generated `plurid'` web application, or any other [configured](https://manual.plurid.com/plurid-app/deploy) web application, can be easily deployed to [`plurid.app`](https://plurid.app) using the [`plurid-cli`][plurid-cli] by simply runnning
 
 ``` bash
 plurid deploy
@@ -51,7 +66,7 @@ plurid deploy
 ## Packages
 
 
-[@plurid/plurid-specification][plurid-specification] • plurid' specification
+[@plurid/plurid-specification][plurid-specification] • `plurid'` specification
 
 [plurid-specification]: https://github.com/plurid/plurid/tree/master/packages/plurid-specification
 
@@ -120,7 +135,7 @@ plurid deploy
     <img src="https://img.shields.io/npm/v/@plurid/plurid-html.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-html][plurid-html] • implementation for HTML Custom Elements
+[@plurid/plurid-html][plurid-html] • implementation for `HTML` Custom Elements
 
 [plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-html
 
@@ -130,7 +145,7 @@ plurid deploy
     <img src="https://img.shields.io/npm/v/@plurid/plurid-react.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-react][plurid-react] • implementation for React
+[@plurid/plurid-react][plurid-react] • implementation for `React`
 
 [plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react
 
@@ -140,6 +155,6 @@ plurid deploy
     <img src="https://img.shields.io/npm/v/@plurid/plurid-react-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-react-server][plurid-react-server] • server for the React implementation
+[@plurid/plurid-react-server][plurid-react-server] • server for the `React` implementation
 
 [plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react-server
