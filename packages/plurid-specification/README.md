@@ -70,10 +70,10 @@ The content of the web page will be placed in a `<plurid-plane>` tag, which is i
 
 The `<plurid-application>` will, by default, span over the full `width` and `height` of the view window, and it will provide all the context required for the transformation of the 2D window view into a 3D explorable space. The most important is the wrapping of the `<plurid-plane>`s into a `<plurid-space>`.
 
-The `<plurid-plane>` is an entity with a certain `width` and `height` which can be configured by the application developer, or let free to be modified by the user at runtime.
+The `<plurid-plane>` is an entity with a certain `width` and `height` which can be configured by the application developer, or let free to be modified by the user at runtime. The `<plurid-plane>` can display an entire entity (an entire /web/page, an entire application), with it's own complex internal state, or a mere visual element with little or no internal state.
 
 The `<plurid-plane>` has a specified `route` attribute. The `route` is unique across the entire `<plurid-space>`.
 
-A `<plurid-plane>` can contain none, one, or more `<plurid-link>`s. A `<plurid-link>` will trigger at action (click, tap, hover) a rendering of the targeted `<plurid-plane>` inside the same `<plurid-space>`. The `<plurid-link>` specifies the targeted `<plurid-plane>` through the `route` attribute.
+A `<plurid-plane>` can contain none, one, or more `<plurid-link>`s. A `<plurid-link>` will trigger at action (click, tap, hover, or other) a rendering of the targeted `<plurid-plane>` inside the same `<plurid-space>`. The `<plurid-link>` specifies the targeted `<plurid-plane>` through the `route` attribute.
 
 A `<plurid-application>` has one ore more `<plurid-plane>`s in view, actually rendered in the view window, one or more `<plurid-plane>`s definitions, on the basis of which new `<plurid-planes>` will be resolved into view, and a function to resolve `<plurid-plane>`s not defined.
