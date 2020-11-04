@@ -23,4 +23,4 @@
 
 
 
-The package contains common data to implement the `plurid'` technology to create a 3D browser-powered view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
+The package contains common data to implement the [`plurid'`](https://gtihub.com/plurid/plurid) technology to create a 3D browser-powered view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).

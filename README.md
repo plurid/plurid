@@ -32,7 +32,7 @@ New applications leveraging the `plurid'` technology can be easily generated and
 
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-demo.png" height="600px">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
 </p>
 
 

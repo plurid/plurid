@@ -23,4 +23,4 @@
 
 
 
-The package contains the 3D JS/CSS Engine and utility functions to implement the `plurid'` technology to create a 3D browser-powered view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
+The package contains the 3D JS/CSS Engine and utility functions to implement the [`plurid'`](https://github.com/plurid/plurid) technology to create a 3D browser-powered view based on the [plurid-specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).

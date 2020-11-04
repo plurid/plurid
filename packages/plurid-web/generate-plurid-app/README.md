@@ -16,7 +16,13 @@
 </h1>
 
 
-Generate a plurid' application with one command (and some choices).
+Generate a [plurid'](https://github.com/plurid/plurid) application with one command (and some choices).
+
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
+</p>
+
 
 
 ## Usage

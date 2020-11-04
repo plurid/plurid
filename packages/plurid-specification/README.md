@@ -22,6 +22,12 @@
 
 The specification details the manner and the general conventions regarding the transformation of displayed information into a 3D explorable structure.
 
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
+</p>
+
+
 The specification is implemented for
 
 + native

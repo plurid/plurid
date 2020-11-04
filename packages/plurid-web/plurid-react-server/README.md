@@ -17,4 +17,9 @@
 </h1>
 
 
-Server side rendering using React of [Plurid](https://github.com/plurid/plurid) to view and explore information in three dimensions.
+Server side rendering using `React` of [plurid'](https://github.com/plurid/plurid) to view and explore information as a 3D structure.
+
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
+</p>

@@ -17,7 +17,13 @@
 </h1>
 
 
-CLI tool for plurid' applications.
+CLI tool for [plurid'](https://github.com/plurid/plurid) applications.
+
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
+</p>
+
 
 
 ## Usage

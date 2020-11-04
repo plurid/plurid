@@ -17,13 +17,18 @@
 </h1>
 
 
-React implementation of [Plurid](https://github.com/plurid/plurid) to view and explore the web in three dimensions.
+`React` implementation of [plurid'](https://github.com/plurid/plurid) to view and explore information as a 3D structure.
+
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
+</p>
 
 
 
 # Install
 
-The simplest manner to setup a "batteries included" plurid' web application is to use [@plurid/generate-plurid-app](https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app)
+The simplest manner to setup a "batteries included" `plurid'` web application is to use [@plurid/generate-plurid-app](https://github.com/plurid/plurid/tree/master/packages/generate-plurid-app)
 
 ``` bash
 npx @plurid/generate-plurid-app
