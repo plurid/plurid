@@ -28,7 +28,7 @@ The `Plurid Space` can be transformed, rotated, scaled, translated, in order to 
 
 `plurid'` is being used extensively in the <a target="_blank" href="https://plurid.com/products">`plurid' ∂products`</a>.
 
-New applications leveraging the `plurid'` technology can be easily generated through the [`plurid.app`](https://plurid.app/assembler) assembler or [programatically](#plurid-application).
+New applications leveraging the `plurid'` technology can be easily generated and developed through the [`plurid.app`](https://plurid.app/assembler) assembler or [programatically](#plurid-application).
 
 
 <p align="center">
@@ -39,7 +39,7 @@ New applications leveraging the `plurid'` technology can be easily generated thr
 
 ## Plurid' Application
 
-To generate a `plurid'` web application programatically use the `Command-Line Interface` tool `@plurid/generate-plurid-app` (provided the [`NodeJS`](https://nodejs.org/en/) runtime is installed on the machine) by running the command
+To generate a `plurid'` application programatically use the `Command-Line Interface` tool `@plurid/generate-plurid-app` (provided the [`NodeJS`](https://nodejs.org/en/) runtime is installed on the machine) by running the command
 
 ``` bash
 npx @plurid/generate-plurid-app
@@ -67,7 +67,7 @@ plurid generate
     <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/diagrams/plurid-generate.png" height="600px">
 </p>
 
-The generated `plurid'` web application, or any other [configured](https://manual.plurid.com/plurid-app/deploy) web application, can be easily deployed to [`plurid.app`](https://plurid.app) using the [`plurid-cli`][plurid-cli] by simply runnning
+A generated `plurid'` web application, or any other [configured](https://manual.plurid.com/plurid-app/deploy) web application, can be easily deployed to [`plurid.app`](https://plurid.app) using the [`plurid-cli`][plurid-cli] by simply runnning
 
 ``` bash
 plurid deploy
@@ -89,7 +89,7 @@ plurid deploy
     <img src="https://img.shields.io/npm/v/@plurid/plurid-cli.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/plurid-cli][plurid-cli] • `plurid'` application life-cycle management: generation, development, deployment
+[@plurid/plurid-cli][plurid-cli] • `plurid'` application life-cycle management: generation, development, deployment, maintenance
 
 [plurid-cli]: https://github.com/plurid/plurid/tree/master/packages/plurid-cli
 
