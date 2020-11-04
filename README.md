@@ -57,6 +57,11 @@ and run
 plurid generate
 ```
 
+<p align="center">
+    <a target="_blank" href="https://youtu.be/aV7MWFDVFkk">
+        <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-app-generate.png" height="600px">
+    </a>
+</p>
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/diagrams/plurid-generate.png" height="600px">
