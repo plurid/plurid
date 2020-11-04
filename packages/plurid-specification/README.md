@@ -52,7 +52,7 @@ The specification is implemented for
 To generate a three-dimensional space within the general information-viewing software/device (e.g., a browser) where each relevant grouping of information (e.g., a /web/page) is a plane of content and transform the information navigational experience into a 3D exploration.
 
 <div align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-demo.png" height="600px">
+    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
 </div>
 
 
