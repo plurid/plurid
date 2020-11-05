@@ -2,7 +2,7 @@ inject text from LICENSE
 
 
 {
-    owner Plurid, Inc.
+    owner 'Plurid, Inc.'
     year 2017
     #text
 }
