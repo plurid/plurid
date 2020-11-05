@@ -1,0 +1,36 @@
+import base from joiner.base
+
+
+
+{
+    ...#base
+    #packages
+    #package
+    #development
+}
+
+
+packages [
+    './packages/plurid-cli'
+    './packages/plurid-web/*'
+    './fixtures/*'
+]
+
+package {
+    ...#base.package
+    ignore [
+        'fixtures/extras'
+        node_modules
+    ]
+}
+
+development {
+    watchPackages all
+    serverPort 55000
+    watchDirectories [
+        build
+        distribution
+        dist
+    ]
+    externalPackages []
+}

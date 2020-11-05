@@ -1,0 +1,14 @@
+import base from joiner.base
+
+
+
+{
+    ...#base
+    #packages
+}
+
+
+packages [
+    './packages/plurid-cli'
+    './packages/plurid-web/*'
+]
