@@ -4,14 +4,8 @@
     <a target="_blank" href="https://www.npmjs.com/package/plurid">
         <img src="https://img.shields.io/npm/v/plurid.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
     </a>
-    <a target="_blank" href="https://travis-ci.org/plurid/plurid">
-        <img src="https://img.shields.io/travis/plurid/plurid.svg?logo=travis&colorB=1380C3&style=for-the-badge" alt="Build Status">
-    </a>
-    <a target="_blank" href="https://coveralls.io/github/plurid/plurid?branch=master">
-        <img src="https://img.shields.io/coveralls/github/plurid/plurid/master.svg?colorB=1380C3&style=for-the-badge" alt="Coverage Status">
-    </a>
     <a target="_blank" href="https://github.com/plurid/plurid/blob/master/LICENSE">
-        <img src="https://img.shields.io/badge/license-MIT-blue.svg?colorB=1380C3&style=for-the-badge" alt="License: MIT">
+        <img src="https://img.shields.io/badge/license-DEL-blue.svg?colorB=1380C3&style=for-the-badge" alt="License: DEL">
     </a>
 </p>
 
