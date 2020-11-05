@@ -11,8 +11,9 @@ import base from joiner.base
 
 
 packages [
-    './packages/plurid-cli'
+    './packages/plurid-utilities/*'
     './packages/plurid-web/*'
+    './packages/plurid-native/*'
     './fixtures/*'
 ]
 
