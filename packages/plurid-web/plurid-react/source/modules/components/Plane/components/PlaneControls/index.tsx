@@ -20,8 +20,8 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    PluridTextline,
-} from '@plurid/plurid-ui-react';
+    universal,
+} from '@plurid/plurid-ui-components-react';
 
 import {
     PluridIconCopy,
@@ -47,6 +47,12 @@ import selectors from '../../../../services/state/selectors';
 // import actions from '../../../../services/state/actions';
 
 
+
+const {
+    inputs: {
+        Textline: PluridTextline,
+    },
+} = universal;
 
 export interface PluridPlaneControlsOwnProperties {
     plane: RegisteredPluridPlane;

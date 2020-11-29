@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-pubsub",
-    "version": "0.1.11",
+    "version": "0.0.0-0",
     "description": "Plurid Publish/Subscribe",
     "keywords": [
         "plurid",
@@ -25,7 +25,7 @@
     ],
     "main": "distribution/index.js",
     "module": "distribution/index.es.js",
-    "jsnext:main": "distribution/index.es.js",
+    "types": "distribution/index.d.js",
     "engines": {
         "node": ">=12",
         "npm": ">=6"

@@ -22,8 +22,8 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
-    PluridSwitch,
-} from '@plurid/plurid-ui-react';
+    universal,
+} from '@plurid/plurid-ui-components-react';
 
 import {
     StyledPluridMoreMenuItem,
@@ -35,6 +35,12 @@ import selectors from '../../../../../../../services/state/selectors';
 import actions from '../../../../../../../services/state/actions';
 
 
+
+const {
+    inputs: {
+        Switch: PluridSwitch,
+    },
+} = universal;
 
 export interface PluridMenuMoreTransformOwnProperties {
 }

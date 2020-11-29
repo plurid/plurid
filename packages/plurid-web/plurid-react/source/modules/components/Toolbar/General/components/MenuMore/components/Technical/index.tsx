@@ -22,8 +22,8 @@ import {
 } from '@plurid/plurid-themes';
 
 import {
-    PluridSlider,
-} from '@plurid/plurid-ui-react';
+    universal,
+} from '@plurid/plurid-ui-components-react';
 
 import {
     useDebouncedCallback,
@@ -39,6 +39,12 @@ import selectors from '../../../../../../../services/state/selectors';
 import actions from '../../../../../../../services/state/actions';
 
 
+
+const {
+    inputs: {
+        Slider: PluridSlider,
+    },
+} = universal;
 
 export interface PluridMenuMoreTechnicalOwnProperties {
 }

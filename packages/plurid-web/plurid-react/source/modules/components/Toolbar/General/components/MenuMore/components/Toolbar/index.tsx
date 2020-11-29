@@ -23,8 +23,8 @@ import {
 } from '@plurid/plurid-engine';
 
 import {
-    PluridSwitch,
-} from '@plurid/plurid-ui-react';
+    universal,
+} from '@plurid/plurid-ui-components-react';
 
 import {
     StyledPluridMoreMenuItem,
@@ -39,6 +39,12 @@ import {
 } from '../../../../../../../services/state/types/space';
 
 
+
+const {
+    inputs: {
+        Switch: PluridSwitch,
+    },
+} = universal;
 
 export interface PluridMenuMoreToolbarOwnProperties {
 }

@@ -9,8 +9,8 @@ import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import {
-    PluridSpinner,
-} from '@plurid/plurid-ui-react';
+    universal,
+} from '@plurid/plurid-ui-components-react';
 
 import {
     mathematics,
@@ -27,6 +27,12 @@ import {
 } from '../../../services/state/types/space';
 
 
+
+const {
+    markers: {
+        Spinner: PluridSpinner,
+    },
+} = universal;
 
 export interface PluridVirtualListOwnProperties {
     items: JSX.Element[];

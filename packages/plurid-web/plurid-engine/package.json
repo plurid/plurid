@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.1.101",
+    "version": "0.0.0-0",
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
         "plurid",
@@ -49,10 +49,10 @@
         "@plurid/plurid-themes": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "^0.1.161",
-        "@plurid/plurid-functions": "^0.1.17",
-        "@plurid/plurid-pubsub": "^0.1.11",
-        "@plurid/plurid-themes": "^0.1.27",
+        "@plurid/plurid-data": "0.0.0-0",
+        "@plurid/plurid-functions": "0.0.0-0",
+        "@plurid/plurid-pubsub": "0.0.0-0",
+        "@plurid/plurid-themes": "0.0.0-0",
         "@rollup/plugin-commonjs": "^16.0.0",
         "@types/jest": "^26.0.15",
         "@types/lodash.camelcase": "^4.3.6",

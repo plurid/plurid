@@ -15,8 +15,8 @@ import {
 } from '@plurid/plurid-data';
 
 import {
-    PluridHeading,
-} from '@plurid/plurid-ui-react';
+    universal,
+} from '@plurid/plurid-ui-components-react';
 
 import {
     StyledPluridDrawer,
@@ -30,6 +30,12 @@ import selectors from '../../../../../services/state/selectors';
 // import actions from '../../../../../services/state/actions';
 
 
+
+const {
+    typography: {
+        Heading: PluridHeading,
+    },
+} = universal;
 
 export interface PluridDrawerOwnProperties {
     heading: string;
