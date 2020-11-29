@@ -18,6 +18,15 @@
 
 
 
++ [About](#about)
++ [Plurid' Application](#plurid-application)
++ [Packages](#packages)
++ [Codeophon](#codeophon)
+
+
+
+## About
+
 The monorepository contains packages implementing the `plurid'` technology to transform information into a 3D explorable structure based on the [plurid specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
 
 With `plurid'`, a grouping of related information (such as a web page, or a fragment of one) can now reside on a `plane of content` (a `Plurid Plane`) in a three-dimensional space (a `Plurid Space`).
@@ -170,3 +179,10 @@ plurid deploy
 [@plurid/plurid-react-server][plurid-react-server] • server for the `React` implementation
 
 [plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react-server
+
+
+
+## [Codeophon](https://github.com/ly3xqhl8g9/codeophon)
+
++ licensing: [delicense](https://github.com/ly3xqhl8g9/delicense)
++ versioning: [αver](https://github.com/ly3xqhl8g9/alpha-versioning)
