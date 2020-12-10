@@ -63,7 +63,7 @@ describe('Parser', () => {
         };
         const parser = new Parser('/four#:~:text=fourStart,fourEnd,[1]', route);
         const response = parser.extract();
-        const fragmentsTexts = [
+        const fragmentsTexts: any[] = [
             { type: 'text', start: 'fourStart', end: 'fourEnd', occurence: 1 },
         ];
         expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
@@ -89,7 +89,7 @@ describe('Parser', () => {
         };
         const parser = new Parser('/four#:~:text=start', route);
         const response = parser.extract();
-        const fragmentsTexts = [
+        const fragmentsTexts: any[] = [
             { type: 'text', start: 'start', end: '', occurence: 0 },
         ];
         expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
@@ -103,7 +103,7 @@ describe('Parser', () => {
         };
         const parser = new Parser('/five#:~:element=555,[2]', route);
         const response = parser.extract();
-        const fragmentsElements = [
+        const fragmentsElements: any[] = [
             { type: 'element', id: '555', occurence: 2 },
         ];
         expect(response.fragments.elements).toStrictEqual(fragmentsElements);
@@ -157,7 +157,7 @@ describe('Parser', () => {
         };
         expect(response.query).toStrictEqual(query);
 
-        const fragmentsTexts = [
+        const fragmentsTexts: any[] = [
             { type: 'text', start: 'threeStart', end: 'threeEnd', occurence: 45 },
         ];
         expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
@@ -180,12 +180,12 @@ describe('Parser', () => {
         };
         expect(response.query).toStrictEqual(query);
 
-        const fragmentsTexts = [
+        const fragmentsTexts: any[] = [
             { type: 'text', start: 'threeStart', end: 'threeEnd', occurence: 45 },
         ];
         expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
 
-        const fragmentsElements = [
+        const fragmentsElements: any[] = [
             { type: 'element', id: 'foo', occurence: 533 },
         ];
         expect(response.fragments.elements).toStrictEqual(fragmentsElements);
