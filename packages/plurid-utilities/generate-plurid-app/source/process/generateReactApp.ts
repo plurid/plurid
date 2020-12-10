@@ -498,7 +498,7 @@ const generatePluridReactApplication = async (
             ? templateTypeScript
             : templateJavaScript;
 
-        const base = `./node_modules/@plurid/generate-plurid-app/distribution/files/${templateFiles}`;
+        const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/${templateFiles}`;
 
         const templatePublicDir = path.join(app.directory, base + '/public');
         const templateSourceDir = path.join(app.directory, base + '/src');
@@ -722,7 +722,7 @@ const generateReactServerApplication = async (
         ? templateTypeScript
         : templateJavaScript;
 
-    const base = `./node_modules/@plurid/generate-plurid-app/distribution/files/${templateFiles}`;
+    const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/${templateFiles}`;
 
     const templateDirectory = path.join(app.directory, base);
     copyDirectory(templateDirectory, app.directory);

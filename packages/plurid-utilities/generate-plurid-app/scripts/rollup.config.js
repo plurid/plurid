@@ -2,17 +2,23 @@ import copy from 'rollup-plugin-copy';
 import json from '@rollup/plugin-json';
 import typescript from 'rollup-plugin-typescript2';
 
-import pkg from './package.json';
+import pkg from '../package.json';
 
 
 
 const globals = {
-    'commander': 'program',
-    'inquirer': 'inquirer',
 };
 
 export default {
     input: 'source/index.ts',
+    external: [
+        'path',
+        'fs',
+        'child_process',
+        'commander',
+        'inquirer',
+        'ora',
+    ],
     output: [
         {
             file: pkg.main,
@@ -29,11 +35,6 @@ export default {
             exports: 'named',
         },
     ],
-    external: [
-        'child_process',
-        'path',
-        'fs',
-    ],
     plugins: [
         json(),
         typescript({
@@ -42,8 +43,8 @@ export default {
         }),
         copy({
             targets: [
-                { src: 'source/files/', dest: 'distribution/' },
+                { src: 'templates/', dest: 'distribution/' },
             ],
         }),
     ],
-}
+};

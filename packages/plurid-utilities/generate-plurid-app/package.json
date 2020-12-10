@@ -22,10 +22,12 @@
     },
     "homepage": "https://github.com/plurid/plurid/blob/master/packages/generate-plurid-app/README.md",
     "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
     "engines": {
-        "node": ">=12"
+        "node": ">=12",
+        "npm": ">=6"
     },
     "main": "distribution/index.js",
     "module": "distribution/index.es.js",
@@ -40,14 +42,14 @@
     "preferGlobal": true,
     "scripts": {
         "clean": "rm -rf ./distribution",
+        "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
+        "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
         "copy.server": "cp -r ./source/server ./distribution/server/",
-        "test": "jest ./source --config ./jest.config.js --rootDir ./",
-        "lint": "eslint ./source --ext .ts,.tsx",
-        "start": "yarn clean && rollup -c rollup.config.js -w --environment ENV_MODE:local",
+        "start": "yarn clean && rollup -c ./scripts/rollup.config.js  -w --environment ENV_MODE:local",
         "build.clean": "rm -rf `find ./distribution/ -type d -name __specs__`",
-        "build.development": "yarn clean && rollup -c rollup.config.js --environment ENV_MODE:development",
-        "build.production": "yarn clean && rollup -c --environment ENV_MODE:production",
-        "build": "yarn clean && yarn lint && yarn test && yarn build.production && yarn build.clean",
+        "build.development": "yarn clean && rollup -c ./scripts/rollup.config.js  --environment ENV_MODE:development",
+        "build.production": "yarn clean && yarn lint && yarn test && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production && yarn build.clean",
+        "build": "yarn build.production",
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
@@ -56,32 +58,32 @@
         "ora": "^5.1.0"
     },
     "devDependencies": {
-        "@rollup/plugin-commonjs": "^16.0.0",
+        "@rollup/plugin-commonjs": "^17.0.0",
         "@rollup/plugin-json": "^4.1.0",
-        "@rollup/plugin-node-resolve": "^10.0.0",
+        "@rollup/plugin-node-resolve": "^11.0.0",
         "@types/inquirer": "^7.3.1",
-        "@types/jest": "^26.0.15",
-        "@types/node": "^14.14.10",
-        "@typescript-eslint/eslint-plugin": "^4.8.2",
-        "@typescript-eslint/parser": "^4.8.2",
+        "@types/jest": "^26.0.18",
+        "@types/node": "^14.14.12",
+        "@typescript-eslint/eslint-plugin": "^4.9.1",
+        "@typescript-eslint/parser": "^4.9.1",
         "colors": "^1.4.0",
         "coveralls": "^3.1.0",
-        "cross-env": "^7.0.2",
-        "eslint": "^7.14.0",
+        "cross-env": "^7.0.3",
+        "eslint": "^7.15.0",
         "jest": "^26.6.3",
         "jest-config": "^26.6.3",
         "lodash.camelcase": "^4.3.0",
         "prompt": "^1.0.0",
         "replace-in-file": "^6.1.0",
         "rimraf": "^3.0.2",
-        "rollup": "^2.34.0",
+        "rollup": "^2.34.2",
         "rollup-plugin-copy": "^3.3.0",
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-sourcemaps": "^0.6.3",
         "rollup-plugin-typescript2": "^0.29.0",
         "shelljs": "^0.8.4",
         "ts-jest": "^26.4.4",
-        "ts-node": "^9.0.0",
+        "ts-node": "^9.1.1",
         "typedoc": "^0.19.2",
         "typescript": "^4.1.2"
     }
