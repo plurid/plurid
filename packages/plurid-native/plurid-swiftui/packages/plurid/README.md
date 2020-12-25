@@ -53,7 +53,7 @@ mkdir /path/to/new/git/repository
 Copy the plurid-swift-ui/plurid package to the new `git` repository
 
 ```
-cp /path/to/plurid-swift-ui/packages/plurid /path/to/new/git/repository
+cp -r /path/to/plurid-swift-ui/packages/plurid/ /path/to/new/git/repository
 ```
 
 ```
