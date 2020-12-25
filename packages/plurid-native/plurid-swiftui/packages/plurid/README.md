@@ -10,7 +10,7 @@
 
 
 <h1 align="center">
-    plurid'
+    plurid' native swiftui
 </h1>
 
 
@@ -23,166 +23,53 @@
 ### Contents
 
 + [About](#about)
-+ [Plurid' Application](#plurid-application)
-+ [Packages](#packages)
++ [Usage](#usage)
 + [Codeophon](#codeophon)
 
 
 
 ## About
 
-The monorepository contains packages implementing the `plurid'` technology to transform information into a 3D explorable structure based on the [plurid specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
-
-With `plurid'`, a grouping of related information (such as a web page, or a fragment of one) can now reside on a `plane of content` (a `Plurid Plane`) in a three-dimensional space (a `Plurid Space`).
-
-The content of one `Plurid Plane` can be linked to another through the `Plurid Link` which at action (click, tap, hover) effectively generates a new `plane of content` in the same space.
-
-The `Plurid Space` can be transformed, rotated, scaled, translated, in order to get a better grasp of the contextual links of the displayed information (text, images, videos, and so forth).
-
-`plurid'` is being used extensively in the <a target="_blank" href="https://plurid.com/products">`plurid' ∂products`</a>.
-
-New applications leveraging the `plurid'` technology can be easily generated and developed through the [`plurid.app`](https://plurid.app/assembler) assembler or [programatically](#plurid-application).
-
-
-<p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
-</p>
+Implementation of the `plurid'` technology to transform information into a 3D explorable structure based on the [plurid specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification) for Apple's SwiftUI.
 
 
 
-## Plurid' Application
+## Usage
 
-To generate a `plurid'` application programatically use the `Command-Line Interface` tool `@plurid/generate-plurid-app` (provided the [`NodeJS`](https://nodejs.org/en/) runtime is installed on the machine) by running the command
+Until Xcode starts to make sense and allow package imports in a sane fashion, the only usage solution is the insane one.
+
+Clone the monorepository locally
+
+```
+git clone https://github.com/plurid/plurid
+```
+
+Make somewhere locally a new `git` repository
+
+```
+mkdir /path/to/new/git/repository
+```
+
+Copy the plurid-swift-ui/plurid package to the new `git` repository
+
+```
+cp /path/to/plurid-swift-ui/packages/plurid /path/to/new/git/repository
+```
+
+```
+cd /path/to/new/git/repository
+git init
+git add .
+git commit -m 'setup'
+```
+
+In the Xcode application project, add the swift package from `File > Swift Package > Add Package Dependency... > file:///path/to/new/git/repository`.
+
+Running the `./scripts/install.sh` achieves a similar effect, by passing the package name and the path to the git repository.
 
 ``` bash
-npx @plurid/generate-plurid-app
+./scripts/install.sh plurid /path/to/new/git/repository
 ```
-
-or install the `Command-Line Interface` tool `@plurid/plurid-cli`
-
-``` bash
-npm install -g @plurid/plurid-cli
-```
-
-and run
-
-```
-plurid generate
-```
-
-<p align="center">
-    <a target="_blank" href="https://youtu.be/aV7MWFDVFkk">
-        <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-app-generate.png" height="600px">
-    </a>
-</p>
-
-<p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/diagrams/plurid-generate.png" height="600px">
-</p>
-
-A generated `plurid'` web application, or any other [configured](https://manual.plurid.com/plurid-app/deploy) web application, can be easily deployed to [`plurid.app`](https://plurid.app) using the [`plurid-cli`][plurid-cli] by simply runnning
-
-``` bash
-plurid deploy
-```
-
-
-
-## Packages
-
-
-[@plurid/plurid-specification][plurid-specification] • `plurid'` specification
-
-[plurid-specification]: https://github.com/plurid/plurid/tree/master/packages/plurid-specification
-
-
-### Generate
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-cli">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-cli.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-cli][plurid-cli] • `plurid'` application life-cycle management: generation, development, deployment, maintenance
-
-[plurid-cli]: https://github.com/plurid/plurid/tree/master/packages/plurid-cli
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/generate-plurid-app">
-    <img src="https://img.shields.io/npm/v/@plurid/generate-plurid-app.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/generate-plurid-app][generate-plurid-app] • generate a `plurid'` application with one command (and some choices)
-
-[generate-plurid-app]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/generate-plurid-app
-
-
-
-### Shared
-
-
-#### Web
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-data">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-data.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-data][plurid-data] • constants, enumerations, interfaces
-
-[plurid-data]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-data
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-engine">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-engine.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-engine][plurid-engine] • 3D and utility functions
-
-[plurid-engine]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-engine
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-pubsub">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-pubsub.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-pubsub][plurid-pubsub] • publish/subscribe message bus
-
-[plurid-pubsub]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-pubsub
-
-
-
-### Implementations
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-html.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-html][plurid-html] • implementation for `HTML` Custom Elements
-
-[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-html
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-react.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-react][plurid-react] • implementation for `React`
-
-[plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react-server">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-react-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-react-server][plurid-react-server] • server for the `React` implementation
-
-[plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react-server
 
 
 
