@@ -36,7 +36,7 @@ Implementation of the `plurid'` technology to transform information into a 3D ex
 
 ## Usage
 
-Until Xcode starts to make sense and allow package imports in a sane fashion, the only usage solution is the insane one.
+Until `Xcode` starts to make sense and allow package imports in a sane fashion, the only usage solution is the insane one.
 
 Clone the monorepository locally
 
@@ -50,10 +50,10 @@ Make somewhere locally a new `git` repository
 mkdir /path/to/new/git/repository
 ```
 
-Copy the plurid-swift-ui/plurid package to the new `git` repository
+Copy the `plurid-swiftui/plurid` package to the new `git` repository
 
 ```
-cp -r /path/to/plurid-swift-ui/packages/plurid/ /path/to/new/git/repository
+cp -r /path/to/plurid-swiftui/packages/plurid/ /path/to/new/git/repository
 ```
 
 ```
@@ -63,7 +63,7 @@ git add .
 git commit -m 'setup'
 ```
 
-In the Xcode application project, add the swift package from `File > Swift Package > Add Package Dependency... > file:///path/to/new/git/repository`.
+In the `Xcode` application project, add the `swift` package from `File > Swift Package > Add Package Dependency... > file:///path/to/new/git/repository`.
 
 Running the `./scripts/install.sh` achieves a similar effect, by passing the package name and the path to the git repository.
 
