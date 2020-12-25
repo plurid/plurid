@@ -2,7 +2,7 @@ import SwiftUI
 
 
 
-public struct PluridView: View {
+struct PluridView: View {
     var planes: [String]
 
     let colors = Gradient(
@@ -12,7 +12,8 @@ public struct PluridView: View {
         ]
     )
 
-    public var body: some View {
+
+    var body: some View {
         ZStack {
             RadialGradient(
                 gradient: colors,
@@ -21,21 +22,27 @@ public struct PluridView: View {
                 endRadius: 800
             )
 
-            Text("Some very long text")
-                .font(.largeTitle)
-                .foregroundColor(.yellow)
-                .rotation3DEffect(
-                    .degrees(53),
-                    axis: (x: 0, y: 1, z: 0)
-                )
+            PluridToolbar()
+
+            PluridViewcube()
+
+//            Text("Some very long text")
+//                .font(.largeTitle)
+//                .foregroundColor(.yellow)
+//                .rotation3DEffect(
+//                    .degrees(53),
+//                    axis: (x: 0, y: 1, z: 0)
+//                )
         }
     }
 }
 
+
 struct PluridView_Previews: PreviewProvider {
     static var previews: some View {
         PluridView(
-        planes: ["on", "two"])
+            planes: ["on", "two"]
+        )
             .previewLayout(
                 .fixed(width: 1024, height: 768)
             )
