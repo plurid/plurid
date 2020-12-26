@@ -12,6 +12,10 @@ struct PluridToolbar: View {
                 alignment: .center
             )
             .padding()
+            .frame(
+                width: 300,
+                height: 50
+            )
             .background(
                 Capsule()
                 .fill(

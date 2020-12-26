@@ -17,9 +17,14 @@ let package = Package(
     targets: [
         .target(
             name: "plurid",
-            dependencies: []),
+            dependencies: [],
+            resources: [
+                .copy("Resources")
+            ]
+        ),
         .testTarget(
             name: "pluridTests",
-            dependencies: ["plurid"]),
+            dependencies: ["plurid"]
+        ),
     ]
 )
