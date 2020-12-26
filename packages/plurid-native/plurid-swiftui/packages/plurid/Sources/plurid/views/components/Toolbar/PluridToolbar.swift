@@ -7,10 +7,19 @@ struct PluridToolbar: View {
         VStack {
             HStack {
                 Text("toolbar")
-            }.frame(
+            }
+            .frame(
                 alignment: .center
             )
-        }.frame(
+            .padding()
+            .background(
+                Capsule()
+                .fill(
+                    Color("pluridTertiary")
+                )
+            )
+        }
+        .frame(
             alignment: .bottom
         )
     }
