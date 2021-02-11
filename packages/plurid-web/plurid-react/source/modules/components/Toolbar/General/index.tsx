@@ -127,7 +127,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
 
 
     /** references */
-    const menuTimeout = useRef<null | number>(null);
+    const menuTimeout = useRef<null | NodeJS.Timeout>(null);
 
 
     /** state */

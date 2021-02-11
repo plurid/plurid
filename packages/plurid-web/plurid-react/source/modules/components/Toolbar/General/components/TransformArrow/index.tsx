@@ -61,8 +61,8 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
 
 
     /** references */
-    const pressingInterval = useRef(0);
-    const arrowElement = useRef<null | number>(null);
+    const pressingInterval = useRef<null | NodeJS.Timeout>(null);
+    const arrowElement = useRef<null | NodeJS.Timeout>(null);
 
 
     /** state */
@@ -90,7 +90,9 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
                 break;
             case 'pressup':
                 setPressed(false);
-                clearInterval(pressingInterval.current);
+                if (pressingInterval.current) {
+                    clearInterval(pressingInterval.current);
+                }
                 break;
         }
     }

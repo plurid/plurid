@@ -123,10 +123,16 @@ export interface ViewDispatchProperties {
     dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
 
     dispatchRotateXWith: typeof actions.space.rotateXWith;
+    dispatchRotateX: typeof actions.space.rotateX;
     dispatchRotateYWith: typeof actions.space.rotateYWith;
+    dispatchRotateY: typeof actions.space.rotateY;
+    // dispatchTranslateX: typeof actions.space.translateX;
     dispatchTranslateXWith: typeof actions.space.translateXWith;
+    // dispatchTranslateY: typeof actions.space.translateY;
     dispatchTranslateYWith: typeof actions.space.translateYWith;
+    // dispatchScaleUp: typeof actions.space.scaleUp;
     dispatchScaleUpWith: typeof actions.space.scaleUpWith;
+    // dispatchScaleDown: typeof actions.space.scaleDown;
     dispatchScaleDownWith: typeof actions.space.scaleDownWith;
 
     // dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
@@ -171,7 +177,9 @@ const PluridView: React.FC<ViewProperties> = (
         dispatchSetTree,
 
         dispatchRotateXWith,
+        dispatchRotateX,
         dispatchRotateYWith,
+        dispatchRotateY,
         dispatchTranslateXWith,
         dispatchTranslateYWith,
         dispatchScaleUpWith,
@@ -452,12 +460,57 @@ const PluridView: React.FC<ViewProperties> = (
             dispatchRotateXWith(value);
         });
 
+        pubsub.subscribe(TOPICS.SPACE_ROTATE_X_TO, (data: any) => {
+            const {
+                value,
+            } = data;
+            dispatchRotateX(value);
+        });
+
+
         pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
             const {
                 value,
             } = data;
             dispatchRotateYWith(value);
         });
+
+        pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_TO, (data: any) => {
+            const {
+                value,
+            } = data;
+            dispatchRotateY(value);
+        });
+
+
+        pubsub.subscribe(TOPICS.SPACE_TRANSLATE_X_WITH, (data: any) => {
+            const {
+                value,
+            } = data;
+            dispatchTranslateXWith(value);
+        });
+
+        // pubsub.subscribe(TOPICS.SPACE_TRANSLATE_X_TO, (data: any) => {
+        //     const {
+        //         value,
+        //     } = data;
+        //     dispatchTranslateX(value);
+        // });
+
+        pubsub.subscribe(TOPICS.SPACE_TRANSLATE_Y_WITH, (data: any) => {
+            const {
+                value,
+            } = data;
+            dispatchTranslateYWith(value);
+        });
+
+        // pubsub.subscribe(TOPICS.SPACE_TRANSLATE_Y_TO, (data: any) => {
+        //     const {
+        //         value,
+        //     } = data;
+        //     dispatchTranslateY(value);
+        // });
+
 
         pubsub.subscribe(TOPICS.VIEW_ADD_PLANE, (data: any) => {
             const {
@@ -1472,22 +1525,40 @@ const mapDispatchToProperties = (
         actions.themes.setInteractionTheme(theme)
     ),
 
-    dispatchRotateXWith: (value: number) => dispatch(
+    dispatchRotateX: (value) => dispatch(
+        actions.space.rotateX(value)
+    ),
+    dispatchRotateXWith: (value) => dispatch(
         actions.space.rotateXWith(value)
     ),
-    dispatchRotateYWith: (value: number) => dispatch(
+    dispatchRotateY: (value) => dispatch(
+        actions.space.rotateY(value)
+    ),
+    dispatchRotateYWith: (value) => dispatch(
         actions.space.rotateYWith(value)
     ),
-    dispatchTranslateXWith: (value: number) => dispatch(
+    // dispatchTranslateX: (value) => dispatch(
+    //     actions.space.translateX(value)
+    // ),
+    dispatchTranslateXWith: (value) => dispatch(
         actions.space.translateXWith(value)
     ),
-    dispatchTranslateYWith: (value: number) => dispatch(
+    // dispatchTranslateY: (value) => dispatch(
+    //     actions.space.translateY(value)
+    // ),
+    dispatchTranslateYWith: (value) => dispatch(
         actions.space.translateYWith(value)
     ),
-    dispatchScaleUpWith: (value: number) => dispatch(
+    // dispatchScaleUp: (value) => dispatch(
+    //     actions.space.scaleUp(value)
+    // ),
+    dispatchScaleUpWith: (value) => dispatch(
         actions.space.scaleUpWith(value)
     ),
-    dispatchScaleDownWith: (value: number) => dispatch(
+    // dispatchScaleDown: (value) => dispatch(
+    //     actions.space.scaleDown(value)
+    // ),
+    dispatchScaleDownWith: (value) => dispatch(
         actions.space.scaleDownWith(value)
     ),
 

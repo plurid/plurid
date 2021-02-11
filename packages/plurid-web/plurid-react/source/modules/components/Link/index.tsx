@@ -148,8 +148,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** references */
     const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
-    const hoverInTimeout = useRef<null | number>(null);
-    const hoverOutTimeout = useRef<null | number>(null);
+    const hoverInTimeout = useRef<null | NodeJS.Timeout>(null);
+    const hoverOutTimeout = useRef<null | NodeJS.Timeout>(null);
 
 
     /** state */
