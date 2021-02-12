@@ -10,7 +10,11 @@ import base from joiner.base
 
 
 packages [
-    './packages/plurid-web/*'
+    ./packages/plurid-web/plurid-core/*
+    ./packages/plurid-web/plurid-html
+    // ./packages/plurid-web/plurid-html-server
+    ./packages/plurid-web/plurid-react
+    ./packages/plurid-web/plurid-react-server
 ]
 
 commit {
