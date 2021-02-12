@@ -4,6 +4,7 @@ import base from joiner.base
 
 {
     ...#base
+    #package
     #packages
     #commit
 }
@@ -16,6 +17,15 @@ packages [
     ./packages/plurid-web/plurid-react
     ./packages/plurid-web/plurid-react-server
 ]
+
+package {
+    ...#base.package
+    ignore [
+        packages/plurid-web/plurid-core/plurid-server
+        node_modules
+    ]
+}
+
 
 commit {
     ...#base.commit
