@@ -8,16 +8,16 @@
 
         "baseUrl": ".",
         "paths": {
-            "#Application/*": [
+            "~Application/*": [
                 "./source/Application/*"
             ],
-            "#components/*": [
+            "~components/*": [
                 "./source/modules/components/*"
             ],
-            "#containers/*": [
+            "~containers/*": [
                 "./source/modules/containers/*"
             ],
-            "#services/*": [
+            "~services/*": [
                 "./source/modules/services/*"
             ]
         },

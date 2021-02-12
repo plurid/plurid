@@ -1,75 +1,83 @@
-import {
-    /** Interfaces */
-    PluridPlane,
-    IndexedPluridPlane,
-    PluridView,
-    PluridUniverse,
-    PluridConfiguration,
-    PluridPartialConfiguration,
-    RecursivePartial,
+// #region imports
+    // #region libraries
+    import {
+        /** Interfaces */
+        PluridPlane,
+        IndexedPluridPlane,
+        PluridView,
+        PluridUniverse,
+        PluridConfiguration,
+        PluridPartialConfiguration,
+        RecursivePartial,
 
-    PluridRoute,
-    PluridRouteSpace,
-    PluridRouteUniverse,
-    PluridRouteCluster,
-    PluridRoutePlane,
+        PluridRoute,
+        PluridRouteSpace,
+        PluridRouteUniverse,
+        PluridRouteCluster,
+        PluridRoutePlane,
 
-    PluridComponent,
-    PluridComponentProperty,
+        PluridComponent,
+        PluridComponentProperty,
 
-    ReactComponentWithPlurid,
+        ReactComponentWithPlurid,
 
-    PluridPreserve,
-    PluridPreserveTransmission,
+        PluridPreserve,
+        PluridPreserveTransmission,
 
-    /** Enumerations */
-    LAYOUT_TYPES as SPACE_LAYOUT,
-    SIZES,
-    TRANSFORM_MODES,
-    TRANSFORM_TOUCHES,
-    PLURID_ROUTER_LOCATION_CHANGED,
-    PLURID_ROUTER_LOCATION_STORED,
-} from '@plurid/plurid-data';
+        /** Enumerations */
+        LAYOUT_TYPES as SPACE_LAYOUT,
+        SIZES,
+        TRANSFORM_MODES,
+        TRANSFORM_TOUCHES,
+        PLURID_ROUTER_LOCATION_CHANGED,
+        PLURID_ROUTER_LOCATION_STORED,
+    } from '@plurid/plurid-data';
 
-import {
-    router,
-} from '@plurid/plurid-engine';
+    import {
+        router,
+    } from '@plurid/plurid-engine';
 
-import PluridPubSub, {
-    TOPICS,
-} from '@plurid/plurid-pubsub';
-
-import PluridApplication from './Application';
-
-import PluridSingleApplication from './Application/SingleApplication';
-import PluridExposedApplication from './Application/ExposedApplication';
-
-import PluridLink from './modules/components/Link';
-import PluridRouterBrowser from './modules/components/RouterBrowser';
-import PluridRouterStatic from './modules/components/RouterStatic';
-import PluridRouterLink from './modules/components/RouterLink';
-import PluridVirtualList from './modules/components/Virtual/List';
-import PluridPlaneConfigurator from './modules/components/PlaneConfigurator';
-import PluridApplicationConfigurator from './modules/components/ApplicationConfigurator';
-
-import PluridProvider from './modules/components/Provider';
-
-import pluridStateModules from './modules/services/state/modules';
-
-import {
-    serverComputeMetastate,
-} from './modules/services/logic/server';
-
-import {
-    pluridRouterNavigate,
-} from './modules/services/utilities/navigate';
-
-import {
-    usePluridRouter,
-} from './modules/services/hooks';
+    import PluridPubSub, {
+        TOPICS,
+    } from '@plurid/plurid-pubsub';
+    // #endregion libraries
 
 
+    // #region internal
+    import PluridApplication from './Application';
 
+    import PluridSingleApplication from './Application/SingleApplication';
+    import PluridExposedApplication from './Application/ExposedApplication';
+
+    import PluridLink from './modules/components/Link';
+    import PluridRouterBrowser from './modules/components/RouterBrowser';
+    import PluridRouterStatic from './modules/components/RouterStatic';
+    import PluridRouterLink from './modules/components/RouterLink';
+    import PluridVirtualList from './modules/components/Virtual/List';
+    import PluridPlaneConfigurator from './modules/components/PlaneConfigurator';
+    import PluridApplicationConfigurator from './modules/components/ApplicationConfigurator';
+
+    import PluridProvider from './modules/components/Provider';
+
+    import pluridStateModules from './modules/services/state/modules';
+
+    import {
+        serverComputeMetastate,
+    } from './modules/services/logic/server';
+
+    import {
+        pluridRouterNavigate,
+    } from './modules/services/utilities/navigate';
+
+    import {
+        usePluridRouter,
+    } from './modules/services/hooks';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const {
     // default: PluridRouter,
     RouteMatcher: PluridRouteMatcher,
@@ -112,8 +120,11 @@ const Plurid = {
     /** Router */
     routerNavigate: pluridRouterNavigate,
 };
+// #endregion module
 
 
+
+// #region exports
 export {
     /** Components */
     PluridApplication,
@@ -185,3 +196,4 @@ export {
 
 
 export default Plurid;
+// #endregion exports
