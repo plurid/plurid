@@ -1,3 +1,4 @@
+// #region module
 const ENV_MODE = process.env.ENV_MODE || '';
 
 const environments: any = {
@@ -13,6 +14,10 @@ const environment = {
     local: environments[ENV_MODE] === 'local' ? true : false,
     localExternal: environments[ENV_MODE] === 'localexternal' ? true : false,
 };
+// #endregion module
 
 
+
+// #region exports
 export default environment;
+// #endregion exports

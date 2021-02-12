@@ -1,3 +1,4 @@
+// #region module
 export const cleanTemplate = (
     template: string,
 ) => {
@@ -6,3 +7,4 @@ export const cleanTemplate = (
 
     return cleanWhitespace;
 }
+// #endregion module

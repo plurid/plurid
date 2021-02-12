@@ -1,24 +1,35 @@
-import React, {
-    Component,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        Component,
+    } from 'react';
 
-import {
-    Provider as ReduxProvider,
-} from 'react-redux';
+    import {
+        Provider as ReduxProvider,
+    } from 'react-redux';
 
-import {
-    PluridApplication as PluridApplicationProperties,
-} from '@plurid/plurid-data';
-
-import PluridView from './View';
-
-import store from '../modules/services/state/store';
-import StateContext from '../modules/services/state/context';
-
-import PluridProviderContext from '../modules/components/Provider/context';
+    import {
+        PluridApplication as PluridApplicationProperties,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import store from '~services/state/store';
+    import StateContext from '~services/state/context';
 
+    import PluridProviderContext from '~components/Provider/context';
+    // #endregion external
+
+
+    // #region internal
+    import PluridView from './View';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 class PluridApplication extends Component<PluridApplicationProperties, {}> {
     static contextType = PluridProviderContext;
 
@@ -37,7 +48,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             id,
         } = properties;
 
-        const defaultStore = context && id && context.states[id]
+        const defaultStore = id && context && context.states[id]
             ? context.states[id]
             : {};
 
@@ -59,6 +70,10 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         );
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default PluridApplication;
+// #endregion exports
