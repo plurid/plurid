@@ -1,33 +1,44 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
-
-import {
-    StyledPluridPlaneDebugger,
-} from './styled';
-
-import { AppState } from '../../../../services/state/store';
-import StateContext from '../../../../services/state/context';
-import selectors from '../../../../services/state/selectors';
-// import actions from '../../.../../services/state/actions';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
 
-interface PluridPlaneDebuggerOwnProperties {
+
+    // #region internal
+    import {
+        StyledPluridPlaneDebugger,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
+export interface PluridPlaneDebuggerOwnProperties {
 }
 
-interface PluridPlaneDebuggerStateProperties {
+export interface PluridPlaneDebuggerStateProperties {
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface PluridPlaneDebuggerDispatchProperties {
+export interface PluridPlaneDebuggerDispatchProperties {
 }
 
 type PluridPlaneDebuggerProperties = PluridPlaneDebuggerOwnProperties
@@ -68,7 +79,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedPluridPlaneDebugger = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -76,3 +87,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridPlaneDebugger);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridPlaneDebugger;
+// #endregion exports

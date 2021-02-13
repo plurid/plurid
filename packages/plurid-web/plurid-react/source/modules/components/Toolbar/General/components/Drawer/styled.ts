@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridDrawer: any = styled.div`
     h5 {
         font-size: 1rem;
@@ -54,3 +59,4 @@ export const StyledPluridDrawerHeading: any = styled.div`
 
 export const StyledPluridDrawerItems = styled.div`
 `;
+// #endregion module

@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridTransformArrow: any = styled.div`
     user-select: none;
     cursor: pointer;
@@ -24,3 +29,4 @@ export const StyledPluridTransformArrow: any = styled.div`
         }};
     }
 `;
+// #endregion module

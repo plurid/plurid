@@ -1,32 +1,43 @@
-import React, {
-    useRef,
-    useState,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+        useState,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
-
-import {
-    StyledPluridTransformArrow,
-} from './styled';
-
-import {
-    loadHammer,
-} from '../../../../../services/utilities/imports';
-
-import { AppState } from '../../../../../services/state/store';
-import StateContext from '../../../../../services/state/context';
-import selectors from '../../../../../services/state/selectors';
-// import actions from '../../../../../services/state/actions';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        loadHammer,
+    } from '~services/utilities/imports';
 
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridTransformArrow,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridTransformArrowOwnProperties {
     direction: string;
     transform: () => void;
@@ -173,7 +184,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridTransformArrow = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -181,3 +192,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridTransformArrow);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridTransformArrow;
+// #endregion exports

@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledUniverseExplorer: any = styled.div`
     position: absolute;
     width: 300px;
@@ -11,3 +16,4 @@ export const StyledUniverseExplorer: any = styled.div`
 
 export const StyledUniverseExplorerClustersWindow: any = styled.div`
 `;
+// #endregion module

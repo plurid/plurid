@@ -1,25 +1,32 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    internationalization,
+    import {
+        internationalization,
 
-    TOOLBAR_DRAWERS,
+        TOOLBAR_DRAWERS,
 
-    InternationalizationFieldType,
-} from '@plurid/plurid-data';
-
-
-import MenuMoreGlobal from './components/Global';
-import MenuMoreTransform from './components/Transform';
-import MenuMoreSpace from './components/Space';
-import MenuMoreToolbar from './components/Toolbar';
-import MenuMoreViewcube from './components/Viewcube';
-import MenuMoreTechnical from './components/Technical';
-import MenuMoreShortcuts from './components/Shortcuts';
+        InternationalizationFieldType,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region internal
+    import MenuMoreGlobal from './components/Global';
+    import MenuMoreTransform from './components/Transform';
+    import MenuMoreSpace from './components/Space';
+    import MenuMoreToolbar from './components/Toolbar';
+    import MenuMoreViewcube from './components/Viewcube';
+    import MenuMoreTechnical from './components/Technical';
+    import MenuMoreShortcuts from './components/Shortcuts';
+    // #endregion internal
+// #endregion imports
 
-interface MoreMenu {
+
+
+// #region module
+export interface MoreMenu {
     name: InternationalizationFieldType;
     drawer: keyof typeof TOOLBAR_DRAWERS,
     component: JSX.Element,
@@ -62,3 +69,4 @@ export const moreMenus: MoreMenu[] = [
         component: (<MenuMoreShortcuts />),
     },
 ];
+// #endregion module

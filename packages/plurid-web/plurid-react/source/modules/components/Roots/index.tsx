@@ -1,44 +1,55 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    /** constants */
-    PLURID_ENTITY_TRANSFORM_ORIGIN,
-    PLURID_ENTITY_ROOTS,
+    import {
+        /** constants */
+        PLURID_ENTITY_TRANSFORM_ORIGIN,
+        PLURID_ENTITY_ROOTS,
 
-    /** enumerations */
-    SIZES,
+        /** enumerations */
+        SIZES,
 
-    /** interfaces */
-    TreePlane,
-    PluridConfiguration,
-} from '@plurid/plurid-data';
-
-import {
-    StyledPluridRoots,
-    StyledTransformOrigin,
-} from './styled';
-
-import PluridRoot from '../Root';
-
-import {
-    cleanTemplate,
-} from '../../services/utilities/template';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+        /** interfaces */
+        TreePlane,
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import PluridRoot from '../Root';
 
+    import {
+        cleanTemplate,
+    } from '~services/utilities/template';
+
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridRoots,
+        StyledTransformOrigin,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridRootsOwnProperties {
     computedTree?: any;
     indexedPlanesReference?: any;
@@ -246,7 +257,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridRoots = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -254,3 +265,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridRoots);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridRoots;
+// #endregion exports

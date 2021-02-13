@@ -1,34 +1,45 @@
-import React, {
-    useRef,
-    useState,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+        useState,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import themes from '@plurid/plurid-themes';
+    import themes from '@plurid/plurid-themes';
 
-import {
-    general as generalEngine,
-} from '@plurid/plurid-engine';
+    import {
+        general as generalEngine,
+    } from '@plurid/plurid-engine';
 
-import {
-    PLURID_ENTITY_PLANE_CONFIGURATOR,
-} from '@plurid/plurid-data';
-
-import {
-    StyledPluridPlaneConfigurator,
-} from './styled';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-// import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+    import {
+        PLURID_ENTITY_PLANE_CONFIGURATOR,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    // import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledPluridPlaneConfigurator,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridPlaneConfiguratorOwnProperties {
     theme: keyof typeof themes;
     style: React.CSSProperties;
@@ -111,7 +122,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridPlaneConfigurator = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -119,3 +130,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridPlaneConfigurator);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridPlaneConfigurator;
+// #endregion exports

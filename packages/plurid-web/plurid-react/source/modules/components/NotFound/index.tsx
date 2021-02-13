@@ -1,24 +1,35 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
-
-import {
-    StyledPluridNotFound,
-} from './styled';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledPluridNotFound,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridNotFoundOwnProperties {
 }
 
@@ -69,7 +80,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedPluridNotFound = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -77,3 +88,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridNotFound);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridNotFound;
+// #endregion exports

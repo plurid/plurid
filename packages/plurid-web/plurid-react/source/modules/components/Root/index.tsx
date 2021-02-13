@@ -1,38 +1,49 @@
-import React, {
-    useState,
-    useContext,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+        useContext,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    StyledPluridRoot,
-} from './styled';
+    import {
+        /** constants */
+        PLURID_ENTITY_ROOT,
 
-import Context from '../../services/logic/context';
-
-import PluridPlane from '../Plane';
-
-import {
-    /** constants */
-    PLURID_ENTITY_ROOT,
-
-    /** interfaces */
-    TreePlane,
-    PluridContext,
-    PluridComponentProperty,
-} from '@plurid/plurid-data';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+        /** interfaces */
+        TreePlane,
+        PluridContext,
+        PluridComponentProperty,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import PluridPlane from '../Plane';
 
+    import Context from '~services/logic/context';
+
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridRoot,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridRootOwnProperties {
     plane: TreePlane;
 
@@ -437,7 +448,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridRoot = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -445,3 +456,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridRoot);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridRoot;
+// #endregion exports

@@ -1,14 +1,22 @@
-import React, {
-    useState,
-} from 'react';
-
-import {
-    StyledToolbarButton,
-    StyledToolbarButtonText,
-} from './styled';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+    } from 'react';
+    // #endregion libraries
 
 
+    // #region internal
+    import {
+        StyledToolbarButton,
+        StyledToolbarButtonText,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
 
+
+
+// #region module
 export interface PluridToolbarButtonProperties {
     atClick: any;
     image: any;
@@ -68,6 +76,10 @@ const PluridToolbarButton: React.FC<PluridToolbarButtonProperties> = (
         </StyledToolbarButton>
     );
 }
+// #endregion module
 
 
+
+// #region exports
 export default PluridToolbarButton;
+// #endregion exports

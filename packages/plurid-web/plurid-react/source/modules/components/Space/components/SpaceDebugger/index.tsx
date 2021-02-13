@@ -1,36 +1,47 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
-
-import {
-    StyledPluridSpaceDebugger,
-} from './styled';
-
-import { AppState } from '../../../../services/state/store';
-import StateContext from '../../../../services/state/context';
-import selectors from '../../../../services/state/selectors';
-// import actions from '../../.../../services/state/actions';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
 
-interface PluridSpaceDebuggerOwnProperties {
+
+    // #region internal
+    import {
+        StyledPluridSpaceDebugger,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
+export interface PluridSpaceDebuggerOwnProperties {
 }
 
-interface PluridSpaceDebuggerStateProperties {
+export interface PluridSpaceDebuggerStateProperties {
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface PluridSpaceDebuggerDispatchProperties {
+export interface PluridSpaceDebuggerDispatchProperties {
 }
 
-type PluridSpaceDebuggerProperties = PluridSpaceDebuggerOwnProperties
+export type PluridSpaceDebuggerProperties = PluridSpaceDebuggerOwnProperties
     & PluridSpaceDebuggerStateProperties
     & PluridSpaceDebuggerDispatchProperties;
 
@@ -68,7 +79,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedPluridSpaceDebugger = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -76,3 +87,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridSpaceDebugger);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridSpaceDebugger;
+// #endregion exports

@@ -1,11 +1,16 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
 
-import {
-    MENUS,
-} from './data';
+    import {
+        MENUS,
+    } from './data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledToolbar: any = styled.div`
     bottom: ${(props: any) => {
         if (!props.conceal) {
@@ -162,3 +167,4 @@ export const StyledIcon = styled.div`
         fill: white;
     } */
 `;
+// #endregion module

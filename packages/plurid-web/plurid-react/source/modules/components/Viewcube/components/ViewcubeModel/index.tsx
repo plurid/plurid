@@ -1,36 +1,47 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    InternationalizationLanguageType,
-    internationalization,
-} from '@plurid/plurid-data';
+    import {
+        InternationalizationLanguageType,
+        internationalization,
+    } from '@plurid/plurid-data';
 
-import {
-    internatiolate,
-} from '@plurid/plurid-engine';
-
-import {
-    StyledPluridViewcubeModel,
-    StyledPluridViewcubeModelContainer,
-    StyledPluridViewcubeModelCube,
-} from './styled';
-
-import ViewcubeFace from '../ViewcubeFace';
-
-import { AppState } from '../../../../services/state/store';
-import StateContext from '../../../../services/state/context';
-import selectors from '../../../../services/state/selectors';
-// import actions from '../../../../services/state/actions';
+    import {
+        internatiolate,
+    } from '@plurid/plurid-engine';
+    // #endregion libraries
 
 
+    // #region external
+    import ViewcubeFace from '../ViewcubeFace';
 
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridViewcubeModel,
+        StyledPluridViewcubeModelContainer,
+        StyledPluridViewcubeModelCube,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridViewcubeModelOwnProperties {
     mouseOver: boolean;
 }
@@ -49,6 +60,7 @@ export interface PluridViewcubeModelDispatchProperties {
 export type PluridViewcubeModelProperties = PluridViewcubeModelOwnProperties
     & PluridViewcubeModelStateProperties
     & PluridViewcubeModelDispatchProperties;
+
 
 const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
     properties,
@@ -186,7 +198,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedPluridViewcubeModel = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -194,3 +206,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridViewcubeModel);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridViewcubeModel;
+// #endregion exports

@@ -1,46 +1,57 @@
-import React, {
-    useContext,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useContext,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    PluridContext
-} from '@plurid/plurid-data';
+    import {
+        PluridContext
+    } from '@plurid/plurid-data';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
-
-import {
-    StyledPluridPlanePreview,
-} from './styled';
-
-import Context from '../../../../services/logic/context';
-
-import { AppState } from '../../../../services/state/store';
-import StateContext from '../../../../services/state/context';
-import selectors from '../../../../services/state/selectors';
-// import actions from '../../../../services/state/actions';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
 
 
+    // #region external
+    import Context from '~services/logic/context';
 
-interface PluridPlanePreviewOwnProperties {
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridPlanePreview,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
+export interface PluridPlanePreviewOwnProperties {
     planeID: string;
     linkCoordinates: any;
 }
 
-interface PluridPlanePreviewStateProperties {
+export interface PluridPlanePreviewStateProperties {
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
 }
 
-interface PluridPlanePreviewDispatchProperties {
+export interface PluridPlanePreviewDispatchProperties {
 }
 
-type PluridPlanePreviewProperties = PluridPlanePreviewOwnProperties
+export type PluridPlanePreviewProperties = PluridPlanePreviewOwnProperties
     & PluridPlanePreviewStateProperties
     & PluridPlanePreviewDispatchProperties;
 
@@ -110,7 +121,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedPluridPlanePreview = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -118,3 +129,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridPlanePreview);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridPlanePreview;
+// #endregion exports

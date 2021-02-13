@@ -1,43 +1,54 @@
-import React, {
-    useState,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    /** constants */
-    PLURID_ENTITY_VIEWCUBE,
+    import {
+        /** constants */
+        PLURID_ENTITY_VIEWCUBE,
 
-    /** interfaces */
-    PluridConfiguration,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    PluridIconGlobal,
-} from '@plurid/plurid-icons-react';
-
-import {
-    StyledPluridViewcube,
-    StyledPluridViewcubeArrow,
-    StyledPluridViewcubeArrowIcon,
-    StyledFitView,
-} from './styled';
-
-import PluridViewcubeModel from './components/ViewcubeModel';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-import actions from '../../services/state/actions';
+    import {
+        PluridIconGlobal,
+    } from '@plurid/plurid-icons-react';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledPluridViewcube,
+        StyledPluridViewcubeArrow,
+        StyledPluridViewcubeArrowIcon,
+        StyledFitView,
+    } from './styled';
+
+    import PluridViewcubeModel from './components/ViewcubeModel';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridViewcubeOwnProperties {
 }
 
@@ -240,7 +251,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedPluridViewcube = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -248,3 +259,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridViewcube);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridViewcube;
+// #endregion exports

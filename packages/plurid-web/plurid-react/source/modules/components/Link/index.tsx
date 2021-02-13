@@ -1,68 +1,80 @@
-import React, {
-    useContext,
-    useState,
-    useRef,
-    useCallback,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useContext,
+        useState,
+        useRef,
+        useCallback,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    /** constants */
-    PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
-    PLURID_ENTITY_LINK,
-    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
-    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
+    import {
+        /** constants */
+        PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
+        PLURID_ENTITY_LINK,
+        PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
+        PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
 
-    /** interfaces */
-    PluridLink as PluridLinkOwnProperties,
-    TreePlane,
-    PluridContext,
-    Indexed,
-    PluridInternalStateUniverse,
-    PluridConfiguration,
-    // PluridRouterRoute,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridLink as PluridLinkOwnProperties,
+        TreePlane,
+        PluridContext,
+        Indexed,
+        PluridInternalStateUniverse,
+        PluridConfiguration,
+        // PluridRouterRoute,
+    } from '@plurid/plurid-data';
 
-import {
-    router,
-    space,
-    general as generalEngine,
-} from '@plurid/plurid-engine';
-
-import {
-    StyledPluridLink,
-} from './styled';
-
-import Context from '../../services/logic/context';
-
-import PluridPlanePreview from './components/Preview';
-import PluridPortal from '../utilities/Portal';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-import actions from '../../services/state/actions';
-import {
-    ViewSize,
-    UpdateSpaceLinkCoordinatesPayload,
-} from '../../services/state/modules/space/types';
+    import {
+        router,
+        space,
+        general as generalEngine,
+    } from '@plurid/plurid-engine';
+    // #endregion libraries
 
 
+    // #region external
+    import PluridPortal from '~components/utilities/Portal';
 
+    import Context from '~services/logic/context';
+
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    import {
+        ViewSize,
+        UpdateSpaceLinkCoordinatesPayload,
+    } from '~services/state/modules/space/types';
+    // #endregion external
+
+
+    // #region internal
+    import PluridPlanePreview from './components/Preview';
+
+    import {
+        StyledPluridLink,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const {
     default: Router,
     resolveRoute,
 } = router;
 
-interface PluridLinkCoordinates {
+export interface PluridLinkCoordinates {
     x: number;
     y: number;
 }
@@ -424,3 +436,4 @@ export default connect(
         context: StateContext,
     },
 )(PluridLink);
+// #endregion module

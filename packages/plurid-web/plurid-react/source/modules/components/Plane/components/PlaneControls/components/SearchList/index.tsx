@@ -1,36 +1,47 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    /** interfaces */
-    PluridConfiguration,
-} from '@plurid/plurid-data';
+    import {
+        /** interfaces */
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    uuid,
-} from '@plurid/plurid-functions';
-
-import {
-    StyledPluridSearchList,
-    StyledSearchFilters,
-} from './styled';
-
-import SearchItem from '../SearchItem';
-
-import { AppState } from '../../../../../../services/state/store';
-import StateContext from '../../../../../../services/state/context';
-import selectors from '../../../../../../services/state/selectors';
-// import actions from '../../../../../../services/state/actions';
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
 
+    import SearchItem from '../SearchItem';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridSearchList,
+        StyledSearchFilters,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridSearchListOwnProperties {
     hideSearch: () => void;
 }
@@ -120,7 +131,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridSearchList = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -128,3 +139,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridSearchList);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridSearchList;
+// #endregion exports

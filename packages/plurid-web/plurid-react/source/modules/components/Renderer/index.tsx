@@ -1,9 +1,17 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
+    // #endregion libraries
 
-// import PluridLink from '../Link';
+
+    // #region external
+    // import PluridLink from '../Link';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface RenderLink {
     start: number;
     length: number;
@@ -24,6 +32,10 @@ const Renderer: React.FC<RendererProperties> = () => {
         </div>
     );
 }
+// #endregion module
 
 
+
+// #region exports
 export default Renderer;
+// #endregion exports

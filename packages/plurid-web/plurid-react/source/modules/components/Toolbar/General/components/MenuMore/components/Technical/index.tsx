@@ -1,45 +1,53 @@
-import React, {
-    useState,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    internationalization,
+    import {
+        internationalization,
 
-    PluridConfiguration,
-    InternationalizationLanguageType,
-} from '@plurid/plurid-data';
+        PluridConfiguration,
+        InternationalizationLanguageType,
+    } from '@plurid/plurid-data';
 
-import {
-    internatiolate,
-} from '@plurid/plurid-engine';
+    import {
+        internatiolate,
+    } from '@plurid/plurid-engine';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    universal,
-} from '@plurid/plurid-ui-components-react';
+    import {
+        universal,
+    } from '@plurid/plurid-ui-components-react';
 
-import {
-    useDebouncedCallback,
-} from '@plurid/plurid-functions-react';
-
-import {
-    StyledPluridMoreMenuItem,
-} from '../../styled';
-
-import { AppState } from '../../../../../../../services/state/store';
-import StateContext from '../../../../../../../services/state/context';
-import selectors from '../../../../../../../services/state/selectors';
-import actions from '../../../../../../../services/state/actions';
+    import {
+        useDebouncedCallback,
+    } from '@plurid/plurid-functions-react';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        StyledPluridMoreMenuItem,
+    } from '../../styled';
 
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const {
     inputs: {
         Slider: PluridSlider,
@@ -151,7 +159,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridMenuMoreTechnical = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -159,3 +167,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridMenuMoreTechnical);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridMenuMoreTechnical;
+// #endregion exports

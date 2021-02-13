@@ -1,34 +1,45 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    PluridConfiguration,
-    PLURID_ENTITY_SPACE,
-} from '@plurid/plurid-data';
-
-import {
-    StyledPluridSpace,
-} from './styled';
-
-import PluridRoots from '../Roots';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+    import {
+        PluridConfiguration,
+        PLURID_ENTITY_SPACE,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import PluridRoots from '../Roots';
 
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridSpace,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridSpaceOwnProperties {
     computedTree?: any;
     indexedPlanesReference?: any;
@@ -104,7 +115,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridSpace = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -112,3 +123,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridSpace);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridSpace;
+// #endregion exports

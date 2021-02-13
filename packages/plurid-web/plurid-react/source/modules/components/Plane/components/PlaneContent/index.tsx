@@ -1,19 +1,27 @@
-import React, {
-    useRef,
-    // useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+        // useEffect,
+    } from 'react';
 
-import {
-    /** constants */
-    PLURID_ENTITY_PLANE_CONTENT,
-} from '@plurid/plurid-data';
-
-import {
-    StyledPluridPlaneContent,
-} from './styled';
-
+    import {
+        /** constants */
+        PLURID_ENTITY_PLANE_CONTENT,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region internal
+    import {
+        StyledPluridPlaneContent,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridPlaneContentOwnProperties {
     // updatePlaneSize: any;
     children: any;
@@ -69,6 +77,10 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
         </StyledPluridPlaneContent>
     );
 }
+// #endregion module
 
 
+
+// #region exports
 export default PluridPlaneContent;
+// #endregion exports

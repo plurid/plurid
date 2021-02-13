@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridToolbarTranslate: any = styled.div`
     display: grid;
     align-items: center;
@@ -15,3 +20,4 @@ export const StyledPluridToolbarTranslate: any = styled.div`
         // return '0.5fr 0.5fr 1fr 0.5fr 0.5fr';
     }};
 `;
+// #endregion module

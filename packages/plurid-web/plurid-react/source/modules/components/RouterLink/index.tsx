@@ -1,16 +1,27 @@
-import React from 'react';
-
-import {
-    StyledPluridRouterLinkAnchor,
-    StyledPluridRouterLinkDiv,
-} from './styled';
-
-import {
-    pluridRouterNavigate,
-} from '../../services/utilities/navigate';
+// #region imports
+    // #region libraries
+    import React from 'react';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        pluridRouterNavigate,
+    } from '~services/utilities/navigate';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledPluridRouterLinkAnchor,
+        StyledPluridRouterLinkDiv,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridRouterLinkOwnProperties {
     route: string;
 
@@ -91,6 +102,10 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         </StyledPluridRouterLinkAnchor>
     );
 }
+// #endregion module
 
 
+
+// #region exports
 export default PluridRouterLink;
+// #endregion exports

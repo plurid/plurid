@@ -1,33 +1,44 @@
-import React, {
-    useRef,
-    useEffect,
-    useState,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+        useEffect,
+        useState,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    universal,
-} from '@plurid/plurid-ui-components-react';
+    import {
+        universal,
+    } from '@plurid/plurid-ui-components-react';
 
-import {
-    mathematics,
-} from '@plurid/plurid-functions';
-
-import PluridVirtualListItem from './components/ListItem';
-
-import { AppState } from '../../../services/state/store';
-import StateContext from '../../../services/state/context';
-import selectors from '../../../services/state/selectors';
-// import actions from '../../../services/state/actions';
-import {
-    ViewSize,
-} from '../../../services/state/types/space';
+    import {
+        mathematics,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    import {
+        ViewSize,
+    } from '~services/state/types/space';
+    // #endregion external
 
+
+    // #region internal
+    import PluridVirtualListItem from './components/ListItem';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const {
     markers: {
         Spinner: PluridSpinner,
@@ -200,7 +211,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridVirtualList = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -208,3 +219,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridVirtualList);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridVirtualList;
+// #endregion exports

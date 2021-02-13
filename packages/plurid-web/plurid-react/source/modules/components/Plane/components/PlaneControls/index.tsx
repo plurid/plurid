@@ -1,53 +1,64 @@
-import React, {
-    useState,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import { Theme } from '@plurid/plurid-themes';
+    import { Theme } from '@plurid/plurid-themes';
 
-import {
-    /** constants */
-    PLURID_ENTITY_PLANE_CONTROLS,
+    import {
+        /** constants */
+        PLURID_ENTITY_PLANE_CONTROLS,
 
-    /** interfaces */
-    PluridPlane,
-    RegisteredPluridPlane,
-    TreePlane,
-    PluridConfiguration,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridPlane,
+        RegisteredPluridPlane,
+        TreePlane,
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    universal,
-} from '@plurid/plurid-ui-components-react';
+    import {
+        universal,
+    } from '@plurid/plurid-ui-components-react';
 
-import {
-    PluridIconCopy,
-    PluridIconLink,
-} from '@plurid/plurid-icons-react';
+    import {
+        PluridIconCopy,
+        PluridIconLink,
+    } from '@plurid/plurid-icons-react';
 
-import {
-    clipboard,
-} from '@plurid/plurid-functions';
-
-import {
-    StyledPluridPlaneControls,
-    StyledPluridPlaneControlsLeft,
-    StyledPluridPlaneControlsCenter,
-    StyledPluridPlaneControlsRight,
-} from './styled';
-
-import SearchList from './components/SearchList';
-
-import { AppState } from '../../../../services/state/store';
-import StateContext from '../../../../services/state/context';
-import selectors from '../../../../services/state/selectors';
-// import actions from '../../../../services/state/actions';
+    import {
+        clipboard,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
 
+
+    // #region internal
+    import SearchList from './components/SearchList';
+
+    import {
+        StyledPluridPlaneControls,
+        StyledPluridPlaneControlsLeft,
+        StyledPluridPlaneControlsCenter,
+        StyledPluridPlaneControlsRight,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const {
     inputs: {
         Textline: PluridTextline,
@@ -216,7 +227,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridPlaneControls = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -224,3 +235,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridPlaneControls);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridPlaneControls;
+// #endregion exports

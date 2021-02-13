@@ -1,33 +1,45 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    /** constants */
-    PLURID_ENTITY_UNIVERSE_EXPLORER,
+    import {
+        /** constants */
+        PLURID_ENTITY_UNIVERSE_EXPLORER,
 
-    /** interfaces */
-    PluridConfiguration,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
-
-import {
-    StyledUniverseExplorer,
-    StyledUniverseExplorerClustersWindow,
-} from './styled';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledUniverseExplorer,
+        StyledUniverseExplorerClustersWindow,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+
+// #region module
 export interface PluridUniverseExplorerOwnProperties {
 }
 
@@ -94,7 +106,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedPluridUniverseExplorer = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -102,3 +114,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridUniverseExplorer);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridUniverseExplorer;
+// #endregion exports

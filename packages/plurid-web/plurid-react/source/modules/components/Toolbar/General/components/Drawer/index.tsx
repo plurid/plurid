@@ -1,36 +1,47 @@
-import React, {
-    useState,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    PluridConfiguration,
-} from '@plurid/plurid-data';
+    import {
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    universal,
-} from '@plurid/plurid-ui-components-react';
-
-import {
-    StyledPluridDrawer,
-    StyledPluridDrawerHeading,
-    StyledPluridDrawerItems,
-} from './styled';
-
-import { AppState } from '../../../../../services/state/store';
-import StateContext from '../../../../../services/state/context';
-import selectors from '../../../../../services/state/selectors';
-// import actions from '../../../../../services/state/actions';
+    import {
+        universal,
+    } from '@plurid/plurid-ui-components-react';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledPluridDrawer,
+        StyledPluridDrawerHeading,
+        StyledPluridDrawerItems,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const {
     typography: {
         Heading: PluridHeading,
@@ -133,7 +144,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridDrawer = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -141,3 +152,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridDrawer);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridDrawer;
+// #endregion exports

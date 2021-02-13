@@ -1,46 +1,57 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    PluridIconScale,
-} from '@plurid/plurid-icons-react';
+    import {
+        PluridIconScale,
+    } from '@plurid/plurid-icons-react';
 
-import {
-    TRANSFORM_MODES,
-    internationalization,
+    import {
+        TRANSFORM_MODES,
+        internationalization,
 
-    InternationalizationLanguageType,
-} from '@plurid/plurid-data';
+        InternationalizationLanguageType,
+    } from '@plurid/plurid-data';
 
-import {
-    internatiolate,
-} from '@plurid/plurid-engine';
-
-import {
-    StyledPluridToolbarScale,
-} from './styled';
-
-import {
-    StyledToolbarButton,
-    StyledIcon,
-} from '../../styled';
-
-import PluridTransformArrow from '../TransformArrow';
-
-import { AppState } from '../../../../../services/state/store';
-import StateContext from '../../../../../services/state/context';
-import selectors from '../../../../../services/state/selectors';
-import actions from '../../../../../services/state/actions';
+    import {
+        internatiolate,
+    } from '@plurid/plurid-engine';
+    // #endregion libraries
 
 
+    // #region external
+    import PluridTransformArrow from '../TransformArrow';
 
+    import {
+        StyledToolbarButton,
+        StyledIcon,
+    } from '../../styled';
+
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridToolbarScale,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridToolbarScaleOwnProperties {
     showTransformButtons: boolean;
     showIcons: boolean;
@@ -144,7 +155,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridToolbarScale = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -152,3 +163,11 @@ export default connect(
         context: StateContext,
     },
 )(PluridToolbarScale);
+// #endregion module
+
+
+
+
+// #region exports
+export default ConnectedPluridToolbarScale;
+// #endregion exports

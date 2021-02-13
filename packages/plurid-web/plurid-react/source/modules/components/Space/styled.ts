@@ -1,10 +1,15 @@
-import styled, {
-    css,
-    keyframes,
-} from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled, {
+        css,
+        keyframes,
+    } from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 const fadeIn = keyframes`
     from {
         opacity: 0%;
@@ -50,3 +55,4 @@ export const StyledPluridSpace: any = styled.div`
         return '';
     }};
 `;
+// #endregion module

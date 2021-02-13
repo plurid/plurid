@@ -1,30 +1,35 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import { Theme } from '@plurid/plurid-themes';
+    import { Theme } from '@plurid/plurid-themes';
 
-import {
-    /** constants */
-    PLURID_ENTITY_PLANE_BRIDGE,
+    import {
+        /** constants */
+        PLURID_ENTITY_PLANE_BRIDGE,
 
-    /** interfaces */
-    PluridConfiguration,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    StyledPluridPlaneBridge,
-} from './styled';
+    import {
+        StyledPluridPlaneBridge,
+    } from './styled';
 
-import { AppState } from '../../../../services/state/store';
-import StateContext from '../../../../services/state/context';
-import selectors from '../../../../services/state/selectors';
-// import actions from '../../../../services/state/actions';
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export interface PluridPlaneBridgeOwnProperties {
 }
 
@@ -81,7 +86,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridPlaneBridge = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -89,3 +94,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridPlaneBridge);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridPlaneBridge;
+// #endregion exports

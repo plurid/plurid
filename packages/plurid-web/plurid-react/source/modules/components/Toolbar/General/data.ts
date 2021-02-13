@@ -1,3 +1,4 @@
+// #region module
 export enum MENUS {
     NONE = 'NONE',
     UNIVERSES = 'UNIVERSES',
@@ -6,3 +7,4 @@ export enum MENUS {
 
 
 export const VIEW_SIZE_WIDTH_LIMIT = 800;
+// #endregion module

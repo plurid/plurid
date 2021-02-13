@@ -1,38 +1,49 @@
-import React, {
-    useRef,
-    useContext,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+        useContext,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import PluridPubSub from '@plurid/plurid-pubsub';
+    import PluridPubSub from '@plurid/plurid-pubsub';
 
-import {
-    PLURID_ENTITY_APPLICATION_CONFIGURATOR,
-    PluridConfiguration,
-    PluridPartialConfiguration,
-} from '@plurid/plurid-data';
+    import {
+        PLURID_ENTITY_APPLICATION_CONFIGURATOR,
+        PluridConfiguration,
+        PluridPartialConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    general as generalEngine,
-} from '@plurid/plurid-engine';
-
-import {
-    StyledPluridApplicationConfigurator,
-} from './styled';
-
-import Context from '../../services/logic/context';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-import actions from '../../services/state/actions';
+    import {
+        general as generalEngine,
+    } from '@plurid/plurid-engine';
+    // #endregion libraries
 
 
+    // #region external
+    import Context from '~services/logic/context';
 
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridApplicationConfigurator,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridApplicationConfiguratorOwnProperties {
     configuration?: PluridPartialConfiguration;
     pubsub?: PluridPubSub;
@@ -143,7 +154,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridApplicationConfigurator = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -151,3 +162,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridApplicationConfigurator);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridApplicationConfigurator;
+// #endregion exports

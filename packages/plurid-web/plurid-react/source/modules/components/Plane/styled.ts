@@ -1,10 +1,16 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
 
-import {
-    decomposeColor,
-} from '@plurid/plurid-themes';
+    import {
+        decomposeColor,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
+// #endregion imports
 
 
+
+// #region module
 export const StyledPluridPlane: any = styled.div`
     background-color: ${(props: any) => {
         if (props.transparentUI && !props.mouseOver) {
@@ -62,3 +68,4 @@ export const StyledPluridPlane: any = styled.div`
 
     transform-origin: 0 0 0;
 `;
+// #endregion module

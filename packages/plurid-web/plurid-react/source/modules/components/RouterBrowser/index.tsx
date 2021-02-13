@@ -1,43 +1,51 @@
-import React, {
-    useRef,
-    useState,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+        useState,
+        useEffect,
+    } from 'react';
 
-import {
-    /** constants */
-    PLURID_ROUTER_LOCATION_CHANGED,
-    PLURID_ROUTER_LOCATION_STORED,
+    import {
+        /** constants */
+        PLURID_ROUTER_LOCATION_CHANGED,
+        PLURID_ROUTER_LOCATION_STORED,
 
-    PLURID_ROUTE_DEFAULT_SPACE,
-    PLURID_ROUTE_DEFAULT_UNIVERSE,
-    PLURID_ROUTE_DEFAULT_CLUSTER,
+        PLURID_ROUTE_DEFAULT_SPACE,
+        PLURID_ROUTE_DEFAULT_UNIVERSE,
+        PLURID_ROUTE_DEFAULT_CLUSTER,
 
-    /** interfaces */
-    IndexedPluridPlane,
-    PluridRouterProperties as PluridRouterBrowserOwnProperties,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        IndexedPluridPlane,
+        PluridRouterProperties as PluridRouterBrowserOwnProperties,
+    } from '@plurid/plurid-data';
 
-import {
-    router,
-    utilities,
-} from '@plurid/plurid-engine';
+    import {
+        router,
+        utilities,
+    } from '@plurid/plurid-engine';
 
-import {
-    storage,
-    uuid,
-} from '@plurid/plurid-functions';
-
-import {
-    getComponentFromRoute,
-    getGatewayView,
-    generateIndexedPlane,
-    generateIndexedPlanes,
-    computeIndexedPlanes,
-} from '../../services/logic/router';
+    import {
+        storage,
+        uuid,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        getComponentFromRoute,
+        getGatewayView,
+        generateIndexedPlane,
+        generateIndexedPlanes,
+        computeIndexedPlanes,
+    } from '~services/logic/router';
+    // #endregion external
+// #endregion imports
 
+
+
+// #region module
 const PluridRouter = router.default;
 const PluridURLRouter = router.URLRouter;
 
@@ -401,6 +409,10 @@ const PluridRouterBrowser = (
         </>
     );
 }
+// #endregion module
 
 
+
+// #region exports
 export default PluridRouterBrowser;
+// #endregion exports

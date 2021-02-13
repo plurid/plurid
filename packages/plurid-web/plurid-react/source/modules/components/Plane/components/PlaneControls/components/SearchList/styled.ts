@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridSearchList = styled.div`
     position: absolute;
     left: 0;
@@ -49,3 +54,4 @@ export const StyledSearchFilters = styled.div`
     place-content: center;
     justify-items: center;
 `;
+// #endregion module

@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridViewcubeFace: any = styled.div`
     font-size: 0.6rem;
     position: absolute;
@@ -105,3 +110,4 @@ export const StyledPluridViewcubeFaceZone: any = styled.div`
         }};
     }
 `;
+// #endregion module

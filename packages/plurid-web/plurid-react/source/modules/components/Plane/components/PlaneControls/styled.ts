@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridPlaneControls: any = styled.div`
     background-color: ${(props: any) => {
         if (props.transparentUI && !props.mouseOver) {
@@ -45,3 +50,4 @@ export const StyledPluridPlaneControlsRight = styled.div`
     grid-template-columns: repeat(4, 30px);
     padding: 0 1rem;
 `;
+// #endregion module

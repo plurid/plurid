@@ -1,28 +1,34 @@
-import React from 'react';
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    PluridConfiguration,
-} from '@plurid/plurid-data';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    StyledPluridViewcubeFace,
-    StyledPluridViewcubeFaceZone,
-} from './styled';
+    import {
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
 
-import { AppState } from '../../../../services/state/store';
-import StateContext from '../../../../services/state/context';
-import selectors from '../../../../services/state/selectors';
-import actions from '../../../../services/state/actions';
+    import {
+        StyledPluridViewcubeFace,
+        StyledPluridViewcubeFaceZone,
+    } from './styled';
+
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 const faceTypes = {
     topLeft: 'TopLeft',
     topCenter: 'TopCenter',
@@ -402,7 +408,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedPluridViewcubeFace = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -410,3 +416,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridViewcubeFace);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridViewcubeFace;
+// #endregion exports

@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridMoreMenu: any = styled.div`
     position: absolute;
     bottom: 75px;
@@ -80,3 +85,4 @@ export const StyledPluridMoreMenuScroll = styled.div`
         margin-top: 0;
     }
 `;
+// #endregion module

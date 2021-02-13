@@ -1,10 +1,15 @@
-import React, {
-    useRef,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+        useEffect,
+    } from 'react';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export interface VirtualListItemOwnProperties {
     top: number;
     index: number;
@@ -44,6 +49,10 @@ const VirtualListItem: React.FC<VirtualListItemOwnProperties> = (
         </div>
     );
 }
+// #endregion module
 
 
+
+// #region exports
 export default VirtualListItem;
+// #endregion exports

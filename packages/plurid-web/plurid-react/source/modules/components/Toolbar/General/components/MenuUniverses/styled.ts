@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridMenuUniverses = styled.div`
     position: absolute;
     bottom: 75px;
@@ -115,3 +120,4 @@ export const StyledMenuUniversesItemList: any = styled.li`
         }};
     }
 `;
+// #endregion module

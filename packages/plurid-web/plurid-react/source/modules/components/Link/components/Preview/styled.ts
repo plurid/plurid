@@ -1,12 +1,17 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
+// #endregion imports
 
 
 
-interface IStyledPreview {
+// #region module
+export interface IStyledPreview {
     theme: Theme;
     linkCoordinates: any;
 }
@@ -32,3 +37,4 @@ export const StyledPluridPlanePreview = styled.div<IStyledPreview>`
         return properties.theme.boxShadowUmbra;
     }};
 `;
+// #endregion module

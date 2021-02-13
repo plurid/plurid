@@ -1,11 +1,16 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
 
-import {
-    SIZES,
-} from '@plurid/plurid-data';
+    import {
+        SIZES,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridRoots: any = styled.div`
     transform-style: preserve-3d;
 `;
@@ -47,3 +52,4 @@ export const StyledTransformOrigin: any = styled.div`
     pointer-events: none;
     touch-action: none;
 `;
+// #endregion module

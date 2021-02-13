@@ -1,45 +1,58 @@
-import React, {
-    useState,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import { Theme } from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    StyledPluridPlane,
-} from './styled';
+    import {
+        PluridPlane as IPluridPlane,
+        RegisteredPluridPlane,
+        TreePlane,
+        PluridConfiguration,
+        PLURID_ENTITY_PLANE,
+    } from '@plurid/plurid-data';
 
-import PlaneBridge from './components/PlaneBridge';
-import PlaneControls from './components/PlaneControls';
-import PlaneContent from './components/PlaneContent';
-
-import {
-    PluridPlane as IPluridPlane,
-    RegisteredPluridPlane,
-    TreePlane,
-    PluridConfiguration,
-    PLURID_ENTITY_PLANE,
-} from '@plurid/plurid-data';
-
-import {
-    mathematics,
-} from '@plurid/plurid-functions';
-
-import {
-    cleanTemplate,
-} from '../../services/utilities/template';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import { ViewSize } from '../../services/state/types/space';
-import selectors from '../../services/state/selectors';
-import actions from '../../services/state/actions';
+    import {
+        mathematics,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        cleanTemplate,
+    } from '~services/utilities/template';
 
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import { ViewSize } from '~services/state/types/space';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridPlane,
+    } from './styled';
+
+    import PlaneBridge from './components/PlaneBridge';
+    import PlaneControls from './components/PlaneControls';
+    import PlaneContent from './components/PlaneContent';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridPlaneOwnProperties {
     planeID: string;
     plane: RegisteredPluridPlane;
@@ -205,7 +218,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridPlane = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -213,3 +226,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridPlane);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridPlane;
+// #endregion exports

@@ -1,29 +1,40 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    /** interfaces */
-    PluridConfiguration,
-} from '@plurid/plurid-data';
-
-import {
-    StyledPluridSearchItem
-} from './styled';
-
-import { AppState } from '../../../../../../services/state/store';
-import StateContext from '../../../../../../services/state/context';
-import selectors from '../../../../../../services/state/selectors';
-// import actions from '../../../../../../services/state/actions';
+    import {
+        /** interfaces */
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledPluridSearchItem
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridSearchItemOwnProperties {
     text: string;
     hideSearch: () => void;
@@ -91,7 +102,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridSearchItem = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -99,3 +110,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridSearchItem);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridSearchItem;
+// #endregion exports

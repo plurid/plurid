@@ -1,15 +1,23 @@
-import React, {
-    Component,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        Component,
+    } from 'react';
 
-import {
-    PluridMetastate,
-} from '@plurid/plurid-data';
-
-import PluridProviderContext from './context';
-
+    import {
+        PluridMetastate,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region internal
+    import PluridProviderContext from './context';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridProviderProperties {
     metastate: PluridMetastate | undefined;
 }
@@ -43,6 +51,10 @@ class PluridProvider extends Component<
         );
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default PluridProvider;
+// #endregion exports

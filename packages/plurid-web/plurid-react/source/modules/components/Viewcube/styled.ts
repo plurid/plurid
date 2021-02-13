@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledPluridViewcube: any = styled.div`
     position: absolute;
     @media (max-width: 800px) {
@@ -81,3 +86,4 @@ export const StyledFitView: any = styled.div`
         fill: white;
     }
 `;
+// #endregion module

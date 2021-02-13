@@ -1,15 +1,20 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    createPortal,
-} from 'react-dom';
+    import {
+        createPortal,
+    } from 'react-dom';
 
-import {
-    usePortal,
-} from '@plurid/plurid-functions-react';
+    import {
+        usePortal,
+    } from '@plurid/plurid-functions-react';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export interface PortalProperties {
     elementID: string;
     rootID: string;
@@ -37,6 +42,10 @@ const PluridPortal: React.FC<PortalProperties> = (
         target,
     );
 };
+// #endregion module
 
 
+
+// #region exports
 export default PluridPortal;
+// #endregion exports

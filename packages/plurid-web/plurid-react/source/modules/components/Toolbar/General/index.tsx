@@ -1,65 +1,76 @@
-import React, {
-    useRef,
-    useState,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+        useState,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    /** constants */
-    PLURID_ENTITY_TOOLBAR,
+    import {
+        /** constants */
+        PLURID_ENTITY_TOOLBAR,
 
-    /** enumerations */
-    TRANSFORM_MODES,
+        /** enumerations */
+        TRANSFORM_MODES,
 
-    /** interfaces */
-    PluridConfiguration,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    StyledToolbar,
-    StyledToolbarButtons,
-    StyledToolbarButton,
-
-    StyledIcon,
-} from './styled';
-
-import {
-    MENUS,
-
-    VIEW_SIZE_WIDTH_LIMIT,
-} from './data';
-
-import MenuUniverses from './components/MenuUniverses';
-import MenuMore from './components/MenuMore';
-
-import ToolbarRotate from './components/ToolbarRotate';
-import ToolbarScale from './components/ToolbarScale';
-import ToolbarTranslate from './components/ToolbarTranslate';
-
-import {
-    PluridIconFirstPerson,
-    PluridIconDocuments,
-    PluridIconMore,
-} from '@plurid/plurid-icons-react';
-
-import { AppState } from '../../../services/state/store';
-import StateContext from '../../../services/state/context';
-import selectors from '../../../services/state/selectors';
-import actions from '../../../services/state/actions';
-import {
-    ViewSize,
-} from '../../../services/state/types/space';
+    import {
+        PluridIconFirstPerson,
+        PluridIconDocuments,
+        PluridIconMore,
+    } from '@plurid/plurid-icons-react';
+    // #endregion libraries
 
 
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    import {
+        ViewSize,
+    } from '~services/state/types/space';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledToolbar,
+        StyledToolbarButtons,
+        StyledToolbarButton,
+
+        StyledIcon,
+    } from './styled';
+
+    import {
+        MENUS,
+
+        VIEW_SIZE_WIDTH_LIMIT,
+    } from './data';
+
+    import MenuUniverses from './components/MenuUniverses';
+    import MenuMore from './components/MenuMore';
+
+    import ToolbarRotate from './components/ToolbarRotate';
+    import ToolbarScale from './components/ToolbarScale';
+    import ToolbarTranslate from './components/ToolbarTranslate';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface PluridToolbarOwnProperties {
 }
 
@@ -318,7 +329,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridToolbar = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -326,3 +337,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridToolbar);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridToolbar;
+// #endregion exports

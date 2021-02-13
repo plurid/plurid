@@ -1,45 +1,53 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
-import {
-    internationalization,
+    import {
+        internationalization,
 
-    PluridConfiguration,
-    InternationalizationLanguageType,
-} from '@plurid/plurid-data';
+        PluridConfiguration,
+        InternationalizationLanguageType,
+    } from '@plurid/plurid-data';
 
-import {
-    internatiolate,
-} from '@plurid/plurid-engine';
+    import {
+        internatiolate,
+    } from '@plurid/plurid-engine';
 
-import {
-    universal,
-} from '@plurid/plurid-ui-components-react';
-
-import {
-    StyledPluridMoreMenuItem,
-} from '../../styled';
-
-import { AppState } from '../../../../../../../services/state/store';
-import StateContext from '../../../../../../../services/state/context';
-import selectors from '../../../../../../../services/state/selectors';
-import actions from '../../../../../../../services/state/actions';
-import {
-    ViewSize,
-} from '../../../../../../../services/state/types/space';
+    import {
+        universal,
+    } from '@plurid/plurid-ui-components-react';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        StyledPluridMoreMenuItem,
+    } from '../../styled';
 
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    import {
+        ViewSize,
+    } from '~services/state/types/space';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const {
     inputs: {
         Switch: PluridSwitch,
@@ -205,7 +213,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridMenuMoreToolbar = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -213,3 +221,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridMenuMoreToolbar);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridMenuMoreToolbar;
+// #endregion exports
