@@ -1,15 +1,27 @@
-import {
-    createStore,
-    applyMiddleware,
-} from 'redux';
-import thunk from 'redux-thunk';
-
-import rootReducer from './reducers';
-
-import environment from '../../utilities/environment';
-
+// #region imports
+    // #region libraries
+    import {
+        createStore,
+        applyMiddleware,
+    } from 'redux';
+    import thunk from 'redux-thunk';
+    // #endregion libraries
 
 
+    // #region external
+    import environment from '~services/utilities/environment';
+    // #endregion external
+
+
+    // #region internal
+    import rootReducer from './reducers';
+    // #endregion internal
+// #endregion imports
+
+
+
+
+// #region module
 let composeWithDevTools: any;
 if (!environment.production) {
     const reduxDevTools = require('redux-devtools-extension');
@@ -31,6 +43,10 @@ const store = (preloadedState: AppState | {}) => {
 
     return _store;
 }
+// #endregion module
 
 
+
+// #region exports
 export default store;
+// #endregion exports

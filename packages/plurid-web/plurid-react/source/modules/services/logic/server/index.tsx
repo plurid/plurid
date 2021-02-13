@@ -1,26 +1,33 @@
-import themes from '@plurid/plurid-themes';
+// #region imports
+    // #region libraries
+    import themes from '@plurid/plurid-themes';
 
-import {
-    PluridMetastate,
-    PluridRoute,
-} from '@plurid/plurid-data';
+    import {
+        PluridMetastate,
+        PluridRoute,
+    } from '@plurid/plurid-data';
 
-import {
-    router,
-} from '@plurid/plurid-engine';
-
-import {
-    collectApplicationsFromPath,
-    computeIndexedPlanes,
-} from '../router';
-
-import {
-    computeApplication,
-} from '../computing';
+    import {
+        router,
+    } from '@plurid/plurid-engine';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        collectApplicationsFromPath,
+        computeIndexedPlanes,
+    } from '../router';
+
+    import {
+        computeApplication,
+    } from '../computing';
+    // #endregion external
+// #endregion imports
 
 
+
+// #region module
 export const serverComputeMetastate = (
     matchedRoute: router.MatcherResponse,
     paths: PluridRoute[],
@@ -121,3 +128,4 @@ export const serverComputeMetastate = (
         states,
     };
 }
+// #endregion module

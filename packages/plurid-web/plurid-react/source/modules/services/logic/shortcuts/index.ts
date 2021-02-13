@@ -1,25 +1,33 @@
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+// #region imports
+    // #region libraries
+    import { AnyAction } from 'redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    dom,
-} from '@plurid/plurid-functions';
+    import {
+        dom,
+    } from '@plurid/plurid-functions';
 
-import {
-    TRANSFORM_MODES,
+    import {
+        TRANSFORM_MODES,
 
-    PluridConfigurationSpaceTransformLocks,
-} from '@plurid/plurid-data';
+        PluridConfigurationSpaceTransformLocks,
+    } from '@plurid/plurid-data';
 
-import {
-    direction as directionLogic,
-} from '@plurid/plurid-engine';
-
-import actions from '../../state/actions';
-
+    import {
+        direction as directionLogic,
+    } from '@plurid/plurid-engine';
+    // #endregion libraries
 
 
-interface Modes {
+    // #region external
+    import actions from '~services/state/actions';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
+export interface Modes {
     rotation: boolean;
     translation: boolean;
     scale: boolean;
@@ -348,3 +356,4 @@ export const handleGlobalWheel = (
         }
     }
 }
+// #endregion module

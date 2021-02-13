@@ -1,24 +1,32 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    PLURID_ENTITY_VIEW,
+    import {
+        PLURID_ENTITY_VIEW,
 
-    PluridApplication,
-} from '@plurid/plurid-data';
-
-import {
-    computeApplication,
-} from '../computing';
-
-import PluridSpace from '../../../components/Space';
-
-import {
-    GlobalStyle,
-    StyledView,
-} from '../../../../Application/View/styled';
+        PluridApplication,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        computeApplication,
+    } from '../computing';
 
+    import PluridSpace from '~components/Space';
+
+    import {
+        GlobalStyle,
+        StyledView,
+    } from '~Application/View/styled';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const renderStatic = (
     data: PluridApplication,
 ) => {
@@ -65,6 +73,10 @@ const renderStatic = (
         </StyledView>
     );
 };
+// #endregion module
 
 
+
+// #region exports
 export default renderStatic;
+// #endregion exports

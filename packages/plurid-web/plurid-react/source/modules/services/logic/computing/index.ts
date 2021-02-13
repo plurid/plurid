@@ -1,27 +1,32 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    PluridPlane,
-    IndexedPluridPlane,
-    TreePlane,
-    PluridView,
-    PluridPartialConfiguration,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridPlane,
+        IndexedPluridPlane,
+        TreePlane,
+        PluridView,
+        PluridPartialConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    router,
-    space,
-    general as generalEngine,
-} from '@plurid/plurid-engine';
+    import {
+        router,
+        space,
+        general as generalEngine,
+    } from '@plurid/plurid-engine';
 
-import {
-    uuid,
-} from '@plurid/plurid-functions';
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const computeApplication = (
     indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
     planes: PluridPlane[] | undefined,
@@ -173,3 +178,4 @@ export const computeApplication = (
 
     return data;
 }
+// #endregion module

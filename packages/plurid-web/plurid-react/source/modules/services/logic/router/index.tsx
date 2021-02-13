@@ -1,42 +1,53 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    /** constants */
-    PLURID_ENTITY_MULTISPACE,
-    PLURID_ROUTE_DEFAULT_PATH_VALUE,
-    PLURID_ROUTE_DEFAULT_PATH,
-    PLURID_ROUTE_DEFAULT_SPACE_VALUE,
-    PLURID_ROUTE_DEFAULT_SPACE,
-    PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE,
-    PLURID_ROUTE_DEFAULT_UNIVERSE,
-    PLURID_ROUTE_DEFAULT_CLUSTER_VALUE,
-    PLURID_ROUTE_DEFAULT_CLUSTER,
-    PLURID_ROUTE_SEPARATOR,
+    import {
+        /** constants */
+        PLURID_ENTITY_MULTISPACE,
+        PLURID_ROUTE_DEFAULT_PATH_VALUE,
+        PLURID_ROUTE_DEFAULT_PATH,
+        PLURID_ROUTE_DEFAULT_SPACE_VALUE,
+        PLURID_ROUTE_DEFAULT_SPACE,
+        PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE,
+        PLURID_ROUTE_DEFAULT_UNIVERSE,
+        PLURID_ROUTE_DEFAULT_CLUSTER_VALUE,
+        PLURID_ROUTE_DEFAULT_CLUSTER,
+        PLURID_ROUTE_SEPARATOR,
 
-    /** interfaces */
-    PluridRoute,
-    PluridRoutePlane,
-    PluridPlane,
-    IndexedPluridPlane,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridRoute,
+        PluridRoutePlane,
+        PluridPlane,
+        IndexedPluridPlane,
+    } from '@plurid/plurid-data';
 
-import {
-    router,
-    utilities,
-} from '@plurid/plurid-engine';
+    import {
+        router,
+        utilities,
+    } from '@plurid/plurid-engine';
 
-import {
-    uuid,
-} from '@plurid/plurid-functions';
-
-import {
-    StyledSpaces,
-} from './styled';
-
-import PluridApplication from '../../../../Application';
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import PluridApplication from '~Application/index';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledSpaces,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface GetComponentFromRouteData {
     matchedRoute: router.MatcherResponse;
     protocol: string;
@@ -1225,3 +1236,4 @@ export const collectApplicationsFromPath = (
 
     return plurids;
 }
+// #endregion module

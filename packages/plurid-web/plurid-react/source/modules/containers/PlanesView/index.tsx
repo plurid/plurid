@@ -1,24 +1,32 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    PluridConfiguration,
-} from '@plurid/plurid-data';
+    import {
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
-
-import PluridSpace from '../../components/Space';
-import PluridToolbar from '../../components/Toolbar/General';
-import PluridViewcube from '../../components/Viewcube';
-
-import { AppState } from '../../services/state/store';
-import StateContext from '../../services/state/context';
-import selectors from '../../services/state/selectors';
-// import actions from '../../services/state/actions';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
+    // #endregion libraries
 
 
+    // #region exports
+    import PluridSpace from '~components/Space';
+    import PluridToolbar from '~components/Toolbar/General';
+    import PluridViewcube from '~components/Viewcube';
 
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    // import actions from '~services/state/actions';
+    // #endregion exports
+// #endregion imports
+
+
+
+// #region module
 export interface PluridPlanesViewOwnProperties {
 }
 
@@ -86,7 +94,7 @@ const mapDispatchToProps = (
 });
 
 
-export default connect(
+const ConnectedPluridPlanesView = connect(
     mapStateToProps,
     mapDispatchToProps,
     null,
@@ -94,3 +102,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridPlanesView);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridPlanesView;
+// #endregion exports

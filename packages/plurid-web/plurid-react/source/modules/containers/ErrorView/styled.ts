@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledErrorView = styled.div`
     position: absolute;
     top: 50%;
@@ -15,3 +20,4 @@ export const StyledErrorView = styled.div`
     font-family: Ubuntu, -apple-system, BlinkMacSystemFont, Roboto,
         'Open Sans', 'Helvetica Neue', 'Lucida Sans', sans-serif;
 `;
+// #endregion module

@@ -1,8 +1,13 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
-interface IStyledSpaces {
+// #region module
+export interface IStyledSpaces {
     alignment: any;
     snapType: any;
 }
@@ -40,3 +45,4 @@ export const StyledSpaces = styled.div<IStyledSpaces>`
     height: -webkit-fill-available;
     width: 100vw;
 `;
+// #endregion module
