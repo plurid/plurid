@@ -1,13 +1,18 @@
-import styled, {
-    createGlobalStyle,
-} from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled, {
+        createGlobalStyle,
+    } from 'styled-components';
 
-import {
-    TRANSFORM_MODES,
-} from '@plurid/plurid-data';
+    import {
+        TRANSFORM_MODES,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const GlobalStyle = createGlobalStyle`
     *,
     *:after,
@@ -111,3 +116,4 @@ export const StyledEmpty: any = styled.div`
         return 'transparent';
     }};
 `;
+// #endregion module

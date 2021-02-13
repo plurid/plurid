@@ -1,90 +1,101 @@
-import React, {
-    useRef,
-    useCallback,
-    useState,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+        useCallback,
+        useState,
+        useEffect,
+    } from 'react';
 
-import { AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import {
-    /** constants */
-    PLURID_ENTITY_VIEW,
-    defaultTreePlane,
+    import {
+        /** constants */
+        PLURID_ENTITY_VIEW,
+        defaultTreePlane,
 
-    /** enumerations */
-    TRANSFORM_MODES,
-    TRANSFORM_TOUCHES,
+        /** enumerations */
+        TRANSFORM_MODES,
+        TRANSFORM_TOUCHES,
 
-    /** interfaces */
-    PluridApplication as PluridApplicationProperties,
-    PluridConfiguration as PluridAppConfiguration,
-    PluridPartialConfiguration,
-    PluridContext,
-    PluridPlane,
-    IndexedPluridPlane,
-    RegisteredPluridPlane,
-    PluridView,
-    TreePlane,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridApplication as PluridApplicationProperties,
+        PluridConfiguration as PluridAppConfiguration,
+        PluridPartialConfiguration,
+        PluridContext,
+        PluridPlane,
+        IndexedPluridPlane,
+        RegisteredPluridPlane,
+        PluridView,
+        TreePlane,
+    } from '@plurid/plurid-data';
 
-import {
-    space,
-    router,
-    general as generalEngine,
-} from '@plurid/plurid-engine';
+    import {
+        space,
+        router,
+        general as generalEngine,
+    } from '@plurid/plurid-engine';
 
-import PluridPubSub, {
-    TOPICS,
-} from '@plurid/plurid-pubsub';
+    import PluridPubSub, {
+        TOPICS,
+    } from '@plurid/plurid-pubsub';
 
-import {
-    meta,
-} from '@plurid/plurid-functions';
+    import {
+        meta,
+    } from '@plurid/plurid-functions';
 
-import themes, {
-    Theme,
-    THEME_NAMES,
-} from '@plurid/plurid-themes';
-
-// import './index.css';
-
-import {
-    StyledEmpty,
-    GlobalStyle,
-    StyledView,
-} from './styled';
-
-import handleView from './logic';
-
-import Context from '../../modules/services/logic/context';
-
-import {
-    handleGlobalShortcuts,
-    handleGlobalWheel,
-} from '../../modules/services/logic/shortcuts';
-
-import {
-    loadHammer,
-} from '../../modules/services/utilities/imports';
-
-import renderStatic from '../../modules/services/logic/static';
-
-import { AppState } from '../../modules/services/state/store';
-import selectors from '../../modules/services/state/selectors';
-import actions from '../../modules/services/state/actions';
-import StateContext from '../../modules/services/state/context';
-import {
-    ViewSize,
-} from '../../modules/services/state/types/space';
-import {
-    SpaceSize,
-} from '../../modules/services/state/modules/space/types';
+    import themes, {
+        Theme,
+        THEME_NAMES,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
 
 
+    // #region external
+    import Context from '~services/logic/context';
 
+    import {
+        handleGlobalShortcuts,
+        handleGlobalWheel,
+    } from '~services/logic/shortcuts';
+
+    import {
+        loadHammer,
+    } from '~services/utilities/imports';
+
+    import renderStatic from '~services/logic/static';
+
+    import { AppState } from '~services/state/store';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+    import StateContext from '~services/state/context';
+    import {
+        ViewSize,
+    } from '~services/state/types/space';
+    import {
+        SpaceSize,
+    } from '~services/state/modules/space/types';
+    // #endregion external
+
+
+    // #region internal
+    // import './index.css';
+
+    import {
+        StyledEmpty,
+        GlobalStyle,
+        StyledView,
+    } from './styled';
+
+    import handleView from './logic';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface ViewOwnProperties {
     application: PluridApplicationProperties;
 }
@@ -1585,7 +1596,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedView = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -1593,3 +1604,10 @@ export default connect(
         context: StateContext,
     },
 )(PluridView);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedView;
+// #endregion exports

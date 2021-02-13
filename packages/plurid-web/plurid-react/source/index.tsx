@@ -46,8 +46,8 @@
     // #region internal
     import PluridApplication from './Application';
 
-    import PluridSingleApplication from './Application/SingleApplication';
-    import PluridExposedApplication from './Application/ExposedApplication';
+    import PluridSingleApplication from './Application/variations/SingleApplication';
+    import PluridExposedApplication from './Application/variations/ExposedApplication';
 
     import PluridLink from './modules/components/Link';
     import PluridRouterBrowser from './modules/components/RouterBrowser';
