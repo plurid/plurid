@@ -419,7 +419,11 @@ class PluridServer {
                 response.send(this.renderer?.html());
                 return;
             } catch (error) {
-                console.log(`Could not handle GET ${request.path}`, error);
+                const date = new Date();
+                console.log(
+                    `[${date.toLocaleTimeString()} - ${date.toLocaleDateString()}]: Could not handle GET ${request.path}`,
+                    error,
+                );
 
                 response
                     .status(500)
