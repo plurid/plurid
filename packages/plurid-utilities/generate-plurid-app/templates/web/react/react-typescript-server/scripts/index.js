@@ -20,13 +20,17 @@ const environment = {
     local: !command.includes('development') && !command.includes('production'),
 };
 
-require('dotenv').config({
-    path: environment.production
-        ? './environment/.env.production'
-        : environment.development
-            ? './environment/.env.development'
-            : './environment/.env.local',
-});
+try {
+    require('dotenv').config({
+        path: environment.production
+            ? './environment/.env.production'
+            : environment.development
+                ? './environment/.env.development'
+                : './environment/.env.local',
+    });
+} catch (error) {
+    console.log('no dotenv');
+}
 
 
 

@@ -15,7 +15,7 @@ import {
 // [START ApolloProvider]
 import {
     ApolloProvider,
-} from '@apollo/react-hooks';
+} from '@apollo/client';
 // [END ApolloProvider]
 
 // [START StripeProvider]
@@ -29,13 +29,13 @@ import {
     PluridRouterBrowser,
 } from '@plurid/plurid-react';
 
-import helmetContext from '#kernel-services/helmet';
+import helmetContext from '~kernel-services/helmet';
 
 // [START ReduxStore]
-import reduxStore from '#kernel-services/state/store';
+import reduxStore from '~kernel-services/state/store';
 // [START ReduxStore]
 // [START GraphqlClient]
-import graphqlClient from '#kernel-services/graphql/client';
+import graphqlClient from '~kernel-services/graphql/client';
 // [START GraphqlClient]
 // [START StripeAPIKey]
 // import {
