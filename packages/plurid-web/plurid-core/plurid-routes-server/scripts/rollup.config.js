@@ -30,6 +30,8 @@ const build = {
     ],
     external: [
         'express',
+        'body-parser',
+        '@plurid/deon',
     ],
     inlineDynamicImports: true,
     plugins: [
