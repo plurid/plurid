@@ -50,7 +50,7 @@ const Page: React.FC<any> = (
                 <PluridLink
                     route="/plane"
                     style={{
-                        color: '#ccc',
+                        color: '~ccc',
                     }}
                 >
                     plurid self link
@@ -59,7 +59,7 @@ const Page: React.FC<any> = (
                 <PluridRouterLink
                     route="/static"
                     style={{
-                        color: '#ccc',
+                        color: '~ccc',
                     }}
                 >
                     router link to static page

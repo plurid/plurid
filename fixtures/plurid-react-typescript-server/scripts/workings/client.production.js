@@ -2,7 +2,7 @@ const path = require('path');
 
 const webpack = require('webpack');
 const merge = require('webpack-merge').merge;
-const TerserPlugin = require('terser-webpack-plugin');
+// const TerserPlugin = require('terser-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const {
@@ -26,7 +26,7 @@ const config = {
         children: true,
     },
 
-    devtool: '',
+    // devtool: '',
 
     optimization: {
         splitChunks: {
@@ -38,19 +38,19 @@ const config = {
                 },
             },
         },
-        minimize: true,
-        minimizer: [
-            new TerserPlugin({
-                test: /\.js(\?.*)?$/i,
-                sourceMap: true,
-                terserOptions: {
-                    output: {
-                        comments: false,
-                    },
-                },
-                extractComments: false,
-            }),
-        ],
+        // minimize: true,
+        // minimizer: [
+        //     new TerserPlugin({
+        //         test: /\.js(\?.*)?$/i,
+        //         sourceMap: true,
+        //         terserOptions: {
+        //             output: {
+        //                 comments: false,
+        //             },
+        //         },
+        //         extractComments: false,
+        //     }),
+        // ],
     },
 
     plugins: [
