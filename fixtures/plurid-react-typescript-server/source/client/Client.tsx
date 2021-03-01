@@ -1,55 +1,63 @@
-import React, {
-    useRef,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useRef,
+    } from 'react';
 
-import {
-    HelmetProvider,
-} from 'react-helmet-async';
+    import {
+        HelmetProvider,
+    } from 'react-helmet-async';
 
-// [START ReduxProvider]
-import {
-    Provider as ReduxProvider,
-} from 'react-redux';
-// [END ReduxProvider]
+    // [START ReduxProvider]
+    import {
+        Provider as ReduxProvider,
+    } from 'react-redux';
+    // [END ReduxProvider]
 
-// [START ApolloProvider]
-import {
-    ApolloProvider,
-} from '@apollo/client';
-// [END ApolloProvider]
+    // [START ApolloProvider]
+    import {
+        ApolloProvider,
+    } from '@apollo/client';
+    // [END ApolloProvider]
 
-// [START StripeProvider]
-// import {
-//     StripeProvider,
-// } from 'react-stripe-elements';
-// [END StripeProvider]
+    // [START StripeProvider]
+    // import {
+    //     StripeProvider,
+    // } from 'react-stripe-elements';
+    // [END StripeProvider]
 
-import {
-    PluridProvider,
-    PluridRouterBrowser,
-} from '@plurid/plurid-react';
-
-import helmetContext from '~kernel-services/helmet';
-
-// [START ReduxStore]
-import reduxStore from '~kernel-services/state/store';
-// [START ReduxStore]
-// [START GraphqlClient]
-import graphqlClient from '~kernel-services/graphql/client';
-// [START GraphqlClient]
-// [START StripeAPIKey]
-// import {
-//     STRIPE_API_KEY as stripeAPIKey,
-// } from './App/data/constants';
-// [END StripeAPIKey]
-
-import {
-    routes,
-    shell,
-} from '../shared';
+    import {
+        PluridProvider,
+        PluridRouterBrowser,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
 
 
+    // #region external
+    import helmetContext from '~kernel-services/helmet';
 
+    // [START ReduxStore]
+    import reduxStore from '~kernel-services/state/store';
+    // [START ReduxStore]
+    // [START GraphqlClient]
+    import graphqlClient from '~kernel-services/graphql/client';
+    // [START GraphqlClient]
+    // [START StripeAPIKey]
+    // import {
+    //     STRIPE_API_KEY as stripeAPIKey,
+    // } from './App/data/constants';
+    // [END StripeAPIKey]
+
+    import {
+        routes,
+        shell,
+    } from '../shared';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const reduxState = (window as any).__PRELOADED_REDUX_STATE__;
 delete (window as any).__PRELOADED_REDUX_STATE__;
 
@@ -58,11 +66,12 @@ delete (window as any).__PRELOADED_PLURID_METASTATE__;
 
 
 const Client: React.FC<any> = () => {
-    /** references */
+    // #region references
     const store = useRef(reduxStore(reduxState));
+    // #endregion references
 
 
-    /** render */
+    // #region render
     return (
         // [START ClientReturn]
         <HelmetProvider context={helmetContext}>
@@ -81,7 +90,12 @@ const Client: React.FC<any> = () => {
         </HelmetProvider>
         // [END ClientReturn]
     );
+    // #endregion render
 }
+// #endregion module
 
 
+
+// #region exports
 export default Client;
+// #endregion exports

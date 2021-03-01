@@ -1,39 +1,50 @@
-import PluridServer, {
-    PluridServerMiddleware,
-    PluridServerService,
-    PluridServerServicesData,
-    PluridServerPartialOptions,
-    PluridServerTemplateConfiguration,
-} from '@plurid/plurid-react-server';
-
-import helmet from '~kernel-services/helmet';
-
-/** uncomment to use services */
-// [START redux import]
-import reduxStore from '~kernel-services/state/store';
-// [END redux import]
-// [START apollo import]
-import apolloClient from '~kernel-services/graphql/client';
-// [END apollo import]
-// [START stripe import]
-// import {
-//     STRIPE_API_KEY as stripeAPIKey,
-// } from '../client/App/data/constants';
-// [END stripe import]
-
-import {
-    routes,
-    shell,
-} from '../shared';
-
-import preserves from './preserves';
-
-import {
-    setRouteHandlers,
-} from './handlers';
+// #region imports
+    // #region libraries
+    import PluridServer, {
+        PluridServerMiddleware,
+        PluridServerService,
+        PluridServerServicesData,
+        PluridServerPartialOptions,
+        PluridServerTemplateConfiguration,
+    } from '@plurid/plurid-react-server';
+    // #endregion libraries
 
 
+    // #region external
+    import helmet from '~kernel-services/helmet';
 
+    /** uncomment to use services */
+    // [START redux import]
+    import reduxStore from '~kernel-services/state/store';
+    // [END redux import]
+    // [START apollo import]
+    import apolloClient from '~kernel-services/graphql/client';
+    // [END apollo import]
+    // [START stripe import]
+    // import {
+    //     STRIPE_API_KEY as stripeAPIKey,
+    // } from '../client/App/data/constants';
+    // [END stripe import]
+
+    import {
+        routes,
+        shell,
+    } from '../shared';
+    // #endregion external
+
+
+    // #region internal
+    import preserves from './preserves';
+
+    import {
+        setRouteHandlers,
+    } from './handlers';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 /** ENVIRONMENT */
 const watchMode = process.env.PLURID_WATCH_MODE === 'true';
 const isProduction = process.env.ENV_MODE === 'production';
@@ -143,6 +154,10 @@ setRouteHandlers(pluridServer);
 if (require.main === module) {
     pluridServer.start(port);
 }
+// #endregion module
 
 
+
+// #region exports
 export default pluridServer;
+// #endregion exports

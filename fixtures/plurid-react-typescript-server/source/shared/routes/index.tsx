@@ -1,17 +1,25 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    PluridRoute,
-} from '@plurid/plurid-data';
-
-import IndexPagePlane from '../kernel/planes/Index/Page';
-import NotFoundPlane from '../kernel/planes/NotFound';
-import StaticPlane from '../kernel/planes/Static';
-
-import Head from '../kernel/components/Head';
+    import {
+        PluridRoute,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import IndexPagePlane from '../kernel/planes/Index/Page';
+    import NotFoundPlane from '../kernel/planes/NotFound';
+    import StaticPlane from '../kernel/planes/Static';
 
+    import Head from '../kernel/components/Head';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const indexRoute: PluridRoute = {
     value: '/',
     exterior: {
@@ -182,6 +190,10 @@ const routes: PluridRoute[] = [
     parametricRoute,
     notFoundRoute,
 ];
+// #endregion module
 
 
+
+// #region exports
 export default routes;
+// #endregion exports

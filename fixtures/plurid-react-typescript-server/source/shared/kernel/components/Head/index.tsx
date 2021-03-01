@@ -1,11 +1,16 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    Helmet,
-} from 'react-helmet-async';
+    import {
+        Helmet,
+    } from 'react-helmet-async';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export interface HeadProperties {
     title?: string;
     description?: string;
@@ -19,7 +24,7 @@ export interface HeadProperties {
 const Head: React.FC<HeadProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         title,
         description,
@@ -38,9 +43,10 @@ const Head: React.FC<HeadProperties> = (
     const ogURLValue = ogURL || 'https://plurid.com';
 
     const apiDomain = 'https://api.plurid.com/graphql';
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <Helmet>
             <meta charSet="utf-8" />
@@ -91,7 +97,12 @@ const Head: React.FC<HeadProperties> = (
             <meta name="msapplication-TileColor" content="#ffffff" />
         </Helmet>
     );
+    // #endregion render
 }
+// #endregion module
 
 
+
+// #region exports
 export default Head;
+// #endregion exports

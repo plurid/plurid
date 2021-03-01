@@ -1,29 +1,38 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    PluridComponent,
-} from '@plurid/plurid-react';
-
-import {
-    GlobalStyle,
-} from './styled';
-
+    import {
+        PluridComponent,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
 
 
-interface ShellProperties {
+    // #region internal
+    import {
+        GlobalStyle,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
+export interface ShellProperties {
 }
 
 
 const Shell: React.FC<ShellProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         children,
     } = properties;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <>
             <GlobalStyle />
@@ -31,6 +40,7 @@ const Shell: React.FC<ShellProperties> = (
             {children}
         </>
     );
+    // #endregion render
 }
 
 
@@ -38,6 +48,10 @@ const shell: PluridComponent = {
     kind: 'react',
     element: Shell,
 };
+// #endregion module
 
 
+
+// #region exports
 export default shell;
+// #endregion exports

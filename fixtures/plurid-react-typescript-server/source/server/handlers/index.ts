@@ -1,7 +1,12 @@
-import PluridServer from '@plurid/plurid-react-server';
+// #region imports
+    // #region libraries
+    import PluridServer from '@plurid/plurid-react-server';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const setRouteHandlers = (
     server: PluridServer,
 ) => {
@@ -17,3 +22,4 @@ export const setRouteHandlers = (
         );
     });
 }
+// #endregion module

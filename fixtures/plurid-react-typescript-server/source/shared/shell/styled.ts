@@ -1,9 +1,14 @@
-import {
-    createGlobalStyle,
-} from 'styled-components';
+// #region imports
+    // #region libraries
+    import {
+        createGlobalStyle,
+    } from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const GlobalStyle = createGlobalStyle`
     *, *::after, *::before {
         box-sizing: border-box;
@@ -26,7 +31,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     a {
-        color: inherit;
+        color: hsl(220,10%,60%);
         text-decoration: none;
     }
 
@@ -35,3 +40,4 @@ export const GlobalStyle = createGlobalStyle`
         overflow: auto;
     }
 `;
+// #endregion module
