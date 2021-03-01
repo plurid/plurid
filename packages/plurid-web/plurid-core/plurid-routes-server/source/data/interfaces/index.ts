@@ -33,7 +33,25 @@ export interface PluridRoutesServerOptions {
 export type PluridRoutesServerPartialOptions = Partial<PluridRoutesServerOptions>;
 
 
+
+export type QueryRoute = (
+    route: string,
+) => Promise<RouteElement>;
+
+export type RegisterRoute = (
+    route: string,
+    data: RouteElement,
+) => Promise<boolean>;
+
 export interface PluridRoutesServerConfiguration {
+    queryRoute: QueryRoute;
+    registerRoute: RegisterRoute;
     options?: PluridRoutesServerPartialOptions;
+}
+
+
+
+export interface RouteElement {
+    elementql: string;
 }
 // #endregion module

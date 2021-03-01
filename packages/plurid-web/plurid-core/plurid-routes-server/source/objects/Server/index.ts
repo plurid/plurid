@@ -26,12 +26,18 @@
 
         DEFAULT_SERVER_PORT,
         DEFAULT_SERVER_OPTIONS,
+
+        ENDPOINT_ROUTE,
+        ENDPOINT_REGISTER,
     } from '../../data/constants';
 
     import {
         PluridRoutesServerOptions,
         PluridRoutesServerPartialOptions,
         PluridRoutesServerConfiguration,
+
+        QueryRoute,
+        RegisterRoute,
     } from '../../data/interfaces';
     // #endregion external
 // #endregion imports
@@ -45,10 +51,16 @@ class PluridRoutesServer {
     private server: Server | undefined;
     private port: number | string;
 
+    private queryRoute: QueryRoute;
+    private registerRoute: RegisterRoute;
+
 
     constructor(
-        configuration?: PluridRoutesServerConfiguration,
+        configuration: PluridRoutesServerConfiguration,
     ) {
+        this.queryRoute = configuration.queryRoute;
+        this.registerRoute = configuration.registerRoute;
+
         this.options = this.handleOptions(configuration?.options);
 
         this.serverApplication = express();
@@ -134,21 +146,142 @@ class PluridRoutesServer {
 
 
     private computeApplication() {
-        this.serverApplication.post('*', async (request, response, next) => {
+        this.serverApplication.post(ENDPOINT_ROUTE, async (request, response) => {
             try {
                 console.log(
                     `[${time.stamp()}]: POST ${request.path}`,
                 );
 
-                const b = request.body;
-                console.log(
-                    `[${time.stamp()}]: POST ${request.path}`,
-                    b,
+                if (!request.body.route) {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    );
+
+                    response
+                        .status(400)
+                        .send('Bad Request');
+                    return;
+                }
+
+                const {
+                    route,
+                } = request.body;
+
+                const data = await this.queryRoute(
+                    route,
                 );
 
-                response.json({
-                    elementql: '/path/to/elementql',
-                });
+                if (!data.elementql) {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    );
+
+                    response
+                        .status(400)
+                        .send('Bad Request');
+                    return;
+                }
+
+                const {
+                    elementql,
+                } = data;
+
+                const contentType = request.header('Content-Type');
+
+                const responseData = {
+                    elementql,
+                };
+
+                if (contentType !== DEON_MEDIA_TYPE) {
+                    response.json(responseData);
+                    return;
+                }
+
+                const deon = new Deon();
+                const responseDeon = deon.stringify(responseData);
+
+                response.setHeader(
+                    'Content-Type',
+                    DEON_MEDIA_TYPE
+                );
+
+                response.send(responseDeon);
+
+                return;
+            } catch (error) {
+                console.log(
+                    `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    error,
+                );
+
+                response
+                    .status(500)
+                    .send('Server Error');
+                return;
+            }
+        });
+
+        this.serverApplication.post(ENDPOINT_REGISTER, async (request, response) => {
+            try {
+                console.log(
+                    `[${time.stamp()}]: POST ${request.path}`,
+                );
+
+                if (
+                    !request.body.route
+                    || !request.body.data
+                ) {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    );
+
+                    response
+                        .status(400)
+                        .send('Bad Request');
+                    return;
+                }
+
+                const {
+                    route,
+                    data,
+                } = request.body;
+
+                const registered = await this.registerRoute(
+                    route,
+                    data,
+                );
+
+                if (typeof registered !== 'boolean') {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    );
+
+                    response
+                        .status(400)
+                        .send('Bad Request');
+                    return;
+                }
+
+                const contentType = request.header('Content-Type');
+
+                const responseData = {
+                    registered,
+                };
+
+                if (contentType !== DEON_MEDIA_TYPE) {
+                    response.json(responseData);
+                    return;
+                }
+
+                const deon = new Deon();
+                const responseDeon = deon.stringify(responseData);
+
+                response.setHeader(
+                    'Content-Type',
+                    DEON_MEDIA_TYPE,
+                );
+
+                response.send(responseDeon);
 
                 return;
             } catch (error) {

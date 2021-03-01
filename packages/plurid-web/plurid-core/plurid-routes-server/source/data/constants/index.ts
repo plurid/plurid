@@ -13,6 +13,9 @@ export const DEFAULT_SERVER_OPTIONS = {
 };
 
 
+export const ENDPOINT_ROUTE = process.env.PLURID_ENDPOINT_ROUTE || '/route';
+export const ENDPOINT_REGISTER = process.env.PLURID_ENDPOINT_REGISTER || '/register';
+
 
 export const environment = {
     production: process.env.ENV_MODE === 'production',
