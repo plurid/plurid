@@ -53,6 +53,7 @@ export const StyledView: any = styled.div`
     position: relative;
     scroll-snap-align: start;
     outline: none;
+    overflow: hidden;
 
     cursor: ${(props: any) => {
         if (
