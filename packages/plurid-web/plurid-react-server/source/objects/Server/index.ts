@@ -1,82 +1,91 @@
-import {
-    Server,
-} from 'http';
-import fs from 'fs';
-import path from 'path';
+// #region imports
+    // #region libraries
+    import {
+        Server,
+    } from 'http';
+    import fs from 'fs';
+    import path from 'path';
 
-import express, {
-    Express,
-} from 'express';
+    import express, {
+        Express,
+    } from 'express';
 
-import compression from 'compression';
+    import compression from 'compression';
 
-import open from 'open';
+    import open from 'open';
 
-import {
-    ServerStyleSheet,
-} from 'styled-components';
+    import {
+        ServerStyleSheet,
+    } from 'styled-components';
 
-import {
-    Helmet,
-} from 'react-helmet-async';
+    import {
+        Helmet,
+    } from 'react-helmet-async';
 
-import {
-    PluridRoute,
-    PluridPreserve,
-    PluridPreserveOnServe,
-    PluridPreserveAfterServe,
-    PluridPreserveOnError,
-    PluridPreserveResponse,
-    PluridPreserveTransmission,
-    PluridComponent,
-} from '@plurid/plurid-data';
+    import {
+        PluridRoute,
+        PluridPreserve,
+        PluridPreserveOnServe,
+        PluridPreserveAfterServe,
+        PluridPreserveOnError,
+        PluridPreserveResponse,
+        PluridPreserveTransmission,
+        PluridComponent,
+    } from '@plurid/plurid-data';
 
-import {
-    router,
-} from '@plurid/plurid-engine';
+    import {
+        router,
+    } from '@plurid/plurid-engine';
 
-import {
-    serverComputeMetastate,
-} from '@plurid/plurid-react';
-
-import {
-    environment,
-
-    defaultStillerOptions,
-
-    NOT_FOUND_ROUTE,
-    DEFAULT_SERVER_PORT,
-    DEFAULT_SERVER_OPTIONS,
-} from '../../data/constants';
-
-import {
-    NOT_FOUND_TEMPLATE,
-} from '../../data/templates';
-
-import {
-    PluridServerMiddleware,
-    PluridServerService,
-    PluridServerServicesData,
-    PluridServerOptions,
-    PluridServerPartialOptions,
-    PluridServerConfiguration,
-    PluridServerTemplateConfiguration,
-} from '../../data/interfaces';
-
-import PluridRenderer from '../Renderer';
-import PluridContentGenerator from '../ContentGenerator';
-import PluridsResponder from '../PluridsResponder';
-import PluridStillsManager from '../StillsManager';
+    import {
+        serverComputeMetastate,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        environment,
 
+        defaultStillerOptions,
+
+        NOT_FOUND_ROUTE,
+        DEFAULT_SERVER_PORT,
+        DEFAULT_SERVER_OPTIONS,
+    } from '../../data/constants';
+
+    import {
+        NOT_FOUND_TEMPLATE,
+        SERVER_ERROR_TEMPLATE,
+    } from '../../data/templates';
+
+    import {
+        PluridServerMiddleware,
+        PluridServerService,
+        PluridServerServicesData,
+        PluridServerOptions,
+        PluridServerPartialOptions,
+        PluridServerConfiguration,
+        PluridServerTemplateConfiguration,
+    } from '../../data/interfaces';
+
+    import PluridRenderer from '../Renderer';
+    import PluridContentGenerator from '../ContentGenerator';
+    import PluridsResponder from '../PluridsResponder';
+    import PluridStillsManager from '../StillsManager';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const {
     default: PluridRouter,
     URLRouter: PluridURLRouter,
 } = router;
 
 
-export default class PluridServer {
+class PluridServer {
     private routes: PluridRoute[];
     private preserves: PluridPreserve[];
     private helmet: Helmet;
@@ -238,171 +247,179 @@ export default class PluridServer {
         const pluridsResponder = new PluridsResponder();
 
         this.serverApplication.get('*', async (request, response, next) => {
-            const path = request.path;
+            try {
+                const path = request.path;
 
-            for (const ignore of this.options.ignore) {
-                if (path === ignore) {
-                    next();
-                    return;
-                }
-
-                if (ignore.includes('/*')) {
-                    const curatedIgnore = ignore.replace('/*', '');
-
-                    if (path.startsWith(curatedIgnore)) {
+                for (const ignore of this.options.ignore) {
+                    if (path === ignore) {
                         next();
                         return;
                     }
-                }
-            }
 
-            const urlMatch = urlRouter.match(request.originalUrl);
+                    if (ignore.includes('/*')) {
+                        const curatedIgnore = ignore.replace('/*', '');
 
-            let preserveOnServe: undefined | PluridPreserveOnServe<any>;
-            let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
-            let preserveOnError: undefined | PluridPreserveOnError<any>;
-            if (urlMatch?.target) {
-                const catchAll = this.preserves.find(
-                    preserve => preserve.serve === '*'
-                );
-
-                const preserve = catchAll
-                    ? catchAll
-                    : this.preserves.find(
-                        preserve => preserve.serve === urlMatch.target
-                    );
-
-                if (preserve) {
-                    preserveOnServe = preserve.onServe;
-                    preserveAfterServe = preserve.afterServe;
-                    preserveOnError = preserve.onError;
-                }
-            }
-
-            let preserveResult: void | PluridPreserveResponse;
-            if (preserveOnServe && urlMatch) {
-                const transmission: PluridPreserveTransmission<any> = {
-                    request,
-                    response,
-                    context: {
-                        contextualizers: undefined,
-                        path: request.originalUrl,
-                        match: urlMatch,
-                    },
-                };
-
-                try {
-                    preserveResult = await preserveOnServe(transmission);
-
-                    if (preserveResult) {
-                        if (preserveResult.responded) {
+                        if (path.startsWith(curatedIgnore)) {
+                            next();
                             return;
                         }
                     }
-                } catch (error) {
-                    if (preserveOnError) {
-                        const onErrorResponse = await preserveOnError(
-                            error,
-                            transmission,
+                }
+
+                const urlMatch = urlRouter.match(request.originalUrl);
+
+                let preserveOnServe: undefined | PluridPreserveOnServe<any>;
+                let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
+                let preserveOnError: undefined | PluridPreserveOnError<any>;
+                if (urlMatch?.target) {
+                    const catchAll = this.preserves.find(
+                        preserve => preserve.serve === '*'
+                    );
+
+                    const preserve = catchAll
+                        ? catchAll
+                        : this.preserves.find(
+                            preserve => preserve.serve === urlMatch.target
                         );
 
-                        if (onErrorResponse) {
-                            if (onErrorResponse.responded) {
+                    if (preserve) {
+                        preserveOnServe = preserve.onServe;
+                        preserveAfterServe = preserve.afterServe;
+                        preserveOnError = preserve.onError;
+                    }
+                }
+
+                let preserveResult: void | PluridPreserveResponse;
+                if (preserveOnServe && urlMatch) {
+                    const transmission: PluridPreserveTransmission<any> = {
+                        request,
+                        response,
+                        context: {
+                            contextualizers: undefined,
+                            path: request.originalUrl,
+                            match: urlMatch,
+                        },
+                    };
+
+                    try {
+                        preserveResult = await preserveOnServe(transmission);
+
+                        if (preserveResult) {
+                            if (preserveResult.responded) {
                                 return;
                             }
+                        }
+                    } catch (error) {
+                        if (preserveOnError) {
+                            const onErrorResponse = await preserveOnError(
+                                error,
+                                transmission,
+                            );
 
-                            if (!onErrorResponse.depreserve) {
-                                return;
+                            if (onErrorResponse) {
+                                if (onErrorResponse.responded) {
+                                    return;
+                                }
+
+                                if (!onErrorResponse.depreserve) {
+                                    return;
+                                }
                             }
                         }
                     }
                 }
-            }
 
 
-            // HANDLE GATEWAY
-            const {
-                gatewayEndpoint,
-            } = this.options;
+                // HANDLE GATEWAY
+                const {
+                    gatewayEndpoint,
+                } = this.options;
 
-            if (path === gatewayEndpoint) {
-                const gatewayRoute = {
-                    path: {
-                        value: gatewayEndpoint,
-                    },
-                    pathname: gatewayEndpoint,
-                    parameters: {},
-                    query: {
-                        __gatewayQuery: request.originalUrl,
-                    },
-                    fragments: {
-                        texts: [],
-                        elements: [],
-                    },
-                    route: gatewayEndpoint,
-                };
+                if (path === gatewayEndpoint) {
+                    const gatewayRoute = {
+                        path: {
+                            value: gatewayEndpoint,
+                        },
+                        pathname: gatewayEndpoint,
+                        parameters: {},
+                        query: {
+                            __gatewayQuery: request.originalUrl,
+                        },
+                        fragments: {
+                            texts: [],
+                            elements: [],
+                        },
+                        route: gatewayEndpoint,
+                    };
+                    this.renderer = await this.renderApplication(
+                        gatewayRoute,
+                        preserveResult,
+                    );
+                    response.send(this.renderer?.html());
+                    return;
+                }
+
+
+                // HANDLE PLURIDS ???
+                // check if the url is plurids
+                // http://example.com/plurids/<route>/<space>/<page>
+                // http://example.com/plurids/index/12345/54321
+
+                // if (pluridsResponder.search(path)) {
+                //     response.send(pluridsResponder);
+                //     return;
+                // }
+
+
+                // HANDLE STILLS
+                // const still = stills.get(path);
+                // if (still) {
+                //     response.send(still);
+                //     return;
+                // }
+
+
+                let redirect: undefined | string;
+                if (preserveResult) {
+                    redirect = preserveResult.redirect;
+                }
+
+                const matchingPath = redirect || path;
+
+                const route = router.match(matchingPath);
+                if (!route) {
+                    const notFoundStill = stills.get(NOT_FOUND_ROUTE);
+                    if (notFoundStill) {
+                        response.status(404).send(notFoundStill);
+                        return;
+                    }
+
+                    const notFoundRoute = router.match(NOT_FOUND_ROUTE);
+                    if (!notFoundRoute) {
+                        response.status(404).send(NOT_FOUND_TEMPLATE);
+                        return;
+                    }
+
+                    this.renderer = await this.renderApplication(
+                        notFoundRoute,
+                        preserveResult,
+                    );
+                    response.send(this.renderer?.html());
+                    return;
+                }
+
                 this.renderer = await this.renderApplication(
-                    gatewayRoute,
+                    route,
                     preserveResult,
                 );
                 response.send(this.renderer?.html());
                 return;
-            }
-
-
-            // HANDLE PLURIDS ???
-            // check if the url is plurids
-            // http://example.com/plurids/<route>/<space>/<page>
-            // http://example.com/plurids/index/12345/54321
-
-            // if (pluridsResponder.search(path)) {
-            //     response.send(pluridsResponder);
-            //     return;
-            // }
-
-
-            // HANDLE STILLS
-            // const still = stills.get(path);
-            // if (still) {
-            //     response.send(still);
-            //     return;
-            // }
-
-
-            let redirect: undefined | string;
-            if (preserveResult) {
-                redirect = preserveResult.redirect;
-            }
-
-            const matchingPath = redirect || path;
-
-            const route = router.match(matchingPath);
-            if (!route) {
-                const notFoundStill = stills.get(NOT_FOUND_ROUTE);
-                if (notFoundStill) {
-                    response.status(404).send(notFoundStill);
-                    return;
-                }
-
-                const notFoundRoute = router.match(NOT_FOUND_ROUTE);
-                if (!notFoundRoute) {
-                    response.status(404).send(NOT_FOUND_TEMPLATE);
-                    return;
-                }
-
-                this.renderer = await this.renderApplication(
-                    notFoundRoute,
-                    preserveResult,
-                );
-                response.send(this.renderer?.html());
+            } catch (error) {
+                response
+                    .status(500)
+                    .send(SERVER_ERROR_TEMPLATE);
                 return;
             }
-
-            this.renderer = await this.renderApplication(
-                route,
-                preserveResult,
-            );
-            response.send(this.renderer?.html());
         });
     }
 
@@ -641,3 +658,10 @@ export default class PluridServer {
         }
     }
 }
+// #endregion module
+
+
+
+// #region exports
+export default PluridServer;
+// #endregion exports
