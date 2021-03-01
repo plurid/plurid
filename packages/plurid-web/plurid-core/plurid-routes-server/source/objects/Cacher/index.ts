@@ -32,7 +32,7 @@ class Cacher {
             return;
         }
 
-        return cached;
+        return cached.data;
     }
 
     public set(
@@ -42,7 +42,6 @@ class Cacher {
         this.routes.set(
             route,
             {
-                route,
                 data,
                 expiration: time.now() + ONE_DAY,
             },
