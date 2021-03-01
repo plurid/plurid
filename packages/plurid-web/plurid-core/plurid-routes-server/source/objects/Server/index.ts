@@ -74,7 +74,7 @@ class PluridRoutesServer {
 
         this.configureServer();
 
-        this.setEndpoints();
+        this.handleEndpoints();
 
         process.addListener('SIGINT', () => {
             this.stop();
@@ -151,7 +151,7 @@ class PluridRoutesServer {
     }
 
 
-    private setEndpoints() {
+    private handleEndpoints() {
         this.serverApplication.post(ENDPOINT_ROUTE, async (request, response) => {
             try {
                 console.log(
@@ -214,14 +214,14 @@ class PluridRoutesServer {
 
                 response.setHeader(
                     'Content-Type',
-                    DEON_MEDIA_TYPE
+                    DEON_MEDIA_TYPE,
                 );
 
                 response.send(responseDeon);
 
                 return;
             } catch (error) {
-                console.log(
+                console.error(
                     `[${time.stamp()}]: Could not handle POST ${request.path}`,
                     error,
                 );
@@ -302,7 +302,7 @@ class PluridRoutesServer {
 
                 return;
             } catch (error) {
-                console.log(
+                console.error(
                     `[${time.stamp()}]: Could not handle POST ${request.path}`,
                     error,
                 );
@@ -357,7 +357,7 @@ class PluridRoutesServer {
 
                     next();
                 } catch (error) {
-                    console.log(
+                    console.error(
                         `[${time.stamp()}]: Could not handle deon middleware ${request.path}`,
                         error,
                     );
