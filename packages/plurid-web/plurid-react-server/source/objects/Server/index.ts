@@ -390,13 +390,17 @@ class PluridServer {
                 if (!route) {
                     const notFoundStill = stills.get(NOT_FOUND_ROUTE);
                     if (notFoundStill) {
-                        response.status(404).send(notFoundStill);
+                        response
+                            .status(404)
+                            .send(notFoundStill);
                         return;
                     }
 
                     const notFoundRoute = router.match(NOT_FOUND_ROUTE);
                     if (!notFoundRoute) {
-                        response.status(404).send(NOT_FOUND_TEMPLATE);
+                        response
+                            .status(404)
+                            .send(NOT_FOUND_TEMPLATE);
                         return;
                     }
 
@@ -415,6 +419,8 @@ class PluridServer {
                 response.send(this.renderer?.html());
                 return;
             } catch (error) {
+                console.log(`Could not handle GET ${request.path}`, error);
+
                 response
                     .status(500)
                     .send(SERVER_ERROR_TEMPLATE);
