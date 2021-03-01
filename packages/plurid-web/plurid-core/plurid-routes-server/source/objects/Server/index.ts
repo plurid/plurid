@@ -8,6 +8,12 @@
         Express,
     } from 'express';
 
+    import bodyParser from 'body-parser';
+
+    import Deon, {
+        DEON_MEDIA_TYPE,
+    } from '@plurid/deon';
+
     import {
         time,
     } from '@plurid/plurid-functions';
@@ -128,10 +134,16 @@ class PluridRoutesServer {
 
 
     private computeApplication() {
-        this.serverApplication.get('*', async (request, response, next) => {
+        this.serverApplication.post('*', async (request, response, next) => {
             try {
                 console.log(
-                    `[${time.stamp()}]: GET ${request.path}`,
+                    `[${time.stamp()}]: POST ${request.path}`,
+                );
+
+                const b = request.body;
+                console.log(
+                    `[${time.stamp()}]: POST ${request.path}`,
+                    b,
                 );
 
                 response.json({
@@ -141,7 +153,7 @@ class PluridRoutesServer {
                 return;
             } catch (error) {
                 console.log(
-                    `[${time.stamp()}]: Could not handle GET ${request.path}`,
+                    `[${time.stamp()}]: Could not handle POST ${request.path}`,
                     error,
                 );
 
@@ -167,6 +179,43 @@ class PluridRoutesServer {
 
     private configureServer() {
         this.serverApplication.disable('x-powered-by');
+
+        this.serverApplication.use(
+            bodyParser.json(),
+        );
+
+        this.serverApplication.use(
+            bodyParser.raw({
+                type: DEON_MEDIA_TYPE,
+            }),
+        );
+
+        this.serverApplication.use(
+            async (request, _, next) => {
+                try {
+                    const contentType = request.header('Content-Type');
+
+                    if (contentType !== DEON_MEDIA_TYPE) {
+                        next();
+                        return;
+                    }
+
+                    const body = request.body.toString();
+                    const deon = new Deon();
+                    const data = await deon.parse(body);
+                    request.body = data;
+
+                    next();
+                } catch (error) {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle deon middleware ${request.path}`,
+                        error,
+                    );
+
+                    next();
+                }
+            },
+        );
     }
 }
 // #endregion module
