@@ -1,14 +1,20 @@
-import PluridServer from './objects/Server';
+// #region imports
+    // #region internal
+    import PluridServer from './objects/Server';
 
-import PluridStillsGenerator from './objects/StillsGenerator';
+    import PluridStillsGenerator from './objects/StillsGenerator';
+    // #endregion internal
+// #endregion imports
 
 
 
+// #region exports
 export * from './data/interfaces';
 
 export {
     PluridStillsGenerator,
-}
+};
 
 
 export default PluridServer;
+// #endregion exports

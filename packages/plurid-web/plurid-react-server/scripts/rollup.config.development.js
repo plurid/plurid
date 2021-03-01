@@ -1,16 +1,19 @@
-import replace from '@rollup/plugin-replace';
-import external from 'rollup-plugin-peer-deps-external';
-import postcss from 'rollup-plugin-postcss';
-import url from '@rollup/plugin-url';
-import babel from '@rollup/plugin-babel';
-import typescript from 'rollup-plugin-typescript2';
-import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
-
-import pkg from '../package.json';
+// #region imports
+    // #region libraries
+    import external from 'rollup-plugin-peer-deps-external';
+    import typescript from 'rollup-plugin-typescript2';
+    import { nodeResolve } from '@rollup/plugin-node-resolve';
+    // #endregion libraries
 
 
+    // #region external
+    import pkg from '../package.json';
+    // #endregion external
+// #endregion imports
 
+
+
+// #region exports
 export default [
     {
         input: 'source/index.ts',
@@ -21,29 +24,32 @@ export default [
                 exports: 'named',
                 sourcemap: true
             },
+            {
+                file: pkg.module,
+                format: 'es',
+                exports: 'named',
+                sourcemap: true
+            }
+        ],
+        external: [
+            'detect-port',
+            'express',
+            'open',
+            'compression',
+            'react-stripe-elements',
+            'graphql-tag',
+            'fast-json-stable-stringify',
+            'zen-observable',
         ],
         inlineDynamicImports: true,
         plugins: [
-            replace({
-                'process.env.MODE_ENV': JSON.stringify(process.env.MODE_ENV),
-            }),
             external(),
-            postcss({
-                modules: true,
-            }),
-            url(),
-            babel({
-                babelHelpers: 'bundled',
-                exclude: 'node_modules/**',
-            }),
+            nodeResolve(),
             typescript({
                 rollupCommonJSResolveHack: true,
                 clean: true,
             }),
-            commonjs(),
-            resolve({
-                modulesOnly: true,
-            }),
         ],
     },
 ];
+// #endregion exports
