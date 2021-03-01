@@ -39,6 +39,8 @@
         QueryRoute,
         RegisterRoute,
     } from '../../data/interfaces';
+
+    import Cacher from '../Cacher';
     // #endregion external
 // #endregion imports
 
@@ -54,21 +56,25 @@ class PluridRoutesServer {
     private queryRoute: QueryRoute;
     private registerRoute: RegisterRoute;
 
+    private cacher: Cacher;
+
 
     constructor(
         configuration: PluridRoutesServerConfiguration,
     ) {
-        this.queryRoute = configuration.queryRoute;
-        this.registerRoute = configuration.registerRoute;
-
         this.options = this.handleOptions(configuration?.options);
 
         this.serverApplication = express();
         this.port = DEFAULT_SERVER_PORT;
 
+        this.queryRoute = configuration.queryRoute;
+        this.registerRoute = configuration.registerRoute;
+
+        this.cacher = new Cacher();
+
         this.configureServer();
 
-        this.computeApplication();
+        this.setEndpoints();
 
         process.addListener('SIGINT', () => {
             this.stop();
@@ -145,7 +151,7 @@ class PluridRoutesServer {
     }
 
 
-    private computeApplication() {
+    private setEndpoints() {
         this.serverApplication.post(ENDPOINT_ROUTE, async (request, response) => {
             try {
                 console.log(
@@ -167,9 +173,15 @@ class PluridRoutesServer {
                     route,
                 } = request.body;
 
-                const data = await this.queryRoute(
+                let data = this.cacher.get(
                     route,
                 );
+
+                if (!data) {
+                    data = await this.queryRoute(
+                        route,
+                    );
+                }
 
                 if (!data.elementql) {
                     console.log(
@@ -261,6 +273,11 @@ class PluridRoutesServer {
                         .send('Bad Request');
                     return;
                 }
+
+                this.cacher.set(
+                    route,
+                    data,
+                );
 
                 const contentType = request.header('Content-Type');
 

@@ -17,6 +17,9 @@ export const ENDPOINT_ROUTE = process.env.PLURID_ENDPOINT_ROUTE || '/route';
 export const ENDPOINT_REGISTER = process.env.PLURID_ENDPOINT_REGISTER || '/register';
 
 
+export const ONE_DAY = 60 * 60 * 24;
+
+
 export const environment = {
     production: process.env.ENV_MODE === 'production',
     development: process.env.ENV_MODE === 'development',
