@@ -315,7 +315,6 @@ class PluridServer {
                 preserveResult,
                 preserveAfterServe,
             } = await this.resolvePreserve(
-                this.urlRouter,
                 request,
                 response,
             );
@@ -353,50 +352,98 @@ class PluridServer {
             }
 
 
-            // HANDLE PLURIDS ???
+            // HANDLE PLURIDS
             // check if the url is plurids
             // http://example.com/plurids/<route>/<space>/<page>
             // http://example.com/plurids/index/12345/54321
-
             if (this.pluridsResponder.search(path)) {
+                if (this.debugAllows('info')) {
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}`,
+                    );
+                }
+
                 response.send(this.pluridsResponder);
+
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
+
                 return;
             }
 
 
             // HANDLE STILLS
             const still = this.stills.get(path);
+
             if (still) {
+                if (this.debugAllows('info')) {
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Still Handled GET ${request.path}`,
+                    );
+                }
+
                 response.send(still);
+
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
+
                 return;
             }
 
 
-            let redirect: undefined | string;
-            if (preserveResult) {
-                redirect = preserveResult.redirect;
-            }
-
+            const redirect = preserveResult ? preserveResult.redirect : '';
             const matchingPath = redirect || path;
-
             const route = this.router.match(matchingPath);
 
             if (!route) {
                 const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
                 if (notFoundStill) {
+                    if (this.debugAllows('info')) {
+                        console.info(
+                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}`,
+                        );
+                    }
+
                     response
                         .status(404)
                         .send(notFoundStill);
+
+                    this.resolvePreserveAfterServe(
+                        preserveAfterServe,
+                        request,
+                        response,
+                    );
+
                     return;
                 }
 
                 const notFoundRoute = this.router.match(NOT_FOUND_ROUTE);
                 if (!notFoundRoute) {
+                    if (this.debugAllows('info')) {
+                        console.info(
+                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}`,
+                        );
+                    }
+
                     response
                         .status(404)
                         .send(NOT_FOUND_TEMPLATE);
+
+                    this.resolvePreserveAfterServe(
+                        preserveAfterServe,
+                        request,
+                        response,
+                    );
+
                     return;
                 }
+
 
                 const renderer = await this.renderApplication(
                     notFoundRoute,
@@ -405,11 +452,20 @@ class PluridServer {
 
                 if (this.debugAllows('info')) {
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}`,
                     );
                 }
 
-                response.send(renderer.html());
+                response
+                    .status(404)
+                    .send(renderer.html());
+
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
+
                 return;
             }
 
@@ -426,6 +482,13 @@ class PluridServer {
             }
 
             response.send(renderer.html());
+
+            this.resolvePreserveAfterServe(
+                preserveAfterServe,
+                request,
+                response,
+            );
+
             return;
         } catch (error) {
             if (this.debugAllows('error')) {
@@ -438,6 +501,7 @@ class PluridServer {
             response
                 .status(500)
                 .send(SERVER_ERROR_TEMPLATE);
+
             return;
         }
     }
@@ -463,11 +527,10 @@ class PluridServer {
     }
 
     private async resolvePreserve(
-        urlRouter: any,
         request: express.Request,
         response: express.Response,
     ) {
-        const urlMatch = urlRouter.match(request.originalUrl);
+        const urlMatch = this.urlRouter.match(request.originalUrl);
 
         let preserveOnServe: undefined | PluridPreserveOnServe<any>;
         let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
@@ -547,6 +610,32 @@ class PluridServer {
             preserveResult,
             preserveAfterServe,
         };
+    }
+
+    private async resolvePreserveAfterServe(
+        preserveAfterServe: PluridPreserveAfterServe<any> | undefined,
+        request: express.Request,
+        response: express.Response,
+    ) {
+        if (preserveAfterServe) {
+            const urlMatch = this.urlRouter.match(request.originalUrl);
+
+            if (!urlMatch) {
+                return;
+            }
+
+            const transmission: PluridPreserveTransmission<any> = {
+                request,
+                response,
+                context: {
+                    contextualizers: undefined,
+                    path: request.originalUrl,
+                    match: urlMatch,
+                },
+            };
+
+            await preserveAfterServe(transmission);
+        }
     }
 
     private async handleGateway(
