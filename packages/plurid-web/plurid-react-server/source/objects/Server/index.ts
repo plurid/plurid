@@ -507,7 +507,7 @@ class PluridServer {
         }
 
         return {
-            preserveResponded: true,
+            preserveResponded: false,
             preserveResult,
         };
     }
