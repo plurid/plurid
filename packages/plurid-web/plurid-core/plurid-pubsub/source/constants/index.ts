@@ -1,3 +1,4 @@
+// #region module
 export const TOPICS = {
     CONFIGURATION: 'configuration',
 
@@ -36,4 +37,5 @@ export const TOPICS = {
     VIEW_ADD_PLANE: 'view.addPlane',
     VIEW_SET_PLANES: 'view.setPlanes',
     VIEW_REMOVE_PLANE: 'view.removePlane',
-}
+};
+// #endregion module

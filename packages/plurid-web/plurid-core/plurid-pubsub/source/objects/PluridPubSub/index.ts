@@ -31,9 +31,9 @@ class PluridPubSub implements IPluridPubSub {
         return 0;
     }
 
-    public publish(
+    public publish<D = any>(
         topic: string,
-        data: any,
+        data: D,
     ) {
         const subscriptions = this.subscriptions[topic];
 

@@ -6,8 +6,8 @@ export interface IPluridPubSub {
     ) => void;
     subscribe: (
         topic: string,
-        callback: (data: any) => number,
-    ) => void;
+        callback: Callback,
+    ) => number;
     unsubscribe: (
         index: number,
         topic: string,
@@ -15,14 +15,7 @@ export interface IPluridPubSub {
 }
 
 
-export interface Subscription {
-    topic: string;
-    callback: (
-        data: any,
-    ) => void;
-}
-
-export type Callback = (
-    data: any,
+export type Callback = <D = any>(
+    data: D,
 ) => void;
 // #endregion module
