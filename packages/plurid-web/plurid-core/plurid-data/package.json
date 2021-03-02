@@ -48,7 +48,7 @@
         "@plurid/plurid-themes": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-pubsub": "0.0.0-0",
+        "@plurid/plurid-pubsub": "0.0.0-2",
         "@plurid/plurid-themes": "0.0.0-0",
         "@types/react": "^17.0.2",
         "@typescript-eslint/eslint-plugin": "^4.16.1",
