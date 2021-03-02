@@ -292,71 +292,28 @@ class PluridServer {
                     }
 
 
-                    const urlMatch = urlRouter.match(request.originalUrl);
+                    const {
+                        preserveResponded,
+                        preserveResult,
+                    } = await this.resolvePreserve(
+                        urlRouter,
+                        request,
+                        response,
+                    );
 
-                    let preserveOnServe: undefined | PluridPreserveOnServe<any>;
-                    let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
-                    let preserveOnError: undefined | PluridPreserveOnError<any>;
-                    if (urlMatch?.target) {
-                        const catchAll = this.preserves.find(
-                            preserve => preserve.serve === '*'
-                        );
-
-                        const preserve = catchAll
-                            ? catchAll
-                            : this.preserves.find(
-                                preserve => preserve.serve === urlMatch.target
+                    if (
+                        preserveResponded
+                    ) {
+                        if (this.debugAllows('info')) {
+                            console.info(
+                                `[${time.stamp()} :: ${requestID}] (204 No Content) Preserve handled GET ${request.path}`,
                             );
-
-                        if (preserve) {
-                            preserveOnServe = preserve.onServe;
-                            preserveAfterServe = preserve.afterServe;
-                            preserveOnError = preserve.onError;
                         }
-                    }
 
-                    let preserveResult: void | PluridPreserveResponse;
-                    if (preserveOnServe && urlMatch) {
-                        const transmission: PluridPreserveTransmission<any> = {
-                            request,
-                            response,
-                            context: {
-                                contextualizers: undefined,
-                                path: request.originalUrl,
-                                match: urlMatch,
-                            },
-                        };
-
-                        try {
-                            preserveResult = await preserveOnServe(transmission);
-
-                            if (preserveResult) {
-                                if (preserveResult.responded) {
-                                    return;
-                                }
-                            }
-                        } catch (error) {
-                            if (preserveOnError) {
-                                const onErrorResponse = await preserveOnError(
-                                    error,
-                                    transmission,
-                                );
-
-                                if (onErrorResponse) {
-                                    if (onErrorResponse.responded) {
-                                        return;
-                                    }
-
-                                    if (!onErrorResponse.depreserve) {
-                                        return;
-                                    }
-                                }
-                            }
-                        }
+                        return;
                     }
 
 
-                    // HANDLE GATEWAY
                     const gatewayResponse = await this.handleGateway(
                         path,
                         request,
@@ -368,7 +325,7 @@ class PluridServer {
                     ) {
                         if (this.debugAllows('info')) {
                             console.info(
-                                `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}`,
+                                `[${time.stamp()} :: ${requestID}] (200 OK) Gateway handled GET ${request.path}`,
                             );
                         }
 
@@ -460,7 +417,7 @@ class PluridServer {
                 return true;
             }
 
-            if (ignore.includes('/*')) {
+            if (ignore.endsWith('/*')) {
                 const curatedIgnore = ignore.replace('/*', '');
 
                 if (path.startsWith(curatedIgnore)) {
@@ -470,6 +427,89 @@ class PluridServer {
         }
 
         return false;
+    }
+
+    private async resolvePreserve(
+        urlRouter: any,
+        request: express.Request,
+        response: express.Response,
+    ) {
+        const urlMatch = urlRouter.match(request.originalUrl);
+
+        let preserveOnServe: undefined | PluridPreserveOnServe<any>;
+        let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
+        let preserveOnError: undefined | PluridPreserveOnError<any>;
+        if (urlMatch?.target) {
+            const catchAll = this.preserves.find(
+                preserve => preserve.serve === '*'
+            );
+
+            const preserve = catchAll
+                ? catchAll
+                : this.preserves.find(
+                    preserve => preserve.serve === urlMatch.target
+                );
+
+            if (preserve) {
+                preserveOnServe = preserve.onServe;
+                preserveAfterServe = preserve.afterServe;
+                preserveOnError = preserve.onError;
+            }
+        }
+
+        let preserveResult: void | PluridPreserveResponse;
+        if (preserveOnServe && urlMatch) {
+            const transmission: PluridPreserveTransmission<any> = {
+                request,
+                response,
+                context: {
+                    contextualizers: undefined,
+                    path: request.originalUrl,
+                    match: urlMatch,
+                },
+            };
+
+            try {
+                preserveResult = await preserveOnServe(transmission);
+
+                if (preserveResult) {
+                    if (preserveResult.responded) {
+                        return {
+                            preserveResponded: true,
+                            preserveResult,
+                        };
+                    }
+                }
+            } catch (error) {
+                if (preserveOnError) {
+                    const onErrorResponse = await preserveOnError(
+                        error,
+                        transmission,
+                    );
+
+                    if (onErrorResponse) {
+                        if (onErrorResponse.responded) {
+                            return {
+                                preserveResponded: true,
+                                preserveResult,
+                            };
+                        }
+
+                        if (!onErrorResponse.depreserve) {
+                            return {
+                                preserveResponded: false,
+                                preserveResult,
+                            };
+                        }
+                    }
+                }
+            }
+        }
+
+        return {
+            preserveResponded: true,
+            preserveResult,
+        };
     }
 
     private async handleGateway(
