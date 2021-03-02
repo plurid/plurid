@@ -114,7 +114,8 @@ const servicesData: PluridServerServicesData = {
 const options: PluridServerPartialOptions = {
     buildDirectory,
     open: openAtStart,
-    debug,
+    quiet: false,
+    debug: 'info',
 };
 
 const template: PluridServerTemplateConfiguration = {
