@@ -81,6 +81,7 @@
     import PluridContentGenerator from '../ContentGenerator';
     import PluridsResponder from '../PluridsResponder';
     import PluridStillsManager from '../StillsManager';
+import { resultKeyNameFromField } from '@apollo/client/utilities';
     // #endregion external
 // #endregion imports
 
@@ -269,23 +270,27 @@ class PluridServer {
                         );
                     }
 
+
                     const path = request.path;
 
-                    for (const ignore of this.options.ignore) {
-                        if (path === ignore) {
-                            next();
-                            return;
+
+                    const ignorable = this.ignoreGetRequest(
+                        path,
+                    );
+
+                    if (
+                        ignorable
+                    ) {
+                        if (this.debugAllows('info')) {
+                            console.info(
+                                `[${time.stamp()} :: ${requestID}] (200 OK) Ignored GET ${request.path}`,
+                            );
                         }
 
-                        if (ignore.includes('/*')) {
-                            const curatedIgnore = ignore.replace('/*', '');
-
-                            if (path.startsWith(curatedIgnore)) {
-                                next();
-                                return;
-                            }
-                        }
+                        next();
+                        return;
                     }
+
 
                     const urlMatch = urlRouter.match(request.originalUrl);
 
@@ -352,31 +357,22 @@ class PluridServer {
 
 
                     // HANDLE GATEWAY
-                    const {
-                        gatewayEndpoint,
-                    } = this.options;
+                    const gatewayResponse = await this.handleGateway(
+                        path,
+                        request,
+                        preserveResult,
+                    );
 
-                    if (path === gatewayEndpoint) {
-                        const gatewayRoute = {
-                            path: {
-                                value: gatewayEndpoint,
-                            },
-                            pathname: gatewayEndpoint,
-                            parameters: {},
-                            query: {
-                                __gatewayQuery: request.originalUrl,
-                            },
-                            fragments: {
-                                texts: [],
-                                elements: [],
-                            },
-                            route: gatewayEndpoint,
-                        };
-                        this.renderer = await this.renderApplication(
-                            gatewayRoute,
-                            preserveResult,
-                        );
-                        response.send(this.renderer?.html());
+                    if (
+                        gatewayResponse
+                    ) {
+                        if (this.debugAllows('info')) {
+                            console.info(
+                                `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}`,
+                            );
+                        }
+
+                        response.send(gatewayResponse);
                         return;
                     }
 
@@ -455,6 +451,68 @@ class PluridServer {
             },
         );
     }
+
+    private ignoreGetRequest(
+        path: string,
+    ) {
+        for (const ignore of this.options.ignore) {
+            if (path === ignore) {
+                return true;
+            }
+
+            if (ignore.includes('/*')) {
+                const curatedIgnore = ignore.replace('/*', '');
+
+                if (path.startsWith(curatedIgnore)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private async handleGateway(
+        path: string,
+        request: express.Request,
+        preserveResult: any,
+    ) {
+        const {
+            gatewayEndpoint,
+        } = this.options;
+
+        if (path !== gatewayEndpoint) {
+            return;
+        }
+
+        const gatewayRoute = {
+            path: {
+                value: gatewayEndpoint,
+            },
+            pathname: gatewayEndpoint,
+            parameters: {},
+            query: {
+                __gatewayQuery: request.originalUrl,
+            },
+            fragments: {
+                texts: [],
+                elements: [],
+            },
+            route: gatewayEndpoint,
+        };
+
+        this.renderer = await this.renderApplication(
+            gatewayRoute,
+            preserveResult,
+        );
+
+        if (!this.renderer) {
+            return;
+        }
+
+        return this.renderer.html();
+    }
+
 
     private async renderApplication(
         route: router.MatcherResponse,
@@ -603,6 +661,7 @@ class PluridServer {
         };
     }
 
+
     private handleOptions(
         partialOptions?: PluridServerPartialOptions,
     ) {
@@ -679,6 +738,7 @@ class PluridServer {
             );
         }
     }
+
 
     private open(
         serverlink: string,
