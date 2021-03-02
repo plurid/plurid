@@ -9,7 +9,9 @@ import base from joiner.base
 
 
 packages [
-    './packages/plurid-utilities/*'
-    './packages/plurid-web/*'
-    './packages/plurid-native/*'
+    ./packages/plurid-utilities/*
+    ./packages/plurid-web/plurid-browser/*
+    ./packages/plurid-web/plurid-core/*
+    ./packages/plurid-web/plurid-works/*
+    ./packages/plurid-native/*
 ]
