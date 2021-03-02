@@ -221,7 +221,7 @@ class PluridRoutesServer {
                 }
 
 
-                if (!data.elementql) {
+                if (!data) {
                     console.log(
                         `[${time.stamp()}]: Could not handle POST ${request.path}`,
                     );
@@ -229,6 +229,18 @@ class PluridRoutesServer {
                     response
                         .status(400)
                         .send('Bad Request');
+                    return;
+                }
+
+
+                if (!data.elementql) {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    );
+
+                    response
+                        .status(404)
+                        .send('Not Found');
                     return;
                 }
 
