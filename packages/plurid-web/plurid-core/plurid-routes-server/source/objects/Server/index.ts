@@ -16,6 +16,7 @@
 
     import {
         time,
+        uuid,
     } from '@plurid/plurid-functions';
     // #endregion libraries
 
@@ -32,6 +33,8 @@
     } from '../../data/constants';
 
     import {
+        DebugLevels,
+
         PluridRoutesServerOptions,
         PluridRoutesServerPartialOptions,
         PluridRoutesServerConfiguration,
@@ -93,8 +96,10 @@ class PluridRoutesServer {
 
         const serverlink = `http://localhost:${port}`;
 
-        if (!this.options.quiet) {
-            console.info(`\n\t[${time.stamp()}]: ${this.options.serverName} Started on Port ${port}: ${serverlink}\n`);
+        if (this.debugAllows('info')) {
+            console.info(
+                `\n\t[${time.stamp()}]: ${this.options.serverName} Started on Port ${port}: ${serverlink}\n`,
+            );
         }
 
         this.server = this.serverApplication.listen(port);
@@ -103,8 +108,10 @@ class PluridRoutesServer {
     }
 
     public stop() {
-        if (!this.options.quiet) {
-            console.info(`\n\t[${time.stamp()}]: ${this.options.serverName} Closed on Port ${this.port}\n`);
+        if (this.debugAllows('info')) {
+            console.info(
+                `\n\t[${time.stamp()}]: ${this.options.serverName} Closed on Port ${this.port}\n`,
+            );
         }
 
         if (this.server) {
@@ -155,251 +162,329 @@ class PluridRoutesServer {
 
 
     private handleEndpoints() {
-        this.serverApplication.post(ENDPOINT_ROUTE, async (request, response) => {
-            try {
-                console.log(
-                    `[${time.stamp()}]: POST ${request.path}`,
+        this.serverApplication.post(ENDPOINT_ROUTE, this.handleEndpointRoute);
+
+        this.serverApplication.post(ENDPOINT_REGISTER, this.handleEndpointRegister);
+    }
+
+    private async handleEndpointRoute(
+        request: express.Request,
+        response: express.Response,
+    ) {
+        const requestID = (request as any).requestID || uuid.generate();
+
+        try {
+            if (this.debugAllows('info')) {
+                console.info(
+                    `[${time.stamp()} :: ${requestID}]: POST ${request.path}`,
                 );
+            }
 
 
-                if (
-                    !request.body.token
-                ) {
-                    console.log(
-                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    );
-
-                    response
-                        .status(401)
-                        .send('Unauthorized');
-                    return;
-                }
-
-
-                if (
-                    !request.body.route
-                ) {
-                    console.log(
-                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    );
-
-                    response
-                        .status(400)
-                        .send('Bad Request');
-                    return;
-                }
-
-
-                const {
-                    token,
-                    route,
-                } = request.body;
-
-
-                const verifiedToken = await this.verifyToken(token);
-
-                if (!verifiedToken) {
-                    console.log(
-                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    );
-
-                    response
-                        .status(403)
-                        .send('Forbidden');
-                    return;
-                }
-
-
-                let data = this.cacher.get(
-                    route,
-                );
-
-                if (!data) {
-                    data = await this.queryRoute(
-                        route,
+            if (
+                !request.body.token
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}]: (401 Unauthorized) Could not handle POST ${request.path}`,
                     );
                 }
-
-
-                if (!data) {
-                    console.log(
-                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    );
-
-                    response
-                        .status(400)
-                        .send('Bad Request');
-                    return;
-                }
-
-
-                if (!data.elementql) {
-                    console.log(
-                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    );
-
-                    response
-                        .status(404)
-                        .send('Not Found');
-                    return;
-                }
-
-
-                const {
-                    elementql,
-                } = data;
-
-                const contentType = request.header('Content-Type');
-
-                const responseData = {
-                    elementql,
-                };
-
-                if (contentType !== DEON_MEDIA_TYPE) {
-                    response.json(responseData);
-                    return;
-                }
-
-
-                const deon = new Deon();
-                const responseDeon = deon.stringify(responseData);
-
-                response.setHeader(
-                    'Content-Type',
-                    DEON_MEDIA_TYPE,
-                );
-
-                response.send(responseDeon);
-
-                return;
-            } catch (error) {
-                console.error(
-                    `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    error,
-                );
 
                 response
-                    .status(500)
-                    .send('Server Error');
+                    .status(401)
+                    .send('Unauthorized');
                 return;
             }
-        });
-
-        this.serverApplication.post(ENDPOINT_REGISTER, async (request, response) => {
-            try {
-                console.log(
-                    `[${time.stamp()}]: POST ${request.path}`,
-                );
 
 
-                if (
-                    !request.body.token
-                ) {
-                    console.log(
-                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+            if (
+                !request.body.route
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}]: (400 Bad Request) Could not handle POST ${request.path}`,
                     );
-
-                    response
-                        .status(401)
-                        .send('Unauthorized');
-                    return;
                 }
-
-
-                if (
-                    !request.body.route
-                    || !request.body.data
-                ) {
-                    console.log(
-                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    );
-
-                    response
-                        .status(400)
-                        .send('Bad Request');
-                    return;
-                }
-
-
-                const {
-                    token,
-                    route,
-                    data,
-                } = request.body;
-
-
-                const verifiedToken = await this.verifyToken(token);
-
-                if (!verifiedToken) {
-                    console.log(
-                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    );
-
-                    response
-                        .status(403)
-                        .send('Forbidden');
-                    return;
-                }
-
-
-                const registered = await this.registerRoute(
-                    route,
-                    data,
-                );
-
-                if (typeof registered !== 'boolean') {
-                    console.log(
-                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    );
-
-                    response
-                        .status(400)
-                        .send('Bad Request');
-                    return;
-                }
-
-
-                this.cacher.set(
-                    route,
-                    data,
-                );
-
-
-                const contentType = request.header('Content-Type');
-
-                const responseData = {
-                    registered,
-                };
-
-                if (contentType !== DEON_MEDIA_TYPE) {
-                    response.json(responseData);
-                    return;
-                }
-
-
-                const deon = new Deon();
-                const responseDeon = deon.stringify(responseData);
-
-                response.setHeader(
-                    'Content-Type',
-                    DEON_MEDIA_TYPE,
-                );
-
-                response.send(responseDeon);
-
-                return;
-            } catch (error) {
-                console.error(
-                    `[${time.stamp()}]: Could not handle POST ${request.path}`,
-                    error,
-                );
 
                 response
-                    .status(500)
-                    .send('Server Error');
+                    .status(400)
+                    .send('Bad Request');
                 return;
             }
-        });
+
+
+            const {
+                token,
+                route,
+            } = request.body;
+
+
+            const verifiedToken = await this.verifyToken(token);
+
+            if (
+                !verifiedToken
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}]: (403 Forbidden) Could not handle POST ${request.path}`,
+                    );
+                }
+
+                response
+                    .status(403)
+                    .send('Forbidden');
+                return;
+            }
+
+
+            let data = this.cacher.get(
+                route,
+            );
+
+            if (!data) {
+                data = await this.queryRoute(
+                    route,
+                );
+            }
+
+
+            if (
+                !data
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}]: (400 Bad Request) Could not handle POST ${request.path}`,
+                    );
+                }
+
+                response
+                    .status(400)
+                    .send('Bad Request');
+                return;
+            }
+
+
+            if (
+                !data.elementql
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}]: (404 Not Found) Could not handle POST ${request.path}`,
+                    );
+                }
+
+                response
+                    .status(404)
+                    .send('Not Found');
+                return;
+            }
+
+
+            const {
+                elementql,
+            } = data;
+
+            const contentType = request.header('Content-Type');
+
+            const responseData = {
+                elementql,
+            };
+
+            if (
+                contentType !== DEON_MEDIA_TYPE
+            ) {
+                if (this.debugAllows('info')) {
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}]: (200 OK) Handled POST ${request.path}`,
+                    );
+                }
+
+                response.json(responseData);
+                return;
+            }
+
+
+            const deon = new Deon();
+            const responseDeon = deon.stringify(responseData);
+
+            response.setHeader(
+                'Content-Type',
+                DEON_MEDIA_TYPE,
+            );
+
+            if (this.debugAllows('info')) {
+                console.info(
+                    `[${time.stamp()} :: ${requestID}]: (200 OK) Handled POST ${request.path}`,
+                );
+            }
+
+            response.send(responseDeon);
+
+            return;
+        } catch (error) {
+            if (this.debugAllows('error')) {
+                console.error(
+                    `[${time.stamp()} :: ${requestID}]: (500 Server Error) Could not handle POST ${request.path}`,
+                    error,
+                );
+            }
+
+            response
+                .status(500)
+                .send('Server Error');
+            return;
+        }
+    }
+
+    private async handleEndpointRegister(
+        request: express.Request,
+        response: express.Response,
+    ) {
+        const requestID = (request as any).requestID || uuid.generate();
+
+        try {
+            if (this.debugAllows('info')) {
+                console.info(
+                    `[${time.stamp()} :: ${requestID}]: Handling POST ${request.path}`,
+                );
+            }
+
+
+            if (
+                !request.body.token
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}]: (401 Unauthorized) Could not handle POST ${request.path}`,
+                    );
+                }
+
+                response
+                    .status(401)
+                    .send('Unauthorized');
+                return;
+            }
+
+
+            if (
+                !request.body.route
+                || !request.body.data
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}]: (400 Bad Request) Could not handle POST ${request.path}`,
+                    );
+                }
+
+                response
+                    .status(400)
+                    .send('Bad Request');
+                return;
+            }
+
+
+            const {
+                token,
+                route,
+                data,
+            } = request.body;
+
+
+            const verifiedToken = await this.verifyToken(token);
+
+            if (
+                !verifiedToken
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}]: (403 Forbidden) Could not handle POST ${request.path}`,
+                    );
+                }
+
+                response
+                    .status(403)
+                    .send('Forbidden');
+                return;
+            }
+
+
+            const registered = await this.registerRoute(
+                route,
+                data,
+            );
+
+            if (
+                typeof registered !== 'boolean'
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}]: (400 Bad Request) Could not handle POST ${request.path}`,
+                    );
+                }
+
+                response
+                    .status(400)
+                    .send('Bad Request');
+                return;
+            }
+
+
+            this.cacher.set(
+                route,
+                data,
+            );
+
+
+            const contentType = request.header('Content-Type');
+
+            const responseData = {
+                registered,
+            };
+
+            if (
+                contentType !== DEON_MEDIA_TYPE
+            ) {
+                if (this.debugAllows('info')) {
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}]: (200 OK) Handled POST ${request.path}`,
+                    );
+                }
+
+                response.json(responseData);
+                return;
+            }
+
+
+            const deon = new Deon();
+            const responseDeon = deon.stringify(responseData);
+
+            response.setHeader(
+                'Content-Type',
+                DEON_MEDIA_TYPE,
+            );
+
+            if (this.debugAllows('info')) {
+                console.info(
+                    `[${time.stamp()} :: ${requestID}]: (200 OK) Handled POST ${request.path}`,
+                );
+            }
+
+            response.send(responseDeon);
+
+            return;
+        } catch (error) {
+            if (this.debugAllows('error')) {
+                console.error(
+                    `[${time.stamp()} :: ${requestID}]: (500 Server Error) Could not handle POST ${request.path}`,
+                    error,
+                );
+            }
+
+            response
+                .status(500)
+                .send('Server Error');
+            return;
+        }
     }
 
     private handleOptions(
@@ -416,6 +501,15 @@ class PluridRoutesServer {
 
     private configureServer() {
         this.serverApplication.disable('x-powered-by');
+
+        this.serverApplication.use(
+            (request, _, next) => {
+                const requestID = uuid.generate();
+                (request as any).requestID = requestID;
+
+                next();
+            }
+        );
 
         this.serverApplication.use(
             bodyParser.json(),
@@ -444,15 +538,56 @@ class PluridRoutesServer {
 
                     next();
                 } catch (error) {
-                    console.error(
-                        `[${time.stamp()}]: Could not handle deon middleware ${request.path}`,
-                        error,
-                    );
+                    const requestID = (request as any).requestID || '';
+                    const requestIDLog = requestID
+                        ? ` :: ${requestID}`
+                        : '';
+
+                    if (this.debugAllows('error')) {
+                        console.error(
+                            `[${time.stamp()}${requestIDLog}]: Could not handle deon middleware ${request.path}`,
+                            error,
+                        );
+                    }
 
                     next();
                 }
             },
         );
+    }
+
+    private debugAllows(
+        level: DebugLevels,
+    ) {
+        if (this.options.quiet) {
+            return false;
+        }
+
+        if (this.options.debug === 'none') {
+            return false;
+        }
+
+        switch (level) {
+            case 'error':
+                if (
+                    this.options.debug === 'error'
+                ) {
+                    return true;
+                }
+                return false;
+            case 'warn':
+                if (
+                    this.options.debug === 'error'
+                    || this.options.debug === 'warn'
+                ) {
+                    return true;
+                }
+                return false;
+            case 'info':
+                return true;
+            default:
+                return false;
+        }
     }
 }
 // #endregion module
