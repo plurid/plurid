@@ -109,8 +109,6 @@ class PluridServer {
     private serverApplication: Express;
     private server: Server | undefined;
     private port: number | string;
-    private renderer: PluridRenderer | undefined;
-
 
     private urlRouter: router.URLRouter;
     private stills: PluridStillsManager;
@@ -171,7 +169,7 @@ class PluridServer {
 
         this.configureServer();
 
-        this.computeApplication();
+        this.handleEndpoints();
 
         process.addListener('SIGINT', () => {
             this.stop();
@@ -263,10 +261,11 @@ class PluridServer {
     }
 
 
-    private computeApplication() {
+    private handleEndpoints() {
         this.loadMiddleware();
 
-        this.serverApplication.get('*',
+        this.serverApplication.get(
+            '*',
             async (request, response, next) => {
                 this.handleGetRequest(
                     request, response, next,
@@ -314,6 +313,7 @@ class PluridServer {
             const {
                 preserveResponded,
                 preserveResult,
+                preserveAfterServe,
             } = await this.resolvePreserve(
                 this.urlRouter,
                 request,
@@ -380,6 +380,7 @@ class PluridServer {
             const matchingPath = redirect || path;
 
             const route = this.router.match(matchingPath);
+
             if (!route) {
                 const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
                 if (notFoundStill) {
@@ -397,19 +398,34 @@ class PluridServer {
                     return;
                 }
 
-                this.renderer = await this.renderApplication(
+                const renderer = await this.renderApplication(
                     notFoundRoute,
                     preserveResult,
                 );
-                response.send(this.renderer?.html());
+
+                if (this.debugAllows('info')) {
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}`,
+                    );
+                }
+
+                response.send(renderer.html());
                 return;
             }
 
-            this.renderer = await this.renderApplication(
+
+            const renderer = await this.renderApplication(
                 route,
                 preserveResult,
             );
-            response.send(this.renderer?.html());
+
+            if (this.debugAllows('info')) {
+                console.info(
+                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}`,
+                );
+            }
+
+            response.send(renderer.html());
             return;
         } catch (error) {
             if (this.debugAllows('error')) {
@@ -494,6 +510,7 @@ class PluridServer {
                         return {
                             preserveResponded: true,
                             preserveResult,
+                            preserveAfterServe,
                         };
                     }
                 }
@@ -509,6 +526,7 @@ class PluridServer {
                             return {
                                 preserveResponded: true,
                                 preserveResult,
+                                preserveAfterServe,
                             };
                         }
 
@@ -516,6 +534,7 @@ class PluridServer {
                             return {
                                 preserveResponded: false,
                                 preserveResult,
+                                preserveAfterServe,
                             };
                         }
                     }
@@ -526,6 +545,7 @@ class PluridServer {
         return {
             preserveResponded: false,
             preserveResult,
+            preserveAfterServe,
         };
     }
 
@@ -558,16 +578,12 @@ class PluridServer {
             route: gatewayEndpoint,
         };
 
-        this.renderer = await this.renderApplication(
+        const renderer = await this.renderApplication(
             gatewayRoute,
             preserveResult,
         );
 
-        if (!this.renderer) {
-            return;
-        }
-
-        return this.renderer.html();
+        return renderer.html();
     }
 
 
