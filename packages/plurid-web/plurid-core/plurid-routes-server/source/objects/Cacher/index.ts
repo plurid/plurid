@@ -34,6 +34,7 @@ class Cacher {
         }
 
         if (time.now() > cached.expiration) {
+            this.routes.delete(route);
             return;
         }
 
