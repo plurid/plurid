@@ -1,3 +1,4 @@
+// #region module
 export interface IPluridPubSub {
     publish: (
         topic: string,
@@ -5,9 +6,10 @@ export interface IPluridPubSub {
     ) => void;
     subscribe: (
         topic: string,
-        callback: (data: any) => void,
+        callback: (data: any) => number,
     ) => void;
     unsubscribe: (
+        index: number,
         topic: string,
     ) => boolean;
 }
@@ -19,3 +21,8 @@ export interface Subscription {
         data: any,
     ) => void;
 }
+
+export type Callback = (
+    data: any,
+) => void;
+// #endregion module
