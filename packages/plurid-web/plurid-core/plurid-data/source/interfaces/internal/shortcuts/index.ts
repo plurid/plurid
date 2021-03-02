@@ -1,13 +1,18 @@
-import {
-    SHORTCUTS,
-} from '../../../enumerations';
+// #region imports
+    // #region external
+    import {
+        SHORTCUTS,
+    } from '../../../enumerations';
 
-import {
-    InternationalizationFieldType,
-} from '../internationalization';
+    import {
+        InternationalizationFieldType,
+    } from '../internationalization';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface ShortcutName {
     name: InternationalizationFieldType;
     internationalizedKey?: boolean;
@@ -20,3 +25,4 @@ export type ShortcutNamesTypes = keyof typeof SHORTCUTS;
 
 
 export type ShortcutNames = Record<ShortcutNamesTypes, ShortcutName>;
+// #endregion module

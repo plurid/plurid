@@ -1,9 +1,14 @@
-import {
-    KeyModifiers,
-} from '../../interfaces';
+// #region imports
+    // #region external
+    import {
+        KeyModifiers,
+    } from '../../interfaces';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export const keyModifiers: Record<KeyModifiers, string> = {
     SHIFT: '⇧',
     ALT: '⌥',
@@ -11,3 +16,4 @@ export const keyModifiers: Record<KeyModifiers, string> = {
     META: '⌘',
     CTRLMETA: '⌃/⌘',
 };
+// #endregion module

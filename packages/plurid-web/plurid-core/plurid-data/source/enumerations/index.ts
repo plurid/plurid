@@ -1,3 +1,4 @@
+// #region module
 export enum SHORTCUTS {
     TOGGLE_FIRST_PERSON = 'TOGGLE_FIRST_PERSON',
     MOVE_FORWARD = 'MOVE_FORWARD',
@@ -82,3 +83,4 @@ export enum TOOLBAR_DRAWERS {
     TECHNICAL = 'TECHNICAL',
     SHORTCUTS = 'SHORTCUTS',
 }
+// #endregion module

@@ -1,3 +1,4 @@
+// #region module
 export type InternationalizationChinese = 'chinese';
 export type InternationalizationEnglish = 'english';
 export type InternationalizationFrench = 'french';
@@ -273,3 +274,4 @@ export interface InternationalizationFields {
 
 
 export type Internationalization = Record<InternationalizationFieldType, string>;
+// #endregion module

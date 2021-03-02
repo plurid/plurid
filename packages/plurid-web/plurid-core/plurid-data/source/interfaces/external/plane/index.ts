@@ -1,9 +1,14 @@
-import {
-    PluridComponent,
-} from '../component';
+// #region imports
+    // #region external
+    import {
+        PluridComponent,
+    } from '../component';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface PluridPlane {
     /**
      * Custom HTML, React, Vue, or Angular component to be rendered in the PluridPlane.
@@ -93,3 +98,4 @@ export interface RegisteredPluridPlane {
     };
     component: PluridComponent;
 }
+// #endregion module

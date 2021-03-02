@@ -1,23 +1,28 @@
-import {
-    PluridConfiguration,
-} from '../../external/configuration';
+// #region imports
+    // #region external
+    import {
+        PluridConfiguration,
+    } from '../../external/configuration';
 
-import {
-    PluridView,
-} from '../../external/view';
+    import {
+        PluridView,
+    } from '../../external/view';
 
-import {
-    TreePlane,
-} from '../tree';
+    import {
+        TreePlane,
+    } from '../tree';
 
-import {
-    Coordinates,
-    ViewSize,
-    SpaceSize,
-} from '../utilities';
+    import {
+        Coordinates,
+        ViewSize,
+        SpaceSize,
+    } from '../utilities';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface PluridState {
     configuration: PluridConfiguration;
     data: PluridStateData;
@@ -67,3 +72,4 @@ export interface PluridStateThemes<T> {
 export interface PluridStateUI {
     toolbarScrollPosition: number;
 }
+// #endregion module

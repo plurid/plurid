@@ -1,3 +1,4 @@
+// #region module
 export interface PluridAnimation {
     duration: number;
 
@@ -28,3 +29,4 @@ export interface PluridAnimationLocationData {
     y: number;
     z: number;
 }
+// #endregion module

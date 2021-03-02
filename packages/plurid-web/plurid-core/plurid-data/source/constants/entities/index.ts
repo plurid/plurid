@@ -1,3 +1,4 @@
+// #region module
 export const PLURID_ENTITY_VIEW = 'PluridView';
 export const PLURID_ENTITY_APPLICATION_CONFIGURATOR = 'PluridApplicationConfigurator';
 export const PLURID_ENTITY_TRANSFORM_ORIGIN = 'PluridTransformOrigin';
@@ -16,3 +17,4 @@ export const PLURID_ENTITY_MULTISPACE = 'PluridMultispace';
 export const PLURID_ENTITY_TOOLBAR = 'PluridToolbar';
 export const PLURID_ENTITY_VIEWCUBE = 'PluridViewcube';
 export const PLURID_ENTITY_UNIVERSE_EXPLORER = 'PluridUniverseExplorer';
+// #endregion module

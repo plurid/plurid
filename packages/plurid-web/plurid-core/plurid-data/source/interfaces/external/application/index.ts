@@ -1,36 +1,44 @@
-import PluridPubSub from '@plurid/plurid-pubsub';
-
-import {
-    PluridPlane,
-    PluridPlaneContext,
-} from '../plane';
-
-// import {
-//     PluridCluster,
-// } from '../cluster';
-
-// import {
-//     PluridUniverse,
-// } from '../universe';
-
-import {
-    PluridComponent,
-} from '../component';
-
-import {
-    PluridView,
-} from '../view';
-
-import {
-    PluridPartialConfiguration,
-} from '../configuration';
-
-import {
-    IndexedPluridPlane,
-} from '../plane';
+// #region imports
+    // #region libraries
+    import PluridPubSub from '@plurid/plurid-pubsub';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        PluridPlane,
+        PluridPlaneContext,
+    } from '../plane';
 
+    // import {
+    //     PluridCluster,
+    // } from '../cluster';
+
+    // import {
+    //     PluridUniverse,
+    // } from '../universe';
+
+    import {
+        PluridComponent,
+    } from '../component';
+
+    import {
+        PluridView,
+    } from '../view';
+
+    import {
+        PluridPartialConfiguration,
+    } from '../configuration';
+
+    import {
+        IndexedPluridPlane,
+    } from '../plane';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 export interface PluridApplication {
     id?: string;
 
@@ -110,3 +118,4 @@ export interface PluridApplication {
 // export interface PluridServerData {
 //     planes?: PluridPlane[];
 // }
+// #endregion module

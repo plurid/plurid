@@ -1,9 +1,14 @@
-import {
-    TreePlane,
-} from '../../interfaces/internal';
+// #region imports
+    // #region external
+    import {
+        TreePlane,
+    } from '../../interfaces/internal';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export const defaultTreePlane: TreePlane = {
     sourceID: '',
     planeID: '',
@@ -60,3 +65,4 @@ export const defaultTreePlane: TreePlane = {
     },
     show: true,
 };
+// #endregion module

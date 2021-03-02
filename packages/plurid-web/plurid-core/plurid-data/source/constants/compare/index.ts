@@ -1,9 +1,14 @@
-import {
-    CompareTypes,
-} from '../../interfaces';
+// #region imports
+    // #region external
+    import {
+        CompareTypes,
+    } from '../../interfaces';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export const compareTypes: CompareTypes = {
     equal: '==',
     equalLessThan: '<=',
@@ -11,3 +16,4 @@ export const compareTypes: CompareTypes = {
     equalGreaterThan: '>=',
     greaterThan: '>',
 };
+// #endregion module

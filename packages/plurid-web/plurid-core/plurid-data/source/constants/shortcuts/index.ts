@@ -1,22 +1,27 @@
-import {
-    SHORTCUTS,
-    KEY_MODIFIERS,
-} from '../../enumerations';
+// #region imports
+    // #region external
+    import {
+        SHORTCUTS,
+        KEY_MODIFIERS,
+    } from '../../enumerations';
 
-import {
-    ShortcutNames,
-} from '../../interfaces';
+    import {
+        ShortcutNames,
+    } from '../../interfaces';
 
-import {
-    internationalization
-} from '../internationalization';
+    import {
+        internationalization
+    } from '../internationalization';
 
-import {
-    keyModifiers,
-} from '../keys';
+    import {
+        keyModifiers,
+    } from '../keys';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 const {
     fields: internationalizationFields,
 } = internationalization;
@@ -282,3 +287,4 @@ export const defaultShortcuts = [
         key: 's',
     },
 ];
+// #endregion module

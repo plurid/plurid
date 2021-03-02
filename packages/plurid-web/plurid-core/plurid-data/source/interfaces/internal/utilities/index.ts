@@ -1,3 +1,4 @@
+// #region module
 export interface Coordinates {
     x: number;
     y: number;
@@ -19,3 +20,4 @@ export interface SpaceSize {
         z: number;
     };
 }
+// #endregion module

@@ -1,3 +1,4 @@
+// #region exports
 export * from './compare';
 export * from './configuration';
 export * from './defaults';
@@ -8,3 +9,4 @@ export * from './keys';
 export * from './shortcuts';
 export * from './space';
 export * from './tree';
+// #endregion exports

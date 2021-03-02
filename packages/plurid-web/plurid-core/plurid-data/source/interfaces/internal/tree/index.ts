@@ -1,9 +1,14 @@
-import {
-    PluridRouteFragments,
-} from '../../external/router';
+// #region imports
+    // #region external
+    import {
+        PluridRouteFragments,
+    } from '../../external/router';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface TreePlane {
     /**
      * The application defined plane ID that is the source
@@ -145,3 +150,4 @@ export interface TopPlanePoint {
     x: number;
     z: number;
 }
+// #endregion module

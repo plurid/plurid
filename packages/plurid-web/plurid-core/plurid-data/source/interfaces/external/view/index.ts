@@ -1,3 +1,4 @@
+// #region module
 export interface PluridView {
     /**
      * Route to a `PluridPlane`.
@@ -17,3 +18,4 @@ export interface PluridView {
      */
     ordinal?: number;
 }
+// #endregion module

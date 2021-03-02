@@ -1,17 +1,22 @@
-import {
-    PluridPlane,
-} from '../plane';
+// #region imports
+    // #region external
+    import {
+        PluridPlane,
+    } from '../plane';
 
-import {
-    PluridCluster,
-} from '../cluster';
+    import {
+        PluridCluster,
+    } from '../cluster';
 
-import {
-    PluridView,
-} from '../view';
+    import {
+        PluridView,
+    } from '../view';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface PluridUniverse {
     /**
      * Optional, application-wide unique identifier.
@@ -52,3 +57,4 @@ export interface PluridUniverse {
      */
     clusters?: PluridCluster[];
 }
+// #endregion module

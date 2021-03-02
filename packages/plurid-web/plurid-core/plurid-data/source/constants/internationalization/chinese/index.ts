@@ -1,9 +1,14 @@
-import {
-    Internationalization,
-} from '../../../interfaces/internal/internationalization';
+// #region imports
+    // #region exports
+    import {
+        Internationalization,
+    } from '../../../interfaces/internal/internationalization';
+    // #endregion exports
+// #endregion imports
 
 
 
+// #region module
 const chinese: Internationalization = {
     viewcubeFront: '面前',
     viewcubeBack: '背部',
@@ -86,6 +91,10 @@ const chinese: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollLeft: '← 或向左滚动',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ 或向右滚动',
 };
+// #endregion module
 
 
+
+// #region exports
 export default chinese;
+// #endregion exports

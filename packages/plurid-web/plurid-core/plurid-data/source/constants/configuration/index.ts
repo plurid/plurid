@@ -1,34 +1,39 @@
-import {
-    PluridConfiguration,
-    PluridConfigurationGlobal,
-    PluridConfigurationElements,
-    PluridConfigurationSpace,
-    PluridConfigurationNetwork,
-    PluridConfigurationDevelopment,
-} from '../../interfaces';
+// #region imports
+    // #region external
+    import {
+        PluridConfiguration,
+        PluridConfigurationGlobal,
+        PluridConfigurationElements,
+        PluridConfigurationSpace,
+        PluridConfigurationNetwork,
+        PluridConfigurationDevelopment,
+    } from '../../interfaces';
 
-import {
-    LAYOUT_TYPES,
-    SIZES,
-    TRANSFORM_MODES,
-    TRANSFORM_TOUCHES,
-} from '../../enumerations';
+    import {
+        LAYOUT_TYPES,
+        SIZES,
+        TRANSFORM_MODES,
+        TRANSFORM_TOUCHES,
+    } from '../../enumerations';
 
-import {
-    PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
+    import {
+        PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
 
-    PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
-    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_SHOW,
-    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
-    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
-    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_X,
-    PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_Y,
+        PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
+        PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_SHOW,
+        PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
+        PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
+        PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_X,
+        PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_Y,
 
-    PLURID_DEFAULT_CONFIGURATION_NETWORK_HOST,
-} from '../defaults';
+        PLURID_DEFAULT_CONFIGURATION_NETWORK_HOST,
+    } from '../defaults';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export const defaultConfigurationGlobal: PluridConfigurationGlobal = {
     micro: false,
     theme: {
@@ -149,3 +154,4 @@ export const layoutNames = {
     SHEAVES: 'sheaves',
     META: 'meta',
 };
+// #endregion module

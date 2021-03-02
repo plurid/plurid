@@ -1,9 +1,14 @@
-import {
-    Internationalization,
-} from '../../../interfaces/internal/internationalization';
+// #region imports
+    // #region exports
+    import {
+        Internationalization,
+    } from '../../../interfaces/internal/internationalization';
+    // #endregion exports
+// #endregion imports
 
 
 
+// #region module
 const german: Internationalization = {
     viewcubeFront: 'front',
     viewcubeBack: 'zurück',
@@ -86,6 +91,10 @@ const german: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollLeft: '← oder nach links scrollen',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ oder nach rechts scrollen',
 };
+// #endregion module
 
 
+
+// #region exports
 export default german;
+// #endregion exports

@@ -1,9 +1,14 @@
-import {
-    PluridComponent,
-} from '../component';
+// #region imports
+    // #region external
+    import {
+        PluridComponent,
+    } from '../component';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface PluridLink {
     /**
      * The route of the plane.
@@ -141,3 +146,4 @@ export interface PluridLink {
     style?: React.CSSProperties;
     className?: string;
 }
+// #endregion module

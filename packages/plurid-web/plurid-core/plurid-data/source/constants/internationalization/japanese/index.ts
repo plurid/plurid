@@ -1,9 +1,14 @@
-import {
-    Internationalization,
-} from '../../../interfaces/internal/internationalization';
+// #region imports
+    // #region exports
+    import {
+        Internationalization,
+    } from '../../../interfaces/internal/internationalization';
+    // #endregion exports
+// #endregion imports
 
 
 
+// #region module
 const japanese: Internationalization = {
     viewcubeFront: 'フロント',
     viewcubeBack: 'バック',
@@ -86,6 +91,10 @@ const japanese: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollLeft: '← または左にスクロール',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ または右にスクロール',
 };
+// #endregion module
 
 
+
+// #region exports
 export default japanese;
+// #endregion exports

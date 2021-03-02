@@ -1,13 +1,18 @@
-import {
-    PluridPlane,
-} from '../plane';
+// #region imports
+    // #region external
+    import {
+        PluridPlane,
+    } from '../plane';
 
-import {
-    PluridLayout,
-} from '../layout';
+    import {
+        PluridLayout,
+    } from '../layout';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface PluridCluster {
     id: string;
     name?: string;
@@ -15,3 +20,4 @@ export interface PluridCluster {
     clusters?: PluridCluster[];
     layout?: PluridLayout;
 }
+// #endregion module

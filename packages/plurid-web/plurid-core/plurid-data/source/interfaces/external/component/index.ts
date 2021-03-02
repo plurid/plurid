@@ -1,14 +1,22 @@
-import React from 'react';
-
-import {
-    RouteHostDivision,
-    RouteDivision,
-    RouteHostProtocol,
-    RoutePlaneDivision,
-} from '../../internal/tree';
+// #region imports
+    // #region libraries
+    import React from 'react';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        RouteHostDivision,
+        RouteDivision,
+        RouteHostProtocol,
+        RoutePlaneDivision,
+    } from '../../internal/tree';
+    // #endregion external
+// #endregion imports
 
+
+
+// #region module
 export interface PluridComponentBase {
     kind: PluridComponentKind;
 
@@ -75,3 +83,4 @@ export interface PluridComponentPropertyRoute {
 export type PluridComponent =
     | PluridComponentElementQL
     | PluridComponentReact;
+// #endregion module

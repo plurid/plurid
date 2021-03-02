@@ -1,3 +1,4 @@
+// #region module
 export const PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE = 1_500;
 
 
@@ -27,3 +28,4 @@ export const PLURID_DEFAULT_CONFIGURATION_NETWORK_HOST = 'originhost';
 
 
 export const PLURID_ROUTER_STORAGE = '__PLURID_ROUTER__';
+// #endregion module

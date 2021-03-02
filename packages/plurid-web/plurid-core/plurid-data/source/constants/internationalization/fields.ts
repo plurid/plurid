@@ -4,6 +4,7 @@ import {
 
 
 
+// #region module
 const internationalizationFields: InternationalizationFields = {
     viewcubeFront: 'viewcubeFront',
     viewcubeBack: 'viewcubeBack',
@@ -86,6 +87,10 @@ const internationalizationFields: InternationalizationFields = {
     toolbarDrawerShortcutsArrowOrScrollLeft: 'toolbarDrawerShortcutsArrowOrScrollLeft',
     toolbarDrawerShortcutsArrowOrScrollRight: 'toolbarDrawerShortcutsArrowOrScrollRight',
 }
+// #endregion module
 
 
+
+// #region exports
 export default internationalizationFields;
+// #endregion exports

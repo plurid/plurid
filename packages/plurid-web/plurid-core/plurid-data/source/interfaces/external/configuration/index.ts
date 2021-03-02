@@ -1,28 +1,36 @@
-import themes, {
-    Theme,
-} from '@plurid/plurid-themes';
-
-import {
-    SIZES,
-    TRANSFORM_MODES,
-    TRANSFORM_TOUCHES,
-    TOOLBAR_DRAWERS,
-} from '../../../enumerations';
-
-import {
-    RecursivePartial,
-} from '../../helpers';
-
-import {
-    PluridLayout,
-} from '../layout';
-
-import {
-    InternationalizationLanguageType,
-} from '../../internal/internationalization';
+// #region imports
+    // #region libraries
+    import themes, {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        SIZES,
+        TRANSFORM_MODES,
+        TRANSFORM_TOUCHES,
+        TOOLBAR_DRAWERS,
+    } from '../../../enumerations';
 
+    import {
+        RecursivePartial,
+    } from '../../helpers';
+
+    import {
+        PluridLayout,
+    } from '../layout';
+
+    import {
+        InternationalizationLanguageType,
+    } from '../../internal/internationalization';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 export type PluridPartialConfiguration = RecursivePartial<PluridConfiguration>;
 
 
@@ -293,3 +301,4 @@ export interface PluridConfigurationDevelopment {
      */
     spaceDebugger: boolean;
 }
+// #endregion module

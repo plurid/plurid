@@ -1,3 +1,4 @@
+// #region module
 export type CompareTypeEqual = '==';
 export type CompareTypeEqualLessThan = '<=';
 export type CompareTypeLessThan = '<';
@@ -19,3 +20,4 @@ export interface CompareTypes {
     equalGreaterThan: CompareTypeEqualGreaterThan;
     greaterThan: CompareTypeGreaterThan;
 }
+// #endregion module

@@ -1,9 +1,14 @@
-import {
-    Internationalization,
-} from '../../../interfaces/internal/internationalization';
+// #region imports
+    // #region exports
+    import {
+        Internationalization,
+    } from '../../../interfaces/internal/internationalization';
+    // #endregion exports
+// #endregion imports
 
 
 
+// #region module
 const hindi: Internationalization = {
     viewcubeFront: 'सामने',
     viewcubeBack: 'वापस',
@@ -86,6 +91,10 @@ const hindi: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollLeft: '← या बाईं ओर स्क्रॉल करें',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ या दाईं ओर स्क्रॉल करें',
 };
+// #endregion module
 
 
+
+// #region exports
 export default hindi;
+// #endregion exports

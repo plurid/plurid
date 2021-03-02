@@ -1,24 +1,29 @@
-import {
-    PluridUniverse,
-    PluridPlane,
-} from '../../external';
+// #region imports
+    // #region external
+    import {
+        PluridUniverse,
+        PluridPlane,
+    } from '../../external';
 
-import {
-    Identified,
-} from '../../helpers';
+    import {
+        Identified,
+    } from '../../helpers';
 
-import {
-    PluridInternalStatePlane,
-    PluridInternalContextPlane,
-} from '../plane';
+    import {
+        PluridInternalStatePlane,
+        PluridInternalContextPlane,
+    } from '../plane';
 
-import {
-    PathParameters,
-    PathQuery,
-} from '../tree';
+    import {
+        PathParameters,
+        PathQuery,
+    } from '../tree';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface IdentifiedPluridUniverse extends Identified<PluridUniverse> {
     planes: Identified<PluridPlane>[];
 }
@@ -48,3 +53,4 @@ export interface PlanePath {
     parameters?: PathParameters;
     query?: PathQuery;
 }
+// #endregion module

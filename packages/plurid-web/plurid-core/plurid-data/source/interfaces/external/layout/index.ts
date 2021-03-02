@@ -1,10 +1,15 @@
-import {
-    LAYOUT_TYPES,
-} from '../../../enumerations';
+// #region imports
+    // #region external
+    import {
+        LAYOUT_TYPES,
+    } from '../../../enumerations';
+    // #endregion external
+// #endregion imports
 
 
 
-interface Layout {
+// #region module
+export interface Layout {
     type: keyof typeof LAYOUT_TYPES;
 }
 
@@ -196,3 +201,4 @@ export type PluridLayout = LayoutColumns
     | LayoutFaceToFace
     | LayoutSheaves
     | LayoutMeta;
+// #endregion module

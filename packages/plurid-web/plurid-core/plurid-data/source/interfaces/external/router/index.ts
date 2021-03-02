@@ -1,17 +1,22 @@
-import {
-    PluridComponent,
-} from '../component';
+// #region imports
+    // #region external
+    import {
+        PluridComponent,
+    } from '../component';
 
-import {
-    PluridPartialConfiguration,
-} from '../configuration';
+    import {
+        PluridPartialConfiguration,
+    } from '../configuration';
 
-import {
-    CompareType,
-} from '../compare';
+    import {
+        CompareType,
+    } from '../compare';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export interface PluridRouterProperties {
     routes: PluridRoute[];
 
@@ -356,3 +361,4 @@ export interface PluridRouteFragmentElement extends PluridRouteFragment {
     id: string;
     occurence: number;
 }
+// #endregion module

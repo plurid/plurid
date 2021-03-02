@@ -1,9 +1,14 @@
-import {
-    Internationalization,
-} from '../../../interfaces/internal/internationalization';
+// #region imports
+    // #region exports
+    import {
+        Internationalization,
+    } from '../../../interfaces/internal/internationalization';
+    // #endregion exports
+// #endregion imports
 
 
 
+// #region module
 const romanian: Internationalization = {
     viewcubeFront: 'față',
     viewcubeBack: 'spate',
@@ -86,6 +91,10 @@ const romanian: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollLeft: '← sau scroll stânga',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ sau scroll dreapta',
 };
+// #endregion module
 
 
+
+// #region exports
 export default romanian;
+// #endregion exports

@@ -1,3 +1,4 @@
+// #region module
 export const ROTATION_STEP = 3.01;
 
 export const TRANSLATION_STEP = 25;
@@ -10,3 +11,4 @@ export const SCALE_UPPER_LIMIT = 4;
 export const ROOTS_GAP = 50;
 
 export const PLANE_DEFAULT_ANGLE = 90.1;
+// #endregion module

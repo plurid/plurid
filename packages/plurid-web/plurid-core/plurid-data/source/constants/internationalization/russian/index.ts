@@ -1,9 +1,14 @@
-import {
-    Internationalization,
-} from '../../../interfaces/internal/internationalization';
+// #region imports
+    // #region exports
+    import {
+        Internationalization,
+    } from '../../../interfaces/internal/internationalization';
+    // #endregion exports
+// #endregion imports
 
 
 
+// #region module
 const russian: Internationalization = {
     viewcubeFront: 'лицо',
     viewcubeBack: 'назад',
@@ -86,6 +91,10 @@ const russian: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollLeft: '← или прокрутите влево',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ или прокрутите вправо',
 };
+// #endregion module
 
 
+
+// #region exports
 export default russian;
+// #endregion exports
