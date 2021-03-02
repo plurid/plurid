@@ -81,7 +81,6 @@
     import PluridContentGenerator from '../ContentGenerator';
     import PluridsResponder from '../PluridsResponder';
     import PluridStillsManager from '../StillsManager';
-import { resultKeyNameFromField } from '@apollo/client/utilities';
     // #endregion external
 // #endregion imports
 
@@ -111,6 +110,12 @@ class PluridServer {
     private server: Server | undefined;
     private port: number | string;
     private renderer: PluridRenderer | undefined;
+
+
+    private urlRouter: router.URLRouter;
+    private stills: PluridStillsManager;
+    private router: router.default;
+    private pluridsResponder: PluridsResponder;
 
 
     constructor(
@@ -144,6 +149,25 @@ class PluridServer {
 
         this.serverApplication = express();
         this.port = DEFAULT_SERVER_PORT;
+
+
+        const urlRoutes = this.routes.map(route => {
+            const {
+                value,
+                parameters,
+            } = route;
+
+            return {
+                value,
+                parameters,
+            };
+        });
+        this.urlRouter = new PluridURLRouter(urlRoutes);
+
+        this.stills = new PluridStillsManager(this.options);
+        this.router = new PluridRouter(this.routes);
+        this.pluridsResponder = new PluridsResponder();
+
 
         this.configureServer();
 
@@ -242,171 +266,164 @@ class PluridServer {
     private computeApplication() {
         this.loadMiddleware();
 
-        const urlRoutes = this.routes.map(route => {
-            const {
-                value,
-                parameters,
-            } = route;
-
-            return {
-                value,
-                parameters,
-            };
-        });
-        const urlRouter = new PluridURLRouter(urlRoutes);
-
-        const stills = new PluridStillsManager(this.options);
-        const router = new PluridRouter(this.routes);
-        const pluridsResponder = new PluridsResponder();
-
         this.serverApplication.get('*',
             async (request, response, next) => {
-                const requestID = (request as ServerRequest).requestID || uuid.generate();
-
-                try {
-                    if (this.debugAllows('info')) {
-                        console.info(
-                            `[${time.stamp()} :: ${requestID}] (000 Start) Handling GET ${request.path}`,
-                        );
-                    }
-
-
-                    const path = request.path;
-
-
-                    const ignorable = this.ignoreGetRequest(
-                        path,
-                    );
-
-                    if (
-                        ignorable
-                    ) {
-                        if (this.debugAllows('info')) {
-                            console.info(
-                                `[${time.stamp()} :: ${requestID}] (204 No Content) Ignored GET ${request.path}`,
-                            );
-                        }
-
-                        next();
-                        return;
-                    }
-
-
-                    const {
-                        preserveResponded,
-                        preserveResult,
-                    } = await this.resolvePreserve(
-                        urlRouter,
-                        request,
-                        response,
-                    );
-
-                    if (
-                        preserveResponded
-                    ) {
-                        if (this.debugAllows('info')) {
-                            console.info(
-                                `[${time.stamp()} :: ${requestID}] (204 No Content) Preserve handled GET ${request.path}`,
-                            );
-                        }
-
-                        return;
-                    }
-
-
-                    const gatewayResponse = await this.handleGateway(
-                        path,
-                        request,
-                        preserveResult,
-                    );
-
-                    if (
-                        gatewayResponse
-                    ) {
-                        if (this.debugAllows('info')) {
-                            console.info(
-                                `[${time.stamp()} :: ${requestID}] (200 OK) Gateway handled GET ${request.path}`,
-                            );
-                        }
-
-                        response.send(gatewayResponse);
-                        return;
-                    }
-
-
-                    // HANDLE PLURIDS ???
-                    // check if the url is plurids
-                    // http://example.com/plurids/<route>/<space>/<page>
-                    // http://example.com/plurids/index/12345/54321
-
-                    if (pluridsResponder.search(path)) {
-                        response.send(pluridsResponder);
-                        return;
-                    }
-
-
-                    // HANDLE STILLS
-                    const still = stills.get(path);
-                    if (still) {
-                        response.send(still);
-                        return;
-                    }
-
-
-                    let redirect: undefined | string;
-                    if (preserveResult) {
-                        redirect = preserveResult.redirect;
-                    }
-
-                    const matchingPath = redirect || path;
-
-                    const route = router.match(matchingPath);
-                    if (!route) {
-                        const notFoundStill = stills.get(NOT_FOUND_ROUTE);
-                        if (notFoundStill) {
-                            response
-                                .status(404)
-                                .send(notFoundStill);
-                            return;
-                        }
-
-                        const notFoundRoute = router.match(NOT_FOUND_ROUTE);
-                        if (!notFoundRoute) {
-                            response
-                                .status(404)
-                                .send(NOT_FOUND_TEMPLATE);
-                            return;
-                        }
-
-                        this.renderer = await this.renderApplication(
-                            notFoundRoute,
-                            preserveResult,
-                        );
-                        response.send(this.renderer?.html());
-                        return;
-                    }
-
-                    this.renderer = await this.renderApplication(
-                        route,
-                        preserveResult,
-                    );
-                    response.send(this.renderer?.html());
-                    return;
-                } catch (error) {
-                    if (this.debugAllows('error')) {
-                        console.error(
-                            `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle GET ${request.path}`,
-                            error,
-                        );
-                    }
-
-                    response
-                        .status(500)
-                        .send(SERVER_ERROR_TEMPLATE);
-                    return;
-                }
+                this.handleGetRequest(
+                    request, response, next,
+                );
             },
         );
+    }
+
+    private async handleGetRequest(
+        request: express.Request,
+        response: express.Response,
+        next: express.NextFunction,
+    ) {
+        const requestID = (request as ServerRequest).requestID || uuid.generate();
+
+        try {
+            if (this.debugAllows('info')) {
+                console.info(
+                    `[${time.stamp()} :: ${requestID}] (000 Start) Handling GET ${request.path}`,
+                );
+            }
+
+
+            const path = request.path;
+
+
+            const ignorable = this.ignoreGetRequest(
+                path,
+            );
+
+            if (
+                ignorable
+            ) {
+                if (this.debugAllows('info')) {
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (204 No Content) Ignored GET ${request.path}`,
+                    );
+                }
+
+                next();
+                return;
+            }
+
+
+            const {
+                preserveResponded,
+                preserveResult,
+            } = await this.resolvePreserve(
+                this.urlRouter,
+                request,
+                response,
+            );
+
+            if (
+                preserveResponded
+            ) {
+                if (this.debugAllows('info')) {
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (204 No Content) Preserve handled GET ${request.path}`,
+                    );
+                }
+
+                return;
+            }
+
+
+            const gatewayResponse = await this.handleGateway(
+                path,
+                request,
+                preserveResult,
+            );
+
+            if (
+                gatewayResponse
+            ) {
+                if (this.debugAllows('info')) {
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Gateway handled GET ${request.path}`,
+                    );
+                }
+
+                response.send(gatewayResponse);
+                return;
+            }
+
+
+            // HANDLE PLURIDS ???
+            // check if the url is plurids
+            // http://example.com/plurids/<route>/<space>/<page>
+            // http://example.com/plurids/index/12345/54321
+
+            if (this.pluridsResponder.search(path)) {
+                response.send(this.pluridsResponder);
+                return;
+            }
+
+
+            // HANDLE STILLS
+            const still = this.stills.get(path);
+            if (still) {
+                response.send(still);
+                return;
+            }
+
+
+            let redirect: undefined | string;
+            if (preserveResult) {
+                redirect = preserveResult.redirect;
+            }
+
+            const matchingPath = redirect || path;
+
+            const route = this.router.match(matchingPath);
+            if (!route) {
+                const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
+                if (notFoundStill) {
+                    response
+                        .status(404)
+                        .send(notFoundStill);
+                    return;
+                }
+
+                const notFoundRoute = this.router.match(NOT_FOUND_ROUTE);
+                if (!notFoundRoute) {
+                    response
+                        .status(404)
+                        .send(NOT_FOUND_TEMPLATE);
+                    return;
+                }
+
+                this.renderer = await this.renderApplication(
+                    notFoundRoute,
+                    preserveResult,
+                );
+                response.send(this.renderer?.html());
+                return;
+            }
+
+            this.renderer = await this.renderApplication(
+                route,
+                preserveResult,
+            );
+            response.send(this.renderer?.html());
+            return;
+        } catch (error) {
+            if (this.debugAllows('error')) {
+                console.error(
+                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle GET ${request.path}`,
+                    error,
+                );
+            }
+
+            response
+                .status(500)
+                .send(SERVER_ERROR_TEMPLATE);
+            return;
+        }
     }
 
     private ignoreGetRequest(
@@ -708,7 +725,9 @@ class PluridServer {
         const options: PluridServerOptions = {
             serverName: partialOptions?.serverName || DEFAULT_SERVER_OPTIONS.SERVER_NAME,
             quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
-            debug: (partialOptions?.debug || environment.production) ? 'error' : 'info',
+            debug: partialOptions?.debug
+                ? partialOptions?.debug
+                : environment.production ? 'error' : 'info',
             compression: partialOptions?.compression ?? DEFAULT_SERVER_OPTIONS.COMPRESSION,
             open: partialOptions?.open ?? DEFAULT_SERVER_OPTIONS.OPEN,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
