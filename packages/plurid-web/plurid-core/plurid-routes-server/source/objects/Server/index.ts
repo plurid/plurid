@@ -248,11 +248,19 @@ class PluridRoutesServer {
             let data = this.cacher.get(
                 route,
             );
+            let updateCache = false;
 
             if (!data) {
                 data = await this.queryRoute(
                     route,
                 );
+                updateCache = true;
+            } else {
+                if (this.debugAllows('info')) {
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] Retrieved from cache POST ${request.path}`,
+                    );
+                }
             }
 
 
@@ -292,11 +300,21 @@ class PluridRoutesServer {
                 elementql,
             } = data;
 
+
+            if (updateCache) {
+                this.cacher.set(
+                    route,
+                    data,
+                );
+            }
+
+
             const contentType = request.header('Content-Type');
 
             const responseData = {
                 elementql,
             };
+
 
             if (
                 contentType !== DEON_MEDIA_TYPE
@@ -448,6 +466,7 @@ class PluridRoutesServer {
             const responseData = {
                 registered,
             };
+
 
             if (
                 contentType !== DEON_MEDIA_TYPE
