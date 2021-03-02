@@ -1,4 +1,28 @@
+// #region imports
+    // #region libraries
+    import express from 'express';
+    // #endregion libraries
+// #endregion imports
+
+
+
 // #region module
+export type ServerRequest = express.Request & {
+    requestID: string;
+}
+
+export type ServerRequestRouteBody = {
+    token: string;
+    route: string;
+}
+
+export type ServerRequestRegisterBody = {
+    token: string;
+    route: string;
+    data: RouteElement;
+}
+
+
 export type DebugLevels =
     | 'none'
     | 'error'
@@ -63,5 +87,10 @@ export interface RouteElement {
 export interface RouteRegistration {
     route: string;
     data: RouteElement;
+}
+
+export interface CachedRouteElement {
+    data: RouteElement;
+    expiration: number;
 }
 // #endregion module

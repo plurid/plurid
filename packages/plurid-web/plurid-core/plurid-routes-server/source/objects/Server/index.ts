@@ -33,6 +33,10 @@
     } from '../../data/constants';
 
     import {
+        ServerRequest,
+        ServerRequestRouteBody,
+        ServerRequestRegisterBody,
+
         DebugLevels,
 
         PluridRoutesServerOptions,
@@ -171,12 +175,12 @@ class PluridRoutesServer {
         request: express.Request,
         response: express.Response,
     ) {
-        const requestID = (request as any).requestID || uuid.generate();
+        const requestID = (request as ServerRequest).requestID || uuid.generate();
 
         try {
             if (this.debugAllows('info')) {
                 console.info(
-                    `[${time.stamp()} :: ${requestID}]: POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}]: Handling POST ${request.path}`,
                 );
             }
 
@@ -216,7 +220,7 @@ class PluridRoutesServer {
             const {
                 token,
                 route,
-            } = request.body;
+            } = request.body as ServerRequestRouteBody;
 
 
             const verifiedToken = await this.verifyToken(token);
@@ -340,7 +344,7 @@ class PluridRoutesServer {
         request: express.Request,
         response: express.Response,
     ) {
-        const requestID = (request as any).requestID || uuid.generate();
+        const requestID = (request as ServerRequest).requestID || uuid.generate();
 
         try {
             if (this.debugAllows('info')) {
@@ -387,7 +391,7 @@ class PluridRoutesServer {
                 token,
                 route,
                 data,
-            } = request.body;
+            } = request.body as ServerRequestRegisterBody;
 
 
             const verifiedToken = await this.verifyToken(token);
@@ -538,7 +542,7 @@ class PluridRoutesServer {
 
                     next();
                 } catch (error) {
-                    const requestID = (request as any).requestID || '';
+                    const requestID = (request as ServerRequest).requestID || '';
                     const requestIDLog = requestID
                         ? ` :: ${requestID}`
                         : '';

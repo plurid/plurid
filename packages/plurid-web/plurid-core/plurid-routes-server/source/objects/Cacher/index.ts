@@ -8,6 +8,11 @@
 
     // #region external
     import {
+        RouteElement,
+        CachedRouteElement,
+    } from '../../data/interfaces';
+
+    import {
         ONE_DAY,
     } from '../../data/constants';
     // #endregion external
@@ -17,7 +22,7 @@
 
 // #region module
 class Cacher {
-    private routes = new Map();
+    private routes: Map<string, CachedRouteElement> = new Map();
 
     public get(
         route: string,
@@ -37,7 +42,7 @@ class Cacher {
 
     public set(
         route: string,
-        data: any,
+        data: RouteElement,
     ) {
         this.routes.set(
             route,
