@@ -18,7 +18,7 @@ class PluridPubSub implements IPluridPubSub {
         topic: string,
         callback: Callback,
     ) {
-        if (!this.subscriptions[topic]) {
+        if (this.subscriptions[topic]) {
             this.subscriptions[topic]?.push(callback);
 
             return (this.subscriptions[topic]?.length || 1) - 1;
@@ -42,7 +42,11 @@ class PluridPubSub implements IPluridPubSub {
         }
 
         for (const subscription of subscriptions) {
-            subscription(data);
+            try {
+                subscription(data);
+            } catch (error) {
+                continue;
+            }
         }
     }
 
@@ -54,12 +58,12 @@ class PluridPubSub implements IPluridPubSub {
 
         if (this.subscriptions[topic]) {
             this.subscriptions[topic] = this.subscriptions[topic]?.filter((_, idx) => {
-                if (idx !== index) {
+                if (idx === index) {
                     unsubscribed = true;
-                    return true;
+                    return false;
                 }
 
-                return false;
+                return true;
             });
         }
 

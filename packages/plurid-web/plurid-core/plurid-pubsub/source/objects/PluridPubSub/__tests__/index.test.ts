@@ -27,7 +27,7 @@ describe('PluridPubSub', () => {
     it('subscribes and unsubscribes', () => {
         const pluridPubSub = new PluridPubSub();
 
-        pluridPubSub.subscribe('space.increase.rotateY', (data: any) => {
+        const index = pluridPubSub.subscribe('space.increase.rotateY', (data: any) => {
             const {
                 value,
             } = data;
@@ -37,7 +37,10 @@ describe('PluridPubSub', () => {
 
         pluridPubSub.publish('space.increase.rotateY', { value: 1 });
 
-        const unsubscribed = pluridPubSub.unsubscribe('space.increase.rotateY');
+        const unsubscribed = pluridPubSub.unsubscribe(
+            index,
+            'space.increase.rotateY',
+        );
 
         expect(unsubscribed).toBe(true);
     });
