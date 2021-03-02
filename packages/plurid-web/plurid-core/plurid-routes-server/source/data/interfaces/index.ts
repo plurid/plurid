@@ -43,9 +43,14 @@ export type RegisterRoute = (
     data: RouteElement,
 ) => Promise<boolean>;
 
+export type VerifyToken = (
+    token: string,
+) => Promise<boolean>;
+
 export interface PluridRoutesServerConfiguration {
     queryRoute: QueryRoute;
     registerRoute: RegisterRoute;
+    verifyToken: VerifyToken;
     options?: PluridRoutesServerPartialOptions;
 }
 

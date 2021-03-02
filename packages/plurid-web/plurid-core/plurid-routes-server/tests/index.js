@@ -21,10 +21,19 @@ const registerRoute = async (
     return true;
 }
 
+const verifyToken = async (
+    token,
+) => {
+    console.log('verifyToken', token);
+
+    return true;
+}
+
 
 const server = new PluridRoutesServer({
     queryRoute,
     registerRoute,
+    verifyToken,
 });
 
 server.start();

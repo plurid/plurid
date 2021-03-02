@@ -38,6 +38,7 @@
 
         QueryRoute,
         RegisterRoute,
+        VerifyToken,
     } from '../../data/interfaces';
 
     import Cacher from '../Cacher';
@@ -55,6 +56,7 @@ class PluridRoutesServer {
 
     private queryRoute: QueryRoute;
     private registerRoute: RegisterRoute;
+    private verifyToken: VerifyToken;
 
     private cacher: Cacher;
 
@@ -69,6 +71,7 @@ class PluridRoutesServer {
 
         this.queryRoute = configuration.queryRoute;
         this.registerRoute = configuration.registerRoute;
+        this.verifyToken = configuration.verifyToken;
 
         this.cacher = new Cacher();
 
@@ -158,7 +161,24 @@ class PluridRoutesServer {
                     `[${time.stamp()}]: POST ${request.path}`,
                 );
 
-                if (!request.body.route) {
+
+                if (
+                    !request.body.token
+                ) {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    );
+
+                    response
+                        .status(401)
+                        .send('Unauthorized');
+                    return;
+                }
+
+
+                if (
+                    !request.body.route
+                ) {
                     console.log(
                         `[${time.stamp()}]: Could not handle POST ${request.path}`,
                     );
@@ -169,9 +189,26 @@ class PluridRoutesServer {
                     return;
                 }
 
+
                 const {
+                    token,
                     route,
                 } = request.body;
+
+
+                const verifiedToken = await this.verifyToken(token);
+
+                if (!verifiedToken) {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    );
+
+                    response
+                        .status(403)
+                        .send('Forbidden');
+                    return;
+                }
+
 
                 let data = this.cacher.get(
                     route,
@@ -183,6 +220,7 @@ class PluridRoutesServer {
                     );
                 }
 
+
                 if (!data.elementql) {
                     console.log(
                         `[${time.stamp()}]: Could not handle POST ${request.path}`,
@@ -193,6 +231,7 @@ class PluridRoutesServer {
                         .send('Bad Request');
                     return;
                 }
+
 
                 const {
                     elementql,
@@ -208,6 +247,7 @@ class PluridRoutesServer {
                     response.json(responseData);
                     return;
                 }
+
 
                 const deon = new Deon();
                 const responseDeon = deon.stringify(responseData);
@@ -239,6 +279,21 @@ class PluridRoutesServer {
                     `[${time.stamp()}]: POST ${request.path}`,
                 );
 
+
+                if (
+                    !request.body.token
+                ) {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    );
+
+                    response
+                        .status(401)
+                        .send('Unauthorized');
+                    return;
+                }
+
+
                 if (
                     !request.body.route
                     || !request.body.data
@@ -253,10 +308,27 @@ class PluridRoutesServer {
                     return;
                 }
 
+
                 const {
+                    token,
                     route,
                     data,
                 } = request.body;
+
+
+                const verifiedToken = await this.verifyToken(token);
+
+                if (!verifiedToken) {
+                    console.log(
+                        `[${time.stamp()}]: Could not handle POST ${request.path}`,
+                    );
+
+                    response
+                        .status(403)
+                        .send('Forbidden');
+                    return;
+                }
+
 
                 const registered = await this.registerRoute(
                     route,
@@ -274,10 +346,12 @@ class PluridRoutesServer {
                     return;
                 }
 
+
                 this.cacher.set(
                     route,
                     data,
                 );
+
 
                 const contentType = request.header('Content-Type');
 
@@ -289,6 +363,7 @@ class PluridRoutesServer {
                     response.json(responseData);
                     return;
                 }
+
 
                 const deon = new Deon();
                 const responseDeon = deon.stringify(responseData);
