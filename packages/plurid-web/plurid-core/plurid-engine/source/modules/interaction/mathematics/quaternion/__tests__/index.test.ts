@@ -1,18 +1,23 @@
-import {
-    degToRad,
-    makeQuaternion,
-    zeroQuaternion,
-    inverseQuaternion,
-    conjugateQuaternion,
-    computeQuaternionFromEulers,
-    quaternionFromAxisAngle,
-    quaternionMultiply,
-    rotatePointViaQuaternion,
-    makeRotationMatrixFromQuaternion
-} from '..';
+// #region imports
+    // #region external
+    import {
+        degToRad,
+        makeQuaternion,
+        zeroQuaternion,
+        inverseQuaternion,
+        conjugateQuaternion,
+        computeQuaternionFromEulers,
+        quaternionFromAxisAngle,
+        quaternionMultiply,
+        rotatePointViaQuaternion,
+        makeRotationMatrixFromQuaternion
+    } from '../';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 xdescribe('degToRad', () => {
     it('converts 90 degrees to radians', () => {
         const rad = degToRad(90);
@@ -149,3 +154,4 @@ xdescribe('quaternion computation', () => {
         expect(quaternion).toEqual(rotationMatrixResult);
     });
 });
+// #endregion module

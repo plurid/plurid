@@ -1,13 +1,18 @@
-import {
-    getMatrixValues,
-    getRotationMatrix,
-    getTranslationMatrix,
-    getScalationValue,
-    getTransformRotate,
-} from '..';
+// #region imports
+    // #region external
+    import {
+        getMatrixValues,
+        getRotationMatrix,
+        getTranslationMatrix,
+        getScalationValue,
+        getTransformRotate,
+    } from '../';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 xdescribe('transformations', () => {
     it('getMatrixValues() - gets matrix array numbers from the matrix3d CSS string', () => {
         const matrix3d = 'matrix3d(0.866025, 0.17101, -0.469846, 0, 0, 0.939693, 0.34202, 0, 0.5, -0.296198, 0.813798, 0, 200, 300, 0, 1)';
@@ -94,3 +99,4 @@ xdescribe('transformations', () => {
         expect(rotate).toEqual(result);
     });
 });
+// #endregion module

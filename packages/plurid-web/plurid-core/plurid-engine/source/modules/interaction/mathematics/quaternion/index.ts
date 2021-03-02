@@ -1,3 +1,4 @@
+// #region module
 /**
  * Converts degrees to radians.
  *
@@ -254,3 +255,4 @@ export function makeRotationMatrixFromQuaternion(quaternion: Quaternion) {
         0,                      0,                      0,                      1,
     ];
 }
+// #endregion module

@@ -1,3 +1,4 @@
+// #region module
 export const cleanPathElement = (
     path: string
 ) => {
@@ -6,3 +7,4 @@ export const cleanPathElement = (
     }
     return path;
 }
+// #endregion module

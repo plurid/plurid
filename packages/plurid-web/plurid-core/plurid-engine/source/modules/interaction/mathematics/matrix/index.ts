@@ -1,15 +1,20 @@
-import {
-    computeQuaternionFromEulers,
-    // conjugateQuaternion,
-    // inverseQuaternion,
-    makeRotationMatrixFromQuaternion,
-    // quaternionFromAxisAngle,
-    quaternionMultiply,
-    // rotatePointViaQuaternion,
-} from '../quaternion';
+// #region imports
+    // #region external
+    import {
+        computeQuaternionFromEulers,
+        // conjugateQuaternion,
+        // inverseQuaternion,
+        makeRotationMatrixFromQuaternion,
+        // quaternionFromAxisAngle,
+        quaternionMultiply,
+        // rotatePointViaQuaternion,
+    } from '../quaternion';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 /**
  *
  * @param xAngle
@@ -155,3 +160,4 @@ export function multiplyArrayOfMatrices(matrices: number[][]): number[] {
 export function matrixArrayToCSSMatrix(array: number[]): string {
     return 'matrix3d(' + array.join(',') + ')';
 }
+// #endregion module

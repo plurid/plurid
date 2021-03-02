@@ -1,9 +1,14 @@
-import {
-    getWheelDirection,
-} from '..';
+// #region imports
+    // #region external
+    import {
+        getWheelDirection,
+    } from '../';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 xdescribe('getWheelDirection', () => {
     it('returns "left" direction', () => {
         const deltas = {
@@ -37,3 +42,4 @@ xdescribe('getWheelDirection', () => {
         expect(getWheelDirection(deltas)).toBe('down');
     });
 });
+// #endregion module

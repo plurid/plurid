@@ -1,14 +1,19 @@
-import {
-    rotateMatrix,
-    translateMatrix,
-    scaleMatrix,
-    multiplyMatrices,
-    multiplyArrayOfMatrices,
-    matrixArrayToCSSMatrix,
-} from '..';
+// #region imports
+    // #region external
+    import {
+        rotateMatrix,
+        translateMatrix,
+        scaleMatrix,
+        multiplyMatrices,
+        multiplyArrayOfMatrices,
+        matrixArrayToCSSMatrix,
+    } from '../';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 xdescribe('matrix computation', () => {
     it('rotateMatrix() computes rotation matrix from euler angles', () => {
         const rotationMatrix = rotateMatrix(10, 20, 30);
@@ -149,3 +154,4 @@ xdescribe('matrix computation', () => {
         expect(matrixToCSSMatrix).toEqual(result);
     })
 });
+// #endregion module

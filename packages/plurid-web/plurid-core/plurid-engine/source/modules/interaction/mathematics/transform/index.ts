@@ -1,14 +1,20 @@
-import {
-    multiplyArrayOfMatrices,
-    matrixArrayToCSSMatrix,
-    rotateMatrix,
-    translateMatrix,
-    scaleMatrix,
-} from '../matrix';
-// import { radToDeg } from './quaternion';
+// #region imports
+    // #region external
+    import {
+        multiplyArrayOfMatrices,
+        matrixArrayToCSSMatrix,
+        rotateMatrix,
+        translateMatrix,
+        scaleMatrix,
+    } from '../matrix';
+
+    // import { radToDeg } from './quaternion';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 /**
  * Converts the CSS string matrix3d into an array of numbers.
  *
@@ -445,3 +451,4 @@ export function scalePlurid(
     );
     return transformedMatrix3d;
 }
+// #endregion module

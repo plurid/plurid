@@ -1,12 +1,16 @@
-interface Deltas {
-    deltaX: number;
-    deltaY: number;
-}
+// #region imports
+    // #region external
+    import {
+        WheelDeltas,
+    } from '../../../data/interfaces';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export const getWheelDirection = (
-    deltas: Deltas,
+    deltas: WheelDeltas,
     ABSTHRESHOLD: number = 10,
     THRESHOLD: number = 0,
 ): string => {
@@ -70,3 +74,4 @@ export const getWheelDirection = (
 
     return direction;
 };
+// #endregion module
