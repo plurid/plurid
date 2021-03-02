@@ -1,0 +1,37 @@
+{
+    "manifest_version": 2,
+    "name": "Plurid Text Transfer Protocol",
+    "short_name" : "PTTP",
+    "description": "Plurid Text Transfer Protocol support",
+    "author": "Plurid, Inc.",
+    "version": "0.0.0",
+    "icons" : {
+        "16" : "assets/icons/icon16.png",
+        "32" : "assets/icons/icon32.png",
+        "48" : "assets/icons/icon48.png",
+        "128" : "assets/icons/icon128.png"
+    },
+    "omnibox": {
+        "keyword": "pttp"
+    },
+    "permissions": [
+        "storage"
+    ],
+    "background": {
+        "persistent": false,
+        "scripts": [
+            "background.js"
+        ]
+    },
+    "options_ui": {
+        "page": "options.html",
+        "chrome_style": true
+    },
+    "browser_action" : {
+        "default_title" : "PTTP",
+        "default_icon" : "assets/icons/icon.png",
+        "default_popup" : "popup.html"
+    },
+    "incognito": "spanning",
+    "content_security_policy": "script-src 'self'; object-src 'self'"
+}
