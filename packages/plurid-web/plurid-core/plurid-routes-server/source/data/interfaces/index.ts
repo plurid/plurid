@@ -59,4 +59,9 @@ export interface PluridRoutesServerConfiguration {
 export interface RouteElement {
     elementql: string;
 }
+
+export interface RouteRegistration {
+    route: string;
+    data: RouteElement;
+}
 // #endregion module
