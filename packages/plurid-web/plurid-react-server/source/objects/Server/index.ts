@@ -23,6 +23,11 @@
     } from 'react-helmet-async';
 
     import {
+        time,
+        uuid,
+    } from '@plurid/plurid-functions';
+
+    import {
         PluridRoute,
         PluridPreserve,
         PluridPreserveOnServe,
@@ -45,6 +50,19 @@
 
     // #region external
     import {
+        ServerRequest,
+        DebugLevels,
+
+        PluridServerMiddleware,
+        PluridServerService,
+        PluridServerServicesData,
+        PluridServerOptions,
+        PluridServerPartialOptions,
+        PluridServerConfiguration,
+        PluridServerTemplateConfiguration,
+    } from '../../data/interfaces';
+
+    import {
         environment,
 
         defaultStillerOptions,
@@ -58,16 +76,6 @@
         NOT_FOUND_TEMPLATE,
         SERVER_ERROR_TEMPLATE,
     } from '../../data/templates';
-
-    import {
-        PluridServerMiddleware,
-        PluridServerService,
-        PluridServerServicesData,
-        PluridServerOptions,
-        PluridServerPartialOptions,
-        PluridServerConfiguration,
-        PluridServerTemplateConfiguration,
-    } from '../../data/interfaces';
 
     import PluridRenderer from '../Renderer';
     import PluridContentGenerator from '../ContentGenerator';
@@ -163,8 +171,10 @@ class PluridServer {
 
         const serverlink = `http://localhost:${port}`;
 
-        if (!this.options.quiet) {
-            console.info(`\n\t${this.options.serverName} Started on Port ${port}: ${serverlink}\n`);
+        if (this.debugAllows('info')) {
+            console.info(
+                `\n\t[${time.stamp()}] ${this.options.serverName} Started on Port ${port}: ${serverlink}\n`,
+            );
         }
 
         this.server = this.serverApplication.listen(port);
@@ -175,8 +185,10 @@ class PluridServer {
     }
 
     public stop() {
-        if (!this.options.quiet) {
-            console.info(`\n\t${this.options.serverName} Closed on Port ${this.port}\n`);
+        if (this.debugAllows('info')) {
+            console.info(
+                `\n\t[${time.stamp()}] ${this.options.serverName} Closed on Port ${this.port}\n`,
+            );
         }
 
         if (this.server) {
@@ -246,191 +258,202 @@ class PluridServer {
         const router = new PluridRouter(this.routes);
         const pluridsResponder = new PluridsResponder();
 
-        this.serverApplication.get('*', async (request, response, next) => {
-            try {
-                const path = request.path;
+        this.serverApplication.get('*',
+            async (request, response, next) => {
+                const requestID = (request as ServerRequest).requestID || uuid.generate();
 
-                for (const ignore of this.options.ignore) {
-                    if (path === ignore) {
-                        next();
-                        return;
+                try {
+                    if (this.debugAllows('info')) {
+                        console.info(
+                            `[${time.stamp()} :: ${requestID}] (000 Start) Handling GET ${request.path}`,
+                        );
                     }
 
-                    if (ignore.includes('/*')) {
-                        const curatedIgnore = ignore.replace('/*', '');
+                    const path = request.path;
 
-                        if (path.startsWith(curatedIgnore)) {
+                    for (const ignore of this.options.ignore) {
+                        if (path === ignore) {
                             next();
                             return;
                         }
-                    }
-                }
 
-                const urlMatch = urlRouter.match(request.originalUrl);
+                        if (ignore.includes('/*')) {
+                            const curatedIgnore = ignore.replace('/*', '');
 
-                let preserveOnServe: undefined | PluridPreserveOnServe<any>;
-                let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
-                let preserveOnError: undefined | PluridPreserveOnError<any>;
-                if (urlMatch?.target) {
-                    const catchAll = this.preserves.find(
-                        preserve => preserve.serve === '*'
-                    );
-
-                    const preserve = catchAll
-                        ? catchAll
-                        : this.preserves.find(
-                            preserve => preserve.serve === urlMatch.target
-                        );
-
-                    if (preserve) {
-                        preserveOnServe = preserve.onServe;
-                        preserveAfterServe = preserve.afterServe;
-                        preserveOnError = preserve.onError;
-                    }
-                }
-
-                let preserveResult: void | PluridPreserveResponse;
-                if (preserveOnServe && urlMatch) {
-                    const transmission: PluridPreserveTransmission<any> = {
-                        request,
-                        response,
-                        context: {
-                            contextualizers: undefined,
-                            path: request.originalUrl,
-                            match: urlMatch,
-                        },
-                    };
-
-                    try {
-                        preserveResult = await preserveOnServe(transmission);
-
-                        if (preserveResult) {
-                            if (preserveResult.responded) {
+                            if (path.startsWith(curatedIgnore)) {
+                                next();
                                 return;
                             }
                         }
-                    } catch (error) {
-                        if (preserveOnError) {
-                            const onErrorResponse = await preserveOnError(
-                                error,
-                                transmission,
+                    }
+
+                    const urlMatch = urlRouter.match(request.originalUrl);
+
+                    let preserveOnServe: undefined | PluridPreserveOnServe<any>;
+                    let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
+                    let preserveOnError: undefined | PluridPreserveOnError<any>;
+                    if (urlMatch?.target) {
+                        const catchAll = this.preserves.find(
+                            preserve => preserve.serve === '*'
+                        );
+
+                        const preserve = catchAll
+                            ? catchAll
+                            : this.preserves.find(
+                                preserve => preserve.serve === urlMatch.target
                             );
 
-                            if (onErrorResponse) {
-                                if (onErrorResponse.responded) {
+                        if (preserve) {
+                            preserveOnServe = preserve.onServe;
+                            preserveAfterServe = preserve.afterServe;
+                            preserveOnError = preserve.onError;
+                        }
+                    }
+
+                    let preserveResult: void | PluridPreserveResponse;
+                    if (preserveOnServe && urlMatch) {
+                        const transmission: PluridPreserveTransmission<any> = {
+                            request,
+                            response,
+                            context: {
+                                contextualizers: undefined,
+                                path: request.originalUrl,
+                                match: urlMatch,
+                            },
+                        };
+
+                        try {
+                            preserveResult = await preserveOnServe(transmission);
+
+                            if (preserveResult) {
+                                if (preserveResult.responded) {
                                     return;
                                 }
+                            }
+                        } catch (error) {
+                            if (preserveOnError) {
+                                const onErrorResponse = await preserveOnError(
+                                    error,
+                                    transmission,
+                                );
 
-                                if (!onErrorResponse.depreserve) {
-                                    return;
+                                if (onErrorResponse) {
+                                    if (onErrorResponse.responded) {
+                                        return;
+                                    }
+
+                                    if (!onErrorResponse.depreserve) {
+                                        return;
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
 
-                // HANDLE GATEWAY
-                const {
-                    gatewayEndpoint,
-                } = this.options;
+                    // HANDLE GATEWAY
+                    const {
+                        gatewayEndpoint,
+                    } = this.options;
 
-                if (path === gatewayEndpoint) {
-                    const gatewayRoute = {
-                        path: {
-                            value: gatewayEndpoint,
-                        },
-                        pathname: gatewayEndpoint,
-                        parameters: {},
-                        query: {
-                            __gatewayQuery: request.originalUrl,
-                        },
-                        fragments: {
-                            texts: [],
-                            elements: [],
-                        },
-                        route: gatewayEndpoint,
-                    };
+                    if (path === gatewayEndpoint) {
+                        const gatewayRoute = {
+                            path: {
+                                value: gatewayEndpoint,
+                            },
+                            pathname: gatewayEndpoint,
+                            parameters: {},
+                            query: {
+                                __gatewayQuery: request.originalUrl,
+                            },
+                            fragments: {
+                                texts: [],
+                                elements: [],
+                            },
+                            route: gatewayEndpoint,
+                        };
+                        this.renderer = await this.renderApplication(
+                            gatewayRoute,
+                            preserveResult,
+                        );
+                        response.send(this.renderer?.html());
+                        return;
+                    }
+
+
+                    // HANDLE PLURIDS ???
+                    // check if the url is plurids
+                    // http://example.com/plurids/<route>/<space>/<page>
+                    // http://example.com/plurids/index/12345/54321
+
+                    // if (pluridsResponder.search(path)) {
+                    //     response.send(pluridsResponder);
+                    //     return;
+                    // }
+
+
+                    // HANDLE STILLS
+                    // const still = stills.get(path);
+                    // if (still) {
+                    //     response.send(still);
+                    //     return;
+                    // }
+
+
+                    let redirect: undefined | string;
+                    if (preserveResult) {
+                        redirect = preserveResult.redirect;
+                    }
+
+                    const matchingPath = redirect || path;
+
+                    const route = router.match(matchingPath);
+                    if (!route) {
+                        const notFoundStill = stills.get(NOT_FOUND_ROUTE);
+                        if (notFoundStill) {
+                            response
+                                .status(404)
+                                .send(notFoundStill);
+                            return;
+                        }
+
+                        const notFoundRoute = router.match(NOT_FOUND_ROUTE);
+                        if (!notFoundRoute) {
+                            response
+                                .status(404)
+                                .send(NOT_FOUND_TEMPLATE);
+                            return;
+                        }
+
+                        this.renderer = await this.renderApplication(
+                            notFoundRoute,
+                            preserveResult,
+                        );
+                        response.send(this.renderer?.html());
+                        return;
+                    }
+
                     this.renderer = await this.renderApplication(
-                        gatewayRoute,
+                        route,
                         preserveResult,
                     );
                     response.send(this.renderer?.html());
                     return;
-                }
-
-
-                // HANDLE PLURIDS ???
-                // check if the url is plurids
-                // http://example.com/plurids/<route>/<space>/<page>
-                // http://example.com/plurids/index/12345/54321
-
-                // if (pluridsResponder.search(path)) {
-                //     response.send(pluridsResponder);
-                //     return;
-                // }
-
-
-                // HANDLE STILLS
-                // const still = stills.get(path);
-                // if (still) {
-                //     response.send(still);
-                //     return;
-                // }
-
-
-                let redirect: undefined | string;
-                if (preserveResult) {
-                    redirect = preserveResult.redirect;
-                }
-
-                const matchingPath = redirect || path;
-
-                const route = router.match(matchingPath);
-                if (!route) {
-                    const notFoundStill = stills.get(NOT_FOUND_ROUTE);
-                    if (notFoundStill) {
-                        response
-                            .status(404)
-                            .send(notFoundStill);
-                        return;
+                } catch (error) {
+                    if (this.debugAllows('error')) {
+                        console.error(
+                            `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle GET ${request.path}`,
+                            error,
+                        );
                     }
 
-                    const notFoundRoute = router.match(NOT_FOUND_ROUTE);
-                    if (!notFoundRoute) {
-                        response
-                            .status(404)
-                            .send(NOT_FOUND_TEMPLATE);
-                        return;
-                    }
-
-                    this.renderer = await this.renderApplication(
-                        notFoundRoute,
-                        preserveResult,
-                    );
-                    response.send(this.renderer?.html());
+                    response
+                        .status(500)
+                        .send(SERVER_ERROR_TEMPLATE);
                     return;
                 }
-
-                this.renderer = await this.renderApplication(
-                    route,
-                    preserveResult,
-                );
-                response.send(this.renderer?.html());
-                return;
-            } catch (error) {
-                const date = new Date();
-                console.log(
-                    `[${date.toLocaleTimeString()} - ${date.toLocaleDateString()}]: Could not handle GET ${request.path}`,
-                    error,
-                );
-
-                response
-                    .status(500)
-                    .send(SERVER_ERROR_TEMPLATE);
-                return;
-            }
-        });
+            },
+        );
     }
 
     private async renderApplication(
@@ -604,6 +627,15 @@ class PluridServer {
 
         this.serverApplication.disable('x-powered-by');
 
+        this.serverApplication.use(
+            (request, _, next) => {
+                const requestID = uuid.generate();
+                (request as ServerRequest).requestID = requestID;
+
+                next();
+            }
+        );
+
         if (this.options.compression) {
             this.serverApplication.use(
                 compression(),
@@ -665,6 +697,41 @@ class PluridServer {
             }
         } catch (error) {
             return;
+        }
+    }
+
+    private debugAllows(
+        level: DebugLevels,
+    ) {
+        if (this.options.quiet) {
+            return false;
+        }
+
+        if (this.options.debug === 'none') {
+            return false;
+        }
+
+        switch (level) {
+            case 'error':
+                return true;
+            case 'warn':
+                if (
+                    this.options.debug === 'error'
+                ) {
+                    return false;
+                }
+                return true;
+            case 'info':
+                if (
+                    this.options.debug === 'error'
+                    || this.options.debug === 'warn'
+                ) {
+                    return false;
+                }
+
+                return true;
+            default:
+                return false;
         }
     }
 }

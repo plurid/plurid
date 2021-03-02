@@ -19,6 +19,11 @@ export type PluridServerMiddleware = (
 ) => void;
 
 
+export type ServerRequest = express.Request & {
+    requestID: string;
+}
+
+
 export type DebugLevels =
     | 'none'
     | 'error'
