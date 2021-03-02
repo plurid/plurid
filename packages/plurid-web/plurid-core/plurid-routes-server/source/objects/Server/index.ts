@@ -166,9 +166,13 @@ class PluridRoutesServer {
 
 
     private handleEndpoints() {
-        this.serverApplication.post(ENDPOINT_ROUTE, this.handleEndpointRoute);
+        this.serverApplication.post(ENDPOINT_ROUTE, (request, response) => {
+            this.handleEndpointRoute(request, response);
+        });
 
-        this.serverApplication.post(ENDPOINT_REGISTER, this.handleEndpointRegister);
+        this.serverApplication.post(ENDPOINT_REGISTER, (request, response) => {
+            this.handleEndpointRegister(request, response);
+        });
     }
 
     private async handleEndpointRoute(
@@ -497,7 +501,9 @@ class PluridRoutesServer {
         const options: PluridRoutesServerOptions = {
             serverName: partialOptions?.serverName || DEFAULT_SERVER_OPTIONS.SERVER_NAME,
             quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
-            debug: (partialOptions?.debug || environment.production) ? 'error' : 'info',
+            debug: partialOptions?.debug
+                ? partialOptions?.debug
+                : environment.production ? 'error' : 'info',
             ignore: partialOptions?.ignore || [],
         };
         return options;
@@ -573,21 +579,22 @@ class PluridRoutesServer {
 
         switch (level) {
             case 'error':
+                return true;
+            case 'warn':
                 if (
                     this.options.debug === 'error'
                 ) {
-                    return true;
+                    return false;
                 }
-                return false;
-            case 'warn':
+                return true;
+            case 'info':
                 if (
                     this.options.debug === 'error'
                     || this.options.debug === 'warn'
                 ) {
-                    return true;
+                    return false;
                 }
-                return false;
-            case 'info':
+
                 return true;
             default:
                 return false;
