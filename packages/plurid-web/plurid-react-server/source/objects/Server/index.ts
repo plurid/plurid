@@ -283,7 +283,7 @@ class PluridServer {
                     ) {
                         if (this.debugAllows('info')) {
                             console.info(
-                                `[${time.stamp()} :: ${requestID}] (200 OK) Ignored GET ${request.path}`,
+                                `[${time.stamp()} :: ${requestID}] (204 No Content) Ignored GET ${request.path}`,
                             );
                         }
 
@@ -339,18 +339,18 @@ class PluridServer {
                     // http://example.com/plurids/<route>/<space>/<page>
                     // http://example.com/plurids/index/12345/54321
 
-                    // if (pluridsResponder.search(path)) {
-                    //     response.send(pluridsResponder);
-                    //     return;
-                    // }
+                    if (pluridsResponder.search(path)) {
+                        response.send(pluridsResponder);
+                        return;
+                    }
 
 
                     // HANDLE STILLS
-                    // const still = stills.get(path);
-                    // if (still) {
-                    //     response.send(still);
-                    //     return;
-                    // }
+                    const still = stills.get(path);
+                    if (still) {
+                        response.send(still);
+                        return;
+                    }
 
 
                     let redirect: undefined | string;
