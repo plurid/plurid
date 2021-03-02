@@ -2,6 +2,7 @@
     // #region external
     import {
         IPluridPubSub,
+        PluridPubSubOptions,
         Callback,
     } from '../../interfaces';
     // #endregion external
@@ -12,7 +13,41 @@
 // #region module
 class PluridPubSub implements IPluridPubSub {
     private subscriptions: Record<string, Callback[] | undefined> = {};
+    private options: PluridPubSubOptions | undefined;
 
+
+    constructor(
+        options?: PluridPubSubOptions,
+    ) {
+        this.options = options;
+    }
+
+
+    public publish<D = any>(
+        topic: string,
+        data: D,
+    ) {
+        const subscriptions = this.subscriptions[topic];
+
+        if (!subscriptions) {
+            return;
+        }
+
+        for (const subscription of subscriptions) {
+            try {
+                subscription(data);
+            } catch (error) {
+                if (this.options?.debug) {
+                    console.log(
+                        `Plurid Publish/Subscribe Error on '${topic}'`,
+                        error,
+                    );
+                }
+
+                continue;
+            }
+        }
+    }
 
     public subscribe(
         topic: string,
@@ -29,25 +64,6 @@ class PluridPubSub implements IPluridPubSub {
         ];
 
         return 0;
-    }
-
-    public publish<D = any>(
-        topic: string,
-        data: D,
-    ) {
-        const subscriptions = this.subscriptions[topic];
-
-        if (!subscriptions) {
-            return;
-        }
-
-        for (const subscription of subscriptions) {
-            try {
-                subscription(data);
-            } catch (error) {
-                continue;
-            }
-        }
     }
 
     public unsubscribe(

@@ -1,8 +1,13 @@
 // #region module
+export interface PluridPubSubOptions {
+    debug?: boolean;
+}
+
+
 export interface IPluridPubSub {
-    publish: (
+    publish: <D = any>(
         topic: string,
-        data: any,
+        data: D,
     ) => void;
     subscribe: (
         topic: string,
