@@ -1,24 +1,32 @@
-import {
-    TreePlane,
-    PluridConfiguration,
+// #region imports
+    // #region libraries
+    import {
+        TreePlane,
+        PluridConfiguration,
 
-    defaultConfiguration,
-} from '@plurid/plurid-data';
+        defaultConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    mathematics,
-} from '@plurid/plurid-functions';
-
-import {
-    splitIntoGroups,
-} from '../utilities';
-
-import {
-    recomputeChildrenLocation,
-} from '../location';
+    import {
+        mathematics,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        splitIntoGroups,
+    } from '../utilities';
 
+    import {
+        recomputeChildrenLocation,
+    } from '../location';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const toRadians = mathematics.geometry.toRadians;
 
 
@@ -143,6 +151,10 @@ const computeFaceToFaceLayout = (
 
     return tree;
 }
+// #endregion module
 
 
+
+// #region exports
 export default computeFaceToFaceLayout;
+// #endregion exports

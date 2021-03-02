@@ -1,18 +1,29 @@
-import {
-    TreePlane,
-    PluridConfiguration,
+// #region imports
+    // #region libraries
+    import {
+        TreePlane,
+        PluridConfiguration,
 
-    defaultConfiguration,
-} from '@plurid/plurid-data';
-
-import computeColumnLayout from './column';
-
-import {
-    recomputeChildrenLocation,
-} from '../location';
+        defaultConfiguration,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        recomputeChildrenLocation,
+    } from '../location';
+    // #endregion external
 
+
+    // #region internal
+    import computeColumnLayout from './column';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const computeZigZagLayout = (
     pages: TreePlane[],
     angle: number = 45,
@@ -49,6 +60,10 @@ const computeZigZagLayout = (
 
     return tree;
 }
+// #endregion module
 
 
+
+// #region external
 export default computeZigZagLayout;
+// #endregion external

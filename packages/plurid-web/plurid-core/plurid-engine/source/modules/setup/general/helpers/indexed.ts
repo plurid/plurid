@@ -1,14 +1,19 @@
-import {
-    indexing,
-} from '@plurid/plurid-functions';
+// #region imports
+    // #region libraries
+    import {
+        indexing,
+    } from '@plurid/plurid-functions';
 
-import {
-    Indexed,
-} from '@plurid/plurid-data';
+    import {
+        Indexed,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
-interface TwithID {
+// #region module
+export interface TwithID {
     id: string;
     [key: string]: any;
 }
@@ -26,3 +31,4 @@ export const createIndexed = <T extends TwithID>(
 
     // return indexedItems;
 }
+// #endregion module

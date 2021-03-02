@@ -1,11 +1,16 @@
-import URLRouter from '..';
+// #region imports
+    // #region external
+    import URLRouter from '../';
 
-import {
-    URLRoute,
-} from '../data';
+    import {
+        URLRoute,
+    } from '../data';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 describe('URLRouter', () => {
     it('finds a basic route', () => {
         const routes: URLRoute[] = [
@@ -127,3 +132,4 @@ describe('URLRouter', () => {
         expect(match?.elements.query).toBe('q=one');
     });
 });
+// #endregion module

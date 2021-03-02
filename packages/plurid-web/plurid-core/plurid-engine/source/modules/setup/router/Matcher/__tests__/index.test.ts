@@ -1,11 +1,19 @@
-import {
-    PluridRoute,
-} from '@plurid/plurid-data';
+// #region imports
+    // #region libraries
+    import {
+        PluridRoute,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
-import Matcher from '..';
+
+    // #region external
+    import Matcher from '../';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 describe('Matcher', () => {
     it('simple route match', () => {
         const route: PluridRoute = {
@@ -31,3 +39,4 @@ describe('Matcher', () => {
         expect(response).toBe(undefined);
     });
 });
+// #endregion module

@@ -1,17 +1,22 @@
-import {
-    indexing,
-} from '@plurid/plurid-functions';
+// #region imports
+    // #region libraries
+    import {
+        indexing,
+    } from '@plurid/plurid-functions';
 
-import {
-    PluridPlane,
-    PluridUniverse,
+    import {
+        PluridPlane,
+        PluridUniverse,
 
-    Identified,
-    IdentifiedPluridUniverse,
-} from '@plurid/plurid-data';
+        Identified,
+        IdentifiedPluridUniverse,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 // export const identifyPlanes = (
 //     pages: PluridPlane[],
 // ): Identified<PluridPlane>[] => {
@@ -43,3 +48,4 @@ import {
 //     // });
 //     // return identifiedUniverses;
 // }
+// #endregion module

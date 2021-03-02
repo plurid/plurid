@@ -1,9 +1,14 @@
-import {
-    resolveRoute,
-} from '../';
+// #region imports
+    // #region external
+    import {
+        resolveRoute,
+    } from '../';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 describe('resolveRoute', () => {
     it('handles plane', () => {
         const link = '/plane-one';
@@ -19,3 +24,4 @@ describe('resolveRoute', () => {
         expect(result?.route).toEqual('http://localhost:3000://static');
     });
 });
+// #endregion module

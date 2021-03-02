@@ -1,17 +1,25 @@
-import {
-    TreePlane,
-    RegisteredPluridPlane,
-    PluridConfiguration,
-    PluridView,
-    PluridCluster,
-} from '@plurid/plurid-data';
-
-import {
-    computeSpaceTree,
-} from './logic';
-
+// #region imports
+    // #region libraries
+    import {
+        TreePlane,
+        RegisteredPluridPlane,
+        PluridConfiguration,
+        PluridView,
+        PluridCluster,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region internal
+    import {
+        computeSpaceTree,
+    } from './logic';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export interface TreeData {
     planes: Map<string, RegisteredPluridPlane>,
     view: string[] | PluridView[],
@@ -43,3 +51,4 @@ export default class Tree {
         );
     }
 }
+// #endregion module

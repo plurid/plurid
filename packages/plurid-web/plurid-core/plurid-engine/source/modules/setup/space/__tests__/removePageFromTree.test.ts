@@ -1,17 +1,25 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    TreePlane,
-} from '@plurid/plurid-data';
-
-import {
-    removePageFromTree,
-} from '../tree/logic';
-
+        /** interfaces */
+        TreePlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        removePageFromTree,
+    } from '../tree/logic';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 describe('removePageFromTree', () => {
     it('removes the tree page on the first child', () => {
         const tree: TreePlane[] = [
@@ -196,3 +204,4 @@ describe('removePageFromTree', () => {
         expect(result).toMatchObject(updatedTree);
     });
 })
+// #endregion module

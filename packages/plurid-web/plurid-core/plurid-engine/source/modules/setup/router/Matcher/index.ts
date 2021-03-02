@@ -1,21 +1,32 @@
-import {
-    PluridRoute,
-} from '@plurid/plurid-data';
-
-import {
-    MatcherOptions,
-    MatcherPartialOptions,
-    MatcherResponse,
-} from './interfaces';
-
-import Parser from '../Parser';
-
-import {
-    checkValidPath,
-} from './logic';
+// #region imports
+    // #region libraries
+    import {
+        PluridRoute,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import Parser from '../Parser';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        MatcherOptions,
+        MatcherPartialOptions,
+        MatcherResponse,
+    } from './interfaces';
+
+    import {
+        checkValidPath,
+    } from './logic';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export default class Matcher<T> {
     private location: string;
     private path: PluridRoute;
@@ -73,3 +84,4 @@ export default class Matcher<T> {
         return this.matchedData;
     }
 }
+// #endregion module

@@ -1,17 +1,25 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    TreePlane,
-} from '@plurid/plurid-data';
-
-import {
-    logic,
-} from '../tree';
-
+        /** interfaces */
+        TreePlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        logic,
+    } from '../tree';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 describe('updateTreePlane', () => {
     it('updates the tree page on the first child', () => {
         const tree: TreePlane[] = [
@@ -127,3 +135,4 @@ describe('updateTreePlane', () => {
         expect(result).toMatchObject(updatedTree);
     });
 });
+// #endregion module

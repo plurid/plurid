@@ -1,3 +1,4 @@
+// #region module
 export type RouterPartialOptions = Partial<RouterOptions>;
 
 
@@ -8,3 +9,4 @@ export interface RouterOptions {
     cacheLimit: number;
     gateway: string | undefined;
 }
+// #endregion module

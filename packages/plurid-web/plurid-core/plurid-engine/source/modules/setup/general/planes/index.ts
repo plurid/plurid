@@ -1,16 +1,21 @@
-import {
-    uuid,
-} from '@plurid/plurid-functions';
+// #region imports
+    // #region libraries
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
 
-import {
-    PluridPlane,
+    import {
+        PluridPlane,
 
-    PluridInternalStatePlane,
-    PluridInternalContextPlane,
-} from '@plurid/plurid-data';
+        PluridInternalStatePlane,
+        PluridInternalContextPlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const createInternalStatePlane = (
     plane: PluridPlane,
 ): PluridInternalStatePlane => {
@@ -60,3 +65,4 @@ export const getPluridPlaneIDByData = (
 
     return getPluridPlaneIDByData(parent);
 }
+// #endregion module

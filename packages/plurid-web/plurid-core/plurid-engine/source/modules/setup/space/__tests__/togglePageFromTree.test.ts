@@ -1,17 +1,25 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    TreePlane,
-} from '@plurid/plurid-data';
-
-import {
-    logic,
-} from '../tree';
-
+        /** interfaces */
+        TreePlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        logic,
+    } from '../tree';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 describe('togglePageFromTree', () => {
     it('toggle page level one child', () => {
         const tree: TreePlane[] = [
@@ -146,3 +154,4 @@ describe('togglePageFromTree', () => {
         expect(result).toMatchObject(updatedTree);
     });
 });
+// #endregion module

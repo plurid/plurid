@@ -1,15 +1,23 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    TreePlane,
-} from '@plurid/plurid-data';
-
-import computeFaceToFaceLayout from '../faceToFace';
-
+        /** interfaces */
+        TreePlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import computeFaceToFaceLayout from '../faceToFace';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 xdescribe('computeColumnLayout', () => {
     // handle crypto for jest - https://stackoverflow.com/a/52612372
     const crypto = require('crypto');
@@ -253,3 +261,4 @@ xdescribe('computeColumnLayout', () => {
         expect(resultWithEmptyIDs).toStrictEqual(locatedTree);
     });
 });
+// #endregion module

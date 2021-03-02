@@ -1,9 +1,14 @@
-import {
-    PluridRouteParameter,
-} from '@plurid/plurid-data';
+// #region imports
+    // #region libraries
+    import {
+        PluridRouteParameter,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const CATCH_ALL_ROUTE = '*';
 
 
@@ -41,3 +46,4 @@ export interface RouteElements {
     query: string;
     fragment: string;
 }
+// #endregion module

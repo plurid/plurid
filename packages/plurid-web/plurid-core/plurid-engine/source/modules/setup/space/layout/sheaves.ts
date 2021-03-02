@@ -1,20 +1,28 @@
-import {
-    TreePlane,
-    PluridConfiguration,
+// #region imports
+    // #region libraries
+    import {
+        TreePlane,
+        PluridConfiguration,
 
-    defaultConfiguration,
-} from '@plurid/plurid-data';
+        defaultConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    mathematics,
-} from '@plurid/plurid-functions';
-
-import {
-    recomputeChildrenLocation,
-} from '../location';
-
+    import {
+        mathematics,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        recomputeChildrenLocation,
+    } from '../location';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const computeSheavesLayout = (
     roots: TreePlane[],
     depth: number = 0.3,
@@ -63,6 +71,10 @@ const computeSheavesLayout = (
 
     return tree;
 }
+// #endregion module
 
 
+
+// #region exports
 export default computeSheavesLayout;
+// #endregion exports

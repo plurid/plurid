@@ -1,53 +1,60 @@
-import {
-    /** constants */
-    PLANE_DEFAULT_ANGLE,
-    PLURID_ROUTE_SEPARATOR,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        PLANE_DEFAULT_ANGLE,
+        PLURID_ROUTE_SEPARATOR,
 
-    /** enumerations */
-    LAYOUT_TYPES,
+        /** enumerations */
+        LAYOUT_TYPES,
 
-    /** interfaces */
-    PluridView,
-    PluridConfiguration,
-    RegisteredPluridPlane,
-    TreePlane,
-    LinkCoordinates,
-    PathParameters,
-    PluridRoute,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridView,
+        PluridConfiguration,
+        RegisteredPluridPlane,
+        TreePlane,
+        LinkCoordinates,
+        PathParameters,
+        PluridRoute,
+    } from '@plurid/plurid-data';
 
-import {
-    uuid,
-} from '@plurid/plurid-functions';
-
-import {
-    computeColumnLayout,
-    computeRowLayout,
-    computeFaceToFaceLayout,
-    computeSheavesLayout,
-    computeZigZagLayout,
-} from '../layout';
-
-import {
-    computePluridPlaneLocation,
-} from '../location';
-
-import {
-    getTreePlaneByPlaneID,
-} from '../utilities';
-
-import Router, {
-    resolveRoute,
-} from '../../router';
-
-import {
-    computeComparingPath,
-    extractParametersValues,
-} from '../../router/Parser/logic';
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        computeColumnLayout,
+        computeRowLayout,
+        computeFaceToFaceLayout,
+        computeSheavesLayout,
+        computeZigZagLayout,
+    } from '../layout';
+
+    import {
+        computePluridPlaneLocation,
+    } from '../location';
+
+    import {
+        getTreePlaneByPlaneID,
+    } from '../utilities';
+
+    import Router, {
+        resolveRoute,
+    } from '../../router';
+
+    import {
+        computeComparingPath,
+        extractParametersValues,
+    } from '../../router/Parser/logic';
+    // #endregion external
+// #endregion imports
 
 
+
+// #region module
 const matchRouteElements = (
     routePath: string,
     viewPath: string,
@@ -887,3 +894,4 @@ export const togglePlaneFromTree = (
 
     return updatedTree;
 }
+// #endregion module

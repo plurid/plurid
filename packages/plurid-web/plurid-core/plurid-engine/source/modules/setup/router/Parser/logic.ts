@@ -1,16 +1,24 @@
-import {
-    Indexed,
-    PluridRouteFragments,
-    PluridRouteFragmentElement,
-    PluridRouteFragmentText,
-} from '@plurid/plurid-data';
-
-import {
-    ParserParametersAndMatch,
-} from './interfaces';
-
+// #region imports
+    // #region libraries
+    import {
+        Indexed,
+        PluridRouteFragments,
+        PluridRouteFragmentElement,
+        PluridRouteFragmentText,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region internal
+    import {
+        ParserParametersAndMatch,
+    } from './interfaces';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export const extractPathname = (
     location: string,
 ) => {
@@ -307,3 +315,4 @@ export const extractOccurence = (
 
     return occurenceValue;
 }
+// #endregion module

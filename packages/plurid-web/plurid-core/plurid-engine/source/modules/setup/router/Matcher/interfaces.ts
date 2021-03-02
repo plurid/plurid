@@ -1,10 +1,15 @@
-import {
-    PluridRoute,
-    PluridRouteFragments,
-} from '@plurid/plurid-data';
+// #region imports
+    // #region libraries
+    import {
+        PluridRoute,
+        PluridRouteFragments,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export type MatcherPartialOptions = Partial<MatcherOptions>;
 
 
@@ -20,3 +25,4 @@ export interface MatcherResponse {
     fragments: PluridRouteFragments;
     route: string;
 }
+// #endregion module

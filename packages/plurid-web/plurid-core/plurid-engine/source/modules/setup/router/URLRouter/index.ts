@@ -1,20 +1,25 @@
-import {
-    processRoute,
-    matchRoute,
-    matchRoutes,
-    extractRouteElements,
-} from './logic';
+// #region imports
+    // #region internal
+    import {
+        processRoute,
+        matchRoute,
+        matchRoutes,
+        extractRouteElements,
+    } from './logic';
 
-import {
-    CATCH_ALL_ROUTE,
+    import {
+        CATCH_ALL_ROUTE,
 
-    ProcessedRoute,
-    URLRoute,
-    MatchedRoute,
-} from './data';
+        ProcessedRoute,
+        URLRoute,
+        MatchedRoute,
+    } from './data';
+    // #endregion internal
+// #endregion imports
 
 
 
+// #region module
 class URLRouter {
     private routes: Record<string, ProcessedRoute>;
 
@@ -124,6 +129,10 @@ class URLRouter {
         return index;
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default URLRouter;
+// #endregion exports

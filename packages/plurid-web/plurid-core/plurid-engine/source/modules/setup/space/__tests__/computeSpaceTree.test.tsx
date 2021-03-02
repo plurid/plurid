@@ -1,20 +1,28 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    PluridConfiguration,
-    TreePlane,
-    defaultConfiguration,
-    LAYOUT_TYPES,
-} from '@plurid/plurid-data';
-
-import {
-    logic,
-} from '../tree';
-
+        /** interfaces */
+        PluridConfiguration,
+        TreePlane,
+        defaultConfiguration,
+        LAYOUT_TYPES,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        logic,
+    } from '../tree';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 describe('computeSpaceTree', () => {
     /** handle crypto for jest - https://stackoverflow.com/a/52612372 */
     const crypto = require('crypto');
@@ -189,3 +197,4 @@ describe('computeSpaceTree', () => {
         expect(true).toBeTruthy();
     });
 });
+// #endregion module

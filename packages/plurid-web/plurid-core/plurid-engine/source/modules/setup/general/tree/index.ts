@@ -1,24 +1,32 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    PluridInternalContextPlane,
-    PluridInternalStatePlane,
-    TreePlane,
-    LinkCoordinates,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridInternalContextPlane,
+        PluridInternalStatePlane,
+        TreePlane,
+        LinkCoordinates,
+    } from '@plurid/plurid-data';
 
-import {
-    uuid,
-} from '@plurid/plurid-functions';
-
-import {
-    pluridLinkPathDivider,
-} from '../../router';
-
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        pluridLinkPathDivider,
+    } from '../../router';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 export const createTreePlane = (
     contextPlane: PluridInternalContextPlane,
     documentPlane: PluridInternalStatePlane,
@@ -99,3 +107,4 @@ export const updateTreeByPlaneIDWithLinkCoordinates = (
 
     return updatedTree;
 }
+// #endregion module

@@ -1,15 +1,23 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    TreePlane,
-} from '@plurid/plurid-data';
-
-import computeZigZagLayout from '../zigZag';
-
+        /** interfaces */
+        TreePlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import computeZigZagLayout from '../zigZag';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 describe('computeZigZagLayout', () => {
     /** handle crypto for jest - https://stackoverflow.com/a/52612372 */
     const crypto = require('crypto');
@@ -126,3 +134,4 @@ describe('computeZigZagLayout', () => {
         expect(resultWithEmptyIDs).toStrictEqual(locatedTree);
     });
 });
+// #endregion module

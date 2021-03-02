@@ -1,27 +1,35 @@
-import {
-    /** constants */
-    ROOTS_GAP,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        ROOTS_GAP,
 
-    /** interfaces */
-    PluridPlane,
-    PluridConfiguration,
-    TreePlane,
-    SpaceLocation,
-    LocationCoordinates,
-    LinkCoordinates,
-    TopPlanePoint,
-} from '@plurid/plurid-data';
+        /** interfaces */
+        PluridPlane,
+        PluridConfiguration,
+        TreePlane,
+        SpaceLocation,
+        LocationCoordinates,
+        LinkCoordinates,
+        TopPlanePoint,
+    } from '@plurid/plurid-data';
 
-import {
-    mathematics,
-} from '@plurid/plurid-functions';
-
-import {
-    getTreePlaneByPlaneID,
-} from '../utilities';
-
+    import {
+        mathematics,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        getTreePlaneByPlaneID,
+    } from '../utilities';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const toRadians = mathematics.geometry.toRadians;
 
 
@@ -208,3 +216,4 @@ export const computeCameraLocationX = (
     // account for camera space inversion
     return -1 * translateX;
 }
+// #endregion module

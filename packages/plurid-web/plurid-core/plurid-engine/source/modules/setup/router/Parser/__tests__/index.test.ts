@@ -1,11 +1,19 @@
-import {
-    PluridRoute,
-} from '@plurid/plurid-data';
+// #region imports
+    // #region libraries
+    import {
+        PluridRoute,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
-import Parser from '..';
+
+    // #region external
+    import Parser from '../';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 describe('Parser', () => {
     it('simple string', () => {
         const route: PluridRoute = {
@@ -207,3 +215,4 @@ describe('Parser', () => {
         expect(query.plurid).toEqual('https://domain.com://r?q=3#:~:t=2://s://u://c:///a-plane');
     });
 });
+// #endregion module

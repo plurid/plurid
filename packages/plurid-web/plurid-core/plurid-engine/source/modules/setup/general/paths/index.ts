@@ -1,16 +1,21 @@
-import {
-    uuid,
-} from '@plurid/plurid-functions';
+// #region imports
+    // #region libraries
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
 
-import {
-    PluridInternalStatePlane,
+    import {
+        PluridInternalStatePlane,
 
-    PlanePath,
-    PathParameters,
-} from '@plurid/plurid-data';
+        PlanePath,
+        PathParameters,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const registerPaths = (
     pages: PluridInternalStatePlane[],
 ): PlanePath[] => {
@@ -46,7 +51,7 @@ export const registerPaths = (
 }
 
 
-interface PathHandler {
+export interface PathHandler {
     regex: string;
     parameters?: PathParameters;
 }
@@ -138,6 +143,9 @@ export const composePathRegex = (
 }
 
 
-export const subpathIsParameter = (subpath: string) => {
+export const subpathIsParameter = (
+    subpath: string,
+) => {
     return subpath[0] === '/' && subpath[1] === ':';
 }
+// #endregion module

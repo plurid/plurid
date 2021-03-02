@@ -1,21 +1,29 @@
-import {
-    PluridConfiguration,
-    TreePlane,
+// #region imports
+    // #region libraries
+    import {
+        PluridConfiguration,
+        TreePlane,
 
-    ROOTS_GAP,
-    defaultConfiguration,
-} from '@plurid/plurid-data';
+        ROOTS_GAP,
+        defaultConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    mathematics,
-} from '@plurid/plurid-functions';
-
-import {
-    recomputeChildrenLocation,
-} from '../location';
-
+    import {
+        mathematics,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        recomputeChildrenLocation,
+    } from '../location';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const computeRowLayout = (
     roots: TreePlane[],
     rows: number = 1,
@@ -72,6 +80,10 @@ const computeRowLayout = (
 
     return tree;
 }
+// #endregion module
 
 
+
+// #region exports
 export default computeRowLayout;
+// #endregion exports

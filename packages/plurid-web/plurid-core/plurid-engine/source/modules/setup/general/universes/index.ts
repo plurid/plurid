@@ -1,27 +1,35 @@
-import {
-    uuid,
-} from '@plurid/plurid-functions';
+// #region imports
+    // #region libraries
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
 
-import {
-    PluridUniverse,
+    import {
+        PluridUniverse,
 
-    PluridInternalStateUniverse,
-    PluridInternalContextUniverse,
-} from '@plurid/plurid-data';
-
-import {
-    createInternalStatePlane,
-    createInternalContextPlane,
-} from '../planes';
-
-import * as helpers from '../helpers';
-
-import {
-    registerPaths,
-} from '../paths';
+        PluridInternalStateUniverse,
+        PluridInternalContextUniverse,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        createInternalStatePlane,
+        createInternalContextPlane,
+    } from '../planes';
 
+    import * as helpers from '../helpers';
+
+    import {
+        registerPaths,
+    } from '../paths';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 /**
  * From `PluridUniverse` create `PluridInternalStateUniverse`.
  *
@@ -101,3 +109,4 @@ export const findActiveUniverse = (
 
     return activeUniverseID;
 }
+// #endregion module

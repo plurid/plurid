@@ -1,16 +1,24 @@
-import {
-    /** interfaces */
-    PluridView,
-    TreePlane,
-    SpaceLocation,
-} from '@plurid/plurid-data';
-
-import {
-    findPage,
-} from '../utilities';
-
+// #region imports
+    // #region libraries
+    import {
+        /** interfaces */
+        PluridView,
+        TreePlane,
+        SpaceLocation,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        findPage,
+    } from '../utilities';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 export const computeViewTree = (
     pages: TreePlane[],
     view: string[] | PluridView[],
@@ -106,3 +114,4 @@ export const checkPageInView = (
 
     return false;
 }
+// #endregion module

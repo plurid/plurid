@@ -1,30 +1,41 @@
-import {
-    Indexed,
-    PluridRoute,
-} from '@plurid/plurid-data';
-
-import {
-    RouterOptions,
-    RouterPartialOptions,
-} from './interfaces';
-
-import {
-    MatcherResponse,
-} from '../Matcher/interfaces';
-
-import Matcher from '../Matcher';
-import Parser from '../Parser';
-
-import {
-    extractQuery,
-} from '../Parser/logic';
-
-import {
-    pluridLinkPathDivider,
-} from '../utilities';
+// #region imports
+    // #region libraries
+    import {
+        Indexed,
+        PluridRoute,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        MatcherResponse,
+    } from '../Matcher/interfaces';
 
+    import Matcher from '../Matcher';
+    import Parser from '../Parser';
+
+    import {
+        extractQuery,
+    } from '../Parser/logic';
+
+    import {
+        pluridLinkPathDivider,
+    } from '../utilities';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        RouterOptions,
+        RouterPartialOptions,
+    } from './interfaces';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const findPathByDivisions = (
     paths: any[],
     queryData: any,
@@ -195,3 +206,4 @@ export default class Router {
         return;
     }
 }
+// #endregion module

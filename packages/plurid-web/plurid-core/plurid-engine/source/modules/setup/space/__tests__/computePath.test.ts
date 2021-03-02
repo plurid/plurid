@@ -1,17 +1,25 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    TreePlane,
-} from '@plurid/plurid-data';
-
-import {
-    computePath,
-} from '../location';
-
+        /** interfaces */
+        TreePlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        computePath,
+    } from '../location';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 describe('computePath', () => {
     it('computes the path on the first child', () => {
         const targetPage: TreePlane = {
@@ -108,3 +116,4 @@ describe('computePath', () => {
         expect(result).toStrictEqual([targetPage_1, targetPage_2]);
     });
 });
+// #endregion module

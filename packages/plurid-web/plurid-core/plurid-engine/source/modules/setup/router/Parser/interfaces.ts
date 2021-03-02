@@ -1,11 +1,16 @@
-import {
-    Indexed,
-    PluridRoute,
-    PluridRouteFragments,
-} from '@plurid/plurid-data';
+// #region imports
+    // #region libraries
+    import {
+        Indexed,
+        PluridRoute,
+        PluridRouteFragments,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export type ParserPartialOptions = Partial<ParserOptions>;
 
 
@@ -34,3 +39,4 @@ export interface ParserParametersAndMatch {
     parameters: Indexed<string>
     elements: string[];
 }
+// #endregion module

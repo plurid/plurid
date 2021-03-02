@@ -1,15 +1,23 @@
-import {
-    Indexed,
-    PluridRoute,
-    RouteDivisions,
-} from '@plurid/plurid-data';
-
-import {
-    cleanPathElement,
-} from '../../../utilities';
-
+// #region imports
+    // #region libraries
+    import {
+        Indexed,
+        PluridRoute,
+        RouteDivisions,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        cleanPathElement,
+    } from '../../../utilities';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 export const mapPathsToRoutes = <T, V>(
     paths: Indexed<string>,
     view: V,
@@ -368,3 +376,4 @@ export const resolveRoute = (
         route: absoluteRoute,
     };
 }
+// #endregion module

@@ -1,9 +1,14 @@
-import {
-    pluridLinkPathDivider,
-} from '../';
+// #region imports
+    // #region external
+    import {
+        pluridLinkPathDivider,
+    } from '../';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 describe('pluridLinkPathDivider', () => {
     it('handles plane', () => {
         const link = '/plane-one';
@@ -12,3 +17,4 @@ describe('pluridLinkPathDivider', () => {
         expect(result.plane.value).toEqual('plane-one');
     });
 });
+// #endregion module

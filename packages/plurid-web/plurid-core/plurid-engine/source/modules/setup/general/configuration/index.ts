@@ -1,18 +1,23 @@
-import {
-    PluridPartialConfiguration,
-    PluridConfigurationTheme,
-    PluridConfiguration,
-    RecursivePartial,
+// #region imports
+    // #region libraries
+    import {
+        PluridPartialConfiguration,
+        PluridConfigurationTheme,
+        PluridConfiguration,
+        RecursivePartial,
 
-    defaultConfiguration,
-} from '@plurid/plurid-data';
+        defaultConfiguration,
+    } from '@plurid/plurid-data';
 
-import {
-    objects,
-} from '@plurid/plurid-functions';
+    import {
+        objects,
+    } from '@plurid/plurid-functions';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 const specifiedOrDefault = <T>(
     path: string,
     type: string,
@@ -317,3 +322,4 @@ export const merge = (
 
     return mergedConfiguration;
 }
+// #endregion module

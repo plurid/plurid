@@ -1,17 +1,25 @@
-import {
-    /** constants */
-    defaultTreePlane,
+// #region imports
+    // #region libraries
+    import {
+        /** constants */
+        defaultTreePlane,
 
-    /** interfaces */
-    TreePlane,
-} from '@plurid/plurid-data';
-
-import {
-    getTreePlaneByPlaneID,
-} from '../utilities';
-
+        /** interfaces */
+        TreePlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        getTreePlaneByPlaneID,
+    } from '../utilities';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const tree: TreePlane[] = [
     {
         ...defaultTreePlane,
@@ -131,3 +139,4 @@ describe('getTreePlaneByPlaneID', () => {
         }
     });
 });
+// #endregion module

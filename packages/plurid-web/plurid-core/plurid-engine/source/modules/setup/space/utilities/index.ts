@@ -1,10 +1,15 @@
-import {
-    /** interfaces */
-    TreePlane,
-} from '@plurid/plurid-data';
+// #region imports
+    // #region libraries
+    import {
+        /** interfaces */
+        TreePlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const computeSpaceSize = (
     tree: TreePlane[],
 ) => {
@@ -103,3 +108,4 @@ export const getTreePlaneByPlaneID = (
 
     return _page;
 }
+// #endregion module

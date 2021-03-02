@@ -1,26 +1,37 @@
-import {
-    PluridRouteParameter,
-} from '@plurid/plurid-data';
-
-import {
-    checkParameterLength,
-} from '../Matcher/logic';
-
-import {
-    splitPath,
-    computeComparingPath,
-    extractParametersValues,
-} from '../Parser/logic';
-
-import {
-    ProcessedRoute,
-    URLRoute,
-    InternalMatchedRoute,
-    RouteElements,
-} from './data';
+// #region imports
+    // #region libraries
+    import {
+        PluridRouteParameter,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        checkParameterLength,
+    } from '../Matcher/logic';
 
+    import {
+        splitPath,
+        computeComparingPath,
+        extractParametersValues,
+    } from '../Parser/logic';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        ProcessedRoute,
+        URLRoute,
+        InternalMatchedRoute,
+        RouteElements,
+    } from './data';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export const processRoute = (
     route: URLRoute,
 ): ProcessedRoute => {
@@ -178,3 +189,4 @@ export const checkValidPath = (
 
     return true;
 }
+// #endregion module

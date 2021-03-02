@@ -1,15 +1,23 @@
-import {
-    compareTypes,
-    CompareType,
-} from '@plurid/plurid-data';
-
-import {
-    ParserResponse,
-} from '../interfaces';
-
+// #region imports
+    // #region libraries
+    import {
+        compareTypes,
+        CompareType,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
-export const checkParameterLength = (
+    // #region external
+    import {
+        ParserResponse,
+    } from '../interfaces';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
+ export const checkParameterLength = (
     parameter: string,
     length: number,
     compareType?: CompareType,
@@ -87,3 +95,4 @@ export const checkValidPath = (
 
     return true;
 }
+// #endregion module

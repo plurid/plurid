@@ -1,26 +1,37 @@
-import {
-    PluridRoute,
-} from '@plurid/plurid-data';
-
-import {
-    ParserOptions,
-    ParserPartialOptions,
-    ParserResponse,
-} from './interfaces';
-
-import {
-    extractPathname,
-    extractParametersAndMatch,
-    extractQuery,
-    extractFragments,
-} from './logic';
-
-// import {
-//     Route,
-// } from '../Router/interfaces';
+// #region imports
+    // #region libraries
+    import {
+        PluridRoute,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    // import {
+    //     Route,
+    // } from '../Router/interfaces';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        ParserOptions,
+        ParserPartialOptions,
+        ParserResponse,
+    } from './interfaces';
+
+    import {
+        extractPathname,
+        extractParametersAndMatch,
+        extractQuery,
+        extractFragments,
+    } from './logic';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 export default class Parser<T> {
     /** properties */
     private location: string;
@@ -118,3 +129,4 @@ export default class Parser<T> {
         return parserResponse;
     }
 }
+// #endregion module
