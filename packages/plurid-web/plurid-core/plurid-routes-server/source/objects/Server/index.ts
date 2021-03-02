@@ -102,7 +102,7 @@ class PluridRoutesServer {
 
         if (this.debugAllows('info')) {
             console.info(
-                `\n\t[${time.stamp()}]: ${this.options.serverName} Started on Port ${port}: ${serverlink}\n`,
+                `\n\t[${time.stamp()}] ${this.options.serverName} Started on Port ${port}: ${serverlink}\n`,
             );
         }
 
@@ -114,7 +114,7 @@ class PluridRoutesServer {
     public stop() {
         if (this.debugAllows('info')) {
             console.info(
-                `\n\t[${time.stamp()}]: ${this.options.serverName} Closed on Port ${this.port}\n`,
+                `\n\t[${time.stamp()}] ${this.options.serverName} Closed on Port ${this.port}\n`,
             );
         }
 
@@ -184,7 +184,7 @@ class PluridRoutesServer {
         try {
             if (this.debugAllows('info')) {
                 console.info(
-                    `[${time.stamp()} :: ${requestID}]: Handling POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (000 Start) Handling POST ${request.path}`,
                 );
             }
 
@@ -194,7 +194,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}]: (401 Unauthorized) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (401 Unauthorized) Could not handle POST ${request.path}`,
                     );
                 }
 
@@ -210,7 +210,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}]: (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
                     );
                 }
 
@@ -234,7 +234,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}]: (403 Forbidden) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (403 Forbidden) Could not handle POST ${request.path}`,
                     );
                 }
 
@@ -261,7 +261,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}]: (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
                     );
                 }
 
@@ -277,7 +277,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}]: (404 Not Found) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Could not handle POST ${request.path}`,
                     );
                 }
 
@@ -303,7 +303,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('info')) {
                     console.info(
-                        `[${time.stamp()} :: ${requestID}]: (200 OK) Handled POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}`,
                     );
                 }
 
@@ -322,7 +322,7 @@ class PluridRoutesServer {
 
             if (this.debugAllows('info')) {
                 console.info(
-                    `[${time.stamp()} :: ${requestID}]: (200 OK) Handled POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}`,
                 );
             }
 
@@ -332,7 +332,7 @@ class PluridRoutesServer {
         } catch (error) {
             if (this.debugAllows('error')) {
                 console.error(
-                    `[${time.stamp()} :: ${requestID}]: (500 Server Error) Could not handle POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle POST ${request.path}`,
                     error,
                 );
             }
@@ -353,7 +353,7 @@ class PluridRoutesServer {
         try {
             if (this.debugAllows('info')) {
                 console.info(
-                    `[${time.stamp()} :: ${requestID}]: Handling POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (000 Start) Handling POST ${request.path}`,
                 );
             }
 
@@ -363,7 +363,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}]: (401 Unauthorized) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (401 Unauthorized) Could not handle POST ${request.path}`,
                     );
                 }
 
@@ -380,7 +380,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}]: (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
                     );
                 }
 
@@ -405,7 +405,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}]: (403 Forbidden) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (403 Forbidden) Could not handle POST ${request.path}`,
                     );
                 }
 
@@ -426,7 +426,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}]: (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
                     );
                 }
 
@@ -454,7 +454,7 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('info')) {
                     console.info(
-                        `[${time.stamp()} :: ${requestID}]: (200 OK) Handled POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}`,
                     );
                 }
 
@@ -473,7 +473,7 @@ class PluridRoutesServer {
 
             if (this.debugAllows('info')) {
                 console.info(
-                    `[${time.stamp()} :: ${requestID}]: (200 OK) Handled POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}`,
                 );
             }
 
@@ -483,7 +483,7 @@ class PluridRoutesServer {
         } catch (error) {
             if (this.debugAllows('error')) {
                 console.error(
-                    `[${time.stamp()} :: ${requestID}]: (500 Server Error) Could not handle POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle POST ${request.path}`,
                     error,
                 );
             }
@@ -555,7 +555,7 @@ class PluridRoutesServer {
 
                     if (this.debugAllows('error')) {
                         console.error(
-                            `[${time.stamp()}${requestIDLog}]: Could not handle deon middleware ${request.path}`,
+                            `[${time.stamp()}${requestIDLog}] Could not handle deon middleware ${request.path}`,
                             error,
                         );
                     }
