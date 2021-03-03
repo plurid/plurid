@@ -11,6 +11,11 @@ const reducer = (
     action: Types.Actions,
 ): Types.State => {
     switch(action.type) {
+        case 'SET_STATE':
+            return {
+                ...state,
+                ...action.payload.configuration,
+            };
         case Types.SET_CONFIGURATION:
             return resolvers.setConfiguration(state, action);
         case Types.SET_CONFIGURATION_MICRO:

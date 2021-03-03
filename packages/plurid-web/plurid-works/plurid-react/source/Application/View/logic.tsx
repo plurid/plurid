@@ -3,7 +3,7 @@
     import React from 'react';
 
     import {
-        PluridPlane,
+        PluridApplicationView,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -18,9 +18,9 @@
 
 // #region module
 const handleView = (
-    planes: PluridPlane[] | undefined,
+    view: PluridApplicationView | undefined,
 ): JSX.Element => {
-    if (planes) {
+    if (view) {
         return (
             <PluridPlanesView />
         );
@@ -28,7 +28,7 @@ const handleView = (
 
     return (
         <PluridErrorView
-            error="the plurid' application must contain planes"
+            error="the plurid' application must contain a view"
         />
     );
 }

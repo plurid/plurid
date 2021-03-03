@@ -5,6 +5,10 @@ import {
     PluridView,
 } from '@plurid/plurid-data';
 
+import {
+    SetStateAction,
+} from '../global';
+
 
 
 export const SET_SPACE_LOADING = 'SET_SPACE_LOADING';
@@ -324,7 +328,9 @@ export interface State {
 }
 
 
-export type Actions = SetSpaceLoadingAction
+export type Actions =
+    | SetStateAction
+    | SetSpaceLoadingAction
     | SetAnimatedTransformAction
     | SetTransformTimeAction
     | SetSpaceLocationAction

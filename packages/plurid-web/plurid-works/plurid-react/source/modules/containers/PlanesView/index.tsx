@@ -45,10 +45,11 @@ export type PluridPlanesViewProperties = PluridPlanesViewOwnProperties
 const PluridPlanesView: React.FC<PluridPlanesViewProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** state */
+        // #region state
         stateConfiguration,
+        // #endregion state
     } = properties;
 
     const {
@@ -62,9 +63,10 @@ const PluridPlanesView: React.FC<PluridPlanesViewProperties> = (
 
     const showToolbar = toolbar.show;
     const showViewcube = viewcube.show;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <>
             <PluridSpace />
@@ -78,6 +80,7 @@ const PluridPlanesView: React.FC<PluridPlanesViewProperties> = (
             )}
         </>
     );
+    // #endregion render
 }
 
 

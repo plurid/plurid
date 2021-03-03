@@ -52,6 +52,11 @@ export const StyledPluridViewcube: any = styled.div`
 export const StyledPluridViewcubeArrow: any = styled.div`
     display: grid;
     place-content: center;
+
+    /* TODO
+     * Themed color
+     */
+    color: white;
 `;
 
 

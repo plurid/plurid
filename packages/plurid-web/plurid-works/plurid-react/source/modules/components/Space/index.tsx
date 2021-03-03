@@ -63,7 +63,7 @@ export type PluridSpaceProperties = PluridSpaceOwnProperties
 const PluridSpace: React.FC<PluridSpaceProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         /** state */
         stateConfiguration,
@@ -75,19 +75,25 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
     } = stateConfiguration;
 
     const opaqueSpace = space.opaque;
+    // #endregion properties
 
 
-    /** state */
-    const [isMounted, setIsMounted] = useState(false);
+    // #region state
+    const [
+        isMounted,
+        setIsMounted,
+    ] = useState(false);
+    // #endregion state
 
 
-    /** effects */
+    // #region effects
     useEffect(() => {
         setIsMounted(true);
     }, []);
+    // #endregion effects
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridSpace
             theme={stateGeneralTheme}
@@ -98,10 +104,11 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
             <PluridRoots />
         </StyledPluridSpace>
     );
+    // #endregion render
 }
 
 
-const mapStateToProps = (
+const mapStateToProperties = (
     state: AppState,
 ): PluridSpaceStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
@@ -109,15 +116,15 @@ const mapStateToProps = (
 });
 
 
-const mapDispatchToProps = (
+const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridSpaceDispatchProperties => ({
 });
 
 
 const ConnectedPluridSpace = connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,

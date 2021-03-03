@@ -82,7 +82,7 @@ export type PluridRootsProperties = PluridRootsOwnProperties
 const PluridRoots: React.FC<PluridRootsProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         /** own */
         computedTree,
@@ -140,9 +140,10 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         : transformOriginSize === SIZES.NORMAL
             ? 5
             : 7.5;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridRoots
             suppressHydrationWarning={true}
@@ -231,10 +232,11 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
             )} */}
         </StyledPluridRoots>
     );
+    // #endregion render
 }
 
 
-const mapStateToProps = (
+const mapStateToProperties = (
     state: AppState,
 ): PluridRootsStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
@@ -251,15 +253,15 @@ const mapStateToProps = (
 });
 
 
-const mapDispatchToProps = (
+const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridRootsDispatchProperties => ({
 });
 
 
 const ConnectedPluridRoots = connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,

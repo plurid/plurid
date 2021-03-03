@@ -11,6 +11,11 @@ const reducer = (
     action: Types.Actions,
 ): Types.State => {
     switch(action.type) {
+        case 'SET_STATE':
+            return {
+                ...state,
+                ...action.payload.space,
+            };
         case Types.SET_SPACE_LOADING:
             return resolvers.setSpaceLoading(state, action);
         case Types.SET_ANIMATED_TRANSFORM:

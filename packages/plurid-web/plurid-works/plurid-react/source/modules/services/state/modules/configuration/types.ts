@@ -9,6 +9,10 @@ import {
     LAYOUT_TYPES,
 } from '@plurid/plurid-data';
 
+import {
+    SetStateAction,
+} from '../global';
+
 
 
 export const SET_CONFIGURATION = 'SET_CONFIGURATION';
@@ -189,7 +193,9 @@ export interface State extends PluridConfiguration {
 }
 
 
-export type Actions = SetConfigurationAction
+export type Actions =
+    | SetStateAction
+    | SetConfigurationAction
     | SetConfigurationMicroAction
     /** PLANE */
     | SetConfigurationPlaneControlsAction

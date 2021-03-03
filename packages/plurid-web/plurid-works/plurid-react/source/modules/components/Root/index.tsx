@@ -68,7 +68,7 @@ export type PluridRootProperties = PluridRootOwnProperties
 const PluridRoot: React.FC<PluridRootProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         /** own */
         plane,
@@ -83,6 +83,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const {
         location,
     } = plane;
+    // #endregion properties
 
 
     // if (typeof indexedPlanesReference !== 'undefined') {
@@ -434,7 +435,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 }
 
 
-const mapStateToProps = (
+const mapStateToProperties = (
     state: AppState,
 ): PluridRootStateProperties => ({
     activeUniverseID: selectors.space.getActiveUniverseID(state),
@@ -442,15 +443,15 @@ const mapStateToProps = (
 });
 
 
-const mapDispatchToProps = (
+const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridRootDispatchProperties => ({
 });
 
 
 const ConnectedPluridRoot = connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,
