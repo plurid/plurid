@@ -6,6 +6,11 @@
 
     // #region external
     import {
+        PluridState,
+    } from '../../internal/state';
+
+
+    import {
         PluridPlane,
         PluridPlaneContext,
     } from '../plane';
@@ -112,6 +117,8 @@ export interface PluridApplication {
      * Render the application statically.
      */
     static?: boolean;
+
+    precomputedState?: Partial<PluridState>;
 }
 
 
