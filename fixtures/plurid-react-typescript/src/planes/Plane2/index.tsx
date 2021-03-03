@@ -15,7 +15,7 @@ const Plane2: React.FC<any> = (
         <div style={{
             height: 400,
         }}>
-            page 2 <PluridLink route="/page-1">link to page 1</PluridLink>
+            page 2 <PluridLink route="/two">link to two</PluridLink>
 
             <div style={{ marginLeft: 200, marginTop: 100}}>
                 <PluridLink route="/page-1">link to page 1</PluridLink>
