@@ -26,4 +26,7 @@ export {
     space,
     utilities,
 };
+
+export * from './setup/PlanesRegistrar';
+export * from './setup/computeState';
 // #endregion module
