@@ -32,6 +32,7 @@ export default {
     external: [
         '@plurid/plurid-data',
         '@plurid/plurid-functions',
+        '@plurid/plurid-themes',
     ],
     watch: {
         include: 'source/**',
