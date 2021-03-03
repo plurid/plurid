@@ -57,9 +57,6 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         const defaultStore = this.computeStore();
 
         this.store = store(defaultStore);
-
-        console.log('PluridApplication this.store', this.store);
-        console.log('PluridApplication properties', properties);
     }
 
 
@@ -70,8 +67,6 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             type: 'SET_STATE',
             payload: updatedStore,
         });
-
-        console.log('PluridApplication componentDidUpdate', this.props);
     }
 
 

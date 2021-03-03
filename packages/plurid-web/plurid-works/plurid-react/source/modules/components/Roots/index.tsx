@@ -86,8 +86,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
     const {
         /** own */
         computedTree,
-        indexedPlanesReference,
-        planesPropertiesReference,
+        // indexedPlanesReference,
+        // planesPropertiesReference,
         appConfiguration,
 
         /** state */

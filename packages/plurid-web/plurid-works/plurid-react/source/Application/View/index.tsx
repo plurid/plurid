@@ -173,12 +173,37 @@ const PluridView: React.FC<ViewProperties> = (
 
         // #region state
         stateConfiguration,
-        stateSpaceLoading,
+        // stateSpaceLoading,
+        stateTransform,
+        stateSpaceView,
         // #endregion state
 
 
         // #region dispatch
-        dispatchSetSpaceLoading,
+        dispatch,
+        // dispatchSetConfiguration,
+        // dispatchSetConfigurationMicro,
+        // dispatchSetGeneralTheme,
+        // dispatchSetInteractionTheme,
+
+        // dispatchSetSpaceLoading,
+        dispatchSetSpaceLocation,
+        dispatchSetAnimatedTransform,
+        dispatchSetTransformTime,
+        // dispatchSetInitialTree,
+        // dispatchSetTree,
+
+        dispatchRotateXWith,
+        dispatchRotateX,
+        dispatchRotateYWith,
+        dispatchRotateY,
+        dispatchTranslateXWith,
+        dispatchTranslateYWith,
+        dispatchScaleUpWith,
+        dispatchScaleDownWith,
+
+        dispatchSpaceSetViewSize,
+        dispatchSpaceSetView,
         // #endregion dispatch
     } = properties;
     // #endregion properties
@@ -189,7 +214,529 @@ const PluridView: React.FC<ViewProperties> = (
     // #endregion references
 
 
+    // #region callbacks
+    const shortcutsCallback = useCallback((event: KeyboardEvent) => {
+        const {
+            transformLocks,
+        } = stateConfiguration.space;
+
+        handleGlobalShortcuts(
+            dispatch,
+            event,
+            stateConfiguration.space.firstPerson,
+            transformLocks,
+        );
+    }, [
+        stateConfiguration.space.firstPerson,
+        stateConfiguration.space.transformLocks,
+        dispatch,
+    ]);
+
+    const wheelCallback = useCallback((event: WheelEvent) => {
+        const {
+            transformMode,
+            transformLocks,
+        } = stateConfiguration.space;
+
+        const transformModes = {
+            rotation: transformMode === TRANSFORM_MODES.ROTATION,
+            translation: transformMode === TRANSFORM_MODES.TRANSLATION,
+            scale: transformMode === TRANSFORM_MODES.SCALE,
+        };
+
+        handleGlobalWheel(
+            dispatch,
+            event,
+            transformModes,
+            transformLocks,
+        );
+    }, [
+        dispatch,
+        stateConfiguration.space.transformMode,
+        stateConfiguration.space.transformLocks,
+    ]);
+    // #endregion callbacks
+
+
+    // #region handlers
+        // #region handlers pubsub
+        const handlePubSubSubscribe = (
+            pubsub: PluridPubSub,
+        ) => {
+            pubsub.subscribe(TOPICS.SPACE_TRANSFORM, (data: any) => {
+                const {
+                    value,
+                    internal,
+                } = data;
+
+                if (internal) {
+                    return;
+                }
+
+                dispatchSetSpaceLocation(value);
+            });
+
+            pubsub.subscribe(TOPICS.SPACE_ANIMATED_TRANSFORM, (data: any) => {
+                const {
+                    value,
+                } = data;
+
+                dispatchSetAnimatedTransform(value.active);
+
+                if (value.time) {
+                    dispatchSetTransformTime(value.time);
+                } else {
+                    dispatchSetTransformTime(450);
+                }
+            });
+
+            pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
+                const {
+                    value,
+                } = data;
+                dispatchRotateXWith(value);
+            });
+
+            pubsub.subscribe(TOPICS.SPACE_ROTATE_X_TO, (data: any) => {
+                const {
+                    value,
+                } = data;
+                dispatchRotateX(value);
+            });
+
+
+            pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
+                const {
+                    value,
+                } = data;
+                dispatchRotateYWith(value);
+            });
+
+            pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_TO, (data: any) => {
+                const {
+                    value,
+                } = data;
+                dispatchRotateY(value);
+            });
+
+
+            pubsub.subscribe(TOPICS.SPACE_TRANSLATE_X_WITH, (data: any) => {
+                const {
+                    value,
+                } = data;
+                dispatchTranslateXWith(value);
+            });
+
+            // pubsub.subscribe(TOPICS.SPACE_TRANSLATE_X_TO, (data: any) => {
+            //     const {
+            //         value,
+            //     } = data;
+            //     dispatchTranslateX(value);
+            // });
+
+            pubsub.subscribe(TOPICS.SPACE_TRANSLATE_Y_WITH, (data: any) => {
+                const {
+                    value,
+                } = data;
+                dispatchTranslateYWith(value);
+            });
+
+            // pubsub.subscribe(TOPICS.SPACE_TRANSLATE_Y_TO, (data: any) => {
+            //     const {
+            //         value,
+            //     } = data;
+            //     dispatchTranslateY(value);
+            // });
+
+
+            pubsub.subscribe(TOPICS.VIEW_ADD_PLANE, (data: any) => {
+                const {
+                    plane,
+                } = data;
+
+                const updatedView = [
+                    ...stateSpaceView,
+                    plane,
+                ];
+                dispatchSpaceSetView(updatedView);
+            });
+
+            pubsub.subscribe(TOPICS.VIEW_SET_PLANES, (data: any) => {
+                const {
+                    view,
+                } = data;
+
+                dispatchSpaceSetView([
+                    ...view,
+                ]);
+            });
+
+            pubsub.subscribe(TOPICS.VIEW_REMOVE_PLANE, (data: any) => {
+                const {
+                    plane,
+                } = data;
+
+                /** TODO
+                 * a less naive filtering
+                 */
+                const updatedView = stateSpaceView.filter(view => {
+                    if (typeof view === 'string') {
+                        return view === plane;
+                    }
+
+                    return true;
+                });
+
+                dispatchSpaceSetView(updatedView);
+            });
+        }
+
+        const handlePubSubPublish = (
+            pubsub: PluridPubSub,
+        ) => {
+            const internalTransform = {
+                value: {
+                    ...stateTransform,
+                },
+                internal: true,
+            };
+            pubsub.publish(TOPICS.SPACE_TRANSFORM, internalTransform);
+
+            // pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
+        }
+
+        const registerPubSub = (
+            pubsub: PluridPubSub,
+        ) => {
+            // const pluridPubSubs = [
+            //     ...pluridPubSub,
+            //     pubsub,
+            // ];
+
+            // setPluridPubSub(pluridPubSubs);
+        }
+        // #endregion handlers pubsub
+
+
+        // #region handlers touch
+        const handleSwipe = (
+            event: HammerInput,
+        ) => {
+            const {
+                transformMode,
+            } = stateConfiguration.space;
+
+            const {
+                velocity,
+                distance,
+                direction,
+            } = event;
+
+            if (transformMode === TRANSFORM_MODES.ALL) {
+                return;
+            }
+
+            const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+            const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+            const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
+
+            dispatchSetAnimatedTransform(true);
+            switch (direction) {
+                case 2:
+                    /** right */
+                    if (rotationMode) {
+                        dispatchRotateYWith(velocity * 60);
+                    }
+
+                    if (translationMode) {
+                        dispatchTranslateXWith(-1 * distance);
+                    }
+                    break;
+                case 4:
+                    /** left */
+                    if (rotationMode) {
+                        dispatchRotateYWith(velocity * 60);
+                    }
+
+                    if (translationMode) {
+                        dispatchTranslateXWith(distance);
+                    }
+                    break;
+                case 8:
+                    /** top */
+                    if (rotationMode) {
+                        dispatchRotateXWith(velocity * 60);
+                    }
+
+                    if (translationMode) {
+                        dispatchTranslateYWith(-1 * distance);
+                    }
+
+                    if (scalationMode) {
+                        dispatchScaleUpWith(velocity);
+                    }
+                    break;
+                case 16:
+                    /** down */
+                    if (rotationMode) {
+                        dispatchRotateXWith(velocity * 60);
+                    }
+
+                    if (translationMode) {
+                        dispatchTranslateYWith(distance);
+                    }
+
+                    if (scalationMode) {
+                        dispatchScaleDownWith(velocity);
+                    }
+                    break;
+            }
+            setTimeout(() => {
+                dispatchSetAnimatedTransform(false);
+            }, 450);
+        }
+
+        const handlePan = (
+            event: HammerInput,
+        ) => {
+            const {
+                transformMode,
+            } = stateConfiguration.space;
+
+            const {
+                velocity,
+                distance,
+                direction,
+            } = event;
+
+            if (transformMode === TRANSFORM_MODES.ALL) {
+                return;
+            }
+
+            const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
+            const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
+            const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
+
+            const rotationVelocity = velocity * 20;
+            const translationVelocity = distance / 5;
+            const scaleVelocity = velocity / 4;
+
+            switch (direction) {
+                case 2:
+                    /** right */
+                    if (rotationMode) {
+                        dispatchRotateYWith(rotationVelocity);
+                    }
+
+                    if (translationMode) {
+                        dispatchTranslateXWith(-1 * translationVelocity);
+                    }
+                    break;
+                case 4:
+                    /** left */
+                    if (rotationMode) {
+                        dispatchRotateYWith(rotationVelocity);
+                    }
+
+                    if (translationMode) {
+                        dispatchTranslateXWith(translationVelocity);
+                    }
+                    break;
+                case 8:
+                    /** top */
+                    if (rotationMode) {
+                        dispatchRotateXWith(rotationVelocity);
+                    }
+
+                    if (translationMode) {
+                        dispatchTranslateYWith(-1 * translationVelocity);
+                    }
+
+                    if (scalationMode) {
+                        dispatchScaleUpWith(scaleVelocity);
+                    }
+                    break;
+                case 16:
+                    /** down */
+                    if (rotationMode) {
+                        dispatchRotateXWith(rotationVelocity);
+                    }
+
+                    if (translationMode) {
+                        dispatchTranslateYWith(translationVelocity);
+                    }
+
+                    if (scalationMode) {
+                        dispatchScaleDownWith(scaleVelocity);
+                    }
+                    break;
+            }
+        }
+        // #endregion handlers touch
+    // #endregion handlers
+
+
+    // #region effects
+        // #region effects listeners
+        /** Keydown, Wheel Listeners */
+        useEffect(() => {
+            if (viewElement.current) {
+                viewElement.current.addEventListener(
+                    'keydown',
+                    shortcutsCallback,
+                    {
+                        passive: false,
+                    },
+                );
+                viewElement.current.addEventListener(
+                    'wheel',
+                    wheelCallback,
+                    {
+                        passive: false,
+                    },
+                );
+            }
+
+            return () => {
+                if (viewElement.current) {
+                    viewElement.current.removeEventListener(
+                        'keydown',
+                        shortcutsCallback,
+                    );
+                    viewElement.current.removeEventListener(
+                        'wheel',
+                        wheelCallback,
+                    );
+                }
+            }
+        }, [
+            viewElement.current,
+            stateConfiguration.space.transformMode,
+            stateConfiguration.space.firstPerson,
+        ]);
+
+        /** Resize Listener */
+        useEffect(() => {
+            const handleResize = meta.debounce(() => {
+                if (viewElement && viewElement.current) {
+                    const width = viewElement.current.offsetWidth;
+                    const height = viewElement.current.offsetHeight;
+                    dispatchSpaceSetViewSize({
+                        width,
+                        height,
+                    });
+                }
+            }, 150);
+
+            window.addEventListener('resize', handleResize);
+
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            }
+        }, []);
+        // #endregion effects listeners
+
+
+        // #region effects touch
+        /** Touch */
+        useEffect(() => {
+            if (typeof window === 'undefined') {
+                return;
+            }
+
+            let touch: HammerManager;
+
+            const handleTouch = async () => {
+                const HammerImport = await loadHammer();
+                const Hammer = HammerImport.default;
+
+                const {
+                    transformTouch,
+                } = stateConfiguration.space;
+
+                /**
+                 * Remove Hammerjs default css properties to add them only when in Lock Mode.
+                 * https://stackoverflow.com/a/37896547
+                 */
+                delete (Hammer as any).defaults.cssProps.userSelect;
+                delete (Hammer as any).defaults.cssProps.userDrag;
+                delete (Hammer as any).defaults.cssProps.tapHighlightColor;
+                delete (Hammer as any).defaults.cssProps.touchSelect;
+
+                if (!viewElement.current) {
+                    return;
+                }
+
+                touch = new Hammer(viewElement.current);
+                touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+                touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+
+                if (transformTouch === TRANSFORM_TOUCHES.PAN) {
+                    touch.on('pan', handlePan);
+                } else {
+                    touch.on('swipe', handleSwipe);
+                }
+            }
+
+            handleTouch();
+
+            return () => {
+                const {
+                    transformTouch,
+                } = stateConfiguration.space;
+
+                if (transformTouch === TRANSFORM_TOUCHES.PAN) {
+                    if (touch) {
+                        touch.off('pan', handlePan);
+                    }
+                } else {
+                    if (touch) {
+                        touch.off('swipe', handleSwipe);
+                    }
+                }
+            }
+        }, [
+            viewElement.current,
+            stateConfiguration.space.transformTouch,
+        ]);
+        // #endregion effects touch
+
+
+        // #region effects pubsub
+        /** PubSub Subscribe */
+        useEffect(() => {
+            // for (const pubsub of pluridPubSub) {
+            //     if (pubsub) {
+            //         handlePubSubSubscribe(pubsub as any);
+            //     }
+            // }
+        }, [
+            // pluridPubSub.length,
+        ]);
+
+        /** PubSub Publish */
+        useEffect(() => {
+            // for (const pubsub of pluridPubSub) {
+            //     if (pubsub) {
+            //         handlePubSubPublish(pubsub);
+            //     }
+            // }
+        }, [
+            // pluridPubSub.length,
+            stateConfiguration,
+            stateTransform,
+        ]);
+        // #endregion effects pubsub
+    // #endregion effects
+
+
     // #region render
+    const pluridContext: PluridContext = {
+        // DEPRECATED
+        planesRegistry: new Map(),
+        registerPubSub,
+    };
+
     const viewContainer = handleView(
         application.view,
     );
@@ -204,13 +751,11 @@ const PluridView: React.FC<ViewProperties> = (
             <GlobalStyle />
 
             {/* {!stateSpaceLoading && ( */}
-                <>
-                    {/* <Context.Provider
-                        value={pluridContext}
-                    > */}
-                        {viewContainer}
-                    {/* </Context.Provider> */}
-                </>
+                <Context.Provider
+                    value={pluridContext}
+                >
+                    {viewContainer}
+                </Context.Provider>
             {/* )} */}
         </StyledView>
     );
