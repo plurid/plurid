@@ -2,8 +2,14 @@
     // #region libraries
     import {
         PluridPlane,
+        RegisteredPluridPlane,
     } from '@plurid/plurid-data';
     // #endregion libraries
+
+
+    // #region external
+    import * as router from '../router';
+    // #endregion external
 // #endregion imports
 
 
@@ -12,15 +18,64 @@
 class PluridPlanesRegistrar {
     // TODO
     // Store the planes in a better data structure.
-    private planes: Map<string, PluridPlane> = new Map();
+    private planes: Map<string, RegisteredPluridPlane> = new Map();
 
     public register(
         planes: PluridPlane[],
     ) {
         for (const plane of planes) {
+            // loop over PluridPlanes and generate the Fully Qualified Route
+            // given the FQR
+            // store the component in an index by route
+
+            const {
+                component,
+                route,
+            } = plane;
+
+            const {
+                kind,
+                element,
+                properties,
+            } = component;
+
+            // obtain from path the absolute route
+            // /plane -> Fully Qualified Route
+            const resolvedRoute = router.resolveRoute(
+                route,
+                'http',
+                'localhost',
+            );
+            // console.log('resolvedRoute', resolvedRoute);
+
+            const {
+                protocol,
+                host,
+                path: routePath,
+                space,
+                universe,
+                cluster,
+                plane: planePath,
+                route: absoluteRoute,
+            } = resolvedRoute;
+
+            const registeredPluridPlane: RegisteredPluridPlane = {
+                component,
+                route: {
+                    protocol: {},
+                    host: {},
+                    path: {},
+                    space: {},
+                    universe: {},
+                    cluster: {},
+                    plane: {},
+                    absolute: absoluteRoute,
+                },
+            };
+
             this.planes.set(
-                plane.route,
-                plane,
+                absoluteRoute,
+                registeredPluridPlane,
             );
         }
     }
@@ -31,6 +86,10 @@ class PluridPlanesRegistrar {
         // TODO
         // Account for parametric, constrained routes.
         return this.planes.get(route);
+    }
+
+    public getAll() {
+        return this.planes;
     }
 }
 // #endregion module
