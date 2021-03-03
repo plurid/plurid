@@ -68,7 +68,7 @@ export interface PluridApplication {
     /**
      * Routes of the planes in view on the initial rendering.
      */
-    view?: string[] | PluridView[];
+    view: PluridApplicationView;
 
     // /**
     //  * A cluster ensures the rendering of all the planes that reference it
@@ -121,6 +121,8 @@ export interface PluridApplication {
     precomputedState?: Partial<PluridState>;
 }
 
+
+export type PluridApplicationView = string[] | PluridView[];
 
 // export interface PluridServerData {
 //     planes?: PluridPlane[];
