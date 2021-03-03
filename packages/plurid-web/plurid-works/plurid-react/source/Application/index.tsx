@@ -40,7 +40,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         properties: PluridApplicationProperties,
         context: React.ContextType<typeof PluridProviderContext>,
     ) {
-        super(properties, context);
+        super(properties);
 
         this.context = context;
 
@@ -50,7 +50,9 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
 
         const defaultStore = id && context && context.states[id]
             ? context.states[id]
-            : {};
+            : properties.precomputedState
+                ? properties.precomputedState
+                : {};
 
         this.store = store(defaultStore);
     }
