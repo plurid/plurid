@@ -15,10 +15,16 @@ import {
 } from '@plurid/plurid-react';
 
 import {
-    PluridPureButton,
-} from '@plurid/plurid-ui-react';
+    universal,
+} from '@plurid/plurid-ui-components-react';
 
 
+
+const {
+    buttons: {
+        PureButton: PluridPureButton,
+    },
+} = universal;
 
 const pluridPubSub = new PluridPubSub();
 
