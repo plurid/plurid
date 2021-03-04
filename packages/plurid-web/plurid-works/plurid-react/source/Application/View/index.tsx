@@ -36,6 +36,8 @@
         space,
         router,
         general as generalEngine,
+
+        getRegisteredPlanes,
     } from '@plurid/plurid-engine';
 
     import PluridPubSub, {
@@ -191,7 +193,7 @@ const PluridView: React.FC<ViewProperties> = (
         dispatchSetAnimatedTransform,
         dispatchSetTransformTime,
         // dispatchSetInitialTree,
-        // dispatchSetTree,
+        dispatchSetTree,
 
         dispatchRotateXWith,
         dispatchRotateX,
@@ -254,6 +256,25 @@ const PluridView: React.FC<ViewProperties> = (
         dispatch,
         stateConfiguration.space.transformMode,
         stateConfiguration.space.transformLocks,
+    ]);
+
+    const treeUpdateCallback = useCallback(() => {
+        // TODO?
+        // stateConfiguration update
+
+        const planes = getRegisteredPlanes(planesRegistrar);
+
+        const spaceTree = new space.tree.Tree({
+            planes,
+            configuration: stateConfiguration,
+            view,
+        });
+
+        const computedTree = spaceTree.compute();
+        dispatchSetTree(computedTree);
+    }, [
+        view,
+        stateConfiguration,
     ]);
     // #endregion callbacks
 
@@ -635,6 +656,16 @@ const PluridView: React.FC<ViewProperties> = (
                 window.removeEventListener('resize', handleResize);
             }
         }, []);
+
+        useEffect(() => {
+            window.addEventListener('resize', treeUpdateCallback);
+
+            return () => {
+                window.removeEventListener('resize', treeUpdateCallback);
+            }
+        }, [
+            view,
+        ]);
         // #endregion effects listeners
 
 
