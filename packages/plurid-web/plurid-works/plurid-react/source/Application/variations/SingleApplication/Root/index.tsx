@@ -51,7 +51,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             context={StateContext}
         >
             <PluridView
-                application={pluridApplication}
+                {...pluridApplication}
             />
         </ReduxProvider>
     );

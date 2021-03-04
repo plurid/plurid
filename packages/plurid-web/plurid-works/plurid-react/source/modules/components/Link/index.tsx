@@ -38,6 +38,8 @@
         router,
         space,
         general as generalEngine,
+
+        getPlanesRegistrar,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -148,19 +150,17 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     /** context */
-    // const context = useContext(Context);
+    const context = useContext(Context);
 
-    // if (!context) {
-    //     return (<></>);
-    // }
+    if (!context) {
+        return (<></>);
+    }
 
-    // const {
-    //     planesRegistry,
-    // } = context;
+    const {
+        planesRegistrar,
+    } = context;
 
-    const planesRegistry = (window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined
-        ? (window as PluridalWindow).__pluridPlanesRegistrar__
-        : undefined;
+    const planesRegistry = getPlanesRegistrar(planesRegistrar);
 
     if (!planesRegistry) {
         return (<></>);

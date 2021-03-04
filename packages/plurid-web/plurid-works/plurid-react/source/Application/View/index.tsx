@@ -96,8 +96,7 @@
 
 
 // #region module
-export interface ViewOwnProperties {
-    application: PluridApplicationProperties;
+export interface ViewOwnProperties extends PluridApplicationProperties {
 }
 
 export interface ViewStateProperties {
@@ -166,7 +165,8 @@ const PluridView: React.FC<ViewProperties> = (
     const {
         // #region required
             // #region values
-            application,
+            view,
+            planesRegistrar,
             // #endregion values
         // #endregion required
 
@@ -732,13 +732,12 @@ const PluridView: React.FC<ViewProperties> = (
 
     // #region render
     const pluridContext: PluridContext = {
-        // DEPRECATED
-        planesRegistry: new Map(),
+        planesRegistrar,
         registerPubSub,
     };
 
     const viewContainer = handleView(
-        application.view,
+        view,
     );
 
     return (

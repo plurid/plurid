@@ -930,7 +930,7 @@ const PluridView: React.FC<ViewProperties> = (
 
     /** context */
     const pluridContext: PluridContext = {
-        planesRegistry: planesRegistry.current,
+        // planesRegistry: planesRegistry.current,
         registerPubSub,
         // planesMap: indexedPlanesReference.current,
         // planesProperties: planesPropertiesReference.current,

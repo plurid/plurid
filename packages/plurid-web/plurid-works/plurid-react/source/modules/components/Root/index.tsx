@@ -20,6 +20,11 @@
         PluridComponentProperty,
         PluridalWindow,
     } from '@plurid/plurid-data';
+
+    import {
+        getPlanesRegistrar,
+        getRegisteredPlane,
+    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -183,19 +188,20 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
 
     /** context */
-    // const context = useContext(Context);
+    const context = useContext(Context);
     // console.log('plurid root context', context);
 
-    // if (!context) {
-    //     return (<></>);
-    // }
+    if (!context) {
+        return (<></>);
+    }
 
-    // const {
-    //     planesRegistry,
-    //     // planesProperties,
-    //     planeContext: PlaneContext,
-    //     planeContextValue,
-    // } = context;
+    const {
+        planesRegistrar,
+        // planesRegistry,
+        // planesProperties,
+        planeContext: PlaneContext,
+        planeContextValue,
+    } = context;
 
     // console.log('planesMap', planesMap);
     // console.log('statePlaneSources', statePlaneSources);
@@ -218,9 +224,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             return;
         }
 
-        const planesRegistry = (window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined
-            ? (window as PluridalWindow).__pluridPlanesRegistrar__
-            : undefined;
+        const planesRegistry = getPlanesRegistrar(planesRegistrar);
 
         plane.children.map(child => {
             // console.log('child', child);
@@ -364,9 +368,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         );
     }
 
-    const pluridPlane = (window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined
-        ? (window as PluridalWindow).__pluridPlanesRegistrar__.get(pluridPlaneID)
-        : undefined;
+    const pluridPlane = getRegisteredPlane(
+        pluridPlaneID,
+        planesRegistrar,
+    );
     // const pluridPlane = planesRegistry.get(pluridPlaneID);
     // const pluridPlaneProperties = planesProperties.get(pluridPlaneID);
     // console.log('Root pluridPlaneID', pluridPlaneID);
@@ -435,7 +440,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 planeID={plane.planeID}
                 location={location}
             >
-                {/* {PlaneContext
+                {PlaneContext
                     ? (
                         <PlaneContext.Provider
                             value={planeContextValue}
@@ -449,11 +454,11 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                             {...planeProperties}
                         />
                     )
-                } */}
+                }
 
-                <Plane
+                {/* <Plane
                     {...planeProperties}
-                />
+                /> */}
             </PluridPlane>
 
             {childrenPlanes}

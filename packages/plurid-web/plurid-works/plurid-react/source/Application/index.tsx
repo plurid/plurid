@@ -77,9 +77,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
                 context={StateContext}
             >
                 <PluridView
-                    application={{
-                        ...this.props,
-                    }}
+                    {...this.props}
                 />
             </ReduxProvider>
         );

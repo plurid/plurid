@@ -15,6 +15,10 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
+
+    import {
+        getPlanesRegistrar,
+    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -79,8 +83,14 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
     }
 
     const {
-        planesRegistry,
+        planesRegistrar,
     } = context;
+
+    const planesRegistry = getPlanesRegistrar(planesRegistrar);
+
+    if (!planesRegistry) {
+        return (<></>);
+    }
 
     const plane = planesRegistry.get(planeID);
 
