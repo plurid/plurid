@@ -25,6 +25,8 @@
     import {
         resolveThemes,
     } from './themes';
+
+    import * as local from './local';
     // #endregion internal
 // #endregion imports
 
@@ -36,6 +38,7 @@ const compute = (
     configuration: RecursivePartial<PluridConfiguration> | undefined,
     planesRegistrar: IPluridPlanesRegistrar | undefined,
     currentState: PluridState | undefined,
+    localState: PluridState | undefined,
     precomputedState: Partial<PluridState> | undefined,
     contextState: PluridMetastateState | undefined,
 ) => {
@@ -56,6 +59,7 @@ const compute = (
         stateConfiguration,
         planesRegistrar,
         currentState,
+        localState,
         precomputedState,
         contextState,
     );
@@ -96,5 +100,6 @@ const compute = (
 // #region exports
 export {
     compute,
+    local,
 };
 // #endregion exports
