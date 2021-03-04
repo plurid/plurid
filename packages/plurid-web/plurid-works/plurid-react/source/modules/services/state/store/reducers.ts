@@ -8,7 +8,6 @@
 
     // #region external
     import * as configuration from '../modules/configuration';
-    // import * as data from '../modules/data';
     import * as shortcuts from '../modules/shortcuts';
     import * as space from '../modules/space';
     import * as themes from '../modules/themes';
@@ -21,7 +20,6 @@
 // #region module
 const rootReducer = combineReducers({
     configuration: configuration.reducer,
-    // data: data.reducer,
     shortcuts: shortcuts.reducer,
     space: space.reducer,
     themes: themes.reducer,

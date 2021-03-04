@@ -18,7 +18,7 @@
 
     import {
         registerPlanes,
-        computeState,
+        state,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -105,7 +105,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             ? this.context.states[id]
             : undefined;
 
-        const store = computeState(
+        const store = state.compute(
             view,
             configuration,
             planesRegistrar,
