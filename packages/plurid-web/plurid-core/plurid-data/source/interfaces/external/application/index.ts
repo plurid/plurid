@@ -125,6 +125,15 @@ export interface PluridApplication {
     precomputedState?: Partial<PluridState>;
 
     planesRegistrar?: PluridPlanesRegistrar;
+
+    /**
+     * Save plurid application state to local storage,
+     * and load from local storage at startup.
+     *
+     * If multiple plurid applications run on the same origin,
+     * use the `id` property to differentiate between states.
+     */
+    useLocalStorage?: boolean;
 }
 
 
