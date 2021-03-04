@@ -628,6 +628,7 @@ const PluridView: React.FC<ViewProperties> = (
                 }
             }, 150);
 
+            handleResize();
             window.addEventListener('resize', handleResize);
 
             return () => {
