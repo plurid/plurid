@@ -1,10 +1,5 @@
 // #region imports
     // #region libraries
-    import themes, {
-        Theme,
-        THEME_NAMES,
-    } from '@plurid/plurid-themes';
-
     import {
         PluridApplicationView,
         PluridConfiguration,
@@ -17,58 +12,28 @@
     // #endregion libraries
 
 
-    // #region internal
-    import * as space from './space';
+    // #region external
+    import * as space from '../space';
 
-    import * as generalEngine from './general';
+    import * as generalEngine from '../general';
 
     import {
         getRegisteredPlanes,
-    } from './PlanesRegistrar';
+    } from '../PlanesRegistrar';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        resolveThemes,
+    } from './themes';
     // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-const resolveThemes = (
-    configuration: PluridConfiguration,
-) => {
-    let generalTheme: Theme | undefined;
-    let interactionTheme: Theme | undefined;
-
-    if (typeof configuration.global.theme === 'object') {
-        const {
-            general,
-            interaction,
-        } = configuration.global.theme;
-
-        if (typeof general === 'string') {
-            if (Object.keys(THEME_NAMES).includes(general)) {
-                generalTheme = (themes as any)[general];
-            }
-        }
-
-        if (typeof interaction === 'string') {
-            if (Object.keys(THEME_NAMES).includes(interaction)) {
-                interactionTheme = (themes as any)[interaction];
-            }
-        }
-    } else {
-        if (Object.keys(THEME_NAMES).includes(configuration.global.theme)) {
-            generalTheme = (themes as any)[configuration.global.theme];
-            interactionTheme = (themes as any)[configuration.global.theme];
-        }
-    }
-
-    return {
-        general: generalTheme || themes.plurid,
-        interaction: interactionTheme || themes.plurid,
-    };
-}
-
-
-const computeState = (
+const compute = (
     view: PluridApplicationView,
     configuration: RecursivePartial<PluridConfiguration> | undefined,
     planesRegistrar: IPluridPlanesRegistrar | undefined,
@@ -99,9 +64,6 @@ const computeState = (
     const state: PluridState = {
         configuration: {
             ...stateConfiguration,
-        },
-        data: {
-            planeSources: {},
         },
         shortcuts: {
             global: true,
@@ -163,6 +125,6 @@ const computeState = (
 
 // #region exports
 export {
-    computeState,
+    compute,
 };
 // #endregion exports

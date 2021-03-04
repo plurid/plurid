@@ -8,6 +8,7 @@
     import * as router from './setup/router';
     import * as transform from './interaction/mathematics/transform';
     import * as space from './setup/space';
+    import * as state from './setup/state';
     import * as utilities from './utilities';
     // #endregion internal
 // #endregion imports
@@ -24,9 +25,9 @@ export {
     router,
     transform,
     space,
+    state,
     utilities,
 };
 
 export * from './setup/PlanesRegistrar';
-export * from './setup/computeState';
 // #endregion module
