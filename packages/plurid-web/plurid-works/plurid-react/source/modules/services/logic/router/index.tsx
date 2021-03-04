@@ -25,6 +25,8 @@
     import {
         router,
         utilities,
+
+        PluridPlanesRegistrar,
     } from '@plurid/plurid-engine';
 
     import {
@@ -265,6 +267,7 @@ export const getComponentFromRoute = (
 
             // console.log('spaces path.value', path.value);
             // console.log('getComponentFromRoute spaces view', view);
+            const pluridPlanesRegistrar = new PluridPlanesRegistrar();
 
             const App = (
                 <PluridApplication
@@ -275,6 +278,7 @@ export const getComponentFromRoute = (
                     view={view}
                     static={staticRender}
                     configuration={space.configuration}
+                    planesRegistrar={pluridPlanesRegistrar}
                 />
             );
             spacesArray.push(App);
