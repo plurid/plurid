@@ -35,9 +35,15 @@ const compute = (
     view: PluridApplicationView,
     configuration: RecursivePartial<PluridConfiguration> | undefined,
     planesRegistrar: IPluridPlanesRegistrar | undefined,
+    currentState: PluridState | undefined,
     precomputedState: Partial<PluridState> | undefined,
     contextState: PluridMetastateState | undefined,
 ) => {
+    // TODO
+    // the compute call also needs to make clear the nature of the change
+    // i.e. if any of the states overwrite the current state
+    // or if the current state takes precedence.
+
     const specifiedConfiguration = generalEngine.configuration.merge(configuration);
     const stateConfiguration: PluridConfiguration = {
         ...specifiedConfiguration,
@@ -49,6 +55,7 @@ const compute = (
         view,
         stateConfiguration,
         planesRegistrar,
+        currentState,
         precomputedState,
         contextState,
     );

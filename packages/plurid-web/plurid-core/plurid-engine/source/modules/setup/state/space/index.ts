@@ -27,6 +27,7 @@ const resolveSpace = (
     view: PluridApplicationView,
     configuration: PluridConfiguration,
     planesRegistrar: IPluridPlanesRegistrar | undefined,
+    currentState: PluridState | undefined,
     precomputedState: Partial<PluridState> | undefined,
     contextState: PluridMetastateState | undefined,
 ) => {
@@ -77,6 +78,15 @@ const resolveSpace = (
         ...precomputedState?.space,
         ...contextState?.space,
     };
+
+    if (currentState) {
+        stateSpace.translationX = currentState.space.translationX;
+        stateSpace.translationY = currentState.space.translationY;
+        stateSpace.translationZ = currentState.space.translationZ;
+        stateSpace.rotationX = currentState.space.rotationX;
+        stateSpace.rotationY = currentState.space.rotationY;
+        stateSpace.scale = currentState.space.scale;
+    }
 
     return stateSpace;
 }
