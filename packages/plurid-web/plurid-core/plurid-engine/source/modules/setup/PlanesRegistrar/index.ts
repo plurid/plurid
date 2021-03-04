@@ -7,8 +7,6 @@
 
 
 // #region exports
-export * from './interfaces';
-
 export * from './utilities';
 
 export {

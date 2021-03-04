@@ -1,11 +1,16 @@
 // #region imports
     // #region libraries
-    import themes from '@plurid/plurid-themes';
+    import themes, {
+        Theme,
+        THEME_NAMES,
+    } from '@plurid/plurid-themes';
 
     import {
         PluridApplicationView,
-        PluridPlane,
         PluridConfiguration,
+        PluridPlanesRegistrar as IPluridPlanesRegistrar,
+        PluridState,
+        PluridMetastateState,
 
         RecursivePartial,
     } from '@plurid/plurid-data';
@@ -18,7 +23,7 @@
     import * as generalEngine from './general';
 
     import {
-        PluridalWindow,
+        getRegisteredPlanes,
     } from './PlanesRegistrar';
     // #endregion internal
 // #endregion imports
@@ -26,18 +31,53 @@
 
 
 // #region module
+const resolveThemes = (
+    configuration: PluridConfiguration,
+) => {
+    let generalTheme: Theme | undefined;
+    let interactionTheme: Theme | undefined;
+
+    if (typeof configuration.global.theme === 'object') {
+        const {
+            general,
+            interaction,
+        } = configuration.global.theme;
+
+        if (typeof general === 'string') {
+            if (Object.keys(THEME_NAMES).includes(general)) {
+                generalTheme = (themes as any)[general];
+            }
+        }
+
+        if (typeof interaction === 'string') {
+            if (Object.keys(THEME_NAMES).includes(interaction)) {
+                interactionTheme = (themes as any)[interaction];
+            }
+        }
+    } else {
+        if (Object.keys(THEME_NAMES).includes(configuration.global.theme)) {
+            generalTheme = (themes as any)[configuration.global.theme];
+            interactionTheme = (themes as any)[configuration.global.theme];
+        }
+    }
+
+    return {
+        general: generalTheme || themes.plurid,
+        interaction: interactionTheme || themes.plurid,
+    };
+}
+
+
 const computeState = (
     view: PluridApplicationView,
-    planes: PluridPlane[] | undefined,
     configuration: RecursivePartial<PluridConfiguration> | undefined,
-    precomputedState: any,
-    contextState: any,
+    planesRegistrar: IPluridPlanesRegistrar | undefined,
+    precomputedState: Partial<PluridState> | undefined,
+    contextState: PluridMetastateState | undefined,
 ) => {
     const activeConfiguration = generalEngine.configuration.merge(configuration);
 
-    const registeredPlanes = (window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined
-        ? (window as PluridalWindow).__pluridPlanesRegistrar__.getAll()
-        : new Map();
+    const registeredPlanes = getRegisteredPlanes(planesRegistrar);
 
     const spaceTree = new space.tree.Tree({
         planes: registeredPlanes,
@@ -47,12 +87,25 @@ const computeState = (
 
     const computedTree = spaceTree.compute();
 
-    return {
+
+    const stateConfiguration: PluridConfiguration = {
+        ...activeConfiguration,
+        ...precomputedState?.configuration,
+        ...contextState?.configuration,
+    };
+
+    const stateThemes = resolveThemes(stateConfiguration);
+
+    const state: PluridState = {
         configuration: {
-            ...activeConfiguration,
+            ...stateConfiguration,
+        },
+        data: {
+            planeSources: {},
         },
         shortcuts: {
             global: true,
+            ...precomputedState?.shortcuts,
         },
         space: {
             loading: true,
@@ -88,19 +141,21 @@ const computeState = (
             },
             view,
             culledView: [],
+            ...precomputedState?.space,
+            ...contextState?.space,
         },
         themes: {
-            general: {
-                ...themes.plurid,
-            },
-            interaction: {
-                ...themes.plurid,
-            },
+            ...stateThemes,
+            ...precomputedState?.themes,
         },
         ui: {
             toolbarScrollPosition: 0,
+            ...precomputedState?.ui,
+            ...contextState?.ui,
         },
     };
+
+    return state;
 }
 // #endregion module
 

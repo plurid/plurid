@@ -2,16 +2,15 @@
     // #region libraries
     import {
         PluridPlane,
+        PluridPlanesRegistrar as IPluridPlanesRegistrar,
+
+        PluridalWindow,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region internal
     import PluridPlanesRegistrar from './object';
-
-    import {
-        PluridalWindow,
-    } from './interfaces';
     // #endregion internal
 // #endregion imports
 
@@ -20,8 +19,14 @@
 // #region module
 const registerPlanes = (
     planes?: PluridPlane[],
+    planesRegistrar?: IPluridPlanesRegistrar,
 ) => {
     if (!planes) {
+        return;
+    }
+
+    if (planesRegistrar) {
+        planesRegistrar.register(planes);
         return;
     }
 
@@ -37,6 +42,25 @@ const registerPlanes = (
     }
 
     (window as PluridalWindow).__pluridPlanesRegistrar__.register(planes);
+
+    return;
+}
+
+
+const getRegisteredPlanes = (
+    planesRegistrar: IPluridPlanesRegistrar | undefined,
+) => {
+    if (planesRegistrar) {
+        return planesRegistrar.getAll();
+    }
+
+    if (window) {
+        if ((window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined) {
+            return (window as PluridalWindow).__pluridPlanesRegistrar__.getAll();
+        }
+    }
+
+    return new Map();
 }
 // #endregion module
 
@@ -45,5 +69,6 @@ const registerPlanes = (
 // #region exports
 export {
     registerPlanes,
+    getRegisteredPlanes,
 };
 // #endregion exports

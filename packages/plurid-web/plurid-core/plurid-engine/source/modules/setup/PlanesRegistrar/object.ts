@@ -3,6 +3,7 @@
     import {
         PluridPlane,
         RegisteredPluridPlane,
+        PluridPlanesRegistrar as IPluridPlanesRegistrar,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -15,7 +16,7 @@
 
 
 // #region module
-class PluridPlanesRegistrar {
+class PluridPlanesRegistrar implements IPluridPlanesRegistrar {
     // TODO
     // Store the planes in a better data structure.
     private planes: Map<string, RegisteredPluridPlane> = new Map();
