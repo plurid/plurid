@@ -92,11 +92,13 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             planes,
             configuration,
             precomputedState,
+            planesRegistrar,
             id,
         } = this.props;
 
         registerPlanes(
             planes,
+            planesRegistrar,
         );
 
         const contextState = id && this.context && this.context.states[id]
@@ -105,8 +107,8 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
 
         const store = computeState(
             view,
-            planes,
             configuration,
+            planesRegistrar,
             precomputedState,
             contextState,
         );

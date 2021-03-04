@@ -18,11 +18,8 @@
         TreePlane,
         PluridContext,
         PluridComponentProperty,
-    } from '@plurid/plurid-data';
-
-    import {
         PluridalWindow,
-    } from '@plurid/plurid-engine';
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 

@@ -31,14 +31,13 @@
         PluridInternalStateUniverse,
         PluridConfiguration,
         // PluridRouterRoute,
+        PluridalWindow,
     } from '@plurid/plurid-data';
 
     import {
         router,
         space,
         general as generalEngine,
-
-        PluridalWindow,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
