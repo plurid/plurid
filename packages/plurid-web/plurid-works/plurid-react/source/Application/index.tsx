@@ -6,6 +6,7 @@
 
     import {
         Store,
+        Unsubscribe as ReduxUnsubscribe,
     } from 'redux';
 
     import {
@@ -43,8 +44,10 @@
 class PluridApplication extends Component<PluridApplicationProperties, {}> {
     static contextType = PluridProviderContext;
 
-    public context!: React.ContextType<typeof PluridProviderContext>
+    public context!: React.ContextType<typeof PluridProviderContext>;
+
     private store: Store;
+    private storeSubscriber: ReduxUnsubscribe | undefined;
 
 
     constructor(
@@ -58,6 +61,8 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         const defaultStore = this.computeStore();
 
         this.store = store(defaultStore);
+
+        this.subscribeStore();
     }
 
 
@@ -70,6 +75,11 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         });
     }
 
+    public componentWillUnmount() {
+        if (this.storeSubscriber) {
+            this.storeSubscriber();
+        }
+    }
 
     public render() {
         return (
@@ -93,6 +103,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             precomputedState,
             planesRegistrar,
             id,
+            useLocalStorage,
         } = this.props;
 
         registerPlanes(
@@ -104,6 +115,11 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             ? this.store.getState()
             : undefined;
 
+        const localState = state.local.load(
+            id,
+            useLocalStorage,
+        );
+
         const contextState = id && this.context && this.context.states[id]
             ? this.context.states[id]
             : undefined;
@@ -113,11 +129,38 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             configuration,
             planesRegistrar,
             currentState,
+            localState,
             precomputedState,
             contextState,
         );
 
         return store;
+    }
+
+    private subscribeStore() {
+        if (!this.store) {
+            return;
+        }
+
+        const {
+            id,
+            useLocalStorage,
+        } = this.props;
+
+        if (!useLocalStorage) {
+            return;
+        }
+
+        this.storeSubscriber = this.store.subscribe(() => {
+            const state = this.store.getState();
+            const stateData = JSON.stringify(state);
+            const stateID = id || 'default';
+
+            localStorage.setItem(
+                'pluridState-' + stateID,
+                stateData,
+            );
+        });
     }
 }
 // #endregion module
