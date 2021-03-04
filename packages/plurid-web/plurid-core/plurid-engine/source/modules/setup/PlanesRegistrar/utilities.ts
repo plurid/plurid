@@ -47,6 +47,23 @@ const registerPlanes = (
 }
 
 
+const getPlanesRegistrar = (
+    planesRegistrar: IPluridPlanesRegistrar | undefined,
+) => {
+    if (planesRegistrar) {
+        return planesRegistrar;
+    }
+
+    if (window) {
+        if ((window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined) {
+            return (window as PluridalWindow).__pluridPlanesRegistrar__;
+        }
+    }
+
+    return;
+}
+
+
 const getRegisteredPlanes = (
     planesRegistrar: IPluridPlanesRegistrar | undefined,
 ) => {
@@ -62,6 +79,24 @@ const getRegisteredPlanes = (
 
     return new Map();
 }
+
+
+const getRegisteredPlane = (
+    route: string,
+    planesRegistrar: IPluridPlanesRegistrar | undefined,
+) => {
+    if (planesRegistrar) {
+        return planesRegistrar.get(route);
+    }
+
+    if (window) {
+        if ((window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined) {
+            return (window as PluridalWindow).__pluridPlanesRegistrar__.get(route);
+        }
+    }
+
+    return;
+}
 // #endregion module
 
 
@@ -69,6 +104,8 @@ const getRegisteredPlanes = (
 // #region exports
 export {
     registerPlanes,
+    getPlanesRegistrar,
     getRegisteredPlanes,
+    getRegisteredPlane,
 };
 // #endregion exports
