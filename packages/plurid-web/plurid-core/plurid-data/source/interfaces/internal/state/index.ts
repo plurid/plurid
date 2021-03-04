@@ -1,4 +1,11 @@
 // #region imports
+    // #region libraries
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
+
+
     // #region external
     import {
         PluridConfiguration,
@@ -25,17 +32,12 @@
 // #region module
 export interface PluridState {
     configuration: PluridConfiguration;
-    data: PluridStateData;
     shortcuts: PluridStateShortcuts;
     space: PluridStateSpace;
-    themes: PluridStateThemes<any>;
+    themes: PluridStateThemes;
     ui: PluridStateUI;
 }
 
-
-export interface PluridStateData {
-    planeSources: Record<string, string>;
-}
 
 
 export interface PluridStateShortcuts {
@@ -64,9 +66,9 @@ export interface PluridStateSpace {
 }
 
 
-export interface PluridStateThemes<T> {
-    general: T;
-    interaction: T;
+export interface PluridStateThemes {
+    general: Theme;
+    interaction: Theme;
 }
 
 
