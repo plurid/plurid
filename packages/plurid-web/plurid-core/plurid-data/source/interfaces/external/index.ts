@@ -9,7 +9,9 @@ export * from './layout';
 export * from './link';
 export * from './metastate';
 export * from './plane';
+export * from './registrar';
 export * from './router';
 export * from './universe';
 export * from './view';
+export * from './window';
 // #endregion exports

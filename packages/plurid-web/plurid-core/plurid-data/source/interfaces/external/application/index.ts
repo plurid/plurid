@@ -38,6 +38,10 @@
     import {
         IndexedPluridPlane,
     } from '../plane';
+
+    import {
+        PluridPlanesRegistrar,
+    } from '../registrar';
     // #endregion external
 // #endregion imports
 
@@ -119,6 +123,8 @@ export interface PluridApplication {
     static?: boolean;
 
     precomputedState?: Partial<PluridState>;
+
+    planesRegistrar?: PluridPlanesRegistrar;
 }
 
 
