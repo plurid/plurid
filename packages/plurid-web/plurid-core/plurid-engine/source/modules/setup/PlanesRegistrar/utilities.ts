@@ -54,7 +54,7 @@ const getPlanesRegistrar = (
         return planesRegistrar;
     }
 
-    if (window) {
+    if (typeof window !== 'undefined') {
         if ((window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined) {
             return (window as PluridalWindow).__pluridPlanesRegistrar__;
         }
@@ -71,7 +71,7 @@ const getRegisteredPlanes = (
         return planesRegistrar.getAll();
     }
 
-    if (window) {
+    if (typeof window !== 'undefined') {
         if ((window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined) {
             return (window as PluridalWindow).__pluridPlanesRegistrar__.getAll();
         }
@@ -89,7 +89,7 @@ const getRegisteredPlane = (
         return planesRegistrar.get(route);
     }
 
-    if (window) {
+    if (typeof window !== 'undefined') {
         if ((window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined) {
             return (window as PluridalWindow).__pluridPlanesRegistrar__.get(route);
         }
