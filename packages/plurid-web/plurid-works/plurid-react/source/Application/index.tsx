@@ -14,6 +14,7 @@
 
     import {
         PluridApplication as PluridApplicationProperties,
+        PluridState,
     } from '@plurid/plurid-data';
 
     import {
@@ -99,6 +100,10 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             planesRegistrar,
         );
 
+        const currentState: PluridState | undefined = this.store
+            ? this.store.getState()
+            : undefined;
+
         const contextState = id && this.context && this.context.states[id]
             ? this.context.states[id]
             : undefined;
@@ -107,6 +112,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             view,
             configuration,
             planesRegistrar,
+            currentState,
             precomputedState,
             contextState,
         );
