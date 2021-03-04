@@ -10,8 +10,8 @@
     } from '../../external';
 
     import {
-        RegisteredPluridPlane,
-    } from '../../external/plane';
+        PluridPlanesRegistrar,
+    } from '../../external/registrar';
     // #endregion external
 // #endregion imports
 
@@ -19,7 +19,7 @@
 
 // #region module
 export interface PluridContext {
-    planesRegistry: Map<string, RegisteredPluridPlane>;
+    planesRegistrar?: PluridPlanesRegistrar;
     planeContext?: PluridPlaneContext<any>;
     planeContextValue?: any;
 
