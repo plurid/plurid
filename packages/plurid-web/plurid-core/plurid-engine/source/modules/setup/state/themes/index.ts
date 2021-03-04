@@ -8,6 +8,7 @@
     import {
         PluridConfiguration,
         PluridStateThemes,
+        PluridState,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -17,6 +18,7 @@
 // #region module
 const resolveThemes = (
     configuration: PluridConfiguration,
+    precomputedState: Partial<PluridState> | undefined,
 ) => {
     let generalTheme: Theme | undefined;
     let interactionTheme: Theme | undefined;
@@ -48,6 +50,7 @@ const resolveThemes = (
     const stateThemes: PluridStateThemes = {
         general: generalTheme || themes.plurid,
         interaction: interactionTheme || themes.plurid,
+        ...precomputedState?.themes,
     };
 
     return stateThemes;
