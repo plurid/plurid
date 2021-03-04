@@ -802,10 +802,9 @@ class PluridServer {
         } catch (error) {
             if (this.options.debug !== 'none' && !this.options.quiet) {
                 const errorText = `${this.options.serverName} Error: Something went wrong in getContentAndStyles().`
-                if (this.options.debug === 'error') {
+
+                if (this.debugAllows('error')) {
                     console.error(errorText, error);
-                } else {
-                    console.log(errorText);
                 }
             }
 
