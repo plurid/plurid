@@ -49,6 +49,7 @@ const App = () => {
         <PluridApplication
             planes={pluridPlanes}
             view={pluridView}
+            // useLocalStorage={true}
         />
     );
 }
