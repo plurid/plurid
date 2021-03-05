@@ -1,26 +1,42 @@
+// #region imports
+    // #region external
+    import {
+        PluridPubSubTopic,
+    } from '~constants/pubsub';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        PluridPubSubPublishMessage,
+        PluridPubSubSubscribeMessage,
+    } from './message';
+    // #endregion internal
+// #endregion imports
+
+
+
 // #region module
+export * from './message';
+
+
+
 export interface PluridPubSubOptions {
     debug?: boolean;
 }
 
 
+
 export interface PluridPubSub {
-    publish: <D = any>(
-        topic: string,
-        data: D,
-    ) => void;
-    subscribe: (
-        topic: string,
-        callback: PluridPubSubCallback,
-    ) => number;
-    unsubscribe: (
+    publish(
+        message: PluridPubSubPublishMessage,
+    ): void;
+    subscribe(
+        message: PluridPubSubSubscribeMessage,
+    ): number;
+    unsubscribe(
         index: number,
-        topic: string,
-    ) => boolean;
+        topic: PluridPubSubTopic,
+    ): boolean;
 }
-
-
-export type PluridPubSubCallback = <D = any>(
-    data: D,
-) => void;
 // #endregion module
