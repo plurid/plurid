@@ -6,12 +6,16 @@ import React, {
 import {
     PluridApplication,
     PluridPlane,
+    PluridPubSub,
+    TOPICS,
 } from '@plurid/plurid-react';
 
 import Plane1 from './planes/Plane1';
 import Plane2 from './planes/Plane2';
 
 
+
+const pluridPubSub = new PluridPubSub();
 
 const App = () => {
     const pluridPlanes: PluridPlane[] = [
@@ -45,11 +49,23 @@ const App = () => {
         }, 3000);
     }, [])
 
+    useEffect(() => {
+        setTimeout(() => {
+            pluridPubSub.publish(
+                TOPICS.SPACE_ROTATE_Y_TO,
+                {
+                    value: 50,
+                },
+            );
+        }, 3000);
+    }, [])
+
     return (
         <PluridApplication
             planes={pluridPlanes}
             view={pluridView}
             // useLocalStorage={true}
+            pubsub={pluridPubSub}
         />
     );
 }
