@@ -1,17 +1,16 @@
 // #region imports
-    // #region libraries
-    import PluridPubSub from '@plurid/plurid-pubsub';
-    // #endregion libraries
-
-
     // #region external
     import {
         PluridPlaneContext,
-    } from '../../external';
+    } from '~interfaces/external/plane';
 
     import {
         PluridPlanesRegistrar,
-    } from '../../external/registrar';
+    } from '~interfaces/external/registrar';
+
+    import {
+        PluridPubSub,
+    } from '~interfaces/external/pubsub';
     // #endregion external
 // #endregion imports
 
