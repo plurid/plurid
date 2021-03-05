@@ -8,12 +8,6 @@
 
         "baseUrl": ".",
         "paths": {
-            "~constants/*": [
-                "./source/constants/*"
-            ],
-            "~interfaces/*": [
-                "./source/interfaces/*"
-            ],
             "~objects/*": [
                 "./source/objects/*"
             ]
