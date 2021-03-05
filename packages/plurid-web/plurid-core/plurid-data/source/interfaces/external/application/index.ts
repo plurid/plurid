@@ -1,9 +1,4 @@
 // #region imports
-    // #region libraries
-    import PluridPubSub from '@plurid/plurid-pubsub';
-    // #endregion libraries
-
-
     // #region external
     import {
         PluridState,
@@ -38,6 +33,10 @@
     import {
         IndexedPluridPlane,
     } from '../plane';
+
+    import {
+        PluridPubSub,
+    } from '../pubsub';
 
     import {
         PluridPlanesRegistrar,
