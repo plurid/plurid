@@ -8,13 +8,13 @@
 
         "baseUrl": ".",
         "paths": {
-            "#interaction/*": [
+            "~interaction/*": [
                 "./source/modules/interaction/*"
             ],
-            "#setup/*": [
-                "./source/modules/setup*"
+            "~setup/*": [
+                "./source/modules/setup/*"
             ],
-            "#utilities/*": [
+            "~utilities/*": [
                 "./source/modules/utilities/*"
             ]
         },
@@ -45,7 +45,18 @@
         "noUnusedParameters": false,
 
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+
+        "plugins": [
+            {
+                "transform": "typescript-transform-paths",
+                "afterDeclarations": true,
+            },
+            {
+                "transform": "@zerollup/ts-transform-paths",
+                "exclude": ["*"]
+            }
+        ]
     },
     "include": [
         "source"

@@ -29,4 +29,13 @@ module.exports = {
     collectCoverageFrom: [
         'source/*.{js,ts}',
     ],
+    moduleDirectories: [
+        'node_modules',
+        'source',
+    ],
+    moduleNameMapper: {
+        "interaction/(.*)": "<rootDir>/source/modules/interaction/$1",
+        "setup/(.*)": "<rootDir>/source/modules/setup/$1",
+        "utilities/(.*)": "<rootDir>/source/modules/utilities/$1",
+    },
 }
