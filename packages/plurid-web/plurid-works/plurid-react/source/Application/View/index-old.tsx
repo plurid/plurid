@@ -30,6 +30,7 @@
         RegisteredPluridPlane,
         PluridView,
         TreePlane,
+        PluridPubSub as IPluridPubSub,
     } from '@plurid/plurid-data';
 
     import {
@@ -224,7 +225,7 @@ const PluridView: React.FC<ViewProperties> = (
 
 
     /** state */
-    const [pluridPubSub, setPluridPubSub] = useState<(PluridPubSub | undefined)[]>(pubsub ? [pubsub] : []);
+    const [pluridPubSub, setPluridPubSub] = useState<(IPluridPubSub | undefined)[]>(pubsub ? [pubsub] : []);
 
 
     /** callbacks */
@@ -566,7 +567,7 @@ const PluridView: React.FC<ViewProperties> = (
     }
 
     const handlePubSubPublish = (
-        pubsub: PluridPubSub,
+        pubsub: IPluridPubSub,
     ) => {
         const internalTransform = {
             value: {

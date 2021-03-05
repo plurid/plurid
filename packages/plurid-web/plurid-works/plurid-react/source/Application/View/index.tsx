@@ -30,6 +30,7 @@
         RegisteredPluridPlane,
         PluridView,
         TreePlane,
+        PluridPubSub as IPluridPubSub,
     } from '@plurid/plurid-data';
 
     import {
@@ -169,6 +170,7 @@ const PluridView: React.FC<ViewProperties> = (
             // #region values
             view,
             planesRegistrar,
+            pubsub,
             // #endregion values
         // #endregion required
 
@@ -214,6 +216,18 @@ const PluridView: React.FC<ViewProperties> = (
     // #region references
     const viewElement = useRef<HTMLDivElement | null>(null);
     // #endregion references
+
+
+    // #region state
+    const [
+        pluridPubSub,
+        setPluridPubSub,
+    ] = useState<IPluridPubSub[]>(
+        pubsub
+            ? [pubsub]
+            : []
+    );
+    // #endregion state
 
 
     // #region callbacks
@@ -282,7 +296,7 @@ const PluridView: React.FC<ViewProperties> = (
     // #region handlers
         // #region handlers pubsub
         const handlePubSubSubscribe = (
-            pubsub: PluridPubSub,
+            pubsub: IPluridPubSub,
         ) => {
             pubsub.subscribe(TOPICS.SPACE_TRANSFORM, (data: any) => {
                 const {
@@ -413,7 +427,7 @@ const PluridView: React.FC<ViewProperties> = (
         }
 
         const handlePubSubPublish = (
-            pubsub: PluridPubSub,
+            pubsub: IPluridPubSub,
         ) => {
             const internalTransform = {
                 value: {
@@ -427,14 +441,14 @@ const PluridView: React.FC<ViewProperties> = (
         }
 
         const registerPubSub = (
-            pubsub: PluridPubSub,
+            pubsub: IPluridPubSub,
         ) => {
-            // const pluridPubSubs = [
-            //     ...pluridPubSub,
-            //     pubsub,
-            // ];
+            const pluridPubSubs = [
+                ...pluridPubSub,
+                pubsub,
+            ];
 
-            // setPluridPubSub(pluridPubSubs);
+            setPluridPubSub(pluridPubSubs);
         }
         // #endregion handlers pubsub
 
@@ -737,24 +751,24 @@ const PluridView: React.FC<ViewProperties> = (
         // #region effects pubsub
         /** PubSub Subscribe */
         useEffect(() => {
-            // for (const pubsub of pluridPubSub) {
-            //     if (pubsub) {
-            //         handlePubSubSubscribe(pubsub as any);
-            //     }
-            // }
+            for (const pubsub of pluridPubSub) {
+                if (pubsub) {
+                    handlePubSubSubscribe(pubsub);
+                }
+            }
         }, [
-            // pluridPubSub.length,
+            pluridPubSub.length,
         ]);
 
         /** PubSub Publish */
         useEffect(() => {
-            // for (const pubsub of pluridPubSub) {
-            //     if (pubsub) {
-            //         handlePubSubPublish(pubsub);
-            //     }
-            // }
+            for (const pubsub of pluridPubSub) {
+                if (pubsub) {
+                    handlePubSubPublish(pubsub);
+                }
+            }
         }, [
-            // pluridPubSub.length,
+            pluridPubSub.length,
             stateConfiguration,
             stateTransform,
         ]);
