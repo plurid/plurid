@@ -17,6 +17,10 @@ const load = (
         return;
     }
 
+    if (typeof localStorage === 'undefined') {
+        return;
+    }
+
     try {
         const stateID = id || 'default';
 
@@ -26,7 +30,10 @@ const load = (
             return;
         }
 
-        const state: PluridState | undefined = JSON.parse(stateData);
+        const state: PluridState = JSON.parse(stateData);
+
+        // TODO
+        // check state conforms to the PluridState datashape using datasign
 
         return state;
     } catch (error) {
