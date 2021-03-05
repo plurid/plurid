@@ -12,11 +12,11 @@
 
 
     // #region external
-    import * as space from '../../space';
+    import * as space from '../../../space';
 
     import {
         getRegisteredPlanes,
-    } from '../../PlanesRegistrar';
+    } from '../../../PlanesRegistrar';
     // #endregion external
 // #endregion imports
 
