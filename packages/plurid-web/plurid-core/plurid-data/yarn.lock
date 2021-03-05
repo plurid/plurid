@@ -59,11 +59,6 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@plurid/plurid-pubsub@0.0.0-2":
-  version "0.0.0-2"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.0.0-2.tgz#a0ba328befcef99220ed9ee5963db066f95472bd"
-  integrity sha512-bDQpIcxQ335RLTPn53AHou3uVDve73IAT0/hTggl8mJuU7I/f4upxaG22Qwg3arPNEwkgXl2wrwrQeEDaZ4dcw==
-
 "@plurid/plurid-themes@0.0.0-0":
   version "0.0.0-0"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.0.0-0.tgz#a478114a291ebbade70ff030b81feb49beb48294"
