@@ -1,18 +1,18 @@
 // #region imports
-    // #region external
+    // #region libraries
     import {
-        IPluridPubSub,
+        PluridPubSub as IPluridPubSub,
         PluridPubSubOptions,
-        Callback,
-    } from '~interfaces/index';
-    // #endregion external
+        PluridPubSubCallback,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 // #endregion imports
 
 
 
 // #region module
 class PluridPubSub implements IPluridPubSub {
-    private subscriptions: Record<string, Callback[] | undefined> = {};
+    private subscriptions: Record<string, PluridPubSubCallback[] | undefined> = {};
     private options: PluridPubSubOptions | undefined;
 
 
@@ -51,7 +51,7 @@ class PluridPubSub implements IPluridPubSub {
 
     public subscribe(
         topic: string,
-        callback: Callback,
+        callback: PluridPubSubCallback,
     ) {
         if (this.subscriptions[topic]) {
             this.subscriptions[topic]?.push(callback);
