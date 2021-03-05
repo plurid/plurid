@@ -11,7 +11,7 @@ import {
     PluridApplicationConfigurator,
     PluridPubSub,
 
-    TOPICS,
+    PLURID_PUBSUB_TOPIC,
 } from '@plurid/plurid-react';
 
 import {
@@ -41,32 +41,32 @@ const Plane: React.FC<ReactComponentWithPlurid<any>> = (
 
     /** handlers */
     const addView = () => {
-        pluridPubSub.publish(
-            TOPICS.VIEW_ADD_PLANE,
-            {
+        pluridPubSub.publish({
+            topic: PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
+            data: {
                 plane: '/plane-2',
             },
-        );
+        });
     }
 
     const setView = () => {
-        pluridPubSub.publish(
-            TOPICS.VIEW_SET_PLANES,
-            {
+        pluridPubSub.publish({
+            topic: PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
+            data: {
                 view: [
                     '/plane-2',
                 ],
             },
-        );
+        });
     }
 
     const removePlane = () => {
-        pluridPubSub.publish(
-            TOPICS.VIEW_REMOVE_PLANE,
-            {
+        pluridPubSub.publish({
+            topic: PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
+            data: {
                 plane: '/plane-2',
             },
-        );
+        });
     }
 
 

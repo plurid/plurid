@@ -8,7 +8,7 @@ import {
     PluridPartialConfiguration,
     PluridPubSub,
 
-    TOPICS,
+    // PLURID_PUBSUB_TOPIC,
 } from '@plurid/plurid-react';
 
 import {
@@ -60,34 +60,34 @@ const App = () => {
 
     /** effects */
     useEffect(() => {
-        pluridPubSub.publish(TOPICS.SPACE_ANIMATED_TRANSFORM, {
-            value: {
-                active: true,
-                time: 2000,
-            },
-        });
+        // pluridPubSub.publish(PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM, {
+        //     value: {
+        //         active: true,
+        //         time: 2000,
+        //     },
+        // });
 
         setTimeout(() => {
-            const spaceTransform = {
-                value: {
-                    // translationX: 0,
-                    // translationY: 0,
-                    // translationZ: 0,
-                    // rotationX: 0,
-                    rotationY: 50,
-                    // scale: 1,
-                },
-            };
-            pluridPubSub.publish(TOPICS.SPACE_TRANSFORM, spaceTransform);
+            // const spaceTransform = {
+            //     value: {
+            //         // translationX: 0,
+            //         // translationY: 0,
+            //         // translationZ: 0,
+            //         // rotationX: 0,
+            //         rotationY: 50,
+            //         // scale: 1,
+            //     },
+            // };
+            // pluridPubSub.publish(PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM, spaceTransform);
         }, 1);
 
 
         setTimeout(() => {
-            pluridPubSub.publish(TOPICS.SPACE_ANIMATED_TRANSFORM, {
-                value: {
-                    active: false,
-                },
-            });
+            // pluridPubSub.publish(PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM, {
+            //     value: {
+            //         active: false,
+            //     },
+            // });
         }, 2100);
     }, []);
 

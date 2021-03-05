@@ -8,6 +8,8 @@ import {
     PluridPlane,
     PluridPubSub,
     PLURID_PUBSUB_TOPIC,
+    // PluridPubSubPublishMessage,
+    // PluridPubSubSubscribeMessage,
 } from '@plurid/plurid-react';
 
 import Plane1 from './planes/Plane1';
@@ -58,12 +60,12 @@ const App = () => {
                 },
             });
 
-            pluridPubSub.publish({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
-                data: {
-                    value: 50,
-                },
-            });
+            // pluridPubSub.publish({
+            //     topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
+            //     data: {
+            //         value: 50,
+            //     },
+            // });
         }, 3000);
     }, [])
 
