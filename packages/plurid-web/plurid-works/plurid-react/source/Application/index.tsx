@@ -150,7 +150,6 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         }
 
         const {
-            id,
             useLocalStorage,
         } = this.props;
 
