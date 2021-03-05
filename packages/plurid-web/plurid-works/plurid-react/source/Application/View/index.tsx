@@ -151,7 +151,7 @@ const PluridView: React.FC<ViewProperties> = (
     const {
         // #region required
             // #region values
-            view,
+            // view,
             planesRegistrar,
             pubsub,
             // #endregion values
@@ -258,19 +258,18 @@ const PluridView: React.FC<ViewProperties> = (
     const treeUpdateCallback = useCallback(() => {
         // TODO?
         // stateConfiguration update
-
         const planes = getRegisteredPlanes(planesRegistrar);
 
         const spaceTree = new space.tree.Tree({
             planes,
             configuration: stateConfiguration,
-            view,
+            view: stateSpaceView,
         });
 
         const computedTree = spaceTree.compute();
         dispatchSetTree(computedTree);
     }, [
-        view,
+        stateSpaceView,
         stateConfiguration,
     ]);
     // #endregion callbacks
@@ -630,7 +629,7 @@ const PluridView: React.FC<ViewProperties> = (
             }
         }
         // #endregion handlers touch
-    // #endregion handlers
+        // #endregion handlers
 
 
     // #region effects
@@ -700,7 +699,8 @@ const PluridView: React.FC<ViewProperties> = (
                 window.removeEventListener('resize', treeUpdateCallback);
             }
         }, [
-            view,
+            stateSpaceView,
+            stateConfiguration,
         ]);
         // #endregion effects listeners
 
@@ -791,6 +791,13 @@ const PluridView: React.FC<ViewProperties> = (
             stateTransform,
         ]);
         // #endregion effects pubsub
+
+
+        useEffect(() => {
+            treeUpdateCallback();
+        }, [
+            stateSpaceView,
+        ]);
     // #endregion effects
 
 
@@ -801,7 +808,7 @@ const PluridView: React.FC<ViewProperties> = (
     };
 
     const viewContainer = handleView(
-        view,
+        stateSpaceView,
     );
 
     return (
