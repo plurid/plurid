@@ -1,3 +1,4 @@
+import ttypescript from 'ttypescript';
 import commonjs from '@rollup/plugin-commonjs';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
@@ -31,6 +32,7 @@ export default {
     },
     plugins: [
         typescript({
+            typescript: ttypescript,
             rollupCommonJSResolveHack: true,
             clean: true,
         }),
