@@ -1,6 +1,11 @@
 // #region imports
     // #region libraries
     import {
+        // #region constants
+        PLURID_PUBSUB_TOPIC,
+        // #endregion constants
+
+
         // #region interfaces
         PluridPlane,
         IndexedPluridPlane,
@@ -40,9 +45,7 @@
         router,
     } from '@plurid/plurid-engine';
 
-    import PluridPubSub, {
-        TOPICS,
-    } from '@plurid/plurid-pubsub';
+    import PluridPubSub from '@plurid/plurid-pubsub';
     // #endregion libraries
 
 
@@ -116,7 +119,7 @@ const Plurid = {
 
     /** PubSub */
     PubSub: PluridPubSub,
-    TOPICS,
+    PUBSUB_TOPIC: PLURID_PUBSUB_TOPIC,
 
     /** Server */
     serverComputeMetastate,
@@ -187,7 +190,7 @@ export {
 
     /** PubSub */
     PluridPubSub,
-    TOPICS,
+    PLURID_PUBSUB_TOPIC,
 
     /** Server */
     serverComputeMetastate,

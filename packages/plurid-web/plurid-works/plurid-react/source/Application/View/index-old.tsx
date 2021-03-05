@@ -14,6 +14,7 @@
     import {
         /** constants */
         PLURID_ENTITY_VIEW,
+        PLURID_PUBSUB_TOPIC,
         defaultTreePlane,
 
         /** enumerations */
@@ -39,9 +40,7 @@
         general as generalEngine,
     } from '@plurid/plurid-engine';
 
-    import PluridPubSub, {
-        TOPICS,
-    } from '@plurid/plurid-pubsub';
+    import PluridPubSub from '@plurid/plurid-pubsub';
 
     import {
         meta,
@@ -438,132 +437,132 @@ const PluridView: React.FC<ViewProperties> = (
     const handlePubSubSubscribe = (
         pubsub: PluridPubSub,
     ) => {
-        pubsub.subscribe(TOPICS.SPACE_TRANSFORM, (data: any) => {
-            const {
-                value,
-                internal,
-            } = data;
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM, (data: any) => {
+        //     const {
+        //         value,
+        //         internal,
+        //     } = data;
 
-            if (internal) {
-                return;
-            }
+        //     if (internal) {
+        //         return;
+        //     }
 
-            dispatchSetSpaceLocation(value);
-        });
+        //     dispatchSetSpaceLocation(value);
+        // });
 
-        pubsub.subscribe(TOPICS.SPACE_ANIMATED_TRANSFORM, (data: any) => {
-            const {
-                value,
-            } = data;
-
-            dispatchSetAnimatedTransform(value.active);
-
-            if (value.time) {
-                dispatchSetTransformTime(value.time);
-            } else {
-                dispatchSetTransformTime(450);
-            }
-        });
-
-        pubsub.subscribe(TOPICS.SPACE_ROTATE_X_WITH, (data: any) => {
-            const {
-                value,
-            } = data;
-            dispatchRotateXWith(value);
-        });
-
-        pubsub.subscribe(TOPICS.SPACE_ROTATE_X_TO, (data: any) => {
-            const {
-                value,
-            } = data;
-            dispatchRotateX(value);
-        });
-
-
-        pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_WITH, (data: any) => {
-            const {
-                value,
-            } = data;
-            dispatchRotateYWith(value);
-        });
-
-        pubsub.subscribe(TOPICS.SPACE_ROTATE_Y_TO, (data: any) => {
-            const {
-                value,
-            } = data;
-            dispatchRotateY(value);
-        });
-
-
-        pubsub.subscribe(TOPICS.SPACE_TRANSLATE_X_WITH, (data: any) => {
-            const {
-                value,
-            } = data;
-            dispatchTranslateXWith(value);
-        });
-
-        // pubsub.subscribe(TOPICS.SPACE_TRANSLATE_X_TO, (data: any) => {
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM, (data: any) => {
         //     const {
         //         value,
         //     } = data;
-        //     dispatchTranslateX(value);
+
+        //     dispatchSetAnimatedTransform(value.active);
+
+        //     if (value.time) {
+        //         dispatchSetTransformTime(value.time);
+        //     } else {
+        //         dispatchSetTransformTime(450);
+        //     }
         // });
 
-        pubsub.subscribe(TOPICS.SPACE_TRANSLATE_Y_WITH, (data: any) => {
-            const {
-                value,
-            } = data;
-            dispatchTranslateYWith(value);
-        });
-
-        // pubsub.subscribe(TOPICS.SPACE_TRANSLATE_Y_TO, (data: any) => {
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH, (data: any) => {
         //     const {
         //         value,
         //     } = data;
-        //     dispatchTranslateY(value);
+        //     dispatchRotateXWith(value);
+        // });
+
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO, (data: any) => {
+        //     const {
+        //         value,
+        //     } = data;
+        //     dispatchRotateX(value);
         // });
 
 
-        pubsub.subscribe(TOPICS.VIEW_ADD_PLANE, (data: any) => {
-            const {
-                plane,
-            } = data;
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH, (data: any) => {
+        //     const {
+        //         value,
+        //     } = data;
+        //     dispatchRotateYWith(value);
+        // });
 
-            const updatedView = [
-                ...stateSpaceView,
-                plane,
-            ];
-            dispatchSpaceSetView(updatedView);
-        });
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO, (data: any) => {
+        //     const {
+        //         value,
+        //     } = data;
+        //     dispatchRotateY(value);
+        // });
 
-        pubsub.subscribe(TOPICS.VIEW_SET_PLANES, (data: any) => {
-            const {
-                view,
-            } = data;
 
-            dispatchSpaceSetView([
-                ...view,
-            ]);
-        });
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH, (data: any) => {
+        //     const {
+        //         value,
+        //     } = data;
+        //     dispatchTranslateXWith(value);
+        // });
 
-        pubsub.subscribe(TOPICS.VIEW_REMOVE_PLANE, (data: any) => {
-            const {
-                plane,
-            } = data;
+        // // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_TO, (data: any) => {
+        // //     const {
+        // //         value,
+        // //     } = data;
+        // //     dispatchTranslateX(value);
+        // // });
 
-            /** TODO
-             * a less naive filtering
-             */
-            const updatedView = stateSpaceView.filter(view => {
-                if (typeof view === 'string') {
-                    return view === plane;
-                }
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_WITH, (data: any) => {
+        //     const {
+        //         value,
+        //     } = data;
+        //     dispatchTranslateYWith(value);
+        // });
 
-                return true;
-            });
+        // // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_TO, (data: any) => {
+        // //     const {
+        // //         value,
+        // //     } = data;
+        // //     dispatchTranslateY(value);
+        // // });
 
-            dispatchSpaceSetView(updatedView);
-        });
+
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE, (data: any) => {
+        //     const {
+        //         plane,
+        //     } = data;
+
+        //     const updatedView = [
+        //         ...stateSpaceView,
+        //         plane,
+        //     ];
+        //     dispatchSpaceSetView(updatedView);
+        // });
+
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES, (data: any) => {
+        //     const {
+        //         view,
+        //     } = data;
+
+        //     dispatchSpaceSetView([
+        //         ...view,
+        //     ]);
+        // });
+
+        // pubsub.subscribe(PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE, (data: any) => {
+        //     const {
+        //         plane,
+        //     } = data;
+
+        //     /** TODO
+        //      * a less naive filtering
+        //      */
+        //     const updatedView = stateSpaceView.filter(view => {
+        //         if (typeof view === 'string') {
+        //             return view === plane;
+        //         }
+
+        //         return true;
+        //     });
+
+        //     dispatchSpaceSetView(updatedView);
+        // });
     }
 
     const handlePubSubPublish = (
@@ -575,9 +574,9 @@ const PluridView: React.FC<ViewProperties> = (
             },
             internal: true,
         };
-        pubsub.publish(TOPICS.SPACE_TRANSFORM, internalTransform);
+        // pubsub.publish(PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM, internalTransform);
 
-        // pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
+        // pubsub.publish(PLURID_PUBSUB_TOPIC.CONFIGURATION, stateConfiguration);
     }
 
     const registerPubSub = (
@@ -588,7 +587,7 @@ const PluridView: React.FC<ViewProperties> = (
             pubsub,
         ];
 
-        setPluridPubSub(pluridPubSubs);
+        // setPluridPubSub(pluridPubSubs);
     }
 
 
