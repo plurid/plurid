@@ -1,6 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
+import cleanup from 'rollup-plugin-cleanup';
 
 const pkg = require('../package.json');
 
@@ -35,5 +36,10 @@ export default {
         }),
         commonjs(),
         sourceMaps(),
+        cleanup({
+            extensions: [
+                'ts',
+            ],
+        }),
     ],
 };
