@@ -7,7 +7,7 @@ import {
     PluridApplication,
     PluridPlane,
     PluridPubSub,
-    TOPICS,
+    PLURID_PUBSUB_TOPIC,
 } from '@plurid/plurid-react';
 
 import Plane1 from './planes/Plane1';
@@ -51,12 +51,19 @@ const App = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            pluridPubSub.publish(
-                TOPICS.SPACE_ROTATE_Y_TO,
-                {
+            pluridPubSub.publish({
+                topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO,
+                data: {
                     value: 50,
                 },
-            );
+            });
+
+            pluridPubSub.publish({
+                topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
+                data: {
+                    value: 50,
+                },
+            });
         }, 3000);
     }, [])
 
