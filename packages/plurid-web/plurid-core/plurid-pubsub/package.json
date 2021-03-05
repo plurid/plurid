@@ -43,7 +43,11 @@
         "build": "yarn lint && yarn test && yarn build.production && yarn clean.tests",
         "prepublishOnly": "yarn build"
     },
+    "peerDependencies": {
+        "@plurid/plurid-data": "*"
+    },
     "devDependencies": {
+        "@plurid/plurid-data": "^0.0.0-0",
         "@types/jest": "^26.0.20",
         "@types/react": "^17.0.2",
         "@typescript-eslint/eslint-plugin": "^4.16.1",

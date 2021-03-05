@@ -536,6 +536,11 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
+"@plurid/plurid-data@^0.0.0-0":
+  version "0.0.0-0"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.0.0-0.tgz#3eed9cd3ee2dbdc8432b89171800d17a74fa61ee"
+  integrity sha512-iCXixYClebcyYg5Kj61cxz48SEcwM4TYKC9loP+cZagTpv6QrdNr60Mo/PlE9mg2iqt4TIrJBkzWMR044flbWg==
+
 "@rollup/pluginutils@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-4.1.0.tgz#0dcc61c780e39257554feb7f77207dceca13c838"
