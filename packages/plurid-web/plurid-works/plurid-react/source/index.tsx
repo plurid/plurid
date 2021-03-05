@@ -1,7 +1,7 @@
 // #region imports
     // #region libraries
     import {
-        /** Interfaces */
+        // #region interfaces
         PluridPlane,
         IndexedPluridPlane,
         PluridView,
@@ -23,14 +23,17 @@
 
         PluridPreserve,
         PluridPreserveTransmission,
+        // #endregion interfaces
 
-        /** Enumerations */
+
+        // #region enumerations
         LAYOUT_TYPES as SPACE_LAYOUT,
         SIZES,
         TRANSFORM_MODES,
         TRANSFORM_TOUCHES,
         PLURID_ROUTER_LOCATION_CHANGED,
         PLURID_ROUTER_LOCATION_STORED,
+        // #endregion enumerations
     } from '@plurid/plurid-data';
 
     import {
@@ -89,7 +92,7 @@ const {
  * Components and utilities.
  */
 const Plurid = {
-    /** COMPONENTS */
+    // #region Components
     Application: PluridApplication,
     SingleApplication: PluridSingleApplication,
 
@@ -101,9 +104,10 @@ const Plurid = {
     PlaneConfigurator: PluridPlaneConfigurator,
     ApplicationConfigurator: PluridApplicationConfigurator,
     Provider: PluridProvider,
+    // #endregion Components
 
 
-    /** UTILITIES */
+    // #region Utilities
     /** Enumerations */
     SPACE_LAYOUT,
     SIZES,
@@ -119,6 +123,7 @@ const Plurid = {
 
     /** Router */
     routerNavigate: pluridRouterNavigate,
+    // #endregion Utilities
 };
 // #endregion module
 
@@ -126,7 +131,7 @@ const Plurid = {
 
 // #region exports
 export {
-    /** Components */
+    // #region Components
     PluridApplication,
     PluridSingleApplication,
     PluridExposedApplication,
@@ -139,9 +144,10 @@ export {
     PluridPlaneConfigurator,
     PluridApplicationConfigurator,
     PluridProvider,
+    // #endregion Components
 
 
-    /** UTILITIES */
+    // #region Utilities
     /** Interfaces */
     PluridPlane,
     IndexedPluridPlane,
@@ -192,6 +198,7 @@ export {
 
     /** state */
     pluridStateModules,
+    // #endregion Utilities
 };
 
 
