@@ -46,8 +46,9 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
 
     public context!: React.ContextType<typeof PluridProviderContext>;
 
-    private store: Store;
+    private store: Store<PluridState>;
     private storeSubscriber: ReduxUnsubscribe | undefined;
+    private storeID: string;
 
 
     constructor(
@@ -55,6 +56,8 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         context: React.ContextType<typeof PluridProviderContext>,
     ) {
         super(properties);
+
+        this.storeID = properties.id || 'default';
 
         this.context = context;
 
@@ -111,12 +114,12 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             planesRegistrar,
         );
 
-        const currentState: PluridState | undefined = this.store
+        const currentState = this.store
             ? this.store.getState()
             : undefined;
 
         const localState = state.local.load(
-            id,
+            this.storeID,
             useLocalStorage,
         );
 
@@ -142,6 +145,10 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             return;
         }
 
+        if (typeof localStorage === 'undefined') {
+            return;
+        }
+
         const {
             id,
             useLocalStorage,
@@ -154,10 +161,9 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         this.storeSubscriber = this.store.subscribe(() => {
             const state = this.store.getState();
             const stateData = JSON.stringify(state);
-            const stateID = id || 'default';
 
             localStorage.setItem(
-                'pluridState-' + stateID,
+                'pluridState-' + this.storeID,
                 stateData,
             );
         });
