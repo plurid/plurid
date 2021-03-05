@@ -16,6 +16,10 @@
 
 
 // #region module
+/**
+ * The planes registrar can be stored in-memory (server-side)
+ * or on the `window.__pluridPlanesRegistrar__` object (browser-side).
+ */
 class PluridPlanesRegistrar implements IPluridPlanesRegistrar {
     // TODO
     // Store the planes in a better data structure.
