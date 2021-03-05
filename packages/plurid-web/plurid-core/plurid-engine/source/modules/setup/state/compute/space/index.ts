@@ -52,8 +52,6 @@ const resolveSpace = (
         translationX: 0,
         translationY: 0,
         translationZ: 0,
-        initialTree: computedTree,
-        tree: computedTree,
         activeUniverseID: '',
         camera: {
             x: 0,
@@ -74,10 +72,16 @@ const resolveSpace = (
                 z: 0,
             },
         },
-        view,
         culledView: [],
+
         ...precomputedState?.space,
         ...contextState?.space,
+        ...localState?.space,
+        ...currentState?.space,
+
+        view,
+        initialTree: computedTree,
+        tree: computedTree,
     };
 
     if (currentState) {

@@ -50,6 +50,8 @@ const compute = (
         ...specifiedConfiguration,
         ...precomputedState?.configuration,
         ...contextState?.configuration,
+        ...localState?.configuration,
+        ...currentState?.configuration,
     };
 
     const stateSpace = resolveSpace(
