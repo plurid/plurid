@@ -283,7 +283,7 @@ const PluridView: React.FC<ViewProperties> = (
         ) => {
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         value,
                         internal,
@@ -299,7 +299,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         value,
                     } = data;
@@ -316,7 +316,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         value,
                     } = data;
@@ -326,7 +326,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         value,
                     } = data;
@@ -337,7 +337,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         value,
                     } = data;
@@ -347,7 +347,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         value,
                     } = data;
@@ -358,7 +358,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         value,
                     } = data;
@@ -366,7 +366,7 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
-            // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_TO, (data: any) => {
+            // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_TO, (data) => {
             //     const {
             //         value,
             //     } = data;
@@ -375,7 +375,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_WITH,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         value,
                     } = data;
@@ -383,7 +383,7 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
-            // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_TO, (data: any) => {
+            // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_TO, (data) => {
             //     const {
             //         value,
             //     } = data;
@@ -393,7 +393,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         plane,
                     } = data;
@@ -408,7 +408,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         view,
                     } = data;
@@ -421,7 +421,7 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
-                callback: (data: any) => {
+                callback: (data) => {
                     const {
                         plane,
                     } = data;

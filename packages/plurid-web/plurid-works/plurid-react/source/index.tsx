@@ -28,6 +28,9 @@
 
         PluridPreserve,
         PluridPreserveTransmission,
+
+        PluridPubSubPublishMessage,
+        PluridPubSubSubscribeMessage,
         // #endregion interfaces
 
 
@@ -170,6 +173,9 @@ export {
 
     PluridPreserve,
     PluridPreserveTransmission,
+
+    PluridPubSubPublishMessage,
+    PluridPubSubSubscribeMessage,
 
     PluridConfiguration,
     PluridPartialConfiguration,
