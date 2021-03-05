@@ -4,6 +4,8 @@
         PluridPubSub as IPluridPubSub,
         PluridPubSubOptions,
         PluridPubSubCallback,
+        PluridPubSubPublishMessage,
+        PluridPubSubSubscribeMessage,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -23,10 +25,14 @@ class PluridPubSub implements IPluridPubSub {
     }
 
 
-    public publish<D = any>(
-        topic: string,
-        data: D,
+    public publish (
+        message: PluridPubSubPublishMessage,
     ) {
+        const {
+            topic,
+            data,
+        } = message;
+
         const subscriptions = this.subscriptions[topic];
 
         if (!subscriptions) {
@@ -50,9 +56,13 @@ class PluridPubSub implements IPluridPubSub {
     }
 
     public subscribe(
-        topic: string,
-        callback: PluridPubSubCallback,
+        message: PluridPubSubSubscribeMessage,
     ) {
+        const {
+            topic,
+            callback,
+        } = message;
+
         if (this.subscriptions[topic]) {
             this.subscriptions[topic]?.push(callback);
 
