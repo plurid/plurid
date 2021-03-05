@@ -14,7 +14,6 @@
     import {
         /** constants */
         PLURID_ENTITY_VIEW,
-        defaultTreePlane,
 
         /** enumerations */
         TRANSFORM_MODES,
@@ -23,11 +22,7 @@
         /** interfaces */
         PluridApplication as PluridApplicationProperties,
         PluridConfiguration as PluridAppConfiguration,
-        PluridPartialConfiguration,
         PluridContext,
-        PluridPlane,
-        IndexedPluridPlane,
-        RegisteredPluridPlane,
         PluridView,
         TreePlane,
         PluridPubSub as IPluridPubSub,
@@ -35,13 +30,10 @@
 
     import {
         space,
-        router,
-        general as generalEngine,
-
         getRegisteredPlanes,
     } from '@plurid/plurid-engine';
 
-    import PluridPubSub, {
+    import {
         TOPICS,
     } from '@plurid/plurid-pubsub';
 
@@ -49,9 +41,8 @@
         meta,
     } from '@plurid/plurid-functions';
 
-    import themes, {
+    import {
         Theme,
-        THEME_NAMES,
     } from '@plurid/plurid-themes';
     // #endregion libraries
 
@@ -68,8 +59,6 @@
         loadHammer,
     } from '~services/utilities/imports';
 
-    import renderStatic from '~services/logic/static';
-
     import { AppState } from '~services/state/store';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
@@ -77,9 +66,6 @@
     import {
         ViewSize,
     } from '~services/state/types/space';
-    import {
-        SpaceSize,
-    } from '~services/state/modules/space/types';
     // #endregion external
 
 
@@ -87,7 +73,6 @@
     import './index.css';
 
     import {
-        StyledEmpty,
         GlobalStyle,
         StyledView,
     } from './styled';
@@ -160,6 +145,7 @@ export interface ViewDispatchProperties {
 export type ViewProperties = ViewOwnProperties
     & ViewStateProperties
     & ViewDispatchProperties;
+
 
 const PluridView: React.FC<ViewProperties> = (
     properties,
@@ -437,7 +423,7 @@ const PluridView: React.FC<ViewProperties> = (
             };
             pubsub.publish(TOPICS.SPACE_TRANSFORM, internalTransform);
 
-            // pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
+            pubsub.publish(TOPICS.CONFIGURATION, stateConfiguration);
         }
 
         const registerPubSub = (
@@ -752,9 +738,7 @@ const PluridView: React.FC<ViewProperties> = (
         /** PubSub Subscribe */
         useEffect(() => {
             for (const pubsub of pluridPubSub) {
-                if (pubsub) {
-                    handlePubSubSubscribe(pubsub);
-                }
+                handlePubSubSubscribe(pubsub);
             }
         }, [
             pluridPubSub.length,
@@ -763,9 +747,7 @@ const PluridView: React.FC<ViewProperties> = (
         /** PubSub Publish */
         useEffect(() => {
             for (const pubsub of pluridPubSub) {
-                if (pubsub) {
-                    handlePubSubPublish(pubsub);
-                }
+                handlePubSubPublish(pubsub);
             }
         }, [
             pluridPubSub.length,
