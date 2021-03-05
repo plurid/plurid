@@ -9,7 +9,7 @@
 
 
     // #region external
-    import * as router from '../router';
+    import * as router from '../../router';
     // #endregion external
 // #endregion imports
 

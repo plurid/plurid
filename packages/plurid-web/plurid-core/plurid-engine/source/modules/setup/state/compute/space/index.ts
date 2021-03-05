@@ -16,7 +16,7 @@
 
     import {
         getRegisteredPlanes,
-    } from '../../../PlanesRegistrar';
+    } from '../../../objects/PlanesRegistrar';
     // #endregion external
 // #endregion imports
 

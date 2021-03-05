@@ -29,5 +29,5 @@ export {
     utilities,
 };
 
-export * from './setup/PlanesRegistrar';
+export * from './setup/objects/PlanesRegistrar';
 // #endregion module
