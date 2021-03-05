@@ -1,4 +1,5 @@
 import typescript from 'rollup-plugin-typescript2';
+import cleanup from 'rollup-plugin-cleanup';
 
 import pkg from '../package.json';
 
@@ -24,6 +25,11 @@ export default {
         typescript({
             rollupCommonJSResolveHack: true,
             clean: true,
+        }),
+        cleanup({
+            extensions: [
+                'ts',
+            ],
         }),
     ],
 }

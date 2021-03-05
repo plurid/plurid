@@ -4,7 +4,7 @@
         IPluridPubSub,
         PluridPubSubOptions,
         Callback,
-    } from '../../interfaces';
+    } from '~interfaces/index';
     // #endregion external
 // #endregion imports
 
