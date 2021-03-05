@@ -6,6 +6,7 @@
         PluridPubSubCallback,
         PluridPubSubPublishMessage,
         PluridPubSubSubscribeMessage,
+        PluridPubSubTopic,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -14,7 +15,7 @@
 
 // #region module
 class PluridPubSub implements IPluridPubSub {
-    private subscriptions: Record<string, PluridPubSubCallback[] | undefined> = {};
+    private subscriptions: Map<any, PluridPubSubCallback[] | undefined> = new Map();
     private options: PluridPubSubOptions | undefined;
 
 
@@ -25,7 +26,7 @@ class PluridPubSub implements IPluridPubSub {
     }
 
 
-    public publish (
+    public publish(
         message: PluridPubSubPublishMessage,
     ) {
         const {
@@ -33,7 +34,7 @@ class PluridPubSub implements IPluridPubSub {
             data,
         } = message;
 
-        const subscriptions = this.subscriptions[topic];
+        const subscriptions = this.subscriptions.get(topic);
 
         if (!subscriptions) {
             return;
@@ -63,34 +64,47 @@ class PluridPubSub implements IPluridPubSub {
             callback,
         } = message;
 
-        if (this.subscriptions[topic]) {
-            this.subscriptions[topic]?.push(callback);
+        if (this.subscriptions.has(topic)) {
+            const subscriptions = this.subscriptions.get(topic);
+            subscriptions?.push(callback);
+            this.subscriptions.set(
+                topic,
+                subscriptions,
+            );
 
-            return (this.subscriptions[topic]?.length || 1) - 1;
+            return (subscriptions?.length || 1) - 1;
         }
 
-        this.subscriptions[topic] = [
-            callback,
-        ];
+        this.subscriptions.set(
+            topic,
+            [callback],
+        );
 
         return 0;
     }
 
     public unsubscribe(
         index: number,
-        topic: string,
+        topic: PluridPubSubTopic,
     ) {
         let unsubscribed = false;
 
-        if (this.subscriptions[topic]) {
-            this.subscriptions[topic] = this.subscriptions[topic]?.filter((_, idx) => {
-                if (idx === index) {
-                    unsubscribed = true;
-                    return false;
-                }
+        if (this.subscriptions.has(topic)) {
+            const updatedTopic = this.subscriptions.get(topic)?.filter(
+                (_, idx) => {
+                    if (idx === index) {
+                        unsubscribed = true;
+                        return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                },
+            );
+
+            this.subscriptions.set(
+                topic,
+                updatedTopic,
+            );
         }
 
         return unsubscribed;

@@ -1,3 +1,4 @@
+import ttypescript from 'ttypescript';
 import typescript from 'rollup-plugin-typescript2';
 import cleanup from 'rollup-plugin-cleanup';
 
@@ -23,6 +24,7 @@ export default {
     ],
     plugins: [
         typescript({
+            typescript: ttypescript,
             rollupCommonJSResolveHack: true,
             clean: true,
         }),
