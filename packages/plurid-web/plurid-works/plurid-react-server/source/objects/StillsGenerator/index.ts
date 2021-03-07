@@ -1,32 +1,40 @@
-import path from 'path';
+// #region imports
+    // #region libraries
+    import path from 'path';
 
-import {
-    promises as fs,
-} from 'fs'
+    import {
+        promises as fs,
+    } from 'fs'
 
-import {
-    fork,
-} from 'child_process';
+    import {
+        fork,
+    } from 'child_process';
 
-import detectPort from 'detect-port';
+    import detectPort from 'detect-port';
 
-import {
-    uuid,
-} from '@plurid/plurid-functions';
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
 
-import {
-    PluridRoute,
-} from '@plurid/plurid-data';
-
-import {
-    StillsGeneratorOptions,
-} from '../../data/interfaces';
-
-import Stiller from '../Stiller';
-import PluridServer from '../Server';
+    import {
+        PluridRoute,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        StillsGeneratorOptions,
+    } from '~data/interfaces';
 
+    import Stiller from '../Stiller';
+    import PluridServer from '../Server';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 class StillsGenerator {
     private options: StillsGeneratorOptions;
 
@@ -171,6 +179,10 @@ class StillsGenerator {
         child.kill(2);
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default StillsGenerator;
+// #endregion exports

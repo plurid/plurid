@@ -1,3 +1,4 @@
+// #region module
 /**
  * Parses the elements of a fully-defined pluriversal link.
  *
@@ -74,6 +75,10 @@ class PluridsResponder {
 
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default PluridsResponder;
+// #endregion exports

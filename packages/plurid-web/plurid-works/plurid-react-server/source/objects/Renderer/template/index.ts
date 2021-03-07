@@ -1,13 +1,18 @@
-import {
-    cleanTemplate,
-} from '../../utilities/template';
+// #region imports
+    // #region external
+    import {
+        cleanTemplate,
+    } from '~utilities/template';
 
-import {
-    RendererTemplateData,
-} from '../../data/interfaces';
+    import {
+        RendererTemplateData,
+    } from '~data/interfaces';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 const template = (
     data: RendererTemplateData,
 ) => {
@@ -68,6 +73,10 @@ const template = (
 
     return cleanTemplate(templateString);
 }
+// #endregion module
 
 
+
+// #region exports
 export default template;
+// #endregion exports

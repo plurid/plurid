@@ -1,12 +1,20 @@
-import puppeteer from 'puppeteer';
-
-import {
-    StillerOptions,
-    StillerConfiguration,
-} from '../../data/interfaces';
+// #region imports
+    // #region libraries
+    import puppeteer from 'puppeteer';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        StillerOptions,
+        StillerConfiguration,
+    } from '~data/interfaces';
+    // #endregion external
+// #endregion imports
 
+
+
+// #region module
 /**
  * Replace the rendering viewport resolution in order to reduce the loading flash.
  * @param html
@@ -114,6 +122,10 @@ class Stiller {
         }
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default Stiller;
+// #endregion exports

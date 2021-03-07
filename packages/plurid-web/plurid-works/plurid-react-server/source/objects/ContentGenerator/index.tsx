@@ -1,31 +1,39 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    renderToString,
-} from 'react-dom/server';
+    import {
+        renderToString,
+    } from 'react-dom/server';
 
-import {
-    StyleSheetManager,
-} from 'styled-components';
+    import {
+        StyleSheetManager,
+    } from 'styled-components';
 
-import {
-    HelmetProvider,
-} from 'react-helmet-async';
+    import {
+        HelmetProvider,
+    } from 'react-helmet-async';
 
-import {
-    PluridProvider,
-    PluridRouterStatic,
-} from '@plurid/plurid-react';
-
-import {
-    PluridContentGeneratorData,
-} from '../../data/interfaces';
-
-import wrapping from '../../utilities/wrapping';
+    import {
+        PluridProvider,
+        PluridRouterStatic,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        PluridContentGeneratorData,
+    } from '~data/interfaces';
 
-export default class PluridContentGenerator {
+    import wrapping from '~utilities/wrapping';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
+class PluridContentGenerator {
     private data: PluridContentGeneratorData;
 
     constructor(
@@ -162,3 +170,10 @@ export default class PluridContentGenerator {
         };
     }
 }
+// #endregion module
+
+
+
+// #region exports
+export default PluridContentGenerator;
+// #endregion exports

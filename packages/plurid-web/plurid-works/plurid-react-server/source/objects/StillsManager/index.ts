@@ -1,18 +1,26 @@
-import path from 'path';
+// #region imports
+    // #region libraries
+    import path from 'path';
 
-import {
-    existsSync,
-    promises as fs,
-} from 'fs';
-
-import {
-    PluridServerOptions,
-    StilledPage,
-    StilledMetadataEntry,
-} from '../../data/interfaces';
+    import {
+        existsSync,
+        promises as fs,
+    } from 'fs';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        PluridServerOptions,
+        StilledPage,
+        StilledMetadataEntry,
+    } from '~data/interfaces';
+    // #endregion external
+// #endregion imports
 
+
+
+// #region module
 class StillsManager {
     private options: PluridServerOptions;
     private stills: Map<string, StilledPage> = new Map();
@@ -83,6 +91,10 @@ class StillsManager {
         }
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default StillsManager;
+// #endregion exports

@@ -1,30 +1,38 @@
-import {
-    DEFAULT_RENDERER_REDUX_STATE,
-    DEFAULT_RENDERER_PLURID_STATE,
-    DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE,
-    DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE,
-    DEFAULT_WINDOW_SIZER_SCRIPT,
-    DEFAULT__PRELOADED_REDUX_STATE__,
-    DEFAULT__PRELOADED_PLURID_METASTATE__,
-} from '../../data/constants';
+// #region imports
+    // #region external
+    import {
+        DEFAULT_RENDERER_REDUX_STATE,
+        DEFAULT_RENDERER_PLURID_STATE,
+        DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE,
+        DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE,
+        DEFAULT_WINDOW_SIZER_SCRIPT,
+        DEFAULT__PRELOADED_REDUX_STATE__,
+        DEFAULT__PRELOADED_PLURID_METASTATE__,
+    } from '~data/constants';
 
-import {
-    PluridRendererConfiguration,
-    RendererTemplateData,
-} from '../../data/interfaces';
+    import {
+        PluridRendererConfiguration,
+        RendererTemplateData,
+    } from '~data/interfaces';
 
-import {
-    recordToString,
-    resolveBackgroundStyle,
-    assetsPathRewrite,
-    safeStore,
-} from '../../utilities/template';
-
-import template from './template';
-
+    import {
+        recordToString,
+        resolveBackgroundStyle,
+        assetsPathRewrite,
+        safeStore,
+    } from '~utilities/template';
+    // #endregion external
 
 
-export default class PluridRenderer {
+    // #region internal
+    import template from './template';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
+class PluridRenderer {
     private htmlLanguage: string;
     private htmlAttributes: string;
     private head: string;
@@ -122,3 +130,10 @@ export default class PluridRenderer {
         return template(data);
     }
 }
+// #endregion module
+
+
+
+// #region exports
+export default PluridRenderer;
+// #endregion exports
