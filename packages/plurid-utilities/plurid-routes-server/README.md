@@ -208,7 +208,9 @@ server.handle().post(
                 .send('Server Error');
         }
     }
-)
+);
+
+server.cacheLoad(routes);
 
 server.start();
 // #endregion server
