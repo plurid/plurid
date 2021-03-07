@@ -2,14 +2,30 @@ const PluridRoutesServer = require('../distribution').default;
 
 
 
+const initialRoutes = {
+    '/example-valid-registered': {
+        id: '/example-valid-registered',
+    },
+    '/example-valid-elementql': {
+        elementql: '/example-valid-elementql',
+    },
+    '/example-invalid': {
+    },
+};
+
+const routes = new Map(
+    Object.entries(initialRoutes),
+);
+
+const validToken = 'token';
+
+
 const queryRoute = async (
     route,
 ) => {
     console.log('queryRoute', route);
 
-    return {
-        elementql: '/path/to/element',
-    };
+    return routes.get(route);
 }
 
 const registerRoute = async (
@@ -17,6 +33,8 @@ const registerRoute = async (
     data,
 ) => {
     console.log('registerRoute', route, data);
+
+    routes.set(route, data);
 
     return true;
 }
@@ -26,7 +44,7 @@ const verifyToken = async (
 ) => {
     console.log('verifyToken', token);
 
-    return true;
+    return token === validToken;
 }
 
 
@@ -35,5 +53,32 @@ const server = new PluridRoutesServer({
     registerRoute,
     verifyToken,
 });
+
+
+server.handle().post(
+    '/cache-reset',
+    (request, response) => {
+        try {
+            if (request.body.token !== validToken) {
+                console.log('cacheReset invalid token');
+                response
+                    .status(403)
+                    .send('Forbidden');
+                return;
+            }
+
+            console.log('cacheReset');
+            server.cacheReset();
+
+            response.send('Cache Reseted');
+        } catch (error) {
+            console.log('cacheReset error', error);
+
+            response
+                .status(500)
+                .send('Server Error');
+        }
+    }
+)
 
 server.start();
