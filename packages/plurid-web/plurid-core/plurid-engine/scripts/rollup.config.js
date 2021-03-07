@@ -2,7 +2,7 @@ import ttypescript from 'ttypescript';
 import commonjs from '@rollup/plugin-commonjs';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
-import cleanup from 'rollup-plugin-cleanup';
+import { terser } from 'rollup-plugin-terser';
 
 const pkg = require('../package.json');
 
@@ -38,10 +38,13 @@ export default {
         }),
         commonjs(),
         sourceMaps(),
-        cleanup({
-            extensions: [
-                'ts',
-            ],
+        terser({
+            mangle: false,
+            compress: false,
+            format: {
+                beautify: true,
+                comments: false,
+            },
         }),
     ],
 };
