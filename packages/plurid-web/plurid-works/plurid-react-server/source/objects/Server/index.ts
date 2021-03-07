@@ -168,8 +168,8 @@ class PluridServer {
 
 
         this.configureServer();
-
         this.handleEndpoints();
+
 
         process.addListener('SIGINT', () => {
             this.stop();
@@ -268,8 +268,6 @@ class PluridServer {
 
 
     private handleEndpoints() {
-        this.loadMiddleware();
-
         this.serverApplication.get(
             '*',
             async (request, response, next) => {
@@ -993,6 +991,8 @@ class PluridServer {
                 maxAge: this.options.staticCache,
             }),
         );
+
+        this.loadMiddleware();
     }
 
     private loadMiddleware() {
