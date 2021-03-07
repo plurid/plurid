@@ -275,10 +275,8 @@ The default endpoint values are
 
 and they can be overwritten by environment variables
 
-```
-+ `ENDPOINT_ROUTE` : `process.env.PLURID_ENDPOINT_ROUTE`
-+ `ENDPOINT_REGISTER` : `process.env.PLURID_ENDPOINT_REGISTER`
-```
++ `ENDPOINT_ROUTE` : `process.env.PLURID_ROUTES_SERVER_ENDPOINT_ROUTE`
++ `ENDPOINT_REGISTER` : `process.env.PLURID_ROUTES_SERVER_ENDPOINT_REGISTER`
 
 
 
