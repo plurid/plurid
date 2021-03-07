@@ -6,7 +6,9 @@ import babel from 'rollup-plugin-babel';
 import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-
+import {
+    terser,
+} from 'rollup-plugin-terser';
 
 
 export const input = 'source/index.tsx';
@@ -28,5 +30,13 @@ export const plugins = [
     commonjs(),
     resolve({
         modulesOnly: true,
+    }),
+    terser({
+        mangle: false,
+        compress: false,
+        format: {
+            beautify: true,
+            comments: false,
+        },
     }),
 ];
