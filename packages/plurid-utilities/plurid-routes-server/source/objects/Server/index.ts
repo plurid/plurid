@@ -293,7 +293,7 @@ class PluridRoutesServer {
 
             if (
                 !(data as RouteElementRegistered).id
-                || !(data as RouteElementElementQL).elementql
+                && !(data as RouteElementElementQL).elementql
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
@@ -464,7 +464,7 @@ class PluridRoutesServer {
 
             if (
                 !(data as RouteElementRegistered).id
-                || !(data as RouteElementElementQL).elementql
+                && !(data as RouteElementElementQL).elementql
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
