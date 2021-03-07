@@ -12,18 +12,18 @@ describe('PluridPubSub', () => {
         const pluridPubSub = new PluridPubSub();
 
         pluridPubSub.subscribe({
-            topic: 'space.increase.rotateY',
-            callback: (data: any) => {
+            topic: 'space.rotateYWith',
+            callback: data => {
                 const {
                     value,
                 } = data;
                 // increase the rotateY with value
-                console.log('called topic space.increase.rotateY with value:', value);
+                console.log('called topic space.rotateYWith with value:', value);
             },
         });
 
         pluridPubSub.publish({
-            topic: 'space.increase.rotateY',
+            topic: 'space.rotateYWith',
             data: { value: 1 },
         });
 
@@ -34,24 +34,24 @@ describe('PluridPubSub', () => {
         const pluridPubSub = new PluridPubSub();
 
         const index = pluridPubSub.subscribe({
-            topic: 'space.increase.rotateY',
-            callback: (data: any) => {
+            topic: 'space.rotateYWith',
+            callback: data => {
                 const {
                     value,
                 } = data;
                 // increase the rotateY with value
-                console.log('called topic space.increase.rotateY with value:', value);
+                console.log('called topic space.rotateYWith with value:', value);
             },
         });
 
         pluridPubSub.publish({
-            topic: 'space.increase.rotateY',
+            topic: 'space.rotateYWith',
             data: { value: 1 },
         });
 
         const unsubscribed = pluridPubSub.unsubscribe(
             index,
-            'space.increase.rotateY',
+            'space.rotateYWith',
         );
 
         expect(unsubscribed).toBe(true);

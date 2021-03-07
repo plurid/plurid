@@ -6,7 +6,7 @@
         PluridPubSubCallback,
         PluridPubSubPublishMessage,
         PluridPubSubSubscribeMessage,
-        PluridPubSubTopic,
+        PluridPubSubTopicKeysType,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -85,7 +85,7 @@ class PluridPubSub implements IPluridPubSub {
 
     public unsubscribe(
         index: number,
-        topic: PluridPubSubTopic,
+        topic: PluridPubSubTopicKeysType,
     ) {
         let unsubscribed = false;
 
