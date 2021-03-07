@@ -508,20 +508,20 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@plurid/plurid-data@0.0.0-0":
-  version "0.0.0-0"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-data/-/plurid-data-0.0.0-0.tgz#3eed9cd3ee2dbdc8432b89171800d17a74fa61ee"
-  integrity sha512-iCXixYClebcyYg5Kj61cxz48SEcwM4TYKC9loP+cZagTpv6QrdNr60Mo/PlE9mg2iqt4TIrJBkzWMR044flbWg==
+"@plurid/plurid-data@0.0.0-2":
+  version "0.0.0-2"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-2.tgz#0d35e1c39916f5edbd228d999c1c651140fc0d67"
+  integrity sha512-tkYxXsH/OCWJS1btEV7Jq3oUuXzmoIJZWbU677PjecbCpIrSmec6IqOFLhk8Q+sYNjw+NGZX7L4tqpejp6eVKg==
 
 "@plurid/plurid-functions@0.0.0-1":
   version "0.0.0-1"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.0.0-1.tgz#bafc34fc9b356b8863edecefcbc7a4d7768e5f0d"
   integrity sha512-wLVlB/pv4OGv1oGCeS+J30CWSrGkTU/AbOIpqW/nb2lfy1riBARQp4oSyG8zEVSh/LtBheTe0wmUVw1bOfQWcA==
 
-"@plurid/plurid-pubsub@0.0.0-2":
-  version "0.0.0-2"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-pubsub/-/plurid-pubsub-0.0.0-2.tgz#a0ba328befcef99220ed9ee5963db066f95472bd"
-  integrity sha512-bDQpIcxQ335RLTPn53AHou3uVDve73IAT0/hTggl8mJuU7I/f4upxaG22Qwg3arPNEwkgXl2wrwrQeEDaZ4dcw==
+"@plurid/plurid-pubsub@0.0.0-3":
+  version "0.0.0-3"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-pubsub/-/plurid-pubsub-0.0.0-3.tgz#e72d0426c52a04b402d979f163012b684c35beeb"
+  integrity sha512-tHsO1GOfUYkS3RPkiqLsxrLDwN7MtGayPqKcJm8XyNqgINnNAqZw3t4kJjYdv4bjxqJIooqmxo1N+rs2ojuq1Q==
 
 "@plurid/plurid-themes@0.0.0-0":
   version "0.0.0-0"
@@ -653,18 +653,6 @@
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.6.tgz#f4c7ec43e81b319a9815115031709f26987891f0"
   integrity sha512-3c+yGKvVP5Y9TYBEibGNR+kLtijnj7mYrXRg+WpFb2X9xm04g/DXYkfg4hmzJQosc9snFNUPkbYIhu+KAm6jJw==
-
-"@types/lodash.camelcase@^4.3.6":
-  version "4.3.6"
-  resolved "https://registry.yarnpkg.com/@types/lodash.camelcase/-/lodash.camelcase-4.3.6.tgz#393c748b70cd926fc629e6502a9d0929f217d5fd"
-  integrity sha512-hd/TEuPd76Jtf1xEq85CHbCqR+iqvs5IOKyrYbiaOg69BRQgPN9XkvLj8Jl8rBp/dfJ2wQ1AVcP8mZmybq7kIg==
-  dependencies:
-    "@types/lodash" "*"
-
-"@types/lodash@*":
-  version "4.14.165"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.165.tgz#74d55d947452e2de0742bad65270433b63a8c30f"
-  integrity sha512-tjSSOTHhI5mCHTy/OOXYIhi2Wt1qcbHmuXD1Ha7q70CgI/I71afO4XtLb/cVexki1oVYchpul/TOuu3Arcdxrg==
 
 "@types/node@*":
   version "14.14.12"
@@ -2953,11 +2941,6 @@ locate-path@^5.0.0:
   integrity sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==
   dependencies:
     p-locate "^4.1.0"
-
-lodash.camelcase@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
-  integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
 lodash.sortby@^4.7.0:
   version "4.7.0"
