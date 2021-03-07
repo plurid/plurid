@@ -881,11 +881,17 @@ class PluridServer {
 
             styles = stylesheet.getStyleTags();
         } catch (error) {
-            if (this.options.debug !== 'none' && !this.options.quiet) {
-                const errorText = `${this.options.serverName} Error: Something went wrong in getContentAndStyles().`
+            if (
+                this.options.debug !== 'none'
+                && !this.options.quiet
+            ) {
+                const errorText = `${this.options.serverName} Error: Something went wrong in getContentAndStyles().`;
 
                 if (this.debugAllows('error')) {
-                    console.error(errorText, error);
+                    console.error(
+                        errorText,
+                        error,
+                    );
                 }
             }
 
