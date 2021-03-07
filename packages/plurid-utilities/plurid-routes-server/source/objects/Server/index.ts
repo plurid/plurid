@@ -8,7 +8,10 @@
         Express,
     } from 'express';
 
-    import bodyParser from 'body-parser';
+    import {
+        raw as bodyParserRaw,
+        json as bodyParserJSON,
+    } from 'body-parser';
 
     import Deon, {
         DEON_MEDIA_TYPE,
@@ -555,18 +558,18 @@ class PluridRoutesServer {
         this.serverApplication.use(
             (request, _, next) => {
                 const requestID = uuid.generate();
-                (request as any).requestID = requestID;
+                (request as ServerRequest).requestID = requestID;
 
                 next();
             }
         );
 
         this.serverApplication.use(
-            bodyParser.json(),
+            bodyParserJSON(),
         );
 
         this.serverApplication.use(
-            bodyParser.raw({
+            bodyParserRaw({
                 type: DEON_MEDIA_TYPE,
             }),
         );
@@ -604,6 +607,56 @@ class PluridRoutesServer {
                 }
             },
         );
+
+        this.serverApplication.use(
+            async (request, _, next) => {
+                try {
+                    const contentType = request.header('Content-Type');
+
+                    if (
+                        contentType !== DEON_MEDIA_TYPE
+                        && contentType !== 'application/json'
+                    ) {
+                        next();
+                        return;
+                    }
+
+                    const authorization = request.header('Authorization');
+
+                    if (!authorization) {
+                        next();
+                        return;
+                    }
+
+                    const token = authorization.replace('Bearer ', '');
+
+                    if (!token) {
+                        next();
+                        return;
+                    }
+
+                    if (!request.body.token) {
+                        request.body.token = token;
+                    }
+
+                    next();
+                } catch (error) {
+                    const requestID = (request as ServerRequest).requestID || '';
+                    const requestIDLog = requestID
+                        ? ` :: ${requestID}`
+                        : '';
+
+                    if (this.debugAllows('error')) {
+                        console.error(
+                            `[${time.stamp()}${requestIDLog}] Could not handle token middleware ${request.path}`,
+                            error,
+                        );
+                    }
+
+                    next();
+                }
+            }
+        )
     }
 
     private debugAllows(
