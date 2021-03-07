@@ -3,6 +3,7 @@
     import external from 'rollup-plugin-peer-deps-external';
     import typescript from 'rollup-plugin-typescript2';
     import { nodeResolve } from '@rollup/plugin-node-resolve';
+    import { terser } from 'rollup-plugin-terser';
     // #endregion libraries
 
 
@@ -45,6 +46,14 @@ const build = {
         typescript({
             // rollupCommonJSResolveHack: true,
             // clean: true,
+        }),
+        terser({
+            mangle: false,
+            compress: false,
+            format: {
+                beautify: true,
+                comments: false,
+            },
         }),
     ],
 };
