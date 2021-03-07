@@ -1,7 +1,10 @@
+// #region imports
 const PluridRoutesServer = require('../distribution').default;
+// #endregion imports
 
 
 
+// #region data
 const initialRoutes = {
     '/example-valid-registered': {
         id: '/example-valid-registered',
@@ -18,8 +21,11 @@ const routes = new Map(
 );
 
 const validToken = 'token';
+// #endregion data
 
 
+
+// #region functions
 const queryRoute = async (
     route,
 ) => {
@@ -46,8 +52,11 @@ const verifyToken = async (
 
     return token === validToken;
 }
+// #endregion functions
 
 
+
+// #region server
 const server = new PluridRoutesServer({
     queryRoute,
     registerRoute,
@@ -90,3 +99,4 @@ server.handle().post(
 )
 
 server.start();
+// #endregion server
