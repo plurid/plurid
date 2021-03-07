@@ -54,6 +54,17 @@ class Cacher {
         );
     }
 
+    public load(
+        routes: Map<string, RouteElement>,
+    ) {
+        for (const [route, data] of routes) {
+            this.set(
+                route,
+                data,
+            );
+        }
+    }
+
     public reset() {
         this.routes = new Map();
     }

@@ -50,6 +50,7 @@
         RegisterRoute,
         VerifyToken,
 
+        RouteElement,
         RouteElementRegistered,
         RouteElementElementQL,
     } from '../../data/interfaces';
@@ -168,6 +169,12 @@ class PluridRoutesServer {
 
     public instance() {
         return this.serverApplication;
+    }
+
+    public cacheLoad(
+        routes: Map<string, RouteElement>,
+    ) {
+        this.cacher.load(routes);
     }
 
     public cacheReset() {
