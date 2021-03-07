@@ -32,6 +32,7 @@ const build = {
         'express',
         'body-parser',
         '@plurid/deon',
+        '@plurid/plurid-functions',
     ],
     inlineDynamicImports: true,
     plugins: [
