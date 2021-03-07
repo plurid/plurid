@@ -88,7 +88,7 @@ The `PluridRoutesServer` must be instantiated with the following functions:
 
 which will provide the functionality.
 
-An example (`tests/index.js`), with a mock-up `initialRoutes`, and in-memory (Map) `routes` registration.
+An example (`tests/index.xs`), with a mock-up `initialRoutes`, and in-memory (Map) `routes` registration.
 
 ``` typescript
 // #region imports
