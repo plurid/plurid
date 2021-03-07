@@ -208,14 +208,20 @@ class PluridServer {
     }
 
     public stop() {
-        if (this.debugAllows('info')) {
-            console.info(
-                `\n\t[${time.stamp()}] ${this.options.serverName} Closed on Port ${this.port}\n`,
-            );
-        }
-
         if (this.server) {
+            if (this.debugAllows('info')) {
+                console.info(
+                    `\n\t[${time.stamp()}] ${this.options.serverName} Stopped on Port ${this.port}\n`,
+                );
+            }
+
             this.server.close();
+        } else {
+            if (this.debugAllows('info')) {
+                console.info(
+                    `\n\t[${time.stamp()}] ${this.options.serverName} Could not be Stopped on Port ${this.port}\n`,
+                );
+            }
         }
     }
 
