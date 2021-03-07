@@ -1,0 +1,19 @@
+import base from joiner.base
+
+
+
+{
+    ...#base
+    #packages
+    #commit
+}
+
+
+packages [
+    ./packages/plurid-web/plurid-works/*
+]
+
+commit {
+    ...#base.commit
+    root 'plurid-web/plurid-works/'
+}
