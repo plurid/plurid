@@ -360,6 +360,13 @@ class PluridServer {
                 }
 
                 response.send(gatewayResponse);
+
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
+
                 return;
             }
 
@@ -368,7 +375,9 @@ class PluridServer {
             // check if the url is plurids
             // http://example.com/plurids/<route>/<space>/<page>
             // http://example.com/plurids/index/12345/54321
-            if (this.pluridsResponder.search(path)) {
+            if (
+                this.pluridsResponder.search(path)
+            ) {
                 if (this.debugAllows('info')) {
                     const requestTime = this.computeRequestTime(request);
 
@@ -392,7 +401,9 @@ class PluridServer {
             // HANDLE STILLS
             const still = this.stills.get(path);
 
-            if (still) {
+            if (
+                still
+            ) {
                 if (this.debugAllows('info')) {
                     const requestTime = this.computeRequestTime(request);
 
@@ -413,11 +424,43 @@ class PluridServer {
             }
 
 
-            const redirect = preserveResult ? preserveResult.redirect : '';
-            const matchingPath = redirect || path;
+            const {
+                externalRedirect,
+                matchingPath,
+            } = this.resolveMatchingPath(
+                preserveResult,
+                path,
+            );
+
+            if (
+                externalRedirect
+            ) {
+                if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (302 Redirect) Handled GET ${request.path} redirect to ${matchingPath}${requestTime}`,
+                    );
+                }
+
+                response
+                    .status(302)
+                    .redirect(matchingPath);
+
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
+
+                return;
+            }
+
             const route = this.router.match(matchingPath);
 
-            if (!route) {
+            if (
+                !route
+            ) {
                 const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
                 if (notFoundStill) {
                     if (this.debugAllows('info')) {
@@ -550,6 +593,20 @@ class PluridServer {
         }
 
         return false;
+    }
+
+    private resolveMatchingPath(
+        preserveResult: PluridPreserveResponse | void,
+        path: string,
+    ) {
+        const redirect = preserveResult ? preserveResult.redirect : '';
+        const externalRedirect = !!(redirect?.startsWith('http'));
+        const matchingPath = redirect || path;
+
+        return {
+            externalRedirect,
+            matchingPath,
+        };
     }
 
     private async resolvePreserve(
