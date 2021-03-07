@@ -21,6 +21,7 @@ export type PluridServerMiddleware = (
 
 export type ServerRequest = express.Request & {
     requestID: string;
+    requestTime: number;
 }
 
 

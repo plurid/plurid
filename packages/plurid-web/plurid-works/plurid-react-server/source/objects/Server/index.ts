@@ -300,8 +300,10 @@ class PluridServer {
                 ignorable
             ) {
                 if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (204 No Content) Ignored GET ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (204 No Content) Ignored GET ${request.path}${requestTime}`,
                     );
                 }
 
@@ -323,8 +325,10 @@ class PluridServer {
                 preserveResponded
             ) {
                 if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (204 No Content) Preserve handled GET ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (204 No Content) Preserve handled GET ${request.path}${requestTime}`,
                     );
                 }
 
@@ -342,8 +346,10 @@ class PluridServer {
                 gatewayResponse
             ) {
                 if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Gateway handled GET ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Gateway handled GET ${request.path}${requestTime}`,
                     );
                 }
 
@@ -358,8 +364,10 @@ class PluridServer {
             // http://example.com/plurids/index/12345/54321
             if (this.pluridsResponder.search(path)) {
                 if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}${requestTime}`,
                     );
                 }
 
@@ -380,8 +388,10 @@ class PluridServer {
 
             if (still) {
                 if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Still Handled GET ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Still Handled GET ${request.path}${requestTime}`,
                     );
                 }
 
@@ -405,8 +415,10 @@ class PluridServer {
                 const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
                 if (notFoundStill) {
                     if (this.debugAllows('info')) {
+                        const requestTime = this.computeRequestTime(request);
+
                         console.info(
-                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}`,
+                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}${requestTime}`,
                         );
                     }
 
@@ -426,8 +438,10 @@ class PluridServer {
                 const notFoundRoute = this.router.match(NOT_FOUND_ROUTE);
                 if (!notFoundRoute) {
                     if (this.debugAllows('info')) {
+                        const requestTime = this.computeRequestTime(request);
+
                         console.info(
-                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}`,
+                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}${requestTime}`,
                         );
                     }
 
@@ -451,8 +465,10 @@ class PluridServer {
                 );
 
                 if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}${requestTime}`,
                     );
                 }
 
@@ -476,8 +492,10 @@ class PluridServer {
             );
 
             if (this.debugAllows('info')) {
+                const requestTime = this.computeRequestTime(request);
+
                 console.info(
-                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}${requestTime}`,
                 );
             }
 
@@ -492,8 +510,10 @@ class PluridServer {
             return;
         } catch (error) {
             if (this.debugAllows('error')) {
+                const requestTime = this.computeRequestTime(request);
+
                 console.error(
-                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle GET ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle GET ${request.path}${requestTime}`,
                     error,
                 );
             }
@@ -822,6 +842,21 @@ class PluridServer {
         };
     }
 
+    private computeRequestTime(
+        request: express.Request,
+    ) {
+        const requestTime = (request as ServerRequest).requestTime;
+
+        if (!requestTime) {
+            return '';
+        }
+
+        const now = Date.now();
+        const difference = now - requestTime;
+
+        return ` in ${difference} ms`;
+    }
+
 
     private handleOptions(
         partialOptions?: PluridServerPartialOptions,
@@ -853,6 +888,9 @@ class PluridServer {
             (request, _, next) => {
                 const requestID = uuid.generate();
                 (request as ServerRequest).requestID = requestID;
+
+                const requestTime = Date.now();
+                (request as ServerRequest).requestTime = requestTime;
 
                 next();
             }
