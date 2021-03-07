@@ -15,6 +15,8 @@ export interface PluridPlanesRegistrar {
         planes: PluridPlane[],
     ): void;
 
+    identify(): string[];
+
     get(
         route: string,
     ): RegisteredPluridPlane | undefined;
