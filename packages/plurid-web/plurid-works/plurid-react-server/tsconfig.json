@@ -8,13 +8,13 @@
 
         "baseUrl": ".",
         "paths": {
-            "#data/*": [
+            "~data/*": [
                 "./source/data/*"
             ],
-            "#objects/*": [
+            "~objects/*": [
                 "./source/objects/*"
             ],
-            "#utilities/*": [
+            "~utilities/*": [
                 "./source/utilities/*"
             ]
         },
@@ -46,7 +46,18 @@
         "noUnusedParameters": false,
 
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+
+        "plugins": [
+            {
+                "transform": "typescript-transform-paths",
+                "afterDeclarations": true,
+            },
+            {
+                "transform": "@zerollup/ts-transform-paths",
+                "exclude": ["*"]
+            }
+        ]
     },
     "include": [
         "source"

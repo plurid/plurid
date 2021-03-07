@@ -1,17 +1,22 @@
-import express from 'express';
+// #region imports
+    // #region libraries
+    import express from 'express';
 
-import {
-    Helmet,
-} from 'react-helmet-async';
+    import {
+        Helmet,
+    } from 'react-helmet-async';
 
-import {
-    PluridRoute,
-    PluridPreserve,
-    PluridComponent,
-} from '@plurid/plurid-data';
+    import {
+        PluridRoute,
+        PluridPreserve,
+        PluridComponent,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export type PluridServerMiddleware = (
     request: express.Request,
     response: express.Response,
@@ -206,3 +211,4 @@ export interface PluridStillerOptions {
      */
     ignore: string[];
 }
+// #endregion module

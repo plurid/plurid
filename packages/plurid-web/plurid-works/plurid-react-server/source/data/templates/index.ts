@@ -1,9 +1,14 @@
-import {
-    cleanTemplate,
-} from '../../utilities/template';
+// #region imports
+    // #region external
+    import {
+        cleanTemplate,
+    } from '~utilities/template';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export const NOT_FOUND_TEMPLATE = cleanTemplate(`
 <!DOCTYPE html>
 <html>
@@ -62,3 +67,4 @@ export const SERVER_ERROR_TEMPLATE = cleanTemplate(`
     </body>
 </html>
 `);
+// #endregion module

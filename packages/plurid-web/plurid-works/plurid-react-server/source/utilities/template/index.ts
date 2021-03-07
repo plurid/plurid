@@ -1,3 +1,4 @@
+// #region module
 export const cleanTemplate = (
     template: string,
 ) => {
@@ -82,3 +83,4 @@ export const safeStore = (
         '\\u003c',
     );
 }
+// #endregion module

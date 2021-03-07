@@ -1,29 +1,37 @@
-import {
-    Helmet,
-} from 'react-helmet-async';
+// #region imports
+    // #region libraries
+    import {
+        Helmet,
+    } from 'react-helmet-async';
 
-import {
-    ServerStyleSheet,
-} from 'styled-components';
+    import {
+        ServerStyleSheet,
+    } from 'styled-components';
 
-import {
-    Indexed,
-    PluridRoute,
-    PluridComponent,
-} from '@plurid/plurid-data';
+    import {
+        Indexed,
+        PluridRoute,
+        PluridComponent,
+    } from '@plurid/plurid-data';
 
-import {
-    router,
-} from '@plurid/plurid-engine';
-
-import {
-    PluridServerService,
-    PluridServerServicesData,
-    PluridStillerOptions,
-} from './external';
+    import {
+        router,
+    } from '@plurid/plurid-engine';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        PluridServerService,
+        PluridServerServicesData,
+        PluridStillerOptions,
+    } from '../external';
+    // #endregion external
+// #endregion imports
 
+
+
+// #region module
 export interface PluridRendererConfiguration {
     htmlLanguage: string | undefined;
     htmlAttributes: Record<string, string> | undefined;
@@ -116,3 +124,4 @@ export interface RendererTemplateData {
     pluridMetastate: string;
     bodyScripts: string;
 }
+// #endregion module

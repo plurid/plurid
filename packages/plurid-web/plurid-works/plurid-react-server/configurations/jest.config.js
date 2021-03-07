@@ -29,4 +29,13 @@ module.exports = {
     collectCoverageFrom: [
         'source/*.{js,ts}',
     ],
+    moduleDirectories: [
+        'node_modules',
+        'source',
+    ],
+    moduleNameMapper: {
+        "data/(.*)": "<rootDir>/source/data/$1",
+        "objects/(.*)": "<rootDir>/source/objects/$1",
+        "utilities/(.*)": "<rootDir>/source/utilities/$1",
+    },
 }

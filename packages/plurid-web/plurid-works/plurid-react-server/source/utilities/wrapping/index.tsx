@@ -1,7 +1,12 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 const wrapping = (
     WrappedComponent: any,
     WrappeeComponent: any,
@@ -23,6 +28,10 @@ const wrapping = (
         }
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default wrapping;
+// #endregion exports
