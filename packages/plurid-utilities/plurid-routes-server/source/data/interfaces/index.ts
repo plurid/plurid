@@ -81,10 +81,10 @@ export interface PluridRoutesServerConfiguration {
 
 
 export type RouteElement =
-    | RouteElementRegistred
+    | RouteElementRegistered
     | RouteElementElementQL
 
-export interface RouteElementRegistred {
+export interface RouteElementRegistered {
     id: string;
 }
 

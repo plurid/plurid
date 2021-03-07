@@ -47,7 +47,7 @@
         RegisterRoute,
         VerifyToken,
 
-        RouteElementRegistred,
+        RouteElementRegistered,
         RouteElementElementQL,
     } from '../../data/interfaces';
 
@@ -282,25 +282,25 @@ class PluridRoutesServer {
                 }
 
                 response
-                    .status(405)
+                    .status(404)
                     .send('Not Found');
                 return;
             }
 
 
             if (
-                !(data as RouteElementRegistred).id
+                !(data as RouteElementRegistered).id
                 || !(data as RouteElementElementQL).elementql
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
                     );
                 }
 
                 response
-                    .status(404)
-                    .send('Not Found');
+                    .status(400)
+                    .send('Bad Request');
                 return;
             }
 
@@ -445,6 +445,23 @@ class PluridRoutesServer {
 
             if (
                 typeof registered !== 'boolean'
+            ) {
+                if (this.debugAllows('warn')) {
+                    console.warn(
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
+                    );
+                }
+
+                response
+                    .status(400)
+                    .send('Bad Request');
+                return;
+            }
+
+
+            if (
+                !(data as RouteElementRegistered).id
+                || !(data as RouteElementElementQL).elementql
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
