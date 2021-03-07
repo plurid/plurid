@@ -82,9 +82,9 @@ yarn add \
 
 The `PluridRoutesServer` must be instantiated with the following functions:
 
-+ queryRoute,
-+ registerRoute,
-+ verifyToken,
++ `queryRoute: QueryRoute`
++ `registerRoute: RegisterRoute`
++ `verifyToken: VerifyToken`
 
 which will provide the functionality.
 
