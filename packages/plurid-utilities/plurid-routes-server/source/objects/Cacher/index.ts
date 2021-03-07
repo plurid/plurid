@@ -53,6 +53,10 @@ class Cacher {
             },
         );
     }
+
+    public reset() {
+        this.routes = new Map();
+    }
 }
 // #endregion module
 

@@ -167,6 +167,10 @@ class PluridRoutesServer {
         return this.serverApplication;
     }
 
+    public cacheReset() {
+        this.cacher.reset();
+    }
+
 
     private handleEndpoints() {
         this.serverApplication.post(ENDPOINT_ROUTE, (request, response) => {
