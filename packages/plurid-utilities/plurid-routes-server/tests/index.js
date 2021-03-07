@@ -5,6 +5,13 @@ const PluridRoutesServer = require('../distribution').default;
 
 
 // #region data
+/**
+ * Mock-up data.
+ *
+ * In the real case, the `initialRoutes` would be loaded from a database,
+ * and the `validToken` would assume an authentication/authorization mechanism.
+ */
+
 const initialRoutes = {
     '/example-valid-registered': {
         id: '/example-valid-registered',
