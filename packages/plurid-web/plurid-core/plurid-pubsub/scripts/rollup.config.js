@@ -1,6 +1,6 @@
 import ttypescript from 'ttypescript';
 import typescript from 'rollup-plugin-typescript2';
-import cleanup from 'rollup-plugin-cleanup';
+import { terser } from 'rollup-plugin-terser';
 
 import pkg from '../package.json';
 
@@ -28,10 +28,13 @@ export default {
             rollupCommonJSResolveHack: true,
             clean: true,
         }),
-        cleanup({
-            extensions: [
-                'ts',
-            ],
+        terser({
+            mangle: false,
+            compress: false,
+            format: {
+                beautify: true,
+                comments: false,
+            },
         }),
     ],
 }
