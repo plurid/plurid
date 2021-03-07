@@ -59,6 +59,14 @@ server.handle().post(
     '/cache-reset',
     (request, response) => {
         try {
+            if (!request.body.token) {
+                console.log('cacheReset bad request');
+                response
+                    .status(405)
+                    .send('Bad Request');
+                return;
+            }
+
             if (request.body.token !== validToken) {
                 console.log('cacheReset invalid token');
                 response
