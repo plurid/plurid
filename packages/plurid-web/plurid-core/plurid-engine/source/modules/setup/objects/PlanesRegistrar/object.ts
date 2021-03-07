@@ -85,6 +85,19 @@ class PluridPlanesRegistrar implements IPluridPlanesRegistrar {
         }
     }
 
+    public identify() {
+        if (this.planes.size === 0) {
+            return [];
+        }
+
+        const ids: string[] = [];
+        for (const [id, _] of this.planes) {
+            ids.push(id);
+        }
+
+        return ids;
+    }
+
     public get(
         route: string,
     ) {
