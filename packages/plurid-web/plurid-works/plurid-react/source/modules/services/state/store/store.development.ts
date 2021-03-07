@@ -3,6 +3,7 @@
     import {
         createStore,
         applyMiddleware,
+        Store,
     } from 'redux';
     import thunk from 'redux-thunk';
     // #endregion libraries
@@ -30,7 +31,7 @@ if (!environment.production) {
 
 export type AppState = ReturnType<typeof rootReducer>;
 
-const store = (preloadedState: AppState | {}) => {
+const store: (preloadedState: AppState | {}) => Store<AppState> = (preloadedState: AppState | {}) => {
     const middleware = [ thunk ];
 
     const _store = createStore(

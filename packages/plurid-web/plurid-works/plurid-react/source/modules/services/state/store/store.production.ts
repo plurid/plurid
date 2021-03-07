@@ -3,6 +3,7 @@
     import {
         createStore,
         applyMiddleware,
+        Store,
     } from 'redux';
     import thunk from 'redux-thunk';
     // #endregion libraries
@@ -18,7 +19,7 @@
 // #region module
 export type AppState = ReturnType<typeof rootReducer>;
 
-const store = (preloadedState: AppState | {}) => createStore(
+const store: (preloadedState: AppState | {}) => Store<AppState> = (preloadedState: AppState | {}) => createStore(
     rootReducer,
     preloadedState,
     applyMiddleware(
