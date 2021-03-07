@@ -13,8 +13,8 @@ export const DEFAULT_SERVER_OPTIONS = {
 };
 
 
-export const ENDPOINT_ROUTE = process.env.PLURID_ENDPOINT_ROUTE || '/route';
-export const ENDPOINT_REGISTER = process.env.PLURID_ENDPOINT_REGISTER || '/register';
+export const ENDPOINT_ROUTE = process.env.PLURID_ROUTES_SERVER_ENDPOINT_ROUTE || '/route';
+export const ENDPOINT_REGISTER = process.env.PLURID_ROUTES_SERVER_ENDPOINT_REGISTER || '/register';
 
 
 export const ONE_DAY = 60 * 60 * 24;

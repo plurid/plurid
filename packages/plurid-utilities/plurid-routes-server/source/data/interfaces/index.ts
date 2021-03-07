@@ -46,11 +46,6 @@ export interface PluridRoutesServerOptions {
      * Development default: `info` and above.
      */
     debug: DebugLevels;
-
-    /**
-     * Routes to be ignored when serving the application (`GET`).
-     */
-    ignore: string[];
 }
 
 

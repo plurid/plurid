@@ -554,7 +554,6 @@ class PluridRoutesServer {
             debug: partialOptions?.debug
                 ? partialOptions?.debug
                 : environment.production ? 'error' : 'info',
-            ignore: partialOptions?.ignore || [],
         };
         return options;
     }
