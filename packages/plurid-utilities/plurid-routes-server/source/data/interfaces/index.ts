@@ -80,7 +80,15 @@ export interface PluridRoutesServerConfiguration {
 
 
 
-export interface RouteElement {
+export type RouteElement =
+    | RouteElementRegistred
+    | RouteElementElementQL
+
+export interface RouteElementRegistred {
+    id: string;
+}
+
+export interface RouteElementElementQL {
     elementql: string;
 }
 

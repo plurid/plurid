@@ -46,6 +46,9 @@
         QueryRoute,
         RegisterRoute,
         VerifyToken,
+
+        RouteElementRegistred,
+        RouteElementElementQL,
     } from '../../data/interfaces';
 
     import Cacher from '../Cacher';
@@ -281,7 +284,8 @@ class PluridRoutesServer {
 
 
             if (
-                !data.elementql
+                !(data as RouteElementRegistred).id
+                || !(data as RouteElementElementQL).elementql
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
@@ -296,11 +300,6 @@ class PluridRoutesServer {
             }
 
 
-            const {
-                elementql,
-            } = data;
-
-
             if (updateCache) {
                 this.cacher.set(
                     route,
@@ -312,7 +311,7 @@ class PluridRoutesServer {
             const contentType = request.header('Content-Type');
 
             const responseData = {
-                elementql,
+                ...data,
             };
 
 
