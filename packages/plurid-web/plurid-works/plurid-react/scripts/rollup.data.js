@@ -18,6 +18,7 @@ export const plugins = [
     }),
     replace({
         'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
+        preventAssignment: true,
     }),
     external(),
     postcss({
