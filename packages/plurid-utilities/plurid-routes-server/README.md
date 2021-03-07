@@ -32,6 +32,7 @@ The `plurid-routes-server` is to be used alongside [plurid](https://github.com/p
 + [About](#about)
 + [Install](#install)
 + [Setup](#setup)
++ [Requests](#requests)
 + [Codeophon](#codeophon)
 
 
@@ -223,8 +224,8 @@ Request:
 ``` bash
 curl \
     -X POST \
-    -d '{"route":"/example-valid-registered"}' \
     -H "Content-Type: application/json" \
+    -d '{"route":"/example-valid-registered"}' \
     -H "Authorization: Bearer token" \
     "http://localhost:8080/route"
 ```
@@ -235,9 +236,49 @@ Expected:
 {"id":"/example-valid-registered"}
 ```
 
-The `Content-Type` header can be `application/json` or `application/deon`.
+The `Content-Type` header can be `application/json` or `application/deon`, with the adequate data serialized into the body (`json` or `deon`).
 
 The authentication `token` can be passed in the `Authorization: Bearer` header, or directly as a data field in the body.
+
+
+
+## Requests
+
+The `PluridRoutesServer` handles two `HTTP POST` endpoints:
+
++ `ENDPOINT_ROUTE`
++ `ENDPOINT_REGISTER`
+
+The `ENDPOINT_ROUTE` body must respect the interface
+
+``` typescript
+interface EndpointRoute {
+    token?: string;
+    route: string;
+}
+```
+
+The `ENDPOINT_REGISTER` body must respect the interface
+
+``` typescript
+interface EndpointRegister {
+    token?: string;
+    route: string;
+    data: RouteElement;
+}
+```
+
+The default endpoint values are
+
++ `ENDPOINT_ROUTE` : `/route`
++ `ENDPOINT_REGISTER` : `/register`
+
+and they can be overwritten by environment variables
+
+```
++ `ENDPOINT_ROUTE` : `process.env.PLURID_ENDPOINT_ROUTE`
++ `ENDPOINT_REGISTER` : `process.env.PLURID_ENDPOINT_REGISTER`
+```
 
 
 
