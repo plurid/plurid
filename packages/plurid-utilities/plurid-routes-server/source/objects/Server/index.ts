@@ -251,14 +251,15 @@ class PluridRoutesServer {
             let data = this.cacher.get(
                 route,
             );
-            let updateCache = false;
+            const cacheRetrieval = !!data;
 
             if (!data) {
                 data = await this.queryRoute(
                     route,
                 );
-                updateCache = true;
-            } else {
+            }
+
+            if (data && cacheRetrieval) {
                 if (this.debugAllows('info')) {
                     console.info(
                         `[${time.stamp()} :: ${requestID}] Retrieved from cache POST ${request.path}`,
@@ -272,13 +273,13 @@ class PluridRoutesServer {
             ) {
                 if (this.debugAllows('warn')) {
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Could not handle POST ${request.path}`,
                     );
                 }
 
                 response
-                    .status(400)
-                    .send('Bad Request');
+                    .status(405)
+                    .send('Not Found');
                 return;
             }
 
@@ -300,7 +301,7 @@ class PluridRoutesServer {
             }
 
 
-            if (updateCache) {
+            if (!cacheRetrieval) {
                 this.cacher.set(
                     route,
                     data,
