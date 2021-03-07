@@ -9,13 +9,21 @@
     // #region external
     import pkg from '../package.json';
     // #endregion external
+
+
+    // #region internal
+    import {
+        input,
+        external as externalPackages,
+    } from './rollup.data';
+    // #endregion internal
 // #endregion imports
 
 
 
 // #region module
 const build = {
-    input: 'source/index.ts',
+    input,
     output: [
         {
             file: pkg.main,
@@ -28,24 +36,12 @@ const build = {
             exports: 'named',
         },
     ],
-    external: [
-        'detect-port',
-        'express',
-        'open',
-        'compression',
-        'react-stripe-elements',
-        'graphql-tag',
-        'fast-json-stable-stringify',
-        'zen-observable',
-    ],
+    external: externalPackages,
     inlineDynamicImports: true,
     plugins: [
         external(),
         nodeResolve(),
-        typescript({
-            // rollupCommonJSResolveHack: true,
-            // clean: true,
-        }),
+        typescript(),
     ],
 };
 // #endregion module
