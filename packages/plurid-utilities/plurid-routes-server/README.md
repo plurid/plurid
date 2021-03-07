@@ -216,6 +216,30 @@ server.start();
 // #endregion server
 ```
 
+The example server can be tested with `cURL` (more examples in `tests/requests.md`)
+
+Request:
+
+``` bash
+curl \
+    -X POST \
+    -d '{"route":"/example-valid-registered"}' \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer token" \
+    "http://localhost:8080/route"
+```
+
+Expected:
+
+```
+{"id":"/example-valid-registered"}
+```
+
+The `Content-Type` header can be `application/json` or `application/deon`.
+
+The authentication `token` can be passed in the `Authorization: Bearer` header, or directly as a data field in the body.
+
+
 
 ## [Codeophon](https://github.com/ly3xqhl8g9/codeophon)
 
