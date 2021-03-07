@@ -1,7 +1,7 @@
 // #region imports
     // #region external
     import {
-        PluridPubSubTopic,
+        PluridPubSubTopicKeysType,
     } from '~constants/pubsub';
     // #endregion external
 
@@ -36,7 +36,7 @@ export interface PluridPubSub {
     ): number;
     unsubscribe(
         index: number,
-        topic: PluridPubSubTopic,
+        topic: PluridPubSubTopicKeysType,
     ): boolean;
 }
 // #endregion module

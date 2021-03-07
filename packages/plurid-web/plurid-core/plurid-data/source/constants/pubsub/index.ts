@@ -79,4 +79,8 @@ export const PLURID_PUBSUB_TOPIC: PluridPubSubTopic = {
     VIEW_SET_PLANES: 'view.setPlanes',
     VIEW_REMOVE_PLANE: 'view.removePlane',
 };
+
+
+export type PluridPubSubTopicKeys = keyof typeof PLURID_PUBSUB_TOPIC;
+export type PluridPubSubTopicKeysType = typeof PLURID_PUBSUB_TOPIC[PluridPubSubTopicKeys];
 // #endregion module
