@@ -340,88 +340,6 @@ class PluridServer {
             }
 
 
-            const gatewayResponse = await this.handleGateway(
-                path,
-                request,
-                preserveResult,
-            );
-
-            if (
-                gatewayResponse
-            ) {
-                if (this.debugAllows('info')) {
-                    const requestTime = this.computeRequestTime(request);
-
-                    console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Gateway handled GET ${request.path}${requestTime}`,
-                    );
-                }
-
-                response.send(gatewayResponse);
-
-                this.resolvePreserveAfterServe(
-                    preserveAfterServe,
-                    request,
-                    response,
-                );
-
-                return;
-            }
-
-
-            // HANDLE PLURIDS
-            // check if the url is plurids
-            // http://example.com/plurids/<route>/<space>/<page>
-            // http://example.com/plurids/index/12345/54321
-            if (
-                this.pluridsResponder.search(path)
-            ) {
-                if (this.debugAllows('info')) {
-                    const requestTime = this.computeRequestTime(request);
-
-                    console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}${requestTime}`,
-                    );
-                }
-
-                response.send(this.pluridsResponder);
-
-                this.resolvePreserveAfterServe(
-                    preserveAfterServe,
-                    request,
-                    response,
-                );
-
-                return;
-            }
-
-
-            // HANDLE STILLS
-            const still = this.stills.get(path);
-
-            if (
-                still
-            ) {
-                if (this.debugAllows('info')) {
-                    const requestTime = this.computeRequestTime(request);
-
-                    console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Still Handled GET ${request.path}${requestTime}`,
-                    );
-                }
-
-                response.send(still);
-
-                this.resolvePreserveAfterServe(
-                    preserveAfterServe,
-                    request,
-                    response,
-                );
-
-                return;
-            }
-
-
             const {
                 externalRedirect,
                 matchingPath,
@@ -454,6 +372,89 @@ class PluridServer {
                 return;
             }
 
+
+            const gatewayResponse = await this.handleGateway(
+                matchingPath,
+                request,
+                preserveResult,
+            );
+
+            if (
+                gatewayResponse
+            ) {
+                if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Gateway handled GET ${matchingPath}${requestTime}`,
+                    );
+                }
+
+                response.send(gatewayResponse);
+
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
+
+                return;
+            }
+
+
+            // HANDLE PLURIDS
+            // check if the url is plurids
+            // http://example.com/plurids/<route>/<space>/<page>
+            // http://example.com/plurids/index/12345/54321
+            if (
+                this.pluridsResponder.search(matchingPath)
+            ) {
+                if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${matchingPath}${requestTime}`,
+                    );
+                }
+
+                response.send(this.pluridsResponder);
+
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
+
+                return;
+            }
+
+
+            // HANDLE STILLS
+            const still = this.stills.get(matchingPath);
+
+            if (
+                still
+            ) {
+                if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Still Handled GET ${matchingPath}${requestTime}`,
+                    );
+                }
+
+                response.send(still);
+
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
+
+                return;
+            }
+
+
             const route = this.router.match(matchingPath);
 
             if (
@@ -465,7 +466,7 @@ class PluridServer {
                         const requestTime = this.computeRequestTime(request);
 
                         console.info(
-                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}${requestTime}`,
+                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
                         );
                     }
 
@@ -488,7 +489,7 @@ class PluridServer {
                         const requestTime = this.computeRequestTime(request);
 
                         console.info(
-                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}${requestTime}`,
+                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
                         );
                     }
 
@@ -515,7 +516,7 @@ class PluridServer {
                     const requestTime = this.computeRequestTime(request);
 
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${request.path}${requestTime}`,
+                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
                     );
                 }
 
@@ -542,7 +543,7 @@ class PluridServer {
                 const requestTime = this.computeRequestTime(request);
 
                 console.info(
-                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${request.path}${requestTime}`,
+                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${matchingPath}${requestTime}`,
                 );
             }
 
