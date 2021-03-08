@@ -8,14 +8,11 @@
 
         "baseUrl": ".",
         "paths": {
-            "#data/*": [
+            "~data/*": [
                 "./source/data/*"
             ],
-            "#objects/*": [
+            "~objects/*": [
                 "./source/objects/*"
-            ],
-            "#utilities/*": [
-                "./source/utilities/*"
             ]
         },
 

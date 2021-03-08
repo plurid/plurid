@@ -21,7 +21,7 @@
         "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-core/plurid-routes-server",
+    "homepage": "https://github.com/plurid/plurid/tree/master/packages/plurid-utilities/plurid-routes-server",
     "files": [
         "distribution/"
     ],
