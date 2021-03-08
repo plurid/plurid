@@ -119,14 +119,20 @@ class PluridRoutesServer {
     }
 
     public stop() {
-        if (this.debugAllows('info')) {
-            console.info(
-                `\n\t[${time.stamp()}] ${this.options.serverName} Closed on Port ${this.port}\n`,
-            );
-        }
-
         if (this.server) {
+            if (this.debugAllows('info')) {
+                console.info(
+                    `\n\t[${time.stamp()}] ${this.options.serverName} Stopped on Port ${this.port}\n`,
+                );
+            }
+
             this.server.close();
+        } else {
+            if (this.debugAllows('info')) {
+                console.info(
+                    `\n\t[${time.stamp()}] ${this.options.serverName} Could not be Stopped on Port ${this.port}\n`,
+                );
+            }
         }
     }
 
@@ -210,8 +216,10 @@ class PluridRoutesServer {
                 !request.body.token
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (401 Unauthorized) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (401 Unauthorized) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -226,8 +234,10 @@ class PluridRoutesServer {
                 !request.body.route
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -250,8 +260,10 @@ class PluridRoutesServer {
                 !verifiedToken
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (403 Forbidden) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (403 Forbidden) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -275,8 +287,10 @@ class PluridRoutesServer {
 
             if (data && cacheRetrieval) {
                 if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] Retrieved from cache POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] Retrieved from cache POST ${request.path}${requestTime}`,
                     );
                 }
             }
@@ -286,8 +300,10 @@ class PluridRoutesServer {
                 !data
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -303,8 +319,10 @@ class PluridRoutesServer {
                 && !(data as RouteElementElementQL).elementql
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -334,8 +352,10 @@ class PluridRoutesServer {
                 contentType !== DEON_MEDIA_TYPE
             ) {
                 if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -353,8 +373,10 @@ class PluridRoutesServer {
             );
 
             if (this.debugAllows('info')) {
+                const requestTime = this.computeRequestTime(request);
+
                 console.info(
-                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}${requestTime}`,
                 );
             }
 
@@ -363,8 +385,10 @@ class PluridRoutesServer {
             return;
         } catch (error) {
             if (this.debugAllows('error')) {
+                const requestTime = this.computeRequestTime(request);
+
                 console.error(
-                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle POST ${request.path}${requestTime}`,
                     error,
                 );
             }
@@ -394,8 +418,10 @@ class PluridRoutesServer {
                 !request.body.token
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (401 Unauthorized) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (401 Unauthorized) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -411,8 +437,10 @@ class PluridRoutesServer {
                 || !request.body.data
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -436,8 +464,10 @@ class PluridRoutesServer {
                 !verifiedToken
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (403 Forbidden) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (403 Forbidden) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -457,8 +487,10 @@ class PluridRoutesServer {
                 typeof registered !== 'boolean'
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -474,8 +506,10 @@ class PluridRoutesServer {
                 && !(data as RouteElementElementQL).elementql
             ) {
                 if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.warn(
-                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -503,8 +537,10 @@ class PluridRoutesServer {
                 contentType !== DEON_MEDIA_TYPE
             ) {
                 if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
+
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}`,
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}${requestTime}`,
                     );
                 }
 
@@ -522,8 +558,10 @@ class PluridRoutesServer {
             );
 
             if (this.debugAllows('info')) {
+                const requestTime = this.computeRequestTime(request);
+
                 console.info(
-                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}${requestTime}`,
                 );
             }
 
@@ -532,8 +570,10 @@ class PluridRoutesServer {
             return;
         } catch (error) {
             if (this.debugAllows('error')) {
+                const requestTime = this.computeRequestTime(request);
+
                 console.error(
-                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle POST ${request.path}`,
+                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle POST ${request.path}${requestTime}`,
                     error,
                 );
             }
@@ -565,6 +605,9 @@ class PluridRoutesServer {
             (request, _, next) => {
                 const requestID = uuid.generate();
                 (request as ServerRequest).requestID = requestID;
+
+                const requestTime = Date.now();
+                (request as ServerRequest).requestTime = requestTime;
 
                 next();
             }
@@ -698,6 +741,21 @@ class PluridRoutesServer {
             default:
                 return false;
         }
+    }
+
+    private computeRequestTime(
+        request: express.Request,
+    ) {
+        const requestTime = (request as ServerRequest).requestTime;
+
+        if (!requestTime) {
+            return '';
+        }
+
+        const now = Date.now();
+        const difference = now - requestTime;
+
+        return ` in ${difference} ms`;
     }
 }
 // #endregion module

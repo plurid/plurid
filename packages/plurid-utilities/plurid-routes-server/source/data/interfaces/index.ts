@@ -9,6 +9,7 @@
 // #region module
 export type ServerRequest = express.Request & {
     requestID: string;
+    requestTime: number;
 }
 
 export type ServerRequestRouteBody = {
