@@ -287,10 +287,8 @@ class PluridRoutesServer {
 
             if (data && cacheRetrieval) {
                 if (this.debugAllows('info')) {
-                    const requestTime = this.computeRequestTime(request);
-
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] Retrieved from cache POST ${request.path}${requestTime}`,
+                        `[${time.stamp()} :: ${requestID}] Retrieved from cache POST ${request.path}`,
                     );
                 }
             }
