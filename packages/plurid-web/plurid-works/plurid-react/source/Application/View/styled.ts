@@ -49,6 +49,25 @@ export const GlobalStyle = createGlobalStyle`
 
 export const StyledView: any = styled.div`
     height: 100%;
+    min-height: ${(props: any) => {
+        if (
+            props.fullHeight
+        ) {
+            return '100vh';
+        }
+
+        return '100%';
+    }};
+    min-height: ${(props: any) => {
+        if (
+            props.fullHeight
+        ) {
+            return '-webkit-fill-available';
+        }
+
+        return '100%';
+    }};
+
     width: 100%;
     position: relative;
     scroll-snap-align: start;
