@@ -612,20 +612,20 @@ class PluridServer {
         request: express.Request,
         response: express.Response,
     ) {
+        const catchAll = this.preserves.find(
+            preserve => preserve.serve === '*',
+        );
+
         const urlMatch = this.urlRouter.match(request.originalUrl);
 
         let preserveOnServe: undefined | PluridPreserveOnServe<any>;
         let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
         let preserveOnError: undefined | PluridPreserveOnError<any>;
-        if (urlMatch?.target) {
-            const catchAll = this.preserves.find(
-                preserve => preserve.serve === '*'
-            );
-
+        if (urlMatch?.target || catchAll) {
             const preserve = catchAll
                 ? catchAll
                 : this.preserves.find(
-                    preserve => preserve.serve === urlMatch.target
+                    preserve => preserve.serve === urlMatch?.target
                 );
 
             if (preserve) {
@@ -636,14 +636,14 @@ class PluridServer {
         }
 
         let preserveResult: void | PluridPreserveResponse;
-        if (preserveOnServe && urlMatch) {
+        if (preserveOnServe) {
             const transmission: PluridPreserveTransmission<any> = {
                 request,
                 response,
                 context: {
                     contextualizers: undefined,
                     path: request.originalUrl,
-                    match: urlMatch,
+                    match: urlMatch as any, // hack as any
                 },
             };
 
