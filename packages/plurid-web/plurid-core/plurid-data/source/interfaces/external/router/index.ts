@@ -82,7 +82,7 @@ export interface PluridRouterProperties {
      */
     api?: string;
 
-    static?: any;
+    static?: PluridRouterStatic;
 }
 
 
