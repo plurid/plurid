@@ -40,7 +40,7 @@ export const StyledSpaces = styled.div<IStyledSpaces>`
 
     outline: none;
     overflow: auto;
-    display: flex;
+    /* display: flex; */
     height: 100vh;
     height: -webkit-fill-available;
     width: 100vw;
