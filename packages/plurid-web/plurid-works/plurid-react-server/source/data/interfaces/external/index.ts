@@ -180,13 +180,6 @@ export interface PluridServerTemplateConfiguration {
      */
     defaultPreloadedPluridMetastate?: string;
 
-    /**
-     * JavaScript code to handle plurid space window resizing on the client.
-     *
-     * Default https://manual.plurid.com/plurid/server/window-sizer-script
-     */
-    windowSizerScript?: string;
-
     bodyScripts?: string;
 }
 
