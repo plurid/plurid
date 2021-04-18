@@ -5,7 +5,6 @@
         DEFAULT_RENDERER_PLURID_STATE,
         DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE,
         DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE,
-        DEFAULT_WINDOW_SIZER_SCRIPT,
         DEFAULT__PRELOADED_REDUX_STATE__,
         DEFAULT__PRELOADED_PLURID_METASTATE__,
     } from '~data/constants';
@@ -44,7 +43,6 @@ class PluridRenderer {
     private bodyAttributes: string;
     private root: string;
     private content: string;
-    private windowSizerScript: string;
     private defaultPreloadedReduxState: string;
     private reduxState: string;
     private defaultPreloadedPluridMetastate: string;
@@ -66,7 +64,6 @@ class PluridRenderer {
             bodyAttributes,
             content,
             root,
-            windowSizerScript,
             defaultPreloadedReduxState,
             reduxState,
             defaultPreloadedPluridMetastate,
@@ -98,7 +95,6 @@ class PluridRenderer {
         this.bodyAttributes = bodyAttributes || '';
         this.root = root || 'root';
         this.content = assetsPathRewrite(content) || '';
-        this.windowSizerScript = windowSizerScript ?? DEFAULT_WINDOW_SIZER_SCRIPT;
         this.defaultPreloadedReduxState = defaultPreloadedReduxState || DEFAULT__PRELOADED_REDUX_STATE__;
         this.reduxState = safeStore(reduxState) || DEFAULT_RENDERER_REDUX_STATE;
         this.defaultPreloadedPluridMetastate = defaultPreloadedPluridMetastate || DEFAULT__PRELOADED_PLURID_METASTATE__;
@@ -119,7 +115,6 @@ class PluridRenderer {
             bodyAttributes: this.bodyAttributes,
             root: this.root,
             content: this.content,
-            windowSizerScript: this.windowSizerScript,
             defaultPreloadedReduxState: this.defaultPreloadedReduxState,
             reduxState: this.reduxState,
             defaultPreloadedPluridMetastate: this.defaultPreloadedPluridMetastate,

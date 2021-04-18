@@ -44,7 +44,6 @@ export interface PluridRendererConfiguration {
     bodyAttributes: string | undefined;
     root: string | undefined;
     content: string;
-    windowSizerScript: string | undefined;
     defaultPreloadedReduxState: string | undefined;
     reduxState: string;
     defaultPreloadedPluridMetastate: string | undefined;
@@ -117,7 +116,6 @@ export interface RendererTemplateData {
     bodyAttributes: string;
     root: string;
     content: string;
-    windowSizerScript: string;
     defaultPreloadedReduxState: string;
     reduxState: string;
     defaultPreloadedPluridMetastate: string;

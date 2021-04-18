@@ -829,7 +829,6 @@ class PluridServer {
             bodyAttributes,
             content,
             root: this.template?.root,
-            windowSizerScript: this.template?.windowSizerScript,
             defaultPreloadedReduxState: this.template?.defaultPreloadedReduxState,
             reduxState: store,
             defaultPreloadedPluridMetastate: this.template?.defaultPreloadedPluridMetastate,

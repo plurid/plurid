@@ -30,15 +30,6 @@ export const DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE = '/index.js';
 export const DEFAULT__PRELOADED_REDUX_STATE__ = '__PRELOADED_REDUX_STATE__';
 export const DEFAULT__PRELOADED_PLURID_METASTATE__ = '__PRELOADED_PLURID_METASTATE__';
 
-export const DEFAULT_WINDOW_SIZER_SCRIPT = `
-/** PLURID WINDOW SIZER */
-const pluridRoots = document.querySelectorAll('[data-plurid-entity="PluridRoots"]');
-pluridRoots.forEach(pluridRoot => {
-    pluridRoot.style.width = window.innerWidth + 'px';
-    pluridRoot.style.height = window.innerHeight + 'px';
-});
-`;
-
 
 export const NOT_FOUND_ROUTE = '/not-found';
 
