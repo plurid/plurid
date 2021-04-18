@@ -797,7 +797,10 @@ class PluridServer {
             ${helmet.script.toString()}
         `;
 
-        const htmlAttributes = helmet.htmlAttributes.toString();
+        const htmlAttributes = {
+            ...this.template?.htmlAttributes,
+            ...helmet.htmlAttributes,
+        };
         const bodyAttributes = helmet.bodyAttributes.toString();
 
 
@@ -819,7 +822,7 @@ class PluridServer {
 
         const renderer = new PluridRenderer({
             htmlLanguage: this.template?.htmlLanguage,
-            htmlAttributes: this.template?.htmlAttributes,
+            htmlAttributes,
             head,
             defaultStyle: this.template?.defaultStyle,
             styles: mergedStyles,
