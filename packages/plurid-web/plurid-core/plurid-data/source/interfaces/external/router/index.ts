@@ -21,6 +21,11 @@ export interface PluridRouterProperties {
     routes: PluridRoute[];
 
     /**
+     * Plurid planes not specific to any route.
+     */
+    planes?: PluridRoutePlane[];
+
+    /**
      * Component to be rendered outside of the current `path` component and of the `shell`.
      */
     exterior?: PluridComponent;
