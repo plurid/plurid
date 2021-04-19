@@ -29,6 +29,7 @@
 
     import {
         PluridRoute,
+        PluridRoutePlane,
         PluridPreserve,
         PluridPreserveOnServe,
         PluridPreserveAfterServe,
@@ -95,6 +96,7 @@ const {
 
 class PluridServer {
     private routes: PluridRoute[];
+    private planes: PluridRoutePlane[];
     private preserves: PluridPreserve[];
     private helmet: Helmet;
     private styles: string[];
@@ -121,6 +123,7 @@ class PluridServer {
     ) {
         const {
             routes,
+            planes,
             preserves,
             helmet,
             styles,
@@ -134,6 +137,7 @@ class PluridServer {
         } = configuration;
 
         this.routes = routes;
+        this.planes = planes || [];
         this.preserves = preserves;
         this.helmet = helmet;
         this.styles = styles || [];
@@ -373,89 +377,90 @@ class PluridServer {
             }
 
 
-            const gatewayResponse = await this.handleGateway(
-                matchingPath,
-                request,
-                preserveResult,
-            );
+            // const gatewayResponse = await this.handleGateway(
+            //     matchingPath,
+            //     request,
+            //     preserveResult,
+            // );
 
-            if (
-                gatewayResponse
-            ) {
-                if (this.debugAllows('info')) {
-                    const requestTime = this.computeRequestTime(request);
+            // if (
+            //     gatewayResponse
+            // ) {
+            //     if (this.debugAllows('info')) {
+            //         const requestTime = this.computeRequestTime(request);
 
-                    console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Gateway handled GET ${matchingPath}${requestTime}`,
-                    );
-                }
+            //         console.info(
+            //             `[${time.stamp()} :: ${requestID}] (200 OK) Gateway handled GET ${matchingPath}${requestTime}`,
+            //         );
+            //     }
 
-                response.send(gatewayResponse);
+            //     response.send(gatewayResponse);
 
-                this.resolvePreserveAfterServe(
-                    preserveAfterServe,
-                    request,
-                    response,
-                );
+            //     this.resolvePreserveAfterServe(
+            //         preserveAfterServe,
+            //         request,
+            //         response,
+            //     );
 
-                return;
-            }
-
-
-            // HANDLE PLURIDS
-            // check if the url is plurids
-            // http://example.com/plurids/<route>/<space>/<page>
-            // http://example.com/plurids/index/12345/54321
-            if (
-                this.pluridsResponder.search(matchingPath)
-            ) {
-                if (this.debugAllows('info')) {
-                    const requestTime = this.computeRequestTime(request);
-
-                    console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${matchingPath}${requestTime}`,
-                    );
-                }
-
-                response.send(this.pluridsResponder);
-
-                this.resolvePreserveAfterServe(
-                    preserveAfterServe,
-                    request,
-                    response,
-                );
-
-                return;
-            }
+            //     return;
+            // }
 
 
-            // HANDLE STILLS
-            const still = this.stills.get(matchingPath);
+            // // HANDLE PLURIDS
+            // // check if the url is plurids
+            // // http://example.com/plurids/<route>/<space>/<page>
+            // // http://example.com/plurids/index/12345/54321
+            // if (
+            //     this.pluridsResponder.search(matchingPath)
+            // ) {
+            //     if (this.debugAllows('info')) {
+            //         const requestTime = this.computeRequestTime(request);
 
-            if (
-                still
-            ) {
-                if (this.debugAllows('info')) {
-                    const requestTime = this.computeRequestTime(request);
+            //         console.info(
+            //             `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${matchingPath}${requestTime}`,
+            //         );
+            //     }
 
-                    console.info(
-                        `[${time.stamp()} :: ${requestID}] (200 OK) Still Handled GET ${matchingPath}${requestTime}`,
-                    );
-                }
+            //     response.send(this.pluridsResponder);
 
-                response.send(still);
+            //     this.resolvePreserveAfterServe(
+            //         preserveAfterServe,
+            //         request,
+            //         response,
+            //     );
 
-                this.resolvePreserveAfterServe(
-                    preserveAfterServe,
-                    request,
-                    response,
-                );
+            //     return;
+            // }
 
-                return;
-            }
+
+            // // HANDLE STILLS
+            // const still = this.stills.get(matchingPath);
+
+            // if (
+            //     still
+            // ) {
+            //     if (this.debugAllows('info')) {
+            //         const requestTime = this.computeRequestTime(request);
+
+            //         console.info(
+            //             `[${time.stamp()} :: ${requestID}] (200 OK) Still Handled GET ${matchingPath}${requestTime}`,
+            //         );
+            //     }
+
+            //     response.send(still);
+
+            //     this.resolvePreserveAfterServe(
+            //         preserveAfterServe,
+            //         request,
+            //         response,
+            //     );
+
+            //     return;
+            // }
 
 
             const route = this.router.match(matchingPath);
+            // console.log('route', route);
 
             if (
                 !route
@@ -578,12 +583,16 @@ class PluridServer {
         path: string,
     ) {
         for (const ignore of this.options.ignore) {
-            if (path === ignore) {
+            const normalizedIgnore = ignore.endsWith('/') && ignore.length > 1
+                ? ignore.slice(0, ignore.length - 1)
+                : ignore
+
+            if (path === normalizedIgnore) {
                 return true;
             }
 
-            if (ignore.endsWith('/*')) {
-                const curatedIgnore = ignore.replace('/*', '');
+            if (normalizedIgnore.endsWith('/*')) {
+                const curatedIgnore = normalizedIgnore.replace('/*', '');
 
                 if (path.startsWith(curatedIgnore)) {
                     return true;
@@ -799,7 +808,7 @@ class PluridServer {
 
         const htmlAttributes = {
             ...this.template?.htmlAttributes,
-            ...helmet.htmlAttributes,
+            ...helmet.htmlAttributes.toComponent(),
         };
         const bodyAttributes = helmet.bodyAttributes.toString();
 

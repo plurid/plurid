@@ -8,6 +8,7 @@
 
     import {
         PluridRoute,
+        PluridRoutePlane,
         PluridPreserve,
         PluridComponent,
     } from '@plurid/plurid-data';
@@ -116,6 +117,7 @@ export interface PluridServerServicesData {
 
 export interface PluridServerConfiguration {
     routes: PluridRoute[];
+    planes?: PluridRoutePlane[];
     preserves: PluridPreserve[];
     helmet: Helmet;
     styles?: string[];
