@@ -312,11 +312,13 @@ export interface PluridRoutePlane {
      * Map a direct link for a specific plane.
      *
      * e.g. `/plane-one` will route in browser the path `protocol://host/plane-one`
+     *
+     * Default composed from route and plane value, `/<route.value/<plane.value>`
      */
     link?: string;
 
     /**
-     * On direct link access (from the browser URL), show the plane in a `plurid` space,
+     * On direct link access (from the browser), show the plane in a `plurid` space,
      * or as the legacy view of an web page.
      *
      * Default `'plurid'`
@@ -329,6 +331,20 @@ export interface PluridRoutePlane {
      * Default `true`
      */
     injectable?: boolean;
+
+    /**
+     * Render route exterior when directly accessed.
+     *
+     * Default `true`
+     */
+    directExterior?: boolean;
+
+    /**
+     * Render route exterior when injected into other `plurid` space.
+     *
+     * Default `false`
+     */
+    injectExterior?: boolean;
 }
 
 
