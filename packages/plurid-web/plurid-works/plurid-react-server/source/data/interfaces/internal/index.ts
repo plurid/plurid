@@ -11,6 +11,7 @@
     import {
         Indexed,
         PluridRoute,
+        PluridRoutePlane,
         PluridComponent,
     } from '@plurid/plurid-data';
 
@@ -96,6 +97,7 @@ export interface PluridContentGeneratorData {
     shell: PluridComponent | undefined;
     matchedRoute: router.MatcherResponse;
     routes: PluridRoute[];
+    planes: PluridRoutePlane[];
     pluridMetastate: any;
     gateway: boolean;
     gatewayEndpoint: string;

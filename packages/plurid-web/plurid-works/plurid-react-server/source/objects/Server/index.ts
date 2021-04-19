@@ -882,6 +882,7 @@ class PluridServer {
                 helmet: this.helmet,
                 matchedRoute,
                 routes: this.routes,
+                planes: this.planes,
                 pluridMetastate,
                 gateway,
                 gatewayEndpoint,

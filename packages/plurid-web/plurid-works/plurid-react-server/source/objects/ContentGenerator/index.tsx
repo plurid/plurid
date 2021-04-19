@@ -47,6 +47,7 @@ class PluridContentGenerator {
             pluridMetastate,
             matchedRoute,
             routes,
+            planes,
             exterior,
             shell,
             gateway,
@@ -68,6 +69,7 @@ class PluridContentGenerator {
                 <PluridRouterStatic
                     path={matchedRoute.pathname}
                     routes={routes}
+                    planes={planes}
                     exterior={exterior}
                     shell={shell}
                     gateway={gateway}
