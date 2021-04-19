@@ -27,8 +27,9 @@
     // [END stripe import]
 
     import {
-        routes,
         shell,
+        routes,
+        planes,
     } from '../shared';
     // #endregion external
 
@@ -128,9 +129,10 @@ const template: PluridServerTemplateConfiguration = {
 // generate server
 const pluridServer = new PluridServer({
     helmet,
-    routes,
-    preserves,
     shell,
+    routes,
+    planes,
+    preserves,
     styles,
     middleware,
     services,

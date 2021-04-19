@@ -1,7 +1,8 @@
 // #region imports
     // #region internal
-    import routes from './routes';
     import shell from './shell';
+    import routes from './routes';
+    import planes from './planes';
     // #endregion internal
 // #endregion imports
 
@@ -9,7 +10,8 @@
 
 // #region module
 export {
-    routes,
     shell,
+    routes,
+    planes,
 };
 // #endregion module

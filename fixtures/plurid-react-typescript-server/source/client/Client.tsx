@@ -49,8 +49,9 @@
     // [END StripeAPIKey]
 
     import {
-        routes,
         shell,
+        routes,
+        planes,
     } from '../shared';
     // #endregion external
 // #endregion imports
@@ -82,6 +83,7 @@ const Client: React.FC<any> = () => {
                             <PluridRouterBrowser
                                 shell={shell}
                                 routes={routes}
+                                planes={planes}
                             />
                         </PluridProvider>
                     {/* </StripeProvider> */}
