@@ -4,6 +4,7 @@
 
     import {
         PluridRoute,
+        PluridRoutePlane,
         PluridComponent,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -22,6 +23,7 @@ export interface PluridRouterStaticOwnProperties {
     exterior?: PluridComponent;
     shell?: PluridComponent;
     routes: PluridRoute[];
+    planes: PluridRoutePlane[];
     protocol?: string;
     host?: string;
     gateway?: boolean;
@@ -37,6 +39,7 @@ const PluridRouterStatic = (
     const {
         path,
         routes,
+        planes,
         exterior,
         shell,
         protocol: protocolProperty,
@@ -56,6 +59,7 @@ const PluridRouterStatic = (
     return (
         <PluridRouterBrowser
             routes={routes}
+            planes={planes}
             exterior={exterior}
             shell={shell}
             static={{

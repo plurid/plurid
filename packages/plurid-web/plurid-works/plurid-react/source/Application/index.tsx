@@ -113,6 +113,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
             planes,
             planesRegistrar,
         );
+        // console.log('computeStore planesRegistrar', planesRegistrar);
 
         const currentState = this.store
             ? this.store.getState()
