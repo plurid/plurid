@@ -316,10 +316,19 @@ export interface PluridRoutePlane {
     link?: string;
 
     /**
-     * On direct link access, show the plane in a `plurid` space,
+     * On direct link access (from the browser URL), show the plane in a `plurid` space,
      * or as the legacy view of an web page.
+     *
+     * Default `'plurid'`
      */
     linkView?: 'legacy' | 'plurid';
+
+    /**
+     * Injectable into other `plurid` spaces.
+     *
+     * Default `true`
+     */
+    injectable?: boolean;
 }
 
 
