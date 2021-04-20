@@ -101,15 +101,28 @@ const gatherPluridPlanes = (
 }
 
 const computePluridRoute = (
-    matchedPath: string,
+    matchedRoute: router.MatcherResponse | undefined,
     routes: PluridRoute[],
     planesRegistrar: PluridPlanesRegistrar,
 ) => {
     // TODO get matched route taking into consideration parameter matching
+    // let matchedRouteData: PluridRoute | undefined;
+    // for (const route of routes) {
+    //     if (route.value === matchedPath) {
+    //         matchedRouteData = route;
+    //     }
+    // }
+
+    if (!matchedRoute) {
+        return () => () => (<></>);
+    }
+
     let matchedRouteData: PluridRoute | undefined;
     for (const route of routes) {
-        if (route.value === matchedPath) {
-            matchedRouteData = route;
+        if (route.value === matchedRoute.path.value) {
+            matchedRouteData = {
+                ...route,
+            };
         }
     }
 
@@ -216,7 +229,7 @@ const computePluridRoute = (
 
 const computeInitialMatchedPath = (
     staticContext?: any,
-) => {
+): string => {
     if (staticContext) {
         return staticContext.path;
     }
@@ -257,8 +270,20 @@ const PluridRouterBrowser = (
 
 
     // #region references
-    const pluridPlanesRegistrar = useRef(new PluridPlanesRegistrar());
+    const pluridPlanesRegistrar = useRef(
+        new PluridPlanesRegistrar(),
+    );
     pluridPlanesRegistrar.current.register(pluridPlanes);
+
+    // const pluridURLRouter = useRef(new PluridURLRouter(
+    //     urlRoutes.current,
+    // ));
+
+    const pluridRouter = useRef(
+        new PluridRouter(
+            routes,
+        ),
+    );
     // #endregion references
 
 
@@ -281,7 +306,9 @@ const PluridRouterBrowser = (
     const [
         matchedRoute,
         setMatchedRoute,
-    ] = useState();
+    ] = useState(
+        pluridRouter.current.match(matchedPath),
+    );
     // console.log('matchedRoute', matchedRoute);
 
     const [
@@ -289,7 +316,7 @@ const PluridRouterBrowser = (
         setPluridRoute,
     ] = useState<React.FC<any>>(
         computePluridRoute(
-            matchedPath,
+            matchedRoute,
             routes,
             pluridPlanesRegistrar.current,
         ),
@@ -371,6 +398,9 @@ const PluridRouterBrowser = (
             history.pushState(null, '', matchedPath);
         }
 
+        const matchedRoute = pluridRouter.current.match(matchedPath);
+        // console.log('matchedRoute', matchedRoute);
+
         setMatchedPath(matchedPath);
 
 
@@ -418,9 +448,11 @@ const PluridRouterBrowser = (
 
 
     useEffect(() => {
+        const matchedRoute = pluridRouter.current.match(matchedPath);
+
         setPluridRoute(
             computePluridRoute(
-                matchedPath,
+                matchedRoute,
                 routes,
                 pluridPlanesRegistrar.current,
             ),
