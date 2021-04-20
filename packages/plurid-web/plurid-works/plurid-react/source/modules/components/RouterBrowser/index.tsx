@@ -271,9 +271,10 @@ const PluridRouterBrowser = (
 
     // #region references
     const pluridPlanesRegistrar = useRef(
-        new PluridPlanesRegistrar(),
+        new PluridPlanesRegistrar(
+            pluridPlanes,
+        ),
     );
-    pluridPlanesRegistrar.current.register(pluridPlanes);
 
     // const pluridURLRouter = useRef(new PluridURLRouter(
     //     urlRoutes.current,
