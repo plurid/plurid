@@ -467,7 +467,7 @@ class PluridServer {
             if (
                 !route
             ) {
-                // check if matchingPath is direct plane
+                // Handle direct plane match.
                 const {
                     matchRoute,
                     matchPlane,
@@ -477,6 +477,13 @@ class PluridServer {
                     this.routes,
                     this.planes,
                 );
+
+                if (
+                    matchPlane
+                    && matchPath
+                ) {
+                    // Render direct plane.
+                }
 
 
                 const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
