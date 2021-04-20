@@ -287,11 +287,6 @@ const PluridRouterBrowser = (
     // #endregion references
 
 
-    // console.log('pluridPlanesRegistrar', pluridPlanesRegistrar);
-    // console.log('staticContext', staticContext);
-    // console.log('PluridRouterBrowser properties', properties);
-
-
     // #region state
     const [
         matchedPath,
@@ -301,7 +296,6 @@ const PluridRouterBrowser = (
             staticContext,
         ),
     );
-    // console.log('matchedPath', matchedPath);
 
     const [
         matchedRoute,
@@ -309,7 +303,6 @@ const PluridRouterBrowser = (
     ] = useState(
         pluridRouter.current.match(matchedPath),
     );
-    // console.log('matchedRoute', matchedRoute);
 
     const [
         PluridRoute,
@@ -321,51 +314,10 @@ const PluridRouterBrowser = (
             pluridPlanesRegistrar.current,
         ),
     );
-    // console.log('PluridRoute', PluridRoute);
     // #endregion state
 
 
     // #region handlers
-    const handleMatchedRoute = (
-        matchedRoute: router.MatcherResponse,
-    ) => {
-        // console.log('matchedRoute', matchedRoute);
-        // setMatchedRoute(matchedRoute);
-
-        // if (!cleanNavigation) {
-        //     if (window.location.pathname !== matchedRoute.route) {
-        //         history.pushState(null, '', matchedRoute.route);
-        //     }
-        // }
-
-        // storage.saveState(
-        //     matchedRoute.path.value,
-        //     '__PLURID_ROUTER__',
-        // );
-
-        // const event = new CustomEvent(
-        //     PLURID_ROUTER_LOCATION_STORED,
-        //     {
-        //         detail: {
-        //             path: matchedRoute.path.value,
-        //         },
-        //     },
-        // );
-        // if (window) {
-        //     window.dispatchEvent(event);
-        // }
-
-        // const Component = getComponentFromRoute({
-        //     matchedRoute,
-        //     protocol,
-        //     host,
-        //     indexedPlanes: indexedPlanes.current,
-        //     // staticRender: true,
-        // });
-
-        // setComponent(Component);
-    }
-
     const handleLocation = (
         event?: any,
     ) => {
@@ -394,42 +346,7 @@ const PluridRouterBrowser = (
         }
 
 
-        if (!cleanNavigation) {
-            history.pushState(null, '', matchedPath);
-        }
-
-        const matchedRoute = pluridRouter.current.match(matchedPath);
-        // console.log('matchedRoute', matchedRoute);
-
         setMatchedPath(matchedPath);
-
-
-        // if (!event && pathname === gatewayPath) {
-        //     handleGateway();
-        //     return;
-        // }
-
-        // const path = event && event.detail?.path
-        //     ? event.detail.path
-        //     : cleanNavigation && view
-        //         ? view
-        //         : pathname + window.location.search;
-
-        // // if (cleanNavigation && pathname !== gateway) {
-        // //     window.history.replaceState(null, '', '/');
-        // // }
-
-        // const matchedRoute = pluridRouter.current.match(path);
-
-        // const matchedURL = pluridURLRouter.current.match(path);
-        // // console.log('matchedURL', matchedURL);
-
-        // if (!matchedRoute) {
-        //     handleNoMatch();
-        //     return;
-        // }
-
-        // handleMatchedRoute(matchedRoute);
     }
     // #endregion handlers
 
@@ -450,6 +367,7 @@ const PluridRouterBrowser = (
     useEffect(() => {
         const matchedRoute = pluridRouter.current.match(matchedPath);
 
+        setMatchedRoute(matchedRoute);
         setPluridRoute(
             computePluridRoute(
                 matchedRoute,
@@ -460,11 +378,40 @@ const PluridRouterBrowser = (
     }, [
         matchedPath,
     ]);
+
+
+    useEffect(() => {
+        if (!matchedRoute) {
+            return;
+        }
+
+        if (!cleanNavigation) {
+            history.pushState(null, '', matchedRoute.path.value);
+        }
+
+        storage.saveState(
+            matchedRoute.path.value,
+            '__PLURID_ROUTER__',
+        );
+
+        const locationStoredEvent = new CustomEvent(
+            PLURID_ROUTER_LOCATION_STORED,
+            {
+                detail: {
+                    path: matchedRoute.path.value,
+                },
+            },
+        );
+        window.dispatchEvent(locationStoredEvent);
+    }, [
+        cleanNavigation,
+        matchedRoute,
+    ]);
     // #endregion effects
 
 
     // #region render
-    let PluridRouterExterior: React.FC<any> = () => (<></>);
+    let PluridRouterExterior: React.FC<any> | undefined;
     if (exterior) {
         if (exterior.kind === 'react') {
             PluridRouterExterior = exterior.element;
@@ -489,12 +436,14 @@ const PluridRouterBrowser = (
 
     return (
         <>
-            <PluridRouterExterior
-                // matchedRoute={actualMatchedInitialRoute || matchedRoute}
-            />
+            {PluridRouterExterior && (
+                <PluridRouterExterior
+                    matchedRoute={matchedRoute}
+                />
+            )}
 
             <PluridRouterShell
-                // matchedRoute={actualMatchedInitialRoute || matchedRoute}
+                matchedRoute={matchedRoute}
             >
                 <PluridRoute />
             </PluridRouterShell>
