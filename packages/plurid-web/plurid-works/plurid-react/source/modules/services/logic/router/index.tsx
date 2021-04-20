@@ -1760,14 +1760,11 @@ export const computeInitialMatchedPath = (
 }
 
 
-export const renderDirectPlane = (
+export const getDirectPlaneMatch = (
     matchedPath: string,
     routes: PluridRoute[],
-    planesRegistrar: PluridPlanesRegistrar,
+    planes: PluridRoutePlane[] | undefined,
 ) => {
-    let matchedPlane: router.MatcherResponse | undefined;
-    let DirectPlane: React.FC<any> | undefined;
-
     let matchRoute: PluridRoute | undefined;
     let matchPlane: PluridRoutePlane | undefined;
     let matchPath: string | undefined;
@@ -1792,6 +1789,50 @@ export const renderDirectPlane = (
         }
     }
 
+    if (planes) {
+        for (const plane of planes) {
+            if (matchedPath === plane.value) {
+                matchPlane = plane;
+                break;
+            }
+        }
+    }
+
+    return {
+        matchRoute,
+        matchPlane,
+        matchPath,
+    };
+}
+
+
+export const renderDirectPlane = (
+    matchedPath: string,
+    routes: PluridRoute[],
+    planes: PluridRoutePlane[] | undefined,
+    planesRegistrar: PluridPlanesRegistrar,
+) => {
+    let matchedPlane: router.MatcherResponse | undefined;
+    let DirectPlane: React.FC<any> | undefined;
+
+    const {
+        matchRoute,
+        matchPlane,
+        matchPath,
+    } = getDirectPlaneMatch(
+        matchedPath,
+        routes,
+        planes,
+    );
+
+    if (matchRoute) {
+        const parsedRoute = new router.RouteParser(
+            matchedPath,
+            matchRoute,
+        );
+        matchedPlane = parsedRoute.extract();
+    }
+
     if (
         matchRoute && matchPlane && matchPath
     ) {
@@ -1811,15 +1852,6 @@ export const renderDirectPlane = (
 
             return PluridRoute;
         };
-    }
-
-
-    if (matchRoute) {
-        const parsedRoute = new router.RouteParser(
-            matchedPath,
-            matchRoute,
-        );
-        matchedPlane = parsedRoute.extract();
     }
 
     return {

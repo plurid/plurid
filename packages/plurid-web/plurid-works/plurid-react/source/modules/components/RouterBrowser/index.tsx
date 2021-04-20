@@ -208,6 +208,7 @@ const PluridRouterBrowser = (
             } = renderDirectPlane(
                 matchedPath,
                 routes,
+                planes,
                 pluridPlanesRegistrar.current,
             );
 
