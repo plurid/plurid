@@ -338,6 +338,23 @@ export interface PluridRoutePlane {
     injectable?: boolean;
 
     /**
+     * Direct access to the plane from the browser.
+     *
+     * Default plane link composed from route and plane value, `/<route.value/<plane.value>`;
+     * changeable through the `link` property.
+     *
+     * Default `true`
+     */
+    urlable?: boolean;
+
+    /**
+     * Access to the plane through the `gateway` path.
+     *
+     * Default `true`
+     */
+    gateable?: boolean;
+
+    /**
      * Render route exterior when directly accessed.
      *
      * Default `true`
