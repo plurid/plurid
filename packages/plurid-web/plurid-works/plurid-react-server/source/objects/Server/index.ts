@@ -479,10 +479,37 @@ class PluridServer {
                 );
 
                 if (
-                    matchPlane
+                    matchRoute
+                    && matchPlane
                     && matchPath
                 ) {
                     // Render direct plane.
+                    const parsedRoute = new router.RouteParser(
+                        matchingPath,
+                        matchRoute,
+                    );
+                    const matchedPlane = parsedRoute.extract();
+
+                    const renderer = await this.renderApplication(
+                        matchedPlane,
+                        preserveResult,
+                    );
+
+                    if (this.debugAllows('info')) {
+                        const requestTime = this.computeRequestTime(request);
+
+                        console.info(
+                            `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${matchingPath}${requestTime}`,
+                        );
+                    }
+
+                    response.send(renderer.html());
+
+                    this.resolvePreserveAfterServe(
+                        preserveAfterServe,
+                        request,
+                        response,
+                    );
                 }
 
 
