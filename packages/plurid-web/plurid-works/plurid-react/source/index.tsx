@@ -75,6 +75,10 @@
     } from './modules/services/logic/server';
 
     import {
+        getDirectPlaneMatch,
+    } from './modules/services/logic/router';
+
+    import {
         pluridRouterNavigate,
     } from './modules/services/utilities/navigate';
 
