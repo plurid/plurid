@@ -192,6 +192,17 @@ const PluridRouterBrowser = (
 
         let matchedRoute = pluridRouter.current.match(matchedPath);
 
+        // Handle direct plane access
+        //        gateway access
+        if (!matchedRoute) {
+            if (matchedPath === '/gateway') {
+                // handle gateway
+            }
+
+            // render direct plane
+            console.log('Direct plane or gateway access');
+        }
+
         // Handle not found.
         if (!matchedRoute) {
             matchedRoute = pluridRouter.current.match(notFoundPath);
