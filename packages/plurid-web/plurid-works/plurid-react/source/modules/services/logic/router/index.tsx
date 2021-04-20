@@ -1241,3 +1241,197 @@ export const collectApplicationsFromPath = (
     return plurids;
 }
 // #endregion module
+
+
+
+
+
+// #region module update
+export const gatherPluridPlanes = (
+    routes: PluridRoute[],
+    planes: PluridRoutePlane[] | undefined,
+) => {
+    const pluridPlanes: PluridPlane[] = [];
+
+    for (const route of routes) {
+        if (route.planes) {
+            for (const plane of route.planes) {
+                if (plane.component.kind === 'react') {
+                    const pluridPlane: PluridPlane = {
+                        route: plane.value,
+                        component: {
+                            kind: 'react',
+                            element: plane.component.element,
+                        },
+                    };
+                    pluridPlanes.push(pluridPlane);
+                }
+            }
+        }
+
+        if (route.spaces) {
+            // gather planes from spaces
+        }
+    }
+
+    if (planes) {
+        for (const plane of planes) {
+            if (plane.component.kind === 'react') {
+                const pluridPlane: PluridPlane = {
+                    route: plane.value,
+                    component: {
+                        kind: 'react',
+                        element: plane.component.element,
+                    },
+                };
+                pluridPlanes.push(pluridPlane);
+            }
+        }
+    }
+
+    return pluridPlanes;
+}
+
+
+export const computePluridRoute = (
+    matchedRoute: router.MatcherResponse | undefined,
+    routes: PluridRoute[],
+    planesRegistrar: PluridPlanesRegistrar,
+) => {
+    // TODO get matched route taking into consideration parameter matching
+    // let matchedRouteData: PluridRoute | undefined;
+    // for (const route of routes) {
+    //     if (route.value === matchedPath) {
+    //         matchedRouteData = route;
+    //     }
+    // }
+
+    if (!matchedRoute) {
+        return () => () => (<></>);
+    }
+
+    let matchedRouteData: PluridRoute | undefined;
+    for (const route of routes) {
+        if (route.value === matchedRoute.path.value) {
+            matchedRouteData = {
+                ...route,
+            };
+        }
+    }
+
+    if (!matchedRouteData) {
+        return () => () => (<></>);
+    }
+
+    const {
+        exterior,
+        view,
+        planes,
+        spaces,
+    } = matchedRouteData;
+
+    let PluridRouteExterior: React.FC<any> | undefined;
+    if (exterior && exterior.kind === 'react') {
+        PluridRouteExterior = exterior.element;
+        PluridRouteExterior.displayName = 'PluridRouteExterior';
+    }
+
+
+    // Render only the exterior of the route.
+    if (
+        exterior
+        && PluridRouteExterior
+        && !view
+        && !planes
+        && !spaces
+    ) {
+        return (): React.FC<any> => {
+            const PluridRoute = () => (
+                <>
+                    {PluridRouteExterior && (
+                        <PluridRouteExterior />
+                    )}
+                </>
+            );
+
+            return PluridRoute;
+        };
+    }
+
+
+    // Render a single Plurid Application in the route.
+    if (
+        view
+    ) {
+        return (): React.FC<any> => {
+            const PluridRoute = () => (
+                <>
+                    {PluridRouteExterior && (
+                        <PluridRouteExterior />
+                    )}
+
+                    <PluridApplication
+                        view={view}
+                        planesRegistrar={planesRegistrar}
+                    />
+                </>
+            );
+
+            return PluridRoute;
+        };
+    }
+
+
+    // Render a multispace route.
+    let MultispaceHeader: React.FC<any> | undefined;
+    let MultispaceFooter: React.FC<any> | undefined;
+    if (matchedRouteData.multispace?.header) {
+        const header = matchedRouteData.multispace.header;
+
+        if (header.kind === 'react') {
+            MultispaceHeader = header.element;
+        }
+    }
+    if (matchedRouteData.multispace?.footer) {
+        const footer = matchedRouteData.multispace.footer;
+
+        if (footer.kind === 'react') {
+            MultispaceFooter = footer.element;
+        }
+    }
+
+    return (): React.FC<any> => {
+        const PluridRoute = () => (
+            <>
+                {PluridRouteExterior && (
+                    <PluridRouteExterior />
+                )}
+
+                <PluridApplication
+                    view={view || []}
+                    planesRegistrar={planesRegistrar}
+                />
+            </>
+        );
+
+        return PluridRoute;
+    };
+
+    // return () => <></>;
+}
+
+
+export const computeInitialMatchedPath = (
+    staticContext?: any,
+): string => {
+    if (staticContext) {
+        return staticContext.path;
+    }
+
+    if (typeof window !== 'undefined') {
+        return window.location.pathname;
+    }
+
+    return '/';
+}
+// #endregion module update
