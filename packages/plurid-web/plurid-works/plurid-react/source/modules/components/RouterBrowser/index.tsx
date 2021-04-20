@@ -134,6 +134,20 @@ const computePluridRoute = (
     // return () => <></>;
 }
 
+const computeInitialMatchedPath = (
+    staticContext?: any,
+) => {
+    if (staticContext) {
+        return staticContext.path;
+    }
+
+    if (typeof window !== 'undefined') {
+        return window.location.pathname;
+    }
+
+    return '/';
+}
+
 
 const PluridRouter = router.default;
 const PluridURLRouter = router.URLRouter;
@@ -156,14 +170,18 @@ const PluridRouterBrowser = (
         routes,
         planes,
     );
+    // #endregion properties
 
-    const pluridPlanesRegistrar = new PluridPlanesRegistrar();
-    pluridPlanesRegistrar.register(pluridPlanes);
+
+    // #region references
+    const pluridPlanesRegistrar = useRef(new PluridPlanesRegistrar());
+    pluridPlanesRegistrar.current.register(pluridPlanes);
+    // #endregion references
+
 
     // console.log('pluridPlanesRegistrar', pluridPlanesRegistrar);
     // console.log('staticContext', staticContext);
     // console.log('PluridRouterBrowser properties', properties);
-    // #endregion properties
 
 
     // #region state
@@ -171,11 +189,9 @@ const PluridRouterBrowser = (
         matchedPath,
         setMatchedPath,
     ] = useState(
-        staticContext
-            ? staticContext.path
-            : typeof window !== 'undefined'
-                ? window.location.pathname
-                : '',
+        computeInitialMatchedPath(
+            staticContext,
+        ),
     );
     // console.log('matchedPath', matchedPath);
 
@@ -192,7 +208,7 @@ const PluridRouterBrowser = (
         computePluridRoute(
             matchedPath,
             routes,
-            pluridPlanesRegistrar,
+            pluridPlanesRegistrar.current,
         ),
     );
     // console.log('PluridRoute', PluridRoute);
@@ -243,14 +259,14 @@ const PluridRouterBrowser = (
     const handleLocation = (
         event?: any,
     ) => {
-        const pathname = window.location.pathname;
-        console.log('pathname', pathname);
-        console.log('event', event);
-
         if (event && event.detail.path) {
             setMatchedPath(event.detail.path);
             return;
         }
+
+        const pathname = window.location.pathname;
+        console.log('pathname', pathname);
+        console.log('event', event);
 
         // if (!event && pathname === gatewayPath) {
         //     handleGateway();
@@ -300,7 +316,7 @@ const PluridRouterBrowser = (
             computePluridRoute(
                 matchedPath,
                 routes,
-                pluridPlanesRegistrar,
+                pluridPlanesRegistrar.current,
             ),
         );
     }, [
