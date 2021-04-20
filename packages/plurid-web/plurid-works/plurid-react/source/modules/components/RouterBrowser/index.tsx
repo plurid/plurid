@@ -247,6 +247,10 @@ const PluridRouterBrowser = (
         console.log('pathname', pathname);
         console.log('event', event);
 
+        if (event && event.detail.path) {
+            setMatchedPath(event.detail.path);
+            return;
+        }
 
         // if (!event && pathname === gatewayPath) {
         //     handleGateway();
@@ -289,6 +293,19 @@ const PluridRouterBrowser = (
             window.removeEventListener(PLURID_ROUTER_LOCATION_CHANGED, handleLocation);
         };
     }, []);
+
+
+    useEffect(() => {
+        setPluridRoute(
+            computePluridRoute(
+                matchedPath,
+                routes,
+                pluridPlanesRegistrar,
+            ),
+        );
+    }, [
+        matchedPath,
+    ]);
     // #endregion effects
 
 
