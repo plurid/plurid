@@ -77,7 +77,10 @@ const PluridRouterBrowser = (
 
         view: cleanNavigationView,
         cleanNavigation,
+        notFoundPath: notFoundPathProperty,
     } = properties;
+
+    const notFoundPath = notFoundPathProperty || '/not-found';
 
     const pluridPlanes = gatherPluridPlanes(
         routes,
@@ -183,7 +186,16 @@ const PluridRouterBrowser = (
 
 
     useEffect(() => {
-        const matchedRoute = pluridRouter.current.match(matchedPath);
+        if (!cleanNavigation) {
+            history.pushState(null, '', matchedPath);
+        }
+
+        let matchedRoute = pluridRouter.current.match(matchedPath);
+
+        // Handle not found.
+        if (!matchedRoute) {
+            matchedRoute = pluridRouter.current.match(notFoundPath);
+        }
 
         setMatchedRoute(matchedRoute);
         setPluridRoute(
@@ -201,10 +213,6 @@ const PluridRouterBrowser = (
     useEffect(() => {
         if (!matchedRoute) {
             return;
-        }
-
-        if (!cleanNavigation) {
-            history.pushState(null, '', matchedRoute.route);
         }
 
         storage.saveState(
