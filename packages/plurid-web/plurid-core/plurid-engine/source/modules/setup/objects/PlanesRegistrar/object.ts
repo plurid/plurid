@@ -25,6 +25,16 @@ class PluridPlanesRegistrar implements IPluridPlanesRegistrar {
     // Store the planes in a better data structure.
     private planes: Map<string, RegisteredPluridPlane> = new Map();
 
+
+    constructor(
+        planes?: PluridPlane[],
+    ) {
+        if (planes) {
+            this.register(planes);
+        }
+    }
+
+
     public register(
         planes: PluridPlane[],
     ) {
