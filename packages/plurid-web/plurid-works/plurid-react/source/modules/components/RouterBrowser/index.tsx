@@ -52,6 +52,7 @@
         gatherPluridPlanes,
         computePluridRoute,
         computeInitialMatchedPath,
+        renderDirectPlane,
     } from '~services/logic/router';
     // #endregion external
 // #endregion imports
@@ -195,12 +196,26 @@ const PluridRouterBrowser = (
         // Handle direct plane access
         //        gateway access
         if (!matchedRoute) {
+            console.log('Direct plane or gateway access');
             if (matchedPath === '/gateway') {
                 // handle gateway
             }
 
             // render direct plane
-            console.log('Direct plane or gateway access');
+            const {
+                matchedPlane,
+                DirectPlane,
+            } = renderDirectPlane(
+                matchedPath,
+                routes,
+                pluridPlanesRegistrar.current,
+            );
+
+            if (matchedPlane && DirectPlane) {
+                setMatchedRoute(matchedPlane);
+                setPluridRoute(DirectPlane);
+                return;
+            }
         }
 
         // Handle not found.

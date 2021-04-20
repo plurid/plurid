@@ -1761,8 +1761,70 @@ export const computeInitialMatchedPath = (
 
 
 export const renderDirectPlane = (
-
+    matchedPath: string,
+    routes: PluridRoute[],
+    planesRegistrar: PluridPlanesRegistrar,
 ) => {
+    let matchedPlane: router.MatcherResponse | undefined;
+    let DirectPlane: React.FC<any> | undefined;
 
+    let matchRoute: PluridRoute | undefined;
+    let matchPlane: PluridRoutePlane | undefined;
+    let matchPath: string | undefined;
+    for (const route of routes) {
+        if (route.planes) {
+            for (const plane of route.planes) {
+                const planePath = route.value === '/'
+                    ? plane.value
+                    : route.value + plane.value;
+                matchPath = planePath;
+
+                if (matchedPath === planePath) {
+                    matchPlane = plane;
+                    break;
+                }
+            }
+        }
+
+        if (matchPlane) {
+            matchRoute = route;
+            break;
+        }
+    }
+
+    if (
+        matchRoute && matchPlane && matchPath
+    ) {
+        DirectPlane = (): any => {
+            const PluridRoute = () => (
+                <>
+                    <PluridApplication
+                        view={matchPath
+                            ? [
+                                matchPath,
+                            ] : []
+                        }
+                        planesRegistrar={planesRegistrar}
+                    />
+                </>
+            );
+
+            return PluridRoute;
+        };
+    }
+
+
+    if (matchRoute) {
+        const parsedRoute = new router.RouteParser(
+            matchedPath,
+            matchRoute,
+        );
+        matchedPlane = parsedRoute.extract();
+    }
+
+    return {
+        matchedPlane,
+        DirectPlane,
+    };
 }
 // #endregion module update
