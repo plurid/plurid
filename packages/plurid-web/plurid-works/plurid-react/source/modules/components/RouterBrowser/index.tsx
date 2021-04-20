@@ -76,6 +76,10 @@ const gatherPluridPlanes = (
                 }
             }
         }
+
+        if (route.spaces) {
+            // gather planes from spaces
+        }
     }
 
     if (planes) {
@@ -101,28 +105,104 @@ const computePluridRoute = (
     routes: PluridRoute[],
     planesRegistrar: PluridPlanesRegistrar,
 ) => {
-    let exterior: PluridComponent | undefined;
-    let view: string[] = [];
+    // TODO get matched route taking into consideration parameter matching
+    let matchedRouteData: PluridRoute | undefined;
     for (const route of routes) {
         if (route.value === matchedPath) {
-            view = route.view || [];
-            exterior = route.exterior;
+            matchedRouteData = route;
         }
     }
 
-    let PluridRouteExterior: React.FC<any> = () => (<></>);
+    if (!matchedRouteData) {
+        return () => () => (<></>);
+    }
+
+    const {
+        exterior,
+        view,
+        planes,
+        spaces,
+    } = matchedRouteData;
+
+    let PluridRouteExterior: React.FC<any> | undefined;
     if (exterior && exterior.kind === 'react') {
         PluridRouteExterior = exterior.element;
         PluridRouteExterior.displayName = 'PluridRouteExterior';
     }
 
+
+    // Render only the exterior of the route.
+    if (
+        exterior
+        && PluridRouteExterior
+        && !view
+        && !planes
+        && !spaces
+    ) {
+        return (): React.FC<any> => {
+            const PluridRoute = () => (
+                <>
+                    {PluridRouteExterior && (
+                        <PluridRouteExterior />
+                    )}
+                </>
+            );
+
+            return PluridRoute;
+        };
+    }
+
+
+    // Render a single Plurid Application in the route.
+    if (
+        view
+    ) {
+        return (): React.FC<any> => {
+            const PluridRoute = () => (
+                <>
+                    {PluridRouteExterior && (
+                        <PluridRouteExterior />
+                    )}
+
+                    <PluridApplication
+                        view={view}
+                        planesRegistrar={planesRegistrar}
+                    />
+                </>
+            );
+
+            return PluridRoute;
+        };
+    }
+
+
+    // Render a multispace route.
+    let MultispaceHeader: React.FC<any> | undefined;
+    let MultispaceFooter: React.FC<any> | undefined;
+    if (matchedRouteData.multispace?.header) {
+        const header = matchedRouteData.multispace.header;
+
+        if (header.kind === 'react') {
+            MultispaceHeader = header.element;
+        }
+    }
+    if (matchedRouteData.multispace?.footer) {
+        const footer = matchedRouteData.multispace.footer;
+
+        if (footer.kind === 'react') {
+            MultispaceFooter = footer.element;
+        }
+    }
+
     return (): React.FC<any> => {
         const PluridRoute = () => (
             <>
-                <PluridRouteExterior />
+                {PluridRouteExterior && (
+                    <PluridRouteExterior />
+                )}
 
                 <PluridApplication
-                    view={view}
+                    view={view || []}
                     planesRegistrar={planesRegistrar}
                 />
             </>
@@ -164,6 +244,9 @@ const PluridRouterBrowser = (
         shell,
 
         static: staticContext,
+
+        view: cleanNavigationView,
+        cleanNavigation,
     } = properties;
 
     const pluridPlanes = gatherPluridPlanes(
@@ -259,14 +342,37 @@ const PluridRouterBrowser = (
     const handleLocation = (
         event?: any,
     ) => {
-        if (event && event.detail.path) {
-            setMatchedPath(event.detail.path);
-            return;
+        let matchedPath: string | undefined;
+
+        if (
+            event && event.detail.path
+            && !matchedPath
+        ) {
+            matchedPath = event.detail.path;
         }
 
+
+        if (
+            cleanNavigation && cleanNavigationView
+            && !matchedPath
+        ) {
+            matchedPath = cleanNavigationView;
+        }
+
+
         const pathname = window.location.pathname;
-        console.log('pathname', pathname);
-        console.log('event', event);
+
+        if (!matchedPath) {
+            matchedPath = pathname + window.location.search;
+        }
+
+
+        if (!cleanNavigation) {
+            history.pushState(null, '', matchedPath);
+        }
+
+        setMatchedPath(matchedPath);
+
 
         // if (!event && pathname === gatewayPath) {
         //     handleGateway();
