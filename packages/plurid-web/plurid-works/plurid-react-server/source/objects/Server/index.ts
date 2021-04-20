@@ -460,7 +460,7 @@ class PluridServer {
 
 
             const route = this.router.match(matchingPath);
-            // console.log('route', route);
+            // console.log('Route matched', route);
 
             if (
                 !route
