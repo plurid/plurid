@@ -45,6 +45,8 @@
 
     import {
         serverComputeMetastate,
+
+        getDirectPlaneMatch,
     } from '@plurid/plurid-react';
     // #endregion libraries
 
@@ -465,6 +467,18 @@ class PluridServer {
             if (
                 !route
             ) {
+                // check if matchingPath is direct plane
+                const {
+                    matchRoute,
+                    matchPlane,
+                    matchPath,
+                }  = getDirectPlaneMatch(
+                    matchingPath,
+                    this.routes,
+                    this.planes,
+                );
+
+
                 const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
                 if (notFoundStill) {
                     if (this.debugAllows('info')) {
