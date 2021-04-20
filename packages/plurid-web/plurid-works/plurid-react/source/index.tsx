@@ -209,6 +209,8 @@ export {
     pluridRouterNavigate,
     usePluridRouter,
 
+    getDirectPlaneMatch,
+
     /** state */
     pluridStateModules,
     // #endregion Utilities
