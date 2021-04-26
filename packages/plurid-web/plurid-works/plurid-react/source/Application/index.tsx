@@ -55,6 +55,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
         properties: PluridApplicationProperties,
         context: React.ContextType<typeof PluridProviderContext>,
     ) {
+        console.log('properties PluridApplication', properties.view);
         super(properties);
 
         this.storeID = properties.id || 'default';

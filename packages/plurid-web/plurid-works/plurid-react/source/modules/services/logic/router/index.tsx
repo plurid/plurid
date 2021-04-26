@@ -1257,8 +1257,14 @@ export const gatherPluridPlanes = (
         if (route.planes) {
             for (const plane of route.planes) {
                 if (plane.component.kind === 'react') {
+                    const planeRoute = plane.link
+                        ? plane.link
+                        : route.value === '/'
+                            ? plane.value
+                            : route.value + plane.value;
+
                     const pluridPlane: PluridPlane = {
-                        route: plane.value,
+                        route: planeRoute,
                         component: {
                             kind: 'react',
                             element: plane.component.element,
@@ -1787,6 +1793,7 @@ export const getDirectPlaneMatch = (
     let matchRoute: PluridRoute | undefined;
     let matchPlane: PluridRoutePlane | undefined;
     let matchPath: string | undefined;
+
     for (const route of routes) {
         if (route.planes) {
             for (const plane of route.planes) {
@@ -1842,6 +1849,12 @@ export const renderDirectPlane = (
         matchedPath,
         routes,
         planes,
+    );
+    console.log(
+        'renderDirectPlane',
+        matchRoute,
+        matchPlane,
+        matchPath,
     );
 
     if (matchRoute) {

@@ -118,6 +118,7 @@ const PluridRouterBrowser = (
             staticContext,
         ),
     );
+    console.log('matchedPath', matchedPath);
 
     const [
         matchedRoute,
@@ -125,6 +126,7 @@ const PluridRouterBrowser = (
     ] = useState(
         pluridRouter.current.match(matchedPath),
     );
+    console.log('matchedRoute', matchedRoute);
 
     const [
         PluridRoute,
