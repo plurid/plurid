@@ -20,6 +20,7 @@
 // #region module
 export interface PluridRouterStaticOwnProperties {
     path: string;
+    directPlane?: string;
     exterior?: PluridComponent;
     shell?: PluridComponent;
     routes: PluridRoute[];
@@ -38,6 +39,7 @@ const PluridRouterStatic = (
     /** properties */
     const {
         path,
+        directPlane,
         routes,
         planes,
         exterior,
@@ -64,6 +66,7 @@ const PluridRouterStatic = (
             shell={shell}
             static={{
                 path,
+                directPlane,
             }}
             protocol={protocol}
             host={host}

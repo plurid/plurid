@@ -1297,7 +1297,26 @@ export const computePluridRoute = (
     matchedRoute: router.MatcherResponse | undefined,
     routes: PluridRoute[],
     planesRegistrar: PluridPlanesRegistrar,
+    directPlane?: any,
 ) => {
+    if (directPlane) {
+        const {
+            matchedPlane,
+            DirectPlane,
+        } = renderDirectPlane(
+            directPlane,
+            routes,
+            undefined,
+            planesRegistrar,
+        );
+
+        if (matchedPlane && DirectPlane) {
+            // setMatchedRoute(matchedPlane);
+            // setPluridRoute(DirectPlane);
+            return DirectPlane;
+        }
+    }
+
     if (!matchedRoute) {
         return () => () => (<></>);
     }

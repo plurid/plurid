@@ -134,6 +134,7 @@ const PluridRouterBrowser = (
             matchedRoute,
             routes,
             pluridPlanesRegistrar.current,
+            staticContext?.directPlane,
         ),
     );
     // #endregion state
