@@ -74,7 +74,10 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
         space,
     } = stateConfiguration;
 
-    const opaqueSpace = space.opaque;
+    const {
+        opaque,
+        fadeInTime,
+    } = space;
     // #endregion properties
 
 
@@ -98,9 +101,9 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
         <StyledPluridSpace
             data-plurid-entity={PLURID_ENTITY_SPACE}
             theme={stateGeneralTheme}
-            opaque={opaqueSpace}
+            opaque={opaque}
             isMounted={isMounted}
-            fadeInTime={1500}
+            fadeInTime={fadeInTime}
         >
             <PluridRoots />
         </StyledPluridSpace>
