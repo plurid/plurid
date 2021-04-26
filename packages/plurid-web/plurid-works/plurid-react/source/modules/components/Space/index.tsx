@@ -100,7 +100,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
             theme={stateGeneralTheme}
             opaque={opaqueSpace}
             isMounted={isMounted}
-            fadeInTime={1200}
+            fadeInTime={1500}
         >
             <PluridRoots />
         </StyledPluridSpace>
