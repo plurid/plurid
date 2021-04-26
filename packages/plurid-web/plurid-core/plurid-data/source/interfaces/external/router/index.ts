@@ -93,6 +93,7 @@ export interface PluridRouterProperties {
 
 export interface PluridRouterStatic {
     path: string;
+    directPlane?: string;
 }
 
 
