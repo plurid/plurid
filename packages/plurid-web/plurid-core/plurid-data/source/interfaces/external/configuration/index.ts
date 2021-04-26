@@ -150,6 +150,13 @@ export interface PluridConfigurationSpace {
 
     cullingDistance: number;
 
+    /**
+     * Time for the planes to fade in, in milliseconds.
+     *
+     * Default 1500
+     */
+    fadeInTime: number;
+
     // FUTURE:
     /**
      * Change the browser URL depending on the active plane/plane in sight.

@@ -94,6 +94,7 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     },
     perspective: 2000,
     opaque: true,
+    fadeInTime: 1500,
     center: false,
     transformOrigin: {
         show: true,
