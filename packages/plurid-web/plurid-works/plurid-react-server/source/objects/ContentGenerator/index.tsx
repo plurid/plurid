@@ -58,6 +58,7 @@ class PluridContentGenerator {
             services,
             stylesheet,
             preserveResult,
+            matchedPlane,
         } = this.data;
 
         // console.log('ContentGenerator pluridMetastate', pluridMetastate);
@@ -68,6 +69,7 @@ class PluridContentGenerator {
             >
                 <PluridRouterStatic
                     path={matchedRoute.pathname}
+                    directPlane={matchedPlane?.value}
                     routes={routes}
                     planes={planes}
                     exterior={exterior}

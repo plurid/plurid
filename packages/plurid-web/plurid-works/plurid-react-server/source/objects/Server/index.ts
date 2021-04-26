@@ -462,7 +462,7 @@ class PluridServer {
 
 
             const route = this.router.match(matchingPath);
-            // console.log('Route matched', route);
+            console.log('Route matched', route);
 
             if (
                 !route
@@ -477,6 +477,12 @@ class PluridServer {
                     this.routes,
                     this.planes,
                 );
+                console.log('getDirectPlaneMatch',
+                    matchRoute,
+                    matchPlane,
+                    matchPath,
+                );
+
 
                 if (
                     matchRoute
@@ -488,11 +494,12 @@ class PluridServer {
                         matchingPath,
                         matchRoute,
                     );
-                    const matchedPlane = parsedRoute.extract();
+                    const matchedPlaneRoute = parsedRoute.extract();
 
                     const renderer = await this.renderApplication(
-                        matchedPlane,
+                        matchedPlaneRoute,
                         preserveResult,
+                        matchPlane,
                     );
 
                     if (this.debugAllows('info')) {
@@ -510,6 +517,8 @@ class PluridServer {
                         request,
                         response,
                     );
+
+                    return;
                 }
 
 
@@ -818,8 +827,9 @@ class PluridServer {
     private async renderApplication(
         route: router.MatcherResponse,
         preserveResult: any,
+        matchedPlane?: any,
     ) {
-        // console.log('RENDER route', route);
+        console.log('RENDER route', route);
         const pluridMetastate = serverComputeMetastate(
             route,
             this.routes,
@@ -832,6 +842,7 @@ class PluridServer {
             route,
             pluridMetastate,
             preserveResult,
+            matchedPlane,
         );
 
         const stringedStyles = this.styles.reduce(
@@ -903,6 +914,7 @@ class PluridServer {
         matchedRoute: router.MatcherResponse,
         pluridMetastate: any,
         preserveResult: any,
+        matchedPlane?: any,
     ) {
         const stylesheet = new ServerStyleSheet();
         let content = '';
@@ -936,6 +948,7 @@ class PluridServer {
                 gatewayEndpoint,
                 gatewayQuery,
                 preserveResult,
+                matchedPlane,
             });
 
             content = await contentHandler.render();

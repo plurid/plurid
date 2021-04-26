@@ -103,6 +103,7 @@ export interface PluridContentGeneratorData {
     gatewayEndpoint: string;
     gatewayQuery: string;
     preserveResult: any;
+    matchedPlane: any;
 }
 
 
