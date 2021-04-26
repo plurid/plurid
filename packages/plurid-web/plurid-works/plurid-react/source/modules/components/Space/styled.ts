@@ -4,6 +4,10 @@
         css,
         keyframes,
     } from 'styled-components';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
     // #endregion libraries
 // #endregion imports
 
@@ -21,20 +25,31 @@ const fadeIn = keyframes`
 `;
 
 
-export const StyledPluridSpace: any = styled.div`
+export interface IStyledPluridSpace {
+    theme: Theme;
+    opaque: boolean;
+    isMounted: boolean;
+    fadeInTime: number;
+}
+
+export const StyledPluridSpace = styled.div<IStyledPluridSpace>`
     position: relative;
     height: 100%;
     overflow: hidden;
     perspective: 2000px;
     outline: none;
-    background: ${(props: any) => {
-        if (props.opaque) {
-            const foregroundGradient = props.theme.type === 'dark'
-                ? props.theme.backgroundColorTertiary
-                : props.theme.backgroundColorPrimary;
-            const backgroundGradient = props.theme.type === 'dark'
-                ? props.theme.backgroundColorPrimary
-                : props.theme.backgroundColorTertiary;
+
+    background: ${({
+        opaque,
+        theme,
+    }) => {
+        if (opaque) {
+            const foregroundGradient = theme.type === 'dark'
+                ? theme.backgroundColorTertiary
+                : theme.backgroundColorPrimary;
+            const backgroundGradient = theme.type === 'dark'
+                ? theme.backgroundColorPrimary
+                : theme.backgroundColorTertiary;
 
             return `radial-gradient(
                 ellipse at center,
@@ -46,10 +61,24 @@ export const StyledPluridSpace: any = styled.div`
         return 'transparent';
     }};
 
-    opacity: 0%;
-    animation: ${(props: any) => {
-        if (props.isMounted) {
-            return css`${fadeIn} 350ms linear 100ms forwards`;
+    opacity: ${({
+        fadeInTime,
+    }) => {
+        if (fadeInTime) {
+            return '0';
+        }
+
+        return '1';
+    }};
+    animation: ${({
+        isMounted,
+        fadeInTime,
+    }) => {
+        if (
+            isMounted
+            && fadeInTime
+        ) {
+            return css`${fadeIn} ${fadeInTime}ms linear 100ms forwards`;
         }
 
         return '';
