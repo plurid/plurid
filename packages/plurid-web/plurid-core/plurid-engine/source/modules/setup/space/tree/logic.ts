@@ -239,27 +239,30 @@ export const resolveViewItem = (
     const viewData = typeof view === 'string'
         ? view
         : view.plane;
-    // console.log('viewData', viewData);
+    console.log('viewData', viewData);
 
     const resolvedView = resolveRoute(
         viewData,
         protocol,
         host,
     );
-    // console.log('resolvedView', resolvedView);
+    console.log('resolvedView', resolvedView);
 
     for (const [route, _] of planes) {
         const routeMatch = matchRouteToView(
             route,
             resolvedView.route,
         );
-        // console.log('route', route);
-        // console.log('resolvedView.route', resolvedView.route);
-        // console.log('routeMatch', routeMatch);
+        console.log('route', route);
+        console.log('resolvedView.route', resolvedView.route);
+        console.log('routeMatch', routeMatch);
 
-        if (!routeMatch) {
+        if (resolvedView.route !== route) {
             continue;
         }
+        // if (!routeMatch) {
+        //     continue;
+        // }
 
         const treePlane: TreePlane = {
             sourceID: route,

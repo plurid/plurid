@@ -33,13 +33,17 @@ const resolveSpace = (
     contextState: PluridMetastateState | undefined,
 ) => {
     const registeredPlanes = getRegisteredPlanes(planesRegistrar);
+    console.log('resolveSpace > registeredPlanes', registeredPlanes);
 
     const spaceTree = new space.tree.Tree({
         planes: registeredPlanes,
         configuration,
         view,
     });
+    console.log('resolveSpace > spaceTree', spaceTree);
+
     const computedTree = spaceTree.compute();
+    console.log('resolveSpace > computedTree', computedTree);
 
 
     const stateSpace: PluridStateSpace = {

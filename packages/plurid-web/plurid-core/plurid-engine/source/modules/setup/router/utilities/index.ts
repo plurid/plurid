@@ -365,15 +365,26 @@ export const resolveRoute = (
     ];
     const absoluteRoute = resolvers.join(separator);
 
+    // return {
+    //     protocol: protocolDivision,
+    //     host: hostDivision,
+    //     path,
+    //     space,
+    //     universe,
+    //     cluster,
+    //     plane,
+    //     route: absoluteRoute,
+    // };
+
     return {
-        protocol: protocolDivision,
-        host: hostDivision,
-        path,
-        space,
-        universe,
-        cluster,
-        plane,
-        route: absoluteRoute,
+        protocol: '',
+        host: '',
+        path: route,
+        space: '',
+        universe: '',
+        cluster: '',
+        plane: '',
+        route: route,
     };
 }
 // #endregion module
