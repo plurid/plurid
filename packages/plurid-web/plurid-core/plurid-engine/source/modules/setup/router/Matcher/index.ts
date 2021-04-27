@@ -27,16 +27,16 @@
 
 
 // #region module
-export default class Matcher<T> {
+export default class Matcher<C> {
     private location: string;
-    private path: PluridRoute;
+    private path: PluridRoute<C>;
     private options: MatcherOptions;
-    private matchedData: MatcherResponse | undefined;
+    private matchedData: MatcherResponse<C> | undefined;
 
 
     constructor(
         location: string,
-        path: PluridRoute,
+        path: PluridRoute<C>,
         options?: MatcherPartialOptions,
     ) {
         this.location = location;
@@ -66,7 +66,7 @@ export default class Matcher<T> {
             const validPath = checkValidPath(parserResponse);
 
             if (validPath) {
-                const matcherResponse: MatcherResponse = {
+                const matcherResponse: MatcherResponse<C> = {
                     ...parserResponse,
                 };
                 this.matchedData = matcherResponse;

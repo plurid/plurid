@@ -17,8 +17,8 @@ export interface MatcherOptions {
 }
 
 
-export interface MatcherResponse {
-    path: PluridRoute;
+export interface MatcherResponse<C> {
+    path: PluridRoute<C>;
     pathname: string;
     parameters: Record<string, string>;
     query: Record<string, string>;

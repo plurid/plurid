@@ -35,8 +35,8 @@
  *
  * @param universe
  */
-export const createInternalStateUniverse = (
-    universe: PluridUniverse,
+export const createInternalStateUniverse = <C>(
+    universe: PluridUniverse<C>,
 ): PluridInternalStateUniverse => {
     const statePlanes = universe.planes.map(plane => {
         const internalStatePlane = createInternalStatePlane(plane);
@@ -65,16 +65,16 @@ export const createInternalStateUniverse = (
  *
  * @param universe
  */
-export const createInternalContextUniverse = (
-    universe: PluridUniverse,
-): PluridInternalContextUniverse => {
+export const createInternalContextUniverse = <C>(
+    universe: PluridUniverse<C>,
+): PluridInternalContextUniverse<C> => {
     const contextPlanes = universe.planes.map(plane => {
         const internalContextPlane = createInternalContextPlane(plane);
         return internalContextPlane;
     });
     const indexedContextPlanes = helpers.createIndexed(contextPlanes);
 
-    const contextUniverse: PluridInternalContextUniverse = {
+    const contextUniverse: PluridInternalContextUniverse<C> = {
         name: universe.name,
         planes: indexedContextPlanes,
         id: universe.id || uuid.generate(),

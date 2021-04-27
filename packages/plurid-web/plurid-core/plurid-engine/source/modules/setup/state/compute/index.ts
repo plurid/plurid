@@ -31,10 +31,10 @@
 
 
 // #region module
-const compute = (
+const compute = <C>(
     view: PluridApplicationView,
     configuration: RecursivePartial<PluridConfiguration> | undefined,
-    planesRegistrar: IPluridPlanesRegistrar | undefined,
+    planesRegistrar: IPluridPlanesRegistrar<C> | undefined,
     currentState: PluridState | undefined,
     localState: PluridState | undefined,
     precomputedState: Partial<PluridState> | undefined,

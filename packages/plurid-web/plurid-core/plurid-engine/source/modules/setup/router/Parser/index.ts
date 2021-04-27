@@ -32,17 +32,17 @@
 
 
 // #region module
-export default class Parser<T> {
+export default class Parser<C> {
     /** properties */
     private location: string;
-    private path: PluridRoute;
+    private path: PluridRoute<C>;
     private options: ParserOptions;
 
 
     /** constructor */
     constructor(
         location: string,
-        path: PluridRoute,
+        path: PluridRoute<C>,
         options?: ParserPartialOptions,
     ) {
         this.location = location;
@@ -115,7 +115,7 @@ export default class Parser<T> {
             : '';
         const fragments = this.extractFragments();
 
-        const parserResponse: ParserResponse = {
+        const parserResponse: ParserResponse<C> = {
             path: this.path,
             pathname,
             elements,

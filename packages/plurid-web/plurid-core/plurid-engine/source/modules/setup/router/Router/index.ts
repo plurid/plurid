@@ -103,14 +103,14 @@ const findPathByDivisions = (
 }
 
 
-export default class Router {
-    private paths: PluridRoute[];
+export default class Router<C> {
+    private paths: PluridRoute<C>[];
     private options: RouterOptions;
-    private cachedMatched: Indexed<MatcherResponse>;
+    private cachedMatched: Indexed<MatcherResponse<C>>;
 
 
     constructor(
-        paths: PluridRoute[],
+        paths: PluridRoute<C>[],
         options?: RouterPartialOptions,
     ) {
         this.paths = paths;

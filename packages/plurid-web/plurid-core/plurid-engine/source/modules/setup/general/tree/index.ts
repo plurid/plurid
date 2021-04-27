@@ -27,8 +27,8 @@
 
 
 // #region module
-export const createTreePlane = (
-    contextPlane: PluridInternalContextPlane,
+export const createTreePlane = <C>(
+    contextPlane: PluridInternalContextPlane<C>,
     documentPlane: PluridInternalStatePlane,
 ) => {
     const routeDivisions = pluridLinkPathDivider(contextPlane.path);

@@ -16,8 +16,8 @@
 
 
 // #region module
-export const createInternalStatePlane = (
-    plane: PluridPlane,
+export const createInternalStatePlane = <C>(
+    plane: PluridPlane<C>,
 ): PluridInternalStatePlane => {
     const statePlane: PluridInternalStatePlane = {
         // id: plane.id || uuid.generate(),
@@ -31,16 +31,16 @@ export const createInternalStatePlane = (
 }
 
 
-export const createInternalContextPlane = (
-    plane: PluridPlane,
-): PluridInternalContextPlane => {
+export const createInternalContextPlane = <C>(
+    plane: PluridPlane<C>,
+): PluridInternalContextPlane<C> => {
     const {
         // id,
         route,
         component,
     } = plane;
 
-    const contextPlane: PluridInternalContextPlane = {
+    const contextPlane: PluridInternalContextPlane<C> = {
         id: uuid.generate(),
         // id: id || uuid.generate(),
         path: route,

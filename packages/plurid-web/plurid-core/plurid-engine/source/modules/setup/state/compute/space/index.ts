@@ -23,10 +23,10 @@
 
 
 // #region module
-const resolveSpace = (
+const resolveSpace = <C>(
     view: PluridApplicationView,
     configuration: PluridConfiguration,
-    planesRegistrar: IPluridPlanesRegistrar | undefined,
+    planesRegistrar: IPluridPlanesRegistrar<C> | undefined,
     currentState: PluridState | undefined,
     localState: PluridState | undefined,
     precomputedState: Partial<PluridState> | undefined,

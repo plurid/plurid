@@ -22,8 +22,8 @@ export interface ParserOptions {
 }
 
 
-export interface ParserResponse {
-    path: PluridRoute;
+export interface ParserResponse<C> {
+    path: PluridRoute<C>;
     pathname: string;
     elements: string[];
     match: boolean;

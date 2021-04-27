@@ -150,9 +150,9 @@ export const recomputeChildrenLocation = (
  * @param root
  * @param index
  */
-export const computeRootLocationX = (
+export const computeRootLocationX = <C>(
     configuration: PluridConfiguration | undefined,
-    root: PluridPlane,
+    root: PluridPlane<C>,
     index: number,
 ) => {
     let translateX = 0;

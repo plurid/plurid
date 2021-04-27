@@ -42,8 +42,8 @@
 
 
 
-export const checkValidPath = (
-    data: ParserResponse,
+export const checkValidPath = <C>(
+    data: ParserResponse<C>,
 ) => {
     const {
         path,

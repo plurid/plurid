@@ -20,14 +20,14 @@
  * The planes registrar can be stored in-memory (server-side)
  * or on the `window.__pluridPlanesRegistrar__` object (browser-side).
  */
-class PluridPlanesRegistrar implements IPluridPlanesRegistrar {
+class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
     // TODO
     // Store the planes in a better data structure.
-    private planes: Map<string, RegisteredPluridPlane> = new Map();
+    private planes: Map<string, RegisteredPluridPlane<C>> = new Map();
 
 
     constructor(
-        planes?: PluridPlane[],
+        planes?: PluridPlane<C>[],
     ) {
         if (planes) {
             this.register(planes);
@@ -36,7 +36,7 @@ class PluridPlanesRegistrar implements IPluridPlanesRegistrar {
 
 
     public register(
-        planes: PluridPlane[],
+        planes: PluridPlane<C>[],
     ) {
         for (const plane of planes) {
             // loop over PluridPlanes and generate the Fully Qualified Route
@@ -48,11 +48,11 @@ class PluridPlanesRegistrar implements IPluridPlanesRegistrar {
                 route,
             } = plane;
 
-            const {
-                kind,
-                element,
-                properties,
-            } = component;
+            // const {
+            //     kind,
+            //     element,
+            //     properties,
+            // } = component;
 
             // obtain from path the absolute route
             // /plane -> Fully Qualified Route
@@ -74,7 +74,7 @@ class PluridPlanesRegistrar implements IPluridPlanesRegistrar {
                 route: absoluteRoute,
             } = resolvedRoute;
 
-            const registeredPluridPlane: RegisteredPluridPlane = {
+            const registeredPluridPlane: RegisteredPluridPlane<C> = {
                 component,
                 route: {
                     protocol: {},

@@ -17,9 +17,9 @@
 
 
 // #region module
-const registerPlanes = (
-    planes?: PluridPlane[],
-    planesRegistrar?: IPluridPlanesRegistrar,
+const registerPlanes = <C>(
+    planes?: PluridPlane<C>[],
+    planesRegistrar?: IPluridPlanesRegistrar<C>,
 ) => {
     if (!planes) {
         return;
@@ -34,29 +34,29 @@ const registerPlanes = (
         return;
     }
 
-    if (typeof (window as PluridalWindow).__pluridPlanesRegistrar__ === 'undefined') {
-        const pluridPlanesRegistrar = new PluridPlanesRegistrar();
-        (window as PluridalWindow).__pluridPlanesRegistrar__ = pluridPlanesRegistrar;
-        (window as PluridalWindow).__pluridPlanesRegistrar__.register(planes);
+    if (typeof (window as PluridalWindow<C>).__pluridPlanesRegistrar__ === 'undefined') {
+        const pluridPlanesRegistrar = new PluridPlanesRegistrar<C>();
+        (window as PluridalWindow<C>).__pluridPlanesRegistrar__ = pluridPlanesRegistrar;
+        (window as PluridalWindow<C>).__pluridPlanesRegistrar__.register(planes);
         return;
     }
 
-    (window as PluridalWindow).__pluridPlanesRegistrar__.register(planes);
+    (window as PluridalWindow<C>).__pluridPlanesRegistrar__.register(planes);
 
     return;
 }
 
 
-const getPlanesRegistrar = (
-    planesRegistrar: IPluridPlanesRegistrar | undefined,
+const getPlanesRegistrar = <C>(
+    planesRegistrar: IPluridPlanesRegistrar<C> | undefined,
 ) => {
     if (planesRegistrar) {
         return planesRegistrar;
     }
 
     if (typeof window !== 'undefined') {
-        if ((window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined) {
-            return (window as PluridalWindow).__pluridPlanesRegistrar__;
+        if ((window as PluridalWindow<C>).__pluridPlanesRegistrar__ !== undefined) {
+            return (window as PluridalWindow<C>).__pluridPlanesRegistrar__;
         }
     }
 
@@ -64,16 +64,16 @@ const getPlanesRegistrar = (
 }
 
 
-const getRegisteredPlanes = (
-    planesRegistrar: IPluridPlanesRegistrar | undefined,
+const getRegisteredPlanes = <C>(
+    planesRegistrar: IPluridPlanesRegistrar<C> | undefined,
 ) => {
     if (planesRegistrar) {
         return planesRegistrar.getAll();
     }
 
     if (typeof window !== 'undefined') {
-        if ((window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined) {
-            return (window as PluridalWindow).__pluridPlanesRegistrar__.getAll();
+        if ((window as PluridalWindow<C>).__pluridPlanesRegistrar__ !== undefined) {
+            return (window as PluridalWindow<C>).__pluridPlanesRegistrar__.getAll();
         }
     }
 
@@ -81,17 +81,17 @@ const getRegisteredPlanes = (
 }
 
 
-const getRegisteredPlane = (
+const getRegisteredPlane = <C>(
     route: string,
-    planesRegistrar: IPluridPlanesRegistrar | undefined,
+    planesRegistrar: IPluridPlanesRegistrar<C> | undefined,
 ) => {
     if (planesRegistrar) {
         return planesRegistrar.get(route);
     }
 
     if (typeof window !== 'undefined') {
-        if ((window as PluridalWindow).__pluridPlanesRegistrar__ !== undefined) {
-            return (window as PluridalWindow).__pluridPlanesRegistrar__.get(route);
+        if ((window as PluridalWindow<C>).__pluridPlanesRegistrar__ !== undefined) {
+            return (window as PluridalWindow<C>).__pluridPlanesRegistrar__.get(route);
         }
     }
 

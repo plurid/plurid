@@ -20,19 +20,19 @@
 
 
 // #region module
-export interface TreeData {
-    planes: Map<string, RegisteredPluridPlane>,
+export interface TreeData<C> {
+    planes: Map<string, RegisteredPluridPlane<C>>,
     view: string[] | PluridView[],
     configuration: PluridConfiguration,
-    clusters?: PluridCluster[],
+    clusters?: PluridCluster<C>[],
     previousTree?: TreePlane[],
 }
 
-export default class Tree {
-    private data: TreeData;
+export default class Tree<C> {
+    private data: TreeData<C>;
 
     constructor(
-        data: TreeData,
+        data: TreeData<C>,
     ) {
         this.data = data;
     }

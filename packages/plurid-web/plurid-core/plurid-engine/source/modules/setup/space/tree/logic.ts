@@ -226,8 +226,8 @@ const matchRouteToView = (
  *
  * @param view
  */
-export const resolveViewItem = (
-    planes: Map<string, RegisteredPluridPlane>,
+export const resolveViewItem = <C>(
+    planes: Map<string, RegisteredPluridPlane<C>>,
     view: string | PluridView,
     configuration: PluridConfiguration,
 ): TreePlane | undefined => {
@@ -314,8 +314,8 @@ export const resolveViewItem = (
  * @param planes
  * @param configuration
  */
-export const computeSpaceTree = (
-    planes: Map<string, RegisteredPluridPlane>,
+export const computeSpaceTree = <C>(
+    planes: Map<string, RegisteredPluridPlane<C>>,
     view: string[] | PluridView[],
     configuration: PluridConfiguration,
 ): TreePlane[] => {
@@ -571,12 +571,12 @@ export const updateTreePlane = (
 
 
 
-export const updateTreeWithNewPlane = (
+export const updateTreeWithNewPlane = <C>(
     planeRoute: string,
     parentPlaneID: string,
     linkCoordinates: LinkCoordinates,
     tree: TreePlane[],
-    planesRegistry: Map<string, RegisteredPluridPlane>,
+    planesRegistry: Map<string, RegisteredPluridPlane<C>>,
     configuration: PluridConfiguration,
 ): UpdatedTreeWithNewPlane => {
     const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
