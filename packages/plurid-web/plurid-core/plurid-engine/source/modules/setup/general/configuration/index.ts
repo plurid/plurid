@@ -224,6 +224,11 @@ export const merge = (
                 'boolean',
                 configuration,
             ),
+            fadeInTime: specifiedOrDefault(
+                'space.fadeInTime',
+                'number',
+                configuration,
+            ),
             center: specifiedOrDefault(
                 'space.center',
                 'boolean',
