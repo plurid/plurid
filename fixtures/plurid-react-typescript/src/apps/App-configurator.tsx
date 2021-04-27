@@ -5,19 +5,17 @@ import React, {
 
 import {
     PluridApplication,
-    PluridPlane,
+    PluridReactComponent,
+    PluridReactPlane,
     PluridPartialConfiguration,
     PluridPubSub,
     PluridApplicationConfigurator,
 } from '@plurid/plurid-react';
 
-import {
-    ReactComponentWithPlurid,
-} from '@plurid/plurid-data';
 
 
 
-const Plane: React.FC<ReactComponentWithPlurid<any>> = (
+const Plane: PluridReactComponent = (
     properties,
 ) => {
     /** state */
@@ -59,13 +57,10 @@ const pluridPubSub = new PluridPubSub();
 
 const App = () => {
     /** properties */
-    const pluridPlanes: PluridPlane[] = [
+    const pluridPlanes: PluridReactPlane[] = [
         {
             route: '/plane',
-            component: {
-                kind: 'react',
-                element: Plane,
-            },
+            component: Plane,
         },
     ];
 

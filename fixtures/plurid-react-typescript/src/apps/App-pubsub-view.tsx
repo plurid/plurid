@@ -5,8 +5,8 @@ import React, {
 
 import {
     PluridRouterBrowser,
-    PluridRoute,
-    ReactComponentWithPlurid,
+    PluridReactComponent,
+    PluridReactRoute,
     PluridPartialConfiguration,
     PluridApplicationConfigurator,
     PluridPubSub,
@@ -29,7 +29,7 @@ const {
 const pluridPubSub = new PluridPubSub();
 
 
-const Plane: React.FC<ReactComponentWithPlurid<any>> = (
+const Plane: PluridReactComponent = (
     properties,
 ) => {
     /** state */
@@ -130,27 +130,21 @@ const Plane: React.FC<ReactComponentWithPlurid<any>> = (
 
 
 const App = () => {
-    const routes: PluridRoute[] = [
+    const routes: PluridReactRoute[] = [
         {
             value: '/',
             planes: [
                 {
                     value: '/plane-1',
-                    component: {
-                        kind: 'react',
-                        element: Plane,
-                    },
+                    component: Plane,
                 },
                 {
                     value: '/plane-2',
-                    component: {
-                        kind: 'react',
-                        element: () => (
-                            <div>
-                                Plane 2
-                            </div>
-                        ),
-                    },
+                    component: () => (
+                        <div>
+                            Plane 2
+                        </div>
+                    ),
                 },
             ],
             view: [
@@ -159,26 +153,20 @@ const App = () => {
         },
         {
             value: '/planar',
-            exterior: {
-                kind: 'react',
-                element: () => (
-                    <div>
-                        planar route
-                    </div>
-                ),
-            },
+            exterior: () => (
+                <div>
+                    planar route
+                </div>
+            ),
         },
         {
             value: '/not-found',
             planes: [
                 {
                     value: '/',
-                    component: {
-                        kind: 'react',
-                        element: () => (
-                            <div>Not Found</div>
-                        ),
-                    },
+                    component: () => (
+                        <div>Not Found</div>
+                    ),
                 },
             ],
         },

@@ -4,17 +4,14 @@ import React, {
 
 import {
     PluridApplication,
-    PluridPlane,
+    PluridReactComponent,
+    PluridReactPlane,
     PluridLink,
 } from '@plurid/plurid-react';
 
-import {
-    ReactComponentWithPlurid,
-} from '@plurid/plurid-data';
 
 
-
-const ParametricPlane: React.FC<ReactComponentWithPlurid<any>> = (
+const ParametricPlane: PluridReactComponent = (
     properties,
 ) => {
     const {
@@ -35,13 +32,10 @@ const ParametricPlane: React.FC<ReactComponentWithPlurid<any>> = (
 
 
 const App = () => {
-    const pluridPlanes: PluridPlane[] = [
+    const pluridPlanes: PluridReactPlane[] = [
         {
             route: '/:id',
-            component: {
-                kind: 'react',
-                element: ParametricPlane,
-            },
+            component: ParametricPlane,
         },
     ];
 

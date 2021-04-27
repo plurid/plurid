@@ -2,36 +2,30 @@ import React from 'react';
 
 import {
     PluridRouterBrowser,
-    PluridRoute,
+    PluridReactRoute,
     PluridLink,
 } from '@plurid/plurid-react';
 
 
 
 const App = () => {
-    const routes: PluridRoute[] = [
+    const routes: PluridReactRoute[] = [
         {
             value: '/multiplane',
             planes: [
                 {
                     value: '/plane-1',
-                    component: {
-                        kind: 'react',
-                        element: () => (
-                            <div>
-                                <h1>Plane 1</h1>
-                                <br />
-                                <PluridLink route="/plane-2">link to plane 2</PluridLink>
-                            </div>
-                        ),
-                    },
+                    component: () => (
+                        <div>
+                            <h1>Plane 1</h1>
+                            <br />
+                            <PluridLink route="/plane-2">link to plane 2</PluridLink>
+                        </div>
+                    ),
                 },
                 {
                     value: '/plane-2',
-                    component: {
-                        kind: 'react',
-                        element: () => (<h1>Plane 2</h1>),
-                    },
+                    component: () => (<h1>Plane 2</h1>),
                 },
             ],
         },

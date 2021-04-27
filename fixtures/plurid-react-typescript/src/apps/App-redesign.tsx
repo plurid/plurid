@@ -5,7 +5,7 @@ import React, {
 
 import {
     PluridApplication,
-    PluridPlane,
+    PluridReactPlane,
     PluridPubSub,
     PLURID_PUBSUB_TOPIC,
     // PluridPubSubPublishMessage,
@@ -20,20 +20,14 @@ import Plane2 from '../planes/Plane2';
 const pluridPubSub = new PluridPubSub();
 
 const App = () => {
-    const pluridPlanes: PluridPlane[] = [
+    const pluridPlanes: PluridReactPlane[] = [
         {
             route: '/',
-            component: {
-                kind: 'react',
-                element: Plane1,
-            },
+            component: Plane1,
         },
         {
             route: '/two',
-            component: {
-                kind: 'react',
-                element: Plane2,
-            },
+            component: Plane2,
         },
     ];
 

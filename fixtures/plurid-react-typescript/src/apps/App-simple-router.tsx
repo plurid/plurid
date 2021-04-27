@@ -2,7 +2,7 @@ import React from 'react';
 
 import {
     PluridRouterBrowser,
-    PluridRoute,
+    PluridReactRoute,
 } from '@plurid/plurid-react';
 
 import Plane1 from '../planes/Plane1';
@@ -10,16 +10,13 @@ import Plane1 from '../planes/Plane1';
 
 
 const App = () => {
-    const routes: PluridRoute[] = [
+    const routes: PluridReactRoute[] = [
         {
             value: '/',
             planes: [
                 {
                     value: '/plane',
-                    component: {
-                        kind: 'react',
-                        element: Plane1,
-                    },
+                    component: Plane1,
                 },
             ],
             // view: [
@@ -28,26 +25,20 @@ const App = () => {
         },
         {
             value: '/planar',
-            exterior: {
-                kind: 'react',
-                element: () => (
-                    <div>
-                        planar route
-                    </div>
-                ),
-            },
+            exterior: () => (
+                <div>
+                    planar route
+                </div>
+            ),
         },
         {
             value: '/not-found',
             planes: [
                 {
                     value: '/',
-                    component: {
-                        kind: 'react',
-                        element: () => (
-                            <div>Not Found</div>
-                        ),
-                    },
+                    component: () => (
+                        <div>Not Found</div>
+                    ),
                 },
             ],
         },

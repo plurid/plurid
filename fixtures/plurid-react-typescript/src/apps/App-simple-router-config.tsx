@@ -5,15 +5,15 @@ import React, {
 
 import {
     PluridRouterBrowser,
-    PluridRoute,
-    ReactComponentWithPlurid,
+    PluridReactComponent,
+    PluridReactRoute,
     PluridPartialConfiguration,
     PluridApplicationConfigurator,
 } from '@plurid/plurid-react';
 
 
 
-const Plane: React.FC<ReactComponentWithPlurid<any>> = (
+const Plane: PluridReactComponent = (
     properties,
 ) => {
     /** state */
@@ -52,16 +52,13 @@ const Plane: React.FC<ReactComponentWithPlurid<any>> = (
 
 
 const App = () => {
-    const routes: PluridRoute[] = [
+    const routes: PluridReactRoute[] = [
         {
             value: '/',
             planes: [
                 {
                     value: '/plane',
-                    component: {
-                        kind: 'react',
-                        element: Plane,
-                    },
+                    component: Plane,
                 },
             ],
             view: [
@@ -70,26 +67,20 @@ const App = () => {
         },
         {
             value: '/planar',
-            exterior: {
-                kind: 'react',
-                element: () => (
-                    <div>
-                        planar route
-                    </div>
-                ),
-            },
+            exterior: () => (
+                <div>
+                    planar route
+                </div>
+            ),
         },
         {
             value: '/not-found',
             planes: [
                 {
                     value: '/',
-                    component: {
-                        kind: 'react',
-                        element: () => (
-                            <div>Not Found</div>
-                        ),
-                    },
+                    component: () => (
+                        <div>Not Found</div>
+                    ),
                 },
             ],
         },

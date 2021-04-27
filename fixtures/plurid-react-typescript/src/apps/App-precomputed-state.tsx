@@ -2,7 +2,7 @@ import React from 'react';
 
 import {
     PluridApplication,
-    PluridPlane,
+    PluridReactPlane,
 } from '@plurid/plurid-react';
 
 import Plane1 from '../planes/Plane1';
@@ -10,13 +10,10 @@ import Plane1 from '../planes/Plane1';
 
 
 const App = () => {
-    const pluridPlanes: PluridPlane[] = [
+    const pluridPlanes: PluridReactPlane[] = [
         {
             route: '/',
-            component: {
-                kind: 'react',
-                element: Plane1,
-            },
+            component: Plane1,
         },
     ];
 

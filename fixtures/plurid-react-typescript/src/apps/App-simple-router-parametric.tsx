@@ -2,31 +2,28 @@ import React from 'react';
 
 import {
     PluridRouterBrowser,
-    PluridRoute,
+    PluridReactRoute,
 } from '@plurid/plurid-react';
 
 
 
 const App = () => {
-    const routes: PluridRoute[] = [
+    const routes: PluridReactRoute[] = [
         {
             value: '/simple/:parameter',
             planes: [
                 {
                     value: '/plane-1',
-                    component: {
-                        kind: 'react',
-                        element: (properties) => {
-                            const {
-                                plurid,
-                            } = properties;
+                    component: (properties) => {
+                        const {
+                            plurid,
+                        } = properties;
 
-                            return (
-                                <div>
-                                    plane with parameter: {plurid.path.parameters.parameter}
-                                </div>
-                            );
-                        },
+                        return (
+                            <div>
+                                plane with parameter: {plurid.route.path.parameters.parameter}
+                            </div>
+                        );
                     },
                 },
                 // {
@@ -58,17 +55,14 @@ const App = () => {
             planes: [
                 {
                     value: '/',
-                    component: {
-                        kind: 'react',
-                        element: (properties) => {
-                            const {
-                                plurid,
-                            } = properties;
+                    component: (properties) => {
+                        const {
+                            plurid,
+                        } = properties;
 
-                            return (
-                                <div>{plurid.path.parameters.parameter}</div>
-                            );
-                        }
+                        return (
+                            <div>{plurid.route.path.parameters.parameter}</div>
+                        );
                     },
                 },
             ],
