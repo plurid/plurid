@@ -3,6 +3,7 @@
     import styled from 'styled-components';
 
     import {
+        Theme,
         decomposeColor,
     } from '@plurid/plurid-themes';
     // #endregion libraries
@@ -11,39 +12,62 @@
 
 
 // #region module
-export const StyledPluridPlane: any = styled.div`
-    background-color: ${(props: any) => {
-        if (props.transparentUI && !props.mouseOver) {
-            return props.theme.backgroundColorPrimaryAlpha;
+export interface IStyledPluridPlane {
+    theme: Theme;
+    mouseOver: boolean;
+    show: boolean;
+    transparentUI: boolean;
+    planeControls: boolean;
+    planeOpacity: number;
+}
+
+export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
+    background-color: ${({
+        transparentUI,
+        mouseOver,
+        theme,
+        planeOpacity,
+    }) => {
+        if (transparentUI && !mouseOver) {
+            return theme.backgroundColorPrimaryAlpha;
         }
 
-        if (props.planeOpacity !== 1) {
-            const decomposedColor = decomposeColor(props.theme.backgroundColorPrimary);
+        if (planeOpacity !== 1) {
+            const decomposedColor = decomposeColor(theme.backgroundColorPrimary);
             if (decomposedColor) {
-                const color = `hsla(${decomposedColor.hue}, ${decomposedColor.saturation}%, ${decomposedColor.lightness}%, ${props.planeOpacity})`;
+                const color = `hsla(${decomposedColor.hue}, ${decomposedColor.saturation}%, ${decomposedColor.lightness}%, ${planeOpacity})`;
                 return color;
             }
             return 'transparent';
         }
-        return props.theme.backgroundColorPrimary;
+        return theme.backgroundColorPrimary;
     }};
-    box-shadow: ${(props: any) => {
-        if (props.planeOpacity === 0) {
+    box-shadow: ${({
+        planeOpacity,
+        theme,
+    }) => {
+        if (planeOpacity === 0) {
             return 'none';
         }
-        return props.theme.boxShadowUmbra;
+        return theme.boxShadowUmbra;
     }};
-    color: ${(props: any) => {
-        return props.theme.colorPrimary;
+    color: ${({
+        theme,
+    }) => {
+        return theme.colorPrimary;
     }};
-    opacity: ${(props: any) => {
-        if (!props.show) {
+    opacity: ${({
+        show,
+    }) => {
+        if (!show) {
             return '0';
         }
         return '1';
     }};
-    user-select: ${(props: any) => {
-        if (!props.show) {
+    user-select: ${({
+        show,
+    }) => {
+        if (!show) {
             return 'none';
         }
         return 'auto';
@@ -59,8 +83,10 @@ export const StyledPluridPlane: any = styled.div`
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: ${(props: any) => {
-        if (props.planeControls) {
+    grid-template-rows: ${({
+        planeControls,
+    }) => {
+        if (planeControls) {
             return '56px auto';
         }
         return 'auto';
