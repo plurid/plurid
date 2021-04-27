@@ -6,27 +6,69 @@
         MENUS,
     } from './data';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        fadeInAnimation,
+    } from '~services/styled';
+    // #endregion external
 // #endregion imports
 
 
 
 // #region module
-export const StyledToolbar: any = styled.div`
-    bottom: ${(props: any) => {
-        if (!props.conceal) {
+export interface IStyledToolbar {
+    mouseIn: boolean;
+    conceal: boolean;
+    showMenu: keyof typeof MENUS;
+    isMounted: boolean;
+    fadeInTime: number;
+}
+
+export const StyledToolbar = styled.div<IStyledToolbar>`
+    bottom: ${({
+        conceal,
+        mouseIn,
+    }) => {
+        if (!conceal) {
             return '-5px';
         }
 
-        if (props.mouseIn) {
+        if (mouseIn) {
             return '-5px';
         }
         return '-55px';
     }};
-    pointer-events: ${(props: any) => {
-        if (props.showMenu !== MENUS.NONE) {
+    pointer-events: ${({
+        showMenu,
+    }) => {
+        if (showMenu !== MENUS.NONE) {
             return 'all';
         }
         return 'none';
+    }};
+    opacity: ${({
+        fadeInTime,
+    }) => {
+        if (fadeInTime) {
+            return '0';
+        }
+
+        return '1';
+    }};
+    animation: ${({
+        fadeInTime,
+        isMounted,
+    }) => {
+        if (
+            isMounted
+            && fadeInTime
+        ) {
+            return fadeInAnimation(fadeInTime);
+        }
+
+        return '';
     }};
 
     display: grid;

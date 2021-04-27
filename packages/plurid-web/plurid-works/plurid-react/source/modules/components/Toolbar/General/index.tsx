@@ -95,7 +95,7 @@ export type PluridToolbarProperties = PluridToolbarOwnProperties
 const PluridToolbar: React.FC<PluridToolbarProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         /** state */
         theme,
@@ -121,6 +121,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
     const {
         firstPerson,
         transformMode,
+        fadeInTime,
     } = space;
 
     const {
@@ -135,21 +136,29 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
     } = toolbar;
 
     // const universesBased = Object.keys(universes).length > 1;
+    // #endregion properties
 
 
-    /** references */
+    // #region references
     const menuTimeout = useRef<null | NodeJS.Timeout>(null);
+    // #endregion references
 
 
-    /** state */
+    // #region state
     const [mouseIn, setMouseIn] = useState(false);
     const [showMenu, setShowMenu] = useState<keyof typeof MENUS>(MENUS.NONE);
 
     const [showIcons, setShowIcons] = useState(transformIcons);
     const [showTransformButtons, setShowTransformButtons] = useState(transformButtons);
 
+    const [
+        isMounted,
+        setIsMounted,
+    ] = useState(false);
+    // #endregion state
 
-    /** handlers */
+
+    // #region handlers
     const toggleTransform = (
         TYPE: keyof typeof TRANSFORM_MODES,
     ) => {
@@ -170,9 +179,14 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
             setShowMenu(menu);
         }
     }
+    // #endregion handlers
 
 
-    /** effects */
+    // #region effects
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     /** ViewSize Update */
     useEffect(() => {
         if (viewSize.width < VIEW_SIZE_WIDTH_LIMIT) {
@@ -211,9 +225,10 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
     }, [
         mouseIn,
     ]);
+    // #endregion effects
 
 
-    /** render */
+    // #region render
     return (
         <StyledToolbar
             onMouseEnter={() => setMouseIn(true)}
@@ -221,6 +236,8 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
             mouseIn={mouseIn}
             conceal={conceal}
             showMenu={showMenu}
+            isMounted={isMounted}
+            fadeInTime={fadeInTime}
             data-plurid-entity={PLURID_ENTITY_TOOLBAR}
         >
             <StyledToolbarButtons
@@ -301,10 +318,11 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
             )}
         </StyledToolbar>
     );
+    // #endregion render
 }
 
 
-const mapStateToProps = (
+const mapStateToProperties = (
     state: AppState,
 ): PluridToolbarStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
@@ -314,7 +332,7 @@ const mapStateToProps = (
 });
 
 
-const mapDispatchToProps = (
+const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridToolbarDispatchProperties => ({
     dispatchToggleConfigurationSpaceFirstPerson: () => dispatch(
@@ -330,8 +348,8 @@ const mapDispatchToProps = (
 
 
 const ConnectedPluridToolbar = connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,

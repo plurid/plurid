@@ -9,22 +9,18 @@
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        fadeInAnimation,
+    } from '~services/styled';
+    // #endregion external
 // #endregion imports
 
 
 
 // #region module
-const fadeIn = keyframes`
-    from {
-        opacity: 0%;
-    }
-
-    to {
-        opacity: 100%;
-    }
-`;
-
-
 export interface IStyledPluridSpace {
     theme: Theme;
     opaque: boolean;
@@ -78,7 +74,8 @@ export const StyledPluridSpace = styled.div<IStyledPluridSpace>`
             isMounted
             && fadeInTime
         ) {
-            return css`${fadeIn} ${fadeInTime}ms linear 100ms forwards`;
+            // return css`${fadeIn} ${fadeInTime}ms linear 100ms forwards`;
+            return fadeInAnimation(fadeInTime);
         }
 
         return '';

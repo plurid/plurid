@@ -2,29 +2,52 @@
     // #region libraries
     import styled from 'styled-components';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        fadeInAnimation,
+    } from '~services/styled';
+    // #endregion external
 // #endregion imports
 
 
 
 // #region module
-export const StyledPluridViewcube: any = styled.div`
+export interface IStyledPluridViewcube {
+    conceal: boolean;
+    mouseOver: boolean;
+    isMounted: boolean;
+    fadeInTime: number;
+}
+
+export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
     position: absolute;
     @media (max-width: 800px) {
-        top: ${(props: any) => {
-            if (props.conceal && !props.mouseOver) {
+        top: ${({
+            conceal,
+            mouseOver,
+        }) => {
+            if (conceal && !mouseOver) {
                 return '-90px';
             }
             return '0';
         }};
     }
-    bottom: ${(props: any) => {
-        if (props.conceal && !props.mouseOver) {
+    bottom: ${({
+        conceal,
+        mouseOver,
+    }) => {
+        if (conceal && !mouseOver) {
             return '-90px';
         }
         return '0';
     }};
-    right: ${(props: any) => {
-        if (props.conceal && !props.mouseOver) {
+    right: ${({
+        conceal,
+        mouseOver,
+    }) => {
+        if (conceal && !mouseOver) {
             return '-100px';
         }
         return '0';
@@ -42,6 +65,29 @@ export const StyledPluridViewcube: any = styled.div`
                          "PVTranslateX      PVTranslateX    PVTranslateX     PVTranslateX";
     grid-template-rows: 20px 15px 95px 15px 20px;
     grid-template-columns: 15px 115px 15px 20px;
+
+    opacity: ${({
+        fadeInTime,
+    }) => {
+        if (fadeInTime) {
+            return '0';
+        }
+
+        return '1';
+    }};
+    animation: ${({
+        fadeInTime,
+        isMounted,
+    }) => {
+        if (
+            isMounted
+            && fadeInTime
+        ) {
+            return fadeInAnimation(fadeInTime);
+        }
+
+        return '';
+    }};
 
     :hover {
         opacity: 1;

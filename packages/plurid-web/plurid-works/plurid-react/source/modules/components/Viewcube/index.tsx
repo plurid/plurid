@@ -2,6 +2,7 @@
     // #region libraries
     import React, {
         useState,
+        useEffect,
     } from 'react';
 
     import { AnyAction } from 'redux';
@@ -73,22 +74,25 @@ export type PluridViewcubeProperties = PluridViewcubeOwnProperties
 const PluridViewcube: React.FC<PluridViewcubeProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** state */
+        // #region state
         stateConfiguration,
         stateInteractionTheme,
         stateTransformTime,
+        // #endregion state
 
-        /** dispatch */
+        // #region dispatch
         dispatchRotateXWith,
         dispatchRotateYWith,
         dispatchSetAnimatedTransform,
         dispatchSpaceResetTransform,
+        // #endregion dispatch
     } = properties;
 
     const {
         elements,
+        space,
     } = stateConfiguration;
 
     const {
@@ -97,16 +101,26 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
 
     const {
         buttons,
-        opaque,
         conceal,
     } = viewcube;
 
+    const {
+        fadeInTime,
+    } = space;
+    // #endregion properties
 
-    /** state */
+
+    // #region state
     const [mouseOver, setMouseOver] = useState(false);
 
+    const [
+        isMounted,
+        setIsMounted,
+    ] = useState(false);
+    // #endregion state
 
-    /** handlers */
+
+    // #region handlers
     const animatedRotate = (
         type: string,
         value: number,
@@ -138,9 +152,17 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
             dispatchSetAnimatedTransform(false);
         }, stateTransformTime);
     }
+    // #endregion handlers
 
 
-    /** render */
+    // #region effects
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+    // #endregion effects
+
+
+    // #region render
     return (
         <StyledPluridViewcube
             onMouseEnter={() => setMouseOver(true)}
@@ -148,6 +170,8 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
             onMouseMove={() => !mouseOver ? setMouseOver(true) : null}
             conceal={conceal}
             mouseOver={mouseOver}
+            isMounted={isMounted}
+            fadeInTime={fadeInTime}
             data-plurid-entity={PLURID_ENTITY_VIEWCUBE}
         >
             <PluridViewcubeModel
@@ -221,6 +245,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
             )}
         </StyledPluridViewcube>
     );
+    // #endregion render
 }
 
 
