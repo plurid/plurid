@@ -5,7 +5,7 @@ import {
     PluridPlane,
 } from '@plurid/plurid-react';
 
-import Plane1 from './planes/Plane1';
+import Plane1 from '../planes/Plane1';
 
 
 

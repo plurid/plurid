@@ -12,8 +12,8 @@ import {
     // PluridPubSubSubscribeMessage,
 } from '@plurid/plurid-react';
 
-import Plane1 from './planes/Plane1';
-import Plane2 from './planes/Plane2';
+import Plane1 from '../planes/Plane1';
+import Plane2 from '../planes/Plane2';
 
 
 

@@ -19,7 +19,7 @@ const Plane3: React.FC<any> = (
                 style={{ marginLeft: 200, marginTop: 100}}
             >
                 <PluridLink
-                    page="/page-2"
+                    route="/page-2"
                 >
                     link to page 2
                 </PluridLink>

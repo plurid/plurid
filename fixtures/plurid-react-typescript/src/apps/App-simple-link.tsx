@@ -18,7 +18,7 @@ const App = () => {
                     <div>
                         <h1>Plane 1</h1>
                         <br />
-                        <PluridLink path="/plane-2">link to plane 2</PluridLink>
+                        <PluridLink route="/plane-2">link to plane 2</PluridLink>
                     </div>
                 ),
             },
