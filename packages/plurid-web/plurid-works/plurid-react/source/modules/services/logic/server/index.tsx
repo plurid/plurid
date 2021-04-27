@@ -33,7 +33,7 @@
 
 // #region module
 export const serverComputeMetastate = (
-    matchedRoute: router.MatcherResponse,
+    matchedRoute: router.MatcherResponse<PluridReactComponent>,
     paths: PluridRoute<PluridReactComponent>[],
 ): PluridMetastate => {
     const protocol = 'http';

@@ -55,7 +55,7 @@
 
 // #region module
 export interface GetComponentFromRouteData {
-    matchedRoute: router.MatcherResponse;
+    matchedRoute: router.MatcherResponse<PluridReactComponent>;
     protocol: string;
     host: string;
     indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined;
@@ -100,12 +100,13 @@ export const getComponentFromRoute = (
 
     let PluridExterior: React.FC<any> = () => (<></>);
     if (exterior) {
-        switch (exterior.kind) {
-            case 'elementql':
-                break;
-            case 'react':
-                PluridExterior = exterior.element
-        }
+        PluridExterior = exterior;
+        // switch (exterior.kind) {
+        //     case 'elementql':
+        //         break;
+        //     case 'react':
+        //         PluridExterior = exterior.element
+        // }
     }
 
     let PluridSpaces: React.FC<any> = () => (<></>);
@@ -279,7 +280,7 @@ export const getComponentFromRoute = (
 
             // console.log('spaces path.value', path.value);
             // console.log('getComponentFromRoute spaces view', view);
-            const pluridPlanesRegistrar = new PluridPlanesRegistrar();
+            const pluridPlanesRegistrar = new PluridPlanesRegistrar<PluridReactComponent>();
 
             const App = (
                 <PluridApplication
@@ -375,17 +376,17 @@ export const getComponentFromRoute = (
     let MultispaceFooter: React.FC<any>;
     if (path.multispace?.header) {
         const header = path.multispace.header;
-
-        if (header.kind === 'react') {
-            MultispaceHeader = header.element;
-        }
+        MultispaceHeader = header;
+        // if (header.kind === 'react') {
+        //     MultispaceHeader = header.element;
+        // }
     }
     if (path.multispace?.footer) {
         const footer = path.multispace.footer;
-
-        if (footer.kind === 'react') {
-            MultispaceFooter = footer.element;
-        }
+        MultispaceFooter = footer;
+        // if (footer.kind === 'react') {
+        //     MultispaceFooter = footer.element;
+        // }
     }
 
     PluridSpaces = () => (
@@ -676,7 +677,7 @@ export const getGatewayView = (
         </>
     );
 
-    const gatewayRoute: router.MatcherResponse = {
+    const gatewayRoute: router.MatcherResponse<PluridReactComponent> = {
         path: {
             value: gatewayPath || 'gateway',
         },
@@ -1012,7 +1013,7 @@ export const generateIndexedPlanes = (
 
 
 export const collectApplicationsFromPath = (
-    matchedRoute: router.MatcherResponse,
+    matchedRoute: router.MatcherResponse<PluridReactComponent>,
     protocol: string,
     host: string,
 ) => {
@@ -1313,9 +1314,9 @@ export const gatherPluridPlanes = (
 
 
 export const computePluridRoute = (
-    matchedRoute: router.MatcherResponse | undefined,
+    matchedRoute: router.MatcherResponse<PluridReactComponent> | undefined,
     routes: PluridRoute<PluridReactComponent>[],
-    planesRegistrar: PluridPlanesRegistrar,
+    planesRegistrar: PluridPlanesRegistrar<PluridReactComponent>,
     directPlane?: any,
 ) => {
     if (directPlane) {
@@ -1444,12 +1445,13 @@ export const computePluridRoute = (
 
         let PluridExterior: React.FC<any> = () => (<></>);
         if (exterior) {
-            switch (exterior.kind) {
-                case 'elementql':
-                    break;
-                case 'react':
-                    PluridExterior = exterior.element
-            }
+            PluridExterior = exterior;
+            // switch (exterior.kind) {
+            //     case 'elementql':
+            //         break;
+            //     case 'react':
+            //         PluridExterior = exterior.element
+            // }
         }
 
         let PluridSpaces: React.FC<any> = () => (<></>);
@@ -1615,7 +1617,7 @@ export const computePluridRoute = (
 
                 // console.log('spaces path.value', path.value);
                 // console.log('getComponentFromRoute spaces view', view);
-                const pluridPlanesRegistrar = new PluridPlanesRegistrar();
+                const pluridPlanesRegistrar = new PluridPlanesRegistrar<PluridReactComponent>();
 
                 const App = (
                     <PluridApplication
@@ -1707,17 +1709,19 @@ export const computePluridRoute = (
         let MultispaceFooter: React.FC<any>;
         if (path.multispace?.header) {
             const header = path.multispace.header;
+            MultispaceHeader = header;
 
-            if (header.kind === 'react') {
-                MultispaceHeader = header.element;
-            }
+            // if (header.kind === 'react') {
+            //     MultispaceHeader = header.element;
+            // }
         }
         if (path.multispace?.footer) {
             const footer = path.multispace.footer;
+            MultispaceFooter = footer;
 
-            if (footer.kind === 'react') {
-                MultispaceFooter = footer.element;
-            }
+            // if (footer.kind === 'react') {
+            //     MultispaceFooter = footer.element;
+            // }
         }
 
         PluridSpaces = () => (
@@ -1849,9 +1853,9 @@ export const renderDirectPlane = (
     matchedPath: string,
     routes: PluridRoute<PluridReactComponent>[],
     planes: PluridRoutePlane<PluridReactComponent>[] | undefined,
-    planesRegistrar: PluridPlanesRegistrar,
+    planesRegistrar: PluridPlanesRegistrar<PluridReactComponent>,
 ) => {
-    let matchedPlane: router.MatcherResponse | undefined;
+    let matchedPlane: router.MatcherResponse<PluridReactComponent> | undefined;
     let DirectPlane: React.FC<any> | undefined;
 
     const {
