@@ -1,13 +1,10 @@
-import React from 'react';
-
-// import {
-//     PluridLink,
-//     PluridPlaneConfigurator,
-// } from '@plurid/plurid-react';
+import {
+    PluridReactComponent,
+} from '@plurid/plurid-react';
 
 
 
-const Plane1: React.FC<any> = (
+const Plane1: PluridReactComponent = (
     properties,
 ) => {
     return (
