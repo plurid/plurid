@@ -17,23 +17,25 @@
 
 
 // #region module
-export interface PluridRouterProperties {
-    routes: PluridRoute[];
+export interface PluridRouterProperties<C> {
+    routes: PluridRoute<C>[];
 
     /**
      * Plurid planes not specific to any route.
      */
-    planes?: PluridRoutePlane[];
+    planes?: PluridRoutePlane<C>[];
 
     /**
      * Component to be rendered outside of the current `path` component and of the `shell`.
      */
-    exterior?: PluridComponent;
+    // exterior?: PluridComponent;
+    exterior?: C;
 
     /**
      * Component to wrap around the current path component.
      */
-    shell?: PluridComponent;
+    // shell?: PluridComponent;
+    shell?: C;
 
     /**
      * Path to navigate to when using clean navigation.
@@ -74,7 +76,8 @@ export interface PluridRouterProperties {
     /**
      * Component to be rendered on the gateway path, external to the plurid view.
      */
-    gatewayExterior?: PluridComponent;
+    // gatewayExterior?: PluridComponent;
+    gatewayExterior?: C;
 
     /**
      * Redirect not found paths to this path.
@@ -100,7 +103,7 @@ export interface PluridRouterStatic {
 /**
  * A route can be `plurid space` or `exterior`-based.
  */
-export interface PluridRoute {
+export interface PluridRoute<C> {
     /**
      * The route `value` can:
      * + be a simple string, e.g. `'/route/to/page'`;
@@ -115,21 +118,22 @@ export interface PluridRoute {
     /**
      * Accepts a component which will be rendered outside of the `spaces`.
      */
-    exterior?: PluridComponent;
+    // exterior?: PluridComponent;
+    exterior?: C;
 
     /**
      * A path can have planes and/or spaces.
      *
      * Planes will be assigned to the `default` space, `default` universe, `default` cluster.
      */
-    planes?: PluridRoutePlane[];
+    planes?: PluridRoutePlane<C>[];
 
     view?: string[];
 
     /**
      * A path can have planes and/or spaces.
      */
-    spaces?: PluridRouteSpace[];
+    spaces?: PluridRouteSpace<C>[];
 
     /**
      * Pass the rendered `spaces[]` components as a property to the `exterior` component
@@ -137,7 +141,7 @@ export interface PluridRoute {
      */
     slotted?: boolean;
 
-    multispace?: PluridRouteMultispace;
+    multispace?: PluridRouteMultispace<C>;
 
     defaultConfiguration?: PluridPartialConfiguration;
 }
@@ -264,33 +268,34 @@ export interface PluridRouteParameter {
 }
 
 
-export interface PluridRouteSpace {
+export interface PluridRouteSpace<C> {
     value: string;
 
     /**
      * Accepts a component which will be rendered outside of the `space`.
      */
-    exterior?: PluridComponent;
+    // exterior?: PluridComponent;
+    exterior?: C;
 
     /**
      * A space can have planes and/or universes.
      *
      * Planes will be assigned to the `default` universe, `default` cluster.
      */
-    planes?: PluridRoutePlane[];
+    planes?: PluridRoutePlane<C>[];
 
     view?: string[];
 
     /**
      * A space can have planes and/or universes.
      */
-    universes?: PluridRouteUniverse[];
+    universes?: PluridRouteUniverse<C>[];
 
     configuration?: PluridPartialConfiguration;
 }
 
 
-export interface PluridRouteUniverse {
+export interface PluridRouteUniverse<C> {
     value: string;
 
     /**
@@ -298,20 +303,21 @@ export interface PluridRouteUniverse {
      *
      * Planes will be assigned to the `default` cluster.
      */
-    planes?: PluridRoutePlane[];
+    planes?: PluridRoutePlane<C>[];
 
-    clusters?: PluridRouteCluster[];
+    clusters?: PluridRouteCluster<C>[];
 }
 
 
-export interface PluridRouteCluster {
+export interface PluridRouteCluster<C> {
     value: string;
-    planes: PluridRoutePlane[];
+    planes: PluridRoutePlane<C>[];
 }
 
 
-export interface PluridRoutePlane {
-    component: PluridComponent;
+export interface PluridRoutePlane<C> {
+    // component: PluridComponent;
+    component: C;
     value: string;
 
     /**
@@ -371,7 +377,7 @@ export interface PluridRoutePlane {
 }
 
 
-export interface PluridRouteMultispace {
+export interface PluridRouteMultispace<C> {
     /**
      * Default: `y`.
      */
@@ -382,8 +388,10 @@ export interface PluridRouteMultispace {
      */
     snapType?: 'none' | 'mandatory' | 'proximity';
 
-    header?: PluridComponent;
-    footer?: PluridComponent;
+    header?: C;
+    footer?: C;
+    // header?: PluridComponent;
+    // footer?: PluridComponent;
 }
 
 

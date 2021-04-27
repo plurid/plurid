@@ -9,7 +9,7 @@
 
 
 // #region module
-export type PluridalWindow = typeof window & {
-    __pluridPlanesRegistrar__: PluridPlanesRegistrar;
+export type PluridalWindow<C> = typeof window & {
+    __pluridPlanesRegistrar__: PluridPlanesRegistrar<C>;
 }
 // #endregion module

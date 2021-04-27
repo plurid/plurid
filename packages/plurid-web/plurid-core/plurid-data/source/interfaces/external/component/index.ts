@@ -46,11 +46,11 @@ export interface PluridComponentReact extends PluridComponentBase {
      * The `element` will receive the properties, if any,
      * and the `plurid` property.
      */
-    element: React.FC<ReactComponentWithPlurid<any>>;
+    element: React.FC<ComponentWithPlurid<any>>;
 }
 
 
-export type ReactComponentWithPlurid<T> = T & WithPluridComponentProperty;
+export type ComponentWithPlurid<T> = T & WithPluridComponentProperty;
 
 
 export interface WithPluridComponentProperty {

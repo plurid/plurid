@@ -17,8 +17,8 @@
 
 
 // #region module
-export interface PluridContext {
-    planesRegistrar?: PluridPlanesRegistrar;
+export interface PluridContext<C> {
+    planesRegistrar?: PluridPlanesRegistrar<C>;
     planeContext?: PluridPlaneContext<any>;
     planeContextValue?: any;
 

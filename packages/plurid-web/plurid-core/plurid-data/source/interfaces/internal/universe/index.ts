@@ -24,8 +24,8 @@
 
 
 // #region module
-export interface IdentifiedPluridUniverse extends Identified<PluridUniverse> {
-    planes: Identified<PluridPlane>[];
+export interface IdentifiedPluridUniverse<C> extends Identified<PluridUniverse<C>> {
+    planes: Identified<PluridPlane<C>>[];
 }
 
 
@@ -41,8 +41,8 @@ export interface PluridInternalStateUniverse extends PluridInternalUniverse {
     active: boolean;
 }
 
-export interface PluridInternalContextUniverse extends PluridInternalUniverse {
-    planes: Record<string, PluridInternalContextPlane>;
+export interface PluridInternalContextUniverse<C> extends PluridInternalUniverse {
+    planes: Record<string, PluridInternalContextPlane<C>>;
 }
 
 

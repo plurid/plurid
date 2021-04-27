@@ -17,7 +17,7 @@
 
 
 // #region module
-export interface PluridUniverse {
+export interface PluridUniverse<C> {
     /**
      * Optional, application-wide unique identifier.
      */
@@ -28,7 +28,7 @@ export interface PluridUniverse {
      */
     name: string;
 
-    planes: PluridPlane[];
+    planes: PluridPlane<C>[];
 
     /**
      * By default, the order the documents are shown in is based on their index in the `documents[]`.
@@ -55,6 +55,6 @@ export interface PluridUniverse {
      * A cluster ensures the rendering of all the pages that it contains
      * in the same space zone.
      */
-    clusters?: PluridCluster[];
+    clusters?: PluridCluster<C>[];
 }
 // #endregion module

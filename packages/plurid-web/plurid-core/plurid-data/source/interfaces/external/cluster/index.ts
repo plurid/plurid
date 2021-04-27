@@ -13,11 +13,11 @@
 
 
 // #region module
-export interface PluridCluster {
+export interface PluridCluster<C> {
     id: string;
     name?: string;
-    planes?: PluridPlane[];
-    clusters?: PluridCluster[];
+    planes?: PluridPlane<C>[];
+    clusters?: PluridCluster<C>[];
     layout?: PluridLayout;
 }
 // #endregion module

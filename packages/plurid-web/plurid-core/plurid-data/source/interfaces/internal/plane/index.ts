@@ -19,7 +19,7 @@ export interface PluridInternalStatePlane extends PluridInternalPlane {
     // ordinal: number;
 }
 
-export interface PluridInternalContextPlane extends PluridInternalPlane {
-    component: PluridComponent;
+export interface PluridInternalContextPlane<C> extends PluridInternalPlane {
+    component: C;
 }
 // #endregion module

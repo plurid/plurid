@@ -47,16 +47,16 @@
 
 
 // #region module
-export interface PluridApplication {
+export interface PluridApplication<C> {
     id?: string;
 
-    indexedPlanes?: Map<string, IndexedPluridPlane>;
+    indexedPlanes?: Map<string, IndexedPluridPlane<C>>;
     planesProperties?: Map<string, any>;
 
     /**
      * The planes which will be rendered by the `PluridApplication`.
      */
-    planes?: PluridPlane[];
+    planes?: PluridPlane<C>[];
 
     /**
      * Optional context for the plane to have access to.
@@ -102,7 +102,8 @@ export interface PluridApplication {
      * Show or not the default Plane Not Found component, or pass a custom component.
      * Default `true`.
      */
-    notFound?: boolean | PluridComponent;
+    // notFound?: boolean | PluridComponent;
+    notFound?: boolean | C;
 
     /**
      * Application-wide partial configuration.
@@ -123,7 +124,7 @@ export interface PluridApplication {
 
     precomputedState?: Partial<PluridState>;
 
-    planesRegistrar?: PluridPlanesRegistrar;
+    planesRegistrar?: PluridPlanesRegistrar<C>;
 
     /**
      * Save plurid application state to local storage,
@@ -131,12 +132,22 @@ export interface PluridApplication {
      *
      * If multiple plurid applications run on the same origin,
      * use the `id` property to differentiate between states.
+     *
+     * `LocalStorageUsage` differentiates between multiple local storages:
+     * for view, for user interface configuration.
      */
-    useLocalStorage?: boolean;
+    useLocalStorage?: boolean // | LocalStorageUsage;
 }
 
 
 export type PluridApplicationView = string[] | PluridView[];
+
+
+export interface LocalStorageUsage {
+    view: boolean;
+    ui: boolean;
+}
+
 
 // export interface PluridServerData {
 //     planes?: PluridPlane[];

@@ -9,7 +9,7 @@
 
 
 // #region module
-export interface PluridLink {
+export interface PluridLink<C> {
     /**
      * The route of the plane.
      *
@@ -134,14 +134,16 @@ export interface PluridLink {
     /**
      * Show or not the default Not Found component, or pass a custom component
      */
-    notFound?: boolean | PluridComponent;
+    // notFound?: boolean | PluridComponent;
+    notFound?: boolean | C;
 
     preview?: boolean;
     previewFadeIn?: number;
     previewFadeOut?: number;
     previewOffsetX?: number;
     previewOffsetY?: number;
-    previewComponent?: PluridComponent;
+    // previewComponent?: PluridComponent;
+    previewComponent?: C;
 
     style?: React.CSSProperties;
     className?: string;

@@ -9,11 +9,12 @@
 
 
 // #region module
-export interface PluridPlane {
+export interface PluridPlane<C> {
     /**
-     * Custom HTML, React, Vue, or Angular component to be rendered in the PluridPlane.
+     * Component to be rendered in the PluridPlane.
      */
-    component: PluridComponent;
+    component: C;
+    // component: PluridComponent;
 
     /**
      * Route to the plane, e.g. `/plane-1`. By convention, it starts with an '/'.
@@ -67,7 +68,7 @@ export interface PluridPlane {
 export type PluridPlaneContext<T> = React.Context<T>;
 
 
-export interface IndexedPluridPlane {
+export interface IndexedPluridPlane<C> {
     protocol: string;
     host: string;
     path: string;
@@ -76,7 +77,8 @@ export interface IndexedPluridPlane {
     cluster: string;
     plane: string;
     route: string;
-    component: PluridComponent;
+    component: C;
+    // component: PluridComponent;
 }
 
 
@@ -85,7 +87,7 @@ export interface RouteSegment {
 }
 
 
-export interface RegisteredPluridPlane {
+export interface RegisteredPluridPlane<C> {
     route: {
         protocol: RouteSegment;
         host: RouteSegment;
@@ -96,6 +98,7 @@ export interface RegisteredPluridPlane {
         plane: RouteSegment;
         absolute: string;
     };
-    component: PluridComponent;
+    component: C;
+    // component: PluridComponent;
 }
 // #endregion module

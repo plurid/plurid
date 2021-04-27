@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
-    import PluridPubSub from '@plurid/plurid-pubsub';
+    import {
+        PluridPubSub,
+    } from '../pubsub';
     // #endregion libraries
 // #endregion imports
 

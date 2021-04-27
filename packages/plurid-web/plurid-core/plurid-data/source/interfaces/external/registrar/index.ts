@@ -10,17 +10,17 @@
 
 
 // #region module
-export interface PluridPlanesRegistrar {
+export interface PluridPlanesRegistrar<C> {
     register(
-        planes: PluridPlane[],
+        planes: PluridPlane<C>[],
     ): void;
 
     identify(): string[];
 
     get(
         route: string,
-    ): RegisteredPluridPlane | undefined;
+    ): RegisteredPluridPlane<C> | undefined;
 
-    getAll(): Map<string, RegisteredPluridPlane>;
+    getAll(): Map<string, RegisteredPluridPlane<C>>;
 }
 // #endregion module
