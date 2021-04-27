@@ -3,6 +3,10 @@
     import styled from 'styled-components';
 
     import {
+        Theme,
+    } from '@plurid/plurid-themes';
+
+    import {
         SIZES,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -11,17 +15,24 @@
 
 
 // #region module
-export const StyledPluridRoots: any = styled.div`
+export interface IStyledPluridRoots {}
+
+export const StyledPluridRoots = styled.div<IStyledPluridRoots>`
     transform-style: preserve-3d;
 `;
 
 
-export const StyledTransformOrigin: any = styled.div`
-    background-color: ${(props: any) => {
-        return props.theme.backgroundColorTertiaryAlpha;
-    }};
-    height: ${(props: any) => {
-        switch (props.transformOriginSize) {
+export interface IStyledTransformOrigin {
+    theme: Theme;
+    transformOriginSize: keyof typeof SIZES;
+}
+
+export const StyledTransformOrigin = styled.div<IStyledTransformOrigin>`
+    background-color: ${({theme}) => theme.backgroundColorTertiaryAlpha};
+    height: ${({
+        transformOriginSize,
+    }) => {
+        switch (transformOriginSize) {
             case SIZES.SMALL:
                 return '5px';
             case SIZES.NORMAL:
@@ -32,8 +43,10 @@ export const StyledTransformOrigin: any = styled.div`
                 return '10px';
         }
     }};
-    width: ${(props: any) => {
-        switch (props.transformOriginSize) {
+    width: ${({
+        transformOriginSize,
+    }) => {
+        switch (transformOriginSize) {
             case SIZES.SMALL:
                 return '5px';
             case SIZES.NORMAL:

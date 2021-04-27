@@ -54,7 +54,7 @@ export interface PluridRootsOwnProperties {
     computedTree?: any;
     indexedPlanesReference?: any;
     planesPropertiesReference?: any;
-    appConfiguration?: any;
+    appConfiguration?: PluridConfiguration;
 }
 
 export interface PluridRootsStateProperties {
@@ -106,7 +106,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 
     // console.log('Roots stateTree', stateTree);
 
-    const activeConfiguration = computedTree
+    const activeConfiguration = computedTree && appConfiguration
         ? appConfiguration
         : stateConfiguration;
 
