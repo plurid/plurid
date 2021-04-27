@@ -21,10 +21,7 @@
         PluridRouteCluster,
         PluridRoutePlane,
 
-        PluridComponent,
         PluridComponentProperty,
-
-        ReactComponentWithPlurid,
 
         PluridPreserve,
         PluridPreserveTransmission,
@@ -53,6 +50,10 @@
 
 
     // #region internal
+    import {
+        PluridReactComponent,
+    } from './data/interfaces';
+
     import PluridApplication from './Application';
 
     import PluridSingleApplication from './Application/variations/SingleApplication';
@@ -170,10 +171,9 @@ export {
     PluridRouteCluster,
     PluridRoutePlane,
 
-    PluridComponent,
     PluridComponentProperty,
 
-    ReactComponentWithPlurid,
+    PluridReactComponent,
 
     PluridPreserve,
     PluridPreserveTransmission,

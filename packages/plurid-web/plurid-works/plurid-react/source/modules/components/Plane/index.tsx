@@ -41,6 +41,10 @@
 
     // #region internal
     import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
+    import {
         StyledPluridPlane,
     } from './styled';
 
@@ -55,7 +59,7 @@
 // #region module
 export interface PluridPlaneOwnProperties {
     planeID: string;
-    plane: RegisteredPluridPlane;
+    plane: RegisteredPluridPlane<PluridReactComponent>;
     treePlane: TreePlane;
     location: any;
 }

@@ -15,6 +15,10 @@
 
     // #region external
     import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
+    import {
         collectApplicationsFromPath,
         computeIndexedPlanes,
     } from '../router';
@@ -30,7 +34,7 @@
 // #region module
 export const serverComputeMetastate = (
     matchedRoute: router.MatcherResponse,
-    paths: PluridRoute[],
+    paths: PluridRoute<PluridReactComponent>[],
 ): PluridMetastate => {
     const protocol = 'http';
     const host = 'localhost:63000';

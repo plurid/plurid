@@ -1,12 +1,12 @@
 // #region module
 const ENV_MODE = process.env.ENV_MODE || '';
 
-const environments: any = {
+const environments = {
     production: 'production',
     development: 'development',
     local: 'local',
     localExternal: 'localExternal',
-}
+};
 
 const environment = {
     production: environments[ENV_MODE] === 'production' ? true : false,

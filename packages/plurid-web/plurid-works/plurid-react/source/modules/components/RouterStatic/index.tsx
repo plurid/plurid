@@ -11,6 +11,10 @@
 
 
     // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
     import PluridRouterBrowser from '../RouterBrowser';
     // #endregion external
 // #endregion imports
@@ -21,10 +25,10 @@
 export interface PluridRouterStaticOwnProperties {
     path: string;
     directPlane?: string;
-    exterior?: PluridComponent;
-    shell?: PluridComponent;
-    routes: PluridRoute[];
-    planes: PluridRoutePlane[];
+    exterior?: PluridReactComponent;
+    shell?: PluridReactComponent;
+    routes: PluridRoute<PluridReactComponent>[];
+    planes: PluridRoutePlane<PluridReactComponent>[];
     protocol?: string;
     host?: string;
     gateway?: boolean;

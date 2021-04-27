@@ -15,6 +15,7 @@
 
     import {
         PluridApplication as PluridApplicationProperties,
+        ComponentWithPlurid,
         PluridState,
     } from '@plurid/plurid-data';
 
@@ -26,6 +27,10 @@
 
 
     // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
     import store from '~services/state/store';
     import StateContext from '~services/state/context';
 
@@ -41,7 +46,10 @@
 
 
 // #region module
-class PluridApplication extends Component<PluridApplicationProperties, {}> {
+class PluridApplication extends Component<
+    PluridApplicationProperties<PluridReactComponent>,
+    {}
+> {
     static contextType = PluridProviderContext;
 
     public context!: React.ContextType<typeof PluridProviderContext>;
@@ -52,7 +60,7 @@ class PluridApplication extends Component<PluridApplicationProperties, {}> {
 
 
     constructor(
-        properties: PluridApplicationProperties,
+        properties: PluridApplicationProperties<PluridReactComponent>,
         context: React.ContextType<typeof PluridProviderContext>,
     ) {
         console.log('properties PluridApplication', properties.view);

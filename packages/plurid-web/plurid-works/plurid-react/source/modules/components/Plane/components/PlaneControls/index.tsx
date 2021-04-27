@@ -37,6 +37,10 @@
 
 
     // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
@@ -66,7 +70,7 @@ const {
 } = universal;
 
 export interface PluridPlaneControlsOwnProperties {
-    plane: RegisteredPluridPlane;
+    plane: RegisteredPluridPlane<PluridReactComponent>;
     treePlane: TreePlane;
     mouseOver: boolean;
 }

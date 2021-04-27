@@ -45,6 +45,10 @@
 
 
     // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
     import PluridPortal from '~components/utilities/Portal';
 
     import Context from '~services/logic/context';
@@ -100,7 +104,7 @@ export interface PluridLinkDispatchProperties {
     dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
 }
 
-export type PluridLinkProperties = PluridLinkOwnProperties
+export type PluridLinkProperties = PluridLinkOwnProperties<PluridReactComponent>
     & PluridLinkStateProperties
     & PluridLinkDispatchProperties;
 

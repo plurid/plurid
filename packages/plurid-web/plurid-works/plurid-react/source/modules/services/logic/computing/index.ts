@@ -22,20 +22,27 @@
         uuid,
     } from '@plurid/plurid-functions';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+    // #endregion external
 // #endregion imports
 
 
 
 // #region module
 export const computeApplication = (
-    indexedPlanes: Map<string, IndexedPluridPlane> | undefined,
-    planes: PluridPlane[] | undefined,
+    indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined,
+    planes: PluridPlane<PluridReactComponent>[] | undefined,
     configuration: PluridPartialConfiguration | undefined,
     view: string[] | PluridView[] | undefined,
 ) => {
     const planesPropertiesReference = new Map();
 
-    const computedIndexedPlanes = new Map<string, IndexedPluridPlane>(
+    const computedIndexedPlanes = new Map<string, IndexedPluridPlane<PluridReactComponent>>(
         indexedPlanes || new Map()
     );
 
@@ -60,23 +67,29 @@ export const computeApplication = (
                 route,
             } = linkPath;
 
-            const computedIndexedPlane: IndexedPluridPlane = {
+            const computedIndexedPlane: IndexedPluridPlane<PluridReactComponent> = {
                 protocol: protocol,
-                host: host.value,
-                path: path.value,
-                space: space.value,
-                universe: universe.value,
-                cluster: cluster.value,
-                plane: planePath.value,
+                // host: host.value,
+                // path: path.value,
+                // space: space.value,
+                // universe: universe.value,
+                // cluster: cluster.value,
+                // plane: planePath.value,
+                host: '',
+                path: '',
+                space: '',
+                universe: '',
+                cluster: '',
+                plane: '',
                 route,
                 component: plane.component,
             };
             const id = route;
 
-            const planeProperties = {
-                ...plane.component.properties,
-            };
-            planesPropertiesReference.set(id, planeProperties);
+            // const planeProperties = {
+            //     ...plane.component,
+            // };
+            // planesPropertiesReference.set(id, planeProperties);
 
             computedIndexedPlanes.set(id, computedIndexedPlane);
         }
@@ -93,52 +106,52 @@ export const computeApplication = (
     const treePlanes: TreePlane[] = [];
 
     for (const [id, computedIndexedPlane] of computedIndexedPlanes) {
-        const pathProperties = computedIndexedPlane.component.properties?.plurid?.path;
+        // const pathProperties = computedIndexedPlane.component.properties?.plurid?.path;
 
-        let planeRouteSource = computedIndexedPlane.route;
+        // let planeRouteSource = computedIndexedPlane.route;
 
-        if (pathProperties) {
-            for (const [key, value] of Object.entries(pathProperties.parameters)) {
-                planeRouteSource = planeRouteSource.replace(`:${key}`, value as string);
-            }
-        }
+        // if (pathProperties) {
+        //     for (const [key, value] of Object.entries(pathProperties.parameters)) {
+        //         planeRouteSource = planeRouteSource.replace(`:${key}`, value as string);
+        //     }
+        // }
 
-        const planeRoute = router.resolveRoute(planeRouteSource);
-        if (!planeRoute) {
-            continue;
-        }
+        // const planeRoute = router.resolveRoute(planeRouteSource);
+        // if (!planeRoute) {
+        //     continue;
+        // }
 
-        const {
-            protocol,
-            host,
-            path,
-            space,
-            universe,
-            cluster,
-            plane,
-        } = planeRoute;
+        // const {
+        //     protocol,
+        //     host,
+        //     path,
+        //     space,
+        //     universe,
+        //     cluster,
+        //     plane,
+        // } = planeRoute;
 
-        const treePlane: TreePlane = {
-            ...defaultTreePlane,
-            routeDivisions: {
-                protocol: {
-                    value: protocol,
-                    secure: false,
-                },
-                host,
-                path,
-                space,
-                universe,
-                cluster,
-                plane,
-                valid: true,
-            },
-            sourceID: id,
-            route: planeRouteSource,
-            planeID: uuid.generate(),
-            show: true,
-        };
-        treePlanes.push(treePlane);
+        // const treePlane: TreePlane = {
+        //     ...defaultTreePlane,
+        //     routeDivisions: {
+        //         protocol: {
+        //             value: protocol,
+        //             secure: false,
+        //         },
+        //         host,
+        //         path,
+        //         space,
+        //         universe,
+        //         cluster,
+        //         plane,
+        //         valid: true,
+        //     },
+        //     sourceID: id,
+        //     route: planeRouteSource,
+        //     planeID: uuid.generate(),
+        //     show: true,
+        // };
+        // treePlanes.push(treePlane);
     }
 
 

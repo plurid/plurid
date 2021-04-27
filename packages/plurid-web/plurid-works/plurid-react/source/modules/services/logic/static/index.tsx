@@ -12,6 +12,10 @@
 
     // #region external
     import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
+    import {
         computeApplication,
     } from '../computing';
 
@@ -28,7 +32,7 @@
 
 // #region module
 const renderStatic = (
-    data: PluridApplication,
+    data: PluridApplication<PluridReactComponent>,
 ) => {
     const {
         planes,

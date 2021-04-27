@@ -40,6 +40,10 @@
 
 
     // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
     import PluridApplication from '~Application/index';
 
     import {
@@ -65,7 +69,7 @@ const PluridURLRouter = router.URLRouter;
 
 
 const PluridRouterBrowser = (
-    properties: PluridRouterBrowserOwnProperties,
+    properties: PluridRouterBrowserOwnProperties<PluridReactComponent>,
 ) => {
     // #region properties
     const {
@@ -269,10 +273,12 @@ const PluridRouterBrowser = (
     // #region render
     let PluridRouterExterior: React.FC<any> | undefined;
     if (exterior) {
-        if (exterior.kind === 'react') {
-            PluridRouterExterior = exterior.element;
-            PluridRouterExterior.displayName = 'PluridRouterExterior';
-        }
+        PluridRouterExterior = exterior;
+        PluridRouterExterior.displayName = 'PluridRouterExterior';
+        // if (exterior.kind === 'react') {
+        //     PluridRouterExterior = exterior.element;
+        //     PluridRouterExterior.displayName = 'PluridRouterExterior';
+        // }
     }
 
     let PluridRouterShell: React.FC<any> = ({
@@ -283,10 +289,12 @@ const PluridRouterBrowser = (
         </>
     );
     if (shell) {
-        if (shell.kind === 'react') {
-            PluridRouterShell = shell.element;
-            PluridRouterShell.displayName = 'PluridRouterShell';
-        }
+        PluridRouterShell = shell;
+        PluridRouterShell.displayName = 'PluridRouterShell';
+        // if (shell.kind === 'react') {
+        //     PluridRouterShell = shell.element;
+        //     PluridRouterShell.displayName = 'PluridRouterShell';
+        // }
     }
 
 

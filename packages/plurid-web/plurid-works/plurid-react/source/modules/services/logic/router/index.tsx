@@ -36,6 +36,10 @@
 
 
     // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
     import PluridApplication from '~Application/index';
     // #endregion external
 
@@ -54,7 +58,7 @@ export interface GetComponentFromRouteData {
     matchedRoute: router.MatcherResponse;
     protocol: string;
     host: string;
-    indexedPlanes: Map<string, IndexedPluridPlane> | undefined;
+    indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined;
     staticRender?: boolean;
 }
 
@@ -108,7 +112,7 @@ export const getComponentFromRoute = (
     const spacesArray: any[] = [];
     if (spaces) {
         for (const space of spaces) {
-            const planes: PluridPlane[] = [];
+            const planes: PluridPlane<PluridReactComponent>[] = [];
             const view = [];
 
             if (space.planes) {
@@ -138,21 +142,29 @@ export const getComponentFromRoute = (
                     ];
                     const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                    if (component.kind === 'react') {
-                        const pluridPlane: PluridPlane = {
-                            component: {
-                                kind: 'react',
-                                element: component.element,
-                                properties: {
-                                    plurid: pluridProperty,
-                                },
-                            },
-                            route: fullPath,
-                        };
+                    const pluridPlane: PluridPlane<PluridReactComponent> = {
+                        component,
+                        route: fullPath,
+                    };
 
-                        planes.push(pluridPlane);
-                        view.push(fullPath);
-                    }
+                    planes.push(pluridPlane);
+                    view.push(fullPath);
+
+                    // if (component.kind === 'react') {
+                    //     const pluridPlane: PluridPlane<PluridReactComponent> = {
+                    //         component: {
+                    //             kind: 'react',
+                    //             element: component.element,
+                    //             properties: {
+                    //                 plurid: pluridProperty,
+                    //             },
+                    //         },
+                    //         route: fullPath,
+                    //     };
+
+                    //     planes.push(pluridPlane);
+                    //     view.push(fullPath);
+                    // }
                 }
             }
 
@@ -190,28 +202,28 @@ export const getComponentFromRoute = (
                                 ];
                                 const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                                if (component.kind === 'react') {
-                                    const pluridPlane: PluridPlane = {
-                                        component: {
-                                            kind: 'react',
-                                            element: component.element,
-                                            properties: {
-                                                plurid: pluridProperty,
-                                            },
-                                        },
-                                        route: fullPath,
-                                    };
+                                // if (component.kind === 'react') {
+                                //     const pluridPlane: PluridPlane = {
+                                //         component: {
+                                //             kind: 'react',
+                                //             element: component.element,
+                                //             properties: {
+                                //                 plurid: pluridProperty,
+                                //             },
+                                //         },
+                                //         route: fullPath,
+                                //     };
 
-                                    planes.push(pluridPlane);
+                                //     planes.push(pluridPlane);
 
-                                    if (!path.view) {
-                                        view.push(fullPath);
-                                    } else {
-                                        if (path.view.includes(plane.value)) {
-                                            view.push(fullPath);
-                                        }
-                                    }
-                                }
+                                //     if (!path.view) {
+                                //         view.push(fullPath);
+                                //     } else {
+                                //         if (path.view.includes(plane.value)) {
+                                //             view.push(fullPath);
+                                //         }
+                                //     }
+                                // }
                             }
                         }
                     }
@@ -245,21 +257,21 @@ export const getComponentFromRoute = (
                             ];
                             const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                            if (component.kind === 'react') {
-                                const pluridPlane: PluridPlane = {
-                                    component: {
-                                        kind: 'react',
-                                        element: component.element,
-                                        properties: {
-                                            plurid: pluridProperty,
-                                        },
-                                    },
-                                    route: fullPath,
-                                };
+                            // if (component.kind === 'react') {
+                            //     const pluridPlane: PluridPlane = {
+                            //         component: {
+                            //             kind: 'react',
+                            //             element: component.element,
+                            //             properties: {
+                            //                 plurid: pluridProperty,
+                            //             },
+                            //         },
+                            //         route: fullPath,
+                            //     };
 
-                                planes.push(pluridPlane);
-                                view.push(fullPath);
-                            }
+                            //     planes.push(pluridPlane);
+                            //     view.push(fullPath);
+                            // }
                         }
                     }
                 }
@@ -286,8 +298,8 @@ export const getComponentFromRoute = (
     }
 
     if (planes) {
-        const pluridPlanes: PluridPlane[] = [];
-        const view = [];
+        const pluridPlanes: PluridPlane<PluridReactComponent>[] = [];
+        const view: any[] = [];
 
         for (const plane of planes) {
             const {
@@ -313,28 +325,28 @@ export const getComponentFromRoute = (
             ];
             const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-            if (component.kind === 'react') {
-                const pluridPlane: PluridPlane = {
-                    component: {
-                        kind: 'react',
-                        element: component.element,
-                        properties: {
-                            plurid: pluridProperty,
-                        },
-                    },
-                    route: fullPath,
-                };
+            // if (component.kind === 'react') {
+            //     const pluridPlane: PluridPlane<PluridReactComponent> = {
+            //         component: {
+            //             kind: 'react',
+            //             element: component.element,
+            //             properties: {
+            //                 plurid: pluridProperty,
+            //             },
+            //         },
+            //         route: fullPath,
+            //     };
 
-                pluridPlanes.push(pluridPlane);
+            //     pluridPlanes.push(pluridPlane);
 
-                if (!path.view) {
-                    view.push(fullPath);
-                } else {
-                    if (path.view.includes(plane.value)) {
-                        view.push(fullPath);
-                    }
-                }
-            }
+            //     if (!path.view) {
+            //         view.push(fullPath);
+            //     } else {
+            //         if (path.view.includes(plane.value)) {
+            //             view.push(fullPath);
+            //         }
+            //     }
+            // }
         }
 
         const planesProperties = new Map();
@@ -418,12 +430,12 @@ export const getComponentFromRoute = (
 
 export interface GetGatewayViewData {
     queryString: string;
-    routes: PluridRoute[];
+    routes: PluridRoute<PluridReactComponent>[];
     gatewayPath: string | undefined;
     gatewayExterior: any;
     protocol: string;
     host: string;
-    indexedPlanes: Map<string, IndexedPluridPlane> | undefined;
+    indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined;
 }
 
 export const getGatewayView = (
@@ -452,7 +464,7 @@ export const getGatewayView = (
         gatewayView.push(...gatewayViews);
     }
 
-    const planes: PluridPlane[] = [];
+    const planes: PluridPlane<PluridReactComponent>[] = [];
     const view: string[] = [];
 
     for (const path of routes) {
@@ -501,20 +513,20 @@ export const getGatewayView = (
                                         // check that the planeAddress is the same as gatewayViewPlane
                                         // considering parameters / query
 
-                                        if (gatewayViewPlane === planeAddress) {
-                                            if (component.kind === 'react') {
-                                                const pluridPlane: PluridPlane = {
-                                                    component: {
-                                                        kind: 'react',
-                                                        element: component.element,
-                                                    },
-                                                    route: planeAddress,
-                                                };
+                                        // if (gatewayViewPlane === planeAddress) {
+                                        //     if (component.kind === 'react') {
+                                        //         const pluridPlane: PluridPlane = {
+                                        //             component: {
+                                        //                 kind: 'react',
+                                        //                 element: component.element,
+                                        //             },
+                                        //             route: planeAddress,
+                                        //         };
 
-                                                planes.push(pluridPlane);
-                                                view.push(planeAddress);
-                                            }
-                                        }
+                                        //         planes.push(pluridPlane);
+                                        //         view.push(planeAddress);
+                                        //     }
+                                        // }
                                     }
                                 }
                             }
@@ -541,20 +553,20 @@ export const getGatewayView = (
                                 const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
 
                                 for (const gatewayViewPlane of gatewayView) {
-                                    if (gatewayViewPlane === planeAddress) {
-                                        if (component.kind === 'react') {
-                                            const pluridPlane: PluridPlane = {
-                                                component: {
-                                                    kind: 'react',
-                                                    element: component.element,
-                                                },
-                                                route: planeAddress,
-                                            };
+                                    // if (gatewayViewPlane === planeAddress) {
+                                    //     if (component.kind === 'react') {
+                                    //         const pluridPlane: PluridPlane = {
+                                    //             component: {
+                                    //                 kind: 'react',
+                                    //                 element: component.element,
+                                    //             },
+                                    //             route: planeAddress,
+                                    //         };
 
-                                            planes.push(pluridPlane);
-                                            view.push(planeAddress);
-                                        }
-                                    }
+                                    //         planes.push(pluridPlane);
+                                    //         view.push(planeAddress);
+                                    //     }
+                                    // }
                                 }
                             }
                         }
@@ -582,20 +594,20 @@ export const getGatewayView = (
                         const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
 
                         for (const gatewayViewPlane of gatewayView) {
-                            if (gatewayViewPlane === planeAddress) {
-                                if (component.kind === 'react') {
-                                    const pluridPlane: PluridPlane = {
-                                        component: {
-                                            kind: 'react',
-                                            element: component.element,
-                                        },
-                                        route: planeAddress,
-                                    };
+                            // if (gatewayViewPlane === planeAddress) {
+                            //     if (component.kind === 'react') {
+                            //         const pluridPlane: PluridPlane = {
+                            //             component: {
+                            //                 kind: 'react',
+                            //                 element: component.element,
+                            //             },
+                            //             route: planeAddress,
+                            //         };
 
-                                    planes.push(pluridPlane);
-                                    view.push(planeAddress);
-                                }
-                            }
+                            //         planes.push(pluridPlane);
+                            //         view.push(planeAddress);
+                            //     }
+                            // }
                         }
                     }
                 }
@@ -627,18 +639,18 @@ export const getGatewayView = (
                 ];
                 const planeAddress = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                if (component.kind === 'react') {
-                    const pluridPlane: PluridPlane = {
-                        component: {
-                            kind: 'react',
-                            element: component.element,
-                        },
-                        route: planeAddress,
-                    };
+                // if (component.kind === 'react') {
+                //     const pluridPlane: PluridPlane = {
+                //         component: {
+                //             kind: 'react',
+                //             element: component.element,
+                //         },
+                //         route: planeAddress,
+                //     };
 
-                    planes.push(pluridPlane);
-                    view.push(planeAddress);
-                }
+                //     planes.push(pluridPlane);
+                //     view.push(planeAddress);
+                // }
             }
         }
     }
@@ -688,11 +700,11 @@ export const getGatewayView = (
 
 
 export const computeIndexedPlanes = (
-    routes: PluridRoute[],
+    routes: PluridRoute<PluridReactComponent>[],
     protocol: string,
     host: string,
 ) => {
-    const indexedPlanes = new Map<string, IndexedPluridPlane>();
+    const indexedPlanes = new Map<string, IndexedPluridPlane<PluridReactComponent>>();
 
     for (const path of routes) {
         if (path.planes) {
@@ -716,7 +728,7 @@ export const computeIndexedPlanes = (
                 ];
                 const planeAddress = planeAddressElements.join('://');
 
-                const indexedPlane: IndexedPluridPlane = {
+                const indexedPlane: IndexedPluridPlane<PluridReactComponent> = {
                     protocol,
                     host,
                     path: pathName,
@@ -744,7 +756,7 @@ export const computeIndexedPlanes = (
             ];
             const planeAddress = planeAddressElements.join('://');
 
-            const indexedPlane: IndexedPluridPlane = {
+            const indexedPlane: IndexedPluridPlane<PluridReactComponent> = {
                 protocol,
                 host,
                 path: pathName,
@@ -752,10 +764,11 @@ export const computeIndexedPlanes = (
                 universe: '',
                 cluster: '',
                 plane: '',
-                component: path.exterior || {
-                    kind: 'react',
-                    element: () => (<></>),
-                },
+                component: path.exterior || (() => (<></>)),
+                // component: path.exterior || {
+                //     kind: 'react',
+                //     element: () => (<></>),
+                // },
                 route: planeAddress,
             };
 
@@ -801,7 +814,7 @@ export const computeIndexedPlanes = (
                         ];
                         const planeAddress = planeAddressElements.join('://');
 
-                        const indexedPlane: IndexedPluridPlane = {
+                        const indexedPlane: IndexedPluridPlane<PluridReactComponent> = {
                             protocol,
                             host,
                             path: pathName,
@@ -826,7 +839,7 @@ export const computeIndexedPlanes = (
 
 
 export const generateIndexedPlane = (
-    plane: PluridRoutePlane,
+    plane: PluridRoutePlane<PluridReactComponent>,
     protocol: string,
     host: string,
     path: string,
@@ -859,7 +872,7 @@ export const generateIndexedPlane = (
     ];
     const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
 
-    const indexedPlane: IndexedPluridPlane = {
+    const indexedPlane: IndexedPluridPlane<PluridReactComponent> = {
         protocol,
         host,
         path: pathName,
@@ -883,11 +896,11 @@ export const generateIndexedPlane = (
 
 export interface GeneratedIndexedPlane {
     id: string;
-    indexedPlane: IndexedPluridPlane;
+    indexedPlane: IndexedPluridPlane<PluridReactComponent>;
 }
 
 export const generateIndexedPlanes = (
-    path: PluridRoute,
+    path: PluridRoute<PluridReactComponent>,
     protocol: string,
     host: string,
 ) => {
@@ -1023,13 +1036,13 @@ export const collectApplicationsFromPath = (
     };
 
     const plurids: {
-        planes: PluridPlane[],
+        planes: PluridPlane<PluridReactComponent>[],
         view: string[],
     }[] = [];
     if (spaces) {
         for (const space of spaces) {
-            const planes: PluridPlane[] = [];
-            const view = [];
+            const planes: PluridPlane<PluridReactComponent>[] = [];
+            const view: any[] = [];
 
             if (space.planes) {
                 for (const plane of space.planes) {
@@ -1058,21 +1071,21 @@ export const collectApplicationsFromPath = (
                     ];
                     const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                    if (component.kind === 'react') {
-                        const pluridPlane: PluridPlane = {
-                            component: {
-                                kind: 'react',
-                                element: component.element,
-                                properties: {
-                                    plurid: pluridProperty,
-                                },
-                            },
-                            route: fullPath,
-                        };
+                    // if (component.kind === 'react') {
+                    //     const pluridPlane: PluridPlane = {
+                    //         component: {
+                    //             kind: 'react',
+                    //             element: component.element,
+                    //             properties: {
+                    //                 plurid: pluridProperty,
+                    //             },
+                    //         },
+                    //         route: fullPath,
+                    //     };
 
-                        planes.push(pluridPlane);
-                        view.push(fullPath);
-                    }
+                    //     planes.push(pluridPlane);
+                    //     view.push(fullPath);
+                    // }
                 }
             }
 
@@ -1110,21 +1123,21 @@ export const collectApplicationsFromPath = (
                                 ];
                                 const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                                if (component.kind === 'react') {
-                                    const pluridPlane: PluridPlane = {
-                                        component: {
-                                            kind: 'react',
-                                            element: component.element,
-                                            properties: {
-                                                plurid: pluridProperty,
-                                            },
-                                        },
-                                        route: fullPath,
-                                    };
+                                // if (component.kind === 'react') {
+                                //     const pluridPlane: PluridPlane = {
+                                //         component: {
+                                //             kind: 'react',
+                                //             element: component.element,
+                                //             properties: {
+                                //                 plurid: pluridProperty,
+                                //             },
+                                //         },
+                                //         route: fullPath,
+                                //     };
 
-                                    planes.push(pluridPlane);
-                                    view.push(fullPath);
-                                }
+                                //     planes.push(pluridPlane);
+                                //     view.push(fullPath);
+                                // }
                             }
                         }
                     }
@@ -1158,21 +1171,21 @@ export const collectApplicationsFromPath = (
                             ];
                             const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                            if (component.kind === 'react') {
-                                const pluridPlane: PluridPlane = {
-                                    component: {
-                                        kind: 'react',
-                                        element: component.element,
-                                        properties: {
-                                            plurid: pluridProperty,
-                                        },
-                                    },
-                                    route: fullPath,
-                                };
+                            // if (component.kind === 'react') {
+                            //     const pluridPlane: PluridPlane = {
+                            //         component: {
+                            //             kind: 'react',
+                            //             element: component.element,
+                            //             properties: {
+                            //                 plurid: pluridProperty,
+                            //             },
+                            //         },
+                            //         route: fullPath,
+                            //     };
 
-                                planes.push(pluridPlane);
-                                view.push(fullPath);
-                            }
+                            //     planes.push(pluridPlane);
+                            //     view.push(fullPath);
+                            // }
                         }
                     }
                 }
@@ -1187,7 +1200,7 @@ export const collectApplicationsFromPath = (
     }
 
     if (planes) {
-        const pluridPlanes: PluridPlane[] = [];
+        const pluridPlanes: PluridPlane<PluridReactComponent>[] = [];
         // const view = [];
 
         for (const plane of planes) {
@@ -1214,21 +1227,21 @@ export const collectApplicationsFromPath = (
             ];
             const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-            if (component.kind === 'react') {
-                const pluridPlane: PluridPlane = {
-                    component: {
-                        kind: 'react',
-                        element: component.element,
-                        properties: {
-                            plurid: pluridProperty,
-                        },
-                    },
-                    route: fullPath,
-                };
+            // if (component.kind === 'react') {
+            //     const pluridPlane: PluridPlane = {
+            //         component: {
+            //             kind: 'react',
+            //             element: component.element,
+            //             properties: {
+            //                 plurid: pluridProperty,
+            //             },
+            //         },
+            //         route: fullPath,
+            //     };
 
-                pluridPlanes.push(pluridPlane);
-                // view.push(fullPath);
-            }
+            //     pluridPlanes.push(pluridPlane);
+            //     // view.push(fullPath);
+            // }
         }
 
         const pluridApplication = {
@@ -1248,30 +1261,30 @@ export const collectApplicationsFromPath = (
 
 // #region module update
 export const gatherPluridPlanes = (
-    routes: PluridRoute[],
-    planes: PluridRoutePlane[] | undefined,
+    routes: PluridRoute<PluridReactComponent>[],
+    planes: PluridRoutePlane<PluridReactComponent>[] | undefined,
 ) => {
-    const pluridPlanes: PluridPlane[] = [];
+    const pluridPlanes: PluridPlane<PluridReactComponent>[] = [];
 
     for (const route of routes) {
         if (route.planes) {
             for (const plane of route.planes) {
-                if (plane.component.kind === 'react') {
-                    const planeRoute = plane.link
-                        ? plane.link
-                        : route.value === '/'
-                            ? plane.value
-                            : route.value + plane.value;
+                // if (plane.component.kind === 'react') {
+                //     const planeRoute = plane.link
+                //         ? plane.link
+                //         : route.value === '/'
+                //             ? plane.value
+                //             : route.value + plane.value;
 
-                    const pluridPlane: PluridPlane = {
-                        route: planeRoute,
-                        component: {
-                            kind: 'react',
-                            element: plane.component.element,
-                        },
-                    };
-                    pluridPlanes.push(pluridPlane);
-                }
+                //     const pluridPlane: PluridPlane = {
+                //         route: planeRoute,
+                //         component: {
+                //             kind: 'react',
+                //             element: plane.component.element,
+                //         },
+                //     };
+                //     pluridPlanes.push(pluridPlane);
+                // }
             }
         }
 
@@ -1282,16 +1295,16 @@ export const gatherPluridPlanes = (
 
     if (planes) {
         for (const plane of planes) {
-            if (plane.component.kind === 'react') {
-                const pluridPlane: PluridPlane = {
-                    route: plane.value,
-                    component: {
-                        kind: 'react',
-                        element: plane.component.element,
-                    },
-                };
-                pluridPlanes.push(pluridPlane);
-            }
+            // if (plane.component.kind === 'react') {
+            //     const pluridPlane: PluridPlane = {
+            //         route: plane.value,
+            //         component: {
+            //             kind: 'react',
+            //             element: plane.component.element,
+            //         },
+            //     };
+            //     pluridPlanes.push(pluridPlane);
+            // }
         }
     }
 
@@ -1301,7 +1314,7 @@ export const gatherPluridPlanes = (
 
 export const computePluridRoute = (
     matchedRoute: router.MatcherResponse | undefined,
-    routes: PluridRoute[],
+    routes: PluridRoute<PluridReactComponent>[],
     planesRegistrar: PluridPlanesRegistrar,
     directPlane?: any,
 ) => {
@@ -1327,7 +1340,7 @@ export const computePluridRoute = (
         return () => () => (<></>);
     }
 
-    let matchedRouteData: PluridRoute | undefined;
+    let matchedRouteData: PluridRoute<PluridReactComponent> | undefined;
     for (const route of routes) {
         if (route.value === matchedRoute.path.value) {
             matchedRouteData = {
@@ -1348,8 +1361,8 @@ export const computePluridRoute = (
     } = matchedRouteData;
 
     let PluridRouteExterior: React.FC<any> | undefined;
-    if (exterior && exterior.kind === 'react') {
-        PluridRouteExterior = exterior.element;
+    if (exterior) {
+        PluridRouteExterior = exterior;
         PluridRouteExterior.displayName = 'PluridRouteExterior';
     }
 
@@ -1443,8 +1456,8 @@ export const computePluridRoute = (
         const spacesArray: any[] = [];
         if (spaces) {
             for (const space of spaces) {
-                const planes: PluridPlane[] = [];
-                const view = [];
+                const planes: PluridPlane<PluridReactComponent>[] = [];
+                const view: any[] = [];
 
                 if (space.planes) {
                     for (const plane of space.planes) {
@@ -1473,21 +1486,21 @@ export const computePluridRoute = (
                         ];
                         const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                        if (component.kind === 'react') {
-                            const pluridPlane: PluridPlane = {
-                                component: {
-                                    kind: 'react',
-                                    element: component.element,
-                                    properties: {
-                                        plurid: pluridProperty,
-                                    },
-                                },
-                                route: fullPath,
-                            };
+                        // if (component.kind === 'react') {
+                        //     const pluridPlane: PluridPlane = {
+                        //         component: {
+                        //             kind: 'react',
+                        //             element: component.element,
+                        //             properties: {
+                        //                 plurid: pluridProperty,
+                        //             },
+                        //         },
+                        //         route: fullPath,
+                        //     };
 
-                            planes.push(pluridPlane);
-                            view.push(fullPath);
-                        }
+                        //     planes.push(pluridPlane);
+                        //     view.push(fullPath);
+                        // }
                     }
                 }
 
@@ -1525,28 +1538,28 @@ export const computePluridRoute = (
                                     ];
                                     const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                                    if (component.kind === 'react') {
-                                        const pluridPlane: PluridPlane = {
-                                            component: {
-                                                kind: 'react',
-                                                element: component.element,
-                                                properties: {
-                                                    plurid: pluridProperty,
-                                                },
-                                            },
-                                            route: fullPath,
-                                        };
+                                    // if (component.kind === 'react') {
+                                    //     const pluridPlane: PluridPlane = {
+                                    //         component: {
+                                    //             kind: 'react',
+                                    //             element: component.element,
+                                    //             properties: {
+                                    //                 plurid: pluridProperty,
+                                    //             },
+                                    //         },
+                                    //         route: fullPath,
+                                    //     };
 
-                                        planes.push(pluridPlane);
+                                    //     planes.push(pluridPlane);
 
-                                        if (!path.view) {
-                                            view.push(fullPath);
-                                        } else {
-                                            if (path.view.includes(plane.value)) {
-                                                view.push(fullPath);
-                                            }
-                                        }
-                                    }
+                                    //     if (!path.view) {
+                                    //         view.push(fullPath);
+                                    //     } else {
+                                    //         if (path.view.includes(plane.value)) {
+                                    //             view.push(fullPath);
+                                    //         }
+                                    //     }
+                                    // }
                                 }
                             }
                         }
@@ -1580,21 +1593,21 @@ export const computePluridRoute = (
                                 ];
                                 const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                                if (component.kind === 'react') {
-                                    const pluridPlane: PluridPlane = {
-                                        component: {
-                                            kind: 'react',
-                                            element: component.element,
-                                            properties: {
-                                                plurid: pluridProperty,
-                                            },
-                                        },
-                                        route: fullPath,
-                                    };
+                                // if (component.kind === 'react') {
+                                //     const pluridPlane: PluridPlane = {
+                                //         component: {
+                                //             kind: 'react',
+                                //             element: component.element,
+                                //             properties: {
+                                //                 plurid: pluridProperty,
+                                //             },
+                                //         },
+                                //         route: fullPath,
+                                //     };
 
-                                    planes.push(pluridPlane);
-                                    view.push(fullPath);
-                                }
+                                //     planes.push(pluridPlane);
+                                //     view.push(fullPath);
+                                // }
                             }
                         }
                     }
@@ -1619,8 +1632,8 @@ export const computePluridRoute = (
         }
 
         if (planes) {
-            const pluridPlanes: PluridPlane[] = [];
-            const view = [];
+            const pluridPlanes: PluridPlane<PluridReactComponent>[] = [];
+            const view: any[] = [];
 
             for (const plane of planes) {
                 const {
@@ -1646,28 +1659,28 @@ export const computePluridRoute = (
                 ];
                 const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
-                if (component.kind === 'react') {
-                    const pluridPlane: PluridPlane = {
-                        component: {
-                            kind: 'react',
-                            element: component.element,
-                            properties: {
-                                plurid: pluridProperty,
-                            },
-                        },
-                        route: fullPath,
-                    };
+                // if (component.kind === 'react') {
+                //     const pluridPlane: PluridPlane = {
+                //         component: {
+                //             kind: 'react',
+                //             element: component.element,
+                //             properties: {
+                //                 plurid: pluridProperty,
+                //             },
+                //         },
+                //         route: fullPath,
+                //     };
 
-                    pluridPlanes.push(pluridPlane);
+                //     pluridPlanes.push(pluridPlane);
 
-                    if (!path.view) {
-                        view.push(fullPath);
-                    } else {
-                        if (path.view.includes(plane.value)) {
-                            view.push(fullPath);
-                        }
-                    }
-                }
+                //     if (!path.view) {
+                //         view.push(fullPath);
+                //     } else {
+                //         if (path.view.includes(plane.value)) {
+                //             view.push(fullPath);
+                //         }
+                //     }
+                // }
             }
 
             const planesProperties = new Map();
@@ -1787,11 +1800,11 @@ export const computeInitialMatchedPath = (
 
 export const getDirectPlaneMatch = (
     matchedPath: string,
-    routes: PluridRoute[],
-    planes: PluridRoutePlane[] | undefined,
+    routes: PluridRoute<PluridReactComponent>[],
+    planes: PluridRoutePlane<PluridReactComponent>[] | undefined,
 ) => {
-    let matchRoute: PluridRoute | undefined;
-    let matchPlane: PluridRoutePlane | undefined;
+    let matchRoute: PluridRoute<PluridReactComponent> | undefined;
+    let matchPlane: PluridRoutePlane<PluridReactComponent> | undefined;
     let matchPath: string | undefined;
 
     for (const route of routes) {
@@ -1834,8 +1847,8 @@ export const getDirectPlaneMatch = (
 
 export const renderDirectPlane = (
     matchedPath: string,
-    routes: PluridRoute[],
-    planes: PluridRoutePlane[] | undefined,
+    routes: PluridRoute<PluridReactComponent>[],
+    planes: PluridRoutePlane<PluridReactComponent>[] | undefined,
     planesRegistrar: PluridPlanesRegistrar,
 ) => {
     let matchedPlane: router.MatcherResponse | undefined;
