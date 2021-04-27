@@ -5,30 +5,30 @@
   "dependencies": {
     "@plurid/plurid-data": "^0.0.0-2",
     "@plurid/plurid-engine": "^0.0.0-1",
-    "@plurid/plurid-functions": "^0.0.0-1",
-    "@plurid/plurid-functions-react": "^0.0.0-0",
+    "@plurid/plurid-functions": "^0.0.0-3",
+    "@plurid/plurid-functions-react": "^0.0.0-1",
     "@plurid/plurid-icons-react": "^0.0.0-0",
     "@plurid/plurid-pubsub": "^0.0.0-3",
     "@plurid/plurid-react": "^0.0.0-2",
     "@plurid/plurid-themes": "^0.0.0-0",
-    "@plurid/plurid-ui-components-react": "^0.0.0-0",
+    "@plurid/plurid-ui-components-react": "^0.0.0-1",
     "@plurid/plurid-ui-state-react": "^0.0.0-0",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.8.1",
-    "@types/jest": "^26.0.20",
-    "@types/node": "^14.14.32",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.1",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^13.1.5",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.0.0",
+    "@types/react": "^17.0.4",
+    "@types/react-dom": "^17.0.3",
     "hammerjs": "^2.0.8",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-redux": "^7.2.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.4",
     "react-scripts": "4.0.3",
-    "redux": "^4.0.5",
+    "redux": "^4.1.0",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^5.2.1",
-    "typescript": "~4.2.3"
+    "styled-components": "^5.2.3",
+    "typescript": "~4.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,7 +52,7 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.7",
+    "@types/styled-components": "^5.1.9",
     "redux-devtools-extension": "^2.13.9"
   }
 }
