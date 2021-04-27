@@ -1,22 +1,38 @@
 // #region imports
     // #region libraries
     import styled from 'styled-components';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes/distribution';
     // #endregion libraries
 // #endregion imports
 
 
 
 // #region module
-export const StyledPluridPlaneControls: any = styled.div`
-    background-color: ${(props: any) => {
-        if (props.transparentUI && !props.mouseOver) {
+export interface IStyledPluridPlaneControls {
+    theme: Theme;
+    transparentUI: boolean;
+    mouseOver: boolean;
+}
+
+export const StyledPluridPlaneControls = styled.div<IStyledPluridPlaneControls>`
+    background-color: ${({
+        transparentUI,
+        mouseOver,
+        theme,
+    }) => {
+        if (transparentUI && !mouseOver) {
             return 'transparent';
         }
 
-        return props.theme.backgroundColorDark;
+        return theme.backgroundColorDark;
     }};
-    box-shadow: ${(props: any) => {
-        return props.theme.boxShadowUmbraInset;
+    box-shadow: ${({
+        theme,
+    }) => {
+        return theme.boxShadowUmbraInset;
     }};
 
     width: 100%;

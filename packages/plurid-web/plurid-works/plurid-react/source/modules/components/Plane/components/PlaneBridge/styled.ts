@@ -1,23 +1,37 @@
 // #region imports
     // #region libraries
     import styled from 'styled-components';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes/distribution';
     // #endregion libraries
 // #endregion imports
 
 
 
 // #region module
-export const StyledPluridPlaneBridge: any = styled.div`
-    background-color: ${(props: any) => {
-        if (props.planeOpacity === 0) {
+export interface IStyledPluridPlaneBridge {
+    theme: Theme;
+    planeControls: boolean;
+    planeOpacity: number;
+}
+
+export const StyledPluridPlaneBridge = styled.div<IStyledPluridPlaneBridge>`
+    background-color: ${({
+        planeOpacity,
+        planeControls,
+        theme,
+    }) => {
+        if (planeOpacity === 0) {
             return 'transparent';
         }
 
-        if (!props.planeControls) {
-            return props.theme.backgroundColorPrimary;
+        if (!planeControls) {
+            return theme.backgroundColorPrimary;
         }
 
-        return props.theme.backgroundColorDark;
+        return theme.backgroundColorDark;
     }};
 
     position: absolute;

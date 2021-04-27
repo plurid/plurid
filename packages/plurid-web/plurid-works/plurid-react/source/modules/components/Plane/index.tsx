@@ -58,10 +58,14 @@
 
 // #region module
 export interface PluridPlaneOwnProperties {
-    planeID: string;
-    plane: RegisteredPluridPlane<PluridReactComponent>;
-    treePlane: TreePlane;
-    location: any;
+    // #region required
+        // #region values
+        planeID: string;
+        plane: RegisteredPluridPlane<PluridReactComponent>;
+        treePlane: TreePlane;
+        location: any;
+        // #endregion values
+    // #endregion required
 }
 
 export interface PluridPlaneStateProperties {
@@ -85,24 +89,29 @@ export type PluridPlaneProperties = PluridPlaneOwnProperties
 const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** own */
-        planeID,
-        plane,
-        treePlane,
-        location,
+        // #region required
+            // #region values
+            planeID,
+            plane,
+            treePlane,
+            location,
 
-        children,
+            children,
+            // #endregion values
+        // #endregion required
 
-        /** state */
+        // #region state
         viewSize,
         generalTheme,
         configuration,
         // tree,
+        // #endregion state
 
-        /** dispatch */
+        // #region dispatch
         updateSpaceTreePlane,
+        // #endregion dispatch
     } = properties;
 
     const {
@@ -125,15 +134,17 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     const width = mathematics.numbers.checkIntegerNonUnit(planeWidth)
         ? planeWidth
         : planeWidth * viewSize.width;
+    // #endregion properties
 
 
-    /** state */
+    // #region state
     const [mouseOver, setMouseOver] = useState(false);
 
     // based on camera location and world position compute transform matrix
+    // #endregion state
 
 
-    /** handlers */
+    // #region handlers
     const updatePlaneSize = (
         size: any,
     ) => {
@@ -145,11 +156,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
         updateSpaceTreePlane(updatedTreePlane);
     }
+    // #endregion handlers
 
 
-    // console.log('render plane');
-
-    /** render */
+    // #region render
+    // console.log('Render plane');
     return (
         <StyledPluridPlane
             suppressHydrationWarning={true}
@@ -198,6 +209,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             )}
         </StyledPluridPlane>
     );
+    // #endregion render
 }
 
 

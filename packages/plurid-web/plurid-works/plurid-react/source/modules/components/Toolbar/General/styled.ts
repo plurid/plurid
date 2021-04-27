@@ -3,8 +3,8 @@
     import styled from 'styled-components';
 
     import {
-        MENUS,
-    } from './data';
+        Theme,
+    } from '@plurid/plurid-themes/distribution';
     // #endregion libraries
 
 
@@ -13,6 +13,13 @@
         fadeInAnimation,
     } from '~services/styled';
     // #endregion external
+
+
+    // #region internal
+    import {
+        MENUS,
+    } from './data';
+    // #endregion internal
 // #endregion imports
 
 
@@ -81,48 +88,72 @@ export const StyledToolbar = styled.div<IStyledToolbar>`
 `;
 
 
-export const StyledToolbarButtons: any = styled.div`
-    color: ${(props: any) => {
-        return props.theme.colorPrimary;
+export interface IStyledToolbarButtons {
+    theme: Theme;
+    transparentUI: boolean;
+    showIcons: boolean;
+    showTransformButtons: boolean;
+    documentsBased: boolean;
+    opaque: boolean;
+    mouseIn: boolean;
+}
+
+export const StyledToolbarButtons = styled.div<IStyledToolbarButtons>`
+    color: ${({
+        theme,
+    }) => {
+        return theme.colorPrimary;
     }};
-    background-color: ${(props: any) => {
-        if (props.transparentUI) {
-            return props.theme.backgroundColorPrimaryAlpha;
+    background-color: ${({
+        theme,
+        transparentUI,
+    }) => {
+        if (transparentUI) {
+            return theme.backgroundColorPrimaryAlpha;
         }
 
-        return props.theme.backgroundColorSecondary;
+        return theme.backgroundColorSecondary;
     }};
-    box-shadow: ${(props: any) => {
-        return props.theme.boxShadowUmbra;
+    box-shadow: ${({
+        theme,
+    }) => {
+        return theme.boxShadowUmbra;
     }};
-    grid-template-columns: ${(props: any) => {
+    grid-template-columns: ${({
+        showIcons,
+        showTransformButtons,
+        documentsBased,
+    }) => {
         if (
-            props.showIcons
-            && !props.showTransformButtons
+            showIcons
+            && !showTransformButtons
         ) {
-            if (props.documentsBased) {
+            if (documentsBased) {
                 return 'repeat(6, minmax(min-content, 40px))';
             } else {
                 return 'repeat(5, minmax(min-content, 40px))';
             }
         }
 
-        if (!props.showTransformButtons) {
-            if (props.documentsBased) {
+        if (!showTransformButtons) {
+            if (documentsBased) {
                 return 'repeat(6, minmax(min-content, 40px))';
             } else {
                 return 'repeat(5, minmax(min-content, 40px))';
             }
         }
 
-        if (props.documentsBased) {
+        if (documentsBased) {
             return '40px 200px 200px 200px 40px 40px';
         }
 
         return '40px 200px 200px 200px 40px';
     }};
-    opacity: ${(props: any) => {
-        if (!props.opaque && !props.mouseIn) {
+    opacity: ${({
+        opaque,
+        mouseIn,
+    }) => {
+        if (!opaque && !mouseIn) {
             return '0.4';
         }
         return '1';
@@ -157,29 +188,46 @@ export const StyledToolbarButtons: any = styled.div`
 `;
 
 
-export const StyledToolbarButton: any = styled.div`
-    padding: ${(props: any) => {
-        if (props.button) {
+export interface IStyledToolbarButton {
+    theme: Theme;
+    button: boolean;
+    active: boolean;
+    showIcons: boolean;
+    showTransformButtons: boolean;
+}
+
+export const StyledToolbarButton = styled.div<IStyledToolbarButton>`
+    padding: ${({
+        button,
+        showIcons,
+        showTransformButtons,
+    }) => {
+        if (button) {
             return '0';
         }
 
         if (
-            props.showIcons
-            && !props.showTransformButtons
+            showIcons
+            && !showTransformButtons
         ) {
             return '0';
         }
 
         return '0 7px';
     }};
-    background-color: ${(props: any) => {
-        if (props.active) {
-            return props.theme.backgroundColorTertiary;
+    background-color: ${({
+        active,
+        theme,
+    }) => {
+        if (active) {
+            return theme.backgroundColorTertiary;
         }
         return 'transparent';
     }};
-    min-width: ${(props: any) => {
-        if (props.button) {
+    min-width: ${({
+        button,
+    }) => {
+        if (button) {
             return '40px';
         }
 
@@ -194,8 +242,10 @@ export const StyledToolbarButton: any = styled.div`
     user-select: none;
 
     :hover {
-        background: ${(props: any) => {
-            return props.theme.backgroundColorTertiary;
+        background: ${({
+            theme,
+        }) => {
+            return theme.backgroundColorTertiary;
         }};
     }
 `;

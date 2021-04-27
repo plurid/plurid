@@ -1,34 +1,51 @@
 // #region imports
     // #region libraries
     import styled from 'styled-components';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes/distribution';
     // #endregion libraries
 // #endregion imports
 
 
 
 // #region module
-export const StyledPluridLink: any = styled.a`
+export interface IStyledPluridLink {
+    theme: Theme;
+    devisible: boolean;
+    suffix: string;
+}
+
+export const StyledPluridLink = styled.a<IStyledPluridLink>`
     /**
      * Forces element to go to the second row if inlined.
      */
     display: inline-block;
 
     cursor: pointer;
-    color: ${(props: any) => {
-        return props.theme.colorTertiary;
+    color: ${({
+        theme,
+    }) => {
+        return theme.colorTertiary;
     }};
 
     :hover {
-        color: ${(props: any) => {
-            return props.theme.colorPrimary;
+        color: ${({
+            theme,
+        }) => {
+            return theme.colorPrimary;
         }};
     }
 
     ::after {
-        content: "${(props: any) => {
-            if (!props.devisible) {
-                if (props.suffix) {
-                    return props.suffix;
+        content: "${({
+            devisible,
+            suffix,
+        }) => {
+            if (!devisible) {
+                if (suffix) {
+                    return suffix;
                 }
                 return "'";
             }

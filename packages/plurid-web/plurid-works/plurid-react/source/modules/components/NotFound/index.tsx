@@ -49,20 +49,23 @@ export type PluridNotFoundProperties = PluridNotFoundOwnProperties
 const PluridNotFound: React.FC<PluridNotFoundProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     // const {
-        // /** state */
-        // stateGeneralTheme,
-        // stateInteractionTheme,
+    //     // #region state
+    //     stateGeneralTheme,
+    //     stateInteractionTheme,
+    //     // #endregion state
     // } = properties;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridNotFound>
             Plurid' Plane Not Found
         </StyledPluridNotFound>
     );
+    // #endregion render
 }
 
 

@@ -41,8 +41,12 @@
 
 // #region module
 export interface PluridPlaneConfiguratorOwnProperties {
-    theme: keyof typeof themes;
-    style: React.CSSProperties;
+    // #region required
+        // #region values
+        theme: keyof typeof themes;
+        style: React.CSSProperties;
+        // #endregion values
+    // #endregion required
 }
 
 export interface PluridPlaneConfiguratorStateProperties {
@@ -65,27 +69,29 @@ export type PluridPlaneConfiguratorProperties = PluridPlaneConfiguratorOwnProper
 const PluridPlaneConfigurator: React.FC<React.PropsWithChildren<PluridPlaneConfiguratorProperties>> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** own */
-        theme,
-        style,
-
-        /** state */
-
-        /** dispatch */
+        // #region required
+            // #region values
+            theme,
+            style,
+            // #endregion values
+        // #endregion required
     } = properties;
+    // #endregion properties
 
 
-    /** references */
+    // #region references
     const configuratorElement: React.RefObject<HTMLDivElement> = useRef(null);
+    // #endregion references
 
 
-    /** state */
+    // #region state
     const [planePlaneID, setParentPlaneID] = useState('');
+    // #endregion state
 
 
-    /** effects */
+    // #region effects
     /**
      * Get Parent Plane ID
      * Get Plurid Link Coordinates
@@ -96,35 +102,35 @@ const PluridPlaneConfigurator: React.FC<React.PropsWithChildren<PluridPlaneConfi
         );
         setParentPlaneID(parentPlaneID);
     }, []);
+    // #endregion effects
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridPlaneConfigurator
             ref={configuratorElement}
             data-plurid-entity={PLURID_ENTITY_PLANE_CONFIGURATOR}
         />
     );
+    // #endregion render
 }
 
 
-const mapStateToProps = (
+const mapStateToProperties = (
     state: AppState,
 ): PluridPlaneConfiguratorStateProperties => ({
-
 });
 
 
-const mapDispatchToProps = (
+const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridPlaneConfiguratorDispatchProperties => ({
-
 });
 
 
 const ConnectedPluridPlaneConfigurator = connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,

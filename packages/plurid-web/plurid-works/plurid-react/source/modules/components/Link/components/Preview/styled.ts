@@ -22,19 +22,27 @@ export const StyledPluridPlanePreview = styled.div<IStyledPreview>`
     min-height: 300px;
     z-index: 99999;
 
-    top: ${(properties: IStyledPreview) => {
-        const location = properties.linkCoordinates.y;
+    top: ${({
+        linkCoordinates,
+    }) => {
+        const location = linkCoordinates.y;
         return location + 'px';
     }};
-    left: ${(properties: IStyledPreview) => {
-        const location = properties.linkCoordinates.x + 5;
+    left: ${({
+        linkCoordinates,
+    }) => {
+        const location = linkCoordinates.x + 5;
         return location + 'px';
     }};
-    background-color: ${(properties: IStyledPreview) => {
-        return properties.theme.backgroundColorSecondary;
+    background-color: ${({
+        theme,
+    }) => {
+        return theme.backgroundColorSecondary;
     }};
-    box-shadow: ${(properties: IStyledPreview) => {
-        return properties.theme.boxShadowUmbra;
+    box-shadow: ${({
+        theme,
+    }) => {
+        return theme.boxShadowUmbra;
     }};
 `;
 // #endregion module

@@ -48,20 +48,22 @@ export type PluridSpaceDebuggerProperties = PluridSpaceDebuggerOwnProperties
 const PluridSpaceDebugger: React.FC<PluridSpaceDebuggerProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     // const {
         // /** state */
         // stateGeneralTheme,
         // stateInteractionTheme,
     // } = properties;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridSpaceDebugger>
             PluridSpaceDebugger
         </StyledPluridSpaceDebugger>
     );
+    // #endregion render
 }
 
 

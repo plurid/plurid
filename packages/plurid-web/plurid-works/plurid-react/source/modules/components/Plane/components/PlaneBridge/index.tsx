@@ -48,7 +48,7 @@ export type PluridPlaneBridgeProperties = PluridPlaneBridgeOwnProperties
 const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         stateGeneralTheme,
         stateConfiguration,
@@ -58,9 +58,10 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
         controls,
         opacity,
     } = stateConfiguration.elements.plane;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridPlaneBridge
             theme={stateGeneralTheme}
@@ -69,10 +70,11 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
             data-plurid-entity={PLURID_ENTITY_PLANE_BRIDGE}
         />
     );
+    // #endregion render
 }
 
 
-const mapStateToProps = (
+const mapStateToProperties = (
     state: AppState,
 ): PluridPlaneBridgeStateProperties => ({
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
@@ -80,15 +82,15 @@ const mapStateToProps = (
 });
 
 
-const mapDispatchToProps = (
+const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridPlaneBridgeDispatchProperties => ({
 });
 
 
 const ConnectedPluridPlaneBridge = connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,

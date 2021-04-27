@@ -1,12 +1,25 @@
 // #region imports
     // #region libraries
     import styled from 'styled-components';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes/distribution';
     // #endregion libraries
 // #endregion imports
 
 
 
-export const StyledToolbarButton: any = styled.div`
+// #region module
+export interface IStyledToolbarButton {
+    theme: Theme;
+    first?: boolean;
+    last?: boolean;
+    active?: boolean;
+    scaleImage?: boolean;
+}
+
+export const StyledToolbarButton = styled.div<IStyledToolbarButton>`
     position: relative;
     cursor: pointer;
     height: 40px;
@@ -14,48 +27,63 @@ export const StyledToolbarButton: any = styled.div`
     place-content: center;
     transition: transform 50ms ease-in-out;
 
-    border-top-left-radius: ${(props: any) => {
-        if (props.first) {
+    border-top-left-radius: ${({
+        first,
+    }) => {
+        if (first) {
             return '15px';
         }
         return '0';
     }};
-    border-top-right-radius: ${(props: any) => {
-        if (props.first) {
-            return '15px';
-        }
-        return '0';
-    }};
-
-    border-bottom-left-radius: ${(props: any) => {
-        if (props.last) {
-            return '15px';
-        }
-        return '0';
-    }};
-    border-bottom-right-radius: ${(props: any) => {
-        if (props.last) {
+    border-top-right-radius: ${({
+        first,
+    }) => {
+        if (first) {
             return '15px';
         }
         return '0';
     }};
 
-    background-color: ${(props: any) => {
-        if (props.active) {
-            return props.theme.backgroundColorTertiary;
+    border-bottom-left-radius: ${({
+        last,
+    }) => {
+        if (last) {
+            return '15px';
+        }
+        return '0';
+    }};
+    border-bottom-right-radius: ${({
+        last,
+    }) => {
+        if (last) {
+            return '15px';
+        }
+        return '0';
+    }};
+
+    background-color: ${({
+        theme,
+        active,
+    }) => {
+        if (active) {
+            return theme.backgroundColorTertiary;
         }
         return 'transparent';
     }};
 
     :hover {
-        background: ${(props: any) => {
-            return props.theme.backgroundColorTertiary;
+        background: ${({
+            theme,
+        }) => {
+            return theme.backgroundColorTertiary;
         }};
     }
 
     :hover svg {
-        transform: ${(props: any) => {
-            if (props.scaleImage) {
+        transform: ${({
+            scaleImage,
+        }) => {
+            if (scaleImage) {
                 return 'scale(1.2)';
             }
             return '';
@@ -66,11 +94,16 @@ export const StyledToolbarButton: any = styled.div`
         transition: transform 100ms linear;
         width: 15px;
         height: 15px;
-        fill: ${(props: any) => {
-            return props.theme.colorPrimary;
+        fill: ${({
+            theme,
+        }) => {
+            return theme.colorPrimary;
         }};
-        transform: ${(props: any) => {
-            if (props.active && props.scaleImage) {
+        transform: ${({
+            active,
+            scaleImage,
+        }) => {
+            if (active && scaleImage) {
                 return 'scale(1.2)';
             }
             return '';
@@ -79,27 +112,39 @@ export const StyledToolbarButton: any = styled.div`
 `;
 
 
-export const StyledToolbarButtonText: any = styled.div`
-    left: ${(props: any) => {
-        if (props.textLeft) {
+export interface IStyledToolbarButtonText {
+    textLeft?: boolean;
+}
+
+export const StyledToolbarButtonText = styled.div<IStyledToolbarButtonText>`
+    left: ${({
+        textLeft,
+    }) => {
+        if (textLeft) {
             return '-88px';
         }
         return '30px';
     }};
-    justify-content: ${(props: any) => {
-        if (props.textLeft) {
+    justify-content: ${({
+        textLeft,
+    }) => {
+        if (textLeft) {
             return 'flex-end';
         }
         return 'left';
     }};
-    text-align: ${(props: any) => {
-        if (props.textLeft) {
+    text-align: ${({
+        textLeft,
+    }) => {
+        if (textLeft) {
             return 'right';
         }
         return 'left';
     }};
-    padding-left: ${(props: any) => {
-        if (props.textLeft) {
+    padding-left: ${({
+        textLeft,
+    }) => {
+        if (textLeft) {
             return '0';
         }
         return '8px';
@@ -111,3 +156,4 @@ export const StyledToolbarButtonText: any = styled.div`
     display: flex;
     align-items: center;
 `;
+// #endregion module

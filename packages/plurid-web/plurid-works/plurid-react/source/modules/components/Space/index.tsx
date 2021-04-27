@@ -44,7 +44,7 @@ export interface PluridSpaceOwnProperties {
     computedTree?: any;
     indexedPlanesReference?: any;
     planesPropertiesReference?: any;
-    appConfiguration?: any;
+    appConfiguration?: PluridConfiguration;
 }
 
 export interface PluridSpaceStateProperties {
@@ -65,9 +65,10 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
 ) => {
     // #region properties
     const {
-        /** state */
+        // #region state
         stateConfiguration,
         stateGeneralTheme,
+        // #endregion state
     } = properties;
 
     const {

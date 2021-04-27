@@ -18,41 +18,70 @@
 
 // #region module
 export interface PluridToolbarButtonProperties {
-    atClick: any;
-    image: any;
-    scaleImage?: boolean;
-    text: any;
-    textLeft?: boolean;
-    showText?: boolean;
-    first?: boolean;
-    last?: boolean;
-    active?: boolean;
-    theme?: any;
+    // #region required
+        // #region values
+        image: any;
+        text: any;
+        // #endregion values
+
+        // #region methods
+        atClick: any;
+        // #endregion methods
+    // #endregion required
+
+    // #region optional
+        // #region values
+        scaleImage?: boolean;
+        textLeft?: boolean;
+        showText?: boolean;
+        first?: boolean;
+        last?: boolean;
+        active?: boolean;
+        theme?: any;
+        // #endregion values
+    // #endregion optional
 }
 
 const PluridToolbarButton: React.FC<PluridToolbarButtonProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        atClick,
-        image,
-        scaleImage,
-        text,
-        textLeft,
-        showText,
-        first,
-        last,
-        active,
-        theme,
+        // #region required
+            // #region values
+            image,
+            text,
+            // #endregion values
+
+            // #region methods
+            atClick,
+            // #endregion methods
+        // #endregion required
+
+        // #region optional
+            // #region values
+            scaleImage,
+            textLeft,
+            showText,
+            first,
+            last,
+            active,
+            theme,
+            // #endregion values
+        // #endregion optional
     } = properties;
+    // #endregion properties
 
 
-    /** state */
-    const [mouseOver, setMouseOver] = useState(false);
+    // #region state
+    const [
+        mouseOver,
+        setMouseOver,
+    ] = useState(false);
+    // #endregion statet
 
 
-    /** render */
+    // #region render
     return (
         <StyledToolbarButton
             onMouseEnter={() => setMouseOver(true)}
@@ -75,6 +104,7 @@ const PluridToolbarButton: React.FC<PluridToolbarButtonProperties> = (
             )}
         </StyledToolbarButton>
     );
+    // #endregion render
 }
 // #endregion module
 

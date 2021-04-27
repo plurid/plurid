@@ -43,7 +43,7 @@ export interface PluridRouterLinkOwnProperties {
 const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         route,
         asAnchor,
@@ -54,9 +54,10 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     } = properties;
 
     const anchor = asAnchor ?? true;
+    // #endregion properties
 
 
-    /** handlers */
+    // #region handlers
     const handleClick = (
         event: React.MouseEvent<Element, MouseEvent>,
     ) => {
@@ -72,17 +73,20 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 
         pluridRouterNavigate(route);
     }
+    // #endregion handlers
 
 
-    /** render */
+    // #region render
+    const renderProperties = {
+        onClick: handleClick,
+        style,
+        className,
+    };
+
     if (!anchor) {
         return (
             <StyledPluridRouterLinkDiv
-                onClick={handleClick}
-                style={{
-                    ...style,
-                }}
-                className={className}
+                {...renderProperties}
             >
                 {children}
             </StyledPluridRouterLinkDiv>
@@ -92,15 +96,12 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     return (
         <StyledPluridRouterLinkAnchor
             href={route}
-            onClick={handleClick}
-            style={{
-                ...style,
-            }}
-            className={className}
+            {...renderProperties}
         >
             {children}
         </StyledPluridRouterLinkAnchor>
     );
+    // #endregion render
 }
 // #endregion module
 

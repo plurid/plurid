@@ -30,19 +30,21 @@ export interface PluridPlaneContentOwnProperties {
 const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         // updatePlaneSize,
 
         children,
     } = properties;
+    // #endregion properties
 
 
-    /** references */
+    // #region references
     const planeContentElement = useRef<HTMLDivElement>(null);
+    // #endregion references
 
 
-    /** effects */
+    // #region effects
     // useEffect(() => {
     //     if (planeContentElement.current) {
     //         // TODO
@@ -63,11 +65,12 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
     // }, [
     //     planeContentElement.current,
     // ]);
+    // #endregion effects
 
 
     // console.log('render content');
 
-    /** render */
+    // #region render
     return (
         <StyledPluridPlaneContent
             ref={planeContentElement}
@@ -76,6 +79,7 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
             {children}
         </StyledPluridPlaneContent>
     );
+    // #endregion render
 }
 // #endregion module
 

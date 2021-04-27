@@ -1,9 +1,6 @@
 // #region imports
     // #region libraries
-    import styled, {
-        css,
-        keyframes,
-    } from 'styled-components';
+    import styled from 'styled-components';
 
     import {
         Theme,
@@ -74,7 +71,6 @@ export const StyledPluridSpace = styled.div<IStyledPluridSpace>`
             isMounted
             && fadeInTime
         ) {
-            // return css`${fadeIn} ${fadeInTime}ms linear 100ms forwards`;
             return fadeInAnimation(fadeInTime);
         }
 

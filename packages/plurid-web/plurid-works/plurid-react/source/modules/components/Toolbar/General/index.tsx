@@ -244,7 +244,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                 theme={theme}
                 showIcons={showIcons}
                 showTransformButtons={showTransformButtons}
-                universesBased={false}
+                documentsBased={false}
                 // universesBased={universesBased}
                 mouseIn={mouseIn}
                 opaque={opaque}
@@ -255,6 +255,8 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                     onClick={() => dispatchToggleConfigurationSpaceFirstPerson()}
                     active={firstPerson}
                     button={true}
+                    showIcons={showIcons}
+                    showTransformButtons={showTransformButtons}
                 >
                     <StyledIcon>
                         <PluridIconFirstPerson />
@@ -302,6 +304,8 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                     onClick={() => handleShowMenu(MENUS.MORE)}
                     active={showMenu === MENUS.MORE}
                     button={true}
+                    showIcons={showIcons}
+                    showTransformButtons={showTransformButtons}
                 >
                     <StyledIcon>
                         <PluridIconMore />
