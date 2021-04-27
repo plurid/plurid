@@ -65,7 +65,7 @@ export type PluridViewcubeModelProperties = PluridViewcubeModelOwnProperties
 const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         /** own */
         mouseOver,
@@ -79,18 +79,23 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
 
         /** dispatch */
     } = properties;
+    // #endregion properties
 
 
-    /** state */
+    // #region state
     const [hoveredZone, setHoveredZone] = useState('');
     const [activeZone, setActiveZone] = useState('');
+    // #endregion state
 
 
-    /** handler */
+    // #region handlers
     const handleMouseLeave = () => {
         setHoveredZone('');
     }
+    // #endregion handlers
 
+
+    // #region effects
     useEffect(() => {
         if (!hoveredZone) {
             setActiveZone('');
@@ -99,9 +104,10 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
         spaceRotationX,
         spaceRotationY,
     ]);
+    // #endregion effects
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridViewcubeModel>
             <StyledPluridViewcubeModelContainer>
@@ -178,6 +184,7 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
             </StyledPluridViewcubeModelContainer>
         </StyledPluridViewcubeModel>
     );
+    // #endregion render
 }
 
 

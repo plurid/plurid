@@ -1,13 +1,24 @@
 // #region imports
     // #region libraries
     import styled from 'styled-components';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes/distribution';
     // #endregion libraries
 // #endregion imports
 
 
 
 // #region module
-export const StyledPluridViewcubeFace: any = styled.div`
+export interface IStyledPluridViewcubeFace {
+    theme: Theme;
+    mouseOver: boolean;
+    opaque: boolean;
+    face: string;
+}
+
+export const StyledPluridViewcubeFace = styled.div<IStyledPluridViewcubeFace>`
     font-size: 0.6rem;
     position: absolute;
     height: 50px;
@@ -23,31 +34,42 @@ export const StyledPluridViewcubeFace: any = styled.div`
     box-sizing: content-box;
     transition: all 300ms linear;
 
-    border: 1px solid ${(props: any) => {
-        if (props.mouseOver) {
-            return props.theme.colorTertiary;
+    border: 1px solid ${({
+        mouseOver,
+        theme,
+    }) => {
+        if (mouseOver) {
+            return theme.colorTertiary;
         }
-        return props.theme.backgroundColorSecondary;
+        return theme.backgroundColorSecondary;
     }};
-    box-shadow: ${(props: any) => {
-        if (props.face === 'base') {
-            return '0px 0px 12px 2px ' + props.theme.boxShadowPenumbraColor;
+    box-shadow: ${({
+        face,
+        theme,
+    }) => {
+        if (face === 'base') {
+            return '0px 0px 12px 2px ' + theme.boxShadowPenumbraColor;
         }
         return '';
     }};
-    opacity: ${(props: any) => {
-        if (!props.opaque) {
-            if (props.mouseOver) {
+    opacity: ${({
+        opaque,
+        mouseOver,
+    }) => {
+        if (!opaque) {
+            if (mouseOver) {
                 return '0.8';
             }
-            if (!props.mouseOver) {
+            if (!mouseOver) {
                 return '0.4';
             }
         }
         return '1';
     }};
-    transform: ${(props: any) => {
-        switch (props.face) {
+    transform: ${({
+        face,
+    }) => {
+        switch (face) {
             case 'front':
                 return 'translateZ(25px) rotateY(0deg)';
             case 'back':
@@ -67,46 +89,70 @@ export const StyledPluridViewcubeFace: any = styled.div`
 `;
 
 
-export const StyledPluridViewcubeFaceZone: any = styled.div`
+export interface IStyledPluridViewcubeFaceZone {
+    theme: Theme;
+    type: string;
+    hovered: boolean;
+    transparentUI: boolean;
+    active: boolean;
+}
+
+export const StyledPluridViewcubeFaceZone = styled.div<IStyledPluridViewcubeFaceZone>`
     display: grid;
     place-content: center;
     cursor: pointer;
     pointer-events: all;
 
-    grid-area: ${(props:any) => `PVF${props.type}`};
-    color: ${(props: any) => {
-        if (props.hovered) {
-            return props.theme.colorPrimary;
+    grid-area: ${({
+        type,
+    }) => `PVF${type}`};
+    color: ${({
+        theme,
+        hovered,
+    }) => {
+        if (hovered) {
+            return theme.colorPrimary;
         }
-        return props.theme.colorSecondary;
+        return theme.colorSecondary;
     }};
-    background-color: ${(props: any) => {
-        if (props.transparentUI && !props.hovered) {
-            return props.theme.backgroundColorPrimaryAlpha;
+    background-color: ${({
+        theme,
+        transparentUI,
+        hovered,
+        active,
+    }) => {
+        if (transparentUI && !hovered) {
+            return theme.backgroundColorPrimaryAlpha;
         }
 
-        if (props.active) {
-            return props.theme.backgroundColorTertiary;
+        if (active) {
+            return theme.backgroundColorTertiary;
         }
-        if (props.hovered) {
-            return props.theme.backgroundColorTertiary;
+        if (hovered) {
+            return theme.backgroundColorTertiary;
         }
-        return props.theme.backgroundColorSecondary;
+        return theme.backgroundColorSecondary;
     }};
-    border: 1px solid ${(props: any) => {
-        if (props.transparentUI && !props.hovered) {
+    border: 1px solid ${({
+        theme,
+        transparentUI,
+        hovered,
+    }) => {
+        if (transparentUI && !hovered) {
             return 'transparent';
         }
 
-        if (props.hovered) {
-            return props.theme.colorTertiary;
+        if (hovered) {
+            return theme.colorTertiary;
         }
-        return props.theme.backgroundColorSecondary;
+        return theme.backgroundColorSecondary;
     }};
 
     :hover {
-        background-color: ${(props: any) => {
-            return props.theme.backgroundColorTertiary;
+        background-color: ${({
+            theme,
+        }) => {
+            return theme.backgroundColorTertiary;
         }};
     }
 `;

@@ -111,7 +111,10 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
 
 
     // #region state
-    const [mouseOver, setMouseOver] = useState(false);
+    const [
+        mouseOver,
+        setMouseOver,
+    ] = useState(false);
 
     const [
         isMounted,

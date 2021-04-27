@@ -1,6 +1,10 @@
 // #region imports
     // #region libraries
     import styled from 'styled-components';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes/distribution';
     // #endregion libraries
 
 
@@ -95,7 +99,11 @@ export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
 `;
 
 
-export const StyledPluridViewcubeArrow: any = styled.div`
+export interface IStyledPluridViewcubeArrow {
+    theme: Theme;
+}
+
+export const StyledPluridViewcubeArrow = styled.div<IStyledPluridViewcubeArrow>`
     display: grid;
     place-content: center;
 
@@ -106,7 +114,11 @@ export const StyledPluridViewcubeArrow: any = styled.div`
 `;
 
 
-export const StyledPluridViewcubeArrowIcon: any = styled.div`
+export interface IStyledPluridViewcubeArrowIcon {
+    theme: Theme;
+}
+
+export const StyledPluridViewcubeArrowIcon = styled.div<IStyledPluridViewcubeArrowIcon>`
     user-select: none;
     font-size: 0.6rem;
     width: 1.2rem;
@@ -117,14 +129,19 @@ export const StyledPluridViewcubeArrowIcon: any = styled.div`
     cursor: pointer;
 
     :hover {
-        background-color: ${(props: any) => {
-            return props.theme.backgroundColorTertiary;
+        background-color: ${({
+            theme,
+        }) => {
+            return theme.backgroundColorTertiary;
         }};
     }
 `;
 
 
-export const StyledFitView: any = styled.div`
+export interface IStyledFitView {
+}
+
+export const StyledFitView = styled.div<IStyledFitView>`
     grid-area: PVFitview;
     display: grid;
     place-content: center;

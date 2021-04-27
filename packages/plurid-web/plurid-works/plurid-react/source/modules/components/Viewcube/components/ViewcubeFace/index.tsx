@@ -290,7 +290,6 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
             face={face}
             opaque={opaqueFace}
             mouseOver={mouseOver}
-            transparentUI={transparentUI}
         >
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
