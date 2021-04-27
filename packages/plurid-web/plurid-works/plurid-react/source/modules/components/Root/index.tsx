@@ -256,11 +256,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             ) {
                 // instead of forcing show here to pass it as prop
                 // and change the opacity
-                const Plane = activePlane.component.element;
-
-                if (activePlane.component.kind !== 'react') {
-                    return;
-                }
+                const Plane = activePlane.component;
 
                 const pluridProperty: PluridComponentProperty = {
                     route: {
@@ -293,7 +289,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 };
 
                 const properties = {
-                    ...activePlane.component.properties,
+                    // ...activePlane.component.properties,
                     plurid: {
                         ...pluridProperty,
                     },
@@ -384,13 +380,13 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         );
     }
 
-    if (pluridPlane.component.kind !== 'react') {
-        return (
-            <></>
-        );
-    }
+    // if (pluridPlane.component.kind !== 'react') {
+    //     return (
+    //         <></>
+    //     );
+    // }
 
-    const Plane = pluridPlane.component.element;
+    const Plane = pluridPlane.component;
     // console.log('Root Plane', Plane);
 
     const pluridProperty: PluridComponentProperty = {
@@ -424,7 +420,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     };
 
     const planeProperties = {
-        ...pluridPlane.component.properties,
+        // ...pluridPlane.component.properties,
         plurid: {
             ...pluridProperty,
         },

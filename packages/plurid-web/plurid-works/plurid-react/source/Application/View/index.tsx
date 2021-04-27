@@ -45,6 +45,10 @@
 
 
     // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
     import Context from '~services/logic/context';
 
     import {
@@ -81,7 +85,7 @@
 
 
 // #region module
-export interface ViewOwnProperties extends PluridApplicationProperties {
+export interface ViewOwnProperties extends PluridApplicationProperties<PluridReactComponent> {
 }
 
 export interface ViewStateProperties {
@@ -802,7 +806,7 @@ const PluridView: React.FC<ViewProperties> = (
 
 
     // #region render
-    const pluridContext: PluridContext = {
+    const pluridContext: PluridContext<PluridReactComponent> = {
         planesRegistrar,
         registerPubSub,
     };

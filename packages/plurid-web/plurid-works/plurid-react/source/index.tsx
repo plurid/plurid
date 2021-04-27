@@ -58,9 +58,6 @@
 
     import PluridApplication from './Application';
 
-    import PluridSingleApplication from './Application/variations/SingleApplication';
-    import PluridExposedApplication from './Application/variations/ExposedApplication';
-
     import PluridLink from './modules/components/Link';
     import PluridRouterBrowser from './modules/components/RouterBrowser';
     import PluridRouterStatic from './modules/components/RouterStatic';
@@ -107,7 +104,6 @@ const {
 const Plurid = {
     // #region Components
     Application: PluridApplication,
-    SingleApplication: PluridSingleApplication,
 
     Link: PluridLink,
     RouterBrowser: PluridRouterBrowser,
@@ -146,8 +142,6 @@ const Plurid = {
 export {
     // #region Components
     PluridApplication,
-    PluridSingleApplication,
-    PluridExposedApplication,
 
     PluridLink,
     PluridRouterBrowser,

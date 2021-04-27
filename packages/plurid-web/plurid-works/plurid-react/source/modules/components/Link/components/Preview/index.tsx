@@ -100,11 +100,7 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
         return (<></>);
     }
 
-    if (plane.component.kind !== 'react') {
-        return (<></>);
-    }
-
-    const Component = plane.component.element;
+    const Component = plane.component as any;
 
     return (
         <StyledPluridPlanePreview
