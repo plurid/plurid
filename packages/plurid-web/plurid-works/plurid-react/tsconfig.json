@@ -11,6 +11,9 @@
             "~Application/*": [
                 "./source/Application/*"
             ],
+            "~data/*": [
+                "./source/data/*"
+            ],
             "~components/*": [
                 "./source/modules/components/*"
             ],
