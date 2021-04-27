@@ -52,6 +52,8 @@
     // #region internal
     import {
         PluridReactComponent,
+        PluridReactPlane,
+        PluridReactRoute,
     } from './data/interfaces';
 
     import PluridApplication from './Application';
@@ -174,6 +176,8 @@ export {
     PluridComponentProperty,
 
     PluridReactComponent,
+    PluridReactPlane,
+    PluridReactRoute,
 
     PluridPreserve,
     PluridPreserveTransmission,
