@@ -64,10 +64,13 @@ export interface PluridPlaneObject<C> {
 }
 
 export type PluridPlaneTuple<C> = [
+    /**
+     * See `PluridPlaneObject<C>.route`.
+     */
     route: string,
 
     /**
-     * Component to be rendered in the PluridPlane.
+     * See `PluridPlaneObject<C>.component`.
      */
     component: C,
 ];

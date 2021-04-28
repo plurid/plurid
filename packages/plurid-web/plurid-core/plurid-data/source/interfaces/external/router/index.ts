@@ -374,13 +374,20 @@ export interface PluridRoutePlaneOptions {
 
 export interface PluridRoutePlaneObject<C> extends PluridRoutePlaneOptions {
     value: string;
-    // component: PluridComponent;
     component: C;
 }
 
 export type PluridRoutePlaneTuple<C> = [
+    /**
+     * See `PluridRoutePlaneObject<C>.value`.
+     */
     value: string,
+
+    /**
+     * See `PluridRoutePlaneObject<C>.component`.
+     */
     component: C,
+
     options?: PluridRoutePlaneOptions,
 ];
 
