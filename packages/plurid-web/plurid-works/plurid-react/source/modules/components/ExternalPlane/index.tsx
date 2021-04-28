@@ -1,6 +1,9 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useState,
+        useEffect,
+    } from 'react';
 
     import { AnyAction } from 'redux';
     import { connect } from 'react-redux';
@@ -34,6 +37,26 @@
 
 
 // #region module
+const getPttpUrl = (
+    path: string,
+) => {
+    return '';
+}
+
+const getPttpPath = (
+    path: string,
+) => {
+    return '';
+}
+
+const elementRequest = async (
+    url: string,
+    path: string,
+) => {
+    return '';
+}
+
+
 export interface ExternalPlaneOwnProperties {
 }
 
@@ -72,10 +95,42 @@ const ExternalPlane: PluridReactComponent<ExternalPlaneProperties> = (
     // #endregion properties
 
 
+    // #region state
+    const [
+        Component,
+        setComponent,
+    ] = useState<React.FC<any> | null>();
+    // #endregion state
+
+
+    // #region effects
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const pttpURL = getPttpUrl(route.path.value);
+                const pttpPath = getPttpPath(route.path.value);
+
+                const elementData = await elementRequest(
+                    pttpURL,
+                    pttpPath,
+                );
+
+            } catch (error) {
+                return;
+            }
+        }
+
+        load();
+    }, []);
+    // #endregion effects
+
+
     // #region render
     return (
         <StyledExternalPlane>
-            ExternalPlane
+            {Component && (
+                <Component />
+            )}
         </StyledExternalPlane>
     );
     // #endregion render
