@@ -13,7 +13,7 @@
 
 
 // #region module
-export type PluridReactComponent<T = unknown> = React.FC<ComponentWithPlurid<T>>;
+export type PluridReactComponent<T = any> = React.FC<ComponentWithPlurid<T>>;
 
 export type PluridReactPlane = PluridPlane<PluridReactComponent>;
 export type PluridReactRoute = PluridRoute<PluridReactComponent>;
