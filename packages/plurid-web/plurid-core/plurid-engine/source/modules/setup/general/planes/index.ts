@@ -7,6 +7,8 @@
     import {
         PluridPlane,
         PluridPlaneObject,
+        PluridRoutePlane,
+        PluridRoutePlaneObject,
 
         PluridInternalStatePlane,
         PluridInternalContextPlane,
@@ -31,6 +33,29 @@ export const resolvePluridPlaneData = <C>(
         return {
             route,
             component,
+        };
+    }
+
+    return plane;
+}
+
+
+export const resolvePluridRoutePlaneData = <C>(
+    plane: PluridRoutePlane<C>,
+): PluridRoutePlaneObject<C> => {
+    if (
+        Array.isArray(plane)
+    ) {
+        const [
+            value,
+            component,
+            options,
+        ] = plane;
+
+        return {
+            value,
+            component,
+            ...options,
         };
     }
 
