@@ -22,6 +22,15 @@ const App = () => {
             // ],
         },
         {
+            value: '/tupled',
+            planes: [
+                [
+                    '/tuple-plane',
+                    Plane1,
+                ],
+            ],
+        },
+        {
             value: '/planar',
             exterior: () => (
                 <div>
