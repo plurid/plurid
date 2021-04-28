@@ -28,6 +28,10 @@
 
     // #region external
     import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
+    import {
         cleanTemplate,
     } from '~services/utilities/template';
 
@@ -40,10 +44,6 @@
 
 
     // #region internal
-    import {
-        PluridReactComponent,
-    } from '~data/interfaces';
-
     import {
         StyledPluridPlane,
     } from './styled';

@@ -13,6 +13,10 @@
 
 
     // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
@@ -45,16 +49,26 @@ export type ExternalPlaneProperties = ExternalPlaneOwnProperties
     & ExternalPlaneStateProperties
     & ExternalPlaneDispatchProperties;
 
-const ExternalPlane: React.FC<ExternalPlaneProperties> = (
+const ExternalPlane: PluridReactComponent<ExternalPlaneProperties> = (
     properties,
 ) => {
     // #region properties
-    // const {
-        // // #region state
+    const {
+        // #region required
+            // #region values
+            plurid,
+            // #endregion values
+        // #endregion required
+
+        // #region state
         // stateGeneralTheme,
         // stateInteractionTheme,
-        // // #endregion state
-    // } = properties;
+        // #endregion state
+    } = properties;
+
+    const {
+        route,
+    } = plurid;
     // #endregion properties
 
 
