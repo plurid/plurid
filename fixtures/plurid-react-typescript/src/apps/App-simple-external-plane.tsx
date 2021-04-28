@@ -5,16 +5,22 @@ import {
     PluridIframePlane,
 } from '@plurid/plurid-react';
 
+import Plane1 from '../planes/Plane1';
+
 
 
 const App = () => {
     const pluridPlanes: PluridReactPlane[] = [
+        [
+            '/internal-plane',
+            Plane1,
+        ],
         {
             // Makes a request to `https://plurid.com/pttp` for the `/incepts` path `{ path: '/incepts' }`,
             // gets and elementql request host/id and makes the elementql query.
             // The plurid.com/incepts is a plurid space itself,
             // but when requested through pttp,
-            // it will pull all it's defined planes into the requesting space.
+            // it will pull all its defined planes into the requesting space.
             route: 'pttp://plurid.com/incepts',
             component: PluridExternalPlane,
         },
