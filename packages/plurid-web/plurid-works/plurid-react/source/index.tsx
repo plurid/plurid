@@ -59,6 +59,8 @@
     import PluridApplication from './Application';
 
     import PluridLink from './modules/components/Link';
+    import PluridExternalPlane from './modules/components/ExternalPlane';
+    import PluridIframePlane from './modules/components/IframePlane';
     import PluridRouterBrowser from './modules/components/RouterBrowser';
     import PluridRouterStatic from './modules/components/RouterStatic';
     import PluridRouterLink from './modules/components/RouterLink';
@@ -106,6 +108,8 @@ const Plurid = {
     Application: PluridApplication,
 
     Link: PluridLink,
+    ExternalPlane: PluridExternalPlane,
+    IframePlane: PluridIframePlane,
     RouterBrowser: PluridRouterBrowser,
     RouterStatic: PluridRouterStatic,
     RouterLink: PluridRouterLink,
@@ -144,6 +148,8 @@ export {
     PluridApplication,
 
     PluridLink,
+    PluridExternalPlane,
+    PluridIframePlane,
     PluridRouterBrowser,
     PluridRouterStatic,
     PluridRouterLink,
