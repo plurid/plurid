@@ -34,6 +34,12 @@
 
 
 // #region module
+const {
+    resolvePluridPlaneData,
+} = generalEngine.planes;
+
+
+
 export const computeApplication = (
     indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined,
     planes: PluridPlane<PluridReactComponent>[] | undefined,
@@ -51,7 +57,9 @@ export const computeApplication = (
 
     if (planes) {
         for (const plane of planes) {
-            const linkPath = router.resolveRoute(plane.route);
+            const planeData = resolvePluridPlaneData(plane);
+
+            const linkPath = router.resolveRoute(planeData.route);
             if (!linkPath) {
                 continue;
             }
@@ -82,7 +90,7 @@ export const computeApplication = (
                 cluster: '',
                 plane: '',
                 route,
-                component: plane.component,
+                component: planeData.component,
             };
             const id = route;
 
