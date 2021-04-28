@@ -59,9 +59,15 @@ const matchRouteElements = (
     routePath: string,
     viewPath: string,
 ) => {
+    // routePath = routePath[0] === '/'
+    //     ? routePath.slice(1)
+    //     : routePath;
+    // viewPath = viewPath[0] === '/'
+    //     ? viewPath.slice(1)
+    //     : viewPath;
 
-    // console.log('viewPath', viewPath);
-    // console.log('routePath', routePath);
+    console.log('viewPath', viewPath);
+    console.log('routePath', routePath);
 
     if (routePath === viewPath) {
         return {
@@ -77,8 +83,8 @@ const matchRouteElements = (
 
     // check if viewPath is a parametrization of routePath
     const parameters: string[] = [];
-    const routeSplit = routePath.split('/');
-    // console.log('routeSplit', routeSplit);
+    const routeSplit = routePath.slice(1).split('/');
+    console.log('routeSplit', routeSplit);
 
     routeSplit.forEach(routeElement => {
         if (routeElement[0] === ':') {
@@ -87,16 +93,20 @@ const matchRouteElements = (
             parameters.push('');
         }
     });
-    // console.log('parameters', parameters);
+    console.log('parameters', parameters);
 
     const {
         locationElements,
         comparingPath,
     } = computeComparingPath(viewPath, parameters);
-    // console.log('comparingPath', comparingPath);
-    // console.log('routePath', routePath);
+    console.log('comparingPath', comparingPath);
+    console.log('routePath', routePath);
+    console.log('locationElements', locationElements);
 
-    if (comparingPath !== '/' + routePath) {
+    // if (comparingPath !== '/' + routePath) {
+    //     return;
+    // }
+    if (comparingPath !== routePath) {
         return;
     }
 
@@ -104,7 +114,7 @@ const matchRouteElements = (
         parameters,
         locationElements,
     );
-    // console.log('parametersValues', parametersValues);
+    console.log('parametersValues', parametersValues);
     return {
         value: viewPath,
         parameters: parametersValues,
@@ -120,102 +130,134 @@ const matchRouteToView = (
     const routeSplit = route.split(PLURID_ROUTE_SEPARATOR);
     const viewSplit = view.split(PLURID_ROUTE_SEPARATOR);
 
-    // console.log('route', route);
-    // console.log('view', view);
-    // console.log('routeSplit', routeSplit);
-    // console.log('viewSplit', viewSplit);
+    console.log('route', route);
+    console.log('view', view);
+    console.log('routeSplit', routeSplit);
+    console.log('viewSplit', viewSplit);
+
 
     if (routeSplit.length !== viewSplit.length) {
         return;
     }
 
-    const routePath = routeSplit[2];
-    // if (!routePath) return;
-    const viewPath = viewSplit[2];
-    // if (!viewPath) return;
-    // console.log('viewPath', viewPath);
     const pathMatch = matchRouteElements(
-        routePath,
-        viewPath,
+        route,
+        view,
     );
-    // console.log('pathMatch', pathMatch);
-    if (!pathMatch) {
-        return;
-    }
-
-
-    const routeSpace = routeSplit[3];
-    // if (!routeSpace) return;
-    const viewSpace = viewSplit[3];
-    // if (!viewSpace) return;
-    const spaceMatch = matchRouteElements(
-        routeSpace,
-        viewSpace,
-    );
-    // console.log('spaceMatch', spaceMatch);
-    if (!spaceMatch) {
-        return;
-    }
-
-
-    const routeUniverse = routeSplit[4];
-    // if (!routeUniverse) return;
-    const viewUniverse = viewSplit[4];
-    // if (!viewUniverse) return;
-    const universeMatch = matchRouteElements(
-        routeUniverse,
-        viewUniverse,
-    );
-    // console.log('universeMatch', universeMatch);
-    if (!universeMatch) {
-        return;
-    }
-
-
-    const routeCluster = routeSplit[5];
-    // if (!routeCluster) return;
-    const viewCluster = viewSplit[5];
-    // if (!viewCluster) return;
-    const clusterMatch = matchRouteElements(
-        routeCluster,
-        viewCluster,
-    );
-    // console.log('clusterMatch', clusterMatch);
-    if (!clusterMatch) {
-        return;
-    }
-
-
-    const routePlane = routeSplit[6];
-    // if (!routePlane) return;
-    const viewPlane = viewSplit[6];
-    // if (!viewPlane) return;
-    const planeMatch = matchRouteElements(
-        routePlane,
-        viewPlane,
-    );
-    // console.log('planeMatch', planeMatch);
-    if (!planeMatch) {
-        return;
-    }
+    console.log('pathMatch', pathMatch);
 
     return {
         path: {
             ...pathMatch,
         },
         space: {
-            ...spaceMatch,
+            // ...spaceMatch,
         },
         universe: {
-            ...universeMatch,
+            // ...universeMatch,
         },
         cluster: {
-            ...clusterMatch,
+            // ...clusterMatch,
         },
         plane: {
-            ...planeMatch,
+            // ...planeMatch,
         },
     };
+
+
+
+
+    // if (routeSplit.length !== viewSplit.length) {
+    //     return;
+    // }
+
+    // const routePath = routeSplit[2];
+    // // if (!routePath) return;
+    // const viewPath = viewSplit[2];
+    // // if (!viewPath) return;
+    // console.log('viewPath', viewPath);
+    // const pathMatch = matchRouteElements(
+    //     routePath,
+    //     viewPath,
+    // );
+    // console.log('pathMatch', pathMatch);
+    // if (!pathMatch) {
+    //     return;
+    // }
+
+
+    // const routeSpace = routeSplit[3];
+    // // if (!routeSpace) return;
+    // const viewSpace = viewSplit[3];
+    // // if (!viewSpace) return;
+    // const spaceMatch = matchRouteElements(
+    //     routeSpace,
+    //     viewSpace,
+    // );
+    // // console.log('spaceMatch', spaceMatch);
+    // if (!spaceMatch) {
+    //     return;
+    // }
+
+
+    // const routeUniverse = routeSplit[4];
+    // // if (!routeUniverse) return;
+    // const viewUniverse = viewSplit[4];
+    // // if (!viewUniverse) return;
+    // const universeMatch = matchRouteElements(
+    //     routeUniverse,
+    //     viewUniverse,
+    // );
+    // // console.log('universeMatch', universeMatch);
+    // if (!universeMatch) {
+    //     return;
+    // }
+
+
+    // const routeCluster = routeSplit[5];
+    // // if (!routeCluster) return;
+    // const viewCluster = viewSplit[5];
+    // // if (!viewCluster) return;
+    // const clusterMatch = matchRouteElements(
+    //     routeCluster,
+    //     viewCluster,
+    // );
+    // // console.log('clusterMatch', clusterMatch);
+    // if (!clusterMatch) {
+    //     return;
+    // }
+
+
+    // const routePlane = routeSplit[6];
+    // // if (!routePlane) return;
+    // const viewPlane = viewSplit[6];
+    // // if (!viewPlane) return;
+    // const planeMatch = matchRouteElements(
+    //     routePlane,
+    //     viewPlane,
+    // );
+    // // console.log('planeMatch', planeMatch);
+    // if (!planeMatch) {
+    //     return;
+    // }
+
+    // return {
+    //     path: {
+    //         ...pathMatch,
+    //     },
+    //     space: {
+    //         ...spaceMatch,
+    //     },
+    //     universe: {
+    //         ...universeMatch,
+    //     },
+    //     cluster: {
+    //         ...clusterMatch,
+    //     },
+    //     plane: {
+    //         ...planeMatch,
+    //     },
+    // };
 }
 
 
@@ -257,9 +299,9 @@ export const resolveViewItem = <C>(
         console.log('resolvedView.route', resolvedView.route);
         console.log('routeMatch', routeMatch);
 
-        if (resolvedView.route !== route) {
-            continue;
-        }
+        // if (resolvedView.route !== route) {
+        //     continue;
+        // }
         // if (!routeMatch) {
         //     continue;
         // }
