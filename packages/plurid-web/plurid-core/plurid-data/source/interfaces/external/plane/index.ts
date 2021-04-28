@@ -9,13 +9,7 @@
 
 
 // #region module
-export interface PluridPlane<C> {
-    /**
-     * Component to be rendered in the PluridPlane.
-     */
-    component: C;
-    // component: PluridComponent;
-
+export interface PluridPlaneObject<C> {
     /**
      * Route to the plane, e.g. `/plane-1`. By convention, it starts with an '/'.
      *
@@ -45,6 +39,11 @@ export interface PluridPlane<C> {
      */
     route: string;
 
+    /**
+     * Component to be rendered in the PluridPlane.
+     */
+    component: C;
+
 
     // /**
     //  * Optional, application or document-wide unique identifier (if multiple documents).
@@ -63,6 +62,19 @@ export interface PluridPlane<C> {
     //  */
     // cluster?: string;
 }
+
+export type PluridPlaneTuple<C> = [
+    route: string,
+
+    /**
+     * Component to be rendered in the PluridPlane.
+     */
+    component: C,
+];
+
+export type PluridPlane<C> =
+    | PluridPlaneObject<C>
+    | PluridPlaneTuple<C>;
 
 
 export type PluridPlaneContext<T> = React.Context<T>;

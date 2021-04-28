@@ -315,11 +315,7 @@ export interface PluridRouteCluster<C> {
 }
 
 
-export interface PluridRoutePlane<C> {
-    // component: PluridComponent;
-    component: C;
-    value: string;
-
+export interface PluridRoutePlaneOptions {
     /**
      * Map a direct link for a specific plane.
      *
@@ -375,6 +371,23 @@ export interface PluridRoutePlane<C> {
      */
     injectExterior?: boolean;
 }
+
+export interface PluridRoutePlaneObject<C> extends PluridRoutePlaneOptions {
+    value: string;
+    // component: PluridComponent;
+    component: C;
+}
+
+export type PluridRoutePlaneTuple<C> = [
+    value: string,
+    component: C,
+    options?: PluridRoutePlaneOptions,
+];
+
+export type PluridRoutePlane<C> =
+    | PluridRoutePlaneObject<C>
+    | PluridRoutePlaneTuple<C>;
+
 
 
 export interface PluridRouteMultispace<C> {
