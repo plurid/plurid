@@ -6,6 +6,7 @@
 
     import {
         PluridPlane,
+        PluridPlaneObject,
 
         PluridInternalStatePlane,
         PluridInternalContextPlane,
@@ -16,13 +17,36 @@
 
 
 // #region module
+export const resolvePluridPlaneData = <C>(
+    plane: PluridPlane<C>,
+): PluridPlaneObject<C> => {
+    if (
+        Array.isArray(plane)
+    ) {
+        const [
+            route,
+            component,
+        ] = plane;
+
+        return {
+            route,
+            component,
+        };
+    }
+
+    return plane;
+}
+
+
 export const createInternalStatePlane = <C>(
     plane: PluridPlane<C>,
 ): PluridInternalStatePlane => {
+    const planeData = resolvePluridPlaneData(plane);
+
     const statePlane: PluridInternalStatePlane = {
         // id: plane.id || uuid.generate(),
         id: uuid.generate(),
-        path: plane.route,
+        path: planeData.route,
         // root: page.root || false,
         // ordinal: page.ordinal || 0,
     };
@@ -34,11 +58,13 @@ export const createInternalStatePlane = <C>(
 export const createInternalContextPlane = <C>(
     plane: PluridPlane<C>,
 ): PluridInternalContextPlane<C> => {
+    const planeData = resolvePluridPlaneData(plane);
+
     const {
         // id,
         route,
         component,
-    } = plane;
+    } = planeData;
 
     const contextPlane: PluridInternalContextPlane<C> = {
         id: uuid.generate(),

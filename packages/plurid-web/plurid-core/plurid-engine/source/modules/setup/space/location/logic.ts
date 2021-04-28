@@ -22,6 +22,10 @@
 
     // #region external
     import {
+        resolvePluridPlaneData,
+    } from '../../general/planes';
+
+    import {
         getTreePlaneByPlaneID,
     } from '../utilities';
     // #endregion external
@@ -155,10 +159,12 @@ export const computeRootLocationX = <C>(
     root: PluridPlane<C>,
     index: number,
 ) => {
+    const rootData = resolvePluridPlaneData(root);
+
     let translateX = 0;
     if (configuration && configuration.space) {
         if (Array.isArray(configuration.space.layout)) {
-            const layoutIndex = configuration.space.layout.indexOf(root.route);
+            const layoutIndex = configuration.space.layout.indexOf(rootData.route);
             translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
         }
     } else {

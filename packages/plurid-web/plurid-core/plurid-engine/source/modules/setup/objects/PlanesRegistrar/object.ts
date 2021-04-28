@@ -10,6 +10,10 @@
 
     // #region external
     import * as router from '../../router';
+
+    import {
+        resolvePluridPlaneData,
+    } from '../../general/planes';
     // #endregion external
 // #endregion imports
 
@@ -43,16 +47,11 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
             // given the FQR
             // store the component in an index by route
 
-            let route: string | undefined;
-            let component: C | undefined;
-
-            if (Array.isArray(plane)) {
-                route = plane[0];
-                component = plane[1];
-            } else {
-                route = plane.route;
-                component = plane.component;
-            }
+            const planeData = resolvePluridPlaneData(plane);
+            const {
+                route,
+                component,
+            } = planeData;
 
             // obtain from path the absolute route
             // /plane -> Fully Qualified Route
