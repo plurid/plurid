@@ -32,6 +32,7 @@ const App = () => {
     ];
 
     const pluridView: string[] = [
+        // '/internal-plane',
         'pttp://plurid.com/incepts',
     ];
 
