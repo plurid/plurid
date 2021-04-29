@@ -299,9 +299,9 @@ export const resolveViewItem = <C>(
         console.log('resolvedView.route', resolvedView.route);
         console.log('routeMatch', routeMatch);
 
-        // if (resolvedView.route !== route) {
-        //     continue;
-        // }
+        if (resolvedView.route !== routeMatch.path.value) {
+            continue;
+        }
         // if (!routeMatch) {
         //     continue;
         // }
