@@ -127,18 +127,18 @@ const matchRouteToView = (
     route: string,
     view: string,
 ): undefined | any => {
-    const routeSplit = route.split(PLURID_ROUTE_SEPARATOR);
-    const viewSplit = view.split(PLURID_ROUTE_SEPARATOR);
+    // const routeSplit = route.split(PLURID_ROUTE_SEPARATOR);
+    // const viewSplit = view.split(PLURID_ROUTE_SEPARATOR);
 
     console.log('route', route);
     console.log('view', view);
-    console.log('routeSplit', routeSplit);
-    console.log('viewSplit', viewSplit);
+    // console.log('routeSplit', routeSplit);
+    // console.log('viewSplit', viewSplit);
 
 
-    if (routeSplit.length !== viewSplit.length) {
-        return;
-    }
+    // if (routeSplit.length !== viewSplit.length) {
+    //     return;
+    // }
 
     const pathMatch = matchRouteElements(
         route,
