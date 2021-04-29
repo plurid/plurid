@@ -6,6 +6,7 @@
         ComponentWithPlurid,
         PluridPlane,
         PluridRoute,
+        PluridRoutePlane,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -17,4 +18,5 @@ export type PluridReactComponent<T = any> = React.FC<ComponentWithPlurid<T>>;
 
 export type PluridReactPlane = PluridPlane<PluridReactComponent>;
 export type PluridReactRoute = PluridRoute<PluridReactComponent>;
+export type PluridReactRoutePlane = PluridRoutePlane<PluridReactComponent>;
 // #endregion module
