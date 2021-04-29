@@ -24,15 +24,15 @@ const indexRoute: PluridReactRoute = {
     value: '/',
     exterior: Head,
     planes: [
-        {
-            value: '/plane',
-            component: IndexPagePlane,
-        },
+        [
+            '/plane',
+            IndexPagePlane,
+        ],
     ],
     view: [
         '/plane',
     ],
-}
+};
 
 
 const staticRoute: PluridReactRoute = {
