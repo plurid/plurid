@@ -3,8 +3,8 @@
     import React from 'react';
 
     import {
-        PluridRoutePlane,
-    } from '@plurid/plurid-data';
+        PluridReactRoutePlane,
+    } from '@plurid/plurid-react';
     // #endregion libraries
 
 
@@ -19,14 +19,15 @@
 /**
  * General `plurid route plane`s which can be referenced by the `view` of any `route`.
  */
-const pluridRoutePlanes: PluridRoutePlane[] = [
+const pluridRoutePlanes: PluridReactRoutePlane[] = [
     {
         value: '/general-plane',
-        component: {
-            kind: 'react',
-            element: GeneralPlane,
-        },
+        component: GeneralPlane,
     },
+    [
+        '/tuple',
+        () => (<div>tuple</div>),
+    ],
 ];
 // #endregion module
 
