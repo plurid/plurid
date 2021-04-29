@@ -12,12 +12,15 @@
         Indexed,
         PluridRoute,
         PluridRoutePlane,
-        PluridComponent,
     } from '@plurid/plurid-data';
 
     import {
         router,
     } from '@plurid/plurid-engine';
+
+    import {
+        PluridReactComponent,
+    } from '@plurid/plurid-react';
     // #endregion libraries
 
 
@@ -93,11 +96,11 @@ export interface PluridContentGeneratorData {
     servicesData: PluridServerServicesData | undefined;
     stylesheet: ServerStyleSheet;
     helmet: Helmet;
-    exterior: PluridComponent | undefined;
-    shell: PluridComponent | undefined;
-    matchedRoute: router.MatcherResponse;
-    routes: PluridRoute[];
-    planes: PluridRoutePlane[];
+    exterior: PluridReactComponent | undefined;
+    shell: PluridReactComponent | undefined;
+    matchedRoute: router.MatcherResponse<PluridReactComponent>;
+    routes: PluridRoute<PluridReactComponent>[];
+    planes: PluridRoutePlane<PluridReactComponent>[];
     pluridMetastate: any;
     gateway: boolean;
     gatewayEndpoint: string;

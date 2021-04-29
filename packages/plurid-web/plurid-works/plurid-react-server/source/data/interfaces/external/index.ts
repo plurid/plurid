@@ -10,8 +10,11 @@
         PluridRoute,
         PluridRoutePlane,
         PluridPreserve,
-        PluridComponent,
     } from '@plurid/plurid-data';
+
+    import {
+        PluridReactComponent,
+    } from '@plurid/plurid-react';
     // #endregion libraries
 // #endregion imports
 
@@ -116,15 +119,15 @@ export interface PluridServerServicesData {
 
 
 export interface PluridServerConfiguration {
-    routes: PluridRoute[];
-    planes?: PluridRoutePlane[];
+    routes: PluridRoute<PluridReactComponent>[];
+    planes?: PluridRoutePlane<PluridReactComponent>[];
     preserves: PluridPreserve[];
     helmet: Helmet;
     styles?: string[];
     middleware?: PluridServerMiddleware[];
 
-    exterior?: PluridComponent;
-    shell?: PluridComponent;
+    exterior?: PluridReactComponent;
+    shell?: PluridReactComponent;
 
     /**
      * Services to be handled by the server.
@@ -137,7 +140,15 @@ export interface PluridServerConfiguration {
     options?: PluridServerPartialOptions;
 
     template?: PluridServerTemplateConfiguration;
+
+    usePTTP?: boolean;
+    pttpHandler?: PTTPHandler;
 }
+
+
+export type PTTPHandler = (
+    path: string,
+) => Promise<boolean>;
 
 
 export interface PluridServerTemplateConfiguration {

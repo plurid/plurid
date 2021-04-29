@@ -33,6 +33,9 @@ export const DEFAULT__PRELOADED_PLURID_METASTATE__ = '__PRELOADED_PLURID_METASTA
 
 export const NOT_FOUND_ROUTE = '/not-found';
 
+export const CATCH_ALL_PATH = '*';
+export const PTTP_PATH = '/pttp';
+
 
 
 export const environment = {

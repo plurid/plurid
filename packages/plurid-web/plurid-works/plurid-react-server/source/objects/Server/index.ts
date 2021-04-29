@@ -36,7 +36,6 @@
         PluridPreserveOnError,
         PluridPreserveResponse,
         PluridPreserveTransmission,
-        PluridComponent,
     } from '@plurid/plurid-data';
 
     import {
@@ -47,6 +46,8 @@
         serverComputeMetastate,
 
         getDirectPlaneMatch,
+
+        PluridReactComponent,
     } from '@plurid/plurid-react';
     // #endregion libraries
 
@@ -63,7 +64,9 @@
         PluridServerPartialOptions,
         PluridServerConfiguration,
         PluridServerTemplateConfiguration,
-    } from '../../data/interfaces';
+
+        PTTPHandler,
+    } from '~data/interfaces';
 
     import {
         environment,
@@ -73,12 +76,15 @@
         NOT_FOUND_ROUTE,
         DEFAULT_SERVER_PORT,
         DEFAULT_SERVER_OPTIONS,
-    } from '../../data/constants';
+
+        CATCH_ALL_PATH,
+        PTTP_PATH,
+    } from '~data/constants';
 
     import {
         NOT_FOUND_TEMPLATE,
         SERVER_ERROR_TEMPLATE,
-    } from '../../data/templates';
+    } from '~data/templates';
 
     import PluridRenderer from '../Renderer';
     import PluridContentGenerator from '../ContentGenerator';
@@ -97,18 +103,20 @@ const {
 
 
 class PluridServer {
-    private routes: PluridRoute[];
-    private planes: PluridRoutePlane[];
+    private routes: PluridRoute<PluridReactComponent>[];
+    private planes: PluridRoutePlane<PluridReactComponent>[];
     private preserves: PluridPreserve[];
     private helmet: Helmet;
     private styles: string[];
     private middleware: PluridServerMiddleware[];
-    private exterior: PluridComponent | undefined;
-    private shell: PluridComponent | undefined;
+    private exterior: PluridReactComponent | undefined;
+    private shell: PluridReactComponent | undefined;
     private services: PluridServerService[];
     private servicesData: PluridServerServicesData | undefined;
     private options: PluridServerOptions;
     private template: PluridServerTemplateConfiguration | undefined;
+    private usePTTP: boolean;
+    private pttpHandler: PTTPHandler | undefined;
 
     private serverApplication: Express;
     private server: Server | undefined;
@@ -116,7 +124,7 @@ class PluridServer {
 
     private urlRouter: router.URLRouter;
     private stills: PluridStillsManager;
-    private router: router.default;
+    private router: router.default<PluridReactComponent>;
     private pluridsResponder: PluridsResponder;
 
 
@@ -136,6 +144,8 @@ class PluridServer {
             servicesData,
             options,
             template,
+            usePTTP,
+            pttpHandler,
         } = configuration;
 
         this.routes = routes;
@@ -150,6 +160,8 @@ class PluridServer {
         this.servicesData = servicesData;
         this.options = this.handleOptions(options);
         this.template = template;
+        this.usePTTP = usePTTP ?? false;
+        this.pttpHandler = pttpHandler;
 
         this.serverApplication = express();
         this.port = DEFAULT_SERVER_PORT;
@@ -275,9 +287,18 @@ class PluridServer {
 
     private handleEndpoints() {
         this.serverApplication.get(
-            '*',
+            CATCH_ALL_PATH,
             async (request, response, next) => {
                 this.handleGetRequest(
+                    request, response, next,
+                );
+            },
+        );
+
+        this.serverApplication.post(
+            PTTP_PATH,
+            async (request, response, next) => {
+                this.handlePTTPRequest(
                     request, response, next,
                 );
             },
@@ -636,6 +657,92 @@ class PluridServer {
         }
     }
 
+    private async handlePTTPRequest(
+        request: express.Request,
+        response: express.Response,
+        next: express.NextFunction,
+    ) {
+        const requestID = (request as ServerRequest).requestID || uuid.generate();
+
+        try {
+            if (this.debugAllows('info')) {
+                console.info(
+                    `[${time.stamp()} :: ${requestID}] (000 Start) Handling POST ${request.path}`,
+                );
+            }
+
+
+            if (!this.usePTTP) {
+                if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (405 Method Not Allowed) Could not handle POST ${request.path}${requestTime}`,
+                    );
+                }
+
+                response
+                    .status(405)
+                    .end();
+                return;
+            }
+
+
+            const data = request.body;
+
+            if (!data.path) {
+                if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
+                    );
+                }
+
+                response
+                    .status(400)
+                    .end();
+                return;
+            }
+
+
+            if (this.pttpHandler) {
+                const pttpHandled = await this.pttpHandler(
+                    data.path,
+                );
+
+                if (pttpHandled) {
+                    return;
+                }
+            }
+
+            // check amongst all the routes and planes for a match
+            for (const route of this.routes) {
+                if (route.value === data.path) {
+                    // serve the matched route
+
+                }
+            }
+
+
+        } catch (error) {
+            if (this.debugAllows('error')) {
+                const requestTime = this.computeRequestTime(request);
+
+                console.error(
+                    `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle POST ${request.path}${requestTime}`,
+                    error,
+                );
+            }
+
+            response
+                .status(500)
+                .send(SERVER_ERROR_TEMPLATE);
+
+            return;
+        }
+    }
+
     private ignoreGetRequest(
         path: string,
     ) {
@@ -825,7 +932,7 @@ class PluridServer {
 
 
     private async renderApplication(
-        route: router.MatcherResponse,
+        route: router.MatcherResponse<PluridReactComponent>,
         preserveResult: any,
         matchedPlane?: any,
     ) {
@@ -911,7 +1018,7 @@ class PluridServer {
     }
 
     private async getContentAndStyles(
-        matchedRoute: router.MatcherResponse,
+        matchedRoute: router.MatcherResponse<PluridReactComponent>,
         pluridMetastate: any,
         preserveResult: any,
         matchedPlane?: any,
