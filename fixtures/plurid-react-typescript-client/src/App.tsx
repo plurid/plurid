@@ -4,7 +4,7 @@ import {
     PluridApplication,
 
     PluridPartialConfiguration,
-    PluridPlane,
+    PluridReactPlane,
 
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
@@ -34,13 +34,10 @@ const App = () => {
         },
     };
 
-    const pluridPlanes: PluridPlane[] = [
+    const pluridPlanes: PluridReactPlane[] = [
         {
             route: '/plane',
-            component: {
-                kind: 'react',
-                element: Plane,
-            },
+            component: Plane,
         },
     ];
 
