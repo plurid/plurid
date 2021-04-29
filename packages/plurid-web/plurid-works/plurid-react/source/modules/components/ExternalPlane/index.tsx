@@ -107,13 +107,15 @@ const ExternalPlane: PluridReactComponent<ExternalPlaneProperties> = (
     useEffect(() => {
         const load = async () => {
             try {
-                const pttpURL = getPttpUrl(route.path.value);
-                const pttpPath = getPttpPath(route.path.value);
+                console.log('ExternalPlane > plurid', plurid);
 
-                const elementData = await elementRequest(
-                    pttpURL,
-                    pttpPath,
-                );
+                // const pttpURL = getPttpUrl(route.path.value);
+                // const pttpPath = getPttpPath(route.path.value);
+
+                // const elementData = await elementRequest(
+                //     pttpURL,
+                //     pttpPath,
+                // );
 
             } catch (error) {
                 return;

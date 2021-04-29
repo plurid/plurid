@@ -15,7 +15,6 @@
 
     import {
         PluridApplication as PluridApplicationProperties,
-        ComponentWithPlurid,
         PluridState,
     } from '@plurid/plurid-data';
 
@@ -63,7 +62,6 @@ class PluridApplication extends Component<
         properties: PluridApplicationProperties<PluridReactComponent>,
         context: React.ContextType<typeof PluridProviderContext>,
     ) {
-        console.log('properties PluridApplication', properties.view);
         super(properties);
 
         this.storeID = properties.id || 'default';
@@ -122,7 +120,6 @@ class PluridApplication extends Component<
             planes,
             planesRegistrar,
         );
-        // console.log('computeStore planesRegistrar', planesRegistrar);
 
         const currentState = this.store
             ? this.store.getState()
