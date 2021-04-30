@@ -29,10 +29,17 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
     // Store the planes in a better data structure.
     private planes: Map<string, RegisteredPluridPlane<C>> = new Map();
 
+    private isoMatcher: router.IsoMatcher<C>;
+
 
     constructor(
         planes?: PluridPlane<C>[],
     ) {
+        const isoMatcher = new router.IsoMatcher({
+            planes,
+        });
+        this.isoMatcher = isoMatcher;
+
         if (planes) {
             this.register(planes);
         }
@@ -42,56 +49,60 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
     public register(
         planes: PluridPlane<C>[],
     ) {
-        for (const plane of planes) {
-            // loop over PluridPlanes and generate the Fully Qualified Route
-            // given the FQR
-            // store the component in an index by route
+        this.isoMatcher.index({
+            planes,
+        });
 
-            const planeData = resolvePluridPlaneData(plane);
-            const {
-                route,
-                component,
-            } = planeData;
+        // for (const plane of planes) {
+        //     // loop over PluridPlanes and generate the Fully Qualified Route
+        //     // given the FQR
+        //     // store the component in an index by route
 
-            // obtain from path the absolute route
-            // /plane -> Fully Qualified Route
-            const resolvedRoute = router.resolveRoute(
-                route,
-                'http',
-                'localhost',
-            );
-            // console.log('resolvedRoute', resolvedRoute);
+        //     const planeData = resolvePluridPlaneData(plane);
+        //     const {
+        //         route,
+        //         component,
+        //     } = planeData;
 
-            const {
-                protocol,
-                host,
-                path: routePath,
-                space,
-                universe,
-                cluster,
-                plane: planePath,
-                route: absoluteRoute,
-            } = resolvedRoute;
+        //     // obtain from path the absolute route
+        //     // /plane -> Fully Qualified Route
+        //     const resolvedRoute = router.resolveRoute(
+        //         route,
+        //         'http',
+        //         'localhost',
+        //     );
+        //     // console.log('resolvedRoute', resolvedRoute);
 
-            const registeredPluridPlane: RegisteredPluridPlane<C> = {
-                component,
-                route: {
-                    protocol: {},
-                    host: {},
-                    path: {},
-                    space: {},
-                    universe: {},
-                    cluster: {},
-                    plane: {},
-                    absolute: absoluteRoute,
-                },
-            };
+        //     const {
+        //         protocol,
+        //         host,
+        //         path: routePath,
+        //         space,
+        //         universe,
+        //         cluster,
+        //         plane: planePath,
+        //         route: absoluteRoute,
+        //     } = resolvedRoute;
 
-            this.planes.set(
-                absoluteRoute,
-                registeredPluridPlane,
-            );
-        }
+        //     const registeredPluridPlane: RegisteredPluridPlane<C> = {
+        //         component,
+        //         route: {
+        //             protocol: {},
+        //             host: {},
+        //             path: {},
+        //             space: {},
+        //             universe: {},
+        //             cluster: {},
+        //             plane: {},
+        //             absolute: absoluteRoute,
+        //         },
+        //     };
+
+        //     this.planes.set(
+        //         absoluteRoute,
+        //         registeredPluridPlane,
+        //     );
+        // }
     }
 
     public identify() {
@@ -110,9 +121,22 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
     public get(
         route: string,
     ) {
-        // TODO
-        // Account for parametric, constrained routes.
-        return this.planes.get(route);
+        const match = this.isoMatcher.match(route);
+
+        if (match) {
+            const registeredPlane: RegisteredPluridPlane<C> = {
+                route: (match.data as any).route,
+                component: match.data.component,
+            };
+
+            return registeredPlane;
+        }
+
+        return;
+
+        // // TODO
+        // // Account for parametric, constrained routes.
+        // return this.planes.get(route);
     }
 
     public getAll() {
