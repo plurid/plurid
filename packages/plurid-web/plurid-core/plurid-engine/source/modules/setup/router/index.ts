@@ -1,5 +1,6 @@
 // #region imports
     // #region internal
+    import IsoMatcher from './IsoMatcher';
     import Router from './Router';
     import URLRouter from './URLRouter';
     import RouteMatcher from './Matcher';
@@ -23,6 +24,8 @@
 export default Router;
 
 export {
+    IsoMatcher,
+
     URLRouter,
     RouteMatcher,
     RouteParser,
