@@ -181,14 +181,42 @@ class IsoMatcher<C> {
     private matchPlane(
         path: string,
     ) {
-        const address = computePlaneAddress(
+        const planeAddress = computePlaneAddress(
             path,
             undefined,
             this.origin,
         );
 
-        const plane = this.planesIndex.get(address);
-        return plane; // as IsoMatcherPlaneResult<C>;
+        const plane = this.planesIndex.get(planeAddress);
+
+        if (plane) {
+            return plane; // as IsoMatcherPlaneResult<C>;
+        }
+
+        const planePaths = this.planesIndex.keys();
+
+        for (const planePath of planePaths) {
+            const normalizedPlanePath = planePath.replace('pttp://', '');
+            const normalizedPlaneAddress = planeAddress.replace('pttp://', '');
+
+            const planePathSplit = normalizedPlanePath.split('/');
+            const planeAddressSplit = normalizedPlaneAddress.split('/');
+
+            // Not the same origin.
+            if (planePathSplit[0] !== planeAddressSplit[0]) {
+                continue;
+            }
+
+            // Length mismatch.
+            if (planePathSplit.length !== planeAddressSplit.length) {
+                continue;
+            }
+
+            // Check if the plane `address` is a parametrization of `planePath`.
+
+        }
+
+        return;
     }
 
     private matchRoute(
@@ -200,6 +228,13 @@ class IsoMatcher<C> {
             return {
                 route,
             }; // as IsoMatcherRouteResult<C>;
+        }
+
+        const routePaths = this.routesIndex.keys();
+
+        for (const routePath of routePaths) {
+            // Check if the `path` is a parametrization of `routePath`.
+
         }
 
         return;

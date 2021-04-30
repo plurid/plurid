@@ -66,11 +66,15 @@ const planes: PluridPlane<string>[] = [
         '/p/2/3',
         'static-nested',
     ],
+    [
+        '/parametric/:id',
+        'parametric',
+    ],
 ];
 
 
 describe('IsoMatcher', () => {
-    it('matches index paths', () => {
+    xit('matches index paths', () => {
         const isoMatcher = new IsoMatcher<string>({
             routes,
             routePlanes,
@@ -92,6 +96,31 @@ describe('IsoMatcher', () => {
             '/p',
         );
         expect((planeResult?.data as any).route).toEqual('/p');
+    });
+
+
+    it('matches parametric paths', () => {
+        const isoMatcher = new IsoMatcher<string>({
+            routes,
+            routePlanes,
+            planes,
+        });
+
+        // const routeResult = isoMatcher.match(
+        //     '/',
+        //     'route',
+        // );
+        // expect(routeResult?.route.value).toEqual('/');
+
+        // const routePlaneResult = isoMatcher.match(
+        //     '/',
+        // );
+        // expect((routePlaneResult?.data as any).value).toEqual('/');
+
+        const planeResult = isoMatcher.match(
+            '/parametric/one',
+        );
+        expect((planeResult?.data as any).route).toEqual('/parametric/:id');
     });
 });
 // #endregion module
