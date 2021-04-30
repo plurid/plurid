@@ -1043,15 +1043,24 @@ export const generateIndexedPlanes = (
 
 
 export const collectApplicationsFromPath = (
-    matchedRoute: router.MatcherResponse<PluridReactComponent>,
+    // matchedRoute: router.MatcherResponse<PluridReactComponent>,
+    isoMatch: any,
     protocol: string,
     host: string,
 ) => {
-    const {
-        path,
-        parameters,
-        query,
-    } = matchedRoute;
+    const parameters = {};
+    const query = {};
+    const path: any = {
+        planes: isoMatch.route.planes || [],
+        spaces: isoMatch.route.spaces || [],
+        view: isoMatch.route.view || [],
+    };
+
+    // const {
+    //     path,
+    //     parameters,
+    //     query,
+    // } = matchedRoute;
 
     const {
         planes,

@@ -98,7 +98,7 @@ export interface PluridContentGeneratorData {
     helmet: Helmet;
     exterior: PluridReactComponent | undefined;
     shell: PluridReactComponent | undefined;
-    matchedRoute: router.MatcherResponse<PluridReactComponent>;
+    // matchedRoute: router.MatcherResponse<PluridReactComponent>;
     routes: PluridRoute<PluridReactComponent>[];
     planes: PluridRoutePlane<PluridReactComponent>[];
     pluridMetastate: any;
@@ -107,6 +107,8 @@ export interface PluridContentGeneratorData {
     gatewayQuery: string;
     preserveResult: any;
     matchedPlane: any;
+
+    pathname: string;
 }
 
 

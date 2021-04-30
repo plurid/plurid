@@ -33,7 +33,8 @@
 
 // #region module
 export const serverComputeMetastate = (
-    matchedRoute: router.MatcherResponse<PluridReactComponent>,
+    // matchedRoute: router.MatcherResponse<PluridReactComponent>,
+    isoMatch: any,
     paths: PluridRoute<PluridReactComponent>[],
 ): PluridMetastate => {
     const protocol = 'http';
@@ -46,7 +47,8 @@ export const serverComputeMetastate = (
     );
 
     const pluridApplications = collectApplicationsFromPath(
-        matchedRoute,
+        // matchedRoute,
+        isoMatch,
         protocol,
         host,
     );
@@ -66,7 +68,8 @@ export const serverComputeMetastate = (
         } = computeApplication(
             indexedPlanes,
             planes,
-            matchedRoute.path.defaultConfiguration,
+            // matchedRoute.path.defaultConfiguration,
+            undefined,
             view,
         );
 
@@ -120,7 +123,8 @@ export const serverComputeMetastate = (
             },
         };
 
-        const id = matchedRoute.path.value;
+        // const id = matchedRoute.path.value;
+        const id = isoMatch.route.value;
         // console.log('matchedRoute id', id);
 
         states[id] = state;

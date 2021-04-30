@@ -45,7 +45,7 @@ class PluridContentGenerator {
     public async render() {
         const {
             pluridMetastate,
-            matchedRoute,
+            // matchedRoute,
             routes,
             planes,
             exterior,
@@ -59,6 +59,8 @@ class PluridContentGenerator {
             stylesheet,
             preserveResult,
             matchedPlane,
+
+            pathname,
         } = this.data;
 
         // console.log('ContentGenerator pluridMetastate', pluridMetastate);
@@ -68,7 +70,8 @@ class PluridContentGenerator {
                 metastate={pluridMetastate}
             >
                 <PluridRouterStatic
-                    path={matchedRoute.pathname}
+                    // path={matchedRoute.pathname}
+                    path={pathname}
                     directPlane={matchedPlane?.value}
                     routes={routes}
                     planes={planes}

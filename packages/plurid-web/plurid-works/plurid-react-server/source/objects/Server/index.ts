@@ -99,6 +99,7 @@
 const {
     default: PluridRouter,
     URLRouter: PluridURLRouter,
+    IsoMatcher: PluridIsoMatcher,
 } = router;
 
 
@@ -125,6 +126,7 @@ class PluridServer {
     private urlRouter: router.URLRouter;
     private stills: PluridStillsManager;
     private router: router.default<PluridReactComponent>;
+    private isoMatcher: router.IsoMatcher<PluridReactComponent>;
     private pluridsResponder: PluridsResponder;
 
 
@@ -183,6 +185,11 @@ class PluridServer {
         this.stills = new PluridStillsManager(this.options);
         this.router = new PluridRouter(this.routes);
         this.pluridsResponder = new PluridsResponder();
+
+        this.isoMatcher = new PluridIsoMatcher({
+            routes: this.routes,
+            routePlanes: this.planes,
+        });
 
 
         this.configureServer();
@@ -482,143 +489,155 @@ class PluridServer {
             // }
 
 
-            const route = this.router.match(matchingPath);
-            console.log('Route matched', route);
+            const isoMatch = this.isoMatcher.match(
+                matchingPath,
+                'route',
+            );
+            console.log('Route isoMatch', isoMatch);
+
+            // const route = this.router.match(matchingPath);
+            // console.log('Route matched', route);
 
             if (
-                !route
+                !isoMatch
             ) {
-                // Handle direct plane match.
-                const {
-                    matchRoute,
-                    matchPlane,
-                    matchPath,
-                }  = getDirectPlaneMatch(
-                    matchingPath,
-                    this.routes,
-                    this.planes,
-                );
-                console.log('getDirectPlaneMatch',
-                    matchRoute,
-                    matchPlane,
-                    matchPath,
-                );
+                // // Handle direct plane match.
+                // const {
+                //     matchRoute,
+                //     matchPlane,
+                //     matchPath,
+                // }  = getDirectPlaneMatch(
+                //     matchingPath,
+                //     this.routes,
+                //     this.planes,
+                // );
+                // console.log('getDirectPlaneMatch',
+                //     matchRoute,
+                //     matchPlane,
+                //     matchPath,
+                // );
 
 
-                if (
-                    matchRoute
-                    && matchPlane
-                    && matchPath
-                ) {
-                    // Render direct plane.
-                    const parsedRoute = new router.RouteParser(
-                        matchingPath,
-                        matchRoute,
-                    );
-                    const matchedPlaneRoute = parsedRoute.extract();
+                // if (
+                //     matchRoute
+                //     && matchPlane
+                //     && matchPath
+                // ) {
+                //     // Render direct plane.
+                //     const parsedRoute = new router.RouteParser(
+                //         matchingPath,
+                //         matchRoute,
+                //     );
+                //     const matchedPlaneRoute = parsedRoute.extract();
 
-                    const renderer = await this.renderApplication(
-                        matchedPlaneRoute,
-                        preserveResult,
-                        matchPlane,
-                    );
+                //     const renderer = await this.renderApplication(
+                //         // matchedPlaneRoute,
+                //         isoMatch,
+                //         preserveResult,
+                //         matchPlane,
+                //     );
 
-                    if (this.debugAllows('info')) {
-                        const requestTime = this.computeRequestTime(request);
+                //     if (this.debugAllows('info')) {
+                //         const requestTime = this.computeRequestTime(request);
 
-                        console.info(
-                            `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${matchingPath}${requestTime}`,
-                        );
-                    }
+                //         console.info(
+                //             `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${matchingPath}${requestTime}`,
+                //         );
+                //     }
 
-                    response.send(renderer.html());
+                //     response.send(renderer.html());
 
-                    this.resolvePreserveAfterServe(
-                        preserveAfterServe,
-                        request,
-                        response,
-                    );
+                //     this.resolvePreserveAfterServe(
+                //         preserveAfterServe,
+                //         request,
+                //         response,
+                //     );
 
-                    return;
-                }
-
-
-                const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
-                if (notFoundStill) {
-                    if (this.debugAllows('info')) {
-                        const requestTime = this.computeRequestTime(request);
-
-                        console.info(
-                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
-                        );
-                    }
-
-                    response
-                        .status(404)
-                        .send(notFoundStill);
-
-                    this.resolvePreserveAfterServe(
-                        preserveAfterServe,
-                        request,
-                        response,
-                    );
-
-                    return;
-                }
-
-                const notFoundRoute = this.router.match(NOT_FOUND_ROUTE);
-                if (!notFoundRoute) {
-                    if (this.debugAllows('info')) {
-                        const requestTime = this.computeRequestTime(request);
-
-                        console.info(
-                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
-                        );
-                    }
-
-                    response
-                        .status(404)
-                        .send(NOT_FOUND_TEMPLATE);
-
-                    this.resolvePreserveAfterServe(
-                        preserveAfterServe,
-                        request,
-                        response,
-                    );
-
-                    return;
-                }
+                //     return;
+                // }
 
 
-                const renderer = await this.renderApplication(
-                    notFoundRoute,
-                    preserveResult,
-                );
+                // const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
+                // if (notFoundStill) {
+                //     if (this.debugAllows('info')) {
+                //         const requestTime = this.computeRequestTime(request);
 
-                if (this.debugAllows('info')) {
-                    const requestTime = this.computeRequestTime(request);
+                //         console.info(
+                //             `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
+                //         );
+                //     }
 
-                    console.info(
-                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
-                    );
-                }
+                //     response
+                //         .status(404)
+                //         .send(notFoundStill);
+
+                //     this.resolvePreserveAfterServe(
+                //         preserveAfterServe,
+                //         request,
+                //         response,
+                //     );
+
+                //     return;
+                // }
+
+                // const notFoundRoute = this.router.match(NOT_FOUND_ROUTE);
+                // if (!notFoundRoute) {
+                //     if (this.debugAllows('info')) {
+                //         const requestTime = this.computeRequestTime(request);
+
+                //         console.info(
+                //             `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
+                //         );
+                //     }
+
+                //     response
+                //         .status(404)
+                //         .send(NOT_FOUND_TEMPLATE);
+
+                //     this.resolvePreserveAfterServe(
+                //         preserveAfterServe,
+                //         request,
+                //         response,
+                //     );
+
+                //     return;
+                // }
+
+
+                // const renderer = await this.renderApplication(
+                //     notFoundRoute,
+                //     preserveResult,
+                // );
+
+                // if (this.debugAllows('info')) {
+                //     const requestTime = this.computeRequestTime(request);
+
+                //     console.info(
+                //         `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
+                //     );
+                // }
+
+                // response
+                //     .status(404)
+                //     .send(renderer.html());
+
+                // this.resolvePreserveAfterServe(
+                //     preserveAfterServe,
+                //     request,
+                //     response,
+                // );
 
                 response
                     .status(404)
-                    .send(renderer.html());
-
-                this.resolvePreserveAfterServe(
-                    preserveAfterServe,
-                    request,
-                    response,
-                );
+                    .end();
 
                 return;
             }
 
 
             const renderer = await this.renderApplication(
-                route,
+                // route,
+                isoMatch,
                 preserveResult,
             );
 
@@ -922,31 +941,37 @@ class PluridServer {
             route: gatewayEndpoint,
         };
 
-        const renderer = await this.renderApplication(
-            gatewayRoute,
-            preserveResult,
-        );
+        // const renderer = await this.renderApplication(
+        //     gatewayRoute,
+        //     preserveResult,
+        // );
 
-        return renderer.html();
+        // return renderer.html();
+        return '';
     }
 
 
     private async renderApplication(
-        route: router.MatcherResponse<PluridReactComponent>,
+        // route: router.MatcherResponse<PluridReactComponent>,
+        isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
         preserveResult: any,
         matchedPlane?: any,
     ) {
-        console.log('RENDER route', route);
+        // console.log('RENDER route', route);
+        console.log('RENDER isoMatch', isoMatch);
         const pluridMetastate = serverComputeMetastate(
-            route,
+            // route,
+            isoMatch,
             this.routes,
         );
+        console.log('pluridMetastate', pluridMetastate);
 
         const {
             content,
             styles,
         } = await this.getContentAndStyles(
-            route,
+            // route,
+            isoMatch,
             pluridMetastate,
             preserveResult,
             matchedPlane,
@@ -1018,7 +1043,8 @@ class PluridServer {
     }
 
     private async getContentAndStyles(
-        matchedRoute: router.MatcherResponse<PluridReactComponent>,
+        // matchedRoute: router.MatcherResponse<PluridReactComponent>,
+        isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
         pluridMetastate: any,
         preserveResult: any,
         matchedPlane?: any,
@@ -1034,8 +1060,10 @@ class PluridServer {
             //     matchedRoute,
             //     this.paths,
             // );
-            const gateway = matchedRoute.pathname === '/gateway';
-            const gatewayQuery = matchedRoute.query.__gatewayQuery;
+            // const gateway = matchedRoute.pathname === '/gateway';
+            // const gatewayQuery = matchedRoute.query.__gatewayQuery;
+            const gateway = false;
+            const gatewayQuery = '';
             const {
                 gatewayEndpoint,
             } = this.options;
@@ -1047,7 +1075,7 @@ class PluridServer {
                 exterior: this.exterior,
                 shell: this.shell,
                 helmet: this.helmet,
-                matchedRoute,
+                // matchedRoute,
                 routes: this.routes,
                 planes: this.planes,
                 pluridMetastate,
@@ -1056,6 +1084,8 @@ class PluridServer {
                 gatewayQuery,
                 preserveResult,
                 matchedPlane,
+
+                pathname: isoMatch.route.value,
             });
 
             content = await contentHandler.render();
