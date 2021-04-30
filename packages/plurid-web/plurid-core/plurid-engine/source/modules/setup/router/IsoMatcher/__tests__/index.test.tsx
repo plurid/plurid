@@ -83,13 +83,15 @@ describe('IsoMatcher', () => {
             '/',
             'route',
         );
+        console.log('routeResult', routeResult);
 
         // the result should be a PlaneResult
         // something which is meant to be displayed in a specific plurid space
-        // const planeResult = isoMatcher.match(
-        //     '/',
-        //     // 'plane',
-        // );
+        const planeResult = isoMatcher.match(
+            '/',
+            // 'plane',
+        );
+        console.log('planeResult', planeResult);
     });
 });
 // #endregion module

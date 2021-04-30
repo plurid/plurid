@@ -51,9 +51,7 @@ export type IsoMatcherResult<C> =
  * and matches client-side or server-side, in-browser or in-plurid.
  */
 class IsoMatcher<C> {
-    private routes: PluridRoute<C>[];
-    private routePlanes: PluridRoutePlane<C>[];
-    private planes: PluridPlane<C>[];
+    private origin: string = 'origin';
 
     private planesIndex: Map<string, any> = new Map();
     private routesIndex: Map<string, any> = new Map();
@@ -62,11 +60,11 @@ class IsoMatcher<C> {
     constructor(
         data: IsoMatcherData<C>,
     ) {
-        this.routes = data.routes || [];
-        this.routePlanes = data.routePlanes || [];
-        this.planes = data.planes || [];
-
-        this.generateIndexes();
+        this.updateIndexes(
+            data.routes || [],
+            data.routePlanes || [],
+            data.planes || [],
+        );
     }
 
 
@@ -94,22 +92,41 @@ class IsoMatcher<C> {
         }
     }
 
+    /**
+     * Dynammically update the planes and routes indexes.
+     *
+     * @param data
+     */
+    public index(
+        data: IsoMatcherData<C>,
+    ) {
+        this.updateIndexes(
+            data.routes || [],
+            data.routePlanes || [],
+            data.planes || [],
+        );
+    }
+
 
     /**
      * Creates a common data structure able to match and route accordingly.
      */
-    private generateIndexes() {
+    private updateIndexes(
+        routes: PluridRoute<C>[],
+        routePlanes: PluridRoutePlane<C>[],
+        planes: PluridPlane<C>[],
+    ) {
         this.indexPlanes(
-            this.planes,
+            planes,
             'Plane',
         );
 
         this.indexPlanes(
-            this.routePlanes,
+            routePlanes,
             'RoutePlane',
         );
 
-        for (const route of this.routes) {
+        for (const route of routes) {
             if (route.planes) {
                 this.indexPlanes(
                     route.planes,
@@ -140,7 +157,7 @@ class IsoMatcher<C> {
                     ? (planeData as any).route
                     : (planeData as any).value,
                 parent,
-                'some-origin',
+                this.origin,
             );
 
             const indexedPlane = {
@@ -163,13 +180,25 @@ class IsoMatcher<C> {
     private matchPlane(
         path: string,
     ) {
-        return {} as IsoMatcherPlaneResult<C>;
+        const address = computePlaneAddress(
+            path,
+            undefined,
+            this.origin,
+        );
+
+        const plane = this.planesIndex.get(address);
+        return plane;
+
+        // return {} as IsoMatcherPlaneResult<C>;
     }
 
     private matchRoute(
         path: string,
     ) {
-        return {} as IsoMatcherRouteResult<C>;
+        const route = this.routesIndex.get(path);
+        return route;
+
+        // return {} as IsoMatcherRouteResult<C>;
     }
 }
 // #endregion module
