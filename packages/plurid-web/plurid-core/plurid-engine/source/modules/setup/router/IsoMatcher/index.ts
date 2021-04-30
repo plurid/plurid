@@ -17,6 +17,10 @@
     import {
         computePlaneAddress,
     } from '../general';
+
+    import {
+        extractParametersAndMatch,
+    } from '../Parser/logic';
     // #endregion external
 
 
@@ -213,7 +217,18 @@ class IsoMatcher<C> {
             }
 
             // Check if the plane `address` is a parametrization of `planePath`.
+            const parametersAndMatch = extractParametersAndMatch(
+                normalizedPlaneAddress,
+                normalizedPlanePath,
+            );
 
+            // console.log('normalizedPlaneAddress', normalizedPlaneAddress);
+            // console.log('normalizedPlanePath', normalizedPlanePath);
+            // console.log('parametersAndMatch', parametersAndMatch);
+            if (parametersAndMatch.match) {
+                const plane = this.planesIndex.get(planePath);
+                return plane;
+            }
         }
 
         return;

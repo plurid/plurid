@@ -71,6 +71,8 @@ export const extractParametersAndMatch = (
         locationElements,
         comparingPath,
     } = computeComparingPath(location, parameters);
+    // console.log('locationElements', locationElements);
+    // console.log('comparingPath', comparingPath);
     if (comparingPath !== route) {
         return {
             match: false,
@@ -144,7 +146,8 @@ export const computeComparingPath = (
         }
     }
 
-    const comparingPath = '/' + comparingPathElements.join('/');
+    // const comparingPath = '/' + comparingPathElements.join('/');
+    const comparingPath = comparingPathElements.join('/');
 
     return {
         locationElements,
