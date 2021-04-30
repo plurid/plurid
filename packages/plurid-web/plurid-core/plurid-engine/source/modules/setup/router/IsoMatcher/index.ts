@@ -66,7 +66,7 @@ class IsoMatcher<C> {
         this.routePlanes = data.routePlanes || [];
         this.planes = data.planes || [];
 
-        this.generateRecords();
+        this.generateIndexes();
     }
 
 
@@ -98,44 +98,64 @@ class IsoMatcher<C> {
     /**
      * Creates a common data structure able to match and route accordingly.
      */
-    private generateRecords() {
-        for (const plane of this.planes) {
-            const planeData = resolvePluridPlaneData(plane);
-            const address = computePlaneAddress(planeData.route);
-            this.planesIndex.set(
-                address,
-                planeData,
-            );
-        }
+    private generateIndexes() {
+        this.indexPlanes(
+            this.planes,
+            'Plane',
+        );
 
-        for (const plane of this.routePlanes) {
-            resolvePluridRoutePlaneData
-            const planeData = resolvePluridRoutePlaneData(plane);
-            const address = computePlaneAddress(planeData.value);
-            this.planesIndex.set(
-                address,
-                planeData,
-            );
-        }
+        this.indexPlanes(
+            this.routePlanes,
+            'RoutePlane',
+        );
 
         for (const route of this.routes) {
             if (route.planes) {
-                for (const plane of route.planes) {
-                    const planeData = resolvePluridRoutePlaneData(plane);
-                    const address = computePlaneAddress(
-                        planeData.value,
-                        route.value,
-                    );
-                    this.planesIndex.set(
-                        address,
-                        planeData,
-                    );
-                }
+                this.indexPlanes(
+                    route.planes,
+                    'RoutePlane',
+                    route.value,
+                );
             }
 
             this.routesIndex.set(
                 route.value,
                 route,
+            );
+        }
+    }
+
+    private indexPlanes(
+        planes: PluridPlane<C>[] | PluridRoutePlane<C>[],
+        kind: 'Plane' | 'RoutePlane',
+        parent?: string,
+    ) {
+        for (const plane of planes) {
+            const planeData = kind === 'Plane'
+                ? resolvePluridPlaneData(plane as PluridPlane<C>)
+                : resolvePluridRoutePlaneData(plane as PluridRoutePlane<C>);
+
+            const address = computePlaneAddress(
+                kind === 'Plane'
+                    ? (planeData as any).route
+                    : (planeData as any).value,
+                parent,
+                'some-origin',
+            );
+
+            const indexedPlane = {
+                kind,
+                data: {
+                    ...planeData,
+                },
+            };
+            if (parent) {
+                indexedPlane['parent'] = parent;
+            }
+
+            this.planesIndex.set(
+                address,
+                indexedPlane,
             );
         }
     }

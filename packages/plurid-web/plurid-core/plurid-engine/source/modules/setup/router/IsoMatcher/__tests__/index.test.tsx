@@ -24,11 +24,17 @@ const routes: PluridRoute<string>[] = [
                 '/some-plane',
                 'index-plane',
             ],
-        ]
+        ],
     },
     {
         value: '/1',
         exterior: 'static',
+        planes: [
+            [
+                '/some-other-plane',
+                'route-plane',
+            ],
+        ],
     },
 ];
 
@@ -49,15 +55,15 @@ const routePlanes: PluridRoutePlane<string>[] = [
 
 const planes: PluridPlane<string>[] = [
     {
-        route: '/',
+        route: '/p',
         component: 'index',
     },
     {
-        route: '/1',
+        route: '/p/1',
         component: 'static',
     },
     [
-        '/2/3',
+        '/p/2/3',
         'static-nested',
     ],
 ];
