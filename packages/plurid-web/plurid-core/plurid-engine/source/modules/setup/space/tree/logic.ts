@@ -51,6 +51,10 @@
         computeComparingPath,
         extractParametersValues,
     } from '../../router/Parser/logic';
+
+    import {
+        computePlaneAddress,
+    } from '../../router/general';
     // #endregion external
 // #endregion imports
 
@@ -283,13 +287,17 @@ export const resolveViewItem = <C>(
     const viewData = typeof view === 'string'
         ? view
         : view.plane;
-    // console.log('viewData', viewData);
+    console.log('viewData', viewData);
 
-    const resolvedView = resolveRoute(
+    const viewAddress = computePlaneAddress(
         viewData,
-        protocol,
-        host,
     );
+
+    // const resolvedView = resolveRoute(
+    //     viewData,
+    //     protocol,
+    //     host,
+    // );
     // console.log('resolvedView', resolvedView);
 
     const iPlanes = planes.values();
@@ -308,7 +316,9 @@ export const resolveViewItem = <C>(
         planes: pluridPlanes,
     });
 
-    const match = isoMatcher.match(resolvedView.route);
+    // const match = isoMatcher.match(resolvedView.route);
+    const match = isoMatcher.match(viewData);
+    console.log('match', match);
 
     if (match) {
         const route = (match.data as any).route;
@@ -318,7 +328,8 @@ export const resolveViewItem = <C>(
 
             planeID: uuid.generate(),
 
-            route: resolvedView.route,
+            // route: resolvedView.route,
+            route: viewAddress,
 
             routeDivisions: {
                 protocol: {
