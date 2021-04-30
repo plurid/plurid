@@ -16,6 +16,7 @@
         LinkCoordinates,
         PathParameters,
         PluridRoute,
+        PluridPlane,
     } from '@plurid/plurid-data';
 
     import {
@@ -43,6 +44,7 @@
 
     import Router, {
         resolveRoute,
+        IsoMatcher,
     } from '../../router';
 
     import {
@@ -281,30 +283,35 @@ export const resolveViewItem = <C>(
     const viewData = typeof view === 'string'
         ? view
         : view.plane;
-    console.log('viewData', viewData);
+    // console.log('viewData', viewData);
 
     const resolvedView = resolveRoute(
         viewData,
         protocol,
         host,
     );
-    console.log('resolvedView', resolvedView);
+    // console.log('resolvedView', resolvedView);
 
-    for (const [route, _] of planes) {
-        const routeMatch = matchRouteToView(
-            route,
-            resolvedView.route,
-        );
-        console.log('route', route);
-        console.log('resolvedView.route', resolvedView.route);
-        console.log('routeMatch', routeMatch);
+    const iPlanes = planes.values();
+    const pluridPlanes: PluridPlane<C>[] = [];
+    for (const iPlane of iPlanes) {
+        // console.log('iPlane', iPlane);
 
-        if (resolvedView.route !== routeMatch.path.value) {
-            continue;
-        }
-        // if (!routeMatch) {
-        //     continue;
-        // }
+        const plane: PluridPlane<C> = {
+            route: (iPlane as any).route,
+            component: iPlane.component,
+        };
+        pluridPlanes.push(plane);
+    }
+
+    const isoMatcher = new IsoMatcher({
+        planes: pluridPlanes,
+    });
+
+    const match = isoMatcher.match(resolvedView.route);
+
+    if (match) {
+        const route = (match.data as any).route;
 
         const treePlane: TreePlane = {
             sourceID: route,
@@ -322,11 +329,35 @@ export const resolveViewItem = <C>(
                     value: host,
                     controlled: true,
                 },
-                path: routeMatch.path,
-                space: routeMatch.space,
-                universe: routeMatch.universe,
-                cluster: routeMatch.cluster,
-                plane: routeMatch.plane,
+                path: {
+                    parameters: {},
+                    query: {},
+                    value: '',
+                },
+                space: {
+                    parameters: {},
+                    query: {},
+                    value: '',
+                },
+                universe: {
+                    parameters: {},
+                    query: {},
+                    value: '',
+                },
+                cluster: {
+                    parameters: {},
+                    query: {},
+                    value: '',
+                },
+                plane: {
+                    parameters: {},
+                    fragments: {
+                        elements: [],
+                        texts: [],
+                    },
+                    query: {},
+                    value: '',
+                },
                 valid: true,
             },
 
@@ -344,6 +375,61 @@ export const resolveViewItem = <C>(
 
         return treePlane;
     }
+
+    // for (const [route, _] of planes) {
+    //     // const routeMatch = matchRouteToView(
+    //     //     route,
+    //     //     resolvedView.route,
+    //     // );
+    //     // console.log('route', route);
+    //     // console.log('resolvedView.route', resolvedView.route);
+    //     // console.log('routeMatch', routeMatch);
+
+    //     if (resolvedView.route !== routeMatch.path.value) {
+    //         continue;
+    //     }
+    //     // if (!routeMatch) {
+    //     //     continue;
+    //     // }
+
+    //     const treePlane: TreePlane = {
+    //         sourceID: route,
+
+    //         planeID: uuid.generate(),
+
+    //         route: resolvedView.route,
+
+    //         routeDivisions: {
+    //             protocol: {
+    //                 value: '',
+    //                 secure: false,
+    //             },
+    //             host: {
+    //                 value: host,
+    //                 controlled: true,
+    //             },
+    //             path: routeMatch.path,
+    //             space: routeMatch.space,
+    //             universe: routeMatch.universe,
+    //             cluster: routeMatch.cluster,
+    //             plane: routeMatch.plane,
+    //             valid: true,
+    //         },
+
+    //         height: 0,
+    //         width: 0,
+    //         location: {
+    //             translateX: 0,
+    //             translateY: 0,
+    //             translateZ: 0,
+    //             rotateX: 0,
+    //             rotateY: 0,
+    //         },
+    //         show: true,
+    //     };
+
+    //     return treePlane;
+    // }
 
     return;
 }

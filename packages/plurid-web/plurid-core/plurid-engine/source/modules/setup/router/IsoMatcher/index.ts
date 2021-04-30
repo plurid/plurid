@@ -61,8 +61,8 @@ class IsoMatcher<C> {
             data.routePlanes || [],
             data.planes || [],
         );
-        console.log('this.routesIndex', this.routesIndex);
-        console.log('this.planesIndex', this.planesIndex);
+        // console.log('this.routesIndex', this.routesIndex);
+        // console.log('this.planesIndex', this.planesIndex);
     }
 
 
@@ -101,6 +101,8 @@ class IsoMatcher<C> {
             data.routePlanes || [],
             data.planes || [],
         );
+        // console.log('this.routesIndex index', this.routesIndex);
+        // console.log('this.planesIndex index', this.planesIndex);
     }
 
     /**
@@ -110,6 +112,10 @@ class IsoMatcher<C> {
     public clear() {
         this.planesIndex = new Map();
         this.routesIndex = new Map();
+    }
+
+    public getPlanesIndex() {
+        return this.planesIndex;
     }
 
 

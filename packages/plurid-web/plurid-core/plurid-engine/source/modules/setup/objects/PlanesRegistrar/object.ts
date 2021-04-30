@@ -40,9 +40,9 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
         });
         this.isoMatcher = isoMatcher;
 
-        if (planes) {
-            this.register(planes);
-        }
+        // if (planes) {
+        //     this.register(planes);
+        // }
     }
 
 
@@ -106,26 +106,36 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
     }
 
     public identify() {
-        if (this.planes.size === 0) {
-            return [];
-        }
+        const planes = this.isoMatcher.getPlanesIndex();
+        const keys = planes.keys();
 
         const ids: string[] = [];
-        for (const [id, _] of this.planes) {
+        for (const id of keys) {
             ids.push(id);
         }
-
         return ids;
+
+        // if (this.planes.size === 0) {
+        //     return [];
+        // }
+
+        // const ids: string[] = [];
+        // for (const [id, _] of this.planes) {
+        //     ids.push(id);
+        // }
+
+        // return ids;
     }
 
     public get(
         route: string,
     ) {
         const match = this.isoMatcher.match(route);
+        // console.log('match', match, route);
 
         if (match) {
             const registeredPlane: RegisteredPluridPlane<C> = {
-                route: (match.data as any).route,
+                route: (match.data as any).route || (match.data as any).value || '',
                 component: match.data.component,
             };
 
@@ -140,7 +150,23 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
     }
 
     public getAll() {
-        return this.planes;
+        const planes = this.isoMatcher.getPlanesIndex();
+        const all = new Map();
+
+        for (const [path, plane] of planes) {
+            const registeredPlane: RegisteredPluridPlane<C> = {
+                route: (plane.data as any).route || (plane.data as any).value || '',
+                component: plane.data.component,
+            };
+
+            all.set(
+                path,
+                registeredPlane,
+            );
+        }
+
+        // return this.planes;
+        return all;
     }
 }
 // #endregion module
