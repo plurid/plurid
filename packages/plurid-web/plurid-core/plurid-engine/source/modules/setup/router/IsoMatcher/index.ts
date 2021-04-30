@@ -54,7 +54,7 @@ export type IsoMatcherResult<C> =
  * and matches client-side or server-side, in-browser or in-plurid.
  */
 class IsoMatcher<C> {
-    private origin: string = 'origin';
+    private origin: string;
 
     private planesIndex: Map<string, any> = new Map();
     private routesIndex: Map<string, any> = new Map();
@@ -62,7 +62,10 @@ class IsoMatcher<C> {
 
     constructor(
         data: IsoMatcherData<C>,
+        origin: string = 'origin',
     ) {
+        this.origin = origin;
+
         this.updateIndexes(
             data.routes || [],
             data.routePlanes || [],
@@ -85,8 +88,6 @@ class IsoMatcher<C> {
         path: string,
         context: IsoMatcherContext = 'plane',
     ): IsoMatcherResult<C> {
-        console.log('this.routesIndex', this.routesIndex);
-        console.log('this.planesIndex', this.planesIndex);
         switch (context) {
             case 'plane':
                 return this.matchPlane(path);
@@ -108,6 +109,14 @@ class IsoMatcher<C> {
             data.routePlanes || [],
             data.planes || [],
         );
+    }
+
+    /**
+     * Clear all data.
+     */
+    public clear() {
+        this.planesIndex = new Map();
+        this.routesIndex = new Map();
     }
 
 
