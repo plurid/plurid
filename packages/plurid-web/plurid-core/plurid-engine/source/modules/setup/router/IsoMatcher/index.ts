@@ -3,7 +3,9 @@
     import {
         PluridRoute,
         PluridRoutePlane,
+        PluridRoutePlaneObject,
         PluridPlane,
+        PluridPlaneObject,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -38,7 +40,8 @@ export interface IsoMatcherRouteResult<C> {
 }
 
 export interface IsoMatcherPlaneResult<C> {
-    plane: PluridPlane<C>;
+    kind: any;
+    data: PluridPlaneObject<C> | PluridRoutePlaneObject<C>;
 }
 
 export type IsoMatcherResult<C> =
@@ -196,7 +199,9 @@ class IsoMatcher<C> {
         path: string,
     ) {
         const route = this.routesIndex.get(path);
-        return route;
+        return {
+            route,
+        };
 
         // return {} as IsoMatcherRouteResult<C>;
     }

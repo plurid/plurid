@@ -70,28 +70,28 @@ const planes: PluridPlane<string>[] = [
 
 
 describe('IsoMatcher', () => {
-    it('works', () => {
+    it('matches index paths', () => {
         const isoMatcher = new IsoMatcher<string>({
             routes,
             routePlanes,
             planes,
         });
 
-        // the result should be a RouteResult
-        // something which is meant to be displayed on a browser route
         const routeResult = isoMatcher.match(
             '/',
             'route',
         );
-        console.log('routeResult', routeResult);
+        expect(routeResult.route.value).toEqual('/');
 
-        // the result should be a PlaneResult
-        // something which is meant to be displayed in a specific plurid space
-        const planeResult = isoMatcher.match(
+        const routePlaneResult = isoMatcher.match(
             '/',
-            // 'plane',
         );
-        console.log('planeResult', planeResult);
+        expect((routePlaneResult.data as any).value).toEqual('/');
+
+        const planeResult = isoMatcher.match(
+            '/p',
+        );
+        expect((planeResult.data as any).route).toEqual('/p');
     });
 });
 // #endregion module
