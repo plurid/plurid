@@ -36,6 +36,7 @@
         "clean.tests": "find ./distribution -type d -name \"__tests__\" -prune -exec rm -rf {} +",
         "clean.performance": "find ./distribution -type d -name \"__performance__\" -prune -exec rm -rf {} +",
         "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
+        "test.suite": "jest -c configurations/jest.config.js",
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
         "build.local": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:local",

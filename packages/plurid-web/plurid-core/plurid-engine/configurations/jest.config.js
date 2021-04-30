@@ -1,4 +1,5 @@
 module.exports = {
+    rootDir: '../',
     transform: {
         '.(ts|tsx)': 'ts-jest',
     },
