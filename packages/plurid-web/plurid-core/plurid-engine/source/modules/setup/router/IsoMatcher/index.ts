@@ -46,8 +46,8 @@
 class IsoMatcher<C> {
     private origin: string;
 
-    private planesIndex: Map<string, IsoMatcherIndexedPlane<C>> = new Map();
     private routesIndex: Map<string, PluridRoute<C>> = new Map();
+    private planesIndex: Map<string, IsoMatcherIndexedPlane<C>> = new Map();
 
 
     constructor(
@@ -61,6 +61,8 @@ class IsoMatcher<C> {
             data.routePlanes || [],
             data.planes || [],
         );
+        console.log('this.routesIndex', this.routesIndex);
+        console.log('this.planesIndex', this.planesIndex);
     }
 
 

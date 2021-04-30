@@ -39,6 +39,15 @@ export const computePlaneAddress = (
     route?: string,
     origin: string = 'origin',
 ) => {
+    const planeAddressType = checkPlaneAddressType(plane);
+
+    switch(planeAddressType) {
+        case 'http':
+        case 'https':
+        case 'pttp':
+            return plane;
+    }
+
     origin = stringRemoveTrailing(origin, '/');
 
     const path = route && route !== '/'
