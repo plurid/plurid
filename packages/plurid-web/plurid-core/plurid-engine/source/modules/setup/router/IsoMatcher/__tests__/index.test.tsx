@@ -81,17 +81,17 @@ describe('IsoMatcher', () => {
             '/',
             'route',
         );
-        expect(routeResult.route.value).toEqual('/');
+        expect(routeResult?.route.value).toEqual('/');
 
         const routePlaneResult = isoMatcher.match(
             '/',
         );
-        expect((routePlaneResult.data as any).value).toEqual('/');
+        expect((routePlaneResult?.data as any).value).toEqual('/');
 
         const planeResult = isoMatcher.match(
             '/p',
         );
-        expect((planeResult.data as any).route).toEqual('/p');
+        expect((planeResult?.data as any).route).toEqual('/p');
     });
 });
 // #endregion module

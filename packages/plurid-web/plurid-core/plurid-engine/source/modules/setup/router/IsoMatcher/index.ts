@@ -3,9 +3,7 @@
     import {
         PluridRoute,
         PluridRoutePlane,
-        PluridRoutePlaneObject,
         PluridPlane,
-        PluridPlaneObject,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -20,35 +18,23 @@
         computePlaneAddress,
     } from '../general';
     // #endregion external
+
+
+    // #region internal
+    import {
+        IsoMatcherContext,
+        IsoMatcherData,
+        IsoMatcherIndexedPlane,
+        IsoMatcherPlaneResult,
+        IsoMatcherResult,
+        IsoMatcherRouteResult,
+    } from './interfaces';
+    // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-export interface IsoMatcherData<C> {
-    routes?: PluridRoute<C>[];
-    routePlanes?: PluridRoutePlane<C>[];
-    planes?: PluridPlane<C>[];
-}
-
-export type IsoMatcherContext =
-    | 'route'
-    | 'plane';
-
-export interface IsoMatcherRouteResult<C> {
-    route: PluridRoute<C>;
-}
-
-export interface IsoMatcherPlaneResult<C> {
-    kind: any;
-    data: PluridPlaneObject<C> | PluridRoutePlaneObject<C>;
-}
-
-export type IsoMatcherResult<C> =
-    | IsoMatcherRouteResult<C>
-    | IsoMatcherPlaneResult<C>;
-
-
 /**
  * The `IsoMatcher` gathers all the known information about `routes` and `planes`
  * and matches client-side or server-side, in-browser or in-plurid.
@@ -56,8 +42,8 @@ export type IsoMatcherResult<C> =
 class IsoMatcher<C> {
     private origin: string;
 
-    private planesIndex: Map<string, any> = new Map();
-    private routesIndex: Map<string, any> = new Map();
+    private planesIndex: Map<string, IsoMatcherIndexedPlane<C>> = new Map();
+    private routesIndex: Map<string, PluridRoute<C>> = new Map();
 
 
     constructor(
@@ -81,13 +67,13 @@ class IsoMatcher<C> {
      * @param path
      * @param context
      */
-    public match(path: string, context: 'route'): IsoMatcherRouteResult<C>;
-    public match(path: string): IsoMatcherPlaneResult<C>;
-    public match(path: string, context: 'plane'): IsoMatcherPlaneResult<C>;
+    public match(path: string, context: 'route'): IsoMatcherRouteResult<C> | undefined;
+    public match(path: string): IsoMatcherPlaneResult<C> | undefined;
+    public match(path: string, context: 'plane'): IsoMatcherPlaneResult<C> | undefined;
     public match(
         path: string,
         context: IsoMatcherContext = 'plane',
-    ): IsoMatcherResult<C> {
+    ): IsoMatcherResult<C> | undefined {
         switch (context) {
             case 'plane':
                 return this.matchPlane(path);
@@ -174,7 +160,7 @@ class IsoMatcher<C> {
                 this.origin,
             );
 
-            const indexedPlane = {
+            const indexedPlane: IsoMatcherIndexedPlane<C> = {
                 kind,
                 data: {
                     ...planeData,
@@ -209,9 +195,14 @@ class IsoMatcher<C> {
         path: string,
     ) {
         const route = this.routesIndex.get(path);
-        return {
-            route,
-        }; // as IsoMatcherRouteResult<C>;
+
+        if (route) {
+            return {
+                route,
+            }; // as IsoMatcherRouteResult<C>;
+        }
+
+        return;
     }
 }
 // #endregion module
