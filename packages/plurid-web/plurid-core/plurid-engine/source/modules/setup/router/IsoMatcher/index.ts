@@ -113,6 +113,7 @@ class IsoMatcher<C> {
 
     /**
      * Clear all data.
+     *
      */
     public clear() {
         this.planesIndex = new Map();
@@ -122,6 +123,7 @@ class IsoMatcher<C> {
 
     /**
      * Creates a common data structure able to match and route accordingly.
+     *
      */
     private updateIndexes(
         routes: PluridRoute<C>[],
@@ -189,6 +191,7 @@ class IsoMatcher<C> {
         }
     }
 
+
     private matchPlane(
         path: string,
     ) {
@@ -199,9 +202,7 @@ class IsoMatcher<C> {
         );
 
         const plane = this.planesIndex.get(address);
-        return plane;
-
-        // return {} as IsoMatcherPlaneResult<C>;
+        return plane; // as IsoMatcherPlaneResult<C>;
     }
 
     private matchRoute(
@@ -210,9 +211,7 @@ class IsoMatcher<C> {
         const route = this.routesIndex.get(path);
         return {
             route,
-        };
-
-        // return {} as IsoMatcherRouteResult<C>;
+        }; // as IsoMatcherRouteResult<C>;
     }
 }
 // #endregion module
