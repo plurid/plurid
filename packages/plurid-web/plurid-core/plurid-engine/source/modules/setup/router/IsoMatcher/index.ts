@@ -249,7 +249,30 @@ class IsoMatcher<C> {
 
         for (const routePath of routePaths) {
             // Check if the `path` is a parametrization of `routePath`.
+            const routeSplit = routePath.split('/');
+            const pathSplit = path.split('/');
 
+            // Length mismatch.
+            if (routeSplit.length !== pathSplit.length) {
+                continue;
+            }
+
+            const parametersAndMatch = extractParametersAndMatch(
+                path.slice(1),
+                routePath.slice(1),
+            );
+
+            // console.log('path', path);
+            // console.log('routePath', routePath);
+            // console.log('parametersAndMatch', parametersAndMatch);
+            if (parametersAndMatch.match) {
+                const route = this.routesIndex.get(routePath);
+                if (route) {
+                    return {
+                        route,
+                    };
+                }
+            }
         }
 
         return;

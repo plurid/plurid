@@ -36,6 +36,10 @@ const routes: PluridRoute<string>[] = [
             ],
         ],
     },
+    {
+        value: '/parametric/:id',
+        exterior: 'parametric-route',
+    },
 ];
 
 const routePlanes: PluridRoutePlane<string>[] = [
@@ -106,11 +110,11 @@ describe('IsoMatcher', () => {
             planes,
         });
 
-        // const routeResult = isoMatcher.match(
-        //     '/',
-        //     'route',
-        // );
-        // expect(routeResult?.route.value).toEqual('/');
+        const routeResult = isoMatcher.match(
+            '/parametric/one',
+            'route',
+        );
+        expect(routeResult?.route.value).toEqual('/parametric/:id');
 
         // const routePlaneResult = isoMatcher.match(
         //     '/',
