@@ -286,7 +286,7 @@ export const resolveRoute = (
         : window.location.host;
 
     const divisions = pluridLinkPathDivider(route);
-    console.log('resolveRoute > divisions', divisions);
+    // console.log('resolveRoute > divisions', divisions);
 
     const defaultPathname = typeof window !== 'undefined'
             ? window.location.pathname === '/'
