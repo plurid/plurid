@@ -105,6 +105,7 @@ describe('IsoMatcher', () => {
     });
 
 
+
     it('matches parametric paths', () => {
         const isoMatcher = new IsoMatcher<string>({
             routes,
@@ -116,9 +117,14 @@ describe('IsoMatcher', () => {
             '/parametric/one',
             'route',
         );
-        console.log('routeResult', routeResult);
-        if (routeResult?.kind === 'Route') {
-            expect(routeResult?.data.value).toEqual('/parametric/:id');
+        expect(routeResult).toBeTruthy();
+        if (routeResult) {
+            expect(routeResult.kind).toEqual('Route');
+
+            if (routeResult.kind === 'Route') {
+                expect(routeResult.data.value).toEqual('/parametric/:id');
+                expect(routeResult.match.parameters.id).toEqual('one');
+            }
         }
 
         // const routePlaneResult = isoMatcher.match(
@@ -129,8 +135,90 @@ describe('IsoMatcher', () => {
         const planeResult = isoMatcher.match(
             '/parametric/one',
         );
-        console.log('planeResult', planeResult);
-        expect((planeResult?.data as any).route).toEqual('/parametric/:id');
+        expect(planeResult).toBeTruthy();
+        if (planeResult) {
+            expect(planeResult.kind).toEqual('Plane');
+
+            if (planeResult.kind === 'Plane') {
+                expect(planeResult.data.route).toEqual('/parametric/:id');
+                expect(planeResult.match.parameters.id).toEqual('one');
+            }
+        }
+    });
+
+
+
+    it('matches parametric with query paths', () => {
+        const isoMatcher = new IsoMatcher<string>({
+            routes,
+            routePlanes,
+            planes,
+        });
+
+        const routeResult = isoMatcher.match(
+            '/parametric/one?some=query&another=query',
+            'route',
+        );
+        expect(routeResult).toBeTruthy();
+        if (routeResult) {
+            expect(routeResult.kind).toEqual('Route');
+
+            if (routeResult.kind === 'Route') {
+                expect(routeResult.data.value).toEqual('/parametric/:id');
+                expect(routeResult.match.parameters.id).toEqual('one');
+                expect(routeResult.match.query.some).toEqual('query');
+                expect(routeResult.match.query.another).toEqual('query');
+            }
+        }
+
+        // const routePlaneResult = isoMatcher.match(
+        //     '/',
+        // );
+        // expect((routePlaneResult?.data as any).value).toEqual('/');
+
+        const planeResult = isoMatcher.match(
+            '/parametric/one?some=query&another=query',
+        );
+        expect(planeResult).toBeTruthy();
+        if (planeResult) {
+            expect(planeResult.kind).toEqual('Plane');
+
+            if (planeResult.kind === 'Plane') {
+                expect(planeResult.data.route).toEqual('/parametric/:id');
+                expect(planeResult.match.parameters.id).toEqual('one');
+                expect(planeResult.match.query.some).toEqual('query');
+                expect(planeResult.match.query.another).toEqual('query');
+            }
+        }
+    });
+
+
+
+    it('matches parametric with query and fragment paths', () => {
+        const isoMatcher = new IsoMatcher<string>({
+            routes,
+            routePlanes,
+            planes,
+        });
+
+        const planeResult = isoMatcher.match(
+            '/parametric/one?some=query&another=query#:~:text=example',
+        );
+        expect(planeResult).toBeTruthy();
+        if (planeResult) {
+            expect(planeResult.kind).toEqual('Plane');
+
+            if (planeResult.kind === 'Plane') {
+                expect(planeResult.data.route).toEqual('/parametric/:id');
+                expect(planeResult.match.parameters.id).toEqual('one');
+                expect(planeResult.match.query.some).toEqual('query');
+                expect(planeResult.match.query.another).toEqual('query');
+
+                expect(planeResult.match.fragments.texts.length).toEqual(1);
+                expect(planeResult.match.fragments.texts[0].type).toEqual('text');
+                expect(planeResult.match.fragments.texts[0].start).toEqual('example');
+            }
+        }
     });
 });
 // #endregion module

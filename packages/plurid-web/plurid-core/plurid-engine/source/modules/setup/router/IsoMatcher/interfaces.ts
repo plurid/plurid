@@ -53,6 +53,12 @@ export type IsoMatcherRouteResult<C> =
 
 
 
+export interface IsoMatcherIndexedRoute<C> {
+    data: PluridRoute<C>;
+}
+
+
+
 export type IsoMatcherPlaneType =
     | 'Plane'
     | 'RoutePlane';

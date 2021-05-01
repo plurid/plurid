@@ -30,8 +30,9 @@
     import {
         IsoMatcherContext,
         IsoMatcherData,
-        IsoMatcherPlaneType,
+        IsoMatcherIndexedRoute,
         IsoMatcherIndexedPlane,
+        IsoMatcherPlaneType,
         IsoMatcherPlaneResult,
         IsoMatcherPlaneResultPlane,
         IsoMatcherPlaneResultRoutePlane,
@@ -51,7 +52,7 @@
 class IsoMatcher<C> {
     private origin: string;
 
-    private routesIndex: Map<string, PluridRoute<C>> = new Map();
+    private routesIndex: Map<string, IsoMatcherIndexedRoute<C>> = new Map();
     private planesIndex: Map<string, IsoMatcherIndexedPlane<C>> = new Map();
 
     private routesKeys: string[] = [];
@@ -159,7 +160,11 @@ class IsoMatcher<C> {
 
             this.routesIndex.set(
                 route.value,
-                route,
+                {
+                    data: {
+                        ...route,
+                    },
+                },
             );
         }
 
@@ -360,7 +365,7 @@ class IsoMatcher<C> {
 
             const result: IsoMatcherRouteResult<C> = {
                 kind: 'Route',
-                data: route,
+                data: route.data,
                 match: {
                     value,
                     query,
@@ -409,13 +414,17 @@ class IsoMatcher<C> {
                 if (route) {
                     const result: IsoMatcherRouteResult<C> = {
                         kind: 'Route',
-                        data: route,
+                        data: route.data,
                         match,
                     };
 
                     return result;
                 }
             }
+        }
+
+        for (const planePath of this.planesKeys) {
+            // check if value is not a route plane request
         }
 
         return;
