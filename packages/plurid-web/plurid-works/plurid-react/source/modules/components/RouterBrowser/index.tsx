@@ -66,6 +66,7 @@
 // #region module
 const PluridRouter = router.default;
 const PluridURLRouter = router.URLRouter;
+const PluridIsoMatcher = router.IsoMatcher;
 
 
 const PluridRouterBrowser = (
@@ -110,6 +111,13 @@ const PluridRouterBrowser = (
             routes,
         ),
     );
+
+    const pluridIsoMatcher = useRef(
+        new PluridIsoMatcher({
+            routes,
+            routePlanes: planes,
+        }),
+    );
     // #endregion references
 
 
@@ -128,7 +136,11 @@ const PluridRouterBrowser = (
         matchedRoute,
         setMatchedRoute,
     ] = useState(
-        pluridRouter.current.match(matchedPath),
+        pluridIsoMatcher.current.match(
+            matchedPath,
+            'route',
+        ),
+        // pluridRouter.current.match(matchedPath),
     );
     console.log('matchedRoute', matchedRoute);
 
@@ -198,37 +210,39 @@ const PluridRouterBrowser = (
             history.pushState(null, '', matchedPath);
         }
 
-        let matchedRoute = pluridRouter.current.match(matchedPath);
+        // let matchedRoute = pluridRouter.current.match(matchedPath);
+        let matchedRoute = pluridIsoMatcher.current.match(matchedPath, 'route');
 
         // Handle direct plane access
         //        gateway access
         if (!matchedRoute) {
             console.log('Direct plane or gateway access');
-            if (matchedPath === '/gateway') {
-                // handle gateway
-            }
+            // if (matchedPath === '/gateway') {
+            //     // handle gateway
+            // }
 
-            // render direct plane
-            const {
-                matchedPlane,
-                DirectPlane,
-            } = renderDirectPlane(
-                matchedPath,
-                routes,
-                planes,
-                pluridPlanesRegistrar.current,
-            );
+            // // render direct plane
+            // const {
+            //     matchedPlane,
+            //     DirectPlane,
+            // } = renderDirectPlane(
+            //     matchedPath,
+            //     routes,
+            //     planes,
+            //     pluridPlanesRegistrar.current,
+            // );
 
-            if (matchedPlane && DirectPlane) {
-                setMatchedRoute(matchedPlane);
-                setPluridRoute(DirectPlane);
-                return;
-            }
+            // if (matchedPlane && DirectPlane) {
+            //     setMatchedRoute(matchedPlane);
+            //     setPluridRoute(DirectPlane);
+            //     return;
+            // }
         }
 
         // Handle not found.
         if (!matchedRoute) {
-            matchedRoute = pluridRouter.current.match(notFoundPath);
+            matchedRoute = pluridIsoMatcher.current.match(notFoundPath, 'route');
+            // matchedRoute = pluridRouter.current.match(notFoundPath);
         }
 
         setMatchedRoute(matchedRoute);
@@ -250,7 +264,8 @@ const PluridRouterBrowser = (
         }
 
         storage.saveState(
-            matchedRoute.path.value,
+            // matchedRoute.path.value,
+            matchedRoute.route.value,
             PLURID_ROUTER_STORAGE,
         );
 
@@ -258,7 +273,8 @@ const PluridRouterBrowser = (
             PLURID_ROUTER_LOCATION_STORED,
             {
                 detail: {
-                    path: matchedRoute.path.value,
+                    // path: matchedRoute.path.value,
+                    path: matchedRoute.route.value,
                 },
             },
         );
