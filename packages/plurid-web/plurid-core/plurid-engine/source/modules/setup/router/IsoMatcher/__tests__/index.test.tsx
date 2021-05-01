@@ -89,7 +89,9 @@ describe('IsoMatcher', () => {
             '/',
             'route',
         );
-        expect(routeResult?.route.value).toEqual('/');
+        if (routeResult?.kind === 'Route') {
+            expect(routeResult?.data.value).toEqual('/');
+        }
 
         const routePlaneResult = isoMatcher.match(
             '/',
@@ -114,7 +116,9 @@ describe('IsoMatcher', () => {
             '/parametric/one',
             'route',
         );
-        expect(routeResult?.route.value).toEqual('/parametric/:id');
+        if (routeResult?.kind === 'Route') {
+            expect(routeResult?.data.value).toEqual('/parametric/:id');
+        }
 
         // const routePlaneResult = isoMatcher.match(
         //     '/',

@@ -28,8 +28,11 @@
     import {
         IsoMatcherContext,
         IsoMatcherData,
+        IsoMatcherPlaneType,
         IsoMatcherIndexedPlane,
         IsoMatcherPlaneResult,
+        IsoMatcherPlaneResultPlane,
+        IsoMatcherPlaneResultRoutePlane,
         IsoMatcherResult,
         IsoMatcherRouteResult,
     } from './interfaces';
@@ -48,6 +51,9 @@ class IsoMatcher<C> {
 
     private routesIndex: Map<string, PluridRoute<C>> = new Map();
     private planesIndex: Map<string, IsoMatcherIndexedPlane<C>> = new Map();
+
+    private routesKeys: string[] = [];
+    private planesKeys: string[] = [];
 
 
     constructor(
@@ -110,8 +116,10 @@ class IsoMatcher<C> {
      *
      */
     public clear() {
-        this.planesIndex = new Map();
         this.routesIndex = new Map();
+        this.planesIndex = new Map();
+        this.routesKeys = [];
+        this.planesKeys = [];
     }
 
     public getPlanesIndex() {
@@ -152,11 +160,14 @@ class IsoMatcher<C> {
                 route,
             );
         }
+
+        this.routesKeys = Array.from(this.routesIndex.keys());
+        this.planesKeys = Array.from(this.planesIndex.keys());
     }
 
     private indexPlanes(
         planes: PluridPlane<C>[] | PluridRoutePlane<C>[],
-        kind: 'Plane' | 'RoutePlane',
+        kind: IsoMatcherPlaneType,
         parent?: string,
     ) {
         for (const plane of planes) {
@@ -172,7 +183,7 @@ class IsoMatcher<C> {
                 this.origin,
             );
 
-            const indexedPlane: IsoMatcherIndexedPlane<C> = {
+            const indexedPlane: any /** IsoMatcherIndexedPlane<C> */ = {
                 kind,
                 data: {
                     ...planeData,
@@ -191,10 +202,10 @@ class IsoMatcher<C> {
 
 
     private matchPlane(
-        path: string,
+        value: string,
     ) {
         const planeAddress = computePlaneAddress(
-            path,
+            value,
             undefined,
             this.origin,
         );
@@ -202,12 +213,49 @@ class IsoMatcher<C> {
         const plane = this.planesIndex.get(planeAddress);
 
         if (plane) {
-            return plane; // as IsoMatcherPlaneResult<C>;
+            const match = {
+                fragments: {
+                    elements: [],
+                    texts: [],
+                },
+                query: {},
+                parameters: {},
+            };
+
+            if (plane.kind === 'Plane') {
+                const {
+                    kind,
+                    data,
+                    parent,
+                } = plane;
+
+                const result: IsoMatcherPlaneResultPlane<C> = {
+                    kind,
+                    data,
+                    parent,
+                    match,
+                };
+                return result;
+            }
+
+            if (plane.kind === 'RoutePlane') {
+                const {
+                    kind,
+                    data,
+                    parent,
+                } = plane;
+
+                const result: IsoMatcherPlaneResultRoutePlane<C> = {
+                    kind,
+                    data,
+                    parent,
+                    match,
+                };
+                return result;
+            }
         }
 
-        const planePaths = this.planesIndex.keys();
-
-        for (const planePath of planePaths) {
+        for (const planePath of this.planesKeys) {
             const normalizedPlanePath = planePath.replace('pttp://', '');
             const normalizedPlaneAddress = planeAddress.replace('pttp://', '');
 
@@ -235,7 +283,58 @@ class IsoMatcher<C> {
             // console.log('parametersAndMatch', parametersAndMatch);
             if (parametersAndMatch.match) {
                 const plane = this.planesIndex.get(planePath);
-                return plane;
+
+                if (!plane) {
+                    return;
+                }
+
+                const {
+                    elements,
+                    parameters,
+                } = parametersAndMatch;
+
+                const match = {
+                    fragments: {
+                        elements: [],
+                        texts: [],
+                    },
+                    query: {},
+                    parameters,
+                };
+
+                if (plane.kind === 'Plane') {
+                    const {
+                        kind,
+                        data,
+                        parent,
+                    } = plane;
+
+                    const result: IsoMatcherPlaneResultPlane<C> = {
+                        kind,
+                        data,
+                        parent,
+                        match,
+                    };
+
+                    return result;
+                }
+
+                if (plane.kind === 'RoutePlane') {
+                    const {
+                        kind,
+                        data,
+                        parent,
+                    } = plane;
+
+                    const result: IsoMatcherPlaneResultRoutePlane<C> = {
+                        kind,
+                        data,
+                        parent,
+                        match,
+                    };
+
+                    return result;
+                }
             }
         }
 
@@ -243,30 +342,33 @@ class IsoMatcher<C> {
     }
 
     private matchRoute(
-        path: string,
+        value: string,
     ) {
-        const route = this.routesIndex.get(path);
+        const route = this.routesIndex.get(value);
 
         if (route) {
-            return {
-                route,
-            }; // as IsoMatcherRouteResult<C>;
+            const match: IsoMatcherRouteResult<C> = {
+                kind: 'Route',
+                data: route,
+                query: {},
+                parameters: {},
+            };
+
+            return match;
         }
 
-        const routePaths = this.routesIndex.keys();
-
-        for (const routePath of routePaths) {
+        for (const routePath of this.routesKeys) {
             // Check if the `path` is a parametrization of `routePath`.
             const routeSplit = routePath.split('/');
-            const pathSplit = path.split('/');
+            const valueSplit = value.split('/');
 
             // Length mismatch.
-            if (routeSplit.length !== pathSplit.length) {
+            if (routeSplit.length !== valueSplit.length) {
                 continue;
             }
 
             const parametersAndMatch = extractParametersAndMatch(
-                path.slice(1),
+                value.slice(1),
                 routePath.slice(1),
             );
 
@@ -275,10 +377,16 @@ class IsoMatcher<C> {
             // console.log('parametersAndMatch', parametersAndMatch);
             if (parametersAndMatch.match) {
                 const route = this.routesIndex.get(routePath);
+
                 if (route) {
-                    return {
-                        route,
+                    const match: IsoMatcherRouteResult<C> = {
+                        kind: 'Route',
+                        data: route,
+                        query: {},
+                        parameters: {},
                     };
+
+                    return match;
                 }
             }
         }

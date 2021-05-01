@@ -6,6 +6,8 @@
         PluridRoutePlaneObject,
         PluridPlane,
         PluridPlaneObject,
+
+        PluridRouteFragments,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -23,23 +25,79 @@ export type IsoMatcherContext =
     | 'route'
     | 'plane';
 
-export interface IsoMatcherRouteResult<C> {
-    route: PluridRoute<C>;
+
+export interface IsoMatcherResultBase {
+    parameters: Record<string, string>;
+    query: Record<string, string>;
 }
 
-export interface IsoMatcherPlaneResult<C> {
-    kind: string;
-    data: PluridPlaneObject<C> | PluridRoutePlaneObject<C>;
-    parent?: string;
+
+export interface IsoMatcherRouteResultRoute<C> extends IsoMatcherResultBase {
+    kind: 'Route';
+    data: PluridRoute<C>;
 }
+
+export interface IsoMatcherRouteResultRoutePlane<C> extends IsoMatcherResultBase {
+    kind: 'RoutePlane';
+    data: PluridRoutePlane<C>;
+}
+
+export type IsoMatcherRouteResult<C> =
+    | IsoMatcherRouteResultRoute<C>
+    | IsoMatcherRouteResultRoutePlane<C>;
+
+
+
+export type IsoMatcherPlaneType =
+    | 'Plane'
+    | 'RoutePlane';
+
+export interface IsoMatcherPlaneResultMatch extends IsoMatcherResultBase {
+    fragments: PluridRouteFragments;
+}
+
+export interface IsoMatcherPlaneResultBase<C> {
+    parent?: string;
+    match: IsoMatcherPlaneResultMatch;
+}
+
+export interface IsoMatcherPlaneResultPlane<C> extends IsoMatcherPlaneResultBase<C> {
+    kind: 'Plane';
+    data: PluridPlaneObject<C>;
+}
+
+export interface IsoMatcherPlaneResultRoutePlane<C> extends IsoMatcherPlaneResultBase<C> {
+    kind: 'RoutePlane';
+    data: PluridRoutePlaneObject<C>;
+}
+
+export type IsoMatcherPlaneResult<C> =
+    | IsoMatcherPlaneResultPlane<C>
+    | IsoMatcherPlaneResultRoutePlane<C>;
+
+
 
 export type IsoMatcherResult<C> =
     | IsoMatcherRouteResult<C>
     | IsoMatcherPlaneResult<C>;
 
-export interface IsoMatcherIndexedPlane<C> {
-    kind: string;
-    data: PluridPlaneObject<C> | PluridRoutePlaneObject<C>;
+
+
+export interface IsoMatcherIndexedPlaneBase<C> {
     parent?: string;
 }
+
+export interface IsoMatcherIndexedPlanePlane<C> extends IsoMatcherIndexedPlaneBase<C> {
+    kind: 'Plane';
+    data: PluridPlaneObject<C>;
+}
+
+export interface IsoMatcherIndexedPlaneRoutePlane<C> extends IsoMatcherIndexedPlaneBase<C> {
+    kind: 'RoutePlane';
+    data: PluridRoutePlaneObject<C>;
+}
+
+export type IsoMatcherIndexedPlane<C> =
+    | IsoMatcherIndexedPlanePlane<C>
+    | IsoMatcherIndexedPlaneRoutePlane<C>;
 // #endregion module
