@@ -23,7 +23,9 @@ const main = async () => {
 
     for (const url of urls) {
         try {
-            const pathname = url.replace(base, '').replace('/', '-');
+            const pathname = url
+                .replace(base, '')
+                .replace('/', '-');
             const filename = pathname
                 ? pathname + '.html'
                 : 'index.html'
@@ -43,7 +45,7 @@ const main = async () => {
                 }
             });
         } catch (error) {
-            console.log(`\tFetch error ${url}:`, error);
+            console.log(`\tErrored: ${url}`, error);
             continue;
         }
     }
