@@ -60,7 +60,7 @@ const planesRoute: PluridReactRoute = {
         },
     ],
     view: [
-        '/plane-1',
+        '/planes/plane-1',
     ],
     defaultConfiguration: {
         global: {
