@@ -116,6 +116,7 @@ describe('IsoMatcher', () => {
             '/parametric/one',
             'route',
         );
+        console.log('routeResult', routeResult);
         if (routeResult?.kind === 'Route') {
             expect(routeResult?.data.value).toEqual('/parametric/:id');
         }
