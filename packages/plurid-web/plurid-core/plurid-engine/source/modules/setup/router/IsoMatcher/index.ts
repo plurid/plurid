@@ -20,6 +20,8 @@
 
     import {
         extractParametersAndMatch,
+        extractQuery,
+        extractFragments,
     } from '../Parser/logic';
     // #endregion external
 
@@ -290,17 +292,20 @@ class IsoMatcher<C> {
                 }
 
                 const {
-                    elements,
                     parameters,
                 } = parametersAndMatch;
 
+                const query = extractQuery(
+                    value,
+                );
+                const fragments = extractFragments(
+                    value,
+                );
+
                 const match = {
                     value: planeAddress,
-                    fragments: {
-                        elements: [],
-                        texts: [],
-                    },
-                    query: {},
+                    fragments,
+                    query,
                     parameters,
                 };
 
@@ -349,12 +354,16 @@ class IsoMatcher<C> {
         const route = this.routesIndex.get(value);
 
         if (route) {
+            const query = extractQuery(
+                value,
+            );
+
             const result: IsoMatcherRouteResult<C> = {
                 kind: 'Route',
                 data: route,
                 match: {
                     value,
-                    query: {},
+                    query,
                     parameters: {},
                 },
             };
@@ -383,15 +392,25 @@ class IsoMatcher<C> {
             if (parametersAndMatch.match) {
                 const route = this.routesIndex.get(routePath);
 
+                const query = extractQuery(
+                    value,
+                );
+
+                const {
+                    parameters,
+                } = parametersAndMatch;
+
+                const match = {
+                    value,
+                    query,
+                    parameters,
+                };
+
                 if (route) {
                     const result: IsoMatcherRouteResult<C> = {
                         kind: 'Route',
                         data: route,
-                        match: {
-                            value,
-                            query: {},
-                            parameters: {},
-                        },
+                        match,
                     };
 
                     return result;
