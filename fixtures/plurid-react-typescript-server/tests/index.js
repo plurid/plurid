@@ -42,13 +42,17 @@ const main = async () => {
             response.body.pipe(file);
 
             file.on('close', () => {
-                const toTestData = fs.readFileSync(toTestPath + filename);
-                const inTestData = fs.readFileSync(inTestPath + filename);
+                try {
+                    const toTestData = fs.readFileSync(toTestPath + filename);
+                    const inTestData = fs.readFileSync(inTestPath + filename);
 
-                if (toTestData.length === inTestData.length) {
-                    console.log(`\tPassed: ${url}`);
-                } else {
-                    console.log(`\tFailed: ${url}`);
+                    if (toTestData.length === inTestData.length) {
+                        console.log(`\tPassed: ${url}`);
+                    } else {
+                        console.log(`\tFailed: ${url}`);
+                    }
+                } catch (error) {
+                    console.log(`\tErrored on file: ${url}`, error);
                 }
             });
         } catch (error) {
