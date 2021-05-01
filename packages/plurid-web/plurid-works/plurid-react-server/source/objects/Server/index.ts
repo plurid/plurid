@@ -1093,7 +1093,7 @@ class PluridServer {
                 pathname: isoMatch.kind === 'Route' ? isoMatch.data.value : isoMatch.match.value,
                 matchedPlane: isoMatch.kind === 'RoutePlane'
                     ? {
-                        value: isoMatch.data.value,
+                        value: isoMatch.match.value,
                     }
                     : undefined,
             });
