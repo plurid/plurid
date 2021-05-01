@@ -433,7 +433,7 @@ class IsoMatcher<C> {
         if (routePlane) {
             const result: IsoMatcherRouteResult<C> = {
                 kind: 'RoutePlane',
-                data: (routePlane as any).data,
+                data: routePlane.data as any, // HACK
                 match: {
                     value: extractPathname(value),
                     query: routePlane.match.query,

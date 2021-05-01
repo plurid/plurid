@@ -44,7 +44,7 @@ export interface IsoMatcherRouteResultRoute<C> extends IsoMatcherRouteResultBase
 
 export interface IsoMatcherRouteResultRoutePlane<C> extends IsoMatcherRouteResultBase {
     kind: 'RoutePlane';
-    data: PluridRoutePlane<C>;
+    data: PluridRoutePlaneObject<C>;
 }
 
 export type IsoMatcherRouteResult<C> =

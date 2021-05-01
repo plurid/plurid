@@ -418,5 +418,31 @@ describe('IsoMatcher simple', () => {
             }
         }
     });
+
+
+
+    it('matches route planes', () => {
+        const isoMatcher = new IsoMatcher<string>({
+            routes,
+            routePlanes,
+            planes,
+        });
+
+        {
+            const routeResult = isoMatcher.match(
+                '/some-plane',
+                'route',
+            );
+            expect(routeResult).toBeTruthy();
+            if (routeResult) {
+                expect(routeResult.kind).toEqual('RoutePlane');
+
+                if (routeResult.kind === 'RoutePlane') {
+                    expect(routeResult.data.value).toEqual('/some-plane');
+                    expect(routeResult.match.value).toEqual('/some-plane');
+                }
+            }
+        }
+    });
 });
 // #endregion module
