@@ -221,13 +221,17 @@ class IsoMatcher<C> {
         const plane = this.planesIndex.get(planeAddress);
 
         if (plane) {
+            const query = extractQuery(
+                value,
+            );
+            const fragments = extractFragments(
+                value,
+            );
+
             const match = {
                 value: planeAddress,
-                fragments: {
-                    elements: [],
-                    texts: [],
-                },
-                query: {},
+                fragments,
+                query,
                 parameters: {},
             };
 

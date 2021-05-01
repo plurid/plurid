@@ -1,3 +1,13 @@
+// #region imports
+    // #region external
+    import {
+        extractPathname,
+    } from './Parser/logic';
+    // #endregion external
+// #endregion imports
+
+
+
 // #region module
 export const stringInsertInitial = (
     value: string,
@@ -39,20 +49,22 @@ export const computePlaneAddress = (
     route?: string,
     origin: string = 'origin',
 ) => {
-    const planeAddressType = checkPlaneAddressType(plane);
+    const cleanPlane = extractPathname(plane);
+
+    const planeAddressType = checkPlaneAddressType(cleanPlane);
 
     switch(planeAddressType) {
         case 'http':
         case 'https':
         case 'pttp':
-            return plane;
+            return cleanPlane;
     }
 
     origin = stringRemoveTrailing(origin, '/');
 
     const path = route && route !== '/'
-        ? cleanupPath(route) + cleanupPath(plane)
-        : cleanupPath(plane);
+        ? cleanupPath(route) + cleanupPath(cleanPlane)
+        : cleanupPath(cleanPlane);
 
     const planeAddress = PTTP_PROTOCOL + origin + path;
 
