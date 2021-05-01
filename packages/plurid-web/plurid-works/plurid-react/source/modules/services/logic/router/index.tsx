@@ -1384,11 +1384,13 @@ export const computePluridRoute = (
 
     let matchedRouteData: PluridRoute<PluridReactComponent> | undefined;
     for (const route of routes) {
-        if (route.value === matchedRoute.route.value) {
-        // if (route.value === matchedRoute.path.value) {
-            matchedRouteData = {
-                ...route,
-            };
+        if (matchedRoute.kind === 'Route') {
+            if (route.value === matchedRoute.data.value) {
+            // if (route.value === matchedRoute.path.value) {
+                matchedRouteData = {
+                    ...route,
+                };
+            }
         }
     }
 

@@ -263,9 +263,13 @@ const PluridRouterBrowser = (
             return;
         }
 
+        if (matchedRoute.kind !== 'Route') {
+            return;
+        }
+
         storage.saveState(
             // matchedRoute.path.value,
-            matchedRoute.route.value,
+            matchedRoute.data.value,
             PLURID_ROUTER_STORAGE,
         );
 
@@ -274,7 +278,7 @@ const PluridRouterBrowser = (
             {
                 detail: {
                     // path: matchedRoute.path.value,
-                    path: matchedRoute.route.value,
+                    path: matchedRoute.data.value,
                 },
             },
         );
