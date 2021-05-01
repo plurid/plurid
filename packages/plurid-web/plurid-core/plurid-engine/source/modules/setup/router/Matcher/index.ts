@@ -63,7 +63,10 @@ export default class Matcher<C> {
         const parserResponse = parsedLocation.extract();
 
         if (parserResponse.match) {
-            const validPath = checkValidPath(parserResponse);
+            const validPath = checkValidPath(
+                parserResponse.path.parameters,
+                parserResponse.parameters,
+            );
 
             if (validPath) {
                 const matcherResponse: MatcherResponse<C> = {

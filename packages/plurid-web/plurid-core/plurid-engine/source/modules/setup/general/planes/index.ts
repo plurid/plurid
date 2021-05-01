@@ -28,11 +28,13 @@ export const resolvePluridPlaneData = <C>(
         const [
             route,
             component,
+            options,
         ] = plane;
 
         return {
             route,
             component,
+            ...options,
         };
     }
 

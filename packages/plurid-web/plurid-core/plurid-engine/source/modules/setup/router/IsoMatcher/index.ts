@@ -24,6 +24,10 @@
         extractFragments,
         extractPathname,
     } from '../Parser/logic';
+
+    import {
+        checkValidPath,
+    } from '../Matcher/logic';
     // #endregion external
 
 
@@ -297,7 +301,6 @@ class IsoMatcher<C> {
             // console.log('parametersAndMatch', parametersAndMatch);
             if (parametersAndMatch.match) {
                 const plane = this.planesIndex.get(planePath);
-
                 if (!plane) {
                     return;
                 }
@@ -305,6 +308,14 @@ class IsoMatcher<C> {
                 const {
                     parameters,
                 } = parametersAndMatch;
+
+                const validPath = checkValidPath(
+                    plane.data.parameters,
+                    parameters,
+                );
+                if (!validPath) {
+                    return;
+                }
 
                 const query = extractQuery(
                     value,
@@ -404,14 +415,25 @@ class IsoMatcher<C> {
             // console.log('parametersAndMatch', parametersAndMatch);
             if (parametersAndMatch.match) {
                 const route = this.routesIndex.get(routePath);
-
-                const query = extractQuery(
-                    value,
-                );
+                if (!route) {
+                    return;
+                }
 
                 const {
                     parameters,
                 } = parametersAndMatch;
+
+                const validPath = checkValidPath(
+                    route.data.parameters,
+                    parameters,
+                );
+                if (!validPath) {
+                    return;
+                }
+
+                const query = extractQuery(
+                    value,
+                );
 
                 const match = {
                     value: extractPathname(value),

@@ -3,6 +3,8 @@
     import {
         compareTypes,
         CompareType,
+        Indexed,
+        PluridRouteParameter,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -43,17 +45,9 @@
 
 
 export const checkValidPath = <C>(
-    data: ParserResponse<C>,
+    validationParameters: Record<string, PluridRouteParameter> | undefined,
+    parameters: Indexed<string>,
 ) => {
-    const {
-        path,
-        parameters,
-    } = data;
-
-    const {
-        parameters: validationParameters,
-    } = path;
-
     if (validationParameters) {
         for (const [parameterKey, parameterData] of Object.entries(validationParameters)) {
             const {
