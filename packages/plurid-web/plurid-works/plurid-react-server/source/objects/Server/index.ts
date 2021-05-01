@@ -1083,9 +1083,14 @@ class PluridServer {
                 gatewayEndpoint,
                 gatewayQuery,
                 preserveResult,
-                matchedPlane,
+                // matchedPlane,
 
-                pathname: (isoMatch.data as any).value,
+                pathname: isoMatch.kind === 'Route' ? isoMatch.data.value : '',
+                matchedPlane: isoMatch.kind === 'RoutePlane'
+                    ? {
+                        value: (isoMatch.data as any).value,
+                    }
+                    : undefined,
             });
 
             content = await contentHandler.render();
