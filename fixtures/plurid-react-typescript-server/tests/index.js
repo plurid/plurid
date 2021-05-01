@@ -32,7 +32,7 @@ const main = async () => {
         try {
             const pathname = url
                 .replace(base, '')
-                .replace('/', '-');
+                .replace(/\//g, '-');
             const filename = pathname
                 ? pathname + '.html'
                 : 'index.html'
