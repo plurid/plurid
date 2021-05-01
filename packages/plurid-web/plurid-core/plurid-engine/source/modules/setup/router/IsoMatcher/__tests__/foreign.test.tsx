@@ -73,6 +73,21 @@ describe('IsoMatcher foreign', () => {
                 }
             }
         }
+
+        {
+            const planeResult = isoMatcher.match(
+                'pttp://foreign-origin.com/p',
+            );
+            expect(planeResult).toBeTruthy();
+            if (planeResult) {
+                expect(planeResult.kind).toEqual('Plane');
+
+                if (planeResult.kind === 'Plane') {
+                    expect(planeResult.data.route).toEqual('pttp://foreign-origin.com/p');
+                    expect(planeResult.match.value).toEqual('pttp://foreign-origin.com/p');
+                }
+            }
+        }
     });
 
 
@@ -99,6 +114,22 @@ describe('IsoMatcher foreign', () => {
                 }
             }
         }
+
+        {
+            const planeResult = isoMatcher.match(
+                'pttp://foreign-origin.com/p/parametric/one',
+            );
+            expect(planeResult).toBeTruthy();
+            if (planeResult) {
+                expect(planeResult.kind).toEqual('Plane');
+
+                if (planeResult.kind === 'Plane') {
+                    expect(planeResult.data.route).toEqual('pttp://foreign-origin.com/p/parametric/:id');
+                    expect(planeResult.match.value).toEqual('pttp://foreign-origin.com/p/parametric/one');
+                    expect(planeResult.match.parameters.id).toEqual('one');
+                }
+            }
+        }
     });
 
 
@@ -121,6 +152,23 @@ describe('IsoMatcher foreign', () => {
                 if (planeResult.kind === 'RoutePlane') {
                     expect(planeResult.data.value).toEqual('pttp://foreign-origin.com');
                     expect(planeResult.match.value).toEqual('pttp://foreign-origin.com');
+                    expect(planeResult.match.query.query1).toEqual('data-value1');
+                    expect(planeResult.match.query.query2).toEqual('data-value2');
+                }
+            }
+        }
+
+        {
+            const planeResult = isoMatcher.match(
+                'pttp://foreign-origin.com/p?query1=data-value1&query2=data-value2',
+            );
+            expect(planeResult).toBeTruthy();
+            if (planeResult) {
+                expect(planeResult.kind).toEqual('Plane');
+
+                if (planeResult.kind === 'Plane') {
+                    expect(planeResult.data.route).toEqual('pttp://foreign-origin.com/p');
+                    expect(planeResult.match.value).toEqual('pttp://foreign-origin.com/p');
                     expect(planeResult.match.query.query1).toEqual('data-value1');
                     expect(planeResult.match.query.query2).toEqual('data-value2');
                 }
