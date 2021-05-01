@@ -580,52 +580,57 @@ class PluridServer {
                 //     return;
                 // }
 
+                const isoMatchNotFound = this.isoMatcher.match(
+                    NOT_FOUND_ROUTE,
+                    'route',
+                );
                 // const notFoundRoute = this.router.match(NOT_FOUND_ROUTE);
-                // if (!notFoundRoute) {
-                //     if (this.debugAllows('info')) {
-                //         const requestTime = this.computeRequestTime(request);
+                if (!isoMatchNotFound) {
+                    if (this.debugAllows('info')) {
+                        const requestTime = this.computeRequestTime(request);
 
-                //         console.info(
-                //             `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
-                //         );
-                //     }
+                        console.info(
+                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
+                        );
+                    }
 
-                //     response
-                //         .status(404)
-                //         .send(NOT_FOUND_TEMPLATE);
+                    response
+                        .status(404)
+                        .send(NOT_FOUND_TEMPLATE);
 
-                //     this.resolvePreserveAfterServe(
-                //         preserveAfterServe,
-                //         request,
-                //         response,
-                //     );
+                    this.resolvePreserveAfterServe(
+                        preserveAfterServe,
+                        request,
+                        response,
+                    );
 
-                //     return;
-                // }
+                    return;
+                }
 
 
-                // const renderer = await this.renderApplication(
-                //     notFoundRoute,
-                //     preserveResult,
-                // );
+                const renderer = await this.renderApplication(
+                    // notFoundRoute,
+                    isoMatchNotFound,
+                    preserveResult,
+                );
 
-                // if (this.debugAllows('info')) {
-                //     const requestTime = this.computeRequestTime(request);
+                if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
 
-                //     console.info(
-                //         `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
-                //     );
-                // }
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
+                    );
+                }
 
-                // response
-                //     .status(404)
-                //     .send(renderer.html());
+                response
+                    .status(404)
+                    .send(renderer.html());
 
-                // this.resolvePreserveAfterServe(
-                //     preserveAfterServe,
-                //     request,
-                //     response,
-                // );
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
 
                 response
                     .status(404)
