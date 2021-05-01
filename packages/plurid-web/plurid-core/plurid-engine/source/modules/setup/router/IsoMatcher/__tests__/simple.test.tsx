@@ -18,7 +18,6 @@
 const routes: PluridRoute<string>[] = [
     {
         value: '/',
-        exterior: 'index',
         planes: [
             [
                 '/some-plane',
@@ -43,6 +42,10 @@ const routes: PluridRoute<string>[] = [
     {
         value: '/parametric/:id',
         exterior: 'parametric-route',
+    },
+    {
+        value: '/nested/static',
+        exterior: 'nested-static',
     },
 ];
 
@@ -81,7 +84,8 @@ const planes: PluridPlane<string>[] = [
 ];
 
 
-describe('IsoMatcher', () => {
+
+xdescribe('IsoMatcher general', () => {
     it('matches index paths', () => {
         const isoMatcher = new IsoMatcher<string>({
             routes,
@@ -279,6 +283,138 @@ describe('IsoMatcher', () => {
             if (routePlanSomePlaneResult.kind === 'RoutePlane') {
                 expect(routePlanSomePlaneResult.match.value).toEqual('/1/some-parametric-plane/one');
                 expect(routePlanSomePlaneResult.match.parameters.id).toEqual('one');
+            }
+        }
+    });
+});
+
+
+
+describe('IsoMatcher simple', () => {
+    it('matches simple routes', () => {
+        const isoMatcher = new IsoMatcher<string>({
+            routes,
+            routePlanes,
+            planes,
+        });
+
+        {
+            const routeResult = isoMatcher.match(
+                '/',
+                'route',
+            );
+            expect(routeResult).toBeTruthy();
+            if (routeResult) {
+                expect(routeResult.kind).toEqual('Route');
+
+                if (routeResult.kind === 'Route') {
+                    expect(routeResult.data.value).toEqual('/');
+                    expect(routeResult.match.value).toEqual('/');
+                }
+            }
+        }
+
+        {
+            const routeResult = isoMatcher.match(
+                '/1',
+                'route',
+            );
+            expect(routeResult).toBeTruthy();
+            if (routeResult) {
+                expect(routeResult.kind).toEqual('Route');
+
+                if (routeResult.kind === 'Route') {
+                    expect(routeResult.data.value).toEqual('/1');
+                    expect(routeResult.match.value).toEqual('/1');
+                }
+            }
+        }
+
+        {
+            const routeResult = isoMatcher.match(
+                '/nested/static',
+                'route',
+            );
+            expect(routeResult).toBeTruthy();
+            if (routeResult) {
+                expect(routeResult.kind).toEqual('Route');
+
+                if (routeResult.kind === 'Route') {
+                    expect(routeResult.data.value).toEqual('/nested/static');
+                    expect(routeResult.match.value).toEqual('/nested/static');
+                }
+            }
+        }
+    });
+
+
+
+    it('matches parametric routes', () => {
+        const isoMatcher = new IsoMatcher<string>({
+            routes,
+            routePlanes,
+            planes,
+        });
+
+        {
+            const routeResult = isoMatcher.match(
+                '/parametric/one',
+                'route',
+            );
+            expect(routeResult).toBeTruthy();
+            if (routeResult) {
+                expect(routeResult.kind).toEqual('Route');
+
+                if (routeResult.kind === 'Route') {
+                    expect(routeResult.data.value).toEqual('/parametric/:id');
+                    expect(routeResult.match.value).toEqual('/parametric/one');
+                    expect(routeResult.match.parameters.id).toEqual('one');
+                }
+            }
+        }
+    });
+
+
+
+    it('matches queried routes', () => {
+        const isoMatcher = new IsoMatcher<string>({
+            routes,
+            routePlanes,
+            planes,
+        });
+
+        {
+            const routeResult = isoMatcher.match(
+                '/?query1=data-value1&query2=data-value2',
+                'route',
+            );
+            expect(routeResult).toBeTruthy();
+            if (routeResult) {
+                expect(routeResult.kind).toEqual('Route');
+
+                if (routeResult.kind === 'Route') {
+                    expect(routeResult.data.value).toEqual('/');
+                    expect(routeResult.match.value).toEqual('/');
+                    expect(routeResult.match.query.query1).toEqual('data-value1');
+                    expect(routeResult.match.query.query2).toEqual('data-value2');
+                }
+            }
+        }
+
+        {
+            const routeResult = isoMatcher.match(
+                '/?search=%20data%20',
+                'route',
+            );
+            expect(routeResult).toBeTruthy();
+            if (routeResult) {
+                expect(routeResult.kind).toEqual('Route');
+
+                if (routeResult.kind === 'Route') {
+                    expect(routeResult.data.value).toEqual('/');
+                    expect(routeResult.match.value).toEqual('/');
+                    expect(routeResult.match.query.search).toEqual(' data ');
+                }
             }
         }
     });

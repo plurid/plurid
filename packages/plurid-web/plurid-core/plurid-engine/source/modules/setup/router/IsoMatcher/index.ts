@@ -22,6 +22,7 @@
         extractParametersAndMatch,
         extractQuery,
         extractFragments,
+        extractPathname,
     } from '../Parser/logic';
     // #endregion external
 
@@ -369,7 +370,7 @@ class IsoMatcher<C> {
                 kind: 'Route',
                 data: route.data,
                 match: {
-                    value,
+                    value: extractPathname(value),
                     query,
                     parameters: {},
                 },
@@ -409,7 +410,7 @@ class IsoMatcher<C> {
                 } = parametersAndMatch;
 
                 const match = {
-                    value,
+                    value: extractPathname(value),
                     query,
                     parameters,
                 };
@@ -434,7 +435,7 @@ class IsoMatcher<C> {
                 kind: 'RoutePlane',
                 data: (routePlane as any).data,
                 match: {
-                    value,
+                    value: extractPathname(value),
                     query: routePlane.match.query,
                     parameters: routePlane.match.parameters,
                 },
