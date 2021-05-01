@@ -1360,22 +1360,17 @@ export const computePluridRoute = (
     matchedRoute: router.IsoMatcherRouteResult<PluridReactComponent> | undefined,
     routes: PluridRoute<PluridReactComponent>[],
     planesRegistrar: PluridPlanesRegistrar<PluridReactComponent>,
-    directPlane?: any,
+    directPlane?: router.IsoMatcherRouteResult<PluridReactComponent>,
 ) => {
     if (directPlane) {
-        const {
-            matchedPlane,
-            DirectPlane,
-        } = renderDirectPlane(
+        const DirectPlane = renderDirectPlane(
             directPlane,
             routes,
             undefined,
             planesRegistrar,
         );
 
-        if (matchedPlane && DirectPlane) {
-            return DirectPlane;
-        }
+        return DirectPlane;
     }
 
     if (!matchedRoute) {
@@ -1857,62 +1852,77 @@ export const getDirectPlaneMatch = (
 
 
 export const renderDirectPlane = (
-    matchedPath: string,
+    routePlane: router.IsoMatcherRouteResult<PluridReactComponent>,
     routes: PluridRoute<PluridReactComponent>[],
     planes: PluridRoutePlane<PluridReactComponent>[] | undefined,
     planesRegistrar: PluridPlanesRegistrar<PluridReactComponent>,
 ) => {
-    let matchedPlane: router.MatcherResponse<PluridReactComponent> | undefined;
-    let DirectPlane: React.FC<any> | undefined;
-
-    const {
-        matchRoute,
-        matchPlane,
-        matchPath,
-    } = getDirectPlaneMatch(
-        matchedPath,
-        routes,
-        planes,
-    );
-    console.log(
-        'renderDirectPlane',
-        matchRoute,
-        matchPlane,
-        matchPath,
-    );
-
-    if (matchRoute) {
-        const parsedRoute = new router.RouteParser(
-            matchedPath,
-            matchRoute,
+    // let matchedPlane: router.MatcherResponse<PluridReactComponent> | undefined;
+    const DirectPlane = (): any => {
+        const PluridRoute = () => (
+            <>
+                <PluridApplication
+                    view={[
+                        routePlane.match.value,
+                    ]}
+                    planesRegistrar={planesRegistrar}
+                />
+            </>
         );
-        matchedPlane = parsedRoute.extract();
-    }
 
-    if (
-        matchRoute && matchPlane && matchPath
-    ) {
-        DirectPlane = (): any => {
-            const PluridRoute = () => (
-                <>
-                    <PluridApplication
-                        view={matchPath
-                            ? [
-                                matchPath,
-                            ] : []
-                        }
-                        planesRegistrar={planesRegistrar}
-                    />
-                </>
-            );
-
-            return PluridRoute;
-        };
-    }
-
-    return {
-        matchedPlane,
-        DirectPlane,
+        return PluridRoute;
     };
+
+    return DirectPlane;
+
+    // const {
+    //     matchRoute,
+    //     matchPlane,
+    //     matchPath,
+    // } = getDirectPlaneMatch(
+    //     matchedPath,
+    //     routes,
+    //     planes,
+    // );
+    // console.log(
+    //     'renderDirectPlane',
+    //     matchRoute,
+    //     matchPlane,
+    //     matchPath,
+    // );
+
+    // if (matchRoute) {
+    //     const parsedRoute = new router.RouteParser(
+    //         matchedPath,
+    //         matchRoute,
+    //     );
+    //     matchedPlane = parsedRoute.extract();
+    // }
+
+    // if (
+    //     matchRoute && matchPlane && matchPath
+    // ) {
+    //     DirectPlane = (): any => {
+    //         const PluridRoute = () => (
+    //             <>
+    //                 <PluridApplication
+    //                     view={matchPath
+    //                         ? [
+    //                             matchPath,
+    //                         ] : []
+    //                     }
+    //                     planesRegistrar={planesRegistrar}
+    //                 />
+    //             </>
+    //         );
+
+    //         return PluridRoute;
+    //     };
+    // }
+
+    // return {
+    //     matchedPlane,
+    //     DirectPlane,
+    // };
 }
 // #endregion module update

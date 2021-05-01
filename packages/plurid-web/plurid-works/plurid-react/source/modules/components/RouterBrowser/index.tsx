@@ -125,7 +125,7 @@ const PluridRouterBrowser = (
     const [
         matchedRoute,
         setMatchedRoute,
-    ] = useState(
+    ] = useState<router.IsoMatcherRouteResult<PluridReactComponent> | undefined>(
         pluridIsoMatcher.current.match(
             matchedPath,
             'route',
@@ -141,7 +141,11 @@ const PluridRouterBrowser = (
             matchedRoute,
             routes,
             pluridPlanesRegistrar.current,
-            staticContext?.directPlane,
+            staticContext && staticContext.directPlane
+                ? pluridIsoMatcher.current.match(
+                    staticContext.directPlane,
+                    'route',
+                ) : undefined,
         ),
     );
     // #endregion state
@@ -206,22 +210,16 @@ const PluridRouterBrowser = (
             matchedRoute
             && matchedRoute.kind === 'RoutePlane'
         ) {
-           const {
-                matchedPlane,
-                DirectPlane,
-            } = renderDirectPlane(
-                matchedPath,
+           const DirectPlane = renderDirectPlane(
+                matchedRoute,
                 routes,
                 planes,
                 pluridPlanesRegistrar.current,
             );
 
-            if (matchedPlane && DirectPlane) {
-                setMatchedRoute(matchedRoute);
-                setPluridRoute(DirectPlane);
-
-                return;
-            }
+            setMatchedRoute(matchedRoute);
+            setPluridRoute(DirectPlane);
+            return;
         }
 
         // Handle not found.
