@@ -1085,7 +1085,7 @@ class PluridServer {
                 preserveResult,
                 matchedPlane,
 
-                pathname: isoMatch.route.value,
+                pathname: (isoMatch.data as any).value,
             });
 
             content = await contentHandler.render();
