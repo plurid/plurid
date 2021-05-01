@@ -34,7 +34,7 @@
 // #region module
 export const serverComputeMetastate = (
     // matchedRoute: router.MatcherResponse<PluridReactComponent>,
-    isoMatch: any,
+    isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
     paths: PluridRoute<PluridReactComponent>[],
 ): PluridMetastate => {
     const protocol = 'http';
@@ -124,7 +124,7 @@ export const serverComputeMetastate = (
         };
 
         // const id = matchedRoute.path.value;
-        const id = isoMatch.route.value;
+        const id = (isoMatch.data as any).value;
         // console.log('matchedRoute id', id);
 
         states[id] = state;
