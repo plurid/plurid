@@ -128,6 +128,7 @@ describe('IsoMatcher', () => {
         const planeResult = isoMatcher.match(
             '/parametric/one',
         );
+        console.log('planeResult', planeResult);
         expect((planeResult?.data as any).route).toEqual('/parametric/:id');
     });
 });

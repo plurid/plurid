@@ -27,17 +27,22 @@ export type IsoMatcherContext =
 
 
 export interface IsoMatcherResultBase {
+    value: string;
     parameters: Record<string, string>;
     query: Record<string, string>;
 }
 
 
-export interface IsoMatcherRouteResultRoute<C> extends IsoMatcherResultBase {
+export interface IsoMatcherRouteResultBase {
+    match: IsoMatcherResultBase;
+}
+
+export interface IsoMatcherRouteResultRoute<C> extends IsoMatcherRouteResultBase {
     kind: 'Route';
     data: PluridRoute<C>;
 }
 
-export interface IsoMatcherRouteResultRoutePlane<C> extends IsoMatcherResultBase {
+export interface IsoMatcherRouteResultRoutePlane<C> extends IsoMatcherRouteResultBase {
     kind: 'RoutePlane';
     data: PluridRoutePlane<C>;
 }

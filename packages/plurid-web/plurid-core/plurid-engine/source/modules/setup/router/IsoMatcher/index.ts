@@ -214,6 +214,7 @@ class IsoMatcher<C> {
 
         if (plane) {
             const match = {
+                value,
                 fragments: {
                     elements: [],
                     texts: [],
@@ -294,6 +295,7 @@ class IsoMatcher<C> {
                 } = parametersAndMatch;
 
                 const match = {
+                    value: planePath,
                     fragments: {
                         elements: [],
                         texts: [],
@@ -347,14 +349,17 @@ class IsoMatcher<C> {
         const route = this.routesIndex.get(value);
 
         if (route) {
-            const match: IsoMatcherRouteResult<C> = {
+            const result: IsoMatcherRouteResult<C> = {
                 kind: 'Route',
                 data: route,
-                query: {},
-                parameters: {},
+                match: {
+                    value,
+                    query: {},
+                    parameters: {},
+                },
             };
 
-            return match;
+            return result;
         }
 
         for (const routePath of this.routesKeys) {
@@ -379,14 +384,17 @@ class IsoMatcher<C> {
                 const route = this.routesIndex.get(routePath);
 
                 if (route) {
-                    const match: IsoMatcherRouteResult<C> = {
+                    const result: IsoMatcherRouteResult<C> = {
                         kind: 'Route',
                         data: route,
-                        query: {},
-                        parameters: {},
+                        match: {
+                            value,
+                            query: {},
+                            parameters: {},
+                        },
                     };
 
-                    return match;
+                    return result;
                 }
             }
         }
