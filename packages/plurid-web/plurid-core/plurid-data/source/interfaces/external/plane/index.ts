@@ -1,15 +1,23 @@
 // #region imports
     // #region external
     import {
-        PluridComponent,
-    } from '../component';
+        PluridRouteParameter,
+    } from '../router';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
-export interface PluridPlaneObject<C> {
+export interface PluridPlaneOptions {
+    /**
+     * Constraints for the parameters.
+     */
+    parameters?: Record<string, PluridRouteParameter>;
+}
+
+
+export interface PluridPlaneObject<C> extends PluridPlaneOptions {
     /**
      * Route to the plane, e.g. `/plane-1`. By convention, it starts with an '/'.
      *
@@ -73,6 +81,11 @@ export type PluridPlaneTuple<C> = [
      * See `PluridPlaneObject<C>.component`.
      */
     component: C,
+
+    /**
+     * See `PluridPlaneOptions`.
+     */
+    options?: PluridPlaneOptions,
 ];
 
 export type PluridPlane<C> =
@@ -93,7 +106,6 @@ export interface IndexedPluridPlane<C> {
     plane: string;
     route: string;
     component: C;
-    // component: PluridComponent;
 }
 
 
@@ -114,6 +126,5 @@ export interface RegisteredPluridPlane<C> {
         absolute: string;
     };
     component: C;
-    // component: PluridComponent;
 }
 // #endregion module

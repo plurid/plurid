@@ -370,6 +370,11 @@ export interface PluridRoutePlaneOptions {
      * Default `false`
      */
     injectExterior?: boolean;
+
+    /**
+     * Constraints for the parameters.
+     */
+    parameters?: Record<string, PluridRouteParameter>;
 }
 
 export interface PluridRoutePlaneObject<C> extends PluridRoutePlaneOptions {
