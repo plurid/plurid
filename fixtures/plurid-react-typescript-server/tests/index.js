@@ -8,6 +8,13 @@ const base = 'http://localhost:63000';
 const urls = [
     base,
     base + '/static',
+    base + '/planes',
+    base + '/planes/planes-1',
+    base + '/planes/planes-2',
+    base + '/parametric/0123456789',
+    base + '/not-found',
+    base + '/foo',
+    base + '/general-plane',
 ];
 
 const toTestPath = './tests/to-test/';
