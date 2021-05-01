@@ -213,6 +213,24 @@ const PluridRouterBrowser = (
         // let matchedRoute = pluridRouter.current.match(matchedPath);
         let matchedRoute = pluridIsoMatcher.current.match(matchedPath, 'route');
 
+        if (matchedRoute && matchedRoute.kind === 'RoutePlane') {
+           const {
+                matchedPlane,
+                DirectPlane,
+            } = renderDirectPlane(
+                matchedPath,
+                routes,
+                planes,
+                pluridPlanesRegistrar.current,
+            );
+
+            if (matchedPlane && DirectPlane) {
+                setMatchedRoute(matchedRoute);
+                setPluridRoute(DirectPlane);
+                return;
+            }
+        }
+
         // Handle direct plane access
         //        gateway access
         if (!matchedRoute) {
