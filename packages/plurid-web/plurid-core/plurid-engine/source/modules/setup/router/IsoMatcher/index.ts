@@ -263,6 +263,7 @@ class IsoMatcher<C> {
             }
         }
 
+
         for (const planePath of this.planesKeys) {
             const normalizedPlanePath = planePath.replace('pttp://', '');
             const normalizedPlaneAddress = planeAddress.replace('pttp://', '');
@@ -350,6 +351,7 @@ class IsoMatcher<C> {
             }
         }
 
+
         return;
     }
 
@@ -375,6 +377,7 @@ class IsoMatcher<C> {
 
             return result;
         }
+
 
         for (const routePath of this.routesKeys) {
             // Check if the `path` is a parametrization of `routePath`.
@@ -423,9 +426,23 @@ class IsoMatcher<C> {
             }
         }
 
-        for (const planePath of this.planesKeys) {
-            // check if value is not a route plane request
+
+        const routePlane = this.matchPlane(value);
+
+        if (routePlane) {
+            const result: IsoMatcherRouteResult<C> = {
+                kind: 'RoutePlane',
+                data: (routePlane as any).data,
+                match: {
+                    value,
+                    query: routePlane.match.query,
+                    parameters: routePlane.match.parameters,
+                },
+            };
+
+            return result;
         }
+
 
         return;
     }

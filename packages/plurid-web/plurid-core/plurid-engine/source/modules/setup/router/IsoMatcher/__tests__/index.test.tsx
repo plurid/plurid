@@ -34,6 +34,10 @@ const routes: PluridRoute<string>[] = [
                 '/some-other-plane',
                 'route-plane',
             ],
+            [
+                '/some-parametric-plane/:id',
+                'parametric-plane',
+            ],
         ],
     },
     {
@@ -78,7 +82,7 @@ const planes: PluridPlane<string>[] = [
 
 
 describe('IsoMatcher', () => {
-    xit('matches index paths', () => {
+    it('matches index paths', () => {
         const isoMatcher = new IsoMatcher<string>({
             routes,
             routePlanes,
@@ -217,6 +221,64 @@ describe('IsoMatcher', () => {
                 expect(planeResult.match.fragments.texts.length).toEqual(1);
                 expect(planeResult.match.fragments.texts[0].type).toEqual('text');
                 expect(planeResult.match.fragments.texts[0].start).toEqual('example');
+            }
+        }
+    });
+
+
+
+    it('matches routes planes', () => {
+        const isoMatcher = new IsoMatcher<string>({
+            routes,
+            routePlanes,
+            planes,
+        });
+
+        // matches the route /
+        const routePlaneIndexResult = isoMatcher.match(
+            '/',
+            'route',
+        );
+        expect(routePlaneIndexResult).toBeTruthy();
+        if (routePlaneIndexResult) {
+            expect(routePlaneIndexResult.kind).toEqual('Route');
+        }
+
+        // matches the route plane /some-plane
+        const routePlanSomePlaneResult = isoMatcher.match(
+            '/some-plane',
+            'route',
+        );
+        expect(routePlanSomePlaneResult).toBeTruthy();
+        if (routePlanSomePlaneResult) {
+            expect(routePlanSomePlaneResult.kind).toEqual('RoutePlane');
+
+            if (routePlanSomePlaneResult.kind === 'RoutePlane') {
+                expect((routePlanSomePlaneResult.data as any).value).toEqual('/some-plane');
+            }
+        }
+    });
+
+
+
+    it('matches parametric routes planes', () => {
+        const isoMatcher = new IsoMatcher<string>({
+            routes,
+            routePlanes,
+            planes,
+        });
+
+        const routePlanSomePlaneResult = isoMatcher.match(
+            '/1/some-parametric-plane/one',
+            'route',
+        );
+        expect(routePlanSomePlaneResult).toBeTruthy();
+        if (routePlanSomePlaneResult) {
+            expect(routePlanSomePlaneResult.kind).toEqual('RoutePlane');
+
+            if (routePlanSomePlaneResult.kind === 'RoutePlane') {
+                expect(routePlanSomePlaneResult.match.value).toEqual('/1/some-parametric-plane/one');
+                expect(routePlanSomePlaneResult.match.parameters.id).toEqual('one');
             }
         }
     });
