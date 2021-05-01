@@ -102,16 +102,6 @@ const PluridRouterBrowser = (
         ),
     );
 
-    // const pluridURLRouter = useRef(new PluridURLRouter(
-    //     urlRoutes.current,
-    // ));
-
-    const pluridRouter = useRef(
-        new PluridRouter(
-            routes,
-        ),
-    );
-
     const pluridIsoMatcher = useRef(
         new PluridIsoMatcher({
             routes,
@@ -140,7 +130,6 @@ const PluridRouterBrowser = (
             matchedPath,
             'route',
         ),
-        // pluridRouter.current.match(matchedPath),
     );
     console.log('matchedRoute', matchedRoute);
 
@@ -210,10 +199,13 @@ const PluridRouterBrowser = (
             history.pushState(null, '', matchedPath);
         }
 
-        // let matchedRoute = pluridRouter.current.match(matchedPath);
         let matchedRoute = pluridIsoMatcher.current.match(matchedPath, 'route');
 
-        if (matchedRoute && matchedRoute.kind === 'RoutePlane') {
+        // Handle direct plane access.
+        if (
+            matchedRoute
+            && matchedRoute.kind === 'RoutePlane'
+        ) {
            const {
                 matchedPlane,
                 DirectPlane,
@@ -227,40 +219,14 @@ const PluridRouterBrowser = (
             if (matchedPlane && DirectPlane) {
                 setMatchedRoute(matchedRoute);
                 setPluridRoute(DirectPlane);
+
                 return;
             }
-        }
-
-        // Handle direct plane access
-        //        gateway access
-        if (!matchedRoute) {
-            console.log('Direct plane or gateway access');
-            // if (matchedPath === '/gateway') {
-            //     // handle gateway
-            // }
-
-            // // render direct plane
-            // const {
-            //     matchedPlane,
-            //     DirectPlane,
-            // } = renderDirectPlane(
-            //     matchedPath,
-            //     routes,
-            //     planes,
-            //     pluridPlanesRegistrar.current,
-            // );
-
-            // if (matchedPlane && DirectPlane) {
-            //     setMatchedRoute(matchedPlane);
-            //     setPluridRoute(DirectPlane);
-            //     return;
-            // }
         }
 
         // Handle not found.
         if (!matchedRoute) {
             matchedRoute = pluridIsoMatcher.current.match(notFoundPath, 'route');
-            // matchedRoute = pluridRouter.current.match(notFoundPath);
         }
 
         setMatchedRoute(matchedRoute);
@@ -285,9 +251,10 @@ const PluridRouterBrowser = (
             return;
         }
 
+        const path = matchedRoute.match.value;
+
         storage.saveState(
-            // matchedRoute.path.value,
-            matchedRoute.data.value,
+            path,
             PLURID_ROUTER_STORAGE,
         );
 
@@ -295,8 +262,7 @@ const PluridRouterBrowser = (
             PLURID_ROUTER_LOCATION_STORED,
             {
                 detail: {
-                    // path: matchedRoute.path.value,
-                    path: matchedRoute.data.value,
+                    path,
                 },
             },
         );
@@ -313,26 +279,16 @@ const PluridRouterBrowser = (
     if (exterior) {
         PluridRouterExterior = exterior;
         PluridRouterExterior.displayName = 'PluridRouterExterior';
-        // if (exterior.kind === 'react') {
-        //     PluridRouterExterior = exterior.element;
-        //     PluridRouterExterior.displayName = 'PluridRouterExterior';
-        // }
     }
 
     let PluridRouterShell: React.FC<any> = ({
         children,
     }) => (
-        <>
-            {children}
-        </>
+        <>{children}</>
     );
     if (shell) {
         PluridRouterShell = shell;
         PluridRouterShell.displayName = 'PluridRouterShell';
-        // if (shell.kind === 'react') {
-        //     PluridRouterShell = shell.element;
-        //     PluridRouterShell.displayName = 'PluridRouterShell';
-        // }
     }
 
 
