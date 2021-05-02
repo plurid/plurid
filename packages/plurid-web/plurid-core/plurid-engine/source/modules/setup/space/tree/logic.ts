@@ -287,7 +287,7 @@ export const resolveViewItem = <C>(
     const viewData = typeof view === 'string'
         ? view
         : view.plane;
-    console.log('viewData', viewData);
+    // console.log('viewData', viewData);
 
     const viewAddress = computePlaneAddress(
         viewData,
@@ -318,7 +318,7 @@ export const resolveViewItem = <C>(
 
     // const match = isoMatcher.match(resolvedView.route);
     const match = isoMatcher.match(viewData);
-    console.log('match', match);
+    // console.log('match', match);
 
     if (match) {
         const route = (match.data as any).route;
