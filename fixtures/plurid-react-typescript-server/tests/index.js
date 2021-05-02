@@ -12,8 +12,8 @@ const urls = [
     base + '/planes/planes-1',
     base + '/planes/planes-2',
     base + '/parametric/0123456789',
-    base + '/not-found',
-    base + '/foo',
+    // base + '/not-found',
+    // base + '/foo',
     base + '/general-plane',
 ];
 
@@ -49,7 +49,8 @@ const main = async () => {
                     if (toTestData.length === inTestData.length) {
                         console.log(`\tPassed: ${url}`);
                     } else {
-                        console.log(`\tFailed: ${url}`);
+                        const redLog = '\x1b[31m%s\x1b[0m';
+                        console.log(redLog, '\tFailed:', url);
                     }
                 } catch (error) {
                     console.log(`\tErrored on file: ${url}`, error);
