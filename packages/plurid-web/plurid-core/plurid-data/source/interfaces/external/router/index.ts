@@ -233,6 +233,12 @@ export interface PluridPreserveResponse {
      * To be used with the catch-all matcher `'*'` or with complex routing with overlapping parameters.
      */
     pass?: boolean;
+
+    /**
+     * Key-value pairs which will be inserted as globals on the window as in
+     * `window.${key} = ${value}`.
+     */
+    globals?: Record<string, string>;
 }
 
 export interface PluridPreserveResponseProviders {
