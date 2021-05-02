@@ -62,13 +62,23 @@ export const computePlaneAddress = (
 
     origin = stringRemoveTrailing(origin, '/');
 
+    const absolutePlane = isAbsolutePlane(plane)
+
     const path = route && route !== '/'
-        ? cleanupPath(route) + cleanupPath(cleanPlane)
+        ? absolutePlane
+            ? cleanupPath(cleanPlane)
+            : cleanupPath(route) + cleanupPath(cleanPlane)
         : cleanupPath(cleanPlane);
 
     const planeAddress = PTTP_PROTOCOL + origin + path;
 
     return planeAddress;
+}
+
+export const isAbsolutePlane = (
+    value: string,
+) => {
+    return value[0] === '/';
 }
 
 
