@@ -493,7 +493,7 @@ class PluridServer {
                 matchingPath,
                 'route',
             );
-            console.log('Route isoMatch', isoMatch);
+            // console.log('Route isoMatch', isoMatch);
 
             // const route = this.router.match(matchingPath);
             // console.log('Route matched', route);
@@ -963,13 +963,13 @@ class PluridServer {
         matchedPlane?: any,
     ) {
         // console.log('RENDER route', route);
-        console.log('RENDER isoMatch', isoMatch);
+        // console.log('RENDER isoMatch', isoMatch);
         const pluridMetastate = serverComputeMetastate(
             // route,
             isoMatch,
             this.routes,
         );
-        console.log('pluridMetastate', pluridMetastate);
+        // console.log('pluridMetastate', pluridMetastate);
 
         const {
             content,
