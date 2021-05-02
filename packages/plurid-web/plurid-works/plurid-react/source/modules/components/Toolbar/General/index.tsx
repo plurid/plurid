@@ -222,6 +222,12 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                 setShowMenu(MENUS.NONE);
             }, 400);
         }
+
+        return () => {
+            if (menuTimeout.current) {
+                clearTimeout(menuTimeout.current);
+            }
+        }
     }, [
         mouseIn,
     ]);
