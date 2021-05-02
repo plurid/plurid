@@ -2,6 +2,7 @@
     // #region external
     import {
         cleanTemplate,
+        globalsInjector,
     } from '~utilities/template';
 
     import {
@@ -13,20 +14,6 @@
 
 
 // #region module
-const globalsInjector = (
-    globals: Record<string, string>,
-) => {
-    let globalsScript = '';
-
-    for (const [key, value] of Object.entries(globals)) {
-        const globalScript = `window.${key} = ${value}`;
-        globalsScript += globalScript;
-    }
-
-    return globalsScript;
-}
-
-
 const template = (
     data: RendererTemplateData,
 ) => {

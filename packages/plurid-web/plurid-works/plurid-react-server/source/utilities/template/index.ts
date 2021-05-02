@@ -2,16 +2,18 @@
 export const cleanTemplate = (
     template: string,
 ) => {
-    const cleanNewLines = template.replace(
-        /(?:\r\n|\r|\n)/g,
-        ' ',
-    );
-    const cleanWhitespace = cleanNewLines.replace(
-        /  +/g,
-        ' ',
-    );
-
-    return cleanWhitespace;
+    return template
+        // clean new lines
+        .replace(
+            /(?:\r\n|\r|\n)/g,
+            ' ',
+        )
+        // clean whitespace
+        .replace(
+            /  +/g,
+            ' ',
+        )
+        .trim();
 }
 
 
@@ -82,5 +84,19 @@ export const safeStore = (
         /</g,
         '\\u003c',
     );
+}
+
+
+export const globalsInjector = (
+    globals: Record<string, string>,
+) => {
+    let globalsScript = '';
+
+    for (const [key, value] of Object.entries(globals)) {
+        const globalScript = `window.${key} = ${value}`;
+        globalsScript += globalScript;
+    }
+
+    return globalsScript;
 }
 // #endregion module
