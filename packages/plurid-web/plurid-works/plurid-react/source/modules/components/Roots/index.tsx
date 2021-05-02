@@ -148,7 +148,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         <StyledPluridRoots
             suppressHydrationWarning={true}
             style={{
-                width: typeof window !== 'undefined' ? window.innerWidth + 'px' : '1440px',
+                // width: typeof window !== 'undefined' ? window.innerWidth + 'px' : '1440px',
+                width: '100%', // TOFIX
                 height: typeof window !== 'undefined' ? window.innerHeight + 'px' : '821px',
                 transform: cleanTemplate(`
                     translateX(${spaceTranslationX}px)

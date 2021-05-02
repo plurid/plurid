@@ -170,7 +170,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             show={treePlane.show}
             id={planeID}
             style={{
-                width,
+                // width,
+                width: '100%', // TOFIX
                 transform: cleanTemplate(`
                     translateX(${location.translateX}px)
                     translateY(${location.translateY}px)

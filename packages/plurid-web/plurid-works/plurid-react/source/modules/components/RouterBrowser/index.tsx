@@ -120,7 +120,7 @@ const PluridRouterBrowser = (
             staticContext,
         ),
     );
-    console.log('matchedPath', matchedPath);
+    // console.log('matchedPath', matchedPath);
 
     const [
         matchedRoute,
@@ -131,7 +131,7 @@ const PluridRouterBrowser = (
             'route',
         ),
     );
-    console.log('matchedRoute', matchedRoute);
+    // console.log('matchedRoute', matchedRoute);
 
     const [
         PluridRoute,

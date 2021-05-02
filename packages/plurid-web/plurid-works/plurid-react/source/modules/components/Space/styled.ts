@@ -54,7 +54,8 @@ export const StyledPluridSpace = styled.div<IStyledPluridSpace>`
         return 'transparent';
     }};
 
-    opacity: ${({
+    /* TOFIX */
+    /* opacity: ${({
         fadeInTime,
     }) => {
         if (fadeInTime) {
@@ -75,6 +76,6 @@ export const StyledPluridSpace = styled.div<IStyledPluridSpace>`
         }
 
         return '';
-    }};
+    }}; */
 `;
 // #endregion module
