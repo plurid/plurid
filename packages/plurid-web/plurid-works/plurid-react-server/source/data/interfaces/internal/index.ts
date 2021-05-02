@@ -53,6 +53,7 @@ export interface PluridRendererConfiguration {
     defaultPreloadedPluridMetastate: string | undefined;
     pluridMetastate: string;
     bodyScripts: string | undefined;
+    globals: Record<string, string> | undefined;
 }
 
 
@@ -129,5 +130,6 @@ export interface RendererTemplateData {
     defaultPreloadedPluridMetastate: string;
     pluridMetastate: string;
     bodyScripts: string;
+    globals: Record<string, string>;
 }
 // #endregion module

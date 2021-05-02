@@ -959,7 +959,7 @@ class PluridServer {
     private async renderApplication(
         // route: router.MatcherResponse<PluridReactComponent>,
         isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
-        preserveResult: any,
+        preserveResult: PluridPreserveResponse | void,
         matchedPlane?: any,
     ) {
         // console.log('RENDER route', route);
@@ -1010,8 +1010,10 @@ class PluridServer {
 
 
         let reduxPreserveValue;
+        let globals;
         if (preserveResult) {
             reduxPreserveValue = preserveResult.providers?.redux;
+            globals = preserveResult.globals;
         }
 
         const store = this.servicesData?.reduxStore
@@ -1042,6 +1044,7 @@ class PluridServer {
             defaultPreloadedPluridMetastate: this.template?.defaultPreloadedPluridMetastate,
             pluridMetastate: JSON.stringify(pluridMetastate),
             bodyScripts: this.template?.bodyScripts,
+            globals,
         });
 
         return renderer;

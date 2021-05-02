@@ -13,6 +13,20 @@
 
 
 // #region module
+const globalsInjector = (
+    globals: Record<string, string>,
+) => {
+    let globalsScript = '';
+
+    for (const [key, value] of Object.entries(globals)) {
+        const globalScript = `window.${key} = ${value}`;
+        globalsScript += globalScript;
+    }
+
+    return globalsScript;
+}
+
+
 const template = (
     data: RendererTemplateData,
 ) => {
@@ -33,7 +47,10 @@ const template = (
         defaultPreloadedPluridMetastate,
         pluridMetastate,
         bodyScripts,
+        globals,
     } = data;
+
+    const injectedGlobals = globalsInjector(globals);
 
     const templateString = `
 <!DOCTYPE html>
@@ -58,6 +75,7 @@ const template = (
         <div id="${root}">${content}</div>
 
         <script>
+            ${injectedGlobals}
             window.${defaultPreloadedReduxState} = ${reduxState};
             window.${defaultPreloadedPluridMetastate} = ${pluridMetastate};
         </script>
