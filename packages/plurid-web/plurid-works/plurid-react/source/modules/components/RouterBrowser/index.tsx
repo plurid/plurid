@@ -85,6 +85,7 @@ const PluridRouterBrowser = (
         cleanNavigation,
         notFoundPath: notFoundPathProperty,
     } = properties;
+    // console.log('staticContext', staticContext)
 
     const notFoundPath = notFoundPathProperty || '/not-found';
 

@@ -1362,9 +1362,19 @@ export const computePluridRoute = (
     planesRegistrar: PluridPlanesRegistrar<PluridReactComponent>,
     directPlane?: router.IsoMatcherRouteResult<PluridReactComponent>,
 ) => {
-    if (directPlane) {
+    if (
+        directPlane
+        || matchedRoute?.kind === 'RoutePlane'
+    ) {
+        const match = directPlane || matchedRoute;
+
+        if (!match) {
+            return () => () => (<></>);
+        }
+        // console.log('Render Direct Plane');
+
         const DirectPlane = renderDirectPlane(
-            directPlane,
+            match,
             routes,
             undefined,
             planesRegistrar,
@@ -1452,7 +1462,6 @@ export const computePluridRoute = (
     }
 
 
-    // return () => () => (<></>);
     // Render a multispace route.
     {
         if (matchedRoute.kind !== 'Route') {
