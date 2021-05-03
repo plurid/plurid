@@ -327,7 +327,7 @@ class PluridServer {
             }
 
 
-            const path = request.path;
+            const path = request.originalUrl;
 
 
             const ignorable = this.ignoreGetRequest(
@@ -493,7 +493,7 @@ class PluridServer {
                 matchingPath,
                 'route',
             );
-            // console.log('Route isoMatch', isoMatch);
+            // console.log('Route isoMatch', matchingPath, isoMatch);
 
             // const route = this.router.match(matchingPath);
             // console.log('Route matched', route);
