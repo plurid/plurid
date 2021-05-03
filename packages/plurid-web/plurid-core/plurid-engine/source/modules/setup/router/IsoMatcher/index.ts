@@ -455,6 +455,7 @@ class IsoMatcher<C> {
 
 
         const routePlane = this.matchPlane(value);
+        // console.log('routePlane', value, this.planesIndex, routePlane);
 
         if (routePlane) {
             const result: IsoMatcherRouteResult<C> = {

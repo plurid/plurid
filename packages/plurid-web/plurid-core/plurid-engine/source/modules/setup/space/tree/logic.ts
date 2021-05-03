@@ -279,6 +279,8 @@ export const resolveViewItem = <C>(
     view: string | PluridView,
     configuration: PluridConfiguration,
 ): TreePlane | undefined => {
+    // console.log('resolveViewItem', planes);
+
     const {
         protocol,
         host,
@@ -292,6 +294,7 @@ export const resolveViewItem = <C>(
     const viewAddress = computePlaneAddress(
         viewData,
     );
+    // console.log('viewAddress', viewAddress);
 
     // const resolvedView = resolveRoute(
     //     viewData,
@@ -318,10 +321,10 @@ export const resolveViewItem = <C>(
 
     // const match = isoMatcher.match(resolvedView.route);
     const match = isoMatcher.match(viewData);
-    // console.log('match', match);
+    // console.log('isoMatcher match', match);
 
     if (match) {
-        const route = (match.data as any).route;
+        const route = match.match.value;
 
         const treePlane: TreePlane = {
             sourceID: route,

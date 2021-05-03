@@ -39,4 +39,6 @@ export {
 };
 
 export * from './interfaces';
+
+export * from './general';
 // #endregion module
