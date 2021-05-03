@@ -385,7 +385,8 @@ class IsoMatcher<C> {
                 kind: 'Route',
                 data: route.data,
                 match: {
-                    value: extractPathname(value),
+                    // value: extractPathname(value),
+                    value,
                     query,
                     parameters: {},
                 },
@@ -436,7 +437,8 @@ class IsoMatcher<C> {
                 );
 
                 const match = {
-                    value: extractPathname(value),
+                    // value: extractPathname(value),
+                    value,
                     query,
                     parameters,
                 };
@@ -462,7 +464,8 @@ class IsoMatcher<C> {
                 kind: 'RoutePlane',
                 data: routePlane.data as any, // HACK
                 match: {
-                    value: extractPathname(value),
+                    // value: extractPathname(value),
+                    value,
                     query: routePlane.match.query,
                     parameters: routePlane.match.parameters,
                 },
