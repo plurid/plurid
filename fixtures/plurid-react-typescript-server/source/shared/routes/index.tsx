@@ -50,13 +50,14 @@ const planesRoute: PluridReactRoute = {
     ),
     planes: [
         {
-            value: '/plane-1',
+            value: 'plane-1',
             component: () => (<div>plane 1</div>),
+            // link: '/planes/plane-1',
         },
         {
-            value: '/plane-2',
+            value: 'plane-2',
             component: () => (<div>plane 2</div>),
-            link: '/planes/plane-2',
+            // link: '/planes/plane-2',
         },
     ],
     view: [
