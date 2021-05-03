@@ -1093,7 +1093,9 @@ class PluridServer {
                 preserveResult,
                 // matchedPlane,
 
-                pathname: isoMatch.kind === 'Route' ? isoMatch.data.value : isoMatch.match.value,
+                pathname: isoMatch.kind === 'Route'
+                    ? isoMatch.data.value
+                    : isoMatch.match.value,
                 matchedPlane: isoMatch.kind === 'RoutePlane'
                     ? {
                         value: isoMatch.match.value,
