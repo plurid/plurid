@@ -20,6 +20,7 @@
         PluridRoutePlane,
         PluridPlane,
         IndexedPluridPlane,
+        PluridRouterStatic,
     } from '@plurid/plurid-data';
 
     import {
@@ -1322,9 +1323,9 @@ export const gatherPluridPlanes = (
 
                 const planeRoute = planeData.link
                     ? planeData.link
-                    : route.value === '/'
+                    : planeData.value.startsWith('/')
                         ? planeData.value
-                        : route.value + planeData.value;
+                        : route.value + '/' + planeData.value;
 
                 const pluridPlane: PluridReactPlane = {
                     route: planeRoute,
@@ -1371,12 +1372,11 @@ export const computePluridRoute = (
         if (!match) {
             return () => () => (<></>);
         }
-        // console.log('Render Direct Plane');
+        // console.log('Render Direct Plane directPlane', directPlane);
+        // console.log('Render Direct Plane matchedRoute', matchedRoute);
 
         const DirectPlane = renderDirectPlane(
             match,
-            routes,
-            undefined,
             planesRegistrar,
         );
 
@@ -1795,7 +1795,7 @@ export const computePluridRoute = (
 
 
 export const computeInitialMatchedPath = (
-    staticContext?: any,
+    staticContext?: PluridRouterStatic,
 ): string => {
     if (staticContext) {
         return staticContext.path;
@@ -1862,8 +1862,6 @@ export const getDirectPlaneMatch = (
 
 export const renderDirectPlane = (
     routePlane: router.IsoMatcherRouteResult<PluridReactComponent>,
-    routes: PluridRoute<PluridReactComponent>[],
-    planes: PluridRoutePlane<PluridReactComponent>[] | undefined,
     planesRegistrar: PluridPlanesRegistrar<PluridReactComponent>,
 ) => {
     // let matchedPlane: router.MatcherResponse<PluridReactComponent> | undefined;
