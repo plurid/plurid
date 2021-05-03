@@ -1802,7 +1802,7 @@ export const computeInitialMatchedPath = (
     }
 
     if (typeof window !== 'undefined') {
-        return window.location.pathname;
+        return window.location.pathname + window.location.search;
     }
 
     return '/';
@@ -1864,6 +1864,30 @@ export const renderDirectPlane = (
     routePlane: router.IsoMatcherRouteResult<PluridReactComponent>,
     planesRegistrar: PluridPlanesRegistrar<PluridReactComponent>,
 ) => {
+    if (routePlane.match.query.flat) {
+        const flat = routePlane.match.query.flat.toLowerCase();
+        const renderFlat = flat === 'true' || flat === '1';
+
+        if (renderFlat) {
+            const pluridRoute = planesRegistrar.get(routePlane.match.value);
+
+            if (pluridRoute) {
+                const Flat = pluridRoute.component;
+                const DirectPlane = (): any => {
+                    const PluridRoute = () => (
+                        <>
+                            <Flat />
+                        </>
+                    );
+
+                    return PluridRoute;
+                };
+
+                return DirectPlane;
+            }
+        }
+    }
+
     // let matchedPlane: router.MatcherResponse<PluridReactComponent> | undefined;
     const DirectPlane = (): any => {
         const PluridRoute = () => (
