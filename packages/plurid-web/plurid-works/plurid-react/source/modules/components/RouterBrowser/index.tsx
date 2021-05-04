@@ -22,7 +22,7 @@
         PluridRoute,
         PluridRoutePlane,
         PluridPlane,
-        PluridComponent,
+        // PluridComponent,
     } from '@plurid/plurid-data';
 
     import {

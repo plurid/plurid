@@ -5,7 +5,7 @@
     import {
         PluridRoute,
         PluridRoutePlane,
-        PluridComponent,
+        // PluridComponent,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
