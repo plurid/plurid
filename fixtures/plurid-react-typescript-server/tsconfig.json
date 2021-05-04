@@ -17,6 +17,9 @@
             "~kernel-containers/*": [
                 "./source/shared/kernel/containers/*"
             ],
+            "~kernel-planes/*": [
+                "./source/shared/kernel/planes/*"
+            ],
             "~kernel-data/*": [
                 "./source/shared/kernel/data/*"
             ],
