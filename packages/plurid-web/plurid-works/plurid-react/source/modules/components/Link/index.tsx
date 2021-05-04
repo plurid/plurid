@@ -79,6 +79,7 @@
 const {
     default: Router,
     resolveRoute,
+    computePlaneAddress,
 } = router;
 
 export interface PluridLinkCoordinates {
@@ -140,9 +141,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const previewAppearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
     const previewDisappearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
 
-    const planeRouteResolved = planeRoute.startsWith('/') && typeof window !== 'undefined'
-        ? ':/' + window.location.pathname + '://s://u://c://' + planeRoute.slice(1)
-        : planeRoute;
+    // const planeRouteResolved = planeRoute.startsWith('/') && typeof window !== 'undefined'
+    //     ? ':/' + window.location.pathname + '://s://u://c://' + planeRoute.slice(1)
+    //     : planeRoute;
+    const planeRouteResolved = computePlaneAddress(planeRoute);
     // console.log('planeRouteResolved', planeRouteResolved);
 
     const absolutePlaneRoute = resolveRoute(
