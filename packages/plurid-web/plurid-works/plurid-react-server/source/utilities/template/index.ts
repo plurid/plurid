@@ -1,3 +1,13 @@
+// #region imports
+    // #region libraries
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
+// #endregion imports
+
+
+
 // #region module
 export const cleanTemplate = (
     template: string,
@@ -27,7 +37,7 @@ export const resolveBackgroundStyle = (
 
     try {
         const storeJSON = JSON.parse(store);
-        const generalPluridTheme = storeJSON?.themes?.general;
+        const generalPluridTheme: Theme | undefined = storeJSON?.themes?.general;
 
         if (!generalPluridTheme) {
             return defaultBackground;
@@ -93,7 +103,7 @@ export const globalsInjector = (
     let globalsScript = '';
 
     for (const [key, value] of Object.entries(globals)) {
-        const globalScript = `window.${key} = ${value}`;
+        const globalScript = `window.${key} = ${value};\n`;
         globalsScript += globalScript;
     }
 

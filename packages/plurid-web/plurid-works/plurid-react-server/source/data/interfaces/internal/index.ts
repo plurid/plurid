@@ -14,9 +14,9 @@
         PluridRoutePlane,
     } from '@plurid/plurid-data';
 
-    import {
-        router,
-    } from '@plurid/plurid-engine';
+    // import {
+    //     router,
+    // } from '@plurid/plurid-engine';
 
     import {
         PluridReactComponent,
@@ -27,7 +27,7 @@
     // #region external
     import {
         PluridServerService,
-        PluridServerServicesData,
+        // PluridServerServicesData,
         PluridStillerOptions,
     } from '../external';
     // #endregion external
@@ -42,17 +42,17 @@ export interface PluridRendererConfiguration {
     head: string;
     defaultStyle: string | undefined;
     styles: string;
-    headScripts: string | undefined;
+    headScripts: string[] | undefined;
+    bodyScripts: string[] | undefined;
     vendorScriptSource: string | undefined;
     mainScriptSource: string | undefined;
     bodyAttributes: string | undefined;
     root: string | undefined;
     content: string;
-    defaultPreloadedReduxState: string | undefined;
-    reduxState: string;
+    // defaultPreloadedReduxState: string | undefined;
+    // reduxState: string;
     defaultPreloadedPluridMetastate: string | undefined;
     pluridMetastate: string;
-    bodyScripts: string | undefined;
     globals: Record<string, string> | undefined;
 }
 
@@ -94,7 +94,7 @@ export interface StillsGeneratorOptions {
 
 export interface PluridContentGeneratorData {
     services: PluridServerService[];
-    servicesData: PluridServerServicesData | undefined;
+    // servicesData: PluridServerServicesData | undefined;
     stylesheet: ServerStyleSheet;
     helmet: Helmet;
     exterior: PluridReactComponent | undefined;
@@ -119,17 +119,17 @@ export interface RendererTemplateData {
     head: string;
     defaultStyle: string;
     styles: string;
-    headScripts: string;
+    headScripts: string[];
+    bodyScripts: string[];
     vendorScriptSource: string;
     mainScriptSource: string;
     bodyAttributes: string;
     root: string;
     content: string;
-    defaultPreloadedReduxState: string;
-    reduxState: string;
+    // defaultPreloadedReduxState: string;
+    // reduxState: string;
     defaultPreloadedPluridMetastate: string;
     pluridMetastate: string;
-    bodyScripts: string;
     globals: Record<string, string>;
 }
 // #endregion module

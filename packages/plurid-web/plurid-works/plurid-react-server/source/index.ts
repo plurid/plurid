@@ -9,7 +9,7 @@
 
 
 // #region exports
-export * from './data/interfaces';
+export * from './data/interfaces/external';
 
 export {
     PluridStillsGenerator,

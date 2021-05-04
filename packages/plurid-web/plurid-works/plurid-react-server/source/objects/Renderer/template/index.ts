@@ -29,8 +29,8 @@ const template = (
         bodyAttributes,
         root,
         content,
-        defaultPreloadedReduxState,
-        reduxState,
+        // defaultPreloadedReduxState,
+        // reduxState,
         defaultPreloadedPluridMetastate,
         pluridMetastate,
         bodyScripts,
@@ -53,7 +53,7 @@ const template = (
 
         ${styles}
 
-        ${headScripts}
+        ${headScripts.join('\n')}
 
         <script src="${vendorScriptSource}"></script>
         <script defer src="${mainScriptSource}"></script>
@@ -63,14 +63,14 @@ const template = (
 
         <script>
             ${injectedGlobals}
-            window.${defaultPreloadedReduxState} = ${reduxState};
             window.${defaultPreloadedPluridMetastate} = ${pluridMetastate};
         </script>
 
-        ${bodyScripts}
+        ${bodyScripts.join('\n')}
     </body>
 </html>
     `;
+    // window.${defaultPreloadedReduxState} = ${reduxState};
 
     return cleanTemplate(templateString);
 }

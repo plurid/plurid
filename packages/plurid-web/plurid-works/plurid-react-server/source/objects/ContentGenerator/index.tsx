@@ -35,6 +35,7 @@
 // #region module
 class PluridContentGenerator {
     private data: PluridContentGeneratorData;
+    private providers: Record<string, any> | undefined;
 
     constructor(
         data: PluridContentGeneratorData,
@@ -42,10 +43,19 @@ class PluridContentGenerator {
         this.data = data;
     }
 
+
     public async render() {
+        if (!this.providers) {
+            await this.importProviders();
+        }
+
+        if (!this.providers) {
+            console.log('Plurid Server Error :: Providers not loaded');
+            return '';
+        }
+
         const {
             pluridMetastate,
-            // matchedRoute,
             routes,
             planes,
             exterior,
@@ -53,7 +63,6 @@ class PluridContentGenerator {
             gateway,
             gatewayEndpoint,
             gatewayQuery,
-            servicesData,
             helmet,
             services,
             stylesheet,
@@ -63,14 +72,11 @@ class PluridContentGenerator {
             pathname,
         } = this.data;
 
-        // console.log('ContentGenerator pluridMetastate', pluridMetastate);
-
         const RoutedApplication = () => (
             <PluridProvider
                 metastate={pluridMetastate}
             >
                 <PluridRouterStatic
-                    // path={matchedRoute.pathname}
                     path={pathname}
                     directPlane={matchedPlane?.value}
                     routes={routes}
@@ -84,16 +90,6 @@ class PluridContentGenerator {
             </PluridProvider>
         );
 
-        let reduxPreserveValue;
-        if (preserveResult) {
-            reduxPreserveValue = preserveResult.providers?.redux;
-        }
-
-        const reduxStore = servicesData?.reduxStore;
-        const reduxStoreValue = reduxPreserveValue ?? servicesData?.reduxStoreValue ?? {};
-
-        const apolloClient = servicesData?.apolloClient;
-
         let Wrap = wrapping(
             HelmetProvider,
             RoutedApplication,
@@ -102,39 +98,17 @@ class PluridContentGenerator {
             },
         );
 
-        const providers = await this.importProviders();
-
         for (const service of services) {
-            switch (service) {
-                case 'Redux':
-                    Wrap = wrapping(
-                        providers.ReduxProvider,
-                        Wrap,
-                        {
-                            store: reduxStore(reduxStoreValue),
-                            context: servicesData?.reduxContext,
-                        },
-                    );
-                    break;
-                case 'Apollo':
-                    Wrap = wrapping(
-                        providers.ApolloProvider,
-                        Wrap,
-                        {
-                            client: apolloClient,
-                        },
-                    );
-                    break;
-                case 'Stripe':
-                    Wrap = wrapping(
-                        providers.StripeProvider,
-                        Wrap,
-                        {
-                            stripe: null,
-                        },
-                    );
-                    break;
-            }
+            const preserveProperties = preserveResult?.providers?.[service.name];
+
+            Wrap = wrapping(
+                this.providers[service.name],
+                Wrap,
+                {
+                    ...service.properties,
+                    ...preserveProperties,
+                },
+            );
         }
 
         const content = renderToString(
@@ -148,33 +122,24 @@ class PluridContentGenerator {
         return content;
     }
 
+
     private async importProviders() {
-        let ReduxProvider;
-        let StripeProvider;
-        let ApolloProvider;
+        const providers: Record<string, any> = {};
 
         for (const service of this.data.services) {
-            switch (service) {
-                case 'Redux':
-                    const redux = await import('react-redux');
-                    ReduxProvider = redux.Provider;
-                    break;
-                case 'Apollo':
-                    const apollo = await import('@apollo/client');
-                    ApolloProvider = apollo.ApolloProvider;
-                    break;
-                case 'Stripe':
-                    const stripe = await import('react-stripe-elements');
-                    StripeProvider = stripe.StripeProvider;
-                    break;
+            try {
+                const importedService = await import(service.package);
+                const ImportedServiceProvider = service.provider === 'default'
+                    ? importedService
+                    : importedService[service.provider];
+                providers[service.name] = ImportedServiceProvider;
+            } catch (error) {
+                console.log(`Plurid Server Error :: Service '${service.name}' from '${service.package}' could not be imported.`);
+                continue;
             }
         }
 
-        return {
-            ReduxProvider,
-            ApolloProvider,
-            StripeProvider,
-        };
+        this.providers = providers;
     }
 }
 // #endregion module

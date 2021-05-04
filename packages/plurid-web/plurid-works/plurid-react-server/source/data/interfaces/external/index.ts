@@ -103,19 +103,26 @@ export interface PluridServerOptions {
 export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 
 
-export type PluridServerService =
-    | 'Apollo'
-    | 'Redux'
-    | 'Stripe';
-
-
-export interface PluridServerServicesData {
-    reduxStore?: any;
-    reduxStoreValue?: any;
-    reduxContext?: any;
-    apolloClient?: any;
-    stripeScript?: string;
+export interface PluridServerService<P = any> {
+    name: string;
+    package: string;
+    provider: string;
+    properties?: P;
 }
+
+// export type PluridServerService =
+//     | 'Apollo'
+//     | 'Redux'
+//     | 'Stripe';
+
+
+// export interface PluridServerServicesData {
+//     reduxStore?: any;
+//     reduxStoreValue?: any;
+//     reduxContext?: any;
+//     apolloClient?: any;
+//     stripeScript?: string;
+// }
 
 
 export interface PluridServerConfiguration {
@@ -135,7 +142,7 @@ export interface PluridServerConfiguration {
      * Supported: `GraphQL`, `Redux`, `Stripe`.
      */
     services?: PluridServerService[];
-    servicesData?: PluridServerServicesData;
+    // servicesData?: PluridServerServicesData;
 
     options?: PluridServerPartialOptions;
 
@@ -155,7 +162,9 @@ export interface PluridServerTemplateConfiguration {
     htmlLanguage?: string;
     htmlAttributes?: Record<string, string>;
     defaultStyle?: string;
-    headScripts?: string;
+
+    headScripts?: string[];
+    bodyScripts?: string[];
 
     /**
      * The JavaScript vendor filepath to inject in the HTML template.
@@ -177,13 +186,13 @@ export interface PluridServerTemplateConfiguration {
      */
     root?: string;
 
-    /**
-     * Global variable name to be attached to window on the server-side
-     * to preload redux state.
-     *
-     * Default: `__PRELOADED_REDUX_STATE__`
-     */
-    defaultPreloadedReduxState?: string;
+    // /**
+    //  * Global variable name to be attached to window on the server-side
+    //  * to preload redux state.
+    //  *
+    //  * Default: `__PRELOADED_REDUX_STATE__`
+    //  */
+    // defaultPreloadedReduxState?: string;
 
     /**
      * Global variable name to be attached to window on the server-side
@@ -192,8 +201,6 @@ export interface PluridServerTemplateConfiguration {
      * Default: `__PRELOADED_PLURID_METASTATE__`
      */
     defaultPreloadedPluridMetastate?: string;
-
-    bodyScripts?: string;
 }
 
 

@@ -37,17 +37,17 @@ class PluridRenderer {
     private head: string;
     private defaultStyle: string;
     private styles: string;
-    private headScripts: string;
+    private headScripts: string[];
+    private bodyScripts: string[];
     private vendorScriptSource: string;
     private mainScriptSource: string;
     private bodyAttributes: string;
     private root: string;
     private content: string;
-    private defaultPreloadedReduxState: string;
-    private reduxState: string;
+    // private defaultPreloadedReduxState: string;
+    // private reduxState: string;
     private defaultPreloadedPluridMetastate: string;
     private pluridMetastate: string;
-    private bodyScripts: string;
     private globals: Record<string, string>;
 
     constructor(
@@ -65,8 +65,8 @@ class PluridRenderer {
             bodyAttributes,
             content,
             root,
-            defaultPreloadedReduxState,
-            reduxState,
+            // defaultPreloadedReduxState,
+            // reduxState,
             defaultPreloadedPluridMetastate,
             pluridMetastate,
             bodyScripts,
@@ -76,7 +76,8 @@ class PluridRenderer {
         const {
             gradientBackground,
             gradientForeground,
-        } = resolveBackgroundStyle(reduxState);
+        // } = resolveBackgroundStyle(reduxState);
+        } = resolveBackgroundStyle('');
 
         const defaultStyleBasic = `
             body {
@@ -91,17 +92,17 @@ class PluridRenderer {
         this.head = head || '';
         this.defaultStyle = defaultStyle ?? defaultStyleBasic;
         this.styles = styles;
-        this.headScripts = headScripts ?? '';
+        this.headScripts = headScripts ?? [];
         this.vendorScriptSource = vendorScriptSource || DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE;
         this.mainScriptSource = mainScriptSource || DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE;
         this.bodyAttributes = bodyAttributes || '';
         this.root = root || 'root';
         this.content = assetsPathRewrite(content) || '';
-        this.defaultPreloadedReduxState = defaultPreloadedReduxState || DEFAULT__PRELOADED_REDUX_STATE__;
-        this.reduxState = safeStore(reduxState) || DEFAULT_RENDERER_REDUX_STATE;
+        // this.defaultPreloadedReduxState = defaultPreloadedReduxState || DEFAULT__PRELOADED_REDUX_STATE__;
+        // this.reduxState = safeStore(reduxState) || DEFAULT_RENDERER_REDUX_STATE;
         this.defaultPreloadedPluridMetastate = defaultPreloadedPluridMetastate || DEFAULT__PRELOADED_PLURID_METASTATE__;
         this.pluridMetastate = pluridMetastate || DEFAULT_RENDERER_PLURID_STATE;
-        this.bodyScripts = bodyScripts ?? '';
+        this.bodyScripts = bodyScripts ?? [];
         this.globals = globals ?? {};
     }
 
@@ -118,8 +119,8 @@ class PluridRenderer {
             bodyAttributes: this.bodyAttributes,
             root: this.root,
             content: this.content,
-            defaultPreloadedReduxState: this.defaultPreloadedReduxState,
-            reduxState: this.reduxState,
+            // defaultPreloadedReduxState: this.defaultPreloadedReduxState,
+            // reduxState: this.reduxState,
             defaultPreloadedPluridMetastate: this.defaultPreloadedPluridMetastate,
             pluridMetastate: this.pluridMetastate,
             bodyScripts: this.bodyScripts,

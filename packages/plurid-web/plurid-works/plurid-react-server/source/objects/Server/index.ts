@@ -59,7 +59,7 @@
 
         PluridServerMiddleware,
         PluridServerService,
-        PluridServerServicesData,
+        // PluridServerServicesData,
         PluridServerOptions,
         PluridServerPartialOptions,
         PluridServerConfiguration,
@@ -113,7 +113,7 @@ class PluridServer {
     private exterior: PluridReactComponent | undefined;
     private shell: PluridReactComponent | undefined;
     private services: PluridServerService[];
-    private servicesData: PluridServerServicesData | undefined;
+    // private servicesData: PluridServerServicesData | undefined;
     private options: PluridServerOptions;
     private template: PluridServerTemplateConfiguration | undefined;
     private usePTTP: boolean;
@@ -143,7 +143,7 @@ class PluridServer {
             exterior,
             shell,
             services,
-            servicesData,
+            // servicesData,
             options,
             template,
             usePTTP,
@@ -159,7 +159,7 @@ class PluridServer {
         this.exterior = exterior;
         this.shell = shell;
         this.services = services || [];
-        this.servicesData = servicesData;
+        // this.servicesData = servicesData;
         this.options = this.handleOptions(options);
         this.template = template;
         this.usePTTP = usePTTP ?? false;
@@ -1005,7 +1005,7 @@ class PluridServer {
             helmet,
         }: any = this.helmet;
 
-        const head = `
+        const head = helmet ? `
             ${helmet.meta.toString()}
             ${helmet.title.toString()}
             ${helmet.base.toString()}
@@ -1013,32 +1013,33 @@ class PluridServer {
             ${helmet.style.toString()}
             ${helmet.noscript.toString()}
             ${helmet.script.toString()}
-        `;
+        ` : '';
 
         const htmlAttributes = {
             ...this.template?.htmlAttributes,
-            ...helmet.htmlAttributes.toComponent(),
+            ...helmet?.htmlAttributes.toComponent(),
         };
-        const bodyAttributes = helmet.bodyAttributes.toString();
+        const bodyAttributes = helmet?.bodyAttributes.toString() || '';
 
 
-        let reduxPreserveValue;
+        // let reduxPreserveValue;
         let globals;
         if (preserveResult) {
-            reduxPreserveValue = preserveResult.providers?.redux;
+            // reduxPreserveValue = preserveResult.providers?.redux;
             globals = preserveResult.globals;
         }
 
-        const store = this.servicesData?.reduxStore
-            ? JSON.stringify(
-                this.servicesData?.reduxStore(
-                    reduxPreserveValue ?? this.servicesData?.reduxStoreValue ?? {},
-                ).getState())
-            : '';
+        // const store = this.servicesData?.reduxStore
+        //     ? JSON.stringify(
+        //         this.servicesData?.reduxStore(
+        //             reduxPreserveValue ?? this.servicesData?.reduxStoreValue ?? {},
+        //         ).getState())
+        //     : '';
 
-        const headScripts = this.template?.headScripts || '';
-        const stripeScript = this.servicesData?.stripeScript || '';
-        const mergedHeadScripts = headScripts + '\n' + stripeScript;
+        const headScripts = this.template?.headScripts || [];
+        // const stripeScript = this.servicesData?.stripeScript || '';
+        // const mergedHeadScripts = headScripts + '\n' + stripeScript;
+        const mergedHeadScripts = headScripts;
 
         const renderer = new PluridRenderer({
             htmlLanguage: this.template?.htmlLanguage,
@@ -1052,8 +1053,8 @@ class PluridServer {
             bodyAttributes,
             content,
             root: this.template?.root,
-            defaultPreloadedReduxState: this.template?.defaultPreloadedReduxState,
-            reduxState: store,
+            // defaultPreloadedReduxState: this.template?.defaultPreloadedReduxState,
+            // reduxState: store,
             defaultPreloadedPluridMetastate: this.template?.defaultPreloadedPluridMetastate,
             pluridMetastate: JSON.stringify(pluridMetastate),
             bodyScripts: this.template?.bodyScripts,
@@ -1091,7 +1092,7 @@ class PluridServer {
 
             const contentHandler = new PluridContentGenerator({
                 services: this.services,
-                servicesData: this.servicesData,
+                // servicesData: this.servicesData,
                 stylesheet,
                 exterior: this.exterior,
                 shell: this.shell,
