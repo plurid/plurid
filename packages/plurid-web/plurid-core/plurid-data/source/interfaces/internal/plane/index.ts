@@ -1,8 +1,8 @@
 // #region imports
     // #region external
-    import {
-        PluridComponent,
-    } from '../../external';
+    // import {
+    //     PluridComponent,
+    // } from '../../external';
     // #endregion external
 // #endregion imports
 

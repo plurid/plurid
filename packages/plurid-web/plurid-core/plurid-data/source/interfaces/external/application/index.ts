@@ -18,9 +18,9 @@
     //     PluridUniverse,
     // } from '../universe';
 
-    import {
-        PluridComponent,
-    } from '../component';
+    // import {
+    //     PluridComponent,
+    // } from '../component';
 
     import {
         PluridView,

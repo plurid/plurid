@@ -1,8 +1,8 @@
 // #region imports
     // #region external
-    import {
-        PluridComponent,
-    } from '../component';
+    // import {
+    //     PluridComponent,
+    // } from '../component';
 
     import {
         PluridPartialConfiguration,
