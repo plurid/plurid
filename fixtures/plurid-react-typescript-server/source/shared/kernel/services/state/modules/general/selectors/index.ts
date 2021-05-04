@@ -1,15 +1,20 @@
 // #region imports
     // #region external
-    import modules from '../modules';
+    import {
+        AppState,
+    } from '../../../store';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
+const getNotFoundFace = (state: AppState) => state.general.notFoundFace;
+
+
+
 const selectors = {
-    general: modules.general.selectors,
-    themes: modules.themes.selectors,
+    getNotFoundFace,
 };
 // #endregion module
 

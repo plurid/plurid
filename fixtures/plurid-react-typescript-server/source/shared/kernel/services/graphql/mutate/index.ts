@@ -1,7 +1,12 @@
-import gql from 'graphql-tag';
+// #region imports
+    // #region libraries
+    import gql from 'graphql-tag';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const UPDATE_USER = gql`
     mutation UpdateUser($input: InputUpdateUser!) {
         updateUser(input: $input) {
@@ -17,3 +22,4 @@ export const UPDATE_USER = gql`
         }
     }
 `;
+// #endregion module

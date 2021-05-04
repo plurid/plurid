@@ -9,7 +9,7 @@
 
 
 // #region module
-const preserves: PluridPreserve<any>[] = [
+const preserves: PluridPreserve[] = [
     {
         serve: '/',
         onServe: async (
