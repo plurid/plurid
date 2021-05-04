@@ -22,29 +22,12 @@ const preserves: PluridPreserve[] = [
         onServe: async (
             transmission,
         ) => {
-            const {
-                context,
-                // response,
-                // request,
-            } = transmission;
-
-            const {
-                path,
-                contextualizers,
-            } = context;
-
-            // custom logic for the server preserve of '/'
-
-            return {
-                providers: {},
-            };
+            // preserve /
         },
     },
     {
         serve: '/not-found',
-        onServe: async (
-            transmission,
-        ) => {
+        onServe: async () => {
             return {
                 providers: {
                     redux: {
