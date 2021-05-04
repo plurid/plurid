@@ -196,15 +196,15 @@ export interface PluridPreserveTransmission<C = undefined> {
 }
 
 export interface PluridPreserveTransmissionContext<C = undefined> {
-    path: string;
-    /** URL Router `MatchedRoute` */
-    match: {
-        target: string;
-        source: string;
-        elements: any;
-        parameters?: Record<string, string>;
-    };
-    contextualizers: C;
+    // path: string;
+    // /** URL Router `MatchedRoute` */
+    // match: {
+    //     target: string;
+    //     source: string;
+    //     elements: any;
+    //     parameters?: Record<string, string>;
+    // };
+    // contextualizers: C;
 }
 
 
@@ -241,11 +241,12 @@ export interface PluridPreserveResponse {
     globals?: Record<string, string>;
 }
 
-export interface PluridPreserveResponseProviders {
-    apollo?: any;
-    redux?: any;
-    plurid?: any;
-}
+export type PluridPreserveResponseProviders = Record<string, any>;
+// export interface PluridPreserveResponseProviders {
+//     apollo?: any;
+//     redux?: any;
+//     plurid?: any;
+// }
 
 
 export interface PluridRouteParameter {
@@ -408,16 +409,19 @@ export type PluridRoutePlane<C> =
 
 
 
+export type PluridRouteMultispaceAlignment = 'x' | 'y';
+export type PluridRouteMultispaceSnapType = 'none' | 'mandatory' | 'proximity';
+
 export interface PluridRouteMultispace<C> {
     /**
      * Default: `y`.
      */
-    alignment?: 'x' | 'y';
+    alignment?: PluridRouteMultispaceAlignment;
 
     /**
      * Default: `mandatory`.
      */
-    snapType?: 'none' | 'mandatory' | 'proximity';
+    snapType?: PluridRouteMultispaceSnapType;
 
     header?: C;
     footer?: C;
