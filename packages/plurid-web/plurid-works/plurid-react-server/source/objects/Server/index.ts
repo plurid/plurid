@@ -44,7 +44,6 @@
 
     import {
         serverComputeMetastate,
-
         getDirectPlaneMatch,
 
         PluridReactComponent,
@@ -59,7 +58,6 @@
 
         PluridServerMiddleware,
         PluridServerService,
-        // PluridServerServicesData,
         PluridServerOptions,
         PluridServerPartialOptions,
         PluridServerConfiguration,
@@ -88,7 +86,6 @@
 
     import PluridRenderer from '../Renderer';
     import PluridContentGenerator from '../ContentGenerator';
-    import PluridsResponder from '../PluridsResponder';
     import PluridStillsManager from '../StillsManager';
     // #endregion external
 // #endregion imports
@@ -113,7 +110,6 @@ class PluridServer {
     private exterior: PluridReactComponent | undefined;
     private shell: PluridReactComponent | undefined;
     private services: PluridServerService[];
-    // private servicesData: PluridServerServicesData | undefined;
     private options: PluridServerOptions;
     private template: PluridServerTemplateConfiguration | undefined;
     private usePTTP: boolean;
@@ -125,9 +121,7 @@ class PluridServer {
 
     private urlRouter: router.URLRouter;
     private stills: PluridStillsManager;
-    private router: router.default<PluridReactComponent>;
     private isoMatcher: router.IsoMatcher<PluridReactComponent>;
-    private pluridsResponder: PluridsResponder;
 
 
     constructor(
@@ -159,7 +153,6 @@ class PluridServer {
         this.exterior = exterior;
         this.shell = shell;
         this.services = services || [];
-        // this.servicesData = servicesData;
         this.options = this.handleOptions(options);
         this.template = template;
         this.usePTTP = usePTTP ?? false;
@@ -183,9 +176,6 @@ class PluridServer {
         this.urlRouter = new PluridURLRouter(urlRoutes);
 
         this.stills = new PluridStillsManager(this.options);
-        this.router = new PluridRouter(this.routes);
-        this.pluridsResponder = new PluridsResponder();
-
         this.isoMatcher = new PluridIsoMatcher({
             routes: this.routes,
             routePlanes: this.planes,
@@ -436,33 +426,6 @@ class PluridServer {
             // }
 
 
-            // // HANDLE PLURIDS
-            // // check if the url is plurids
-            // // http://example.com/plurids/<route>/<space>/<page>
-            // // http://example.com/plurids/index/12345/54321
-            // if (
-            //     this.pluridsResponder.search(matchingPath)
-            // ) {
-            //     if (this.debugAllows('info')) {
-            //         const requestTime = this.computeRequestTime(request);
-
-            //         console.info(
-            //             `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${matchingPath}${requestTime}`,
-            //         );
-            //     }
-
-            //     response.send(this.pluridsResponder);
-
-            //     this.resolvePreserveAfterServe(
-            //         preserveAfterServe,
-            //         request,
-            //         response,
-            //     );
-
-            //     return;
-            // }
-
-
             // // HANDLE STILLS
             // const still = this.stills.get(matchingPath);
 
@@ -495,68 +458,9 @@ class PluridServer {
             );
             // console.log('Route isoMatch', matchingPath, isoMatch);
 
-            // const route = this.router.match(matchingPath);
-            // console.log('Route matched', route);
-
             if (
                 !isoMatch
             ) {
-                // // Handle direct plane match.
-                // const {
-                //     matchRoute,
-                //     matchPlane,
-                //     matchPath,
-                // }  = getDirectPlaneMatch(
-                //     matchingPath,
-                //     this.routes,
-                //     this.planes,
-                // );
-                // console.log('getDirectPlaneMatch',
-                //     matchRoute,
-                //     matchPlane,
-                //     matchPath,
-                // );
-
-
-                // if (
-                //     matchRoute
-                //     && matchPlane
-                //     && matchPath
-                // ) {
-                //     // Render direct plane.
-                //     const parsedRoute = new router.RouteParser(
-                //         matchingPath,
-                //         matchRoute,
-                //     );
-                //     const matchedPlaneRoute = parsedRoute.extract();
-
-                //     const renderer = await this.renderApplication(
-                //         // matchedPlaneRoute,
-                //         isoMatch,
-                //         preserveResult,
-                //         matchPlane,
-                //     );
-
-                //     if (this.debugAllows('info')) {
-                //         const requestTime = this.computeRequestTime(request);
-
-                //         console.info(
-                //             `[${time.stamp()} :: ${requestID}] (200 OK) Handled GET ${matchingPath}${requestTime}`,
-                //         );
-                //     }
-
-                //     response.send(renderer.html());
-
-                //     this.resolvePreserveAfterServe(
-                //         preserveAfterServe,
-                //         request,
-                //         response,
-                //     );
-
-                //     return;
-                // }
-
-
                 // const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
                 // if (notFoundStill) {
                 //     if (this.debugAllows('info')) {
@@ -584,7 +488,6 @@ class PluridServer {
                     NOT_FOUND_ROUTE,
                     'route',
                 );
-                // const notFoundRoute = this.router.match(NOT_FOUND_ROUTE);
                 if (!isoMatchNotFound) {
                     if (this.debugAllows('info')) {
                         const requestTime = this.computeRequestTime(request);
@@ -609,7 +512,6 @@ class PluridServer {
 
 
                 const renderer = await this.renderApplication(
-                    // notFoundRoute,
                     isoMatchNotFound,
                     preserveResult,
                 );
@@ -641,7 +543,6 @@ class PluridServer {
 
 
             const renderer = await this.renderApplication(
-                // route,
                 isoMatch,
                 preserveResult,
             );
@@ -970,15 +871,12 @@ class PluridServer {
 
 
     private async renderApplication(
-        // route: router.MatcherResponse<PluridReactComponent>,
         isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
         preserveResult: PluridPreserveResponse | void,
         matchedPlane?: any,
     ) {
-        // console.log('RENDER route', route);
         // console.log('RENDER isoMatch', isoMatch);
         const pluridMetastate = serverComputeMetastate(
-            // route,
             isoMatch,
             this.routes,
         );
@@ -1065,7 +963,6 @@ class PluridServer {
     }
 
     private async getContentAndStyles(
-        // matchedRoute: router.MatcherResponse<PluridReactComponent>,
         isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
         pluridMetastate: any,
         preserveResult: any,
@@ -1092,12 +989,10 @@ class PluridServer {
 
             const contentHandler = new PluridContentGenerator({
                 services: this.services,
-                // servicesData: this.servicesData,
                 stylesheet,
                 exterior: this.exterior,
                 shell: this.shell,
                 helmet: this.helmet,
-                // matchedRoute,
                 routes: this.routes,
                 planes: this.planes,
                 pluridMetastate,
@@ -1105,7 +1000,6 @@ class PluridServer {
                 gatewayEndpoint,
                 gatewayQuery,
                 preserveResult,
-                // matchedPlane,
 
                 pathname: isoMatch.kind === 'Route'
                     ? isoMatch.data.value
