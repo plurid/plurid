@@ -813,17 +813,30 @@ class PluridServer {
             preserve => preserve.serve === '*',
         );
 
-        const urlMatch = this.urlRouter.match(request.originalUrl);
+        const notFound = this.preserves.find(
+            preserve => preserve.serve === NOT_FOUND_ROUTE,
+        );
+
+        const isoMatch = this.isoMatcher.match(
+            request.originalUrl,
+            'route',
+        );
 
         let preserveOnServe: undefined | PluridPreserveOnServe<any>;
         let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
         let preserveOnError: undefined | PluridPreserveOnError<any>;
-        if (urlMatch?.target || catchAll) {
+        if (
+            isoMatch
+            || catchAll
+            || notFound
+        ) {
             const preserve = catchAll
                 ? catchAll
-                : this.preserves.find(
-                    preserve => preserve.serve === urlMatch?.target
-                );
+                : notFound && !isoMatch
+                    ? notFound
+                    : this.preserves.find(
+                        preserve => preserve.serve === isoMatch?.data.value
+                    );
 
             if (preserve) {
                 preserveOnServe = preserve.onServe;
@@ -840,7 +853,7 @@ class PluridServer {
                 context: {
                     contextualizers: undefined,
                     path: request.originalUrl,
-                    match: urlMatch as any, // hack as any
+                    match: isoMatch as any, // hack as any
                 },
             };
 
