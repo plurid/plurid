@@ -17,8 +17,8 @@
     } from '@plurid/plurid-functions';
 
     import {
-        PluridRoute,
-    } from '@plurid/plurid-data';
+        PluridReactRoute,
+    } from '@plurid/plurid-react';
     // #endregion libraries
 
 
@@ -78,7 +78,7 @@ class StillsGenerator {
         /**
          * Read the application routes.
          */
-        const stillRoutes: PluridRoute[] = [];
+        const stillRoutes: PluridReactRoute[] = [];
 
         for (const route of serverInformation.routes) {
             if (route.value.includes('/:')) {

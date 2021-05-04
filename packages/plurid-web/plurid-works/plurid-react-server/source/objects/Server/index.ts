@@ -77,8 +77,8 @@
         DEFAULT_SERVER_PORT,
         DEFAULT_SERVER_OPTIONS,
 
-        CATCH_ALL_PATH,
-        PTTP_PATH,
+        CATCH_ALL_ROUTE,
+        PTTP_ROUTE,
     } from '~data/constants';
 
     import {
@@ -294,7 +294,7 @@ class PluridServer {
 
     private handleEndpoints() {
         this.serverApplication.get(
-            CATCH_ALL_PATH,
+            CATCH_ALL_ROUTE,
             async (request, response, next) => {
                 this.handleGetRequest(
                     request, response, next,
@@ -303,7 +303,7 @@ class PluridServer {
         );
 
         this.serverApplication.post(
-            PTTP_PATH,
+            PTTP_ROUTE,
             async (request, response, next) => {
                 this.handlePTTPRequest(
                     request, response, next,
@@ -810,7 +810,7 @@ class PluridServer {
         response: express.Response,
     ) {
         const catchAll = this.preserves.find(
-            preserve => preserve.serve === '*',
+            preserve => preserve.serve === CATCH_ALL_ROUTE,
         );
 
         const notFound = this.preserves.find(

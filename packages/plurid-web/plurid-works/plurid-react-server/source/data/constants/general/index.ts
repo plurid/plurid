@@ -31,10 +31,9 @@ export const DEFAULT__PRELOADED_REDUX_STATE__ = '__PRELOADED_REDUX_STATE__';
 export const DEFAULT__PRELOADED_PLURID_METASTATE__ = '__PRELOADED_PLURID_METASTATE__';
 
 
-export const NOT_FOUND_ROUTE = '/not-found';
-
-export const CATCH_ALL_PATH = '*';
-export const PTTP_PATH = '/pttp';
+export const CATCH_ALL_ROUTE = '*';
+export const NOT_FOUND_ROUTE = process.env.PLURID_SERVER_NOT_FOUND_ROUTE || '/not-found';
+export const PTTP_ROUTE = process.env.PLURID_SERVER_PTTP_ROUTE || '/pttp';
 
 
 
