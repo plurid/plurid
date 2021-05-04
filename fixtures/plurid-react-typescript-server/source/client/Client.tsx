@@ -38,6 +38,7 @@
 
     // [START ReduxStore]
     import reduxStore from '~kernel-services/state/store';
+    import reduxContext from '~kernel-services/state/context';
     // [START ReduxStore]
     // [START GraphqlClient]
     import graphqlClient from '~kernel-services/graphql/client';
@@ -76,7 +77,10 @@ const Client: React.FC<any> = () => {
     return (
         // [START ClientReturn]
         <HelmetProvider context={helmetContext}>
-            <ReduxProvider store={store.current}>
+            <ReduxProvider
+                store={store.current}
+                context={reduxContext}
+            >
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
                         <PluridProvider metastate={pluridMetastate}>

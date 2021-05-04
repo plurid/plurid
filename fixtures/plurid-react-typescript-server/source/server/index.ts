@@ -3,7 +3,6 @@
     import PluridServer, {
         PluridServerMiddleware,
         PluridServerService,
-        PluridServerServicesData,
         PluridServerPartialOptions,
         PluridServerTemplateConfiguration,
     } from '@plurid/plurid-react-server';
@@ -16,6 +15,7 @@
     /** uncomment to use services */
     // [START redux import]
     import reduxStore from '~kernel-services/state/store';
+    import reduxContext from '~kernel-services/state/context';
     // [END redux import]
     // [START apollo import]
     import apolloClient from '~kernel-services/graphql/client';
@@ -65,9 +65,9 @@ const debug = isProduction
     ? 'info'
     : 'error';
 
-// [START stripe script]
-const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
-// [END stripe script]
+// // [START stripe script]
+// const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
+// // [END stripe script]
 
 
 /** Custom styles to be loaded into the template. */
@@ -85,32 +85,41 @@ const middleware: PluridServerMiddleware[] = [
 /** Services to be used in the application. */
 const services: PluridServerService[] = [
     /** uncomment to use services */
-    // [START apollo service]
-    'Apollo',
-    // [END apollo service]
-    // [START redux service]
-    'Redux',
-    // [END redux service]
     // [START stripe service]
-    // 'Stripe',
+    // {
+    //     name: 'Stripe',
+    //     package: 'react-stripe-elements',
+    //     provider: 'StripeProvider',
+    //     properties: {
+    //         stripe: null,
+    //     },
+    // },
     // [END stripe service]
+
+    // [START apollo service]
+    {
+        name: 'Apollo',
+        package: '@apollo/client',
+        provider: 'ApolloProvider',
+        properties: {
+            client: apolloClient,
+        },
+    },
+    // [END apollo service]
+
+    // [START redux service]
+    {
+        name: 'Redux',
+        package: 'react-redux',
+        provider: 'Provider',
+        properties: {
+            store: reduxStore({}),
+            context: reduxContext,
+        },
+    },
+    // [END redux service]
 ];
 
-
-const servicesData: PluridServerServicesData = {
-    /** uncomment to use services */
-    // [START apollo serviceData]
-    apolloClient,
-    // [END apollo serviceData]
-    // [START redux serviceData]
-    reduxStore,
-    reduxStoreValue: {},
-    // [END redux serviceData]
-    // [START stripe serviceData]
-    // stripeAPIKey,
-    // stripeScript,
-    // [END stripe serviceData]
-};
 
 const options: PluridServerPartialOptions = {
     buildDirectory,
@@ -136,7 +145,6 @@ const pluridServer = new PluridServer({
     styles,
     middleware,
     services,
-    servicesData,
     options,
     template,
 });

@@ -10,6 +10,8 @@
     import {
         getRandomFace,
     } from '~kernel-planes/NotFound/logic';
+
+    import reduxStore from '~kernel-services/state/store';
     // #endregion external
 // #endregion imports
 
@@ -28,13 +30,20 @@ const preserves: PluridPreserve[] = [
     {
         serve: '/not-found',
         onServe: async () => {
+            const store = reduxStore({
+                general: {
+                    notFoundFace: getRandomFace(),
+                },
+            });
+
             return {
                 providers: {
-                    redux: {
-                        general: {
-                            notFoundFace: getRandomFace(),
-                        },
+                    Redux: {
+                        store,
                     },
+                },
+                globals: {
+                    __PRELOADED_REDUX_STATE__: JSON.stringify(store.getState()),
                 },
             };
         },
