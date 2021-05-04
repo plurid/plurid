@@ -41,6 +41,8 @@ class PluridContentGenerator {
         data: PluridContentGeneratorData,
     ) {
         this.data = data;
+
+        this.importProviders();
     }
 
 
