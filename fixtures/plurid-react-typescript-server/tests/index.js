@@ -9,6 +9,7 @@ const urls = [
     base,
     base + '/static',
     base + '/planes',
+    base + '/plane',
     base + '/planes/plane-1',
     base + '/planes/plane-2',
     base + '/parametric/0123456789',
