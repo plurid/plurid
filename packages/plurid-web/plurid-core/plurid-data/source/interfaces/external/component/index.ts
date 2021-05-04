@@ -69,13 +69,14 @@ export interface PluridComponentPropertyMetadata {
 }
 
 export interface PluridComponentPropertyRoute {
-    protocol: RouteHostProtocol;
-    host: RouteHostDivision;
-    path: RouteDivision;
-    space: RouteDivision;
-    universe: RouteDivision;
-    cluster: RouteDivision;
-    plane: RoutePlaneDivision;
+    value: string;
+    // protocol: RouteHostProtocol;
+    // host: RouteHostDivision;
+    // path: RouteDivision;
+    // space: RouteDivision;
+    // universe: RouteDivision;
+    // cluster: RouteDivision;
+    // plane: RoutePlaneDivision;
 }
 
 
