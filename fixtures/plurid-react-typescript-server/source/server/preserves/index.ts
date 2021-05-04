@@ -4,6 +4,13 @@
         PluridPreserve,
     } from '@plurid/plurid-react';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        getRandomFace,
+    } from '~kernel-planes/NotFound/logic';
+    // #endregion external
 // #endregion imports
 
 
@@ -30,6 +37,22 @@ const preserves: PluridPreserve[] = [
 
             return {
                 providers: {},
+            };
+        },
+    },
+    {
+        serve: '/not-found',
+        onServe: async (
+            transmission,
+        ) => {
+            return {
+                providers: {
+                    redux: {
+                        general: {
+                            notFoundFace: getRandomFace(),
+                        },
+                    },
+                },
             };
         },
     },
