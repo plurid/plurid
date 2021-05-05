@@ -774,6 +774,37 @@ const PluridView: React.FC<ViewProperties> = (
         // #endregion effects touch
 
 
+        // #region effects gamepad
+        useEffect(() => {
+            const handleGamepadConnect = (
+                event: GamepadEvent,
+            ) => {
+                const gamepad = navigator.getGamepads()[event.gamepad.index];
+                if (!gamepad) {
+                    return;
+                }
+            }
+
+            const handleGamepadDisconnect = (
+                event: GamepadEvent,
+            ) => {
+                const gamepad = navigator.getGamepads()[event.gamepad.index];
+                if (!gamepad) {
+                    return;
+                }
+            }
+
+            window.addEventListener('gamepadconnected', handleGamepadConnect);
+            window.addEventListener('gamepaddisconnected', handleGamepadDisconnect);
+
+            return () => {
+                window.removeEventListener('gamepadconnected', handleGamepadConnect);
+                window.removeEventListener('gamepaddisconnected', handleGamepadDisconnect);
+            }
+        }, []);
+        // #endregion effects gamepad
+
+
         // #region effects pubsub
         /** PubSub Subscribe */
         useEffect(() => {
