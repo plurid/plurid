@@ -1694,9 +1694,6 @@ export const computePluridRoute = (
     isoMatcher: router.IsoMatcher<PluridReactComponent>,
     directPlane?: router.IsoMatcherRouteResult<PluridReactComponent>,
 ) => {
-    console.log('matchedRoute', matchedRoute);
-    console.log('directPlane', directPlane);
-
     if (
         directPlane
         || matchedRoute?.kind === 'RoutePlane'
