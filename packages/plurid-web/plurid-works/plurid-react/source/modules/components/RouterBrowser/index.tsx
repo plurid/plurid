@@ -140,8 +140,8 @@ const PluridRouterBrowser = (
     ] = useState<React.FC<any>>(
         computePluridRoute(
             matchedRoute,
-            routes,
             pluridPlanesRegistrar.current,
+            pluridIsoMatcher.current,
             staticContext && staticContext.directPlane
                 ? pluridIsoMatcher.current.match(
                     staticContext.directPlane,
@@ -230,8 +230,8 @@ const PluridRouterBrowser = (
         setPluridRoute(
             computePluridRoute(
                 matchedRoute,
-                routes,
                 pluridPlanesRegistrar.current,
+                pluridIsoMatcher.current,
             ),
         );
     }, [
