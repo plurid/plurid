@@ -3,7 +3,7 @@ Developing with `plurid` for
 ```
 android
     use plurid-android
-        or plurid-react-native
+     or plurid-react-native
 
 ios
     use plurid-swiftui
@@ -15,5 +15,5 @@ windows/linux/macos
      or plurid-electron
 
 web
-    use plurid-web
+    use plurid-web (plurid-html, plurid-react, plurid-reline)
 ```
