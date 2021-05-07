@@ -15,5 +15,6 @@ windows/linux/macos
      or plurid-electron
 
 web
-    use plurid-web (plurid-html, plurid-react, plurid-reline)
+    use plurid-web
+        (plurid-html · plurid-react · plurid-reline)
 ```
