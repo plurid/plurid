@@ -12,13 +12,13 @@
                 "./source/data/*"
             ],
             "~components/*": [
-                "./source/modules/components/*"
+                "./source/components/*"
             ],
             "~containers/*": [
-                "./source/modules/containers/*"
+                "./source/containers/*"
             ],
             "~services/*": [
-                "./source/modules/services/*"
+                "./source/services/*"
             ]
         },
 

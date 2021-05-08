@@ -34,9 +34,9 @@ module.exports = {
         'source',
     ],
     moduleNameMapper: {
-        "Application/(.*)": "<rootDir>/source/Application/$1",
-        "components/(.*)": "<rootDir>/source/modules/components/$1",
-        "containers/(.*)": "<rootDir>/source/modules/containers/$1",
-        "services/(.*)": "<rootDir>/source/modules/services/$1",
+        "data/(.*)": "<rootDir>/source/data/$1",
+        "components/(.*)": "<rootDir>/source/components/$1",
+        "containers/(.*)": "<rootDir>/source/containers/$1",
+        "services/(.*)": "<rootDir>/source/services/$1",
     },
 }
