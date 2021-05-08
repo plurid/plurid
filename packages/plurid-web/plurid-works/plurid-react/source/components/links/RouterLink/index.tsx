@@ -8,6 +8,13 @@
     // #endregion libraries
 
 
+    // #region external
+    import {
+        DEFAULT_ROUTER_LINK_AS_ANCHOR,
+    } from '~data/constants';
+    // #endregion external
+
+
     // #region internal
     import {
         StyledPluridRouterLinkAnchor,
@@ -20,37 +27,66 @@
 
 // #region module
 export interface PluridRouterLinkOwnProperties {
-    route: string;
+    // #region required
+        // #region values
+        route: string;
+        // #endregion values
 
-    /**
-     * Style as an anchor tag. Default `true`.
-     */
-    asAnchor?: boolean;
+        // #region methods
+        // #endregion methods
+    // #endregion required
 
-    /**
-     * Click handler. If it returns true it will exit preemptively.
-     */
-    atClick?: (event: React.MouseEvent<Element, MouseEvent>) => boolean | void;
+    // #region optional
+        // #region values
+        /**
+         * Style as an anchor tag. Default `true`.
+         */
+        asAnchor?: boolean;
 
-    style?: React.CSSProperties;
-    className?: string;
+        style?: React.CSSProperties;
+        className?: string;
+        // #endregion values
+
+        // #region methods
+        /**
+         * Click handler. If it returns true it will exit preemptively.
+         */
+        atClick?: (
+            event: React.MouseEvent<Element, MouseEvent>,
+        ) => boolean | void;
+        // #endregion methods
+    // #endregion optional
 }
-
 
 const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     properties,
 ) => {
     // #region properties
     const {
-        route,
-        asAnchor,
-        atClick,
-        children,
-        style,
-        className,
+        // #region required
+            // #region values
+            route,
+            children,
+            // #endregion values
+
+            // #region methods
+            // #endregion methods
+        // #endregion required
+
+        // #region optional
+            // #region values
+            asAnchor: asAnchorProperty,
+            style,
+            className,
+            // #endregion values
+
+            // #region methods
+            atClick,
+            // #endregion methods
+        // #endregion optional
     } = properties;
 
-    const anchor = asAnchor ?? true;
+    const asAnchor = asAnchorProperty ?? DEFAULT_ROUTER_LINK_AS_ANCHOR;
     // #endregion properties
 
 
@@ -80,7 +116,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         className,
     };
 
-    if (!anchor) {
+    if (!asAnchor) {
         return (
             <StyledPluridRouterLinkDiv
                 {...renderProperties}
