@@ -29,7 +29,7 @@
 
 
     // #region external
-    import PluridPlane from '../Plane';
+    import PluridPlane from '~components/structural/Plane';
 
     import Context from '~services/context';
 

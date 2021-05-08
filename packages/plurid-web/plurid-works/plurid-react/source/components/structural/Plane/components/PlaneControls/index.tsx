@@ -195,11 +195,11 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                     ariaLabel="Plurid Pathbar"
                 />
 
-                {showSearch && (
+                {/* {showSearch && (
                     <SearchList
                         hideSearch={() => setShowSearch(false)}
                     />
-                )}
+                )} */}
             </StyledPluridPlaneControlsCenter>
 
             <StyledPluridPlaneControlsRight>

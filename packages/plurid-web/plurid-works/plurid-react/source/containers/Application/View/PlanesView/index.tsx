@@ -13,9 +13,9 @@
 
 
     // #region exports
-    import PluridSpace from '~components/Space';
-    import PluridToolbar from '~components/Toolbar/General';
-    import PluridViewcube from '~components/Viewcube';
+    import PluridSpace from '~components/structural/Space';
+    import PluridToolbar from '~components/utilities/Toolbar/General';
+    import PluridViewcube from '~components/utilities/Viewcube';
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';

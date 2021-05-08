@@ -19,7 +19,7 @@
         computeApplication,
     } from '../computing';
 
-    import PluridSpace from '~components/Space';
+    import PluridSpace from '~components/structural/Space';
 
     import {
         GlobalStyle,

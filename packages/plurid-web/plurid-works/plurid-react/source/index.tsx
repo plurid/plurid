@@ -61,16 +61,15 @@
     import PluridApplication from './containers/Application';
     import PluridRouterBrowser from './containers/RouterBrowser';
     import PluridRouterStatic from './containers/RouterStatic';
-
-    import PluridLink from './components/Link';
-    import PluridRouterLink from './components/RouterLink';
-    import PluridApplicationConfigurator from './components/ApplicationConfigurator';
-    import PluridPlaneConfigurator from './components/PlaneConfigurator';
-    import PluridExternalPlane from './components/ExternalPlane';
-    import PluridIframePlane from './components/IframePlane';
-    import PluridVirtualList from './components/Virtual/List';
-
     import PluridProvider from './containers/Provider';
+
+    import PluridLink from './components/links/Link';
+    import PluridRouterLink from './components/links/RouterLink';
+    import PluridApplicationConfigurator from './components/utilities/ApplicationConfigurator';
+    import PluridPlaneConfigurator from './components/utilities/PlaneConfigurator';
+    import PluridExternalPlane from './components/planes/ExternalPlane';
+    import PluridIframePlane from './components/planes/IframePlane';
+    import PluridVirtualList from './components/virtuals/List';
 
     import pluridStateModules from './services/state/modules';
 
