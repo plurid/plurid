@@ -13,9 +13,9 @@
     } from '@plurid/plurid-themes';
 
     import {
-        PluridPlane as IPluridPlane,
         RegisteredPluridPlane,
         TreePlane,
+        TreePlaneLocation,
         PluridConfiguration,
         PLURID_ENTITY_PLANE,
     } from '@plurid/plurid-data';
@@ -63,25 +63,23 @@ export interface PluridPlaneOwnProperties {
         planeID: string;
         plane: RegisteredPluridPlane<PluridReactComponent>;
         treePlane: TreePlane;
-        location: any;
+        location: TreePlaneLocation;
         // #endregion values
     // #endregion required
 }
 
 export interface PluridPlaneStateProperties {
-    viewSize: ViewSize;
-    spaceScale: number;
-    generalTheme: Theme;
-    interactionTheme: Theme;
-    configuration: PluridConfiguration;
-    tree: TreePlane[];
+    stateViewSize: ViewSize;
+    stateGeneralTheme: Theme;
+    stateConfiguration: PluridConfiguration;
 }
 
 export interface PluridPlaneDispatchProperties {
-    updateSpaceTreePlane: typeof actions.space.updateSpaceTreePlane;
+    dispatchUpdateSpaceTreePlane: typeof actions.space.updateSpaceTreePlane;
 }
 
-export type PluridPlaneProperties = PluridPlaneOwnProperties
+export type PluridPlaneProperties =
+    & PluridPlaneOwnProperties
     & PluridPlaneStateProperties
     & PluridPlaneDispatchProperties;
 
@@ -96,28 +94,26 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             planeID,
             plane,
             treePlane,
-            location,
 
             children,
             // #endregion values
         // #endregion required
 
         // #region state
-        viewSize,
-        generalTheme,
-        configuration,
-        // tree,
+        stateViewSize,
+        stateGeneralTheme,
+        stateConfiguration,
         // #endregion state
 
         // #region dispatch
-        updateSpaceTreePlane,
+        dispatchUpdateSpaceTreePlane,
         // #endregion dispatch
     } = properties;
 
     const {
         global,
         elements,
-    } = configuration;
+    } = stateConfiguration;
 
     const {
         transparentUI,
@@ -133,12 +129,15 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     const width = mathematics.numbers.checkIntegerNonUnit(planeWidth)
         ? planeWidth
-        : planeWidth * viewSize.width;
+        : planeWidth * stateViewSize.width;
     // #endregion properties
 
 
     // #region state
-    const [mouseOver, setMouseOver] = useState(false);
+    const [
+        mouseOver,
+        setMouseOver,
+    ] = useState(false);
 
     // based on camera location and world position compute transform matrix
     // #endregion state
@@ -154,7 +153,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         updatedTreePlane.width = size.width;
         updatedTreePlane.height = size.height;
 
-        updateSpaceTreePlane(updatedTreePlane);
+        dispatchUpdateSpaceTreePlane(updatedTreePlane);
     }
     // #endregion handlers
 
@@ -164,7 +163,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     return (
         <StyledPluridPlane
             suppressHydrationWarning={true}
-            theme={generalTheme}
+            theme={stateGeneralTheme}
             planeControls={showPlaneControls}
             planeOpacity={planeOpacity}
             show={treePlane.show}
@@ -173,11 +172,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                 // width,
                 width: '100%', // TOFIX
                 transform: cleanTemplate(`
-                    translateX(${location.translateX}px)
-                    translateY(${location.translateY}px)
-                    translateZ(${location.translateZ}px)
-                    rotateX(${location.rotateX}deg)
-                    rotateY(${location.rotateY}deg)
+                    translateX(${treePlane.location.translateX}px)
+                    translateY(${treePlane.location.translateY}px)
+                    translateZ(${treePlane.location.translateZ}px)
+                    rotateX(${treePlane.location.rotateX}deg)
+                    rotateY(${treePlane.location.rotateY}deg)
                 `),
             }}
             onMouseEnter={() => setMouseOver(true)}
@@ -217,19 +216,18 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridPlaneStateProperties => ({
-    viewSize: selectors.space.getViewSize(state),
-    spaceScale: selectors.space.getScale(state),
-    generalTheme: selectors.themes.getGeneralTheme(state),
-    interactionTheme: selectors.themes.getInteractionTheme(state),
-    configuration: selectors.configuration.getConfiguration(state),
-    tree: selectors.space.getTree(state),
+    stateViewSize: selectors.space.getViewSize(state),
+    stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+    stateConfiguration: selectors.configuration.getConfiguration(state),
 });
 
 
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridPlaneDispatchProperties => ({
-    updateSpaceTreePlane: (treePlane: TreePlane) => dispatch(
+    dispatchUpdateSpaceTreePlane: (
+        treePlane: TreePlane,
+    ) => dispatch(
         actions.space.updateSpaceTreePlane(treePlane),
     ),
 });
