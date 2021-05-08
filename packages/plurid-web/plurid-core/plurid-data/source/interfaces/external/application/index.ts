@@ -140,7 +140,7 @@ export interface PluridApplication<C> {
 }
 
 
-export type PluridApplicationView = string[] | PluridView[];
+export type PluridApplicationView = (string | PluridView)[];
 
 
 export interface LocalStorageUsage {

@@ -8,12 +8,12 @@
 
     // #region external
     import {
-        PluridConfiguration,
-    } from '../../external/configuration';
+        PluridApplicationView,
+    } from '../../external/application';
 
     import {
-        PluridView,
-    } from '../../external/view';
+        PluridConfiguration,
+    } from '../../external/configuration';
 
     import {
         TreePlane,
@@ -61,8 +61,8 @@ export interface PluridStateSpace {
     camera: Coordinates;
     viewSize: ViewSize;
     spaceSize: SpaceSize;
-    view: string[] | PluridView[];
-    culledView: string[] | PluridView[];
+    view: PluridApplicationView;
+    culledView: PluridApplicationView;
 }
 
 
