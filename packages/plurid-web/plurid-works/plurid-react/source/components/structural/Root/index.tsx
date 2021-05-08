@@ -191,6 +191,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         // planesProperties,
         planeContext: PlaneContext,
         planeContextValue,
+        customPlane,
     } = context;
 
     // console.log('planesMap', planesMap);

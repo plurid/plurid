@@ -158,6 +158,7 @@ const PluridView: React.FC<ViewProperties> = (
             // #region values
             // view,
             planesRegistrar,
+            customPlane,
             pubsub,
             // #endregion values
         // #endregion required
@@ -841,6 +842,7 @@ const PluridView: React.FC<ViewProperties> = (
     const pluridContext: PluridContext<PluridReactComponent> = {
         planesRegistrar,
         registerPubSub,
+        customPlane,
     };
 
     const viewContainer = handleView(
