@@ -57,37 +57,37 @@
         PluridReactRoutePlane,
     } from './data/interfaces';
 
-    import PluridApplication from './modules/containers/Application';
-    import PluridRouterBrowser from './modules/containers/RouterBrowser';
-    import PluridRouterStatic from './modules/containers/RouterStatic';
+    import PluridApplication from './containers/Application';
+    import PluridRouterBrowser from './containers/RouterBrowser';
+    import PluridRouterStatic from './containers/RouterStatic';
 
-    import PluridLink from './modules/components/Link';
-    import PluridRouterLink from './modules/components/RouterLink';
-    import PluridApplicationConfigurator from './modules/components/ApplicationConfigurator';
-    import PluridPlaneConfigurator from './modules/components/PlaneConfigurator';
-    import PluridExternalPlane from './modules/components/ExternalPlane';
-    import PluridIframePlane from './modules/components/IframePlane';
-    import PluridVirtualList from './modules/components/Virtual/List';
+    import PluridLink from './components/Link';
+    import PluridRouterLink from './components/RouterLink';
+    import PluridApplicationConfigurator from './components/ApplicationConfigurator';
+    import PluridPlaneConfigurator from './components/PlaneConfigurator';
+    import PluridExternalPlane from './components/ExternalPlane';
+    import PluridIframePlane from './components/IframePlane';
+    import PluridVirtualList from './components/Virtual/List';
 
-    import PluridProvider from './modules/components/Provider';
+    import PluridProvider from './components/Provider';
 
-    import pluridStateModules from './modules/services/state/modules';
+    import pluridStateModules from './services/state/modules';
 
     import {
         serverComputeMetastate,
-    } from './modules/services/logic/server';
+    } from './services/logic/server';
 
     import {
         getDirectPlaneMatch,
-    } from './modules/services/logic/router';
+    } from './services/logic/router';
 
     import {
         pluridRouterNavigate,
-    } from './modules/services/utilities/navigate';
+    } from './services/utilities/navigate';
 
     import {
         usePluridRouter,
-    } from './modules/services/hooks';
+    } from './services/hooks';
     // #endregion internal
 // #endregion imports
 

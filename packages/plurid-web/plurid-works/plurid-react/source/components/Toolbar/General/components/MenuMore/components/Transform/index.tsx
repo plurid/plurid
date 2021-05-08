@@ -31,10 +31,10 @@
         StyledPluridMoreMenuItem,
     } from '../../styled';
 
-    import { AppState } from '../../../../../../../services/state/store';
-    import StateContext from '../../../../../../../services/state/context';
-    import selectors from '../../../../../../../services/state/selectors';
-    import actions from '../../../../../../../services/state/actions';
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
     // #endregion libraries
 // #endregion imports
 
