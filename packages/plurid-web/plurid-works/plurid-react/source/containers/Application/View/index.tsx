@@ -27,6 +27,7 @@
         PluridView,
         TreePlane,
         PluridPubSub as IPluridPubSub,
+        PluridApplicationView,
     } from '@plurid/plurid-data';
 
     import {
@@ -99,7 +100,7 @@ export interface ViewStateProperties {
     // activeUniverseID: string;
     // stateSpaceLocation: any;
     // stateCulledView: any;
-    stateSpaceView: any[];
+    stateSpaceView: PluridApplicationView;
 }
 
 export interface ViewDispatchProperties {

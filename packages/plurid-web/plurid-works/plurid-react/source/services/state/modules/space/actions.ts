@@ -1,7 +1,7 @@
 import {
     TreePlane,
     SpaceLocation,
-    PluridView,
+    PluridApplicationView,
 } from '@plurid/plurid-data';
 
 import * as Types from './types'
@@ -364,7 +364,7 @@ export const updateSpaceLinkCoordinates = (
 
 
 export const spaceSetView = (
-    payload: string[] | PluridView[],
+    payload: PluridApplicationView,
 ): Types.SpaceSetViewAction => {
     return {
         type: Types.SPACE_SET_VIEW,
@@ -374,7 +374,7 @@ export const spaceSetView = (
 
 
 export const spaceSetCulledView = (
-    payload: string[] | PluridView[],
+    payload: PluridApplicationView,
 ): Types.SpaceSetCulledViewAction => {
     return {
         type: Types.SPACE_SET_CULLED_VIEW,

@@ -8,7 +8,7 @@
         PluridPlane,
         IndexedPluridPlane,
         TreePlane,
-        PluridView,
+        PluridApplicationView,
         PluridPartialConfiguration,
     } from '@plurid/plurid-data';
 
@@ -44,7 +44,7 @@ export const computeApplication = (
     indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined,
     planes: PluridPlane<PluridReactComponent>[] | undefined,
     configuration: PluridPartialConfiguration | undefined,
-    view: string[] | PluridView[] | undefined,
+    view: PluridApplicationView | undefined,
 ) => {
     const planesPropertiesReference = new Map();
 

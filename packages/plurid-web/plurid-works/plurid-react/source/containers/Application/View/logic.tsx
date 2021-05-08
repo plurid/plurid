@@ -18,9 +18,9 @@
 
 // #region module
 const handleView = (
-    view: PluridApplicationView | undefined,
+    view: PluridApplicationView,
 ): JSX.Element => {
-    if (view) {
+    if (view.length > 0) {
         return (
             <PluridPlanesView />
         );

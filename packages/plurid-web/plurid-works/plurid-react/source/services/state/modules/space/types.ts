@@ -2,7 +2,7 @@ import {
     TreePlane,
     SpaceLocation,
     LinkCoordinates,
-    PluridView,
+    PluridApplicationView,
 } from '@plurid/plurid-data';
 
 import {
@@ -287,14 +287,14 @@ export interface UpdateSpaceLinkCoordinatesAction {
 export const SPACE_SET_VIEW = 'SPACE_SET_VIEW';
 export interface SpaceSetViewAction {
     type: typeof SPACE_SET_VIEW;
-    payload: string[] | PluridView[];
+    payload: PluridApplicationView;
 }
 
 
 export const SPACE_SET_CULLED_VIEW = 'SPACE_SET_CULLED_VIEW';
 export interface SpaceSetCulledViewAction {
     type: typeof SPACE_SET_CULLED_VIEW;
-    payload: string[] | PluridView[];
+    payload: PluridApplicationView;
 }
 
 
@@ -323,8 +323,8 @@ export interface State {
     camera: Coordinates;
     viewSize: ViewSize;
     spaceSize: SpaceSize;
-    view: string[] | PluridView[];
-    culledView: string[] | PluridView[];
+    view: PluridApplicationView;
+    culledView: PluridApplicationView;
 }
 
 
