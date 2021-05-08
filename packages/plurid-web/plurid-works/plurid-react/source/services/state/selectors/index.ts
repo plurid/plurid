@@ -9,6 +9,8 @@
 // #region exports
 export default {
     configuration: modules.configuration.selectors,
+    general: modules.general.selectors,
+    shortcuts: modules.shortcuts.selectors,
     space: modules.space.selectors,
     themes: modules.themes.selectors,
     ui: modules.ui.selectors,

@@ -16,7 +16,7 @@
     // #region external
     import {
         SetStateAction,
-    } from '~services/state/modules/global';
+    } from '~services/state/global';
     // #endregion external
 // #endregion imports
 

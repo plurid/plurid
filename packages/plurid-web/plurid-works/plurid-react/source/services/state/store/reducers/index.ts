@@ -16,6 +16,7 @@
 // #region module
 const rootReducer = combineReducers({
     configuration: modules.configuration.reducer,
+    general: modules.general.reducer,
     shortcuts: modules.shortcuts.reducer,
     space: modules.space.reducer,
     themes: modules.themes.reducer,

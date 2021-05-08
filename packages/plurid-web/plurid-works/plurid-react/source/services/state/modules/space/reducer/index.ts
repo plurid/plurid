@@ -8,7 +8,7 @@
 
     import {
         SET_STATE,
-    } from '~services/state/modules/global';
+    } from '~services/state/global';
     // #endregion external
 // #endregion imports
 
