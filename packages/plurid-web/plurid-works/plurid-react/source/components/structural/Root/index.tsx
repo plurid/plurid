@@ -52,21 +52,16 @@
 // #region module
 export interface PluridRootOwnProperties {
     plane: TreePlane;
-
-    indexedPlanesReference?: any;
-    planesPropertiesReference?: any;
-    appConfiguration?: any;
 }
 
 export interface PluridRootStateProperties {
-    activeUniverseID: string;
-    // statePlaneSources: Record<string, string>;
 }
 
 export interface PluridRootDispatchProperties {
 }
 
-export type PluridRootProperties = PluridRootOwnProperties
+export type PluridRootProperties =
+    & PluridRootOwnProperties
     & PluridRootStateProperties
     & PluridRootDispatchProperties;
 
@@ -76,14 +71,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 ) => {
     // #region properties
     const {
-        /** own */
+        // #region own
         plane,
-        // planesPropertiesReference,
-        // indexedPlanesReference,
-        // appConfiguration,
-
-        /** state */
-        // statePlaneSources,
+        // #endregion own
     } = properties;
 
     const {
@@ -469,8 +459,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 const mapStateToProperties = (
     state: AppState,
 ): PluridRootStateProperties => ({
-    activeUniverseID: selectors.space.getActiveUniverseID(state),
-    // statePlaneSources: selectors.data.getPlaneSources(state),
 });
 
 
