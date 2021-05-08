@@ -91,6 +91,11 @@ export interface PluridRouterProperties<C> {
     api?: string;
 
     static?: PluridRouterStatic;
+
+    /**
+     * Replace the internal plurid plane with a custom implementation.
+     */
+    customPlane?: C;
 }
 
 

@@ -137,6 +137,11 @@ export interface PluridApplication<C> {
      * for view, for user interface configuration.
      */
     useLocalStorage?: boolean // | LocalStorageUsage;
+
+    /**
+     * Replace the internal plurid plane with a custom implementation.
+     */
+    customPlane?: C;
 }
 
 
