@@ -99,6 +99,7 @@
 // #region module
 const {
     // default: PluridRouter,
+    IsoMatcher: PluridIsoMatcher,
     RouteMatcher: PluridRouteMatcher,
     RouteParser: PluridRouteParser,
 } = router;
@@ -147,6 +148,7 @@ const Plurid = {
     serverComputeMetastate,
 
     /** Router */
+    IsoMatcher: PluridIsoMatcher,
     routerNavigate: pluridRouterNavigate,
 
     internals,
@@ -213,7 +215,7 @@ export {
     PLURID_ROUTER_LOCATION_STORED,
 
     /** Engine */
-    // PluridRouter,
+    PluridIsoMatcher,
     PluridRouteMatcher,
     PluridRouteParser,
 
