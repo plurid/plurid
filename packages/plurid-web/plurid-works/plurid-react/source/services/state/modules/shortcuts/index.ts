@@ -1,19 +1,28 @@
-import * as actions from './actions';
+// #region imports
+    // #region internal
+    import * as actions from './actions';
 
-import initialState from './initial';
+    import initialState from './initial';
 
-import reducer from './reducer';
+    import reducer from './reducer';
 
-import * as resolvers from './resolvers';
+    import * as resolvers from './resolvers';
 
-import * as Types from './types';
+    import selectors from './selectors';
+
+    import * as Types from './types';
+    // #endregion internal
+// #endregion imports
 
 
 
+// #region module
 export {
     actions,
     initialState,
     reducer,
     resolvers,
+    selectors,
     Types,
-}
+};
+// #endregion module

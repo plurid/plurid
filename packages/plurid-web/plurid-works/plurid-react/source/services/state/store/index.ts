@@ -7,17 +7,20 @@
     // #region internal
     import storeProduction, {
         AppState as AppStateProduction,
-    } from './store.production';
+    } from './production';
+
     import storeDevelopment, {
         AppState as AppStateDeveloment,
-    } from './store.development';
+    } from './development';
     // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-export type AppState = AppStateProduction | AppStateDeveloment;
+export type AppState =
+    | AppStateProduction
+    | AppStateDeveloment;
 
 
 const store = environment.production

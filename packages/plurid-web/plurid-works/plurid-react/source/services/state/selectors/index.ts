@@ -1,17 +1,16 @@
 // #region imports
-    import configuration from './configuration';
-    import space from './space';
-    import themes from './themes';
-    import ui from './ui';
+    // #region external
+    import modules from '~services/state/modules';
+    // #endregion external
 // #endregion imports
 
 
 
 // #region exports
 export default {
-    configuration,
-    space,
-    themes,
-    ui,
+    configuration: modules.configuration.selectors,
+    space: modules.space.selectors,
+    themes: modules.themes.selectors,
+    ui: modules.ui.selectors,
 };
 // #endregion exports
