@@ -43,6 +43,7 @@
 
     import {
         router,
+        pluridRouterNavigate,
     } from '@plurid/plurid-engine';
 
     import PluridPubSub from '@plurid/plurid-pubsub';
@@ -80,10 +81,6 @@
     import {
         getDirectPlaneMatch,
     } from './services/logic/router';
-
-    import {
-        pluridRouterNavigate,
-    } from './services/utilities/navigate';
 
     import {
         usePluridRouter,

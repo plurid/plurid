@@ -21,6 +21,10 @@
     } from '@plurid/plurid-data';
 
     import {
+        cleanTemplate,
+    } from '@plurid/plurid-engine';
+
+    import {
         mathematics,
     } from '@plurid/plurid-functions';
     // #endregion libraries
@@ -30,10 +34,6 @@
     import {
         PluridReactComponent,
     } from '~data/interfaces';
-
-    import {
-        cleanTemplate,
-    } from '~services/utilities/template';
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';

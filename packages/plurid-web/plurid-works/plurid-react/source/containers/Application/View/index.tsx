@@ -50,7 +50,7 @@
         PluridReactComponent,
     } from '~data/interfaces';
 
-    import Context from '~services/logic/context';
+    import Context from '~services/context';
 
     import {
         handleGlobalShortcuts,

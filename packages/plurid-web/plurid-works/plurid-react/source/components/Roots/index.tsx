@@ -22,15 +22,15 @@
         TreePlane,
         PluridConfiguration,
     } from '@plurid/plurid-data';
+
+    import {
+        cleanTemplate,
+    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
     // #region external
     import PluridRoot from '../Root';
-
-    import {
-        cleanTemplate,
-    } from '~services/utilities/template';
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';

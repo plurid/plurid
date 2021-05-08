@@ -1,14 +1,11 @@
 // #region imports
     // #region libraries
     import React from 'react';
-    // #endregion libraries
 
-
-    // #region external
     import {
         pluridRouterNavigate,
-    } from '~services/utilities/navigate';
-    // #endregion external
+    } from '@plurid/plurid-engine';
+    // #endregion libraries
 
 
     // #region internal

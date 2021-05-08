@@ -31,7 +31,7 @@
     // #region external
     import PluridPlane from '../Plane';
 
-    import Context from '~services/logic/context';
+    import Context from '~services/context';
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';

@@ -45,6 +45,7 @@ export const useElementEvent = (
     }, [event, callback]);
 }
 
+
 export const useGlobalKeyDown = (
     callback: any,
     element?: any,
@@ -59,6 +60,7 @@ export const useGlobalKeyDown = (
         callback,
     );
 }
+
 
 export const useGlobalWheel = (
     callback: any,

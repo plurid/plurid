@@ -1,3 +1,4 @@
+// #region module
 declare module '*.css' {
     const content: { [className: string]: string };
     export default content;
@@ -9,3 +10,4 @@ declare module '*.svg' {
     export default svgUrl;
     export { svgComponent as ReactComponent }
 }
+// #endregion module
