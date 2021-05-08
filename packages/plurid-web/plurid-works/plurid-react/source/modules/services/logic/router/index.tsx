@@ -43,7 +43,7 @@
         PluridReactPlane,
     } from '~data/interfaces';
 
-    import PluridApplication from '~Application/index';
+    import PluridApplication from '~containers/Application/index';
     // #endregion external
 
 

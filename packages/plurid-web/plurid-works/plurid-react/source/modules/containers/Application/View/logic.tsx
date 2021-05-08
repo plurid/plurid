@@ -9,8 +9,8 @@
 
 
     // #region external
-    import PluridPlanesView from '~containers/PlanesView';
-    import PluridErrorView from '~containers/ErrorView';
+    import PluridPlanesView from '~containers/Application/View/PlanesView';
+    import PluridErrorView from '~containers/Application/View/ErrorView';
     // #endregion external
 // #endregion imports
 

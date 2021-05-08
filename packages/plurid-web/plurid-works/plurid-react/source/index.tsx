@@ -57,17 +57,17 @@
         PluridReactRoutePlane,
     } from './data/interfaces';
 
-    import PluridApplication from './Application';
+    import PluridApplication from './modules/containers/Application';
+    import PluridRouterBrowser from './modules/containers/RouterBrowser';
+    import PluridRouterStatic from './modules/containers/RouterStatic';
 
     import PluridLink from './modules/components/Link';
+    import PluridRouterLink from './modules/components/RouterLink';
+    import PluridApplicationConfigurator from './modules/components/ApplicationConfigurator';
+    import PluridPlaneConfigurator from './modules/components/PlaneConfigurator';
     import PluridExternalPlane from './modules/components/ExternalPlane';
     import PluridIframePlane from './modules/components/IframePlane';
-    import PluridRouterBrowser from './modules/components/RouterBrowser';
-    import PluridRouterStatic from './modules/components/RouterStatic';
-    import PluridRouterLink from './modules/components/RouterLink';
     import PluridVirtualList from './modules/components/Virtual/List';
-    import PluridPlaneConfigurator from './modules/components/PlaneConfigurator';
-    import PluridApplicationConfigurator from './modules/components/ApplicationConfigurator';
 
     import PluridProvider from './modules/components/Provider';
 
@@ -107,16 +107,16 @@ const {
 const Plurid = {
     // #region Components
     Application: PluridApplication,
+    RouterStatic: PluridRouterStatic,
+    RouterBrowser: PluridRouterBrowser,
 
     Link: PluridLink,
+    RouterLink: PluridRouterLink,
+    ApplicationConfigurator: PluridApplicationConfigurator,
+    PlaneConfigurator: PluridPlaneConfigurator,
     ExternalPlane: PluridExternalPlane,
     IframePlane: PluridIframePlane,
-    RouterBrowser: PluridRouterBrowser,
-    RouterStatic: PluridRouterStatic,
-    RouterLink: PluridRouterLink,
     VirtualList: PluridVirtualList,
-    PlaneConfigurator: PluridPlaneConfigurator,
-    ApplicationConfigurator: PluridApplicationConfigurator,
     Provider: PluridProvider,
     // #endregion Components
 
@@ -147,16 +147,16 @@ const Plurid = {
 export {
     // #region Components
     PluridApplication,
-
-    PluridLink,
-    PluridExternalPlane,
-    PluridIframePlane,
     PluridRouterBrowser,
     PluridRouterStatic,
+
+    PluridLink,
     PluridRouterLink,
-    PluridVirtualList,
-    PluridPlaneConfigurator,
     PluridApplicationConfigurator,
+    PluridPlaneConfigurator,
+    PluridExternalPlane,
+    PluridIframePlane,
+    PluridVirtualList,
     PluridProvider,
     // #endregion Components
 

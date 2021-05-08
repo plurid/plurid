@@ -24,7 +24,7 @@
     import {
         GlobalStyle,
         StyledView,
-    } from '~Application/View/styled';
+    } from '~containers/Application/View/styled';
     // #endregion external
 // #endregion imports
 
