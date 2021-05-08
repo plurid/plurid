@@ -8,9 +8,6 @@
 
         "baseUrl": ".",
         "paths": {
-            "~Application/*": [
-                "./source/Application/*"
-            ],
             "~data/*": [
                 "./source/data/*"
             ],
