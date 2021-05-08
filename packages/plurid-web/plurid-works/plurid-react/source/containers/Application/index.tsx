@@ -30,10 +30,10 @@
         PluridReactComponent,
     } from '~data/interfaces';
 
+    import PluridProviderContext from '~containers/Provider/context';
+
     import store from '~services/state/store';
     import StateContext from '~services/state/context';
-
-    import PluridProviderContext from '~components/Provider/context';
     // #endregion external
 
 

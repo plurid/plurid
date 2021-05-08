@@ -70,7 +70,7 @@
     import PluridIframePlane from './components/IframePlane';
     import PluridVirtualList from './components/Virtual/List';
 
-    import PluridProvider from './components/Provider';
+    import PluridProvider from './containers/Provider';
 
     import pluridStateModules from './services/state/modules';
 
@@ -106,6 +106,7 @@ const Plurid = {
     Application: PluridApplication,
     RouterStatic: PluridRouterStatic,
     RouterBrowser: PluridRouterBrowser,
+    Provider: PluridProvider,
 
     Link: PluridLink,
     RouterLink: PluridRouterLink,
@@ -114,7 +115,6 @@ const Plurid = {
     ExternalPlane: PluridExternalPlane,
     IframePlane: PluridIframePlane,
     VirtualList: PluridVirtualList,
-    Provider: PluridProvider,
     // #endregion Components
 
 
@@ -146,6 +146,7 @@ export {
     PluridApplication,
     PluridRouterBrowser,
     PluridRouterStatic,
+    PluridProvider,
 
     PluridLink,
     PluridRouterLink,
@@ -154,7 +155,6 @@ export {
     PluridExternalPlane,
     PluridIframePlane,
     PluridVirtualList,
-    PluridProvider,
     // #endregion Components
 
 
