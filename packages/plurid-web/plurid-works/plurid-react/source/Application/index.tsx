@@ -54,7 +54,7 @@ class PluridApplication extends Component<
     public context!: React.ContextType<typeof PluridProviderContext>;
 
     private store: Store<PluridState>;
-    private storeSubscriber: ReduxUnsubscribe | undefined;
+    private storeUnubscriber: ReduxUnsubscribe | undefined;
     private storeID: string;
 
 
@@ -86,8 +86,8 @@ class PluridApplication extends Component<
     }
 
     public componentWillUnmount() {
-        if (this.storeSubscriber) {
-            this.storeSubscriber();
+        if (this.storeUnubscriber) {
+            this.storeUnubscriber();
         }
     }
 
@@ -156,15 +156,11 @@ class PluridApplication extends Component<
             return;
         }
 
-        const {
-            useLocalStorage,
-        } = this.props;
-
-        if (!useLocalStorage) {
+        if (!this.props.useLocalStorage) {
             return;
         }
 
-        this.storeSubscriber = this.store.subscribe(() => {
+        this.storeUnubscriber = this.store.subscribe(() => {
             const state = this.store.getState();
             const stateData = JSON.stringify(state);
 
