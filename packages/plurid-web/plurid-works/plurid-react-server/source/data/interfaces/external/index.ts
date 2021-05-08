@@ -137,6 +137,11 @@ export interface PluridServerConfiguration {
     shell?: PluridReactComponent;
 
     /**
+     * Replace the internal plurid plane with a custom implementation.
+     */
+    customPlane?: PluridReactComponent;
+
+    /**
      * Services to be handled by the server.
      *
      * Supported: `GraphQL`, `Redux`, `Stripe`.
