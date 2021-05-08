@@ -41,10 +41,6 @@
 
 // #region module
 export interface PluridSpaceOwnProperties {
-    computedTree?: any;
-    indexedPlanesReference?: any;
-    planesPropertiesReference?: any;
-    appConfiguration?: PluridConfiguration;
 }
 
 export interface PluridSpaceStateProperties {
@@ -55,7 +51,8 @@ export interface PluridSpaceStateProperties {
 export interface PluridSpaceDispatchProperties {
 }
 
-export type PluridSpaceProperties = PluridSpaceOwnProperties
+export type PluridSpaceProperties =
+    & PluridSpaceOwnProperties
     & PluridSpaceStateProperties
     & PluridSpaceDispatchProperties;
 
@@ -100,11 +97,11 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
     // #region render
     return (
         <StyledPluridSpace
-            data-plurid-entity={PLURID_ENTITY_SPACE}
             theme={stateGeneralTheme}
             opaque={opaque}
             isMounted={isMounted}
             fadeInTime={fadeInTime}
+            data-plurid-entity={PLURID_ENTITY_SPACE}
         >
             <PluridRoots />
         </StyledPluridSpace>
