@@ -71,6 +71,13 @@
     import PluridIframePlane from './components/planes/IframePlane';
     import PluridVirtualList from './components/virtuals/List';
 
+    import PluridPlaneBridge from './components/structural/Plane/components/PlaneBridge';
+    import PluridPlaneContent from './components/structural/Plane/components/PlaneContent';
+    import PluridPlaneControls from './components/structural/Plane/components/PlaneControls';
+    import PluridPlaneDebugger from './components/structural/Plane/components/PlaneDebugger';
+
+    import PluridSpaceDebugger from './components/structural/Space/components/SpaceDebugger';
+
     import pluridStateModules from './services/state/modules';
 
     import {
@@ -96,6 +103,14 @@ const {
     RouteParser: PluridRouteParser,
 } = router;
 
+
+const internals = {
+    PluridPlaneBridge,
+    PluridPlaneContent,
+    PluridPlaneControls,
+    PluridPlaneDebugger,
+    PluridSpaceDebugger,
+};
 
 /**
  * Components and utilities.
@@ -133,6 +148,8 @@ const Plurid = {
 
     /** Router */
     routerNavigate: pluridRouterNavigate,
+
+    internals,
     // #endregion Utilities
 };
 // #endregion module
@@ -215,6 +232,8 @@ export {
 
     /** state */
     pluridStateModules,
+
+    internals,
     // #endregion Utilities
 };
 
