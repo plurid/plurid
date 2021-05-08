@@ -86,8 +86,8 @@ const {
 export interface PluridLinkStateProperties {
     stateTree: TreePlane[];
     stateGeneralTheme: Theme;
-    stateConfiguration: PluridConfiguration,
-    stateViewSize: ViewSize,
+    stateConfiguration: PluridConfiguration;
+    stateViewSize: ViewSize;
 }
 
 export interface PluridLinkDispatchProperties {
@@ -150,7 +150,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const context = useContext(Context);
 
     if (!context) {
-        return (<></>);
+        return (
+            <>
+                {children}
+            </>
+        );
     }
 
     const {
@@ -160,7 +164,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const planesRegistry = getPlanesRegistrar(planesRegistrar);
 
     if (!planesRegistry) {
-        return (<></>);
+        return (
+            <>
+                {children}
+            </>
+        );
     }
     // #endregion context
 
