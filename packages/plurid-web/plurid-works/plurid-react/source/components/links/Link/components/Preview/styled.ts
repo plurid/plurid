@@ -6,6 +6,13 @@
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        PluridLinkCoordinates,
+    } from '~data/interfaces';
+    // #endregion external
 // #endregion imports
 
 
@@ -13,7 +20,7 @@
 // #region module
 export interface IStyledPreview {
     theme: Theme;
-    linkCoordinates: any;
+    linkCoordinates: PluridLinkCoordinates;
 }
 
 export const StyledPluridPlanePreview = styled.div<IStyledPreview>`

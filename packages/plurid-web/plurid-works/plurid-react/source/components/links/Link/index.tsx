@@ -17,21 +17,18 @@
     } from '@plurid/plurid-themes';
 
     import {
-        /** constants */
+        // #region constants
         PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
         PLURID_ENTITY_LINK,
         PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
         PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
+        // #endregion constants
 
-        /** interfaces */
+        // #region interfaces
         PluridLink as PluridLinkOwnProperties,
         TreePlane,
-        PluridContext,
-        Indexed,
-        PluridInternalStateUniverse,
         PluridConfiguration,
-        // PluridRouterRoute,
-        PluridalWindow,
+        // #endregion interfaces
     } from '@plurid/plurid-data';
 
     import {
@@ -47,7 +44,12 @@
     // #region external
     import {
         PluridReactComponent,
+        PluridLinkCoordinates,
     } from '~data/interfaces';
+
+    import {
+        defaultLinkCoordinates,
+    } from '~data/constants';
 
     import PluridPortal from '~components/utilities/Portal';
 
@@ -77,27 +79,15 @@
 
 // #region module
 const {
-    default: Router,
     resolveRoute,
     computePlaneAddress,
 } = router;
-
-export interface PluridLinkCoordinates {
-    x: number;
-    y: number;
-}
-
-const defaultLinkCoordinates: PluridLinkCoordinates = {
-    x: 0,
-    y: 0,
-};
 
 export interface PluridLinkStateProperties {
     stateTree: TreePlane[];
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration,
     stateViewSize: ViewSize,
-    // statePlaneSources: Record<string, string>;
 }
 
 export interface PluridLinkDispatchProperties {
@@ -105,7 +95,8 @@ export interface PluridLinkDispatchProperties {
     dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
 }
 
-export type PluridLinkProperties = PluridLinkOwnProperties<PluridReactComponent>
+export type PluridLinkProperties =
+    & PluridLinkOwnProperties<PluridReactComponent>
     & PluridLinkStateProperties
     & PluridLinkDispatchProperties;
 
@@ -113,9 +104,9 @@ export type PluridLinkProperties = PluridLinkOwnProperties<PluridReactComponent>
 const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** own */
+        // #region own
         children,
         route: planeRoute,
         devisible: _devisible,
@@ -123,27 +114,27 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         atClick,
         style,
         className,
+        // #endregion own
 
-        /** state */
+        // #region state
         stateTree,
         stateGeneralTheme,
         stateConfiguration,
         stateViewSize,
-        // statePlaneSources,
+        // #endregion state
 
-        /** dispatch */
+        // #region dispatch
         dispatchSetTree,
         dispatchUpdateSpaceLinkCoordinates,
+        // #endregion dispatch
     } = properties;
+    // #endregion properties
 
     const planeControls = stateConfiguration.elements.plane.controls.show;
 
     const previewAppearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
     const previewDisappearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
 
-    // const planeRouteResolved = planeRoute.startsWith('/') && typeof window !== 'undefined'
-    //     ? ':/' + window.location.pathname + '://s://u://c://' + planeRoute.slice(1)
-    //     : planeRoute;
     const planeRouteResolved = computePlaneAddress(planeRoute);
     // console.log('planeRouteResolved', planeRouteResolved);
 
@@ -155,7 +146,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     // console.log('absolutePlaneRoute', absolutePlaneRoute);
 
 
-    /** context */
+    // #region context
     const context = useContext(Context);
 
     if (!context) {
@@ -171,15 +162,17 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     if (!planesRegistry) {
         return (<></>);
     }
+    // #endregion context
 
 
-    /** references */
+    // #region references
     const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
     const hoverInTimeout = useRef<null | NodeJS.Timeout>(null);
     const hoverOutTimeout = useRef<null | NodeJS.Timeout>(null);
+    // #endregion references
 
 
-    /** state */
+    // #region state
     const [mouseOver, setMouseOver] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
     const [showLink, setShowLink] = useState(false);
@@ -190,9 +183,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const [suffix, setSuffix] = useState(PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX);
     const [devisible, setDevisible] = useState(false);
+    // #endregion state
 
 
-    /** handlers */
+    // #region handlers
     const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
         /**
          * TODO
@@ -287,9 +281,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         linkElement.current,
         stateTree,
     ]);
+    // #endregion handlers
 
 
-    /** effects */
+    // #region effects
     /** Set default suffix, devisible */
     useEffect(() => {
         if (_suffix !== undefined) {
@@ -378,9 +373,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             // setPlaneID(potentialPlaneRoute);
         }
     }, []);
+    // #endregion effects
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridLink
             ref={linkElement}
@@ -413,6 +409,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             )}
         </StyledPluridLink>
     );
+    // #endregion render
 }
 
 
@@ -423,7 +420,6 @@ const mapStateToProperties = (
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateViewSize: selectors.space.getViewSize(state),
-    // statePlaneSources: selectors.data.getPlaneSources(state),
 });
 
 

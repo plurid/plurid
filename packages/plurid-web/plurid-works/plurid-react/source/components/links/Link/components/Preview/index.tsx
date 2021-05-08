@@ -9,10 +9,6 @@
     import { ThunkDispatch } from 'redux-thunk';
 
     import {
-        PluridContext
-    } from '@plurid/plurid-data';
-
-    import {
         Theme,
     } from '@plurid/plurid-themes';
 
@@ -23,6 +19,10 @@
 
 
     // #region external
+    import {
+        PluridLinkCoordinates,
+    } from '~data/interfaces';
+
     import Context from '~services/context';
 
     import { AppState } from '~services/state/store';
@@ -44,7 +44,7 @@
 // #region module
 export interface PluridPlanePreviewOwnProperties {
     planeID: string;
-    linkCoordinates: any;
+    linkCoordinates: PluridLinkCoordinates;
 }
 
 export interface PluridPlanePreviewStateProperties {
@@ -55,7 +55,8 @@ export interface PluridPlanePreviewStateProperties {
 export interface PluridPlanePreviewDispatchProperties {
 }
 
-export type PluridPlanePreviewProperties = PluridPlanePreviewOwnProperties
+export type PluridPlanePreviewProperties =
+    & PluridPlanePreviewOwnProperties
     & PluridPlanePreviewStateProperties
     & PluridPlanePreviewDispatchProperties;
 
@@ -63,19 +64,22 @@ export type PluridPlanePreviewProperties = PluridPlanePreviewOwnProperties
 const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** own */
+        // #region own
         planeID,
         linkCoordinates,
+        // #endregion own
 
-        /** state */
+        // #region state
         stateGeneralTheme,
         // stateInteractionTheme,
+        // #endregion state
     } = properties;
+    // #endregion properties
 
 
-    /** context */
+    // #region context
     const context = useContext(Context);
 
     if (!context) {
@@ -93,14 +97,15 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
     }
 
     const plane = planesRegistry.get(planeID);
+    // #endregion context
 
 
-    /** render */
+    // #region render
     if (!plane) {
         return (<></>);
     }
 
-    const Component = plane.component as any;
+    const Component = plane.component;
 
     return (
         <StyledPluridPlanePreview
@@ -110,6 +115,7 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
             <Component />
         </StyledPluridPlanePreview>
     );
+    // #endregion render
 }
 
 
