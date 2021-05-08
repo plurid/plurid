@@ -4,7 +4,7 @@
         TreePlane,
         RegisteredPluridPlane,
         PluridConfiguration,
-        PluridView,
+        PluridApplicationView,
         PluridCluster,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -22,7 +22,7 @@
 // #region module
 export interface TreeData<C> {
     planes: Map<string, RegisteredPluridPlane<C>>,
-    view: string[] | PluridView[],
+    view: PluridApplicationView,
     configuration: PluridConfiguration,
     clusters?: PluridCluster<C>[],
     previousTree?: TreePlane[],

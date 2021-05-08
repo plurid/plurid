@@ -10,6 +10,7 @@
 
         /** interfaces */
         PluridView,
+        PluridApplicationView,
         PluridConfiguration,
         RegisteredPluridPlane,
         TreePlane,
@@ -458,7 +459,7 @@ export const resolveViewItem = <C>(
  */
 export const computeSpaceTree = <C>(
     planes: Map<string, RegisteredPluridPlane<C>>,
-    view: string[] | PluridView[],
+    view: PluridApplicationView,
     configuration: PluridConfiguration,
 ): TreePlane[] => {
     // console.log('computeSpaceTree');
@@ -591,7 +592,7 @@ export const matchForParameters = (
 
 export const assignPagesFromView = (
     planes: TreePlane[],
-    view?: string[] | PluridView[],
+    view?: PluridApplicationView,
 ): TreePlane[] => {
     if (!view) {
         return planes;
@@ -846,7 +847,7 @@ export const updateTreeWithNewPlane = <C>(
 
 
 
-interface UpdatedTreeWithNewPlane {
+export interface UpdatedTreeWithNewPlane {
     pluridPlaneID: string;
     updatedTree: TreePlane[];
 }
