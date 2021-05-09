@@ -134,7 +134,7 @@ const elementRequest = async (
 
         const Element = Elements[element.name];
 
-        return Element;
+        return () => Element;
     } catch (error) {
         // console.log('error', error);
 
