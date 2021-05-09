@@ -154,8 +154,14 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
         const all = new Map();
 
         for (const [path, plane] of planes) {
+            const absoluteRoute = plane.kind === 'Plane'
+                ? plane.data.route
+                : plane.data.value;
+
             const registeredPlane: RegisteredPluridPlane<C> = {
-                route: (plane.data as any).route || (plane.data as any).value || '',
+                route: {
+                    absolute: absoluteRoute,
+                },
                 component: plane.data.component,
             };
 
