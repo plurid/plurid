@@ -155,6 +155,8 @@ export interface PluridServerConfiguration {
 
     usePTTP?: boolean;
     pttpHandler?: PTTPHandler;
+
+    elementqlEndpoint?: string;
 }
 
 

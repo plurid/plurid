@@ -117,6 +117,7 @@ class PluridServer {
     private template: PluridServerTemplateConfiguration | undefined;
     private usePTTP: boolean;
     private pttpHandler: PTTPHandler | undefined;
+    private elementqlEndpoint: string | undefined;
 
     private serverApplication: Express;
     private server: Server | undefined;
@@ -145,6 +146,7 @@ class PluridServer {
             template,
             usePTTP,
             pttpHandler,
+            elementqlEndpoint,
         } = configuration;
 
         this.routes = routes;
@@ -160,6 +162,7 @@ class PluridServer {
         this.template = template;
         this.usePTTP = usePTTP ?? false;
         this.pttpHandler = pttpHandler;
+        this.elementqlEndpoint = elementqlEndpoint;
 
         this.serverApplication = express();
         this.port = DEFAULT_SERVER_PORT;
@@ -650,6 +653,50 @@ class PluridServer {
             }
 
 
+            const planeMatch = this.isoMatcher.match(
+                request.originalUrl,
+            );
+
+            if (!planeMatch) {
+                if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
+                    );
+                }
+
+                response
+                    .status(400)
+                    .end();
+                return;
+            }
+
+
+            const elementMatch = {
+                component: {
+                    name: 'AppElementQL',
+                    url: 'http://localhost:21100/elementql',
+                },
+            };
+            const elementURL = elementMatch.component.url || this.elementqlEndpoint;
+
+            if (!elementURL) {
+                if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
+                    );
+                }
+
+                response
+                    .status(400)
+                    .end();
+                return;
+            }
+
+
             if (this.debugAllows('info')) {
                 const requestTime = this.computeRequestTime(request);
 
@@ -658,14 +705,14 @@ class PluridServer {
                 );
             }
 
-            // check amongst all the routes and planes for a match
+            const elementName = elementMatch.component.name;
             const element = {
-                url: 'http://localhost:21100/elementql',
-                name: 'AppElementQL',
+                url: elementURL,
+                name: elementName,
                 json: {
                     elements: [
                         {
-                            name: 'AppElementQL',
+                            name: elementName,
                         },
                     ],
                 },
@@ -674,12 +721,6 @@ class PluridServer {
             response.json({
                 element,
             });
-            // for (const route of this.routes) {
-            //     if (route.value === data.path) {
-            //         // serve the matched route
-
-            //     }
-            // }
         } catch (error) {
             if (this.debugAllows('error')) {
                 const requestTime = this.computeRequestTime(request);
