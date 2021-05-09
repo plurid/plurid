@@ -654,7 +654,7 @@ class PluridServer {
 
 
             const planeMatch = this.isoMatcher.match(
-                request.originalUrl,
+                data.path,
             );
 
             if (!planeMatch) {
