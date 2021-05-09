@@ -659,7 +659,17 @@ class PluridServer {
             }
 
             // check amongst all the routes and planes for a match
-            const element = 'https://elements.com/id';
+            const element = {
+                url: 'http://localhost:21100/elementql',
+                name: 'AppElementQL',
+                json: {
+                    elements: [
+                        {
+                            name: 'AppElementQL',
+                        },
+                    ],
+                },
+            };
 
             response.json({
                 element,
