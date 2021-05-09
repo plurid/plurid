@@ -116,13 +116,13 @@ export interface RouteSegment {
 
 export interface RegisteredPluridPlane<C> {
     route: {
-        protocol: RouteSegment;
-        host: RouteSegment;
-        path: RouteSegment;
-        space: RouteSegment;
-        universe: RouteSegment;
-        cluster: RouteSegment;
-        plane: RouteSegment;
+        // protocol: RouteSegment;
+        // host: RouteSegment;
+        // path: RouteSegment;
+        // space: RouteSegment;
+        // universe: RouteSegment;
+        // cluster: RouteSegment;
+        // plane: RouteSegment;
         absolute: string;
     };
     component: C;
