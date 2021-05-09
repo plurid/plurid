@@ -259,10 +259,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         );
     }
 
-    const Plane = pluridPlane.component;
-    if (typeof Plane !== 'function') {
-        return (<></>);
-    }
+    const Plane: any = pluridPlane.component;
+    // if (typeof Plane !== 'function') {
+    //     return (<></>);
+    // }
     // console.log('Root Plane', Plane);
 
 
