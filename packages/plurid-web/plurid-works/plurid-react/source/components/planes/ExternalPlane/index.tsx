@@ -40,20 +40,49 @@
 const getPttpUrl = (
     path: string,
 ) => {
-    return '';
+    const re = /^pttp:\/\/(\w+\.\w+)/;
+    const match = path.match(re);
+
+    if (!match) {
+        return {
+            domain: '',
+            url: '',
+        };
+    }
+
+    const domain = match[1];
+    const url = `https://${domain}/pttp`
+    return {
+        domain,
+        url,
+    };
 }
 
 const getPttpPath = (
+    domain: string,
     path: string,
 ) => {
-    return '';
+    if (!domain) {
+        return;
+    }
+
+    const pttpPath = path.replace(`pttp://${domain}`, '');
+
+    return pttpPath;
 }
 
 const elementRequest = async (
     url: string,
     path: string,
 ) => {
-    return '';
+    try {
+        // console.log('elementRequest url', url);
+        // console.log('elementRequest path', path);
+
+        return '';
+    } catch (error) {
+        return;
+    }
 }
 
 
@@ -109,13 +138,26 @@ const ExternalPlane: PluridReactComponent<ExternalPlaneProperties> = (
             try {
                 console.log('ExternalPlane > plurid', plurid);
 
-                // const pttpURL = getPttpUrl(route.path.value);
-                // const pttpPath = getPttpPath(route.path.value);
+                const {
+                    domain,
+                    url,
+                } = getPttpUrl(route.value);
+                const pttpPath = getPttpPath(
+                    domain,
+                    route.value,
+                );
 
-                // const elementData = await elementRequest(
-                //     pttpURL,
-                //     pttpPath,
-                // );
+                if (
+                    !url
+                    || !pttpPath
+                ) {
+                    return;
+                }
+
+                const elementData = await elementRequest(
+                    url,
+                    pttpPath,
+                );
 
             } catch (error) {
                 return;
