@@ -82,101 +82,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     // #endregion properties
 
 
-    // if (typeof indexedPlanesReference !== 'undefined') {
-    //     const pluridPlaneID = plane.sourceID;
-    //     if (!pluridPlaneID) {
-    //         return (
-    //             <></>
-    //         );
-    //     }
-
-    //     const pluridPlane = indexedPlanesReference.get(pluridPlaneID);
-    //     const pluridPlaneProperties = planesPropertiesReference.get(pluridPlaneID);
-
-    //     if (!pluridPlane || !pluridPlaneProperties) {
-    //         return (
-    //             <></>
-    //         );
-    //     }
-
-    //     if (pluridPlane.component.kind !== 'react') {
-    //         return (
-    //             <></>
-    //         );
-    //     }
-
-    //     const Plane = pluridPlane.component.element;
-
-    //     const pluridProperties: PluridProperty = {
-    //         ...pluridPlaneProperties.plurid,
-    //         metadata: {
-    //             planeID: plane.planeID,
-    //         },
-    //     };
-
-    //     const planeProperties = {
-    //         ...pluridPlane.component.properties,
-    //         plurid: {
-    //             ...pluridProperties,
-    //         },
-    //     };
-
-    //     // console.log(Plane, planeProperties, pluridPlane);
-
-    //     // return (
-    //     //     <div>
-    //     //     </div>
-    //     // );
-
-    //     return (
-    //         <StyledPluridRoot
-    //             data-plurid-entity={PLURID_ENTITY_ROOT}
-    //         >
-    //             {/* <Plane /> */}
-
-    //             <PluridPlane
-    //                 plane={pluridPlane}
-    //                 treePlane={plane}
-    //                 planeID={plane.planeID}
-    //                 location={location}
-    //             >
-    //                 <Plane
-    //                     {...planeProperties}
-    //                 />
-    //             </PluridPlane>
-
-    //             {/* <PluridPlane
-    //                 plane={pluridPlane}
-    //                 treePlane={plane}
-    //                 planeID={plane.planeID}
-    //                 location={location}
-    //             >
-    //                 <Plane
-    //                     {...planeProperties}
-    //                 />
-    //                 {PlaneContext
-    //                     ? (
-    //                         <PlaneContext.Provider
-    //                             value={planeContextValue}
-    //                         >
-    //                             <Plane
-    //                                 {...planeProperties}
-    //                             />
-    //                         </PlaneContext.Provider>
-    //                     ) : (
-    //                         <Plane
-    //                             {...planeProperties}
-    //                         />
-    //                     )
-    //                 }
-    //             </PluridPlane> */}
-
-    //             {/* {childrenPlanes} */}
-    //         </StyledPluridRoot>
-    //     );
-    // }
-
-
     // #region context
     const context = useContext(Context);
     if (!context) {
@@ -219,21 +124,11 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             if (!planesRegistry) {
                 return;
             }
-            // if (!statePlaneSources || !planesMap) {
-            //     return;
-            // }
 
             const planeID = child.sourceID;
-            // console.log('AAAAAA indexedPlanesSources', indexedPlanesSources);
             // console.log('planeID', planeID);
-            if (!planeID) {
-                return;
-            }
-
             const activePlane = planesRegistry.get(planeID);
-            // const pluridPlaneProperties = planesProperties.get(planeID);
             // console.log('activePlane', activePlane);
-            // const activePlane = activePlanes[child.sourceID];
 
             let plane = (<></>);
             if (
@@ -285,42 +180,38 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
                 plane = !CustomPluridPlane
                     ? (
-                    <PluridPlane
-                        key={child.planeID}
-                        plane={activePlane}
-                        treePlane={child}
-                        planeID={child.planeID}
-                        location={child.location}
-                    >
-                        {/* {!PlaneContext
-                            ? (
-                                <Plane
-                                    {...properties}
-                                />
-                            ) : (
-                                <PlaneContext.Provider
-                                    value={planeContextValue}
-                                >
+                        <PluridPlane
+                            key={child.planeID}
+                            plane={activePlane}
+                            treePlane={child}
+                            planeID={child.planeID}
+                            location={child.location}
+                        >
+                            {!PlaneContext
+                                ? (
                                     <Plane
                                         {...properties}
                                     />
-                                </PlaneContext.Provider>
-                            )
-                        } */}
-
-                        <Plane
-                            {...properties}
+                                ) : (
+                                    <PlaneContext.Provider
+                                        value={planeContextValue}
+                                    >
+                                        <Plane
+                                            {...properties}
+                                        />
+                                    </PlaneContext.Provider>
+                                )
+                            }
+                        </PluridPlane>
+                    ) : (
+                        <CustomPluridPlane
+                            key={child.planeID}
+                            plane={activePlane}
+                            treePlane={child}
+                            planeID={child.planeID}
+                            location={child.location}
                         />
-                    </PluridPlane>
-                ) : (
-                    <CustomPluridPlane
-                        key={child.planeID}
-                        plane={activePlane}
-                        treePlane={child}
-                        planeID={child.planeID}
-                        location={child.location}
-                    />
-                );
+                    );
 
                 setChildrenPlanes(planes => [
                     ...planes,
@@ -352,9 +243,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
     // #region render
     const pluridPlaneID = plane.sourceID;
-    // const pluridPlaneID = statePlaneSources[plane.sourceID];
     // console.log('Root pluridPlaneID', pluridPlaneID);
-
     if (!pluridPlaneID) {
         return (
             <></>
@@ -365,23 +254,12 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         pluridPlaneID,
         planesRegistrar,
     );
-    // const pluridPlane = planesRegistry.get(pluridPlaneID);
-    // const pluridPlaneProperties = planesProperties.get(pluridPlaneID);
-    // console.log('Root pluridPlaneID', pluridPlaneID);
     // console.log('Root pluridPlane', pluridPlane);
-
-    // if (!pluridPlane || !pluridPlaneProperties) {
     if (!pluridPlane) {
         return (
             <></>
         );
     }
-
-    // if (pluridPlane.component.kind !== 'react') {
-    //     return (
-    //         <></>
-    //     );
-    // }
 
     const Plane = pluridPlane.component;
     // console.log('Root Plane', Plane);
@@ -417,7 +295,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             parentPlaneID: plane.parentPlaneID,
         },
     };
-
     const planeProperties = {
         // ...pluridPlane.component.properties,
         plurid: {
@@ -453,8 +330,12 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 planeID={plane.planeID}
                 location={location}
             >
-                {PlaneContext
+                {!PlaneContext
                     ? (
+                        <Plane
+                            {...planeProperties}
+                        />
+                    ) : (
                         <PlaneContext.Provider
                             value={planeContextValue}
                         >
@@ -462,16 +343,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                                 {...planeProperties}
                             />
                         </PlaneContext.Provider>
-                    ) : (
-                        <Plane
-                            {...planeProperties}
-                        />
                     )
                 }
-
-                {/* <Plane
-                    {...planeProperties}
-                /> */}
             </PluridPlane>
 
             {childrenPlanes}
