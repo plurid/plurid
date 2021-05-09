@@ -673,14 +673,35 @@ class PluridServer {
             }
 
 
-            const elementMatch = {
-                component: {
-                    name: 'AppElementQL',
-                    url: 'http://localhost:21100/elementql',
-                },
-            };
-            const elementURL = elementMatch.component.url || this.elementqlEndpoint;
+            const elementMatch = typeof planeMatch.data.component !== 'function'
+                ? typeof planeMatch.data.component !== 'string'
+                    ? {
+                        name: planeMatch.data.component.name,
+                        url: planeMatch.data.component.url || this.elementqlEndpoint,
+                    }
+                    : {
+                        name: planeMatch.data.component,
+                        url: this.elementqlEndpoint,
+                    }
+                : undefined;
 
+            if (!elementMatch) {
+                if (this.debugAllows('warn')) {
+                    const requestTime = this.computeRequestTime(request);
+
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
+                    );
+                }
+
+                response
+                    .status(400)
+                    .end();
+                return;
+            }
+
+
+            const elementURL = elementMatch.url;
             if (!elementURL) {
                 if (this.debugAllows('warn')) {
                     const requestTime = this.computeRequestTime(request);
@@ -705,7 +726,7 @@ class PluridServer {
                 );
             }
 
-            const elementName = elementMatch.component.name;
+            const elementName = elementMatch.name;
             const element = {
                 url: elementURL,
                 name: elementName,
