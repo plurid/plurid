@@ -16,6 +16,7 @@ const external = [
 
     '@apollo/client',
     'compression',
+    'body-parser',
     'detect-port',
     'express',
     'fast-json-stable-stringify',
