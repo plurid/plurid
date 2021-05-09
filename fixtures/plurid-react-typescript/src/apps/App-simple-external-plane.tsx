@@ -30,7 +30,7 @@ const App = () => {
             component: PluridIframePlane,
         },
         [
-            'pttp://localhost:3001/local-plane',
+            'pttp://localhost:63000/local-plane',
             PluridExternalPlane,
         ],
     ];
@@ -39,7 +39,7 @@ const App = () => {
         // '/internal-plane',
         // 'pttp://plurid.com/incepts',
         // 'https://google.com',
-        'pttp://localhost:3001/local-plane',
+        'pttp://localhost:63000/local-plane',
     ];
 
     return (
