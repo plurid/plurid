@@ -1459,6 +1459,23 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@plurid/elementql-client-react@^0.0.0-0":
+  version "0.0.0-0"
+  resolved "https://npm.plurid.cloud/@plurid%2felementql-client-react/-/elementql-client-react-0.0.0-0.tgz#7711832db5ef9b81e291efaef20978edf056b56b"
+  integrity sha512-aZ2XFYnd5nyQ5Uy6QiaNjSyrdvv1AuDK6SzMyxWMaqsIzENZ21I7zAW8/h5NZ9bcfy2hwaxsarQla6gFRDMp6g==
+  dependencies:
+    "@plurid/elementql-client" "^0.0.0-0"
+
+"@plurid/elementql-client@^0.0.0-0":
+  version "0.0.0-0"
+  resolved "https://npm.plurid.cloud/@plurid%2felementql-client/-/elementql-client-0.0.0-0.tgz#015aab0ef1db2a5be18b33c00b0d8bdf61b28eb1"
+  integrity sha512-LyBxkHn/Ovck3lUHNtCpbAO0dejiLWUyNGa3EHwdb34bhG6KS5cAoX0Yg5AlvPQjUjD6YbQ0EbbZbrQEFLZNrg==
+
+"@plurid/elementql@^0.0.0-0":
+  version "0.0.0-0"
+  resolved "https://npm.plurid.cloud/@plurid%2felementql/-/elementql-0.0.0-0.tgz#49919cf0ef4cf8ac409676388a811cfe043582ef"
+  integrity sha512-6XOW3on1Yu4H1zHpqLJFUqmHMZmWNMdbTDip19Zr69CBACGc2H/ruPUBBaiFb9q9uuEmTTfk33t9HAggc24FSQ==
+
 "@plurid/plurid-data@^0.0.0-2":
   version "0.0.0-2"
   resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-2.tgz#0d35e1c39916f5edbd228d999c1c651140fc0d67"

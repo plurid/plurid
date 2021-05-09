@@ -9,6 +9,8 @@
         "eject": "react-scripts eject"
     },
     "dependencies": {
+        "@plurid/elementql": "^0.0.0-0",
+        "@plurid/elementql-client-react": "^0.0.0-0",
         "@plurid/plurid-data": "^0.0.0-2",
         "@plurid/plurid-engine": "^0.0.0-1",
         "@plurid/plurid-functions": "^0.0.0-3",
