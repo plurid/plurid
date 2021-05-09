@@ -42,8 +42,10 @@
 const getPttpUrl = (
     path: string,
 ) => {
-    const re = /^pttp:\/\/(\w+\.\w+)/;
+    // console.log('getPttpUrl path', path);
+    const re = /^pttp:\/\/(\w+(\.|:)\w+)\/?/;
     const match = path.match(re);
+    // console.log('getPttpUrl match', match);
 
     if (!match) {
         return {
@@ -53,7 +55,8 @@ const getPttpUrl = (
     }
 
     const domain = match[1];
-    const url = `https://${domain}/pttp`
+    const protocol = 'http';
+    const url = `${protocol}://${domain}/pttp`
     return {
         domain,
         url,
@@ -78,8 +81,8 @@ const elementRequest = async (
     path: string,
 ) => {
     try {
-        console.log('elementRequest url', url);
-        console.log('elementRequest path', path);
+        // console.log('elementRequest url', url);
+        // console.log('elementRequest path', path);
 
         const response = await fetch(
             url,
@@ -161,7 +164,9 @@ const ExternalPlane: PluridReactComponent<ExternalPlaneProperties> = (
                 const {
                     domain,
                     url,
-                } = getPttpUrl(route.value);
+                } = getPttpUrl(
+                    route.value,
+                );
                 const pttpPath = getPttpPath(
                     domain,
                     route.value,
