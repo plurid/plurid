@@ -40,7 +40,7 @@
         "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c ./scripts/rollup.development.js -w --environment ENV_MODE:local",
-        "build.development": "yarn clean && rollup -c ./scripts/rollup.development.js --environment ENV_MODE:development",
+        "build.development": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:development",
         "build.production": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
         "build": "yarn clean && yarn lint && yarn test && yarn build.production",
         "esbuild": "esbuild source/index.ts --bundle --platform=node --outfile=distribution/index.js --external:react",
