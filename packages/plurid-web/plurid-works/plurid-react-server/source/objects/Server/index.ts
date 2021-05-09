@@ -641,15 +641,29 @@ class PluridServer {
                 }
             }
 
-            // check amongst all the routes and planes for a match
-            for (const route of this.routes) {
-                if (route.value === data.path) {
-                    // serve the matched route
 
-                }
+            if (this.debugAllows('info')) {
+                const requestTime = this.computeRequestTime(request);
+
+                console.info(
+                    `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}${requestTime}`,
+                );
             }
 
+            // check amongst all the routes and planes for a match
+            const elements = {
+                '/the-request-path': 'https://elements.com/id',
+            };
 
+            response.json({
+                elements,
+            });
+            // for (const route of this.routes) {
+            //     if (route.value === data.path) {
+            //         // serve the matched route
+
+            //     }
+            // }
         } catch (error) {
             if (this.debugAllows('error')) {
                 const requestTime = this.computeRequestTime(request);
