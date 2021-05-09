@@ -21,8 +21,10 @@ export interface ElementQLComponent {
 
 export type ElementQLComponentName = string;
 
+export type PluridReactFunctionalComponent<T = any> = React.FC<ComponentWithPlurid<T>>;
+
 export type PluridReactComponent<T = any> =
-    | React.FC<ComponentWithPlurid<T>>
+    | PluridReactFunctionalComponent<T>
     | ElementQLComponent
     | ElementQLComponentName;
 

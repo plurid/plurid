@@ -274,8 +274,10 @@ const PluridRouterBrowser = (
     // #region render
     let PluridRouterExterior: React.FC<any> | undefined;
     if (exterior) {
-        PluridRouterExterior = exterior;
-        PluridRouterExterior.displayName = 'PluridRouterExterior';
+        if (typeof exterior == 'function') {
+            PluridRouterExterior = exterior;
+            PluridRouterExterior.displayName = 'PluridRouterExterior';
+        }
     }
 
     let PluridRouterShell: React.FC<any> = ({
@@ -284,8 +286,10 @@ const PluridRouterBrowser = (
         <>{children}</>
     );
     if (shell) {
-        PluridRouterShell = shell;
-        PluridRouterShell.displayName = 'PluridRouterShell';
+        if (typeof shell == 'function') {
+            PluridRouterShell = shell;
+            PluridRouterShell.displayName = 'PluridRouterShell';
+        }
     }
 
 

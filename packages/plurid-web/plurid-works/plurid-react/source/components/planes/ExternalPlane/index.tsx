@@ -16,15 +16,13 @@
         Theme,
     } from '@plurid/plurid-themes';
 
-    import ElementQLClient, {
-        useElementQL,
-    } from '@plurid/elementql-client-react';
+    import ElementQLClient from '@plurid/elementql-client-react';
     // #endregion libraries
 
 
     // #region external
     import {
-        PluridReactComponent,
+        PluridReactFunctionalComponent,
     } from '~data/interfaces';
 
     import { AppState } from '~services/state/store';
@@ -158,7 +156,7 @@ export type ExternalPlaneProperties = ExternalPlaneOwnProperties
     & ExternalPlaneStateProperties
     & ExternalPlaneDispatchProperties;
 
-const ExternalPlane: PluridReactComponent<ExternalPlaneProperties> = (
+const ExternalPlane: PluridReactFunctionalComponent<ExternalPlaneProperties> = (
     properties,
 ) => {
     // #region properties

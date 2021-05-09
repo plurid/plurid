@@ -109,13 +109,9 @@ export const getComponentFromRoute = (
 
     let PluridExterior: React.FC<any> = () => (<></>);
     if (exterior) {
-        PluridExterior = exterior;
-        // switch (exterior.kind) {
-        //     case 'elementql':
-        //         break;
-        //     case 'react':
-        //         PluridExterior = exterior.element
-        // }
+        if (typeof exterior == 'function') {
+            PluridExterior = exterior;
+        }
     }
 
     let PluridSpaces: React.FC<any> = () => (<></>);
@@ -393,17 +389,15 @@ export const getComponentFromRoute = (
     let MultispaceFooter: React.FC<any>;
     if (path.multispace?.header) {
         const header = path.multispace.header;
-        MultispaceHeader = header;
-        // if (header.kind === 'react') {
-        //     MultispaceHeader = header.element;
-        // }
+        if (typeof header == 'function') {
+            MultispaceHeader = header;
+        }
     }
     if (path.multispace?.footer) {
         const footer = path.multispace.footer;
-        MultispaceFooter = footer;
-        // if (footer.kind === 'react') {
-        //     MultispaceFooter = footer.element;
-        // }
+        if (typeof footer == 'function') {
+            MultispaceFooter = footer;
+        }
     }
 
     PluridSpaces = () => (
@@ -1400,7 +1394,9 @@ export const renderMultispace = (
 
     let PluridExterior: React.FC<any> = () => (<></>);
     if (exterior) {
-        PluridExterior = exterior;
+        if (typeof exterior == 'function') {
+            PluridExterior = exterior;
+        }
     }
 
     let PluridSpaces: React.FC<any> = () => (<></>);
@@ -1638,11 +1634,15 @@ export const renderMultispace = (
     let MultispaceFooter: React.FC<any>;
     if (path.multispace?.header) {
         const header = path.multispace.header;
-        MultispaceHeader = header;
+        if (typeof header == 'function') {
+            MultispaceHeader = header;
+        }
     }
     if (path.multispace?.footer) {
         const footer = path.multispace.footer;
-        MultispaceFooter = footer;
+        if (typeof footer == 'function') {
+            MultispaceFooter = footer;
+        }
     }
 
     PluridSpaces = () => (
@@ -1740,8 +1740,10 @@ export const computePluridRoute = (
 
     let PluridRouteExterior: React.FC<any> | undefined;
     if (exterior) {
-        PluridRouteExterior = exterior;
-        PluridRouteExterior.displayName = 'PluridRouteExterior';
+        if (typeof exterior == 'function') {
+            PluridRouteExterior = exterior;
+            PluridRouteExterior.displayName = 'PluridRouteExterior';
+        }
     }
 
 
@@ -1876,6 +1878,10 @@ export const renderDirectPlane = (
 
             if (pluridRoute) {
                 const Flat = pluridRoute.component;
+                if (typeof Flat !== 'function') {
+                    return () => () => (<></>);
+                }
+
                 const DirectPlane = (): any => {
                     const PluridRoute = () => (
                         <>

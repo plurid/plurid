@@ -107,6 +107,10 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
 
     const Component = plane.component;
 
+    if (typeof Component !== 'function') {
+        return (<></>);
+    }
+
     return (
         <StyledPluridPlanePreview
             theme={stateGeneralTheme}

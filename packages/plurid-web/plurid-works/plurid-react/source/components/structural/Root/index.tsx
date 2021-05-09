@@ -16,9 +16,7 @@
 
         /** interfaces */
         TreePlane,
-        PluridContext,
         PluridComponentProperty,
-        PluridalWindow,
     } from '@plurid/plurid-data';
 
     import {
@@ -35,7 +33,7 @@
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
-    import selectors from '~services/state/selectors';
+    // import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
     // #endregion external
 
@@ -178,7 +176,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 };
 
                 plane = !CustomPluridPlane
-                    ? (
+                    ? typeof Plane === 'function' ? (
                         <PluridPlane
                             key={child.planeID}
                             plane={activePlane}
@@ -202,7 +200,8 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                                 )
                             }
                         </PluridPlane>
-                    ) : (
+                    ) : (<></>)
+                    : typeof CustomPluridPlane === 'function' ? (
                         <CustomPluridPlane
                             key={child.planeID}
                             plane={activePlane}
@@ -210,7 +209,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                             planeID={child.planeID}
                             location={child.location}
                         />
-                    );
+                    ) : (<></>);
 
                 setChildrenPlanes(planes => [
                     ...planes,
@@ -261,6 +260,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     }
 
     const Plane = pluridPlane.component;
+    if (typeof Plane !== 'function') {
+        return (<></>);
+    }
     // console.log('Root Plane', Plane);
 
 
@@ -304,6 +306,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
 
     if (CustomPluridPlane) {
+        if (typeof CustomPluridPlane !== 'function') {
+            return (<></>);
+        }
+
         return (
             <StyledPluridRoot
                 data-plurid-entity={PLURID_ENTITY_ROOT}
