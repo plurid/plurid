@@ -51,10 +51,6 @@
 
 // #region module
 export interface PluridRootsOwnProperties {
-    computedTree?: any;
-    indexedPlanesReference?: any;
-    planesPropertiesReference?: any;
-    appConfiguration?: PluridConfiguration;
 }
 
 export interface PluridRootsStateProperties {
@@ -74,7 +70,8 @@ export interface PluridRootsStateProperties {
 export interface PluridRootsDispatchProperties {
 }
 
-export type PluridRootsProperties = PluridRootsOwnProperties
+export type PluridRootsProperties =
+    & PluridRootsOwnProperties
     & PluridRootsStateProperties
     & PluridRootsDispatchProperties;
 
@@ -84,13 +81,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 ) => {
     // #region properties
     const {
-        /** own */
-        computedTree,
-        // indexedPlanesReference,
-        // planesPropertiesReference,
-        appConfiguration,
-
-        /** state */
+        // #region state
         stateConfiguration,
         interactionTheme,
         animatedTransform,
@@ -102,17 +93,12 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         spaceTranslationY,
         spaceTranslationZ,
         stateTree,
+        // #endregion state
     } = properties;
-
-    // console.log('Roots stateTree', stateTree);
-
-    const activeConfiguration = computedTree && appConfiguration
-        ? appConfiguration
-        : stateConfiguration;
 
     const {
         space,
-    } = activeConfiguration;
+    } = stateConfiguration;
 
     const {
         // firstPerson,
@@ -126,10 +112,10 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 
     const innerWidth = typeof window === 'undefined'
         ? 720
-        : window.innerWidth/2;
+        : window.innerWidth / 2;
     const innerHeight = typeof window === 'undefined'
         ? 400
-        : window.innerHeight/2;
+        : window.innerHeight / 2;
 
     const transformOriginX = spaceTranslationX * -1 + innerWidth;
     const transformOriginY = spaceTranslationY * -1 + innerHeight;
@@ -202,35 +188,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                     />
                 );
             })}
-
-            {/* {typeof computedTree === 'undefined' && (
-                <>
-                    {stateTree.map(plane => {
-                        return (
-                            <PluridRoot
-                                key={plane.planeID}
-                                plane={plane}
-                            />
-                        );
-                    })}
-                </>
-            )}
-
-            {typeof computedTree !== 'undefined' && (
-                <>
-                    {computedTree.map((plane: any) => {
-                        return (
-                            <PluridRoot
-                                key={plane.planeID}
-                                plane={plane}
-                                indexedPlanesReference={indexedPlanesReference}
-                                planesPropertiesReference={planesPropertiesReference}
-                                appConfiguration={appConfiguration}
-                            />
-                        );
-                    })}
-                </>
-            )} */}
         </StyledPluridRoots>
     );
     // #endregion render
