@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        useRef,
         useState,
         useEffect,
     } from 'react';
@@ -93,17 +94,30 @@ const elementRequest = async (
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    paths: [
-                        path,
-                    ],
+                    path,
                 }),
+                credentials: 'include',
             },
         );
+        // console.log('response', response);
 
-        console.log('response', response);
+        const data = await response.json();
+        // console.log('data', data);
 
-        return '';
+        if (!data.element) {
+            return;
+        }
+
+        // elementql fetch data.element
+
+        const Element = () => () => {
+            return (<div>element fetched</div>);
+        }
+
+        return Element;
     } catch (error) {
+        // console.log('error', error);
+
         return;
     }
 }
@@ -147,6 +161,11 @@ const ExternalPlane: PluridReactComponent<ExternalPlaneProperties> = (
     // #endregion properties
 
 
+    // #region references
+    const mounted = useRef(false);
+    // #endregion references
+
+
     // #region state
     const [
         Component,
@@ -157,9 +176,24 @@ const ExternalPlane: PluridReactComponent<ExternalPlaneProperties> = (
 
     // #region effects
     useEffect(() => {
+        mounted.current = true;
+        return () => {
+            mounted.current = false;
+        };
+    });
+
+    useEffect(() => {
+        let loading = false;
+
         const load = async () => {
+            // TOFIX - load only once
+            if (loading) {
+                return;
+            }
+            loading = true;
+
             try {
-                console.log('ExternalPlane > plurid', plurid);
+                // console.log('ExternalPlane > plurid', plurid);
 
                 const {
                     domain,
@@ -179,11 +213,18 @@ const ExternalPlane: PluridReactComponent<ExternalPlaneProperties> = (
                     return;
                 }
 
-                const elementData = await elementRequest(
+                const Component = await elementRequest(
                     url,
                     pttpPath,
                 );
 
+                if (!mounted.current) {
+                    return;
+                }
+
+                if (Component) {
+                    setComponent(Component);
+                }
             } catch (error) {
                 return;
             }
