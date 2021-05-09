@@ -134,8 +134,14 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
         // console.log('match', match, route);
 
         if (match) {
+            const absoluteRoute = match.kind === 'Plane'
+                ? match.data.route
+                : match.data.value;
+
             const registeredPlane: RegisteredPluridPlane<C> = {
-                route: (match.data as any).route || (match.data as any).value || '',
+                route: {
+                    absolute: absoluteRoute,
+                },
                 component: match.data.component,
             };
 

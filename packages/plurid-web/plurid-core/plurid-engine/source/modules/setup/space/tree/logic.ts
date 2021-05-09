@@ -310,7 +310,7 @@ export const resolveViewItem = <C>(
         // console.log('iPlane', iPlane);
 
         const plane: PluridPlane<C> = {
-            route: (iPlane as any).route,
+            route: iPlane.route.absolute,
             component: iPlane.component,
         };
         pluridPlanes.push(plane);
