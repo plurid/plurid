@@ -14,7 +14,17 @@
 
 
 // #region module
-export type PluridReactComponent<T = any> = React.FC<ComponentWithPlurid<T>>;
+export interface ElementQLComponent {
+    name: ElementQLComponentName;
+    url?: string;
+}
+
+export type ElementQLComponentName = string;
+
+export type PluridReactComponent<T = any> =
+    | React.FC<ComponentWithPlurid<T>>
+    | ElementQLComponent
+    | ElementQLComponentName;
 
 export type PluridReactPlane = PluridPlane<PluridReactComponent>;
 export type PluridReactRoute = PluridRoute<PluridReactComponent>;
