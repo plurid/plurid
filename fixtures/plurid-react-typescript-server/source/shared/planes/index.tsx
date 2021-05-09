@@ -28,6 +28,13 @@ const pluridRoutePlanes: PluridReactRoutePlane[] = [
         '/tuple',
         () => (<div>tuple</div>),
     ],
+    [
+        '/elementql-plane',
+        {
+            name: 'AppElementQL',
+            url: 'http://localhost:21100/elementql',
+        },
+    ],
 ];
 // #endregion module
 
