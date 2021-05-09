@@ -11,6 +11,9 @@
     } from 'express';
 
     import compression from 'compression';
+    import {
+        json as jsonParser,
+    } from 'body-parser';
 
     import open from 'open';
 
@@ -294,6 +297,7 @@ class PluridServer {
 
         this.serverApplication.post(
             PTTP_ROUTE,
+            jsonParser(),
             async (request, response, next) => {
                 this.handlePTTPRequest(
                     request, response, next,
@@ -597,6 +601,10 @@ class PluridServer {
             }
 
 
+            response.setHeader('Access-Control-Allow-Origin', request.headers.origin || '');
+            response.setHeader('Access-Control-Allow-Credentials', 'true');
+
+
             if (!this.usePTTP) {
                 if (this.debugAllows('warn')) {
                     const requestTime = this.computeRequestTime(request);
@@ -651,12 +659,10 @@ class PluridServer {
             }
 
             // check amongst all the routes and planes for a match
-            const elements = {
-                '/the-request-path': 'https://elements.com/id',
-            };
+            const element = 'https://elements.com/id';
 
             response.json({
-                elements,
+                element,
             });
             // for (const route of this.routes) {
             //     if (route.value === data.path) {
