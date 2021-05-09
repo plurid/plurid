@@ -170,7 +170,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         parentPlaneID: child.parentPlaneID,
                     },
                 };
-
                 const properties = {
                     // ...activePlane.component.properties,
                     plurid: {
@@ -301,6 +300,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             ...pluridProperty,
         },
     };
+    // console.log('Root planeProperties', planeProperties);
 
 
     if (CustomPluridPlane) {
