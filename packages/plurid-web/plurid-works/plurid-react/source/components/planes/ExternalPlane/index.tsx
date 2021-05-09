@@ -9,6 +9,8 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+    import fetch from 'cross-fetch';
+
     import {
         Theme,
     } from '@plurid/plurid-themes';
@@ -76,8 +78,26 @@ const elementRequest = async (
     path: string,
 ) => {
     try {
-        // console.log('elementRequest url', url);
-        // console.log('elementRequest path', path);
+        console.log('elementRequest url', url);
+        console.log('elementRequest path', path);
+
+        const response = await fetch(
+            url,
+            {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    paths: [
+                        path,
+                    ],
+                }),
+            },
+        );
+
+        console.log('response', response);
 
         return '';
     } catch (error) {
