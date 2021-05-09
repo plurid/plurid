@@ -15,6 +15,10 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
+
+    import ElementQLClient, {
+        useElementQL,
+    } from '@plurid/elementql-client-react';
     // #endregion libraries
 
 
@@ -108,11 +112,27 @@ const elementRequest = async (
             return;
         }
 
-        // elementql fetch data.element
+        const {
+            element,
+        } = data;
 
-        const Element = () => () => {
-            return (<div>element fetched</div>);
+        const elementQLClient = new ElementQLClient({
+            url: element.url,
+        });
+
+        const {
+            status,
+            Elements,
+        }: any = await elementQLClient.get(
+            element.json,
+            'json',
+        );
+
+        if (!status) {
+            return;
         }
+
+        const Element = Elements[element.name];
 
         return Element;
     } catch (error) {
