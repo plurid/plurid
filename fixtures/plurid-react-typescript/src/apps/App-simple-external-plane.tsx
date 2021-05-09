@@ -29,12 +29,17 @@ const App = () => {
             route: 'https://google.com',
             component: PluridIframePlane,
         },
+        [
+            'pttp://localhost:3001/local-plane',
+            PluridExternalPlane,
+        ],
     ];
 
     const pluridView: string[] = [
-        '/internal-plane',
-        'pttp://plurid.com/incepts',
-        'https://google.com',
+        // '/internal-plane',
+        // 'pttp://plurid.com/incepts',
+        // 'https://google.com',
+        'pttp://localhost:3001/local-plane',
     ];
 
     return (
