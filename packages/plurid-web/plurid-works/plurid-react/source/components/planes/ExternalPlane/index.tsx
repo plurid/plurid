@@ -16,7 +16,9 @@
         Theme,
     } from '@plurid/plurid-themes';
 
-    import ElementQLClient from '@plurid/elementql-client-react';
+    import {
+        ElementQLClient,
+    } from '@plurid/elementql-client-react';
     // #endregion libraries
 
 
