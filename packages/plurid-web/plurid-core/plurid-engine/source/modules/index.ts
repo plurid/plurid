@@ -1,11 +1,7 @@
 // #region imports
     // #region internal
-    import * as direction from './interaction/direction';
-    import * as matrix from './interaction/mathematics/matrix';
-    import * as quaternion from './interaction/mathematics/quaternion';
-    import * as transform from './interaction/mathematics/transform';
-
     import * as general from './general';
+    import * as interaction from './interaction';
     import internatiolate from './internationalization';
     import * as planes from './planes';
     import * as routing from './routing';
@@ -19,12 +15,8 @@
 
 // #region module
 export {
-    direction,
-    matrix,
-    quaternion,
-    transform,
-
     general,
+    interaction,
     internatiolate,
     planes,
     routing,
