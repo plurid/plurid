@@ -34,6 +34,16 @@ export interface ParserResponse<C> {
 }
 
 
+export interface MatcherResponse<C> {
+    path: PluridRoute<C>;
+    pathname: string;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
+    fragments: PluridRouteFragments;
+    route: string;
+}
+
+
 export interface ParserParametersAndMatch {
     match: boolean;
     parameters: Indexed<string>

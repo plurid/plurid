@@ -13,6 +13,9 @@
 
 // #region module
 export * from './IsoMatcher/interfaces';
+export * from './Parser/interfaces';
+
+export * from './logic';
 
 export {
     IsoMatcher,
