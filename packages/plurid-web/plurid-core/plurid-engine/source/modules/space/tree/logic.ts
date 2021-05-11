@@ -43,19 +43,18 @@
         getTreePlaneByPlaneID,
     } from '../utilities';
 
-    import Router, {
-        resolveRoute,
+    import {
         IsoMatcher,
-    } from '../../router';
+    } from '~modules/routing';
 
     import {
         computeComparingPath,
         extractParametersValues,
-    } from '../../router/Parser/logic';
+    } from '~modules/routing/Parser/logic';
 
     import {
         computePlaneAddress,
-    } from '../../router/general';
+    } from '~modules/routing/logic';
     // #endregion external
 // #endregion imports
 

@@ -9,7 +9,9 @@
 
 
     // #region external
-    import * as routing from '~modules/routing';
+    import {
+        IsoMatcher,
+    } from '~modules/routing';
     // #endregion external
 // #endregion imports
 
@@ -21,13 +23,13 @@
  * or on the `window.__pluridPlanesRegistrar__` object (browser-side).
  */
 class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
-    private isoMatcher: routing.IsoMatcher<C>;
+    private isoMatcher: IsoMatcher<C>;
 
 
     constructor(
         planes?: PluridPlane<C>[],
     ) {
-        this.isoMatcher = new routing.IsoMatcher({
+        this.isoMatcher = new IsoMatcher({
             planes,
         });
     }

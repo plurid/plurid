@@ -12,7 +12,7 @@
     import {
         resolvePluridPlaneData,
         resolvePluridRoutePlaneData,
-    } from '~modules/planes';
+    } from '~modules/planes/logic';
 
     import {
         computePlaneAddress,
