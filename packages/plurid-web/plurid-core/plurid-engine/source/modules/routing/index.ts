@@ -12,6 +12,8 @@
 
 
 // #region module
+export * from './IsoMatcher/interfaces';
+
 export {
     IsoMatcher,
     RouteParser,
