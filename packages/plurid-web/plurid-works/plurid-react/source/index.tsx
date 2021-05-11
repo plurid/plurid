@@ -42,7 +42,7 @@
     } from '@plurid/plurid-data';
 
     import {
-        router,
+        routing,
         pluridRouterNavigate,
     } from '@plurid/plurid-engine';
 
@@ -98,11 +98,9 @@
 
 // #region module
 const {
-    // default: PluridRouter,
     IsoMatcher: PluridIsoMatcher,
-    RouteMatcher: PluridRouteMatcher,
     RouteParser: PluridRouteParser,
-} = router;
+} = routing;
 
 
 const internals = {
@@ -216,7 +214,6 @@ export {
 
     /** Engine */
     PluridIsoMatcher,
-    PluridRouteMatcher,
     PluridRouteParser,
 
     /** PubSub */

@@ -20,8 +20,7 @@
     } from '@plurid/plurid-data';
 
     import {
-        getPlanesRegistrar,
-        getRegisteredPlane,
+        planes,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -48,6 +47,12 @@
 
 
 // #region module
+const {
+    getPlanesRegistrar,
+    getRegisteredPlane,
+} = planes;
+
+
 export interface PluridRootOwnProperties {
     plane: TreePlane;
 }

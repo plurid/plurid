@@ -24,11 +24,9 @@
     } from '@plurid/plurid-data';
 
     import {
-        router,
+        routing,
+        planes,
         utilities,
-        general as generalEngine,
-
-        PluridPlanesRegistrar,
     } from '@plurid/plurid-engine';
 
     import {
@@ -59,12 +57,13 @@
 // #region module
 const {
     resolvePluridRoutePlaneData,
-} = generalEngine.planes;
+    Registrar: PluridPlanesRegistrar,
+} = planes;
 
 
 
 export interface GetComponentFromRouteData {
-    matchedRoute: router.MatcherResponse<PluridReactComponent>;
+    matchedRoute: routing.MatcherResponse<PluridReactComponent>;
     protocol: string;
     host: string;
     indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined;
@@ -463,7 +462,7 @@ export const getGatewayView = (
         indexedPlanes,
     } = data
 
-    const query = router.extractQuery(queryString);
+    const query = routing.extractQuery(queryString);
 
     const gatewayView: string[] = [];
 
@@ -696,7 +695,7 @@ export const getGatewayView = (
         </>
     );
 
-    const gatewayRoute: router.MatcherResponse<PluridReactComponent> = {
+    const gatewayRoute: routing.MatcherResponse<PluridReactComponent> = {
         path: {
             value: gatewayPath || 'gateway',
         },
@@ -1039,7 +1038,7 @@ export const generateIndexedPlanes = (
 
 export const collectApplicationsFromPath = (
     // matchedRoute: router.MatcherResponse<PluridReactComponent>,
-    isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
+    isoMatch: routing.IsoMatcherRouteResult<PluridReactComponent>,
     protocol: string,
     host: string,
 ) => {
@@ -1351,7 +1350,7 @@ export const gatherPluridPlanes = (
 
 
 export const renderMultispace = (
-    matchedRoute: router.IsoMatcherRouteResult<PluridReactComponent>,
+    matchedRoute: routing.IsoMatcherRouteResult<PluridReactComponent>,
 ) => {
     if (matchedRoute.kind !== 'Route') {
         return () => () => (<></>);
@@ -1689,10 +1688,10 @@ export const renderMultispace = (
 
 
 export const computePluridRoute = (
-    matchedRoute: router.IsoMatcherRouteResult<PluridReactComponent> | undefined,
-    planesRegistrar: PluridPlanesRegistrar<PluridReactComponent>,
-    isoMatcher: router.IsoMatcher<PluridReactComponent>,
-    directPlane?: router.IsoMatcherRouteResult<PluridReactComponent>,
+    matchedRoute: routing.IsoMatcherRouteResult<PluridReactComponent> | undefined,
+    planesRegistrar: planes.Registrar<PluridReactComponent>,
+    isoMatcher: routing.IsoMatcher<PluridReactComponent>,
+    directPlane?: routing.IsoMatcherRouteResult<PluridReactComponent>,
 ) => {
     if (
         directPlane
@@ -1866,8 +1865,8 @@ export const getDirectPlaneMatch = (
 
 
 export const renderDirectPlane = (
-    routePlane: router.IsoMatcherRouteResult<PluridReactComponent>,
-    planesRegistrar: PluridPlanesRegistrar<PluridReactComponent>,
+    routePlane: routing.IsoMatcherRouteResult<PluridReactComponent>,
+    planesRegistrar: planes.Registrar<PluridReactComponent>,
 ) => {
     if (routePlane.match.query.flat) {
         const flat = routePlane.match.query.flat.toLowerCase();

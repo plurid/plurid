@@ -26,10 +26,9 @@
     } from '@plurid/plurid-data';
 
     import {
-        router,
+        routing,
+        planes,
         utilities,
-
-        PluridPlanesRegistrar,
     } from '@plurid/plurid-engine';
 
     import {
@@ -64,9 +63,14 @@
 
 
 // #region module
-const PluridRouter = router.default;
-const PluridURLRouter = router.URLRouter;
-const PluridIsoMatcher = router.IsoMatcher;
+const {
+    Registrar: PluridPlanesRegistrar,
+} = planes;
+
+const {
+    IsoMatcher: PluridIsoMatcher,
+} = routing;
+
 
 
 const PluridRouterBrowser = (
@@ -126,7 +130,7 @@ const PluridRouterBrowser = (
     const [
         matchedRoute,
         setMatchedRoute,
-    ] = useState<router.IsoMatcherRouteResult<PluridReactComponent> | undefined>(
+    ] = useState<routing.IsoMatcherRouteResult<PluridReactComponent> | undefined>(
         pluridIsoMatcher.current.match(
             matchedPath,
             'route',

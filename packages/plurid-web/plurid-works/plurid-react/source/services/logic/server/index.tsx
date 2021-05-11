@@ -8,7 +8,7 @@
     } from '@plurid/plurid-data';
 
     import {
-        router,
+        routing,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -34,7 +34,7 @@
 // #region module
 export const serverComputeMetastate = (
     // matchedRoute: router.MatcherResponse<PluridReactComponent>,
-    isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
+    isoMatch: routing.IsoMatcherRouteResult<PluridReactComponent>,
     paths: PluridRoute<PluridReactComponent>[],
 ): PluridMetastate => {
     const protocol = 'http';

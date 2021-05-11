@@ -32,11 +32,10 @@
     } from '@plurid/plurid-data';
 
     import {
-        router,
+        planes,
+        routing,
         space,
         general as generalEngine,
-
-        getPlanesRegistrar,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -81,7 +80,14 @@
 const {
     resolveRoute,
     computePlaneAddress,
-} = router;
+} = routing;
+
+const {
+    getPlanesRegistrar,
+    getPluridPlaneIDByData,
+} = planes;
+
+
 
 export interface PluridLinkStateProperties {
     stateTree: TreePlane[];
@@ -323,7 +329,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
      * Get Plurid Link Coordinates
      */
     useEffect(() => {
-        const parentPlaneID = generalEngine.planes.getPluridPlaneIDByData(linkElement.current);
+        const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
         setParentPlaneID(parentPlaneID);
 
         const linkCoordinates = getPluridLinkCoordinates();

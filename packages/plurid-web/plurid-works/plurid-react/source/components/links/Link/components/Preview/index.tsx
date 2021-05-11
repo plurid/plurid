@@ -13,7 +13,7 @@
     } from '@plurid/plurid-themes';
 
     import {
-        getPlanesRegistrar,
+        planes,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -42,6 +42,12 @@
 
 
 // #region module
+const {
+    getPlanesRegistrar,
+} = planes;
+
+
+
 export interface PluridPlanePreviewOwnProperties {
     planeID: string;
     linkCoordinates: PluridLinkCoordinates;

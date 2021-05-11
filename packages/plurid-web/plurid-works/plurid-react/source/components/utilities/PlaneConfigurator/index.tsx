@@ -13,7 +13,7 @@
     import themes from '@plurid/plurid-themes';
 
     import {
-        general as generalEngine,
+        planes,
     } from '@plurid/plurid-engine';
 
     import {
@@ -40,6 +40,12 @@
 
 
 // #region module
+const {
+    getPluridPlaneIDByData,
+} = planes;
+
+
+
 export interface PluridPlaneConfiguratorOwnProperties {
     // #region required
         // #region values
@@ -97,7 +103,7 @@ const PluridPlaneConfigurator: React.FC<React.PropsWithChildren<PluridPlaneConfi
      * Get Plurid Link Coordinates
      */
     useEffect(() => {
-        const parentPlaneID = generalEngine.planes.getPluridPlaneIDByData(
+        const parentPlaneID = getPluridPlaneIDByData(
             configuratorElement.current,
         );
         setParentPlaneID(parentPlaneID);

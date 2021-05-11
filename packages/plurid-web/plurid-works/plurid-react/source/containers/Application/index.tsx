@@ -19,7 +19,7 @@
     } from '@plurid/plurid-data';
 
     import {
-        registerPlanes,
+        planes,
         state,
     } from '@plurid/plurid-engine';
     // #endregion libraries
@@ -45,6 +45,11 @@
 
 
 // #region module
+const {
+    registerPlanes,
+} = planes;
+
+
 class PluridApplication extends Component<
     PluridApplicationProperties<PluridReactComponent>,
     {}

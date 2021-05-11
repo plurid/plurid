@@ -14,7 +14,7 @@
     } from '@plurid/plurid-data';
 
     import {
-        direction as directionLogic,
+        interaction,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -27,6 +27,12 @@
 
 
 // #region module
+const {
+    direction: directionLogic,
+} = interaction;
+
+
+
 export interface Modes {
     rotation: boolean;
     translation: boolean;

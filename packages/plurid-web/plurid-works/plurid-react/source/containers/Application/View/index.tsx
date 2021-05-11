@@ -32,7 +32,7 @@
 
     import {
         space,
-        getRegisteredPlanes,
+        planes,
     } from '@plurid/plurid-engine';
 
     import {
@@ -86,6 +86,12 @@
 
 
 // #region module
+const {
+    getRegisteredPlanes,
+} = planes;
+
+
+
 export interface ViewOwnProperties extends PluridApplicationProperties<PluridReactComponent> {
 }
 

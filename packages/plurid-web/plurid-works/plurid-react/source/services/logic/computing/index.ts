@@ -13,8 +13,8 @@
     } from '@plurid/plurid-data';
 
     import {
-        router,
-        space,
+        routing,
+        planes,
         general as generalEngine,
     } from '@plurid/plurid-engine';
 
@@ -36,7 +36,7 @@
 // #region module
 const {
     resolvePluridPlaneData,
-} = generalEngine.planes;
+} = planes;
 
 
 
@@ -59,7 +59,7 @@ export const computeApplication = (
         for (const plane of planes) {
             const planeData = resolvePluridPlaneData(plane);
 
-            const linkPath = router.resolveRoute(planeData.route);
+            const linkPath = routing.resolveRoute(planeData.route);
             if (!linkPath) {
                 continue;
             }
@@ -169,7 +169,7 @@ export const computeApplication = (
 
     for (const viewItem of currentView) {
         if (typeof viewItem === 'string') {
-            const viewPath = router.resolveRoute(viewItem);
+            const viewPath = routing.resolveRoute(viewItem);
             if (!viewPath) {
                 continue;
             }
