@@ -9,11 +9,7 @@
 
 
     // #region external
-    import * as routing from '../../routing';
-
-    // import {
-    //     resolvePluridPlaneData,
-    // } from '../logic';
+    import * as routing from '~modules/routing';
     // #endregion external
 // #endregion imports
 
@@ -25,24 +21,15 @@
  * or on the `window.__pluridPlanesRegistrar__` object (browser-side).
  */
 class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
-    // TODO
-    // Store the planes in a better data structure.
-    private planes: Map<string, RegisteredPluridPlane<C>> = new Map();
-
     private isoMatcher: routing.IsoMatcher<C>;
 
 
     constructor(
         planes?: PluridPlane<C>[],
     ) {
-        const isoMatcher = new routing.IsoMatcher({
+        this.isoMatcher = new routing.IsoMatcher({
             planes,
         });
-        this.isoMatcher = isoMatcher;
-
-        // if (planes) {
-        //     this.register(planes);
-        // }
     }
 
 
@@ -52,86 +39,17 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
         this.isoMatcher.index({
             planes,
         });
-
-        // for (const plane of planes) {
-        //     // loop over PluridPlanes and generate the Fully Qualified Route
-        //     // given the FQR
-        //     // store the component in an index by route
-
-        //     const planeData = resolvePluridPlaneData(plane);
-        //     const {
-        //         route,
-        //         component,
-        //     } = planeData;
-
-        //     // obtain from path the absolute route
-        //     // /plane -> Fully Qualified Route
-        //     const resolvedRoute = routing.resolveRoute(
-        //         route,
-        //         'http',
-        //         'localhost',
-        //     );
-        //     // console.log('resolvedRoute', resolvedRoute);
-
-        //     const {
-        //         protocol,
-        //         host,
-        //         path: routePath,
-        //         space,
-        //         universe,
-        //         cluster,
-        //         plane: planePath,
-        //         route: absoluteRoute,
-        //     } = resolvedRoute;
-
-        //     const registeredPluridPlane: RegisteredPluridPlane<C> = {
-        //         component,
-        //         route: {
-        //             protocol: {},
-        //             host: {},
-        //             path: {},
-        //             space: {},
-        //             universe: {},
-        //             cluster: {},
-        //             plane: {},
-        //             absolute: absoluteRoute,
-        //         },
-        //     };
-
-        //     this.planes.set(
-        //         absoluteRoute,
-        //         registeredPluridPlane,
-        //     );
-        // }
     }
 
     public identify() {
         const planes = this.isoMatcher.getPlanesIndex();
-        const keys = planes.keys();
-
-        const ids: string[] = [];
-        for (const id of keys) {
-            ids.push(id);
-        }
-        return ids;
-
-        // if (this.planes.size === 0) {
-        //     return [];
-        // }
-
-        // const ids: string[] = [];
-        // for (const [id, _] of this.planes) {
-        //     ids.push(id);
-        // }
-
-        // return ids;
+        return [...planes.keys()];
     }
 
     public get(
         route: string,
     ) {
         const match = this.isoMatcher.match(route);
-        // console.log('match', match, route);
 
         if (match) {
             const absoluteRoute = match.kind === 'Plane'
@@ -149,10 +67,6 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
         }
 
         return;
-
-        // // TODO
-        // // Account for parametric, constrained routes.
-        // return this.planes.get(route);
     }
 
     public getAll() {
@@ -177,7 +91,6 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
             );
         }
 
-        // return this.planes;
         return all;
     }
 }
