@@ -35,6 +35,7 @@ module.exports = {
         'source',
     ],
     moduleNameMapper: {
+        "modules/(.*)": "<rootDir>/source/modules/$1",
         "interaction/(.*)": "<rootDir>/source/modules/interaction/$1",
         "setup/(.*)": "<rootDir>/source/modules/setup/$1",
         "utilities/(.*)": "<rootDir>/source/modules/utilities/$1",

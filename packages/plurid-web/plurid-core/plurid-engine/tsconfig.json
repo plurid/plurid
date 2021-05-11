@@ -8,6 +8,9 @@
 
         "baseUrl": ".",
         "paths": {
+            "~modules/*": [
+                "./source/modules/*"
+            ],
             "~interaction/*": [
                 "./source/modules/interaction/*"
             ],
