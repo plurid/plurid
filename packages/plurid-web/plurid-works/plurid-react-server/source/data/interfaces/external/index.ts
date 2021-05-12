@@ -13,6 +13,10 @@
     } from '@plurid/plurid-data';
 
     import {
+        routing,
+    } from '@plurid/plurid-engine';
+
+    import {
         PluridReactComponent,
     } from '@plurid/plurid-react';
     // #endregion libraries
@@ -128,7 +132,11 @@ export interface PluridServerService<P = any> {
 export interface PluridServerConfiguration {
     routes: PluridRoute<PluridReactComponent>[];
     planes?: PluridRoutePlane<PluridReactComponent>[];
-    preserves: PluridPreserve[];
+    preserves: PluridPreserve<
+        routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+        express.Request,
+        express.Response
+    >[];
     helmet: Helmet;
     styles?: string[];
     middleware?: PluridServerMiddleware[];

@@ -105,7 +105,11 @@ const {
 class PluridServer {
     private routes: PluridRoute<PluridReactComponent>[];
     private planes: PluridRoutePlane<PluridReactComponent>[];
-    private preserves: PluridPreserve[];
+    private preserves: PluridPreserve<
+        routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+        express.Request,
+        express.Response
+    >[];
     private helmet: Helmet;
     private styles: string[];
     private middleware: PluridServerMiddleware[];
@@ -831,9 +835,22 @@ class PluridServer {
             'route',
         );
 
-        let preserveOnServe: undefined | PluridPreserveOnServe<any>;
-        let preserveAfterServe: undefined | PluridPreserveAfterServe<any>;
-        let preserveOnError: undefined | PluridPreserveOnError<any>;
+        let preserveOnServe: undefined | PluridPreserveOnServe<
+            routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+            express.Request,
+            express.Response
+        >;
+        let preserveAfterServe: undefined | PluridPreserveAfterServe<
+            routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+            express.Request,
+            express.Response
+        >;
+        let preserveOnError: undefined | PluridPreserveOnError<
+            routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+            express.Request,
+            express.Response
+        >;
+
         if (
             isoMatch
             || catchAll
@@ -856,14 +873,17 @@ class PluridServer {
 
         let preserveResult: void | PluridPreserveResponse;
         if (preserveOnServe) {
-            const transmission: PluridPreserveTransmission<any> = {
+            const transmission: PluridPreserveTransmission<
+                routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+                express.Request,
+                express.Response
+            > = {
+                context: {
+                    route: request.originalUrl,
+                    match: isoMatch,
+                },
                 request,
                 response,
-                context: {
-                    contextualizers: undefined,
-                    path: request.originalUrl,
-                    match: isoMatch as any, // hack as any
-                },
             };
 
             try {
@@ -914,27 +934,31 @@ class PluridServer {
     }
 
     private async resolvePreserveAfterServe(
-        preserveAfterServe: PluridPreserveAfterServe<any> | undefined,
+        preserveAfterServe: PluridPreserveAfterServe<
+            routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+            express.Request,
+            express.Response
+        > | undefined,
         request: express.Request,
         response: express.Response,
     ) {
         if (preserveAfterServe) {
-            // const urlMatch = this.urlRouter.match(request.originalUrl);
+            const isoMatch = this.isoMatcher.match(
+                request.originalUrl,
+                'route',
+            );
 
-            // if (!urlMatch) {
-            //     return;
-            // }
-            // TOFIX
-            const urlMatch: any = {};
-
-            const transmission: PluridPreserveTransmission<any> = {
+            const transmission: PluridPreserveTransmission<
+                routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+                express.Request,
+                express.Response
+            > = {
+                context: {
+                    route: request.originalUrl,
+                    match: isoMatch,
+                },
                 request,
                 response,
-                context: {
-                    contextualizers: undefined,
-                    path: request.originalUrl,
-                    match: urlMatch,
-                },
             };
 
             await preserveAfterServe(transmission);
