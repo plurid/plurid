@@ -12,11 +12,8 @@
         Indexed,
         PluridRoute,
         PluridRoutePlane,
+        PluridPreserveResponse,
     } from '@plurid/plurid-data';
-
-    // import {
-    //     router,
-    // } from '@plurid/plurid-engine';
 
     import {
         PluridReactComponent,
@@ -27,7 +24,6 @@
     // #region external
     import {
         PluridServerService,
-        // PluridServerServicesData,
         PluridStillerOptions,
     } from '../external';
     // #endregion external
@@ -49,8 +45,6 @@ export interface PluridRendererConfiguration {
     bodyAttributes: string | undefined;
     root: string | undefined;
     content: string;
-    // defaultPreloadedReduxState: string | undefined;
-    // reduxState: string;
     defaultPreloadedPluridMetastate: string | undefined;
     pluridMetastate: string;
     globals: Record<string, string> | undefined;
@@ -94,19 +88,17 @@ export interface StillsGeneratorOptions {
 
 export interface PluridContentGeneratorData {
     services: PluridServerService[];
-    // servicesData: PluridServerServicesData | undefined;
     stylesheet: ServerStyleSheet;
     helmet: Helmet;
     exterior: PluridReactComponent | undefined;
     shell: PluridReactComponent | undefined;
-    // matchedRoute: router.MatcherResponse<PluridReactComponent>;
     routes: PluridRoute<PluridReactComponent>[];
     planes: PluridRoutePlane<PluridReactComponent>[];
     pluridMetastate: any;
     gateway: boolean;
     gatewayEndpoint: string;
     gatewayQuery: string;
-    preserveResult: any;
+    preserveResult: PluridPreserveResponse | undefined;
     matchedPlane: any;
 
     pathname: string;

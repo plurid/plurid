@@ -871,7 +871,7 @@ class PluridServer {
             }
         }
 
-        let preserveResult: void | PluridPreserveResponse;
+        let preserveResult: undefined | PluridPreserveResponse;
         if (preserveOnServe) {
             const transmission: PluridPreserveTransmission<
                 routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
@@ -1006,7 +1006,7 @@ class PluridServer {
 
     private async renderApplication(
         isoMatch: routing.IsoMatcherRouteResult<PluridReactComponent>,
-        preserveResult: PluridPreserveResponse | void,
+        preserveResult: PluridPreserveResponse | undefined,
         matchedPlane?: any,
     ) {
         // console.log('RENDER isoMatch', isoMatch);
@@ -1099,7 +1099,7 @@ class PluridServer {
     private async getContentAndStyles(
         isoMatch: routing.IsoMatcherRouteResult<PluridReactComponent>,
         pluridMetastate: any,
-        preserveResult: any,
+        preserveResult: PluridPreserveResponse | undefined,
         matchedPlane?: any,
     ) {
         const stylesheet = new ServerStyleSheet();
