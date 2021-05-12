@@ -1,5 +1,5 @@
 // #region module
-export interface PluridPreserve<M = undefined, RQ = any, RS = any> {
+export interface PluridPreserve<M = any, RQ = any, RS = any> {
     /**
      * Served path value.
      */
@@ -67,11 +67,11 @@ export interface PluridPreserveResponse {
      */
     responded?: boolean;
 
-    // /**
-    //  * Handle the server response without taking into account the preserve.
-    //  * Considers only the first match.
-    //  */
-    // depreserve?: boolean;
+    /**
+     * Handle the server response without taking into account the preserve.
+     * Considers only the first match.
+     */
+    depreserve?: boolean;
 
     /**
      * Ignore the preserve computation, but continue to try to find a match in the preserves array.
