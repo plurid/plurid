@@ -35,6 +35,8 @@
         PluridReactComponent,
     } from '~data/interfaces';
 
+    import ErrorBoundary from '~components/utilities/ErrorBoundary';
+
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import { ViewSize } from '~services/state/types/space';
@@ -200,11 +202,13 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                         />
                     )}
 
-                    <PlaneContent
-                        // updatePlaneSize={updatePlaneSize}
-                    >
-                        {children}
-                    </PlaneContent>
+                    <ErrorBoundary>
+                        <PlaneContent
+                            // updatePlaneSize={updatePlaneSize}
+                        >
+                            {children}
+                        </PlaneContent>
+                    </ErrorBoundary>
                 </>
             )}
         </StyledPluridPlane>
