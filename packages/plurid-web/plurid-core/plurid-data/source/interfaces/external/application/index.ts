@@ -100,10 +100,18 @@ export interface PluridApplication<C> {
 
     /**
      * Show or not the default Plane Not Found component, or pass a custom component.
+     *
      * Default `true`.
      */
-    // notFound?: boolean | PluridComponent;
-    notFound?: boolean | C;
+    planeNotFound?: boolean | C;
+
+    /**
+     * Use or not Plurid Plane Error Boundary and show the default Plurid Plane Render Error component,
+     * or pass a custom component.
+     *
+     * Default `true`.
+     */
+    planeRenderError?: boolean | C;
 
     /**
      * Application-wide partial configuration.
