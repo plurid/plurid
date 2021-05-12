@@ -23,6 +23,8 @@ export const DEFAULT_SERVER_OPTIONS = {
 };
 
 
+export const DEFAULT_RENDERER_LANGUAGE = 'en';
+export const DEFAULT_RENDERER_ROOT = 'root';
 export const DEFAULT_RENDERER_PLURID_STATE = '{}';
 export const DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE = '/vendor.js';
 export const DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE = '/index.js';

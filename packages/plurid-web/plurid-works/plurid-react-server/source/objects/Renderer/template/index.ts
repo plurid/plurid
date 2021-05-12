@@ -19,21 +19,19 @@ const template = (
 ) => {
     const {
         htmlLanguage,
-        htmlAttributes,
         head,
+        htmlAttributes,
+        bodyAttributes,
         defaultStyle,
         styles,
         headScripts,
+        bodyScripts,
         vendorScriptSource,
         mainScriptSource,
-        bodyAttributes,
         root,
         content,
-        // defaultPreloadedReduxState,
-        // reduxState,
         defaultPreloadedPluridMetastate,
         pluridMetastate,
-        bodyScripts,
         globals,
     } = data;
 
@@ -70,7 +68,6 @@ const template = (
     </body>
 </html>
     `;
-    // window.${defaultPreloadedReduxState} = ${reduxState};
 
     return cleanTemplate(templateString);
 }

@@ -1036,8 +1036,7 @@ class PluridServer {
             '',
         );
         const preserveStyles = preserveResult?.template?.styles?.join(' ') || '';
-        const mergedStyles =
-            + styles
+        const mergedStyles = styles
             + stringedStyles
             + preserveStyles;
 
@@ -1059,8 +1058,7 @@ class PluridServer {
             ...this.template?.htmlAttributes,
             ...helmet?.htmlAttributes.toComponent(),
         };
-        const mergedHtmlAttributes =
-            recordToString(htmlAttributes)
+        const mergedHtmlAttributes = recordToString(htmlAttributes)
             + (preserveResult?.template?.htmlAttributes || '');
 
         const bodyAttributes = helmet?.bodyAttributes.toString() || '';

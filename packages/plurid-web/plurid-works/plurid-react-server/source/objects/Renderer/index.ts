@@ -1,6 +1,8 @@
 // #region imports
     // #region external
     import {
+        DEFAULT_RENDERER_LANGUAGE,
+        DEFAULT_RENDERER_ROOT,
         DEFAULT_RENDERER_PLURID_STATE,
         DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE,
         DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE,
@@ -80,7 +82,7 @@ class PluridRenderer {
             }
         `;
 
-        this.htmlLanguage = htmlLanguage || 'en';
+        this.htmlLanguage = htmlLanguage || DEFAULT_RENDERER_LANGUAGE;
         this.head = head || '';
         this.htmlAttributes = htmlAttributes;
         this.bodyAttributes = bodyAttributes || '';
@@ -90,7 +92,7 @@ class PluridRenderer {
         this.bodyScripts = bodyScripts;
         this.vendorScriptSource = vendorScriptSource || DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE;
         this.mainScriptSource = mainScriptSource || DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE;
-        this.root = root || 'root';
+        this.root = root || DEFAULT_RENDERER_ROOT;
         this.content = assetsPathRewrite(content) || '';
         this.defaultPreloadedPluridMetastate = defaultPreloadedPluridMetastate || DEFAULT__PRELOADED_PLURID_METASTATE__;
         this.pluridMetastate = pluridMetastate || DEFAULT_RENDERER_PLURID_STATE;
