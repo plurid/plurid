@@ -1,11 +1,9 @@
 // #region imports
     // #region external
     import {
-        DEFAULT_RENDERER_REDUX_STATE,
         DEFAULT_RENDERER_PLURID_STATE,
         DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE,
         DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE,
-        DEFAULT__PRELOADED_REDUX_STATE__,
         DEFAULT__PRELOADED_PLURID_METASTATE__,
     } from '~data/constants';
 

@@ -1009,18 +1009,18 @@ class PluridServer {
         preserveResult: PluridPreserveResponse | undefined,
         matchedPlane?: any,
     ) {
-        // console.log('RENDER isoMatch', isoMatch);
+        const mergedHtmlLanguage = preserveResult?.template?.htmlLanguage
+            || this.template?.htmlLanguage;
+
         const pluridMetastate = serverComputeMetastate(
             isoMatch,
             this.routes,
         );
-        // console.log('pluridMetastate', pluridMetastate);
 
         const {
             content,
             styles,
         } = await this.getContentAndStyles(
-            // route,
             isoMatch,
             pluridMetastate,
             preserveResult,
@@ -1031,7 +1031,11 @@ class PluridServer {
             (accumulator, style) => accumulator + style,
             '',
         );
-        const mergedStyles = styles + stringedStyles;
+        const preserveStyles = preserveResult?.template?.styles?.join(' ') || '';
+        const mergedStyles =
+            + styles
+            + stringedStyles
+            + preserveStyles;
 
         const {
             helmet,
@@ -1051,45 +1055,44 @@ class PluridServer {
             ...this.template?.htmlAttributes,
             ...helmet?.htmlAttributes.toComponent(),
         };
+        // add preserveResult?.template?.htmlAttributes
+        const mergedHtmlAttributes = htmlAttributes;
+
         const bodyAttributes = helmet?.bodyAttributes.toString() || '';
-
-
-        // let reduxPreserveValue;
-        let globals;
-        if (preserveResult) {
-            // reduxPreserveValue = preserveResult.providers?.redux;
-            globals = preserveResult.globals;
-        }
-
-        // const store = this.servicesData?.reduxStore
-        //     ? JSON.stringify(
-        //         this.servicesData?.reduxStore(
-        //             reduxPreserveValue ?? this.servicesData?.reduxStoreValue ?? {},
-        //         ).getState())
-        //     : '';
+        const preserveBodyAttributes = preserveResult?.template?.bodyAttributes || '';
+        const mergedBodyAttributes = bodyAttributes
+            + preserveBodyAttributes;
 
         const headScripts = this.template?.headScripts || [];
-        // const stripeScript = this.servicesData?.stripeScript || '';
-        // const mergedHeadScripts = headScripts + '\n' + stripeScript;
-        const mergedHeadScripts = headScripts;
+        const mergedHeadScripts = [
+            ...headScripts,
+            ...(preserveResult?.template?.headScripts || []),
+        ];
+
+        const bodyScripts = this.template?.bodyScripts || [];
+        const mergedBodyScripts = [
+            ...bodyScripts,
+            ...(preserveResult?.template?.bodyScripts || []),
+        ];
+
+        const globals = preserveResult?.globals;
+
 
         const renderer = new PluridRenderer({
-            htmlLanguage: this.template?.htmlLanguage,
-            htmlAttributes,
+            htmlLanguage: mergedHtmlLanguage,
             head,
+            htmlAttributes: mergedHtmlAttributes,
+            bodyAttributes: mergedBodyAttributes,
             defaultStyle: this.template?.defaultStyle,
             styles: mergedStyles,
             headScripts: mergedHeadScripts,
+            bodyScripts: mergedBodyScripts,
             vendorScriptSource: this.template?.vendorScriptSource,
             mainScriptSource: this.template?.mainScriptSource,
-            bodyAttributes,
-            content,
             root: this.template?.root,
-            // defaultPreloadedReduxState: this.template?.defaultPreloadedReduxState,
-            // reduxState: store,
+            content,
             defaultPreloadedPluridMetastate: this.template?.defaultPreloadedPluridMetastate,
             pluridMetastate: JSON.stringify(pluridMetastate),
-            bodyScripts: this.template?.bodyScripts,
             globals,
         });
 

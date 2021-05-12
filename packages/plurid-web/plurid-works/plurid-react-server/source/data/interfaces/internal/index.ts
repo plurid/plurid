@@ -118,8 +118,6 @@ export interface RendererTemplateData {
     bodyAttributes: string;
     root: string;
     content: string;
-    // defaultPreloadedReduxState: string;
-    // reduxState: string;
     defaultPreloadedPluridMetastate: string;
     pluridMetastate: string;
     globals: Record<string, string>;
