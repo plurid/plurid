@@ -1,5 +1,7 @@
 // #region imports
     // #region libraries
+    import cors from 'cors';
+
     import PluridServer from '@plurid/plurid-react-server';
     // #endregion libraries
 // #endregion imports
@@ -21,5 +23,26 @@ export const setRouteHandlers = (
     //         ),
     //     );
     // });
+}
+
+
+export const setPttpCors = (
+    server: PluridServer,
+) => {
+    if (!server.usePTTP) {
+        return;
+    }
+
+    const instance = server.instance();
+    const corsOptions = {
+        credentials: true,
+        origin: (_: any, callback: any) => {
+            return callback(null, true);
+        },
+    };
+    instance.options('/pttp', cors(corsOptions) as any);
+    instance.use(
+        cors(corsOptions),
+    );
 }
 // #endregion module

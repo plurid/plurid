@@ -1,7 +1,5 @@
 // #region imports
     // #region libraries
-    import cors from 'cors';
-
     import PluridServer, {
         PluridServerMiddleware,
         PluridServerService,
@@ -41,6 +39,7 @@
 
     import {
         setRouteHandlers,
+        setPttpCors,
     } from './handlers';
     // #endregion internal
 // #endregion imports
@@ -63,9 +62,12 @@ const openAtStart = watchMode
     : isProduction
         ? false
         : true;
-const debug = isProduction
-    ? 'info'
-    : 'error';
+
+const quiet = false;
+// const debug = isProduction
+//     ? 'info'
+//     : 'error';
+const debug = 'info';
 
 const usePTTP = true;
 
@@ -73,6 +75,7 @@ const usePTTP = true;
 // // [START stripe script]
 // const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
 // // [END stripe script]
+
 
 
 /** Custom styles to be loaded into the template. */
@@ -129,8 +132,8 @@ const services: PluridServerService[] = [
 const options: PluridServerPartialOptions = {
     buildDirectory,
     open: openAtStart,
-    quiet: false,
-    debug: 'info',
+    quiet,
+    debug,
 };
 
 const template: PluridServerTemplateConfiguration = {
@@ -156,22 +159,11 @@ const pluridServer = new PluridServer({
 });
 
 
-const instance = pluridServer.instance();
-const corsOptions = {
-    credentials: true,
-    origin: (_: any, callback: any) => {
-        return callback(null, true);
-    },
-};
-instance.options('/pttp', cors(corsOptions) as any);
-instance.use(
-    cors(corsOptions),
-);
-
-
 // handle non-GET or custom routes (such as API requests, or anything else)
 setRouteHandlers(pluridServer);
 
+// if using PTTP
+setPttpCors(pluridServer);
 
 
 /**

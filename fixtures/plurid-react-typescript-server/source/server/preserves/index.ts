@@ -1,7 +1,14 @@
 // #region imports
     // #region libraries
+    import express from 'express';
+
+    import {
+        routing,
+    } from '@plurid/plurid-engine';
+
     import {
         PluridPreserve,
+        PluridReactComponent,
     } from '@plurid/plurid-react';
     // #endregion libraries
 
@@ -18,7 +25,11 @@
 
 
 // #region module
-const preserves: PluridPreserve[] = [
+const preserves: PluridPreserve<
+    routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+    express.Request,
+    express.Response
+>[] = [
     {
         serve: '/',
         onServe: async (
