@@ -47,7 +47,7 @@
 
     import {
         serverComputeMetastate,
-        getDirectPlaneMatch,
+        // getDirectPlaneMatch,
 
         PluridReactComponent,
     } from '@plurid/plurid-react';
@@ -89,7 +89,7 @@
 
     import PluridRenderer from '../Renderer';
     import PluridContentGenerator from '../ContentGenerator';
-    import PluridStillsManager from '../StillsManager';
+    // import PluridStillsManager from '../StillsManager';
     // #endregion external
 // #endregion imports
 
@@ -122,7 +122,6 @@ class PluridServer {
     private server: Server | undefined;
     private port: number | string;
 
-    // private urlRouter: router.URLRouter;
     // private stills: PluridStillsManager;
     private isoMatcher: routing.IsoMatcher<PluridReactComponent>;
 
@@ -140,7 +139,6 @@ class PluridServer {
             exterior,
             shell,
             services,
-            // servicesData,
             options,
             template,
             usePTTP,
@@ -647,6 +645,14 @@ class PluridServer {
                 );
 
                 if (pttpHandled) {
+                    if (this.debugAllows('info')) {
+                        const requestTime = this.computeRequestTime(request);
+
+                        console.info(
+                            `[${time.stamp()} :: ${requestID}] (200 OK) Handled POST ${request.path}${requestTime} in custom handler`,
+                        );
+                    }
+
                     return;
                 }
             }
@@ -671,30 +677,41 @@ class PluridServer {
                 return;
             }
 
+            const resolveElementFromPlaneMatch = (
+                planeMatch: routing.IsoMatcherPlaneResult<PluridReactComponent<any>>,
+            ) => {
+                if (typeof planeMatch.data.component === 'function') {
+                    return;
+                }
 
-            const elementMatch = typeof planeMatch.data.component !== 'function'
-                ? typeof planeMatch.data.component !== 'string'
-                    ? {
-                        name: planeMatch.data.component.name,
-                        url: planeMatch.data.component.url || this.elementqlEndpoint,
-                    }
-                    : {
+                if (typeof planeMatch.data.component === 'string') {
+                    return {
                         name: planeMatch.data.component,
                         url: this.elementqlEndpoint,
-                    }
-                : undefined;
+                    };
+                }
+
+                return {
+                    name: planeMatch.data.component.name,
+                    url: planeMatch.data.component.url || this.elementqlEndpoint,
+                };
+            }
+
+            const elementMatch = resolveElementFromPlaneMatch(
+                planeMatch,
+            );
 
             if (!elementMatch) {
                 if (this.debugAllows('warn')) {
                     const requestTime = this.computeRequestTime(request);
 
                     console.info(
-                        `[${time.stamp()} :: ${requestID}] (400 Bad Request) Could not handle POST ${request.path}${requestTime}`,
+                        `[${time.stamp()} :: ${requestID}] (404 Not Found) Could not handle POST ${request.path}${requestTime}`,
                     );
                 }
 
                 response
-                    .status(400)
+                    .status(404)
                     .end();
                 return;
             }
