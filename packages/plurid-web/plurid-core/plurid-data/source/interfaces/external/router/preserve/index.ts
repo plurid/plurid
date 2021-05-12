@@ -27,18 +27,18 @@ export interface PluridPreserve<M = any, RQ = any, RS = any> {
 
 export type PluridPreserveOnServe<M, RQ, RS> = (
     transmission: PluridPreserveTransmission<M, RQ, RS>,
-) => Promise<PluridPreserveResponse | void>;
+) => Promise<PluridPreserveResponse | undefined>;
 
 
 export type PluridPreserveAfterServe<M, RQ, RS> = (
     transmission: PluridPreserveTransmission<M, RQ, RS>,
-) => Promise<void>;
+) => Promise<undefined>;
 
 
 export type PluridPreserveOnError<M, RQ, RS> = (
     error: any,
     transmission: PluridPreserveTransmission<M, RQ, RS>,
-) => Promise<PluridPreserveResponse | void>;
+) => Promise<PluridPreserveResponse | undefined>;
 
 
 export interface PluridPreserveTransmission<M, RQ, RS> {
