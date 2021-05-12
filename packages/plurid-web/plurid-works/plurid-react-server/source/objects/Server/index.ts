@@ -90,6 +90,10 @@
     import PluridRenderer from '../Renderer';
     import PluridContentGenerator from '../ContentGenerator';
     // import PluridStillsManager from '../StillsManager';
+
+    import {
+        recordToString,
+    } from '~utilities/template';
     // #endregion external
 // #endregion imports
 
@@ -1055,8 +1059,9 @@ class PluridServer {
             ...this.template?.htmlAttributes,
             ...helmet?.htmlAttributes.toComponent(),
         };
-        // add preserveResult?.template?.htmlAttributes
-        const mergedHtmlAttributes = htmlAttributes;
+        const mergedHtmlAttributes =
+            recordToString(htmlAttributes)
+            + (preserveResult?.template?.htmlAttributes || '');
 
         const bodyAttributes = helmet?.bodyAttributes.toString() || '';
         const preserveBodyAttributes = preserveResult?.template?.bodyAttributes || '';

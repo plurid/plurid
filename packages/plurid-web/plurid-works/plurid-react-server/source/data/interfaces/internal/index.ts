@@ -34,12 +34,12 @@
 // #region module
 export interface PluridRendererConfiguration {
     htmlLanguage: string | undefined;
-    htmlAttributes: Record<string, string> | undefined;
+    htmlAttributes: string;
     head: string;
     defaultStyle: string | undefined;
     styles: string;
-    headScripts: string[] | undefined;
-    bodyScripts: string[] | undefined;
+    headScripts: string[];
+    bodyScripts: string[];
     vendorScriptSource: string | undefined;
     mainScriptSource: string | undefined;
     bodyAttributes: string | undefined;
