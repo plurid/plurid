@@ -22,6 +22,8 @@ export interface PluridContext<C> {
     planeContext?: PluridPlaneContext<any>;
     planeContextValue?: any;
     customPlane?: C;
+    planeNotFound?: boolean | C;
+    planeRenderError?: boolean | C;
 
     registerPubSub: (
         pubsub: PluridPubSub,
