@@ -42,7 +42,7 @@
     } from '@plurid/plurid-data';
 
     import {
-        router,
+        routing,
     } from '@plurid/plurid-engine';
 
     import {
@@ -97,10 +97,9 @@
 
 // #region module
 const {
-    default: PluridRouter,
-    URLRouter: PluridURLRouter,
     IsoMatcher: PluridIsoMatcher,
-} = router;
+} = routing;
+
 
 
 class PluridServer {
@@ -123,9 +122,9 @@ class PluridServer {
     private server: Server | undefined;
     private port: number | string;
 
-    private urlRouter: router.URLRouter;
-    private stills: PluridStillsManager;
-    private isoMatcher: router.IsoMatcher<PluridReactComponent>;
+    // private urlRouter: router.URLRouter;
+    // private stills: PluridStillsManager;
+    private isoMatcher: routing.IsoMatcher<PluridReactComponent>;
 
 
     constructor(
@@ -168,20 +167,20 @@ class PluridServer {
         this.port = DEFAULT_SERVER_PORT;
 
 
-        const urlRoutes = this.routes.map(route => {
-            const {
-                value,
-                parameters,
-            } = route;
+        // const urlRoutes = this.routes.map(route => {
+        //     const {
+        //         value,
+        //         parameters,
+        //     } = route;
 
-            return {
-                value,
-                parameters,
-            };
-        });
-        this.urlRouter = new PluridURLRouter(urlRoutes);
+        //     return {
+        //         value,
+        //         parameters,
+        //     };
+        // });
+        // this.urlRouter = new PluridURLRouter(urlRoutes);
 
-        this.stills = new PluridStillsManager(this.options);
+        // this.stills = new PluridStillsManager(this.options);
         this.isoMatcher = new PluridIsoMatcher({
             routes: this.routes,
             routePlanes: this.planes,
@@ -903,11 +902,13 @@ class PluridServer {
         response: express.Response,
     ) {
         if (preserveAfterServe) {
-            const urlMatch = this.urlRouter.match(request.originalUrl);
+            // const urlMatch = this.urlRouter.match(request.originalUrl);
 
-            if (!urlMatch) {
-                return;
-            }
+            // if (!urlMatch) {
+            //     return;
+            // }
+            // TOFIX
+            const urlMatch: any = {};
 
             const transmission: PluridPreserveTransmission<any> = {
                 request,
@@ -963,7 +964,7 @@ class PluridServer {
 
 
     private async renderApplication(
-        isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
+        isoMatch: routing.IsoMatcherRouteResult<PluridReactComponent>,
         preserveResult: PluridPreserveResponse | void,
         matchedPlane?: any,
     ) {
@@ -1055,7 +1056,7 @@ class PluridServer {
     }
 
     private async getContentAndStyles(
-        isoMatch: router.IsoMatcherRouteResult<PluridReactComponent>,
+        isoMatch: routing.IsoMatcherRouteResult<PluridReactComponent>,
         pluridMetastate: any,
         preserveResult: any,
         matchedPlane?: any,
