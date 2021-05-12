@@ -2,13 +2,20 @@
     // #region libraries
     import React from 'react';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        PluridReactComponent,
+    } from '~data/interfaces';
+    // #endregion external
 // #endregion imports
 
 
 
 // #region module
 export interface ErrorBoundaryProperties {
-    renderError?: JSX.Element;
+    renderError?: PluridReactComponent;
 }
 
 export interface ErrorBoundaryState {

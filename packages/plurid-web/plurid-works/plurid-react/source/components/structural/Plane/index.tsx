@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        useContext,
         useState,
     } from 'react';
 
@@ -36,6 +37,8 @@
     } from '~data/interfaces';
 
     import ErrorBoundary from '~components/utilities/ErrorBoundary';
+
+    import Context from '~services/context';
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
@@ -135,6 +138,18 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // #endregion properties
 
 
+    // #region context
+    const context = useContext(Context);
+    if (!context) {
+        return (<></>);
+    }
+
+    const {
+        planeRenderError,
+    } = context;
+    // #endregion context
+
+
     // #region state
     const [
         mouseOver,
@@ -162,6 +177,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     // #region render
     // console.log('Render plane');
+
+    const planeContentProperties = {
+        // updatePlaneSize,
+    };
+
     return (
         <StyledPluridPlane
             suppressHydrationWarning={true}
@@ -202,13 +222,25 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                         />
                     )}
 
-                    <ErrorBoundary>
+                    {planeRenderError ? (
+                        <ErrorBoundary
+                            renderError={typeof planeRenderError !== 'boolean'
+                                ? planeRenderError : undefined
+                            }
+                        >
+                            <PlaneContent
+                                {...planeContentProperties}
+                            >
+                                {children}
+                            </PlaneContent>
+                        </ErrorBoundary>
+                    ) : (
                         <PlaneContent
-                            // updatePlaneSize={updatePlaneSize}
+                            {...planeContentProperties}
                         >
                             {children}
                         </PlaneContent>
-                    </ErrorBoundary>
+                    )}
                 </>
             )}
         </StyledPluridPlane>
