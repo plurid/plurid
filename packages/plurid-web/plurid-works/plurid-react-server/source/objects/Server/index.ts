@@ -118,7 +118,7 @@ class PluridServer {
     private services: PluridServerService[];
     private options: PluridServerOptions;
     private template: PluridServerTemplateConfiguration | undefined;
-    private usePTTP: boolean;
+    public usePTTP: boolean;
     private pttpHandler: PTTPHandler | undefined;
     private elementqlEndpoint: string | undefined;
 
