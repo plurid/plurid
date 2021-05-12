@@ -2,19 +2,16 @@
     // #region external
     import {
         PluridPartialConfiguration,
-    } from '../configuration';
+    } from '~interfaces/external/configuration';
 
     import {
         CompareType,
-    } from '../compare';
-    // #endregion external
+    } from '~interfaces/external/compare';
 
-
-    // #region internal
     import {
         PluridRouteMultispace,
-    } from './multispace';
-    // #endregion internal
+    } from '../multispace';
+    // #endregion external
 // #endregion imports
 
 
