@@ -34,13 +34,16 @@ export const setPttpCors = (
     }
 
     const instance = server.instance();
+
     const corsOptions = {
         credentials: true,
         origin: (_: any, callback: any) => {
             return callback(null, true);
         },
     };
-    instance.options('/pttp', cors(corsOptions) as any);
+    const PTTP_ROUTE = '/pttp';
+
+    instance.options(PTTP_ROUTE, cors(corsOptions) as any);
     instance.use(
         cors(corsOptions),
     );
