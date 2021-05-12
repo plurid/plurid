@@ -84,7 +84,21 @@ export interface PluridPreserveResponse {
      * `window.${key} = ${value}`.
      */
     globals?: Record<string, string>;
+
+    template?: PluridPreserveResponseTemplate;
 }
 
 export type PluridPreserveResponseProviders = Record<string, any>;
+
+export interface PluridPreserveResponseTemplate {
+    htmlLanguage?: string;
+
+    htmlAttributes?: Record<string, string>;
+    bodyAttributes?: Record<string, string>;
+
+    headScripts?: string[];
+    bodyScripts?: string[];
+
+    styles?: string[];
+}
 // #endregion module
