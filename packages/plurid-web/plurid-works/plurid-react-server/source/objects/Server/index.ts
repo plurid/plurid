@@ -94,6 +94,10 @@
     import {
         recordToString,
     } from '~utilities/template';
+
+    import {
+        resolveElementFromPlaneMatch,
+    } from '~utilities/pttp';
     // #endregion external
 // #endregion imports
 
@@ -303,15 +307,17 @@ class PluridServer {
             },
         );
 
-        this.serverApplication.post(
-            PTTP_ROUTE,
-            jsonParser(),
-            async (request, response, next) => {
-                this.handlePTTPRequest(
-                    request, response, next,
-                );
-            },
-        );
+        if (this.usePTTP) {
+            this.serverApplication.post(
+                PTTP_ROUTE,
+                jsonParser(),
+                async (request, response, next) => {
+                    this.handlePTTPRequest(
+                        request, response,
+                    );
+                },
+            );
+        }
     }
 
     private async handleGetRequest(
@@ -597,7 +603,6 @@ class PluridServer {
     private async handlePTTPRequest(
         request: express.Request,
         response: express.Response,
-        next: express.NextFunction,
     ) {
         const requestID = (request as ServerRequest).requestID || uuid.generate();
 
@@ -613,25 +618,8 @@ class PluridServer {
             response.setHeader('Access-Control-Allow-Credentials', 'true');
 
 
-            if (!this.usePTTP) {
-                if (this.debugAllows('warn')) {
-                    const requestTime = this.computeRequestTime(request);
-
-                    console.info(
-                        `[${time.stamp()} :: ${requestID}] (405 Method Not Allowed) Could not handle POST ${request.path}${requestTime}`,
-                    );
-                }
-
-                response
-                    .status(405)
-                    .end();
-                return;
-            }
-
-
             const data = request.body;
-
-            if (!data.path) {
+            if (!data && !data.path) {
                 if (this.debugAllows('warn')) {
                     const requestTime = this.computeRequestTime(request);
 
@@ -669,7 +657,6 @@ class PluridServer {
             const planeMatch = this.isoMatcher.match(
                 data.path,
             );
-
             if (!planeMatch) {
                 if (this.debugAllows('warn')) {
                     const requestTime = this.computeRequestTime(request);
@@ -685,30 +672,11 @@ class PluridServer {
                 return;
             }
 
-            const resolveElementFromPlaneMatch = (
-                planeMatch: routing.IsoMatcherPlaneResult<PluridReactComponent<any>>,
-            ) => {
-                if (typeof planeMatch.data.component === 'function') {
-                    return;
-                }
-
-                if (typeof planeMatch.data.component === 'string') {
-                    return {
-                        name: planeMatch.data.component,
-                        url: this.elementqlEndpoint,
-                    };
-                }
-
-                return {
-                    name: planeMatch.data.component.name,
-                    url: planeMatch.data.component.url || this.elementqlEndpoint,
-                };
-            }
 
             const elementMatch = resolveElementFromPlaneMatch(
                 planeMatch,
+                this.elementqlEndpoint,
             );
-
             if (!elementMatch) {
                 if (this.debugAllows('warn')) {
                     const requestTime = this.computeRequestTime(request);
@@ -751,6 +719,9 @@ class PluridServer {
             }
 
             const elementName = elementMatch.name;
+            // given the plane match, gather the planes to which it links
+            const linksTo: any[] = [];
+
             const element = {
                 url: elementURL,
                 name: elementName,
@@ -761,6 +732,7 @@ class PluridServer {
                         },
                     ],
                 },
+                linksTo,
             };
 
             response.json({
