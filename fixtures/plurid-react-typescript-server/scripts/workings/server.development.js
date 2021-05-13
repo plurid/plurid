@@ -19,6 +19,5 @@ export default {
         /** typescript and sourcemaps in this order to allow for styled components transfomer (?) */
         plugins.typescript(),
         plugins.sourceMaps(),
-        plugins.terser(),
     ],
-}
+};

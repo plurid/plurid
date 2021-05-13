@@ -147,6 +147,18 @@ const baseConfig = {
         assets: false,
     },
 
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendor',
+                    chunks: 'initial',
+                },
+            },
+        },
+    },
+
     module: {
         rules: [
             rules.styleRule,

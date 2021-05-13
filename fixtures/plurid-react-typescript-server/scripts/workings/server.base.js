@@ -70,10 +70,7 @@ const plugins = {
     commonjs: () => commonjs(),
     sourceMaps: () => sourceMaps(),
     terser: () => terser({
-        mangle: false,
-        compress: false,
         format: {
-            beautify: true,
             comments: false,
         },
     }),
