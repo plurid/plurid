@@ -290,7 +290,7 @@ xdescribe('IsoMatcher general', () => {
 
 
 
-describe('IsoMatcher simple', () => {
+xdescribe('IsoMatcher simple', () => {
     it('matches simple routes', () => {
         const isoMatcher = new IsoMatcher<string>({
             routes,

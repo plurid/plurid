@@ -51,7 +51,7 @@ const planes: PluridPlane<string>[] = [
 
 
 
-describe('IsoMatcher foreign', () => {
+xdescribe('IsoMatcher foreign', () => {
     it('matches simple routes', () => {
         const isoMatcher = new IsoMatcher<string>({
             routes,
