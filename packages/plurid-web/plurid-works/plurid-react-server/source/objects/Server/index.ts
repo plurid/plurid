@@ -1183,6 +1183,7 @@ class PluridServer {
             compression: partialOptions?.compression ?? DEFAULT_SERVER_OPTIONS.COMPRESSION,
             open: partialOptions?.open ?? DEFAULT_SERVER_OPTIONS.OPEN,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
+            assetsDirectory: partialOptions?.assetsDirectory || DEFAULT_SERVER_OPTIONS.ASSETS_DIRECTORY,
             gatewayEndpoint: partialOptions?.gatewayEndpoint || DEFAULT_SERVER_OPTIONS.GATEWAY,
             staticCache: partialOptions?.staticCache || 0,
             ignore: partialOptions?.ignore || [],

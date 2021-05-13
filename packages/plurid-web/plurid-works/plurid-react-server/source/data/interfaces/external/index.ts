@@ -78,6 +78,11 @@ export interface PluridServerOptions {
     buildDirectory: string;
 
     /**
+     * Name of the directory where the assets files are bundled.
+     */
+    assetsDirectory: string;
+
+    /**
      * Default: `/gateway`.
      */
     gatewayEndpoint: string;
