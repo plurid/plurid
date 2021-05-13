@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-data",
-    "version": "0.0.0-2",
+    "version": "0.0.0-3",
     "description": "Plurid Constants, Interfaces, Enumerations",
     "keywords": [
         "plurid",
@@ -49,8 +49,8 @@
     "devDependencies": {
         "@plurid/plurid-themes": "0.0.0-0",
         "@types/react": "^17.0.5",
-        "@typescript-eslint/eslint-plugin": "^4.22.1",
-        "@typescript-eslint/parser": "^4.22.1",
+        "@typescript-eslint/eslint-plugin": "^4.23.0",
+        "@typescript-eslint/parser": "^4.23.0",
         "@zerollup/ts-transform-paths": "^1.7.18",
         "eslint": "^7.26.0",
         "rollup": "^2.47.0",
