@@ -11,10 +11,14 @@ const sourceMaps = require('rollup-plugin-sourcemaps');
 const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
 
 
+const {
+    BUILD_DIRECTORY,
+    ASSETS_DIRECTORY,
 
-const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
+    isProduction,
+} = require ('./shared');
 
-const isProduction = process.env.ENV_MODE === 'production';
+
 
 const input = 'source/server/index.ts';
 
@@ -44,7 +48,7 @@ const plugins = {
         ],
         limit: 0,
         emitFiles: true,
-        fileName: 'client/assets/[name][extname]',
+        fileName: `client/${ASSETS_DIRECTORY}/[name][extname]`,
         sourceDir: path.join(__dirname, 'source'),
     }),
     json: () => json(),
@@ -71,4 +75,4 @@ module.exports = {
     input,
     output,
     plugins,
-}
+};

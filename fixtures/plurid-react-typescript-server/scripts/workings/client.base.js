@@ -8,12 +8,16 @@ const createStyledComponentsTransformer = require('typescript-plugin-styled-comp
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 
+const {
+    BUILD_DIRECTORY,
+    ASSETS_DIRECTORY,
+
+    isProduction,
+} = require ('./shared');
+
+
 
 /** CONSTANTS */
-const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
-
-const isProduction = process.env.ENV_MODE === 'production';
-
 const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
 const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}/client`);
 
@@ -78,7 +82,7 @@ const fileRule = {
         {
             loader: 'file-loader',
             options: {
-                name: 'assets/[name].[ext]',
+                name: `${ASSETS_DIRECTORY}/[name].[ext]`,
                 publicPath: '/',
                 outputPath: '/',
             },
