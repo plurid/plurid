@@ -1,87 +1,44 @@
 // #region imports
-    // #region libraries
-    // import React from 'react';
-    // #endregion libraries
-
-
     // #region external
-    // import {
-    //     RouteHostDivision,
-    //     RouteDivision,
-    //     RouteHostProtocol,
-    //     RoutePlaneDivision,
-    // } from '../../internal/tree';
+    import {
+        PluridRouteFragments,
+    } from '../router';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
-// export interface PluridComponentBase {
-//     kind: PluridComponentKind;
+export type ComponentWithPlurid<T, W> = T & WithPluridComponentProperty<W>;
 
-//     /**
-//      * The `properties` will be passed to the `element` at runtime.
-//      */
-//     properties?: Record<string, any>;
-// }
-
-
-// export type PluridComponentKind =
-//     | 'elementql'
-//     | 'react';
-
-
-// export interface PluridComponentElementQL extends PluridComponentBase {
-//     kind: 'elementql';
-//     endpoint: string;
-//     element: string;
-// }
-
-
-// export interface PluridComponentReact extends PluridComponentBase {
-//     kind: 'react';
-
-//     /**
-//      * The `element` will receive the properties, if any,
-//      * and the `plurid` property.
-//      */
-//     element: React.FC<ComponentWithPlurid<any>>;
-// }
-
-
-export type ComponentWithPlurid<T> = T & WithPluridComponentProperty;
-
-
-export interface WithPluridComponentProperty {
-    plurid: PluridComponentProperty;
+export interface WithPluridComponentProperty<W> {
+    plurid: W;
 }
 
 
-export interface PluridComponentProperty {
-    metadata: PluridComponentPropertyMetadata;
-    route: PluridComponentPropertyRoute;
+export type PlaneComponentWithPluridProperty<T> = ComponentWithPlurid<T, PluridPlaneComponentProperty>;
+
+export type RouteComponentWithPluridProperty<T> = ComponentWithPlurid<T, PluridRouteComponentProperty>;
+
+
+export interface PluridPlaneComponentProperty {
+    route: PluridRouteComponentProperty;
+    plane: PluridPlaneComponentPropertyPlane;
 }
 
-export interface PluridComponentPropertyMetadata {
+export interface PluridPlaneComponentPropertyPlane {
+    value: string;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
+    fragments: PluridRouteFragments;
     planeID: string;
     parentPlaneID?: string;
 }
 
-export interface PluridComponentPropertyRoute {
+
+export interface PluridRouteComponentProperty {
     value: string;
-    // protocol: RouteHostProtocol;
-    // host: RouteHostDivision;
-    // path: RouteDivision;
-    // space: RouteDivision;
-    // universe: RouteDivision;
-    // cluster: RouteDivision;
-    // plane: RoutePlaneDivision;
+    parameters: Record<string, string>;
+    query: Record<string, string>;
 }
-
-
-
-// export type PluridComponent =
-//     | PluridComponentElementQL
-//     | PluridComponentReact;
 // #endregion module
