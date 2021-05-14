@@ -4,6 +4,7 @@
 
     import {
         PluridRouterLink,
+        PluridReactRouteComponent,
     } from '@plurid/plurid-react';
     // #endregion libraries
 
@@ -23,11 +24,9 @@
 
 
 // #region module
-const Static: React.FC<{}> = (
+const Static: PluridReactRouteComponent<{}> = (
     properties,
 ) => {
-    console.log('properties', properties)
-
     // #region render
     return (
         <StyledStatic>
