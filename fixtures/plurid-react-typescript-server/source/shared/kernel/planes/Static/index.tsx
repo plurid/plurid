@@ -23,7 +23,11 @@
 
 
 // #region module
-const Static: React.FC<{}> = () => {
+const Static: React.FC<{}> = (
+    properties,
+) => {
+    console.log('properties', properties)
+
     // #region render
     return (
         <StyledStatic>

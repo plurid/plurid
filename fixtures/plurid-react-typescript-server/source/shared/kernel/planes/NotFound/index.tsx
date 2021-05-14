@@ -7,7 +7,7 @@
     import { ThunkDispatch } from 'redux-thunk';
 
     import {
-        PluridComponentProperty,
+        PluridPlaneComponentProperty,
     } from '@plurid/plurid-react';
     // #endregion libraries
 
@@ -44,7 +44,7 @@ export type NotFoundProperties = NotFoundOwnProperties
     & NotFoundStateProperties
     & NotFoundDispatchProperties
     & {
-        plurid: PluridComponentProperty,
+        plurid: PluridPlaneComponentProperty,
     };
 
 const NotFound: React.FC<NotFoundProperties> = (
