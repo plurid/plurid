@@ -1305,6 +1305,29 @@ export const collectApplicationsFromPath = (
 
 
 // #region module update
+export const isReactRenderable = (
+    component: PluridReactComponent<any, PluridPlaneComponentProperty | PluridRouteComponentProperty> | undefined,
+) => {
+    if (!component) {
+        return false;
+    }
+
+    // Check if elementql component.
+    if (typeof component === 'string') {
+        return false;
+    }
+
+    if (
+        component.name
+        && Object.keys(component).length <= 2
+    ) {
+        return false;
+    }
+
+    return true;
+}
+
+
 export const gatherPluridPlanes = (
     routes: PluridRoute<PluridReactComponent>[],
     planes: PluridRoutePlane<PluridReactComponent>[] | undefined,
@@ -1388,10 +1411,8 @@ export const renderMultispace = (
     const multispaceSnapType = path.multispace?.snapType || 'mandatory';
 
     let PluridExterior: React.FC<any> = () => (<></>);
-    if (exterior) {
-        if (typeof exterior == 'function') {
-            PluridExterior = exterior;
-        }
+    if (isReactRenderable(exterior)) {
+        PluridExterior = exterior as any;
     }
 
     let PluridSpaces: React.FC<any> = () => (<></>);
@@ -1620,18 +1641,13 @@ export const renderMultispace = (
 
     let MultispaceHeader: React.FC<any>;
     let MultispaceFooter: React.FC<any>;
-    if (path.multispace?.header) {
-        const header = path.multispace.header;
-        if (typeof header == 'function') {
-            MultispaceHeader = header;
-        }
+    if (isReactRenderable(path.multispace?.header)) {
+        MultispaceHeader = path.multispace?.header as any;
     }
-    if (path.multispace?.footer) {
-        const footer = path.multispace.footer;
-        if (typeof footer == 'function') {
-            MultispaceFooter = footer;
-        }
+    if (isReactRenderable(path.multispace?.footer)) {
+        MultispaceFooter = path.multispace?.footer as any;
     }
+
 
     PluridSpaces = () => (
         <StyledSpaces
@@ -1739,9 +1755,9 @@ export const computePluridRoute = (
 
 
     let PluridRouteExterior: React.FC<any> | undefined;
-    if (exterior) {
-        if (typeof exterior == 'function') {
-            PluridRouteExterior = exterior;
+    if (isReactRenderable(exterior)) {
+        PluridRouteExterior = exterior as any;
+        if (PluridRouteExterior) {
             PluridRouteExterior.displayName = 'PluridRouteExterior';
         }
     }
