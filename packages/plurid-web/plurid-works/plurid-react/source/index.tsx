@@ -21,7 +21,7 @@
         PluridRouteCluster,
         PluridRoutePlane,
 
-        PluridComponentProperty,
+        ComponentWithPlurid,
 
         PluridPreserve,
         PluridPreserveTransmission,
@@ -187,7 +187,7 @@ export {
     PluridRouteCluster,
     PluridRoutePlane,
 
-    PluridComponentProperty,
+    ComponentWithPlurid,
 
     PluridReactComponent,
     PluridReactPlane,

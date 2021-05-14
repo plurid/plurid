@@ -17,6 +17,10 @@
     } from '@plurid/plurid-themes';
 
     import {
+        PluridRouteComponentProperty,
+    } from '@plurid/plurid-data';
+
+    import {
         ElementQLClient,
     } from '@plurid/elementql-client-react';
     // #endregion libraries
@@ -154,11 +158,16 @@ export interface ExternalPlaneStateProperties {
 export interface ExternalPlaneDispatchProperties {
 }
 
-export type ExternalPlaneProperties = ExternalPlaneOwnProperties
+export type ExternalPlaneProperties =
+    & ExternalPlaneOwnProperties
     & ExternalPlaneStateProperties
     & ExternalPlaneDispatchProperties;
 
-const ExternalPlane: PluridReactFunctionalComponent<ExternalPlaneProperties> = (
+
+const ExternalPlane: PluridReactFunctionalComponent<
+    ExternalPlaneProperties,
+    PluridRouteComponentProperty
+> = (
     properties,
 ) => {
     // #region properties
@@ -175,9 +184,7 @@ const ExternalPlane: PluridReactFunctionalComponent<ExternalPlaneProperties> = (
         // #endregion state
     } = properties;
 
-    const {
-        route,
-    } = plurid;
+    const route = plurid.value;
     // #endregion properties
 
 
@@ -219,11 +226,11 @@ const ExternalPlane: PluridReactFunctionalComponent<ExternalPlaneProperties> = (
                     domain,
                     url,
                 } = getPttpUrl(
-                    route.value,
+                    route,
                 );
                 const pttpPath = getPttpPath(
                     domain,
-                    route.value,
+                    route,
                 );
 
                 if (

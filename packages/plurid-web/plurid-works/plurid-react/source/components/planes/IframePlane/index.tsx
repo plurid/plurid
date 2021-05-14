@@ -9,10 +9,18 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
+
+    import {
+        PluridRouteComponentProperty,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region external
+    import {
+        PluridReactFunctionalComponent,
+    } from '~data/interfaces';
+
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
@@ -41,27 +49,39 @@ export interface IframePlaneStateProperties {
 export interface IframePlaneDispatchProperties {
 }
 
-export type IframePlaneProperties = IframePlaneOwnProperties
+export type IframePlaneProperties =
+    & IframePlaneOwnProperties
     & IframePlaneStateProperties
     & IframePlaneDispatchProperties;
 
-const IframePlane: React.FC<IframePlaneProperties> = (
+const IframePlane: PluridReactFunctionalComponent<
+    IframePlaneProperties,
+    PluridRouteComponentProperty
+> = (
     properties,
 ) => {
     // #region properties
-    // const {
+    const {
+        // #region required
+            // #region values
+            plurid,
+            // #endregion values
+        // #endregion required
+
         // // #region state
         // stateGeneralTheme,
         // stateInteractionTheme,
         // // #endregion state
-    // } = properties;
+    } = properties;
+
+    const route = plurid.value;
     // #endregion properties
 
 
     // #region render
     return (
         <StyledIframePlane>
-            IframePlane
+            <iframe src={route} />
         </StyledIframePlane>
     );
     // #endregion render
