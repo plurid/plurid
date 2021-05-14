@@ -34,6 +34,10 @@
     import StateContext from '~services/state/context';
     // import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
+
+    import {
+        isReactRenderable,
+    } from '~services/utilities/react';
     // #endregion external
 
 
@@ -98,7 +102,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         customPlane,
     } = context;
 
-    const CustomPluridPlane = customPlane;
+    const CustomPluridPlane = customPlane as any; // hack
     // #endregion context
 
 
@@ -141,7 +145,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             ) {
                 // instead of forcing show here to pass it as prop
                 // and change the opacity
-                const Plane = activePlane.component;
+                const Plane = activePlane.component as any; // HACK
 
                 const pluridProperty: PluridPlaneComponentProperty = {
                     plane: {
@@ -167,8 +171,11 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     },
                 };
 
+                const renderablePlane = isReactRenderable(Plane);
+                const renderableCustomPlane = isReactRenderable(CustomPluridPlane);
+
                 plane = !CustomPluridPlane
-                    ? typeof Plane === 'function' ? (
+                    ? renderablePlane ? (
                         <PluridPlane
                             key={child.planeID}
                             plane={activePlane}
@@ -193,7 +200,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                             }
                         </PluridPlane>
                     ) : (<></>)
-                    : typeof CustomPluridPlane === 'function' ? (
+                    : renderableCustomPlane ? (
                         <CustomPluridPlane
                             key={child.planeID}
                             plane={activePlane}

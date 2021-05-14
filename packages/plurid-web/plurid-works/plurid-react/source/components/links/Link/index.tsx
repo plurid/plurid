@@ -248,7 +248,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         } = absolutePlaneRoute;
 
         const linkCoordinates = getPluridLinkCoordinates();
-
+        console.log('planesRegistry', route, planesRegistry);
         const {
             pluridPlaneID,
             updatedTree,

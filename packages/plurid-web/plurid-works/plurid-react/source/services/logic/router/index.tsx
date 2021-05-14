@@ -21,7 +21,6 @@
         PluridPlane,
         IndexedPluridPlane,
         PluridRouterStatic,
-        PluridPlaneComponentProperty,
         PluridRouteComponentProperty,
     } from '@plurid/plurid-data';
 
@@ -44,6 +43,10 @@
     } from '~data/interfaces';
 
     import PluridApplication from '~containers/Application/index';
+
+    import {
+        isReactRenderable,
+    } from '~services/utilities/react';
     // #endregion external
 
 
@@ -1305,29 +1308,6 @@ export const collectApplicationsFromPath = (
 
 
 // #region module update
-export const isReactRenderable = (
-    component: PluridReactComponent<any, PluridPlaneComponentProperty | PluridRouteComponentProperty> | undefined,
-) => {
-    if (!component) {
-        return false;
-    }
-
-    // Check if elementql component.
-    if (typeof component === 'string') {
-        return false;
-    }
-
-    if (
-        component.name
-        && Object.keys(component).length <= 2
-    ) {
-        return false;
-    }
-
-    return true;
-}
-
-
 export const gatherPluridPlanes = (
     routes: PluridRoute<PluridReactComponent>[],
     planes: PluridRoutePlane<PluridReactComponent>[] | undefined,
