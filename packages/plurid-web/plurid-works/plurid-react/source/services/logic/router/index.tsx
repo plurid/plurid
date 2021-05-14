@@ -1726,6 +1726,7 @@ export const computePluridRoute = (
         spaces,
         defaultConfiguration,
     } = matchedRoute.data;
+    // console.log('matchedRoute', matchedRoute);
 
 
     const pluridRouteProperty: PluridRouteComponentProperty = {
