@@ -53,6 +53,8 @@
     // #region internal
     import {
         PluridReactComponent,
+        PluridReactPlaneComponent,
+        PluridReactRouteComponent,
         PluridReactPlane,
         PluridReactRoute,
         PluridReactRoutePlane,
@@ -191,6 +193,8 @@ export {
 
     PluridReactComponent,
     PluridReactPlane,
+    PluridReactPlaneComponent,
+    PluridReactRouteComponent,
     PluridReactRoute,
     PluridReactRoutePlane,
 

@@ -38,6 +38,9 @@ export type PluridReactComponent<
     | ElementQLComponent
     | ElementQLComponentName;
 
+export type PluridReactPlaneComponent<T = any> = PluridReactFunctionalComponent<T, PluridPlaneComponentProperty>;
+export type PluridReactRouteComponent<T = any> = PluridReactFunctionalComponent<T, PluridRouteComponentProperty>;
+
 export type PluridReactPlane = PluridPlane<PluridReactComponent>;
 export type PluridReactRoute = PluridRoute<PluridReactComponent>;
 export type PluridReactRoutePlane = PluridRoutePlane<PluridReactComponent>;
