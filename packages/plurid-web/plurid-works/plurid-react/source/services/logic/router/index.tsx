@@ -1730,6 +1730,14 @@ export const computePluridRoute = (
         spaces,
     } = matchedRoute.data;
 
+
+    const pluridRouteProperty: PluridRouteComponentProperty = {
+        value: matchedRoute.match.value,
+        parameters: matchedRoute.match.parameters,
+        query: matchedRoute.match.query,
+    };
+
+
     let PluridRouteExterior: React.FC<any> | undefined;
     if (exterior) {
         if (typeof exterior == 'function') {
@@ -1751,7 +1759,9 @@ export const computePluridRoute = (
             const PluridRoute = () => (
                 <>
                     {PluridRouteExterior && (
-                        <PluridRouteExterior />
+                        <PluridRouteExterior
+                            plurid={pluridRouteProperty}
+                        />
                     )}
                 </>
             );
@@ -1769,7 +1779,9 @@ export const computePluridRoute = (
             const PluridRoute = () => (
                 <>
                     {PluridRouteExterior && (
-                        <PluridRouteExterior />
+                        <PluridRouteExterior
+                            plurid={pluridRouteProperty}
+                        />
                     )}
 
                     <PluridApplication
