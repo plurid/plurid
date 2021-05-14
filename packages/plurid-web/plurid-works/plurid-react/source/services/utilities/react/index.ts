@@ -17,28 +17,6 @@
 
 
 // #region module
-const isClassComponent = (component: any) => {
-    return (
-        typeof component === 'function' &&
-        !!component.prototype.isReactComponent
-    );
-}
-
-const isFunctionComponent = (component: any) => {
-    return (
-        typeof component === 'function' &&
-        String(component).includes('return React.createElement')
-    );
-}
-
-const isReactComponent = (component: any) => {
-    return (
-        isClassComponent(component) ||
-        isFunctionComponent(component)
-    );
-}
-
-
 export const isReactRenderable = (
     component: PluridReactComponent<
         any, PluridPlaneComponentProperty | PluridRouteComponentProperty
@@ -49,10 +27,13 @@ export const isReactRenderable = (
     }
 
     // Check if elementql component.
-    if (typeof component === 'string') {
+    if (
+        typeof component === 'string'
+        || (component as any).url
+    ) {
         return false;
     }
 
-    return isReactComponent(component);
+    return true;
 }
 // #endregion module
