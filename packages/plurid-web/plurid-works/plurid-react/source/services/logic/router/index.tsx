@@ -1744,6 +1744,7 @@ export const computePluridRoute = (
         view,
         planes,
         spaces,
+        defaultConfiguration,
     } = matchedRoute.data;
 
 
@@ -1803,6 +1804,7 @@ export const computePluridRoute = (
                     <PluridApplication
                         view={view}
                         planesRegistrar={planesRegistrar}
+                        configuration={defaultConfiguration}
                     />
                 </>
             );
