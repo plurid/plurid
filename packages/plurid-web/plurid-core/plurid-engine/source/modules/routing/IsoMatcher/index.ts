@@ -395,7 +395,7 @@ class IsoMatcher<C> {
 
 
         for (const routePath of this.routesKeys) {
-            // Check if the `path` is a parametrization of `routePath`.
+            // Check if the `value` is a parametrization of `routePath`.
             const routeSplit = routePath.split('/');
             const valueSplit = value.split('/');
 
@@ -409,11 +409,12 @@ class IsoMatcher<C> {
                 routePath.slice(1),
             );
 
-            // console.log('path', path);
+            // console.log('value', value);
             // console.log('routePath', routePath);
             // console.log('parametersAndMatch', parametersAndMatch);
             if (parametersAndMatch.match) {
                 const route = this.routesIndex.get(routePath);
+                // console.log('route', route);
                 if (!route) {
                     return;
                 }
@@ -426,6 +427,7 @@ class IsoMatcher<C> {
                     route.data.parameters,
                     parameters,
                 );
+                // console.log('validPath', validPath);
                 if (!validPath) {
                     return;
                 }
@@ -447,6 +449,7 @@ class IsoMatcher<C> {
                         data: route.data,
                         match,
                     };
+                    // console.log('route result', result);
 
                     return result;
                 }
