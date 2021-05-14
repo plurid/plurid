@@ -22,6 +22,8 @@
         PluridRoutePlane,
 
         ComponentWithPlurid,
+        PluridPlaneComponentProperty,
+        PluridRouteComponentProperty,
 
         PluridPreserve,
         PluridPreserveTransmission,
@@ -190,6 +192,8 @@ export {
     PluridRoutePlane,
 
     ComponentWithPlurid,
+    PluridPlaneComponentProperty,
+    PluridRouteComponentProperty,
 
     PluridReactComponent,
     PluridReactPlane,
