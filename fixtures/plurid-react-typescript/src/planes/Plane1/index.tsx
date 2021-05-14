@@ -1,10 +1,10 @@
 import {
-    PluridReactComponent,
+    PluridReactPlaneComponent,
 } from '@plurid/plurid-react';
 
 
 
-const Plane1: PluridReactComponent = (
+const Plane1: PluridReactPlaneComponent<{}> = (
     properties,
 ) => {
     return (
