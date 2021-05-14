@@ -21,6 +21,8 @@
         PluridPlane,
         IndexedPluridPlane,
         PluridRouterStatic,
+        PluridPlaneComponentProperty,
+        PluridRouteComponentProperty,
     } from '@plurid/plurid-data';
 
     import {
@@ -1368,15 +1370,11 @@ export const renderMultispace = (
         parameters,
         query,
     } = match;
-    // const {
-    //     path,
-    // } = matchedRoute;
 
-    const pluridProperty = {
-        path: {
-            parameters,
-            query,
-        },
+    const pluridRouteProperty: PluridRouteComponentProperty = {
+        value: match.value,
+        parameters,
+        query,
     };
 
     const {
@@ -1385,8 +1383,6 @@ export const renderMultispace = (
         spaces,
         slotted,
     } = matchedRoute.data;
-
-    // console.log('path', path);
 
     const multispaceAlignment = path.multispace?.alignment || 'y';
     const multispaceSnapType = path.multispace?.snapType || 'mandatory';
@@ -1609,18 +1605,11 @@ export const renderMultispace = (
             }
         }
 
-        const planesProperties = new Map();
-
-        // console.log('path.value', path.value);
-
-        // console.log('getComponentFromRoute planes view', view);
-
         const App = (
             <PluridApplication
                 key={uuid.generate()}
                 id={path.value}
                 planes={pluridPlanes}
-                planesProperties={planesProperties}
                 view={view}
                 configuration={path.defaultConfiguration}
             />
@@ -1651,13 +1640,17 @@ export const renderMultispace = (
             data-plurid-entity={PLURID_ENTITY_MULTISPACE}
         >
             {MultispaceHeader && (
-                <MultispaceHeader />
+                <MultispaceHeader
+                    plurid={pluridRouteProperty}
+                />
             )}
 
             {spacesArray}
 
             {MultispaceFooter && (
-                <MultispaceFooter />
+                <MultispaceFooter
+                    plurid={pluridRouteProperty}
+                />
             )}
         </StyledSpaces>
     );
@@ -1668,7 +1661,7 @@ export const renderMultispace = (
                 {exterior && (
                     <PluridExterior
                         spaces={slotted ? spacesArray : undefined}
-                        plurid={pluridProperty}
+                        plurid={pluridRouteProperty}
                     />
                 )}
 

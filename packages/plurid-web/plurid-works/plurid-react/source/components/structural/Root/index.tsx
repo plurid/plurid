@@ -16,7 +16,7 @@
 
         /** interfaces */
         TreePlane,
-        PluridComponentProperty,
+        PluridPlaneComponentProperty,
     } from '@plurid/plurid-data';
 
     import {
@@ -143,38 +143,25 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 // and change the opacity
                 const Plane = activePlane.component;
 
-                const pluridProperty: PluridComponentProperty = {
-                    route: {
+                const pluridProperty: PluridPlaneComponentProperty = {
+                    plane: {
                         value: activePlane.route.absolute,
-                        // protocol: {
-                        //     ...child.routeDivisions.protocol,
-                        // },
-                        // host: {
-                        //     ...child.routeDivisions.host,
-                        // },
-                        // path: {
-                        //     ...child.routeDivisions.path,
-                        // },
-                        // space: {
-                        //     ...child.routeDivisions.space,
-                        // },
-                        // universe: {
-                        //     ...child.routeDivisions.universe,
-                        // },
-                        // cluster: {
-                        //     ...child.routeDivisions.cluster,
-                        // },
-                        // plane: {
-                        //     ...child.routeDivisions.plane,
-                        // },
-                    },
-                    metadata: {
                         planeID: child.planeID,
                         parentPlaneID: child.parentPlaneID,
+                        fragments: {
+                            elements: [],
+                            texts: [],
+                        },
+                        parameters: {},
+                        query: {},
+                    },
+                    route: {
+                        value: '',
+                        parameters: {},
+                        query: {},
                     },
                 };
                 const properties = {
-                    // ...activePlane.component.properties,
                     plurid: {
                         ...pluridProperty,
                     },
@@ -271,38 +258,25 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     // console.log('Root Plane', Plane);
 
 
-    const pluridProperty: PluridComponentProperty = {
-        route: {
+    const pluridProperty: PluridPlaneComponentProperty = {
+        plane: {
             value: pluridPlane.route.absolute,
-            // protocol: {
-            //     ...plane.routeDivisions.protocol,
-            // },
-            // host: {
-            //     ...plane.routeDivisions.host,
-            // },
-            // path: {
-            //     ...plane.routeDivisions.path,
-            // },
-            // space: {
-            //     ...plane.routeDivisions.space,
-            // },
-            // universe: {
-            //     ...plane.routeDivisions.universe,
-            // },
-            // cluster: {
-            //     ...plane.routeDivisions.cluster,
-            // },
-            // plane: {
-            //     ...plane.routeDivisions.plane,
-            // },
-        },
-        metadata: {
             planeID: plane.planeID,
             parentPlaneID: plane.parentPlaneID,
+            fragments: {
+                elements: [],
+                texts: [],
+            },
+            parameters: {},
+            query: {},
+        },
+        route: {
+            value: '',
+            parameters: {},
+            query: {},
         },
     };
     const planeProperties = {
-        // ...pluridPlane.component.properties,
         plurid: {
             ...pluridProperty,
         },

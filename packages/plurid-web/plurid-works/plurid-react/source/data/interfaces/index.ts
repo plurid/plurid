@@ -7,6 +7,8 @@
         PluridPlane,
         PluridRoute,
         PluridRoutePlane,
+        PluridPlaneComponentProperty,
+        PluridRouteComponentProperty,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -21,10 +23,18 @@ export interface ElementQLComponent {
 
 export type ElementQLComponentName = string;
 
-export type PluridReactFunctionalComponent<T = any> = React.FC<ComponentWithPlurid<T>>;
+export type PluridReactFunctionalComponent<
+    T = any,
+    W = PluridPlaneComponentProperty | PluridRouteComponentProperty
+> = React.FC<
+    ComponentWithPlurid<T, W>
+>;
 
-export type PluridReactComponent<T = any> =
-    | PluridReactFunctionalComponent<T>
+export type PluridReactComponent<
+    T = any,
+    W = PluridPlaneComponentProperty | PluridRouteComponentProperty
+> =
+    | PluridReactFunctionalComponent<T, W>
     | ElementQLComponent
     | ElementQLComponentName;
 
