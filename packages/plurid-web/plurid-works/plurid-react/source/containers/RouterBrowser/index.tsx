@@ -163,8 +163,7 @@ const PluridRouterBrowser = (
         let matchedPath: string | undefined;
 
         if (
-            event && event.detail.path
-            && !matchedPath
+            event && event.detail && event.detail.path
         ) {
             matchedPath = event.detail.path;
         }
