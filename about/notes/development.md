@@ -16,5 +16,5 @@ windows/linux/macos
 
 web
     use plurid-web
-        (plurid-html · plurid-react · plurid-reline)
+        (plurid-canvas · plurid-html · plurid-react · plurid-reline)
 ```
