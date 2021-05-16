@@ -57,6 +57,10 @@
         computeInitialMatchedPath,
         renderDirectPlane,
     } from '~services/logic/router';
+
+    import {
+        isReactRenderable,
+    } from '~services/utilities/react';
     // #endregion external
 // #endregion imports
 
@@ -277,9 +281,9 @@ const PluridRouterBrowser = (
 
     // #region render
     let PluridRouterExterior: React.FC<any> | undefined;
-    if (exterior) {
-        if (typeof exterior == 'function') {
-            PluridRouterExterior = exterior;
+    if (isReactRenderable(exterior)) {
+        PluridRouterExterior = exterior as any;
+        if (PluridRouterExterior) {
             PluridRouterExterior.displayName = 'PluridRouterExterior';
         }
     }
@@ -289,9 +293,9 @@ const PluridRouterBrowser = (
     }) => (
         <>{children}</>
     );
-    if (shell) {
-        if (typeof shell == 'function') {
-            PluridRouterShell = shell;
+    if (isReactRenderable(shell)) {
+        PluridRouterShell = shell as any;
+        if (PluridRouterShell) {
             PluridRouterShell.displayName = 'PluridRouterShell';
         }
     }
