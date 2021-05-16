@@ -26,6 +26,8 @@ class PluridCanvas {
 
         this.canvas = this.getCanvas();
 
+        window.addEventListener('resize', this.resizeCanvas, false);
+        this.resizeCanvas();
 
         this.draw();
     }
@@ -57,6 +59,16 @@ class PluridCanvas {
         }
 
         return gl;
+    }
+
+    private resizeCanvas() {
+        if (!this.canvas) {
+            return;
+        }
+
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.draw();
     }
 
     private draw() {
