@@ -209,7 +209,9 @@ const PluridRouterBrowser = (
 
     useEffect(() => {
         if (!cleanNavigation) {
-            history.pushState(null, '', matchedPath);
+            if (location.pathname !== matchedPath) {
+                history.pushState(null, '', matchedPath);
+            }
         }
 
         let matchedRoute = pluridIsoMatcher.current.match(matchedPath, 'route');
