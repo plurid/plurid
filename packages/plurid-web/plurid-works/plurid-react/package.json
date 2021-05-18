@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react",
-    "version": "0.0.0-3",
+    "version": "0.0.0-4",
     "description": "React implementation of Plurid to explore the web in three dimensions",
     "keywords": [
         "plurid",
@@ -66,11 +66,11 @@
         "styled-components": ">=5"
     },
     "devDependencies": {
-        "@babel/core": "^7.14.2",
+        "@babel/core": "^7.14.3",
         "@plurid/elementql": "^0.0.0-1",
         "@plurid/elementql-client-react": "^0.0.0-1",
-        "@plurid/plurid-data": "0.0.0-3",
-        "@plurid/plurid-engine": "0.0.0-2",
+        "@plurid/plurid-data": "0.0.0-4",
+        "@plurid/plurid-engine": "0.0.0-3",
         "@plurid/plurid-functions": "0.0.0-3",
         "@plurid/plurid-functions-react": "0.0.0-1",
         "@plurid/plurid-icons-react": "0.0.0-0",
@@ -89,8 +89,8 @@
         "@types/react-dom": "^17.0.5",
         "@types/react-redux": "^7.1.16",
         "@types/styled-components": "^5.1.9",
-        "@typescript-eslint/eslint-plugin": "^4.23.0",
-        "@typescript-eslint/parser": "^4.23.0",
+        "@typescript-eslint/eslint-plugin": "^4.24.0",
+        "@typescript-eslint/parser": "^4.24.0",
         "@zerollup/ts-transform-paths": "^1.7.18",
         "babel-plugin-styled-components": "^1.12.0",
         "babel-runtime": "^6.26.0",
@@ -106,7 +106,7 @@
         "redux": "^4.1.0",
         "redux-devtools-extension": "^2.13.9",
         "redux-thunk": "^2.3.0",
-        "rollup": "^2.47.0",
+        "rollup": "^2.48.0",
         "rollup-plugin-babel": "^4.4.0",
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-postcss": "^4.0.0",
