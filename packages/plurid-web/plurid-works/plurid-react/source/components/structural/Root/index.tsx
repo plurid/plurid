@@ -152,12 +152,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         value: activePlane.route.absolute,
                         planeID: child.planeID,
                         parentPlaneID: child.parentPlaneID,
-                        fragments: {
-                            elements: [],
-                            texts: [],
-                        },
-                        parameters: {},
-                        query: {},
+                        fragments: activePlane.route.fragments,
+                        parameters: activePlane.route.parameters,
+                        query: activePlane.route.query,
                     },
                     route: {
                         value: '',
@@ -270,12 +267,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             value: pluridPlane.route.absolute,
             planeID: plane.planeID,
             parentPlaneID: plane.parentPlaneID,
-            fragments: {
-                elements: [],
-                texts: [],
-            },
-            parameters: {},
-            query: {},
+            fragments: pluridPlane.route.fragments,
+            parameters: pluridPlane.route.parameters,
+            query: pluridPlane.route.query,
         },
         route: {
             value: '',
