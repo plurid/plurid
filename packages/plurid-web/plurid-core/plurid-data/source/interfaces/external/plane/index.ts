@@ -2,6 +2,7 @@
     // #region external
     import {
         PluridRouteParameter,
+        PluridRouteFragments,
     } from '../router';
     // #endregion external
 // #endregion imports
@@ -124,6 +125,9 @@ export interface RegisteredPluridPlane<C> {
         // cluster: RouteSegment;
         // plane: RouteSegment;
         absolute: string;
+        fragments: PluridRouteFragments;
+        parameters: Record<string, string>;
+        query: Record<string, string>;
     };
     component: C;
 }
