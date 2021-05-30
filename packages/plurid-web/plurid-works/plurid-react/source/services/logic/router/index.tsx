@@ -30,6 +30,8 @@
         utilities,
     } from '@plurid/plurid-engine';
 
+    import PluridPubSub from '@plurid/plurid-pubsub';
+
     import {
         uuid,
     } from '@plurid/plurid-functions';
@@ -1775,11 +1777,14 @@ export const computePluridRoute = (
         view
     ) {
         return (): React.FC<any> => {
+            const pubsub = new PluridPubSub();
+
             const pluridApplication = (
                 <PluridApplication
                     view={view}
                     planesRegistrar={planesRegistrar}
                     configuration={defaultConfiguration}
+                    pubsub={pubsub}
                 />
             );
 
@@ -1788,6 +1793,7 @@ export const computePluridRoute = (
                     {PluridRouteExterior && (
                         <PluridRouteExterior
                             plurid={pluridRouteProperty}
+                            pubsub={pubsub}
                             spaces={slotted ? [pluridApplication] : undefined}
                         />
                     )}
