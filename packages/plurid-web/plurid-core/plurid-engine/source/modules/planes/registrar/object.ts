@@ -61,6 +61,9 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
             const registeredPlane: RegisteredPluridPlane<C> = {
                 route: {
                     absolute: absoluteRoute,
+                    fragments: match.match.fragments,
+                    parameters: match.match.parameters,
+                    query: match.match.query,
                 },
                 component: match.data.component,
             };
@@ -83,6 +86,12 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
             const registeredPlane: RegisteredPluridPlane<C> = {
                 route: {
                     absolute: absoluteRoute,
+                    fragments: {
+                        elements: [],
+                        texts: [],
+                    },
+                    parameters: {},
+                    query: {},
                 },
                 component: plane.data.component,
             };
