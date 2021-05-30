@@ -1725,6 +1725,7 @@ export const computePluridRoute = (
         planes,
         spaces,
         defaultConfiguration,
+        slotted,
     } = matchedRoute.data;
     // console.log('matchedRoute', matchedRoute);
 
@@ -1774,19 +1775,28 @@ export const computePluridRoute = (
         view
     ) {
         return (): React.FC<any> => {
+            const pluridApplication = (
+                <PluridApplication
+                    view={view}
+                    planesRegistrar={planesRegistrar}
+                    configuration={defaultConfiguration}
+                />
+            );
+
             const PluridRoute = () => (
                 <>
                     {PluridRouteExterior && (
                         <PluridRouteExterior
                             plurid={pluridRouteProperty}
+                            spaces={slotted ? [pluridApplication] : undefined}
                         />
                     )}
 
-                    <PluridApplication
-                        view={view}
-                        planesRegistrar={planesRegistrar}
-                        configuration={defaultConfiguration}
-                    />
+                    {!slotted && (
+                        <>
+                            {pluridApplication}
+                        </>
+                    )}
                 </>
             );
 
