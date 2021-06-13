@@ -218,9 +218,48 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             };
         }
 
+        let element: HTMLElement = link;
+        let searching = true
+        let top = 0;
+        let left = 0;
+        while (searching) {
+            // console.log('in while loop', element);
+            // console.log('in while loop top', element.offsetTop);
+            // console.log('in while loop left', element.offsetLeft);
+            if (window.getComputedStyle(element).position !== 'static') {
+                top += element.offsetTop;
+                left += element.offsetLeft;
+                // console.log('added top', top);
+                // console.log('added left', left);
+            }
+
+            if (
+                element.parentElement
+            ) {
+                const pluridEntity = element.parentElement.dataset.pluridEntity;
+                if (pluridEntity === 'PluridPlane') {
+                    searching = false;
+                }
+                element = element.parentElement;
+            } else {
+                searching = false;
+            }
+        }
+
+        // console.log('element', element);
+        // console.log('link', link);
+        // console.log('top', top);
+        // console.log('left', left);
+
         const planeControlsHeight = planeControls ? 56 : 0;
-        const x = link.offsetLeft + link.offsetWidth;
-        const y = link.offsetTop + planeControlsHeight;
+        // const x = link.offsetLeft + link.offsetWidth;
+        // const y = link.offsetTop + planeControlsHeight;
+        const x = left + link.offsetLeft + link.offsetWidth;
+        const y = top + planeControlsHeight;
+
+        // console.log('x', x);
+        // console.log('y', y);
+        // console.log('---------');
 
         return {
             x,
@@ -248,7 +287,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         } = absolutePlaneRoute;
 
         const linkCoordinates = getPluridLinkCoordinates();
-        console.log('planesRegistry', route, planesRegistry);
+        // console.log('planesRegistry', route, planesRegistry);
         const {
             pluridPlaneID,
             updatedTree,
