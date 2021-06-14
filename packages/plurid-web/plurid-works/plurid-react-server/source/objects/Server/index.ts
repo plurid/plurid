@@ -310,7 +310,7 @@ class PluridServer {
         if (this.usePTTP) {
             this.serverApplication.post(
                 PTTP_ROUTE,
-                jsonParser(),
+                jsonParser() as any, // FORCED
                 async (request, response, next) => {
                     this.handlePTTPRequest(
                         request, response,
