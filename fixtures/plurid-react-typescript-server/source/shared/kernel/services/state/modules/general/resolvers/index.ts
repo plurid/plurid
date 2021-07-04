@@ -11,9 +11,17 @@ export const setGeneralField = (
     state: Types.State,
     action: Types.SetGeneralFieldAction,
 ): Types.State => {
-    return {
+    const {
+        field,
+        value,
+    } = action.payload;
+
+    const newState = {
         ...state,
     };
+    (newState as any)[field] = value;
+
+    return newState;
 }
 
 
