@@ -195,8 +195,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [parentPlaneID, setParentPlaneID] = useState('');
     const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
 
-    const [suffix, setSuffix] = useState(PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX);
-    const [devisible, setDevisible] = useState(false);
+    const [suffix, setSuffix] = useState(_suffix ?? PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX);
+    const [devisible, setDevisible] = useState(_devisible ?? false);
     // #endregion state
 
 
