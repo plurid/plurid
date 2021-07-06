@@ -46,6 +46,10 @@ export const handleGlobalShortcuts = (
     firstPerson: boolean,
     locks: PluridConfigurationSpaceTransformLocks,
 ) => {
+    if (event.defaultPrevented) {
+        return;
+    }
+
     const inputOnPath = dom.verifyPathInputElement((event as any).path);
     if (inputOnPath) {
         return;
