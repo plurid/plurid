@@ -21,7 +21,7 @@
   resolved "https://npm.plurid.cloud/@babel%2fcompat-data/-/compat-data-7.14.7.tgz#7b047d7a3a89a67d2258dc61f604f098f1bc7e08"
   integrity sha512-nS6dZaISCXJ3+518CWiBfEr//gHyMO02uDxBkXTKZDN5POruCnOZ1N4YBRZDCabwF8nZMWBpRxIicmXtBs+fvw==
 
-"@babel/core@^7.1.0", "@babel/core@^7.14.5", "@babel/core@^7.7.2", "@babel/core@^7.7.5":
+"@babel/core@^7.1.0", "@babel/core@^7.14.6", "@babel/core@^7.7.2", "@babel/core@^7.7.5":
   version "7.14.6"
   resolved "https://npm.plurid.cloud/@babel%2fcore/-/core-7.14.6.tgz#e0814ec1a950032ff16c13a2721de39a8416fcab"
   integrity sha512-gJnOEWSqTk96qG5BoIrl5bVtc23DCycmIePPYnamY9RboYdI4nFy5vAQMSl81O5K/W0sLDWfGysnOECC+KUUCA==
@@ -623,15 +623,15 @@
   resolved "https://npm.plurid.cloud/@plurid%2fplurid-functions-react/-/plurid-functions-react-0.0.0-1.tgz#374ea1b2a8673c46548c8e1c0a95d2f395994833"
   integrity sha512-4Vw0vo1QeJ77TUzneHPPyPucS8Qtp8qDFZUhq4aFMakoXLicW2iom6owy/2+KMGYaU8uAjHAWFcWYrKW2AN/zA==
 
-"@plurid/plurid-functions@0.0.0-3":
-  version "0.0.0-3"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-functions/-/plurid-functions-0.0.0-3.tgz#14af8153ea4d31340d2f6bd445368a6fd026544e"
-  integrity sha512-PnayDviTq4jcsUhNFlHxRE1PZ/x80zMbp6u2UgmEdAl3Ivyt3QXu4iB1M2rxBP0/5cCAiXAny/mqOEuk1SmLLw==
+"@plurid/plurid-functions@0.0.0-5":
+  version "0.0.0-5"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-functions/-/plurid-functions-0.0.0-5.tgz#9e404f340e745d1fcfafd130f18973bb945437c4"
+  integrity sha512-/I0rBQpVUIlXGqsPraJlb6BNVNcvJP7SjyaUcMLw9CJkMheawhuItHqX9YSz1kToVDQz0e7Lq0hLYAnamFnXFQ==
 
-"@plurid/plurid-icons-react@0.0.0-0":
-  version "0.0.0-0"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-icons-react/-/plurid-icons-react-0.0.0-0.tgz#cce790a8a0991b5761f7e59c2084af04a4a8254d"
-  integrity sha512-EcV5wquTCcBstfXaLySPVC9V1Hs69VWwiBf880RcmM1bG65X2dCAe14BUWfDqtKPBMXxXGvYg/DlCozh1tyvuQ==
+"@plurid/plurid-icons-react@0.0.0-1":
+  version "0.0.0-1"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-icons-react/-/plurid-icons-react-0.0.0-1.tgz#b2bdec84eba2ca2df0cfde639eea353e9e5ab527"
+  integrity sha512-nZtkDHl9Hlrgzn0YcqKbVuBuCQ6mq8b7wU+za4VOHDSPaUs+uNe+GgblwCZ4aU7aEIPai+xOrK67PH1GLpraTw==
 
 "@plurid/plurid-pubsub@0.0.0-5":
   version "0.0.0-5"
@@ -643,10 +643,10 @@
   resolved "https://npm.plurid.cloud/@plurid%2fplurid-themes/-/plurid-themes-0.0.0-0.tgz#a478114a291ebbade70ff030b81feb49beb48294"
   integrity sha512-f/2TIKZzu4QMyhNpN64U8imAKJtacZBzaQjFhfO3ldODYWnSAAGgR8c18Qg1sd5V5CHbFxVlszLFVlqxLUh2uQ==
 
-"@plurid/plurid-ui-components-react@0.0.0-1":
-  version "0.0.0-1"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-ui-components-react/-/plurid-ui-components-react-0.0.0-1.tgz#e756f63e625c842a384505a6204b17c76bf6c548"
-  integrity sha512-gbjCzLQ4wqK8Qac7DzOHKv63Tw+oRcON5RfJglv9vQQ2xgMeE2523eN1tW8Jot8utretj8C7Dojj9t6/UlcVRw==
+"@plurid/plurid-ui-components-react@0.0.0-2":
+  version "0.0.0-2"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-ui-components-react/-/plurid-ui-components-react-0.0.0-2.tgz#a277f467d3bf5d320dfeee74a0f18a1518667bf9"
+  integrity sha512-NndowR+rlSoDC7r2BlB1Pm+ivcxRtxPgOBmkejLSuI/3gDp5E2ye6Bz1vK0AICFH8/9Qc667MFw18l6HQUQUUw==
 
 "@plurid/plurid-ui-state-react@0.0.0-0":
   version "0.0.0-0"
@@ -801,10 +801,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/hammerjs@^2.0.39":
-  version "2.0.39"
-  resolved "https://npm.plurid.cloud/@types%2fhammerjs/-/hammerjs-2.0.39.tgz#4be64bbacf3813c79c0dab895c6b0fdc7d5e513f"
-  integrity sha512-lYR2Y/tV2ujpk/WyUc7S0VLI0a9hrtVIN9EwnrNo5oSEJI2cK2/XrgwOQmXLL3eTulOESvh9qP6si9+DWM9cOA==
+"@types/hammerjs@^2.0.40":
+  version "2.0.40"
+  resolved "https://npm.plurid.cloud/@types%2fhammerjs/-/hammerjs-2.0.40.tgz#ded0240b6ea1ad7afc1e60374c49087aaea5dbd8"
+  integrity sha512-VbjwR1fhsn2h2KXAY4oy1fm7dCxaKy0D+deTb8Ilc3Eo3rc5+5eA4rfYmZaHgNJKxVyI0f6WIXzO2zLkVmQPHA==
 
 "@types/hoist-non-react-statics@*", "@types/hoist-non-react-statics@^3.3.0":
   version "3.3.1"
@@ -833,10 +833,10 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^26.0.23":
-  version "26.0.23"
-  resolved "https://npm.plurid.cloud/@types%2fjest/-/jest-26.0.23.tgz#a1b7eab3c503b80451d019efb588ec63522ee4e7"
-  integrity sha512-ZHLmWMJ9jJ9PTiT58juykZpL7KjwJywFN3Rr2pTSkyQfydf/rk22yS7W8p5DaVUMQ2BQC7oYiU3FjbTM/mYrOA==
+"@types/jest@^26.0.24":
+  version "26.0.24"
+  resolved "https://npm.plurid.cloud/@types%2fjest/-/jest-26.0.24.tgz#943d11976b16739185913a1936e0de0c4a7d595a"
+  integrity sha512-E/X5Vib8BWqZNRlDxj9vYXhsDwPYbPINqKF9BsnSoon4RQ0D9moEuLD8txgyypFLH7J4+Lho9Nr/c8H0Fi+17w==
   dependencies:
     jest-diff "^26.0.0"
     pretty-format "^26.0.0"
@@ -846,15 +846,10 @@
   resolved "https://npm.plurid.cloud/@types%2fjson-schema/-/json-schema-7.0.7.tgz#98a993516c859eb0d5c4c8f098317a9ea68db9ad"
   integrity sha512-cxWFQVseBm6O9Gbw1IWb8r6OS4OhSt3hPZLkFApLjM8TEXROBuQGLAH2i2gZpcXdLBIrpXuTDhH7Vbm1iXmNGA==
 
-"@types/node@*":
+"@types/node@*", "@types/node@^16.0.0":
   version "16.0.0"
   resolved "https://npm.plurid.cloud/@types%2fnode/-/node-16.0.0.tgz#067a6c49dc7a5c2412a505628e26902ae967bf6f"
   integrity sha512-TmCW5HoZ2o2/z2EYi109jLqIaPIi9y/lc2LmDCWzuCi35bcaQ+OtUh6nwBiFK7SOu25FAU5+YKdqFZUwtqGSdg==
-
-"@types/node@^15.12.2":
-  version "15.14.1"
-  resolved "https://npm.plurid.cloud/@types%2fnode/-/node-15.14.1.tgz#4f9d3689532499fdda1c898e19f4593718655e36"
-  integrity sha512-wF6hazbsnwaW3GhK4jFuw5NaLDQVRQ6pWQUGAUrJzxixFkTaODSiAKMPXuHwPEPkAKQWHAzj6uJ5h+3zU9gQxg==
 
 "@types/prettier@^2.1.5":
   version "2.3.1"
@@ -871,7 +866,7 @@
   resolved "https://npm.plurid.cloud/@types%2fq/-/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
   integrity sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
 
-"@types/react-dom@^17.0.7":
+"@types/react-dom@^17.0.8":
   version "17.0.8"
   resolved "https://npm.plurid.cloud/@types%2freact-dom/-/react-dom-17.0.8.tgz#3180de6d79bf53762001ad854e3ce49f36dd71fc"
   integrity sha512-0ohAiJAx1DAUEcY9UopnfwCE9sSMDGnY/oXjWMax6g3RpzmTt2GMyMVAXcbn0mo8XAff0SbQJl2/SBU+hjSZ1A==
@@ -888,7 +883,7 @@
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
 
-"@types/react@*", "@types/react@^17.0.11":
+"@types/react@*", "@types/react@^17.0.13":
   version "17.0.13"
   resolved "https://npm.plurid.cloud/@types%2freact/-/react-17.0.13.tgz#6b7c9a8f2868586ad87d941c02337c6888fb874f"
   integrity sha512-D/G3PiuqTfE3IMNjLn/DCp6umjVCSvtZTPdtAFy5+Ved6CsdRvivfKeCzw79W4AatShtU4nGqgvOv5Gro534vQ==
@@ -914,7 +909,7 @@
   resolved "https://npm.plurid.cloud/@types%2fstack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
-"@types/styled-components@^5.1.10":
+"@types/styled-components@^5.1.11":
   version "5.1.11"
   resolved "https://npm.plurid.cloud/@types%2fstyled-components/-/styled-components-5.1.11.tgz#a3a1bc0f2cdad7318d8ce219ee507e6b353503b5"
   integrity sha512-u8g3bSw9KUiZY+S++gh+LlURGraqBe3MC5I5dygrNjGDHWWQfsmZZRTJ9K9oHU2CqWtxChWmJkDI/gp+TZPQMw==
@@ -942,7 +937,7 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@typescript-eslint/eslint-plugin@^4.27.0":
+"@typescript-eslint/eslint-plugin@^4.28.2":
   version "4.28.2"
   resolved "https://npm.plurid.cloud/@typescript-eslint%2feslint-plugin/-/eslint-plugin-4.28.2.tgz#7a8320f00141666813d0ae43b49ee8244f7cf92a"
   integrity sha512-PGqpLLzHSxq956rzNGasO3GsAPf2lY9lDUBXhS++SKonglUmJypaUtcKzRtUte8CV7nruwnDxtLUKpVxs0wQBw==
@@ -967,7 +962,7 @@
     eslint-scope "^5.1.1"
     eslint-utils "^3.0.0"
 
-"@typescript-eslint/parser@^4.27.0":
+"@typescript-eslint/parser@^4.28.2":
   version "4.28.2"
   resolved "https://npm.plurid.cloud/@typescript-eslint%2fparser/-/parser-4.28.2.tgz#6aff11bf4b91eb67ca7517962eede951e9e2a15d"
   integrity sha512-Q0gSCN51eikAgFGY+gnd5p9bhhCUAl0ERMiDKrTzpSoMYRubdB8MJrTTR/BBii8z+iFwz8oihxd0RAdP4l8w8w==
@@ -1196,7 +1191,7 @@ babel-plugin-jest-hoist@^27.0.6:
     "@types/babel__core" "^7.0.0"
     "@types/babel__traverse" "^7.0.6"
 
-"babel-plugin-styled-components@>= 1.12.0", babel-plugin-styled-components@^1.12.0:
+"babel-plugin-styled-components@>= 1.12.0", babel-plugin-styled-components@^1.13.1:
   version "1.13.1"
   resolved "https://npm.plurid.cloud/babel-plugin-styled-components/-/babel-plugin-styled-components-1.13.1.tgz#5ecd28b207627c2a26ef8d5da401e9644065095a"
   integrity sha512-iY11g5orsdBnvWtXKCFBzDyTxZ9jvmkcYCCs5ONlvASYltDRhieCVzeDC7Do0fSW7psAL0zfVoXB3FHz2CkUSg==
@@ -1975,7 +1970,7 @@ eslint-visitor-keys@^2.0.0:
   resolved "https://npm.plurid.cloud/eslint-visitor-keys/-/eslint-visitor-keys-2.1.0.tgz#f65328259305927392c938ed44eb0a5c9b2bd303"
   integrity sha512-0rSmRBzXgDzIsD6mGdJgevzgezI534Cer5L/vyMX0kHzT/jiB43jRhd9YUlMGYLQy2zprNmoT8qasCGtY+QaKw==
 
-eslint@^7.28.0:
+eslint@^7.30.0:
   version "7.30.0"
   resolved "https://npm.plurid.cloud/eslint/-/eslint-7.30.0.tgz#6d34ab51aaa56112fd97166226c9a97f505474f8"
   integrity sha512-VLqz80i3as3NdloY44BQSJpFw534L9Oh+6zJOUaViV4JPd+DaHwutqP7tcpkW3YiXbK6s05RZl7yl7cQn+lijg==
@@ -2735,7 +2730,7 @@ jest-cli@^27.0.6:
     prompts "^2.0.1"
     yargs "^16.0.3"
 
-jest-config@^27.0.4, jest-config@^27.0.6:
+jest-config@^27.0.6:
   version "27.0.6"
   resolved "https://npm.plurid.cloud/jest-config/-/jest-config-27.0.6.tgz#119fb10f149ba63d9c50621baa4f1f179500277f"
   integrity sha512-JZRR3I1Plr2YxPBhgqRspDE2S5zprbga3swYNrvY3HfQGu7p/GjyLOqwrYad97tX3U3mzT53TPHVmozacfP/3w==
@@ -3107,7 +3102,7 @@ jest-worker@^27.0.6:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jest@^27.0.4:
+jest@^27.0.6:
   version "27.0.6"
   resolved "https://npm.plurid.cloud/jest/-/jest-27.0.6.tgz#10517b2a628f0409087fbf473db44777d7a04505"
   integrity sha512-EjV8aETrsD0wHl7CKMibKwQNQc3gIRBXlTikBmmHUeVMKaPFxdcUIBfoDqTSXDoGJIivAYGqCWVlzCSaVjPQsA==
@@ -3988,7 +3983,7 @@ postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.27:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-postcss@^8.3.4:
+postcss@^8.3.5:
   version "8.3.5"
   resolved "https://npm.plurid.cloud/postcss/-/postcss-8.3.5.tgz#982216b113412bc20a86289e91eb994952a5b709"
   integrity sha512-NxTuJocUhYGsMiMFHDUkmjSKT3EdH4/WbGF6GCi1NDGk+vbcUTun4fpbOqaPtD8IIsztA2ilZm2DhYCuyN58gA==
@@ -4281,10 +4276,10 @@ rollup-pluginutils@^2.8.1, rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.51.2:
-  version "2.52.7"
-  resolved "https://npm.plurid.cloud/rollup/-/rollup-2.52.7.tgz#e15a8bf734f6e4c204b7cdf33521151310250cb2"
-  integrity sha512-55cSH4CCU6MaPr9TAOyrIC+7qFCHscL7tkNsm1MBfIJRRqRbCEY0mmeFn4Wg8FKsHtEH8r389Fz38r/o+kgXLg==
+rollup@^2.52.8:
+  version "2.52.8"
+  resolved "https://npm.plurid.cloud/rollup/-/rollup-2.52.8.tgz#b6462f9c16ffe8995b9a2b313f2e4247fa75e4d9"
+  integrity sha512-IjAB0C6KK5/lvqzJWAzsvOik+jV5Bt907QdkQ/gDP4j+R9KYNI1tjqdxiPitGPVrWC21Mf/ucXgowUjN/VemaQ==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -4780,14 +4775,14 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript-transform-paths@^2.2.4:
-  version "2.2.4"
-  resolved "https://npm.plurid.cloud/typescript-transform-paths/-/typescript-transform-paths-2.2.4.tgz#9d4b74a063918ce528b696766634f854b8ce9134"
-  integrity sha512-i+/sgp3rw1ZronMCm2TKGBy1dlvN88Kd8CCb+HWnOE8+Hv0uIVnbC8xM5AD2t1JBCWabEhuH9p3n8DOVi0+R6g==
+typescript-transform-paths@^3.0.2:
+  version "3.0.2"
+  resolved "https://npm.plurid.cloud/typescript-transform-paths/-/typescript-transform-paths-3.0.2.tgz#2a8bc2cd21241982043199e98ed6dd21b2e2cd14"
+  integrity sha512-rl20tb9uDLWIj0faJY8IjPCldVgnKMElhXxkkAl+RCg+B+TLGxO+kRWB6mZw2Zufh5Ske2sQ9NbuIx8GqDspgg==
   dependencies:
     minimatch "^3.0.4"
 
-typescript@^4.3.2:
+typescript@^4.3.5:
   version "4.3.5"
   resolved "https://npm.plurid.cloud/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
   integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
