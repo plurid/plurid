@@ -202,15 +202,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     // #region handlers
     const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
-        /**
-         * TODO
-         * get the link coordinates from the relative parent
-         * until reaching the PluridPlane
-         * LeftLocation = LinkWidth + LinkLeft + RelativeParentLeft + ...
-         * TopLocation = LinkTop + RelativeParentTop + ...
-         */
-
         const link = linkElement.current;
+        // console.log('getPluridLinkCoordinates', link);
 
         if (!link) {
             return {
@@ -218,19 +211,45 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             };
         }
 
+        let partialTop = 0;
+        let partialLeft = 0;
+        let staticSet = false;
+
         let element: HTMLElement = link;
-        let searching = true
+        let searching = true;
         let top = 0;
         let left = 0;
         while (searching) {
             // console.log('in while loop', element);
             // console.log('in while loop top', element.offsetTop);
             // console.log('in while loop left', element.offsetLeft);
-            if (window.getComputedStyle(element).position !== 'static') {
-                top += element.offsetTop;
-                left += element.offsetLeft;
-                // console.log('added top', top);
-                // console.log('added left', left);
+
+            if (window.getComputedStyle(element).position === 'static'
+                && !staticSet
+            ) {
+                // console.log('static set', element);
+
+                partialTop += element.offsetTop;
+                partialLeft += element.offsetLeft;
+                staticSet = true;
+            }
+
+            if (window.getComputedStyle(element).position === 'relative') {
+                // console.log('partial added', element);
+
+                top += partialTop;
+                left += partialLeft;
+                partialTop = 0;
+                partialLeft = 0;
+                staticSet = false;
+            }
+
+            if (element.scrollLeft) {
+                left += -element.scrollLeft;
+            }
+
+            if (element.scrollTop) {
+                top += -element.scrollTop;
             }
 
             if (
@@ -252,9 +271,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         // console.log('left', left);
 
         const planeControlsHeight = planeControls ? 56 : 0;
-        // const x = link.offsetLeft + link.offsetWidth;
-        // const y = link.offsetTop + planeControlsHeight;
-        const x = left + link.offsetLeft + link.offsetWidth;
+        const x = left + link.offsetWidth;
         const y = top + planeControlsHeight;
 
         // console.log('x', x);
