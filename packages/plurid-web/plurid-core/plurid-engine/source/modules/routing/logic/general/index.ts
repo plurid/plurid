@@ -105,18 +105,29 @@ export const checkPlaneAddressType = (
 }
 
 
-export const cleanPathValue = (
+export const removeTrailingSlash = (
     value: string,
 ) => {
     if (value.endsWith('/') && value.length > 1) {
-        value = value.slice(0, value.length - 1);
+        return value.slice(0, value.length - 1);
     }
 
+    return value;
+}
+
+
+export const cleanPathValue = (
+    value: string,
+) => {
     const queryStart = value.indexOf('?');
     if (queryStart < 0) {
-        return value;
+        return removeTrailingSlash(
+            value,
+        );
     }
 
-    return value.substring(0, queryStart);
+    return removeTrailingSlash(
+        value.substring(0, queryStart),
+    );
 }
 // #endregion module
