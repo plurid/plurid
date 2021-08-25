@@ -103,4 +103,20 @@ export const checkPlaneAddressType = (
 
     return 'relative';
 }
+
+
+export const cleanPathValue = (
+    value: string,
+) => {
+    if (value.endsWith('/') && value.length > 1) {
+        value = value.slice(0, value.length - 1);
+    }
+
+    const queryStart = value.indexOf('?');
+    if (queryStart < 0) {
+        return value;
+    }
+
+    return value.substring(0, queryStart);
+}
 // #endregion module
