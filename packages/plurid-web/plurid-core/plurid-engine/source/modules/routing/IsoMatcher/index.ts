@@ -48,6 +48,22 @@
 
 
 // #region module
+const cleanPathValue = (
+    value: string,
+) => {
+    if (value.endsWith('/') && value.length > 1) {
+        value = value.slice(0, value.length - 1);
+    }
+
+    const queryStart = value.indexOf('?');
+    if (queryStart < 0) {
+        return value;
+    }
+
+    return value.substring(0, queryStart);
+}
+
+
 /**
  * The `IsoMatcher` gathers all the known information about `routes` and `planes`
  * and matches client-side or server-side, in-browser or in-plurid.
@@ -372,7 +388,10 @@ class IsoMatcher<C> {
     private matchRoute(
         value: string,
     ) {
-        const route = this.routesIndex.get(value);
+        console.log('matchRoute value', value);
+        const routeValue = cleanPathValue(value);
+        console.log('matchRoute routeValue', routeValue);
+        const route = this.routesIndex.get(routeValue);
 
         if (route) {
             const query = extractQuery(
@@ -384,7 +403,7 @@ class IsoMatcher<C> {
                 data: route.data,
                 match: {
                     // value: extractPathname(value),
-                    value,
+                    value: routeValue,
                     query,
                     parameters: {},
                 },
@@ -397,7 +416,7 @@ class IsoMatcher<C> {
         for (const routePath of this.routesKeys) {
             // Check if the `value` is a parametrization of `routePath`.
             const routeSplit = routePath.split('/');
-            const valueSplit = value.split('/');
+            const valueSplit = routeValue.split('/');
 
             // Length mismatch.
             if (routeSplit.length !== valueSplit.length) {
@@ -405,7 +424,7 @@ class IsoMatcher<C> {
             }
 
             const parametersAndMatch = extractParametersAndMatch(
-                value.slice(1),
+                routeValue.slice(1),
                 routePath.slice(1),
             );
 
@@ -433,12 +452,12 @@ class IsoMatcher<C> {
                 }
 
                 const query = extractQuery(
-                    value,
+                    routeValue,
                 );
 
                 const match = {
                     // value: extractPathname(value),
-                    value,
+                    value: routeValue,
                     query,
                     parameters,
                 };
@@ -457,7 +476,7 @@ class IsoMatcher<C> {
         }
 
 
-        const routePlane = this.matchPlane(value);
+        const routePlane = this.matchPlane(routeValue);
         // console.log('routePlane', value, this.planesIndex, routePlane);
 
         if (routePlane) {
@@ -466,7 +485,7 @@ class IsoMatcher<C> {
                 data: routePlane.data as any, // HACK
                 match: {
                     // value: extractPathname(value),
-                    value,
+                    value: routeValue,
                     query: routePlane.match.query,
                     parameters: routePlane.match.parameters,
                 },
