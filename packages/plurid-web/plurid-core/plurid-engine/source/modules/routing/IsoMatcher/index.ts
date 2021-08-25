@@ -374,9 +374,7 @@ class IsoMatcher<C> {
     private matchRoute(
         value: string,
     ) {
-        console.log('matchRoute value', value);
         const routeValue = cleanPathValue(value);
-        console.log('matchRoute routeValue', routeValue);
         const route = this.routesIndex.get(routeValue);
 
         if (route) {
