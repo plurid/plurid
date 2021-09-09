@@ -335,11 +335,8 @@ class PluridServer {
             }
 
 
-            const path = request.originalUrl;
-
-
             const ignorable = this.ignoreGetRequest(
-                path,
+                request.path,
             );
 
             if (
@@ -387,7 +384,7 @@ class PluridServer {
                 matchingPath,
             } = this.resolveMatchingPath(
                 preserveResult,
-                path,
+                request.originalUrl,
             );
 
             if (
