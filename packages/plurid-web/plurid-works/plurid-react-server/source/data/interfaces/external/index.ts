@@ -137,11 +137,7 @@ export interface PluridServerService<P = any> {
 export interface PluridServerConfiguration {
     routes: PluridRoute<PluridReactComponent>[];
     planes?: PluridRoutePlane<PluridReactComponent>[];
-    preserves: PluridPreserve<
-        routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
-        express.Request,
-        express.Response
-    >[];
+    preserves: PluridPreserveReact[];
     helmet: Helmet;
     styles?: string[];
     middleware?: PluridServerMiddleware[];
@@ -244,4 +240,12 @@ export interface PluridStillerOptions {
      */
     ignore: string[];
 }
+
+
+
+export type PluridPreserveReact = PluridPreserve<
+    routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+    express.Request,
+    express.Response
+>;
 // #endregion module

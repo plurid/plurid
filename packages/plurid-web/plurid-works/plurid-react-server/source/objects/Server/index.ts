@@ -33,7 +33,6 @@
     import {
         PluridRoute,
         PluridRoutePlane,
-        PluridPreserve,
         PluridPreserveOnServe,
         PluridPreserveAfterServe,
         PluridPreserveOnError,
@@ -65,6 +64,7 @@
         PluridServerPartialOptions,
         PluridServerConfiguration,
         PluridServerTemplateConfiguration,
+        PluridPreserveReact,
 
         PTTPHandler,
     } from '~data/interfaces';
@@ -113,11 +113,7 @@ const {
 class PluridServer {
     private routes: PluridRoute<PluridReactComponent>[];
     private planes: PluridRoutePlane<PluridReactComponent>[];
-    private preserves: PluridPreserve<
-        routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
-        express.Request,
-        express.Response
-    >[];
+    private preserves: PluridPreserveReact[];
     private helmet: Helmet;
     private styles: string[];
     private middleware: PluridServerMiddleware[];
