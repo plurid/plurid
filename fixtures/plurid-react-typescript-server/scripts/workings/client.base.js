@@ -78,16 +78,10 @@ const styleRule = {
 
 const fileRule = {
     test: /\.(jpe?g|gif|png|svg|eof|otf|woff|ttf|wav|mp3|pdf|mov|mp4)$/i,
-    use: [
-        {
-            loader: 'file-loader',
-            options: {
-                name: `${ASSETS_DIRECTORY}/[name].[ext]`,
-                publicPath: '/',
-                outputPath: '/',
-            },
-        },
-    ],
+    type: 'asset/resource',
+    generator: {
+        filename: `${ASSETS_DIRECTORY}/[name][ext]`,
+    },
 };
 
 
