@@ -1,9 +1,4 @@
 // #region imports
-    // #region libraries
-    import puppeteer from 'puppeteer';
-    // #endregion libraries
-
-
     // #region external
     import {
         StillerOptions,
@@ -36,6 +31,7 @@ const isCurrentUserRoot = () => {
 }
 
 const render = async (
+    puppeteer: any,
     host: string,
     route: string,
     configuration: StillerConfiguration,
@@ -94,6 +90,7 @@ const render = async (
  * to serve the adequate plurid space structure when asked for the given route.
  */
 class Stiller {
+    private puppeteer: any;
     private host: string;
     private routes: string[];
     private configuration: StillerConfiguration;
@@ -101,6 +98,8 @@ class Stiller {
     constructor(
         options: StillerOptions,
     ) {
+        this.puppeteer = require('puppeteer');
+
         const {
             host,
             routes,
@@ -115,6 +114,7 @@ class Stiller {
     async * still() {
         for (const route of this.routes) {
             yield await render(
+                this.puppeteer,
                 this.host,
                 route,
                 this.configuration,
