@@ -4,9 +4,9 @@ const external = [
     '@plurid/plurid-data',
     '@plurid/plurid-engine',
     '@plurid/plurid-functions',
+    '@plurid/plurid-functions-react',
     '@plurid/plurid-pubsub',
     '@plurid/plurid-react',
-    'puppeteer',
     'react',
     'react-dom',
     'react-helmet-async',
@@ -15,6 +15,7 @@ const external = [
     'styled-components',
 
     '@apollo/client',
+    '@apollo/client/core',
     'compression',
     'body-parser',
     'detect-port',
@@ -22,7 +23,6 @@ const external = [
     'fast-json-stable-stringify',
     'graphql',
     'open',
-    'react-stripe-elements',
     'zen-observable',
 ];
 
