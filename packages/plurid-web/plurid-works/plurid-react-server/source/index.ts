@@ -2,6 +2,7 @@
     // #region internal
     import PluridServer from './objects/Server';
 
+    import PluridLiveServer from './objects/LiveServer';
     import PluridStillsGenerator from './objects/StillsGenerator';
     // #endregion internal
 // #endregion imports
@@ -12,6 +13,7 @@
 export * from './data/interfaces/external';
 
 export {
+    PluridLiveServer,
     PluridStillsGenerator,
 };
 
