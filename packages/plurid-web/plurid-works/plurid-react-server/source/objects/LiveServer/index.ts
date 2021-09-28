@@ -1,9 +1,35 @@
+// #region imports
+    // #region external
+    import {
+        PluridLiveServerOptions,
+    } from '~data/interfaces';
+    // #endregion external
+// #endregion imports
+
+
+
 // #region module
 class LiveServer {
-    constructor(
-        options?: any,
-    ) {
+    private options: PluridLiveServerOptions;
 
+
+    constructor(
+        options?: Partial<PluridLiveServerOptions>,
+    ) {
+        this.options = this.resolveOptions(options);
+    }
+
+
+    private resolveOptions = (
+        options?: Partial<PluridLiveServerOptions>,
+    ) => {
+        const defaultServerPath = './source/server/index.ts';
+
+        const resolvedOptions = {
+            server: options?.server || defaultServerPath,
+        };
+
+        return resolvedOptions;
     }
 
 

@@ -248,4 +248,11 @@ export type PluridPreserveReact = PluridPreserve<
     express.Request,
     express.Response
 >;
+
+
+
+
+export interface PluridLiveServerOptions {
+    server: string;
+}
 // #endregion module
