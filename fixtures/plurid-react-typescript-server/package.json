@@ -7,6 +7,7 @@
     "main": "build/index.js",
     "scripts": {
         "start": "node scripts start",
+        "start.live": "node scripts start.live",
         "start.local": "node scripts start.local",
         "start.development": "node scripts start.development",
         "watch.client": "node scripts watch.client",
