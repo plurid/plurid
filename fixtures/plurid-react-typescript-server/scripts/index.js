@@ -74,6 +74,10 @@ const commandWatchServer = [
     `${crossCommand('rollup')} -w -c ./scripts/workings/server.development.js`,
 ];
 
+const commandStartLive = [
+    `node ./scripts/workings/liveserver.js`,
+];
+
 const commandStartLocal = [
     `${crossCommand('nodemon')} --watch ${path.join(buildFolder, '/index.js')} ${buildFolder}`,
 ];
@@ -187,6 +191,12 @@ switch (command) {
         console.log('\n\tStarting the Application Server...');
         runCommand(commandStart, {
             stdio: 'inherit',
+        });
+        break;
+    case 'start.live':
+        console.log('\n\tRunning the Live Server...');
+        runCommand(commandStartLive, {
+            stdio: verbose,
         });
         break;
     case 'start.local':
