@@ -35,6 +35,10 @@
         storage,
         uuid,
     } from '@plurid/plurid-functions';
+
+    import {
+        useMounted,
+    } from '@plurid/plurid-functions-react';
     // #endregion libraries
 
 
@@ -121,6 +125,8 @@ const PluridRouterBrowser = (
 
 
     // #region state
+    const mounted = useMounted();
+
     const [
         matchedPath,
         setMatchedPath,
@@ -208,6 +214,10 @@ const PluridRouterBrowser = (
 
 
     useEffect(() => {
+        if (!mounted) {
+            return;
+        }
+
         if (!cleanNavigation) {
             if (location.pathname !== matchedPath) {
                 history.pushState(null, '', matchedPath);
@@ -245,6 +255,7 @@ const PluridRouterBrowser = (
             ),
         );
     }, [
+        mounted,
         matchedPath,
     ]);
 
