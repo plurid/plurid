@@ -10,7 +10,7 @@
 
     // #region external
     import PluridPlanesView from '~containers/Application/View/PlanesView';
-    import PluridErrorView from '~containers/Application/View/ErrorView';
+    // import PluridErrorView from '~containers/Application/View/ErrorView';
     // #endregion external
 // #endregion imports
 
@@ -20,16 +20,17 @@
 const handleView = (
     view: PluridApplicationView,
 ): JSX.Element => {
-    if (view.length > 0) {
-        return (
-            <PluridPlanesView />
-        );
+    if (view.length === 0) {
+        // return (
+        //     <PluridErrorView
+        //         error="the plurid' application must contain a view"
+        //     />
+        // );
+        return (<></>);
     }
 
     return (
-        <PluridErrorView
-            error="the plurid' application must contain a view"
-        />
+        <PluridPlanesView />
     );
 }
 // #endregion module
