@@ -297,9 +297,13 @@ const PluridView: React.FC<ViewProperties> = (
         const handlePubSubSubscribe = (
             pubsub: IPluridPubSub,
         ) => {
-            pubsub.subscribe({
+            const configurationIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.CONFIGURATION,
                 callback: (data) => {
+                    if ((data as any).internal) {
+                        return;
+                    }
+
                     const computedConfiguration = generalEngine.configuration.merge(
                         data,
                         stateConfiguration,
@@ -308,7 +312,7 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
-            pubsub.subscribe({
+            const spaceTransformIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
                 callback: (data) => {
                     const {
@@ -324,7 +328,7 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
-            pubsub.subscribe({
+            const spaceAnimatedTransformIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM,
                 callback: (data) => {
                     const {
@@ -341,7 +345,8 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
-            pubsub.subscribe({
+
+            const spaceRotateXWithIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
                 callback: (data) => {
                     const {
@@ -351,7 +356,7 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
-            pubsub.subscribe({
+            const spaceRotateXToIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO,
                 callback: (data) => {
                     const {
@@ -362,7 +367,7 @@ const PluridView: React.FC<ViewProperties> = (
             });
 
 
-            pubsub.subscribe({
+            const spaceRotateYWithIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH,
                 callback: (data) => {
                     const {
@@ -372,7 +377,7 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
-            pubsub.subscribe({
+            const spaceRotateYToIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO,
                 callback: (data) => {
                     const {
@@ -383,7 +388,7 @@ const PluridView: React.FC<ViewProperties> = (
             });
 
 
-            pubsub.subscribe({
+            const spaceTranslateXWithIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH,
                 callback: (data) => {
                     const {
@@ -400,7 +405,7 @@ const PluridView: React.FC<ViewProperties> = (
             //     dispatchTranslateX(value);
             // });
 
-            pubsub.subscribe({
+            const spaceTranslateYWithIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_WITH,
                 callback: (data) => {
                     const {
@@ -418,7 +423,7 @@ const PluridView: React.FC<ViewProperties> = (
             // });
 
 
-            pubsub.subscribe({
+            const viewAddPlaneIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
                 callback: (data) => {
                     const {
@@ -433,7 +438,7 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
-            pubsub.subscribe({
+            const viewSetPlanesIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
                 callback: (data) => {
                     const {
@@ -446,7 +451,7 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
-            pubsub.subscribe({
+            const viewRemovePlaneIndex = pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
                 callback: (data) => {
                     const {
@@ -467,6 +472,73 @@ const PluridView: React.FC<ViewProperties> = (
                     dispatchSpaceSetView(updatedView);
                 },
             });
+
+
+            return () => {
+                pubsub.unsubscribe(
+                    configurationIndex,
+                    PLURID_PUBSUB_TOPIC.CONFIGURATION,
+                );
+
+                pubsub.unsubscribe(
+                    spaceTransformIndex,
+                    PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
+                );
+
+                pubsub.unsubscribe(
+                    spaceAnimatedTransformIndex,
+                    PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM,
+                );
+
+
+                pubsub.unsubscribe(
+                    spaceRotateXWithIndex,
+                    PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
+                );
+
+                pubsub.unsubscribe(
+                    spaceRotateXToIndex,
+                    PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO,
+                );
+
+
+                pubsub.unsubscribe(
+                    spaceRotateYWithIndex,
+                    PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH,
+                );
+
+                pubsub.unsubscribe(
+                    spaceRotateYToIndex,
+                    PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO,
+                );
+
+
+                pubsub.unsubscribe(
+                    spaceTranslateXWithIndex,
+                    PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH,
+                );
+
+                pubsub.unsubscribe(
+                    spaceTranslateYWithIndex,
+                    PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_WITH,
+                );
+
+
+                pubsub.unsubscribe(
+                    viewAddPlaneIndex,
+                    PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
+                );
+
+                pubsub.unsubscribe(
+                    viewSetPlanesIndex,
+                    PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
+                );
+
+                pubsub.unsubscribe(
+                    viewRemovePlaneIndex,
+                    PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
+                );
+            }
         }
 
         const handlePubSubPublish = (
@@ -485,7 +557,10 @@ const PluridView: React.FC<ViewProperties> = (
 
             pubsub.publish({
                 topic: PLURID_PUBSUB_TOPIC.CONFIGURATION,
-                data: stateConfiguration,
+                data: {
+                    ...stateConfiguration,
+                    internal: true,
+                } as any,
             });
         }
 
@@ -832,8 +907,18 @@ const PluridView: React.FC<ViewProperties> = (
         // #region effects pubsub
         /** PubSub Subscribe */
         useEffect(() => {
+            const unsubscribers: (() => void)[] = [];
+
             for (const pubsub of pluridPubSub) {
-                handlePubSubSubscribe(pubsub);
+                const unsubscriber = handlePubSubSubscribe(pubsub);
+
+                unsubscribers.push(unsubscriber);
+            }
+
+            return () => {
+                for (const unsubscriber of unsubscribers) {
+                    unsubscriber();
+                }
             }
         }, [
             pluridPubSub.length,
