@@ -3,6 +3,10 @@
     import {
         PLURID_PUBSUB_TOPIC,
     } from '~constants/pubsub';
+
+    import {
+        PluridPartialConfiguration,
+    } from '~interfaces/external/configuration';
     // #endregion external
 // #endregion imports
 
@@ -28,7 +32,7 @@ export interface PluridPubSubDataValueString {
 
 export interface PluridPubSubPublishMessageConfiguration {
     topic: typeof PLURID_PUBSUB_TOPIC.CONFIGURATION;
-    data: any;
+    data: PluridPartialConfiguration;
 }
 export interface PluridPubSubSubscribeMessageConfiguration {
     topic: typeof PLURID_PUBSUB_TOPIC.CONFIGURATION;
