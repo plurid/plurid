@@ -33,6 +33,7 @@
     import {
         space,
         planes,
+        general as generalEngine,
     } from '@plurid/plurid-engine';
 
     import {
@@ -184,7 +185,7 @@ const PluridView: React.FC<ViewProperties> = (
 
         // #region dispatch
         dispatch,
-        // dispatchSetConfiguration,
+        dispatchSetConfiguration,
         // dispatchSetConfigurationMicro,
         // dispatchSetGeneralTheme,
         // dispatchSetInteractionTheme,
@@ -296,6 +297,21 @@ const PluridView: React.FC<ViewProperties> = (
         const handlePubSubSubscribe = (
             pubsub: IPluridPubSub,
         ) => {
+            pubsub.subscribe({
+                topic: PLURID_PUBSUB_TOPIC.CONFIGURATION,
+                callback: (data) => {
+                    const {
+                        value,
+                    } = data;
+
+                    const computedConfiguration = generalEngine.configuration.merge(
+                        value,
+                        stateConfiguration,
+                    );
+                    dispatchSetConfiguration(computedConfiguration);
+                },
+            });
+
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
                 callback: (data) => {
