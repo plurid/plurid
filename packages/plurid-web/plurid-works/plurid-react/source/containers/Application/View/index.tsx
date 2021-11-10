@@ -300,12 +300,8 @@ const PluridView: React.FC<ViewProperties> = (
             pubsub.subscribe({
                 topic: PLURID_PUBSUB_TOPIC.CONFIGURATION,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-
                     const computedConfiguration = generalEngine.configuration.merge(
-                        value,
+                        data,
                         stateConfiguration,
                     );
                     dispatchSetConfiguration(computedConfiguration);
