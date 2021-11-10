@@ -36,7 +36,7 @@ export interface PluridPubSubPublishMessageConfiguration {
 }
 export interface PluridPubSubSubscribeMessageConfiguration {
     topic: typeof PLURID_PUBSUB_TOPIC.CONFIGURATION;
-    callback: PluridPubSubCallback<any>;
+    callback: PluridPubSubCallback<PluridPartialConfiguration>;
 }
 
 export interface PluridPubSubPublishMessageSpaceAnimatedTransform {
