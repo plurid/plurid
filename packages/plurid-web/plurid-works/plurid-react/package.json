@@ -69,7 +69,7 @@
         "@babel/core": "^7.16.0",
         "@plurid/elementql": "^0.0.0-1",
         "@plurid/elementql-client-react": "^0.0.0-1",
-        "@plurid/plurid-data": "0.0.0-7",
+        "@plurid/plurid-data": "0.0.0-8",
         "@plurid/plurid-engine": "0.0.0-7",
         "@plurid/plurid-functions": "0.0.0-17",
         "@plurid/plurid-functions-react": "0.0.0-4",

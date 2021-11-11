@@ -847,10 +847,10 @@
   resolved "https://npm.plurid.cloud/@plurid%2felementql/-/elementql-0.0.0-1.tgz#6639dd5b71c72cd2df0bf16b615b2e4dfab54af3"
   integrity sha512-ZhIRA9sGeegviDNFEdA71leocIwPXwU4vK81p+B7UEhBRl0hZ+O9pD1Rr5wuW9rU5FtfjDnEprntmyVi0ZEL4Q==
 
-"@plurid/plurid-data@0.0.0-7":
-  version "0.0.0-7"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-7.tgz#c5c3046590822d2de643d23e2de568b579404aa8"
-  integrity sha512-q1ivg6OHEwCsGJ7qZc/u+7+GLZqMJnJACAlKt5e033fPts+0vOaZuemPycWdG/0K9KO5IKRCJjAyl9C75WSgnw==
+"@plurid/plurid-data@0.0.0-8":
+  version "0.0.0-8"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-8.tgz#94e00901da1e3c40246c7447379e4906efdafe54"
+  integrity sha512-BgsYs1wtkTxZFfCfMjXwRPCO2QaMpJn37SuebXVTXbNKUpK0g4p79eiuRKrtyCO8P81bMh4ojXs02O1+WKG4Mw==
 
 "@plurid/plurid-engine@0.0.0-7":
   version "0.0.0-7"
