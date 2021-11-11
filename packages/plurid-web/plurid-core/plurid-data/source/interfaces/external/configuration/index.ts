@@ -201,6 +201,7 @@ export interface PluridConfigurationElementsToolbar {
     conceal: boolean;
     transformIcons: boolean;
     transformButtons: boolean;
+    drawers: (keyof typeof TOOLBAR_DRAWERS)[];
     toggledDrawers: (keyof typeof TOOLBAR_DRAWERS | undefined)[];
 }
 
