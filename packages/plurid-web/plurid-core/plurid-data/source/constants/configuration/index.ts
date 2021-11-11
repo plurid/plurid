@@ -53,6 +53,7 @@ export const defaultConfigurationElements: PluridConfigurationElements = {
         conceal: false,
         transformIcons: false,
         transformButtons: false,
+        drawers: [],
         toggledDrawers: [],
     },
     viewcube: {
