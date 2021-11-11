@@ -172,7 +172,7 @@ const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
                             items={(
                                 <>{component}</>
                             )}
-                            toggled={toggledDrawers.includes(drawer)}
+                            toggled={toggledDrawers.includes('ALL') || toggledDrawers.includes(drawer)}
                             toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(drawer)}
                         />
                     )
