@@ -32,41 +32,44 @@ export interface MoreMenu {
     component: JSX.Element,
 }
 
-export const moreMenus: MoreMenu[] = [
-    {
+
+export const moreMenusRecord: Record<string, MoreMenu> = {
+    GLOBAL: {
         name: internationalization.fields.toolbarDrawerGlobalTitle,
         drawer: TOOLBAR_DRAWERS.GLOBAL,
         component: (<MenuMoreGlobal />),
     },
-    {
+    TRANSFORM: {
         name: internationalization.fields.toolbarDrawerTransformTitle,
         drawer: TOOLBAR_DRAWERS.TRANSFORM,
         component: (<MenuMoreTransform />),
     },
-    {
+    SPACE: {
         name: internationalization.fields.toolbarDrawerSpaceTitle,
         drawer: TOOLBAR_DRAWERS.SPACE,
         component: (<MenuMoreSpace />),
     },
-    {
+    TOOLBAR: {
         name: internationalization.fields.toolbarDrawerToolbarTitle,
         drawer: TOOLBAR_DRAWERS.TOOLBAR,
         component: (<MenuMoreToolbar />),
     },
-    {
+    VIEWCUBE: {
         name: internationalization.fields.toolbarDrawerViewcubeTitle,
         drawer: TOOLBAR_DRAWERS.VIEWCUBE,
         component: (<MenuMoreViewcube />),
     },
-    {
+    TECHNICAL: {
         name: internationalization.fields.toolbarDrawerTechnicalTitle,
         drawer: TOOLBAR_DRAWERS.TECHNICAL,
         component: (<MenuMoreTechnical />),
     },
-    {
+    SHORTCUTS: {
         name: internationalization.fields.toolbarDrawerShortcutsTitle,
         drawer: TOOLBAR_DRAWERS.SHORTCUTS,
         component: (<MenuMoreShortcuts />),
     },
-];
+};
+
+export const moreMenus: MoreMenu[] = Object.values(moreMenusRecord);
 // #endregion module

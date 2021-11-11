@@ -47,7 +47,9 @@
     } from './styled';
 
     import {
+        MoreMenu,
         moreMenus,
+        moreMenusRecord,
     } from './data';
     // #endregion internal
 // #endregion imports
@@ -55,14 +57,32 @@
 
 
 // #region module
+export const resolveMenus = (
+    drawers: string[],
+) => {
+    if (drawers.length === 0 || drawers.includes('ALL')) {
+        return moreMenus;
+    }
+
+    const resolvedMenus: MoreMenu[] = [];
+
+    for (const drawer of drawers) {
+        const menu = moreMenusRecord[drawer];
+        resolvedMenus.push(menu);
+    }
+
+    return resolvedMenus;
+}
+
+
 export interface PluridMoreMenuOwnProperties {
 }
 
 export interface PluridMoreMenuStateProperties {
     stateLanguage: InternationalizationLanguageType;
-    interactionTheme: Theme;
-    configuration: PluridConfiguration;
-    toolbarMenuScrollPosition: number;
+    stateInteractionTheme: Theme;
+    stateConfiguration: PluridConfiguration;
+    stateToolbarMenuScrollPosition: number;
 }
 
 export interface PluridMoreMenuDispatchProperties {
@@ -78,23 +98,25 @@ export type PluridMoreMenuProperties = PluridMoreMenuOwnProperties
 const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** state */
+        // #region state
         stateLanguage,
-        interactionTheme,
-        configuration,
-        toolbarMenuScrollPosition,
+        stateInteractionTheme,
+        stateConfiguration,
+        stateToolbarMenuScrollPosition,
+        // #endregion state
 
-        /** dispatch */
+        // #region dispatch
         dispatchToggleConfigurationToolbarToggleDrawer,
         dispatchSetUIToolbarScrollPosition,
+        // #endregion dispatch
     } = properties;
 
     const {
         global,
         elements,
-    } = configuration;
+    } = stateConfiguration;
 
     const {
         transparentUI,
@@ -105,24 +127,31 @@ const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
     } = elements;
 
     const {
+        drawers,
         toggledDrawers,
     } = toolbar;
 
+    const menus = resolveMenus(drawers);
+    // #endregion properties
 
-    /** references */
+
+    // #region references
     const moreMenuScrollElement = useRef<HTMLDivElement>(null);
+    // #endregion references
 
 
-    /** handlers */
-    const handleWheel = useDebouncedCallback((event: WheelEvent) => {
+    // #region handlers
+    const handleWheel = useDebouncedCallback((_event: WheelEvent) => {
         if (moreMenuScrollElement.current) {
             const scrollPosition = moreMenuScrollElement.current.scrollTop;
             dispatchSetUIToolbarScrollPosition(scrollPosition);
         }
     }, 100);
+    // #endregion handlers
 
 
-    /** effects */
+    // #region effects
+    /** Wheel listener */
     useEffect(() => {
         if (moreMenuScrollElement.current) {
             moreMenuScrollElement.current.addEventListener('wheel', handleWheel);
@@ -137,26 +166,28 @@ const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
         moreMenuScrollElement.current,
     ]);
 
+    /** Set scrollTop */
     useEffect(() => {
         if (moreMenuScrollElement.current) {
-            moreMenuScrollElement.current.scrollTop = toolbarMenuScrollPosition;
+            moreMenuScrollElement.current.scrollTop = stateToolbarMenuScrollPosition;
         }
     }, [
-        toolbarMenuScrollPosition,
+        stateToolbarMenuScrollPosition,
         moreMenuScrollElement.current,
     ]);
+    // #endregion effects
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridMoreMenu
-            theme={interactionTheme}
+            theme={stateInteractionTheme}
             transparentUI={transparentUI}
         >
             <StyledPluridMoreMenuScroll
                 ref={moreMenuScrollElement}
             >
-                {moreMenus.map(moreMenu => {
+                {menus.map(moreMenu => {
                     const {
                         name,
                         drawer,
@@ -180,20 +211,21 @@ const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
             </StyledPluridMoreMenuScroll>
         </StyledPluridMoreMenu>
     );
+    // #endregion render
 }
 
 
-const mapStateToProps = (
+const mapStateToProperties = (
     state: AppState,
 ): PluridMoreMenuStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).global.language,
-    interactionTheme: selectors.themes.getInteractionTheme(state),
-    configuration: selectors.configuration.getConfiguration(state),
-    toolbarMenuScrollPosition: selectors.ui.getToolbarScrollPosition(state),
+    stateInteractionTheme: selectors.themes.getInteractionTheme(state),
+    stateConfiguration: selectors.configuration.getConfiguration(state),
+    stateToolbarMenuScrollPosition: selectors.ui.getToolbarScrollPosition(state),
 });
 
 
-const mapDispatchToProps = (
+const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): PluridMoreMenuDispatchProperties => ({
     dispatchToggleConfigurationToolbarToggleDrawer: (
@@ -210,8 +242,8 @@ const mapDispatchToProps = (
 
 
 const ConnectedPluridMoreMenu = connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,
