@@ -58,7 +58,7 @@
 
 // #region module
 export const resolveMenus = (
-    drawers: string[],
+    drawers: (keyof typeof TOOLBAR_DRAWERS)[],
 ) => {
     if (drawers.length === 0 || drawers.includes('ALL')) {
         return moreMenus;
