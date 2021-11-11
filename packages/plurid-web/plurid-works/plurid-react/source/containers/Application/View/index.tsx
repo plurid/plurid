@@ -40,7 +40,7 @@
         meta,
     } from '@plurid/plurid-functions';
 
-    import {
+    import themes, {
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
@@ -187,8 +187,8 @@ const PluridView: React.FC<ViewProperties> = (
         dispatch,
         dispatchSetConfiguration,
         // dispatchSetConfigurationMicro,
-        // dispatchSetGeneralTheme,
-        // dispatchSetInteractionTheme,
+        dispatchSetGeneralTheme,
+        dispatchSetInteractionTheme,
 
         // dispatchSetSpaceLoading,
         dispatchSetSpaceLocation,
@@ -308,6 +308,27 @@ const PluridView: React.FC<ViewProperties> = (
                         data,
                         stateConfiguration,
                     );
+
+
+                    // Handle themes
+                    if (typeof computedConfiguration.global.theme === 'object') {
+                        if (typeof computedConfiguration.global.theme.general === 'string') {
+                            dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme.general]);
+                        } else {
+                            dispatchSetGeneralTheme(computedConfiguration.global.theme.general);
+                        }
+
+                        if (typeof computedConfiguration.global.theme.interaction === 'string') {
+                            dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme.interaction]);
+                        } else {
+                            dispatchSetInteractionTheme(computedConfiguration.global.theme.interaction);
+                        }
+                    } else if (typeof computedConfiguration.global.theme === 'string') {
+                        dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme]);
+                        dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme]);
+                    }
+
+
                     dispatchSetConfiguration(computedConfiguration);
                 },
             });
