@@ -1,7 +1,8 @@
 // #region imports
     // #region libraries
-    import themes, {
+    import {
         Theme,
+        ThemeName,
     } from '@plurid/plurid-themes';
     // #endregion libraries
 
@@ -58,7 +59,7 @@ export interface PluridConfigurationGlobal {
      * A theme name based on plurid themes, https://meta.plurid.com/themes,
      * or specific theme names/objects for `general` and for the `interaction` elements.
      */
-    theme: keyof typeof themes | PluridConfigurationTheme;
+    theme: ThemeName | PluridConfigurationTheme;
 
     /**
      * Supported languages:
@@ -98,8 +99,8 @@ export interface PluridConfigurationGlobal {
 
 
 export interface PluridConfigurationTheme {
-    general: keyof typeof themes | Theme;
-    interaction: keyof typeof themes  | Theme;
+    general: ThemeName | Theme;
+    interaction: ThemeName  | Theme;
 }
 
 
