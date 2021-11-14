@@ -85,10 +85,10 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@plurid/plurid-themes@0.0.0-0":
-  version "0.0.0-0"
-  resolved "https://registry.yarnpkg.com/@plurid/plurid-themes/-/plurid-themes-0.0.0-0.tgz#a478114a291ebbade70ff030b81feb49beb48294"
-  integrity sha512-f/2TIKZzu4QMyhNpN64U8imAKJtacZBzaQjFhfO3ldODYWnSAAGgR8c18Qg1sd5V5CHbFxVlszLFVlqxLUh2uQ==
+"@plurid/plurid-themes@0.0.0-1":
+  version "0.0.0-1"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-themes/-/plurid-themes-0.0.0-1.tgz#a6f6e81d0f3784710a5934bc1b84ba9b91784ae2"
+  integrity sha512-iOzdlhTASbhD4VOBajjRz7MUP+TXTxsXT1K6Z2+L3aIN37MSmjlTPFe9mO9UMTuU5C1zmc7FV3latDneJPuIqg==
 
 "@rollup/pluginutils@^4.1.0":
   version "4.1.0"
@@ -1110,10 +1110,10 @@ rollup-plugin-typescript2@^0.30.0:
     resolve "1.20.0"
     tslib "2.1.0"
 
-rollup@^2.59.0:
-  version "2.59.0"
-  resolved "https://npm.plurid.cloud/rollup/-/rollup-2.59.0.tgz#108c61b0fa0a37ebc8d1f164f281622056f0db59"
-  integrity sha512-l7s90JQhCQ6JyZjKgo7Lq1dKh2RxatOM+Jr6a9F7WbS9WgKbocyUSeLmZl8evAse7y96Ae98L2k1cBOwWD8nHw==
+rollup@^2.60.0:
+  version "2.60.0"
+  resolved "https://npm.plurid.cloud/rollup/-/rollup-2.60.0.tgz#4ee60ab7bdd0356763f87d7099f413e5460fc193"
+  integrity sha512-cHdv9GWd58v58rdseC8e8XIaPUo8a9cgZpnCMMDGZFDZKEODOiPPEQFXLriWr/TjXzhPPmG5bkAztPsOARIcGQ==
   optionalDependencies:
     fsevents "~2.3.2"
 
