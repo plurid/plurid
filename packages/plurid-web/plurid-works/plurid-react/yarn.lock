@@ -847,15 +847,15 @@
   resolved "https://npm.plurid.cloud/@plurid%2felementql/-/elementql-0.0.0-1.tgz#6639dd5b71c72cd2df0bf16b615b2e4dfab54af3"
   integrity sha512-ZhIRA9sGeegviDNFEdA71leocIwPXwU4vK81p+B7UEhBRl0hZ+O9pD1Rr5wuW9rU5FtfjDnEprntmyVi0ZEL4Q==
 
-"@plurid/plurid-data@0.0.0-8":
-  version "0.0.0-8"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-8.tgz#94e00901da1e3c40246c7447379e4906efdafe54"
-  integrity sha512-BgsYs1wtkTxZFfCfMjXwRPCO2QaMpJn37SuebXVTXbNKUpK0g4p79eiuRKrtyCO8P81bMh4ojXs02O1+WKG4Mw==
+"@plurid/plurid-data@0.0.0-9":
+  version "0.0.0-9"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-9.tgz#b1d451c51fe571c0800b9a1a95b2f693564628f1"
+  integrity sha512-KD7XU6f2ynBeyo4doIk9xJRTU/YUd3zKIY80YlRPwaYbYgWcjPjgKRMI91Sc5LuFxbvblbKQIuo8e5aUT3EHGg==
 
-"@plurid/plurid-engine@0.0.0-7":
-  version "0.0.0-7"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-engine/-/plurid-engine-0.0.0-7.tgz#22d09be4f698071844fb556c760c6b53ccafdf79"
-  integrity sha512-OpH/XF5Mtvx+SOrg/LSW4WzFf5IVvk/o5gzD9BVMiheC+CcchZ8nwmXxbjwcJOC/bklkaGj6OIjr00bYgewBRA==
+"@plurid/plurid-engine@0.0.0-8":
+  version "0.0.0-8"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-engine/-/plurid-engine-0.0.0-8.tgz#1bab65e8a2b834f325680ef7e47a62085865cc0b"
+  integrity sha512-ZpFsxGepN8b2cN2LdsxeSSFwdhQZz+8veBGT9tFjXkm/8ElXwn0J1vx6PPHgHqGftq2C62JYx/s+wE0ls48R3A==
 
 "@plurid/plurid-functions-react@0.0.0-4":
   version "0.0.0-4"
@@ -867,25 +867,25 @@
   resolved "https://npm.plurid.cloud/@plurid%2fplurid-functions/-/plurid-functions-0.0.0-17.tgz#052113b74e2171609b897199ae75ada819f00c44"
   integrity sha512-gYjM7xSOqIIwnz2yl2Iw/BQ+npqw7x1pdVjGuZR6LCt+O9dNbHMpuwhnl3goim47nRi7ApY2K62Thd9Gb+7+Lg==
 
-"@plurid/plurid-icons-react@0.0.0-1":
-  version "0.0.0-1"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-icons-react/-/plurid-icons-react-0.0.0-1.tgz#b2bdec84eba2ca2df0cfde639eea353e9e5ab527"
-  integrity sha512-nZtkDHl9Hlrgzn0YcqKbVuBuCQ6mq8b7wU+za4VOHDSPaUs+uNe+GgblwCZ4aU7aEIPai+xOrK67PH1GLpraTw==
+"@plurid/plurid-icons-react@0.0.0-2":
+  version "0.0.0-2"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-icons-react/-/plurid-icons-react-0.0.0-2.tgz#65820d9e5e761fe336e14e76f34d85353ee2492f"
+  integrity sha512-YQK3b9JIsuzhRg6Te8tesr5NS+rGtXu5SI6zZ5f5hN22mVyScPk9BXRi6bGMieLDolnyZIYvQIFByyK9IevCeA==
 
 "@plurid/plurid-pubsub@0.0.0-5":
   version "0.0.0-5"
   resolved "https://npm.plurid.cloud/@plurid%2fplurid-pubsub/-/plurid-pubsub-0.0.0-5.tgz#147e4da62d2b16abd1f43a4b4eb99c8826772b28"
   integrity sha512-QyNpjCRu2ckN2qVlQsyJ9t4MEO3P6GIYpZPy0fPJsKc42RNz9eQMKR4Xh+UnrAqBz4tnyM1lqrHbGzT/gQ0yVw==
 
-"@plurid/plurid-themes@0.0.0-0":
-  version "0.0.0-0"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-themes/-/plurid-themes-0.0.0-0.tgz#a478114a291ebbade70ff030b81feb49beb48294"
-  integrity sha512-f/2TIKZzu4QMyhNpN64U8imAKJtacZBzaQjFhfO3ldODYWnSAAGgR8c18Qg1sd5V5CHbFxVlszLFVlqxLUh2uQ==
+"@plurid/plurid-themes@0.0.0-1":
+  version "0.0.0-1"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-themes/-/plurid-themes-0.0.0-1.tgz#a6f6e81d0f3784710a5934bc1b84ba9b91784ae2"
+  integrity sha512-iOzdlhTASbhD4VOBajjRz7MUP+TXTxsXT1K6Z2+L3aIN37MSmjlTPFe9mO9UMTuU5C1zmc7FV3latDneJPuIqg==
 
-"@plurid/plurid-ui-components-react@0.0.0-6":
-  version "0.0.0-6"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-ui-components-react/-/plurid-ui-components-react-0.0.0-6.tgz#2ac8c484ae4f0088d497e747d5dd15a7112afc50"
-  integrity sha512-mWSiFL/Pqp0mciojdvifTcHW1DVIW8IMPdpF7waiMJECapUBnKswV5C9RhK44zWNamJJTixnfqBucmnLY0Htfw==
+"@plurid/plurid-ui-components-react@0.0.0-7":
+  version "0.0.0-7"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-ui-components-react/-/plurid-ui-components-react-0.0.0-7.tgz#46bc1fcab01365f83884835d9672e2f133e5d28b"
+  integrity sha512-+FPzkJjubXQm0jETd1JsY3tbMF9QFPuvVEmUKDqqgU6Oq3oHQrPva2MOhxbdSG/UEaTxgp2dxqc5wg4G49wpqw==
 
 "@plurid/plurid-ui-state-react@0.0.0-2":
   version "0.0.0-2"
@@ -1136,10 +1136,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@^17.0.34":
-  version "17.0.34"
-  resolved "https://npm.plurid.cloud/@types%2freact/-/react-17.0.34.tgz#797b66d359b692e3f19991b6b07e4b0c706c0102"
-  integrity sha512-46FEGrMjc2+8XhHXILr+3+/sTe3OfzSPU9YGKILLrUYbQ1CLQC9Daqo1KzENGXAWwrFwiY0l4ZbF20gRvgpWTg==
+"@types/react@^17.0.35":
+  version "17.0.35"
+  resolved "https://npm.plurid.cloud/@types%2freact/-/react-17.0.35.tgz#217164cf830267d56cd1aec09dcf25a541eedd4c"
+  integrity sha512-r3C8/TJuri/SLZiiwwxQoLAoavaczARfT9up9b4Jr65+ErAUX3MIkU0oMOQnrpfgHme8zIqZLX7O5nnjm5Wayw==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -1183,13 +1183,13 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@typescript-eslint/eslint-plugin@^5.3.1":
-  version "5.3.1"
-  resolved "https://npm.plurid.cloud/@typescript-eslint%2feslint-plugin/-/eslint-plugin-5.3.1.tgz#d8ff412f10f54f6364e7fd7c1e70eb6767f434c3"
-  integrity sha512-cFImaoIr5Ojj358xI/SDhjog57OK2NqlpxwdcgyxDA3bJlZcJq5CPzUXtpD7CxI2Hm6ATU7w5fQnnkVnmwpHqw==
+"@typescript-eslint/eslint-plugin@^5.4.0":
+  version "5.4.0"
+  resolved "https://npm.plurid.cloud/@typescript-eslint%2feslint-plugin/-/eslint-plugin-5.4.0.tgz#05e711a2e7b68342661fde61bccbd1531c19521a"
+  integrity sha512-9/yPSBlwzsetCsGEn9j24D8vGQgJkOTr4oMLas/w886ZtzKIs1iyoqFrwsX2fqYEeUwsdBpC21gcjRGo57u0eg==
   dependencies:
-    "@typescript-eslint/experimental-utils" "5.3.1"
-    "@typescript-eslint/scope-manager" "5.3.1"
+    "@typescript-eslint/experimental-utils" "5.4.0"
+    "@typescript-eslint/scope-manager" "5.4.0"
     debug "^4.3.2"
     functional-red-black-tree "^1.0.1"
     ignore "^5.1.8"
@@ -1197,60 +1197,60 @@
     semver "^7.3.5"
     tsutils "^3.21.0"
 
-"@typescript-eslint/experimental-utils@5.3.1":
-  version "5.3.1"
-  resolved "https://npm.plurid.cloud/@typescript-eslint%2fexperimental-utils/-/experimental-utils-5.3.1.tgz#bbd8f9b67b4d5fdcb9d2f90297d8fcda22561e05"
-  integrity sha512-RgFn5asjZ5daUhbK5Sp0peq0SSMytqcrkNfU4pnDma2D8P3ElZ6JbYjY8IMSFfZAJ0f3x3tnO3vXHweYg0g59w==
+"@typescript-eslint/experimental-utils@5.4.0":
+  version "5.4.0"
+  resolved "https://npm.plurid.cloud/@typescript-eslint%2fexperimental-utils/-/experimental-utils-5.4.0.tgz#238a7418d2da3b24874ba35385eb21cc61d2a65e"
+  integrity sha512-Nz2JDIQUdmIGd6p33A+naQmwfkU5KVTLb/5lTk+tLVTDacZKoGQisj8UCxk7onJcrgjIvr8xWqkYI+DbI3TfXg==
   dependencies:
     "@types/json-schema" "^7.0.9"
-    "@typescript-eslint/scope-manager" "5.3.1"
-    "@typescript-eslint/types" "5.3.1"
-    "@typescript-eslint/typescript-estree" "5.3.1"
+    "@typescript-eslint/scope-manager" "5.4.0"
+    "@typescript-eslint/types" "5.4.0"
+    "@typescript-eslint/typescript-estree" "5.4.0"
     eslint-scope "^5.1.1"
     eslint-utils "^3.0.0"
 
-"@typescript-eslint/parser@^5.3.1":
-  version "5.3.1"
-  resolved "https://npm.plurid.cloud/@typescript-eslint%2fparser/-/parser-5.3.1.tgz#8ff1977c3d3200c217b3e4628d43ef92f89e5261"
-  integrity sha512-TD+ONlx5c+Qhk21x9gsJAMRohWAUMavSOmJgv3JGy9dgPhuBd5Wok0lmMClZDyJNLLZK1JRKiATzCKZNUmoyfw==
+"@typescript-eslint/parser@^5.4.0":
+  version "5.4.0"
+  resolved "https://npm.plurid.cloud/@typescript-eslint%2fparser/-/parser-5.4.0.tgz#3aa83ce349d66e39b84151f6d5464928044ca9e3"
+  integrity sha512-JoB41EmxiYpaEsRwpZEYAJ9XQURPFer8hpkIW9GiaspVLX8oqbqNM8P4EP8HOZg96yaALiLEVWllA2E8vwsIKw==
   dependencies:
-    "@typescript-eslint/scope-manager" "5.3.1"
-    "@typescript-eslint/types" "5.3.1"
-    "@typescript-eslint/typescript-estree" "5.3.1"
+    "@typescript-eslint/scope-manager" "5.4.0"
+    "@typescript-eslint/types" "5.4.0"
+    "@typescript-eslint/typescript-estree" "5.4.0"
     debug "^4.3.2"
 
-"@typescript-eslint/scope-manager@5.3.1":
-  version "5.3.1"
-  resolved "https://npm.plurid.cloud/@typescript-eslint%2fscope-manager/-/scope-manager-5.3.1.tgz#3cfbfbcf5488fb2a9a6fbbe97963ee1e8d419269"
-  integrity sha512-XksFVBgAq0Y9H40BDbuPOTUIp7dn4u8oOuhcgGq7EoDP50eqcafkMVGrypyVGvDYHzjhdUCUwuwVUK4JhkMAMg==
+"@typescript-eslint/scope-manager@5.4.0":
+  version "5.4.0"
+  resolved "https://npm.plurid.cloud/@typescript-eslint%2fscope-manager/-/scope-manager-5.4.0.tgz#aaab08415f4a9cf32b870c7750ae8ba4607126a1"
+  integrity sha512-pRxFjYwoi8R+n+sibjgF9iUiAELU9ihPBtHzocyW8v8D8G8KeQvXTsW7+CBYIyTYsmhtNk50QPGLE3vrvhM5KA==
   dependencies:
-    "@typescript-eslint/types" "5.3.1"
-    "@typescript-eslint/visitor-keys" "5.3.1"
+    "@typescript-eslint/types" "5.4.0"
+    "@typescript-eslint/visitor-keys" "5.4.0"
 
-"@typescript-eslint/types@5.3.1":
-  version "5.3.1"
-  resolved "https://npm.plurid.cloud/@typescript-eslint%2ftypes/-/types-5.3.1.tgz#afaa715b69ebfcfde3af8b0403bf27527912f9b7"
-  integrity sha512-bG7HeBLolxKHtdHG54Uac750eXuQQPpdJfCYuw4ZI3bZ7+GgKClMWM8jExBtp7NSP4m8PmLRM8+lhzkYnSmSxQ==
+"@typescript-eslint/types@5.4.0":
+  version "5.4.0"
+  resolved "https://npm.plurid.cloud/@typescript-eslint%2ftypes/-/types-5.4.0.tgz#b1c130f4b381b77bec19696c6e3366f9781ce8f2"
+  integrity sha512-GjXNpmn+n1LvnttarX+sPD6+S7giO+9LxDIGlRl4wK3a7qMWALOHYuVSZpPTfEIklYjaWuMtfKdeByx0AcaThA==
 
-"@typescript-eslint/typescript-estree@5.3.1":
-  version "5.3.1"
-  resolved "https://npm.plurid.cloud/@typescript-eslint%2ftypescript-estree/-/typescript-estree-5.3.1.tgz#50cc4bfb93dc31bc75e08ae52e29fcb786d606ec"
-  integrity sha512-PwFbh/PKDVo/Wct6N3w+E4rLZxUDgsoII/GrWM2A62ETOzJd4M6s0Mu7w4CWsZraTbaC5UQI+dLeyOIFF1PquQ==
+"@typescript-eslint/typescript-estree@5.4.0":
+  version "5.4.0"
+  resolved "https://npm.plurid.cloud/@typescript-eslint%2ftypescript-estree/-/typescript-estree-5.4.0.tgz#fe524fb308973c68ebeb7428f3b64499a6ba5fc0"
+  integrity sha512-nhlNoBdhKuwiLMx6GrybPT3SFILm5Gij2YBdPEPFlYNFAXUJWX6QRgvi/lwVoadaQEFsizohs6aFRMqsXI2ewA==
   dependencies:
-    "@typescript-eslint/types" "5.3.1"
-    "@typescript-eslint/visitor-keys" "5.3.1"
+    "@typescript-eslint/types" "5.4.0"
+    "@typescript-eslint/visitor-keys" "5.4.0"
     debug "^4.3.2"
     globby "^11.0.4"
     is-glob "^4.0.3"
     semver "^7.3.5"
     tsutils "^3.21.0"
 
-"@typescript-eslint/visitor-keys@5.3.1":
-  version "5.3.1"
-  resolved "https://npm.plurid.cloud/@typescript-eslint%2fvisitor-keys/-/visitor-keys-5.3.1.tgz#c2860ff22939352db4f3806f34b21d8ad00588ba"
-  integrity sha512-3cHUzUuVTuNHx0Gjjt5pEHa87+lzyqOiHXy/Gz+SJOCW1mpw9xQHIIEwnKn+Thph1mgWyZ90nboOcSuZr/jTTQ==
+"@typescript-eslint/visitor-keys@5.4.0":
+  version "5.4.0"
+  resolved "https://npm.plurid.cloud/@typescript-eslint%2fvisitor-keys/-/visitor-keys-5.4.0.tgz#09bc28efd3621f292fe88c86eef3bf4893364c8c"
+  integrity sha512-PVbax7MeE7tdLfW5SA0fs8NGVVr+buMPrcj+CWYWPXsZCH8qZ1THufDzbXm1xrZ2b2PA1iENJ0sRq5fuUtvsJg==
   dependencies:
-    "@typescript-eslint/types" "5.3.1"
+    "@typescript-eslint/types" "5.4.0"
     eslint-visitor-keys "^3.0.0"
 
 "@zerollup/ts-helpers@^1.7.18":
@@ -4185,10 +4185,10 @@ rollup-pluginutils@^2.8.1, rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.59.0:
-  version "2.59.0"
-  resolved "https://npm.plurid.cloud/rollup/-/rollup-2.59.0.tgz#108c61b0fa0a37ebc8d1f164f281622056f0db59"
-  integrity sha512-l7s90JQhCQ6JyZjKgo7Lq1dKh2RxatOM+Jr6a9F7WbS9WgKbocyUSeLmZl8evAse7y96Ae98L2k1cBOwWD8nHw==
+rollup@^2.60.0:
+  version "2.60.0"
+  resolved "https://npm.plurid.cloud/rollup/-/rollup-2.60.0.tgz#4ee60ab7bdd0356763f87d7099f413e5460fc193"
+  integrity sha512-cHdv9GWd58v58rdseC8e8XIaPUo8a9cgZpnCMMDGZFDZKEODOiPPEQFXLriWr/TjXzhPPmG5bkAztPsOARIcGQ==
   optionalDependencies:
     fsevents "~2.3.2"
 
