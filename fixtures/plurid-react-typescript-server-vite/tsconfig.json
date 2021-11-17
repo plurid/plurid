@@ -1,0 +1,78 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "target": "ES6",
+        "lib": ["ES6", "DOM", "DOM.Iterable", "ES2016", "ES2017"],
+        "jsx": "react",
+
+        "baseUrl": ".",
+        "paths": {
+            "~server/*": [
+                "./source/server/*"
+            ],
+            "~kernel-assets/*": [
+                "./source/shared/kernel/assets/*"
+            ],
+            "~kernel-components/*": [
+                "./source/shared/kernel/components/*"
+            ],
+            "~kernel-containers/*": [
+                "./source/shared/kernel/containers/*"
+            ],
+            "~kernel-planes/*": [
+                "./source/shared/kernel/planes/*"
+            ],
+            "~kernel-data/*": [
+                "./source/shared/kernel/data/*"
+            ],
+            "~kernel-services/*": [
+                "./source/shared/kernel/services/*"
+            ],
+            "~planes/*": [
+                "./source/shared/planes/*"
+            ],
+            "~routes/*": [
+                "./source/shared/routes/*"
+            ],
+            "~shell/*": [
+                "./source/shared/shell/*"
+            ],
+        },
+
+        "outDir": "build",
+        "typeRoots": [
+            "node_modules/@types",
+            "source/types/typings.d.ts"
+        ],
+
+        "declaration": false,
+        "sourceMap": true,
+        "allowJs": false,
+        "esModuleInterop": true,
+        "downlevelIteration": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "resolveJsonModule": true,
+
+        "strict": true,
+        "strictNullChecks": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+    },
+    "include": [
+        "source"
+    ],
+    "exclude": [
+        "node_modules",
+        "build",
+        "unsource"
+    ]
+}
