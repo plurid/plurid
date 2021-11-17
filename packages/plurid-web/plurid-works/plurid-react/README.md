@@ -51,16 +51,21 @@ add the peer dependencies
 
 ``` bash
 npm install \
+    @plurid/elementql \
+    @plurid/elementql-client-react \
     @plurid/plurid-data \
-    @plurid/plurid-functions \
     @plurid/plurid-engine \
     @plurid/plurid-functions \
     @plurid/plurid-functions-react \
     @plurid/plurid-icons-react \
     @plurid/plurid-pubsub \
     @plurid/plurid-themes \
-    @plurid/plurid-ui-react \
+    @plurid/plurid-ui-components-react \
+    @plurid/plurid-ui-state-react \
+    cross-fetch \
     hammerjs \
+    react \
+    react-dom \
     react-redux \
     redux \
     redux-thunk \
@@ -71,16 +76,21 @@ or
 
 ``` bash
 yarn add \
+    @plurid/elementql \
+    @plurid/elementql-client-react \
     @plurid/plurid-data \
-    @plurid/plurid-functions \
     @plurid/plurid-engine \
     @plurid/plurid-functions \
     @plurid/plurid-functions-react \
     @plurid/plurid-icons-react \
     @plurid/plurid-pubsub \
     @plurid/plurid-themes \
-    @plurid/plurid-ui-react \
+    @plurid/plurid-ui-components-react \
+    @plurid/plurid-ui-state-react \
+    cross-fetch \
     hammerjs \
+    react \
+    react-dom \
     react-redux \
     redux \
     redux-thunk \
@@ -91,16 +101,22 @@ add the types (if it is a TypeScript project)
 
 ``` bash
 npm install -D \
-    @types/styled-components \
-    @types/react-redux
+    @types/hammerjs \
+    @types/react \
+    @types/react-dom \
+    @types/react-redux \
+    @types/styled-components
 ```
 
 or
 
 ``` bash
 yarn add -D \
-    @types/styled-components \
-    @types/react-redux
+    @types/hammerjs \
+    @types/react \
+    @types/react-dom \
+    @types/react-redux \
+    @types/styled-components
 ```
 
 
@@ -121,7 +137,7 @@ const Application: React.FC<any> = () => {
     /** plurid' planes */
     const pluridPlanes: PluridPlane[] = [
         {
-            path: '/',
+            route: '/',
             component: {
                 kind: 'react',
                 element: () => (<div>Plurid' Application</div>),
