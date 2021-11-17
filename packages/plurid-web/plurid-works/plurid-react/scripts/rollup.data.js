@@ -2,7 +2,9 @@ import replace from '@rollup/plugin-replace';
 import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 import url from '@rollup/plugin-url';
-import babel from 'rollup-plugin-babel';
+// import {
+//     getBabelOutputPlugin,
+// } from '@rollup/plugin-babel';
 import ttypescript from 'ttypescript';
 import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
@@ -29,13 +31,22 @@ export const plugins = [
         modules: true,
     }),
     url(),
-    babel({
-        exclude: 'node_modules/**',
-    }),
     commonjs(),
     resolve({
         modulesOnly: true,
     }),
+    // getBabelOutputPlugin({
+    //     plugins: [
+    //         [
+    //             'babel-plugin-styled-components',
+    //             {
+    //                 namespace: 'plurid',
+    //                 displayName: false,
+    //                 fileName: false,
+    //             },
+    //         ],
+    //     ],
+    // }),
     terser({
         mangle: false,
         compress: false,

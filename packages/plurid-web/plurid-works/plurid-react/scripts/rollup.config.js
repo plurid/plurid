@@ -38,9 +38,10 @@ export default [
             file: 'distribution/index.min.js',
             format: 'cjs',
             exports: 'named',
-            sourcemap: false,
+            sourcemap: true,
         },
         plugins: [
+            ...plugins,
             terser(),
         ],
     },
