@@ -12,7 +12,9 @@ import {
 } from 'rollup-plugin-terser';
 
 
+
 export const input = 'source/index.tsx';
+
 export const plugins = [
     typescript({
         typescript: ttypescript,

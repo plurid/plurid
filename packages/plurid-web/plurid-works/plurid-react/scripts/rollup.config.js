@@ -23,6 +23,16 @@ export default [
         plugins,
     },
     {
+        input,
+        output: {
+            file: `./distribution/index.es.js`,
+            format: 'es',
+            exports: 'named',
+            sourcemap: true,
+        },
+        plugins,
+    },
+    {
         input: pkg.main,
         output: {
             file: 'distribution/index.min.js',
