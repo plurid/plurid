@@ -1689,7 +1689,6 @@ export const computePluridRoute = (
         || matchedRoute?.kind === 'RoutePlane'
     ) {
         const match = directPlane || matchedRoute;
-
         if (!match) {
             return () => () => (<></>);
         }
@@ -1917,6 +1916,10 @@ export const renderDirectPlane = (
     }
 
     // let matchedPlane: router.MatcherResponse<PluridReactComponent> | undefined;
+    const {
+        defaultConfiguration,
+    } = routePlane?.data as any;
+
     const DirectPlane = (): any => {
         const PluridRoute = () => (
             <>
@@ -1925,6 +1928,7 @@ export const renderDirectPlane = (
                         routePlane.match.value,
                     ]}
                     planesRegistrar={planesRegistrar}
+                    configuration={defaultConfiguration}
                 />
             </>
         );

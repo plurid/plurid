@@ -303,9 +303,7 @@ const PluridRouterBrowser = (
 
     let PluridRouterShell: React.FC<any> = ({
         children,
-    }) => (
-        <>{children}</>
-    );
+    }) => (<>{children}</>);
     if (isReactRenderable(shell)) {
         PluridRouterShell = shell as any;
         if (PluridRouterShell) {
