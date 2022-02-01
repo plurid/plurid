@@ -12,14 +12,14 @@
     "@plurid/plurid-icons-react": "^0.0.0-3",
     "@plurid/plurid-pubsub": "^0.0.0-5",
     "@plurid/plurid-react": "^0.0.0-16",
-    "@plurid/plurid-themes": "^0.0.0-1",
+    "@plurid/plurid-themes": "^0.0.0-2",
     "@plurid/plurid-ui-components-react": "^0.0.0-9",
     "@plurid/plurid-ui-state-react": "^0.0.0-2",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.4.0",
-    "@types/node": "^17.0.13",
+    "@types/node": "^17.0.14",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "cross-fetch": "^3.1.5",
@@ -31,7 +31,8 @@
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.3",
-    "typescript": "~4.5.5"
+    "typescript": "^4.5.5",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -40,7 +41,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -53,9 +57,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/styled-components": "^5.1.21",
-    "redux-devtools-extension": "^2.13.9"
   }
 }
