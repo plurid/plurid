@@ -86,7 +86,7 @@ const generatePluridReactApplication = async (
             ? templateTypeScript
             : templateJavaScript;
 
-        const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/${templateFiles}`;
+        const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/web/react/${templateFiles}`;
 
         const templatePublicDir = path.join(app.directory, base + '/public');
         const templateSourceDir = path.join(app.directory, base + '/src');
