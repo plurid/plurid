@@ -155,7 +155,7 @@ export interface PluridApplication<C> {
      */
     customPlane?: C;
 
-    matchedRoute: IsoMatcherRouteResult<C>;
+    matchedRoute?: IsoMatcherRouteResult<C>;
 }
 
 
