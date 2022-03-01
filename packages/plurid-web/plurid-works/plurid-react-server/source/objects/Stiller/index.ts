@@ -98,7 +98,11 @@ class Stiller {
     constructor(
         options: StillerOptions,
     ) {
-        this.puppeteer = require('puppeteer');
+        try {
+            this.puppeteer = require('puppeteer');
+        } catch (error) {
+            console.error('could not load puppeteer: check puppeteer is installed');
+        }
 
         const {
             host,
