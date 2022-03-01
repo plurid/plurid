@@ -55,7 +55,7 @@
     "dependencies": {
         "commander": "^9.0.0",
         "inquirer": "^8.2.0",
-        "ora": "^6.1.0"
+        "ora": "==5.1.0"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^21.0.2",
