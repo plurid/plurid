@@ -20,7 +20,7 @@
 /**
  * A route can be `plurid space` or `exterior`-based.
  */
- export interface PluridRoute<C> {
+export interface PluridRoute<C> {
     /**
      * The route `value` can:
      * + be a simple string, e.g. `'/route/to/page'`;

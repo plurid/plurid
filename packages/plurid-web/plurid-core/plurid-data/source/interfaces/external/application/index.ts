@@ -41,6 +41,10 @@
     import {
         PluridPlanesRegistrar,
     } from '../registrar';
+
+    import {
+        IsoMatcherRouteResult,
+    } from '../routing';
     // #endregion external
 // #endregion imports
 
@@ -150,6 +154,8 @@ export interface PluridApplication<C> {
      * Replace the internal plurid plane with a custom implementation.
      */
     customPlane?: C;
+
+    matchedRoute: IsoMatcherRouteResult<C>;
 }
 
 
