@@ -604,6 +604,7 @@ const generateReactServerApplication = async (
         '@plurid/plurid-ui-state-react',
         '@plurid/plurid-react-server',
         'cross-fetch',
+        'cors',
         'dotenv',
         'hammerjs',
         'react',
@@ -637,6 +638,7 @@ const generateReactServerApplication = async (
     );
 
     const requiredDevelopmentDependencies = [
+        '@types/cors',
         '@rollup/plugin-commonjs',
         '@rollup/plugin-json',
         '@rollup/plugin-node-resolve',
@@ -657,6 +659,7 @@ const generateReactServerApplication = async (
         'rollup-plugin-peer-deps-external',
         'rollup-plugin-sourcemaps',
         'rollup-plugin-postcss',
+        'rollup-plugin-terser',
         'postcss',
         'source-map-loader',
         'style-loader',
