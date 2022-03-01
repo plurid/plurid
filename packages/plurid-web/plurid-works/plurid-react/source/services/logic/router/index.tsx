@@ -1407,7 +1407,7 @@ export const renderMultispace = (
 
             if (space.planes) {
                 for (const plane of space.planes) {
-                    const planeData = resolvePluridRoutePlaneData(plane);
+                    const planeData = resolvePluridRoutePlaneData<React.FC<any>>(plane);
 
                     const {
                         component,
@@ -1450,7 +1450,7 @@ export const renderMultispace = (
                     if (universe.clusters) {
                         for (const cluster of universe.clusters) {
                             for (const plane of cluster.planes) {
-                                const planeData = resolvePluridRoutePlaneData(plane);
+                                const planeData = resolvePluridRoutePlaneData<any>(plane);
 
                                 const {
                                     component,
@@ -1502,7 +1502,7 @@ export const renderMultispace = (
 
                     if (universe.planes) {
                         for (const plane of universe.planes) {
-                            const planeData = resolvePluridRoutePlaneData(plane);
+                            const planeData = resolvePluridRoutePlaneData<any>(plane);
 
                             const {
                                 component,
@@ -1567,7 +1567,7 @@ export const renderMultispace = (
         const view: any[] = [];
 
         for (const plane of planes) {
-            const planeData = resolvePluridRoutePlaneData(plane);
+            const planeData = resolvePluridRoutePlaneData<any>(plane);
 
             const {
                 component,

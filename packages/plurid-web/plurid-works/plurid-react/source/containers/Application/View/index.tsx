@@ -171,6 +171,7 @@ const PluridView: React.FC<ViewProperties> = (
             pubsub,
             planeNotFound,
             planeRenderError,
+            matchedRoute,
             // #endregion values
         // #endregion required
 
@@ -974,6 +975,7 @@ const PluridView: React.FC<ViewProperties> = (
         customPlane,
         planeNotFound,
         planeRenderError,
+        matchedRoute,
 
         registerPubSub,
     };
