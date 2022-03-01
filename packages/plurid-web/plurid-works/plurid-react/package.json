@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react",
-    "version": "0.0.0-16",
+    "version": "0.0.0-17",
     "description": "React implementation of Plurid to explore the web in three dimensions",
     "keywords": [
         "plurid",
@@ -68,7 +68,7 @@
         "@babel/core": "^7.17.5",
         "@plurid/elementql": "^0.0.0-1",
         "@plurid/elementql-client-react": "^0.0.0-1",
-        "@plurid/plurid-data": "0.0.0-10",
+        "@plurid/plurid-data": "0.0.0-11",
         "@plurid/plurid-engine": "0.0.0-9",
         "@plurid/plurid-functions": "0.0.0-21",
         "@plurid/plurid-functions-react": "0.0.0-4",
