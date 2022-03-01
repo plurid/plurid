@@ -51,7 +51,7 @@
         "@plurid/plurid-themes": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "0.0.0-9",
+        "@plurid/plurid-data": "0.0.0-10",
         "@plurid/plurid-functions": "0.0.0-21",
         "@plurid/plurid-pubsub": "0.0.0-5",
         "@plurid/plurid-themes": "0.0.0-2",
