@@ -1069,15 +1069,15 @@
   resolved "https://npm.plurid.cloud/@plurid%2felementql/-/elementql-0.0.0-1.tgz#6639dd5b71c72cd2df0bf16b615b2e4dfab54af3"
   integrity sha512-ZhIRA9sGeegviDNFEdA71leocIwPXwU4vK81p+B7UEhBRl0hZ+O9pD1Rr5wuW9rU5FtfjDnEprntmyVi0ZEL4Q==
 
-"@plurid/plurid-data@0.0.0-9":
-  version "0.0.0-9"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-9.tgz#b1d451c51fe571c0800b9a1a95b2f693564628f1"
-  integrity sha512-KD7XU6f2ynBeyo4doIk9xJRTU/YUd3zKIY80YlRPwaYbYgWcjPjgKRMI91Sc5LuFxbvblbKQIuo8e5aUT3EHGg==
+"@plurid/plurid-data@0.0.0-11":
+  version "0.0.0-11"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-11.tgz#3a7984338a51d2b8c5466660eec99de821c29a5f"
+  integrity sha512-J2kqyw8Lr7Ep3OI0PIS2utU5k2bAUGn5P24RCBQXGRfBaeJ6SbBxw/CWmrbcG1SLeCmIUXE/pu25ZDl5SPkT7w==
 
-"@plurid/plurid-engine@0.0.0-8":
-  version "0.0.0-8"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-engine/-/plurid-engine-0.0.0-8.tgz#1bab65e8a2b834f325680ef7e47a62085865cc0b"
-  integrity sha512-ZpFsxGepN8b2cN2LdsxeSSFwdhQZz+8veBGT9tFjXkm/8ElXwn0J1vx6PPHgHqGftq2C62JYx/s+wE0ls48R3A==
+"@plurid/plurid-engine@0.0.0-9":
+  version "0.0.0-9"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-engine/-/plurid-engine-0.0.0-9.tgz#dfd1083ca79705a089febb7b976f68e96ec942c5"
+  integrity sha512-c6KvhUUbyhZCZI1MAMo1oCJZW4dPyWHtKAoGYGSuHkX1dSDK/IbBhTi8LPiSMiVpLPtlDEdDsztwB/AnvpK6xg==
 
 "@plurid/plurid-functions-react@0.0.0-4":
   version "0.0.0-4"
@@ -1099,10 +1099,10 @@
   resolved "https://npm.plurid.cloud/@plurid%2fplurid-pubsub/-/plurid-pubsub-0.0.0-5.tgz#147e4da62d2b16abd1f43a4b4eb99c8826772b28"
   integrity sha512-QyNpjCRu2ckN2qVlQsyJ9t4MEO3P6GIYpZPy0fPJsKc42RNz9eQMKR4Xh+UnrAqBz4tnyM1lqrHbGzT/gQ0yVw==
 
-"@plurid/plurid-react@0.0.0-16":
-  version "0.0.0-16"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-react/-/plurid-react-0.0.0-16.tgz#851f0b498d31d6e544a5ad3f1513db36135d4319"
-  integrity sha512-xOJh4YTLBEFdLVhBYsDVeajuwjz/iLqDvQu1hJS6UKXi/DKn2SNFCZLKkqZWrd/gnaxc1BSZy+yGH5VmMb0Y7A==
+"@plurid/plurid-react@0.0.0-17":
+  version "0.0.0-17"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-react/-/plurid-react-0.0.0-17.tgz#0425d0907313cc8d680f91a5dc725ce70db3b478"
+  integrity sha512-Yaq1aki4A/s8nsylp1rNUWYyJlJCs1GAaohXSfz9i4INs106udOibc+85+G/DDhnK6H0d2JQfaccGJXa4pln4g==
 
 "@plurid/plurid-themes@0.0.0-2":
   version "0.0.0-2"
