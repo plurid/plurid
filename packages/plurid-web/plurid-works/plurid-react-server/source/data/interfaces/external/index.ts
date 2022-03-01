@@ -10,11 +10,8 @@
         PluridRoute,
         PluridRoutePlane,
         PluridPreserve,
+        IsoMatcherRouteResult,
     } from '@plurid/plurid-data';
-
-    import {
-        routing,
-    } from '@plurid/plurid-engine';
 
     import {
         PluridReactComponent,
@@ -244,7 +241,7 @@ export interface PluridStillerOptions {
 
 
 export type PluridPreserveReact = PluridPreserve<
-    routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+    IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
     express.Request,
     express.Response
 >;

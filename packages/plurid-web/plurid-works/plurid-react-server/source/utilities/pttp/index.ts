@@ -1,8 +1,8 @@
 // #region imports
     // #region libraries
     import {
-        routing,
-    } from '@plurid/plurid-engine';
+        IsoMatcherPlaneResult
+    } from '@plurid/plurid-data';
 
     import {
         PluridReactComponent,
@@ -14,7 +14,7 @@
 
 // #region module
 export const resolveElementFromPlaneMatch = (
-    planeMatch: routing.IsoMatcherPlaneResult<PluridReactComponent<any>>,
+    planeMatch: IsoMatcherPlaneResult<PluridReactComponent<any>>,
     elementqlEndpoint: string | undefined,
 ) => {
     if (typeof planeMatch.data.component === 'function') {
