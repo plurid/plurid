@@ -56,6 +56,7 @@ const generatePluridReactApplication = async (
         'redux',
         'redux-thunk',
         'styled-components',
+        'react-scripts@==4.0.3',
     ];
 
     const pluridReactPackages = requiredPluridReactPackages.join(' ');
@@ -88,10 +89,8 @@ const generatePluridReactApplication = async (
 
         const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/web/react/${templateFiles}`;
 
-        const templatePublicDir = path.join(app.directory, base + '/public');
-        const templateSourceDir = path.join(app.directory, base + '/src');
-        copyDirectory(templatePublicDir, publicDir);
-        copyDirectory(templateSourceDir, sourceDir);
+        const templateDir = path.join(app.directory, base + '/*');
+        copyDirectory(templateDir, app.directory);
 
         await setupPluridAppYaml(app);
         await setupDocker(app);
