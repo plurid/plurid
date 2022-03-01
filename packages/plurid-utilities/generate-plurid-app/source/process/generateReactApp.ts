@@ -730,7 +730,7 @@ const generateReactServerApplication = async (
         ? templateTypeScript
         : templateJavaScript;
 
-    const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/web/${templateFiles}`;
+    const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/web/react/${templateFiles}`;
 
     const templateDirectory = path.join(app.directory, base);
     copyDirectory(templateDirectory, app.directory);
