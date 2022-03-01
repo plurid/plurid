@@ -38,6 +38,8 @@
         PluridPreserveOnError,
         PluridPreserveResponse,
         PluridPreserveTransmission,
+
+        IsoMatcherRouteResult,
     } from '@plurid/plurid-data';
 
     import {
@@ -805,17 +807,17 @@ class PluridServer {
         );
 
         let preserveOnServe: undefined | PluridPreserveOnServe<
-            routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+            IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
             express.Request,
             express.Response
         >;
         let preserveAfterServe: undefined | PluridPreserveAfterServe<
-            routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+            IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
             express.Request,
             express.Response
         >;
         let preserveOnError: undefined | PluridPreserveOnError<
-            routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+            IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
             express.Request,
             express.Response
         >;
@@ -843,7 +845,7 @@ class PluridServer {
         let preserveResult: undefined | PluridPreserveResponse;
         if (preserveOnServe) {
             const transmission: PluridPreserveTransmission<
-                routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+                IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
                 express.Request,
                 express.Response
             > = {
@@ -904,7 +906,7 @@ class PluridServer {
 
     private async resolvePreserveAfterServe(
         preserveAfterServe: PluridPreserveAfterServe<
-            routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+            IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
             express.Request,
             express.Response
         > | undefined,
@@ -918,7 +920,7 @@ class PluridServer {
             );
 
             const transmission: PluridPreserveTransmission<
-                routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+                IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
                 express.Request,
                 express.Response
             > = {
@@ -974,7 +976,7 @@ class PluridServer {
 
 
     private async renderApplication(
-        isoMatch: routing.IsoMatcherRouteResult<PluridReactComponent>,
+        isoMatch: IsoMatcherRouteResult<PluridReactComponent>,
         preserveResult: PluridPreserveResponse | undefined,
         matchedPlane?: any,
     ) {
@@ -1068,7 +1070,7 @@ class PluridServer {
     }
 
     private async getContentAndStyles(
-        isoMatch: routing.IsoMatcherRouteResult<PluridReactComponent>,
+        isoMatch: IsoMatcherRouteResult<PluridReactComponent>,
         pluridMetastate: any,
         preserveResult: PluridPreserveResponse | undefined,
         matchedPlane?: any,
