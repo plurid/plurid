@@ -453,6 +453,8 @@ const generatePluridReactApplication = async (
 
     const requiredPluridReactPackages = [
         '@plurid/generate-plurid-app',
+        '@plurid/elementql',
+        '@plurid/elementql-client-react',
         '@plurid/plurid-data',
         '@plurid/plurid-engine',
         '@plurid/plurid-functions',
@@ -461,13 +463,13 @@ const generatePluridReactApplication = async (
         '@plurid/plurid-pubsub',
         '@plurid/plurid-react',
         '@plurid/plurid-themes',
-        '@plurid/plurid-ui-react',
+        '@plurid/plurid-ui-components-react',
+        '@plurid/plurid-ui-state-react',
         'hammerjs',
         'react-redux',
         'redux',
         'redux-thunk',
         'styled-components',
-        '@types/styled-components',
     ];
 
     const pluridReactPackages = requiredPluridReactPackages.join(' ');
@@ -611,11 +613,7 @@ const generateReactServerApplication = async (
     ];
     const graphqlDependencies = graphqlService
         ? [
-            '@apollo/react-hooks',
-            'apollo-cache-inmemory',
-            'apollo-client',
-            'apollo-link-http',
-            'apollo-utilities',
+            '@apollo/client',
             'graphql',
             'graphql-tag',
         ] : [];
@@ -674,6 +672,7 @@ const generateReactServerApplication = async (
         '@types/react',
         '@types/react-dom',
         '@types/react-redux',
+        '@types/styled-components',
         '@types/styled-components',
         '@types/react-stripe-elements',
         '@typescript-eslint/eslint-plugin',
