@@ -9,6 +9,10 @@
     } from '~interfaces/external/registrar';
 
     import {
+        IsoMatcherRouteResult,
+    } from '~interfaces/external/routing';
+
+    import {
         PluridPubSub,
     } from '~interfaces/external/pubsub';
     // #endregion external
@@ -24,6 +28,7 @@ export interface PluridContext<C> {
     customPlane?: C;
     planeNotFound?: boolean | C;
     planeRenderError?: boolean | C;
+    matchedRoute?: IsoMatcherRouteResult<C> | undefined;
 
     registerPubSub: (
         pubsub: PluridPubSub,
