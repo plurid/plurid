@@ -828,15 +828,15 @@
   resolved "https://npm.plurid.cloud/@plurid%2felementql/-/elementql-0.0.0-1.tgz#6639dd5b71c72cd2df0bf16b615b2e4dfab54af3"
   integrity sha512-ZhIRA9sGeegviDNFEdA71leocIwPXwU4vK81p+B7UEhBRl0hZ+O9pD1Rr5wuW9rU5FtfjDnEprntmyVi0ZEL4Q==
 
-"@plurid/plurid-data@0.0.0-9":
-  version "0.0.0-9"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-9.tgz#b1d451c51fe571c0800b9a1a95b2f693564628f1"
-  integrity sha512-KD7XU6f2ynBeyo4doIk9xJRTU/YUd3zKIY80YlRPwaYbYgWcjPjgKRMI91Sc5LuFxbvblbKQIuo8e5aUT3EHGg==
+"@plurid/plurid-data@0.0.0-10":
+  version "0.0.0-10"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-data/-/plurid-data-0.0.0-10.tgz#c11a5595220f4419b9fd39ee972bbcd77e53ae6e"
+  integrity sha512-HLcbnk2aXmrrD3ZP7jAzp/4s0vsqTZwPvpJ5wOWCxn/MHLk/JMphiVszifw5kaDwQQi09pt7c5Vtt2rCMEhLjw==
 
-"@plurid/plurid-engine@0.0.0-8":
-  version "0.0.0-8"
-  resolved "https://npm.plurid.cloud/@plurid%2fplurid-engine/-/plurid-engine-0.0.0-8.tgz#1bab65e8a2b834f325680ef7e47a62085865cc0b"
-  integrity sha512-ZpFsxGepN8b2cN2LdsxeSSFwdhQZz+8veBGT9tFjXkm/8ElXwn0J1vx6PPHgHqGftq2C62JYx/s+wE0ls48R3A==
+"@plurid/plurid-engine@0.0.0-9":
+  version "0.0.0-9"
+  resolved "https://npm.plurid.cloud/@plurid%2fplurid-engine/-/plurid-engine-0.0.0-9.tgz#dfd1083ca79705a089febb7b976f68e96ec942c5"
+  integrity sha512-c6KvhUUbyhZCZI1MAMo1oCJZW4dPyWHtKAoGYGSuHkX1dSDK/IbBhTi8LPiSMiVpLPtlDEdDsztwB/AnvpK6xg==
 
 "@plurid/plurid-functions-react@0.0.0-4":
   version "0.0.0-4"
