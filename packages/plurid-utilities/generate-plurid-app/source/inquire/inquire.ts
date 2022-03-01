@@ -1,14 +1,22 @@
-import * as inquirer from 'inquirer';
-
-import processArguments from '../process';
-
-import {
-    Question,
-    Answers,
-} from '../data/interfaces';
+// #region imports
+    // #region libraries
+    import * as inquirer from 'inquirer';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        Question,
+        Answers,
+    } from '../data/interfaces';
 
+    import processArguments from '../process';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const inquire = (
     questions: Question[],
 ) => {
@@ -41,6 +49,10 @@ const inquire = (
             await processArguments(answers);
         });
 }
+// #endregion module
 
 
+
+// #region exports
 export default inquire;
+// #endregion exports

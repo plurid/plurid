@@ -1,14 +1,19 @@
-import {
-    ILanguage,
-    IUI,
-    IRenderer,
-    IManager,
-    IServices,
-    IVersioning,
-} from '../interfaces';
+// #region imports
+    // #region external
+    import {
+        ILanguage,
+        IUI,
+        IRenderer,
+        IManager,
+        IServices,
+        IVersioning,
+    } from '../interfaces';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 export const languageTypeScript = 'TypeScript';
 export const languageJavaScript = 'JavaScript';
 export const language: ILanguage = {
@@ -62,3 +67,4 @@ export const versioning: IVersioning = {
     git: versioningGit,
     none: versioningNone,
 };
+// #endregion module

@@ -1,29 +1,44 @@
-import path from 'path';
+// #region imports
+    // #region libraries
+    import path from 'path';
 
-import fs from 'fs';
+    import fs from 'fs';
 
-import {
-    exec,
-} from 'child_process';
-
-import {
-    services,
-} from '../data/constants';
-
-import {
-    Application,
-} from '../data/interfaces';
-
-import {
-    copyDirectory,
-    executeCommand,
-    addScript,
-    loadingSpinner,
-} from '../utilities';
+    import {
+        exec,
+    } from 'child_process';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        services,
+    } from '../../../data/constants';
 
-export const setupPackageJSONReactServer = async (
+    import {
+        Application,
+    } from '../../../data/interfaces';
+
+    import {
+        copyDirectory,
+        executeCommand,
+        addScript,
+        loadingSpinner,
+    } from '../../../utilities';
+
+    import {
+        addScriptPluridApp,
+        setupDocker,
+        removeGeneratePackage,
+        setupPluridAppYaml,
+    } from '../general';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
+const setupPackageJSONReactServer = async (
     app: Application,
 ) => {
     const packageJsonPath = path.join(app.directory, './package.json');
@@ -155,146 +170,7 @@ export const setupPackageJSONReactServer = async (
 }
 
 
-export const addScriptPluridApp = async (
-    app: Application,
-) => {
-    if (!app.deployment) {
-        return;
-    }
-
-    const packageJsonPath = path.join(app.directory, './package.json');
-
-    await addScript({
-        name: 'deploy',
-        value: `plurid deploy`,
-        path: packageJsonPath,
-    });
-}
-
-
-export const setupPluridAppYaml = async (
-    app: Application,
-) => {
-    if (!app.deployment) {
-        return;
-    }
-
-    const appName = path.relative(process.cwd(), app.directory);
-
-    const yamlContents =
-`---
-# The name of the application to be used as subdomain: <name>.plurid.app
-# The name needs to be unique across all plurid.app applications.
-#
-# Can use only letters, numbers, and hyphens (-). Dots (.) will be converted to hyphens (-).
-# Cannot contain more than 64 characters.
-# Cannot coincide with internet protocols, such as www, ftp.
-# Cannot start or end with a hyphen (-).
-name: ${appName}
-
-# Environment in which to run the application.
-# Supported: static, node, python, go.
-# Default: static.
-runtime: node
-
-# Deployment region.
-# Supported: us, europe.
-# Default: us.
-region: us
-`;
-
-    try {
-        const pluridAppPath = path.join(app.directory, './configurations/plurid.app.yaml');
-        fs.writeFileSync(pluridAppPath, yamlContents);
-    } catch (error) {
-    }
-}
-
-
-export const setupDocker = async (
-    app: Application,
-) => {
-    if (!app.containerize) {
-        return;
-    }
-
-    const dockerProductionContents =
-`FROM mhart/alpine-node:12 AS builder
-WORKDIR /app
-COPY . .
-ENV ENV_MODE=production
-RUN yarn install
-RUN yarn build.production
-
-
-FROM mhart/alpine-node:12
-WORKDIR /app
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/scripts ./scripts
-RUN yarn install --production
-CMD ["yarn", "start"]
-`;
-
-    const dockerProductionStillsContents =
-`FROM node:10-slim AS builder
-
-# Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
-# Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
-# installs, work.
-RUN apt-get update \
-    && apt-get install -y wget gnupg \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf \
-      --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-COPY . .
-ENV ENV_MODE=production
-RUN yarn install
-
-RUN yarn build.production.stills \
-    && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-    && mkdir -p /home/pptruser/Downloads \
-    && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /app/node_modules \
-    && chown -R pptruser:pptruser /app/build
-
-USER pptruser
-
-
-FROM mhart/alpine-node:12
-WORKDIR /app
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/scripts ./scripts
-RUN yarn install --production
-CMD ["yarn", "start"]
-`;
-
-const dockerIgnoreContents =
-`node_modules
-`;
-
-    try {
-        const dockerfileProductionPath = path.join(app.directory, './configurations/production.dockerfile');
-        fs.writeFileSync(dockerfileProductionPath, dockerProductionContents);
-
-        const dockerfileProductionStillsPath = path.join(app.directory, './configurations/production.stills.dockerfile');
-        fs.writeFileSync(dockerfileProductionStillsPath, dockerProductionStillsContents);
-
-        const dockerIgnorePath = path.join(app.directory, '.dockerignore');
-        fs.writeFileSync(dockerIgnorePath, dockerIgnoreContents);
-    } catch (error) {
-        return;
-    }
-}
-
-
-export const setupEnvFiles = async (
+const setupEnvFiles = async (
     app: Application,
 ) => {
     if (!app.deployment) {
@@ -341,7 +217,7 @@ PLURID_DEFAULT_VERBOSE=false
 }
 
 
-export const setupVersioning = async (
+const setupVersioning = async (
     app: Application,
 ) => {
     if (app.versioning === 'None') {
@@ -358,7 +234,7 @@ export const setupVersioning = async (
 }
 
 
-export const arrangePackageJSON = async (
+const arrangePackageJSON = async (
     packagePath: string,
 ) => {
     const file = fs.readFileSync(packagePath);
@@ -392,37 +268,7 @@ export const arrangePackageJSON = async (
 
 
 
-export const removeGeneratePackage = async (
-    app: Application,
-) => {
-    const yarnUninstallCommand = `yarn remove @plurid/generate-plurid-app`;
-    const npmUninstallCommand = `npm uninstall @plurid/generate-plurid-app`;
-    const uninstallCommand = app.manager === 'Yarn'
-        ? yarnUninstallCommand
-        : npmUninstallCommand;
-
-    exec(uninstallCommand, {
-        cwd: app.directory,
-    }, () => {
-        console.log('\n\tAll done.');
-
-        const relativePath = path.relative(process.cwd(), app.directory);
-
-        console.log('\n\tChange directory');
-        console.log(`\n\t\tcd ${relativePath}`);
-        console.log('\n\trun');
-
-        if (app.manager === 'Yarn') {
-            console.log('\n\t\tyarn start');
-        } else {
-            console.log('\n\t\tnpm start');
-        }
-
-        console.log('\n\tand enjoy.\n');
-    });
-}
-
-export const removeUnusedAddons = async (
+const removeUnusedAddons = async (
     app: Application,
 ) => {
     const graphqlService = app.services.includes(services.apollo);
@@ -444,99 +290,6 @@ export const removeUnusedAddons = async (
             `rm -rf ${reduxDirectory}`,
         );
     }
-}
-
-const generatePluridReactApplication = async (
-    app: Application,
-) => {
-    console.log('\n\tAdding the plurid\' packages to the React Application...');
-
-    const requiredPluridReactPackages = [
-        '@plurid/generate-plurid-app',
-        '@plurid/elementql',
-        '@plurid/elementql-client-react',
-        '@plurid/plurid-data',
-        '@plurid/plurid-engine',
-        '@plurid/plurid-functions',
-        '@plurid/plurid-functions-react',
-        '@plurid/plurid-icons-react',
-        '@plurid/plurid-pubsub',
-        '@plurid/plurid-react',
-        '@plurid/plurid-themes',
-        '@plurid/plurid-ui-components-react',
-        '@plurid/plurid-ui-state-react',
-        'hammerjs',
-        'react-redux',
-        'redux',
-        'redux-thunk',
-        'styled-components',
-    ];
-
-    const pluridReactPackages = requiredPluridReactPackages.join(' ');
-
-    const yarnInstallCommand = `yarn add ${pluridReactPackages}`;
-    const npmInstallCommand = `npm install ${pluridReactPackages}`;
-    const installCommand = app.manager === 'Yarn'
-        ? yarnInstallCommand
-        : npmInstallCommand;
-
-    exec(installCommand, {
-        cwd: app.directory,
-    }, async () => {
-        console.log('\tPlurid\' packages added succesfully.');
-
-        console.log('\n\tSetting up the template files...');
-
-        const publicDir = path.join(app.directory, './public');
-        const sourceDir = path.join(app.directory, './src');
-        const gitDir = path.join(app.directory, './.git');
-        fs.rmdirSync(publicDir, {recursive: true});
-        fs.rmdirSync(sourceDir, {recursive: true});
-        fs.rmdirSync(gitDir, {recursive: true});
-
-        const templateTypeScript = 'react-typescript-client';
-        const templateJavaScript = 'react-javascript-client';
-        const templateFiles = app.language === 'TypeScript'
-            ? templateTypeScript
-            : templateJavaScript;
-
-        const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/${templateFiles}`;
-
-        const templatePublicDir = path.join(app.directory, base + '/public');
-        const templateSourceDir = path.join(app.directory, base + '/src');
-        copyDirectory(templatePublicDir, publicDir);
-        copyDirectory(templateSourceDir, sourceDir);
-
-        await setupPluridAppYaml(app);
-        await setupDocker(app);
-
-        await addScriptPluridApp(app);
-
-        await removeGeneratePackage(app);
-    });
-}
-
-
-const generateReactClientApplication = async (
-    app: Application,
-) => {
-    const language = app.language === 'TypeScript'
-        ? '--template typescript'
-        : '';
-
-    console.log('\n\tGenerating the React Application...');
-
-    const yarnCreateCommand = `yarn create react-app ${app.directory} ${language}`;
-    const npmCreateCommand = `npx create-react-app ${app.directory} ${language} --use-npm`;
-    const createCommand = app.manager === 'Yarn'
-        ? yarnCreateCommand
-        : npmCreateCommand;
-
-    exec(createCommand, async () => {
-        console.log('\tReact Application generated successfully.');
-
-        await generatePluridReactApplication(app);
-    });
 }
 
 
@@ -748,18 +501,10 @@ const generateReactServerApplication = async (
 
     templateFilesSpinner.stopAndPersist();
 }
+// #endregion module
 
 
-const generateReactApplication = async (
-    app: Application,
-) => {
-    switch (app.renderer) {
-        case 'Client':
-            return await generateReactClientApplication(app);
-        case 'Server':
-            return await generateReactServerApplication(app);
-    }
-}
 
-
-export default generateReactApplication;
+// #region exports
+export default generateReactServerApplication;
+// #endregion exports

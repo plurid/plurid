@@ -1,11 +1,19 @@
-import * as inquirer from 'inquirer';
-
-import {
-    Question,
-} from '../data/interfaces';
-
+// #region imports
+    // #region libraries
+    import * as inquirer from 'inquirer';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        Question,
+    } from '../data/interfaces';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const values = {
     language: [
         'TypeScript',
@@ -32,13 +40,13 @@ const values = {
     services: [
         { name: 'Redux', value: 'Redux', checked: true },
         { name: 'Apollo', value: 'Apollo', checked: true },
-        { name: 'Stripe', value: 'Stripe', checked: true },
+        { name: 'Stripe', value: 'Stripe', checked: false },
         new inquirer.Separator('---- select services ----'),
     ],
     versioning: [
         'Git',
         'None',
-        new inquirer.Separator('---- select version control ----'),
+        new inquirer.Separator('---- pick one ----'),
     ],
 };
 
@@ -98,6 +106,10 @@ const questions: Question[] = [
         default: true,
     },
 ];
+// #endregion module
 
 
+
+// #region exports
 export default questions;
+// #endregion exports

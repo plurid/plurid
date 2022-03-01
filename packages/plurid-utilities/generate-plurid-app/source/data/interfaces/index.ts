@@ -1,3 +1,4 @@
+// #region module
 export interface Question {
     type: string;
     name: string;
@@ -108,3 +109,4 @@ export interface AddScriptConfiguration {
     value: string;
     path: string;
 }
+// #endregion module

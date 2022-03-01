@@ -1,21 +1,29 @@
-import {
-    program,
-    Command,
-} from 'commander';
-
-import {
-    inquire,
-    questions,
-} from './inquire';
-
-import {
-    Answers,
-} from './data/interfaces';
-
-import processArguments from './process';
+// #region imports
+    // #region libraries
+    import {
+        program,
+        Command,
+    } from 'commander';
+    // #endregion libraries
 
 
+    // #region internal
+    import {
+        Answers,
+    } from './data/interfaces';
 
+    import {
+        inquire,
+        questions,
+    } from './inquire';
+
+    import processArguments from './process';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 async function main(program: Command) {
     program
         .version('0.0.0-0', '-v, --version');
@@ -71,3 +79,4 @@ async function main(program: Command) {
 
 
 main(program);
+// #endregion module

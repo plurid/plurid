@@ -1,19 +1,27 @@
-import path from 'path';
+// #region imports
+    // #region libraries
+    import path from 'path';
 
-import fs from 'fs';
+    import fs from 'fs';
 
-import {
-    exec,
-} from 'child_process';
+    import {
+        exec,
+    } from 'child_process';
 
-import ora from 'ora';
-
-import {
-    AddScriptConfiguration,
-} from '../data/interfaces';
-
+    import ora from 'ora';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        AddScriptConfiguration,
+    } from '../data/interfaces';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 export const copyDirectory = (
     src: any,
     dest: any,
@@ -140,3 +148,4 @@ export const loadingSpinner = (
 
     return spinner;
 }
+// #endregion module

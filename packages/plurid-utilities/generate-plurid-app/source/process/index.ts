@@ -1,30 +1,38 @@
-import generateReactApp from './generateReactApp';
+// #region imports
+    // #region external
+    import {
+        Answers,
+        Application,
+        Language,
+        UI,
+        Renderer,
+        Manager,
+        Versioning,
+    } from '../data/interfaces';
 
-import {
-    resolveAppDirectory,
-    makeDirectory,
-} from '../utilities';
+    import {
+        language as languageTypes,
+        ui as uiTypes,
+        renderer as rendererTypes,
+        manager as managerTypes,
+        versioning as versioningTypes,
+    } from '../data/constants';
 
-import {
-    Answers,
-    Application,
-    Language,
-    UI,
-    Renderer,
-    Manager,
-    Versioning,
-} from '../data/interfaces';
+    import {
+        resolveAppDirectory,
+        makeDirectory,
+    } from '../utilities';
+    // #endregion external
 
-import {
-    language as languageTypes,
-    ui as uiTypes,
-    renderer as rendererTypes,
-    manager as managerTypes,
-    versioning as versioningTypes,
-} from '../data/constants';
+
+    // #region internal
+    import generateReactApp from './react';
+    // #endregion internal
+// #endregion imports
 
 
 
+// #region module
 const generateApplication = async (
     app: Application,
 ) => {
@@ -173,6 +181,10 @@ const processArguments = async (
         console.log('\n\tSomething went wrong.\n');
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default processArguments;
+// #endregion exports
