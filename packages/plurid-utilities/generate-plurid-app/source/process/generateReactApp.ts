@@ -590,6 +590,8 @@ const generateReactServerApplication = async (
 
     const requiredDependencies = [
         '@plurid/generate-plurid-app',
+        '@plurid/elementql',
+        '@plurid/elementql-client-react',
         '@plurid/plurid-data',
         '@plurid/plurid-engine',
         '@plurid/plurid-functions',
@@ -597,9 +599,9 @@ const generateReactServerApplication = async (
         '@plurid/plurid-icons-react',
         '@plurid/plurid-pubsub',
         '@plurid/plurid-react',
-        '@plurid/plurid-react-server',
         '@plurid/plurid-themes',
-        '@plurid/plurid-ui-react',
+        '@plurid/plurid-ui-components-react',
+        '@plurid/plurid-ui-state-react',
         'cross-fetch',
         'dotenv',
         'hammerjs',
