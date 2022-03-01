@@ -100,6 +100,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         planeContext: PlaneContext,
         planeContextValue,
         customPlane,
+        matchedRoute,
     } = context;
 
     const CustomPluridPlane = customPlane as any; // hack
@@ -157,9 +158,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         query: activePlane.route.query,
                     },
                     route: {
-                        value: '',
-                        parameters: {},
-                        query: {},
+                        value: matchedRoute?.match.value || '',
+                        parameters: matchedRoute?.match.parameters || {},
+                        query: matchedRoute?.match.query || {},
                     },
                 };
                 const properties = {
@@ -272,9 +273,9 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             query: pluridPlane.route.query,
         },
         route: {
-            value: '',
-            parameters: {},
-            query: {},
+            value: matchedRoute?.match.value || '',
+            parameters: matchedRoute?.match.parameters || {},
+            query: matchedRoute?.match.query || {},
         },
     };
     const planeProperties = {
