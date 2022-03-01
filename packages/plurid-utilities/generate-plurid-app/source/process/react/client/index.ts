@@ -77,9 +77,9 @@ const generatePluridReactApplication = async (
         const publicDir = path.join(app.directory, './public');
         const sourceDir = path.join(app.directory, './src');
         const gitDir = path.join(app.directory, './.git');
-        removeDirectory(publicDir);
-        removeDirectory(sourceDir);
-        removeDirectory(gitDir);
+        await removeDirectory(publicDir);
+        await removeDirectory(sourceDir);
+        await removeDirectory(gitDir);
 
         const templateTypeScript = 'react-typescript-client';
         const templateJavaScript = 'react-javascript-client';
