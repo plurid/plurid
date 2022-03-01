@@ -1,22 +1,33 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    PluridRouterLink,
-} from '@plurid/plurid-react';
-
-import {
-    StyledStatic,
-} from './styled';
-
-import Head from '../../components/Head';
+    import {
+        PluridRouterLink,
+        PluridReactRouteComponent,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
 
 
+    // #region external
+    import Head from '~kernel-components/Head';
+    // #endregion external
 
-const Static: React.FC<any> = () => {
-    /** properties */
+
+    // #region internal
+    import {
+        StyledStatic,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
 
 
-    /** render */
+
+// #region module
+const Static: PluridReactRouteComponent<{}> = (
+    properties,
+) => {
+    // #region render
     return (
         <StyledStatic>
             <Head
@@ -36,7 +47,12 @@ const Static: React.FC<any> = () => {
             </div>
         </StyledStatic>
     );
+    // #endregion render
 }
+// #endregion module
 
 
+
+// #region exports
 export default Static;
+// #endregion exports

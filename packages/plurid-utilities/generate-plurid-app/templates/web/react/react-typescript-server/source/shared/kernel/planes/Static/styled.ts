@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+// #region imports
+    // #region libraries
+    import styled from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const StyledStatic = styled.div`
     display: grid;
     place-content: center;
@@ -12,3 +17,4 @@ export const StyledStatic = styled.div`
         color: #ccc;
     }
 `;
+// #endregion module

@@ -1,27 +1,69 @@
-import React, {
-    useRef,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    StyledNotFound,
-} from './styled';
+    import { AnyAction } from 'redux';
+    import { connect } from 'react-redux';
+    import { ThunkDispatch } from 'redux-thunk';
 
-import faces from './faces';
+    import {
+        PluridPlaneComponentProperty,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
+
+
+    // #region external
+    import { AppState } from '~kernel-services/state/store';
+    import StateContext from '~kernel-services/state/context';
+    import selectors from '~kernel-services/state/selectors';
+    // import actions from '~kernel-services/state/actions';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledNotFound,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
 
 
 
-interface NotFoundProperties {
+// #region module
+export interface NotFoundOwnProperties {
 }
 
-const NotFound: React.FC<NotFoundProperties> = () => {
-    /** properties */
-    const faceIndex = useRef(Math.floor(Math.random() * faces.length));
-    const face = useRef(faces[faceIndex.current]);
+export interface NotFoundStateProperties {
+    stateGeneralNotFoundFace: string;
+}
 
+export interface NotFoundDispatchProperties {
+}
+
+export type NotFoundProperties = NotFoundOwnProperties
+    & NotFoundStateProperties
+    & NotFoundDispatchProperties
+    & {
+        plurid: PluridPlaneComponentProperty,
+    };
+
+const NotFound: React.FC<NotFoundProperties> = (
+    properties,
+) => {
+    // #region properties
+    const {
+        // #region state
+        stateGeneralNotFoundFace,
+        // #endregion state
+    } = properties;
+    // #endregion properties
+
+
+    // #region render
     return (
         <StyledNotFound>
             <h1>
-                {face.current}
+                {stateGeneralNotFoundFace}
             </h1>
 
             <p>
@@ -29,7 +71,35 @@ const NotFound: React.FC<NotFoundProperties> = () => {
             </p>
         </StyledNotFound>
     );
+    // #endregion render
 }
 
 
-export default NotFound;
+const mapStateToProperties = (
+    state: AppState,
+): NotFoundStateProperties => ({
+    stateGeneralNotFoundFace: selectors.general.getNotFoundFace(state),
+});
+
+
+const mapDispatchToProperties = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): NotFoundDispatchProperties => ({
+});
+
+
+const ConnectedNotFound = connect(
+    mapStateToProperties,
+    mapDispatchToProperties,
+    null,
+    {
+        context: StateContext,
+    },
+)(NotFound);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedNotFound;
+// #endregion exports

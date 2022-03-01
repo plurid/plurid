@@ -1,16 +1,17 @@
-import * as Types from './types';
+// #region imports
+    // #region external
+    import * as Types from '../types';
 
-import {
-    initialState
-} from './initial';
+    import initialState from '../initial';
 
-import {
-    resolvers,
-} from './resolvers';
+    import resolvers from '../resolvers';
+    // #endregion external
+// #endregion imports
 
 
 
-export const reducer = (
+// #region module
+const reducer = (
     state: Types.State = initialState,
     action: Types.Actions,
 ): Types.State => {
@@ -33,3 +34,10 @@ export const metareducer = (
     state: Types.State = initialState,
     actions: Types.Actions,
 ) => reducer(state, actions);
+// #endregion module
+
+
+
+// #region exports
+export default reducer;
+// #endregion exports

@@ -1,39 +1,52 @@
-import PluridServer, {
-    PluridServerMiddleware,
-    PluridServerService,
-    PluridServerServicesData,
-    PluridServerPartialOptions,
-    PluridServerTemplateConfiguration,
-} from '@plurid/plurid-react-server';
-
-import helmet from '~kernel-services/helmet';
-
-/** uncomment to use services */
-// [START redux import]
-import reduxStore from '~kernel-services/state/store';
-// [END redux import]
-// [START apollo import]
-import apolloClient from '~kernel-services/graphql/client';
-// [END apollo import]
-// [START stripe import]
-// import {
-//     STRIPE_API_KEY as stripeAPIKey,
-// } from '../client/App/data/constants';
-// [END stripe import]
-
-import {
-    routes,
-    shell,
-} from '../shared';
-
-import preserves from './preserves';
-
-import {
-    setRouteHandlers,
-} from './handlers';
+// #region imports
+    // #region libraries
+    import PluridServer, {
+        PluridServerMiddleware,
+        PluridServerService,
+        PluridServerPartialOptions,
+        PluridServerTemplateConfiguration,
+    } from '@plurid/plurid-react-server';
+    // #endregion libraries
 
 
+    // #region external
+    import helmet from '~kernel-services/helmet';
 
+    /** uncomment to use services */
+    // [START redux import]
+    import reduxStore from '~kernel-services/state/store';
+    import reduxContext from '~kernel-services/state/context';
+    // [END redux import]
+    // [START apollo import]
+    import apolloClient from '~kernel-services/graphql/client';
+    // [END apollo import]
+    // [START stripe import]
+    // import {
+    //     STRIPE_API_KEY as stripeAPIKey,
+    // } from '../client/App/data/constants';
+    // [END stripe import]
+
+    import {
+        shell,
+        routes,
+        planes,
+    } from '../shared';
+    // #endregion external
+
+
+    // #region internal
+    import preserves from './preserves';
+
+    import {
+        setRouteHandlers,
+        setPttpCors,
+    } from './handlers';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 /** ENVIRONMENT */
 const watchMode = process.env.PLURID_WATCH_MODE === 'true';
 const isProduction = process.env.ENV_MODE === 'production';
@@ -49,13 +62,20 @@ const openAtStart = watchMode
     : isProduction
         ? false
         : true;
-const debug = isProduction
-    ? 'info'
-    : 'error';
 
-// [START stripe script]
-const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
-// [END stripe script]
+const quiet = false;
+// const debug = isProduction
+//     ? 'info'
+//     : 'error';
+const debug = 'info';
+
+const usePTTP = true;
+
+
+// // [START stripe script]
+// const stripeScript = '<script src="https://js.stripe.com/v3/"></script>';
+// // [END stripe script]
+
 
 
 /** Custom styles to be loaded into the template. */
@@ -73,36 +93,46 @@ const middleware: PluridServerMiddleware[] = [
 /** Services to be used in the application. */
 const services: PluridServerService[] = [
     /** uncomment to use services */
-    // [START apollo service]
-    'Apollo',
-    // [END apollo service]
-    // [START redux service]
-    'Redux',
-    // [END redux service]
     // [START stripe service]
-    // 'Stripe',
+    // {
+    //     name: 'Stripe',
+    //     package: 'react-stripe-elements',
+    //     provider: 'StripeProvider',
+    //     properties: {
+    //         stripe: null,
+    //     },
+    // },
     // [END stripe service]
+
+    // [START apollo service]
+    {
+        name: 'Apollo',
+        package: '@apollo/client',
+        provider: 'ApolloProvider',
+        properties: {
+            client: apolloClient,
+        },
+    },
+    // [END apollo service]
+
+    // [START redux service]
+    {
+        name: 'Redux',
+        package: 'react-redux',
+        provider: 'Provider',
+        properties: {
+            store: reduxStore({}),
+            context: reduxContext,
+        },
+    },
+    // [END redux service]
 ];
 
-
-const servicesData: PluridServerServicesData = {
-    /** uncomment to use services */
-    // [START apollo serviceData]
-    apolloClient,
-    // [END apollo serviceData]
-    // [START redux serviceData]
-    reduxStore,
-    reduxStoreValue: {},
-    // [END redux serviceData]
-    // [START stripe serviceData]
-    // stripeAPIKey,
-    // stripeScript,
-    // [END stripe serviceData]
-};
 
 const options: PluridServerPartialOptions = {
     buildDirectory,
     open: openAtStart,
+    quiet,
     debug,
 };
 
@@ -116,21 +146,24 @@ const template: PluridServerTemplateConfiguration = {
 // generate server
 const pluridServer = new PluridServer({
     helmet,
-    routes,
-    preserves,
     shell,
+    routes,
+    planes,
+    preserves,
     styles,
     middleware,
     services,
-    servicesData,
     options,
     template,
+    usePTTP,
 });
 
 
 // handle non-GET or custom routes (such as API requests, or anything else)
 setRouteHandlers(pluridServer);
 
+// if using PTTP
+setPttpCors(pluridServer);
 
 
 /**
@@ -143,6 +176,10 @@ setRouteHandlers(pluridServer);
 if (require.main === module) {
     pluridServer.start(port);
 }
+// #endregion module
 
 
+
+// #region exports
 export default pluridServer;
+// #endregion exports

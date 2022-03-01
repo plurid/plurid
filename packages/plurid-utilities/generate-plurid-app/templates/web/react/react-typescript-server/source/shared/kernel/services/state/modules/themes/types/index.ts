@@ -1,9 +1,14 @@
-import {
-    Theme,
-} from '@plurid/plurid-themes';
+// #region imports
+    // #region libraries
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const SET_GENERAL_THEME = 'SET_GENERAL_THEME';
 export interface SetGeneralThemeAction {
     type: typeof SET_GENERAL_THEME;
@@ -25,5 +30,7 @@ export interface State {
 }
 
 
-export type Actions = SetGeneralThemeAction
+export type Actions =
+    | SetGeneralThemeAction
     | SetInteractionThemeAction;
+// #endregion module

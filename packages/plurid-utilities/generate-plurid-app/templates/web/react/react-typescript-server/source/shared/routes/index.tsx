@@ -1,100 +1,67 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    PluridRoute,
-} from '@plurid/plurid-data';
-
-import IndexPagePlane from '../kernel/planes/Index/Page';
-import NotFoundPlane from '../kernel/planes/NotFound';
-import StaticPlane from '../kernel/planes/Static';
-
-import Head from '../kernel/components/Head';
+    import {
+        PluridReactRoute,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
 
 
+    // #region external
+    import IndexPagePlane from '../kernel/planes/Index/Page';
+    import NotFoundPlane from '../kernel/planes/NotFound';
+    import StaticPlane from '../kernel/planes/Static';
 
-const indexRoute: PluridRoute = {
+    import Head from '../kernel/components/Head';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
+const indexRoute: PluridReactRoute = {
     value: '/',
-    exterior: {
-        kind: 'react',
-        element: Head,
-    },
+    exterior: Head,
     planes: [
-        {
-            value: '/plane',
-            component: {
-                kind: 'react',
-                element: IndexPagePlane,
-            },
-        },
+        [
+            '/plane',
+            IndexPagePlane,
+        ],
     ],
     view: [
         '/plane',
     ],
-    // spaces: [
-    //     {
-    //         value: 'default',
-    //         universes: [
-    //             {
-    //                 value: 'default',
-    //                 clusters: [
-    //                     {
-    //                         value: 'default',
-    //                         planes: [
-    //                             {
-    //                                 value: '/page',
-    //                                 component: {
-    //                                     kind: 'react',
-    //                                     element: IndexPagePlane,
-    //                                 },
-    //                             },
-    //                         ],
-    //                     },
-    //                 ],
-    //             },
-    //         ],
-    //     },
-    // ],
-}
-
-
-const staticRoute: PluridRoute = {
-    value: '/static',
-    exterior: {
-        kind: 'react',
-        element: StaticPlane,
-    },
 };
 
 
-const planesRoute: PluridRoute = {
+const staticRoute: PluridReactRoute = {
+    value: '/static',
+    exterior: StaticPlane,
+};
+
+
+const planesRoute: PluridReactRoute = {
     value: '/planes',
-    exterior: {
-        kind: 'react',
-        element: () => (
-            <Head
-                title="Planes | Plurid' Application"
-            />
-        ),
-    },
+    exterior: () => (
+        <Head
+            title="Planes | Plurid' Application"
+        />
+    ),
     planes: [
         {
-            value: '/plane-1',
-            component: {
-                kind: 'react',
-                element: () => (<div>plane 1</div>),
-            },
+            value: 'plane-1',
+            component: () => (<div>plane 1</div>),
+            // link: '/planes/plane-1',
         },
         {
-            value: '/plane-2',
-            component: {
-                kind: 'react',
-                element: () => (<div>plane 2</div>),
-            },
-            link: '/planes/plane-2',
+            value: 'plane-2',
+            component: () => (<div>plane 2</div>),
+            // link: '/planes/plane-2',
         },
     ],
     view: [
-        '/plane-1',
+        '/planes/plane-1',
     ],
     defaultConfiguration: {
         global: {
@@ -123,7 +90,7 @@ const planesRoute: PluridRoute = {
 };
 
 
-const parametricRoute: PluridRoute = {
+const parametricRoute: PluridReactRoute = {
     value: '/parametric/:parameter',
     parameters: {
         parameter: {
@@ -131,23 +98,17 @@ const parametricRoute: PluridRoute = {
             lengthType: '==',
         },
     },
-    exterior: {
-        kind: 'react',
-        element: StaticPlane,
-    },
+    exterior: StaticPlane,
 };
 
 
-const notFoundRoute: PluridRoute = {
+const notFoundRoute: PluridReactRoute = {
     value: '/not-found',
-    exterior: {
-        kind: 'react',
-        element: () => (
-            <Head
-                title="Not Found | Plurid' Application"
-            />
-        ),
-    },
+    exterior: () => (
+        <Head
+            title="Not Found | Plurid' Application"
+        />
+    ),
     spaces: [
         {
             value: 'default',
@@ -160,10 +121,7 @@ const notFoundRoute: PluridRoute = {
                             planes: [
                                 {
                                     value: '/',
-                                    component: {
-                                        kind: 'react',
-                                        element: NotFoundPlane,
-                                    },
+                                    component: NotFoundPlane,
                                 },
                             ],
                         },
@@ -175,13 +133,17 @@ const notFoundRoute: PluridRoute = {
 };
 
 
-const routes: PluridRoute[] = [
+const routes: PluridReactRoute[] = [
     indexRoute,
     staticRoute,
     planesRoute,
     parametricRoute,
     notFoundRoute,
 ];
+// #endregion module
 
 
+
+// #region exports
 export default routes;
+// #endregion exports
