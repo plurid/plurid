@@ -89,7 +89,7 @@ const generatePluridReactApplication = async (
 
         const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/web/react/${templateFiles}`;
 
-        const templateDir = path.join(app.directory, base + '/*');
+        const templateDir = path.join(app.directory, base);
         copyDirectory(templateDir, app.directory);
 
         await setupPluridAppYaml(app);
