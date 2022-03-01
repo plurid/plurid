@@ -51,11 +51,13 @@ const generatePluridReactApplication = async (
         '@plurid/plurid-themes',
         '@plurid/plurid-ui-components-react',
         '@plurid/plurid-ui-state-react',
+        'cross-fetch',
         'hammerjs',
         'react-redux',
         'redux',
         'redux-thunk',
         'styled-components',
+        '@types/styled-components',
         'react-scripts@==4.0.3',
     ];
 
