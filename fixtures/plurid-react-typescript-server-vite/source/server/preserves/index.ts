@@ -3,12 +3,8 @@
     import express from 'express';
 
     import {
-        routing,
-    } from '@plurid/plurid-engine';
-
-    import {
         PluridPreserve,
-        PluridReactComponent,
+        PluridRouteMatch,
     } from '@plurid/plurid-react';
     // #endregion libraries
 
@@ -26,7 +22,7 @@
 
 // #region module
 const preserves: PluridPreserve<
-    routing.IsoMatcherRouteResult<PluridReactComponent<any>> | undefined,
+    PluridRouteMatch | undefined,
     express.Request,
     express.Response
 >[] = [
