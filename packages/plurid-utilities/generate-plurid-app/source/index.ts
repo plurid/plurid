@@ -1,5 +1,6 @@
-import program, {
-    CommanderStatic,
+import {
+    program,
+    Command,
 } from 'commander';
 
 import {
@@ -15,9 +16,9 @@ import processArguments from './process';
 
 
 
-async function main(program: CommanderStatic) {
+async function main(program: Command) {
     program
-        .version('0.1.0', '-v, --version');
+        .version('0.0.0-0', '-v, --version');
 
     if (process.argv.length === 2) {
         program
@@ -36,7 +37,7 @@ async function main(program: CommanderStatic) {
             .option('-s, --services <service-list>', 'pass additional services as a comma-separated list (graphql, redux, stripe)', 'graphql,redux,stripe')
             .option('-c, --containerize', 'use Docker to containerize the application', false)
             .option('-p, --pluridapp', 'deploy the application to plurid.app', true)
-            .action(async () => {
+            .action(async (options) => {
                 const {
                     directory,
                     language,
@@ -47,7 +48,7 @@ async function main(program: CommanderStatic) {
                     versioning,
                     containerize,
                     pluridapp: deployment,
-                } = program;
+                } = options;
 
                 const answers: Answers = {
                     directory,
