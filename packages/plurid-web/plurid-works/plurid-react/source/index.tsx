@@ -60,6 +60,7 @@
         PluridReactPlane,
         PluridReactRoute,
         PluridReactRoutePlane,
+        PluridRouteMatch,
     } from './data/interfaces';
 
     import PluridApplication from './containers/Application';
@@ -201,6 +202,7 @@ export {
     PluridReactRouteComponent,
     PluridReactRoute,
     PluridReactRoutePlane,
+    PluridRouteMatch,
 
     PluridPreserve,
     PluridPreserveTransmission,

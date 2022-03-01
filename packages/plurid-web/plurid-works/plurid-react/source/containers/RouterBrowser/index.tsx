@@ -45,6 +45,7 @@
     // #region external
     import {
         PluridReactComponent,
+        PluridRouteMatch,
     } from '~data/interfaces';
 
     import PluridApplication from '~containers/Application/index';
@@ -140,7 +141,7 @@ const PluridRouterBrowser = (
     const [
         matchedRoute,
         setMatchedRoute,
-    ] = useState<routing.IsoMatcherRouteResult<PluridReactComponent> | undefined>(
+    ] = useState<PluridRouteMatch | undefined>(
         pluridIsoMatcher.current.match(
             matchedPath,
             'route',
