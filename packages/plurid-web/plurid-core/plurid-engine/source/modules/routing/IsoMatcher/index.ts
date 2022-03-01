@@ -4,6 +4,17 @@
         PluridRoute,
         PluridRoutePlane,
         PluridPlane,
+
+        IsoMatcherContext,
+        IsoMatcherData,
+        IsoMatcherIndexedRoute,
+        IsoMatcherIndexedPlane,
+        IsoMatcherPlaneType,
+        IsoMatcherPlaneResult,
+        IsoMatcherPlaneResultPlane,
+        IsoMatcherPlaneResultRoutePlane,
+        IsoMatcherResult,
+        IsoMatcherRouteResult,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -29,22 +40,6 @@
         // extractPathname,
     } from '../Parser/logic';
     // #endregion external
-
-
-    // #region internal
-    import {
-        IsoMatcherContext,
-        IsoMatcherData,
-        IsoMatcherIndexedRoute,
-        IsoMatcherIndexedPlane,
-        IsoMatcherPlaneType,
-        IsoMatcherPlaneResult,
-        IsoMatcherPlaneResultPlane,
-        IsoMatcherPlaneResultRoutePlane,
-        IsoMatcherResult,
-        IsoMatcherRouteResult,
-    } from './interfaces';
-    // #endregion internal
 // #endregion imports
 
 
