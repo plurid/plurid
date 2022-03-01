@@ -74,6 +74,22 @@ export const makeDirectory = (
 }
 
 
+export const removeDirectory = async (
+    directory: string,
+) => {
+    try {
+        await fs.promises.rm(
+            directory,
+            {
+                recursive: true,
+            },
+        );
+    } catch (error) {
+        return;
+    }
+}
+
+
 /**
  * Executes a shell command and return it as a Promise.
  *
