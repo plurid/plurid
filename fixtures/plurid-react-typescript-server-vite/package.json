@@ -35,7 +35,7 @@
         "deploy": "plurid deploy"
     },
     "dependencies": {
-        "@apollo/client": "^3.5.9",
+        "@apollo/client": "^3.5.10",
         "@plurid/elementql": "^0.0.0-1",
         "@plurid/elementql-client-react": "^0.0.0-1",
         "@plurid/plurid-data": "^0.0.0-11",
