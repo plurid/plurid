@@ -1,4 +1,4 @@
-FROM node:10-slim AS builder
+FROM node:16.14-alpine AS builder
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
@@ -54,7 +54,7 @@ USER pptruser
 
 
 
-FROM mhart/alpine-node:12
+FROM node:16.14-alpine
 
 WORKDIR /app
 

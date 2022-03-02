@@ -1,4 +1,4 @@
-FROM node:14.15.3-alpine AS builder
+FROM node:16.14-alpine AS builder
 
 ARG NPM_TOKEN
 ARG NPM_REGISTRY=registry.npmjs.org
@@ -23,7 +23,7 @@ RUN yarn run build.production verbose
 
 
 
-FROM node:14.15.3-alpine
+FROM node:16.14-alpine
 
 ENV PORT 8080
 ENV HOST 0.0.0.0
