@@ -1,6 +1,6 @@
 const path = require('path');
 
-const merge = require('webpack-merge');
+const merge = require('webpack-merge').merge;
 
 const {
     plugins,
@@ -11,19 +11,6 @@ const {
 
 const config = {
     mode: 'development',
-
-    optimization: {
-        minimize: false,
-        splitChunks: {
-            cacheGroups: {
-                commons: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: 'vendor',
-                    chunks: 'initial',
-                },
-            },
-        },
-    },
 
     devtool: 'inline-source-map',
 

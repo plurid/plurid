@@ -1,15 +1,20 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    Helmet,
-} from 'react-helmet-async';
+    import {
+        Helmet,
+    } from 'react-helmet-async';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 const Head = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         title,
         description,
@@ -28,14 +33,18 @@ const Head = (
     const ogURLValue = ogURL || 'https://plurid.com';
 
     const apiDomain = 'https://api.plurid.com/graphql';
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <Helmet>
             <meta charSet="utf-8" />
             <meta name="robots" content="index,follow" />
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+            <title>{titleValue}</title>
+            <meta name="title" content={titleValue} />
             <meta name="description" content={descriptionValue} />
 
             <link rel="preconnect" href={apiDomain} />
@@ -52,8 +61,6 @@ const Head = (
                 <link rel="canonical" href={canonicalURL} />
             )}
 
-            <title>{titleValue}</title>
-
             {/* OPEN GRAPH */}
             <meta property="og:type" content="website" />
             <meta property="og:title" content={ogTitleValue} />
@@ -62,14 +69,30 @@ const Head = (
             <meta property="og:url" content={ogURLValue} />
             <meta property="og:description" content={ogDescriptionValue} />
 
+            {/* TWITTER */}
+            <meta property="twitter:card" content="summary_large_image" />
+            <meta property="twitter:url" content={ogURLValue} />
+            <meta property="twitter:title" content={ogTitleValue} />
+            <meta property="twitter:description" content={ogDescriptionValue} />
+            <meta property="twitter:image" content={ogImageValue} />
+
             {/* SAFARI */}
             <meta name="apple-mobile-web-app-capable" content="yes" />
             <meta name="apple-mobile-web-app-status-bar-style" content="default" />
             <meta name="apple-mobile-web-app-title" content={titleValue} />
             <link rel="apple-touch-icon" href="/icon-192x192.png" />
+
+            {/* MICROSOFT */}
+            <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#456c77" />
+            <meta name="msapplication-TileColor" content="#ffffff" />
         </Helmet>
     );
+    // #endregion render
 }
+// #endregion module
 
 
+
+// #region exports
 export default Head;
+// #endregion exports

@@ -1,13 +1,25 @@
-import environment from '../../utilities/environment';
+// #region imports
+    // #region external
+    import environment from '~kernel-services/utilities/environment';
+    // #endregion external
 
-import storeProduction from './store.production';
-import storeDevelopment from './store.development';
+
+    // #region internal
+    import storeProduction from './production';
+    import storeDevelopment from './development';
+    // #endregion internal
+// #endregion imports
 
 
 
+// #region module
 const store = environment.production
     ? storeProduction
     : storeDevelopment;
+// #endregion module
 
 
+
+// #region exports
 export default store;
+// #endregion exports

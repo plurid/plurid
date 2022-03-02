@@ -5,12 +5,16 @@ const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
 
+const {
+    BUILD_DIRECTORY,
+    ASSETS_DIRECTORY,
+
+    isProduction,
+} = require ('./shared');
+
+
 
 /** CONSTANTS */
-const BUILD_DIRECTORY = process.env.PLURID_BUILD_DIRECTORY || 'build';
-
-const isProduction = process.env.ENV_MODE === 'production';
-
 const entryIndex = path.resolve(__dirname, '../../source/client/index.jsx');
 const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}/client`);
 
@@ -35,13 +39,14 @@ const compressionPluginBrotli = new CompressionPlugin({
     deleteOriginalAssets: false,
 });
 const compressionPluginGzip = new CompressionPlugin({
-    include: 'vendor.js',
-    filename: 'vendor.js.gzip',
+    include: /vendor.js$/,
+    // filename: 'vendor.js.gzip',
 });
 
 const processEnvironmentPlugin = new webpack.DefinePlugin({
     'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
     'process.env.SC_DISABLE_SPEEDY': true, /** HACK: styled components not rendering in production */
+    'process.env.PLURID_LIVE_SERVER': JSON.stringify(''),
 });
 
 
@@ -66,28 +71,9 @@ const styleRule = {
 
 const fileRule = {
     test: /\.(jpe?g|gif|png|svg|eof|otf|woff|ttf|wav|mp3|pdf|mov|mp4)$/i,
-    use: [
-        {
-            loader: 'file-loader',
-            options: {
-                name: '/assets/[name].[ext]',
-            },
-        },
-    ],
-};
-
-
-const babelRule = {
-    test: /\.jsx?$/,
-    exclude: /node_modules/,
-    use: {
-        loader: 'babel-loader',
-        options: {
-            presets: [
-                '@babel/preset-env',
-                '@babel/preset-react',
-            ],
-        },
+    type: 'asset/resource',
+    generator: {
+        filename: `${ASSETS_DIRECTORY}/[name][ext]`,
     },
 };
 
@@ -95,7 +81,6 @@ const babelRule = {
 const rules = {
     styleRule,
     fileRule,
-    babelRule,
 };
 
 
@@ -112,7 +97,11 @@ const baseConfig = {
     },
 
     resolve: {
-        extensions: ['.js', '.jsx', '.json'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+
+        alias: {
+            crypto: false,
+        },
     },
 
     stats: {
@@ -121,11 +110,22 @@ const baseConfig = {
         assets: false,
     },
 
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendor',
+                    chunks: 'initial',
+                },
+            },
+        },
+    },
+
     module: {
         rules: [
             rules.styleRule,
             rules.fileRule,
-            rules.babelRule,
         ],
     },
 };
