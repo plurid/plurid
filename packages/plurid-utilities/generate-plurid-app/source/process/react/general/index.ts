@@ -12,18 +12,11 @@
 
     // #region external
     import {
-        services,
-    } from '../../../data/constants';
-
-    import {
         Application,
     } from '../../../data/interfaces';
 
     import {
-        copyDirectory,
-        executeCommand,
         addScript,
-        loadingSpinner,
     } from '../../../utilities';
     // #endregion external
 // #endregion imports
@@ -56,25 +49,41 @@ export const setupDocker = async (
     }
 
     const dockerProductionContents =
-`FROM mhart/alpine-node:12 AS builder
+`FROM node:16.14-alpine AS builder
+
+ENV PORT 8080
+ENV HOST 0.0.0.0
+ENV NODE_ENV production
+ENV ENV_MODE production
+
 WORKDIR /app
+
 COPY . .
-ENV ENV_MODE=production
-RUN yarn install
-RUN yarn build.production
+
+RUN yarn install --production false --network-timeout 1000000
+RUN yarn run build.production verbose
 
 
-FROM mhart/alpine-node:12
+FROM node:16.14-alpine
+
+ENV PORT 8080
+ENV HOST 0.0.0.0
+ENV NODE_ENV production
+ENV ENV_MODE production
+
 WORKDIR /app
+
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/scripts ./scripts
-RUN yarn install --production
-CMD ["yarn", "start"]
+
+RUN yarn install --production --network-timeout 1000000
+
+CMD [ "yarn", "start" ]
 `;
 
     const dockerProductionStillsContents =
-`FROM node:10-slim AS builder
+`FROM node:16.14-alpine AS builder
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
@@ -103,7 +112,7 @@ RUN yarn build.production.stills \
 USER pptruser
 
 
-FROM mhart/alpine-node:12
+FROM node:16.14-alpine
 WORKDIR /app
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/build ./build
