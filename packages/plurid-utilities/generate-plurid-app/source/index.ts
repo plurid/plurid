@@ -31,6 +31,8 @@ async function main(program: Command) {
     if (process.argv.length === 2) {
         program
             .action(() => {
+                console.log('\n\tGenerate a plurid application by answering the following inquiries\n');
+
                 inquire(questions);
             });
     }
