@@ -1,5 +1,6 @@
 const path = require('path');
 
+const alias = require('@rollup/plugin-alias');
 const postcss = require('rollup-plugin-postcss');
 const url = require('@rollup/plugin-url');
 const json = require('@rollup/plugin-json');
@@ -31,6 +32,20 @@ const output = [
 
 
 const plugins = {
+    alias: () => alias({
+        entries: [
+            { find: '~server', replacement: './source/server' },
+            { find: '~kernel-assets', replacement: './source/shared/kernel/assets' },
+            { find: '~kernel-components', replacement: './source/shared/kernel/components' },
+            { find: '~kernel-containers', replacement: './source/shared/kernel/containers' },
+            { find: '~kernel-planes', replacement: './source/shared/kernel/planes' },
+            { find: '~kernel-data', replacement: './source/shared/kernel/data' },
+            { find: '~kernel-services', replacement: './source/shared/kernel/services' },
+            { find: '~planes', replacement: './source/shared/planes' },
+            { find: '~routes', replacement: './source/shared/routes' },
+            { find: '~shell', replacement: './source/shared/shell' },
+        ],
+    }),
     postcss: () => postcss(),
     url: () => url({
         include: [

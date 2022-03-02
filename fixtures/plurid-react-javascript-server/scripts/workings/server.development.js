@@ -10,6 +10,7 @@ export default {
     input,
     output,
     plugins: [
+        plugins.alias(),
         plugins.postcss(),
         plugins.url(),
         plugins.json(),
