@@ -273,8 +273,8 @@ class IsoMatcher<C> {
 
 
         for (const planePath of this.planesKeys) {
-            const normalizedPlanePath = planePath.replace('pttp://', '');
-            const normalizedPlaneAddress = planeAddress.replace('pttp://', '');
+            const normalizedPlanePath = planePath.replace('plurid://', '');
+            const normalizedPlaneAddress = planeAddress.replace('plurid://', '');
 
             const planePathSplit = normalizedPlanePath.split('/');
             const planeAddressSplit = normalizedPlaneAddress.split('/');
