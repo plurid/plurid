@@ -34,14 +34,14 @@
 
 
     // #region external
-    import helmetContext from '~kernel-services/helmet';
+    import helmetContext from '../shared/kernel/services/helmet';
 
     // [START ReduxStore]
-    import reduxStore from '~kernel-services/state/store';
-    import reduxContext from '~kernel-services/state/context';
+    import reduxStore from '../shared/kernel/services/state/store';
+    import reduxContext from '../shared/kernel/services/state/context';
     // [START ReduxStore]
     // [START GraphqlClient]
-    import graphqlClient from '~kernel-services/graphql/client';
+    import graphqlClient from '../shared/kernel/services/graphql/client';
     // [START GraphqlClient]
     // [START StripeAPIKey]
     // import {

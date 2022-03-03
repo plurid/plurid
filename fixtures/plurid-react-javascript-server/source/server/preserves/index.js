@@ -2,9 +2,9 @@
     // #region external
     import {
         getRandomFace,
-    } from '~kernel-planes/NotFound/logic';
+    } from '../../shared/kernel/planes/NotFound/logic';
 
-    import reduxStore from '~kernel-services/state/store';
+    import reduxStore from '../../shared/kernel/services/state/store';
     // #endregion external
 // #endregion imports
 

@@ -1,5 +1,5 @@
 // #region module
-const helmetContext: any = {};
+const helmetContext = {};
 // #endregion module
 
 

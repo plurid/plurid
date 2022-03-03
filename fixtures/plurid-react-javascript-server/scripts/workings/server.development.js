@@ -10,12 +10,12 @@ export default {
     input,
     output,
     plugins: [
-        plugins.alias(),
         plugins.postcss(),
         plugins.url(),
         plugins.json(),
         plugins.external(),
         plugins.resolve(),
+        plugins.babel(),
         plugins.commonjs(),
         plugins.sourceMaps(),
     ],

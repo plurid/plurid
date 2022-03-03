@@ -143,8 +143,8 @@ const commandBuildDevelopmentStills = [
 
 const commandBuildProduction = [
     ...commandClean,
-    ...commandLint,
-    ...commandTest,
+    // ...commandLint,
+    // ...commandTest,
     ...commandBuildServerProduction,
     ...commandBuildClientProduction,
 ];

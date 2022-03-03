@@ -5,15 +5,15 @@
 
 
     // #region external
-    import helmet from '~kernel-services/helmet';
+    import helmet from '../shared/kernel/services/helmet';
 
     /** uncomment to use services */
     // [START redux import]
-    import reduxStore from '~kernel-services/state/store';
-    import reduxContext from '~kernel-services/state/context';
+    import reduxStore from '../shared/kernel/services/state/store';
+    import reduxContext from '../shared/kernel/services/state/context';
     // [END redux import]
     // [START apollo import]
-    import apolloClient from '~kernel-services/graphql/client';
+    import apolloClient from '../shared/kernel/services/graphql/client';
     // [END apollo import]
     // [START stripe import]
     // import {

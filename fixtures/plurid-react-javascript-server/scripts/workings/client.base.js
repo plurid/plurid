@@ -78,9 +78,30 @@ const fileRule = {
 };
 
 
+const jsxRule = {
+    test: /\.(js|jsx)$/,
+    exclude: /node_modules/,
+    use: [{
+        loader: 'babel-loader',
+        options: {
+            presets: [
+                [
+                    '@babel/preset-env',
+                    {
+                        'targets': 'defaults',
+                    },
+                ],
+                '@babel/preset-react',
+            ],
+        },
+    }],
+};
+
+
 const rules = {
     styleRule,
     fileRule,
+    jsxRule,
 };
 
 
@@ -97,19 +118,9 @@ const baseConfig = {
     },
 
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+        extensions: ['.js', '.jsx', '.json'],
 
         alias: {
-            '~server': './source/server',
-            '~kernel-assets': './source/shared/kernel/assets',
-            '~kernel-components': './source/shared/kernel/components',
-            '~kernel-containers': './source/shared/kernel/containers',
-            '~kernel-planes': './source/shared/kernel/planes',
-            '~kernel-data': './source/shared/kernel/data',
-            '~kernel-services': './source/shared/kernel/services',
-            '~planes': './source/shared/planes',
-            '~routes': './source/shared/routes',
-            '~shell': './source/shared/shell',
             crypto: false,
         },
     },
@@ -136,6 +147,7 @@ const baseConfig = {
         rules: [
             rules.styleRule,
             rules.fileRule,
+            rules.jsxRule,
         ],
     },
 };

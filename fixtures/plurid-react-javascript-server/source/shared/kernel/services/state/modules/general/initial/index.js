@@ -2,7 +2,7 @@
     // #region external
     import {
         getRandomFace,
-    } from '~kernel-planes/NotFound/logic'
+    } from '../../../../../planes/NotFound/logic';
     // #endregion external
 // #endregion imports
 

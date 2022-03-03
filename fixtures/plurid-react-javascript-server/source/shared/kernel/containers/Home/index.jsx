@@ -7,8 +7,8 @@
 
 
     // #region external
-    import selectors from '~kernel-services/state/selectors';
-    // import actions from '~kernel-services/state/actions';
+    import selectors from '../../services/state/selectors';
+    // import actions from '../../services/state/actions';
     // #endregion external
 
 

@@ -9,7 +9,7 @@
 
 
     // #region external
-    import Head from '~kernel-components/Head';
+    import Head from '../../components/Head';
     // #endregion external
 
 
