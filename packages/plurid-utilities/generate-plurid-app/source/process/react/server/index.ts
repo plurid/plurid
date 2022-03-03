@@ -445,6 +445,7 @@ const generateReactServerApplication = async (
         '@babel/preset-env',
         '@babel/preset-react',
         'babel-loader',
+        '@rollup/plugin-babel',
     ];
     const requiredDevelopmentDependenciesPackages = app.language === 'TypeScript'
         ? [ ...requiredDevelopmentDependencies, ...requiredDevelopmentTypescriptDependencies].join(' ')
