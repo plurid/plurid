@@ -190,7 +190,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                 <PluridTextline
                     theme={interactionTheme}
                     // text={showAddress ? gatewayAddress : path}
-                    text={plane.route.absolute}
+                    text={treePlane.route}
                     atChange={onPathInput}
                     atKeyDown={handleOnKeyDown}
                     ariaLabel="Plurid Pathbar"
