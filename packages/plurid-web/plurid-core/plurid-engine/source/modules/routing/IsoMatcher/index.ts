@@ -63,7 +63,11 @@ class IsoMatcher<C> {
         data: IsoMatcherData<C>,
         origin: string = 'origin',
     ) {
-        this.origin = origin;
+        if (origin === 'origin' && typeof location !== 'undefined') {
+            this.origin = location.host;
+        } else {
+            this.origin = origin;
+        }
 
         this.updateIndexes(
             data.routes || [],
