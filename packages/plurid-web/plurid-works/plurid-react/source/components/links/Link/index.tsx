@@ -134,7 +134,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         dispatchUpdateSpaceLinkCoordinates,
         // #endregion dispatch
     } = properties;
-    // #endregion properties
 
     const planeControls = stateConfiguration.elements.plane.controls.show;
 
@@ -150,6 +149,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         stateConfiguration.network.host,
     );
     // console.log('absolutePlaneRoute', absolutePlaneRoute);
+    // #endregion properties
 
 
     // #region context
