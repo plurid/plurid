@@ -49,6 +49,10 @@ export const computePlaneAddress = (
     route?: string,
     origin: string = 'origin',
 ) => {
+    if (origin === 'origin' && typeof location !== 'undefined') {
+        origin = location.host;
+    }
+
     const cleanPlane = extractPathname(plane);
 
     const planeAddressType = checkPlaneAddressType(cleanPlane);
