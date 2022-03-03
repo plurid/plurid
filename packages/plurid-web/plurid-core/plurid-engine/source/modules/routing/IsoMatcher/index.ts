@@ -15,6 +15,8 @@
         IsoMatcherPlaneResultRoutePlane,
         IsoMatcherResult,
         IsoMatcherRouteResult,
+
+        protocols,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -273,8 +275,8 @@ class IsoMatcher<C> {
 
 
         for (const planePath of this.planesKeys) {
-            const normalizedPlanePath = planePath.replace('plurid://', '');
-            const normalizedPlaneAddress = planeAddress.replace('plurid://', '');
+            const normalizedPlanePath = planePath.replace(protocols.plurid, '');
+            const normalizedPlaneAddress = planeAddress.replace(protocols.plurid, '');
 
             const planePathSplit = normalizedPlanePath.split('/');
             const planeAddressSplit = normalizedPlaneAddress.split('/');

@@ -1,4 +1,14 @@
 // #region imports
+    // #region imports
+    import {
+        protocols,
+        PLURID_PROTOCOL,
+        HTTPS_PROTOCOL,
+        HTTP_PROTOCOL,
+    } from '@plurid/plurid-data';
+    // #endregion imports
+
+
     // #region external
     import {
         extractPathname,
@@ -33,7 +43,6 @@ export const stringRemoveTrailing = (
 
 
 const PATH_SEPARATOR = '/';
-const PTTP_PROTOCOL = 'plurid://';
 
 export const cleanupPath = (
     value: string,
@@ -74,7 +83,7 @@ export const computePlaneAddress = (
             : cleanupPath(route) + cleanupPath(cleanPlane)
         : cleanupPath(cleanPlane);
 
-    const planeAddress = PTTP_PROTOCOL + origin + path;
+    const planeAddress = protocols.plurid + origin + path;
 
     return planeAddress;
 }
@@ -93,16 +102,16 @@ export const checkPlaneAddressType = (
         .toLowerCase()
         .trim();
 
-    if (value.startsWith(PTTP_PROTOCOL)) {
+    if (value.startsWith(protocols.plurid)) {
         return 'pttp';
     }
 
-    if (value.startsWith('https://')) {
-        return 'https';
+    if (value.startsWith(protocols.https)) {
+        return HTTPS_PROTOCOL;
     }
 
-    if (value.startsWith('http://')) {
-        return 'http';
+    if (value.startsWith(protocols.http)) {
+        return HTTP_PROTOCOL;
     }
 
     return 'relative';
