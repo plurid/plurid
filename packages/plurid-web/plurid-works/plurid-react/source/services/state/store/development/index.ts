@@ -26,8 +26,12 @@
 // #region module
 let composeWithDevTools: any;
 if (!environment.production) {
-    const reduxDevTools = require('redux-devtools-extension');
-    composeWithDevTools = reduxDevTools.composeWithDevTools;
+    try {
+        const reduxDevTools = require('redux-devtools-extension');
+        composeWithDevTools = reduxDevTools.composeWithDevTools;
+    } catch (error) {
+        composeWithDevTools = undefined;
+    }
 }
 
 export type AppState = ReturnType<typeof rootReducer>;
