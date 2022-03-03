@@ -2,7 +2,7 @@
     // #region external
     import {
         WheelDeltas,
-    } from '../../../data/interfaces';
+    } from '@plurid/plurid-data';
     // #endregion external
 // #endregion imports
 
