@@ -440,9 +440,15 @@ const generateReactServerApplication = async (
         'typescript',
         'typescript-plugin-styled-components',
     ];
+    const requiredDevelopmentJavascriptDependencies = [
+        '@babel/core',
+        '@babel/preset-env',
+        '@babel/preset-react',
+        'babel-loader',
+    ];
     const requiredDevelopmentDependenciesPackages = app.language === 'TypeScript'
         ? [ ...requiredDevelopmentDependencies, ...requiredDevelopmentTypescriptDependencies].join(' ')
-        : requiredDevelopmentDependencies.join(' ');
+        : [...requiredDevelopmentDependencies, ...requiredDevelopmentJavascriptDependencies].join(' ');
     const installDevelopmentDependenciesCommand = computeInstallDevelopmentDependenciesCommand(
         app,
         requiredDevelopmentDependenciesPackages,
