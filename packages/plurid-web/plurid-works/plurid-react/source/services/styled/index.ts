@@ -23,7 +23,5 @@ export const fadeIn = keyframes`
 
 export const fadeInAnimation = (
     fadeInTime: number,
-) => (css as any)`${fadeIn} ${fadeInTime}ms linear 100ms forwards`;
-    // |
-    // |--- HACK disable `colon expected ts-styled-plugin(9999)`
+) => css`${fadeIn} ${fadeInTime}ms linear 100ms forwards`;
 // #endregion module
