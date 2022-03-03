@@ -33,7 +33,7 @@ export const stringRemoveTrailing = (
 
 
 const PATH_SEPARATOR = '/';
-const PTTP_PROTOCOL = 'pttp://';
+const PTTP_PROTOCOL = 'plurid://';
 
 export const cleanupPath = (
     value: string,
