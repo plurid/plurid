@@ -21,7 +21,11 @@
 const pluridApp = document.getElementById('plurid-app');
 
 
-ReactDOM.hydrate(
+const render = process.env.PLURID_LIVE_SERVER !== 'true'
+    ? ReactDOM.hydrate
+    : ReactDOM.render;
+
+render(
     <Client />,
     pluridApp,
 );

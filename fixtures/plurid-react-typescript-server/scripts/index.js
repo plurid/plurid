@@ -184,9 +184,9 @@ const runCommand = (
 switch (command) {
     case 'start':
         if (!existsSync(buildFolder)) {
-            console.log('\n\tBuild Required. Starting the Stilled Production Build Process...');
-            runCommand(commandBuildProductionStills);
-            console.log('\n\tFinished the Stilled Production Build Process.\n');
+            console.log('\n\tBuild Required. Starting the Production Build Process...');
+            runCommand(commandBuildProduction);
+            console.log('\n\tFinished the Production Build Process.\n');
         }
         console.log('\n\tStarting the Application Server...');
         runCommand(commandStart, {

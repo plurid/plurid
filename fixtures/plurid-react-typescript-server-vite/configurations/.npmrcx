@@ -1,3 +1,0 @@
-//${NPM_REGISTRY}/:_authToken="${NPM_TOKEN}"
-registry=https://${NPM_REGISTRY}/
-always-auth=true
