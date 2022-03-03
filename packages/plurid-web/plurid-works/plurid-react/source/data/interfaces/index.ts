@@ -9,11 +9,8 @@
         PluridRoutePlane,
         PluridPlaneComponentProperty,
         PluridRouteComponentProperty,
+        IsoMatcherRouteResult,
     } from '@plurid/plurid-data';
-
-    import {
-        routing,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 // #endregion imports
 
@@ -58,5 +55,5 @@ export interface PluridLinkCoordinates {
 
 
 
-export type PluridRouteMatch = routing.IsoMatcherRouteResult<PluridReactComponent>;
+export type PluridRouteMatch = IsoMatcherRouteResult<PluridReactComponent>;
 // #endregion module

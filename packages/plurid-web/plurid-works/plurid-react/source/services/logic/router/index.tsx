@@ -1407,7 +1407,7 @@ export const renderMultispace = (
 
             if (space.planes) {
                 for (const plane of space.planes) {
-                    const planeData = resolvePluridRoutePlaneData<React.FC<any>>(plane);
+                    const planeData = resolvePluridRoutePlaneData<React.FC<any>>(plane as any);
 
                     const {
                         component,
