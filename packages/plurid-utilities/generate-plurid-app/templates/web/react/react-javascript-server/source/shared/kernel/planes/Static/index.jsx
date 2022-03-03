@@ -1,22 +1,32 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    PluridRouterLink,
-} from '@plurid/plurid-react';
-
-import {
-    StyledStatic,
-} from './styled';
-
-import Head from '../../components/Head';
+    import {
+        PluridRouterLink,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
 
 
+    // #region external
+    import Head from '../../components/Head';
+    // #endregion external
 
-const Static = () => {
-    /** properties */
+
+    // #region internal
+    import {
+        StyledStatic,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
 
 
-    /** render */
+
+// #region module
+const Static = (
+    properties,
+) => {
+    // #region render
     return (
         <StyledStatic>
             <Head
@@ -36,7 +46,12 @@ const Static = () => {
             </div>
         </StyledStatic>
     );
+    // #endregion render
 }
+// #endregion module
 
 
+
+// #region exports
 export default Static;
+// #endregion exports

@@ -12,10 +12,12 @@ export default {
     plugins: [
         plugins.postcss(),
         plugins.url(),
-        plugins.babel(),
+        plugins.json(),
         plugins.external(),
         plugins.resolve(),
+        plugins.babel(),
         plugins.commonjs(),
         plugins.sourceMaps(),
+        plugins.terser(),
     ],
-}
+};

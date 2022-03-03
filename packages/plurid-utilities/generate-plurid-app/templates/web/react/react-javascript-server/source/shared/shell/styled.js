@@ -1,9 +1,14 @@
-import {
-    createGlobalStyle,
-} from 'styled-components';
+// #region imports
+    // #region libraries
+    import {
+        createGlobalStyle,
+    } from 'styled-components';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const GlobalStyle = createGlobalStyle`
     *, *::after, *::before {
         box-sizing: border-box;
@@ -23,10 +28,11 @@ export const GlobalStyle = createGlobalStyle`
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         color: white;
+        background: radial-gradient(ellipse at center, hsl(220, 10%, 32%) 0%, hsl(220, 10%, 18%) 100%);
     }
 
     a {
-        color: inherit;
+        color: hsl(220,10%,60%);
         text-decoration: none;
     }
 
@@ -35,3 +41,4 @@ export const GlobalStyle = createGlobalStyle`
         overflow: auto;
     }
 `;
+// #endregion module

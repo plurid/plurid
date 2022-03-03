@@ -1,21 +1,30 @@
-import React from 'react';
-
-import {
-    GlobalStyle,
-} from './styled';
-
+// #region imports
+    // #region libraries
+    import React from 'react';
+    // #endregion libraries
 
 
+    // #region internal
+    import {
+        GlobalStyle,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const Shell = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         children,
     } = properties;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <>
             <GlobalStyle />
@@ -23,13 +32,15 @@ const Shell = (
             {children}
         </>
     );
+    // #endregion render
 }
 
 
-const shell = {
-    kind: 'react',
-    element: Shell,
-};
+const shell = Shell;
+// #endregion module
 
 
+
+// #region exports
 export default shell;
+// #endregion exports

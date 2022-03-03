@@ -1,19 +1,30 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    PluridLink,
-    PluridRouterLink,
-} from '@plurid/plurid-react';
-
-import {
-    StyledPage,
-} from './styled';
-
-// import pluridLogo from './assets/plurid-logo.png';
-import pluridLogoSVG from './assets/plurid-logo.svg';
+    import {
+        PluridLink,
+        PluridRouterLink,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
 
 
+    // #region external
+    // import pluridLogo from './assets/plurid-logo.png';
+    import pluridLogoSVG from './assets/plurid-logo.svg';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledPage,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const Page = (
     properties,
 ) => {
@@ -48,9 +59,9 @@ const Page = (
                 }}
             >
                 <PluridLink
-                    route="/page"
+                    route="/plane"
                     style={{
-                        color: '#ccc',
+                        color: '~ccc',
                     }}
                 >
                     plurid self link
@@ -59,7 +70,7 @@ const Page = (
                 <PluridRouterLink
                     route="/static"
                     style={{
-                        color: '#ccc',
+                        color: '~ccc',
                     }}
                 >
                     router link to static page
@@ -68,6 +79,10 @@ const Page = (
         </StyledPage>
     );
 }
+// #endregion module
 
 
+
+// #region exports
 export default Page;
+// #endregion exports

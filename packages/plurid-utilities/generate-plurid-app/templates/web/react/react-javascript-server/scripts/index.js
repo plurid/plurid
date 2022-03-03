@@ -20,13 +20,17 @@ const environment = {
     local: !command.includes('development') && !command.includes('production'),
 };
 
-require('dotenv').config({
-    path: environment.production
-        ? './environment/.env.production'
-        : environment.development
-            ? './environment/.env.development'
-            : './environment/.env.local',
-});
+try {
+    require('dotenv').config({
+        path: environment.production
+            ? './environment/.env.production'
+            : environment.development
+                ? './environment/.env.development'
+                : './environment/.env.local',
+    });
+} catch (error) {
+    console.log('no dotenv');
+}
 
 
 
@@ -68,6 +72,10 @@ const commandWatchClient = [
 ];
 const commandWatchServer = [
     `${crossCommand('rollup')} -w -c ./scripts/workings/server.development.js`,
+];
+
+const commandStartLive = [
+    `node ./scripts/workings/liveserver.js`,
 ];
 
 const commandStartLocal = [
@@ -135,8 +143,8 @@ const commandBuildDevelopmentStills = [
 
 const commandBuildProduction = [
     ...commandClean,
-    ...commandLint,
-    ...commandTest,
+    // ...commandLint,
+    // ...commandTest,
     ...commandBuildServerProduction,
     ...commandBuildClientProduction,
 ];
@@ -185,8 +193,20 @@ switch (command) {
             stdio: 'inherit',
         });
         break;
+    case 'start.live':
+        console.log('\n\tRunning the Live Server...');
+        runCommand(commandStartLive, {
+            stdio: verbose,
+        });
+        break;
     case 'start.local':
         console.log('\n\tRunning the Local Server...');
+        runCommand(commandStartLocal, {
+            stdio: verbose,
+        });
+        break;
+    case 'start.development':
+        console.log('\n\tRunning the Development Server...');
         runCommand(commandStartLocal, {
             stdio: verbose,
         });

@@ -1,7 +1,12 @@
-import gql from 'graphql-tag';
+// #region imports
+    // #region libraries
+    import gql from 'graphql-tag';
+    // #endregion libraries
+// #endregion imports
 
 
 
+// #region module
 export const CURRENT_USER = gql`
     query CurrentUser {
         currentUser {
@@ -17,3 +22,4 @@ export const CURRENT_USER = gql`
         }
     }
 `;
+// #endregion module

@@ -1,8 +1,13 @@
-import gql from 'graphql-tag';
+// #region imports
+    // #region libraries
+    import gql from 'graphql-tag';
+    // #endregion libraries
+// #endregion imports
 
 
 
-export const CURRENT_USER = gql`
+// #region module
+export const UPDATE_USER = gql`
     mutation UpdateUser($input: InputUpdateUser!) {
         updateUser(input: $input) {
             status
@@ -17,3 +22,4 @@ export const CURRENT_USER = gql`
         }
     }
 `;
+// #endregion module
