@@ -6,6 +6,7 @@ export * from './entities';
 export * from './events';
 export * from './internationalization';
 export * from './keys';
+export * from './protocols';
 export * from './pubsub';
 export * from './shortcuts';
 export * from './space';
