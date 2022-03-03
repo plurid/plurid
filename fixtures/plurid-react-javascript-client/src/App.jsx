@@ -31,11 +31,8 @@ const App = () => {
 
     const pluridPlanes = [
         {
-            path: '/plane',
-            component: {
-                kind: 'react',
-                element: Plane,
-            },
+            route: '/plane',
+            component: Plane,
         },
     ];
 
