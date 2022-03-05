@@ -26,6 +26,13 @@ export interface SetSpaceLoadingAction {
 }
 
 
+export const SET_TRANSFORM = 'SET_TRANSFORM';
+export interface SetTransformAction {
+    type: typeof SET_TRANSFORM;
+    payload: any;
+}
+
+
 export const SET_ANIMATED_TRANSFORM = 'SET_ANIMATED_TRANSFORM';
 export interface SetAnimatedTransformAction {
     type: typeof SET_ANIMATED_TRANSFORM;
@@ -339,6 +346,7 @@ export interface State {
 export type Actions =
     | SetStateAction
     | SetSpaceLoadingAction
+    | SetTransformAction
     | SetAnimatedTransformAction
     | SetTransformTimeAction
     | SetSpaceLocationAction

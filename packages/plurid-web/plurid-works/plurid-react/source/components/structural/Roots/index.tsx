@@ -150,11 +150,11 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                     // : firstPerson
                     //     ? 'transform 100ms linear'
                         : 'initial',
-                transformOrigin: cleanTemplate(`
-                    ${transformOriginX}px
-                    ${transformOriginY}px
-                    ${transformOriginZ}px
-                `),
+                // transformOrigin: cleanTemplate(`
+                //     ${transformOriginX}px
+                //     ${transformOriginY}px
+                //     ${transformOriginZ}px
+                // `),
             }}
             data-plurid-entity={PLURID_ENTITY_ROOTS}
         >

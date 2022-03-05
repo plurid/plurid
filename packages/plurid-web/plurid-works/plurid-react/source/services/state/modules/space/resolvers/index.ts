@@ -44,6 +44,38 @@ export const setSpaceLoading = (
 }
 
 
+export const setTransform = (
+    state: Types.State,
+    action: Types.SetTransformAction,
+): Types.State => {
+    const {
+        translationX,
+        translationY,
+        translationZ,
+        rotationX,
+        rotationY,
+        scale,
+    } = action.payload;
+
+    const resolvedTranslationX = translationX ?? state.translationX;
+    const resolvedTranslationY = translationY ?? state.translationY;
+    const resolvedTranslationZ = translationZ ?? state.translationZ;
+    const resolvedRotationX = rotationX ?? state.rotationX;
+    const resolvedRotationY = rotationY ?? state.rotationY;
+    const resolvedScale = scale ?? state.scale;
+
+    return {
+        ...state,
+        translationX: resolvedTranslationX,
+        translationY: resolvedTranslationY,
+        translationZ: resolvedTranslationZ,
+        rotationX: resolvedRotationX,
+        rotationY: resolvedRotationY,
+        scale: resolvedScale,
+    };
+}
+
+
 export const setAnimatedTransform = (
     state: Types.State,
     action: Types.SetAnimatedTransformAction,

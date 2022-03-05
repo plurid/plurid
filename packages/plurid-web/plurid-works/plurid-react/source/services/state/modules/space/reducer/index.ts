@@ -27,6 +27,8 @@ const reducer = (
             };
         case Types.SET_SPACE_LOADING:
             return resolvers.setSpaceLoading(state, action);
+        case Types.SET_TRANSFORM:
+            return resolvers.setTransform(state, action);
         case Types.SET_ANIMATED_TRANSFORM:
             return resolvers.setAnimatedTransform(state, action);
         case Types.SET_TRANSFORM_TIME:

@@ -35,6 +35,7 @@
         planes,
         routing,
         space,
+        interaction,
         // general as generalEngine,
     } from '@plurid/plurid-engine';
     // #endregion libraries
@@ -99,6 +100,7 @@ export interface PluridLinkStateProperties {
 export interface PluridLinkDispatchProperties {
     dispatchSetTree: typeof actions.space.setTree;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
+    dispatchSetTransform: typeof actions.space.setTransform;
     dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
 }
 
@@ -133,6 +135,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         // #region dispatch
         dispatchSetTree,
         dispatchSetAnimatedTransform,
+        dispatchSetTransform,
         dispatchUpdateSpaceLinkCoordinates,
         // #endregion dispatch
     } = properties;
@@ -355,6 +358,59 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
 
         dispatchSetAnimatedTransform(true);
+
+
+        const {
+            multiplyMatrices,
+            translateMatrix,
+            rotateYMatrix,
+            printMatrix,
+        } = interaction.transform2;
+
+        const {
+            degToRad,
+            radToDeg,
+        } = interaction.quaternion;
+
+        const {
+            getTransformRotate,
+            getTransformTranslate,
+            getTransformScale
+        } = interaction.transform;
+
+        const newMatrix = multiplyMatrices(
+            multiplyMatrices(
+                multiplyMatrices(
+                    translateMatrix(-95, -155, -100),
+                    rotateYMatrix(degToRad(91)),
+                ),
+                translateMatrix(95, 155, 100),
+            ),
+            translateMatrix(-(95 + 200), -155, -100),
+        );
+
+        const matrix3d = `matrix3d(${newMatrix.flat().join(',')})`;
+
+        const rotate = getTransformRotate(matrix3d);
+        const translate = getTransformTranslate(matrix3d);
+        const scale = getTransformScale(matrix3d);
+
+        dispatchSetTransform({
+            translationX: translate.translateX,
+            translationY: translate.translateY,
+            translationZ: translate.translateZ,
+            // rotationX,
+            rotationY: radToDeg(rotate.rotateY) * -1,
+            // scale,
+        });
+
+        console.log({
+            newMatrix,
+            matrix3d,
+            rotate,
+            translate,
+            scale,
+        });
     }
 
     const handleClick = useCallback((
@@ -526,6 +582,11 @@ const mapDispatchToProperties = (
         payload,
     ) => dispatch(
         actions.space.setAnimatedTransform(payload),
+    ),
+    dispatchSetTransform: (
+        payload,
+    ) => dispatch(
+        actions.space.setTransform(payload),
     ),
     dispatchUpdateSpaceLinkCoordinates: (
         payload: UpdateSpaceLinkCoordinatesPayload,

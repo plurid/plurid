@@ -19,6 +19,7 @@ export interface IStyledPluridRoots {}
 
 export const StyledPluridRoots = styled.div<IStyledPluridRoots>`
     transform-style: preserve-3d;
+    transform-origin: 0 0 0;
 `;
 
 

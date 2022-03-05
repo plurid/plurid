@@ -26,6 +26,16 @@ export const setSpaceLoading = (
 }
 
 
+export const setTransform = (
+    payload: any,
+): Types.SetTransformAction => {
+    return {
+        type: Types.SET_TRANSFORM,
+        payload,
+    };
+}
+
+
 export const setAnimatedTransform = (
     payload: boolean,
 ): Types.SetAnimatedTransformAction => {
