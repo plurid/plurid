@@ -35,7 +35,7 @@
         planes,
         routing,
         space,
-        general as generalEngine,
+        // general as generalEngine,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -98,6 +98,7 @@ export interface PluridLinkStateProperties {
 
 export interface PluridLinkDispatchProperties {
     dispatchSetTree: typeof actions.space.setTree;
+    dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
 }
 
@@ -131,6 +132,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         // #region dispatch
         dispatchSetTree,
+        dispatchSetAnimatedTransform,
         dispatchUpdateSpaceLinkCoordinates,
         // #endregion dispatch
     } = properties;
@@ -339,7 +341,25 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }
 
-    const handleClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
+    const navigateToPluridPlane = (
+        event: React.MouseEvent<HTMLAnchorElement>,
+    ) => {
+        if (showLink) {
+            // Link already clicked.
+            return;
+        }
+
+        if (event.ctrlKey || event.metaKey) {
+            // Only navigate at pure link click.
+            return;
+        }
+
+        dispatchSetAnimatedTransform(true);
+    }
+
+    const handleClick = useCallback((
+        event: React.MouseEvent<HTMLAnchorElement>,
+    ) => {
         event.preventDefault();
 
         if (atClick !== undefined) {
@@ -347,6 +367,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
 
         handleShowPluridPlane();
+        navigateToPluridPlane(event);
     }, [
         linkElement.current,
         stateTree,
@@ -500,6 +521,11 @@ const mapDispatchToProperties = (
         tree: TreePlane[],
     ) => dispatch(
         actions.space.setTree(tree),
+    ),
+    dispatchSetAnimatedTransform: (
+        payload,
+    ) => dispatch(
+        actions.space.setAnimatedTransform(payload),
     ),
     dispatchUpdateSpaceLinkCoordinates: (
         payload: UpdateSpaceLinkCoordinatesPayload,
