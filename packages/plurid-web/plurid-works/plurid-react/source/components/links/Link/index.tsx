@@ -373,8 +373,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
-        dispatchSetAnimatedTransform(true);
-
 
         const {
             multiplyMatrices,
@@ -431,6 +429,17 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         const translate = getTransformTranslate(matrix3d);
         const scale = getTransformScale(matrix3d);
 
+        // console.log({
+        //     location,
+        //     newMatrix,
+        //     matrix3d,
+        //     rotate,
+        //     translate,
+        //     scale,
+        // });
+
+        dispatchSetAnimatedTransform(true);
+
         dispatchSetTransform({
             translationX: translate.translateX,
             translationY: translate.translateY,
@@ -440,13 +449,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             // scale,
         });
 
-        // console.log({
-        //     newMatrix,
-        //     matrix3d,
-        //     rotate,
-        //     translate,
-        //     scale,
-        // });
+        setTimeout(() => {
+            dispatchSetAnimatedTransform(false);
+        }, 500);
     }
 
     const handleShowPluridPlane = (
