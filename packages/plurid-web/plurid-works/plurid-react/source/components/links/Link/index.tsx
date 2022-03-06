@@ -299,7 +299,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         dispatchUpdateSpaceLinkCoordinates(payload);
     }
 
-    const updateTreeWithLink = () => {
+    const updateTreeWithLink = (
+        event: React.MouseEvent<HTMLAnchorElement>,
+    ) => {
         if (!parentPlaneID || !absolutePlaneRoute) {
             return;
         }
@@ -313,6 +315,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         const {
             pluridPlaneID,
             updatedTree,
+            updatedTreePlane,
         } = space.tree.logic.updateTreeWithNewPlane(
             route,
             parentPlaneID,
@@ -323,30 +326,43 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         );
 
         if (pluridPlaneID) {
+            navigateToPluridPlane(
+                event,
+                updatedTreePlane,
+            );
+
             dispatchSetTree(updatedTree);
             setShowLink(true);
             setPluridPlaneID(pluridPlaneID);
         }
     }
 
-    const toggleLinkFromTree = () => {
-        const updatedTree = space.tree.logic.togglePlaneFromTree(stateTree, pluridPlaneID);
+    const toggleLinkFromTree = (
+        event: React.MouseEvent<HTMLAnchorElement>,
+    ) => {
+        const {
+            updatedTree,
+            updatedPlane,
+        } = space.tree.logic.togglePlaneFromTree(stateTree, pluridPlaneID);
+
+        navigateToPluridPlane(
+            event,
+            updatedPlane,
+        );
+
         dispatchSetTree(updatedTree);
         setShowLink(show => !show);
         setShowPreview(false);
     }
 
-    const handleShowPluridPlane = () => {
-        if (!showLink && !pluridPlaneID) {
-            updateTreeWithLink();
-        } else {
-            toggleLinkFromTree();
-        }
-    }
-
     const navigateToPluridPlane = (
         event: React.MouseEvent<HTMLAnchorElement>,
+        updatedPlane: TreePlane | undefined,
     ) => {
+        if (!updatedPlane) {
+            return;
+        }
+
         if (showLink) {
             // Link already clicked.
             return;
@@ -364,7 +380,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             multiplyMatrices,
             translateMatrix,
             rotateYMatrix,
-            printMatrix,
         } = interaction.transform2;
 
         const {
@@ -378,16 +393,37 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             getTransformScale
         } = interaction.transform;
 
+        const {
+            location,
+        } = updatedPlane;
+
+        const {
+            translateX,
+            translateY,
+            translateZ,
+            rotateY,
+        } = location;
+
         const newMatrix = multiplyMatrices(
             multiplyMatrices(
                 multiplyMatrices(
-                    translateMatrix(-95, -155, -100),
-                    rotateYMatrix(degToRad(91)),
+                    translateMatrix(-translateX, -translateY, translateZ),
+                    rotateYMatrix(degToRad(rotateY)),
                 ),
-                translateMatrix(95, 155, 100),
+                translateMatrix(translateX, translateY, -translateZ),
             ),
-            translateMatrix(-(95 + 200), -155, -100),
+            translateMatrix(-(translateX + 200), -translateY, translateZ),
         );
+        // const newMatrix = multiplyMatrices(
+        //     multiplyMatrices(
+        //         multiplyMatrices(
+        //             translateMatrix(-95, -155, -100),
+        //             rotateYMatrix(degToRad(91)),
+        //         ),
+        //         translateMatrix(95, 155, 100),
+        //     ),
+        //     translateMatrix(-(95 + 200), -155, -100),
+        // );
 
         const matrix3d = `matrix3d(${newMatrix.flat().join(',')})`;
 
@@ -404,13 +440,23 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             // scale,
         });
 
-        console.log({
-            newMatrix,
-            matrix3d,
-            rotate,
-            translate,
-            scale,
-        });
+        // console.log({
+        //     newMatrix,
+        //     matrix3d,
+        //     rotate,
+        //     translate,
+        //     scale,
+        // });
+    }
+
+    const handleShowPluridPlane = (
+        event: React.MouseEvent<HTMLAnchorElement>,
+    ) => {
+        if (!showLink && !pluridPlaneID) {
+            updateTreeWithLink(event);
+        } else {
+            toggleLinkFromTree(event);
+        }
     }
 
     const handleClick = useCallback((
@@ -422,8 +468,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             atClick(event);
         }
 
-        handleShowPluridPlane();
-        navigateToPluridPlane(event);
+        handleShowPluridPlane(event);
     }, [
         linkElement.current,
         stateTree,
