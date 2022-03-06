@@ -76,7 +76,9 @@ describe('togglePageFromTree', () => {
 
         const togglePageID = 'bbb';
 
-        const result = logic.togglePlaneFromTree(tree, togglePageID);
+        const {
+            updatedTree: result,
+        } = logic.togglePlaneFromTree(tree, togglePageID);
         expect(result).toMatchObject(updatedTree);
     });
 
@@ -149,7 +151,9 @@ describe('togglePageFromTree', () => {
 
         const togglePageID = 'bbb';
 
-        const result = logic.togglePlaneFromTree(tree, togglePageID);
+        const {
+            updatedTree: result,
+        } = logic.togglePlaneFromTree(tree, togglePageID);
 
         expect(result).toMatchObject(updatedTree);
     });
