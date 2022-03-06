@@ -694,24 +694,30 @@ export const updateTreePlane = (
     tree: TreePlane[],
     updatedPage: TreePlane,
 ): TreePlane[] => {
-    const updatedTree = tree.map(page => {
-        if (page.planeID === updatedPage.planeID) {
+    const updatedTree = tree.map(treePlane => {
+        if (treePlane.planeID === updatedPage.planeID) {
             return updatedPage;
         }
 
-        if (page.children) {
-            const pageTree = updateTreePlane(page.children, updatedPage);
-            page.children = pageTree;
-            return page;
+        if (treePlane.children) {
+            const pageTree = updateTreePlane(treePlane.children, updatedPage);
+            treePlane.children = pageTree;
+            return treePlane;
         }
 
-        return page;
+        return treePlane;
     });
 
     return updatedTree;
 }
 
 
+
+export interface UpdatedTreeWithNewPlane {
+    pluridPlaneID: string;
+    updatedTree: TreePlane[];
+    updatedTreePlane?: TreePlane;
+}
 
 export const updateTreeWithNewPlane = <C>(
     planeRoute: string,
@@ -841,15 +847,11 @@ export const updateTreeWithNewPlane = <C>(
     return {
         pluridPlaneID: updatedTreePlane.planeID,
         updatedTree,
+        updatedTreePlane,
     };
 }
 
 
-
-export interface UpdatedTreeWithNewPlane {
-    pluridPlaneID: string;
-    updatedTree: TreePlane[];
-}
 
 export const updateTreeWithNewPage = (
     tree: TreePlane[],
@@ -1006,37 +1008,65 @@ export const toggleChildren = (
 }
 
 
+export interface TogglePlaneFromTree {
+    updatedTree: TreePlane[];
+    updatedPlane: TreePlane | undefined;
+}
+
 export const togglePlaneFromTree = (
     tree: TreePlane[],
     pluridPlaneID: string,
-): TreePlane[] => {
+): TogglePlaneFromTree => {
     const updatedTree: TreePlane[] = [];
 
-    for (const page of tree) {
-        if (page.planeID === pluridPlaneID) {
-            const updatedPage: TreePlane = {
-                ...page,
-                show: !page.show,
+    let updatedPlane: TreePlane | undefined;
+
+    for (const plane of tree) {
+        if (plane.planeID === pluridPlaneID) {
+            const treeUpdatedPlane: TreePlane = {
+                ...plane,
+                show: !plane.show,
                 children: [],
                 // TODO
                 // Instead of removing all the children to toggle them
                 // currently, issue with the plurid link creating new instances.
                 // children: page.children ? toggleChildren(page.children) : [],
             };
-            updatedTree.push(updatedPage);
+
+            updatedTree.push(treeUpdatedPlane);
+            updatedPlane = {
+                ...treeUpdatedPlane,
+            };
+
             continue;
         }
 
-        if (page.children) {
-            const pageTree = togglePlaneFromTree(page.children, pluridPlaneID);
-            page.children = [ ...pageTree ];
-            updatedTree.push(page);
+
+        if (plane.children) {
+            const {
+                updatedTree: childrenUpdatedTree,
+                updatedPlane: childrenUpdatedPlane,
+            } = togglePlaneFromTree(plane.children, pluridPlaneID);
+
+            plane.children = [ ...childrenUpdatedTree ];
+            updatedTree.push(plane);
+
+            if (childrenUpdatedPlane) {
+                updatedPlane = {
+                    ...childrenUpdatedPlane,
+                };
+            }
+
             continue;
         }
 
-        updatedTree.push(page);
+
+        updatedTree.push(plane);
     }
 
-    return updatedTree;
+    return {
+        updatedTree,
+        updatedPlane,
+    };
 }
 // #endregion module
