@@ -402,15 +402,19 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             rotateY,
         } = location;
 
+        const zSign1 = rotateY < 100 ? 1 : -1;
+        const zSign2 = rotateY < 100 ? -1 : 1;
+        const xOffset = rotateY < 100 ? 200 : 0;
+
         const newMatrix = multiplyMatrices(
             multiplyMatrices(
                 multiplyMatrices(
-                    translateMatrix(-translateX, -translateY, translateZ),
+                    translateMatrix(-translateX, -translateY, zSign1 * translateZ),
                     rotateYMatrix(degToRad(rotateY)),
                 ),
-                translateMatrix(translateX, translateY, -translateZ),
+                translateMatrix(translateX, translateY, zSign2 * translateZ),
             ),
-            translateMatrix(-(translateX + 200), -translateY, translateZ),
+            translateMatrix(-(translateX + xOffset), -translateY, zSign1 * translateZ),
         );
         // const newMatrix = multiplyMatrices(
         //     multiplyMatrices(
