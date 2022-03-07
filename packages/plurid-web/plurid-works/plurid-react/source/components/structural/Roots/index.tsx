@@ -25,6 +25,7 @@
 
     import {
         cleanTemplate,
+        interaction,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -50,6 +51,23 @@
 
 
 // #region module
+const {
+    quaternion,
+    matrix,
+} = interaction;
+
+const {
+    matrixArrayToCSSMatrix,
+    rotateMatrix,
+    multiplyArrayOfMatrices,
+    scaleMatrix,
+    translateMatrix,
+} = matrix;
+
+const {
+    degToRad,
+} = quaternion;
+
 export interface PluridRootsOwnProperties {
 }
 
@@ -131,14 +149,33 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 
     // #region render
     // const transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
-    const transform = cleanTemplate(`
-        translateX(${spaceTranslationX}px)
-        translateY(${spaceTranslationY}px)
-        translateZ(${spaceTranslationZ}px)
-        scale(${spaceScale})
-        rotateX(${spaceRotationX}deg)
-        rotateY(${spaceRotationY}deg)
-    `);
+    // const transform = cleanTemplate(`
+    //     translateX(${spaceTranslationX}px)
+    //     translateY(${spaceTranslationY}px)
+    //     translateZ(${spaceTranslationZ}px)
+    //     scale(${spaceScale})
+    //     rotateX(${spaceRotationX}deg)
+    //     rotateY(${spaceRotationY}deg)
+    // `);
+
+    const rotationMatrix = rotateMatrix(degToRad(spaceRotationX), degToRad(spaceRotationY));
+    const translationMatrix = translateMatrix(spaceTranslationX, spaceTranslationY, spaceTranslationZ);
+    const scalationMatrix = scaleMatrix(spaceScale);
+
+    const transformMatrix = multiplyArrayOfMatrices([
+        translationMatrix,
+        // rotationMatrix,
+        multiplyArrayOfMatrices([
+            translateMatrix(500, 500, 0),
+            rotationMatrix,
+            translateMatrix(-500, -500, 0),
+            // translateMatrix(500, 500, 0),
+        ]),
+        scalationMatrix,
+    ]);
+
+    const transform = matrixArrayToCSSMatrix(transformMatrix);
+
 
     return (
         <StyledPluridRoots
