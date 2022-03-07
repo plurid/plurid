@@ -158,7 +158,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
     //     rotateY(${spaceRotationY}deg)
     // `);
 
-    const rotationMatrix = rotateMatrix(degToRad(spaceRotationX), degToRad(spaceRotationY));
+    const rotationMatrix = rotateMatrix(degToRad(-spaceRotationX), degToRad(-spaceRotationY));
     const translationMatrix = translateMatrix(spaceTranslationX, spaceTranslationY, spaceTranslationZ);
     const scalationMatrix = scaleMatrix(spaceScale);
 
