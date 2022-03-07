@@ -57,11 +57,13 @@ export interface IRenderer {
 
 export type ManagerNPM = 'NPM';
 export type ManagerYarn = 'Yarn';
-export type Manager = ManagerNPM | ManagerYarn;
+export type ManagerPNPM = 'pNPM';
+export type Manager = ManagerNPM | ManagerYarn | ManagerPNPM;
 
 export interface IManager {
     npm: ManagerNPM;
     yarn: ManagerYarn;
+    pnpm: ManagerPNPM;
 }
 
 

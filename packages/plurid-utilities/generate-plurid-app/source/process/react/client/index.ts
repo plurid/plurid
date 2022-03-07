@@ -14,6 +14,10 @@
     } from '../../../data/interfaces';
 
     import {
+        manager,
+    } from '../../../data/constants';
+
+    import {
         copyDirectory,
         removeDirectory,
     } from '../../../utilities';
@@ -63,9 +67,12 @@ const generatePluridReactApplication = async (
 
     const yarnInstallCommand = `yarn add ${pluridReactPackages}`;
     const npmInstallCommand = `npm install ${pluridReactPackages}`;
-    const installCommand = app.manager === 'Yarn'
+    const pnpmInstallCommand = `pnpm install ${pluridReactPackages}`;
+    const installCommand = app.manager === manager.yarn
         ? yarnInstallCommand
-        : npmInstallCommand;
+        : app.manager === manager.pnpm
+            ? pnpmInstallCommand
+            : npmInstallCommand;
 
     exec(installCommand, {
         cwd: app.directory,
@@ -113,9 +120,12 @@ const generateReactClientApplication = async (
 
     const yarnCreateCommand = `yarn create react-app ${app.directory} ${language}`;
     const npmCreateCommand = `npx create-react-app ${app.directory} ${language} --use-npm`;
-    const createCommand = app.manager === 'Yarn'
+    const pnpmCreateCommand = `pnpm dlx create-react-app ${app.directory} ${language}`;
+    const createCommand = app.manager === manager.yarn
         ? yarnCreateCommand
-        : npmCreateCommand;
+        : app.manager === manager.pnpm
+            ? pnpmCreateCommand
+            : npmCreateCommand;
 
     exec(createCommand, async () => {
         console.log('\tReact Application generated successfully.');

@@ -33,8 +33,9 @@ const values = {
         new inquirer.Separator('---- pick one ----'),
     ],
     manager: [
-        'Yarn',
         'NPM',
+        'pNPM',
+        'Yarn',
         new inquirer.Separator('---- pick one ----'),
     ],
     services: [

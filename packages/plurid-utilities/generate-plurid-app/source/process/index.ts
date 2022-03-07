@@ -106,9 +106,11 @@ const processArguments = async (
                 break;
             case managerTypes.npm.toLowerCase():
                 manager = managerTypes.npm;
+            case managerTypes.pnpm.toLowerCase():
+                manager = managerTypes.pnpm;
                 break;
             default:
-                manager = managerTypes.yarn;
+                manager = managerTypes.npm;
         }
 
         switch (program.versioning.toLowerCase()) {

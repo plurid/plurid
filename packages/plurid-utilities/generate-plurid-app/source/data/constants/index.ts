@@ -44,9 +44,11 @@ export const renderer: IRenderer = {
 
 export const managerNPM = 'NPM';
 export const managerYarn = 'Yarn';
+export const managerPNPM = 'pNPM';
 export const manager: IManager = {
     npm: managerNPM,
     yarn: managerYarn,
+    pnpm: managerPNPM,
 };
 
 

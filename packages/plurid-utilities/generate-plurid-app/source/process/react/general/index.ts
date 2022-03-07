@@ -16,6 +16,10 @@
     } from '../../../data/interfaces';
 
     import {
+        manager,
+    } from '../../../data/constants';
+
+    import {
         addScript,
     } from '../../../utilities';
     // #endregion external
@@ -145,9 +149,12 @@ export const removeGeneratePackage = async (
 ) => {
     const yarnUninstallCommand = `yarn remove @plurid/generate-plurid-app`;
     const npmUninstallCommand = `npm uninstall @plurid/generate-plurid-app`;
-    const uninstallCommand = app.manager === 'Yarn'
+    const pnpmUninstallCommand = `pnpm uninstall @plurid/generate-plurid-app`;
+    const uninstallCommand = app.manager === manager.yarn
         ? yarnUninstallCommand
-        : npmUninstallCommand;
+        : app.manager === manager.pnpm
+            ? pnpmUninstallCommand
+            : npmUninstallCommand;
 
     exec(uninstallCommand, {
         cwd: app.directory,
@@ -160,8 +167,10 @@ export const removeGeneratePackage = async (
         console.log(`\n\t\tcd ${relativePath}`);
         console.log('\n\trun');
 
-        if (app.manager === 'Yarn') {
+        if (app.manager === manager.yarn) {
             console.log('\n\t\tyarn start');
+        } else if (app.manager === manager.pnpm) {
+            console.log('\n\t\tpnpm start');
         } else {
             console.log('\n\t\tnpm start');
         }

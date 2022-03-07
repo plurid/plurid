@@ -9,6 +9,7 @@
     // #region external
     import {
         services,
+        manager,
     } from '../../../data/constants';
 
     import {
@@ -294,9 +295,13 @@ const computeInitCommand = (
 ) => {
     const yarnInitCommand = `yarn init -y`;
     const npmInitCommand = `npm init -y`;
-    const initCommand = app.manager === 'Yarn'
+    const pnpmInitCommand = `pnpm init -y`;
+    const initCommand = app.manager === manager.yarn
         ? yarnInitCommand
-        : npmInitCommand;
+        : app.manager === manager.pnpm
+            ? pnpmInitCommand
+            : npmInitCommand;
+
     return initCommand;
 }
 
@@ -306,9 +311,13 @@ const computeInstallDependenciesCommand = (
 ) => {
     const yarnInstallDependenciesCommand = `yarn add ${dependencies}`;
     const npmInstallDependenciesCommand = `npm install ${dependencies}`;
-    const installDependenciesCommand = app.manager === 'Yarn'
+    const pnpmInstallDependenciesCommand = `pnpm install ${dependencies}`;
+    const installDependenciesCommand = app.manager === manager.yarn
         ? yarnInstallDependenciesCommand
-        : npmInstallDependenciesCommand;
+        : app.manager === manager.pnpm
+            ? pnpmInstallDependenciesCommand
+            : npmInstallDependenciesCommand;
+
     return installDependenciesCommand;
 }
 
@@ -318,9 +327,12 @@ const computeInstallDevelopmentDependenciesCommand = (
 ) => {
     const yarnInstallDevelopmentDependenciesCommand = `yarn add -D ${dependencies}`;
     const npmInstallDevelopmentDependenciesCommand = `npm install -D ${dependencies}`;
-    const installDevelopmentDependenciesCommand = app.manager === 'Yarn'
+    const pnpmInstallDevelopmentDependenciesCommand = `pnpm install -D ${dependencies}`;
+    const installDevelopmentDependenciesCommand = app.manager === manager.yarn
         ? yarnInstallDevelopmentDependenciesCommand
-        : npmInstallDevelopmentDependenciesCommand;
+        : app.manager === manager.pnpm
+            ? pnpmInstallDevelopmentDependenciesCommand
+            : npmInstallDevelopmentDependenciesCommand;
 
     return installDevelopmentDependenciesCommand;
 }
