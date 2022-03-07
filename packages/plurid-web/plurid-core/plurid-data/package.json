@@ -37,11 +37,11 @@
     "scripts": {
         "clean": "rm -rf ./distribution",
         "lint": "eslint ./source --ext .ts,.tsx",
-        "start": "yarn clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
-        "build.development": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:local",
+        "start": "pnpm clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
+        "build.development": "pnpm clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:local",
         "build.production": "rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
-        "build": "yarn clean && yarn build.production",
-        "prepublishOnly": "yarn build"
+        "build": "pnpm clean && pnpm build.production",
+        "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
         "@plurid/plurid-themes": "*"
