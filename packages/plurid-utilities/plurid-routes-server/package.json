@@ -37,11 +37,11 @@
         "clean.tests": "find ./distribution -type d -name \"__tests__\" -prune -exec rm -rf {} +",
         "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
-        "start": "yarn clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
-        "build.development": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:development",
-        "build.production": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
-        "build": "yarn clean && yarn lint && yarn test && yarn build.production && yarn clean.tests",
-        "prepublishOnly": "yarn build"
+        "start": "pnpm clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
+        "build.development": "pnpm clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:development",
+        "build.production": "pnpm clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
+        "build": "pnpm clean && pnpm lint && pnpm test && pnpm build.production && pnpm clean.tests",
+        "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
         "@plurid/deon": "*",
