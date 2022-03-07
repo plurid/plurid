@@ -41,16 +41,16 @@
     ],
     "preferGlobal": true,
     "scripts": {
-        "clean": "rm -rf ./distribution",
+        "clean": "rimraf ./distribution",
         "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
         "copy.server": "cp -r ./source/server ./distribution/server/",
-        "start": "yarn clean && rollup -c ./scripts/rollup.config.js  -w --environment ENV_MODE:local",
+        "start": "pnpm clean && rollup -c ./scripts/rollup.config.js  -w --environment ENV_MODE:local",
         "build.clean": "rm -rf `find ./distribution/ -type d -name __specs__`",
-        "build.development": "yarn clean && rollup -c ./scripts/rollup.config.js  --environment ENV_MODE:development",
-        "build.production": "yarn clean && yarn lint && yarn test && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production && yarn build.clean",
-        "build": "yarn build.production",
-        "prepublishOnly": "yarn build"
+        "build.development": "pnpm clean && rollup -c ./scripts/rollup.config.js  --environment ENV_MODE:development",
+        "build.production": "pnpm clean && pnpm lint && pnpm test && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production && pnpm build.clean",
+        "build": "pnpm build.production",
+        "prepublishOnly": "pnpm build"
     },
     "dependencies": {
         "commander": "^9.0.0",
