@@ -130,6 +130,16 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 
 
     // #region render
+    // const transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
+    const transform = cleanTemplate(`
+        translateX(${spaceTranslationX}px)
+        translateY(${spaceTranslationY}px)
+        translateZ(${spaceTranslationZ}px)
+        scale(${spaceScale})
+        rotateX(${spaceRotationX}deg)
+        rotateY(${spaceRotationY}deg)
+    `);
+
     return (
         <StyledPluridRoots
             suppressHydrationWarning={true}
@@ -137,14 +147,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                 // width: typeof window !== 'undefined' ? window.innerWidth + 'px' : '1440px',
                 width: '100%', // TOFIX
                 height: typeof window !== 'undefined' ? window.innerHeight + 'px' : '821px',
-                transform: cleanTemplate(`
-                    translateX(${spaceTranslationX}px)
-                    translateY(${spaceTranslationY}px)
-                    translateZ(${spaceTranslationZ}px)
-                    scale(${spaceScale})
-                    rotateX(${spaceRotationX}deg)
-                    rotateY(${spaceRotationY}deg)
-                `),
+                transform,
                 transition: animatedTransform
                     ? `transform ${transformTime}ms ease-in-out`
                     // : firstPerson
