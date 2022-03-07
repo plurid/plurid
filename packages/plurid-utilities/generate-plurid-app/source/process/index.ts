@@ -106,6 +106,7 @@ const processArguments = async (
                 break;
             case managerTypes.npm.toLowerCase():
                 manager = managerTypes.npm;
+                break;
             case managerTypes.pnpm.toLowerCase():
                 manager = managerTypes.pnpm;
                 break;
