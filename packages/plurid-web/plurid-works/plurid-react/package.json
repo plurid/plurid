@@ -38,10 +38,10 @@
         "clean": "rm -rf ./distribution",
         "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
-        "build.development": "yarn clean && rollup -c ./scripts/rollup.development.js --environment ENV_MODE:development",
-        "build.production": "yarn clean && yarn lint && yarn test && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
-        "build": "yarn build.production",
-        "prepublishOnly": "yarn build"
+        "build.development": "pnpm clean && rollup -c ./scripts/rollup.development.js --environment ENV_MODE:development",
+        "build.production": "pnpm clean && pnpm lint && pnpm test && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
+        "build": "pnpm build.production",
+        "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
         "@plurid/elementql": "*",
