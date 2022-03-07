@@ -26,7 +26,7 @@
 let composeWithDevTools: any;
 if (!environment.production) {
     try {
-        const reduxDevTools = require('redux-devtools-extension');
+        const reduxDevTools = require('@redux-devtools/extension');
         composeWithDevTools = reduxDevTools.composeWithDevTools;
     } catch (error) {
         composeWithDevTools = undefined;
