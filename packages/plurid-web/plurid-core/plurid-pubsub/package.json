@@ -36,12 +36,12 @@
         "clean.tests": "find ./distribution -type d -name \"__tests__\" -prune -exec rm -rf {} +",
         "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
-        "start": "yarn clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
-        "build.local": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:local",
-        "build.development": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:development",
-        "build.production": "yarn clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
-        "build": "yarn lint && yarn test && yarn build.production && yarn clean.tests",
-        "prepublishOnly": "yarn build"
+        "start": "pnpm clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
+        "build.local": "pnpm clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:local",
+        "build.development": "pnpm clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:development",
+        "build.production": "pnpm clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
+        "build": "pnpm lint && pnpm test && pnpm build.production && pnpm clean.tests",
+        "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
         "@plurid/plurid-data": "*"
@@ -57,6 +57,7 @@
         "@zerollup/ts-transform-paths": "^1.7.18",
         "eslint": "^8.10.0",
         "jest": "^27.5.1",
+        "rimraf": "^3.0.2",
         "rollup": "^2.68.0",
         "rollup-plugin-terser": "^7.0.2",
         "rollup-plugin-typescript2": "^0.31.2",
