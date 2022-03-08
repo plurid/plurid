@@ -754,7 +754,7 @@ const PluridView: React.FC<ViewProperties> = (
             }
         }
         // #endregion handlers touch
-        // #endregion handlers
+    // #endregion handlers
 
 
     // #region effects
@@ -959,11 +959,11 @@ const PluridView: React.FC<ViewProperties> = (
         // #endregion effects pubsub
 
 
-        useEffect(() => {
-            treeUpdateCallback();
-        }, [
-            stateSpaceView,
-        ]);
+        // useEffect(() => {
+        //     treeUpdateCallback();
+        // }, [
+        //     stateSpaceView,
+        // ]);
     // #endregion effects
 
 
