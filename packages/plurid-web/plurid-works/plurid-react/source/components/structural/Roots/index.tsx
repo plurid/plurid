@@ -25,7 +25,7 @@
 
     import {
         cleanTemplate,
-        interaction,
+        // interaction,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -51,22 +51,22 @@
 
 
 // #region module
-const {
-    quaternion,
-    matrix,
-} = interaction;
+// const {
+//     quaternion,
+//     matrix,
+// } = interaction;
 
-const {
-    matrixArrayToCSSMatrix,
-    rotateMatrix,
-    multiplyArrayOfMatrices,
-    scaleMatrix,
-    translateMatrix,
-} = matrix;
+// const {
+//     matrixArrayToCSSMatrix,
+//     rotateMatrix,
+//     multiplyArrayOfMatrices,
+//     scaleMatrix,
+//     translateMatrix,
+// } = matrix;
 
-const {
-    degToRad,
-} = quaternion;
+// const {
+//     degToRad,
+// } = quaternion;
 
 export interface PluridRootsOwnProperties {
 }
@@ -106,8 +106,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         spaceTransformMatrix,
         animatedTransform,
         transformTime,
-        spaceScale,
-        spaceRotationX,
+        // spaceScale,
+        // spaceRotationX,
         spaceRotationY,
         spaceTranslationX,
         spaceTranslationY,
@@ -150,21 +150,21 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 
 
     // #region render
-    const rotationMatrix = rotateMatrix(degToRad(-spaceRotationX), degToRad(-spaceRotationY));
-    const translationMatrix = translateMatrix(spaceTranslationX, spaceTranslationY, spaceTranslationZ);
-    const scalationMatrix = scaleMatrix(spaceScale);
+    // const rotationMatrix = rotateMatrix(degToRad(-spaceRotationX), degToRad(-spaceRotationY));
+    // const translationMatrix = translateMatrix(spaceTranslationX, spaceTranslationY, spaceTranslationZ);
+    // const scalationMatrix = scaleMatrix(spaceScale);
 
-    const transformMatrix = multiplyArrayOfMatrices([
-        translationMatrix,
-        multiplyArrayOfMatrices([
-            translateMatrix(transformOriginX, transformOriginY, transformOriginZ),
-            rotationMatrix,
-            translateMatrix(-transformOriginX, -transformOriginY, -transformOriginZ),
-        ]),
-        scalationMatrix,
-    ]);
+    // const transformMatrix = multiplyArrayOfMatrices([
+    //     translationMatrix,
+    //     multiplyArrayOfMatrices([
+    //         translateMatrix(transformOriginX, transformOriginY, transformOriginZ),
+    //         rotationMatrix,
+    //         translateMatrix(-transformOriginX, -transformOriginY, -transformOriginZ),
+    //     ]),
+    //     scalationMatrix,
+    // ]);
 
-    const transform = matrixArrayToCSSMatrix(transformMatrix);
+    // const transform = matrixArrayToCSSMatrix(transformMatrix);
 
 
     return (
@@ -174,7 +174,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                 // width: typeof window !== 'undefined' ? window.innerWidth + 'px' : '1440px',
                 width: '100%', // TOFIX
                 height: typeof window !== 'undefined' ? window.innerHeight + 'px' : '821px',
-                transform,
+                transform: spaceTransformMatrix,
                 transition: animatedTransform
                     ? `transform ${transformTime}ms ease-in-out`
                     // : firstPerson

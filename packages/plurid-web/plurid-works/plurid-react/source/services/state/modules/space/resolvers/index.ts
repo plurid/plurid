@@ -22,6 +22,10 @@
 
     // #region external
     import * as Types from '../types';
+
+    import {
+        computeMatrix,
+    } from '~services/logic/transform';
     // #endregion external
 // #endregion imports
 
@@ -136,12 +140,13 @@ export const setSpaceLocation = (
 export const viewCameraMoveForward = (
     state: Types.State,
 ): Types.State => {
-    const translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
-    const translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
+    const newState = getNewState(state);
+    newState.translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
+    newState.translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationX,
-        translationZ,
+        ...newState,
     };
 }
 
@@ -149,12 +154,13 @@ export const viewCameraMoveForward = (
 export const viewCameraMoveBackward = (
     state: Types.State,
 ): Types.State => {
-    const translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
-    const translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
+    const newState = getNewState(state);
+    newState.translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
+    newState.translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationX,
-        translationZ,
+        ...newState,
     };
 }
 
@@ -162,12 +168,13 @@ export const viewCameraMoveBackward = (
 export const viewCameraMoveLeft = (
     state: Types.State,
 ): Types.State => {
-    const translationX = state.translationX + TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
-    const translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
+    const newState = getNewState(state);
+    newState.translationX = state.translationX + TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
+    newState.translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationX,
-        translationZ,
+        ...newState,
     };
 }
 
@@ -175,12 +182,13 @@ export const viewCameraMoveLeft = (
 export const viewCameraMoveRight = (
     state: Types.State,
 ): Types.State => {
-    const translationX = state.translationX - TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
-    const translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
+    const newState = getNewState(state);
+    newState.translationX = state.translationX - TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
+    newState.translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationX,
-        translationZ,
+        ...newState,
     };
 }
 
@@ -188,10 +196,12 @@ export const viewCameraMoveRight = (
 export const viewCameraMoveUp = (
     state: Types.State,
 ): Types.State => {
-    const translationY = state.translationY + TRANSLATION_STEP * 3;
+    const newState = getNewState(state);
+    newState.translationY = state.translationY + TRANSLATION_STEP * 3;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationY,
+        ...newState,
     };
 }
 
@@ -199,10 +209,12 @@ export const viewCameraMoveUp = (
 export const viewCameraMoveDown = (
     state: Types.State,
 ): Types.State => {
-    const translationY = state.translationY - TRANSLATION_STEP * 3;
+    const newState = getNewState(state);
+    newState.translationY = state.translationY - TRANSLATION_STEP * 3;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationY,
+        ...newState,
     };
 }
 
@@ -210,10 +222,12 @@ export const viewCameraMoveDown = (
 export const viewCameraTurnUp = (
     state: Types.State,
 ): Types.State => {
-    const rotationX = (state.rotationX + ROTATION_STEP) % 360;
+    const newState = getNewState(state);
+    newState.rotationX = (state.rotationX + ROTATION_STEP) % 360;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationX,
+        ...newState,
     };
 }
 
@@ -221,10 +235,12 @@ export const viewCameraTurnUp = (
 export const viewCameraTurnDown = (
     state: Types.State,
 ): Types.State => {
-    const rotationX = (state.rotationX - ROTATION_STEP) % 360;
+    const newState = getNewState(state);
+    newState.rotationX = (state.rotationX - ROTATION_STEP) % 360;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationX,
+        ...newState,
     };
 }
 
@@ -232,10 +248,12 @@ export const viewCameraTurnDown = (
 export const viewCameraTurnLeft = (
     state: Types.State,
 ): Types.State => {
-    const rotationY = (state.rotationY - ROTATION_STEP) % 360;
+    const newState = getNewState(state);
+    newState.rotationY = (state.rotationY - ROTATION_STEP) % 360;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationY,
+        ...newState,
     };
 }
 
@@ -243,10 +261,12 @@ export const viewCameraTurnLeft = (
 export const viewCameraTurnRight = (
     state: Types.State,
 ): Types.State => {
-    const rotationY = (state.rotationY + ROTATION_STEP) % 360;
+    const newState = getNewState(state);
+    newState.rotationY = (state.rotationY + ROTATION_STEP) % 360;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationY,
+        ...newState,
     };
 }
 
@@ -254,10 +274,12 @@ export const viewCameraTurnRight = (
 export const rotateUp = (
     state: Types.State,
 ): Types.State => {
-    const rotationX = (state.rotationX + ROTATION_STEP) % 360;
+    const newState = getNewState(state);
+    newState.rotationX = (state.rotationX + ROTATION_STEP) % 360;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationX,
+        ...newState,
     };
 }
 
@@ -265,10 +287,12 @@ export const rotateUp = (
 export const rotateDown = (
     state: Types.State,
 ): Types.State => {
-    const rotationX = (state.rotationX - ROTATION_STEP) % 360;
+    const newState = getNewState(state);
+    newState.rotationX = (state.rotationX - ROTATION_STEP) % 360;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationX,
+        ...newState,
     };
 }
 
@@ -277,9 +301,12 @@ export const rotateX = (
     state: Types.State,
     action: Types.RotateXAction,
 ): Types.State => {
+    const newState = getNewState(state);
+    newState.rotationX = action.payload;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationX: action.payload,
+        ...newState,
     };
 }
 
@@ -288,10 +315,12 @@ export const rotateXWith = (
     state: Types.State,
     action: Types.RotateXWithAction,
 ): Types.State => {
-    const rotationX = state.rotationX + action.payload;
+    const newState = getNewState(state);
+    newState.rotationX = state.rotationX + action.payload;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationX,
+        ...newState,
     };
 }
 
@@ -299,10 +328,12 @@ export const rotateXWith = (
 export const rotateLeft = (
     state: Types.State,
 ): Types.State => {
-    const rotationY = (state.rotationY + ROTATION_STEP) % 360;
+    const newState = getNewState(state);
+    newState.rotationY = (state.rotationY + ROTATION_STEP) % 360;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationY,
+        ...newState,
     };
 }
 
@@ -310,10 +341,12 @@ export const rotateLeft = (
 export const rotateRight = (
     state: Types.State,
 ): Types.State => {
-    const rotationY = (state.rotationY - ROTATION_STEP) % 360;
+    const newState = getNewState(state);
+    newState.rotationY = (state.rotationY - ROTATION_STEP) % 360;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationY,
+        ...newState,
     };
 }
 
@@ -322,9 +355,12 @@ export const rotateY = (
     state: Types.State,
     action: Types.RotateYAction,
 ): Types.State => {
+    const newState = getNewState(state);
+    newState.rotationY = action.payload;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationY: action.payload,
+        ...newState,
     };
 }
 
@@ -333,10 +369,12 @@ export const rotateYWith = (
     state: Types.State,
     action: Types.RotateYWithAction,
 ): Types.State => {
-    const rotationY = state.rotationY + action.payload;
+    const newState = getNewState(state);
+    newState.rotationY = state.rotationY + action.payload;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        rotationY,
+        ...newState,
     };
 }
 
@@ -344,10 +382,12 @@ export const rotateYWith = (
 export const translateUp = (
     state: Types.State,
 ): Types.State => {
-    const translationY = state.translationY - TRANSLATION_STEP;
+    const newState = getNewState(state);
+    newState.translationY = state.translationY - TRANSLATION_STEP;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationY,
+        ...newState,
     };
 }
 
@@ -355,10 +395,12 @@ export const translateUp = (
 export const translateDown = (
     state: Types.State,
 ): Types.State => {
-    const translationY = state.translationY + TRANSLATION_STEP;
+    const newState = getNewState(state);
+    newState.translationY = state.translationY + TRANSLATION_STEP;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationY,
+        ...newState,
     };
 }
 
@@ -366,12 +408,13 @@ export const translateDown = (
 export const translateLeft = (
     state: Types.State,
 ): Types.State => {
-    const translationX = state.translationX - TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
-    const translationZ = state.translationZ - TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
+    const newState = getNewState(state);
+    newState.translationX = state.translationX - TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
+    newState.translationZ = state.translationZ - TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationX,
-        translationZ,
+        ...newState,
     };
 }
 
@@ -379,12 +422,13 @@ export const translateLeft = (
 export const translateRight = (
     state: Types.State,
 ): Types.State => {
-    const translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
-    const translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
+    const newState = getNewState(state);
+    newState.translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
+    newState.translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationX,
-        translationZ,
+        ...newState,
     };
 }
 
@@ -392,12 +436,13 @@ export const translateRight = (
 export const translateIn = (
     state: Types.State,
 ): Types.State => {
-    const translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
-    const translationX = state.translationX - TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
+    const newState = getNewState(state);
+    newState.translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
+    newState.translationX = state.translationX - TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationX,
-        translationZ,
+        ...newState,
     };
 }
 
@@ -405,12 +450,13 @@ export const translateIn = (
 export const translateOut = (
     state: Types.State,
 ): Types.State => {
-    const translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
-    const translationX = state.translationX + TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
+    const newState = getNewState(state);
+    newState.translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
+    newState.translationX = state.translationX + TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationX,
-        translationZ,
+        ...newState,
     };
 }
 
@@ -419,12 +465,13 @@ export const translateXWith = (
     state: Types.State,
     action: Types.TranslateXWithAction,
 ): Types.State => {
-    const translationX = state.translationX +  action.payload * Math.cos(toRadians(state.rotationY));
-    const translationZ = state.translationZ +  action.payload * Math.sin(toRadians(state.rotationY));
+    const newState = getNewState(state);
+    newState.translationX = state.translationX +  action.payload * Math.cos(toRadians(state.rotationY));
+    newState.translationZ = state.translationZ +  action.payload * Math.sin(toRadians(state.rotationY));
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationX,
-        translationZ,
+        ...newState,
     };
 }
 
@@ -433,10 +480,12 @@ export const translateYWith = (
     state: Types.State,
     action: Types.TranslateYWithAction,
 ): Types.State => {
-    const translationY = state.translationY + action.payload;
+    const newState = getNewState(state);
+    newState.translationY = state.translationY + action.payload;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        translationY,
+        ...newState,
     };
 }
 
@@ -448,9 +497,13 @@ export const scaleUp = (
     const scale = computedScale < SCALE_UPPER_LIMIT
         ? computedScale
         : SCALE_UPPER_LIMIT;
+
+    const newState = getNewState(state);
+    newState.scale = scale;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        scale,
+        ...newState,
     };
 }
 
@@ -462,9 +515,13 @@ export const scaleDown = (
     const scale = computedScale > SCALE_LOWER_LIMIT
         ? computedScale
         : SCALE_LOWER_LIMIT;
+
+    const newState = getNewState(state);
+    newState.scale = scale;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        scale,
+        ...newState,
     };
 }
 
@@ -478,9 +535,12 @@ export const scaleUpWith = (
         ? computedScale
         : SCALE_UPPER_LIMIT;
 
+    const newState = getNewState(state);
+    newState.scale = scale;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        scale,
+        ...newState,
     };
 }
 
@@ -495,9 +555,12 @@ export const scaleDownWith = (
         ? computedScale
         : SCALE_LOWER_LIMIT;
 
+    const newState = getNewState(state);
+    newState.scale = scale;
+    newState.transform = computeMatrix(state);
+
     return {
-        ...state,
-        scale,
+        ...newState,
     };
 }
 
