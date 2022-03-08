@@ -5,11 +5,6 @@
     import { AnyAction } from 'redux';
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
-
-
-    import {
-        PluridConfiguration,
-    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -21,7 +16,7 @@
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
-    import selectors from '~services/state/selectors';
+    // import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
     // #endregion exports
 // #endregion imports
@@ -33,13 +28,13 @@ export interface PluridPlanesViewOwnProperties {
 }
 
 export interface PluridPlanesViewStateProperties {
-    stateConfiguration: PluridConfiguration;
 }
 
 export interface PluridPlanesViewDispatchProperties {
 }
 
-export type PluridPlanesViewProperties = PluridPlanesViewOwnProperties
+export type PluridPlanesViewProperties =
+    & PluridPlanesViewOwnProperties
     & PluridPlanesViewStateProperties
     & PluridPlanesViewDispatchProperties;
 
@@ -47,27 +42,6 @@ export type PluridPlanesViewProperties = PluridPlanesViewOwnProperties
 const PluridPlanesView: React.FC<PluridPlanesViewProperties> = (
     properties,
 ) => {
-    // #region properties
-    const {
-        // #region state
-        stateConfiguration,
-        // #endregion state
-    } = properties;
-
-    const {
-        elements,
-    } = stateConfiguration;
-
-    const {
-        toolbar,
-        viewcube,
-    } = elements;
-
-    const showToolbar = toolbar.show;
-    const showViewcube = viewcube.show;
-    // #endregion properties
-
-
     // #region render
     return (
         <>
@@ -75,13 +49,9 @@ const PluridPlanesView: React.FC<PluridPlanesViewProperties> = (
 
             <PluridOrigin />
 
-            {showToolbar && (
-                <PluridToolbar />
-            )}
+            <PluridToolbar />
 
-            {showViewcube && (
-                <PluridViewcube />
-            )}
+            <PluridViewcube />
         </>
     );
     // #endregion render
@@ -91,7 +61,6 @@ const PluridPlanesView: React.FC<PluridPlanesViewProperties> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridPlanesViewStateProperties => ({
-    stateConfiguration: selectors.configuration.getConfiguration(state),
 });
 
 

@@ -107,6 +107,8 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
     const {
         fadeInTime,
     } = space;
+
+    const showViewcube = viewcube.show;
     // #endregion properties
 
 
@@ -166,6 +168,10 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
 
 
     // #region render
+    if (!showViewcube) {
+        return (<></>);
+    }
+
     return (
         <StyledPluridViewcube
             onMouseEnter={() => setMouseOver(true)}

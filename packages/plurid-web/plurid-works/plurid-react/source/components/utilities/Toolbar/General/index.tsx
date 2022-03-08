@@ -135,6 +135,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
         transformButtons,
     } = toolbar;
 
+    const showToolbar = toolbar.show;
     // const universesBased = Object.keys(universes).length > 1;
     // #endregion properties
 
@@ -235,6 +236,10 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
 
 
     // #region render
+    if (!showToolbar) {
+        return (<></>);
+    }
+
     return (
         <StyledToolbar
             onMouseEnter={() => setMouseIn(true)}
