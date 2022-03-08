@@ -156,6 +156,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         stateConfiguration.network.host,
     );
     // console.log('absolutePlaneRoute', absolutePlaneRoute);
+
+    const suffix = _suffix ?? PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX;
+    const devisible = _devisible ?? false;
     // #endregion properties
 
 
@@ -201,9 +204,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [pluridPlaneID, setPluridPlaneID] = useState('');
     const [parentPlaneID, setParentPlaneID] = useState('');
     const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
-
-    const [suffix, setSuffix] = useState(_suffix ?? PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX);
-    const [devisible, setDevisible] = useState(_devisible ?? false);
     // #endregion state
 
 
@@ -493,20 +493,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     // #region effects
-    /** Set default suffix, devisible */
-    useEffect(() => {
-        if (_suffix !== undefined) {
-            setSuffix(_suffix);
-        }
-
-        if (_devisible !== undefined) {
-            setDevisible(_devisible);
-        }
-    }, [
-        _suffix,
-        _devisible,
-    ]);
-
     /**
      * Update Link Coordinates
      */
