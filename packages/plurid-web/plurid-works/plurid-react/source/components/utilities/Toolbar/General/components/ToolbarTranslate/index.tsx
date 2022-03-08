@@ -79,27 +79,31 @@ export type PluridToolbarTranslateProperties = PluridToolbarTranslateOwnProperti
 const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** own */
+        // #region own
         showTransformButtons,
         showIcons,
         transformMode,
         toggleTransform,
+        // #endregion own
 
-        /** state */
+        // #region state
         stateLanguage,
         interactionTheme,
+        // #endregion state
 
-        /** dispatch */
+        // #region dispatch
         translateUp,
         translateDown,
         translateLeft,
         translateRight,
+        // #endregion dispatch
     } = properties;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridToolbarTranslate
             showTransformButtons={showTransformButtons}
@@ -154,10 +158,11 @@ const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
             )}
         </StyledPluridToolbarTranslate>
     );
+    // #endregion render
 }
 
 
-const mapStateToProps = (
+const mapStateToProperties = (
     state: AppState,
 ): PluridToolbarTranslateStateProperties => ({
     stateLanguage: selectors.configuration.getConfiguration(state).global.language,
@@ -165,7 +170,7 @@ const mapStateToProps = (
 });
 
 
-const mapDispatchToProps = (
+const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridToolbarTranslateDispatchProperties => ({
     translateUp: () => dispatch(
@@ -184,8 +189,8 @@ const mapDispatchToProps = (
 
 
 const ConnectedPluridToolbarTranslate = connect(
-    mapStateToProps,
-    mapDispatchToProps,
+    mapStateToProperties,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,

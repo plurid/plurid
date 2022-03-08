@@ -1,13 +1,22 @@
 // #region imports
     // #region libraries
     import styled from 'styled-components';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
     // #endregion libraries
 // #endregion imports
 
 
 
 // #region module
-export const StyledPluridTransformArrow: any = styled.div`
+export interface IStyledPluridTransformArrow {
+    theme: Theme;
+    pressed: boolean;
+}
+
+export const StyledPluridTransformArrow = styled.div<IStyledPluridTransformArrow>`
     user-select: none;
     cursor: pointer;
     border-radius: 50px;
@@ -16,17 +25,26 @@ export const StyledPluridTransformArrow: any = styled.div`
     display: grid;
     place-content: center;
     padding: 2px;
-    background-color: ${(props: any) => {
-        if (props.pressed) {
-            return props.theme.backgroundColorTertiary;
+
+    background-color: ${
+        ({
+            pressed,
+            theme,
+        }: IStyledPluridTransformArrow) => {
+            if (pressed) {
+                return theme.backgroundColorTertiary;
+            }
+
+            return 'initial';
         }
-        return 'initial';
-    }};
+    };
 
     :hover {
-        background-color: ${(props: any) => {
-            return props.theme.backgroundColorTertiary;
-        }};
+        background-color: ${
+            ({
+                theme,
+            }: IStyledPluridTransformArrow) => theme.backgroundColorTertiary
+        };
     }
 `;
 // #endregion module

@@ -38,6 +38,14 @@
 
 
 // #region module
+const arrowSigns = {
+    left :'◀',
+    right :'▶',
+    up :'▲',
+    down :'▼',
+};
+
+
 export interface PluridTransformArrowOwnProperties {
     direction: string;
     transform: () => void;
@@ -58,30 +66,37 @@ export type PluridTransformArrowProperties = PluridTransformArrowOwnProperties
 const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** own */
+        // #region own
         direction,
         transform,
+        // #endregion own
 
-        /** state */
+        // #region state
         interactionTheme,
-
-        /** dispatch */
+        // #endregion state
     } = properties;
 
+    const arrowSign = arrowSigns[direction];
+    // #endregion properties
 
-    /** references */
+
+    // #region references
     const pressingInterval = useRef<null | NodeJS.Timeout>(null);
-    const arrowElement = useRef<null | NodeJS.Timeout>(null);
+    const arrowElement = useRef<null | HTMLDivElement>(null);
+    // #endregion references
 
 
-    /** state */
-    const [arrowSign, setArrowSign] = useState('');
-    const [pressed, setPressed] = useState(false);
+    // #region state
+    const [
+        pressed,
+        setPressed,
+    ] = useState(false);
+    // #endregion state
 
 
-    /** handlers */
+    // #region handlers
     const handleTouch = (
         event: HammerInput,
     ) => {
@@ -108,28 +123,16 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
         }
     }
 
-
-    /** effects */
-    /** Direction */
-    useEffect(() => {
-        switch (direction) {
-            case 'left':
-                setArrowSign('◀');
-                break;
-            case 'right':
-                setArrowSign('▶');
-                break;
-            case 'up':
-                setArrowSign('▲');
-                break;
-            case 'down':
-                setArrowSign('▼');
-                break;
+    const handleMouseLeave = () => {
+        if (pressingInterval.current) {
+            setPressed(false);
+            clearInterval(pressingInterval.current);
         }
-    }, [
-        direction,
-    ]);
+    }
+    // #endregion handlers
 
+
+    // #region effects
     /** Touch */
     useEffect(() => {
         if (typeof window === 'undefined') {
@@ -138,15 +141,14 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
 
         let touch: HammerManager;
 
-        const handleTouch = async () => {
+        const loadTouch = async () => {
             const HammerImport = await loadHammer();
             const Hammer = HammerImport.default;
 
             touch = new Hammer((arrowElement as any).current);
             touch.on('tap press pressup', handleTouch);
         }
-
-        handleTouch();
+        loadTouch();
 
         return () => {
             if (touch) {
@@ -156,6 +158,7 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
     }, [
         arrowElement.current,
     ]);
+    // #endregion effects
 
 
     /** render */
@@ -164,6 +167,7 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
             ref={arrowElement}
             theme={interactionTheme}
             pressed={pressed}
+            onMouseLeave={() => handleMouseLeave()}
         >
             {arrowSign}
         </StyledPluridTransformArrow>
