@@ -493,16 +493,16 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     // #region effects
-    /**
-     * Update Link Coordinates
-     */
-    useEffect(() => {
-        if (showLink) {
-            updateLinkCoordinates();
-        }
-    }, [
-        stateViewSize,
-    ]);
+    // /**
+    //  * Update Link Coordinates
+    //  */
+    // useEffect(() => {
+    //     if (showLink) {
+    //         updateLinkCoordinates();
+    //     }
+    // }, [
+    //     stateViewSize,
+    // ]);
 
     /**
      * Get Parent Plane ID
