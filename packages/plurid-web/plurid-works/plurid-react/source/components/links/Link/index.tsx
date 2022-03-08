@@ -101,6 +101,7 @@ export interface PluridLinkDispatchProperties {
     dispatchSetTree: typeof actions.space.setTree;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     dispatchSetTransform: typeof actions.space.setTransform;
+    dispatchSetSpaceField: typeof actions.space.setSpaceField;
     dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
 }
 
@@ -136,6 +137,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         dispatchSetTree,
         dispatchSetAnimatedTransform,
         dispatchSetTransform,
+        dispatchSetSpaceField,
         dispatchUpdateSpaceLinkCoordinates,
         // #endregion dispatch
     } = properties;
@@ -444,6 +446,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         dispatchSetAnimatedTransform(true);
 
+        dispatchSetSpaceField({
+            field: 'transform',
+            value: matrix3d,
+        });
+
         dispatchSetTransform({
             translationX: translate.translateX,
             translationY: translate.translateY,
@@ -641,6 +648,11 @@ const mapDispatchToProperties = (
         payload,
     ) => dispatch(
         actions.space.setTransform(payload),
+    ),
+    dispatchSetSpaceField: (
+        payload,
+    ) => dispatch(
+        actions.space.setSpaceField(payload),
     ),
     dispatchUpdateSpaceLinkCoordinates: (
         payload: UpdateSpaceLinkCoordinatesPayload,
