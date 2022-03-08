@@ -9,6 +9,7 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
     import {
         InternationalizationLanguageType,
         internationalization,
@@ -16,6 +17,7 @@
 
     import {
         internatiolate,
+        interaction,
     } from '@plurid/plurid-engine';
     // #endregion libraries
 
@@ -42,6 +44,19 @@
 
 
 // #region module
+const {
+    matrixArrayToCSSMatrix,
+    rotateMatrix,
+    multiplyArrayOfMatrices,
+    scaleMatrix,
+    translateMatrix,
+} = interaction.matrix;
+
+const {
+    degToRad,
+} = interaction.quaternion;
+
+
 export interface PluridViewcubeModelOwnProperties {
     mouseOver: boolean;
 }
@@ -57,7 +72,8 @@ export interface PluridViewcubeModelStateProperties {
 export interface PluridViewcubeModelDispatchProperties {
 }
 
-export type PluridViewcubeModelProperties = PluridViewcubeModelOwnProperties
+export type PluridViewcubeModelProperties =
+    & PluridViewcubeModelOwnProperties
     & PluridViewcubeModelStateProperties
     & PluridViewcubeModelDispatchProperties;
 
@@ -67,17 +83,17 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
 ) => {
     // #region properties
     const {
-        /** own */
+        // #region own
         mouseOver,
+        // #endregion own
 
-        /** state */
+        // #region state
         stateLanguage,
         spaceRotationX,
         spaceRotationY,
         stateAnimatedTransform,
         stateTransformTime,
-
-        /** dispatch */
+        // #endregion state
     } = properties;
     // #endregion properties
 
@@ -91,6 +107,38 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
     // #region handlers
     const handleMouseLeave = () => {
         setHoveredZone('');
+    }
+
+    const computeTransform = () => {
+        const offsets = {
+            x: 32,
+            y: 23,
+            z: 0,
+        };
+        const transformOrigins = {
+            x: 0,
+            y: 0,
+            z: 0,
+        };
+        const scale = 1;
+
+        const rotationMatrix = rotateMatrix(degToRad(-spaceRotationX), degToRad(-spaceRotationY));
+        const translationMatrix = translateMatrix(offsets.x, offsets.y, offsets.z);
+        const scalationMatrix = scaleMatrix(scale);
+
+        const transformMatrix = multiplyArrayOfMatrices([
+            translationMatrix,
+            multiplyArrayOfMatrices([
+                translateMatrix(transformOrigins.x, transformOrigins.y, transformOrigins.z),
+                rotationMatrix,
+                translateMatrix(-transformOrigins.x, -transformOrigins.y, -transformOrigins.z),
+            ]),
+            scalationMatrix,
+        ]);
+
+        const transform = matrixArrayToCSSMatrix(transformMatrix);
+
+        return transform;
     }
     // #endregion handlers
 
@@ -108,18 +156,15 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
 
 
     // #region render
+    const transform = computeTransform();
+
     return (
         <StyledPluridViewcubeModel>
             <StyledPluridViewcubeModelContainer>
                 <StyledPluridViewcubeModelCube
                     suppressHydrationWarning={true}
                     style={{
-                        transform: `
-                            translateX(32px)
-                            translateY(23px)
-                            rotateX(${spaceRotationX}deg)
-                            rotateY(${spaceRotationY}deg)
-                        `,
+                        transform,
                         transition: mouseOver || stateAnimatedTransform
                             ? `transform ${stateTransformTime}ms ease-in-out`
                             : '',
