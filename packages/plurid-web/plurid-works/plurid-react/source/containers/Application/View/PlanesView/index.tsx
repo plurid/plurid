@@ -2,18 +2,20 @@
     // #region libraries
     import React from 'react';
 
-    import {
-        PluridConfiguration,
-    } from '@plurid/plurid-data';
-
     import { AnyAction } from 'redux';
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
+
+
+    import {
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region exports
     import PluridSpace from '~components/structural/Space';
+    import PluridOrigin from '~components/utilities/Origin';
     import PluridToolbar from '~components/utilities/Toolbar/General';
     import PluridViewcube from '~components/utilities/Viewcube';
 
@@ -31,7 +33,7 @@ export interface PluridPlanesViewOwnProperties {
 }
 
 export interface PluridPlanesViewStateProperties {
-    stateConfiguration: PluridConfiguration,
+    stateConfiguration: PluridConfiguration;
 }
 
 export interface PluridPlanesViewDispatchProperties {
@@ -70,6 +72,8 @@ const PluridPlanesView: React.FC<PluridPlanesViewProperties> = (
     return (
         <>
             <PluridSpace />
+
+            <PluridOrigin />
 
             {showToolbar && (
                 <PluridToolbar />
