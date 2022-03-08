@@ -43,6 +43,7 @@ const getNewState = (
 ) => objects.clone(state, 'any');
 
 
+
 export const setSpaceField = (
     state: Types.State,
     action: Types.SetSpaceFieldAction,
@@ -65,8 +66,10 @@ export const setSpaceLoading = (
     state: Types.State,
     action: Types.SetSpaceLoadingAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         loading: action.payload,
     };
 }
@@ -92,8 +95,10 @@ export const setTransform = (
     const resolvedRotationY = rotationY ?? state.rotationY;
     const resolvedScale = scale ?? state.scale;
 
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         translationX: resolvedTranslationX,
         translationY: resolvedTranslationY,
         translationZ: resolvedTranslationZ,
@@ -108,8 +113,10 @@ export const setAnimatedTransform = (
     state: Types.State,
     action: Types.SetAnimatedTransformAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         animatedTransform: action.payload,
     };
 }
@@ -119,8 +126,10 @@ export const setTransformTime = (
     state: Types.State,
     action: Types.SetTransformTimeAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         transformTime: action.payload,
     };
 }
@@ -130,8 +139,10 @@ export const setSpaceLocation = (
     state: Types.State,
     action: Types.SetSpaceLocationAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         ...action.payload,
     };
 }
@@ -569,8 +580,10 @@ export const setInitialTree = (
     state: Types.State,
     action: Types.SetInitialTreeAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         initialTree: [
             ...action.payload,
         ],
@@ -582,8 +595,10 @@ export const setTree = (
     state: Types.State,
     action: Types.SetTreeAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         tree: [
             ...action.payload,
         ],
@@ -595,8 +610,10 @@ export const setActiveUniverse = (
     state: Types.State,
     action: Types.SetActiveUniverseAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         activeUniverseID: action.payload,
     };
 }
@@ -605,8 +622,10 @@ export const setActiveUniverse = (
 export const spaceResetTransform = (
     state: Types.State,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         scale: 1,
         rotationX: 0,
         rotationY: 0,
@@ -621,8 +640,10 @@ export const setViewSize = (
     state: Types.State,
     action: Types.SetViewSizeAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         viewSize: {
             ...action.payload,
         },
@@ -634,8 +655,10 @@ export const setSpaceSize = (
     state: Types.State,
     action: Types.SetSpaceSizeAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         spaceSize: {
             ...action.payload,
         },
@@ -647,10 +670,12 @@ export const updateSpaceTreePlane = (
     state: Types.State,
     action: Types.UpdateSpaceTreePlaneAction,
 ): Types.State => {
-    const updatedTree = generalEngine.tree.updateTreePlane(state.tree, action.payload);
+    const newState = getNewState(state);
+
+    const updatedTree = generalEngine.tree.updateTreePlane(newState.tree, action.payload);
 
     return {
-        ...state,
+        ...newState,
         tree: updatedTree,
     };
 }
@@ -665,14 +690,16 @@ export const updateSpaceLinkCoordinates = (
         linkCoordinates,
     } = action.payload;
 
+    const newState = getNewState(state);
+
     const updatedTree = generalEngine.tree.updateTreeByPlaneIDWithLinkCoordinates(
-        state.tree,
+        newState.tree,
         planeID,
         linkCoordinates,
     );
 
     return {
-        ...state,
+        ...newState,
         tree: updatedTree,
     };
 }
@@ -682,8 +709,10 @@ export const spaceSetView = (
     state: Types.State,
     action: Types.SpaceSetViewAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         view: action.payload,
     };
 }
@@ -693,8 +722,10 @@ export const spaceSetCulledView = (
     state: Types.State,
     action: Types.SpaceSetCulledViewAction,
 ): Types.State => {
+    const newState = getNewState(state);
+
     return {
-        ...state,
+        ...newState,
         culledView: action.payload,
     };
 }
