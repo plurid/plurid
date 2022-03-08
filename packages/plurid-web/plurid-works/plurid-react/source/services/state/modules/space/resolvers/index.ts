@@ -154,7 +154,7 @@ export const viewCameraMoveForward = (
     const newState = getNewState(state);
     newState.translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
     newState.translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -168,7 +168,7 @@ export const viewCameraMoveBackward = (
     const newState = getNewState(state);
     newState.translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
     newState.translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -182,7 +182,7 @@ export const viewCameraMoveLeft = (
     const newState = getNewState(state);
     newState.translationX = state.translationX + TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
     newState.translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -196,7 +196,7 @@ export const viewCameraMoveRight = (
     const newState = getNewState(state);
     newState.translationX = state.translationX - TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
     newState.translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -209,7 +209,7 @@ export const viewCameraMoveUp = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.translationY = state.translationY + TRANSLATION_STEP * 3;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -222,7 +222,7 @@ export const viewCameraMoveDown = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.translationY = state.translationY - TRANSLATION_STEP * 3;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -235,7 +235,7 @@ export const viewCameraTurnUp = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationX = (state.rotationX + ROTATION_STEP) % 360;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -248,7 +248,7 @@ export const viewCameraTurnDown = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationX = (state.rotationX - ROTATION_STEP) % 360;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -261,7 +261,7 @@ export const viewCameraTurnLeft = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationY = (state.rotationY - ROTATION_STEP) % 360;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -274,7 +274,7 @@ export const viewCameraTurnRight = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationY = (state.rotationY + ROTATION_STEP) % 360;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -287,7 +287,7 @@ export const rotateUp = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationX = (state.rotationX + ROTATION_STEP) % 360;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -300,7 +300,7 @@ export const rotateDown = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationX = (state.rotationX - ROTATION_STEP) % 360;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -314,7 +314,7 @@ export const rotateX = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationX = action.payload;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -328,7 +328,7 @@ export const rotateXWith = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationX = state.rotationX + action.payload;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -341,7 +341,7 @@ export const rotateLeft = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationY = (state.rotationY + ROTATION_STEP) % 360;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -354,7 +354,7 @@ export const rotateRight = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationY = (state.rotationY - ROTATION_STEP) % 360;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -368,7 +368,7 @@ export const rotateY = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationY = action.payload;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -382,7 +382,7 @@ export const rotateYWith = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.rotationY = state.rotationY + action.payload;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -395,7 +395,7 @@ export const translateUp = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.translationY = state.translationY - TRANSLATION_STEP;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -408,7 +408,7 @@ export const translateDown = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.translationY = state.translationY + TRANSLATION_STEP;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -422,7 +422,7 @@ export const translateLeft = (
     const newState = getNewState(state);
     newState.translationX = state.translationX - TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
     newState.translationZ = state.translationZ - TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -436,7 +436,7 @@ export const translateRight = (
     const newState = getNewState(state);
     newState.translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
     newState.translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -450,7 +450,7 @@ export const translateIn = (
     const newState = getNewState(state);
     newState.translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
     newState.translationX = state.translationX - TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -464,7 +464,7 @@ export const translateOut = (
     const newState = getNewState(state);
     newState.translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
     newState.translationX = state.translationX + TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -479,7 +479,7 @@ export const translateXWith = (
     const newState = getNewState(state);
     newState.translationX = state.translationX +  action.payload * Math.cos(toRadians(state.rotationY));
     newState.translationZ = state.translationZ +  action.payload * Math.sin(toRadians(state.rotationY));
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -493,7 +493,7 @@ export const translateYWith = (
 ): Types.State => {
     const newState = getNewState(state);
     newState.translationY = state.translationY + action.payload;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -511,7 +511,7 @@ export const scaleUp = (
 
     const newState = getNewState(state);
     newState.scale = scale;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -529,7 +529,7 @@ export const scaleDown = (
 
     const newState = getNewState(state);
     newState.scale = scale;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -548,7 +548,7 @@ export const scaleUpWith = (
 
     const newState = getNewState(state);
     newState.scale = scale;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -568,7 +568,7 @@ export const scaleDownWith = (
 
     const newState = getNewState(state);
     newState.scale = scale;
-    newState.transform = computeMatrix(state);
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
@@ -623,15 +623,16 @@ export const spaceResetTransform = (
     state: Types.State,
 ): Types.State => {
     const newState = getNewState(state);
+    newState.scale = 1;
+    newState.rotationX = 0;
+    newState.rotationY = 0;
+    newState.translationX = 0;
+    newState.translationY = 0;
+    newState.translationZ = 0;
+    newState.transform = computeMatrix(newState);
 
     return {
         ...newState,
-        scale: 1,
-        rotationX: 0,
-        rotationY: 0,
-        translationX: 0,
-        translationY: 0,
-        translationZ: 0,
     };
 }
 
