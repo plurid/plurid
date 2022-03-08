@@ -2,6 +2,7 @@
     // #region libraries
     import {
         mathematics,
+        objects,
     } from '@plurid/plurid-functions';
 
     import {
@@ -31,6 +32,29 @@ const {
     toRadians,
 } = mathematics.geometry;
 
+
+
+const getNewState = (
+    state: Types.State,
+) => objects.clone(state, 'any');
+
+
+export const setSpaceField = (
+    state: Types.State,
+    action: Types.SetSpaceFieldAction,
+): Types.State => {
+    const {
+        field,
+        value,
+    } = action.payload;
+
+    const newState = getNewState(state);
+    (newState as any)[field] = value;
+
+    return {
+        ...state,
+    };
+}
 
 
 export const setSpaceLoading = (

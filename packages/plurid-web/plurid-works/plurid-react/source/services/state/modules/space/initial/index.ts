@@ -7,6 +7,7 @@
 // #region module
 const initialState: Types.State = {
     loading: true,
+    transform: 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)',
     animatedTransform: false,
     transformTime: 450,
     scale: 1,

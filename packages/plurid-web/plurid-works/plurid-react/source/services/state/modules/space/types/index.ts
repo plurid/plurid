@@ -19,6 +19,17 @@
 
 
 // #region module
+export const SET_SPACE_FIELD = 'SET_SPACE_FIELD';
+export interface SetSpaceFieldPayload {
+    field: keyof State;
+    value: any;
+}
+export interface SetSpaceFieldAction {
+    type: typeof SET_SPACE_FIELD;
+    payload: SetSpaceFieldPayload;
+}
+
+
 export const SET_SPACE_LOADING = 'SET_SPACE_LOADING';
 export interface SetSpaceLoadingAction {
     type: typeof SET_SPACE_LOADING;
@@ -324,6 +335,7 @@ export interface Coordinates {
 
 export interface State {
     loading: boolean;
+    transform: string;
     animatedTransform: boolean;
     transformTime: number;
     scale: number;
@@ -344,6 +356,7 @@ export interface State {
 
 
 export type Actions =
+    | SetSpaceFieldAction
     | SetStateAction
     | SetSpaceLoadingAction
     | SetTransformAction

@@ -16,6 +16,16 @@
 
 
 // #region module
+export const setSpaceField = (
+    payload: Types.SetSpaceFieldPayload,
+): Types.SetSpaceFieldAction => {
+    return {
+        type: Types.SET_SPACE_FIELD,
+        payload,
+    };
+}
+
+
 export const setSpaceLoading = (
     payload: boolean,
 ): Types.SetSpaceLoadingAction => {
