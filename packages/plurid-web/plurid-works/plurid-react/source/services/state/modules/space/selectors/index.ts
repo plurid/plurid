@@ -15,6 +15,7 @@
 
 // #region module
 const getLoading = (state: AppState): boolean => state.space.loading;
+const getTransformMatrix = (state: AppState) => state.space.transform;
 const getAnimatedTransform = (state: AppState): boolean => state.space.animatedTransform;
 const getTransformTime = (state: AppState): number => state.space.transformTime;
 
@@ -49,6 +50,7 @@ const getCulledView = (state: AppState) => state.space.culledView;
 export default {
     getLoading,
 
+    getTransformMatrix,
     getAnimatedTransform,
     getTransformTime,
 

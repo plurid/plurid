@@ -74,6 +74,7 @@ export interface PluridRootsOwnProperties {
 export interface PluridRootsStateProperties {
     stateConfiguration: PluridConfiguration;
     interactionTheme: Theme;
+    spaceTransformMatrix: string;
     animatedTransform: boolean;
     transformTime: number;
     spaceScale: number;
@@ -102,6 +103,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         // #region state
         stateConfiguration,
         interactionTheme,
+        spaceTransformMatrix,
         animatedTransform,
         transformTime,
         spaceScale,
@@ -222,6 +224,7 @@ const mapStateToProperties = (
 ): PluridRootsStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     interactionTheme: selectors.themes.getInteractionTheme(state),
+    spaceTransformMatrix: selectors.space.getTransformMatrix(state),
     animatedTransform: selectors.space.getAnimatedTransform(state),
     transformTime: selectors.space.getTransformTime(state),
     spaceScale: selectors.space.getScale(state),
