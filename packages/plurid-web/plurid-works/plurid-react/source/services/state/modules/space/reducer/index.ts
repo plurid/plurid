@@ -25,6 +25,8 @@ const reducer = (
                 ...state,
                 ...action.payload.space,
             };
+        case Types.SET_SPACE_FIELD:
+            return resolvers.setSpaceField(state, action);
         case Types.SET_SPACE_LOADING:
             return resolvers.setSpaceLoading(state, action);
         case Types.SET_TRANSFORM:
