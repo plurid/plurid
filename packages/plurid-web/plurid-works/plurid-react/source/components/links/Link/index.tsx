@@ -89,6 +89,24 @@ const {
 } = planes;
 
 
+const {
+    multiplyMatrices,
+    translateMatrix,
+    rotateYMatrix,
+} = interaction.transform2;
+
+const {
+    degToRad,
+    radToDeg,
+} = interaction.quaternion;
+
+const {
+    getTransformRotate,
+    getTransformTranslate,
+    getTransformScale
+} = interaction.transform;
+
+
 
 export interface PluridLinkStateProperties {
     stateTree: TreePlane[];
@@ -375,24 +393,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
-
-        const {
-            multiplyMatrices,
-            translateMatrix,
-            rotateYMatrix,
-        } = interaction.transform2;
-
-        const {
-            degToRad,
-            radToDeg,
-        } = interaction.quaternion;
-
-        const {
-            getTransformRotate,
-            getTransformTranslate,
-            getTransformScale
-        } = interaction.transform;
-
         const {
             location,
         } = updatedPlane;
@@ -418,16 +418,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             ),
             translateMatrix(-(translateX + xOffset), -translateY, zSign1 * translateZ),
         );
-        // const newMatrix = multiplyMatrices(
-        //     multiplyMatrices(
-        //         multiplyMatrices(
-        //             translateMatrix(-95, -155, -100),
-        //             rotateYMatrix(degToRad(91)),
-        //         ),
-        //         translateMatrix(95, 155, 100),
-        //     ),
-        //     translateMatrix(-(95 + 200), -155, -100),
-        // );
 
         const matrix3d = `matrix3d(${newMatrix.flat().join(',')})`;
 
@@ -435,14 +425,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         const translate = getTransformTranslate(matrix3d);
         const scale = getTransformScale(matrix3d);
 
-        // console.log({
-        //     location,
-        //     newMatrix,
-        //     matrix3d,
-        //     rotate,
-        //     translate,
-        //     scale,
-        // });
 
         dispatchSetAnimatedTransform(true);
 
@@ -455,9 +437,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             translationX: translate.translateX,
             translationY: translate.translateY,
             translationZ: translate.translateZ,
-            // rotationX,
+            rotationX: radToDeg(rotate.rotateX),
             rotationY: radToDeg(rotate.rotateY) * -1,
-            // scale,
+            scale: scale.scale,
         });
 
         setTimeout(() => {
