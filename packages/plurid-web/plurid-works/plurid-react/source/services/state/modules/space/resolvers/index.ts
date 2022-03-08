@@ -56,7 +56,7 @@ export const setSpaceField = (
     (newState as any)[field] = value;
 
     return {
-        ...state,
+        ...newState,
     };
 }
 
