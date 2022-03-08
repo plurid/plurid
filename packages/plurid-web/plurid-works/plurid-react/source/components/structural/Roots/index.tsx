@@ -148,28 +148,16 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 
 
     // #region render
-    // const transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
-    // const transform = cleanTemplate(`
-    //     translateX(${spaceTranslationX}px)
-    //     translateY(${spaceTranslationY}px)
-    //     translateZ(${spaceTranslationZ}px)
-    //     scale(${spaceScale})
-    //     rotateX(${spaceRotationX}deg)
-    //     rotateY(${spaceRotationY}deg)
-    // `);
-
     const rotationMatrix = rotateMatrix(degToRad(-spaceRotationX), degToRad(-spaceRotationY));
     const translationMatrix = translateMatrix(spaceTranslationX, spaceTranslationY, spaceTranslationZ);
     const scalationMatrix = scaleMatrix(spaceScale);
 
     const transformMatrix = multiplyArrayOfMatrices([
         translationMatrix,
-        // rotationMatrix,
         multiplyArrayOfMatrices([
-            translateMatrix(500, 500, 0),
+            translateMatrix(transformOriginX, transformOriginY, transformOriginZ),
             rotationMatrix,
-            translateMatrix(-500, -500, 0),
-            // translateMatrix(500, 500, 0),
+            translateMatrix(-transformOriginX, -transformOriginY, -transformOriginZ),
         ]),
         scalationMatrix,
     ]);
@@ -190,11 +178,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                     // : firstPerson
                     //     ? 'transform 100ms linear'
                         : 'initial',
-                // transformOrigin: cleanTemplate(`
-                //     ${transformOriginX}px
-                //     ${transformOriginY}px
-                //     ${transformOriginZ}px
-                // `),
             }}
             data-plurid-entity={PLURID_ENTITY_ROOTS}
         >
