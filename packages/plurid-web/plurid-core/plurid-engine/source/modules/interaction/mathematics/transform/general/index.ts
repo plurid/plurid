@@ -2,6 +2,7 @@
 export type Matrix = number[][];
 
 
+
 export const multiplyMatrices = (
     m1: Matrix,
     m2: Matrix,
@@ -28,7 +29,7 @@ export const multiplyMatrices = (
 
 export const arrayToMatrix = (
     array: number[],
-): number[][] => {
+): Matrix => {
     const matrix: Matrix = [];
 
     for (let i = 0; i < array.length; i += 4) {
@@ -109,7 +110,7 @@ export const rotateXMatrix = (
 
 export const rotateYMatrix = (
     angle: number,
-) => {
+): Matrix => {
     const x = Math.cos(angle);
     const y = -1 * Math.sin(angle);
     const z = Math.sin(angle);
