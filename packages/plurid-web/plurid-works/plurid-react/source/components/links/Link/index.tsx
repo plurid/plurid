@@ -90,21 +90,21 @@ const {
 
 
 const {
-    multiplyMatrices,
-    translateMatrix,
-    rotateYMatrix,
-} = interaction.transform2;
-
-const {
     degToRad,
     radToDeg,
 } = interaction.quaternion;
 
 const {
+    multiplyMatrices,
+    translateMatrix,
+    rotateYMatrix,
+} = interaction.transform.general;
+
+const {
     getTransformRotate,
     getTransformTranslate,
     getTransformScale
-} = interaction.transform;
+} = interaction.transform.matrix3d;
 
 
 
