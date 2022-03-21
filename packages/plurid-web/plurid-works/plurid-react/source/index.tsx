@@ -1,6 +1,10 @@
 // #region imports
     // #region libraries
     import {
+        Theme,
+    } from '@plurid/plurid-themes';
+
+    import {
         // #region constants
         PLURID_PUBSUB_TOPIC,
         // #endregion constants
@@ -181,6 +185,8 @@ export {
 
     // #region Utilities
     /** Interfaces */
+    Theme,
+
     PluridPlane,
     IndexedPluridPlane,
     PluridView,
