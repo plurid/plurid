@@ -446,6 +446,7 @@ const generateReactServerApplication = async (
         '@typescript-eslint/eslint-plugin',
         '@typescript-eslint/parser',
         'rollup-plugin-typescript2',
+        'tslib',
         'ts-loader',
         'ts-jest',
         'tsconfig-paths-webpack-plugin',
