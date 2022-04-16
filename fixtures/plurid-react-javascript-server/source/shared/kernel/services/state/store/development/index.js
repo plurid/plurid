@@ -9,7 +9,7 @@
 
     import {
         composeWithDevTools,
-    } from 'redux-devtools-extension';
+    } from '@redux-devtools/extension';
     // #endregion libraries
 
 
