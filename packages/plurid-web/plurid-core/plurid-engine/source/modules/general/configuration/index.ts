@@ -20,20 +20,6 @@
 
 
 // #region module
-const specifiedOrDefault = <T>(
-    path: string,
-    type: string,
-    configuration: PluridPartialConfiguration,
-): T => {
-    const item = objects.getNested(configuration, path);
-
-    if (typeof item === type) {
-        return item;
-    }
-
-    return objects.getNested(defaultConfiguration, path);
-}
-
 const resolveTheme = (
     theme: string | number | symbol | RecursivePartial<PluridConfigurationTheme> | undefined,
     type: 'general' | 'interaction',
@@ -81,6 +67,21 @@ export const merge = (
             ...targetConfiguration,
         };
     }
+
+
+    const specifiedOrDefault = <T>(
+        path: string,
+        type: string,
+        configuration: PluridPartialConfiguration,
+    ): T => {
+        const item = objects.getNested(configuration, path);
+        if (typeof item === type) {
+            return item;
+        }
+
+        return objects.getNested(targetConfiguration, path);
+    }
+
 
     /**
      * HACK:
