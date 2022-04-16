@@ -5,7 +5,7 @@ specifiers:
   '@plurid/elementql': ^0.0.0-1
   '@plurid/elementql-client-react': ^0.0.0-1
   '@plurid/plurid-data': 0.0.0-12
-  '@plurid/plurid-engine': 0.0.0-10
+  '@plurid/plurid-engine': 0.0.0-11
   '@plurid/plurid-functions': 0.0.0-22
   '@plurid/plurid-functions-react': 0.0.0-5
   '@plurid/plurid-icons-react': 0.0.0-3
@@ -39,7 +39,7 @@ specifiers:
   postcss: ^8.4.12
   react: ^18.0.0
   react-dom: ^18.0.0
-  react-redux: ^7.2.8
+  react-redux: ^8.0.0
   react-test-renderer: ^18.0.0
   redux: ^4.1.2
   redux-thunk: ^2.4.1
@@ -60,13 +60,13 @@ devDependencies:
   '@plurid/elementql': 0.0.0-1
   '@plurid/elementql-client-react': 0.0.0-1
   '@plurid/plurid-data': 0.0.0-12_@plurid+plurid-themes@0.0.0-2
-  '@plurid/plurid-engine': 0.0.0-10_dd1ab15c60f00abba6902afe357866df
+  '@plurid/plurid-engine': 0.0.0-11_dd1ab15c60f00abba6902afe357866df
   '@plurid/plurid-functions': 0.0.0-22
   '@plurid/plurid-functions-react': 0.0.0-5_react@18.0.0
   '@plurid/plurid-icons-react': 0.0.0-3_577493d13b55261e7b9df56214a7b365
   '@plurid/plurid-pubsub': 0.0.0-6_01884cbd407338655cac9e0f8946d98c
   '@plurid/plurid-themes': 0.0.0-2
-  '@plurid/plurid-ui-components-react': 0.0.0-11_71a8a0cacb91ab45e845aeb2bb90ba18
+  '@plurid/plurid-ui-components-react': 0.0.0-11_91bbc558e8c9409cef8dcf96b8102254
   '@plurid/plurid-ui-state-react': 0.0.0-2_@plurid+plurid-themes@0.0.0-2
   '@redux-devtools/extension': 3.2.2_redux@4.1.2
   '@rollup/plugin-babel': 5.3.1_@babel+core@7.17.9+rollup@2.70.2
@@ -94,7 +94,7 @@ devDependencies:
   postcss: 8.4.12
   react: 18.0.0
   react-dom: 18.0.0_react@18.0.0
-  react-redux: 7.2.8_react-dom@18.0.0+react@18.0.0
+  react-redux: 8.0.0_1a99d6572508766259a4b157fa729f77
   react-test-renderer: 18.0.0_react@18.0.0
   redux: 4.1.2
   redux-thunk: 2.4.1_redux@4.1.2
@@ -798,8 +798,8 @@ packages:
       '@plurid/plurid-themes': 0.0.0-2
     dev: true
 
-  /@plurid/plurid-engine/0.0.0-10_dd1ab15c60f00abba6902afe357866df:
-    resolution: {integrity: sha512-JrZwIPMxqG53V203Ga8GNyBzBPAV7qX8PXa/UlBY88OJCSxALkbHMZJYX3Opg8l1feyWtyMm5ippa32gwHj72Q==}
+  /@plurid/plurid-engine/0.0.0-11_dd1ab15c60f00abba6902afe357866df:
+    resolution: {integrity: sha512-i1deWGP0wh97eyydmWl6YXjlFvyAMl/p5uMf2ioScLM6GVAF+XcfiWsPut7oC482oaGehPlEAP4UYGSD5fktbg==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/plurid-data': '*'
@@ -856,7 +856,7 @@ packages:
     engines: {node: '>=12', npm: '>=6'}
     dev: true
 
-  /@plurid/plurid-ui-components-react/0.0.0-11_71a8a0cacb91ab45e845aeb2bb90ba18:
+  /@plurid/plurid-ui-components-react/0.0.0-11_91bbc558e8c9409cef8dcf96b8102254:
     resolution: {integrity: sha512-6+L1NbePTBQqFKjZ6T7znK8Wpd33ILtVJ9n4ghTD9kmtVLF/PoGRK9eaSl22LJdAholgaF7Qu2no5zJTRRftcw==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
@@ -879,7 +879,7 @@ packages:
       '@plurid/plurid-ui-state-react': 0.0.0-2_@plurid+plurid-themes@0.0.0-2
       react: 18.0.0
       react-dom: 18.0.0_react@18.0.0
-      react-redux: 7.2.8_react-dom@18.0.0+react@18.0.0
+      react-redux: 8.0.0_1a99d6572508766259a4b157fa729f77
       redux: 4.1.2
       redux-thunk: 2.4.1_redux@4.1.2
       styled-components: 5.3.5_react-dom@18.0.0+react@18.0.0
@@ -1174,6 +1174,10 @@ packages:
       '@types/hoist-non-react-statics': 3.3.1
       '@types/react': 18.0.5
       csstype: 3.0.11
+    dev: true
+
+  /@types/use-sync-external-store/0.0.3:
+    resolution: {integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==}
     dev: true
 
   /@types/yargs-parser/21.0.0:
@@ -4009,14 +4013,6 @@ packages:
       sisteransi: 1.0.5
     dev: true
 
-  /prop-types/15.8.1:
-    resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      react-is: 16.13.1
-    dev: true
-
   /psl/1.8.0:
     resolution: {integrity: sha512-RIdOzyoavK+hA18OGGWDqUTsCLhtA7IcZ/6NCs4fFJaHBDab+pDDmDIByWFRQJq2Cd7r1OoQxBGKOaztq+hjIQ==}
     dev: true
@@ -4058,26 +4054,34 @@ packages:
     resolution: {integrity: sha512-yUcBYdBBbo3QiPsgYDcfQcIkGZHfxOaoE6HLSnr1sPzMhdyxusbfKOSUbSd/ocGi32dxcj366PsTj+5oggeKKw==}
     dev: true
 
-  /react-redux/7.2.8_react-dom@18.0.0+react@18.0.0:
-    resolution: {integrity: sha512-6+uDjhs3PSIclqoCk0kd6iX74gzrGc3W5zcAjbrFgEdIjRSQObdIwfx80unTkVUYvbQ95Y8Av3OvFHq1w5EOUw==}
+  /react-redux/8.0.0_1a99d6572508766259a4b157fa729f77:
+    resolution: {integrity: sha512-zBwWgosy/MD2KKr1CtZyAzAaUa1xifJNt2mNszaBF7TtNlst5dooofVz7Djo7cxxkYZn+010Fqef/O4yxlW3cA==}
     peerDependencies:
-      react: ^16.8.3 || ^17 || ^18
-      react-dom: '*'
-      react-native: '*'
+      '@types/react': ^16.8 || ^17.0 || ^18.0
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+      react-native: '>=0.59'
+      redux: ^4
     peerDependenciesMeta:
+      '@types/react':
+        optional: true
       react-dom:
         optional: true
       react-native:
         optional: true
+      redux:
+        optional: true
     dependencies:
       '@babel/runtime': 7.17.2
-      '@types/react-redux': 7.1.24
+      '@types/hoist-non-react-statics': 3.3.1
+      '@types/react': 18.0.5
+      '@types/use-sync-external-store': 0.0.3
       hoist-non-react-statics: 3.3.2
-      loose-envify: 1.4.0
-      prop-types: 15.8.1
       react: 18.0.0
       react-dom: 18.0.0_react@18.0.0
-      react-is: 17.0.2
+      react-is: 18.0.0
+      redux: 4.1.2
+      use-sync-external-store: 1.0.0_react@18.0.0
     dev: true
 
   /react-shallow-renderer/16.14.1_react@18.0.0:
@@ -4734,6 +4738,14 @@ packages:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
     dependencies:
       punycode: 2.1.1
+    dev: true
+
+  /use-sync-external-store/1.0.0_react@18.0.0:
+    resolution: {integrity: sha512-AFVsxg5GkFg8GDcxnl+Z0lMAz9rE8DGJCc28qnBuQF7lac57B5smLcT37aXpXIIPz75rW4g3eXHPjhHwdGskOw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0-rc
+    dependencies:
+      react: 18.0.0
     dev: true
 
   /util-deprecate/1.0.2:
