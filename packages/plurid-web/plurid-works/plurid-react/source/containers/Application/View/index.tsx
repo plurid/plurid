@@ -310,7 +310,6 @@ const PluridView: React.FC<ViewProperties> = (
                         stateConfiguration,
                     );
 
-
                     // Handle themes
                     if (typeof computedConfiguration.global.theme === 'object') {
                         if (typeof computedConfiguration.global.theme.general === 'string') {
@@ -607,15 +606,15 @@ const PluridView: React.FC<ViewProperties> = (
                 transformMode,
             } = stateConfiguration.space;
 
+            if (transformMode === TRANSFORM_MODES.ALL) {
+                return;
+            }
+
             const {
                 velocity,
                 distance,
                 direction,
             } = event;
-
-            if (transformMode === TRANSFORM_MODES.ALL) {
-                return;
-            }
 
             const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
             const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
@@ -684,15 +683,15 @@ const PluridView: React.FC<ViewProperties> = (
                 transformMode,
             } = stateConfiguration.space;
 
+            if (transformMode === TRANSFORM_MODES.ALL) {
+                return;
+            }
+
             const {
                 velocity,
                 distance,
                 direction,
             } = event;
-
-            if (transformMode === TRANSFORM_MODES.ALL) {
-                return;
-            }
 
             const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
             const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
@@ -874,23 +873,24 @@ const PluridView: React.FC<ViewProperties> = (
             handleTouch();
 
             return () => {
+                if (!touch) {
+                    return;
+                }
+
                 const {
                     transformTouch,
                 } = stateConfiguration.space;
 
                 if (transformTouch === TRANSFORM_TOUCHES.PAN) {
-                    if (touch) {
-                        touch.off('pan', handlePan);
-                    }
+                    touch.off('pan', handlePan);
                 } else {
-                    if (touch) {
-                        touch.off('swipe', handleSwipe);
-                    }
+                    touch.off('swipe', handleSwipe);
                 }
             }
         }, [
             viewElement.current,
             stateConfiguration.space.transformTouch,
+            stateConfiguration.space.transformMode,
         ]);
         // #endregion effects touch
 
