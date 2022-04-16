@@ -94,7 +94,7 @@ export type PluridPlane<C> =
     | PluridPlaneTuple<C>;
 
 
-export type PluridPlaneContext<T> = React.Context<T>;
+export type PluridPlaneContext<T> = any;
 
 
 export interface IndexedPluridPlane<C> {
