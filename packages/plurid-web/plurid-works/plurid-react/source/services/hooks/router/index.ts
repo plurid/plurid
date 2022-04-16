@@ -10,6 +10,7 @@
     } from '@plurid/plurid-functions';
 
     import {
+        PLURID_ROUTER_STORAGE,
         PLURID_ROUTER_LOCATION_STORED,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -30,7 +31,7 @@ export const usePluridRouter = () => {
     // #region effects
     useEffect(() => {
         const fetchState = () => {
-            const state = storage.loadState('__PLURID_ROUTER__');
+            const state = storage.loadState(PLURID_ROUTER_STORAGE);
             if (state) {
                 setRouterValue(state);
             }
