@@ -1,15 +1,5 @@
-// #region imports
-    // #region external
-    // import {
-    //     PluridComponent,
-    // } from '../component';
-    // #endregion external
-// #endregion imports
-
-
-
 // #region module
-export interface PluridLink<C> {
+export interface PluridLink<C, S, M> {
     /**
      * The route of the plane.
      *
@@ -129,12 +119,11 @@ export interface PluridLink<C> {
     /**
      * Execute function at click (onClick Event).
      */
-    atClick?: (event?: MouseEvent | React.MouseEvent) => void;
+    atClick?: (event?: MouseEvent | M) => void;
 
     /**
      * Show or not the default Not Found component, or pass a custom component
      */
-    // notFound?: boolean | PluridComponent;
     notFound?: boolean | C;
 
     preview?: boolean;
@@ -142,10 +131,9 @@ export interface PluridLink<C> {
     previewFadeOut?: number;
     previewOffsetX?: number;
     previewOffsetY?: number;
-    // previewComponent?: PluridComponent;
     previewComponent?: C;
 
-    style?: React.CSSProperties;
+    style?: S;
     className?: string;
 }
 // #endregion module
