@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@plurid/plurid-data': 0.0.0-12
-  '@plurid/plurid-functions': 0.0.0-21
+  '@plurid/plurid-functions': 0.0.0-22
   '@plurid/plurid-pubsub': 0.0.0-5
   '@plurid/plurid-themes': 0.0.0-2
   '@rollup/plugin-commonjs': ^21.1.0
@@ -28,7 +28,7 @@ specifiers:
 
 devDependencies:
   '@plurid/plurid-data': 0.0.0-12_@plurid+plurid-themes@0.0.0-2
-  '@plurid/plurid-functions': 0.0.0-21
+  '@plurid/plurid-functions': 0.0.0-22
   '@plurid/plurid-pubsub': 0.0.0-5_@plurid+plurid-data@0.0.0-12
   '@plurid/plurid-themes': 0.0.0-2
   '@rollup/plugin-commonjs': 21.1.0_rollup@2.70.2
@@ -681,8 +681,8 @@ packages:
       '@plurid/plurid-themes': 0.0.0-2
     dev: true
 
-  /@plurid/plurid-functions/0.0.0-21:
-    resolution: {integrity: sha512-gaji+exMPsHN8KScl/GEw0srAh8tkZ7P2jXqxpeKvOazv769kLiUmzCDmBOwdYnIVA1EKLEtGZvSf7D2/0YHOQ==}
+  /@plurid/plurid-functions/0.0.0-22:
+    resolution: {integrity: sha512-LTMIDk1F9g1UohgyRxt+vyawRI5VAkr/0G3ZYboDhTw7IHoxH8OPAUxZCjUYMrILxpXgXH+2tEJHl4/7BuP0xw==}
     engines: {node: '>=12', npm: '>=6'}
     dev: true
 

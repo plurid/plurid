@@ -52,7 +52,7 @@
     },
     "devDependencies": {
         "@plurid/plurid-data": "0.0.0-12",
-        "@plurid/plurid-functions": "0.0.0-21",
+        "@plurid/plurid-functions": "0.0.0-22",
         "@plurid/plurid-pubsub": "0.0.0-5",
         "@plurid/plurid-themes": "0.0.0-2",
         "@rollup/plugin-commonjs": "^21.1.0",
