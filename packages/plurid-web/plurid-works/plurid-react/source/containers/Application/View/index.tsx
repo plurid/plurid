@@ -103,7 +103,7 @@ export interface ViewStateProperties {
     stateSpaceLoading: boolean;
     stateTransform: any;
     // initialTree: TreePlane[];
-    // stateTree: TreePlane[];
+    stateTree: TreePlane[];
     // activeUniverseID: string;
     // stateSpaceLocation: any;
     // stateCulledView: any;
@@ -181,6 +181,7 @@ const PluridView: React.FC<ViewProperties> = (
         // stateSpaceLoading,
         stateTransform,
         stateSpaceView,
+        stateTree,
         // #endregion state
 
 
@@ -285,6 +286,18 @@ const PluridView: React.FC<ViewProperties> = (
         });
 
         const computedTree = spaceTree.compute();
+
+        // Merge the compute tree with existing stateTree plane children.
+        for (const statePlane of stateTree) {
+            for (const [index, computedPlane] of computedTree.entries()) {
+                if (statePlane.route === computedPlane.route) {
+                    if (statePlane.children) {
+                        computedTree[index].children = statePlane.children;
+                    }
+                }
+            }
+        }
+
         dispatchSetTree(computedTree);
     }, [
         stateSpaceView,
@@ -1014,7 +1027,7 @@ const mapStateToProperties = (
     // viewSize: selectors.space.getViewSize(state),
     stateTransform: selectors.space.getTransform(state),
     // initialTree: selectors.space.getInitialTree(state),
-    // stateTree: selectors.space.getTree(state),
+    stateTree: selectors.space.getTree(state),
     // activeUniverseID: selectors.space.getActiveUniverseID(state),
     stateSpaceLoading: selectors.space.getLoading(state),
     // stateSpaceLocation: selectors.space.getTransform(state),
