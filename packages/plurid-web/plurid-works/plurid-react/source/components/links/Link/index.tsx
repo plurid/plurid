@@ -388,7 +388,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
-        if (event.ctrlKey || event.metaKey) {
+        if (event.altKey || event.metaKey) {
             // Only navigate at pure link click.
             return;
         }
