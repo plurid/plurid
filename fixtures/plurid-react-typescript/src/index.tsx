@@ -1,4 +1,7 @@
-import ReactDOM from 'react-dom';
+import {
+    createRoot,
+} from 'react-dom/client';
+
 
 import './index.css';
 
@@ -23,9 +26,10 @@ import * as serviceWorker from './serviceWorker';
 
 
 
-ReactDOM.render(
+createRoot(
+    document.getElementById('root')!,
+).render(
     <App />,
-    document.getElementById('root'),
 );
 
 
