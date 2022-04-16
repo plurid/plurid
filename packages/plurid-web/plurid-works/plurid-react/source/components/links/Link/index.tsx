@@ -124,7 +124,7 @@ export interface PluridLinkDispatchProperties {
 }
 
 export type PluridLinkProperties =
-    & PluridLinkOwnProperties<PluridReactComponent>
+    & PluridLinkOwnProperties<PluridReactComponent, React.CSSProperties, React.MouseEvent>
     & PluridLinkStateProperties
     & PluridLinkDispatchProperties;
 

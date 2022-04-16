@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+
+    } from 'react';
     // #endregion libraries
 
 
@@ -16,6 +18,7 @@
 // #region module
 export interface ErrorBoundaryProperties {
     renderError?: PluridReactComponent;
+    children?: any;
 }
 
 export interface ErrorBoundaryState {

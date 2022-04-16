@@ -18,6 +18,7 @@
 export interface PortalProperties {
     elementID: string;
     rootID: string;
+    children?: React.ReactNode;
 }
 
 /**
@@ -25,6 +26,7 @@ export interface PortalProperties {
  * <Portal>
  *   <p>elements</p>
  * </Portal>
+ *
  */
 const PluridPortal: React.FC<PortalProperties> = (
     properties,
