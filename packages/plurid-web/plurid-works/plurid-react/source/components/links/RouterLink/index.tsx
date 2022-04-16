@@ -45,6 +45,7 @@ export interface PluridRouterLinkOwnProperties {
 
         style?: React.CSSProperties;
         className?: string;
+        children?: React.ReactNode;
         // #endregion values
 
         // #region methods
