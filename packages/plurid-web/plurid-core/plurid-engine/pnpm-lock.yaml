@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@plurid/plurid-data': 0.0.0-12
   '@plurid/plurid-functions': 0.0.0-22
-  '@plurid/plurid-pubsub': 0.0.0-5
+  '@plurid/plurid-pubsub': 0.0.0-6
   '@plurid/plurid-themes': 0.0.0-2
   '@rollup/plugin-commonjs': ^21.1.0
   '@types/jest': ^27.4.1
@@ -29,7 +29,7 @@ specifiers:
 devDependencies:
   '@plurid/plurid-data': 0.0.0-12_@plurid+plurid-themes@0.0.0-2
   '@plurid/plurid-functions': 0.0.0-22
-  '@plurid/plurid-pubsub': 0.0.0-5_@plurid+plurid-data@0.0.0-12
+  '@plurid/plurid-pubsub': 0.0.0-6_01884cbd407338655cac9e0f8946d98c
   '@plurid/plurid-themes': 0.0.0-2
   '@rollup/plugin-commonjs': 21.1.0_rollup@2.70.2
   '@types/jest': 27.4.1
@@ -686,13 +686,15 @@ packages:
     engines: {node: '>=12', npm: '>=6'}
     dev: true
 
-  /@plurid/plurid-pubsub/0.0.0-5_@plurid+plurid-data@0.0.0-12:
-    resolution: {integrity: sha512-QyNpjCRu2ckN2qVlQsyJ9t4MEO3P6GIYpZPy0fPJsKc42RNz9eQMKR4Xh+UnrAqBz4tnyM1lqrHbGzT/gQ0yVw==}
+  /@plurid/plurid-pubsub/0.0.0-6_01884cbd407338655cac9e0f8946d98c:
+    resolution: {integrity: sha512-yRrEhEiltVchat73nHWQ9M7cF9YgouyOEAKYMa00aX1V+6ioNDznkpCMbB4uluCFMN3A86g8XqjliHB8ROlnhw==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/plurid-data': '*'
+      '@plurid/plurid-themes': '*'
     dependencies:
       '@plurid/plurid-data': 0.0.0-12_@plurid+plurid-themes@0.0.0-2
+      '@plurid/plurid-themes': 0.0.0-2
     dev: true
 
   /@plurid/plurid-themes/0.0.0-2:
