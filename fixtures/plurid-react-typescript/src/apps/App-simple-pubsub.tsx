@@ -76,6 +76,15 @@ const App = () => {
             planes={pluridPlanes}
             view={pluridView}
             pubsub={pubsub}
+            configuration={{
+                elements: {
+                    plane: {
+                        controls: {
+                            show: false,
+                        },
+                    },
+                },
+            }}
         />
     );
 }
