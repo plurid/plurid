@@ -1742,7 +1742,12 @@ export const computePluridRoute = (
         spaces,
         defaultConfiguration,
         slotted,
+        resolver,
     } = matchedRoute.data;
+
+    if (resolver) {
+        const resolved = resolver(undefined);
+    }
     // console.log('matchedRoute', matchedRoute);
 
 
