@@ -980,12 +980,15 @@ class PluridServer {
         preserveResult: PluridPreserveResponse | undefined,
         matchedPlane?: any,
     ) {
+        const globals = preserveResult?.globals;
+
         const mergedHtmlLanguage = preserveResult?.template?.htmlLanguage
             || this.template?.htmlLanguage;
 
         const pluridMetastate = serverComputeMetastate(
             isoMatch,
             this.routes,
+            // globals,
         );
 
         const {
@@ -1044,8 +1047,6 @@ class PluridServer {
             ...bodyScripts,
             ...(preserveResult?.template?.bodyScripts || []),
         ];
-
-        const globals = preserveResult?.globals;
 
 
         const renderer = new PluridRenderer({
