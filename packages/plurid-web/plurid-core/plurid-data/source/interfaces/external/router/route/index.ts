@@ -17,10 +17,13 @@
 
 
 // #region module
+export type PluridRouteResolver<C> = Omit<PluridRoute<C>, 'value' | 'resolver'>;
+
+
 /**
  * A route can be `plurid space` or `exterior`-based.
  */
-export interface PluridRoute<C> {
+export interface PluridRoute<C, S = any> {
     /**
      * The route `value` can:
      * + be a simple string, e.g. `'/route/to/page'`;
@@ -61,6 +64,13 @@ export interface PluridRoute<C> {
     multispace?: PluridRouteMultispace<C>;
 
     defaultConfiguration?: PluridPartialConfiguration;
+
+    /**
+     * Resolve the route at request time.
+     */
+    resolver?: (
+        state: S,
+    ) => PluridRouteResolver<C> | Promise<PluridRouteResolver<C>>;
 }
 
 
