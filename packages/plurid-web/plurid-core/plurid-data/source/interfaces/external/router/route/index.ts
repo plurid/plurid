@@ -69,7 +69,6 @@ export interface PluridRoute<C, G = any> {
      * Resolve the route at request time.
      *
      * Receives the `globals` from the preserve, if any.
-     *
      */
     resolver?: (
         globals: G | undefined,
