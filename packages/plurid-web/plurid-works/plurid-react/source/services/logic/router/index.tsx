@@ -1049,6 +1049,7 @@ export const collectApplicationsFromPath = async (
     isoMatch: PluridRouteMatch,
     protocol: string,
     host: string,
+    globals: Record<string, string> | undefined,
 ) => {
     const parameters = {};
     const query = {};
@@ -1060,14 +1061,16 @@ export const collectApplicationsFromPath = async (
     };
 
     if (isoMatch.kind === 'Route') {
-        // if (isoMatch.data.resolver) {
-        //     const resolved = await isoMatch.data.resolver(state);
-        // }
+        let data = isoMatch.data;
 
-        path.planes = isoMatch.data.planes || [];
-        path.spaces = isoMatch.data.spaces || [];
-        path.view = isoMatch.data.view || [];
-        path.value = isoMatch.data.value || '';
+        if (isoMatch.data.resolver) {
+            data = await isoMatch.data.resolver(globals);
+        }
+
+        path.planes = data.planes || [];
+        path.spaces = data.spaces || [];
+        path.view = data.view || [];
+        path.value = data.value || '';
     }
 
     // const {

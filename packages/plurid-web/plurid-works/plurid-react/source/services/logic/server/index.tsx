@@ -33,6 +33,7 @@ export const serverComputeMetastate = async (
     // matchedRoute: router.MatcherResponse<PluridReactComponent>,
     isoMatch: PluridRouteMatch,
     paths: PluridRoute<PluridReactComponent>[],
+    globals: Record<string, string> | undefined,
 ): Promise<PluridMetastate> => {
     const protocol = 'http';
     const host = 'localhost:63000';
@@ -48,6 +49,7 @@ export const serverComputeMetastate = async (
         isoMatch,
         protocol,
         host,
+        globals,
     );
 
     const states: any = {};
