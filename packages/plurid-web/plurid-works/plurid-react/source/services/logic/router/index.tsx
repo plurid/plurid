@@ -1061,16 +1061,16 @@ export const collectApplicationsFromPath = async (
     };
 
     if (isoMatch.kind === 'Route') {
-        let data = isoMatch.data;
+        let routeData: any = isoMatch.data;
 
         if (isoMatch.data.resolver) {
-            data = await isoMatch.data.resolver(globals);
+            routeData = await isoMatch.data.resolver(globals);
         }
 
-        path.planes = data.planes || [];
-        path.spaces = data.spaces || [];
-        path.view = data.view || [];
-        path.value = data.value || '';
+        path.planes = routeData.planes || [];
+        path.spaces = routeData.spaces || [];
+        path.view = routeData.view || [];
+        path.value = isoMatch.data.value || '';
     }
 
     // const {
