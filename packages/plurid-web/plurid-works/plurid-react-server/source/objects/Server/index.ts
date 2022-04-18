@@ -988,7 +988,7 @@ class PluridServer {
         const pluridMetastate = serverComputeMetastate(
             isoMatch,
             this.routes,
-            // globals,
+            globals,
         );
 
         const {
