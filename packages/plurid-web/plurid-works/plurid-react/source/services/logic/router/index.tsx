@@ -1044,7 +1044,7 @@ export const generateIndexedPlanes = (
 
 
 
-export const collectApplicationsFromPath = (
+export const collectApplicationsFromPath = async (
     // matchedRoute: router.MatcherResponse<PluridReactComponent>,
     isoMatch: PluridRouteMatch,
     protocol: string,
@@ -1053,11 +1053,22 @@ export const collectApplicationsFromPath = (
     const parameters = {};
     const query = {};
     const path: any = {
-        planes: (isoMatch.data as any).planes || [],
-        spaces: (isoMatch.data as any).spaces || [],
-        view: (isoMatch.data as any).view || [],
-        value: (isoMatch.data as any).value || '',
+        planes: [],
+        spaces: [],
+        view: [],
+        value: '',
     };
+
+    if (isoMatch.kind === 'Route') {
+        // if (isoMatch.data.resolver) {
+        //     const resolved = await isoMatch.data.resolver(state);
+        // }
+
+        path.planes = isoMatch.data.planes || [];
+        path.spaces = isoMatch.data.spaces || [];
+        path.view = isoMatch.data.view || [];
+        path.value = isoMatch.data.value || '';
+    }
 
     // const {
     //     path,
