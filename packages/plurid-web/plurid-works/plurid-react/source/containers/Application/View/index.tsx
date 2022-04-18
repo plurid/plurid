@@ -274,15 +274,18 @@ const PluridView: React.FC<ViewProperties> = (
         stateConfiguration.space.transformLocks,
     ]);
 
-    const treeUpdateCallback = useCallback(() => {
+    const treeUpdate = (
+        view: PluridApplicationView,
+        configuration = stateConfiguration,
+    ) => {
         // TODO?
         // stateConfiguration update
         const planes = getRegisteredPlanes(planesRegistrar);
 
         const spaceTree = new space.tree.Tree({
             planes,
-            configuration: stateConfiguration,
-            view: stateSpaceView,
+            configuration,
+            view,
         });
 
         const computedTree = spaceTree.compute();
@@ -299,6 +302,10 @@ const PluridView: React.FC<ViewProperties> = (
         }
 
         dispatchSetTree(computedTree);
+    }
+
+    const treeUpdateCallback = useCallback(() => {
+        treeUpdate(stateSpaceView);
     }, [
         stateSpaceView,
         stateConfiguration,
@@ -469,6 +476,8 @@ const PluridView: React.FC<ViewProperties> = (
                         plane,
                     ];
                     dispatchSpaceSetView(updatedView);
+
+                    treeUpdate(updatedView);
                 },
             });
 
@@ -482,6 +491,8 @@ const PluridView: React.FC<ViewProperties> = (
                     dispatchSpaceSetView([
                         ...view,
                     ]);
+
+                    treeUpdate(view);
                 },
             });
 
@@ -504,6 +515,8 @@ const PluridView: React.FC<ViewProperties> = (
                     });
 
                     dispatchSpaceSetView(updatedView);
+
+                    treeUpdate(updatedView);
                 },
             });
 
