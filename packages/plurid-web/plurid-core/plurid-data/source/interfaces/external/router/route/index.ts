@@ -23,7 +23,7 @@ export type PluridRouteResolver<C> = Omit<PluridRoute<C>, 'value' | 'resolver'>;
 /**
  * A route can be `plurid space` or `exterior`-based.
  */
-export interface PluridRoute<C, S = any> {
+export interface PluridRoute<C, G = any> {
     /**
      * The route `value` can:
      * + be a simple string, e.g. `'/route/to/page'`;
@@ -67,9 +67,12 @@ export interface PluridRoute<C, S = any> {
 
     /**
      * Resolve the route at request time.
+     *
+     * Receives the `globals` from the preserve, if any.
+     *
      */
     resolver?: (
-        state: S,
+        globals: G | undefined,
     ) => PluridRouteResolver<C> | Promise<PluridRouteResolver<C>>;
 }
 
