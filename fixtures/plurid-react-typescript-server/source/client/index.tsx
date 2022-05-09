@@ -33,7 +33,7 @@ const plurid = document.getElementById(APPLICATION_ROOT)!;
 
 
 if (
-    process.env.PLURID_LIVE_SERVER !== 'true'
+    process.env.PLURID_LIVE_SERVER === 'true'
 ) {
     createRoot(
         plurid,
