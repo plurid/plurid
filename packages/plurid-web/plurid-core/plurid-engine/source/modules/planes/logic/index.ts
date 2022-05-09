@@ -106,7 +106,7 @@ export const createInternalContextPlane = <C>(
 
 export const getPluridPlaneIDByData = (
     element: HTMLElement | null,
-): any => {
+): string => {
     if (!element) {
         return '';
     }
