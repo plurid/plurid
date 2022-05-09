@@ -17,8 +17,9 @@ describe('PluridPubSub', () => {
                 const {
                     value,
                 } = data;
+
                 // increase the rotateY with value
-                console.log('called topic space.rotateYWith with value:', value);
+                // console.log('called topic space.rotateYWith with value:', value);
             },
         });
 
@@ -39,8 +40,9 @@ describe('PluridPubSub', () => {
                 const {
                     value,
                 } = data;
+
                 // increase the rotateY with value
-                console.log('called topic space.rotateYWith with value:', value);
+                // console.log('called topic space.rotateYWith with value:', value);
             },
         });
 
