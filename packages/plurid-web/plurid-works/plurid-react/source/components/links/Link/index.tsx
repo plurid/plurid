@@ -220,7 +220,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [showLink, setShowLink] = useState(false);
     const [planeID, setPlaneID] = useState('');
     const [pluridPlaneID, setPluridPlaneID] = useState('');
-    const [parentPlaneID, setParentPlaneID] = useState('');
+    const [parentPlaneID, setParentPlaneID] = useState(getPluridPlaneIDByData(linkElement.current));
     const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
     // #endregion state
 
@@ -331,7 +331,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         } = absolutePlaneRoute;
 
         const linkCoordinates = getPluridLinkCoordinates();
-        // console.log('planesRegistry', route, planesRegistry);
         const {
             pluridPlaneID,
             updatedTree,
