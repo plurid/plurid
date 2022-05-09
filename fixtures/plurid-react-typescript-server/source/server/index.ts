@@ -30,7 +30,11 @@
         shell,
         routes,
         planes,
-    } from '../shared';
+    } from '~shared/index';
+
+    import {
+        APPLICATION_ROOT,
+    } from '~shared/data/constants';
     // #endregion external
 
 
@@ -56,7 +60,6 @@ const port = process.env.PORT || 63000;
 
 
 /** CONSTANTS */
-const applicationRoot = 'plurid-app';
 const openAtStart = watchMode
     ? false
     : isProduction
@@ -137,7 +140,7 @@ const options: PluridServerPartialOptions = {
 };
 
 const template: PluridServerTemplateConfiguration = {
-    root: applicationRoot,
+    root: APPLICATION_ROOT,
 };
 
 
