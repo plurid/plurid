@@ -4,5 +4,7 @@
 
 @font-face {
     font-family: "Ubuntu";
+    font-style: normal;
+    font-weight: 400;
     src: url("../assets/fonts/Ubuntu-Regular.ttf") format("truetype");
 }
