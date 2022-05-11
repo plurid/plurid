@@ -1,0 +1,8 @@
+/*
+    Add general/global styles, i.e. html rules, font imports.
+*/
+
+@font-face {
+    font-family: "Ubuntu";
+    src: url("../assets/fonts/Ubuntu-Regular.ttf") format("truetype");
+}
