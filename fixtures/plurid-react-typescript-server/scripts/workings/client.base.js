@@ -82,6 +82,7 @@ const fileRule = {
     type: 'asset/resource',
     generator: {
         filename: `${ASSETS_DIRECTORY}/[name][ext]`,
+        publicPath: '/',
     },
 };
 
