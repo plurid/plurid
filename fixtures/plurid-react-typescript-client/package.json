@@ -36,13 +36,13 @@
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {
+        "@redux-devtools/extension": "^3.2.2",
         "@types/jest": "^28.1.3",
         "@types/node": "^18.0.0",
         "@types/react": "^18.0.14",
         "@types/react-dom": "^18.0.5",
         "@types/react-redux": "^7.1.24",
         "@types/styled-components": "^5.1.25",
-        "redux-devtools-extension": "^2.13.9",
         "typescript": "~4.7.4"
     },
     "eslintConfig": {
