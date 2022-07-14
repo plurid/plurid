@@ -141,6 +141,20 @@ const options: PluridServerPartialOptions = {
 
 const template: PluridServerTemplateConfiguration = {
     root: APPLICATION_ROOT,
+    headScripts: [
+        `
+        <script>
+            (function() {
+                var log = console.log;
+                console.log = (message) => {
+                    if (!/Download the (React|Apollo) DevTools/.test(message)) {
+                        log.apply(console, arguments)
+                    }
+                }
+            })()
+        </script>
+        `,
+    ]
 };
 
 
