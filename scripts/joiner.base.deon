@@ -7,7 +7,7 @@
 
 
 package {
-    manager yarn
+    manager pnpm
     publisher npm
 }
 
