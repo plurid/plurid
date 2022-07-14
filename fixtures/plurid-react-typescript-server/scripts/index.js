@@ -108,6 +108,7 @@ const commandLive = [
     ...commandClean,
     'mkdir -p build/client',
     'cp -r source/public/ build/client/',
+    'touch build/client/vendor.js',
     `node ./scripts/live/client.js & node ./scripts/live/server.js & deon environment ./environment/.env.local.deon nodemon build/index.js`,
 ];
 

@@ -1,6 +1,6 @@
 const common = {
     bundle: true,
-    assetNames: 'assets/[name]-[hash]',
+    assetNames: 'assets/[name]',
     loader: {
         '.ttf': 'file',
         '.png': 'file',
