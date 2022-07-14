@@ -141,9 +141,8 @@ const options: PluridServerPartialOptions = {
 
 const template: PluridServerTemplateConfiguration = {
     root: APPLICATION_ROOT,
-    headScripts: [
-        `
-        <script>
+    headScripts: isProduction ? undefined : [
+        `<script>
             (function() {
                 var log = console.log;
                 console.log = (message) => {
@@ -152,9 +151,8 @@ const template: PluridServerTemplateConfiguration = {
                     }
                 }
             })()
-        </script>
-        `,
-    ]
+        </script>`,
+    ],
 };
 
 
