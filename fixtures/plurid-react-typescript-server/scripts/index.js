@@ -67,6 +67,10 @@ const commandStart = [
     `node ${buildFolder}`,
 ];
 
+const commandCheck = [
+    `${crossCommand('tsc')} --project ./configurations/tsconfig.check.json`,
+];
+
 const commandWatchClient = [
     `${crossCommand('webpack')} --watch --config ./scripts/workings/client.development.js`,
 ];
@@ -98,6 +102,13 @@ const commandLint = [
 
 const commandTest = [
     `${crossCommand('jest')} -c ./configurations/jest.config.js ./source`,
+];
+
+const commandLive = [
+    ...commandClean,
+    'mkdir -p build/client',
+    'cp -r source/public/ build/client/',
+    `node ./scripts/live/client.js & node ./scripts/live/server.js & deon environment ./environment/.env.local.deon nodemon build/index.js`,
 ];
 
 const commandContainerizeProduction = [
@@ -191,6 +202,16 @@ switch (command) {
         console.log('\n\tStarting the Application Server...');
         runCommand(commandStart, {
             stdio: 'inherit',
+        });
+        break;
+    case 'live':
+        runCommand(commandLive, {
+            stdio: verbose,
+        });
+        break;
+    case 'check':
+        runCommand(commandCheck, {
+            stdio: verbose,
         });
         break;
     case 'start.live':
