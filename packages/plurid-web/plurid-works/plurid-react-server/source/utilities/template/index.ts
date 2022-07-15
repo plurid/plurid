@@ -1,6 +1,10 @@
 // #region imports
     // #region libraries
     import {
+        minify,
+    } from 'html-minifier';
+
+    import {
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
@@ -12,18 +16,7 @@
 export const cleanTemplate = (
     template: string,
 ) => {
-    return template
-        // clean new lines
-        .replace(
-            /(?:\r\n|\r|\n)/g,
-            ' ',
-        )
-        // clean whitespace
-        .replace(
-            /  +/g,
-            ' ',
-        )
-        .trim();
+    return minify(template);
 }
 
 

@@ -27,7 +27,7 @@ const replacePluridResolution = (
  */
 const isCurrentUserRoot = () => {
     // UID 0 is always root
-    return process.getuid() == 0;
+    return (process as any).getuid() == 0;
 }
 
 const render = async (
