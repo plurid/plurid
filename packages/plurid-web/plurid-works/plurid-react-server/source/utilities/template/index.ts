@@ -16,7 +16,12 @@
 export const cleanTemplate = (
     template: string,
 ) => {
-    return minify(template);
+    return minify(
+        template,
+        {
+            collapseWhitespace: true,
+        },
+    );
 }
 
 
