@@ -20,9 +20,10 @@ const external = [
     'body-parser',
     'detect-port',
     'express',
+    'html-minifier',
+    'open',
     'fast-json-stable-stringify',
     'graphql',
-    'open',
     'zen-observable',
 ];
 
