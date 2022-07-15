@@ -1,12 +1,10 @@
 // #region imports
     // #region libraries
     import React from 'react';
-    import ReactDOM from 'react-dom';
 
-    // import {
-    //     createRoot,
-    //     hydrateRoot,
-    // } from 'react-dom/client';
+    import {
+        hydrateRoot,
+    } from 'react-dom/client';
     // #endregion libraries
 
 
@@ -32,27 +30,8 @@
 
 const plurid = document.getElementById(APPLICATION_ROOT)!;
 
-
-// if (
-//     process.env.PLURID_LIVE_SERVER !== 'true'
-// ) {
-//     hydrateRoot(
-//         plurid,
-//         <Client />,
-//     );
-// } else {
-//     createRoot(
-//         plurid,
-//     ).render(
-//         <Client />,
-//     );
-// }
-const render = process.env.PLURID_LIVE_SERVER !== 'true'
-    ? ReactDOM.hydrate
-    : ReactDOM.render;
-
-render(
-    <Client />,
+hydrateRoot(
     plurid,
+    <Client />,
 );
 // #endregion module
