@@ -142,6 +142,7 @@ const options: PluridServerPartialOptions = {
 const template: PluridServerTemplateConfiguration = {
     root: APPLICATION_ROOT,
     headScripts: isProduction ? undefined : [
+        `<link rel="stylesheet" href="index.css" />`,
         `<script>
             (function() {
                 var log = console.log;
