@@ -12,7 +12,7 @@ specifiers:
   '@plurid/plurid-icons-react': ^0.0.0-4
   '@plurid/plurid-pubsub': ^0.0.0-6
   '@plurid/plurid-react': ^0.0.0-22
-  '@plurid/plurid-react-server': ^0.0.0-9
+  '@plurid/plurid-react-server': ^0.0.0-10
   '@plurid/plurid-themes': ^0.0.0-2
   '@plurid/plurid-ui-components-react': ^0.0.0-13
   '@plurid/plurid-ui-state-react': ^0.0.0-3
@@ -96,7 +96,7 @@ dependencies:
   '@plurid/plurid-icons-react': 0.0.0-4_6lv54evgjlquccbhrezg5vln4a
   '@plurid/plurid-pubsub': 0.0.0-6_tc4ta54tjzvv3alwff57fphngi
   '@plurid/plurid-react': 0.0.0-22_fdkb2gz2ab2s2judsbseiubcli
-  '@plurid/plurid-react-server': 0.0.0-9_k2tqlvhl5kpl5fyegrwi22e6bm
+  '@plurid/plurid-react-server': 0.0.0-10_k2tqlvhl5kpl5fyegrwi22e6bm
   '@plurid/plurid-themes': 0.0.0-2
   '@plurid/plurid-ui-components-react': 0.0.0-13_5pwhcfyln6ynps7z267sp4ikju
   '@plurid/plurid-ui-state-react': 0.0.0-3_mxmwhuu22ojdd45featjegrj4i
@@ -1148,8 +1148,8 @@ packages:
       '@plurid/plurid-themes': 0.0.0-2
     dev: false
 
-  /@plurid/plurid-react-server/0.0.0-9_k2tqlvhl5kpl5fyegrwi22e6bm:
-    resolution: {integrity: sha512-t8JXwHMNVLUJjWN1IgfHgJkmbJ6qCVp7ogPlV09dWFywNtvNJgtsVoA1jpJCSWM/49h2AAMacLo06kldAf9vmQ==}
+  /@plurid/plurid-react-server/0.0.0-10_k2tqlvhl5kpl5fyegrwi22e6bm:
+    resolution: {integrity: sha512-9k/Rbo6guJZiz25zPQZikuqajsRT6fWB+5aGm0RdzWo5702nQXLdA+Kc+uRwYNtJsWktcFu37yTKuOOT7l1P6Q==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/elementql': '*'
