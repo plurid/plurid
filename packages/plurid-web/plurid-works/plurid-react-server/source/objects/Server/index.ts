@@ -988,7 +988,7 @@ class PluridServer {
         const mergedHtmlLanguage = preserveResult?.template?.htmlLanguage
             || this.template?.htmlLanguage;
 
-        const pluridMetastate = serverComputeMetastate(
+        const pluridMetastate = await serverComputeMetastate(
             isoMatch,
             this.routes,
             globals,
