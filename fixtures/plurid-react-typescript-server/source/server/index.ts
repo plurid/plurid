@@ -138,7 +138,7 @@ const options: PluridServerPartialOptions = {
     quiet,
     debug,
     serverName: 'Plurid Server',
-    hostname: 'localhost:63000',
+    hostname: 'localhost:' + port,
 };
 
 const template: PluridServerTemplateConfiguration = {
