@@ -189,10 +189,13 @@ class PluridServer {
         // this.urlRouter = new PluridURLRouter(urlRoutes);
 
         // this.stills = new PluridStillsManager(this.options);
-        this.isoMatcher = new PluridIsoMatcher({
-            routes: this.routes,
-            routePlanes: this.planes,
-        });
+        this.isoMatcher = new PluridIsoMatcher(
+            {
+                routes: this.routes,
+                routePlanes: this.planes,
+            },
+            this.options.hostname,
+        );
 
 
         this.configureServer();
@@ -1170,6 +1173,7 @@ class PluridServer {
     ) {
         const options: PluridServerOptions = {
             serverName: partialOptions?.serverName || DEFAULT_SERVER_OPTIONS.SERVER_NAME,
+            hostname: partialOptions?.hostname || DEFAULT_SERVER_OPTIONS.HOSTNAME,
             quiet: partialOptions?.quiet || DEFAULT_SERVER_OPTIONS.QUIET,
             debug: partialOptions?.debug
                 ? partialOptions?.debug

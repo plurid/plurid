@@ -47,6 +47,12 @@ export interface PluridServerOptions {
     serverName: string;
 
     /**
+     * The hostname of the server exposed to the internet, e.g. `example.com`,
+     * to be used in plurid plane links.
+     */
+    hostname: string;
+
+    /**
      * To log or not to log to the console.
      */
     quiet: boolean;
