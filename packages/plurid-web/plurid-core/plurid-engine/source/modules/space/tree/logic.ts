@@ -72,8 +72,8 @@ const matchRouteElements = (
     //     ? viewPath.slice(1)
     //     : viewPath;
 
-    console.log('viewPath', viewPath);
-    console.log('routePath', routePath);
+    // console.log('viewPath', viewPath);
+    // console.log('routePath', routePath);
 
     if (routePath === viewPath) {
         return {
@@ -90,7 +90,7 @@ const matchRouteElements = (
     // check if viewPath is a parametrization of routePath
     const parameters: string[] = [];
     const routeSplit = routePath.slice(1).split('/');
-    console.log('routeSplit', routeSplit);
+    // console.log('routeSplit', routeSplit);
 
     routeSplit.forEach(routeElement => {
         if (routeElement[0] === ':') {
@@ -99,15 +99,15 @@ const matchRouteElements = (
             parameters.push('');
         }
     });
-    console.log('parameters', parameters);
+    // console.log('parameters', parameters);
 
     const {
         locationElements,
         comparingPath,
     } = computeComparingPath(viewPath, parameters);
-    console.log('comparingPath', comparingPath);
-    console.log('routePath', routePath);
-    console.log('locationElements', locationElements);
+    // console.log('comparingPath', comparingPath);
+    // console.log('routePath', routePath);
+    // console.log('locationElements', locationElements);
 
     // if (comparingPath !== '/' + routePath) {
     //     return;
@@ -120,7 +120,7 @@ const matchRouteElements = (
         parameters,
         locationElements,
     );
-    console.log('parametersValues', parametersValues);
+    // console.log('parametersValues', parametersValues);
     return {
         value: viewPath,
         parameters: parametersValues,
@@ -136,8 +136,8 @@ const matchRouteToView = (
     // const routeSplit = route.split(PLURID_ROUTE_SEPARATOR);
     // const viewSplit = view.split(PLURID_ROUTE_SEPARATOR);
 
-    console.log('route', route);
-    console.log('view', view);
+    // console.log('route', route);
+    // console.log('view', view);
     // console.log('routeSplit', routeSplit);
     // console.log('viewSplit', viewSplit);
 
@@ -150,7 +150,7 @@ const matchRouteToView = (
         route,
         view,
     );
-    console.log('pathMatch', pathMatch);
+    // console.log('pathMatch', pathMatch);
 
     return {
         path: {
@@ -469,6 +469,7 @@ export const computeSpaceTree = <C>(
     // console.log('planes', planes);
     // console.log('configuration', configuration);
     // console.log('computeSpaceTree view', view);
+    // console.log('computeSpaceTree origin', origin);
 
     const treePlanes: TreePlane[] = [];
 

@@ -39,6 +39,7 @@ const compute = <C>(
     localState: PluridState | undefined,
     precomputedState: Partial<PluridState> | undefined,
     contextState: PluridMetastateState | undefined,
+    hostname = 'origin',
 ) => {
     // TODO
     // the compute call also needs to make clear the nature of the change
@@ -62,6 +63,7 @@ const compute = <C>(
         localState,
         precomputedState,
         contextState,
+        hostname,
     );
 
     const stateThemes = resolveThemes(

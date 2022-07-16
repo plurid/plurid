@@ -31,15 +31,19 @@ const resolveSpace = <C>(
     localState: PluridState | undefined,
     precomputedState: Partial<PluridState> | undefined,
     contextState: PluridMetastateState | undefined,
+    hostname = 'origin',
 ) => {
     const registeredPlanes = getRegisteredPlanes(planesRegistrar);
     // console.log('resolveSpace > registeredPlanes', registeredPlanes);
 
-    const spaceTree = new space.tree.Tree({
-        planes: registeredPlanes,
-        configuration,
-        view,
-    });
+    const spaceTree = new space.tree.Tree(
+        {
+            planes: registeredPlanes,
+            configuration,
+            view,
+        },
+        hostname,
+    );
     // console.log('resolveSpace > spaceTree', spaceTree);
 
     const computedTree = spaceTree.compute();
