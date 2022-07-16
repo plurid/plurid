@@ -1719,6 +1719,7 @@ export const computePluridRoute = (
         const DirectPlane = renderDirectPlane(
             match,
             planesRegistrar,
+            hostname,
         );
 
         return DirectPlane;
@@ -1732,6 +1733,8 @@ export const computePluridRoute = (
                 notFoundRoute,
                 planesRegistrar,
                 isoMatcher,
+                undefined,
+                hostname,
             );
 
             return notFoundRender as any;

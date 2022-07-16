@@ -119,6 +119,7 @@ class PluridApplication extends Component<
             planesRegistrar,
             id,
             useLocalStorage,
+            hostname,
         } = this.props;
 
         registerPlanes(
@@ -147,6 +148,7 @@ class PluridApplication extends Component<
             localState,
             precomputedState,
             contextState,
+            hostname,
         );
 
         return store;
