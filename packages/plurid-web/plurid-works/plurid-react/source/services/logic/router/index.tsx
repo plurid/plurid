@@ -310,6 +310,7 @@ export const getComponentFromRoute = (
                     static={staticRender}
                     configuration={space.configuration}
                     planesRegistrar={pluridPlanesRegistrar}
+                    hostname={host}
                 />
             );
             spacesArray.push(App);
@@ -386,6 +387,7 @@ export const getComponentFromRoute = (
                 view={view}
                 static={staticRender}
                 configuration={path.defaultConfiguration}
+                hostname={host}
             />
         );
         spacesArray.push(App);
@@ -1373,13 +1375,14 @@ export const gatherPluridPlanes = (
 
 export const renderMultispace = (
     matchedRoute: PluridRouteMatch,
+    hostname = 'origin',
 ) => {
     if (matchedRoute.kind !== 'Route') {
         return () => () => (<></>);
     }
 
     const protocol = 'http';
-    const host = 'localhost:63000';
+    const host = hostname;
 
     const {
         match,
@@ -1570,6 +1573,7 @@ export const renderMultispace = (
                     view={view}
                     configuration={space.configuration}
                     planesRegistrar={pluridPlanesRegistrar}
+                    hostname={hostname}
                 />
             );
             spacesArray.push(App);
@@ -1630,6 +1634,7 @@ export const renderMultispace = (
                 planes={pluridPlanes}
                 view={view}
                 configuration={path.defaultConfiguration}
+                hostname={hostname}
             />
         );
         spacesArray.push(App);
@@ -1698,6 +1703,7 @@ export const computePluridRoute = (
     planesRegistrar: planes.Registrar<PluridReactComponent>,
     isoMatcher: routing.IsoMatcher<PluridReactComponent>,
     directPlane?: PluridRouteMatch,
+    hostname = 'origin',
 ) => {
     if (
         directPlane
@@ -1805,6 +1811,7 @@ export const computePluridRoute = (
                     configuration={defaultConfiguration}
                     pubsub={pubsub}
                     matchedRoute={matchedRoute}
+                    hostname={hostname}
                 />
             );
 
@@ -1907,6 +1914,7 @@ export const getDirectPlaneMatch = (
 export const renderDirectPlane = (
     routePlane: PluridRouteMatch,
     planesRegistrar: planes.Registrar<PluridReactComponent>,
+    hostname = 'origin',
 ) => {
     if (routePlane.match.query.flat) {
         const flat = routePlane.match.query.flat.toLowerCase();
@@ -1950,6 +1958,7 @@ export const renderDirectPlane = (
                     ]}
                     planesRegistrar={planesRegistrar}
                     configuration={defaultConfiguration}
+                    hostname={hostname}
                 />
             </>
         );

@@ -91,6 +91,7 @@ const PluridRouterBrowser = (
         planes,
         exterior,
         shell,
+        hostname,
 
         static: staticContext,
 
@@ -117,10 +118,13 @@ const PluridRouterBrowser = (
     );
 
     const pluridIsoMatcher = useRef(
-        new PluridIsoMatcher({
-            routes,
-            routePlanes: planes,
-        }),
+        new PluridIsoMatcher(
+            {
+                routes,
+                routePlanes: planes,
+            },
+            hostname,
+        ),
     );
     // #endregion references
 
@@ -162,6 +166,7 @@ const PluridRouterBrowser = (
                     staticContext.directPlane,
                     'route',
                 ) : undefined,
+            hostname,
         ),
     );
     // #endregion state
@@ -235,6 +240,7 @@ const PluridRouterBrowser = (
            const DirectPlane = renderDirectPlane(
                 matchedRoute,
                 pluridPlanesRegistrar.current,
+                hostname,
             );
 
             setMatchedRoute(matchedRoute);
@@ -253,6 +259,7 @@ const PluridRouterBrowser = (
                 matchedRoute,
                 pluridPlanesRegistrar.current,
                 pluridIsoMatcher.current,
+                hostname,
             ),
         );
     }, [

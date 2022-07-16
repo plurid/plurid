@@ -172,6 +172,7 @@ const PluridView: React.FC<ViewProperties> = (
             planeNotFound,
             planeRenderError,
             matchedRoute,
+            hostname,
             // #endregion values
         // #endregion required
 
@@ -282,11 +283,14 @@ const PluridView: React.FC<ViewProperties> = (
         // stateConfiguration update
         const planes = getRegisteredPlanes(planesRegistrar);
 
-        const spaceTree = new space.tree.Tree({
-            planes,
-            configuration,
-            view,
-        });
+        const spaceTree = new space.tree.Tree(
+            {
+                planes,
+                configuration,
+                view,
+            },
+            hostname,
+        );
 
         const computedTree = spaceTree.compute();
 
