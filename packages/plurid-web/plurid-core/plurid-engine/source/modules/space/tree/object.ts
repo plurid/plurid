@@ -30,11 +30,14 @@ export interface TreeData<C> {
 
 export default class Tree<C> {
     private data: TreeData<C>;
+    private origin: string;
 
     constructor(
         data: TreeData<C>,
+        origin: string = 'origin',
     ) {
         this.data = data;
+        this.origin = origin;
     }
 
     public compute() {
@@ -48,6 +51,7 @@ export default class Tree<C> {
             planes,
             view,
             configuration,
+            this.origin,
         );
     }
 }

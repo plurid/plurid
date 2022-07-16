@@ -278,6 +278,7 @@ export const resolveViewItem = <C>(
     planes: Map<string, RegisteredPluridPlane<C>>,
     view: string | PluridView,
     configuration: PluridConfiguration,
+    origin = 'origin',
 ): TreePlane | undefined => {
     // console.log('resolveViewItem', planes);
 
@@ -293,6 +294,8 @@ export const resolveViewItem = <C>(
 
     const viewAddress = computePlaneAddress(
         viewData,
+        undefined,
+        origin,
     );
     // console.log('viewAddress', viewAddress);
 
@@ -460,6 +463,7 @@ export const computeSpaceTree = <C>(
     planes: Map<string, RegisteredPluridPlane<C>>,
     view: PluridApplicationView,
     configuration: PluridConfiguration,
+    origin = 'origin',
 ): TreePlane[] => {
     // console.log('computeSpaceTree');
     // console.log('planes', planes);
@@ -473,6 +477,7 @@ export const computeSpaceTree = <C>(
             planes,
             viewItem,
             configuration,
+            origin,
         );
 
         if (treePlane) {
