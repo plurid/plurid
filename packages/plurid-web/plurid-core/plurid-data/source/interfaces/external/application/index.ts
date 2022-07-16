@@ -77,6 +77,12 @@ export interface PluridApplication<C> {
      */
     view: PluridApplicationView;
 
+    /**
+     * The hostname of the server exposed to the internet, e.g. `example.com`,
+     * to be used in plurid plane links.
+     */
+    hostname?: string;
+
     // /**
     //  * A cluster ensures the rendering of all the planes that reference it
     //  * in the same space zone.

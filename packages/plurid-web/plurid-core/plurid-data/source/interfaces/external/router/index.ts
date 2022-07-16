@@ -47,11 +47,9 @@ export interface PluridRouterProperties<C> {
     protocol?: string;
 
     /**
-     * Development default: `'localhost:3000'`.
-     *
-     * Production default: `window.location.host`.
+     * Default: `'origin'` | `window.location.host`.
      */
-    host?: string;
+    hostname?: string;
 
     /**
      * The `gatewayPath` is used to receive external routing requests.
