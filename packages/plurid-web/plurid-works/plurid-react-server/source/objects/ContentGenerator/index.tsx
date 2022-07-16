@@ -72,6 +72,7 @@ class PluridContentGenerator {
             matchedPlane,
 
             pathname,
+            hostname,
         } = this.data;
 
         const RoutedApplication = () => (
@@ -88,6 +89,7 @@ class PluridContentGenerator {
                     gateway={gateway}
                     gatewayEndpoint={gatewayEndpoint}
                     gatewayQuery={gatewayQuery}
+                    hostname={hostname}
                 />
             </PluridProvider>
         );

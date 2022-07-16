@@ -102,6 +102,7 @@ export interface PluridContentGeneratorData {
     matchedPlane: any;
 
     pathname: string;
+    hostname: string;
 }
 
 

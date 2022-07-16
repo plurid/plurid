@@ -1113,6 +1113,7 @@ class PluridServer {
                 preserveResult,
 
                 pathname: isoMatch.match.value,
+                hostname: this.options.hostname,
                 matchedPlane: isoMatch.kind === 'RoutePlane'
                     ? {
                         value: isoMatch.match.value,
