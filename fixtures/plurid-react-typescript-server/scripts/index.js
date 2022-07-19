@@ -67,30 +67,13 @@ const commandStart = [
     `node ${buildFolder}`,
 ];
 
-const commandCheck = [
-    `${crossCommand('tsc')} --project ./configurations/tsconfig.check.json`,
-];
-
-const commandWatchClient = [
-    `${crossCommand('webpack')} --watch --config ./scripts/workings/client.development.js`,
-];
-const commandWatchServer = [
-    `${crossCommand('rollup')} -w -c ./scripts/workings/server.development.js`,
-];
-
-const commandStartLive = [
-    `node ./scripts/workings/liveserver.js`,
-];
-
 const commandStartLocal = [
     `${crossCommand('nodemon')} --watch ${path.join(buildFolder, '/index.js')} ${buildFolder}`,
 ];
 
-const commandWatch = [
-    `${crossCommand('rimraf')} ${path.join(buildFolder, '/stills')}`,
-    `PLURID_WATCH_MODE=true concurrently \"yarn watch.client verbose\" \"yarn watch.server verbose\" \"yarn start.local verbose\"`,
+const commandCheck = [
+    `${crossCommand('tsc')} --project ./configurations/tsconfig.check.json`,
 ];
-
 
 const commandClean = [
     `${crossCommand('rimraf')} ${buildFolder}`,
@@ -205,6 +188,12 @@ switch (command) {
             stdio: 'inherit',
         });
         break;
+    case 'start.local':
+        console.log('\n\tRunning the Local Server...');
+        runCommand(commandStartLocal, {
+            stdio: verbose,
+        });
+        break;
     case 'live':
         runCommand(commandLive, {
             stdio: verbose,
@@ -212,42 +201,6 @@ switch (command) {
         break;
     case 'check':
         runCommand(commandCheck, {
-            stdio: verbose,
-        });
-        break;
-    case 'start.live':
-        console.log('\n\tRunning the Live Server...');
-        runCommand(commandStartLive, {
-            stdio: verbose,
-        });
-        break;
-    case 'start.local':
-        console.log('\n\tRunning the Local Server...');
-        runCommand(commandStartLocal, {
-            stdio: verbose,
-        });
-        break;
-    case 'start.development':
-        console.log('\n\tRunning the Development Server...');
-        runCommand(commandStartLocal, {
-            stdio: verbose,
-        });
-        break;
-    case 'watch.client':
-        console.log('\n\tStarting the Client Watching Process...');
-        runCommand(commandWatchClient, {
-            stdio: verbose,
-        });
-        break;
-    case 'watch.server':
-        console.log('\n\tStarting the Server Watching Process...');
-        runCommand(commandWatchServer, {
-            stdio: verbose,
-        });
-        break;
-    case 'watch':
-        console.log('\n\tRunning the Watching Process...');
-        runCommand(commandWatch, {
             stdio: verbose,
         });
         break;
