@@ -7,13 +7,21 @@
     import {
         TRANSFORM_MODES,
     } from '@plurid/plurid-data';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
     // #endregion libraries
 // #endregion imports
 
 
 
 // #region module
-export const GlobalStyle = createGlobalStyle`
+export interface IGlobalStyle {
+    theme: Theme;
+}
+
+export const GlobalStyle = createGlobalStyle<IGlobalStyle>`
     *,
     *:after,
     *:before {
@@ -32,8 +40,11 @@ export const GlobalStyle = createGlobalStyle`
         overflow: hidden;
         background: black;
         color: white;
-        font-family: Ubuntu, -apple-system, BlinkMacSystemFont, Roboto,
-            'Open Sans', 'Helvetica Neue', 'Lucida Sans', sans-serif;
+        font-family: ${
+            ({
+                theme,
+            }) => theme.fontFamilySansSerif
+        }
 
         /*
          * HACK

@@ -73,8 +73,6 @@
 
 
     // #region internal
-    // import './index.css';
-
     import {
         GlobalStyle,
         StyledView,
@@ -108,6 +106,7 @@ export interface ViewStateProperties {
     // stateSpaceLocation: any;
     // stateCulledView: any;
     stateSpaceView: PluridApplicationView;
+    stateGeneralTheme: Theme;
 }
 
 export interface ViewDispatchProperties {
@@ -183,6 +182,7 @@ const PluridView: React.FC<ViewProperties> = (
         stateTransform,
         stateSpaceView,
         stateTree,
+        stateGeneralTheme,
         // #endregion state
 
 
@@ -1022,7 +1022,9 @@ const PluridView: React.FC<ViewProperties> = (
             transformMode={stateConfiguration.space.transformMode}
             data-plurid-entity={PLURID_ENTITY_VIEW}
         >
-            <GlobalStyle />
+            <GlobalStyle
+                theme={stateGeneralTheme}
+            />
 
             {/* {!stateSpaceLoading && ( */}
                 <Context.Provider
@@ -1051,6 +1053,7 @@ const mapStateToProperties = (
     // stateSpaceLocation: selectors.space.getTransform(state),
     // stateCulledView: selectors.space.getCulledView(state),
     stateSpaceView: selectors.space.getView(state),
+    stateGeneralTheme: selectors.themes.getGeneralTheme(state),
 });
 
 
