@@ -10,7 +10,7 @@ module.exports = {
         'tsx',
         'js',
     ],
-    collectCoverage: true,
+    collectCoverage: false,
     coveragePathIgnorePatterns: [
         '/node_modules/',
         '/distribution/',
