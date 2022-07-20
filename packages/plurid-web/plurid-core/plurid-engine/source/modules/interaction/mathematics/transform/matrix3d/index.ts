@@ -24,7 +24,9 @@
  *                          .getPropertyValue('transform').
  * @returns             Numbers array.
  */
-export function getMatrixValues(matrix3d: string): number[] {
+export function getMatrixValues(
+    matrix3d: string,
+): number[] {
     const matrixValues = matrix3d.split('(')[1].split(')')[0].split(',');
     const matrixValuesInt = [] as number[];
     for (let i = 0; i < matrixValues.length; i++) {
@@ -43,7 +45,9 @@ export function getMatrixValues(matrix3d: string): number[] {
  *                          .getPropertyValue("transform").
  * @returns             Rotation matrix.
  */
-export function getRotationMatrix(matrix3d: string): number[] {
+export function getRotationMatrix(
+    matrix3d: string,
+): number[] {
     const valuesMatrix = getMatrixValues(matrix3d);
     const scale = getScalationValue(matrix3d);
 
@@ -72,7 +76,9 @@ export function getRotationMatrix(matrix3d: string): number[] {
  *                          .getPropertyValue("transform").
  * @returns             Translation matrix.
  */
-export function getTranslationMatrix(matrix3d: string): number[] {
+export function getTranslationMatrix(
+    matrix3d: string,
+): number[] {
     const valuesMatrix = getMatrixValues(matrix3d);
     let translationMatrix: any;
 
@@ -95,7 +101,9 @@ export function getTranslationMatrix(matrix3d: string): number[] {
  *                          .getPropertyValue("transform").
  * @returns             Scalation value.
  */
-export function getScalationValue(matrix3d: string): number {
+export function getScalationValue(
+    matrix3d: string,
+): number {
     const valuesMatrix = getMatrixValues(matrix3d);
     let temp = 0;
     let scale: any;
@@ -146,13 +154,15 @@ export function setTransform(
 
 
 
-interface RotationValues {
+export interface RotationValues {
     rotateX: number;
     rotateY: number;
     rotateZ: number;
 }
 
-export function getTransformRotate(matrix3d: string): RotationValues {
+export function getTransformRotate(
+    matrix3d: string,
+): RotationValues {
     const pi = Math.PI;
     const values: number[] = getRotationMatrix(matrix3d);
     // console.log('getRotationMatrix', values);
@@ -265,13 +275,15 @@ export function getTransformRotate(matrix3d: string): RotationValues {
 }
 
 
-interface TranslationValues {
+export interface TranslationValues {
     translateX: number;
     translateY: number;
     translateZ: number;
 }
 
-export function getTransformTranslate(matrix3d: string): TranslationValues {
+export function getTransformTranslate(
+    matrix3d: string,
+): TranslationValues {
     const values: number[] = getTranslationMatrix(matrix3d);
     const translateX = values[0];
     const translateY = values[1];
@@ -284,20 +296,20 @@ export function getTransformTranslate(matrix3d: string): TranslationValues {
     };
 }
 
-interface ScalationValue {
+
+export interface ScalationValue {
     scale: number;
 }
 
-export function getTransformScale(matrix3d: string): ScalationValue {
+export function getTransformScale(
+    matrix3d: string,
+): ScalationValue {
     const scale = getScalationValue(matrix3d);
     return {
         scale,
     };
 }
 
-
-// let rotateX = 0;
-// let rotateY = 0;
 
 
 export function rotatePlurid(
