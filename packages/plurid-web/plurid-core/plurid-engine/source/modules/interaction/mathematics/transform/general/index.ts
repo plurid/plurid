@@ -3,6 +3,18 @@ export type Matrix = number[][];
 
 
 
+export const getInitialMatrix = () => {
+    const matrix: Matrix = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ];
+
+    return matrix;
+}
+
+
 export const multiplyMatrices = (
     m1: Matrix,
     m2: Matrix,
