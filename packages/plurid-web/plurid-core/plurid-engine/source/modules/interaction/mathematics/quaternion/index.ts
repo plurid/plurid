@@ -5,8 +5,9 @@
  * @param deg
  * @returns radians
  */
-export const degToRad = (deg: number): number => {
-    // deg * Math.PI / 180
+export const degToRad = (
+    deg: number,
+): number => {
     // return deg * Math.PI / 180;
     return deg * 0.01745329252;
 };
@@ -17,15 +18,16 @@ export const degToRad = (deg: number): number => {
  * @param deg
  * @returns degrees
  */
-export const radToDeg = (rad: number): number => {
-    // rad * 180 / Math.PI
+export const radToDeg = (
+    rad: number,
+): number => {
     // return rad * 180 / Math.PI;
     return rad * 57.2957795131;
 };
 
 
 
-interface Quaternion {
+export interface Quaternion {
     x: number;
     y: number;
     z: number;
@@ -67,7 +69,9 @@ export const zeroQuaternion = (): Quaternion => {
  *
  * @param quaternion
  */
-export function inverseQuaternion(quaternion: Quaternion): Quaternion {
+export function inverseQuaternion(
+    quaternion: Quaternion,
+): Quaternion {
     return makeQuaternion(
         quaternion.x,
         quaternion.y,
@@ -80,7 +84,9 @@ export function inverseQuaternion(quaternion: Quaternion): Quaternion {
  *
  * @param quaternion
  */
-export function conjugateQuaternion(quaternion: Quaternion): Quaternion {
+export function conjugateQuaternion(
+    quaternion: Quaternion,
+): Quaternion {
     return makeQuaternion(
         -quaternion.x,
         -quaternion.y,
@@ -150,55 +156,48 @@ export function quaternionFromAxisAngle(
  *
  * @param quaternionArray
  */
-export function quaternionMultiply(quaternionArray: Quaternion[]): Quaternion {
-    const temporaryQuaternion: Quaternion = quaternionArray[0];
-    const copyQuaternion: Quaternion = {
-        x: temporaryQuaternion.x,
-        y: temporaryQuaternion.y,
-        z: temporaryQuaternion.z,
-        w: temporaryQuaternion.w,
+export function quaternionMultiply(
+    quaternionArray: Quaternion[],
+): Quaternion {
+    const firstQuaternion: Quaternion = quaternionArray[0];
+    const valueQuaternion: Quaternion = {
+        ...firstQuaternion,
     };
 
     for (let i = 1; i < quaternionArray.length; i++) {
-        const secondaryTemporaryQuaternion: Quaternion = quaternionArray[i];
-        const nextQuaternion: Quaternion = {
-            x: secondaryTemporaryQuaternion.x,
-            y: secondaryTemporaryQuaternion.y,
-            z: secondaryTemporaryQuaternion.z,
-            w: secondaryTemporaryQuaternion.w,
-        };
+        const nextQuaternion: Quaternion = quaternionArray[i];
 
         const w =
-            copyQuaternion.w * nextQuaternion.w -
-            copyQuaternion.x * nextQuaternion.x -
-            copyQuaternion.y * nextQuaternion.y -
-            copyQuaternion.z * nextQuaternion.z;
+            valueQuaternion.w * nextQuaternion.w -
+            valueQuaternion.x * nextQuaternion.x -
+            valueQuaternion.y * nextQuaternion.y -
+            valueQuaternion.z * nextQuaternion.z;
 
         const x =
-            copyQuaternion.x * nextQuaternion.w +
-            copyQuaternion.w * nextQuaternion.x +
-            copyQuaternion.y * nextQuaternion.z -
-            copyQuaternion.z * nextQuaternion.y;
+            valueQuaternion.x * nextQuaternion.w +
+            valueQuaternion.w * nextQuaternion.x +
+            valueQuaternion.y * nextQuaternion.z -
+            valueQuaternion.z * nextQuaternion.y;
 
         const y =
-            copyQuaternion.y * nextQuaternion.w +
-            copyQuaternion.w * nextQuaternion.y +
-            copyQuaternion.z * nextQuaternion.x -
-            copyQuaternion.x * nextQuaternion.z;
+            valueQuaternion.y * nextQuaternion.w +
+            valueQuaternion.w * nextQuaternion.y +
+            valueQuaternion.z * nextQuaternion.x -
+            valueQuaternion.x * nextQuaternion.z;
 
         const z =
-            copyQuaternion.z * nextQuaternion.w +
-            copyQuaternion.w * nextQuaternion.z +
-            copyQuaternion.x * nextQuaternion.y -
-            copyQuaternion.y * nextQuaternion.x;
+            valueQuaternion.z * nextQuaternion.w +
+            valueQuaternion.w * nextQuaternion.z +
+            valueQuaternion.x * nextQuaternion.y -
+            valueQuaternion.y * nextQuaternion.x;
 
-        copyQuaternion.x = x;
-        copyQuaternion.y = y;
-        copyQuaternion.z = z;
-        copyQuaternion.w = w;
+        valueQuaternion.x = x;
+        valueQuaternion.y = y;
+        valueQuaternion.z = z;
+        valueQuaternion.w = w;
     }
 
-    return copyQuaternion;
+    return valueQuaternion;
 }
 
 /**
@@ -207,7 +206,7 @@ export function quaternionMultiply(quaternionArray: Quaternion[]): Quaternion {
  * @param quaternion
  */
 export function rotatePointViaQuaternion(
-    pointRotate: any,
+    pointRotate: [number, number, number],
     quaternion: Quaternion,
 ): Quaternion {
     const temporaryQuaternion: Quaternion = {
@@ -216,25 +215,22 @@ export function rotatePointViaQuaternion(
         z: pointRotate[2],
         w: 0,
     };
-    const rotatedPoint = quaternionMultiply([
+    const rotatedPointQuaternion = quaternionMultiply([
         quaternion,
         temporaryQuaternion,
         conjugateQuaternion(quaternion),
     ]);
 
-    return {
-        x: rotatedPoint.x,
-        y: rotatedPoint.y,
-        z: rotatedPoint.z,
-        w: rotatedPoint.w,
-    };
+    return rotatedPointQuaternion;
 }
 
 /**
  *
  * @param quaternion
  */
-export function makeRotationMatrixFromQuaternion(quaternion: Quaternion) {
+export function makeRotationMatrixFromQuaternion(
+    quaternion: Quaternion,
+) {
     const num = quaternion.x * 2;
     const num2 = quaternion.y * 2;
     const num3 = quaternion.z * 2;
