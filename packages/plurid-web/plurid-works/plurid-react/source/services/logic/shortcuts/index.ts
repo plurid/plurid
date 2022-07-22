@@ -50,7 +50,9 @@ export const handleGlobalShortcuts = (
         return;
     }
 
-    const inputOnPath = dom.verifyPathInputElement((event as any).path);
+    const inputOnPath = dom.verifyPathInputElement(
+        dom.getEventPath(event),
+    );
     if (inputOnPath) {
         return;
     }
