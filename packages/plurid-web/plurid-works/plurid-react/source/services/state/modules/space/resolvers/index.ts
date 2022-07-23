@@ -75,6 +75,22 @@ export const setSpaceLoading = (
 }
 
 
+export const changeTransform = (
+    state: Types.State,
+    action: Types.ChangeTransformAction,
+) => {
+    const {
+        type,
+        kind,
+        value,
+    } = action.payload;
+
+    const newState = getNewState(state);
+
+    return newState;
+}
+
+
 export const setTransform = (
     state: Types.State,
     action: Types.SetTransformAction,

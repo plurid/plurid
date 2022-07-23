@@ -37,6 +37,18 @@ export interface SetSpaceLoadingAction {
 }
 
 
+export const CHANGE_TRANSFORM = 'CHANGE_TRANSFORM';
+export interface ChangeTransformPayload {
+    type: 'rotate' | 'translate' | 'scale';
+    kind: 'set' | 'add';
+    value: number;
+}
+export interface ChangeTransformAction {
+    type: typeof CHANGE_TRANSFORM;
+    payload: ChangeTransformPayload;
+}
+
+
 export const SET_TRANSFORM = 'SET_TRANSFORM';
 export interface SetTransformAction {
     type: typeof SET_TRANSFORM;
@@ -359,6 +371,7 @@ export type Actions =
     | SetSpaceFieldAction
     | SetStateAction
     | SetSpaceLoadingAction
+    | ChangeTransformAction
     | SetTransformAction
     | SetAnimatedTransformAction
     | SetTransformTimeAction
