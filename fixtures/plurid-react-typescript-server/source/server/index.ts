@@ -148,10 +148,13 @@ const template: PluridServerTemplateConfiguration = {
         `<script>
             (function() {
                 var log = console.log;
-                console.log = (message) => {
-                    if (!/Download the (React|Apollo) DevTools/.test(message)) {
-                        log.apply(console, arguments)
+                console.log = (...args) => {
+                    const print = !args.some(val => /Download the (React|Apollo) DevTools/.test(val));
+                    if (!print) {
+                        return;
                     }
+
+                    log(...args);
                 }
             })()
         </script>`,
