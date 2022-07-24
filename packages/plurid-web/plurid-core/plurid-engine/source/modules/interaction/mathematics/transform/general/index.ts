@@ -66,6 +66,25 @@ export const matrixToArray = (
 }
 
 
+/**
+ * Parse a `matrix3d` string into a `Matrix`.
+ *
+ * @param value
+ * @returns
+ */
+export const matrix3DToMatrix = (
+    value: string,
+): Matrix => {
+    const values = value
+        .replace('matrix3d(', '')
+        .replace(')', '')
+        .split(',')
+        .map(val => parseInt(val));
+
+    return arrayToMatrix(values);
+}
+
+
 export const printMatrix = (
     matrix: Matrix,
     name: string,
