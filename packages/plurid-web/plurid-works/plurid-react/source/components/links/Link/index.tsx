@@ -435,7 +435,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         dispatchSetTransform({
             translationX: translate.translateX,
             translationY: translate.translateY,
-            translationZ: translate.translateZ,
+            translationZ: translate.translateZ * -1 + xOffset,
             rotationX: radToDeg(rotate.rotateX),
             rotationY: radToDeg(rotate.rotateY) * -1,
             scale: scale.scale,
