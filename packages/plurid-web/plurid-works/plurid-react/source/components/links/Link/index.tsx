@@ -35,7 +35,6 @@
         planes,
         routing,
         space,
-        interaction,
         // general as generalEngine,
     } from '@plurid/plurid-engine';
     // #endregion libraries
@@ -63,6 +62,10 @@
         ViewSize,
         UpdateSpaceLinkCoordinatesPayload,
     } from '~services/state/modules/space/types';
+
+    import {
+        computePlaneLocation,
+    } from '~services/logic/computing';
     // #endregion external
 
 
@@ -87,24 +90,6 @@ const {
     getPlanesRegistrar,
     getPluridPlaneIDByData,
 } = planes;
-
-
-const {
-    degToRad,
-    radToDeg,
-} = interaction.quaternion;
-
-const {
-    multiplyMatrices,
-    translateMatrix,
-    rotateYMatrix,
-} = interaction.transform.general;
-
-const {
-    getTransformRotate,
-    getTransformTranslate,
-    getTransformScale
-} = interaction.transform.matrix3d;
 
 
 
@@ -393,37 +378,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
 
         const {
-            location,
-        } = updatedPlane;
-
-        const {
-            translateX,
-            translateY,
-            translateZ,
-            rotateY,
-        } = location;
-
-        const zSign1 = rotateY < 100 ? 1 : -1;
-        const zSign2 = rotateY < 100 ? -1 : 1;
-        const xOffset = rotateY < 100 ? 200 : 0;
-
-        const newMatrix = multiplyMatrices(
-            multiplyMatrices(
-                multiplyMatrices(
-                    translateMatrix(-translateX, -translateY, zSign1 * translateZ),
-                    rotateYMatrix(degToRad(rotateY)),
-                ),
-                translateMatrix(translateX, translateY, zSign2 * translateZ),
-            ),
-            translateMatrix(-(translateX + xOffset), -translateY, zSign1 * translateZ),
-        );
-
-        const matrix3d = `matrix3d(${newMatrix.flat().join(',')})`;
-
-        const rotate = getTransformRotate(matrix3d);
-        const translate = getTransformTranslate(matrix3d);
-        const scale = getTransformScale(matrix3d);
-
+            matrix3d,
+            transform,
+        } = computePlaneLocation(updatedPlane);
 
         dispatchSetAnimatedTransform(true);
 
@@ -433,12 +390,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         });
 
         dispatchSetTransform({
-            translationX: translate.translateX,
-            translationY: translate.translateY,
-            translationZ: translate.translateZ * -1 + xOffset,
-            rotationX: radToDeg(rotate.rotateX),
-            rotationY: radToDeg(rotate.rotateY) * -1,
-            scale: scale.scale,
+            ...transform,
         });
 
         setTimeout(() => {
