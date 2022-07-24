@@ -79,7 +79,7 @@ export const matrix3DToMatrix = (
         .replace('matrix3d(', '')
         .replace(')', '')
         .split(',')
-        .map(val => parseInt(val));
+        .map(val => parseFloat(val));
 
     return arrayToMatrix(values);
 }
