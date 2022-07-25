@@ -51,6 +51,9 @@ const {
 export interface PluridPlanePreviewOwnProperties {
     planeID: string;
     linkCoordinates: PluridLinkCoordinates;
+    previewOffsetX: any;
+    previewOffsetY: any;
+    previewComponent: any;
 }
 
 export interface PluridPlanePreviewStateProperties {

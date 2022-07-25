@@ -128,6 +128,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         atClick,
         style,
         className,
+        preview,
+        previewComponent,
+        previewFadeIn,
+        previewFadeOut,
+        previewOffsetX,
+        previewOffsetY,
         // #endregion own
 
         // #region state
@@ -149,8 +155,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const planeControls = stateConfiguration.elements.plane.controls.show;
 
-    const previewAppearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
-    const previewDisappearTime = PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
+    const previewAppearTime = previewFadeIn || PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
+    const previewDisappearTime = previewFadeOut || PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
 
     const planeRouteResolved = computePlaneAddress(planeRoute);
     // console.log('planeRouteResolved', planeRouteResolved);
@@ -392,7 +398,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 );
 
                 navigateToPluridPlane(
-                    undefined,
+                    event,
                     plane,
                     dispatch,
                 );
@@ -473,6 +479,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** Show Preview */
     useEffect(() => {
+        if (!preview) {
+            return;
+        }
+
         if (mouseOver && hoverOutTimeout.current) {
             hoverInTimeout.current = setTimeout(
                 () => {
@@ -505,6 +515,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             }
         }
     }, [
+        preview,
         mouseOver,
     ]);
 
@@ -555,6 +566,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                     <PluridPlanePreview
                         planeID={planeID}
                         linkCoordinates={linkCoordinates}
+                        previewComponent={previewComponent}
+                        previewOffsetX={previewOffsetX}
+                        previewOffsetY={previewOffsetY}
                     />
                 </PluridPortal>
             )}
