@@ -69,6 +69,8 @@ export interface PluridToolbarTranslateDispatchProperties {
     translateDown: typeof actions.space.translateDown;
     translateLeft: typeof actions.space.translateLeft;
     translateRight: typeof actions.space.translateRight;
+    translateIn: typeof actions.space.translateIn;
+    translateOut: typeof actions.space.translateOut;
 }
 
 export type PluridToolbarTranslateProperties = PluridToolbarTranslateOwnProperties
@@ -98,6 +100,8 @@ const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
         translateDown,
         translateLeft,
         translateRight,
+        translateIn,
+        translateOut,
         // #endregion dispatch
     } = properties;
     // #endregion properties
@@ -117,7 +121,13 @@ const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
 
                     <PluridTransformArrow
                         direction="up"
-                        transform={() => translateUp()}
+                        transform={(event) => {
+                            if (event.altKey) {
+                                translateOut();
+                            } else {
+                                translateUp();
+                            }
+                        }}
                     />
                 </>
             )}
@@ -147,7 +157,13 @@ const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
                 <>
                     <PluridTransformArrow
                         direction="down"
-                        transform={() => translateDown()}
+                        transform={(event) => {
+                            if (event.altKey) {
+                                translateIn();
+                            } else {
+                                translateDown();
+                            }
+                        }}
                     />
 
                     <PluridTransformArrow
@@ -184,6 +200,12 @@ const mapDispatchToProperties = (
     ),
     translateRight: () => dispatch(
         actions.space.translateRight(),
+    ),
+    translateIn: () => dispatch(
+        actions.space.translateIn(),
+    ),
+    translateOut: () => dispatch(
+        actions.space.translateOut(),
     ),
 });
 

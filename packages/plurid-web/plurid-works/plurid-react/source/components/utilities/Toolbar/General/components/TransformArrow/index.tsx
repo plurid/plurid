@@ -32,23 +32,24 @@
     import {
         StyledPluridTransformArrow,
     } from './styled';
+
+    import {
+        arrowSigns,
+        events,
+    } from './data';
     // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-const arrowSigns = {
-    left :'◀',
-    right :'▶',
-    up :'▲',
-    down :'▼',
-};
-
-
 export interface PluridTransformArrowOwnProperties {
     direction: string;
-    transform: () => void;
+    transform: (
+        event: {
+            altKey: boolean;
+        },
+    ) => void;
 }
 
 export interface PluridTransformArrowStateProperties {
@@ -58,7 +59,8 @@ export interface PluridTransformArrowStateProperties {
 export interface PluridTransformArrowDispatchProperties {
 }
 
-export type PluridTransformArrowProperties = PluridTransformArrowOwnProperties
+export type PluridTransformArrowProperties =
+    & PluridTransformArrowOwnProperties
     & PluridTransformArrowStateProperties
     & PluridTransformArrowDispatchProperties;
 
@@ -78,7 +80,7 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
         // #endregion state
     } = properties;
 
-    const arrowSign = arrowSigns[direction];
+    const arrowSign = arrowSigns[direction] || '';
     // #endregion properties
 
 
@@ -100,9 +102,13 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
     const handleTouch = (
         event: HammerInput,
     ) => {
+        const eventData = {
+            altKey: event.srcEvent.altKey,
+        };
+
         switch (event.type) {
             case 'tap':
-                transform();
+                transform(eventData);
                 if (pressingInterval.current) {
                     setPressed(false);
                     clearInterval(pressingInterval.current);
@@ -111,7 +117,7 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
             case 'press':
                 setPressed(true);
                 pressingInterval.current = setInterval(() => {
-                    transform();
+                    transform(eventData);
                 }, 30);
                 break;
             case 'pressup':
@@ -146,13 +152,13 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
             const Hammer = HammerImport.default;
 
             touch = new Hammer((arrowElement as any).current);
-            touch.on('tap press pressup', handleTouch);
+            touch.on(events, handleTouch);
         }
         loadTouch();
 
         return () => {
             if (touch) {
-                touch.off('tap press pressup', handleTouch);
+                touch.off(events, handleTouch);
             }
         }
     }, [
