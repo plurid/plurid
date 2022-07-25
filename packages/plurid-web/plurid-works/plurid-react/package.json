@@ -38,7 +38,7 @@
         "clean": "rm -rf ./distribution",
         "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
-        "build.development": "pnpm clean && rollup -c ./scripts/rollup.development.js --environment ENV_MODE:development",
+        "build.development": "pnpm clean && node scripts/development.js",
         "build.production": "pnpm clean && pnpm lint && pnpm test && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
         "build": "pnpm build.production",
         "prepublishOnly": "pnpm build"
@@ -97,6 +97,7 @@
         "babel-plugin-styled-components": "^2.0.7",
         "babel-runtime": "^6.26.0",
         "cross-fetch": "^3.1.5",
+        "esbuild": "^0.14.50",
         "eslint": "^8.20.0",
         "jest": "^28.1.3",
         "jest-config": "^28.1.3",
