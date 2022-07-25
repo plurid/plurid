@@ -564,7 +564,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                     rootID={parentPlaneID}
                 >
                     <PluridPlanePreview
-                        planeID={planeID}
+                        planeRoute={planeRouteResolved}
                         linkCoordinates={linkCoordinates}
                         previewComponent={previewComponent}
                         previewOffsetX={previewOffsetX}

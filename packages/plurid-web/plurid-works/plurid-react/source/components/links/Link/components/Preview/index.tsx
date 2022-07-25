@@ -49,10 +49,10 @@ const {
 
 
 export interface PluridPlanePreviewOwnProperties {
-    planeID: string;
+    planeRoute: string;
     linkCoordinates: PluridLinkCoordinates;
-    previewOffsetX: any;
-    previewOffsetY: any;
+    previewOffsetX: number | undefined;
+    previewOffsetY: number | undefined;
     previewComponent: any;
 }
 
@@ -76,8 +76,11 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
     // #region properties
     const {
         // #region own
-        planeID,
+        planeRoute,
         linkCoordinates,
+        previewComponent,
+        previewOffsetX,
+        previewOffsetY,
         // #endregion own
 
         // #region state
@@ -85,12 +88,16 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
         // stateInteractionTheme,
         // #endregion state
     } = properties;
+
+    const resolvedLinkCoordinates = {
+        x: linkCoordinates.x + (previewOffsetX ?? 0),
+        y: linkCoordinates.y + (previewOffsetY ?? 0),
+    };
     // #endregion properties
 
 
     // #region context
     const context = useContext(Context);
-
     if (!context) {
         return (<></>);
     }
@@ -100,22 +107,19 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
     } = context;
 
     const planesRegistry = getPlanesRegistrar(planesRegistrar);
-
     if (!planesRegistry) {
         return (<></>);
     }
-
-    const plane = planesRegistry.get(planeID);
     // #endregion context
 
 
     // #region render
+    const plane = planesRegistry.get(planeRoute);
     if (!plane) {
         return (<></>);
     }
 
-    const Component = plane.component;
-
+    const Component = previewComponent ?? plane.component;
     if (typeof Component !== 'function') {
         return (<></>);
     }
@@ -123,7 +127,7 @@ const PluridPlanePreview: React.FC<PluridPlanePreviewProperties> = (
     return (
         <StyledPluridPlanePreview
             theme={stateGeneralTheme}
-            linkCoordinates={linkCoordinates}
+            linkCoordinates={resolvedLinkCoordinates}
         >
             <Component />
         </StyledPluridPlanePreview>
