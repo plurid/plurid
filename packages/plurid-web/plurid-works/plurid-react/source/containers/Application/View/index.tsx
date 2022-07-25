@@ -36,6 +36,8 @@
         general as generalEngine,
     } from '@plurid/plurid-engine';
 
+    import PluridPubSub from '@plurid/plurid-pubsub';
+
     import {
         meta,
     } from '@plurid/plurid-functions';
@@ -233,8 +235,8 @@ const PluridView: React.FC<ViewProperties> = (
         setPluridPubSub,
     ] = useState<IPluridPubSub[]>(
         pubsub
-            ? [pubsub]
-            : []
+            ? [new PluridPubSub(), pubsub]
+            : [new PluridPubSub()]
     );
     // #endregion state
 
@@ -1031,6 +1033,7 @@ const PluridView: React.FC<ViewProperties> = (
             }
         }, [
             pluridPubSub.length,
+            JSON.stringify(stateTree),
         ]);
 
         /** PubSub Publish */
@@ -1065,6 +1068,7 @@ const PluridView: React.FC<ViewProperties> = (
         planeRenderError,
         matchedRoute,
 
+        defaultPubSub: pluridPubSub[0],
         registerPubSub,
     };
 
