@@ -3,6 +3,10 @@
     import {
         PluridRouteFragments,
     } from '../router';
+
+    import {
+        PluridPubSub,
+    } from '../pubsub';
     // #endregion external
 // #endregion imports
 
@@ -24,6 +28,7 @@ export type RouteComponentWithPluridProperty<T> = ComponentWithPlurid<T, PluridR
 export interface PluridPlaneComponentProperty {
     route: PluridRouteComponentProperty;
     plane: PluridPlaneComponentPropertyPlane;
+    getPubSub: () => PluridPubSub;
 }
 
 export interface PluridPlaneComponentPropertyPlane {
