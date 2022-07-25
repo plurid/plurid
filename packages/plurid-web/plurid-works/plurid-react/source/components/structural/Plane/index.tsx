@@ -62,6 +62,35 @@
 
 
 // #region module
+const getTreePlaneByID = (
+    stateTree: TreePlane[],
+    id: string | undefined,
+): TreePlane | undefined => {
+    if (!id) {
+        return;
+    }
+
+    for (const plane of stateTree) {
+        if (plane.planeID === id) {
+            return plane;
+        }
+
+        if (plane.children) {
+            const found = getTreePlaneByID(
+                plane.children,
+                id,
+            );
+
+            if (found) {
+                return found;
+            }
+        }
+    }
+
+    return;
+}
+
+
 export interface PluridPlaneOwnProperties {
     // #region required
         // #region values
@@ -74,6 +103,7 @@ export interface PluridPlaneOwnProperties {
 }
 
 export interface PluridPlaneStateProperties {
+    stateTree: TreePlane[];
     stateViewSize: ViewSize;
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
@@ -105,6 +135,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         // #endregion required
 
         // #region state
+        stateTree,
         stateViewSize,
         stateGeneralTheme,
         stateConfiguration,
@@ -135,6 +166,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     const width = mathematics.numbers.checkIntegerNonUnit(planeWidth)
         ? planeWidth
         : planeWidth * stateViewSize.width;
+
+    const parentTreePlane = getTreePlaneByID(
+        stateTree,
+        treePlane.parentPlaneID,
+    );
     // #endregion properties
 
 
@@ -211,7 +247,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             {treePlane.show && (
                 <>
                     {treePlane.parentPlaneID && (
-                        <PlaneBridge />
+                        <PlaneBridge
+                            treePlane={treePlane}
+                            parentTreePlane={parentTreePlane!}
+                        />
                     )}
 
                     {showPlaneControls && (
@@ -252,6 +291,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 const mapStateToProps = (
     state: AppState,
 ): PluridPlaneStateProperties => ({
+    stateTree: selectors.space.getTree(state),
     stateViewSize: selectors.space.getViewSize(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),

@@ -6,31 +6,50 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
-    import { Theme } from '@plurid/plurid-themes';
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
 
     import {
         /** constants */
         PLURID_ENTITY_PLANE_BRIDGE,
 
         /** interfaces */
+        TreePlane,
         PluridConfiguration,
     } from '@plurid/plurid-data';
 
     import {
-        StyledPluridPlaneBridge,
-    } from './styled';
+        PluridIconArrowLeft,
+    } from '@plurid/plurid-icons-react';
+    // #endregion libraries
 
+
+    // #region external
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
-    // #endregion libraries
+
+    import {
+        navigateToPluridPlane,
+    } from '~services/logic/animation';
+    // #endregion external
+
+
+    // #region internal
+    import {
+        StyledPluridPlaneBridge,
+    } from './styled';
+    // #endregion internal
 // #endregion imports
 
 
 
 // #region module
 export interface PluridPlaneBridgeOwnProperties {
+    treePlane: TreePlane;
+    parentTreePlane: TreePlane;
 }
 
 export interface PluridPlaneBridgeStateProperties {
@@ -39,9 +58,11 @@ export interface PluridPlaneBridgeStateProperties {
 }
 
 export interface PluridPlaneBridgeDispatchProperties {
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
 }
 
-export type PluridPlaneBridgeProperties = PluridPlaneBridgeOwnProperties
+export type PluridPlaneBridgeProperties =
+    & PluridPlaneBridgeOwnProperties
     & PluridPlaneBridgeStateProperties
     & PluridPlaneBridgeDispatchProperties;
 
@@ -50,8 +71,19 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
 ) => {
     // #region properties
     const {
+        // #region own
+        treePlane,
+        parentTreePlane,
+        // #endregion own
+
+        // #region state
         stateGeneralTheme,
         stateConfiguration,
+        // #endregion state
+
+        // #region dispatch
+        dispatch,
+        // #endregion dispatch
     } = properties;
 
     const {
@@ -68,7 +100,19 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
             planeControls={controls.show}
             planeOpacity={opacity}
             data-plurid-entity={PLURID_ENTITY_PLANE_BRIDGE}
-        />
+        >
+            <PluridIconArrowLeft
+                atClick={(event) => {
+                    navigateToPluridPlane(
+                        event,
+                        parentTreePlane,
+                        dispatch,
+                    );
+                }}
+                theme={stateGeneralTheme}
+                title="back"
+            />
+        </StyledPluridPlaneBridge>
     );
     // #endregion render
 }
@@ -85,6 +129,7 @@ const mapStateToProperties = (
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridPlaneBridgeDispatchProperties => ({
+    dispatch,
 });
 
 

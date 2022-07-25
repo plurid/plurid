@@ -40,5 +40,9 @@ export const StyledPluridPlaneBridge = styled.div<IStyledPluridPlaneBridge>`
     height: 30px;
     width: 100px;
     opacity: 0.5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 // #endregion module
