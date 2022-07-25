@@ -236,7 +236,9 @@ export const computePlaneLocation = (
 
     const zSign1 = rotateY < 100 ? 1 : -1;
     const zSign2 = rotateY < 100 ? -1 : 1;
-    const xOffset = rotateY < 100 ? 200 : 0;
+    const xOffset = rotateY < 100
+        ? plane.parentPlaneID ? 200 : 0
+        : 0;
 
     const newMatrix = multiplyMatrices(
         multiplyMatrices(

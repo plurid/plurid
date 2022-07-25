@@ -51,6 +51,10 @@ export const StyledPluridPlaneControls = styled.div<IStyledPluridPlaneControls>`
 
 
 export const StyledPluridPlaneControlsLeft = styled.div`
+    margin: 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 `;
 
 

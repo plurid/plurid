@@ -28,6 +28,7 @@
     import {
         PluridIconCopy,
         PluridIconLink,
+        PluridIconFrame,
     } from '@plurid/plurid-icons-react';
 
     import {
@@ -45,6 +46,10 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
+
+    import {
+        navigateToPluridPlane,
+    } from '~services/logic/animation';
     // #endregion external
 
 
@@ -82,6 +87,7 @@ export interface PluridPlaneControlsStateProperties {
 }
 
 export interface PluridPlaneControlsDispatchProperties {
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
 }
 
 export type PluridPlaneControlsProperties = PluridPlaneControlsOwnProperties
@@ -94,15 +100,21 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
 ) => {
     /** properties */
     const {
-        /** own */
+        // #region own
         plane,
         treePlane,
         mouseOver,
+        // #endregion own
 
-        /** state */
+        // #region state
         configuration,
         generalTheme,
         interactionTheme,
+        // #endregion state
+
+        // #region dispatch
+        dispatch,
+        // #endregion dispatch
     } = properties;
 
     const {
@@ -184,6 +196,17 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
             data-plurid-entity={PLURID_ENTITY_PLANE_CONTROLS}
         >
             <StyledPluridPlaneControlsLeft>
+                <PluridIconFrame
+                    atClick={(event) => {
+                        navigateToPluridPlane(
+                            event,
+                            treePlane,
+                            dispatch,
+                        );
+                    }}
+                    theme={generalTheme}
+                    title="focus"
+                />
             </StyledPluridPlaneControlsLeft>
 
             <StyledPluridPlaneControlsCenter>
@@ -230,6 +253,7 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridPlaneControlsDispatchProperties => ({
+    dispatch,
 });
 
 

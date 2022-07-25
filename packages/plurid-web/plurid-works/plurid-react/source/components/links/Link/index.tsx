@@ -64,8 +64,8 @@
     } from '~services/state/modules/space/types';
 
     import {
-        computePlaneLocation,
-    } from '~services/logic/computing';
+        navigateToPluridPlane,
+    } from '~services/logic/animation';
     // #endregion external
 
 
@@ -101,6 +101,7 @@ export interface PluridLinkStateProperties {
 }
 
 export interface PluridLinkDispatchProperties {
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
     dispatchSetTree: typeof actions.space.setTree;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
     dispatchSetTransform: typeof actions.space.setTransform;
@@ -137,6 +138,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         // #endregion state
 
         // #region dispatch
+        dispatch,
         dispatchSetTree,
         dispatchSetAnimatedTransform,
         dispatchSetTransform,
@@ -330,7 +332,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         );
 
         if (pluridPlaneID) {
-            navigateToPluridPlane(
+            handlePlaneNavigation(
                 event,
                 updatedTreePlane,
             );
@@ -349,7 +351,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             updatedPlane,
         } = space.tree.logic.togglePlaneFromTree(stateTree, pluridPlaneID);
 
-        navigateToPluridPlane(
+        handlePlaneNavigation(
             event,
             updatedPlane,
         );
@@ -359,7 +361,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         setShowPreview(false);
     }
 
-    const navigateToPluridPlane = (
+    const handlePlaneNavigation = (
         event: React.MouseEvent<HTMLAnchorElement>,
         updatedPlane: TreePlane | undefined,
     ) => {
@@ -372,30 +374,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
-        if (event.altKey || event.metaKey) {
-            // Only navigate at pure link click.
-            return;
-        }
-
-        const {
-            matrix3d,
-            transform,
-        } = computePlaneLocation(updatedPlane);
-
-        dispatchSetAnimatedTransform(true);
-
-        dispatchSetSpaceField({
-            field: 'transform',
-            value: matrix3d,
-        });
-
-        dispatchSetTransform({
-            ...transform,
-        });
-
-        setTimeout(() => {
-            dispatchSetAnimatedTransform(false);
-        }, 500);
+        navigateToPluridPlane(
+            event,
+            updatedPlane,
+            dispatch,
+        );
     }
 
     const handleShowPluridPlane = (
@@ -567,6 +550,7 @@ const mapStateToProperties = (
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridLinkDispatchProperties => ({
+    dispatch,
     dispatchSetTree: (
         tree: TreePlane[],
     ) => dispatch(
