@@ -27,7 +27,7 @@ export const navigateToPluridPlane = (
     plane: TreePlane | undefined,
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ) => {
-    if (event && (event.metaKey)) {
+    if (event && (event.ctrlKey || event.metaKey)) {
         // Only navigate at pure link click.
         return;
     }
