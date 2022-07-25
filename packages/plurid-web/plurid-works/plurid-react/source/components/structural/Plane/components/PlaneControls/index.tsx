@@ -28,6 +28,7 @@
     import {
         PluridIconCopy,
         PluridIconLink,
+        PluridIconArrowLeft,
         PluridIconFrame,
     } from '@plurid/plurid-icons-react';
 
@@ -77,13 +78,14 @@ const {
 export interface PluridPlaneControlsOwnProperties {
     plane: RegisteredPluridPlane<PluridReactComponent>;
     treePlane: TreePlane;
+    parentTreePlane: TreePlane | undefined;
     mouseOver: boolean;
 }
 
 export interface PluridPlaneControlsStateProperties {
     configuration: PluridConfiguration;
-    generalTheme: Theme;
-    interactionTheme: Theme;
+    stateGeneralTheme: Theme;
+    stateInteractionTheme: Theme;
 }
 
 export interface PluridPlaneControlsDispatchProperties {
@@ -98,18 +100,19 @@ export type PluridPlaneControlsProperties = PluridPlaneControlsOwnProperties
 const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         // #region own
         plane,
         treePlane,
+        parentTreePlane,
         mouseOver,
         // #endregion own
 
         // #region state
         configuration,
-        generalTheme,
-        interactionTheme,
+        stateGeneralTheme,
+        stateInteractionTheme,
         // #endregion state
 
         // #region dispatch
@@ -143,15 +146,17 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     const gateway = 'gateway';
 
     const gatewayAddress = `${protocol}://${host.value}/${gateway}?plurid=` + encodeURIComponent(route);
+    // #endregion properties
 
 
-    /** state */
+    // #region state
     const [path, setPath] = useState(treePlane.route);
     const [showAddress, setShowAddress] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
+    // #endregion state
 
 
-    /** handlers */
+    // #region handlers
     const onPathInput = (
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
@@ -185,17 +190,32 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     const copyGatewayLink = () => {
         clipboard.copy(gatewayAddress);
     }
+    // #endregion handlers
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridPlaneControls
-            theme={generalTheme}
+            theme={stateGeneralTheme}
             mouseOver={mouseOver}
             transparentUI={transparentUI}
             data-plurid-entity={PLURID_ENTITY_PLANE_CONTROLS}
         >
             <StyledPluridPlaneControlsLeft>
+                {parentTreePlane && (
+                    <PluridIconArrowLeft
+                        atClick={(event) => {
+                            navigateToPluridPlane(
+                                event,
+                                parentTreePlane,
+                                dispatch,
+                            );
+                        }}
+                        theme={stateGeneralTheme}
+                        title="back"
+                    />
+                )}
+
                 <PluridIconFrame
                     atClick={(event) => {
                         navigateToPluridPlane(
@@ -204,14 +224,14 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                             dispatch,
                         );
                     }}
-                    theme={generalTheme}
+                    theme={stateGeneralTheme}
                     title="focus"
                 />
             </StyledPluridPlaneControlsLeft>
 
             <StyledPluridPlaneControlsCenter>
                 <PluridTextline
-                    theme={interactionTheme}
+                    theme={stateInteractionTheme}
                     // text={showAddress ? gatewayAddress : path}
                     // text={treePlane.route}
                     text={path}
@@ -238,6 +258,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
             </StyledPluridPlaneControlsRight>
         </StyledPluridPlaneControls>
     );
+    // #endregion render
 }
 
 
@@ -245,8 +266,8 @@ const mapStateToProps = (
     state: AppState,
 ): PluridPlaneControlsStateProperties => ({
     configuration: selectors.configuration.getConfiguration(state),
-    generalTheme: selectors.themes.getGeneralTheme(state),
-    interactionTheme: selectors.themes.getInteractionTheme(state),
+    stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+    stateInteractionTheme: selectors.themes.getInteractionTheme(state),
 });
 
 

@@ -229,6 +229,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                         <PlaneControls
                             plane={plane}
                             treePlane={treePlane}
+                            parentTreePlane={parentTreePlane}
                             mouseOver={mouseOver}
                         />
                     )}

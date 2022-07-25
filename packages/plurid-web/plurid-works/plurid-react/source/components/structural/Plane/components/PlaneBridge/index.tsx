@@ -18,10 +18,6 @@
         TreePlane,
         PluridConfiguration,
     } from '@plurid/plurid-data';
-
-    import {
-        PluridIconArrowLeft,
-    } from '@plurid/plurid-icons-react';
     // #endregion libraries
 
 
@@ -30,10 +26,6 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
-
-    import {
-        navigateToPluridPlane,
-    } from '~services/logic/animation';
     // #endregion external
 
 
@@ -58,7 +50,7 @@ export interface PluridPlaneBridgeStateProperties {
 }
 
 export interface PluridPlaneBridgeDispatchProperties {
-    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    dispatch: ThunkDispatch<{}, {}, AnyAction>;
 }
 
 export type PluridPlaneBridgeProperties =
@@ -72,8 +64,8 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
     // #region properties
     const {
         // #region own
-        treePlane,
-        parentTreePlane,
+        // treePlane,
+        // parentTreePlane,
         // #endregion own
 
         // #region state
@@ -82,7 +74,7 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
         // #endregion state
 
         // #region dispatch
-        dispatch,
+        // dispatch,
         // #endregion dispatch
     } = properties;
 
@@ -101,17 +93,6 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
             planeOpacity={opacity}
             data-plurid-entity={PLURID_ENTITY_PLANE_BRIDGE}
         >
-            <PluridIconArrowLeft
-                atClick={(event) => {
-                    navigateToPluridPlane(
-                        event,
-                        parentTreePlane,
-                        dispatch,
-                    );
-                }}
-                theme={stateGeneralTheme}
-                title="back"
-            />
         </StyledPluridPlaneBridge>
     );
     // #endregion render
