@@ -32,6 +32,13 @@ const {
 } = interaction;
 
 
+const directions = {
+    left: 'left',
+    right: 'right',
+    up: 'up',
+    down: 'down',
+};
+
 
 export interface Modes {
     rotation: boolean;
@@ -243,6 +250,7 @@ export const handleGlobalShortcuts = (
 }
 
 
+
 export const handleGlobalWheel = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: WheelEvent,
@@ -267,105 +275,117 @@ export const handleGlobalWheel = (
     const direction = directionLogic.getWheelDirection(deltas);
 
     if (modes.rotation) {
-        if (direction === 'left' && locks.rotationY) {
-            dispatch(actions.space.rotateLeft());
+        if (direction === directions.left && locks.rotationY) {
+            return dispatch(actions.space.rotateLeft());
         }
 
-        if (direction === 'right' && locks.rotationY) {
-            dispatch(actions.space.rotateRight());
+        if (direction === directions.right && locks.rotationY) {
+            return dispatch(actions.space.rotateRight());
         }
 
-        if (direction === 'up' && locks.rotationX) {
-            dispatch(actions.space.rotateUp());
+        if (direction === directions.up && locks.rotationX) {
+            return dispatch(actions.space.rotateUp());
         }
 
-        if (direction === 'down' && locks.rotationX) {
-            dispatch(actions.space.rotateDown());
+        if (direction === directions.down && locks.rotationX) {
+            return dispatch(actions.space.rotateDown());
         }
     }
 
     if (event.shiftKey && !event.altKey) {
-        if (direction === 'up' && locks.rotationX) {
-            dispatch(actions.space.rotateUp());
+        if (direction === directions.up && locks.rotationX) {
+            return dispatch(actions.space.rotateUp());
         }
 
-        if (direction === 'down' && locks.rotationX) {
-            dispatch(actions.space.rotateDown());
+        if (direction === directions.down && locks.rotationX) {
+            return dispatch(actions.space.rotateDown());
         }
 
-        if (direction === 'left' && locks.rotationY) {
-            dispatch(actions.space.rotateLeft());
+        if (direction === directions.left && locks.rotationY) {
+            return dispatch(actions.space.rotateLeft());
         }
 
-        if (direction === 'right' && locks.rotationY) {
-            dispatch(actions.space.rotateRight());
+        if (direction === directions.right && locks.rotationY) {
+            return dispatch(actions.space.rotateRight());
         }
     }
 
     if (modes.translation) {
-        if (direction === 'up' && locks.translationY) {
-            dispatch(actions.space.translateDown());
+        if (event.altKey) {
+            if (direction === directions.up && locks.translationZ) {
+                return dispatch(actions.space.translateIn());
+            }
+
+            if (direction === directions.down && locks.translationZ) {
+                return dispatch(actions.space.translateOut());
+            }
         }
 
-        if (direction === 'down' && locks.translationY) {
-            dispatch(actions.space.translateUp());
+        if (direction === directions.up && locks.translationY) {
+            return dispatch(actions.space.translateDown());
         }
 
-        if (direction === 'left' && locks.translationX) {
-            dispatch(actions.space.translateRight());
+        if (direction === directions.down && locks.translationY) {
+            return dispatch(actions.space.translateUp());
         }
 
-        if (direction === 'right' && locks.translationX) {
-            dispatch(actions.space.translateLeft());
+        if (direction === directions.left && locks.translationX) {
+            return dispatch(actions.space.translateRight());
+        }
+
+        if (direction === directions.right && locks.translationX) {
+            return dispatch(actions.space.translateLeft());
         }
     }
 
     if (event.altKey && event.shiftKey) {
-        if (direction === 'up' && locks.translationZ) {
-            dispatch(actions.space.translateIn());
+        if (direction === directions.up && locks.translationZ) {
+            return dispatch(actions.space.translateIn());
         }
 
-        if (direction === 'down' && locks.translationZ) {
-            dispatch(actions.space.translateOut());
+        if (direction === directions.down && locks.translationZ) {
+            return dispatch(actions.space.translateOut());
         }
     }
 
     if (event.altKey && !event.shiftKey) {
-        if (direction === 'up' && locks.translationY) {
-            dispatch(actions.space.translateDown());
+        if (direction === directions.up && locks.translationY) {
+            return dispatch(actions.space.translateDown());
         }
 
-        if (direction === 'down' && locks.translationY) {
-            dispatch(actions.space.translateUp());
+        if (direction === directions.down && locks.translationY) {
+            return dispatch(actions.space.translateUp());
         }
 
-        if (direction === 'left' && locks.translationX) {
-            dispatch(actions.space.translateRight());
+        if (direction === directions.left && locks.translationX) {
+            return dispatch(actions.space.translateRight());
         }
 
-        if (direction === 'right' && locks.translationX) {
-            dispatch(actions.space.translateLeft());
+        if (direction === directions.right && locks.translationX) {
+            return dispatch(actions.space.translateLeft());
         }
     }
 
     if (modes.scale) {
-        if (direction === 'down' && locks.scale) {
-            dispatch(actions.space.scaleUp());
+        if (direction === directions.down && locks.scale) {
+            return dispatch(actions.space.scaleUp());
         }
 
-        if (direction === 'up' && locks.scale) {
-            dispatch(actions.space.scaleDown());
+        if (direction === directions.up && locks.scale) {
+            return dispatch(actions.space.scaleDown());
         }
     }
 
     if (event.metaKey || event.ctrlKey) {
-        if (direction === 'down' && locks.scale) {
-            dispatch(actions.space.scaleUp());
+        if (direction === directions.down && locks.scale) {
+            return dispatch(actions.space.scaleUp());
         }
 
-        if (direction === 'up' && locks.scale) {
-            dispatch(actions.space.scaleDown());
+        if (direction === directions.up && locks.scale) {
+            return dispatch(actions.space.scaleDown());
         }
     }
+
+    return;
 }
 // #endregion module
