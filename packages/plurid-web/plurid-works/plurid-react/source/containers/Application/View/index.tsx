@@ -69,6 +69,10 @@
     import {
         ViewSize,
     } from '~services/state/types/space';
+
+    import {
+        navigateToPluridPlane,
+    } from '~services/logic/animation';
     // #endregion external
 
 
@@ -527,6 +531,27 @@ const PluridView: React.FC<ViewProperties> = (
             });
 
 
+            const navigateToPlaneIndex = pubsub.subscribe({
+                topic: PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
+                callback: (data) => {
+                    const {
+                        id,
+                    } = data;
+
+                    const plane = space.tree.logic.getTreePlaneByID(
+                        stateTree,
+                        id,
+                    );
+
+                    navigateToPluridPlane(
+                        undefined,
+                        plane,
+                        dispatch,
+                    );
+                },
+            });
+
+
             return () => {
                 pubsub.unsubscribe(
                     configurationIndex,
@@ -590,6 +615,12 @@ const PluridView: React.FC<ViewProperties> = (
                 pubsub.unsubscribe(
                     viewRemovePlaneIndex,
                     PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
+                );
+
+
+                pubsub.unsubscribe(
+                    navigateToPlaneIndex,
+                    PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
                 );
             }
         }

@@ -23,12 +23,16 @@
 
 // #region module
 export const navigateToPluridPlane = (
-    event: React.MouseEvent,
-    plane: TreePlane,
+    event: React.MouseEvent | undefined,
+    plane: TreePlane | undefined,
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ) => {
-    if (event.altKey || event.metaKey) {
+    if (event && (event.altKey || event.metaKey)) {
         // Only navigate at pure link click.
+        return;
+    }
+
+    if (!plane) {
         return;
     }
 

@@ -23,6 +23,7 @@
 
     import {
         cleanTemplate,
+        space,
     } from '@plurid/plurid-engine';
 
     import {
@@ -62,35 +63,6 @@
 
 
 // #region module
-const getTreePlaneByID = (
-    stateTree: TreePlane[],
-    id: string | undefined,
-): TreePlane | undefined => {
-    if (!id) {
-        return;
-    }
-
-    for (const plane of stateTree) {
-        if (plane.planeID === id) {
-            return plane;
-        }
-
-        if (plane.children) {
-            const found = getTreePlaneByID(
-                plane.children,
-                id,
-            );
-
-            if (found) {
-                return found;
-            }
-        }
-    }
-
-    return;
-}
-
-
 export interface PluridPlaneOwnProperties {
     // #region required
         // #region values
@@ -167,7 +139,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         ? planeWidth
         : planeWidth * stateViewSize.width;
 
-    const parentTreePlane = getTreePlaneByID(
+    const parentTreePlane = space.tree.logic.getTreePlaneByID(
         stateTree,
         treePlane.parentPlaneID,
     );
