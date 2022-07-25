@@ -3,6 +3,11 @@
     import React from 'react';
 
     import {
+        plurid,
+        Theme,
+    } from '@plurid/plurid-themes';
+
+    import {
         pluridRouterNavigate,
     } from '@plurid/plurid-engine';
     // #endregion libraries
@@ -43,6 +48,7 @@ export interface PluridRouterLinkOwnProperties {
          */
         asAnchor?: boolean;
 
+        theme?: Theme;
         style?: React.CSSProperties;
         className?: string;
         children?: React.ReactNode;
@@ -77,6 +83,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         // #region optional
             // #region values
             asAnchor: asAnchorProperty,
+            theme: themeProperty,
             style,
             className,
             // #endregion values
@@ -88,6 +95,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     } = properties;
 
     const asAnchor = asAnchorProperty ?? DEFAULT_ROUTER_LINK_AS_ANCHOR;
+    const theme = themeProperty || plurid;
     // #endregion properties
 
 
@@ -126,6 +134,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     const renderProperties = {
         onClick: handleClick,
         onKeyUp: handleKeyUp,
+        theme,
         style,
         className,
         tabIndex: 0,
