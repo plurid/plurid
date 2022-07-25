@@ -224,6 +224,12 @@ export interface TranslateYWithAction {
     payload: number;
 }
 
+export const TRANSLATE_Z_WITH = 'TRANSLATE_Z_WITH';
+export interface TranslateZWithAction {
+    type: typeof TRANSLATE_Z_WITH;
+    payload: number;
+}
+
 
 export const SCALE_UP = 'SCALE_UP';
 export interface ScaleUpAction {
@@ -402,6 +408,7 @@ export type Actions =
     | TranslateOutAction
     | TranslateXWithAction
     | TranslateYWithAction
+    | TranslateZWithAction
     | ScaleUpAction
     | ScaleDownAction
     | ScaleUpWithAction

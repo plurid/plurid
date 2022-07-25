@@ -272,7 +272,8 @@ export const handleGlobalWheel = (
         deltaX: event.deltaX,
         deltaY: event.deltaY,
     };
-    const direction = directionLogic.getWheelDirection(deltas);
+    const absoluteThreshold = 100;
+    const direction = directionLogic.getWheelDirection(deltas, absoluteThreshold);
 
     if (modes.rotation) {
         if (direction === directions.left && locks.rotationY) {

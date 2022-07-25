@@ -277,6 +277,15 @@ export const translateYWith = (
     };
 }
 
+export const translateZWith = (
+    payload: number,
+): Types.TranslateZWithAction => {
+    return {
+        type: Types.TRANSLATE_Z_WITH,
+        payload,
+    };
+}
+
 
 export const scaleUp = (
 ): Types.ScaleUpAction => {

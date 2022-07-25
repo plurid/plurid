@@ -95,6 +95,8 @@ const reducer = (
             return resolvers.translateXWith(state, action);
         case Types.TRANSLATE_Y_WITH:
             return resolvers.translateYWith(state, action);
+        case Types.TRANSLATE_Z_WITH:
+            return resolvers.translateZWith(state, action);
 
         case Types.SCALE_UP:
             return resolvers.scaleUp(state);

@@ -517,6 +517,20 @@ export const translateYWith = (
 }
 
 
+export const translateZWith = (
+    state: Types.State,
+    action: Types.TranslateZWithAction,
+): Types.State => {
+    const newState = getNewState(state);
+    newState.translationZ = state.translationZ + action.payload;
+    newState.transform = computeMatrix(newState);
+
+    return {
+        ...newState,
+    };
+}
+
+
 export const scaleUp = (
     state: Types.State,
 ): Types.State => {

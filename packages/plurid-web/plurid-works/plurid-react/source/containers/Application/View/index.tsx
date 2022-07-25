@@ -136,6 +136,7 @@ export interface ViewDispatchProperties {
     dispatchTranslateXWith: typeof actions.space.translateXWith;
     // dispatchTranslateY: typeof actions.space.translateY;
     dispatchTranslateYWith: typeof actions.space.translateYWith;
+    dispatchTranslateZWith: typeof actions.space.translateZWith;
     // dispatchScaleUp: typeof actions.space.scaleUp;
     dispatchScaleUpWith: typeof actions.space.scaleUpWith;
     // dispatchScaleDown: typeof actions.space.scaleDown;
@@ -206,6 +207,7 @@ const PluridView: React.FC<ViewProperties> = (
         dispatchRotateY,
         dispatchTranslateXWith,
         dispatchTranslateYWith,
+        dispatchTranslateZWith,
         dispatchScaleUpWith,
         dispatchScaleDownWith,
 
@@ -646,6 +648,10 @@ const PluridView: React.FC<ViewProperties> = (
                 direction,
             } = event;
 
+            const {
+                altKey,
+            } = event.srcEvent;
+
             const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
             const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
             const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
@@ -679,7 +685,11 @@ const PluridView: React.FC<ViewProperties> = (
                     }
 
                     if (translationMode) {
-                        dispatchTranslateYWith(-1 * distance);
+                        if (altKey) {
+                            dispatchTranslateZWith(-1 * distance);
+                        } else {
+                            dispatchTranslateYWith(-1 * distance);
+                        }
                     }
 
                     if (scalationMode) {
@@ -693,7 +703,11 @@ const PluridView: React.FC<ViewProperties> = (
                     }
 
                     if (translationMode) {
-                        dispatchTranslateYWith(distance);
+                        if (altKey) {
+                            dispatchTranslateZWith(distance);
+                        } else {
+                            dispatchTranslateYWith(distance);
+                        }
                     }
 
                     if (scalationMode) {
@@ -722,6 +736,10 @@ const PluridView: React.FC<ViewProperties> = (
                 distance,
                 direction,
             } = event;
+
+            const {
+                altKey,
+            } = event.srcEvent;
 
             const rotationMode = transformMode === TRANSFORM_MODES.ROTATION;
             const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
@@ -759,7 +777,11 @@ const PluridView: React.FC<ViewProperties> = (
                     }
 
                     if (translationMode) {
-                        dispatchTranslateYWith(-1 * translationVelocity);
+                        if (altKey) {
+                            dispatchTranslateZWith(-1 * translationVelocity);
+                        } else {
+                            dispatchTranslateYWith(-1 * translationVelocity);
+                        }
                     }
 
                     if (scalationMode) {
@@ -773,7 +795,11 @@ const PluridView: React.FC<ViewProperties> = (
                     }
 
                     if (translationMode) {
-                        dispatchTranslateYWith(translationVelocity);
+                        if (altKey) {
+                            dispatchTranslateZWith(translationVelocity);
+                        } else {
+                            dispatchTranslateYWith(translationVelocity);
+                        }
                     }
 
                     if (scalationMode) {
@@ -1134,6 +1160,9 @@ const mapDispatchToProperties = (
     // ),
     dispatchTranslateYWith: (value) => dispatch(
         actions.space.translateYWith(value)
+    ),
+    dispatchTranslateZWith: (value) => dispatch(
+        actions.space.translateZWith(value)
     ),
     // dispatchScaleUp: (value) => dispatch(
     //     actions.space.scaleUp(value)
