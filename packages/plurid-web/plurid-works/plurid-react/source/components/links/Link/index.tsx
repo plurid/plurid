@@ -391,6 +391,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }
 
+    const defocusLink = () => {
+        if (linkElement.current) {
+            linkElement.current.blur();
+        }
+    }
+
     const handleClick = useCallback((
         event: React.MouseEvent<HTMLAnchorElement>,
     ) => {
@@ -401,6 +407,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
 
         handleShowPluridPlane(event);
+
+        defocusLink();
     }, [
         linkElement.current,
         stateTree,
@@ -412,6 +420,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         if (event.code === 'Enter') {
             // FORCED any
             handleClick(event as any);
+
+            defocusLink();
             return;
         }
 
