@@ -422,6 +422,18 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         linkElement.current,
         stateTree,
     ]);
+
+    const handleKeyUp = (
+        event: React.KeyboardEvent,
+    ) => {
+        if (event.code === 'Enter') {
+            // FORCED any
+            handleClick(event as any);
+            return;
+        }
+
+        return;
+    }
     // #endregion handlers
 
 
@@ -510,6 +522,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             onClick={(event: React.MouseEvent<HTMLAnchorElement>) => handleClick(event)}
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
+            onKeyUp={(event) => handleKeyUp(event)}
             theme={stateGeneralTheme}
             suffix={suffix}
             devisible={devisible}
@@ -518,6 +531,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             }}
             className={className}
             data-plurid-entity={PLURID_ENTITY_LINK}
+            tabIndex={0}
         >
             {children}
 
