@@ -107,14 +107,28 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 
         pluridRouterNavigate(route);
     }
+
+    const handleKeyUp = (
+        event: React.KeyboardEvent,
+    ) => {
+        if (event.code === 'Enter') {
+            // FORCED any
+            handleClick(event as any);
+            return;
+        }
+
+        return;
+    }
     // #endregion handlers
 
 
     // #region render
     const renderProperties = {
         onClick: handleClick,
+        onKeyUp: handleKeyUp,
         style,
         className,
+        tabIndex: 0,
     };
 
     if (!asAnchor) {
