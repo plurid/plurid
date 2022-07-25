@@ -384,6 +384,23 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const handleShowPluridPlane = (
         event: React.MouseEvent<HTMLAnchorElement>,
     ) => {
+        if (event.altKey) {
+            if (showLink && pluridPlaneID) {
+                const plane = space.tree.logic.getTreePlaneByID(
+                    stateTree,
+                    pluridPlaneID,
+                );
+
+                navigateToPluridPlane(
+                    undefined,
+                    plane,
+                    dispatch,
+                );
+
+                return;
+            }
+        }
+
         if (!showLink && !pluridPlaneID) {
             updateTreeWithLink(event);
         } else {
@@ -411,7 +428,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         defocusLink();
     }, [
         linkElement.current,
-        stateTree,
+        JSON.stringify(stateTree),
     ]);
 
     const handleKeyUp = (
