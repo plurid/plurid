@@ -1075,4 +1075,33 @@ export const togglePlaneFromTree = (
         updatedPlane,
     };
 }
+
+
+export const getTreePlaneByID = (
+    stateTree: TreePlane[],
+    id: string | undefined,
+): TreePlane | undefined => {
+    if (!id) {
+        return;
+    }
+
+    for (const plane of stateTree) {
+        if (plane.planeID === id) {
+            return plane;
+        }
+
+        if (plane.children) {
+            const found = getTreePlaneByID(
+                plane.children,
+                id,
+            );
+
+            if (found) {
+                return found;
+            }
+        }
+    }
+
+    return;
+}
 // #endregion module
