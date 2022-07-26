@@ -1,9 +1,8 @@
 // #region imports
     // #region libraries
     import React, {
-        useState,
         useContext,
-        useEffect,
+        useMemo,
     } from 'react';
 
     import { AnyAction } from 'redux';
@@ -109,24 +108,18 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     // #endregion context
 
 
-    // #region state
-    const [
-        childrenPlanes,
-        setChildrenPlanes,
-    ] = useState<JSX.Element[]>([]);
-    // #endregion state
-
-
     // #region handlers
     const computeChildrenPlanes = (
         plane: TreePlane,
     ) => {
-        // console.log('computeChildrenPlanes plane', plane);
+        // console.log('computeChildrenPlanesMemo', JSON.stringify(plane));
         if (!plane.children || plane.children.length === 0) {
-            return;
+            return [];
         }
 
         const planesRegistry = getPlanesRegistrar(planesRegistrar);
+
+        const planes: JSX.Element[] = [];
 
         plane.children.map(child => {
             // console.log('child', child);
@@ -175,11 +168,12 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
                 const renderablePlane = isReactRenderable(Plane);
                 const renderableCustomPlane = isReactRenderable(CustomPluridPlane);
+                const keyBase = 'plurid-plane-child-';
 
                 plane = !CustomPluridPlane
                     ? renderablePlane ? (
                         <PluridPlane
-                            key={child.planeID}
+                            key={keyBase + child.planeID}
                             plane={activePlane}
                             treePlane={child}
                             planeID={child.planeID}
@@ -204,7 +198,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     ) : (<></>)
                     : renderableCustomPlane ? (
                         <CustomPluridPlane
-                            key={child.planeID}
+                            key={keyBase + child.planeID}
                             plane={activePlane}
                             treePlane={child}
                             planeID={child.planeID}
@@ -212,31 +206,29 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         />
                     ) : (<></>);
 
-                setChildrenPlanes(planes => [
-                    ...planes,
-                    plane,
-                ]);
+                planes.push(plane);
             }
 
             if (child.children) {
-                computeChildrenPlanes(child);
+                const childrenPlanes = computeChildrenPlanesMemo(child);
+                if (childrenPlanes) {
+                    planes.push(...childrenPlanes);
+                }
             }
         });
+
+        return planes;
     }
     // #endregion handlers
 
 
     // #region effects
-    /** Compute children planes */
-    useEffect(() => {
-        // TODO: explore for optimizations
-        // check if the plane is already in the array
-        // or get a better dependency than the JSON stringification
-        setChildrenPlanes([]);
-        computeChildrenPlanes(plane);
-    }, [
-        JSON.stringify(plane),
-    ]);
+    const childrenPlanes = useMemo<JSX.Element[]>(
+        () => computeChildrenPlanes(plane),
+        [
+            JSON.stringify(plane),
+        ],
+    );
     // #endregion effects
 
 
