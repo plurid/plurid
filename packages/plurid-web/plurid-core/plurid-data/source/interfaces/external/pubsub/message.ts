@@ -286,6 +286,18 @@ export interface PluridPubSubSubscribeMessageNavigateToPlane {
     callback: PluridPubSubCallback<PluridPubSubMessageNavigateToPlane>;
 }
 
+export interface PluridPubSubMessageClosePlane {
+    id: string;
+}
+export interface PluridPubSubPublishMessageClosePlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.CLOSE_PLANE;
+    data: PluridPubSubMessageClosePlane;
+}
+export interface PluridPubSubSubscribeMessageClosePlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.CLOSE_PLANE;
+    callback: PluridPubSubCallback<PluridPubSubMessageClosePlane>;
+}
+
 
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
@@ -316,6 +328,7 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageViewSetPlanes
     | PluridPubSubPublishMessageViewRemovePlane
     | PluridPubSubPublishMessageNavigateToPlane
+    | PluridPubSubPublishMessageClosePlane
     ;
 
 
@@ -348,5 +361,6 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageViewSetPlanes
     | PluridPubSubSubscribeMessageViewRemovePlane
     | PluridPubSubSubscribeMessageNavigateToPlane
+    | PluridPubSubSubscribeMessageClosePlane
     ;
 // #endregion module
