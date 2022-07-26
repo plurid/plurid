@@ -122,7 +122,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         plane: TreePlane,
     ) => {
         // console.log('computeChildrenPlanes plane', plane);
-        if (!plane.children) {
+        if (!plane.children || plane.children.length === 0) {
             return;
         }
 
@@ -170,6 +170,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     plurid: {
                         ...pluridProperty,
                     },
+                    key: 'plurid-plane-' + child.planeID,
                 };
 
                 const renderablePlane = isReactRenderable(Plane);
@@ -286,6 +287,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         plurid: {
             ...pluridProperty,
         },
+        key: 'plurid-plane-' + plane.planeID,
     };
     // console.log('Root planeProperties', planeProperties);
 
