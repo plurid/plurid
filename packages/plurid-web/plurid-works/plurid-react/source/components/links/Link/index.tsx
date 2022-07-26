@@ -17,6 +17,10 @@
     } from '@plurid/plurid-themes';
 
     import {
+        useDebouncedCallback,
+    } from '@plurid/plurid-functions-react';
+
+    import {
         // #region constants
         PLURID_PUBSUB_TOPIC,
         PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
@@ -314,6 +318,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         dispatchUpdateSpaceLinkCoordinates(payload);
     }
 
+    const debouncedUpdateLinkCoordinates = useDebouncedCallback(() => {
+        // updateLinkCoordinates();
+    }, 1_000);
+
     const updateTreeWithLink = (
         event: React.MouseEvent<HTMLAnchorElement>,
     ) => {
@@ -469,17 +477,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     // #region effects
-    // /**
-    //  * Update Link Coordinates
-    //  */
-    // useEffect(() => {
-    //     if (showLink) {
-    //         updateLinkCoordinates();
-    //     }
-    // }, [
-    //     stateViewSize,
-    // ]);
-
     /**
      * Get Parent Plane ID
      * Get Plurid Link Coordinates
@@ -491,6 +488,18 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         const linkCoordinates = getPluridLinkCoordinates();
         setLinkCoordinates(linkCoordinates);
     }, []);
+
+    /**
+     * Update Link Coordinates
+     */
+     useEffect(() => {
+        if (showLink) {
+            debouncedUpdateLinkCoordinates();
+        }
+    }, [
+        showLink,
+        stateViewSize,
+    ]);
 
     /** Show Preview */
     useEffect(() => {
