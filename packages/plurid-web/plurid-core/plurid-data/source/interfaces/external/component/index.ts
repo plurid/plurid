@@ -28,7 +28,7 @@ export type RouteComponentWithPluridProperty<T> = ComponentWithPlurid<T, PluridR
 export interface PluridPlaneComponentProperty {
     route: PluridRouteComponentProperty;
     plane: PluridPlaneComponentPropertyPlane;
-    getPubSub: () => PluridPubSub;
+    pubSub: PluridPubSub;
 }
 
 export interface PluridPlaneComponentPropertyPlane {
