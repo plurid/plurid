@@ -235,7 +235,7 @@ const PluridView: React.FC<ViewProperties> = (
         setPluridPubSub,
     ] = useState<IPluridPubSub[]>(
         pubsub
-            ? [new PluridPubSub(), pubsub]
+            ? [pubsub]
             : [new PluridPubSub()]
     );
     // #endregion state

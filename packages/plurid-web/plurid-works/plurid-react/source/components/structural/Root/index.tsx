@@ -164,7 +164,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         parameters: matchedRoute?.match.parameters || {},
                         query: matchedRoute?.match.query || {},
                     },
-                    getPubSub: () => defaultPubSub,
+                    pubSub: defaultPubSub,
                 };
                 const properties = {
                     plurid: {
@@ -280,7 +280,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             parameters: matchedRoute?.match.parameters || {},
             query: matchedRoute?.match.query || {},
         },
-        getPubSub: () => defaultPubSub,
+        pubSub: defaultPubSub,
     };
     const planeProperties = {
         plurid: {
