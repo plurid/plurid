@@ -18,6 +18,7 @@
 
     import {
         // #region constants
+        PLURID_PUBSUB_TOPIC,
         PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
         PLURID_ENTITY_LINK,
         PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
@@ -186,6 +187,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const {
         planesRegistrar,
+        defaultPubSub,
     } = context;
 
     const planesRegistry = getPlanesRegistrar(planesRegistrar);
@@ -349,22 +351,35 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }
 
-    const toggleLinkFromTree = (
-        event: React.MouseEvent<HTMLAnchorElement>,
-    ) => {
+    const togglePlane = () => {
         const {
             updatedTree,
             updatedPlane,
-        } = space.tree.logic.togglePlaneFromTree(stateTree, pluridPlaneID);
-
-        handlePlaneNavigation(
-            event,
-            updatedPlane,
+        } = space.tree.logic.togglePlaneFromTree(
+            stateTree,
+            pluridPlaneID,
         );
 
         dispatchSetTree(updatedTree);
         setShowLink(show => !show);
         setShowPreview(false);
+
+        return {
+            updatedPlane,
+        };
+    }
+
+    const toggleLinkFromTree = (
+        event: React.MouseEvent<HTMLAnchorElement>,
+    ) => {
+        const {
+            updatedPlane,
+        } = togglePlane();
+
+        handlePlaneNavigation(
+            event,
+            updatedPlane,
+        );
     }
 
     const handlePlaneNavigation = (
@@ -533,6 +548,30 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             // setPlaneID(potentialPlaneRoute);
         }
     }, []);
+
+    useEffect(() => {
+        const closePlaneIndex = defaultPubSub.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
+            callback: (data) => {
+                const {
+                    id,
+                } = data;
+
+                if (id === pluridPlaneID) {
+                    togglePlane();
+                }
+            },
+        });
+
+        return () => {
+            defaultPubSub.unsubscribe(
+                closePlaneIndex,
+                PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
+            );
+        }
+    }, [
+        pluridPlaneID,
+    ])
     // #endregion effects
 
 

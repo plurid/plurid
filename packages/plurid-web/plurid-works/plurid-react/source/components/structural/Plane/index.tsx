@@ -14,6 +14,7 @@
     } from '@plurid/plurid-themes';
 
     import {
+        PLURID_PUBSUB_TOPIC,
         RegisteredPluridPlane,
         TreePlane,
         TreePlaneLocation,
@@ -154,6 +155,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     const {
         planeRenderError,
+        defaultPubSub,
     } = context;
     // #endregion context
 
@@ -182,7 +184,12 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     }
 
     const closePlane = () => {
-
+        defaultPubSub.publish({
+            topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
+            data: {
+                id: planeID,
+            },
+        });
     }
     // #endregion handlers
 
