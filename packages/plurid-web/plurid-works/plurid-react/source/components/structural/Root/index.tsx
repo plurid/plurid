@@ -117,11 +117,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             return [];
         }
 
+        const children: JSX.Element[] = [];
         const planesRegistry = getPlanesRegistrar(planesRegistrar);
 
-        const planes: JSX.Element[] = [];
-
-        plane.children.map(child => {
+        plane.children.forEach(child => {
             // console.log('child', child);
 
             if (!planesRegistry) {
@@ -133,91 +132,98 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             const activePlane = planesRegistry.get(planeID);
             // console.log('activePlane', activePlane);
 
-            let plane = (<></>);
             if (
                 activePlane
                 // && pluridPlaneProperties
                 // && child.show
             ) {
-                // instead of forcing show here to pass it as prop
-                // and change the opacity
-                const Plane = activePlane.component as any; // HACK
+                const renderPlane = () => {
+                    // instead of forcing show here to pass it as prop
+                    // and change the opacity
+                    const Plane = activePlane.component as any; // HACK
 
-                const pluridProperty: PluridPlaneComponentProperty = {
-                    plane: {
-                        value: activePlane.route.absolute,
+                    const pluridProperty: PluridPlaneComponentProperty = {
+                        plane: {
+                            value: activePlane.route.absolute,
+                            planeID: child.planeID,
+                            parentPlaneID: child.parentPlaneID,
+                            fragments: activePlane.route.fragments,
+                            parameters: activePlane.route.parameters,
+                            query: activePlane.route.query,
+                        },
+                        route: {
+                            value: matchedRoute?.match.value || '',
+                            parameters: matchedRoute?.match.parameters || {},
+                            query: matchedRoute?.match.query || {},
+                        },
+                        pubSub: defaultPubSub,
+                    };
+                    const properties = {
+                        plurid: {
+                            ...pluridProperty,
+                        },
+                        key: 'plurid-plane-' + child.planeID,
+                    };
+
+                    const renderablePlane = isReactRenderable(Plane);
+                    const renderableCustomPlane = isReactRenderable(CustomPluridPlane);
+                    const keyBase = 'plurid-plane-child-';
+                    const planeProperties = {
+                        key: keyBase + child.planeID,
+                        plane: activePlane,
+                        treePlane: child,
                         planeID: child.planeID,
-                        parentPlaneID: child.parentPlaneID,
-                        fragments: activePlane.route.fragments,
-                        parameters: activePlane.route.parameters,
-                        query: activePlane.route.query,
-                    },
-                    route: {
-                        value: matchedRoute?.match.value || '',
-                        parameters: matchedRoute?.match.parameters || {},
-                        query: matchedRoute?.match.query || {},
-                    },
-                    pubSub: defaultPubSub,
-                };
-                const properties = {
-                    plurid: {
-                        ...pluridProperty,
-                    },
-                    key: 'plurid-plane-' + child.planeID,
-                };
+                        location: child.location,
+                    };
 
-                const renderablePlane = isReactRenderable(Plane);
-                const renderableCustomPlane = isReactRenderable(CustomPluridPlane);
-                const keyBase = 'plurid-plane-child-';
+                    if (CustomPluridPlane && renderableCustomPlane) {
+                        return (
+                            <CustomPluridPlane
+                                {...planeProperties}
+                            />
+                        )
+                    }
 
-                plane = !CustomPluridPlane
-                    ? renderablePlane ? (
-                        <PluridPlane
-                            key={keyBase + child.planeID}
-                            plane={activePlane}
-                            treePlane={child}
-                            planeID={child.planeID}
-                            location={child.location}
-                        >
-                            {!PlaneContext
-                                ? (
-                                    <Plane
-                                        {...properties}
-                                    />
-                                ) : (
-                                    <PlaneContext.Provider
-                                        value={planeContextValue}
-                                    >
+                    if (renderablePlane) {
+                        return (
+                            <PluridPlane
+                                {...planeProperties}
+                            >
+                                {!PlaneContext
+                                    ? (
                                         <Plane
                                             {...properties}
                                         />
-                                    </PlaneContext.Provider>
-                                )
-                            }
-                        </PluridPlane>
-                    ) : (<></>)
-                    : renderableCustomPlane ? (
-                        <CustomPluridPlane
-                            key={keyBase + child.planeID}
-                            plane={activePlane}
-                            treePlane={child}
-                            planeID={child.planeID}
-                            location={child.location}
-                        />
-                    ) : (<></>);
+                                    ) : (
+                                        <PlaneContext.Provider
+                                            value={planeContextValue}
+                                        >
+                                            <Plane
+                                                {...properties}
+                                            />
+                                        </PlaneContext.Provider>
+                                    )
+                                }
+                            </PluridPlane>
+                        );
+                    }
 
-                planes.push(plane);
+                    return (<></>);
+                }
+
+                const plane = renderPlane();
+                children.push(plane);
             }
 
             if (child.children) {
-                const childrenPlanes = computeChildrenPlanesMemo(child);
+                const childrenPlanes = computeChildrenPlanes(child);
                 if (childrenPlanes) {
-                    planes.push(...childrenPlanes);
+                    children.push(...childrenPlanes);
                 }
             }
         });
 
-        return planes;
+        return children;
     }
     // #endregion handlers
 
