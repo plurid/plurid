@@ -1104,4 +1104,16 @@ export const getTreePlaneByID = (
 
     return;
 }
+
+
+export const removeRootFromTree = (
+    tree: TreePlane[],
+    pluridPlaneID: string,
+) => {
+    const updatedTree = tree.filter(plane => plane.planeID !== pluridPlaneID);
+
+    return {
+        updatedTree,
+    };
+}
 // #endregion module
