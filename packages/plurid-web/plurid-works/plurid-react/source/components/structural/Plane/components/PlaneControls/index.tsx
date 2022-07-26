@@ -30,6 +30,7 @@
         PluridIconLink,
         PluridIconArrowLeft,
         PluridIconFrame,
+        PluridIconDelete,
     } from '@plurid/plurid-icons-react';
 
     import {
@@ -80,6 +81,8 @@ export interface PluridPlaneControlsOwnProperties {
     treePlane: TreePlane;
     parentTreePlane: TreePlane | undefined;
     mouseOver: boolean;
+
+    closePlane: () => void;
 }
 
 export interface PluridPlaneControlsStateProperties {
@@ -107,6 +110,8 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
         treePlane,
         parentTreePlane,
         mouseOver,
+
+        closePlane,
         // #endregion own
 
         // #region state
@@ -255,6 +260,16 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                 <PluridIconLink
                     atClick={() => setShowAddress(show => !show)}
                 /> */}
+
+                {parentTreePlane && (
+                    <PluridIconDelete
+                        atClick={() => {
+                            closePlane();
+                        }}
+                        theme={stateGeneralTheme}
+                        title="close"
+                    />
+                )}
             </StyledPluridPlaneControlsRight>
         </StyledPluridPlaneControls>
     );

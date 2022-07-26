@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
-    import styled from 'styled-components';
+    import styled, {
+        css,
+    } from 'styled-components';
 
     import {
         Theme,
@@ -50,11 +52,16 @@ export const StyledPluridPlaneControls = styled.div<IStyledPluridPlaneControls>`
 
 
 
-export const StyledPluridPlaneControlsLeft = styled.div`
+export const styleCommonControls = css`
     margin: 0 1rem;
     display: flex;
     align-items: center;
     gap: 1rem;
+`;
+
+
+export const StyledPluridPlaneControlsLeft = styled.div`
+    ${styleCommonControls}
 `;
 
 
@@ -66,8 +73,7 @@ export const StyledPluridPlaneControlsCenter = styled.div`
 
 
 export const StyledPluridPlaneControlsRight = styled.div`
-    display: grid;
-    grid-template-columns: repeat(4, 30px);
-    padding: 0 1rem;
+    ${styleCommonControls}
+    justify-content: right;
 `;
 // #endregion module

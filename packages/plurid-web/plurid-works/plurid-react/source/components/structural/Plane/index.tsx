@@ -180,6 +180,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
         dispatchUpdateSpaceTreePlane(updatedTreePlane);
     }
+
+    const closePlane = () => {
+
+    }
     // #endregion handlers
 
 
@@ -231,6 +235,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                             treePlane={treePlane}
                             parentTreePlane={parentTreePlane}
                             mouseOver={mouseOver}
+
+                            closePlane={closePlane}
                         />
                     )}
 
