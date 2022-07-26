@@ -261,15 +261,13 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                     atClick={() => setShowAddress(show => !show)}
                 /> */}
 
-                {parentTreePlane && (
-                    <PluridIconDelete
-                        atClick={() => {
-                            closePlane();
-                        }}
-                        theme={stateGeneralTheme}
-                        title="close"
-                    />
-                )}
+                <PluridIconDelete
+                    atClick={() => {
+                        closePlane();
+                    }}
+                    theme={stateGeneralTheme}
+                    title="close"
+                />
             </StyledPluridPlaneControlsRight>
         </StyledPluridPlaneControls>
     );

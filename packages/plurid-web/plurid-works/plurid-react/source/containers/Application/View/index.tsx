@@ -553,6 +553,26 @@ const PluridView: React.FC<ViewProperties> = (
                 },
             });
 
+            const closePlaneIndex = pubsub.subscribe({
+                topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
+                callback: (data) => {
+                    const {
+                        id,
+                    } = data;
+
+                    const treePlane = stateTree.find(plane => plane.planeID === id);
+                    if (treePlane) {
+                        const {
+                            updatedTree,
+                        } = space.tree.logic.removeRootFromTree(
+                            stateTree,
+                            treePlane.planeID,
+                        );
+                        dispatchSetTree(updatedTree);
+                    }
+                },
+            });
+
 
             return () => {
                 pubsub.unsubscribe(
@@ -623,6 +643,11 @@ const PluridView: React.FC<ViewProperties> = (
                 pubsub.unsubscribe(
                     navigateToPlaneIndex,
                     PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
+                );
+
+                pubsub.unsubscribe(
+                    closePlaneIndex,
+                    PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
                 );
             }
         }
