@@ -76,7 +76,6 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
     // #region render
     return (
         <StyledPluridRoots
-            suppressHydrationWarning={true}
             style={{
                 // width: typeof window !== 'undefined' ? window.innerWidth + 'px' : '1440px',
                 width: '100%', // TOFIX

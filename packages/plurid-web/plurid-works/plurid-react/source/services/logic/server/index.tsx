@@ -71,6 +71,9 @@ export const serverComputeMetastate = async (
             undefined,
             view,
         );
+        // console.log({
+        //     computedTree,
+        // });
 
         const state = {
             configuration: {

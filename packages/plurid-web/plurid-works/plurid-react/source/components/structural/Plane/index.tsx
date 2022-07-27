@@ -203,7 +203,6 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     return (
         <StyledPluridPlane
-            suppressHydrationWarning={true}
             theme={stateGeneralTheme}
             planeControls={showPlaneControls}
             planeOpacity={planeOpacity}

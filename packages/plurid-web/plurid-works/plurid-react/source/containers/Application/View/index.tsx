@@ -291,6 +291,8 @@ const PluridView: React.FC<ViewProperties> = (
         // stateConfiguration update
         const planes = getRegisteredPlanes(planesRegistrar);
 
+        const hostname = 'localhost:63000';
+
         const spaceTree = new space.tree.Tree(
             {
                 planes,
@@ -301,11 +303,20 @@ const PluridView: React.FC<ViewProperties> = (
         );
 
         const computedTree = spaceTree.compute();
+        // console.log({
+        //     planesRegistrar,
+        //     computedTree,
+        //     stateTree,
+        // });
 
         // Merge the compute tree with existing stateTree plane children.
         for (const statePlane of stateTree) {
             for (const [index, computedPlane] of computedTree.entries()) {
                 if (statePlane.route === computedPlane.route) {
+                    // console.log('statePlane.planeID', statePlane.planeID);
+                    // console.log('computedPlane.planeID', computedPlane.planeID);
+                    computedPlane.planeID = statePlane.planeID;
+                    // computedPlane.planeID = 'fooid';
                     if (statePlane.children) {
                         computedTree[index].children = statePlane.children;
                     }
@@ -313,6 +324,7 @@ const PluridView: React.FC<ViewProperties> = (
             }
         }
 
+        // console.log('dispatchSetTree', computedTree);
         dispatchSetTree(computedTree);
     }
 
@@ -1084,6 +1096,7 @@ const PluridView: React.FC<ViewProperties> = (
 
 
     // #region render
+    // console.log('render planesRegistrar', planesRegistrar);
     const pluridContext: PluridContext<PluridReactComponent> = {
         planesRegistrar,
         planeContext,

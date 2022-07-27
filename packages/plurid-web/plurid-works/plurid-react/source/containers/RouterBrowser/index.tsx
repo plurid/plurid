@@ -114,6 +114,7 @@ const PluridRouterBrowser = (
     const pluridPlanesRegistrar = useRef(
         new PluridPlanesRegistrar(
             pluridPlanes,
+            hostname,
         ),
     );
 

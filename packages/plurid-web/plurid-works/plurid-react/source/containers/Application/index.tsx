@@ -117,14 +117,18 @@ class PluridApplication extends Component<
             configuration,
             precomputedState,
             planesRegistrar,
-            id,
+            // id,
             useLocalStorage,
-            hostname,
+            // hostname,
         } = this.props;
+
+        const id = '/';
+        const hostname = 'localhost:63000';
 
         registerPlanes(
             planes,
             planesRegistrar,
+            hostname,
         );
 
         const currentState = this.store
@@ -139,6 +143,13 @@ class PluridApplication extends Component<
         const contextState = id && this.context && this.context.states[id]
             ? this.context.states[id]
             : undefined;
+        // console.log({
+        //     id,
+        //     currentState,
+        //     localState,
+        //     precomputedState,
+        //     contextState,
+        // });
 
         const store = state.compute(
             view,

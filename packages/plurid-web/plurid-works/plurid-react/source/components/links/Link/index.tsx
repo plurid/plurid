@@ -180,13 +180,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     // #region context
     const context = useContext(Context);
-
     if (!context) {
-        return (
-            <>
-                {children}
-            </>
-        );
+        return (<>{children}</>);
     }
 
     const {
@@ -195,13 +190,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     } = context;
 
     const planesRegistry = getPlanesRegistrar(planesRegistrar);
-
     if (!planesRegistry) {
-        return (
-            <>
-                {children}
-            </>
-        );
+        return (<>{children}</>);
     }
     // #endregion context
 
@@ -217,9 +207,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [mouseOver, setMouseOver] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
     const [showLink, setShowLink] = useState(false);
-    const [planeID, setPlaneID] = useState('');
     const [pluridPlaneID, setPluridPlaneID] = useState('');
     const [parentPlaneID, setParentPlaneID] = useState(getPluridPlaneIDByData(linkElement.current));
+    // console.log('parentPlaneID', {parentPlaneID});
     const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
     // #endregion state
 
@@ -325,6 +315,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const updateTreeWithLink = (
         event: React.MouseEvent<HTMLAnchorElement>,
     ) => {
+        console.log('updateTreeWithLink', {
+            parentPlaneID, absolutePlaneRoute,
+        });
         if (!parentPlaneID || !absolutePlaneRoute) {
             return;
         }
@@ -346,6 +339,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             planesRegistry.getAll(),
             stateConfiguration,
         );
+        console.log('pluridPlaneID,', pluridPlaneID);
 
         if (pluridPlaneID) {
             handlePlaneNavigation(
@@ -456,8 +450,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         defocusLink();
     }, [
-        linkElement.current,
+        parentPlaneID,
         JSON.stringify(stateTree),
+        linkElement.current,
     ]);
 
     const handleKeyUp = (
@@ -580,7 +575,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }, [
         pluridPlaneID,
-    ])
+    ]);
     // #endregion effects
 
 

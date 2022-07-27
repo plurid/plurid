@@ -31,7 +31,7 @@
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
-    // import selectors from '~services/state/selectors';
+    import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
 
     import {
@@ -61,6 +61,7 @@ export interface PluridRootOwnProperties {
 }
 
 export interface PluridRootStateProperties {
+    stateTree: TreePlane[];
 }
 
 export interface PluridRootDispatchProperties {
@@ -80,6 +81,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         // #region own
         plane,
         // #endregion own
+
+        // #region state
+        stateTree,
+        // #endregion state
     } = properties;
 
     const {
@@ -233,6 +238,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         () => computeChildrenPlanes(plane),
         [
             JSON.stringify(plane),
+            JSON.stringify(stateTree),
         ],
     );
     // #endregion effects
@@ -242,9 +248,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const pluridPlaneID = plane.sourceID;
     // console.log('Root pluridPlaneID', pluridPlaneID);
     if (!pluridPlaneID) {
-        return (
-            <></>
-        );
+        return (<></>);
     }
 
     const pluridPlane = getRegisteredPlane(
@@ -253,9 +257,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     );
     // console.log('Root pluridPlane', pluridPlane);
     if (!pluridPlane) {
-        return (
-            <></>
-        );
+        return (<></>);
     }
 
     const Plane: any = pluridPlane.component;
@@ -348,6 +350,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 const mapStateToProperties = (
     state: AppState,
 ): PluridRootStateProperties => ({
+    stateTree: selectors.space.getTree(state),
 });
 
 

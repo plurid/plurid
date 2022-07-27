@@ -16,6 +16,7 @@
         routing,
         planes,
         interaction,
+        space,
         general as generalEngine,
     } from '@plurid/plurid-engine';
 
@@ -55,6 +56,7 @@ const {
 
 const {
     resolvePluridPlaneData,
+    Registrar,
 } = planes;
 
 
@@ -65,11 +67,11 @@ export const computeApplication = (
     configuration: PluridPartialConfiguration | undefined,
     view: PluridApplicationView | undefined,
 ) => {
-    const planesPropertiesReference = new Map();
+    // const planesPropertiesReference = new Map();
 
-    const computedIndexedPlanes = new Map<string, IndexedPluridPlane<PluridReactComponent>>(
-        indexedPlanes || new Map()
-    );
+    // const computedIndexedPlanes = new Map<string, IndexedPluridPlane<PluridReactComponent>>(
+    //     indexedPlanes || new Map()
+    // );
 
     const appConfiguration = generalEngine.configuration.merge(configuration);
 
@@ -118,68 +120,68 @@ export const computeApplication = (
             // };
             // planesPropertiesReference.set(id, planeProperties);
 
-            computedIndexedPlanes.set(id, computedIndexedPlane);
+            // computedIndexedPlanes.set(id, computedIndexedPlane);
         }
     }
 
-    const indexedPlanesReference = new Map(computedIndexedPlanes);
+    // const indexedPlanesReference = new Map(computedIndexedPlanes);
 
-    const planeSources: Record<string, string> = {};
-    for (const [id, indexedPlane] of computedIndexedPlanes) {
-        planeSources[indexedPlane.route] = id;
-    }
+    // const planeSources: Record<string, string> = {};
+    // for (const [id, indexedPlane] of computedIndexedPlanes) {
+    //     planeSources[indexedPlane.route] = id;
+    // }
 
-    // create tree planes
-    const treePlanes: TreePlane[] = [];
+    // // create tree planes
+    // const treePlanes: TreePlane[] = [];
 
-    for (const [id, computedIndexedPlane] of computedIndexedPlanes) {
-        // const pathProperties = computedIndexedPlane.component.properties?.plurid?.path;
+    // for (const [id, computedIndexedPlane] of computedIndexedPlanes) {
+    //     // const pathProperties = computedIndexedPlane.component.properties?.plurid?.path;
 
-        // let planeRouteSource = computedIndexedPlane.route;
+    //     // let planeRouteSource = computedIndexedPlane.route;
 
-        // if (pathProperties) {
-        //     for (const [key, value] of Object.entries(pathProperties.parameters)) {
-        //         planeRouteSource = planeRouteSource.replace(`:${key}`, value as string);
-        //     }
-        // }
+    //     // if (pathProperties) {
+    //     //     for (const [key, value] of Object.entries(pathProperties.parameters)) {
+    //     //         planeRouteSource = planeRouteSource.replace(`:${key}`, value as string);
+    //     //     }
+    //     // }
 
-        // const planeRoute = router.resolveRoute(planeRouteSource);
-        // if (!planeRoute) {
-        //     continue;
-        // }
+    //     // const planeRoute = router.resolveRoute(planeRouteSource);
+    //     // if (!planeRoute) {
+    //     //     continue;
+    //     // }
 
-        // const {
-        //     protocol,
-        //     host,
-        //     path,
-        //     space,
-        //     universe,
-        //     cluster,
-        //     plane,
-        // } = planeRoute;
+    //     // const {
+    //     //     protocol,
+    //     //     host,
+    //     //     path,
+    //     //     space,
+    //     //     universe,
+    //     //     cluster,
+    //     //     plane,
+    //     // } = planeRoute;
 
-        // const treePlane: TreePlane = {
-        //     ...defaultTreePlane,
-        //     routeDivisions: {
-        //         protocol: {
-        //             value: protocol,
-        //             secure: false,
-        //         },
-        //         host,
-        //         path,
-        //         space,
-        //         universe,
-        //         cluster,
-        //         plane,
-        //         valid: true,
-        //     },
-        //     sourceID: id,
-        //     route: planeRouteSource,
-        //     planeID: uuid.generate(),
-        //     show: true,
-        // };
-        // treePlanes.push(treePlane);
-    }
+    //     // const treePlane: TreePlane = {
+    //     //     ...defaultTreePlane,
+    //     //     routeDivisions: {
+    //     //         protocol: {
+    //     //             value: protocol,
+    //     //             secure: false,
+    //     //         },
+    //     //         host,
+    //     //         path,
+    //     //         space,
+    //     //         universe,
+    //     //         cluster,
+    //     //         plane,
+    //     //         valid: true,
+    //     //     },
+    //     //     sourceID: id,
+    //     //     route: planeRouteSource,
+    //     //     planeID: uuid.generate(),
+    //     //     show: true,
+    //     // };
+    //     // treePlanes.push(treePlane);
+    // }
 
 
     // create absolute view
@@ -201,18 +203,35 @@ export const computeApplication = (
     // console.log('absoluteView', absoluteView);
 
     // create tree
-    // const spaceTree = new space.tree.Tree({
-    //     planes: treePlanes,
-    //     configuration: appConfiguration,
-    //     view: absoluteView,
+    // const planes = getRegisteredPlanes(planesRegistrar);
+
+    const origin = 'localhost:63000';
+
+    const registrar = new Registrar(
+        planes,
+        origin,
+    );
+    const registrarPlanes = registrar.getAll();
+    // console.log({
+    //     planes,
+    //     registrarPlanes,
     // });
-    // const computedTree = spaceTree.compute();
+
+    const spaceTree = new space.tree.Tree(
+        {
+            planes: registrarPlanes,
+            configuration: appConfiguration,
+            view: absoluteView,
+        },
+        origin,
+    );
+    const computedTree = spaceTree.compute();
 
 
     const data = {
-        computedTree: [],
-        indexedPlanesReference,
-        planesPropertiesReference,
+        computedTree,
+        // indexedPlanesReference,
+        // planesPropertiesReference,
         appConfiguration,
     };
 

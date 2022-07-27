@@ -298,7 +298,10 @@ export const getComponentFromRoute = (
 
             // console.log('spaces path.value', path.value);
             // console.log('getComponentFromRoute spaces view', view);
-            const pluridPlanesRegistrar = new PluridPlanesRegistrar<PluridReactComponent>();
+            const pluridPlanesRegistrar = new PluridPlanesRegistrar<PluridReactComponent>(
+                [],
+                'localhost:63000',
+            );
 
             const App = (
                 <PluridApplication
@@ -1269,9 +1272,10 @@ export const collectApplicationsFromPath = async (
         // const view = [];
 
         for (const plane of planes) {
-            const planeData = resolvePluridRoutePlaneData(plane);
+            const planeData = resolvePluridRoutePlaneData<any>(plane);
 
             const {
+                value,
                 component,
             } = planeData;
 
@@ -1294,6 +1298,13 @@ export const collectApplicationsFromPath = async (
             ];
             const fullPath = pathDivisions.join(PLURID_ROUTE_SEPARATOR);
 
+            const pluridPlane: PluridPlane<PluridReactComponent> = {
+                component,
+                route: '/plane',
+            };
+
+            pluridPlanes.push(pluridPlane);
+
             // if (component.kind === 'react') {
             //     const pluridPlane: PluridPlane = {
             //         component: {
@@ -1313,7 +1324,9 @@ export const collectApplicationsFromPath = async (
 
         const pluridApplication = {
             planes: pluridPlanes,
-            view: view || [],
+            view: [
+                '/plane',
+            ],
         };
         plurids.push(pluridApplication);
     }
@@ -1563,7 +1576,10 @@ export const renderMultispace = (
 
             // console.log('spaces path.value', path.value);
             // console.log('getComponentFromRoute spaces view', view);
-            const pluridPlanesRegistrar = new PluridPlanesRegistrar<PluridReactComponent>();
+            const pluridPlanesRegistrar = new PluridPlanesRegistrar<PluridReactComponent>(
+                [],
+                'localhost:63000',
+            );
 
             const App = (
                 <PluridApplication
@@ -1703,7 +1719,8 @@ export const computePluridRoute = (
     planesRegistrar: planes.Registrar<PluridReactComponent>,
     isoMatcher: routing.IsoMatcher<PluridReactComponent>,
     directPlane?: PluridRouteMatch,
-    hostname = 'origin',
+    // hostname = 'origin',
+    hostname = 'localhost:63000',
 ) => {
     if (
         directPlane
