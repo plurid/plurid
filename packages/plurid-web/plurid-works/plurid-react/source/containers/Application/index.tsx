@@ -119,11 +119,10 @@ class PluridApplication extends Component<
             planesRegistrar,
             // id,
             useLocalStorage,
-            // hostname,
+            hostname,
         } = this.props;
 
         const id = '/';
-        const hostname = 'localhost:63000';
 
         registerPlanes(
             planes,
