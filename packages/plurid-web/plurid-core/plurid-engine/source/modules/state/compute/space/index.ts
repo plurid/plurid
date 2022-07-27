@@ -82,15 +82,16 @@ const resolveSpace = <C>(
         },
         culledView: [],
 
+        view,
+        initialTree: computedTree,
+        tree: computedTree,
+
         ...precomputedState?.space,
         ...contextState?.space,
         ...localState?.space,
         ...currentState?.space,
-
-        view,
-        initialTree: computedTree,
-        tree: computedTree,
     };
+    // console.log({stateSpace});
 
     if (currentState) {
         stateSpace.translationX = currentState.space.translationX;

@@ -318,9 +318,12 @@ export const resolveViewItem = <C>(
         pluridPlanes.push(plane);
     }
 
-    const isoMatcher = new IsoMatcher({
-        planes: pluridPlanes,
-    });
+    const isoMatcher = new IsoMatcher(
+        {
+            planes: pluridPlanes,
+        },
+        origin,
+    );
 
     // const match = isoMatcher.match(resolvedView.route);
     const match = isoMatcher.match(viewData);
@@ -734,7 +737,7 @@ export const updateTreeWithNewPlane = <C>(
     configuration: PluridConfiguration,
 ): UpdatedTreeWithNewPlane => {
     const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
-    // console.log('parentPlane', parentPlane);
+    // console.log('updateTreeWithNewPlane parentPlane', parentPlane);
 
     if (!parentPlane) {
         return {
@@ -755,8 +758,9 @@ export const updateTreeWithNewPlane = <C>(
         planesRegistry,
         planeRoute,
         configuration,
+        'localhost:63000',
     );
-    // console.log('treePlane', treePlane);
+    // console.log('updateTreeWithNewPlane treePlane', treePlane);
 
     if (!treePlane) {
         return {

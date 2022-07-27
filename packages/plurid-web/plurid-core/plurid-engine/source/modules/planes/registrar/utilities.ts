@@ -20,6 +20,7 @@
 const registerPlanes = <C>(
     planes?: PluridPlane<C>[],
     planesRegistrar?: IPluridPlanesRegistrar<C>,
+    origin = 'origin',
 ) => {
     if (!planes) {
         return;
@@ -35,7 +36,7 @@ const registerPlanes = <C>(
     }
 
     if (typeof (window as PluridalWindow<C>).__pluridPlanesRegistrar__ === 'undefined') {
-        const pluridPlanesRegistrar = new PluridPlanesRegistrar<C>();
+        const pluridPlanesRegistrar = new PluridPlanesRegistrar<C>([], origin);
         (window as PluridalWindow<C>).__pluridPlanesRegistrar__ = pluridPlanesRegistrar;
         (window as PluridalWindow<C>).__pluridPlanesRegistrar__.register(planes);
         return;

@@ -28,10 +28,14 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
 
     constructor(
         planes?: PluridPlane<C>[],
+        origin = 'origin',
     ) {
-        this.isoMatcher = new IsoMatcher({
-            planes,
-        });
+        this.isoMatcher = new IsoMatcher(
+            {
+                planes,
+            },
+            origin,
+        );
     }
 
 
