@@ -315,9 +315,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const updateTreeWithLink = (
         event: React.MouseEvent<HTMLAnchorElement>,
     ) => {
-        console.log('updateTreeWithLink', {
-            parentPlaneID, absolutePlaneRoute,
-        });
         if (!parentPlaneID || !absolutePlaneRoute) {
             return;
         }
@@ -339,7 +336,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             planesRegistry.getAll(),
             stateConfiguration,
         );
-        console.log('pluridPlaneID,', pluridPlaneID);
 
         if (pluridPlaneID) {
             handlePlaneNavigation(
