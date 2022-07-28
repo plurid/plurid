@@ -1018,6 +1018,29 @@ export const toggleChildren = (
 }
 
 
+export const toggleAllChildren = (
+    tree: TreePlane[],
+    show: boolean,
+) => {
+    const updatedTree: TreePlane[] = [];
+
+    for (const plane of tree) {
+        if (plane.children) {
+            plane.children = toggleAllChildren(
+                plane.children,
+                show,
+            );
+        }
+
+        plane.show = show;
+
+        updatedTree.push(plane);
+    }
+
+    return tree;
+}
+
+
 export interface TogglePlaneFromTree {
     updatedTree: TreePlane[];
     updatedPlane: TreePlane | undefined;
@@ -1039,12 +1062,15 @@ export const togglePlaneFromTree = (
             const treeUpdatedPlane: TreePlane = {
                 ...plane,
                 show,
-                children: [],
-                // TODO
-                // Instead of removing all the children to toggle them
-                // currently, issue with the plurid link creating new instances.
-                // children: page.children ? toggleChildren(page.children) : [],
             };
+
+            if (treeUpdatedPlane.children) {
+                const children = toggleAllChildren(
+                    treeUpdatedPlane.children,
+                    show,
+                );
+                treeUpdatedPlane.children = children;
+            }
 
             updatedTree.push(treeUpdatedPlane);
             updatedPlane = {
