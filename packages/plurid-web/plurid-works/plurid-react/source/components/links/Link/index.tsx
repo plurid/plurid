@@ -590,7 +590,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     /** Unmount */
     useEffect(() => {
         return () => {
-            if (showLink) {
+            if (showLink && linkElement.current === null) {
+                /**
+                 * The plurid plane is active
+                 * but the link element has been removed from the DOM.
+                 */
                 removePlane();
             }
         }
