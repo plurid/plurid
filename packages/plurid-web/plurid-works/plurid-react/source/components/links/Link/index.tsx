@@ -349,13 +349,16 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }
 
-    const togglePlane = () => {
+    const togglePlane = (
+        forceShow?: boolean,
+    ) => {
         const {
             updatedTree,
             updatedPlane,
         } = space.tree.logic.togglePlaneFromTree(
             stateTree,
             pluridPlaneID,
+            forceShow,
         );
 
         dispatchSetTree(updatedTree);
@@ -434,7 +437,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const removePlane = () => {
-        togglePlane();
+        const show = false;
+
+        togglePlane(show);
     }
 
     const handleClick = useCallback((
@@ -563,7 +568,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 } = data;
 
                 if (id === pluridPlaneID) {
-                    togglePlane();
+                    if (showLink) {
+                        const show = false;
+                        togglePlane(show);
+                    }
                 }
             },
         });
@@ -575,6 +583,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             );
         }
     }, [
+        showLink,
         pluridPlaneID,
     ]);
 
