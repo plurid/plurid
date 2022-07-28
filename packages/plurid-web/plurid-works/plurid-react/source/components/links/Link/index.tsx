@@ -299,18 +299,32 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const updateLinkCoordinates = () => {
-        const linkCoordinates = getPluridLinkCoordinates();
+        const newLinkCoordinates = getPluridLinkCoordinates();
+        if (
+            newLinkCoordinates.x === linkCoordinates.x
+            && newLinkCoordinates.y === linkCoordinates.y
+        ) {
+            return;
+        }
 
         const payload: UpdateSpaceLinkCoordinatesPayload = {
             planeID: pluridPlaneID,
-            linkCoordinates,
+            linkCoordinates: newLinkCoordinates,
         };
         dispatchUpdateSpaceLinkCoordinates(payload);
+
+        const updatedTree = space.tree.logic.updatePlaneLocation(
+            stateTree,
+            parentPlaneID,
+            pluridPlaneID,
+            newLinkCoordinates,
+        );
+        dispatchSetTree(updatedTree);
     }
 
     const debouncedUpdateLinkCoordinates = useDebouncedCallback(() => {
-        // updateLinkCoordinates();
-    }, 1_000);
+        updateLinkCoordinates();
+    }, 200);
 
     const updateTreeWithLink = (
         event: React.MouseEvent<HTMLAnchorElement>,
@@ -503,7 +517,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }, [
         showLink,
-        stateViewSize,
+        JSON.stringify(stateViewSize),
     ]);
 
     /** Show Preview */
