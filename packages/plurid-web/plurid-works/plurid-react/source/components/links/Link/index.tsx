@@ -437,9 +437,14 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const removePlane = () => {
-        const show = false;
+        const updatedTree = space.tree.logic.removePlaneFromTree(
+            stateTree,
+            pluridPlaneID,
+        );
 
-        togglePlane(show);
+        dispatchSetTree(updatedTree);
+        setShowLink(show => !show);
+        setShowPreview(false);
     }
 
     const handleClick = useCallback((
