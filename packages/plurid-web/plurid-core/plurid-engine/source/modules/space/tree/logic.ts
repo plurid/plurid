@@ -1026,6 +1026,7 @@ export interface TogglePlaneFromTree {
 export const togglePlaneFromTree = (
     tree: TreePlane[],
     pluridPlaneID: string,
+    forceShow?: boolean,
 ): TogglePlaneFromTree => {
     const updatedTree: TreePlane[] = [];
 
@@ -1033,9 +1034,11 @@ export const togglePlaneFromTree = (
 
     for (const plane of tree) {
         if (plane.planeID === pluridPlaneID) {
+            const show = forceShow ?? !plane.show;
+
             const treeUpdatedPlane: TreePlane = {
                 ...plane,
-                show: !plane.show,
+                show,
                 children: [],
                 // TODO
                 // Instead of removing all the children to toggle them
@@ -1056,7 +1059,11 @@ export const togglePlaneFromTree = (
             const {
                 updatedTree: childrenUpdatedTree,
                 updatedPlane: childrenUpdatedPlane,
-            } = togglePlaneFromTree(plane.children, pluridPlaneID);
+            } = togglePlaneFromTree(
+                plane.children,
+                pluridPlaneID,
+                forceShow,
+            );
 
             plane.children = [ ...childrenUpdatedTree ];
             updatedTree.push(plane);
