@@ -1153,4 +1153,30 @@ export const removeRootFromTree = (
         updatedTree,
     };
 }
+
+
+export const removePlaneFromTree = (
+    tree: TreePlane[],
+    pluridPlaneID: string,
+) => {
+    const updatedTree: TreePlane[] = [];
+
+    for (const plane of tree) {
+        if (plane.planeID === pluridPlaneID) {
+            continue;
+        }
+
+        if (plane.children) {
+            const children = removePlaneFromTree(
+                plane.children,
+                pluridPlaneID,
+            );
+            plane.children = children;
+        }
+
+        updatedTree.push(plane);
+    }
+
+    return updatedTree;
+}
 // #endregion module
