@@ -433,6 +433,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }
 
+    const removePlane = () => {
+        togglePlane();
+    }
+
     const handleClick = useCallback((
         event: React.MouseEvent<HTMLAnchorElement>,
     ) => {
@@ -483,7 +487,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     /**
      * Update Link Coordinates
      */
-     useEffect(() => {
+    useEffect(() => {
         if (showLink) {
             debouncedUpdateLinkCoordinates();
         }
@@ -549,6 +553,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }, []);
 
+    /** PubSub Close Plane */
     useEffect(() => {
         const closePlaneIndex = defaultPubSub.subscribe({
             topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
@@ -571,6 +576,19 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }, [
         pluridPlaneID,
+    ]);
+
+    /** Unmount */
+    useEffect(() => {
+        return () => {
+            if (showLink) {
+                removePlane();
+            }
+        }
+    }, [
+        showLink,
+        pluridPlaneID,
+        parentPlaneID,
     ]);
     // #endregion effects
 
