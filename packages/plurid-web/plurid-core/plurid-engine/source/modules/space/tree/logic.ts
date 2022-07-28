@@ -701,16 +701,19 @@ export const assignPagesFromView = (
 
 export const updateTreePlane = (
     tree: TreePlane[],
-    updatedPage: TreePlane,
+    updatedPlane: TreePlane,
 ): TreePlane[] => {
     const updatedTree = tree.map(treePlane => {
-        if (treePlane.planeID === updatedPage.planeID) {
-            return updatedPage;
+        if (treePlane.planeID === updatedPlane.planeID) {
+            return updatedPlane;
         }
 
         if (treePlane.children) {
-            const pageTree = updateTreePlane(treePlane.children, updatedPage);
-            treePlane.children = pageTree;
+            const children = updateTreePlane(
+                treePlane.children,
+                updatedPlane,
+            );
+            treePlane.children = children;
             return treePlane;
         }
 
@@ -859,6 +862,41 @@ export const updateTreeWithNewPlane = <C>(
         updatedTree,
         updatedTreePlane,
     };
+}
+
+
+export const updatePlaneLocation = (
+    tree: TreePlane[],
+    parentPlaneID: string,
+    planeID: string,
+    linkCoordinates: LinkCoordinates,
+) => {
+    const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
+    const plane = getTreePlaneByPlaneID(tree, planeID);
+
+    if (!parentPlane || !plane) {
+        return tree;
+    }
+
+    const location = computePluridPlaneLocation(
+        linkCoordinates,
+        parentPlane,
+    );
+
+    plane.location = {
+        translateX: location.x,
+        translateY: location.y,
+        translateZ: location.z,
+        rotateX: 0,
+        rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
+    };
+
+    const updatedTree = updateTreePlane(
+        tree,
+        plane,
+    );
+
+    return updatedTree;
 }
 
 
