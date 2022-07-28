@@ -585,6 +585,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }, [
         showLink,
         pluridPlaneID,
+        JSON.stringify(stateTree),
     ]);
 
     /** Unmount */
@@ -602,6 +603,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         showLink,
         pluridPlaneID,
         parentPlaneID,
+        JSON.stringify(stateTree),
     ]);
     // #endregion effects
 
