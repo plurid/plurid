@@ -3,6 +3,7 @@
     import React, {
         useContext,
         useState,
+        useEffect,
     } from 'react';
 
     import { AnyAction } from 'redux';
@@ -162,6 +163,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     // #region state
     const [
+        remountKey,
+        setRemountKey,
+    ] = useState(0);
+
+    const [
         mouseOver,
         setMouseOver,
     ] = useState(false);
@@ -184,12 +190,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     }
 
     const refreshPlane = () => {
-        defaultPubSub.publish({
-            topic: PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
-            data: {
-                id: planeID,
-            },
-        });
+        setRemountKey(value => ++value);
     }
 
     const closePlane = () => {
@@ -203,6 +204,34 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // #endregion handlers
 
 
+    // #region effects
+    useEffect(() => {
+        const refreshPlaneIndex = defaultPubSub.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
+            callback: (data) => {
+                const {
+                    id,
+                } = data;
+
+                if (id === planeID) {
+                    refreshPlane();
+                }
+            },
+        });
+
+        return () => {
+            defaultPubSub.unsubscribe(
+                refreshPlaneIndex,
+                PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
+            );
+        }
+    }, [
+        remountKey,
+        planeID,
+    ]);
+    // #endregion effects
+
+
     // #region render
     // console.log('Render plane');
 
@@ -212,6 +241,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     return (
         <StyledPluridPlane
+            key={planeID + '-' + remountKey}
             theme={stateGeneralTheme}
             planeControls={showPlaneControls}
             planeOpacity={planeOpacity}
