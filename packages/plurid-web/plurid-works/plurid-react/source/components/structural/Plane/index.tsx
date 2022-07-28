@@ -183,6 +183,15 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         dispatchUpdateSpaceTreePlane(updatedTreePlane);
     }
 
+    const refreshPlane = () => {
+        defaultPubSub.publish({
+            topic: PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
+            data: {
+                id: planeID,
+            },
+        });
+    }
+
     const closePlane = () => {
         defaultPubSub.publish({
             topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
@@ -242,6 +251,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                             parentTreePlane={parentTreePlane}
                             mouseOver={mouseOver}
 
+                            refreshPlane={refreshPlane}
                             closePlane={closePlane}
                         />
                     )}

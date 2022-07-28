@@ -26,10 +26,12 @@
     } from '@plurid/plurid-ui-components-react';
 
     import {
-        PluridIconCopy,
-        PluridIconLink,
         PluridIconArrowLeft,
         PluridIconFrame,
+        PluridIconReset,
+
+        PluridIconCopy,
+        PluridIconLink,
         PluridIconDelete,
     } from '@plurid/plurid-icons-react';
 
@@ -82,6 +84,7 @@ export interface PluridPlaneControlsOwnProperties {
     parentTreePlane: TreePlane | undefined;
     mouseOver: boolean;
 
+    refreshPlane: () => void;
     closePlane: () => void;
 }
 
@@ -111,6 +114,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
         parentTreePlane,
         mouseOver,
 
+        refreshPlane,
         closePlane,
         // #endregion own
 
@@ -231,6 +235,14 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                     }}
                     theme={stateGeneralTheme}
                     title="focus"
+                />
+
+                <PluridIconReset
+                    atClick={() => {
+                        refreshPlane();
+                    }}
+                    theme={stateGeneralTheme}
+                    title="refresh"
                 />
             </StyledPluridPlaneControlsLeft>
 
