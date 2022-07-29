@@ -72,7 +72,6 @@ export const navigateToPluridPlane = (
         actions.space.setSpaceField(payload),
     );
 
-
     const {
         matrix3d,
         transform,
@@ -87,6 +86,11 @@ export const navigateToPluridPlane = (
 
     dispatchSetTransform({
         ...transform,
+    });
+
+    dispatchSetSpaceField({
+        field: 'activePlaneID',
+        value: plane.planeID,
     });
 }
 

@@ -83,6 +83,7 @@ export interface PluridPlaneOwnProperties {
 export interface PluridPlaneStateProperties {
     stateTree: TreePlane[];
     stateViewSize: ViewSize;
+    stateActivePlaneID: string;
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
 }
@@ -116,6 +117,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         // #region state
         stateTree,
         stateViewSize,
+        stateActivePlaneID,
         stateGeneralTheme,
         stateConfiguration,
         // #endregion state
@@ -219,6 +221,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     const debouncedSetActivePlane = useDebouncedCallback(
         () => {
+            if (stateActivePlaneID === planeID) {
+                return;
+            }
+
             const payload = {
                 field: 'activePlaneID' as const,
                 value: planeID,
@@ -226,7 +232,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
             dispatchSetSpaceField(payload);
         },
-        1_000,
+        500,
     );
     // #endregion handlers
 
@@ -294,6 +300,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             }}
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
+            onMouseOver={() => debouncedSetActivePlane()}
             onMouseMove={() => debouncedSetActivePlane()}
             transparentUI={transparentUI}
             mouseOver={mouseOver}
@@ -353,6 +360,7 @@ const mapStateToProps = (
 ): PluridPlaneStateProperties => ({
     stateTree: selectors.space.getTree(state),
     stateViewSize: selectors.space.getViewSize(state),
+    stateActivePlaneID: selectors.space.getActivePlaneID(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
 });
