@@ -15,6 +15,7 @@
         /** constants */
         PLURID_ENTITY_VIEW,
         PLURID_PUBSUB_TOPIC,
+        PLURID_DEFAULT_PREVENT_OVERSCROLL_TIMEOUT,
         PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME,
 
         /** enumerations */
@@ -227,6 +228,7 @@ const PluridView: React.FC<ViewProperties> = (
 
     // #region references
     const viewElement = useRef<HTMLDivElement | null>(null);
+    const scrollTimeout = useRef<NodeJS.Timeout>();
     // #endregion references
 
 
@@ -239,7 +241,33 @@ const PluridView: React.FC<ViewProperties> = (
             ? [pubsub]
             : [new PluridPubSub()]
     );
+
+    const [
+        preventOverscroll,
+        setPreventOverscroll,
+    ] = useState(false);
     // #endregion state
+
+
+    // #region handlers
+    const handlePreventOverscroll = (
+        event: WheelEvent,
+    ) => {
+        if (
+            event.shiftKey
+            || event.altKey
+            || event.metaKey
+            || event.ctrlKey
+        ) {
+            setPreventOverscroll(true);
+        }
+
+        clearTimeout(scrollTimeout.current);
+        scrollTimeout.current = setTimeout(() => {
+            setPreventOverscroll(false);
+        }, PLURID_DEFAULT_PREVENT_OVERSCROLL_TIMEOUT);
+    }
+    // #endregion handlers
 
 
     // #region callbacks
@@ -261,6 +289,8 @@ const PluridView: React.FC<ViewProperties> = (
     ]);
 
     const wheelCallback = useCallback((event: WheelEvent) => {
+        handlePreventOverscroll(event);
+
         const {
             transformMode,
             transformLocks,
@@ -1124,6 +1154,7 @@ const PluridView: React.FC<ViewProperties> = (
         >
             <GlobalStyle
                 theme={stateGeneralTheme}
+                preventOverscroll={preventOverscroll}
             />
 
             {/* {!stateSpaceLoading && ( */}

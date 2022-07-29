@@ -19,6 +19,7 @@
 // #region module
 export interface IGlobalStyle {
     theme: Theme;
+    preventOverscroll: boolean;
 }
 
 export const GlobalStyle = createGlobalStyle<IGlobalStyle>`
@@ -34,6 +35,17 @@ export const GlobalStyle = createGlobalStyle<IGlobalStyle>`
         margin: 0;
         height: 100%;
         width: 100%;
+        overscroll-behavior-x: ${
+            ({
+                preventOverscroll,
+            }) => {
+                if (preventOverscroll) {
+                    return 'none';
+                }
+
+                return 'auto';
+            }
+        };
     }
 
     html {
@@ -45,15 +57,6 @@ export const GlobalStyle = createGlobalStyle<IGlobalStyle>`
                 theme,
             }) => theme.fontFamilySansSerif
         }
-
-        /*
-         * HACK
-         * Prevents Chrome from going backward/forward in page history on wheel event.
-         *
-         * TODO
-         * Apply it dinamically.
-         */
-        overscroll-behavior-x: contain;
     }
 `;
 
