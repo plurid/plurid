@@ -31,4 +31,7 @@ export const PLURID_ROUTER_STORAGE = '__PLURID_ROUTER__';
 
 
 export const PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME = 50; // in ms
+
+
+export const PLURID_DEFAULT_PREVENT_OVERSCROLL_TIMEOUT = 250; // in ms
 // #endregion module
