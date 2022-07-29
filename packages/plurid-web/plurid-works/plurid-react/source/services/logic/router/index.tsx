@@ -1824,7 +1824,7 @@ export const computePluridRoute = (
         return (): React.FC<any> => {
             const pubsub = new PluridPubSub();
 
-            const space = '/';
+            const space = matchedRoute.data.value;
 
             const pluridApplication = (
                 <PluridApplication
