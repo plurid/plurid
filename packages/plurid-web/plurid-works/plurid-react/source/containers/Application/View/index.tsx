@@ -103,6 +103,7 @@ export interface ViewOwnProperties extends PluridApplicationProperties<PluridRea
 }
 
 export interface ViewStateProperties {
+    state: AppState;
     stateConfiguration: PluridAppConfiguration;
     // stateDataUniverses: Indexed<PluridInternalStateUniverse>;
     // viewSize: ViewSize;
@@ -186,6 +187,7 @@ const PluridView: React.FC<ViewProperties> = (
 
 
         // #region state
+        state,
         stateConfiguration,
         // stateSpaceLoading,
         stateTransform,
@@ -278,11 +280,13 @@ const PluridView: React.FC<ViewProperties> = (
 
         handleGlobalShortcuts(
             dispatch,
+            state,
             event,
             stateConfiguration.space.firstPerson,
             transformLocks,
         );
     }, [
+        JSON.stringify(state),
         stateConfiguration.space.firstPerson,
         stateConfiguration.space.transformLocks,
         dispatch,
@@ -947,6 +951,7 @@ const PluridView: React.FC<ViewProperties> = (
                 }
             }
         }, [
+            JSON.stringify(state),
             viewElement.current,
             stateConfiguration.space.transformMode,
             stateConfiguration.space.firstPerson,
@@ -1173,6 +1178,7 @@ const PluridView: React.FC<ViewProperties> = (
 const mapStateToProperties = (
     state: AppState,
 ): ViewStateProperties => ({
+    state,
     stateConfiguration: selectors.configuration.getConfiguration(state),
     // stateDataUniverses: selectors.data.getUniverses(state),
     // viewSize: selectors.space.getViewSize(state),

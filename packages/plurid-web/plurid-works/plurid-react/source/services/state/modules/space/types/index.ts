@@ -370,6 +370,7 @@ export interface State {
     spaceSize: SpaceSize;
     view: PluridApplicationView;
     culledView: PluridApplicationView;
+    activePlaneID: string;
 }
 
 

@@ -20,7 +20,13 @@
 
 
     // #region external
+    import { AppState } from '~services/state/store';
     import actions from '~services/state/actions';
+
+    import {
+        focusActivePlane,
+        focusParentActivePlane,
+    } from '~services/logic/animation';
     // #endregion external
 // #endregion imports
 
@@ -49,6 +55,7 @@ export interface Modes {
 
 export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    state: AppState,
     event: KeyboardEvent,
     firstPerson: boolean,
     locks: PluridConfigurationSpaceTransformLocks,
@@ -245,6 +252,24 @@ export const handleGlobalShortcuts = (
             return dispatch(actions.space.scaleDown());
         }
     }
+
+
+    if (event.altKey && event.code === 'KeyF') {
+        focusActivePlane(
+            dispatch,
+            state,
+        );
+        return;
+    }
+
+    if (event.altKey && event.code === 'KeyB') {
+        focusParentActivePlane(
+            dispatch,
+            state,
+        );
+        return;
+    }
+
 
     return;
 }

@@ -40,6 +40,7 @@ const initialState: Types.State = {
     },
     view: [],
     culledView: [],
+    activePlaneID: '',
 };
 // #endregion module
 

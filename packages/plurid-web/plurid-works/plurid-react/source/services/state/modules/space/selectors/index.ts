@@ -42,6 +42,8 @@ const getActiveUniverseID = (state: AppState) => state.space.activeUniverseID;
 const getView = (state: AppState) => state.space.view;
 const getViewSize = (state: AppState) => state.space.viewSize;
 const getCulledView = (state: AppState) => state.space.culledView;
+
+const getActivePlaneID = (state: AppState) => state.space.activePlaneID;
 // #endregion module
 
 
@@ -70,5 +72,7 @@ export default {
     getView,
     getViewSize,
     getCulledView,
+
+    getActivePlaneID,
 };
 // #endregion exports

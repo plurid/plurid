@@ -31,6 +31,10 @@
     import {
         mathematics,
     } from '@plurid/plurid-functions';
+
+    import {
+        useDebouncedCallback,
+    } from '@plurid/plurid-functions-react';
     // #endregion libraries
 
 
@@ -84,6 +88,7 @@ export interface PluridPlaneStateProperties {
 }
 
 export interface PluridPlaneDispatchProperties {
+    dispatchSetSpaceField: typeof actions.space.setSpaceField;
     dispatchUpdateSpaceTreePlane: typeof actions.space.updateSpaceTreePlane;
 }
 
@@ -116,6 +121,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         // #endregion state
 
         // #region dispatch
+        dispatchSetSpaceField,
         dispatchUpdateSpaceTreePlane,
         // #endregion dispatch
     } = properties;
@@ -201,6 +207,27 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             },
         });
     }
+
+    const setActivePlane = () => {
+        const payload = {
+            field: 'activePlaneID' as const,
+            value: mouseOver ? planeID : '',
+        };
+
+        dispatchSetSpaceField(payload);
+    }
+
+    const debouncedSetActivePlane = useDebouncedCallback(
+        () => {
+            const payload = {
+                field: 'activePlaneID' as const,
+                value: planeID,
+            };
+
+            dispatchSetSpaceField(payload);
+        },
+        1_000,
+    );
     // #endregion handlers
 
 
@@ -228,6 +255,13 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     }, [
         remountKey,
         planeID,
+    ]);
+
+    useEffect(() => {
+        setActivePlane();
+    }, [
+        planeID,
+        mouseOver,
     ]);
     // #endregion effects
 
@@ -260,6 +294,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             }}
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
+            onMouseMove={() => debouncedSetActivePlane()}
             transparentUI={transparentUI}
             mouseOver={mouseOver}
             data-plurid-plane={planeID}
@@ -326,6 +361,11 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridPlaneDispatchProperties => ({
+    dispatchSetSpaceField: (
+        payload,
+    ) => dispatch(
+        actions.space.setSpaceField(payload),
+    ),
     dispatchUpdateSpaceTreePlane: (
         treePlane: TreePlane,
     ) => dispatch(
