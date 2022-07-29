@@ -162,6 +162,11 @@ export interface PluridApplication<C> {
     customPlane?: C;
 
     matchedRoute?: IsoMatcherRouteResult<C>;
+
+    /**
+     * Used to identify the space if using `multispace`.
+     */
+    space?: string;
 }
 
 
