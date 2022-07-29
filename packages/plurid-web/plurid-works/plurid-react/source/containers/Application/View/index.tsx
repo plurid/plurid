@@ -15,6 +15,7 @@
         /** constants */
         PLURID_ENTITY_VIEW,
         PLURID_PUBSUB_TOPIC,
+        PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME,
 
         /** enumerations */
         TRANSFORM_MODES,
@@ -932,7 +933,7 @@ const PluridView: React.FC<ViewProperties> = (
                         height,
                     });
                 }
-            }, 150);
+            }, PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME);
 
             handleResize();
             window.addEventListener('resize', handleResize);

@@ -27,6 +27,7 @@
         PLURID_ENTITY_LINK,
         PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
         PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
+        PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME,
         // #endregion constants
 
         // #region interfaces
@@ -324,7 +325,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const debouncedUpdateLinkCoordinates = useDebouncedCallback(() => {
         updateLinkCoordinates();
-    }, 200);
+    }, PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME);
 
     const updateTreeWithLink = (
         event: React.MouseEvent<HTMLAnchorElement>,
