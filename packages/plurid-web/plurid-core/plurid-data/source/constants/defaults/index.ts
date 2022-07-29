@@ -28,4 +28,7 @@ export const PLURID_DEFAULT_CONFIGURATION_NETWORK_HOST = 'originhost';
 
 
 export const PLURID_ROUTER_STORAGE = '__PLURID_ROUTER__';
+
+
+export const PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME = 50; // in ms
 // #endregion module
