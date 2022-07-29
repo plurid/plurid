@@ -34,6 +34,10 @@
 
     import store from '~services/state/store';
     import StateContext from '~services/state/context';
+
+    import {
+        loadStateFromContext,
+    } from '~services/logic/state';
     // #endregion external
 
 
@@ -112,17 +116,16 @@ class PluridApplication extends Component<
 
     private computeStore() {
         const {
+            // id,
             view,
             planes,
             configuration,
             precomputedState,
             planesRegistrar,
-            // id,
             useLocalStorage,
             hostname,
+            space,
         } = this.props;
-
-        const id = '/';
 
         registerPlanes(
             planes,
@@ -139,11 +142,11 @@ class PluridApplication extends Component<
             useLocalStorage,
         );
 
-        const contextState = id && this.context && this.context.states[id]
-            ? this.context.states[id]
-            : undefined;
+        const contextState = loadStateFromContext(
+            this.context,
+            space,
+        );
         // console.log({
-        //     id,
         //     currentState,
         //     localState,
         //     precomputedState,
