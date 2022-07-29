@@ -301,12 +301,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const updateLinkCoordinates = () => {
         const newLinkCoordinates = getPluridLinkCoordinates();
-        if (
-            newLinkCoordinates.x === linkCoordinates.x
-            && newLinkCoordinates.y === linkCoordinates.y
-        ) {
-            return;
-        }
 
         const payload: UpdateSpaceLinkCoordinatesPayload = {
             planeID: pluridPlaneID,
@@ -519,6 +513,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }, [
         showLink,
         JSON.stringify(stateViewSize),
+        JSON.stringify(stateTree),
     ]);
 
     /** Show Preview */
