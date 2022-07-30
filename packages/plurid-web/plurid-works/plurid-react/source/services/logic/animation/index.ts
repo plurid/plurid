@@ -5,6 +5,8 @@
 
 
     import {
+        PLURID_DEFAULT_ANIMATED_TRANSFORM_TIMEOUT,
+
         TreePlane,
     } from '@plurid/plurid-data';
 
@@ -42,7 +44,7 @@ export const useAnimatedTransform = (
 
     setTimeout(() => {
         dispatchSetAnimatedTransform(false);
-    }, ANIMATED_TRANSFORM_TIMEOUT);
+    }, PLURID_DEFAULT_ANIMATED_TRANSFORM_TIMEOUT);
 }
 
 
@@ -88,10 +90,12 @@ export const navigateToPluridPlane = (
         ...transform,
     });
 
-    dispatchSetSpaceField({
-        field: 'activePlaneID',
-        value: plane.planeID,
-    });
+    setTimeout(() => {
+        dispatchSetSpaceField({
+            field: 'activePlaneID',
+            value: plane.planeID,
+        });
+    }, PLURID_DEFAULT_ANIMATED_TRANSFORM_TIMEOUT);
 }
 
 
