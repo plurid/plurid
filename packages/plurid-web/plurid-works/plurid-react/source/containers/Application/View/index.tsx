@@ -281,6 +281,7 @@ const PluridView: React.FC<ViewProperties> = (
         handleGlobalShortcuts(
             dispatch,
             state,
+            pluridPubSub[0],
             event,
             stateConfiguration.space.firstPerson,
             transformLocks,
@@ -593,9 +594,8 @@ const PluridView: React.FC<ViewProperties> = (
                     );
 
                     navigateToPluridPlane(
-                        undefined,
-                        plane,
                         dispatch,
+                        plane,
                     );
                 },
             });

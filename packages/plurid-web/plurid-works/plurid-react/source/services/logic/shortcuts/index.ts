@@ -3,6 +3,7 @@
     import { AnyAction } from 'redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
     import {
         dom,
     } from '@plurid/plurid-functions';
@@ -11,6 +12,8 @@
         TRANSFORM_MODES,
 
         PluridConfigurationSpaceTransformLocks,
+
+        PluridPubSub as IPluridPubSub,
     } from '@plurid/plurid-data';
 
     import {
@@ -28,6 +31,14 @@
         focusParentActivePlane,
     } from '~services/logic/animation';
     // #endregion external
+
+
+    // #region internal
+    import {
+        closeActivePlane,
+        refreshActivePlane,
+    } from './logic';
+    // #endregion internal
 // #endregion imports
 
 
@@ -56,6 +67,7 @@ export interface Modes {
 export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     state: AppState,
+    pubsub: IPluridPubSub,
     event: KeyboardEvent,
     firstPerson: boolean,
     locks: PluridConfigurationSpaceTransformLocks,
@@ -266,6 +278,22 @@ export const handleGlobalShortcuts = (
         focusParentActivePlane(
             dispatch,
             state,
+        );
+        return;
+    }
+
+    if (event.altKey && event.code === 'KeyR') {
+        refreshActivePlane(
+            state,
+            pubsub,
+        );
+        return;
+    }
+
+    if (event.altKey && event.code === 'KeyW') {
+        closeActivePlane(
+            state,
+            pubsub,
         );
         return;
     }
