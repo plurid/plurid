@@ -85,6 +85,8 @@ const chinese: Internationalization = {
     toolbarDrawerShortcutsScaleUp: '放大',
     toolbarDrawerShortcutsScaleDown: '缩小',
     toolbarDrawerShortcutsToggleScale: '切换刻度',
+    toolbarDrawerShortcutsFocusPlane: '焦平面',
+    toolbarDrawerShortcutsFocusParent: '焦點父母',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ 或向上滚动',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ 或向下滚动',

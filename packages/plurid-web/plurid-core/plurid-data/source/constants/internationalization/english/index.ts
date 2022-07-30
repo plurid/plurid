@@ -85,6 +85,8 @@ const english: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'scale up',
     toolbarDrawerShortcutsScaleDown: 'scale down',
     toolbarDrawerShortcutsToggleScale: 'toggle scale',
+    toolbarDrawerShortcutsFocusPlane: 'focus plane',
+    toolbarDrawerShortcutsFocusParent: 'focus parent',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ or scroll up',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ or scroll down',

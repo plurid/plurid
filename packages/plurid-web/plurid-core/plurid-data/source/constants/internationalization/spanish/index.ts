@@ -85,6 +85,8 @@ const spanish: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'aumentar proporcionalmente',
     toolbarDrawerShortcutsScaleDown: 'reducir proporcionalmente',
     toolbarDrawerShortcutsToggleScale: 'alternar escala',
+    toolbarDrawerShortcutsFocusPlane: 'plano de enfoque',
+    toolbarDrawerShortcutsFocusParent: 'plano parent',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ o desplazarse hacia arriba',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ o desplazarse hacia abajo',

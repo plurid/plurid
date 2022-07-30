@@ -85,6 +85,8 @@ const hindi: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'स्केल अप',
     toolbarDrawerShortcutsScaleDown: 'घटाना',
     toolbarDrawerShortcutsToggleScale: 'टॉगल स्केल',
+    toolbarDrawerShortcutsFocusPlane: 'फोकस प्लेन',
+    toolbarDrawerShortcutsFocusParent: 'ध्यान माता-पिता',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ या स्क्रॉल करें',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ या नीचे स्क्रॉल करें',

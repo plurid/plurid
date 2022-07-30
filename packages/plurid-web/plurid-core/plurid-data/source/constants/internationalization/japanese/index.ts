@@ -85,6 +85,8 @@ const japanese: Internationalization = {
     toolbarDrawerShortcutsScaleUp: '拡大する',
     toolbarDrawerShortcutsScaleDown: '縮小する',
     toolbarDrawerShortcutsToggleScale: 'トグルスケール',
+    toolbarDrawerShortcutsFocusPlane: 'フォーカス プレーン',
+    toolbarDrawerShortcutsFocusParent: 'フォーカスの親',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ または上にスクロールします',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ または下にスクロールします',

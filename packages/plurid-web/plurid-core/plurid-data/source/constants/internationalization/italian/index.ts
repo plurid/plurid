@@ -85,6 +85,8 @@ const italian: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'scalare a su',
     toolbarDrawerShortcutsScaleDown: 'scalare a giù',
     toolbarDrawerShortcutsToggleScale: 'attiva / disattiva la scala',
+    toolbarDrawerShortcutsFocusPlane: 'piano attivo',
+    toolbarDrawerShortcutsFocusParent: 'piano genitore',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ o scorrere verso l\'alto',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ o scorrere verso il basso',

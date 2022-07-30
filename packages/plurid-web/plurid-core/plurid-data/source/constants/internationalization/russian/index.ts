@@ -85,6 +85,8 @@ const russian: Internationalization = {
     toolbarDrawerShortcutsScaleUp: 'увеличить масштаб',
     toolbarDrawerShortcutsScaleDown: 'уменьшать',
     toolbarDrawerShortcutsToggleScale: 'шкала переключения',
+    toolbarDrawerShortcutsFocusPlane: 'плоскость фокусировки',
+    toolbarDrawerShortcutsFocusParent: 'фокус родитель',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ или прокрутите вверх',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ или прокрутите вниз',
