@@ -17,8 +17,8 @@ export interface PluridApplicationConfiguratorProperties {
 }
 
 
-export interface PluridPlaneConfiguratorProperties {
+export interface PluridPlaneConfiguratorProperties<S> {
     theme: string;
-    style: React.CSSProperties;
+    style: S;
 }
 // #endregion module

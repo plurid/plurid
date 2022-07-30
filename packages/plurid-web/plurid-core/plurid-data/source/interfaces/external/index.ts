@@ -4,6 +4,7 @@ export * from './cluster';
 export * from './compare';
 export * from './component';
 export * from './configuration';
+export * from './internationalization';
 export * from './keys';
 export * from './layout';
 export * from './link';

@@ -2,7 +2,7 @@
     // #region exports
     import {
         Internationalization,
-    } from '../../../interfaces/internal/internationalization';
+    } from '../../../interfaces/external/internationalization';
     // #endregion exports
 // #endregion imports
 
@@ -87,6 +87,8 @@ const spanish: Internationalization = {
     toolbarDrawerShortcutsToggleScale: 'alternar escala',
     toolbarDrawerShortcutsFocusPlane: 'plano de enfoque',
     toolbarDrawerShortcutsFocusParent: 'plano parent',
+    toolbarDrawerShortcutsRefreshPlane: 'actualizar plano',
+    toolbarDrawerShortcutsClosePlane: 'plano cercano',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ o desplazarse hacia arriba',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ o desplazarse hacia abajo',

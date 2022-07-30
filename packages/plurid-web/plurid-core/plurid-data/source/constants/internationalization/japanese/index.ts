@@ -2,7 +2,7 @@
     // #region exports
     import {
         Internationalization,
-    } from '../../../interfaces/internal/internationalization';
+    } from '../../../interfaces/external/internationalization';
     // #endregion exports
 // #endregion imports
 
@@ -87,6 +87,8 @@ const japanese: Internationalization = {
     toolbarDrawerShortcutsToggleScale: 'トグルスケール',
     toolbarDrawerShortcutsFocusPlane: 'フォーカス プレーン',
     toolbarDrawerShortcutsFocusParent: 'フォーカスの親',
+    toolbarDrawerShortcutsRefreshPlane: '飛行機をリフレッシュ',
+    toolbarDrawerShortcutsClosePlane: '平面を閉じる',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ または上にスクロールします',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ または下にスクロールします',

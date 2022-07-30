@@ -2,7 +2,7 @@
     // #region exports
     import {
         Internationalization,
-    } from '../../../interfaces/internal/internationalization';
+    } from '../../../interfaces/external/internationalization';
     // #endregion exports
 // #endregion imports
 
@@ -87,6 +87,8 @@ const hindi: Internationalization = {
     toolbarDrawerShortcutsToggleScale: 'टॉगल स्केल',
     toolbarDrawerShortcutsFocusPlane: 'फोकस प्लेन',
     toolbarDrawerShortcutsFocusParent: 'ध्यान माता-पिता',
+    toolbarDrawerShortcutsRefreshPlane: 'ताज़ा विमान',
+    toolbarDrawerShortcutsClosePlane: 'बंद विमान',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ या स्क्रॉल करें',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ या नीचे स्क्रॉल करें',

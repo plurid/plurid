@@ -25,7 +25,7 @@
 
     import {
         InternationalizationLanguageType,
-    } from '../../internal/internationalization';
+    } from '../internationalization';
     // #endregion external
 // #endregion imports
 

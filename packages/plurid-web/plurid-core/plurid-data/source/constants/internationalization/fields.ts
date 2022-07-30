@@ -1,15 +1,5 @@
-// #region imports
-    // #region external
-    import {
-        InternationalizationFields,
-    } from '../../interfaces/internal/internationalization';
-    // #endregion external
-// #endregion imports
-
-
-
 // #region module
-const internationalizationFields: InternationalizationFields = {
+const internationalizationFields = {
     viewcubeFront: 'viewcubeFront',
     viewcubeBack: 'viewcubeBack',
     viewcubeLeft: 'viewcubeLeft',
@@ -85,14 +75,17 @@ const internationalizationFields: InternationalizationFields = {
     toolbarDrawerShortcutsScaleUp: 'toolbarDrawerShortcutsScaleUp',
     toolbarDrawerShortcutsScaleDown: 'toolbarDrawerShortcutsScaleDown',
     toolbarDrawerShortcutsToggleScale: 'toolbarDrawerShortcutsToggleScale',
+
     toolbarDrawerShortcutsFocusPlane: 'toolbarDrawerShortcutsFocusPlane',
     toolbarDrawerShortcutsFocusParent: 'toolbarDrawerShortcutsFocusParent',
+    toolbarDrawerShortcutsRefreshPlane: 'toolbarDrawerShortcutsRefreshPlane',
+    toolbarDrawerShortcutsClosePlane: 'toolbarDrawerShortcutsClosePlane',
 
     toolbarDrawerShortcutsArrowOrScrollUp: 'toolbarDrawerShortcutsArrowOrScrollUp',
     toolbarDrawerShortcutsArrowOrScrollDown: 'toolbarDrawerShortcutsArrowOrScrollDown',
     toolbarDrawerShortcutsArrowOrScrollLeft: 'toolbarDrawerShortcutsArrowOrScrollLeft',
     toolbarDrawerShortcutsArrowOrScrollRight: 'toolbarDrawerShortcutsArrowOrScrollRight',
-}
+} as const;
 // #endregion module
 
 

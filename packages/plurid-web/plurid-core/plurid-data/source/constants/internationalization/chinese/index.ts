@@ -2,7 +2,7 @@
     // #region exports
     import {
         Internationalization,
-    } from '../../../interfaces/internal/internationalization';
+    } from '../../../interfaces/external/internationalization';
     // #endregion exports
 // #endregion imports
 
@@ -87,6 +87,8 @@ const chinese: Internationalization = {
     toolbarDrawerShortcutsToggleScale: '切换刻度',
     toolbarDrawerShortcutsFocusPlane: '焦平面',
     toolbarDrawerShortcutsFocusParent: '焦點父母',
+    toolbarDrawerShortcutsRefreshPlane: '刷新平面',
+    toolbarDrawerShortcutsClosePlane: '關閉平面',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ 或向上滚动',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ 或向下滚动',

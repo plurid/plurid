@@ -2,7 +2,7 @@
     // #region exports
     import {
         Internationalization,
-    } from '../../../interfaces/internal/internationalization';
+    } from '../../../interfaces/external/internationalization';
     // #endregion exports
 // #endregion imports
 
@@ -87,6 +87,8 @@ const romanian: Internationalization = {
     toolbarDrawerShortcutsToggleScale: 'comutare scalare',
     toolbarDrawerShortcutsFocusPlane: 'focus plan',
     toolbarDrawerShortcutsFocusParent: 'focus părinte',
+    toolbarDrawerShortcutsRefreshPlane: 'restaurare plan',
+    toolbarDrawerShortcutsClosePlane: 'închidere plan',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ sau scroll sus',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ sau scroll jos',

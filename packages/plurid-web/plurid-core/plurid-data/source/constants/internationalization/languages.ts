@@ -2,7 +2,7 @@
     // #region external
     import {
         InternationalizationLanguageType,
-    } from '../../interfaces/internal/internationalization';
+    } from '../../interfaces/external/internationalization';
     // #endregion external
 // #endregion imports
 

@@ -2,11 +2,11 @@
     // #region external
     import {
         SHORTCUTS,
-    } from '../../../enumerations';
+    } from '~enumerations/index';
 
     import {
         InternationalizationFieldType,
-    } from '../internationalization';
+    } from '~interfaces/external/internationalization';
     // #endregion external
 // #endregion imports
 

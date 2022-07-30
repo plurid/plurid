@@ -2,7 +2,7 @@
     // #region exports
     import {
         Internationalization,
-    } from '../../../interfaces/internal/internationalization';
+    } from '../../../interfaces/external/internationalization';
     // #endregion exports
 // #endregion imports
 
@@ -87,6 +87,8 @@ const italian: Internationalization = {
     toolbarDrawerShortcutsToggleScale: 'attiva / disattiva la scala',
     toolbarDrawerShortcutsFocusPlane: 'piano attivo',
     toolbarDrawerShortcutsFocusParent: 'piano genitore',
+    toolbarDrawerShortcutsRefreshPlane: 'ristorare piano',
+    toolbarDrawerShortcutsClosePlane: 'vicino piano',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ o scorrere verso l\'alto',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ o scorrere verso il basso',

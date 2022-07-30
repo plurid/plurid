@@ -2,7 +2,7 @@
     // #region exports
     import {
         Internationalization,
-    } from '../../../interfaces/internal/internationalization';
+    } from '../../../interfaces/external/internationalization';
     // #endregion exports
 // #endregion imports
 
@@ -87,6 +87,8 @@ const russian: Internationalization = {
     toolbarDrawerShortcutsToggleScale: 'шкала переключения',
     toolbarDrawerShortcutsFocusPlane: 'плоскость фокусировки',
     toolbarDrawerShortcutsFocusParent: 'фокус родитель',
+    toolbarDrawerShortcutsRefreshPlane: 'обновить самолет',
+    toolbarDrawerShortcutsClosePlane: 'близкий самолет',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ или прокрутите вверх',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ или прокрутите вниз',
