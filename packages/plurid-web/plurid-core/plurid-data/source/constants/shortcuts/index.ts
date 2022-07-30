@@ -179,7 +179,7 @@ export const shortcutsNames: ShortcutNames = {
     },
     CLOSE_PLANE: {
         name: internationalizationFields.toolbarDrawerShortcutsClosePlane,
-        key: 'r',
+        key: 'w',
         modifier: keyModifiers.ALT,
     },
 };
