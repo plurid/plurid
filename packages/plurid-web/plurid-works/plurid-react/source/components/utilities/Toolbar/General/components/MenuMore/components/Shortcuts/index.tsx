@@ -101,15 +101,16 @@ const PluridMenuMoreShortcuts: React.FC<PluridMenuMoreShortcutsProperties> = (
                     ? internatiolate(language, keyAsAny)
                     : key;
 
+                const afterline = type === 'TURN_DOWN'
+                    || type === 'TOGGLE_ROTATE'
+                    || type === 'TOGGLE_TRANSLATE'
+                    || type === 'TOGGLE_SCALE';
+
                 return (
                     <StyledPluridMoreMenuItem
                         key={name}
                         theme={interactionTheme}
-                        afterline={
-                            type === 'TURN_DOWN'
-                            || type === 'TOGGLE_ROTATE'
-                            || type === 'TOGGLE_TRANSLATE'
-                        }
+                        afterline={afterline}
                         last={index === defaultShortcuts.length - 1 ? true : false}
                     >
                         <div>
