@@ -100,6 +100,8 @@ export type InternationalizationFieldToolbarDrawerShortcutsToggleTranslate = 'to
 export type InternationalizationFieldToolbarDrawerShortcutsScaleUp = 'toolbarDrawerShortcutsScaleUp';
 export type InternationalizationFieldToolbarDrawerShortcutsScaleDown = 'toolbarDrawerShortcutsScaleDown';
 export type InternationalizationFieldToolbarDrawerShortcutsToggleScale = 'toolbarDrawerShortcutsToggleScale';
+export type InternationalizationFieldToolbarDrawerShortcutsFocusPlane = 'toolbarDrawerShortcutsFocusPlane';
+export type InternationalizationFieldToolbarDrawerShortcutsFocusParent = 'toolbarDrawerShortcutsFocusParent';
 
 export type InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollUp = 'toolbarDrawerShortcutsArrowOrScrollUp';
 export type InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollDown = 'toolbarDrawerShortcutsArrowOrScrollDown';
@@ -183,6 +185,8 @@ export type InternationalizationFieldType =
     | InternationalizationFieldToolbarDrawerShortcutsScaleUp
     | InternationalizationFieldToolbarDrawerShortcutsScaleDown
     | InternationalizationFieldToolbarDrawerShortcutsToggleScale
+    | InternationalizationFieldToolbarDrawerShortcutsFocusPlane
+    | InternationalizationFieldToolbarDrawerShortcutsFocusParent
     | InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollUp
     | InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollDown
     | InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollLeft
@@ -265,6 +269,8 @@ export interface InternationalizationFields {
     toolbarDrawerShortcutsScaleUp: InternationalizationFieldToolbarDrawerShortcutsScaleUp;
     toolbarDrawerShortcutsScaleDown: InternationalizationFieldToolbarDrawerShortcutsScaleDown;
     toolbarDrawerShortcutsToggleScale: InternationalizationFieldToolbarDrawerShortcutsToggleScale;
+    toolbarDrawerShortcutsFocusPlane: InternationalizationFieldToolbarDrawerShortcutsFocusPlane;
+    toolbarDrawerShortcutsFocusParent: InternationalizationFieldToolbarDrawerShortcutsFocusParent;
 
     toolbarDrawerShortcutsArrowOrScrollUp: InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollUp;
     toolbarDrawerShortcutsArrowOrScrollDown: InternationalizationFieldToolbarDrawerShortcutsArrowOrScrollDown;

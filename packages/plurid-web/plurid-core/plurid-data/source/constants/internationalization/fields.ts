@@ -1,6 +1,10 @@
-import {
-    InternationalizationFields,
-} from '../../interfaces/internal/internationalization';
+// #region imports
+    // #region external
+    import {
+        InternationalizationFields,
+    } from '../../interfaces/internal/internationalization';
+    // #endregion external
+// #endregion imports
 
 
 
@@ -81,6 +85,8 @@ const internationalizationFields: InternationalizationFields = {
     toolbarDrawerShortcutsScaleUp: 'toolbarDrawerShortcutsScaleUp',
     toolbarDrawerShortcutsScaleDown: 'toolbarDrawerShortcutsScaleDown',
     toolbarDrawerShortcutsToggleScale: 'toolbarDrawerShortcutsToggleScale',
+    toolbarDrawerShortcutsFocusPlane: 'toolbarDrawerShortcutsFocusPlane',
+    toolbarDrawerShortcutsFocusParent: 'toolbarDrawerShortcutsFocusParent',
 
     toolbarDrawerShortcutsArrowOrScrollUp: 'toolbarDrawerShortcutsArrowOrScrollUp',
     toolbarDrawerShortcutsArrowOrScrollDown: 'toolbarDrawerShortcutsArrowOrScrollDown',

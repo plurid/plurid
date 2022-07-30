@@ -161,6 +161,17 @@ export const shortcutsNames: ShortcutNames = {
         name: internationalizationFields.toolbarDrawerShortcutsToggleScale,
         key: 's',
     },
+
+    FOCUS_PLANE: {
+        name: internationalizationFields.toolbarDrawerShortcutsFocusPlane,
+        key: 'f',
+        modifier: keyModifiers.ALT,
+    },
+    FOCUS_PARENT: {
+        name: internationalizationFields.toolbarDrawerShortcutsFocusParent,
+        key: 'b',
+        modifier: keyModifiers.ALT,
+    },
 };
 
 
@@ -285,6 +296,17 @@ export const defaultShortcuts = [
     {
         type: SHORTCUTS.TOGGLE_SCALE,
         key: 's',
+    },
+
+    {
+        type: SHORTCUTS.FOCUS_PLANE,
+        key: 'f',
+        modifier: KEY_MODIFIERS.ALT
+    },
+    {
+        type: SHORTCUTS.FOCUS_PARENT,
+        key: 'b',
+        modifier: KEY_MODIFIERS.ALT
     },
 ];
 // #endregion module
