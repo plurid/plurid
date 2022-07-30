@@ -172,6 +172,16 @@ export const shortcutsNames: ShortcutNames = {
         key: 'b',
         modifier: keyModifiers.ALT,
     },
+    REFRESH_PLANE: {
+        name: internationalizationFields.toolbarDrawerShortcutsRefreshPlane,
+        key: 'r',
+        modifier: keyModifiers.ALT,
+    },
+    CLOSE_PLANE: {
+        name: internationalizationFields.toolbarDrawerShortcutsClosePlane,
+        key: 'r',
+        modifier: keyModifiers.ALT,
+    },
 };
 
 
@@ -306,6 +316,16 @@ export const defaultShortcuts = [
     {
         type: SHORTCUTS.FOCUS_PARENT,
         key: 'b',
+        modifier: KEY_MODIFIERS.ALT
+    },
+    {
+        type: SHORTCUTS.REFRESH_PLANE,
+        key: 'r',
+        modifier: KEY_MODIFIERS.ALT
+    },
+    {
+        type: SHORTCUTS.CLOSE_PLANE,
+        key: 'w',
         modifier: KEY_MODIFIERS.ALT
     },
 ];
