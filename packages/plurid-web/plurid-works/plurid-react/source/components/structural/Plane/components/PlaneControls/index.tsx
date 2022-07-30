@@ -215,9 +215,9 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                     <PluridIconArrowLeft
                         atClick={(event) => {
                             navigateToPluridPlane(
-                                event,
-                                parentTreePlane,
                                 dispatch,
+                                parentTreePlane,
+                                event,
                             );
                         }}
                         theme={stateGeneralTheme}
@@ -228,9 +228,9 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                 <PluridIconFrame
                     atClick={(event) => {
                         navigateToPluridPlane(
-                            event,
-                            treePlane,
                             dispatch,
+                            treePlane,
+                            event,
                         );
                     }}
                     theme={stateGeneralTheme}

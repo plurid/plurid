@@ -32,8 +32,6 @@
 export const useAnimatedTransform = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ) => {
-    const ANIMATED_TRANSFORM_TIMEOUT = 500;
-
     const dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform = (
         payload,
     ) => dispatch(
@@ -49,9 +47,9 @@ export const useAnimatedTransform = (
 
 
 export const navigateToPluridPlane = (
-    event: React.MouseEvent | undefined,
-    plane: TreePlane | undefined,
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    plane: TreePlane | undefined,
+    event?: React.MouseEvent,
 ) => {
     if (event && (event.ctrlKey || event.metaKey)) {
         // Only navigate at pure link click.
@@ -131,9 +129,8 @@ export const focusActivePlane = (
     }
 
     navigateToPluridPlane(
-        undefined,
-        activePlane,
         dispatch,
+        activePlane,
     );
 }
 
@@ -156,9 +153,8 @@ export const focusParentActivePlane = (
     }
 
     navigateToPluridPlane(
-        undefined,
-        parentPlane,
         dispatch,
+        parentPlane,
     );
 }
 // #endregion module

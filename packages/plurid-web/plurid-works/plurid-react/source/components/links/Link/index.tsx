@@ -406,9 +406,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
 
         navigateToPluridPlane(
-            event,
-            updatedPlane,
             dispatch,
+            updatedPlane,
+            event,
         );
     }
 
@@ -423,9 +423,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 );
 
                 navigateToPluridPlane(
-                    event,
-                    plane,
                     dispatch,
+                    plane,
+                    event,
                 );
 
                 return;
