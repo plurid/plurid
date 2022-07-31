@@ -255,7 +255,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         pluridPlaneID,
         planesRegistrar,
     );
-    // console.log('Root pluridPlane', pluridPlane);
+    // console.log('Root pluridPlane', pluridPlane, pluridPlaneID, planesRegistrar);
     if (!pluridPlane) {
         return (<></>);
     }

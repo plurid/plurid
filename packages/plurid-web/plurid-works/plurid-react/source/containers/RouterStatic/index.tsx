@@ -56,7 +56,7 @@ const PluridRouterStatic = (
     } = properties;
 
     const protocol = protocolProperty || 'http';
-    const hostname = hostnameProperty || 'localhost:63000';
+    const hostname = hostnameProperty || 'origin';
     const gatewayQuery = gatewayQueryProperty || '';
     const gatewayEndpoint = gatewayEndpointProperty || '/gateway';
 

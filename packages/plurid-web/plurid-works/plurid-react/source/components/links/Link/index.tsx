@@ -124,6 +124,25 @@ export type PluridLinkProperties =
 const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     properties,
 ) => {
+    // #region context
+    const context = useContext(Context);
+    if (!context) {
+        return (<>{properties.children}</>);
+    }
+
+    const {
+        hostname,
+        planesRegistrar,
+        defaultPubSub,
+    } = context;
+
+    const planesRegistry = getPlanesRegistrar(planesRegistrar);
+    if (!planesRegistry) {
+        return (<>{properties.children}</>);
+    }
+    // #endregion context
+
+
     // #region properties
     const {
         // #region own
@@ -170,31 +189,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const absolutePlaneRoute = resolveRoute(
         planeRouteResolved,
         stateConfiguration.network.protocol,
-        stateConfiguration.network.host,
+        hostname || stateConfiguration.network.host,
     );
     // console.log('absolutePlaneRoute', absolutePlaneRoute);
 
     const suffix = _suffix ?? PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX;
     const devisible = _devisible ?? false;
     // #endregion properties
-
-
-    // #region context
-    const context = useContext(Context);
-    if (!context) {
-        return (<>{children}</>);
-    }
-
-    const {
-        planesRegistrar,
-        defaultPubSub,
-    } = context;
-
-    const planesRegistry = getPlanesRegistrar(planesRegistrar);
-    if (!planesRegistry) {
-        return (<>{children}</>);
-    }
-    // #endregion context
 
 
     // #region references
@@ -210,7 +211,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const [showLink, setShowLink] = useState(false);
     const [pluridPlaneID, setPluridPlaneID] = useState('');
     const [parentPlaneID, setParentPlaneID] = useState(getPluridPlaneIDByData(linkElement.current));
-    // console.log('parentPlaneID', {parentPlaneID});
     const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
     // #endregion state
 
@@ -344,7 +344,18 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             stateTree,
             planesRegistry.getAll(),
             stateConfiguration,
+            hostname,
         );
+        // console.log({
+        //     route,
+        //     parentPlaneID,
+        //     linkCoordinates,
+        //     stateTree,
+        //     planesRegistry: planesRegistry.getAll(),
+        //     stateConfiguration,
+        //     hostname,
+        // });
+        // console.log({updatedTree});
 
         if (pluridPlaneID) {
             handlePlaneNavigation(
@@ -623,6 +634,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     // #region render
+    // console.log('pluridPlaneID', {pluridPlaneID});
+    // console.log('parentPlaneID', {parentPlaneID});
+
     return (
         <StyledPluridLink
             ref={linkElement}
@@ -706,7 +720,7 @@ const mapDispatchToProperties = (
 });
 
 
-export default connect(
+const ConnectedPluridLink = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -715,3 +729,9 @@ export default connect(
     },
 )(PluridLink);
 // #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridLink;
+// #endregion exports

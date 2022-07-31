@@ -1719,8 +1719,8 @@ export const computePluridRoute = (
     planesRegistrar: planes.Registrar<PluridReactComponent>,
     isoMatcher: routing.IsoMatcher<PluridReactComponent>,
     directPlane?: PluridRouteMatch,
-    // hostname = 'origin',
-    hostname = 'localhost:63000',
+    hostname = 'origin',
+    // hostname = 'localhost:63000',
 ) => {
     if (
         directPlane
