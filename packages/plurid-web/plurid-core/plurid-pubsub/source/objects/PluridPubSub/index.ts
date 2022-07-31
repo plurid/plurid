@@ -9,6 +9,13 @@
         PluridPubSubTopicKeysType,
     } from '@plurid/plurid-data';
     // #endregion libraries
+
+
+    // #region internal
+    import {
+        SELECTOR_SEPARATOR,
+    } from './data';
+    // #endregion internal
 // #endregion imports
 
 
@@ -23,6 +30,30 @@ class PluridPubSub implements IPluridPubSub {
         options?: PluridPubSubOptions,
     ) {
         this.options = options;
+    }
+
+
+    private createSelector(
+        topic: PluridPubSubTopicKeysType,
+        value: number,
+    ) {
+        return topic + SELECTOR_SEPARATOR + value;
+    }
+
+    private parseSelector(
+        selector: string,
+    ) {
+        const [topic, idx] = selector.split(SELECTOR_SEPARATOR) as [PluridPubSubTopicKeysType, string];
+        const index = parseInt(idx);
+
+        if (!topic || typeof index !== 'number') {
+            return;
+        }
+
+        return {
+            topic,
+            index,
+        };
     }
 
 
@@ -72,7 +103,9 @@ class PluridPubSub implements IPluridPubSub {
                 subscriptions,
             );
 
-            return (subscriptions?.length || 1) - 1;
+            const value = (subscriptions?.length || 1) - 1;
+
+            return this.createSelector(topic, value);
         }
 
         this.subscriptions.set(
@@ -80,13 +113,22 @@ class PluridPubSub implements IPluridPubSub {
             [callback],
         );
 
-        return 0;
+        return this.createSelector(topic, 0);
     }
 
     public unsubscribe(
-        index: number,
-        topic: PluridPubSubTopicKeysType,
+        selector: string,
     ) {
+        const parsedSelector = this.parseSelector(selector);
+        if (!parsedSelector) {
+            return false;
+        }
+
+        const {
+            topic,
+            index,
+        } = parsedSelector;
+
         let unsubscribed = false;
 
         if (this.subscriptions.has(topic)) {
