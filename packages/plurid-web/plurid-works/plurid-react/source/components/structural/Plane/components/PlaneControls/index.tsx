@@ -21,16 +21,17 @@
         PluridConfiguration,
     } from '@plurid/plurid-data';
 
-    import {
-        universal,
-    } from '@plurid/plurid-ui-components-react';
+    // import {
+    //     universal,
+    // } from '@plurid/plurid-ui-components-react';
 
     import {
         PluridIconArrowLeft,
         PluridIconFrame,
+        PluridIconDocuments,
 
-        PluridIconCopy,
-        PluridIconLink,
+        // PluridIconCopy,
+        // PluridIconLink,
         PluridIconDelete,
     } from '@plurid/plurid-icons-react';
 
@@ -57,7 +58,7 @@
 
 
     // #region internal
-    import SearchList from './components/SearchList';
+    // import SearchList from './components/SearchList';
     import ControlRefresh from './components/ControlRefresh';
 
     import {
@@ -72,11 +73,11 @@
 
 
 // #region module
-const {
-    inputs: {
-        Textline: PluridTextline,
-    },
-} = universal;
+// const {
+//     inputs: {
+//         Textline: PluridTextline,
+//     },
+// } = universal;
 
 export interface PluridPlaneControlsOwnProperties {
     plane: RegisteredPluridPlane<PluridReactComponent>;
@@ -85,6 +86,7 @@ export interface PluridPlaneControlsOwnProperties {
     mouseOver: boolean;
 
     refreshPlane: () => void;
+    isolatePlane: () => void;
     closePlane: () => void;
 }
 
@@ -115,6 +117,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
         mouseOver,
 
         refreshPlane,
+        isolatePlane,
         closePlane,
         // #endregion own
 
@@ -240,6 +243,14 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                 <ControlRefresh
                     theme={stateGeneralTheme}
                     refreshPlane={refreshPlane}
+                />
+
+                <PluridIconDocuments
+                    atClick={() => {
+                        isolatePlane();
+                    }}
+                    theme={stateGeneralTheme}
+                    title="isolate"
                 />
             </StyledPluridPlaneControlsLeft>
 

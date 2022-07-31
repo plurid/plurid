@@ -201,6 +201,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         setRemountKey(value => ++value);
     }
 
+    const isolatePlane = () => {
+
+    }
+
     const closePlane = () => {
         defaultPubSub.publish({
             topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
@@ -323,6 +327,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                             mouseOver={mouseOver}
 
                             refreshPlane={refreshPlane}
+                            isolatePlane={isolatePlane}
                             closePlane={closePlane}
                         />
                     )}
