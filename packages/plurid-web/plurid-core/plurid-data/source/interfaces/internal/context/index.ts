@@ -29,6 +29,7 @@ export interface PluridContext<C> {
     planeNotFound?: boolean | C;
     planeRenderError?: boolean | C;
     matchedRoute?: IsoMatcherRouteResult<C> | undefined;
+    hostname?: string;
 
     defaultPubSub: PluridPubSub,
     registerPubSub: (
