@@ -255,7 +255,6 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         return () => {
             defaultPubSub.unsubscribe(
                 refreshPlaneIndex,
-                PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
             );
         }
     }, [

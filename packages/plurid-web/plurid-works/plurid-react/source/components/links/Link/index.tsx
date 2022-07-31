@@ -594,7 +594,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         return () => {
             defaultPubSub.unsubscribe(
                 closePlaneIndex,
-                PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
             );
         }
     }, [

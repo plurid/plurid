@@ -621,81 +621,30 @@ const PluridView: React.FC<ViewProperties> = (
             });
 
 
+            const indexes = [
+                configurationIndex,
+                spaceTransformIndex,
+                spaceAnimatedTransformIndex,
+                spaceRotateXWithIndex,
+                spaceRotateXToIndex,
+                spaceRotateYWithIndex,
+                spaceRotateYToIndex,
+                spaceTranslateXWithIndex,
+                spaceTranslateYWithIndex,
+                viewAddPlaneIndex,
+                viewSetPlanesIndex,
+                viewRemovePlaneIndex,
+                navigateToPlaneIndex,
+                closePlaneIndex,
+            ];
+
+
             return () => {
-                pubsub.unsubscribe(
-                    configurationIndex,
-                    PLURID_PUBSUB_TOPIC.CONFIGURATION,
-                );
-
-                pubsub.unsubscribe(
-                    spaceTransformIndex,
-                    PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
-                );
-
-                pubsub.unsubscribe(
-                    spaceAnimatedTransformIndex,
-                    PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM,
-                );
-
-
-                pubsub.unsubscribe(
-                    spaceRotateXWithIndex,
-                    PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
-                );
-
-                pubsub.unsubscribe(
-                    spaceRotateXToIndex,
-                    PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO,
-                );
-
-
-                pubsub.unsubscribe(
-                    spaceRotateYWithIndex,
-                    PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH,
-                );
-
-                pubsub.unsubscribe(
-                    spaceRotateYToIndex,
-                    PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO,
-                );
-
-
-                pubsub.unsubscribe(
-                    spaceTranslateXWithIndex,
-                    PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH,
-                );
-
-                pubsub.unsubscribe(
-                    spaceTranslateYWithIndex,
-                    PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_WITH,
-                );
-
-
-                pubsub.unsubscribe(
-                    viewAddPlaneIndex,
-                    PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
-                );
-
-                pubsub.unsubscribe(
-                    viewSetPlanesIndex,
-                    PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
-                );
-
-                pubsub.unsubscribe(
-                    viewRemovePlaneIndex,
-                    PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
-                );
-
-
-                pubsub.unsubscribe(
-                    navigateToPlaneIndex,
-                    PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
-                );
-
-                pubsub.unsubscribe(
-                    closePlaneIndex,
-                    PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
-                );
+                for (const index of indexes) {
+                    pubsub.unsubscribe(
+                        index,
+                    );
+                }
             }
         }
 
