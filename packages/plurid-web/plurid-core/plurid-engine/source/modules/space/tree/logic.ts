@@ -738,6 +738,7 @@ export const updateTreeWithNewPlane = <C>(
     tree: TreePlane[],
     planesRegistry: Map<string, RegisteredPluridPlane<C>>,
     configuration: PluridConfiguration,
+    hostname = 'origin',
 ): UpdatedTreeWithNewPlane => {
     const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
     // console.log('updateTreeWithNewPlane parentPlane', parentPlane);
@@ -756,12 +757,11 @@ export const updateTreeWithNewPlane = <C>(
     // console.log('location', location);
     // console.log('planeRoute', planeRoute);
 
-
     const treePlane = resolveViewItem(
         planesRegistry,
         planeRoute,
         configuration,
-        'localhost:63000',
+        hostname,
     );
     // console.log('updateTreeWithNewPlane treePlane', treePlane);
 
