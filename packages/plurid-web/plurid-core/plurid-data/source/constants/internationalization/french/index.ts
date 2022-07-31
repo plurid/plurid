@@ -88,6 +88,8 @@ const french: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: 'plan actif',
     toolbarDrawerShortcutsFocusParent: 'plan parente',
     toolbarDrawerShortcutsRefreshPlane: 'plan rafraîchir',
+    toolbarDrawerShortcutsIsolatePlane: 'isoler le plan',
+    toolbarDrawerShortcutsOpenClosedPlane: 'ouvert fermé plan',
     toolbarDrawerShortcutsClosePlane: 'plan proche',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ ou scroll vers le haut',

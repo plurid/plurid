@@ -88,6 +88,8 @@ const russian: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: 'плоскость фокусировки',
     toolbarDrawerShortcutsFocusParent: 'фокус родитель',
     toolbarDrawerShortcutsRefreshPlane: 'обновить самолет',
+    toolbarDrawerShortcutsIsolatePlane: 'изолировать самолет',
+    toolbarDrawerShortcutsOpenClosedPlane: 'открытая закрытая плоскость',
     toolbarDrawerShortcutsClosePlane: 'близкий самолет',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ или прокрутите вверх',

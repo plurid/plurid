@@ -88,6 +88,8 @@ const spanish: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: 'plano de enfoque',
     toolbarDrawerShortcutsFocusParent: 'plano parent',
     toolbarDrawerShortcutsRefreshPlane: 'actualizar plano',
+    toolbarDrawerShortcutsIsolatePlane: 'aislar plano',
+    toolbarDrawerShortcutsOpenClosedPlane: 'plano cerrado abierto',
     toolbarDrawerShortcutsClosePlane: 'plano cercano',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ o desplazarse hacia arriba',

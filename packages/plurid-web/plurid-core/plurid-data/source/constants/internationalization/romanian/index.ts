@@ -88,6 +88,8 @@ const romanian: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: 'focus plan',
     toolbarDrawerShortcutsFocusParent: 'focus părinte',
     toolbarDrawerShortcutsRefreshPlane: 'restaurare plan',
+    toolbarDrawerShortcutsIsolatePlane: 'izolare plane',
+    toolbarDrawerShortcutsOpenClosedPlane: 'deschidere plan închis',
     toolbarDrawerShortcutsClosePlane: 'închidere plan',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ sau scroll sus',

@@ -88,6 +88,8 @@ const german: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: 'fokusebene',
     toolbarDrawerShortcutsFocusParent: 'fokus elternteil',
     toolbarDrawerShortcutsRefreshPlane: 'ebene auffrischen',
+    toolbarDrawerShortcutsIsolatePlane: 'ebene isolieren',
+    toolbarDrawerShortcutsOpenClosedPlane: 'offen geschlossen ebene',
     toolbarDrawerShortcutsClosePlane: 'ebene schließen',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ oder nach oben scrollen',

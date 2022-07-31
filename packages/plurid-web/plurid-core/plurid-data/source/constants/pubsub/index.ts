@@ -40,6 +40,8 @@ export const PLURID_PUBSUB_TOPIC = {
 
     NAVIGATE_TO_PLANE: 'space.navigateToPlane',
     REFRESH_PLANE: 'space.refreshPlane',
+    ISOLATE_PLANE: 'space.isolatePlane',
+    OPEN_CLOSED_PLANE: 'space.openClosedPlane',
     CLOSE_PLANE: 'space.closePlane',
 } as const;
 

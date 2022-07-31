@@ -88,6 +88,8 @@ const chinese: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: '焦平面',
     toolbarDrawerShortcutsFocusParent: '焦點父母',
     toolbarDrawerShortcutsRefreshPlane: '刷新平面',
+    toolbarDrawerShortcutsIsolatePlane: '隔離平面',
+    toolbarDrawerShortcutsOpenClosedPlane: '開閉平面',
     toolbarDrawerShortcutsClosePlane: '關閉平面',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ 或向上滚动',

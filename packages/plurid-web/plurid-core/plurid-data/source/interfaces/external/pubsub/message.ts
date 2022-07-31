@@ -298,6 +298,30 @@ export interface PluridPubSubSubscribeMessageRefreshPlane {
     callback: PluridPubSubCallback<PluridPubSubMessageRefreshPlane>;
 }
 
+export interface PluridPubSubMessageIsolatePlane {
+    id: string;
+}
+export interface PluridPubSubPublishMessageIsolatePlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.ISOLATE_PLANE;
+    data: PluridPubSubMessageIsolatePlane;
+}
+export interface PluridPubSubSubscribeMessageIsolatePlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.ISOLATE_PLANE;
+    callback: PluridPubSubCallback<PluridPubSubMessageIsolatePlane>;
+}
+
+export interface PluridPubSubMessageOpenClosedPlane {
+    id: string;
+}
+export interface PluridPubSubPublishMessageOpenClosedPlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE;
+    data: PluridPubSubMessageOpenClosedPlane;
+}
+export interface PluridPubSubSubscribeMessageOpenClosedPlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE;
+    callback: PluridPubSubCallback<PluridPubSubMessageOpenClosedPlane>;
+}
+
 export interface PluridPubSubMessageClosePlane {
     id: string;
 }
@@ -341,6 +365,8 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageViewRemovePlane
     | PluridPubSubPublishMessageNavigateToPlane
     | PluridPubSubPublishMessageRefreshPlane
+    | PluridPubSubPublishMessageIsolatePlane
+    | PluridPubSubPublishMessageOpenClosedPlane
     | PluridPubSubPublishMessageClosePlane
     ;
 
@@ -375,6 +401,8 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageViewRemovePlane
     | PluridPubSubSubscribeMessageNavigateToPlane
     | PluridPubSubSubscribeMessageRefreshPlane
+    | PluridPubSubSubscribeMessageIsolatePlane
+    | PluridPubSubSubscribeMessageOpenClosedPlane
     | PluridPubSubSubscribeMessageClosePlane
     ;
 // #endregion module

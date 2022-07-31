@@ -88,6 +88,8 @@ const english: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: 'focus plane',
     toolbarDrawerShortcutsFocusParent: 'focus parent',
     toolbarDrawerShortcutsRefreshPlane: 'refresh plane',
+    toolbarDrawerShortcutsIsolatePlane: 'isolate plane',
+    toolbarDrawerShortcutsOpenClosedPlane: 'open closed plane',
     toolbarDrawerShortcutsClosePlane: 'close plane',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ or scroll up',

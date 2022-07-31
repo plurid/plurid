@@ -177,6 +177,16 @@ export const shortcutsNames: ShortcutNames = {
         key: 'r',
         modifier: keyModifiers.ALT,
     },
+    ISOLATE_PLANE: {
+        name: internationalizationFields.toolbarDrawerShortcutsIsolatePlane,
+        key: 'e',
+        modifier: keyModifiers.ALT,
+    },
+    OPEN_CLOSED_PLANE: {
+        name: internationalizationFields.toolbarDrawerShortcutsOpenClosedPlane,
+        key: 't',
+        modifier: [keyModifiers.ALT, keyModifiers.SHIFT],
+    },
     CLOSE_PLANE: {
         name: internationalizationFields.toolbarDrawerShortcutsClosePlane,
         key: 'w',
@@ -311,22 +321,32 @@ export const defaultShortcuts = [
     {
         type: SHORTCUTS.FOCUS_PLANE,
         key: 'f',
-        modifier: KEY_MODIFIERS.ALT
+        modifier: KEY_MODIFIERS.ALT,
     },
     {
         type: SHORTCUTS.FOCUS_PARENT,
         key: 'b',
-        modifier: KEY_MODIFIERS.ALT
+        modifier: KEY_MODIFIERS.ALT,
     },
     {
         type: SHORTCUTS.REFRESH_PLANE,
         key: 'r',
-        modifier: KEY_MODIFIERS.ALT
+        modifier: KEY_MODIFIERS.ALT,
+    },
+    {
+        type: SHORTCUTS.ISOLATE_PLANE,
+        key: 'e',
+        modifier: KEY_MODIFIERS.ALT,
+    },
+    {
+        type: SHORTCUTS.OPEN_CLOSED_PLANE,
+        key: 't',
+        modifier: [KEY_MODIFIERS.ALT, KEY_MODIFIERS.SHIFT],
     },
     {
         type: SHORTCUTS.CLOSE_PLANE,
         key: 'w',
-        modifier: KEY_MODIFIERS.ALT
+        modifier: KEY_MODIFIERS.ALT,
     },
 ];
 // #endregion module

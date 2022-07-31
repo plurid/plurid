@@ -88,6 +88,8 @@ const hindi: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: 'फोकस प्लेन',
     toolbarDrawerShortcutsFocusParent: 'ध्यान माता-पिता',
     toolbarDrawerShortcutsRefreshPlane: 'ताज़ा विमान',
+    toolbarDrawerShortcutsIsolatePlane: 'अलग विमान',
+    toolbarDrawerShortcutsOpenClosedPlane: 'खुला बंद विमान',
     toolbarDrawerShortcutsClosePlane: 'बंद विमान',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ या स्क्रॉल करें',

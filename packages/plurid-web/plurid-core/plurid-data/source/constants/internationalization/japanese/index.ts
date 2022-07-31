@@ -88,6 +88,8 @@ const japanese: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: 'フォーカス プレーン',
     toolbarDrawerShortcutsFocusParent: 'フォーカスの親',
     toolbarDrawerShortcutsRefreshPlane: '飛行機をリフレッシュ',
+    toolbarDrawerShortcutsIsolatePlane: '分離平面',
+    toolbarDrawerShortcutsOpenClosedPlane: '閉じた平面を開く',
     toolbarDrawerShortcutsClosePlane: '平面を閉じる',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ または上にスクロールします',

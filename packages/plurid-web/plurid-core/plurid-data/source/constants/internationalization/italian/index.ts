@@ -88,6 +88,8 @@ const italian: Internationalization = {
     toolbarDrawerShortcutsFocusPlane: 'piano attivo',
     toolbarDrawerShortcutsFocusParent: 'piano genitore',
     toolbarDrawerShortcutsRefreshPlane: 'ristorare piano',
+    toolbarDrawerShortcutsIsolatePlane: 'isolare il piano',
+    toolbarDrawerShortcutsOpenClosedPlane: 'piano chiuso aperto',
     toolbarDrawerShortcutsClosePlane: 'vicino piano',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ o scorrere verso l\'alto',

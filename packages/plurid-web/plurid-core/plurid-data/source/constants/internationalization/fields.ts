@@ -79,6 +79,8 @@ const internationalizationFields = {
     toolbarDrawerShortcutsFocusPlane: 'toolbarDrawerShortcutsFocusPlane',
     toolbarDrawerShortcutsFocusParent: 'toolbarDrawerShortcutsFocusParent',
     toolbarDrawerShortcutsRefreshPlane: 'toolbarDrawerShortcutsRefreshPlane',
+    toolbarDrawerShortcutsIsolatePlane: 'toolbarDrawerShortcutsIsolatePlane',
+    toolbarDrawerShortcutsOpenClosedPlane: 'toolbarDrawerShortcutsOpenClosedPlane',
     toolbarDrawerShortcutsClosePlane: 'toolbarDrawerShortcutsClosePlane',
 
     toolbarDrawerShortcutsArrowOrScrollUp: 'toolbarDrawerShortcutsArrowOrScrollUp',
