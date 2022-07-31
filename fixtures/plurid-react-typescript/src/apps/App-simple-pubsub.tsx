@@ -80,11 +80,13 @@ const App = () => {
                 elements: {
                     plane: {
                         controls: {
-                            show: false,
+                            // show: false,
                         },
                     },
                 },
             }}
+            // hostname={'localhost:3000'}
+            // hostname={window.location.host}
         />
     );
 }
