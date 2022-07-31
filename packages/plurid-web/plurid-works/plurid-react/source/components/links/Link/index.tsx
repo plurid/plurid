@@ -416,6 +416,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             return;
         }
 
+        // Clear plane isolation if any.
+        dispatchSetSpaceField({
+            field: 'isolatePlane',
+            value: '',
+        });
+
         navigateToPluridPlane(
             dispatch,
             updatedPlane,
