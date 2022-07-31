@@ -88,6 +88,11 @@ export const navigateToPluridPlane = (
         ...transform,
     });
 
+    dispatchSetSpaceField({
+        field: 'isolatePlane',
+        value: '',
+    });
+
     setTimeout(() => {
         dispatchSetSpaceField({
             field: 'activePlaneID',
