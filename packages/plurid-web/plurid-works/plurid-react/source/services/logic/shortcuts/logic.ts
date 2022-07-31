@@ -1,6 +1,5 @@
 // #region imports
     // #region libraries
-
     import {
         PLURID_PUBSUB_TOPIC,
 
@@ -38,6 +37,36 @@ export const refreshActivePlane = (
 }
 
 
+export const isolateActivePlane = (
+    state: AppState,
+    pubsub: IPluridPubSub,
+) => {
+    const {
+        activePlaneID: id,
+    } = state.space;
+
+    if (!id) {
+        return;
+    }
+
+    pubsub.publish({
+        topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
+        data: {
+            id,
+        },
+    });
+}
+
+
+export const openClosedPlane = (
+    pubsub: IPluridPubSub,
+) => {
+    pubsub.publish({
+        topic: PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE,
+    });
+}
+
+
 export const closeActivePlane = (
     state: AppState,
     pubsub: IPluridPubSub,
@@ -56,21 +85,5 @@ export const closeActivePlane = (
             id,
         },
     });
-}
-
-
-export const restoreClosedPlane = (
-    state: AppState,
-    pubsub: IPluridPubSub,
-) => {
-    // TOIMPLEMENT
-}
-
-
-export const isolateActivePlane = (
-    state: AppState,
-    pubsub: IPluridPubSub,
-) => {
-    // TOIMPLEMENT
 }
 // #endregion module
