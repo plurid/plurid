@@ -310,16 +310,12 @@ export interface PluridPubSubSubscribeMessageIsolatePlane {
     callback: PluridPubSubCallback<PluridPubSubMessageIsolatePlane>;
 }
 
-export interface PluridPubSubMessageOpenClosedPlane {
-    id: string;
-}
 export interface PluridPubSubPublishMessageOpenClosedPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE;
-    data: PluridPubSubMessageOpenClosedPlane;
 }
 export interface PluridPubSubSubscribeMessageOpenClosedPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE;
-    callback: PluridPubSubCallback<PluridPubSubMessageOpenClosedPlane>;
+    callback: PluridPubSubCallback<any>;
 }
 
 export interface PluridPubSubMessageClosePlane {
