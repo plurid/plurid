@@ -371,6 +371,7 @@ export interface State {
     view: PluridApplicationView;
     culledView: PluridApplicationView;
     activePlaneID: string;
+    isolatePlane: string;
 }
 
 

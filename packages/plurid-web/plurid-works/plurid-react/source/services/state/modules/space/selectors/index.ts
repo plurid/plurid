@@ -44,6 +44,7 @@ const getViewSize = (state: AppState) => state.space.viewSize;
 const getCulledView = (state: AppState) => state.space.culledView;
 
 const getActivePlaneID = (state: AppState) => state.space.activePlaneID;
+const getIsolatePlane = (state: AppState) => state.space.isolatePlane;
 // #endregion module
 
 
@@ -74,5 +75,6 @@ export default {
     getCulledView,
 
     getActivePlaneID,
+    getIsolatePlane,
 };
 // #endregion exports

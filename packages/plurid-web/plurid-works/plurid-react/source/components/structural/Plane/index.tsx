@@ -84,6 +84,7 @@ export interface PluridPlaneStateProperties {
     stateTree: TreePlane[];
     stateViewSize: ViewSize;
     stateActivePlaneID: string;
+    stateIsolatePlane: string;
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
 }
@@ -118,6 +119,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateTree,
         stateViewSize,
         stateActivePlaneID,
+        stateIsolatePlane,
         stateGeneralTheme,
         stateConfiguration,
         // #endregion state
@@ -202,7 +204,16 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     }
 
     const isolatePlane = () => {
+        const id = stateIsolatePlane !== planeID
+            ? planeID
+            : '';
 
+        defaultPubSub.publish({
+            topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
+            data: {
+                id,
+            },
+        });
     }
 
     const closePlane = () => {
@@ -278,6 +289,21 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // #region render
     // console.log('Render plane');
 
+    // const renderWidth = width;
+    const renderWidth = '100%'; // TOFIX
+
+    const isolatePlaneOpacity = stateIsolatePlane
+        ? stateIsolatePlane === planeID ? '1' : '0'
+        : '1';
+
+    const transform = cleanTemplate(`
+        translateX(${treePlane.location.translateX}px)
+        translateY(${treePlane.location.translateY}px)
+        translateZ(${treePlane.location.translateZ}px)
+        rotateX(${treePlane.location.rotateX}deg)
+        rotateY(${treePlane.location.rotateY}deg)
+    `);
+
     const planeContentProperties = {
         // updatePlaneSize,
     };
@@ -291,15 +317,9 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             show={treePlane.show}
             id={planeID}
             style={{
-                // width,
-                width: '100%', // TOFIX
-                transform: cleanTemplate(`
-                    translateX(${treePlane.location.translateX}px)
-                    translateY(${treePlane.location.translateY}px)
-                    translateZ(${treePlane.location.translateZ}px)
-                    rotateX(${treePlane.location.rotateX}deg)
-                    rotateY(${treePlane.location.rotateY}deg)
-                `),
+                width: renderWidth,
+                transform,
+                opacity: isolatePlaneOpacity,
             }}
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
@@ -365,6 +385,7 @@ const mapStateToProps = (
     stateTree: selectors.space.getTree(state),
     stateViewSize: selectors.space.getViewSize(state),
     stateActivePlaneID: selectors.space.getActivePlaneID(state),
+    stateIsolatePlane: selectors.space.getIsolatePlane(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
 });

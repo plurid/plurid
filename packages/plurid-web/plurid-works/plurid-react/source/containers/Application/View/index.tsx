@@ -126,6 +126,7 @@ export interface ViewDispatchProperties {
     dispatchSetConfigurationMicro: typeof actions.configuration.setConfigurationMicro;
 
     // dispatchSetUniverses: typeof actions.data.setUniverses;
+    dispatchSetSpaceField: typeof actions.space.setSpaceField;
 
     dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
     dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
@@ -205,6 +206,7 @@ const PluridView: React.FC<ViewProperties> = (
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
 
+        dispatchSetSpaceField,
         // dispatchSetSpaceLoading,
         dispatchSetSpaceLocation,
         dispatchSetAnimatedTransform,
@@ -607,6 +609,23 @@ const PluridView: React.FC<ViewProperties> = (
                             dispatch,
                             plane,
                         );
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
+                    callback: (data) => {
+                        const {
+                            id,
+                        } = data;
+
+                        if (typeof id !== 'string') {
+                            return;
+                        }
+
+                        dispatchSetSpaceField({
+                            field: 'isolatePlane',
+                            value: id,
+                        });
                     },
                 },
                 {
@@ -1157,6 +1176,9 @@ const mapDispatchToProperties = (
     // dispatchSetUniverses: (universes: any) => dispatch(
     //     actions.data.setUniverses(universes)
     // ),
+    dispatchSetSpaceField: (payload) => dispatch(
+        actions.space.setSpaceField(payload)
+    ),
     dispatchSpaceSetViewSize: (viewSize: ViewSize) => dispatch(
         actions.space.setViewSize(viewSize)
     ),

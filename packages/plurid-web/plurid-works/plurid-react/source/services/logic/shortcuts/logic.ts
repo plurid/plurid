@@ -43,7 +43,18 @@ export const isolateActivePlane = (
 ) => {
     const {
         activePlaneID: id,
+        isolatePlane,
     } = state.space;
+
+    if (isolatePlane) {
+        pubsub.publish({
+            topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
+            data: {
+                id: '',
+            },
+        });
+        return;
+    }
 
     if (!id) {
         return;
