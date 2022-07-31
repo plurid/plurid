@@ -28,7 +28,6 @@
     import {
         PluridIconArrowLeft,
         PluridIconFrame,
-        PluridIconReset,
 
         PluridIconCopy,
         PluridIconLink,
@@ -59,6 +58,7 @@
 
     // #region internal
     import SearchList from './components/SearchList';
+    import ControlRefresh from './components/ControlRefresh';
 
     import {
         StyledPluridPlaneControls,
@@ -237,12 +237,9 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                     title="focus"
                 />
 
-                <PluridIconReset
-                    atClick={() => {
-                        refreshPlane();
-                    }}
+                <ControlRefresh
                     theme={stateGeneralTheme}
-                    title="refresh"
+                    refreshPlane={refreshPlane}
                 />
             </StyledPluridPlaneControlsLeft>
 
