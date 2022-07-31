@@ -4,6 +4,7 @@ export * from './configuration';
 export * from './defaults';
 export * from './entities';
 export * from './events';
+export * from './general';
 export * from './internationalization';
 export * from './keys';
 export * from './protocols';
