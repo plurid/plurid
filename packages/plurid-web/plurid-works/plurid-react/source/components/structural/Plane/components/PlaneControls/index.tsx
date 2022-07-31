@@ -244,7 +244,9 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
             </StyledPluridPlaneControlsLeft>
 
             <StyledPluridPlaneControlsCenter>
-                <PluridTextline
+                {path}
+
+                {/* <PluridTextline
                     theme={stateInteractionTheme}
                     // text={showAddress ? gatewayAddress : path}
                     // text={treePlane.route}
@@ -252,7 +254,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                     atChange={onPathInput}
                     atKeyDown={handleOnKeyDown}
                     ariaLabel="Plurid Pathbar"
-                />
+                /> */}
 
                 {/* {showSearch && (
                     <SearchList
