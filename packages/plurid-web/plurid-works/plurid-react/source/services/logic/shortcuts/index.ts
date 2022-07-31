@@ -10,10 +10,12 @@
 
     import {
         TRANSFORM_MODES,
+        directions,
 
         PluridConfigurationSpaceTransformLocks,
 
         PluridPubSub as IPluridPubSub,
+        TransformModes,
     } from '@plurid/plurid-data';
 
     import {
@@ -47,21 +49,6 @@
 const {
     direction: directionLogic,
 } = interaction;
-
-
-const directions = {
-    left: 'left',
-    right: 'right',
-    up: 'up',
-    down: 'down',
-};
-
-
-export interface Modes {
-    rotation: boolean;
-    translation: boolean;
-    scale: boolean;
-}
 
 
 export const handleGlobalShortcuts = (
@@ -298,6 +285,11 @@ export const handleGlobalShortcuts = (
         return;
     }
 
+    if (event.altKey && event.shiftKey && event.code === 'KeyT') {
+        // restore closed plane?
+        return;
+    }
+
 
     return;
 }
@@ -307,7 +299,7 @@ export const handleGlobalShortcuts = (
 export const handleGlobalWheel = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: WheelEvent,
-    modes: Modes,
+    modes: TransformModes,
     locks: PluridConfigurationSpaceTransformLocks,
 ) => {
     if (event.shiftKey
