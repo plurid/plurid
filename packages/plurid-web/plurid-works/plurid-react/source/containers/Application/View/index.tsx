@@ -29,6 +29,7 @@
         PluridView,
         TreePlane,
         PluridPubSub as IPluridPubSub,
+        PluridPubSubSubscribeMessage,
         PluridApplicationView,
     } from '@plurid/plurid-data';
 
@@ -378,266 +379,265 @@ const PluridView: React.FC<ViewProperties> = (
         const handlePubSubSubscribe = (
             pubsub: IPluridPubSub,
         ) => {
-            const configurationIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.CONFIGURATION,
-                callback: (data) => {
-                    if ((data as any).internal) {
-                        return;
-                    }
-
-                    const computedConfiguration = generalEngine.configuration.merge(
-                        data,
-                        stateConfiguration,
-                    );
-
-                    // Handle themes
-                    if (typeof computedConfiguration.global.theme === 'object') {
-                        if (typeof computedConfiguration.global.theme.general === 'string') {
-                            dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme.general]);
-                        } else {
-                            dispatchSetGeneralTheme(computedConfiguration.global.theme.general);
+            const subscriptions: PluridPubSubSubscribeMessage[] = [
+                {
+                    topic: PLURID_PUBSUB_TOPIC.CONFIGURATION,
+                    callback: (data) => {
+                        if ((data as any).internal) {
+                            return;
                         }
 
-                        if (typeof computedConfiguration.global.theme.interaction === 'string') {
-                            dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme.interaction]);
-                        } else {
-                            dispatchSetInteractionTheme(computedConfiguration.global.theme.interaction);
-                        }
-                    } else if (typeof computedConfiguration.global.theme === 'string') {
-                        dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme]);
-                        dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme]);
-                    }
-
-
-                    dispatchSetConfiguration(computedConfiguration);
-                },
-            });
-
-            const spaceTransformIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
-                callback: (data) => {
-                    const {
-                        value,
-                        internal,
-                    } = data;
-
-                    if (internal) {
-                        return;
-                    }
-
-                    dispatchSetSpaceLocation(value);
-                },
-            });
-
-            const spaceAnimatedTransformIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM,
-                callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-
-                    dispatchSetAnimatedTransform(value.active);
-
-                    if (value.time) {
-                        dispatchSetTransformTime(value.time);
-                    } else {
-                        dispatchSetTransformTime(450);
-                    }
-                },
-            });
-
-
-            const spaceRotateXWithIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
-                callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchRotateXWith(value);
-                },
-            });
-
-            const spaceRotateXToIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO,
-                callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchRotateX(value);
-                }
-            });
-
-
-            const spaceRotateYWithIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH,
-                callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchRotateYWith(value);
-                },
-            });
-
-            const spaceRotateYToIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO,
-                callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchRotateY(value);
-                },
-            });
-
-
-            const spaceTranslateXWithIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH,
-                callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchTranslateXWith(value);
-                },
-            });
-
-            // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_TO, (data) => {
-            //     const {
-            //         value,
-            //     } = data;
-            //     dispatchTranslateX(value);
-            // });
-
-            const spaceTranslateYWithIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_WITH,
-                callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchTranslateYWith(value);
-                },
-            });
-
-            // pubsub.subscribe(PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_TO, (data) => {
-            //     const {
-            //         value,
-            //     } = data;
-            //     dispatchTranslateY(value);
-            // });
-
-
-            const viewAddPlaneIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
-                callback: (data) => {
-                    const {
-                        plane,
-                    } = data;
-
-                    const updatedView = [
-                        ...stateSpaceView,
-                        plane,
-                    ];
-                    dispatchSpaceSetView(updatedView);
-
-                    treeUpdate(updatedView);
-                },
-            });
-
-            const viewSetPlanesIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
-                callback: (data) => {
-                    const {
-                        view,
-                    } = data;
-
-                    dispatchSpaceSetView([
-                        ...view,
-                    ]);
-
-                    treeUpdate(view);
-                },
-            });
-
-            const viewRemovePlaneIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
-                callback: (data) => {
-                    const {
-                        plane,
-                    } = data;
-
-                    /** TODO
-                     * a less naive filtering
-                     */
-                    const updatedView = stateSpaceView.filter(view => {
-                        if (typeof view === 'string') {
-                            return view === plane;
-                        }
-
-                        return true;
-                    });
-
-                    dispatchSpaceSetView(updatedView);
-
-                    treeUpdate(updatedView);
-                },
-            });
-
-
-            const navigateToPlaneIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
-                callback: (data) => {
-                    const {
-                        id,
-                    } = data;
-
-                    const plane = space.tree.logic.getTreePlaneByID(
-                        stateTree,
-                        id,
-                    );
-
-                    navigateToPluridPlane(
-                        dispatch,
-                        plane,
-                    );
-                },
-            });
-
-            const closePlaneIndex = pubsub.subscribe({
-                topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
-                callback: (data) => {
-                    const {
-                        id,
-                    } = data;
-
-                    const treePlane = stateTree.find(plane => plane.planeID === id);
-                    if (treePlane) {
-                        const {
-                            updatedTree,
-                        } = space.tree.logic.removeRootFromTree(
-                            stateTree,
-                            treePlane.planeID,
+                        const computedConfiguration = generalEngine.configuration.merge(
+                            data,
+                            stateConfiguration,
                         );
-                        dispatchSetTree(updatedTree);
-                    }
+
+                        // Handle themes
+                        if (typeof computedConfiguration.global.theme === 'object') {
+                            if (typeof computedConfiguration.global.theme.general === 'string') {
+                                dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme.general]);
+                            } else {
+                                dispatchSetGeneralTheme(computedConfiguration.global.theme.general);
+                            }
+
+                            if (typeof computedConfiguration.global.theme.interaction === 'string') {
+                                dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme.interaction]);
+                            } else {
+                                dispatchSetInteractionTheme(computedConfiguration.global.theme.interaction);
+                            }
+                        } else if (typeof computedConfiguration.global.theme === 'string') {
+                            dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme]);
+                            dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme]);
+                        }
+
+
+                        dispatchSetConfiguration(computedConfiguration);
+                    },
                 },
-            });
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
+                    callback: (data) => {
+                        const {
+                            value,
+                            internal,
+                        } = data;
 
+                        if (internal) {
+                            return;
+                        }
 
-            const indexes = [
-                configurationIndex,
-                spaceTransformIndex,
-                spaceAnimatedTransformIndex,
-                spaceRotateXWithIndex,
-                spaceRotateXToIndex,
-                spaceRotateYWithIndex,
-                spaceRotateYToIndex,
-                spaceTranslateXWithIndex,
-                spaceTranslateYWithIndex,
-                viewAddPlaneIndex,
-                viewSetPlanesIndex,
-                viewRemovePlaneIndex,
-                navigateToPlaneIndex,
-                closePlaneIndex,
+                        dispatchSetSpaceLocation(value);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+
+                        dispatchSetAnimatedTransform(value.active);
+
+                        if (value.time) {
+                            dispatchSetTransformTime(value.time);
+                        } else {
+                            dispatchSetTransformTime(450);
+                        }
+                    },
+                },
+
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        dispatchRotateXWith(value);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        dispatchRotateX(value);
+                    },
+                },
+
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        dispatchRotateYWith(value);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        dispatchRotateY(value);
+                    },
+                },
+
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        dispatchTranslateXWith(value);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_TO,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        // dispatchTranslateXTo(value);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_WITH,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        dispatchTranslateYWith(value);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_TO,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        // dispatchTranslateYTo(value);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Z_WITH,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        dispatchTranslateZWith(value);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Z_TO,
+                    callback: (data) => {
+                        const {
+                            value,
+                        } = data;
+                        // dispatchTranslateZTo(value);
+                    },
+                },
+
+                {
+                    topic: PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
+                    callback: (data) => {
+                        const {
+                            plane,
+                        } = data;
+
+                        const updatedView = [
+                            ...stateSpaceView,
+                            plane,
+                        ];
+                        dispatchSpaceSetView(updatedView);
+
+                        treeUpdate(updatedView);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
+                    callback: (data) => {
+                        const {
+                            view,
+                        } = data;
+
+                        dispatchSpaceSetView([
+                            ...view,
+                        ]);
+
+                        treeUpdate(view);
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
+                    callback: (data) => {
+                        const {
+                            plane,
+                        } = data;
+
+                        /** TODO
+                         * a less naive filtering
+                         */
+                        const updatedView = stateSpaceView.filter(view => {
+                            if (typeof view === 'string') {
+                                return view === plane;
+                            }
+
+                            return true;
+                        });
+
+                        dispatchSpaceSetView(updatedView);
+
+                        treeUpdate(updatedView);
+                    },
+                },
+
+                {
+                    topic: PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
+                    callback: (data) => {
+                        const {
+                            id,
+                        } = data;
+
+                        const plane = space.tree.logic.getTreePlaneByID(
+                            stateTree,
+                            id,
+                        );
+
+                        navigateToPluridPlane(
+                            dispatch,
+                            plane,
+                        );
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
+                    callback: (data) => {
+                        const {
+                            id,
+                        } = data;
+
+                        const treePlane = stateTree.find(plane => plane.planeID === id);
+                        if (treePlane) {
+                            const {
+                                updatedTree,
+                            } = space.tree.logic.removeRootFromTree(
+                                stateTree,
+                                treePlane.planeID,
+                            );
+                            dispatchSetTree(updatedTree);
+                        }
+                    },
+                }
             ];
 
+            const indexes: string[] = [];
+
+            for (const subscription of subscriptions) {
+                const index = pubsub.subscribe(subscription);
+                indexes.push(index);
+            }
 
             return () => {
                 for (const index of indexes) {
