@@ -1,11 +1,4 @@
 // #region imports
-    // #region external
-    import {
-        PluridPubSubTopicKeysType,
-    } from '~constants/pubsub';
-    // #endregion external
-
-
     // #region internal
     import {
         PluridPubSubPublishMessage,
@@ -20,11 +13,9 @@
 export * from './message';
 
 
-
 export interface PluridPubSubOptions {
     debug?: boolean;
 }
-
 
 
 export interface PluridPubSub {
@@ -33,10 +24,9 @@ export interface PluridPubSub {
     ): void;
     subscribe(
         message: PluridPubSubSubscribeMessage,
-    ): number;
+    ): string;
     unsubscribe(
-        index: number,
-        topic: PluridPubSubTopicKeysType,
+        selector: string,
     ): boolean;
 }
 // #endregion module
