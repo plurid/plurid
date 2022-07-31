@@ -13,6 +13,7 @@
 
     // #region internal
     import {
+        SUBSCRIPTION_PREFIX,
         SELECTOR_SEPARATOR,
     } from './data';
     // #endregion internal
@@ -22,7 +23,7 @@
 
 // #region module
 class PluridPubSub implements IPluridPubSub {
-    private subscriptions: Map<any, PluridPubSubCallback[] | undefined> = new Map();
+    private subscriptions: Map<any, Record<string, PluridPubSubCallback> | undefined> = new Map();
     private options: PluridPubSubOptions | undefined;
 
 
@@ -35,7 +36,7 @@ class PluridPubSub implements IPluridPubSub {
 
     private createSelector(
         topic: PluridPubSubTopicKeysType,
-        value: number,
+        value: string,
     ) {
         return topic + SELECTOR_SEPARATOR + value;
     }
@@ -43,10 +44,12 @@ class PluridPubSub implements IPluridPubSub {
     private parseSelector(
         selector: string,
     ) {
-        const [topic, idx] = selector.split(SELECTOR_SEPARATOR) as [PluridPubSubTopicKeysType, string];
-        const index = parseInt(idx);
+        const [
+            topic,
+            index,
+        ] = selector.split(SELECTOR_SEPARATOR) as [PluridPubSubTopicKeysType, string];
 
-        if (!topic || typeof index !== 'number') {
+        if (!topic || !index) {
             return;
         }
 
@@ -54,6 +57,25 @@ class PluridPubSub implements IPluridPubSub {
             topic,
             index,
         };
+    }
+
+    private composeIndex(
+        value: number,
+    ) {
+        return SUBSCRIPTION_PREFIX + value;
+    }
+
+    private getNextIndex(
+        subscriptions: Record<string, PluridPubSubCallback<any>>,
+    ) {
+        const index = Object.keys(subscriptions).length !== 0
+            ? Math.max(
+                ...Object.keys(subscriptions).map(
+                    (val) => parseInt(val.replace(SUBSCRIPTION_PREFIX, '')),
+                ),
+            ) + 1 : 0;
+
+        return this.composeIndex(index);
     }
 
 
@@ -66,12 +88,11 @@ class PluridPubSub implements IPluridPubSub {
         } = message;
 
         const subscriptions = this.subscriptions.get(topic);
-
         if (!subscriptions) {
             return;
         }
 
-        for (const subscription of subscriptions) {
+        for (const subscription of Object.values(subscriptions)) {
             try {
                 subscription(data);
             } catch (error) {
@@ -95,25 +116,16 @@ class PluridPubSub implements IPluridPubSub {
             callback,
         } = message;
 
-        if (this.subscriptions.has(topic)) {
-            const subscriptions = this.subscriptions.get(topic);
-            subscriptions?.push(callback);
-            this.subscriptions.set(
-                topic,
-                subscriptions,
-            );
+        const subscriptions = this.subscriptions.get(topic) || {};
+        const index = this.getNextIndex(subscriptions);
 
-            const value = (subscriptions?.length || 1) - 1;
-
-            return this.createSelector(topic, value);
-        }
-
+        subscriptions[index] = callback;
         this.subscriptions.set(
             topic,
-            [callback],
+            subscriptions,
         );
 
-        return this.createSelector(topic, 0);
+        return this.createSelector(topic, index);
     }
 
     public unsubscribe(
@@ -132,20 +144,17 @@ class PluridPubSub implements IPluridPubSub {
         let unsubscribed = false;
 
         if (this.subscriptions.has(topic)) {
-            const updatedTopic = this.subscriptions.get(topic)?.filter(
-                (_, idx) => {
-                    if (idx === index) {
-                        unsubscribed = true;
-                        return false;
-                    }
+            const subscriptions = this.subscriptions.get(topic);
+            if (!subscriptions) {
+                return unsubscribed;
+            }
 
-                    return true;
-                },
-            );
+            delete subscriptions[index];
+            unsubscribed = true;
 
             this.subscriptions.set(
                 topic,
-                updatedTopic,
+                subscriptions,
             );
         }
 
