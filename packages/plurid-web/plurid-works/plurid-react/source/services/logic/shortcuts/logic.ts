@@ -57,4 +57,20 @@ export const closeActivePlane = (
         },
     });
 }
+
+
+export const restoreClosedPlane = (
+    state: AppState,
+    pubsub: IPluridPubSub,
+) => {
+    // TOIMPLEMENT
+}
+
+
+export const isolateActivePlane = (
+    state: AppState,
+    pubsub: IPluridPubSub,
+) => {
+    // TOIMPLEMENT
+}
 // #endregion module

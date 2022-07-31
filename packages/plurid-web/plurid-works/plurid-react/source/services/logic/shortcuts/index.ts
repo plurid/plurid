@@ -39,6 +39,8 @@
     import {
         closeActivePlane,
         refreshActivePlane,
+        restoreClosedPlane,
+        isolateActivePlane,
     } from './logic';
     // #endregion internal
 // #endregion imports
@@ -286,7 +288,18 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.altKey && event.shiftKey && event.code === 'KeyT') {
-        // restore closed plane?
+        restoreClosedPlane(
+            state,
+            pubsub,
+        );
+        return;
+    }
+
+    if (event.altKey && event.shiftKey && event.code === 'KeyE') {
+        isolateActivePlane(
+            state,
+            pubsub,
+        );
         return;
     }
 
