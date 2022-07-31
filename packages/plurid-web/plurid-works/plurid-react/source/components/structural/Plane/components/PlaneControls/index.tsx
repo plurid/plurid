@@ -15,7 +15,6 @@
         PLURID_ENTITY_PLANE_CONTROLS,
 
         /** interfaces */
-        PluridPlane,
         RegisteredPluridPlane,
         TreePlane,
         PluridConfiguration,
@@ -28,8 +27,6 @@
     import {
         PluridIconArrowLeft,
         PluridIconFrame,
-        PluridIconDocuments,
-
         // PluridIconCopy,
         // PluridIconLink,
         PluridIconDelete,
@@ -60,6 +57,7 @@
     // #region internal
     // import SearchList from './components/SearchList';
     import ControlRefresh from './components/ControlRefresh';
+    import ControlIsolate from './components/ControlIsolate';
 
     import {
         StyledPluridPlaneControls,
@@ -94,6 +92,7 @@ export interface PluridPlaneControlsStateProperties {
     configuration: PluridConfiguration;
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
+    stateIsolatePlane: string;
 }
 
 export interface PluridPlaneControlsDispatchProperties {
@@ -124,7 +123,8 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
         // #region state
         configuration,
         stateGeneralTheme,
-        stateInteractionTheme,
+        // stateInteractionTheme,
+        stateIsolatePlane,
         // #endregion state
 
         // #region dispatch
@@ -146,6 +146,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     } = elements.plane.controls;
 
     const {
+        planeID,
         route,
         routeDivisions
     } = treePlane;
@@ -158,6 +159,8 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     const gateway = 'gateway';
 
     const gatewayAddress = `${protocol}://${host.value}/${gateway}?plurid=` + encodeURIComponent(route);
+
+    const isolated = stateIsolatePlane === planeID;
     // #endregion properties
 
 
@@ -245,12 +248,10 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                     refreshPlane={refreshPlane}
                 />
 
-                <PluridIconDocuments
-                    atClick={() => {
-                        isolatePlane();
-                    }}
+                <ControlIsolate
                     theme={stateGeneralTheme}
-                    title="isolate"
+                    isolated={isolated}
+                    isolatePlane={isolatePlane}
                 />
             </StyledPluridPlaneControlsLeft>
 
@@ -303,6 +304,7 @@ const mapStateToProps = (
     configuration: selectors.configuration.getConfiguration(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
+    stateIsolatePlane: selectors.space.getIsolatePlane(state),
 });
 
 
