@@ -233,10 +233,13 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
 
                 <PluridIconFrame
                     atClick={(event) => {
+                        const deisolate = false;
+
                         navigateToPluridPlane(
                             dispatch,
                             treePlane,
                             event,
+                            deisolate,
                         );
                     }}
                     theme={stateGeneralTheme}

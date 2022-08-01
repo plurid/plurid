@@ -50,6 +50,7 @@ export const navigateToPluridPlane = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     plane: TreePlane | undefined,
     event?: React.MouseEvent,
+    deisolate: boolean = true,
 ) => {
     if (event && (event.ctrlKey || event.metaKey)) {
         // Only navigate at pure link click.
@@ -88,10 +89,12 @@ export const navigateToPluridPlane = (
         ...transform,
     });
 
-    dispatchSetSpaceField({
-        field: 'isolatePlane',
-        value: '',
-    });
+    if (deisolate) {
+        dispatchSetSpaceField({
+            field: 'isolatePlane',
+            value: '',
+        });
+    }
 
     setTimeout(() => {
         dispatchSetSpaceField({
