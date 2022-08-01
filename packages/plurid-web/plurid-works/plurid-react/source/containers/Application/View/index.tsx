@@ -671,6 +671,12 @@ const PluridView: React.FC<ViewProperties> = (
 
                             dispatchSetTree(updatedTree);
 
+                            setTimeout(() => {
+                                // HACK
+                                // force the tree to update with show: false
+                                dispatchSetTree(updatedTree);
+                            }, 50);
+
                             dispatchSetSpaceField({
                                 field: 'lastClosedPlane',
                                 value: id,
