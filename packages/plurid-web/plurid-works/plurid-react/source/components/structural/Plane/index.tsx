@@ -103,6 +103,19 @@ export type PluridPlaneProperties =
 const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     properties,
 ) => {
+    // #region context
+    const context = useContext(Context);
+    if (!context) {
+        return (<></>);
+    }
+
+    const {
+        planeRenderError,
+        defaultPubSub,
+    } = context;
+    // #endregion context
+
+
     // #region properties
     const {
         // #region required
@@ -156,19 +169,6 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         treePlane.parentPlaneID,
     );
     // #endregion properties
-
-
-    // #region context
-    const context = useContext(Context);
-    if (!context) {
-        return (<></>);
-    }
-
-    const {
-        planeRenderError,
-        defaultPubSub,
-    } = context;
-    // #endregion context
 
 
     // #region state
@@ -277,7 +277,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
 
     // #region effects
-    /** Refresh plane */
+    /** PubSub refresh plane */
     useEffect(() => {
         const refreshPlaneIndex = defaultPubSub.subscribe({
             topic: PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
