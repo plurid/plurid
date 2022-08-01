@@ -249,6 +249,18 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         },
         500,
     );
+
+    const computeIsolatePlaneOpacity = () => {
+        if (!treePlane.show || !stateIsolatePlane) {
+            return;
+        }
+
+        if (stateIsolatePlane === planeID) {
+            return '1';
+        }
+
+        return '0';
+    }
     // #endregion handlers
 
 
@@ -288,14 +300,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     // #region render
     // console.log('Render plane');
-
+    const key = planeID + '-' + remountKey;
     // const renderWidth = width;
     const renderWidth = '100%'; // TOFIX
-
-    const isolatePlaneOpacity = stateIsolatePlane
-        ? stateIsolatePlane === planeID ? '1' : '0'
-        : '1';
-
+    const isolatePlaneOpacity = computeIsolatePlaneOpacity();
     const transform = cleanTemplate(`
         translateX(${treePlane.location.translateX}px)
         translateY(${treePlane.location.translateY}px)
@@ -310,7 +318,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     return (
         <StyledPluridPlane
-            key={planeID + '-' + remountKey}
+            key={key}
             theme={stateGeneralTheme}
             planeControls={showPlaneControls}
             planeOpacity={planeOpacity}
