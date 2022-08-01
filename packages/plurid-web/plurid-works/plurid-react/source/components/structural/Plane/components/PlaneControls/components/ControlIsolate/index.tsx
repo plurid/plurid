@@ -8,8 +8,7 @@
     } from '@plurid/plurid-themes';
 
     import {
-        PluridIconDocuments,
-        PluridIconExit,
+        PluridIconRectangle,
     } from '@plurid/plurid-icons-react';
     // #endregion libraries
 // #region imports
@@ -50,16 +49,17 @@ const ControlIsolate: React.FC<ControlIsolateProperties> = (
 
 
     // #region render
-    const Icon = isolated ? PluridIconExit : PluridIconDocuments;
     const title = isolated ? 'isolated' : 'isolate';
+    const fill = isolated ? true : false;
 
     return (
-        <Icon
+        <PluridIconRectangle
             atClick={() => {
                 isolatePlane();
             }}
             theme={theme}
             title={title}
+            fill={fill}
         />
     );
     // #endregion render
