@@ -115,7 +115,7 @@ xdescribe('quaternion computation', () => {
     });
 
     it('computes rotation of a point via quaternion', () => {
-        const pointRotate = [5, 10, 15];
+        const pointRotate: [number, number, number] = [5, 10, 15];
         const quaternionCompute = makeQuaternion(0.1, 0.2, 0.3, 0.4);
         const quaternion = rotatePointViaQuaternion(
             pointRotate,
