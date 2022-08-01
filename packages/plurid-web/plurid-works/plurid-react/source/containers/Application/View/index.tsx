@@ -879,6 +879,36 @@ const PluridView: React.FC<ViewProperties> = (
                     break;
             }
         }
+
+        const handlePinch = (
+            event: HammerInput,
+            type: 'in' | 'out',
+        ) => {
+            const {
+                transformMode,
+            } = stateConfiguration.space;
+
+            if (transformMode !== 'TRANSLATION') {
+                return;
+            }
+
+            const direction = type === 'in' ? 1 : -1;
+            const velocity = direction * 20;
+
+            dispatchTranslateZWith(velocity);
+        }
+
+        const handlePinchin = (
+            event: HammerInput,
+        ) => {
+            handlePinch(event, 'in');
+        }
+
+        const handlePinchout = (
+            event: HammerInput,
+        ) => {
+            handlePinch(event, 'out');
+        }
         // #endregion handlers touch
     // #endregion handlers
 
@@ -990,12 +1020,16 @@ const PluridView: React.FC<ViewProperties> = (
                 touch = new Hammer(viewElement.current);
                 touch.get('pan').set({ direction: Hammer.DIRECTION_ALL });
                 touch.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+                touch.get('pinch').set({ enable: true });
 
                 if (transformTouch === TRANSFORM_TOUCHES.PAN) {
                     touch.on('pan', handlePan);
                 } else {
                     touch.on('swipe', handleSwipe);
                 }
+
+                touch.on('pinchin', handlePinchin);
+                touch.on('pinchout', handlePinchout);
             }
 
             handleTouch();
@@ -1014,6 +1048,9 @@ const PluridView: React.FC<ViewProperties> = (
                 } else {
                     touch.off('swipe', handleSwipe);
                 }
+
+                touch.off('pinchin', handlePinchin);
+                touch.off('pinchout', handlePinchout);
             }
         }, [
             viewElement.current,
