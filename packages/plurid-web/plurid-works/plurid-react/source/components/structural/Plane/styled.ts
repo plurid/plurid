@@ -97,4 +97,14 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
 
     transform-origin: 0 0 0;
 `;
+
+
+export const StyledFocusAnchor = styled.a`
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+    pointer-event: none;
+`;
 // #endregion module

@@ -2,6 +2,7 @@
     // #region libraries
     import React, {
         useContext,
+        useRef,
         useState,
         useEffect,
     } from 'react';
@@ -58,6 +59,7 @@
     // #region internal
     import {
         StyledPluridPlane,
+        StyledFocusAnchor,
     } from './styled';
 
     import PlaneBridge from './components/PlaneBridge';
@@ -171,6 +173,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // #endregion properties
 
 
+    // #region references
+    const planeRef = useRef<HTMLDivElement>(null);
+    // #endregion references
+
+
     // #region state
     const [
         remountKey,
@@ -277,6 +284,19 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
 
     // #region effects
+    useEffect(() => {
+        if (!treePlane.show) {
+            return;
+        }
+
+        const focusAnchor: HTMLAnchorElement | null = document.querySelector(`[id='${planeID}-focus']`);
+        if (focusAnchor) {
+            focusAnchor.focus();
+        }
+    }, [
+        treePlane.show,
+    ]);
+
     /** PubSub refresh plane */
     useEffect(() => {
         const refreshPlaneIndex = defaultPubSub.subscribe({
@@ -333,6 +353,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     return (
         <StyledPluridPlane
             key={key}
+            ref={planeRef}
             theme={stateGeneralTheme}
             planeControls={showPlaneControls}
             planeOpacity={planeOpacity}
@@ -353,6 +374,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             data-plurid-plane={planeID}
             data-plurid-entity={PLURID_ENTITY_PLANE}
         >
+            <StyledFocusAnchor
+                tabIndex={0}
+                id={planeID + '-focus'}
+            />
+
             {treePlane.show && (
                 <>
                     {treePlane.parentPlaneID && (
