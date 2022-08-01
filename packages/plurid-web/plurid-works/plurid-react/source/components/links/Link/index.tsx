@@ -588,6 +588,33 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }, []);
 
+    /** PubSub Open Closed Plane */
+    useEffect(() => {
+        const openClosedPlaneIndex = defaultPubSub.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE,
+            callback: () => {
+                if (stateLastClosedPlane === pluridPlaneID) {
+                    togglePlane();
+
+                    dispatchSetSpaceField({
+                        field: 'lastClosedPlane',
+                        value: '',
+                    });
+                }
+            },
+        });
+
+        return () => {
+            defaultPubSub.unsubscribe(
+                openClosedPlaneIndex,
+            );
+        }
+    }, [
+        showLink,
+        pluridPlaneID,
+        JSON.stringify(stateTree),
+    ]);
+
     /** PubSub Close Plane */
     useEffect(() => {
         const closePlaneIndex = defaultPubSub.subscribe({
@@ -622,28 +649,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         JSON.stringify(stateTree),
     ]);
 
-    /** PubSub Open Closed Plane */
-    useEffect(() => {
-        const openClosedPlaneIndex = defaultPubSub.subscribe({
-            topic: PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE,
-            callback: () => {
-                if (stateLastClosedPlane === pluridPlaneID) {
-                    togglePlane();
-                }
-            },
-        });
-
-        return () => {
-            defaultPubSub.unsubscribe(
-                openClosedPlaneIndex,
-            );
-        }
-    }, [
-        showLink,
-        pluridPlaneID,
-        JSON.stringify(stateTree),
-    ]);
-
     /** Unmount */
     useEffect(() => {
         return () => {
@@ -657,6 +662,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
     }, [
         showLink,
+        showPreview,
         pluridPlaneID,
         parentPlaneID,
         JSON.stringify(stateTree),

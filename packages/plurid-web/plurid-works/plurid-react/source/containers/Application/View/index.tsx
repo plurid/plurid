@@ -629,6 +629,29 @@ const PluridView: React.FC<ViewProperties> = (
                     },
                 },
                 {
+                    topic: PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE,
+                    callback: () => {
+                        const treePlane = stateTree.find(plane => plane.planeID === state.space.lastClosedPlane);
+                        if (treePlane) {
+                            const forceShow = true;
+                            const {
+                                updatedTree,
+                            } = space.tree.logic.togglePlaneFromTree(
+                                stateTree,
+                                treePlane.planeID,
+                                forceShow,
+                            );
+
+                            dispatchSetTree(updatedTree);
+
+                            dispatchSetSpaceField({
+                                field: 'lastClosedPlane',
+                                value: '',
+                            });
+                        }
+                    },
+                },
+                {
                     topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
                     callback: (data) => {
                         const {
@@ -637,12 +660,15 @@ const PluridView: React.FC<ViewProperties> = (
 
                         const treePlane = stateTree.find(plane => plane.planeID === id);
                         if (treePlane) {
+                            const forceShow = false;
                             const {
                                 updatedTree,
-                            } = space.tree.logic.removeRootFromTree(
+                            } = space.tree.logic.togglePlaneFromTree(
                                 stateTree,
                                 treePlane.planeID,
+                                forceShow,
                             );
+
                             dispatchSetTree(updatedTree);
 
                             dispatchSetSpaceField({
@@ -1113,6 +1139,7 @@ const PluridView: React.FC<ViewProperties> = (
                 }
             }
         }, [
+            state.space.lastClosedPlane,
             pluridPubSub.length,
             JSON.stringify(stateTree),
         ]);
