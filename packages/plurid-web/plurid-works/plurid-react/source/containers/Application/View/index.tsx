@@ -644,6 +644,11 @@ const PluridView: React.FC<ViewProperties> = (
                                 treePlane.planeID,
                             );
                             dispatchSetTree(updatedTree);
+
+                            dispatchSetSpaceField({
+                                field: 'lastClosedPlane',
+                                value: id,
+                            });
                         }
                     },
                 }

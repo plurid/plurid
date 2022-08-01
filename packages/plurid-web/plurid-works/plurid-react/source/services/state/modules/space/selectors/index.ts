@@ -45,6 +45,7 @@ const getCulledView = (state: AppState) => state.space.culledView;
 
 const getActivePlaneID = (state: AppState) => state.space.activePlaneID;
 const getIsolatePlane = (state: AppState) => state.space.isolatePlane;
+const getLastClosedPlane = (state: AppState) => state.space.lastClosedPlane;
 // #endregion module
 
 
@@ -76,5 +77,6 @@ export default {
 
     getActivePlaneID,
     getIsolatePlane,
+    getLastClosedPlane,
 };
 // #endregion exports

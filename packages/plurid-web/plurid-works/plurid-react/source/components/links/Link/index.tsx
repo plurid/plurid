@@ -101,6 +101,7 @@ const {
 
 export interface PluridLinkStateProperties {
     stateTree: TreePlane[];
+    stateLastClosedPlane: string;
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
     stateViewSize: ViewSize;
@@ -109,8 +110,6 @@ export interface PluridLinkStateProperties {
 export interface PluridLinkDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     dispatchSetTree: typeof actions.space.setTree;
-    dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
-    dispatchSetTransform: typeof actions.space.setTransform;
     dispatchSetSpaceField: typeof actions.space.setSpaceField;
     dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
 }
@@ -163,6 +162,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         // #region state
         stateTree,
+        stateLastClosedPlane,
         stateGeneralTheme,
         stateConfiguration,
         stateViewSize,
@@ -171,8 +171,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         // #region dispatch
         dispatch,
         dispatchSetTree,
-        dispatchSetAnimatedTransform,
-        dispatchSetTransform,
         dispatchSetSpaceField,
         dispatchUpdateSpaceLinkCoordinates,
         // #endregion dispatch
@@ -603,6 +601,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                     if (showLink) {
                         const show = false;
                         togglePlane(show);
+
+                        dispatchSetSpaceField({
+                            field: 'lastClosedPlane',
+                            value: id,
+                        });
                     }
                 }
             },
@@ -611,6 +614,28 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         return () => {
             defaultPubSub.unsubscribe(
                 closePlaneIndex,
+            );
+        }
+    }, [
+        showLink,
+        pluridPlaneID,
+        JSON.stringify(stateTree),
+    ]);
+
+    /** PubSub Open Closed Plane */
+    useEffect(() => {
+        const openClosedPlaneIndex = defaultPubSub.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE,
+            callback: () => {
+                if (stateLastClosedPlane === pluridPlaneID) {
+                    togglePlane();
+                }
+            },
+        });
+
+        return () => {
+            defaultPubSub.unsubscribe(
+                openClosedPlaneIndex,
             );
         }
     }, [
@@ -688,6 +713,7 @@ const mapStateToProperties = (
     state: AppState,
 ): PluridLinkStateProperties => ({
     stateTree: selectors.space.getTree(state),
+    stateLastClosedPlane: selectors.space.getLastClosedPlane(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateViewSize: selectors.space.getViewSize(state),
@@ -702,16 +728,6 @@ const mapDispatchToProperties = (
         tree: TreePlane[],
     ) => dispatch(
         actions.space.setTree(tree),
-    ),
-    dispatchSetAnimatedTransform: (
-        payload,
-    ) => dispatch(
-        actions.space.setAnimatedTransform(payload),
-    ),
-    dispatchSetTransform: (
-        payload,
-    ) => dispatch(
-        actions.space.setTransform(payload),
     ),
     dispatchSetSpaceField: (
         payload,

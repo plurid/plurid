@@ -42,6 +42,7 @@ const initialState: Types.State = {
     culledView: [],
     activePlaneID: '',
     isolatePlane: '',
+    lastClosedPlane: '',
 };
 // #endregion module
 

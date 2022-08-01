@@ -277,6 +277,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
 
     // #region effects
+    /** Refresh plane */
     useEffect(() => {
         const refreshPlaneIndex = defaultPubSub.subscribe({
             topic: PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
