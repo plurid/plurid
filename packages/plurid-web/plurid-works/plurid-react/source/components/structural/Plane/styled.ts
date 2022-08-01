@@ -105,6 +105,7 @@ export const StyledFocusAnchor = styled.a`
     left: 0;
     height: 0;
     width: 0;
-    pointer-event: none;
+    pointer-events: none;
+    user-select: none;
 `;
 // #endregion module
