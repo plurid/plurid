@@ -136,9 +136,14 @@ export const focusActivePlane = (
         return;
     }
 
+    const event = undefined;
+    const deisolate = false;
+
     navigateToPluridPlane(
         dispatch,
         activePlane,
+        event,
+        deisolate,
     );
 }
 
