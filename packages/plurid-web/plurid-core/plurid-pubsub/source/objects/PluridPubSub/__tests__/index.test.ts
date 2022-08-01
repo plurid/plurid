@@ -53,7 +53,6 @@ describe('PluridPubSub', () => {
 
         const unsubscribed = pluridPubSub.unsubscribe(
             index,
-            'space.rotateYWith',
         );
 
         expect(unsubscribed).toBe(true);
