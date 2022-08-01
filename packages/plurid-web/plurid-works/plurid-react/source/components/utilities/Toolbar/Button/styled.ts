@@ -71,23 +71,25 @@ export const StyledToolbarButton = styled.div<IStyledToolbarButton>`
         return 'transparent';
     }};
 
-    :hover {
-        background: ${({
-            theme,
-        }) => {
-            return theme.backgroundColorTertiary;
-        }};
-    }
+    @media (hover: hover) {
+        :hover {
+            background: ${({
+                theme,
+            }) => {
+                return theme.backgroundColorTertiary;
+            }};
+        }
 
-    :hover svg {
-        transform: ${({
-            scaleImage,
-        }) => {
-            if (scaleImage) {
-                return 'scale(1.2)';
-            }
-            return '';
-        }};
+        :hover svg {
+            transform: ${({
+                scaleImage,
+            }) => {
+                if (scaleImage) {
+                    return 'scale(1.2)';
+                }
+                return '';
+            }};
+        }
     }
 
     svg {

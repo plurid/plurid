@@ -241,12 +241,14 @@ export const StyledToolbarButton = styled.div<IStyledToolbarButton>`
     cursor: pointer;
     user-select: none;
 
-    :hover {
-        background: ${({
-            theme,
-        }) => {
-            return theme.backgroundColorTertiary;
-        }};
+    @media (hover: hover) {
+        :hover {
+            background: ${({
+                theme,
+            }) => {
+                return theme.backgroundColorTertiary;
+            }};
+        }
     }
 `;
 
