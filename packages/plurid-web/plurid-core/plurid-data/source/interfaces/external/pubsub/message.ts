@@ -312,6 +312,7 @@ export interface PluridPubSubSubscribeMessageIsolatePlane {
 
 export interface PluridPubSubPublishMessageOpenClosedPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE;
+    data: any;
 }
 export interface PluridPubSubSubscribeMessageOpenClosedPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE;
