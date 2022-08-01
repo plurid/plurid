@@ -261,6 +261,18 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
         return '0';
     }
+
+    const computeIsolatePointerEvents = () => {
+        if (!treePlane.show || !stateIsolatePlane) {
+            return;
+        }
+
+        if (stateIsolatePlane === planeID) {
+            return;
+        }
+
+        return 'none';
+    }
     // #endregion handlers
 
 
@@ -304,7 +316,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // const renderWidth = width;
     const renderWidth = '100%'; // TOFIX
     const isolatePlaneOpacity = computeIsolatePlaneOpacity();
-    const isolatePointerEvents = isolatePlaneOpacity === '1' ? 'none' : undefined;
+    const isolatePointerEvents = computeIsolatePointerEvents();
     const transform = cleanTemplate(`
         translateX(${treePlane.location.translateX}px)
         translateY(${treePlane.location.translateY}px)
