@@ -83,6 +83,7 @@ export interface PluridPlaneControlsOwnProperties {
     parentTreePlane: TreePlane | undefined;
     mouseOver: boolean;
 
+    refreshing: boolean;
     refreshPlane: () => void;
     isolatePlane: () => void;
     closePlane: () => void;
@@ -115,6 +116,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
         parentTreePlane,
         mouseOver,
 
+        refreshing,
         refreshPlane,
         isolatePlane,
         closePlane,
@@ -248,6 +250,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
 
                 <ControlRefresh
                     theme={stateGeneralTheme}
+                    refreshing={refreshing}
                     refreshPlane={refreshPlane}
                 />
 

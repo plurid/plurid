@@ -185,6 +185,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     ] = useState(0);
 
     const [
+        refreshing,
+        setRefreshing,
+    ] = useState(false);
+
+    const [
         mouseOver,
         setMouseOver,
     ] = useState(false);
@@ -207,7 +212,12 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     }
 
     const refreshPlane = () => {
-        setRemountKey(value => ++value);
+        setRefreshing(true);
+
+        setTimeout(() => {
+            setRemountKey(value => ++value);
+            setRefreshing(false);
+        }, 350);
     }
 
     const isolatePlane = () => {
@@ -395,6 +405,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                             parentTreePlane={parentTreePlane}
                             mouseOver={mouseOver}
 
+                            refreshing={refreshing}
                             refreshPlane={refreshPlane}
                             isolatePlane={isolatePlane}
                             closePlane={closePlane}

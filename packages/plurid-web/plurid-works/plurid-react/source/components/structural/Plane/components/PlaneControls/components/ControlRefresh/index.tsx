@@ -20,6 +20,7 @@ export interface ControlRefreshProperties {
     // #region required
         // #region values
         theme: Theme;
+        refreshing: boolean;
         // #endregion values
 
         // #region methods
@@ -36,6 +37,7 @@ const ControlRefresh: React.FC<ControlRefreshProperties> = (
         // #region required
             // #region values
             theme,
+            refreshing,
             // #endregion values
 
             // #region methods
@@ -54,6 +56,10 @@ const ControlRefresh: React.FC<ControlRefreshProperties> = (
             }}
             theme={theme}
             title="refresh"
+            style={{
+                opacity: refreshing ? '0' : '1',
+                pointerEvents: refreshing ? 'none' : undefined,
+            }}
         />
     );
     // #endregion render
