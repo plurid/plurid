@@ -41,7 +41,7 @@ export interface PluridPubSubSubscribeMessageConfiguration {
 
 export interface PluridPubSubPublishMessageSpaceAnimatedTransform {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM;
-    data: any;
+    data?: any;
 }
 export interface PluridPubSubSubscribeMessageSpaceAnimatedTransform {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM;
@@ -233,7 +233,7 @@ export interface PluridPubSubSubscribeMessageSpaceScaleWith {
 
 export interface PluridPubSubPublishMessageSpaceTransform {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM;
-    data: any;
+    data?: any;
 }
 export interface PluridPubSubSubscribeMessageSpaceTransform {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM;
@@ -255,7 +255,7 @@ export interface PluridPubSubSubscribeMessageViewAddPlane {
 
 export interface PluridPubSubPublishMessageViewSetPlanes {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES;
-    data: any;
+    data?: any;
 }
 export interface PluridPubSubSubscribeMessageViewSetPlanes {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES;
@@ -312,7 +312,7 @@ export interface PluridPubSubSubscribeMessageIsolatePlane {
 
 export interface PluridPubSubPublishMessageOpenClosedPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE;
-    data: any;
+    data?: any;
 }
 export interface PluridPubSubSubscribeMessageOpenClosedPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE;
