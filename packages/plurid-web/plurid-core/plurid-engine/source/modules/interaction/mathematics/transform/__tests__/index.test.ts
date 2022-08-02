@@ -7,6 +7,7 @@
 
     import {
         degToRad,
+        makeQuaternion,
         makeRotationMatrixFromQuaternion,
     } from '../../quaternion';
     // #endregion external
@@ -192,7 +193,7 @@ describe('transform', () => {
     });
 
 
-    it('works', () => {
+    xit('works', () => {
         const pointP = {
             w: 0,
             i: 0,
@@ -313,6 +314,60 @@ describe('transform', () => {
 
         // const r = rotateYMatrix(45);
         // printMatrix(r, 'r');
+    });
+
+
+    it('works', () => {
+        const iMatrix = getInitialMatrix();
+        printMatrix(iMatrix, 'iMatrix');
+
+
+        const currentX1 = 0;
+        const incrementX1 = 20;
+        const nextX1 = currentX1 + incrementX1;
+
+        const t1Matrix = translateMatrix(
+            nextX1,
+        );
+        printMatrix(t1Matrix, 't1Matrix');
+
+
+        const m1 = multiplyMatrices(
+            iMatrix,
+            t1Matrix,
+        );
+        printMatrix(m1, 'm1');
+
+
+        const currentY1 = 0;
+        const incrementY1 = 30;
+        const nextY1 = currentY1 + incrementY1;
+
+        const t2Matrix = translateMatrix(
+            0,
+            nextY1,
+        );
+        printMatrix(t2Matrix, 't2Matrix');
+
+
+        const m2 = multiplyMatrices(
+            m1,
+            t2Matrix,
+        );
+        printMatrix(m2, 'm2');
+
+
+        const q1 = makeQuaternion(0, 0.3826, 0, 0.9238); // pitch 45 deg
+        const r1 = makeRotationMatrixFromQuaternion(q1);
+        const mr1 = arrayToMatrix(r1);
+        printMatrix(mr1, 'mr1');
+
+
+        const m3 = multiplyMatrices(
+            m2,
+            mr1,
+        );
+        printMatrix(m3, 'm3');
     });
 });
 // #endregion module
