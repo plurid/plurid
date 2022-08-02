@@ -1,6 +1,10 @@
 // #region imports
     // #region libraries
     import {
+        FOCUS_ANCHOR_SUFFIX,
+    } from '@plurid/plurid-data';
+
+    import {
         interaction,
     } from '@plurid/plurid-engine';
     // #endregion libraries
@@ -82,7 +86,8 @@ export const computeMatrix = (
 export const focusPluridPlaneAnchor = (
     planeID: string,
 ) => {
-    const focusAnchor: HTMLAnchorElement | null = document.querySelector(`[id='${planeID}-focus']`);
+    const selector = `[id='${planeID + FOCUS_ANCHOR_SUFFIX}']`;
+    const focusAnchor: HTMLAnchorElement | null = document.querySelector(selector);
 
     if (focusAnchor) {
         focusAnchor.focus();

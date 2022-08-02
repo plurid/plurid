@@ -17,11 +17,13 @@
 
     import {
         PLURID_PUBSUB_TOPIC,
+        FOCUS_ANCHOR_SUFFIX,
+        PLURID_ENTITY_PLANE,
+
         RegisteredPluridPlane,
         TreePlane,
         TreePlaneLocation,
         PluridConfiguration,
-        PLURID_ENTITY_PLANE,
     } from '@plurid/plurid-data';
 
     import {
@@ -53,6 +55,10 @@
     import { ViewSize } from '~services/state/types/space';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+
+    import {
+        focusPluridPlaneAnchor,
+    } from '~services/logic/transform';
     // #endregion external
 
 
@@ -294,6 +300,17 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
 
     // #region effects
+    useEffect(() => {
+        focusPluridPlaneAnchor(planeID);
+    }, []);
+
+    useEffect(() => {
+        setActivePlane();
+    }, [
+        planeID,
+        mouseOver,
+    ]);
+
     /** PubSub refresh plane */
     useEffect(() => {
         const refreshPlaneIndex = defaultPubSub.subscribe({
@@ -318,19 +335,13 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         remountKey,
         planeID,
     ]);
-
-    useEffect(() => {
-        setActivePlane();
-    }, [
-        planeID,
-        mouseOver,
-    ]);
     // #endregion effects
 
 
     // #region render
     // console.log('Render plane');
     const key = planeID + '-' + remountKey;
+    const focusAnchorID = planeID + FOCUS_ANCHOR_SUFFIX;
     // const renderWidth = width;
     const renderWidth = '100%'; // TOFIX
     const isolatePlaneOpacity = computeIsolatePlaneOpacity();
@@ -373,7 +384,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         >
             <StyledFocusAnchor
                 tabIndex={0}
-                id={planeID + '-focus'}
+                id={focusAnchorID}
             />
 
             {treePlane.show && (
