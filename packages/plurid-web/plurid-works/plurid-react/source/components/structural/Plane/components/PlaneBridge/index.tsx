@@ -15,7 +15,6 @@
         PLURID_ENTITY_PLANE_BRIDGE,
 
         /** interfaces */
-        TreePlane,
         PluridConfiguration,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -40,8 +39,7 @@
 
 // #region module
 export interface PluridPlaneBridgeOwnProperties {
-    treePlane: TreePlane;
-    parentTreePlane: TreePlane;
+    mouseOver: boolean;
 }
 
 export interface PluridPlaneBridgeStateProperties {
@@ -50,7 +48,6 @@ export interface PluridPlaneBridgeStateProperties {
 }
 
 export interface PluridPlaneBridgeDispatchProperties {
-    dispatch: ThunkDispatch<{}, {}, AnyAction>;
 }
 
 export type PluridPlaneBridgeProperties =
@@ -64,24 +61,23 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
     // #region properties
     const {
         // #region own
-        // treePlane,
-        // parentTreePlane,
+        mouseOver,
         // #endregion own
 
         // #region state
         stateGeneralTheme,
         stateConfiguration,
         // #endregion state
-
-        // #region dispatch
-        // dispatch,
-        // #endregion dispatch
     } = properties;
 
     const {
         controls,
         opacity,
     } = stateConfiguration.elements.plane;
+
+    const {
+        transparentUI,
+    } = stateConfiguration.global;
     // #endregion properties
 
 
@@ -91,9 +87,10 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
             theme={stateGeneralTheme}
             planeControls={controls.show}
             planeOpacity={opacity}
+            transparentUI={transparentUI}
+            mouseOver={mouseOver}
             data-plurid-entity={PLURID_ENTITY_PLANE_BRIDGE}
-        >
-        </StyledPluridPlaneBridge>
+        />
     );
     // #endregion render
 }
@@ -110,7 +107,6 @@ const mapStateToProperties = (
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridPlaneBridgeDispatchProperties => ({
-    dispatch,
 });
 
 

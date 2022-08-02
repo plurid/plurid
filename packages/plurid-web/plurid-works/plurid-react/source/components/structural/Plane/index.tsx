@@ -380,8 +380,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                 <>
                     {treePlane.parentPlaneID && (
                         <PlaneBridge
-                            treePlane={treePlane}
-                            parentTreePlane={parentTreePlane!}
+                            mouseOver={mouseOver}
                         />
                     )}
 

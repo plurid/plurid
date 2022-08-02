@@ -15,14 +15,22 @@ export interface IStyledPluridPlaneBridge {
     theme: Theme;
     planeControls: boolean;
     planeOpacity: number;
+    transparentUI: boolean;
+    mouseOver: boolean;
 }
 
 export const StyledPluridPlaneBridge = styled.div<IStyledPluridPlaneBridge>`
     background-color: ${({
-        planeOpacity,
-        planeControls,
         theme,
+        planeControls,
+        planeOpacity,
+        transparentUI,
+        mouseOver,
     }) => {
+        if (transparentUI && !mouseOver) {
+            return theme.backgroundColorPrimaryAlpha;
+        }
+
         if (planeOpacity === 0) {
             return 'transparent';
         }
