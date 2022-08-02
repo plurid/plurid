@@ -368,6 +368,18 @@ export const handleGlobalWheel = (
     }
 
     if (modes.translation) {
+        if (event.metaKey || event.ctrlKey) {
+            if (direction === directions.up) {
+                return dispatch(actions.space.translateDown());
+            }
+
+            if (direction === directions.down) {
+                return dispatch(actions.space.translateUp());
+            }
+
+            return;
+        }
+
         if (event.altKey) {
             if (direction === directions.up && locks.translationZ) {
                 return dispatch(actions.space.translateIn());
@@ -406,6 +418,18 @@ export const handleGlobalWheel = (
     }
 
     if (event.altKey && !event.shiftKey) {
+        if (event.metaKey || event.ctrlKey) {
+            if (direction === directions.up) {
+                return dispatch(actions.space.translateDown());
+            }
+
+            if (direction === directions.down) {
+                return dispatch(actions.space.translateUp());
+            }
+
+            return;
+        }
+
         if (direction === directions.up && locks.translationY) {
             return dispatch(actions.space.translateDown());
         }
