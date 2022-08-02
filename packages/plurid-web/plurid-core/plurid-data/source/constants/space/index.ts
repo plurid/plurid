@@ -11,4 +11,6 @@ export const SCALE_UPPER_LIMIT = 4;
 export const ROOTS_GAP = 50;
 
 export const PLANE_DEFAULT_ANGLE = 90.1;
+
+export const FOCUS_ANCHOR_SUFFIX = '-focus';
 // #endregion module
