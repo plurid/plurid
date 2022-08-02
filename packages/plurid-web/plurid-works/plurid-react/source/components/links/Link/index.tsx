@@ -72,6 +72,10 @@
     import {
         navigateToPluridPlane,
     } from '~services/logic/animation';
+
+    import {
+        focusPluridPlaneAnchor,
+    } from '~services/logic/transform';
     // #endregion external
 
 
@@ -442,6 +446,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                     plane,
                     event,
                 );
+
+                focusPluridPlaneAnchor(pluridPlaneID);
 
                 return;
             }

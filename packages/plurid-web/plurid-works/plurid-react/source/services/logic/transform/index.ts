@@ -77,4 +77,15 @@ export const computeMatrix = (
 
     return transform;
 }
+
+
+export const focusPluridPlaneAnchor = (
+    planeID: string,
+) => {
+    const focusAnchor: HTMLAnchorElement | null = document.querySelector(`[id='${planeID}-focus']`);
+
+    if (focusAnchor) {
+        focusAnchor.focus();
+    }
+}
 // #endregion module
