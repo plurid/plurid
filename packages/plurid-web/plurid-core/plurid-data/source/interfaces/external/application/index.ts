@@ -78,6 +78,11 @@ export interface PluridApplication<C> {
     view: PluridApplicationView;
 
     /**
+     * Center the view on a plane from `view`.
+     */
+    centerView?: string;
+
+    /**
      * The hostname of the server exposed to the internet, e.g. `example.com`,
      * to be used in plurid plane links.
      */
