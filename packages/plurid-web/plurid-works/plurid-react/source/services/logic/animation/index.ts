@@ -23,6 +23,10 @@
     import {
         computePlaneLocation,
     } from '../computing';
+
+    import {
+        focusPluridPlaneAnchor,
+    } from '../transform';
     // #endregion external
 // #endregion imports
 
@@ -97,6 +101,8 @@ export const navigateToPluridPlane = (
     }
 
     setTimeout(() => {
+        focusPluridPlaneAnchor(plane.planeID);
+
         dispatchSetSpaceField({
             field: 'activePlaneID',
             value: plane.planeID,

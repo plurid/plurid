@@ -53,10 +53,6 @@
     import { ViewSize } from '~services/state/types/space';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
-
-    import {
-        focusPluridPlaneAnchor,
-    } from '~services/logic/transform';
     // #endregion external
 
 
@@ -298,16 +294,6 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
 
     // #region effects
-    useEffect(() => {
-        if (!treePlane.show) {
-            return;
-        }
-
-        focusPluridPlaneAnchor(planeID);
-    }, [
-        treePlane.show,
-    ]);
-
     /** PubSub refresh plane */
     useEffect(() => {
         const refreshPlaneIndex = defaultPubSub.subscribe({
