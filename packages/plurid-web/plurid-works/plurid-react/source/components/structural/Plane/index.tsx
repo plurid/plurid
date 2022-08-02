@@ -55,10 +55,6 @@
     import { ViewSize } from '~services/state/types/space';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
-
-    import {
-        focusPluridPlaneAnchor,
-    } from '~services/logic/transform';
     // #endregion external
 
 
@@ -300,10 +296,6 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
 
     // #region effects
-    useEffect(() => {
-        focusPluridPlaneAnchor(planeID);
-    }, []);
-
     useEffect(() => {
         setActivePlane();
     }, [

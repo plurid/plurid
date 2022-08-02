@@ -1300,7 +1300,7 @@ export const collectApplicationsFromPath = async (
 
             const pluridPlane: PluridPlane<PluridReactComponent> = {
                 component,
-                route: '/plane',
+                route: value,
             };
 
             pluridPlanes.push(pluridPlane);
@@ -1324,9 +1324,7 @@ export const collectApplicationsFromPath = async (
 
         const pluridApplication = {
             planes: pluridPlanes,
-            view: [
-                '/plane',
-            ],
+            view,
         };
         plurids.push(pluridApplication);
     }
