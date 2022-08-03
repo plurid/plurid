@@ -8,6 +8,8 @@
     import {
         degToRad,
         makeQuaternion,
+        inverseQuaternion,
+        quaternionMultiply,
         makeRotationMatrixFromQuaternion,
         computeQuaternionFromEulers,
     } from '../../quaternion';
@@ -320,7 +322,7 @@ describe('transform', () => {
     });
 
 
-    it('works', () => {
+    xit('works', () => {
         const iMatrix = getInitialMatrix();
         printMatrix(iMatrix, 'iMatrix');
 
@@ -343,13 +345,18 @@ describe('transform', () => {
         printMatrix(m1, 'm1');
 
 
-        const currentY1 = 0;
-        const incrementY1 = -500;
-        const nextY1 = currentY1 + incrementY1;
+        // const currentY1 = 0;
+        // const incrementY1 = -500;
+        // const nextY1 = currentY1 + incrementY1;
 
         const t2Matrix = translateMatrix(
-            nextY1,
+            // nextY1,
+            // 0,
             0,
+            -300,
+            100,
+            // 0,
+            // 0,
         );
         printMatrix(t2Matrix, 't2Matrix');
 
@@ -363,7 +370,7 @@ describe('transform', () => {
 
         // q1 is equal to qFromEuler
         const currentAngle1 = 0;
-        const angleIncrement1 = 45;
+        const angleIncrement1 = 90;
         const angle1 = currentAngle1 + angleIncrement1;
         // const q1 = makeQuaternion(0, 0.3826, 0, 0.9238); // pitch 45 deg
         const qFromEuler = computeQuaternionFromEulers(0, 0, angle1, false);
@@ -381,13 +388,16 @@ describe('transform', () => {
         printMatrix(m3, 'm3');
 
 
-        const currentY2 = -500;
-        const incrementY2 = 1000;
-        const nextY2 = currentY2 + incrementY2;
+        // const currentY2 = -500;
+        // const incrementY2 = 1000;
+        // const nextY2 = currentY2 + incrementY2;
 
         const t3Matrix = translateMatrix(
-            nextY2,
             0,
+            300,
+            -100,
+            // nextY2,
+            // 0,
         );
         printMatrix(t3Matrix, 't3Matrix');
 
@@ -397,6 +407,54 @@ describe('transform', () => {
             t3Matrix,
         );
         printMatrix(m4, 'm4');
+    });
+
+
+    xit('works', () => {
+        const t1Matrix = translateMatrix(
+            0,
+            300,
+            -100,
+        );
+        printMatrix(t1Matrix, 't1Matrix');
+
+        const qFromEuler1 = computeQuaternionFromEulers(0, 0, 90, false);
+        const r1 = rotationMatrixFromQuaternion(qFromEuler1);
+        printMatrix(r1, 'r1');
+
+        const m1 = multiplyMatrices(
+            t1Matrix,
+            r1,
+        );
+        printMatrix(m1, 'm1');
+
+
+        const qFromEuler2 = computeQuaternionFromEulers(0, 0, 91, false);
+        const r2 = rotationMatrixFromQuaternion(qFromEuler2);
+        printMatrix(r1, 'r1');
+
+
+        const m2 = multiplyMatrices(
+            m1,
+            r2,
+        );
+        printMatrix(m2, 'm2');
+    });
+
+
+    it('works', () => {
+        const qFromEuler1 = computeQuaternionFromEulers(0, 0, 90, false);
+        const qPoint = makeQuaternion(0, 300, -100, 0);
+        const qInverse = inverseQuaternion(qFromEuler1);
+        const qMultiply = quaternionMultiply([
+            qFromEuler1,
+            qPoint,
+            qInverse,
+        ]);
+        console.log({qMultiply});
+
+        const r1 = rotationMatrixFromQuaternion(qMultiply);
+        printMatrix(r1, 'r1');
     });
 });
 // #endregion module
