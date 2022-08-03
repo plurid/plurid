@@ -224,4 +224,13 @@ export function rotationMatrixFromQuaternion(
         [0,                      0,                      0,                      1],
     ];
 }
+
+
+export const matrixToCSSMatrix = (
+    matrix: Matrix,
+): string => {
+    const value = matrix.flat().join(',');
+
+    return `matrix3d(${value})`;
+}
 // #endregion module

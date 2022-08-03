@@ -28,6 +28,7 @@ const {
     rotateZMatrix,
     translateMatrix,
     rotationMatrixFromQuaternion,
+    matrixToCSSMatrix,
 } = general;
 
 const {
@@ -361,8 +362,11 @@ describe('transform', () => {
 
 
         // q1 is equal to qFromEuler
+        const currentAngle1 = 0;
+        const angleIncrement1 = 45;
+        const angle1 = currentAngle1 + angleIncrement1;
         // const q1 = makeQuaternion(0, 0.3826, 0, 0.9238); // pitch 45 deg
-        const qFromEuler = computeQuaternionFromEulers(0, 0, 45, false);
+        const qFromEuler = computeQuaternionFromEulers(0, 0, angle1, false);
         // const r1 = makeRotationMatrixFromQuaternion(qFromEuler);
         // const mr1 = arrayToMatrix(r1);
         // printMatrix(mr1, 'mr1');
