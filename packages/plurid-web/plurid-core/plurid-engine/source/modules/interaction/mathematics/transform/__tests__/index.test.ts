@@ -325,7 +325,8 @@ describe('transform', () => {
 
 
         const currentX1 = 0;
-        const incrementX1 = 20;
+        const incrementX1 = 0;
+        // const incrementX1 = 20;
         const nextX1 = currentX1 + incrementX1;
 
         const t1Matrix = translateMatrix(
@@ -342,12 +343,12 @@ describe('transform', () => {
 
 
         const currentY1 = 0;
-        const incrementY1 = 30;
+        const incrementY1 = -500;
         const nextY1 = currentY1 + incrementY1;
 
         const t2Matrix = translateMatrix(
-            0,
             nextY1,
+            0,
         );
         printMatrix(t2Matrix, 't2Matrix');
 
@@ -374,6 +375,24 @@ describe('transform', () => {
             r1,
         );
         printMatrix(m3, 'm3');
+
+
+        const currentY2 = -500;
+        const incrementY2 = 1000;
+        const nextY2 = currentY2 + incrementY2;
+
+        const t3Matrix = translateMatrix(
+            nextY2,
+            0,
+        );
+        printMatrix(t3Matrix, 't3Matrix');
+
+
+        const m4 = multiplyMatrices(
+            m3,
+            t3Matrix,
+        );
+        printMatrix(m4, 'm4');
     });
 });
 // #endregion module
