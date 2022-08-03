@@ -1,3 +1,13 @@
+// #region imports
+    // #region external
+    import {
+        Quaternion,
+    } from '../../quaternion';
+    // #endregion external
+// #endregion imports
+
+
+
 // #region module
 export type Matrix = number[][];
 
@@ -188,5 +198,30 @@ export const translateMatrix = (
     ];
 
     return m;
+}
+
+
+export function rotationMatrixFromQuaternion(
+    quaternion: Quaternion,
+): Matrix {
+    const num = quaternion.x * 2;
+    const num2 = quaternion.y * 2;
+    const num3 = quaternion.z * 2;
+    const num4 = quaternion.x * num;
+    const num5 = quaternion.y * num2;
+    const num6 = quaternion.z * num3;
+    const num7 = quaternion.x * num2;
+    const num8 = quaternion.x * num3;
+    const num9 = quaternion.y * num3;
+    const num10 = quaternion.w * num;
+    const num11 = quaternion.w * num2;
+    const num12 = quaternion.w * num3;
+
+    return [
+        [1 - (num5 + num6),      num7 - num12,           num8 + num11,           0],
+        [num7 + num12,           1 - (num4 + num6),      num9 - num10,           0],
+        [num8 - num11,           num9 + num10,           1 - (num4 + num5),      0],
+        [0,                      0,                      0,                      1],
+    ];
 }
 // #endregion module
