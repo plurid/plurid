@@ -107,13 +107,11 @@ export function computeQuaternionFromEulers(
     alpha: number,
     beta: number,
     gamma: number,
+    radians = true,
 ): Quaternion {
-    // const x = degToRad(beta);
-    // const y = degToRad(gamma);
-    // const z = degToRad(alpha);
-    const x = beta;
-    const y = gamma;
-    const z = alpha;
+    const x = radians ? beta : degToRad(beta);
+    const y = radians ? gamma : degToRad(gamma);
+    const z = radians ? alpha : degToRad(alpha);
 
     const cX = Math.cos(x / 2);
     const cY = Math.cos(y / 2);

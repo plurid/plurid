@@ -9,6 +9,7 @@
         degToRad,
         makeQuaternion,
         makeRotationMatrixFromQuaternion,
+        computeQuaternionFromEulers,
     } from '../../quaternion';
     // #endregion external
 // #endregion imports
@@ -357,8 +358,10 @@ describe('transform', () => {
         printMatrix(m2, 'm2');
 
 
-        const q1 = makeQuaternion(0, 0.3826, 0, 0.9238); // pitch 45 deg
-        const r1 = makeRotationMatrixFromQuaternion(q1);
+        // q1 is equal to qFromEuler
+        // const q1 = makeQuaternion(0, 0.3826, 0, 0.9238); // pitch 45 deg
+        const qFromEuler = computeQuaternionFromEulers(0, 0, 45, false);
+        const r1 = makeRotationMatrixFromQuaternion(qFromEuler);
         const mr1 = arrayToMatrix(r1);
         printMatrix(mr1, 'mr1');
 
