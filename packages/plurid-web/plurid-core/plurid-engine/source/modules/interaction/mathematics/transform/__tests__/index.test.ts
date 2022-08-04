@@ -7,11 +7,13 @@
 
     import {
         degToRad,
+        zeroQuaternion,
         makeQuaternion,
         inverseQuaternion,
         quaternionMultiply,
         makeRotationMatrixFromQuaternion,
         computeQuaternionFromEulers,
+        quaternionFromAxisAngle,
     } from '../../quaternion';
     // #endregion external
 // #endregion imports
@@ -442,7 +444,7 @@ describe('transform', () => {
     });
 
 
-    it('works', () => {
+    xit('works', () => {
         const qFromEuler1 = computeQuaternionFromEulers(0, 0, 90, false);
         const qPoint = makeQuaternion(0, 300, -100, 0);
         const qInverse = inverseQuaternion(qFromEuler1);
@@ -455,6 +457,35 @@ describe('transform', () => {
 
         const r1 = rotationMatrixFromQuaternion(qMultiply);
         printMatrix(r1, 'r1');
+    });
+
+
+    it('works', () => {
+        const xAngle = 40;
+        const phi = degToRad(xAngle);
+        const xAxis: [number, number, number] = [0, 1, 0];
+        const qx = quaternionFromAxisAngle(...xAxis, phi);
+
+        const zAngle = 0;
+        const theta = degToRad(zAngle);
+        const zAxis: [number, number, number] = [1, 0, 0];
+        const qz = quaternionFromAxisAngle(...zAxis, theta);
+
+        const qr = quaternionMultiply([
+            qx,
+            qz,
+        ]);
+
+        const r1 = rotationMatrixFromQuaternion(qr);
+        printMatrix(r1, 'r1');
+
+        // console.log({
+        //     phi,
+        //     qx,
+        //     theta,
+        //     qz,
+        //     qr,
+        // });
     });
 });
 // #endregion module
