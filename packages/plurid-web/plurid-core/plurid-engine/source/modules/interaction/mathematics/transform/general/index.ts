@@ -49,9 +49,19 @@ export const multiplyMatrices = (
 }
 
 
+/**
+ * Multiplies multiple `matrices`, must contain at least 2.
+ *
+ * @param matrices
+ * @returns
+ */
 export const multiplyMatricesArray = (
     matrices: Matrix[],
 ) => {
+    if (matrices.length < 2) {
+        throw new Error('invalid number of matrices');
+    }
+
     const first = matrices[0];
     let result: Matrix = first;
 
