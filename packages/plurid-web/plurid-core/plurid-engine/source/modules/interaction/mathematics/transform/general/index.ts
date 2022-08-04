@@ -49,6 +49,28 @@ export const multiplyMatrices = (
 }
 
 
+export const multiplyMatricesArray = (
+    matrices: Matrix[],
+) => {
+    const first = matrices[0];
+    let result: Matrix = first;
+
+    for (const [index, matrix] of matrices.entries()) {
+        if (index === 0) {
+            continue;
+        }
+
+        result = multiplyMatrices(
+            result,
+            matrix,
+        );
+    }
+
+    return result;
+}
+
+
+
 export const arrayToMatrix = (
     array: number[],
 ): Matrix => {
@@ -199,6 +221,20 @@ export const translateMatrix = (
 
     return m;
 }
+
+
+export const scaleMatrix = (
+    s: number,
+): Matrix => {
+    return [
+        [s,    0,    0,   0],
+        [0,    s,    0,   0],
+        [0,    0,    s,   0],
+        [0,    0,    0,   1],
+    ];
+}
+
+
 
 
 export function rotationMatrixFromQuaternion(
