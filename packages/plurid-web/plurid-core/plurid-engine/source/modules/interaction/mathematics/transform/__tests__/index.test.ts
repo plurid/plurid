@@ -31,8 +31,10 @@ const {
     rotateYMatrix,
     rotateZMatrix,
     translateMatrix,
+    scaleMatrix,
     rotationMatrixFromQuaternion,
     matrixToCSSMatrix,
+    multiplyMatricesArray,
 } = general;
 
 const {
@@ -461,7 +463,14 @@ describe('transform', () => {
 
 
     it('works', () => {
-        const xAngle = 40;
+        const t1Matrix = translateMatrix(
+            400,
+            400,
+        );
+        printMatrix(t1Matrix, 't1Matrix');
+
+
+        const xAngle = 80;
         const phi = degToRad(xAngle);
         const xAxis: [number, number, number] = [0, 1, 0];
         const qx = quaternionFromAxisAngle(...xAxis, phi);
@@ -478,6 +487,30 @@ describe('transform', () => {
 
         const r1 = rotationMatrixFromQuaternion(qr);
         printMatrix(r1, 'r1');
+
+
+        const t2Matrix = translateMatrix(
+            -400,
+            -400,
+        );
+        printMatrix(t2Matrix, 't2Matrix');
+
+        const t3Matrix = translateMatrix(
+            400,
+            800,
+        );
+        printMatrix(t3Matrix, 't3Matrix');
+
+        const s1Matrix = scaleMatrix(0.7);
+        printMatrix(s1Matrix, 's1Matrix');
+
+        const m2 = multiplyMatricesArray([
+            t2Matrix,
+            r1,
+            t3Matrix,
+            s1Matrix,
+        ]);
+        printMatrix(m2, 'm2');
 
         // console.log({
         //     phi,
