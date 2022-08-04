@@ -143,10 +143,13 @@ export function quaternionFromAxisAngle(
 ): Quaternion {
     const q: Quaternion = zeroQuaternion();
     const halfAngle = angle / 2;
-    q.x = x * Math.sin(halfAngle);
-    q.y = y * Math.sin(halfAngle);
-    q.z = z * Math.sin(halfAngle);
+    const sine = Math.sin(halfAngle);
+
+    q.x = x * sine;
+    q.y = y * sine;
+    q.z = z * sine;
     q.w = Math.cos(halfAngle);
+
     return q;
 }
 
