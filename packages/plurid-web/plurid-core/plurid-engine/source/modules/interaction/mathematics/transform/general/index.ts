@@ -279,4 +279,103 @@ export const matrixToCSSMatrix = (
 
     return `matrix3d(${value})`;
 }
+
+
+
+export const identityMatrix = (): Matrix => {
+    const matrix: Matrix = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ];
+
+    return matrix;
+}
+
+
+/**
+ * Inverse a matrix based on
+ * https://github.com/josdejong/mathjs/blob/develop/src/function/matrix/inv.js
+ *
+ * @param matrix
+ * @returns
+ */
+export const inverseMatrix = (
+    matrix: Matrix,
+) => {
+    const cols = 4;
+    const rows = 4;
+
+    const A: Matrix = [...matrix];
+    const B = identityMatrix();
+
+    let r: number;
+    let s: number;
+    let f: number;
+    let temp: number[];
+
+    // loop over all columns, and perform row reductions
+    for (let c = 0; c < cols; c++) {
+        // Pivoting: Swap row c with row r, where row r contains the largest element A[r][c]
+        let ABig = Math.abs(A[c][c]);
+        let rBig = c;
+        r = c + 1;
+
+        while (r < rows) {
+            if (Math.abs(A[r][c]) > ABig) {
+                ABig = Math.abs(A[r][c]);
+                rBig = r;
+            }
+            r++;
+        }
+
+        if (ABig === 0) {
+            throw Error('Cannot calculate inverse, determinant is zero')
+        }
+
+        r = rBig;
+        if (r !== c) {
+            temp = A[c]; A[c] = A[r]; A[r] = temp;
+            temp = B[c]; B[c] = B[r]; B[r] = temp;
+        }
+
+        // eliminate non-zero values on the other rows at column c
+        const Ac = A[c];
+        const Bc = B[c];
+
+        for (r = 0; r < rows; r++) {
+            const Ar = A[r];
+            const Br = B[r];
+
+            if (r !== c) {
+                // eliminate value at column c and row r
+                if (Ar[c] !== 0) {
+                    f = -Ar[c] / Ac[c];
+
+                    // add (f * row c) to row r to eliminate the value
+                    // at column c
+                    for (s = c; s < cols; s++) {
+                        Ar[s] = Ar[s] + f * Ac[s];
+                    }
+                    for (s = 0; s < cols; s++) {
+                        Br[s] = Br[s] + f * Bc[s];
+                    }
+                }
+            } else {
+                // normalize value at Acc to 1,
+                // divide each value on row r with the value at Acc
+                f = Ac[c];
+                for (s = c; s < cols; s++) {
+                    Ar[s] = Ar[s] / f;
+                }
+                for (s = 0; s < cols; s++) {
+                    Br[s] = Br[s] / f;
+                }
+            }
+        }
+    }
+
+    return B;
+}
 // #endregion module
