@@ -288,4 +288,27 @@ export const focusRootIndex = (
         true,
     );
 }
+
+
+export const focusRootID = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    state: AppState,
+    id: string,
+) => {
+    const {
+        tree,
+    } = state.space;
+
+    const root = tree.find(plane => plane.planeID === id);
+    if (!root) {
+        return;
+    }
+
+    navigateToPluridPlane(
+        dispatch,
+        root,
+        undefined,
+        true,
+    );
+}
 // #endregion module

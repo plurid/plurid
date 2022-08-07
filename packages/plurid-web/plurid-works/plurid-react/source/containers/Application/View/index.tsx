@@ -79,6 +79,8 @@
         navigateToPluridPlane,
         focusPreviousRoot,
         focusNextRoot,
+        focusRootIndex,
+        focusRootID,
     } from '~services/logic/animation';
     // #endregion external
 
@@ -701,6 +703,27 @@ const PluridView: React.FC<ViewProperties> = (
                         focusNextRoot(
                             dispatch,
                             state,
+                        );
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.NAVIGATE_TO_ROOT,
+                    callback: (data) => {
+                        const index = (data as any).index;
+                        if (typeof index !== 'undefined') {
+                            focusRootIndex(
+                                dispatch,
+                                state,
+                                index,
+                            );
+                            return;
+                        }
+
+                        const id = (data as any).id;
+                        focusRootID(
+                            dispatch,
+                            state,
+                            id,
                         );
                     },
                 },
