@@ -265,4 +265,27 @@ export const focusNextRoot = (
         'next',
     );
 }
+
+
+export const focusRootIndex = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    state: AppState,
+    index: number,
+) => {
+    const {
+        tree,
+    } = state.space;
+
+    const root = tree[index];
+    if (!root) {
+        return;
+    }
+
+    navigateToPluridPlane(
+        dispatch,
+        root,
+        undefined,
+        true,
+    );
+}
 // #endregion module

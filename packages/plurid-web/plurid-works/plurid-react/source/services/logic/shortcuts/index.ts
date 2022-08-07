@@ -33,6 +33,7 @@
         focusParentActivePlane,
         focusPreviousRoot,
         focusNextRoot,
+        focusRootIndex,
     } from '~services/logic/animation';
     // #endregion external
 
@@ -319,6 +320,19 @@ export const handleGlobalShortcuts = (
         );
         return;
     }
+
+
+    if (event.altKey && event.code.startsWith('Digit')) {
+        const index = parseInt(event.code.replace('Digit', '')) - 1;
+
+        focusRootIndex(
+            dispatch,
+            state,
+            index,
+        );
+        return;
+    }
+
 
     return;
 }
