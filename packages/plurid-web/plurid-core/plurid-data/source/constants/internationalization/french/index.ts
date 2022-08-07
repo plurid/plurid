@@ -91,6 +91,8 @@ const french: Internationalization = {
     toolbarDrawerShortcutsIsolatePlane: 'isoler le plan',
     toolbarDrawerShortcutsOpenClosedPlane: 'ouvert fermé plan',
     toolbarDrawerShortcutsClosePlane: 'plan proche',
+    toolbarDrawerShortcutsPreviousRoot: 'racine précédente',
+    toolbarDrawerShortcutsNextRoot: 'racine suivante',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ ou scroll vers le haut',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ ou scroll vers le bas',

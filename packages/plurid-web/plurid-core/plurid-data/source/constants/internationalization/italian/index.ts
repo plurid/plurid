@@ -91,6 +91,8 @@ const italian: Internationalization = {
     toolbarDrawerShortcutsIsolatePlane: 'isolare il piano',
     toolbarDrawerShortcutsOpenClosedPlane: 'piano chiuso aperto',
     toolbarDrawerShortcutsClosePlane: 'vicino piano',
+    toolbarDrawerShortcutsPreviousRoot: 'radice precedente',
+    toolbarDrawerShortcutsNextRoot: 'radice successiva',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ o scorrere verso l\'alto',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ o scorrere verso il basso',

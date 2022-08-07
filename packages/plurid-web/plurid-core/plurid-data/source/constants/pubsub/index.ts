@@ -43,6 +43,8 @@ export const PLURID_PUBSUB_TOPIC = {
     ISOLATE_PLANE: 'space.isolatePlane',
     OPEN_CLOSED_PLANE: 'space.openClosedPlane',
     CLOSE_PLANE: 'space.closePlane',
+    PREVIOUS_ROOT: 'space.previousRoot',
+    NEXT_ROOT: 'space.nextRoot',
 } as const;
 
 

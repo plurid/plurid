@@ -91,6 +91,8 @@ const german: Internationalization = {
     toolbarDrawerShortcutsIsolatePlane: 'ebene isolieren',
     toolbarDrawerShortcutsOpenClosedPlane: 'offen geschlossen ebene',
     toolbarDrawerShortcutsClosePlane: 'ebene schließen',
+    toolbarDrawerShortcutsPreviousRoot: 'vorherige wurzel',
+    toolbarDrawerShortcutsNextRoot: 'nächste wurzel',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ oder nach oben scrollen',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ oder nach unten scrollen',

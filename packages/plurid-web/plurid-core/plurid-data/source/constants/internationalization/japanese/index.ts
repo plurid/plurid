@@ -91,6 +91,8 @@ const japanese: Internationalization = {
     toolbarDrawerShortcutsIsolatePlane: '分離平面',
     toolbarDrawerShortcutsOpenClosedPlane: '閉じた平面を開く',
     toolbarDrawerShortcutsClosePlane: '平面を閉じる',
+    toolbarDrawerShortcutsPreviousRoot: '前のルート',
+    toolbarDrawerShortcutsNextRoot: '次のルート',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ または上にスクロールします',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ または下にスクロールします',

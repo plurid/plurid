@@ -192,6 +192,16 @@ export const shortcutsNames: ShortcutNames = {
         key: 'w',
         modifier: keyModifiers.ALT,
     },
+    PREVIOUS_ROOT: {
+        name: internationalizationFields.toolbarDrawerShortcutsPreviousRoot,
+        key: 'a',
+        modifier: keyModifiers.ALT,
+    },
+    NEXT_ROOT: {
+        name: internationalizationFields.toolbarDrawerShortcutsNextRoot,
+        key: 'd',
+        modifier: keyModifiers.ALT,
+    },
 };
 
 
@@ -346,6 +356,16 @@ export const defaultShortcuts = [
     {
         type: SHORTCUTS.CLOSE_PLANE,
         key: 'w',
+        modifier: KEY_MODIFIERS.ALT,
+    },
+    {
+        type: SHORTCUTS.PREVIOUS_ROOT,
+        key: 'a',
+        modifier: KEY_MODIFIERS.ALT,
+    },
+    {
+        type: SHORTCUTS.NEXT_ROOT,
+        key: 'd',
         modifier: KEY_MODIFIERS.ALT,
     },
 ];

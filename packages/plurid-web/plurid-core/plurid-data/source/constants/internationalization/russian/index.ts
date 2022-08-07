@@ -91,6 +91,8 @@ const russian: Internationalization = {
     toolbarDrawerShortcutsIsolatePlane: 'изолировать самолет',
     toolbarDrawerShortcutsOpenClosedPlane: 'открытая закрытая плоскость',
     toolbarDrawerShortcutsClosePlane: 'близкий самолет',
+    toolbarDrawerShortcutsPreviousRoot: 'предыдущий корень',
+    toolbarDrawerShortcutsNextRoot: 'следующий корень',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ или прокрутите вверх',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ или прокрутите вниз',

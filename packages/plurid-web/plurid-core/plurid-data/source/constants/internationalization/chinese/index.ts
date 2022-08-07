@@ -91,6 +91,8 @@ const chinese: Internationalization = {
     toolbarDrawerShortcutsIsolatePlane: '隔離平面',
     toolbarDrawerShortcutsOpenClosedPlane: '開閉平面',
     toolbarDrawerShortcutsClosePlane: '關閉平面',
+    toolbarDrawerShortcutsPreviousRoot: '前根',
+    toolbarDrawerShortcutsNextRoot: '下一個根',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ 或向上滚动',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ 或向下滚动',
