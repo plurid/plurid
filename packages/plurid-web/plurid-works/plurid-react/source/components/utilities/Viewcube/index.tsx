@@ -44,6 +44,7 @@
     } from './styled';
 
     import PluridViewcubeModel from './components/ViewcubeModel';
+    import PluridViewcubeTransformAreas from './components/ViewcubeTransformAreas';
     // #endregion internal
 // #endregion imports
 
@@ -252,6 +253,8 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                     </StyledFitView>
                 </>
             )}
+
+            <PluridViewcubeTransformAreas />
         </StyledPluridViewcube>
     );
     // #endregion render
