@@ -181,9 +181,15 @@ export const StyledToolbarButtons = styled.div<IStyledToolbarButtons>`
         content: '';
         position: absolute;
         top: 55px;
-        left: 0;
-        right: 0;
         height: 20px;
+        left: 0;
+        right: 20%;
+    }
+
+    @media (max-width: 900px) {
+        :after {
+            right: 0;
+        }
     }
 `;
 
