@@ -79,7 +79,7 @@ const ViewcubeTransformAreas: React.FC<ViewcubeTransformAreasProperties> = (
             >
                 <TransformArea
                     theme={stateGeneralTheme}
-                    value={0}
+                    value={50}
                     atChange={(value) => {}}
                     position={'vertical'}
                 />
@@ -88,7 +88,7 @@ const ViewcubeTransformAreas: React.FC<ViewcubeTransformAreasProperties> = (
             <StyledViewcubeTransformTranslateX>
                 <TransformArea
                     theme={stateGeneralTheme}
-                    value={0}
+                    value={50}
                     atChange={(value) => {}}
                 />
             </StyledViewcubeTransformTranslateX>

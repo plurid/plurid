@@ -98,12 +98,14 @@ export const StyledTransformThumb = styled.div<IStyledTransformThumb>`
     top: ${
         ({
             position,
-        }) => position === transformAreaPositions.horizontal ? '5px' : '0'
+            value,
+        }) => position === transformAreaPositions.horizontal ? '5px' : value + '%'
     };
     left: ${
         ({
             position,
-        }) => position === transformAreaPositions.horizontal ? '0' : '4px'
+            value,
+        }) => position === transformAreaPositions.horizontal ? value + '%' : '4px'
     };
 
     width: ${
