@@ -349,6 +349,20 @@ export interface PluridPubSubSubscribeMessageNextRoot {
     callback: PluridPubSubCallback<any>;
 }
 
+export type PluridPubSubMessageNavigateToRoot = {
+    index: number;
+} | {
+    id: string;
+}
+export interface PluridPubSubPublishMessageNavigateToRoot {
+    topic: typeof PLURID_PUBSUB_TOPIC.NAVIGATE_TO_ROOT;
+    data: PluridPubSubMessageNavigateToRoot;
+}
+export interface PluridPubSubSubscribeMessageNavigateToRoot {
+    topic: typeof PLURID_PUBSUB_TOPIC.NAVIGATE_TO_ROOT;
+    callback: PluridPubSubCallback<PluridPubSubMessageNavigateToRoot>;
+}
+
 
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
@@ -385,6 +399,7 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageClosePlane
     | PluridPubSubPublishMessagePreviousRoot
     | PluridPubSubPublishMessageNextRoot
+    | PluridPubSubPublishMessageNavigateToRoot
     ;
 
 
@@ -423,5 +438,6 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageClosePlane
     | PluridPubSubSubscribeMessagePreviousRoot
     | PluridPubSubSubscribeMessageNextRoot
+    | PluridPubSubSubscribeMessageNavigateToRoot
     ;
 // #endregion module
