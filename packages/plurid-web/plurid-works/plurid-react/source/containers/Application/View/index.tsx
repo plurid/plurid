@@ -77,6 +77,8 @@
 
     import {
         navigateToPluridPlane,
+        focusPreviousRoot,
+        focusNextRoot,
     } from '~services/logic/animation';
     // #endregion external
 
@@ -683,7 +685,25 @@ const PluridView: React.FC<ViewProperties> = (
                             });
                         }
                     },
-                }
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.PREVIOUS_ROOT,
+                    callback: () => {
+                        focusPreviousRoot(
+                            dispatch,
+                            state,
+                        );
+                    },
+                },
+                {
+                    topic: PLURID_PUBSUB_TOPIC.NEXT_ROOT,
+                    callback: () => {
+                        focusNextRoot(
+                            dispatch,
+                            state,
+                        );
+                    },
+                },
             ];
 
             const indexes: string[] = [];
