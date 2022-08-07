@@ -31,6 +31,8 @@
     import {
         focusActivePlane,
         focusParentActivePlane,
+        focusPreviousRoot,
+        focusNextRoot,
     } from '~services/logic/animation';
     // #endregion external
 
@@ -298,6 +300,22 @@ export const handleGlobalShortcuts = (
         closeActivePlane(
             state,
             pubsub,
+        );
+        return;
+    }
+
+    if (event.altKey && event.code === 'KeyA') {
+        focusPreviousRoot(
+            dispatch,
+            state,
+        );
+        return;
+    }
+
+    if (event.altKey && event.code === 'KeyD') {
+        focusNextRoot(
+            dispatch,
+            state,
         );
         return;
     }

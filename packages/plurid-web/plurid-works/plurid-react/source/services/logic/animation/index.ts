@@ -176,4 +176,93 @@ export const focusParentActivePlane = (
         parentPlane,
     );
 }
+
+
+export const findRootIndex = (
+    tree: TreePlane[],
+    activePlaneID: string,
+    currentRootIndex?: number,
+): number | undefined => {
+    for (const [index, plane] of tree.entries()) {
+        if (plane.planeID === activePlaneID) {
+            return currentRootIndex ?? index;
+        }
+
+        if (
+            plane.children
+        ) {
+            const rootIndex = findRootIndex(
+                plane.children,
+                activePlaneID,
+                index,
+            );
+
+            if (typeof rootIndex === 'number') {
+                return rootIndex;
+            }
+        }
+    }
+
+    return;
+}
+
+
+export const navigateToRoot = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    state: AppState,
+    type: 'previous' | 'next',
+) => {
+    const {
+        activePlaneID,
+        tree,
+    } = state.space;
+
+    const rootIndex = findRootIndex(
+        tree,
+        activePlaneID,
+    );
+    if (typeof rootIndex !== 'number') {
+        return;
+    }
+
+    const treeIndex = type === 'previous'
+        ? rootIndex - 1 || 0
+        : rootIndex + 1;
+
+    const root = tree[treeIndex];
+    if (!root) {
+        return;
+    }
+
+    navigateToPluridPlane(
+        dispatch,
+        root,
+        undefined,
+        true,
+    );
+}
+
+
+export const focusPreviousRoot = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    state: AppState,
+) => {
+    navigateToRoot(
+        dispatch,
+        state,
+        'previous',
+    );
+}
+
+
+export const focusNextRoot = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    state: AppState,
+) => {
+    navigateToRoot(
+        dispatch,
+        state,
+        'next',
+    );
+}
 // #endregion module
