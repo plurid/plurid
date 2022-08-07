@@ -8,15 +8,16 @@
     // #endregion libraries
 
 
-    // #region external
-    // #endregion external
-
-
     // #region internal
     import {
         StyledTransformArea,
         StyledTransformLine,
+        StyledTransformThumb,
     } from './styled';
+
+    import {
+        TransformAreaPosition,
+    } from './data';
     // #endregion internal
 // #region imports
 
@@ -27,15 +28,17 @@ export interface TransformAreaProperties {
     // #region required
         // #region values
         theme: Theme;
+        value: number;
         // #endregion values
 
         // #region methods
+        atChange: (value: number) => void;
         // #endregion methods
     // #endregion required
 
     // #region optional
         // #region values
-        position?: 'vertical' | 'horizontal';
+        position?: TransformAreaPosition;
         // #endregion values
 
         // #region methods
@@ -51,9 +54,11 @@ const TransformArea: React.FC<TransformAreaProperties> = (
         // #region required
             // #region values
             theme,
+            value,
             // #endregion values
 
             // #region methods
+            atChange,
             // #endregion methods
         // #endregion required
 
@@ -78,6 +83,12 @@ const TransformArea: React.FC<TransformAreaProperties> = (
         >
             <StyledTransformLine
                 theme={theme}
+                position={position}
+            />
+
+            <StyledTransformThumb
+                theme={theme}
+                value={value}
                 position={position}
             />
         </StyledTransformArea>
