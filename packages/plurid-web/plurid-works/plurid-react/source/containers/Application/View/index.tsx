@@ -76,6 +76,7 @@
     } from '~services/state/types/space';
 
     import {
+        useAnimatedTransform,
         navigateToPluridPlane,
         focusPreviousRoot,
         focusNextRoot,
@@ -807,7 +808,8 @@ const PluridView: React.FC<ViewProperties> = (
             const translationMode = transformMode === TRANSFORM_MODES.TRANSLATION;
             const scalationMode = transformMode === TRANSFORM_MODES.SCALE;
 
-            dispatchSetAnimatedTransform(true);
+            useAnimatedTransform(dispatch);
+
             switch (direction) {
                 case 2:
                     /** right */
@@ -866,9 +868,6 @@ const PluridView: React.FC<ViewProperties> = (
                     }
                     break;
             }
-            setTimeout(() => {
-                dispatchSetAnimatedTransform(false);
-            }, 450);
         }
 
         const handlePan = (

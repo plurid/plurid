@@ -33,21 +33,32 @@
 
 
 // #region module
-export const useAnimatedTransform = (
-    dispatch: ThunkDispatch<{}, {}, AnyAction>,
-) => {
-    const dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform = (
-        payload,
-    ) => dispatch(
-        actions.space.setAnimatedTransform(payload),
-    );
+export const factoryUseAnimatedTransform = () => {
+    let timeout: NodeJS.Timeout | undefined;
 
-    dispatchSetAnimatedTransform(true);
+    return (
+        dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    ) => {
+        const dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform = (
+            payload,
+        ) => dispatch(
+            actions.space.setAnimatedTransform(payload),
+        );
 
-    setTimeout(() => {
-        dispatchSetAnimatedTransform(false);
-    }, PLURID_DEFAULT_ANIMATED_TRANSFORM_TIMEOUT);
+        dispatchSetAnimatedTransform(true);
+
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+
+        timeout = setTimeout(() => {
+            dispatchSetAnimatedTransform(false);
+        }, PLURID_DEFAULT_ANIMATED_TRANSFORM_TIMEOUT);
+    }
 }
+
+export const useAnimatedTransform = factoryUseAnimatedTransform();
+
 
 
 export const navigateToPluridPlane = (
