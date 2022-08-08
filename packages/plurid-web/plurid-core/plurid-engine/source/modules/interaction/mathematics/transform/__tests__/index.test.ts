@@ -14,6 +14,7 @@
         makeRotationMatrixFromQuaternion,
         computeQuaternionFromEulers,
         quaternionFromAxisAngle,
+        radToDeg,
     } from '../../quaternion';
     // #endregion external
 // #endregion imports
@@ -470,12 +471,12 @@ describe('transform', () => {
         printMatrix(t1Matrix, 't1Matrix');
 
 
-        const xAngle = 80;
+        const xAngle = 77;
         const phi = degToRad(xAngle);
         const xAxis: [number, number, number] = [0, 1, 0];
         const qx = quaternionFromAxisAngle(...xAxis, phi);
 
-        const zAngle = 0;
+        const zAngle = 23;
         const theta = degToRad(zAngle);
         const zAxis: [number, number, number] = [1, 0, 0];
         const qz = quaternionFromAxisAngle(...zAxis, theta);
@@ -511,6 +512,26 @@ describe('transform', () => {
             s1Matrix,
         ]);
         printMatrix(m2, 'm2');
+
+        // const matrix3d = matrixToCSSMatrix(r1);
+
+        // const values: number[] = getRotationMatrix(matrix3d);
+        // // console.log('getRotationMatrix', values);
+        // // printMatrix(arrayToMatrix(values), 'values');
+
+
+        // const rotate = getTransformRotate(matrix3d);
+        // const translate = getTransformTranslate(matrix3d);
+        // const scale = getTransformScale(matrix3d);
+        // console.log({
+        //     matrix3d,
+        //     rotate,
+        //     x: radToDeg(rotate.rotateX),
+        //     y: radToDeg(rotate.rotateY),
+        //     translate,
+        //     scale,
+        // });
+
 
         // console.log({
         //     phi,
