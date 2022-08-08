@@ -42,15 +42,16 @@ const {
 } = interaction.quaternion;
 
 const {
-    multiplyMatrices,
+    multiplyMatricesArray,
     translateMatrix,
     rotateYMatrix,
+    matrixToCSSMatrix,
 } = interaction.transform.general;
 
 const {
     getTransformRotate,
     getTransformTranslate,
-    getTransformScale
+    getTransformScale,
 } = interaction.transform.matrix3d;
 
 
@@ -259,18 +260,15 @@ export const computePlaneLocation = (
         ? plane.parentPlaneID ? 200 : 0
         : 0;
 
-    const newMatrix = multiplyMatrices(
-        multiplyMatrices(
-            multiplyMatrices(
-                translateMatrix(-translateX, -translateY, zSign1 * translateZ),
-                rotateYMatrix(degToRad(rotateY)),
-            ),
-            translateMatrix(translateX, translateY, zSign2 * translateZ),
-        ),
-        translateMatrix(-(translateX + xOffset), -translateY, zSign1 * translateZ),
-    );
+    const newMatrix = multiplyMatricesArray([
+        translateMatrix(-translateX, -translateY, zSign1 * translateZ),
+        rotateYMatrix(degToRad(rotateY)),
+        translateMatrix(translateX, translateY, zSign2 * translateZ),
 
-    const matrix3d = `matrix3d(${newMatrix.flat().join(',')})`;
+        translateMatrix(-(translateX + xOffset), -translateY, zSign1 * translateZ),
+    ]);
+
+    const matrix3d = matrixToCSSMatrix(newMatrix);
 
     const rotate = getTransformRotate(matrix3d);
     const translate = getTransformTranslate(matrix3d);
