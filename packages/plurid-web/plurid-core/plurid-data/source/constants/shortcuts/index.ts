@@ -354,14 +354,14 @@ export const defaultShortcuts = [
         modifier: KEY_MODIFIERS.ALT,
     },
     {
-        type: SHORTCUTS.OPEN_CLOSED_PLANE,
-        key: 't',
-        modifier: [KEY_MODIFIERS.ALT, KEY_MODIFIERS.SHIFT],
-    },
-    {
         type: SHORTCUTS.CLOSE_PLANE,
         key: 'w',
         modifier: KEY_MODIFIERS.ALT,
+    },
+    {
+        type: SHORTCUTS.OPEN_CLOSED_PLANE,
+        key: 't',
+        modifier: [KEY_MODIFIERS.ALT, KEY_MODIFIERS.SHIFT],
     },
     {
         type: SHORTCUTS.PREVIOUS_ROOT,
