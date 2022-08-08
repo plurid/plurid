@@ -74,7 +74,7 @@ export const StyledTransformLine = styled.div<IStyledTransformLine>`
     background-color: ${
         ({
             theme,
-        }: IStyledTransformLine) => theme.backgroundColorPrimaryAlpha
+        }: IStyledTransformLine) => theme.colorTertiary
     };
 `;
 
@@ -93,7 +93,7 @@ export const StyledTransformThumb = styled.div<IStyledTransformThumb>`
     background-color: ${
         ({
             theme,
-        }: IStyledTransformThumb) => theme.backgroundColorPrimaryAlpha
+        }: IStyledTransformThumb) => theme.colorPrimary
     };
     top: ${
         ({

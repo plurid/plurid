@@ -9,6 +9,7 @@
 // #region module
 export const StyledPluridViewcubeModel = styled.div`
     grid-area: PVModel;
+    margin-left: -7px;
 `;
 
 

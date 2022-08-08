@@ -75,8 +75,7 @@ const ViewcubeTransformAreas: React.FC<ViewcubeTransformAreasProperties> = (
                 />
             </StyledViewcubeTransformScale> */}
 
-            <StyledViewcubeTransformTranslateY
-            >
+            <StyledViewcubeTransformTranslateY>
                 <TransformArea
                     theme={stateGeneralTheme}
                     value={50}

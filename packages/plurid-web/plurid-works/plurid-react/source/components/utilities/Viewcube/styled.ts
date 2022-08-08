@@ -68,7 +68,7 @@ export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
                          "PVEmptyThree      PVRotateDown    PVFitview        PVTranslateY"
                          "PVTranslateX      PVTranslateX    PVTranslateX     PVTranslateX";
     grid-template-rows: 20px 15px 95px 15px 20px;
-    grid-template-columns: 15px 115px 15px 20px;
+    grid-template-columns: 15px 100px 15px 20px;
 
     opacity: ${({
         fadeInTime,
