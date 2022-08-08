@@ -93,6 +93,7 @@ const french: Internationalization = {
     toolbarDrawerShortcutsClosePlane: 'plan proche',
     toolbarDrawerShortcutsPreviousRoot: 'racine précédente',
     toolbarDrawerShortcutsNextRoot: 'racine suivante',
+    toolbarDrawerShortcutsFocusRoot: 'focus racine',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ ou scroll vers le haut',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ ou scroll vers le bas',

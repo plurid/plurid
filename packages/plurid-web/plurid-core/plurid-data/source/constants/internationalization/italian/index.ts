@@ -93,6 +93,7 @@ const italian: Internationalization = {
     toolbarDrawerShortcutsClosePlane: 'vicino piano',
     toolbarDrawerShortcutsPreviousRoot: 'radice precedente',
     toolbarDrawerShortcutsNextRoot: 'radice successiva',
+    toolbarDrawerShortcutsFocusRoot: 'radice di messa a fuoco',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ o scorrere verso l\'alto',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ o scorrere verso il basso',

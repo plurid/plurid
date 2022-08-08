@@ -93,6 +93,7 @@ const romanian: Internationalization = {
     toolbarDrawerShortcutsClosePlane: 'închidere plan',
     toolbarDrawerShortcutsPreviousRoot: 'rădăcina anterioară',
     toolbarDrawerShortcutsNextRoot: 'rădăcina următoare',
+    toolbarDrawerShortcutsFocusRoot: 'focus rădăcină',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ sau scroll sus',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ sau scroll jos',

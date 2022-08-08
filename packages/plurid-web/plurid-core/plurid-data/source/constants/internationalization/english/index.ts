@@ -93,6 +93,7 @@ const english: Internationalization = {
     toolbarDrawerShortcutsClosePlane: 'close plane',
     toolbarDrawerShortcutsPreviousRoot: 'previous root',
     toolbarDrawerShortcutsNextRoot: 'next root',
+    toolbarDrawerShortcutsFocusRoot: 'focus root',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ or scroll up',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ or scroll down',

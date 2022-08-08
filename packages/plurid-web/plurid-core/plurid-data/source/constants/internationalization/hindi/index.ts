@@ -93,6 +93,7 @@ const hindi: Internationalization = {
     toolbarDrawerShortcutsClosePlane: 'बंद विमान',
     toolbarDrawerShortcutsPreviousRoot: 'पिछली जड़',
     toolbarDrawerShortcutsNextRoot: 'अगली जड़',
+    toolbarDrawerShortcutsFocusRoot: 'फोकस रूट',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ या स्क्रॉल करें',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ या नीचे स्क्रॉल करें',

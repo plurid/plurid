@@ -202,6 +202,11 @@ export const shortcutsNames: ShortcutNames = {
         key: 'd',
         modifier: keyModifiers.ALT,
     },
+    FOCUS_ROOT: {
+        name: internationalizationFields.toolbarDrawerShortcutsFocusRoot,
+        key: '[digit]',
+        modifier: keyModifiers.ALT,
+    },
 };
 
 
@@ -366,6 +371,11 @@ export const defaultShortcuts = [
     {
         type: SHORTCUTS.NEXT_ROOT,
         key: 'd',
+        modifier: KEY_MODIFIERS.ALT,
+    },
+    {
+        type: SHORTCUTS.FOCUS_ROOT,
+        key: '[digit]',
         modifier: KEY_MODIFIERS.ALT,
     },
 ];

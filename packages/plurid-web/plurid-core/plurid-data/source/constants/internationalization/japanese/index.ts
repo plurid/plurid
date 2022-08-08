@@ -93,6 +93,7 @@ const japanese: Internationalization = {
     toolbarDrawerShortcutsClosePlane: '平面を閉じる',
     toolbarDrawerShortcutsPreviousRoot: '前のルート',
     toolbarDrawerShortcutsNextRoot: '次のルート',
+    toolbarDrawerShortcutsFocusRoot: 'フォーカス ルート',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ または上にスクロールします',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ または下にスクロールします',

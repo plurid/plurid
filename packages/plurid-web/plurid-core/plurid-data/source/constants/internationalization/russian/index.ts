@@ -93,6 +93,7 @@ const russian: Internationalization = {
     toolbarDrawerShortcutsClosePlane: 'близкий самолет',
     toolbarDrawerShortcutsPreviousRoot: 'предыдущий корень',
     toolbarDrawerShortcutsNextRoot: 'следующий корень',
+    toolbarDrawerShortcutsFocusRoot: 'корень фокуса',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ или прокрутите вверх',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ или прокрутите вниз',

@@ -93,6 +93,7 @@ const german: Internationalization = {
     toolbarDrawerShortcutsClosePlane: 'ebene schließen',
     toolbarDrawerShortcutsPreviousRoot: 'vorherige wurzel',
     toolbarDrawerShortcutsNextRoot: 'nächste wurzel',
+    toolbarDrawerShortcutsFocusRoot: 'fokus wurzel',
 
     toolbarDrawerShortcutsArrowOrScrollUp: '↑ oder nach oben scrollen',
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ oder nach unten scrollen',
