@@ -1,10 +1,6 @@
 // #region imports
     // #region libraries
     import {
-        /** constants */
-        defaultTreePlane,
-
-        /** interfaces */
         PluridPlane,
         IndexedPluridPlane,
         TreePlane,
@@ -19,10 +15,6 @@
         space,
         general as generalEngine,
     } from '@plurid/plurid-engine';
-
-    import {
-        uuid,
-    } from '@plurid/plurid-functions';
     // #endregion libraries
 
 
@@ -46,6 +38,8 @@ const {
     translateMatrix,
     rotateYMatrix,
     matrixToCSSMatrix,
+    arrayToMatrix,
+    inverseMatrix,
 } = interaction.transform.general;
 
 const {
@@ -54,6 +48,12 @@ const {
     getTransformScale,
 } = interaction.transform.matrix3d;
 
+const {
+    rotateMatrix,
+    translateMatrix: translateMatrixArray,
+    scaleMatrix,
+    multiplyArrayOfMatrices,
+} = interaction.matrix;
 
 const {
     resolvePluridPlaneData,
@@ -254,38 +254,81 @@ export const computePlaneLocation = (
         rotateY,
     } = location;
 
-    const zSign1 = rotateY < 100 ? 1 : -1;
-    const zSign2 = rotateY < 100 ? -1 : 1;
-    const xOffset = rotateY < 100
-        ? plane.parentPlaneID ? 200 : 0
-        : 0;
 
-    const newMatrix = multiplyMatricesArray([
-        translateMatrix(-translateX, -translateY, zSign1 * translateZ),
-        rotateYMatrix(degToRad(rotateY)),
-        translateMatrix(translateX, translateY, zSign2 * translateZ),
+    const getTransform = () => {
+        const innerWidth = typeof window === 'undefined'
+            ? 720
+            : window.innerWidth / 2;
+        const innerHeight = typeof window === 'undefined'
+            ? 400
+            : window.innerHeight / 2;
 
-        translateMatrix(-(translateX + xOffset), -translateY, zSign1 * translateZ),
-    ]);
+        const transformOriginX = translateX * -1 + innerWidth;
+        const transformOriginY = translateY * -1 + innerHeight;
+        const transformOriginZ = translateZ * -1;
 
-    const matrix3d = matrixToCSSMatrix(newMatrix);
+        const rotationMatrix = rotateMatrix(0, degToRad(rotateY));
+        const translationMatrix = translateMatrixArray(translateX, translateY, translateZ);
+        const scalationMatrix = scaleMatrix(1);
 
-    const rotate = getTransformRotate(matrix3d);
-    const translate = getTransformTranslate(matrix3d);
-    const scale = getTransformScale(matrix3d);
+        const transformMatrix = multiplyArrayOfMatrices([
+            translationMatrix,
 
-    const transform = {
-        translationX: translate.translateX,
-        translationY: translate.translateY,
-        translationZ: translate.translateZ * -1 + xOffset,
-        rotationX: radToDeg(rotate.rotateX),
-        rotationY: radToDeg(rotate.rotateY) * -1,
-        scale: scale.scale,
-    };
+            translateMatrixArray(transformOriginX, transformOriginY, transformOriginZ),
+            rotationMatrix,
+            translateMatrixArray(-transformOriginX, -transformOriginY, -transformOriginZ),
+
+            scalationMatrix,
+        ]);
+        const inverseTransformMatrix = inverseMatrix(
+            arrayToMatrix(transformMatrix),
+        );
+
+        const matrix3dTransformMatrix = matrixToCSSMatrix(inverseTransformMatrix);
+
+        const rotate = getTransformRotate(matrix3dTransformMatrix);
+        const translate = getTransformTranslate(matrix3dTransformMatrix);
+        const scale = getTransformScale(matrix3dTransformMatrix);
+
+        const transform = {
+            translationX: translate.translateX,
+            translationY: translate.translateY,
+            translationZ: translate.translateZ,
+            rotationX: radToDeg(rotate.rotateX),
+            rotationY: radToDeg(rotate.rotateY),
+            scale: scale.scale,
+        };
+
+        return transform;
+    }
+    const transform = getTransform();
+
+
+    const getMatrix3d = () => {
+        const zSign1 = rotateY < 100 ? 1 : -1;
+        const zSign2 = rotateY < 100 ? -1 : 1;
+        const xOffset = rotateY < 100
+            ? plane.parentPlaneID ? 200 : 0
+            : 0;
+
+        const newMatrix = multiplyMatricesArray([
+            translateMatrix(-translateX, -translateY, zSign1 * translateZ),
+            rotateYMatrix(degToRad(rotateY)),
+            translateMatrix(translateX, translateY, zSign2 * translateZ),
+
+            translateMatrix(-(translateX + xOffset), -translateY, zSign1 * translateZ),
+        ]);
+
+        const matrix3d = matrixToCSSMatrix(newMatrix);
+
+        return matrix3d;
+    }
+    const matrix3d = getMatrix3d();
+
 
     return {
-        matrix3d,
         transform,
+        matrix3d,
     };
 }
 // #endregion module

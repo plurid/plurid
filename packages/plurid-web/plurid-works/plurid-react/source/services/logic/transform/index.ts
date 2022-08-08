@@ -68,11 +68,11 @@ export const computeMatrix = (
 
     const transformMatrix = multiplyArrayOfMatrices([
         translationMatrix,
-        multiplyArrayOfMatrices([
-            translateMatrix(transformOriginX, transformOriginY, transformOriginZ),
-            rotationMatrix,
-            translateMatrix(-transformOriginX, -transformOriginY, -transformOriginZ),
-        ]),
+
+        translateMatrix(transformOriginX, transformOriginY, transformOriginZ),
+        rotationMatrix,
+        translateMatrix(-transformOriginX, -transformOriginY, -transformOriginZ),
+
         scalationMatrix,
     ]);
 
