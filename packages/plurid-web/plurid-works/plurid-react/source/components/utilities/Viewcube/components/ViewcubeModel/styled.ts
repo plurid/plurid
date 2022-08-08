@@ -10,6 +10,7 @@
 export const StyledPluridViewcubeModel = styled.div`
     grid-area: PVModel;
     margin-left: -7px;
+    margin-top: 5px;
 `;
 
 

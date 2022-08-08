@@ -60,14 +60,14 @@ export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
     user-select: none;
     transition: all 300ms ease-in-out;
     z-index: 9998;
-    height: 165px;
+    height: 175px;
     display: grid;
     grid-template-areas: "PVScale           PVScale         PVScale          PVScale"
                          "PVEmptyOne        PVRotateUp      PVEmptyTwo       PVTranslateY"
                          "PVRotateLeft      PVModel         PVRotateRight    PVTranslateY"
                          "PVEmptyThree      PVRotateDown    PVFitview        PVTranslateY"
                          "PVTranslateX      PVTranslateX    PVTranslateX     PVTranslateX";
-    grid-template-rows: 20px 15px 95px 15px 20px;
+    grid-template-rows: 20px 15px 105px 15px 20px;
     grid-template-columns: 15px 100px 15px 20px;
 
     opacity: ${({
