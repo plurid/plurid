@@ -252,7 +252,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                         <PluridIconGlobal />
                     </StyledFitView>
 
-                    <PluridViewcubeTransformAreas />
+                    {/* <PluridViewcubeTransformAreas /> */}
                 </>
             )}
         </StyledPluridViewcube>
