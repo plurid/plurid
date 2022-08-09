@@ -1056,6 +1056,10 @@ export const collectApplicationsFromPath = async (
     host: string,
     globals: Record<string, string> | undefined,
 ) => {
+    console.log({
+        aaaa: isoMatch,
+    });
+
     const parameters = {};
     const query = {};
     const path: any = {
@@ -1064,9 +1068,11 @@ export const collectApplicationsFromPath = async (
         view: [],
         value: '',
     };
+    let defaultConfiguration;
 
     if (isoMatch.kind === 'Route') {
         let routeData: any = isoMatch.data;
+        defaultConfiguration = routeData.defaultConfiguration;
 
         if (isoMatch.data.resolver) {
             routeData = await isoMatch.data.resolver(globals);
@@ -1100,6 +1106,7 @@ export const collectApplicationsFromPath = async (
     const plurids: {
         planes: PluridPlane<PluridReactComponent>[],
         view: string[],
+        configuration?: any,
     }[] = [];
     if (spaces) {
         for (const space of spaces) {
@@ -1262,6 +1269,7 @@ export const collectApplicationsFromPath = async (
             const pluridApplication = {
                 planes,
                 view,
+                configuration: defaultConfiguration,
             };
             plurids.push(pluridApplication);
         }
@@ -1325,6 +1333,7 @@ export const collectApplicationsFromPath = async (
         const pluridApplication = {
             planes: pluridPlanes,
             view,
+            configuration: defaultConfiguration,
         };
         plurids.push(pluridApplication);
     }

@@ -58,6 +58,7 @@ export const serverComputeMetastate = async (
         const {
             planes,
             view,
+            configuration,
         } = application;
         // console.log('serverComputeMetastate view', view);
 
@@ -67,8 +68,7 @@ export const serverComputeMetastate = async (
         } = computeApplication(
             indexedPlanes,
             planes,
-            // matchedRoute.path.defaultConfiguration,
-            undefined,
+            (isoMatch.data as any).defaultConfiguration,
             view,
         );
         // console.log({
