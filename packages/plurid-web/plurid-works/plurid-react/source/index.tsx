@@ -21,7 +21,6 @@
         PluridRoute,
         PluridRouteSpace,
         PluridRouteUniverse,
-        PluridRouteCluster,
         PluridRoutePlane,
 
         ComponentWithPlurid,
@@ -193,7 +192,6 @@ export {
     PluridRoute,
     PluridRouteSpace,
     PluridRouteUniverse,
-    PluridRouteCluster,
     PluridRoutePlane,
 
     ComponentWithPlurid,
