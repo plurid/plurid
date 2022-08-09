@@ -11,6 +11,16 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
+    import themes, {
+        Theme,
+    } from '@plurid/plurid-themes';
+
+    import {
+        meta,
+        objects,
+    } from '@plurid/plurid-functions';
+
     import {
         /** constants */
         PLURID_ENTITY_VIEW,
@@ -33,22 +43,7 @@
         PluridApplicationView,
     } from '@plurid/plurid-data';
 
-    import {
-        space,
-        planes,
-        general as generalEngine,
-    } from '@plurid/plurid-engine';
-
     import PluridPubSub from '@plurid/plurid-pubsub';
-
-    import {
-        meta,
-        objects,
-    } from '@plurid/plurid-functions';
-
-    import themes, {
-        Theme,
-    } from '@plurid/plurid-themes';
     // #endregion libraries
 
 
@@ -85,7 +80,12 @@
         focusRootID,
     } from '~services/logic/animation';
 
-    import PluridPlanesView from '~containers/Application/View/PlanesView';
+    import {
+        generalEngine,
+        space,
+
+        getRegisteredPlanes,
+    } from '~services/engine';
     // #endregion external
 
 
@@ -94,22 +94,18 @@
         GlobalStyle,
         StyledView,
     } from './styled';
+
+    import PluridViewContainer from './Container';
     // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-const {
-    getRegisteredPlanes,
-} = planes;
-
-
-
-export interface ViewOwnProperties extends PluridApplicationProperties<PluridReactComponent> {
+export interface PluridViewOwnProperties extends PluridApplicationProperties<PluridReactComponent> {
 }
 
-export interface ViewStateProperties {
+export interface PluridViewStateProperties {
     state: AppState;
     stateConfiguration: PluridAppConfiguration;
     // stateDataUniverses: Indexed<PluridInternalStateUniverse>;
@@ -125,7 +121,7 @@ export interface ViewStateProperties {
     stateGeneralTheme: Theme;
 }
 
-export interface ViewDispatchProperties {
+export interface PluridViewDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
     dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
@@ -168,12 +164,13 @@ export interface ViewDispatchProperties {
     // dispatchDataSetPlaneSources: typeof actions.data.setPlaneSources;
 }
 
-export type ViewProperties = ViewOwnProperties
-    & ViewStateProperties
-    & ViewDispatchProperties;
+export type PluridViewProperties =
+    & PluridViewOwnProperties
+    & PluridViewStateProperties
+    & PluridViewDispatchProperties;
 
 
-const PluridView: React.FC<ViewProperties> = (
+const PluridView: React.FC<PluridViewProperties> = (
     properties,
 ) => {
     // #region properties
@@ -1247,7 +1244,7 @@ const PluridView: React.FC<ViewProperties> = (
                 value={pluridContext}
             >
                 {stateSpaceView.length !== 0 ? (
-                    <PluridPlanesView />
+                    <PluridViewContainer />
                 ) : (
                     <></>
                 )}
@@ -1260,7 +1257,7 @@ const PluridView: React.FC<ViewProperties> = (
 
 const mapStateToProperties = (
     state: AppState,
-): ViewStateProperties => ({
+): PluridViewStateProperties => ({
     state,
     stateConfiguration: selectors.configuration.getConfiguration(state),
     // stateDataUniverses: selectors.data.getUniverses(state),
@@ -1279,7 +1276,7 @@ const mapStateToProperties = (
 
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-): ViewDispatchProperties => ({
+): PluridViewDispatchProperties => ({
     dispatch,
 
     dispatchSetConfiguration: (configuration: PluridAppConfiguration) => dispatch(
@@ -1397,7 +1394,7 @@ const mapDispatchToProperties = (
 });
 
 
-const ConnectedView = connect(
+const ConnectedPluridView = connect(
     mapStateToProperties,
     mapDispatchToProperties,
     null,
@@ -1410,5 +1407,5 @@ const ConnectedView = connect(
 
 
 // #region exports
-export default ConnectedView;
+export default ConnectedPluridView;
 // #endregion exports
