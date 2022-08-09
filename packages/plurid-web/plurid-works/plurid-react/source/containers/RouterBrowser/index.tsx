@@ -17,7 +17,6 @@
         PLURID_ROUTE_DEFAULT_CLUSTER,
 
         /** interfaces */
-        IndexedPluridPlane,
         PluridRouterProperties as PluridRouterBrowserOwnProperties,
         PluridRoute,
         PluridRoutePlane,
@@ -53,9 +52,6 @@
     import {
         getComponentFromRoute,
         getGatewayView,
-        generateIndexedPlane,
-        generateIndexedPlanes,
-        computeIndexedPlanes,
 
         gatherPluridPlanes,
         computePluridRoute,
