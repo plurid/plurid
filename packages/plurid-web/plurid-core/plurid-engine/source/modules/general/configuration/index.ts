@@ -1,8 +1,6 @@
 // #region imports
     // #region libraries
     import {
-        TOOLBAR_DRAWERS,
-
         PluridPartialConfiguration,
         PluridConfigurationTheme,
         PluridConfiguration,
@@ -72,24 +70,6 @@ export const merge = (
         {
             'global.theme.general': () => resolveTheme(configuration.global?.theme, 'general') as any,
             'global.theme.interaction': () => resolveTheme(configuration.global?.theme, 'interaction') as any,
-
-            'elements.toolbar.drawers': () => (configuration.elements
-                && configuration.elements.toolbar
-                && configuration.elements.toolbar.drawers
-                    ? configuration.elements.toolbar.drawers
-                    : targetConfiguration.elements.toolbar.drawers) as (keyof typeof TOOLBAR_DRAWERS)[],
-            'elements.toolbar.toggledDrawers': () => (configuration.elements
-                && configuration.elements.toolbar
-                && configuration.elements.toolbar.toggledDrawers
-                    ? configuration.elements.toolbar.toggledDrawers
-                    : targetConfiguration.elements.toolbar.toggledDrawers) as (keyof typeof TOOLBAR_DRAWERS)[],
-            'elements.switch.show': () => configuration?.elements?.switch?.show ?? false,
-
-            'space.layout': () => configuration
-                && configuration.space
-                && typeof configuration.space.layout === 'object'
-                    ? configuration.space.layout
-                    : targetConfiguration.space.layout,
         },
     );
 
