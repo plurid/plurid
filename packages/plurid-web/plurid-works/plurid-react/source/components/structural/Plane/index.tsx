@@ -214,12 +214,13 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     }
 
     const refreshPlane = () => {
+        const REFRESH_TIMEOUT = 250;
         setRefreshing(true);
 
         setTimeout(() => {
             setRemountKey(value => ++value);
             setRefreshing(false);
-        }, 350);
+        }, REFRESH_TIMEOUT);
     }
 
     const isolatePlane = () => {
