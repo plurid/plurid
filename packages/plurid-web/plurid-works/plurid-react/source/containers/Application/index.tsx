@@ -13,15 +13,11 @@
         Provider as ReduxProvider,
     } from 'react-redux';
 
+
     import {
         PluridApplication as PluridApplicationProperties,
         PluridState,
     } from '@plurid/plurid-data';
-
-    import {
-        planes,
-        state,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -38,6 +34,11 @@
     import {
         loadStateFromContext,
     } from '~services/logic/state';
+
+    import {
+        state,
+        registerPlanes,
+    } from '~services/engine';
     // #endregion external
 
 
@@ -49,11 +50,6 @@
 
 
 // #region module
-const {
-    registerPlanes,
-} = planes;
-
-
 class PluridApplication extends Component<
     PluridApplicationProperties<PluridReactComponent>,
     {}

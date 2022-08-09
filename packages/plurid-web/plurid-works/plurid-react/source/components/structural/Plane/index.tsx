@@ -27,11 +27,6 @@
     } from '@plurid/plurid-data';
 
     import {
-        cleanTemplate,
-        space,
-    } from '@plurid/plurid-engine';
-
-    import {
         mathematics,
     } from '@plurid/plurid-functions';
 
@@ -55,6 +50,11 @@
     import { ViewSize } from '~services/state/types/space';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+
+    import {
+        cleanTemplate,
+        space,
+    } from '~services/engine';
     // #endregion external
 
 

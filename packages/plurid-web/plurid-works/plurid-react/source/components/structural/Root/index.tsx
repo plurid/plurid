@@ -9,6 +9,7 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
     import {
         /** constants */
         PLURID_ENTITY_ROOT,
@@ -17,10 +18,6 @@
         TreePlane,
         PluridPlaneComponentProperty,
     } from '@plurid/plurid-data';
-
-    import {
-        planes,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -37,6 +34,11 @@
     import {
         isReactRenderable,
     } from '~services/utilities/react';
+
+    import {
+        getPlanesRegistrar,
+        getRegisteredPlane,
+    } from '~services/engine';
     // #endregion external
 
 
@@ -50,12 +52,6 @@
 
 
 // #region module
-const {
-    getPlanesRegistrar,
-    getRegisteredPlane,
-} = planes;
-
-
 export interface PluridRootOwnProperties {
     plane: TreePlane;
 }

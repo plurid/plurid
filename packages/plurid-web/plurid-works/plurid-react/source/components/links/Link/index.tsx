@@ -36,13 +36,6 @@
         PluridConfiguration,
         // #endregion interfaces
     } from '@plurid/plurid-data';
-
-    import {
-        planes,
-        routing,
-        space,
-        // general as generalEngine,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -72,6 +65,16 @@
     import {
         navigateToPluridPlane,
     } from '~services/logic/animation';
+
+    import {
+        getPlanesRegistrar,
+        getPluridPlaneIDByData,
+
+        resolveRoute,
+        computePlaneAddress,
+
+        space,
+    } from '~services/engine';
     // #endregion external
 
 
@@ -87,18 +90,6 @@
 
 
 // #region module
-const {
-    resolveRoute,
-    computePlaneAddress,
-} = routing;
-
-const {
-    getPlanesRegistrar,
-    getPluridPlaneIDByData,
-} = planes;
-
-
-
 export interface PluridLinkStateProperties {
     stateTree: TreePlane[];
     stateLastClosedPlane: string;

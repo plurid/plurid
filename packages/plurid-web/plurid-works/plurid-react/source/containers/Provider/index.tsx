@@ -22,6 +22,7 @@ export interface PluridProviderProperties {
     metastate: PluridMetastate | undefined;
 }
 
+
 class PluridProvider extends Component<
     React.PropsWithChildren<PluridProviderProperties>
 > {

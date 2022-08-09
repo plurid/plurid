@@ -5,7 +5,6 @@
     import {
         PluridRoute,
         PluridRoutePlane,
-        // PluridComponent,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -15,7 +14,7 @@
         PluridReactComponent,
     } from '~data/interfaces';
 
-    import PluridRouterBrowser from '../RouterBrowser';
+    import PluridRouterBrowser from '~containers/RouterBrowser';
     // #endregion external
 // #endregion imports
 
@@ -40,7 +39,7 @@ export interface PluridRouterStaticOwnProperties {
 const PluridRouterStatic = (
     properties: PluridRouterStaticOwnProperties,
 ) => {
-    /** properties */
+    // #region properties
     const {
         path,
         directPlane,
@@ -59,9 +58,10 @@ const PluridRouterStatic = (
     const hostname = hostnameProperty || 'origin';
     const gatewayQuery = gatewayQueryProperty || '';
     const gatewayEndpoint = gatewayEndpointProperty || '/gateway';
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <PluridRouterBrowser
             routes={routes}
@@ -76,6 +76,7 @@ const PluridRouterStatic = (
             hostname={hostname}
         />
     );
+    // #endregion render
 }
 // #endregion module
 

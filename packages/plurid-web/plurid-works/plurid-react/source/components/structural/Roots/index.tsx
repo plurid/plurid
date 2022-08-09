@@ -19,7 +19,7 @@
 
 
     // #region external
-    import PluridRoot from '../Root';
+    import PluridRoot from '~components/structural/Root';
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';

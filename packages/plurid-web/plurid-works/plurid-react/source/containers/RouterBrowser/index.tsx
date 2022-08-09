@@ -6,38 +6,24 @@
         useEffect,
     } from 'react';
 
+
+    import {
+        storage,
+    } from '@plurid/plurid-functions';
+
+    import {
+        useMounted,
+    } from '@plurid/plurid-functions-react';
+
     import {
         /** constants */
         PLURID_ROUTER_LOCATION_CHANGED,
         PLURID_ROUTER_LOCATION_STORED,
         PLURID_ROUTER_STORAGE,
 
-        PLURID_ROUTE_DEFAULT_SPACE,
-        PLURID_ROUTE_DEFAULT_UNIVERSE,
-        PLURID_ROUTE_DEFAULT_CLUSTER,
-
         /** interfaces */
         PluridRouterProperties as PluridRouterBrowserOwnProperties,
-        PluridRoute,
-        PluridRoutePlane,
-        PluridPlane,
-        // PluridComponent,
     } from '@plurid/plurid-data';
-
-    import {
-        routing,
-        planes,
-        utilities,
-    } from '@plurid/plurid-engine';
-
-    import {
-        storage,
-        uuid,
-    } from '@plurid/plurid-functions';
-
-    import {
-        useMounted,
-    } from '@plurid/plurid-functions-react';
     // #endregion libraries
 
 
@@ -47,12 +33,7 @@
         PluridRouteMatch,
     } from '~data/interfaces';
 
-    import PluridApplication from '~containers/Application/index';
-
     import {
-        getComponentFromRoute,
-        getGatewayView,
-
         gatherPluridPlanes,
         computePluridRoute,
         computeInitialMatchedPath,
@@ -62,22 +43,17 @@
     import {
         isReactRenderable,
     } from '~services/utilities/react';
+
+    import {
+        PluridPlanesRegistrar,
+        PluridIsoMatcher,
+    } from '~services/engine';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
-const {
-    Registrar: PluridPlanesRegistrar,
-} = planes;
-
-const {
-    IsoMatcher: PluridIsoMatcher,
-} = routing;
-
-
-
 const PluridRouterBrowser = (
     properties: PluridRouterBrowserOwnProperties<PluridReactComponent>,
 ) => {

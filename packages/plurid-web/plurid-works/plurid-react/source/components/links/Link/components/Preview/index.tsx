@@ -11,10 +11,6 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
-
-    import {
-        planes,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -29,6 +25,10 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
+
+    import {
+        getPlanesRegistrar,
+    } from '~services/engine';
     // #endregion external
 
 
@@ -42,12 +42,6 @@
 
 
 // #region module
-const {
-    getPlanesRegistrar,
-} = planes;
-
-
-
 export interface PluridPlanePreviewOwnProperties {
     planeRoute: string;
     linkCoordinates: PluridLinkCoordinates;
