@@ -10,17 +10,9 @@
         PluridPlaneContext,
     } from '../plane';
 
-    // import {
-    //     PluridCluster,
-    // } from '../cluster';
-
-    // import {
-    //     PluridUniverse,
-    // } from '../universe';
-
-    // import {
-    //     PluridComponent,
-    // } from '../component';
+    import {
+        PluridUniverse,
+    } from '../universe';
 
     import {
         PluridView,
@@ -83,18 +75,12 @@ export interface PluridApplication<C> {
      */
     hostname?: string;
 
-    // /**
-    //  * A cluster ensures the rendering of all the planes that reference it
-    //  * in the same space zone.
-    //  */
-    // clusters?: PluridCluster[];
-
-    // /**
-    //  * A `PluridApplication` must be either planes or universes based.
-    //  *
-    //  * A `PluridUniverse` is a collection of PluridPlanes (`PluridPlane[]`).
-    //  */
-    // universes?: PluridUniverse[];
+    /**
+     * A `PluridApplication` must be either planes or universes based.
+     *
+     * A `PluridUniverse` is a collection of `PluridPlane`s.
+     */
+    universes?: PluridUniverse<C>[];
 
     // /**
     //  * Controlled origins.
@@ -177,9 +163,4 @@ export interface LocalStorageUsage {
     view: boolean;
     ui: boolean;
 }
-
-
-// export interface PluridServerData {
-//     planes?: PluridPlane[];
-// }
 // #endregion module
