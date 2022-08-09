@@ -1056,10 +1056,6 @@ export const collectApplicationsFromPath = async (
     host: string,
     globals: Record<string, string> | undefined,
 ) => {
-    console.log({
-        aaaa: isoMatch,
-    });
-
     const parameters = {};
     const query = {};
     const path: any = {
