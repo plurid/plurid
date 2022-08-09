@@ -1,17 +1,10 @@
 // #region imports
     // #region libraries
     import {
-        uuid,
-    } from '@plurid/plurid-functions';
-
-    import {
         PluridPlane,
         PluridPlaneObject,
         PluridRoutePlane,
         PluridRoutePlaneObject,
-
-        PluridInternalStatePlane,
-        PluridInternalContextPlane,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -62,45 +55,6 @@ export const resolvePluridRoutePlaneData = <C>(
     }
 
     return plane;
-}
-
-
-export const createInternalStatePlane = <C>(
-    plane: PluridPlane<C>,
-): PluridInternalStatePlane => {
-    const planeData = resolvePluridPlaneData(plane);
-
-    const statePlane: PluridInternalStatePlane = {
-        // id: plane.id || uuid.generate(),
-        id: uuid.generate(),
-        path: planeData.route,
-        // root: page.root || false,
-        // ordinal: page.ordinal || 0,
-    };
-
-    return statePlane;
-}
-
-
-export const createInternalContextPlane = <C>(
-    plane: PluridPlane<C>,
-): PluridInternalContextPlane<C> => {
-    const planeData = resolvePluridPlaneData(plane);
-
-    const {
-        // id,
-        route,
-        component,
-    } = planeData;
-
-    const contextPlane: PluridInternalContextPlane<C> = {
-        id: uuid.generate(),
-        // id: id || uuid.generate(),
-        path: route,
-        component,
-    };
-
-    return contextPlane;
 }
 
 

@@ -5,8 +5,6 @@
         defaultTreePlane,
 
         /** interfaces */
-        PluridInternalContextPlane,
-        PluridInternalStatePlane,
         TreePlane,
         LinkCoordinates,
     } from '@plurid/plurid-data';
@@ -27,25 +25,6 @@
 
 
 // #region module
-export const createTreePlane = <C>(
-    contextPlane: PluridInternalContextPlane<C>,
-    documentPlane: PluridInternalStatePlane,
-) => {
-    const routeDivisions = pluridLinkPathDivider(contextPlane.path);
-    // console.log('routeDivisions', routeDivisions);
-
-    const treePlane: TreePlane = {
-        ...defaultTreePlane,
-        routeDivisions,
-        sourceID: contextPlane.id,
-        planeID: uuid.generate(),
-        route: contextPlane.path,
-        show: true,
-    };
-    return treePlane;
-}
-
-
 export const updateTreePlane = (
     tree: TreePlane[],
     page: TreePlane,
