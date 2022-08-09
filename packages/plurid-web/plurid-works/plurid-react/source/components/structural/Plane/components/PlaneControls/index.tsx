@@ -8,7 +8,14 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
-    import { Theme } from '@plurid/plurid-themes';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+
+    import {
+        clipboard,
+    } from '@plurid/plurid-functions';
 
     import {
         /** constants */
@@ -31,10 +38,6 @@
         // PluridIconLink,
         PluridIconDelete,
     } from '@plurid/plurid-icons-react';
-
-    import {
-        clipboard,
-    } from '@plurid/plurid-functions';
     // #endregion libraries
 
 
@@ -144,6 +147,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     } = global;
 
     const {
+        title,
         pathbar,
     } = elements.plane.controls;
 
@@ -262,23 +266,27 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
             </StyledPluridPlaneControlsLeft>
 
             <StyledPluridPlaneControlsCenter>
-                {path}
+                {title && (
+                    <>
+                        {path}
 
-                {/* <PluridTextline
-                    theme={stateInteractionTheme}
-                    // text={showAddress ? gatewayAddress : path}
-                    // text={treePlane.route}
-                    text={path}
-                    atChange={onPathInput}
-                    atKeyDown={handleOnKeyDown}
-                    ariaLabel="Plurid Pathbar"
-                /> */}
+                        {/* <PluridTextline
+                            theme={stateInteractionTheme}
+                            // text={showAddress ? gatewayAddress : path}
+                            // text={treePlane.route}
+                            text={path}
+                            atChange={onPathInput}
+                            atKeyDown={handleOnKeyDown}
+                            ariaLabel="Plurid Pathbar"
+                        /> */}
 
-                {/* {showSearch && (
-                    <SearchList
-                        hideSearch={() => setShowSearch(false)}
-                    />
-                )} */}
+                        {/* {showSearch && (
+                            <SearchList
+                                hideSearch={() => setShowSearch(false)}
+                            />
+                        )} */}
+                    </>
+                )}
             </StyledPluridPlaneControlsCenter>
 
             <StyledPluridPlaneControlsRight>
