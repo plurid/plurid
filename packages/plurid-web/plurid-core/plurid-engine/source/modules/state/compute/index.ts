@@ -46,14 +46,20 @@ const compute = <C>(
     // i.e. if any of the states overwrite the current state
     // or if the current state takes precedence.
 
-    const specifiedConfiguration = generalEngine.configuration.merge(configuration);
-    const stateConfiguration: PluridConfiguration = {
-        ...specifiedConfiguration,
-        ...precomputedState?.configuration,
-        ...contextState?.configuration,
-        ...localState?.configuration,
-        ...currentState?.configuration,
-    };
+    let stateConfiguration = generalEngine.configuration.merge(configuration);
+
+    const configurations = [
+        precomputedState?.configuration,
+        contextState?.configuration,
+        localState?.configuration,
+        currentState?.configuration,
+    ];
+
+    for (const configuration of configurations) {
+        if (configuration) {
+            stateConfiguration = generalEngine.configuration.merge(configuration);
+        }
+    }
 
     const stateSpace = resolveSpace(
         view,
