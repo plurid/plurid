@@ -1213,7 +1213,6 @@ const PluridView: React.FC<PluridViewProperties> = (
 
 
     // #region render
-    // console.log('render planesRegistrar', planesRegistrar);
     const pluridContext: PluridContext<PluridReactComponent> = {
         planesRegistrar,
         planeContext,
