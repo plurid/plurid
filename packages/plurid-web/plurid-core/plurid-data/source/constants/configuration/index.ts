@@ -67,6 +67,7 @@ export const defaultConfigurationElements: PluridConfigurationElements = {
         opacity: 1,
         controls: {
             show: true,
+            title: true,
             pathbar: {
                 domainURL: true,
             },
