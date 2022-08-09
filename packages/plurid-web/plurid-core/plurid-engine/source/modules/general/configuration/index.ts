@@ -201,6 +201,11 @@ export const merge = (
                         'boolean',
                         configuration,
                     ),
+                    title: specifiedOrDefault(
+                        'elements.plane.controls.title',
+                        'boolean',
+                        configuration,
+                    ),
                     pathbar: {
                         domainURL: specifiedOrDefault(
                             'elements.plane.controls.pathbar.domainURL',
