@@ -13,11 +13,11 @@
         TRANSFORM_MODES,
         TRANSFORM_TOUCHES,
         TOOLBAR_DRAWERS,
-    } from '../../../enumerations';
+    } from '~enumerations/index';
 
     import {
         RecursivePartial,
-    } from '../../helpers';
+    } from '~interfaces/helpers';
 
     import {
         PluridLayout,
@@ -37,13 +37,9 @@ export type PluridPartialConfiguration = RecursivePartial<PluridConfiguration>;
 
 export interface PluridConfiguration {
     global: PluridConfigurationGlobal;
-
     elements: PluridConfigurationElements;
-
     space: PluridConfigurationSpace;
-
     network: PluridConfigurationNetwork;
-
     development: PluridConfigurationDevelopment;
 }
 
@@ -100,7 +96,7 @@ export interface PluridConfigurationGlobal {
 
 export interface PluridConfigurationTheme {
     general: ThemeName | Theme;
-    interaction: ThemeName  | Theme;
+    interaction: ThemeName | Theme;
 }
 
 

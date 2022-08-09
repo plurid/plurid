@@ -2,7 +2,7 @@
     // #region external
     import {
         LAYOUT_TYPES,
-    } from '../../../enumerations';
+    } from '~enumerations/index';
     // #endregion external
 // #endregion imports
 

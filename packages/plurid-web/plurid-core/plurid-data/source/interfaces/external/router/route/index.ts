@@ -38,20 +38,17 @@ export interface PluridRoute<C, G = any> {
     /**
      * Accepts a component which will be rendered outside of the `spaces`.
      */
-    // exterior?: PluridComponent;
     exterior?: C;
 
     /**
-     * A path can have planes and/or spaces.
-     *
-     * Planes will be assigned to the `default` space, `default` universe, `default` cluster.
+     * A route can have planes and/or spaces.
      */
     planes?: PluridRoutePlane<C>[];
 
     view?: string[];
 
     /**
-     * A path can have planes and/or spaces.
+     * A route can have planes and/or spaces.
      */
     spaces?: PluridRouteSpace<C>[];
 
@@ -109,13 +106,10 @@ export interface PluridRouteSpace<C> {
     /**
      * Accepts a component which will be rendered outside of the `space`.
      */
-    // exterior?: PluridComponent;
     exterior?: C;
 
     /**
      * A space can have planes and/or universes.
-     *
-     * Planes will be assigned to the `default` universe, `default` cluster.
      */
     planes?: PluridRoutePlane<C>[];
 
@@ -133,20 +127,25 @@ export interface PluridRouteSpace<C> {
 export interface PluridRouteUniverse<C> {
     value: string;
 
-    /**
-     * An universe can have planes and/or clusters.
-     *
-     * Planes will be assigned to the `default` cluster.
-     */
     planes?: PluridRoutePlane<C>[];
 
-    clusters?: PluridRouteCluster<C>[];
-}
+    view?: string[];
 
+    /**
+     * By default, the order the documents are shown in is based on their index in the `documents[]`.
+     * The ordinal can be used to overrule the default order.
+     * If not unique, the documents with equal `ordinal` will be ordered by index.
+     *
+     * 0-based.
+     */
+    ordinal?: number;
 
-export interface PluridRouteCluster<C> {
-    value: string;
-    planes: PluridRoutePlane<C>[];
+    /**
+     * Set the document as active. By default the first document is active.
+     *
+     * Only one document can be active at a time.
+     */
+    active?: boolean;
 }
 
 
