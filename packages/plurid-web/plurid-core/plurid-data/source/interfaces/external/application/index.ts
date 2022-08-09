@@ -31,10 +31,6 @@
     } from '../configuration';
 
     import {
-        IndexedPluridPlane,
-    } from '../plane';
-
-    import {
         PluridPubSub,
     } from '../pubsub';
 
@@ -54,7 +50,6 @@
 export interface PluridApplication<C> {
     id?: string;
 
-    indexedPlanes?: Map<string, IndexedPluridPlane<C>>;
     planesProperties?: Map<string, any>;
 
     /**

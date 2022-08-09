@@ -97,18 +97,6 @@ export type PluridPlane<C> =
 export type PluridPlaneContext<T> = any;
 
 
-export interface IndexedPluridPlane<C> {
-    protocol: string;
-    host: string;
-    path: string;
-    space: string;
-    universe: string;
-    cluster: string;
-    plane: string;
-    route: string;
-    component: C;
-}
-
 
 export interface RouteSegment {
     [key: string]: any;
