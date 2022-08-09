@@ -18,6 +18,12 @@
     } from '@plurid/plurid-functions';
 
     import {
+        PluridIconArrowLeft,
+        PluridIconFrame,
+        PluridIconDelete,
+    } from '@plurid/plurid-icons-react';
+
+    import {
         /** constants */
         PLURID_ENTITY_PLANE_CONTROLS,
 
@@ -26,18 +32,6 @@
         TreePlane,
         PluridConfiguration,
     } from '@plurid/plurid-data';
-
-    // import {
-    //     universal,
-    // } from '@plurid/plurid-ui-components-react';
-
-    import {
-        PluridIconArrowLeft,
-        PluridIconFrame,
-        // PluridIconCopy,
-        // PluridIconLink,
-        PluridIconDelete,
-    } from '@plurid/plurid-icons-react';
     // #endregion libraries
 
 
@@ -74,12 +68,6 @@
 
 
 // #region module
-// const {
-//     inputs: {
-//         Textline: PluridTextline,
-//     },
-// } = universal;
-
 export interface PluridPlaneControlsOwnProperties {
     plane: RegisteredPluridPlane<PluridReactComponent>;
     treePlane: TreePlane;

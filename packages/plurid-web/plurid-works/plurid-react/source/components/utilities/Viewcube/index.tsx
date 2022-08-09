@@ -9,13 +9,6 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
-    import {
-        /** constants */
-        PLURID_ENTITY_VIEWCUBE,
-
-        /** interfaces */
-        PluridConfiguration,
-    } from '@plurid/plurid-data';
 
     import {
         Theme,
@@ -24,6 +17,14 @@
     import {
         PluridIconGlobal,
     } from '@plurid/plurid-icons-react';
+
+    import {
+        /** constants */
+        PLURID_ENTITY_VIEWCUBE,
+
+        /** interfaces */
+        PluridConfiguration,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -44,7 +45,7 @@
     } from './styled';
 
     import PluridViewcubeModel from './components/ViewcubeModel';
-    import PluridViewcubeTransformAreas from './components/ViewcubeTransformAreas';
+    // import PluridViewcubeTransformAreas from './components/ViewcubeTransformAreas';
     // #endregion internal
 // #endregion imports
 

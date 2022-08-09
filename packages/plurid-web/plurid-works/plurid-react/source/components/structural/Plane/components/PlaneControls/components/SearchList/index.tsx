@@ -6,18 +6,19 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
     import {
         Theme,
     } from '@plurid/plurid-themes';
 
     import {
+        uuid,
+    } from '@plurid/plurid-functions';
+
+    import {
         /** interfaces */
         PluridConfiguration,
     } from '@plurid/plurid-data';
-
-    import {
-        uuid,
-    } from '@plurid/plurid-functions';
     // #endregion libraries
 
 
@@ -55,7 +56,8 @@ export interface PluridSearchListStateProperties {
 export interface PluridSearchListDispatchProperties {
 }
 
-export type PluridSearchListProperties = PluridSearchListOwnProperties
+export type PluridSearchListProperties =
+    & PluridSearchListOwnProperties
     & PluridSearchListStateProperties
     & PluridSearchListDispatchProperties;
 
@@ -63,13 +65,15 @@ export type PluridSearchListProperties = PluridSearchListOwnProperties
 const PluridSearchList: React.FC<PluridSearchListProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** own */
+        // #region own
         hideSearch,
+        // #endregion own
 
-        /** state */
+        // #region state
         stateInteractionTheme,
+        // #endregion state
     } = properties;
 
     const searchTerms: any[] = [
@@ -79,9 +83,10 @@ const PluridSearchList: React.FC<PluridSearchListProperties> = (
         // '/four',
         // '/five',
     ];
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridSearchList
             theme={stateInteractionTheme}
@@ -113,6 +118,7 @@ const PluridSearchList: React.FC<PluridSearchListProperties> = (
             </ul>
         </StyledPluridSearchList>
     );
+    // #endregion render
 }
 
 

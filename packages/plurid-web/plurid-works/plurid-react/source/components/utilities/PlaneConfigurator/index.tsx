@@ -10,11 +10,8 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
-    import themes from '@plurid/plurid-themes';
 
-    import {
-        planes,
-    } from '@plurid/plurid-engine';
+    import themes from '@plurid/plurid-themes';
 
     import {
         PLURID_ENTITY_PLANE_CONFIGURATOR,
@@ -27,6 +24,10 @@
     import StateContext from '~services/state/context';
     // import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
+
+    import {
+        planes,
+    } from '~services/engine';
     // #endregion external
 
 

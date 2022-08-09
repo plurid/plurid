@@ -11,9 +11,18 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
     import {
         Theme,
     } from '@plurid/plurid-themes';
+
+    import {
+        mathematics,
+    } from '@plurid/plurid-functions';
+
+    import {
+        useDebouncedCallback,
+    } from '@plurid/plurid-functions-react';
 
     import {
         PLURID_PUBSUB_TOPIC,
@@ -25,14 +34,6 @@
         TreePlaneLocation,
         PluridConfiguration,
     } from '@plurid/plurid-data';
-
-    import {
-        mathematics,
-    } from '@plurid/plurid-functions';
-
-    import {
-        useDebouncedCallback,
-    } from '@plurid/plurid-functions-react';
     // #endregion libraries
 
 

@@ -1,8 +1,6 @@
 // #region imports
     // #region libraries
-    import React, {
-
-    } from 'react';
+    import React from 'react';
     // #endregion libraries
 
 

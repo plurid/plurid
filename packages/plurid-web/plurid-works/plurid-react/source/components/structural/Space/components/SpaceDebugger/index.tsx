@@ -6,6 +6,7 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
     import {
         Theme,
     } from '@plurid/plurid-themes';
@@ -41,9 +42,11 @@ export interface PluridSpaceDebuggerStateProperties {
 export interface PluridSpaceDebuggerDispatchProperties {
 }
 
-export type PluridSpaceDebuggerProperties = PluridSpaceDebuggerOwnProperties
+export type PluridSpaceDebuggerProperties =
+    & PluridSpaceDebuggerOwnProperties
     & PluridSpaceDebuggerStateProperties
     & PluridSpaceDebuggerDispatchProperties;
+
 
 const PluridSpaceDebugger: React.FC<PluridSpaceDebuggerProperties> = (
     properties,

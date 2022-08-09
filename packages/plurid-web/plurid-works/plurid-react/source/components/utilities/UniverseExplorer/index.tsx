@@ -6,6 +6,11 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+
     import {
         /** constants */
         PLURID_ENTITY_UNIVERSE_EXPLORER,
@@ -13,10 +18,6 @@
         /** interfaces */
         PluridConfiguration,
     } from '@plurid/plurid-data';
-
-    import {
-        Theme,
-    } from '@plurid/plurid-themes';
     // #endregion libraries
 
 

@@ -6,6 +6,7 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
     import {
         Theme,
     } from '@plurid/plurid-themes';
@@ -27,7 +28,7 @@
 
     // #region internal
     import {
-        StyledPluridSearchItem
+        StyledPluridSearchItem,
     } from './styled';
     // #endregion internal
 // #endregion imports
@@ -49,7 +50,8 @@ export interface PluridSearchItemStateProperties {
 export interface PluridSearchItemDispatchProperties {
 }
 
-export type PluridSearchItemProperties = PluridSearchItemOwnProperties
+export type PluridSearchItemProperties =
+    & PluridSearchItemOwnProperties
     & PluridSearchItemStateProperties
     & PluridSearchItemDispatchProperties;
 
@@ -57,25 +59,28 @@ export type PluridSearchItemProperties = PluridSearchItemOwnProperties
 const PluridSearchItem: React.FC<PluridSearchItemProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     const {
-        /** own */
+        // #region own
         text,
         hideSearch,
+        // #endregion own
 
-        /** state */
+        // #region state
         stateInteractionTheme,
+        // #endregion state
     } = properties;
+    // #endregion properties
 
 
-    /** handlers */
+    // #region handlers
     const handleClickSearch = () => {
         hideSearch();
-        console.log('text', text);
     }
+    // #endregion handlers
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridSearchItem
             theme={stateInteractionTheme}
@@ -84,6 +89,7 @@ const PluridSearchItem: React.FC<PluridSearchItemProperties> = (
             {text}
         </StyledPluridSearchItem>
     );
+    // #endregion render
 }
 
 

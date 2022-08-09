@@ -10,6 +10,7 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
     import PluridPubSub from '@plurid/plurid-pubsub';
 
     import {
@@ -17,10 +18,6 @@
         PluridConfiguration,
         PluridPartialConfiguration,
     } from '@plurid/plurid-data';
-
-    import {
-        general as generalEngine,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -31,6 +28,10 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+
+    import {
+        generalEngine,
+    } from '~services/engine';
     // #endregion external
 
 
