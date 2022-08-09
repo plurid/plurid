@@ -58,14 +58,12 @@ export const merge = (
     target?: PluridConfiguration,
 ): PluridConfiguration => {
     const targetConfiguration = {
-        ...defaultConfiguration,
-        ...target,
+        ...objects.clone(defaultConfiguration),
+        ...objects.clone(target || {}),
     };
 
     if (!configuration) {
-        return {
-            ...targetConfiguration,
-        };
+        return targetConfiguration;
     }
 
 
