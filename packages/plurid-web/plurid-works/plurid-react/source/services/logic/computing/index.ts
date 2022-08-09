@@ -2,7 +2,6 @@
     // #region libraries
     import {
         PluridPlane,
-        IndexedPluridPlane,
         TreePlane,
         PluridApplicationView,
         PluridPartialConfiguration,
@@ -63,17 +62,10 @@ const {
 
 
 export const computeApplication = (
-    indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined,
     planes: PluridPlane<PluridReactComponent>[] | undefined,
     configuration: PluridPartialConfiguration | undefined,
     view: PluridApplicationView | undefined,
 ) => {
-    // const planesPropertiesReference = new Map();
-
-    // const computedIndexedPlanes = new Map<string, IndexedPluridPlane<PluridReactComponent>>(
-    //     indexedPlanes || new Map()
-    // );
-
     const appConfiguration = generalEngine.configuration.merge(configuration);
 
 
@@ -97,40 +89,15 @@ export const computeApplication = (
                 route,
             } = linkPath;
 
-            const computedIndexedPlane: IndexedPluridPlane<PluridReactComponent> = {
-                protocol: protocol,
-                // host: host.value,
-                // path: path.value,
-                // space: space.value,
-                // universe: universe.value,
-                // cluster: cluster.value,
-                // plane: planePath.value,
-                host: '',
-                path: '',
-                space: '',
-                universe: '',
-                cluster: '',
-                plane: '',
-                route,
-                component: planeData.component,
-            };
             const id = route;
 
             // const planeProperties = {
             //     ...plane.component,
             // };
             // planesPropertiesReference.set(id, planeProperties);
-
-            // computedIndexedPlanes.set(id, computedIndexedPlane);
         }
     }
 
-    // const indexedPlanesReference = new Map(computedIndexedPlanes);
-
-    // const planeSources: Record<string, string> = {};
-    // for (const [id, indexedPlane] of computedIndexedPlanes) {
-    //     planeSources[indexedPlane.route] = id;
-    // }
 
     // // create tree planes
     // const treePlanes: TreePlane[] = [];
@@ -231,7 +198,6 @@ export const computeApplication = (
 
     const data = {
         computedTree,
-        // indexedPlanesReference,
         // planesPropertiesReference,
         appConfiguration,
     };

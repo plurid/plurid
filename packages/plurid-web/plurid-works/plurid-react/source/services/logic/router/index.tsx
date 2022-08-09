@@ -74,7 +74,6 @@ export interface GetComponentFromRouteData {
     matchedRoute: routing.MatcherResponse<PluridReactComponent>;
     protocol: string;
     host: string;
-    indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined;
     staticRender?: boolean;
 }
 
@@ -85,7 +84,6 @@ export const getComponentFromRoute = (
         matchedRoute,
         protocol,
         host,
-        indexedPlanes,
         staticRender,
     } = data;
 
@@ -308,7 +306,6 @@ export const getComponentFromRoute = (
                     key={uuid.generate()}
                     id={path.value}
                     planes={planes}
-                    indexedPlanes={indexedPlanes}
                     view={view}
                     static={staticRender}
                     configuration={space.configuration}
@@ -385,7 +382,6 @@ export const getComponentFromRoute = (
                 key={uuid.generate()}
                 id={path.value}
                 planes={pluridPlanes}
-                indexedPlanes={indexedPlanes}
                 planesProperties={planesProperties}
                 view={view}
                 static={staticRender}
@@ -459,7 +455,6 @@ export interface GetGatewayViewData {
     gatewayExterior: any;
     protocol: string;
     host: string;
-    indexedPlanes: Map<string, IndexedPluridPlane<PluridReactComponent>> | undefined;
 }
 
 export const getGatewayView = (
@@ -472,7 +467,6 @@ export const getGatewayView = (
         gatewayExterior,
         protocol,
         host,
-        indexedPlanes,
     } = data
 
     const query = routing.extractQuery(queryString);
@@ -702,7 +696,6 @@ export const getGatewayView = (
 
             <PluridApplication
                 planes={planes}
-                indexedPlanes={indexedPlanes}
                 view={view}
             />
         </>
@@ -730,327 +723,7 @@ export const getGatewayView = (
 }
 
 
-
-export const computeIndexedPlanes = (
-    routes: PluridRoute<PluridReactComponent>[],
-    protocol: string,
-    host: string,
-) => {
-    const indexedPlanes = new Map<string, IndexedPluridPlane<PluridReactComponent>>();
-
-    for (const path of routes) {
-        if (path.planes) {
-            for (const plane of path.planes) {
-                const planeData = resolvePluridRoutePlaneData(plane);
-
-                const pathName = path.value === '/'
-                    ? 'p'
-                    : utilities.cleanPathElement(path.value);
-                const spaceName = 's';
-                const universeName = 'u';
-                const clusterName = 'c';
-                const planeName = utilities.cleanPathElement(planeData.value);
-
-                const planeAddressElements = [
-                    protocol,
-                    host,
-                    pathName,
-                    spaceName,
-                    universeName,
-                    clusterName,
-                    planeName,
-                ];
-                const planeAddress = planeAddressElements.join('://');
-
-                const indexedPlane: IndexedPluridPlane<PluridReactComponent> = {
-                    protocol,
-                    host,
-                    path: pathName,
-                    space: spaceName,
-                    universe: universeName,
-                    cluster: clusterName,
-                    plane: planeName,
-                    component: planeData.component,
-                    route: planeAddress,
-                };
-
-                indexedPlanes.set(planeAddress, indexedPlane);
-            }
-        }
-
-        if (!path.spaces) {
-            const pathName = path.value === '/'
-                ? 'p'
-                : utilities.cleanPathElement(path.value);
-
-            const planeAddressElements = [
-                protocol,
-                host,
-                pathName,
-            ];
-            const planeAddress = planeAddressElements.join('://');
-
-            const indexedPlane: IndexedPluridPlane<PluridReactComponent> = {
-                protocol,
-                host,
-                path: pathName,
-                space: '',
-                universe: '',
-                cluster: '',
-                plane: '',
-                component: path.exterior || (() => (<></>)),
-                // component: path.exterior || {
-                //     kind: 'react',
-                //     element: () => (<></>),
-                // },
-                route: planeAddress,
-            };
-
-            indexedPlanes.set(planeAddress, indexedPlane);
-
-            continue;
-        }
-
-        for (const space of path.spaces) {
-            if (!space.universes) {
-                continue;
-            }
-
-            for (const universe of space.universes) {
-                if (!universe.clusters) {
-                    continue;
-                }
-
-                for (const cluster of universe.clusters) {
-                    for (const plane of cluster.planes) {
-                        const planeData = resolvePluridRoutePlaneData(plane);
-
-                        const pathName = path.value === '/'
-                            ? 'p'
-                            : utilities.cleanPathElement(path.value);
-                        const spaceName = space.value === 'default'
-                            ? 's'
-                            : utilities.cleanPathElement(space.value);
-                        const universeName = universe.value === 'default'
-                            ? 'u'
-                            : utilities.cleanPathElement(universe.value);
-                        const clusterName = cluster.value === 'default'
-                            ? 'c'
-                            : utilities.cleanPathElement(cluster.value);
-                        const planeName = utilities.cleanPathElement(planeData.value);
-
-                        const planeAddressElements = [
-                            protocol,
-                            host,
-                            pathName,
-                            spaceName,
-                            universeName,
-                            clusterName,
-                            planeName,
-                        ];
-                        const planeAddress = planeAddressElements.join('://');
-
-                        const indexedPlane: IndexedPluridPlane<PluridReactComponent> = {
-                            protocol,
-                            host,
-                            path: pathName,
-                            space: spaceName,
-                            universe: universeName,
-                            cluster: clusterName,
-                            plane: planeName,
-                            component: planeData.component,
-                            route: planeAddress,
-                        };
-
-                        indexedPlanes.set(planeAddress, indexedPlane);
-                    }
-                }
-            }
-        }
-    }
-
-    return indexedPlanes;
-}
-
-
-
-export const generateIndexedPlane = (
-    plane: PluridRoutePlane<PluridReactComponent>,
-    protocol: string,
-    host: string,
-    path: string,
-    space: string,
-    universe: string,
-    cluster: string,
-) => {
-    const planeData = resolvePluridRoutePlaneData(plane);
-
-    const pathName = path === PLURID_ROUTE_DEFAULT_PATH_VALUE
-        ? PLURID_ROUTE_DEFAULT_PATH
-        : utilities.cleanPathElement(path);
-    const spaceName = space === PLURID_ROUTE_DEFAULT_SPACE_VALUE
-        ? PLURID_ROUTE_DEFAULT_SPACE
-        : utilities.cleanPathElement(space);
-    const universeName = universe === PLURID_ROUTE_DEFAULT_UNIVERSE_VALUE
-        ? PLURID_ROUTE_DEFAULT_UNIVERSE
-        : utilities.cleanPathElement(universe);
-    const clusterName = cluster === PLURID_ROUTE_DEFAULT_CLUSTER_VALUE
-        ? PLURID_ROUTE_DEFAULT_CLUSTER
-        : utilities.cleanPathElement(cluster);
-    const planeName = utilities.cleanPathElement(planeData.value);
-
-    const planeAddressElements = [
-        protocol,
-        host,
-        pathName,
-        spaceName,
-        universeName,
-        clusterName,
-        planeName,
-    ];
-    const planeAddress = planeAddressElements.join(PLURID_ROUTE_SEPARATOR);
-
-    const indexedPlane: IndexedPluridPlane<PluridReactComponent> = {
-        protocol,
-        host,
-        path: pathName,
-        space: spaceName,
-        universe: universeName,
-        cluster: clusterName,
-        plane: planeName,
-        route: planeAddress,
-        component: planeData.component,
-    };
-
-    const id = planeAddress;
-    // const id = uuid.generate();
-
-    return {
-        id,
-        indexedPlane,
-    };
-}
-
-
-export interface GeneratedIndexedPlane {
-    id: string;
-    indexedPlane: IndexedPluridPlane<PluridReactComponent>;
-}
-
-export const generateIndexedPlanes = (
-    path: PluridRoute<PluridReactComponent>,
-    protocol: string,
-    host: string,
-) => {
-    const indexedPlanes: GeneratedIndexedPlane[] = [];
-
-    const defaultPathPlanes = path.planes || [];
-
-    for (const defaultPathPlane of defaultPathPlanes) {
-        const {
-            id,
-            indexedPlane,
-        } = generateIndexedPlane(
-            defaultPathPlane,
-            protocol,
-            host,
-            path.value,
-            PLURID_ROUTE_DEFAULT_SPACE,
-            PLURID_ROUTE_DEFAULT_UNIVERSE,
-            PLURID_ROUTE_DEFAULT_CLUSTER,
-        );
-
-        indexedPlanes.push({
-            id,
-            indexedPlane,
-        });
-    }
-
-    if (!path.spaces) {
-        return indexedPlanes;
-    }
-
-    for (const space of path.spaces) {
-        const defaultSpacePlanes = space.planes || [];
-
-        for (const defaultSpacePlane of defaultSpacePlanes) {
-            const {
-                id,
-                indexedPlane,
-            } = generateIndexedPlane(
-                defaultSpacePlane,
-                protocol,
-                host,
-                path.value,
-                space.value,
-                PLURID_ROUTE_DEFAULT_UNIVERSE,
-                PLURID_ROUTE_DEFAULT_CLUSTER,
-            );
-
-            indexedPlanes.push({
-                id,
-                indexedPlane,
-            });
-        }
-
-        if (space.universes) {
-            for (const universe of space.universes) {
-                const defaultUniversePlanes = universe.planes || [];
-
-                for (const defaultUniversePlane of defaultUniversePlanes) {
-                    const {
-                        id,
-                        indexedPlane,
-                    } = generateIndexedPlane(
-                        defaultUniversePlane,
-                        protocol,
-                        host,
-                        path.value,
-                        space.value,
-                        universe.value,
-                        PLURID_ROUTE_DEFAULT_CLUSTER,
-                    );
-
-                    indexedPlanes.push({
-                        id,
-                        indexedPlane,
-                    });
-                }
-
-                if (universe.clusters) {
-                    for (const cluster of universe.clusters) {
-                        for (const plane of cluster.planes) {
-                            const {
-                                id,
-                                indexedPlane,
-                            } = generateIndexedPlane(
-                                plane,
-                                protocol,
-                                host,
-                                path.value,
-                                space.value,
-                                universe.value,
-                                cluster.value,
-                            );
-
-                            indexedPlanes.push({
-                                id,
-                                indexedPlane,
-                            });
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    return indexedPlanes;
-}
-
-
-
 export const collectApplicationsFromPath = async (
-    // matchedRoute: router.MatcherResponse<PluridReactComponent>,
     isoMatch: PluridRouteMatch,
     protocol: string,
     host: string,
@@ -1336,13 +1009,11 @@ export const collectApplicationsFromPath = async (
 
     return plurids;
 }
-// #endregion module
 
 
 
 
 
-// #region module update
 export const gatherPluridPlanes = (
     routes: PluridRoute<PluridReactComponent>[],
     planes: PluridRoutePlane<PluridReactComponent>[] | undefined,
@@ -1723,7 +1394,6 @@ export const computePluridRoute = (
     isoMatcher: routing.IsoMatcher<PluridReactComponent>,
     directPlane?: PluridRouteMatch,
     hostname = 'origin',
-    // hostname = 'localhost:63000',
 ) => {
     if (
         directPlane
@@ -2044,4 +1714,4 @@ export const renderDirectPlane = (
     //     DirectPlane,
     // };
 }
-// #endregion module update
+// #endregion module

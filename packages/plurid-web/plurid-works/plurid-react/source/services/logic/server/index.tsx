@@ -17,7 +17,6 @@
 
     import {
         collectApplicationsFromPath,
-        computeIndexedPlanes,
     } from '../router';
 
     import {
@@ -37,12 +36,6 @@ export const serverComputeMetastate = async (
 ): Promise<PluridMetastate> => {
     const protocol = 'http';
     const host = 'localhost:63000';
-
-    const indexedPlanes = computeIndexedPlanes(
-        paths,
-        protocol,
-        host,
-    );
 
     const pluridApplications = await collectApplicationsFromPath(
         // matchedRoute,
@@ -66,7 +59,6 @@ export const serverComputeMetastate = async (
             computedTree,
             appConfiguration,
         } = computeApplication(
-            indexedPlanes,
             planes,
             (isoMatch.data as any).defaultConfiguration,
             view,
