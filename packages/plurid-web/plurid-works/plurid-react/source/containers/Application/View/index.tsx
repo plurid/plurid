@@ -84,6 +84,8 @@
         focusRootIndex,
         focusRootID,
     } from '~services/logic/animation';
+
+    import PluridPlanesView from '~containers/Application/View/PlanesView';
     // #endregion external
 
 
@@ -92,8 +94,6 @@
         GlobalStyle,
         StyledView,
     } from './styled';
-
-    import handleView from './logic';
     // #endregion internal
 // #endregion imports
 
@@ -1205,12 +1205,13 @@ const PluridView: React.FC<ViewProperties> = (
         // #endregion effects pubsub
 
 
-        /** FORCE tree update */
+        // #region effects tree update
         useEffect(() => {
             treeUpdateCallback();
         }, [
         //     stateSpaceView,
         ]);
+        // #endregion effects tree update
     // #endregion effects
 
 
@@ -1230,10 +1231,6 @@ const PluridView: React.FC<ViewProperties> = (
         registerPubSub,
     };
 
-    const viewContainer = handleView(
-        stateSpaceView,
-    );
-
     return (
         <StyledView
             ref={viewElement}
@@ -1246,13 +1243,15 @@ const PluridView: React.FC<ViewProperties> = (
                 preventOverscroll={preventOverscroll}
             />
 
-            {/* {!stateSpaceLoading && ( */}
-                <Context.Provider
-                    value={pluridContext}
-                >
-                    {viewContainer}
-                </Context.Provider>
-            {/* )} */}
+            <Context.Provider
+                value={pluridContext}
+            >
+                {stateSpaceView.length !== 0 ? (
+                    <PluridPlanesView />
+                ) : (
+                    <></>
+                )}
+            </Context.Provider>
         </StyledView>
     );
     // #endregion render
