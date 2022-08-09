@@ -12,7 +12,6 @@
 
         // #region interfaces
         PluridPlane,
-        IndexedPluridPlane,
         PluridView,
         PluridUniverse,
         PluridConfiguration,
@@ -188,7 +187,6 @@ export {
     Theme,
 
     PluridPlane,
-    IndexedPluridPlane,
     PluridView,
     PluridUniverse,
 
