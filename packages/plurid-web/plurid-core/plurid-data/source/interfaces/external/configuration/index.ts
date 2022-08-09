@@ -242,6 +242,10 @@ export interface PluridConfigurationElementsPlane {
 
 export interface PluridConfigurationElementsPlaneControls {
     show: boolean;
+    /**
+     * Show plane title.
+     */
+    title: boolean;
     pathbar: PluridConfigurationElementsPlaneControlsPathbar;
 }
 
