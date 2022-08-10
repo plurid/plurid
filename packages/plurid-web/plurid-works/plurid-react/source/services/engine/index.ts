@@ -1,11 +1,13 @@
 // #region imports
     // #region libraries
     import {
+        interaction,
         planes,
         space,
         state,
         routing,
         general as generalEngine,
+        utilities,
         cleanTemplate,
     } from '@plurid/plurid-engine';
     // #endregion libraries
@@ -20,6 +22,8 @@ const {
     getPlanesRegistrar,
     getPluridPlaneIDByData,
     getRegisteredPlane,
+    resolvePluridRoutePlaneData,
+    resolvePluridPlaneData,
     Registrar: PluridPlanesRegistrar,
 } = planes;
 
@@ -34,11 +38,13 @@ const {
 
 // #region exports
 export {
+    interaction,
     planes,
     space,
     state,
     routing,
     generalEngine,
+    utilities,
     cleanTemplate,
 
     registerPlanes,
@@ -46,6 +52,8 @@ export {
     getPlanesRegistrar,
     getPluridPlaneIDByData,
     getRegisteredPlane,
+    resolvePluridRoutePlaneData,
+    resolvePluridPlaneData,
     PluridPlanesRegistrar,
 
     PluridIsoMatcher,

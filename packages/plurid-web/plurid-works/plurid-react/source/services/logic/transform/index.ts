@@ -3,10 +3,6 @@
     import {
         FOCUS_ANCHOR_SUFFIX,
     } from '@plurid/plurid-data';
-
-    import {
-        interaction,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -14,6 +10,10 @@
     import {
         State as SpaceState,
     } from '~services/state/modules/space/types';
+
+    import {
+        interaction,
+    } from '~services/engine';
     // #endregion external
 // #endregion imports
 
@@ -26,6 +26,10 @@ const {
 } = interaction;
 
 const {
+    degToRad,
+} = quaternion;
+
+const {
     matrixArrayToCSSMatrix,
     rotateMatrix,
     multiplyArrayOfMatrices,
@@ -33,9 +37,6 @@ const {
     translateMatrix,
 } = matrix;
 
-const {
-    degToRad,
-} = quaternion;
 
 
 export const computeMatrix = (

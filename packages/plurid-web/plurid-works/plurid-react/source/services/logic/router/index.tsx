@@ -23,12 +23,6 @@
         PluridRouteComponentProperty,
     } from '@plurid/plurid-data';
 
-    import {
-        routing,
-        planes,
-        utilities,
-    } from '@plurid/plurid-engine';
-
     import PluridPubSub from '@plurid/plurid-pubsub';
 
     import {
@@ -49,6 +43,15 @@
     import {
         isReactRenderable,
     } from '~services/utilities/react';
+
+    import {
+        routing,
+        planes,
+        utilities,
+
+        PluridPlanesRegistrar,
+        resolvePluridRoutePlaneData,
+    } from '~services/engine';
     // #endregion external
 
 
@@ -62,13 +65,6 @@
 
 
 // #region module
-const {
-    resolvePluridRoutePlaneData,
-    Registrar: PluridPlanesRegistrar,
-} = planes;
-
-
-
 export interface GetComponentFromRouteData {
     matchedRoute: routing.MatcherResponse<PluridReactComponent>;
     protocol: string;

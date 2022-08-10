@@ -6,14 +6,6 @@
         PluridApplicationView,
         PluridPartialConfiguration,
     } from '@plurid/plurid-data';
-
-    import {
-        routing,
-        planes,
-        interaction,
-        space,
-        general as generalEngine,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -21,6 +13,16 @@
     import {
         PluridReactComponent,
     } from '~data/interfaces';
+
+    import {
+        routing,
+        interaction,
+        space,
+        generalEngine,
+
+        resolvePluridPlaneData,
+        PluridPlanesRegistrar,
+    } from '~services/engine';
     // #endregion external
 // #endregion imports
 
@@ -28,9 +30,16 @@
 
 // #region module
 const {
+    quaternion,
+    transform,
+    matrix,
+} = interaction;
+
+
+const {
     degToRad,
     radToDeg,
-} = interaction.quaternion;
+} = quaternion;
 
 const {
     multiplyMatricesArray,
@@ -39,26 +48,20 @@ const {
     matrixToCSSMatrix,
     arrayToMatrix,
     inverseMatrix,
-} = interaction.transform.general;
+} = transform.general;
 
 const {
     getTransformRotate,
     getTransformTranslate,
     getTransformScale,
-} = interaction.transform.matrix3d;
+} = transform.matrix3d;
 
 const {
     rotateMatrix,
     translateMatrix: translateMatrixArray,
     scaleMatrix,
     multiplyArrayOfMatrices,
-} = interaction.matrix;
-
-const {
-    resolvePluridPlaneData,
-    Registrar,
-} = planes;
-
+} = matrix;
 
 
 export const computeApplication = (
@@ -175,7 +178,7 @@ export const computeApplication = (
 
     const origin = 'localhost:63000';
 
-    const registrar = new Registrar(
+    const registrar = new PluridPlanesRegistrar(
         planes,
         origin,
     );

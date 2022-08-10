@@ -17,10 +17,6 @@
         PluridPubSub as IPluridPubSub,
         TransformModes,
     } from '@plurid/plurid-data';
-
-    import {
-        interaction,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -35,6 +31,10 @@
         focusNextRoot,
         focusRootIndex,
     } from '~services/logic/animation';
+
+    import {
+        interaction,
+    } from '~services/engine';
     // #endregion external
 
 

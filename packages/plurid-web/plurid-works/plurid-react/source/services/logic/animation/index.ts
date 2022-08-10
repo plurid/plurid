@@ -9,16 +9,16 @@
 
         TreePlane,
     } from '@plurid/plurid-data';
-
-    import {
-        space,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
     // #region external
     import actions from '~services/state/actions';
     import { AppState } from '~services/state/store';
+
+    import {
+        space,
+    } from '~services/engine';
 
     import {
         computePlaneLocation,
