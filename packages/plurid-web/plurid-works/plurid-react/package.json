@@ -61,9 +61,8 @@
         "hammerjs": ">=2",
         "react": ">=17",
         "react-dom": ">=17",
+        "@reduxjs/toolkit": ">=1.8",
         "react-redux": ">=7",
-        "redux": ">=4",
-        "redux-thunk": ">=2",
         "styled-components": ">=5"
     },
     "devDependencies": {
@@ -80,6 +79,7 @@
         "@plurid/plurid-ui-components-react": "0.0.0-14",
         "@plurid/plurid-ui-state-react": "0.0.0-4",
         "@redux-devtools/extension": "^3.2.2",
+        "@reduxjs/toolkit": "^1.8.3",
         "@rollup/plugin-babel": "^5.3.1",
         "@rollup/plugin-commonjs": "^22.0.2",
         "@rollup/plugin-node-resolve": "^13.3.0",
@@ -108,8 +108,6 @@
         "react-dom": "^18.2.0",
         "react-redux": "^8.0.2",
         "react-test-renderer": "^18.2.0",
-        "redux": "^4.2.0",
-        "redux-thunk": "^2.4.1",
         "rollup": "^2.77.2",
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-postcss": "^4.0.2",
