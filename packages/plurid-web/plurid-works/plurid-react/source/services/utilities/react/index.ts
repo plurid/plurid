@@ -10,6 +10,7 @@
     // #region external
     import {
         PluridReactComponent,
+        ElementQLComponent,
     } from '~data/interfaces';
     // #endregion external
 // #endregion imports
@@ -26,10 +27,10 @@ export const isReactRenderable = (
         return false;
     }
 
-    // Check if elementql component.
+    // Check elementql component.
     if (
         typeof component === 'string'
-        || (component as any).url
+        || (component as ElementQLComponent).url
     ) {
         return false;
     }
