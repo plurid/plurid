@@ -1,28 +1,50 @@
 // #region imports
+    // #region libraries
+    import {
+        createSlice,
+        // PayloadAction,
+    } from '@reduxjs/toolkit';
+    // #endregion libraries
+
+
     // #region internal
-    import * as actions from './actions';
-
-    import initialState from './initial';
-
-    import reducer from './reducer';
-
-    import * as resolvers from './resolvers';
-
-    import selectors from './selectors';
-
-    import * as Types from './types';
+    import type {
+        AppState,
+    } from '~services/state/store';
     // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-export {
-    actions,
-    initialState,
-    reducer,
-    resolvers,
-    selectors,
-    Types,
+export interface GeneralState {
+}
+
+
+const initialState: GeneralState = {
 };
+
+
+export const general = createSlice({
+    name: 'general',
+    initialState,
+    reducers: {
+    },
+});
 // #endregion module
+
+
+
+// #region exports
+export const actions = general.actions;
+
+
+export const getGeneral = (state: AppState) => state.general;
+
+export const selectors = {
+    getGeneral,
+};
+
+
+export const reducer = general.reducer;
+// #endregion exports

@@ -1,28 +1,58 @@
 // #region imports
+    // #region libraries
+    import {
+        createSlice,
+        PayloadAction,
+    } from '@reduxjs/toolkit';
+    // #endregion libraries
+
+
     // #region internal
-    import * as actions from './actions';
-
-    import initialState from './initial';
-
-    import reducer from './reducer';
-
-    import * as resolvers from './resolvers';
-
-    import selectors from './selectors';
-
-    import * as Types from './types';
+    import type {
+        AppState,
+    } from '~services/state/store';
     // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-export {
-    actions,
-    initialState,
-    reducer,
-    resolvers,
-    selectors,
-    Types,
+export interface ShortcutsState {
+    global: boolean;
+}
+
+
+const initialState: ShortcutsState = {
+    global: true,
 };
+
+
+export const shortcuts = createSlice({
+    name: 'shortcuts',
+    initialState,
+    reducers: {
+        setGlobalShortcuts: (
+            state,
+            action: PayloadAction<boolean>,
+        ) => {
+            state.global = action.payload;
+        },
+    },
+});
 // #endregion module
+
+
+
+// #region exports
+export const actions = shortcuts.actions;
+
+
+export const getGlobal = (state: AppState) => state.shortcuts.global;
+
+export const selectors = {
+    getGlobal,
+};
+
+
+export const reducer = shortcuts.reducer;
+// #endregion exports

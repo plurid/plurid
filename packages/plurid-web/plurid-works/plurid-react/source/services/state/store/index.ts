@@ -1,4 +1,12 @@
 // #region imports
+    // #region libraries
+    import {
+        ThunkAction,
+        Action,
+    } from '@reduxjs/toolkit';
+    // #endregion libraries
+
+
     // #region external
     import environment from '~services/utilities/environment';
     // #endregion external
@@ -6,21 +14,27 @@
 
     // #region internal
     import storeProduction, {
-        AppState as AppStateProduction,
+        AppDispatch as AppDispatchProduction,
     } from './production';
 
     import storeDevelopment, {
-        AppState as AppStateDeveloment,
+        AppDispatch as AppDispatchDevelopment,
     } from './development';
+
+    import type {
+        AppState,
+    } from './reducer';
     // #endregion internal
 // #endregion imports
 
 
 
 // #region module
-export type AppState =
-    | AppStateProduction
-    | AppStateDeveloment;
+type AppDispatch =
+    | AppDispatchProduction
+    | AppDispatchDevelopment;
+
+type AppThunk = ThunkAction<void, AppState, unknown, Action>;
 
 
 const store = environment.production
@@ -31,5 +45,11 @@ const store = environment.production
 
 
 // #region exports
+export {
+    AppState,
+    AppDispatch,
+    AppThunk,
+};
+
 export default store;
 // #endregion exports
