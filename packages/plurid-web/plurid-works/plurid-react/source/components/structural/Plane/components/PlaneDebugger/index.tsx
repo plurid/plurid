@@ -41,27 +41,31 @@ export interface PluridPlaneDebuggerStateProperties {
 export interface PluridPlaneDebuggerDispatchProperties {
 }
 
-type PluridPlaneDebuggerProperties = PluridPlaneDebuggerOwnProperties
+type PluridPlaneDebuggerProperties =
+    & PluridPlaneDebuggerOwnProperties
     & PluridPlaneDebuggerStateProperties
     & PluridPlaneDebuggerDispatchProperties;
+
 
 const PluridPlaneDebugger: React.FC<PluridPlaneDebuggerProperties> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     // const {
         // /** state */
         // stateGeneralTheme,
         // stateInteractionTheme,
     // } = properties;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <StyledPluridPlaneDebugger>
             PluridPlaneDebugger
         </StyledPluridPlaneDebugger>
     );
+    // #endregion render
 }
 
 

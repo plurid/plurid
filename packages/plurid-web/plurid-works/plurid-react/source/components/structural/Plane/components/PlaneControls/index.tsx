@@ -91,7 +91,8 @@ export interface PluridPlaneControlsDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 }
 
-export type PluridPlaneControlsProperties = PluridPlaneControlsOwnProperties
+export type PluridPlaneControlsProperties =
+    & PluridPlaneControlsOwnProperties
     & PluridPlaneControlsStateProperties
     & PluridPlaneControlsDispatchProperties;
 

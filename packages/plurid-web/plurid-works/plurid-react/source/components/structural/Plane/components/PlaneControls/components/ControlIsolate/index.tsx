@@ -29,6 +29,7 @@ export interface ControlIsolateProperties {
     // #endregion required
 }
 
+
 const ControlIsolate: React.FC<ControlIsolateProperties> = (
     properties,
 ) => {

@@ -24,8 +24,9 @@
 // #region module
 export interface PluridPlaneContentOwnProperties {
     // updatePlaneSize: any;
-    children: any;
+    children: React.ReactNode;
 }
+
 
 const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
     properties,

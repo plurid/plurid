@@ -29,6 +29,7 @@ export interface ControlRefreshProperties {
     // #endregion required
 }
 
+
 const ControlRefresh: React.FC<ControlRefreshProperties> = (
     properties,
 ) => {
