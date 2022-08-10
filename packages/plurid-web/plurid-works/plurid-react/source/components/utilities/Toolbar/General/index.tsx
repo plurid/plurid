@@ -6,9 +6,12 @@
         useEffect,
     } from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
+
 
     import {
         Theme,
@@ -39,8 +42,11 @@
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
     import {
-        ViewSize,
-    } from '~services/state/types/space';
+        DispatchAction,
+    } from '~data/interfaces';
+    // import {
+    //     ViewSize,
+    // } from '~services/state/types/space';
     // #endregion external
 
 
@@ -77,14 +83,14 @@ export interface PluridToolbarOwnProperties {
 export interface PluridToolbarStateProperties {
     theme: Theme;
     configuration: PluridConfiguration;
-    viewSize: ViewSize;
+    // viewSize: ViewSize;
+    viewSize: any;
     // universes: any;
 }
 
 export interface PluridToolbarDispatchProperties {
-    dispatchToggleConfigurationSpaceFirstPerson: typeof actions.configuration.toggleConfigurationSpaceFirstPerson;
-
-    dispatchSetConfigurationSpaceTransformMode: typeof actions.configuration.setConfigurationSpaceTransformMode;
+    dispatchToggleConfigurationSpaceFirstPerson: DispatchAction<typeof actions.configuration.toggleConfigurationSpaceFirstPerson>;
+    dispatchSetConfigurationSpaceTransformMode: DispatchAction<typeof actions.configuration.setConfigurationSpaceTransformMode>;
 }
 
 export type PluridToolbarProperties = PluridToolbarOwnProperties
@@ -167,7 +173,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
             setShowMenu(MENUS.NONE);
         }
 
-        dispatchSetConfigurationSpaceTransformMode(TYPE);
+        dispatchSetConfigurationSpaceTransformMode(TYPE as any);
     }
 
     const handleShowMenu = (
@@ -263,7 +269,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
             >
                 <StyledToolbarButton
                     theme={theme}
-                    onClick={() => dispatchToggleConfigurationSpaceFirstPerson()}
+                    onClick={() => dispatchToggleConfigurationSpaceFirstPerson(undefined)}
                     active={firstPerson}
                     button={true}
                     showIcons={showIcons}
@@ -355,7 +361,7 @@ const mapDispatchToProperties = (
     ),
 
     dispatchSetConfigurationSpaceTransformMode: (
-        mode: keyof typeof TRANSFORM_MODES,
+        mode,
     ) => dispatch(
         actions.configuration.setConfigurationSpaceTransformMode(mode)
     ),

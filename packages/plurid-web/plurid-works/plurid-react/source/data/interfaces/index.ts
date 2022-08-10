@@ -57,3 +57,9 @@ export interface PluridLinkCoordinates {
 
 export type PluridRouteMatch = IsoMatcherRouteResult<PluridReactComponent>;
 // #endregion module
+
+
+
+// #region exports
+export * from './utility';
+// #endregion exports

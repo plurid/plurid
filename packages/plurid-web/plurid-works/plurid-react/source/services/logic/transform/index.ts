@@ -8,8 +8,8 @@
 
     // #region external
     import {
-        State as SpaceState,
-    } from '~services/state/modules/space/types';
+        SpaceState,
+    } from '~services/state/modules/space';
 
     import {
         interaction,

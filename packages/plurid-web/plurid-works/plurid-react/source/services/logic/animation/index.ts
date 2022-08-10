@@ -1,6 +1,6 @@
 // #region imports
     // #region libraries
-    import { AnyAction } from 'redux';
+    import { AnyAction } from '@reduxjs/toolkit';
     import { ThunkDispatch } from 'redux-thunk';
 
 
@@ -15,6 +15,9 @@
     // #region external
     import actions from '~services/state/actions';
     import { AppState } from '~services/state/store';
+    import {
+        DispatchAction,
+    } from '~data/interfaces';
 
     import {
         space,
@@ -39,7 +42,7 @@ export const factoryUseAnimatedTransform = () => {
     return (
         dispatch: ThunkDispatch<{}, {}, AnyAction>,
     ) => {
-        const dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform = (
+        const dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform> = (
             payload,
         ) => dispatch(
             actions.space.setAnimatedTransform(payload),
@@ -77,12 +80,12 @@ export const navigateToPluridPlane = (
     }
 
 
-    const dispatchSetTransform: typeof actions.space.setTransform = (
+    const dispatchSetTransform: DispatchAction<typeof actions.space.setTransform> = (
         payload,
     ) => dispatch(
         actions.space.setTransform(payload),
     );
-    const dispatchSetSpaceField: typeof actions.space.setSpaceField = (
+    const dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField> = (
         payload,
     ) => dispatch(
         actions.space.setSpaceField(payload),

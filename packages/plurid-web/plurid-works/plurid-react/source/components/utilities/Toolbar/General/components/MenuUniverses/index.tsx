@@ -2,9 +2,12 @@
     // #region libraries
     import React from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
+
 
     import {
         Theme,
@@ -12,7 +15,7 @@
 
     import {
         Indexed,
-        PluridInternalStateUniverse,
+        // PluridInternalStateUniverse,
     } from '@plurid/plurid-data';
     // #endregion libraries
 

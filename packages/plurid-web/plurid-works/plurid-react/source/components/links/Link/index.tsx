@@ -8,9 +8,11 @@
         useEffect,
     } from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
 
     import {
         Theme,
@@ -59,8 +61,11 @@
     import actions from '~services/state/actions';
     import {
         ViewSize,
-        UpdateSpaceLinkCoordinatesPayload,
-    } from '~services/state/modules/space/types';
+        // UpdateSpaceLinkCoordinatesPayload,
+    } from '~services/state/modules/space';
+    import {
+        DispatchAction,
+    } from '~data/interfaces';
 
     import {
         navigateToPluridPlane,
@@ -100,9 +105,9 @@ export interface PluridLinkStateProperties {
 
 export interface PluridLinkDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-    dispatchSetTree: typeof actions.space.setTree;
-    dispatchSetSpaceField: typeof actions.space.setSpaceField;
-    dispatchUpdateSpaceLinkCoordinates: typeof actions.space.updateSpaceLinkCoordinates;
+    dispatchSetTree: DispatchAction<typeof actions.space.setTree>;
+    dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
+    dispatchUpdateSpaceLinkCoordinates: DispatchAction<typeof actions.space.updateSpaceLinkCoordinates>;
 }
 
 export type PluridLinkProperties =
@@ -291,7 +296,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const updateLinkCoordinates = () => {
         const newLinkCoordinates = getPluridLinkCoordinates();
 
-        const payload: UpdateSpaceLinkCoordinatesPayload = {
+        // const payload: UpdateSpaceLinkCoordinatesPayload = {
+        const payload: any = {
             planeID: pluridPlaneID,
             linkCoordinates: newLinkCoordinates,
         };
@@ -722,9 +728,9 @@ const mapDispatchToProperties = (
 ): PluridLinkDispatchProperties => ({
     dispatch,
     dispatchSetTree: (
-        tree: TreePlane[],
+        payload,
     ) => dispatch(
-        actions.space.setTree(tree),
+        actions.space.setTree(payload),
     ),
     dispatchSetSpaceField: (
         payload,
@@ -732,7 +738,7 @@ const mapDispatchToProperties = (
         actions.space.setSpaceField(payload),
     ),
     dispatchUpdateSpaceLinkCoordinates: (
-        payload: UpdateSpaceLinkCoordinatesPayload,
+        payload,
     ) => dispatch(
         actions.space.updateSpaceLinkCoordinates(payload)
     ),

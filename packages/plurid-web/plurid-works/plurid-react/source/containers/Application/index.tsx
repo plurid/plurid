@@ -7,7 +7,7 @@
     import {
         Store,
         Unsubscribe as ReduxUnsubscribe,
-    } from 'redux';
+    } from '@reduxjs/toolkit';
 
     import {
         Provider as ReduxProvider,

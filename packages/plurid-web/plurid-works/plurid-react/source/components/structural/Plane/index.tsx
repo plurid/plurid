@@ -7,9 +7,11 @@
         useEffect,
     } from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
 
 
     import {
@@ -48,9 +50,12 @@
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
-    import { ViewSize } from '~services/state/types/space';
+    // import { ViewSize } from '~services/state/types/space';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+    } from '~data/interfaces';
 
     import {
         cleanTemplate,
@@ -87,7 +92,8 @@ export interface PluridPlaneOwnProperties {
 
 export interface PluridPlaneStateProperties {
     stateTree: TreePlane[];
-    stateViewSize: ViewSize;
+    // stateViewSize: ViewSize;
+    stateViewSize: any;
     stateActivePlaneID: string;
     stateIsolatePlane: string;
     stateGeneralTheme: Theme;
@@ -95,8 +101,8 @@ export interface PluridPlaneStateProperties {
 }
 
 export interface PluridPlaneDispatchProperties {
-    dispatchSetSpaceField: typeof actions.space.setSpaceField;
-    dispatchUpdateSpaceTreePlane: typeof actions.space.updateSpaceTreePlane;
+    dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
+    dispatchUpdateSpaceTreePlane: DispatchAction<typeof actions.space.updateSpaceTreePlane>;
 }
 
 export type PluridPlaneProperties =

@@ -6,9 +6,11 @@
         useEffect,
     } from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
 
 
     import PluridPubSub from '@plurid/plurid-pubsub';
@@ -28,6 +30,9 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+    } from '~data/interfaces';
 
     import {
         generalEngine,
@@ -55,7 +60,7 @@ export interface PluridApplicationConfiguratorStateProperties {
 }
 
 export interface PluridApplicationConfiguratorDispatchProperties {
-    dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
+    dispatchSetConfiguration: DispatchAction<typeof actions.configuration.setConfiguration>;
 }
 
 export type PluridApplicationConfiguratorProperties = PluridApplicationConfiguratorOwnProperties
@@ -148,9 +153,9 @@ const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridApplicationConfiguratorDispatchProperties => ({
     dispatchSetConfiguration: (
-        configuration: PluridConfiguration,
+        payload,
     ) => dispatch(
-        actions.configuration.setConfiguration(configuration)
+        actions.configuration.setConfiguration(payload)
     ),
 });
 

@@ -7,9 +7,11 @@
         useEffect,
     } from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
 
 
     import themes, {
@@ -68,8 +70,11 @@
     import actions from '~services/state/actions';
     import StateContext from '~services/state/context';
     import {
-        ViewSize,
-    } from '~services/state/types/space';
+        DispatchAction,
+    } from '~data/interfaces';
+    // import {
+    //     ViewSize,
+    // } from '~services/state/types/space';
 
     import {
         useAnimatedTransform,
@@ -124,44 +129,44 @@ export interface PluridViewStateProperties {
 export interface PluridViewDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
-    dispatchSetConfiguration: typeof actions.configuration.setConfiguration;
-    dispatchSetConfigurationMicro: typeof actions.configuration.setConfigurationMicro;
+    dispatchSetConfiguration: DispatchAction<typeof actions.configuration.setConfiguration>;
+    dispatchSetConfigurationMicro: DispatchAction<typeof actions.configuration.setConfigurationMicro>;
 
-    // dispatchSetUniverses: typeof actions.data.setUniverses;
-    dispatchSetSpaceField: typeof actions.space.setSpaceField;
+    // dispatchSetUniverses: DispatchAction<typeof actions.data.setUniverses>;
+    dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
 
-    dispatchSetSpaceLoading: typeof actions.space.setSpaceLoading;
-    dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
-    dispatchSetTransformTime: typeof actions.space.setTransformTime;
-    dispatchSetSpaceLocation: typeof actions.space.setSpaceLocation;
-    dispatchSetInitialTree: typeof actions.space.setInitialTree;
-    dispatchSetTree: typeof actions.space.setTree;
-    // dispatchSetSpaceSize: typeof actions.space.setSpaceSize;
+    dispatchSetSpaceLoading: DispatchAction<typeof actions.space.setSpaceLoading>;
+    dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform>;
+    dispatchSetTransformTime: DispatchAction<typeof actions.space.setTransformTime>;
+    dispatchSetSpaceLocation: DispatchAction<typeof actions.space.setSpaceLocation>;
+    dispatchSetInitialTree: DispatchAction<typeof actions.space.setInitialTree>;
+    dispatchSetTree: DispatchAction<typeof actions.space.setTree>;
+    // dispatchSetSpaceSize: DispatchAction<typeof actions.space.setSpaceSize>;
 
-    dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
-    dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
+    dispatchSetGeneralTheme: DispatchAction<typeof actions.themes.setGeneralTheme>;
+    dispatchSetInteractionTheme: DispatchAction<typeof actions.themes.setInteractionTheme>;
 
-    dispatchRotateXWith: typeof actions.space.rotateXWith;
-    dispatchRotateX: typeof actions.space.rotateX;
-    dispatchRotateYWith: typeof actions.space.rotateYWith;
-    dispatchRotateY: typeof actions.space.rotateY;
-    // dispatchTranslateX: typeof actions.space.translateX;
-    dispatchTranslateXWith: typeof actions.space.translateXWith;
-    // dispatchTranslateY: typeof actions.space.translateY;
-    dispatchTranslateYWith: typeof actions.space.translateYWith;
-    dispatchTranslateZWith: typeof actions.space.translateZWith;
-    // dispatchScaleUp: typeof actions.space.scaleUp;
-    dispatchScaleUpWith: typeof actions.space.scaleUpWith;
-    // dispatchScaleDown: typeof actions.space.scaleDown;
-    dispatchScaleDownWith: typeof actions.space.scaleDownWith;
+    dispatchRotateXWith: DispatchAction<typeof actions.space.rotateXWith>;
+    dispatchRotateX: DispatchAction<typeof actions.space.rotateX>;
+    dispatchRotateYWith: DispatchAction<typeof actions.space.rotateYWith>;
+    dispatchRotateY: DispatchAction<typeof actions.space.rotateY>;
+    // dispatchTranslateX: DispatchAction<typeof actions.space.translateX>;
+    dispatchTranslateXWith: DispatchAction<typeof actions.space.translateXWith>;
+    // dispatchTranslateY: DispatchAction<typeof actions.space.translateY>;
+    dispatchTranslateYWith: DispatchAction<typeof actions.space.translateYWith>;
+    dispatchTranslateZWith: DispatchAction<typeof actions.space.translateZWith>;
+    // dispatchScaleUp: DispatchAction<typeof actions.space.scaleUp>;
+    dispatchScaleUpWith: DispatchAction<typeof actions.space.scaleUpWith>;
+    // dispatchScaleDown: DispatchAction<typeof actions.space.scaleDown>;
+    dispatchScaleDownWith: DispatchAction<typeof actions.space.scaleDownWith>;
 
-    // dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
+    // dispatchSetActiveUniverse: DispatchAction<typeof actions.space.setActiveUniverse>;
 
-    dispatchSpaceSetViewSize: typeof actions.space.setViewSize;
-    dispatchSpaceSetView: typeof actions.space.spaceSetView;
-    // dispatchSpaceSetCulledView: typeof actions.space.spaceSetCulledView;
+    dispatchSpaceSetViewSize: DispatchAction<typeof actions.space.setViewSize>;
+    dispatchSpaceSetView: DispatchAction<typeof actions.space.spaceSetView>;
+    // dispatchSpaceSetCulledView: DispatchAction<typeof actions.space.spaceSetCulledView>;
 
-    // dispatchDataSetPlaneSources: typeof actions.data.setPlaneSources;
+    // dispatchDataSetPlaneSources: DispatchAction<typeof actions.data.setPlaneSources>;
 }
 
 export type PluridViewProperties =
@@ -1278,8 +1283,8 @@ const mapDispatchToProperties = (
 ): PluridViewDispatchProperties => ({
     dispatch,
 
-    dispatchSetConfiguration: (configuration: PluridAppConfiguration) => dispatch(
-        actions.configuration.setConfiguration(configuration)
+    dispatchSetConfiguration: (payload) => dispatch(
+        actions.configuration.setConfiguration(payload)
     ),
     dispatchSetConfigurationMicro: () => dispatch(
         actions.configuration.setConfigurationMicro()
@@ -1291,7 +1296,7 @@ const mapDispatchToProperties = (
     dispatchSetSpaceField: (payload) => dispatch(
         actions.space.setSpaceField(payload)
     ),
-    dispatchSpaceSetViewSize: (viewSize: ViewSize) => dispatch(
+    dispatchSpaceSetViewSize: (viewSize) => dispatch(
         actions.space.setViewSize(viewSize)
     ),
 
@@ -1306,7 +1311,7 @@ const mapDispatchToProperties = (
     ) => dispatch(
         actions.space.setTransformTime(value)
     ),
-    dispatchSetSpaceLocation: (spaceLocation: any) => dispatch(
+    dispatchSetSpaceLocation: (spaceLocation) => dispatch(
         actions.space.setSpaceLocation(spaceLocation)
     ),
     dispatchSetInitialTree: (
@@ -1323,10 +1328,10 @@ const mapDispatchToProperties = (
     //     actions.space.setSpaceSize(payload)
     // ),
 
-    dispatchSetGeneralTheme: (theme: Theme) => dispatch(
+    dispatchSetGeneralTheme: (theme) => dispatch(
         actions.themes.setGeneralTheme(theme)
     ),
-    dispatchSetInteractionTheme: (theme: Theme) => dispatch(
+    dispatchSetInteractionTheme: (theme) => dispatch(
         actions.themes.setInteractionTheme(theme)
     ),
 
