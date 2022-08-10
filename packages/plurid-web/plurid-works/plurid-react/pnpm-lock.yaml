@@ -13,7 +13,6 @@ specifiers:
   '@plurid/plurid-themes': 0.0.0-2
   '@plurid/plurid-ui-components-react': 0.0.0-14
   '@plurid/plurid-ui-state-react': 0.0.0-4
-  '@redux-devtools/extension': ^3.2.2
   '@reduxjs/toolkit': ^1.8.3
   '@rollup/plugin-babel': ^5.3.1
   '@rollup/plugin-commonjs': ^22.0.2
@@ -72,7 +71,6 @@ devDependencies:
   '@plurid/plurid-themes': 0.0.0-2
   '@plurid/plurid-ui-components-react': 0.0.0-14_5cmjegxtkutaevproz2ngukkbu
   '@plurid/plurid-ui-state-react': 0.0.0-4_mxmwhuu22ojdd45featjegrj4i
-  '@redux-devtools/extension': 3.2.2_redux@4.2.0
   '@reduxjs/toolkit': 1.8.3_kkwg4cbsojnjnupd3btipussee
   '@rollup/plugin-babel': 5.3.1_tui6liyexu3zy4m5r2rytc7ixu
   '@rollup/plugin-commonjs': 22.0.2_rollup@2.77.2
@@ -1088,15 +1086,6 @@ packages:
       '@plurid/plurid-themes': '*'
     dependencies:
       '@plurid/plurid-themes': 0.0.0-2
-    dev: true
-
-  /@redux-devtools/extension/3.2.2_redux@4.2.0:
-    resolution: {integrity: sha512-fKA2TWNzJF7wXSDwBemwcagBFudaejXCzH5hRszN3Z6B7XEJtEmGD77AjV0wliZpIZjA/fs3U7CejFMQ+ipS7A==}
-    peerDependencies:
-      redux: ^3.1.0 || ^4.0.0
-    dependencies:
-      '@babel/runtime': 7.17.2
-      redux: 4.2.0
     dev: true
 
   /@reduxjs/toolkit/1.8.3_kkwg4cbsojnjnupd3btipussee:
