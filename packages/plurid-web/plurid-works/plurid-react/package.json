@@ -40,6 +40,7 @@
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
         "check": "tsc --project ./configurations/tsconfig.check.json",
         "types": "tsc --project ./configurations/tsconfig.types.json && rm -rf ./temporary-ts-emit",
+        "build.development.only": "pnpm clean && node scripts/development.js",
         "build.development": "pnpm clean && pnpm types && node scripts/development.js",
         "build.production": "pnpm clean && pnpm lint && pnpm test && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production",
         "build": "pnpm build.production",
