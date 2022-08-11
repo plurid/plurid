@@ -71,6 +71,7 @@
     import StateContext from '~services/state/context';
     import {
         DispatchAction,
+        DispatchActionWithoutPayload,
     } from '~data/interfaces';
     // import {
     //     ViewSize,
@@ -130,7 +131,7 @@ export interface PluridViewDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
     dispatchSetConfiguration: DispatchAction<typeof actions.configuration.setConfiguration>;
-    dispatchSetConfigurationMicro: DispatchAction<typeof actions.configuration.setConfigurationMicro>;
+    dispatchSetConfigurationMicro: DispatchActionWithoutPayload<typeof actions.configuration.setConfigurationMicro>;
 
     // dispatchSetUniverses: DispatchAction<typeof actions.data.setUniverses>;
     dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
@@ -1283,100 +1284,94 @@ const mapDispatchToProperties = (
     dispatch,
 
     dispatchSetConfiguration: (payload) => dispatch(
-        actions.configuration.setConfiguration(payload)
+        actions.configuration.setConfiguration(payload),
     ),
     dispatchSetConfigurationMicro: () => dispatch(
-        actions.configuration.setConfigurationMicro()
+        actions.configuration.setConfigurationMicro(),
     ),
 
     // dispatchSetUniverses: (universes: any) => dispatch(
-    //     actions.data.setUniverses(universes)
+    //     actions.data.setUniverses(universes),
     // ),
     dispatchSetSpaceField: (payload) => dispatch(
-        actions.space.setSpaceField(payload)
+        actions.space.setSpaceField(payload),
     ),
-    dispatchSpaceSetViewSize: (viewSize) => dispatch(
-        actions.space.setViewSize(viewSize)
+    dispatchSpaceSetViewSize: (payload) => dispatch(
+        actions.space.setViewSize(payload),
     ),
 
-    dispatchSetSpaceLoading: (loading: boolean) => dispatch(
-        actions.space.setSpaceLoading(loading)
+    dispatchSetSpaceLoading: (payload) => dispatch(
+        actions.space.setSpaceLoading(payload),
     ),
-    dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
-        actions.space.setAnimatedTransform(animated)
+    dispatchSetAnimatedTransform: (payload) => dispatch(
+        actions.space.setAnimatedTransform(payload),
     ),
-    dispatchSetTransformTime: (
-        value,
-    ) => dispatch(
-        actions.space.setTransformTime(value)
+    dispatchSetTransformTime: (payload) => dispatch(
+        actions.space.setTransformTime(payload),
     ),
-    dispatchSetSpaceLocation: (spaceLocation) => dispatch(
-        actions.space.setSpaceLocation(spaceLocation)
+    dispatchSetSpaceLocation: (payload) => dispatch(
+        actions.space.setSpaceLocation(payload),
     ),
-    dispatchSetTree: (
-        payload,
-    ) => dispatch(
+    dispatchSetTree: (payload) => dispatch(
         actions.space.setTree(payload),
     ),
-    // dispatchSetSpaceSize: (payload: SpaceSize) => dispatch(
+    // dispatchSetSpaceSize: (payload) => dispatch(
     //     actions.space.setSpaceSize(payload)
     // ),
 
-    dispatchSetGeneralTheme: (theme) => dispatch(
-        actions.themes.setGeneralTheme(theme)
+    dispatchSetGeneralTheme: (payload) => dispatch(
+        actions.themes.setGeneralTheme(payload),
     ),
-    dispatchSetInteractionTheme: (theme) => dispatch(
-        actions.themes.setInteractionTheme(theme)
+    dispatchSetInteractionTheme: (payload) => dispatch(
+        actions.themes.setInteractionTheme(payload),
     ),
 
-    dispatchRotateX: (value) => dispatch(
-        actions.space.rotateX(value)
+    dispatchRotateX: (payload) => dispatch(
+        actions.space.rotateX(payload),
     ),
-    dispatchRotateXWith: (value) => dispatch(
-        actions.space.rotateXWith(value)
+    dispatchRotateXWith: (payload) => dispatch(
+        actions.space.rotateXWith(payload),
     ),
-    dispatchRotateY: (value) => dispatch(
-        actions.space.rotateY(value)
+    dispatchRotateY: (payload) => dispatch(
+        actions.space.rotateY(payload),
     ),
-    dispatchRotateYWith: (value) => dispatch(
-        actions.space.rotateYWith(value)
+    dispatchRotateYWith: (payload) => dispatch(
+        actions.space.rotateYWith(payload),
     ),
-    // dispatchTranslateX: (value) => dispatch(
-    //     actions.space.translateX(value)
+    // dispatchTranslateX: (payload) => dispatch(
+    //     actions.space.translateX(payload),
     // ),
-    dispatchTranslateXWith: (value) => dispatch(
-        actions.space.translateXWith(value)
+    dispatchTranslateXWith: (payload) => dispatch(
+        actions.space.translateXWith(payload),
     ),
-    // dispatchTranslateY: (value) => dispatch(
-    //     actions.space.translateY(value)
+    // dispatchTranslateY: (payload) => dispatch(
+    //     actions.space.translateY(payload),
     // ),
-    dispatchTranslateYWith: (value) => dispatch(
-        actions.space.translateYWith(value)
+    dispatchTranslateYWith: (payload) => dispatch(
+        actions.space.translateYWith(payload),
     ),
-    dispatchTranslateZWith: (value) => dispatch(
-        actions.space.translateZWith(value)
+    dispatchTranslateZWith: (payload) => dispatch(
+        actions.space.translateZWith(payload),
     ),
-    // dispatchScaleUp: (value) => dispatch(
-    //     actions.space.scaleUp(value)
+    // dispatchScaleUp: (payload) => dispatch(
+    //     actions.space.scaleUp(payload),
     // ),
-    dispatchScaleUpWith: (value) => dispatch(
-        actions.space.scaleUpWith(value)
+    dispatchScaleUpWith: (payload) => dispatch(
+        actions.space.scaleUpWith(payload),
     ),
-    // dispatchScaleDown: (value) => dispatch(
-    //     actions.space.scaleDown(value)
+    // dispatchScaleDown: (payload) => dispatch(
+    //     actions.space.scaleDown(payload),
     // ),
-    dispatchScaleDownWith: (value) => dispatch(
-        actions.space.scaleDownWith(value)
+    dispatchScaleDownWith: (payload) => dispatch(
+        actions.space.scaleDownWith(payload),
     ),
 
     // dispatchSetActiveUniverse: (activeUniverse: string) => dispatch(
-    //     actions.space.setActiveUniverse(activeUniverse)
+    //     actions.space.setActiveUniverse(activeUniverse),
     // ),
 
-    dispatchSpaceSetView: (
-        view,
-    ) => dispatch(
-        actions.space.spaceSetView(view),
+    dispatchSpaceSetView: (payload) => dispatch(
+        actions.space.spaceSetView(payload),
     ),
     // dispatchSpaceSetCulledView: (
     //     culledView,
