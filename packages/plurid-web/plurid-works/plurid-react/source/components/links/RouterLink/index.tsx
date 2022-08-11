@@ -2,10 +2,15 @@
     // #region libraries
     import React from 'react';
 
+
     import {
         plurid,
         Theme,
     } from '@plurid/plurid-themes';
+
+    import {
+        objects,
+    } from '@plurid/plurid-functions';
 
     import {
         pluridRouterNavigate,
@@ -31,7 +36,9 @@
 
 
 // #region module
-export interface PluridRouterLinkOwnProperties {
+export type CustomHTMLAnchorElement = Omit<HTMLAnchorElement, 'children' | 'style' | 'className'>;
+
+export interface PluridRouterLinkOwnProperties extends CustomHTMLAnchorElement {
     // #region required
         // #region values
         route: string;
@@ -94,6 +101,23 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         // #endregion optional
     } = properties;
 
+    // const htmlAnchorProperties: any = objects.omit(
+    //     {...properties},
+    //     [
+    //         'route',
+    //         'children',
+    //         'asAnchor',
+    //         'theme',
+    //         'style',
+    //         'className',
+    //         'atClick',
+    //     ],
+    // );
+
+    const htmlAnchorProperties: any = {
+        ...properties,
+    };
+
     const asAnchor = asAnchorProperty ?? DEFAULT_ROUTER_LINK_AS_ANCHOR;
     const theme = themeProperty || plurid;
     // #endregion properties
@@ -132,17 +156,18 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 
     // #region render
     const renderProperties = {
-        onClick: handleClick,
-        onKeyUp: handleKeyUp,
+        tabIndex: 0,
         theme,
         style,
         className,
-        tabIndex: 0,
+        onClick: handleClick,
+        onKeyUp: handleKeyUp,
     };
 
     if (!asAnchor) {
         return (
             <StyledPluridRouterLinkDiv
+                {...htmlAnchorProperties}
                 {...renderProperties}
             >
                 {children}
@@ -152,6 +177,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 
     return (
         <StyledPluridRouterLinkAnchor
+            {...htmlAnchorProperties}
             href={route}
             {...renderProperties}
         >
