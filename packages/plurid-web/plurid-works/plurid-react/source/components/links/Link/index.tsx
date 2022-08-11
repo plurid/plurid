@@ -458,7 +458,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const removePlane = () => {
         const updatedTree = space.tree.logic.removePlaneFromTree(
-            stateTree,
+            JSON.parse(JSON.stringify(stateTree)),
             pluridPlaneID,
         );
 
