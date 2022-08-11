@@ -86,7 +86,6 @@ export interface SpaceState {
     translationX: number;
     translationY: number;
     translationZ: number;
-    initialTree: TreePlane[];
     tree: TreePlane[];
     activeUniverseID: string;
     camera: Coordinates;
@@ -97,6 +96,32 @@ export interface SpaceState {
     activePlaneID: string;
     isolatePlane: string;
     lastClosedPlane: string;
+}
+
+
+export interface SetSpaceFieldPayload {
+    field: keyof SpaceState;
+    value: any;
+}
+
+export interface ChangeTransformPayload {
+    type: 'rotate' | 'translate' | 'scale';
+    kind: 'set' | 'add';
+    value: number;
+}
+
+export interface SetTransformPayload {
+    translationX?: number;
+    translationY?: number;
+    translationZ?: number;
+    rotationX?: number;
+    rotationY?: number;
+    scale?: number;
+}
+
+export interface UpdateSpaceLinkCoordinatesPayload {
+    planeID: string;
+    linkCoordinates: LinkCoordinates;
 }
 
 
@@ -111,7 +136,6 @@ const initialState: SpaceState = {
     translationX: 0,
     translationY: 0,
     translationZ: 0,
-    initialTree: [],
     tree: [],
     activeUniverseID: '',
     camera: {
@@ -147,8 +171,7 @@ export const space = createSlice({
     reducers: {
         setSpaceField: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetSpaceFieldAction,
+            action: PayloadAction<SetSpaceFieldPayload>,
         ) => {
             const {
                 field,
@@ -159,31 +182,23 @@ export const space = createSlice({
         },
         setSpaceLoading: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetSpaceLoadingAction,
+            action: PayloadAction<boolean>,
         ) => {
-            return {
-                ...state,
-                loading: action.payload,
-            };
+            state.loading = action.payload;
         },
         changeTransform: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.ChangeTransformAction,
+            action: PayloadAction<ChangeTransformPayload>,
         ) => {
-            const {
-                type,
-                kind,
-                value,
-            } = action.payload;
-
-            return state;
+            // const {
+            //     type,
+            //     kind,
+            //     value,
+            // } = action.payload;
         },
         setTransform: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetTransformAction,
+            action: PayloadAction<SetTransformPayload>,
         ) => {
             const {
                 translationX,
@@ -201,42 +216,30 @@ export const space = createSlice({
             const resolvedRotationY = rotationY ?? state.rotationY;
             const resolvedScale = scale ?? state.scale;
 
-            return {
-                ...state,
-                translationX: resolvedTranslationX,
-                translationY: resolvedTranslationY,
-                translationZ: resolvedTranslationZ,
-                rotationX: resolvedRotationX,
-                rotationY: resolvedRotationY,
-                scale: resolvedScale,
-            };
+            state.translationX = resolvedTranslationX;
+            state.translationY = resolvedTranslationY;
+            state.translationZ = resolvedTranslationZ;
+            state.rotationX = resolvedRotationX;
+            state.rotationY = resolvedRotationY;
+            state.scale = resolvedScale;
         },
         setAnimatedTransform: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetAnimatedTransformAction,
+            action: PayloadAction<boolean>,
         ) => {
-            return {
-                ...state,
-                animatedTransform: action.payload,
-            };
+            state.animatedTransform = action.payload;
         },
         setTransformTime: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetTransformTimeAction,
+            action: PayloadAction<number>,
         ) => {
-            return {
-                ...state,
-                transformTime: action.payload,
-            };
+            state.transformTime = action.payload;
         },
         setSpaceLocation: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetSpaceLocationAction,
+            action: PayloadAction<SpaceLocation>,
         ) => {
-            return {
+            state = {
                 ...state,
                 ...action.payload,
             };
@@ -319,16 +322,14 @@ export const space = createSlice({
         },
         rotateX: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.RotateXAction,
+            action: PayloadAction<number>,
         ) => {
             state.rotationX = action.payload;
             state.transform = computeMatrix(state);
         },
         rotateXWith: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.RotateXWithAction,
+            action: PayloadAction<number>,
         ) => {
             state.rotationX = state.rotationX + action.payload;
             state.transform = computeMatrix(state);
@@ -347,16 +348,14 @@ export const space = createSlice({
         },
         rotateY: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.RotateYAction,
+            action: PayloadAction<number>,
         ) => {
             state.rotationY = action.payload;
             state.transform = computeMatrix(state);
         },
         rotateYWith: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.RotateYWithAction,
+            action: PayloadAction<number>,
         ) => {
             state.rotationY = state.rotationY + action.payload;
             state.transform = computeMatrix(state);
@@ -403,8 +402,7 @@ export const space = createSlice({
         },
         translateXWith: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.TranslateXWithAction,
+            action: PayloadAction<number>,
         ) => {
             state.translationX = state.translationX +  action.payload * Math.cos(toRadians(state.rotationY));
             state.translationZ = state.translationZ +  action.payload * Math.sin(toRadians(state.rotationY));
@@ -412,16 +410,14 @@ export const space = createSlice({
         },
         translateYWith: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.TranslateYWithAction,
+            action: PayloadAction<number>,
         ) => {
             state.translationY = state.translationY + action.payload;
             state.transform = computeMatrix(state);
         },
         translateZWith: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.TranslateZWithAction,
+            action: PayloadAction<number>,
         ) => {
             state.translationZ = state.translationZ + action.payload;
             state.transform = computeMatrix(state);
@@ -450,8 +446,7 @@ export const space = createSlice({
         },
         scaleUpWith: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.ScaleUpWithAction,
+            action: PayloadAction<number>,
         ) => {
             const computedScale = state.scale + Math.abs(action.payload);
             const scale = computedScale < SCALE_UPPER_LIMIT
@@ -463,8 +458,7 @@ export const space = createSlice({
         },
         scaleDownWith: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.ScaleDownWithAction,
+            action: PayloadAction<number>,
         ) => {
             const computedScale = state.scale - Math.abs(action.payload);
             const scale = computedScale > SCALE_LOWER_LIMIT
@@ -474,39 +468,19 @@ export const space = createSlice({
             state.scale = scale;
             state.transform = computeMatrix(state);
         },
-        setInitialTree: (
-            state,
-            action: PayloadAction<any>,
-            // action: Types.SetInitialTreeAction,
-        ) => {
-            return {
-                ...state,
-                initialTree: [
-                    ...action.payload,
-                ],
-            };
-        },
         setTree: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetTreeAction,
+            action: PayloadAction<TreePlane[]>,
         ) => {
-            return {
-                ...state,
-                tree: [
-                    ...action.payload,
-                ],
-            };
+            state.tree = [
+                ...action.payload,
+            ];
         },
         setActiveUniverse: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetActiveUniverseAction,
+            action: PayloadAction<string>,
         ) => {
-            return {
-                ...state,
-                activeUniverseID: action.payload,
-            };
+            state.activeUniverseID = action.payload;
         },
         spaceResetTransform: (
             state,
@@ -521,44 +495,26 @@ export const space = createSlice({
         },
         setViewSize: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetViewSizeAction,
+            action: PayloadAction<ViewSize>,
         ) => {
-            return {
-                ...state,
-                viewSize: {
-                    ...action.payload,
-                },
-            };
+            state.viewSize = action.payload;
         },
         setSpaceSize: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SetSpaceSizeAction,
+            action: PayloadAction<SpaceSize>,
         ) => {
-            return {
-                ...state,
-                spaceSize: {
-                    ...action.payload,
-                },
-            };
+            state.spaceSize = action.payload;
         },
         updateSpaceTreePlane: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.UpdateSpaceTreePlaneAction,
+            action: PayloadAction<TreePlane>,
         ) => {
             const updatedTree = generalEngine.tree.updateTreePlane(state.tree, action.payload);
-
-            return {
-                ...state,
-                tree: updatedTree,
-            };
+            state.tree = updatedTree;
         },
         updateSpaceLinkCoordinates: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.UpdateSpaceLinkCoordinatesAction,
+            action: PayloadAction<UpdateSpaceLinkCoordinatesPayload>,
         ) => {
             const {
                 planeID,
@@ -571,22 +527,17 @@ export const space = createSlice({
                 linkCoordinates,
             );
 
-            return {
-                ...state,
-                tree: updatedTree,
-            };
+            state.tree = updatedTree;
         },
         spaceSetView: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SpaceSetViewAction,
+            action: PayloadAction<PluridApplicationView>,
         ) => {
             state.view = action.payload;
         },
         spaceSetCulledView: (
             state,
-            action: PayloadAction<any>,
-            // action: Types.SpaceSetCulledViewAction,
+            action: PayloadAction<PluridApplicationView>,
         ) => {
             state.culledView = action.payload;
         },
@@ -612,7 +563,6 @@ const getTranslationX = (state: AppState): number => state.space.translationX;
 const getTranslationY = (state: AppState): number => state.space.translationY;
 const getTranslationZ = (state: AppState): number => state.space.translationZ;
 const getScale = (state: AppState): number => state.space.scale;
-const getInitialTree = (state: AppState): TreePlane[] => state.space.initialTree;
 const getTree = (state: AppState): TreePlane[] => state.space.tree;
 const getTransform = (state: AppState) => {
     return {
@@ -652,7 +602,6 @@ export const selectors = {
     getScale,
     getTransform,
 
-    getInitialTree,
     getTree,
 
     getActiveUniverseID,
