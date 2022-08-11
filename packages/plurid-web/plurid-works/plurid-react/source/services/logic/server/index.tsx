@@ -90,7 +90,6 @@ export const serverComputeMetastate = async (
                 translationX: 0,
                 translationY: 0,
                 translationZ: 0,
-                initialTree: computedTree,
                 tree: computedTree,
                 activeUniverseID: '',
                 camera: {
