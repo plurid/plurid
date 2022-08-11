@@ -61,8 +61,8 @@
     import actions from '~services/state/actions';
     import {
         ViewSize,
-        // UpdateSpaceLinkCoordinatesPayload,
-    } from '~services/state/modules/space';
+        UpdateSpaceLinkCoordinatesPayload,
+    } from '~services/state/modules/space/types';
     import {
         DispatchAction,
     } from '~data/interfaces';
@@ -296,8 +296,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const updateLinkCoordinates = () => {
         const newLinkCoordinates = getPluridLinkCoordinates();
 
-        // const payload: UpdateSpaceLinkCoordinatesPayload = {
-        const payload: any = {
+        const payload: UpdateSpaceLinkCoordinatesPayload = {
             planeID: pluridPlaneID,
             linkCoordinates: newLinkCoordinates,
         };
