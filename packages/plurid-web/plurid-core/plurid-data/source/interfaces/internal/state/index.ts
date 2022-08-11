@@ -55,7 +55,6 @@ export interface PluridStateSpace {
     translationX: number;
     translationY: number;
     translationZ: number;
-    initialTree: TreePlane[];
     tree: TreePlane[];
     activeUniverseID: string;
     camera: Coordinates;
