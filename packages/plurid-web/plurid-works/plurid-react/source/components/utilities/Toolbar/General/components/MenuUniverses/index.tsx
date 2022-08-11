@@ -25,6 +25,9 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+    } from '~data/interfaces';
     // #endregion external
 
 
@@ -51,7 +54,7 @@ export interface PluridMenuUniversesStateProperties {
 }
 
 export interface PluridMenuUniversesDispatchProperties {
-    dispatchSetActiveUniverse: typeof actions.space.setActiveUniverse;
+    dispatchSetActiveUniverse: DispatchAction<typeof actions.space.setActiveUniverse>;
 }
 
 export type PluridMenuUniversesProperties = PluridMenuUniversesOwnProperties
@@ -120,8 +123,8 @@ const mapDispatchToProps = (
     dispatchSetActiveUniverse: (
         documentID: string,
     ) => dispatch(
-        actions.space.setActiveUniverse(documentID)
-    )
+        actions.space.setActiveUniverse(documentID),
+    ),
 });
 
 

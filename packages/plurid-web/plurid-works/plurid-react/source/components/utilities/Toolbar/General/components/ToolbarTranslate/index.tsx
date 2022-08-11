@@ -42,6 +42,9 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchActionWithoutPayload,
+    } from '~data/interfaces';
     // #endregion external
 
 
@@ -68,12 +71,12 @@ export interface PluridToolbarTranslateStateProperties {
 }
 
 export interface PluridToolbarTranslateDispatchProperties {
-    translateUp: typeof actions.space.translateUp;
-    translateDown: typeof actions.space.translateDown;
-    translateLeft: typeof actions.space.translateLeft;
-    translateRight: typeof actions.space.translateRight;
-    translateIn: typeof actions.space.translateIn;
-    translateOut: typeof actions.space.translateOut;
+    translateUp: DispatchActionWithoutPayload<typeof actions.space.translateUp>;
+    translateDown: DispatchActionWithoutPayload<typeof actions.space.translateDown>;
+    translateLeft: DispatchActionWithoutPayload<typeof actions.space.translateLeft>;
+    translateRight: DispatchActionWithoutPayload<typeof actions.space.translateRight>;
+    translateIn: DispatchActionWithoutPayload<typeof actions.space.translateIn>;
+    translateOut: DispatchActionWithoutPayload<typeof actions.space.translateOut>;
 }
 
 export type PluridToolbarTranslateProperties = PluridToolbarTranslateOwnProperties

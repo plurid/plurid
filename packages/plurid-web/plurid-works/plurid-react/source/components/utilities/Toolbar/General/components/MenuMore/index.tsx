@@ -40,6 +40,9 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+    } from '~data/interfaces';
     // #endregion external
 
 
@@ -89,8 +92,8 @@ export interface PluridMoreMenuStateProperties {
 }
 
 export interface PluridMoreMenuDispatchProperties {
-    dispatchToggleConfigurationToolbarToggleDrawer: typeof actions.configuration.toggleConfigurationToolbarToggleDrawer;
-    dispatchSetUIToolbarScrollPosition: typeof actions.ui.setUIToolbarScrollPosition;
+    dispatchToggleConfigurationToolbarToggleDrawer: DispatchAction<typeof actions.configuration.toggleConfigurationToolbarToggleDrawer>;
+    dispatchSetUIToolbarScrollPosition: DispatchAction<typeof actions.ui.setUIToolbarScrollPosition>;
 }
 
 export type PluridMoreMenuProperties = PluridMoreMenuOwnProperties
@@ -207,7 +210,7 @@ const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
                                 <>{component}</>
                             )}
                             toggled={toggledDrawers.includes('ALL') || toggledDrawers.includes(drawer)}
-                            toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(drawer)}
+                            toggle={() => dispatchToggleConfigurationToolbarToggleDrawer(drawer as TOOLBAR_DRAWERS)}
                         />
                     )
                 })}
@@ -232,12 +235,12 @@ const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): PluridMoreMenuDispatchProperties => ({
     dispatchToggleConfigurationToolbarToggleDrawer: (
-        drawer: keyof typeof TOOLBAR_DRAWERS,
+        drawer,
     ) => dispatch(
         actions.configuration.toggleConfigurationToolbarToggleDrawer(drawer),
     ),
     dispatchSetUIToolbarScrollPosition: (
-        value: number,
+        value,
     ) => dispatch(
         actions.ui.setUIToolbarScrollPosition(value),
     ),

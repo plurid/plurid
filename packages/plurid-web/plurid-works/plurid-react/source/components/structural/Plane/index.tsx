@@ -10,6 +10,7 @@
     import {
         AnyAction,
         ThunkDispatch,
+        Dispatch,
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
@@ -457,9 +458,9 @@ const mapDispatchToProps = (
         actions.space.setSpaceField(payload),
     ),
     dispatchUpdateSpaceTreePlane: (
-        treePlane: TreePlane,
+        payload,
     ) => dispatch(
-        actions.space.updateSpaceTreePlane(treePlane),
+        actions.space.updateSpaceTreePlane(payload),
     ),
 });
 

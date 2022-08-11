@@ -30,7 +30,7 @@
     // import actions from '~services/state/actions';
     import {
         ViewSize,
-    } from '~services/state/types/space';
+    } from '~services/state/modules/space/types';
     // #endregion external
 
 

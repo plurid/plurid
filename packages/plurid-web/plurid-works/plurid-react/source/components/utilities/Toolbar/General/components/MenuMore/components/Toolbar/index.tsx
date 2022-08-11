@@ -5,9 +5,12 @@
         useEffect,
     } from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
+
 
     import {
         Theme,
@@ -40,8 +43,11 @@
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
     import {
+        DispatchActionWithoutPayload,
+    } from '~data/interfaces';
+    import {
         ViewSize,
-    } from '~services/state/types/space';
+    } from '~services/state/modules/space/types';
     // #endregion external
 // #endregion imports
 
@@ -65,10 +71,10 @@ export interface PluridMenuMoreToolbarStateProperties {
 }
 
 export interface PluridMenuMoreToolbarDispatchProperties {
-    dispatchToggleConfigurationToolbarConceal: typeof actions.configuration.toggleConfigurationToolbarConceal;
-    dispatchToggleConfigurationToolbarTransformIcons: typeof actions.configuration.toggleConfigurationToolbarTransformIcons;
-    dispatchToggleConfigurationToolbarTransformButtons: typeof actions.configuration.toggleConfigurationToolbarTransformButtons;
-    dispatchToggleConfigurationToolbarOpaque: typeof actions.configuration.toggleConfigurationToolbarOpaque
+    dispatchToggleConfigurationToolbarConceal: DispatchActionWithoutPayload<typeof actions.configuration.toggleConfigurationToolbarConceal>;
+    dispatchToggleConfigurationToolbarTransformIcons: DispatchActionWithoutPayload<typeof actions.configuration.toggleConfigurationToolbarTransformIcons>;
+    dispatchToggleConfigurationToolbarTransformButtons: DispatchActionWithoutPayload<typeof actions.configuration.toggleConfigurationToolbarTransformButtons>;
+    dispatchToggleConfigurationToolbarOpaque: DispatchActionWithoutPayload<typeof actions.configuration.toggleConfigurationToolbarOpaque>;
 }
 
 export type PluridMenuMoreToolbarProperties = PluridMenuMoreToolbarOwnProperties
@@ -199,17 +205,17 @@ const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): PluridMenuMoreToolbarDispatchProperties => ({
     dispatchToggleConfigurationToolbarConceal: () => dispatch(
-        actions.configuration.toggleConfigurationToolbarConceal()
+        actions.configuration.toggleConfigurationToolbarConceal(),
     ),
     dispatchToggleConfigurationToolbarTransformIcons: () => dispatch(
-        actions.configuration.toggleConfigurationToolbarTransformIcons()
+        actions.configuration.toggleConfigurationToolbarTransformIcons(),
     ),
     dispatchToggleConfigurationToolbarTransformButtons: () => dispatch(
-        actions.configuration.toggleConfigurationToolbarTransformButtons()
+        actions.configuration.toggleConfigurationToolbarTransformButtons(),
     ),
     dispatchToggleConfigurationToolbarOpaque: () => dispatch(
-        actions.configuration.toggleConfigurationToolbarOpaque()
-    )
+        actions.configuration.toggleConfigurationToolbarOpaque(),
+    ),
 });
 
 

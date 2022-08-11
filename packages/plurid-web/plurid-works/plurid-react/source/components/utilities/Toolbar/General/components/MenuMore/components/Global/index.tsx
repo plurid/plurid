@@ -5,9 +5,12 @@
         useEffect,
     } from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
+
 
     import themes, {
         Theme,
@@ -39,6 +42,9 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+    } from '~data/interfaces';
     // #endregion external
 // #endregion imports
 
@@ -61,12 +67,12 @@ export interface PluridMenuMoreGlobalStateProperties {
 }
 
 export interface PluridMenuMoreGlobalDispatchProperties {
-    dispatchSetGeneralTheme: typeof actions.themes.setGeneralTheme;
-    dispatchSetInteractionTheme: typeof actions.themes.setInteractionTheme;
+    dispatchSetGeneralTheme: DispatchAction<typeof actions.themes.setGeneralTheme>;
+    dispatchSetInteractionTheme: DispatchAction<typeof actions.themes.setInteractionTheme>;
 
-    dispatchSetConfigurationThemeGeneralAction: typeof actions.configuration.setConfigurationThemeGeneralAction;
-    dispatchSetConfigurationThemeInteractionAction: typeof actions.configuration.setConfigurationThemeInteractionAction;
-    dispatchSetConfigurationLanguage: typeof actions.configuration.setConfigurationLanguageAction;
+    dispatchSetConfigurationThemeGeneralAction: DispatchAction<typeof actions.configuration.setConfigurationThemeGeneral>;
+    dispatchSetConfigurationThemeInteractionAction: DispatchAction<typeof actions.configuration.setConfigurationThemeInteraction>;
+    dispatchSetConfigurationLanguage: DispatchAction<typeof actions.configuration.setConfigurationLanguage>;
 }
 
 export type PluridMenuMoreGlobalProperties = PluridMenuMoreGlobalOwnProperties
@@ -206,15 +212,15 @@ const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): PluridMenuMoreGlobalDispatchProperties => ({
     dispatchSetConfigurationThemeGeneralAction: (theme: string) => dispatch(
-        actions.configuration.setConfigurationThemeGeneralAction(theme)
+        actions.configuration.setConfigurationThemeGeneral(theme)
     ),
     dispatchSetConfigurationThemeInteractionAction: (theme: string) => dispatch(
-        actions.configuration.setConfigurationThemeInteractionAction(theme)
+        actions.configuration.setConfigurationThemeInteraction(theme)
     ),
     dispatchSetConfigurationLanguage: (
         language,
     ) => dispatch(
-        actions.configuration.setConfigurationLanguageAction(language)
+        actions.configuration.setConfigurationLanguage(language)
     ),
 
     dispatchSetGeneralTheme: (theme: Theme) => dispatch(

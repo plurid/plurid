@@ -2,9 +2,12 @@
     // #region libraries
     import React from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
+
 
     import {
         Theme,
@@ -32,6 +35,9 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     // import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+    } from '~data/interfaces';
     // #endregion external
 // #endregion imports
 

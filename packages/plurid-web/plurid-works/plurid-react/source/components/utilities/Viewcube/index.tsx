@@ -5,9 +5,11 @@
         useEffect,
     } from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
 
 
     import {
@@ -33,6 +35,10 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+        DispatchActionWithoutPayload,
+    } from '~data/interfaces';
     // #endregion external
 
 
@@ -62,13 +68,14 @@ export interface PluridViewcubeStateProperties {
 }
 
 export interface PluridViewcubeDispatchProperties {
-    dispatchRotateXWith: typeof actions.space.rotateXWith;
-    dispatchRotateYWith: typeof actions.space.rotateYWith;
-    dispatchSetAnimatedTransform: typeof actions.space.setAnimatedTransform;
-    dispatchSpaceResetTransform: typeof actions.space.spaceResetTransform;
+    dispatchRotateXWith: DispatchAction<typeof actions.space.rotateXWith>;
+    dispatchRotateYWith: DispatchAction<typeof actions.space.rotateYWith>;
+    dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform>;
+    dispatchSpaceResetTransform: DispatchActionWithoutPayload<typeof actions.space.spaceResetTransform>;
 }
 
-export type PluridViewcubeProperties = PluridViewcubeOwnProperties
+export type PluridViewcubeProperties =
+    & PluridViewcubeOwnProperties
     & PluridViewcubeStateProperties
     & PluridViewcubeDispatchProperties;
 

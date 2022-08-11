@@ -42,6 +42,9 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchActionWithoutPayload,
+    } from '~data/interfaces';
     // #endregion external
 
 
@@ -68,8 +71,8 @@ export interface PluridToolbarScaleStateProperties {
 }
 
 export interface PluridToolbarScaleDispatchProperties {
-    scaleUp: typeof actions.space.scaleUp;
-    scaleDown: typeof actions.space.scaleDown;
+    scaleUp: DispatchActionWithoutPayload<typeof actions.space.scaleUp>;
+    scaleDown: DispatchActionWithoutPayload<typeof actions.space.scaleDown>;
 }
 
 export type PluridToolbarScaleProperties = PluridToolbarScaleOwnProperties

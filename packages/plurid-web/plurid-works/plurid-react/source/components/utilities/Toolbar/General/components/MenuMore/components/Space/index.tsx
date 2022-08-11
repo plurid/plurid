@@ -2,9 +2,12 @@
     // #region libraries
     import React from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
+
 
     import {
         Theme,
@@ -39,6 +42,10 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+        DispatchActionWithoutPayload,
+    } from '~data/interfaces';
     // #endregion external
 // #endregion imports
 
@@ -62,12 +69,12 @@ export interface PluridMenuMoreSpaceStateProperties {
 }
 
 export interface PluridMenuMoreSpaceDispatchProperties {
-    dispatchSetConfigurationPlaneOpacity: typeof actions.configuration.setConfigurationPlaneOpacity;
+    dispatchSetConfigurationPlaneOpacity: DispatchAction<typeof actions.configuration.setConfigurationPlaneOpacity>;
 
-    dispatchToggleConfigurationSpaceTransparentUI: typeof actions.configuration.toggleConfigurationSpaceTransparentUI;
-    dispatchToggleConfigurationSpaceShowTransformOrigin: typeof actions.configuration.toggleConfigurationSpaceShowTransformOrigin;
-    dispatchSetConfigurationSpaceTransformOriginSize: typeof actions.configuration.setConfigurationSpaceTransformOriginSize;
-    dispatchSetConfigurationSpaceLayoutType: typeof actions.configuration.setConfigurationSpaceLayoutType;
+    dispatchToggleConfigurationSpaceTransparentUI: DispatchActionWithoutPayload<typeof actions.configuration.toggleConfigurationSpaceTransparentUI>;
+    dispatchToggleConfigurationSpaceShowTransformOrigin: DispatchActionWithoutPayload<typeof actions.configuration.toggleConfigurationShowTransformOrigin>;
+    dispatchSetConfigurationSpaceTransformOriginSize: DispatchAction<typeof actions.configuration.setConfigurationSpaceTransformOriginSize>;
+    dispatchSetConfigurationSpaceLayoutType: DispatchAction<typeof actions.configuration.setConfigurationSpaceLayout>;
 }
 
 export type PluridMenuMoreSpaceProperties = PluridMenuMoreSpaceOwnProperties
@@ -216,7 +223,7 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): PluridMenuMoreSpaceDispatchProperties => ({
-    dispatchSetConfigurationPlaneOpacity: (value: number) => dispatch(
+    dispatchSetConfigurationPlaneOpacity: (value) => dispatch(
         actions.configuration.setConfigurationPlaneOpacity(value)
     ),
 
@@ -224,17 +231,17 @@ const mapDispatchToProps = (
         actions.configuration.toggleConfigurationSpaceTransparentUI()
     ),
     dispatchToggleConfigurationSpaceShowTransformOrigin: () => dispatch(
-        actions.configuration.toggleConfigurationSpaceShowTransformOrigin()
+        actions.configuration.toggleConfigurationShowTransformOrigin()
     ),
     dispatchSetConfigurationSpaceTransformOriginSize: (
         size: keyof typeof SIZES,
     ) => dispatch(
-        actions.configuration.setConfigurationSpaceTransformOriginSize(size)
+        actions.configuration.setConfigurationSpaceTransformOriginSize(size as any)
     ),
     dispatchSetConfigurationSpaceLayoutType: (
         layoutType: keyof typeof LAYOUT_TYPES,
     ) => dispatch(
-        actions.configuration.setConfigurationSpaceLayoutType(layoutType),
+        actions.configuration.setConfigurationSpaceLayout(layoutType),
     ),
 });
 

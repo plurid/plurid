@@ -41,6 +41,9 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchActionWithoutPayload,
+    } from '~data/interfaces';
     // #endregion external
 
 
@@ -69,10 +72,10 @@ export interface PluridToolbarRotateStateProperties {
 }
 
 export interface PluridToolbarRotateDispatchProperties {
-    rotateUp: typeof actions.space.rotateUp;
-    rotateDown: typeof actions.space.rotateDown;
-    rotateLeft: typeof actions.space.rotateLeft;
-    rotateRight: typeof actions.space.rotateRight;
+    rotateUp: DispatchActionWithoutPayload<typeof actions.space.rotateUp>;
+    rotateDown: DispatchActionWithoutPayload<typeof actions.space.rotateDown>;
+    rotateLeft: DispatchActionWithoutPayload<typeof actions.space.rotateLeft>;
+    rotateRight: DispatchActionWithoutPayload<typeof actions.space.rotateRight>;
 }
 
 export type PluridToolbarRotateProperties = PluridToolbarRotateOwnProperties

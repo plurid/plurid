@@ -2,9 +2,12 @@
     // #region libraries
     import React from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
+
 
     import {
         Theme,
@@ -36,6 +39,10 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+        DispatchActionWithoutPayload,
+    } from '~data/interfaces';
     // #endregion external
 // #endregion imports
 
@@ -58,10 +65,10 @@ export interface PluridMenuMoreViewcubeStateProperties {
 }
 
 export interface PluridMenuMoreViewcubeDispatchProperties {
-    dispatchToggleConfigurationViewcubeHide: typeof actions.configuration.toggleConfigurationViewcubeHide;
-    dispatchToggleConfigurationViewcubeButtons: typeof actions.configuration.toggleConfigurationViewcubeButtons;
-    dispatchToggleConfigurationViewcubeOpaque: typeof actions.configuration.toggleConfigurationViewcubeOpaque;
-    dispatchToggleConfigurationViewcubeConceal: typeof actions.configuration.toggleConfigurationViewcubeConceal;
+    dispatchToggleConfigurationViewcubeHide: DispatchAction<typeof actions.configuration.toggleConfigurationViewcubeHide>;
+    dispatchToggleConfigurationViewcubeButtons: DispatchAction<typeof actions.configuration.toggleConfigurationViewcubeButtons>;
+    dispatchToggleConfigurationViewcubeOpaque: DispatchAction<typeof actions.configuration.toggleConfigurationViewcubeOpaque>;
+    dispatchToggleConfigurationViewcubeConceal: DispatchActionWithoutPayload<typeof actions.configuration.toggleConfigurationViewcubeConceal>;
 }
 
 export type PluridMenuMoreViewcubeProperties = PluridMenuMoreViewcubeOwnProperties

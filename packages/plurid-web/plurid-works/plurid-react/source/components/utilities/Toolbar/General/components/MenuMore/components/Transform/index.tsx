@@ -2,9 +2,12 @@
     // #region libraries
     import React from 'react';
 
-    import { AnyAction } from 'redux';
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
-    import { ThunkDispatch } from 'redux-thunk';
+
 
     import {
         Theme,
@@ -35,6 +38,9 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import {
+        DispatchAction,
+    } from '~data/interfaces';
     // #endregion libraries
 // #endregion imports
 
@@ -57,9 +63,9 @@ export interface PluridMenuMoreTransformStateProperties {
 }
 
 export interface PluridMenuMoreTransformDispatchProperties {
-    dispatchToggleConfigurationSpaceTransformMultimode: typeof actions.configuration.toggleConfigurationSpaceTransformMultimode;
-    dispatchSetConfigurationSpaceTransformTouch: typeof actions.configuration.setConfigurationSpaceTransformTouch;
-    dispatchSetConfigurationSpaceTransformLocks: typeof actions.configuration.setConfigurationSpaceTransformLocks;
+    dispatchToggleConfigurationSpaceTransformMultimode: DispatchAction<typeof actions.configuration.toggleConfigurationSpaceTransformMultimode>;
+    dispatchSetConfigurationSpaceTransformTouch: DispatchAction<typeof actions.configuration.setConfigurationSpaceTransformTouch>;
+    dispatchSetConfigurationSpaceTransformLocks: DispatchAction<typeof actions.configuration.setConfigurationSpaceTransformLocks>;
 }
 
 export type PluridMenuMoreTransformProperties = PluridMenuMoreTransformOwnProperties
@@ -232,17 +238,17 @@ const mapDispatchToProps = (
     dispatchToggleConfigurationSpaceTransformMultimode: (
         multimode,
     ) => dispatch(
-        actions.configuration.toggleConfigurationSpaceTransformMultimode(multimode)
+        actions.configuration.toggleConfigurationSpaceTransformMultimode(multimode),
     ),
     dispatchSetConfigurationSpaceTransformTouch: (
         touch: keyof typeof TRANSFORM_TOUCHES,
     ) => dispatch(
-        actions.configuration.setConfigurationSpaceTransformTouch(touch)
+        actions.configuration.setConfigurationSpaceTransformTouch(touch as any),
     ),
     dispatchSetConfigurationSpaceTransformLocks: (
         lock: string,
     ) => dispatch(
-        actions.configuration.setConfigurationSpaceTransformLocks(lock)
+        actions.configuration.setConfigurationSpaceTransformLocks(lock),
     ),
 });
 
