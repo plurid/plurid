@@ -139,7 +139,6 @@ export interface PluridViewDispatchProperties {
     dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform>;
     dispatchSetTransformTime: DispatchAction<typeof actions.space.setTransformTime>;
     dispatchSetSpaceLocation: DispatchAction<typeof actions.space.setSpaceLocation>;
-    dispatchSetInitialTree: DispatchAction<typeof actions.space.setInitialTree>;
     dispatchSetTree: DispatchAction<typeof actions.space.setTree>;
     // dispatchSetSpaceSize: DispatchAction<typeof actions.space.setSpaceSize>;
 
@@ -1314,15 +1313,10 @@ const mapDispatchToProperties = (
     dispatchSetSpaceLocation: (spaceLocation) => dispatch(
         actions.space.setSpaceLocation(spaceLocation)
     ),
-    dispatchSetInitialTree: (
-        tree: TreePlane[],
-    ) => dispatch(
-        actions.space.setInitialTree(tree),
-    ),
     dispatchSetTree: (
-        tree: TreePlane[],
+        payload,
     ) => dispatch(
-        actions.space.setTree(tree),
+        actions.space.setTree(payload),
     ),
     // dispatchSetSpaceSize: (payload: SpaceSize) => dispatch(
     //     actions.space.setSpaceSize(payload)
