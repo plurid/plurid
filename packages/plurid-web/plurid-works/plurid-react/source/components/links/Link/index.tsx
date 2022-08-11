@@ -370,7 +370,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             updatedTree,
             updatedPlane,
         } = space.tree.logic.togglePlaneFromTree(
-            stateTree,
+            JSON.parse(JSON.stringify(stateTree)),
             pluridPlaneID,
             forceShow,
         );
