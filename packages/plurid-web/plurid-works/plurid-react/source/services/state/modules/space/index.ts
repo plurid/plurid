@@ -8,7 +8,6 @@
 
     import {
         mathematics,
-        objects,
     } from '@plurid/plurid-functions';
 
     import {
@@ -21,7 +20,6 @@
 
         TreePlane,
         SpaceLocation,
-        LinkCoordinates,
         PluridApplicationView,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -39,9 +37,17 @@
 
 
     // #region internal
-    import type {
-        AppState,
-    } from '~services/state/store';
+    import {
+        ViewSize,
+        SpaceSize,
+        Coordinates,
+        SetSpaceFieldPayload,
+        ChangeTransformPayload,
+        SetTransformPayload,
+        UpdateSpaceLinkCoordinatesPayload,
+    } from './types';
+
+    import * as selectors from './selectors';
     // #endregion internal
 // #endregion imports
 
@@ -52,28 +58,6 @@ const {
     toRadians,
 } = mathematics.geometry;
 
-
-export interface ViewSize {
-    width: number;
-    height: number;
-}
-
-export interface SpaceSize {
-    width: number;
-    height: number;
-    depth: number;
-    topCorner: {
-        x: number;
-        y: number;
-        z: number;
-    };
-}
-
-export interface Coordinates {
-    x: number;
-    y: number;
-    z: number;
-}
 
 export interface SpaceState {
     loading: boolean;
@@ -97,33 +81,6 @@ export interface SpaceState {
     isolatePlane: string;
     lastClosedPlane: string;
 }
-
-
-export interface SetSpaceFieldPayload {
-    field: keyof SpaceState;
-    value: any;
-}
-
-export interface ChangeTransformPayload {
-    type: 'rotate' | 'translate' | 'scale';
-    kind: 'set' | 'add';
-    value: number;
-}
-
-export interface SetTransformPayload {
-    translationX?: number;
-    translationY?: number;
-    translationZ?: number;
-    rotationX?: number;
-    rotationY?: number;
-    scale?: number;
-}
-
-export interface UpdateSpaceLinkCoordinatesPayload {
-    planeID: string;
-    linkCoordinates: LinkCoordinates;
-}
-
 
 const initialState: SpaceState = {
     loading: true,
@@ -550,71 +507,9 @@ export const space = createSlice({
 // #region exports
 export const actions = space.actions;
 
-
-export const getSpace = (state: AppState) => state.space;
-const getLoading = (state: AppState): boolean => state.space.loading;
-const getTransformMatrix = (state: AppState) => state.space.transform;
-const getAnimatedTransform = (state: AppState): boolean => state.space.animatedTransform;
-const getTransformTime = (state: AppState): number => state.space.transformTime;
-
-const getRotationX = (state: AppState): number => state.space.rotationX;
-const getRotationY = (state: AppState): number => state.space.rotationY;
-const getTranslationX = (state: AppState): number => state.space.translationX;
-const getTranslationY = (state: AppState): number => state.space.translationY;
-const getTranslationZ = (state: AppState): number => state.space.translationZ;
-const getScale = (state: AppState): number => state.space.scale;
-const getTree = (state: AppState): TreePlane[] => state.space.tree;
-const getTransform = (state: AppState) => {
-    return {
-        rotationX: state.space.rotationX,
-        rotationY: state.space.rotationY,
-        translationX: state.space.translationX,
-        translationY: state.space.translationY,
-        translationZ: state.space.translationZ,
-        scale: state.space.scale,
-    };
-}
-const getActiveUniverseID = (state: AppState) => state.space.activeUniverseID;
-
-const getView = (state: AppState) => state.space.view;
-const getViewSize = (state: AppState) => state.space.viewSize;
-const getCulledView = (state: AppState) => state.space.culledView;
-
-const getActivePlaneID = (state: AppState) => state.space.activePlaneID;
-const getIsolatePlane = (state: AppState) => state.space.isolatePlane;
-const getLastClosedPlane = (state: AppState) => state.space.lastClosedPlane;
-
-
-export const selectors = {
-    getSpace,
-
-    getLoading,
-
-    getTransformMatrix,
-    getAnimatedTransform,
-    getTransformTime,
-
-    getRotationX,
-    getRotationY,
-    getTranslationX,
-    getTranslationY,
-    getTranslationZ,
-    getScale,
-    getTransform,
-
-    getTree,
-
-    getActiveUniverseID,
-
-    getView,
-    getViewSize,
-    getCulledView,
-
-    getActivePlaneID,
-    getIsolatePlane,
-    getLastClosedPlane,
+export {
+    selectors,
 };
-
 
 export const reducer = space.reducer;
 // #endregion exports
