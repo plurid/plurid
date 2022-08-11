@@ -303,10 +303,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         dispatchUpdateSpaceLinkCoordinates(payload);
 
         const updatedTree = space.tree.logic.updatePlaneLocation(
-            stateTree,
+            JSON.parse(JSON.stringify(stateTree)),
             parentPlaneID,
             pluridPlaneID,
-            newLinkCoordinates,
+            JSON.parse(JSON.stringify(newLinkCoordinates)),
         );
         dispatchSetTree(updatedTree);
     }
@@ -335,7 +335,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             route,
             parentPlaneID,
             linkCoordinates,
-            stateTree,
+            JSON.parse(JSON.stringify(stateTree)),
             planesRegistry.getAll(),
             stateConfiguration,
             hostname,
