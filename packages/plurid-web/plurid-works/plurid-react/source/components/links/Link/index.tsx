@@ -19,6 +19,10 @@
     } from '@plurid/plurid-themes';
 
     import {
+        objects,
+    } from '@plurid/plurid-functions';
+
+    import {
         useDebouncedCallback,
     } from '@plurid/plurid-functions-react';
 
@@ -303,10 +307,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         dispatchUpdateSpaceLinkCoordinates(payload);
 
         const updatedTree = space.tree.logic.updatePlaneLocation(
-            JSON.parse(JSON.stringify(stateTree)),
+            objects.clone((stateTree)),
             parentPlaneID,
             pluridPlaneID,
-            JSON.parse(JSON.stringify(newLinkCoordinates)),
+            objects.clone((newLinkCoordinates)),
         );
         dispatchSetTree(updatedTree);
     }
@@ -335,7 +339,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             route,
             parentPlaneID,
             linkCoordinates,
-            JSON.parse(JSON.stringify(stateTree)),
+            objects.clone((stateTree)),
             planesRegistry.getAll(),
             stateConfiguration,
             hostname,
@@ -370,7 +374,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             updatedTree,
             updatedPlane,
         } = space.tree.logic.togglePlaneFromTree(
-            JSON.parse(JSON.stringify(stateTree)),
+            objects.clone((stateTree)),
             pluridPlaneID,
             forceShow,
         );
@@ -458,7 +462,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     const removePlane = () => {
         const updatedTree = space.tree.logic.removePlaneFromTree(
-            JSON.parse(JSON.stringify(stateTree)),
+            objects.clone((stateTree)),
             pluridPlaneID,
         );
 
