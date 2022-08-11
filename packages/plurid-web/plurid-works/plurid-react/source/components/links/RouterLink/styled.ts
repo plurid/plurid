@@ -7,7 +7,6 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
-
     // #endregion libraries
 // #endregion imports
 
@@ -25,12 +24,14 @@ const commonStyle = css<IStyledPluridRouterLink>`
         return theme.colorTertiary;
     }};
 
-    :hover {
-        color: ${({
-            theme,
-        }) => {
-            return theme.colorPrimary;
-        }};
+    @media (hover:hover) {
+        :hover {
+            color: ${({
+                theme,
+            }) => {
+                return theme.colorPrimary;
+            }};
+        }
     }
 `;
 
