@@ -156,10 +156,6 @@ export const space = createSlice({
             } = action.payload;
 
             (state as any)[field] = value;
-
-            return {
-                ...state,
-            };
         },
         setSpaceLoading: (
             state,
@@ -251,10 +247,6 @@ export const space = createSlice({
             state.translationZ = state.translationZ + TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
             state.translationX = state.translationX + TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         viewCameraMoveBackward: (
             state,
@@ -262,10 +254,6 @@ export const space = createSlice({
             state.translationZ = state.translationZ - TRANSLATION_STEP * 6 * Math.cos(toRadians(-state.rotationY));
             state.translationX = state.translationX - TRANSLATION_STEP * 6 * Math.sin(toRadians(-state.rotationY));
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         viewCameraMoveLeft: (
             state,
@@ -273,10 +261,6 @@ export const space = createSlice({
             state.translationX = state.translationX + TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
             state.translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         viewCameraMoveRight: (
             state,
@@ -284,90 +268,54 @@ export const space = createSlice({
             state.translationX = state.translationX - TRANSLATION_STEP * 3 * Math.cos(toRadians(state.rotationY));
             state.translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.sin(toRadians(state.rotationY));
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         viewCameraMoveUp: (
             state,
         ) => {
             state.translationY = state.translationY + TRANSLATION_STEP * 3;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         viewCameraMoveDown: (
             state,
         ) => {
             state.translationY = state.translationY - TRANSLATION_STEP * 3;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         viewCameraTurnUp: (
             state,
         ) => {
             state.rotationX = (state.rotationX + ROTATION_STEP) % 360;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         viewCameraTurnDown: (
             state,
         ) => {
             state.rotationX = (state.rotationX - ROTATION_STEP) % 360;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         viewCameraTurnLeft: (
             state,
         ) => {
             state.rotationY = (state.rotationY - ROTATION_STEP) % 360;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         viewCameraTurnRight: (
             state,
         ) => {
             state.rotationY = (state.rotationY + ROTATION_STEP) % 360;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         rotateUp: (
             state,
         ) => {
             state.rotationX = (state.rotationX + ROTATION_STEP) % 360;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         rotateDown: (
             state,
         ) => {
             state.rotationX = (state.rotationX - ROTATION_STEP) % 360;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         rotateX: (
             state,
@@ -376,10 +324,6 @@ export const space = createSlice({
         ) => {
             state.rotationX = action.payload;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         rotateXWith: (
             state,
@@ -388,30 +332,18 @@ export const space = createSlice({
         ) => {
             state.rotationX = state.rotationX + action.payload;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         rotateLeft: (
             state,
         ) => {
             state.rotationY = (state.rotationY + ROTATION_STEP) % 360;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         rotateRight: (
             state,
         ) => {
             state.rotationY = (state.rotationY - ROTATION_STEP) % 360;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         rotateY: (
             state,
@@ -420,10 +352,6 @@ export const space = createSlice({
         ) => {
             state.rotationY = action.payload;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         rotateYWith: (
             state,
@@ -432,30 +360,18 @@ export const space = createSlice({
         ) => {
             state.rotationY = state.rotationY + action.payload;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         translateUp: (
             state,
         ) => {
             state.translationY = state.translationY - TRANSLATION_STEP;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         translateDown: (
             state,
         ) => {
             state.translationY = state.translationY + TRANSLATION_STEP;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         translateLeft: (
             state,
@@ -463,10 +379,6 @@ export const space = createSlice({
             state.translationX = state.translationX - TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
             state.translationZ = state.translationZ - TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         translateRight: (
             state,
@@ -474,10 +386,6 @@ export const space = createSlice({
             state.translationX = state.translationX + TRANSLATION_STEP * Math.cos(toRadians(state.rotationY));
             state.translationZ = state.translationZ + TRANSLATION_STEP * Math.sin(toRadians(state.rotationY));
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         translateIn: (
             state,
@@ -485,10 +393,6 @@ export const space = createSlice({
             state.translationZ = state.translationZ - TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
             state.translationX = state.translationX - TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         translateOut: (
             state,
@@ -496,10 +400,6 @@ export const space = createSlice({
             state.translationZ = state.translationZ + TRANSLATION_STEP * 3 * Math.cos(toRadians(-state.rotationY));
             state.translationX = state.translationX + TRANSLATION_STEP * 3 * Math.sin(toRadians(-state.rotationY));
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         translateXWith: (
             state,
@@ -509,10 +409,6 @@ export const space = createSlice({
             state.translationX = state.translationX +  action.payload * Math.cos(toRadians(state.rotationY));
             state.translationZ = state.translationZ +  action.payload * Math.sin(toRadians(state.rotationY));
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         translateYWith: (
             state,
@@ -521,10 +417,6 @@ export const space = createSlice({
         ) => {
             state.translationY = state.translationY + action.payload;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         translateZWith: (
             state,
@@ -533,10 +425,6 @@ export const space = createSlice({
         ) => {
             state.translationZ = state.translationZ + action.payload;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         scaleUp: (
             state,
@@ -548,10 +436,6 @@ export const space = createSlice({
 
             state.scale = scale;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         scaleDown: (
             state,
@@ -563,10 +447,6 @@ export const space = createSlice({
 
             state.scale = scale;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         scaleUpWith: (
             state,
@@ -580,10 +460,6 @@ export const space = createSlice({
 
             state.scale = scale;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         scaleDownWith: (
             state,
@@ -597,10 +473,6 @@ export const space = createSlice({
 
             state.scale = scale;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         setInitialTree: (
             state,
@@ -646,10 +518,6 @@ export const space = createSlice({
             state.translationY = 0;
             state.translationZ = 0;
             state.transform = computeMatrix(state);
-
-            return {
-                ...state,
-            };
         },
         setViewSize: (
             state,

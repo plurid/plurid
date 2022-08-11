@@ -47,7 +47,10 @@ export const configuration = createSlice({
             state,
             action: PayloadAction<PluridConfiguration>,
         ) => {
-            state = action.payload;
+            state = {
+                ...state,
+                ...action.payload,
+            };
         },
         setConfigurationMicro: (
             state,
