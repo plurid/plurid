@@ -55,7 +55,7 @@ export const merge = (
     configuration?: PluridPartialConfiguration,
     target?: PluridConfiguration,
 ): PluridConfiguration => {
-    const targetConfiguration = {
+    const targetConfiguration: PluridConfiguration = {
         ...objects.clone(defaultConfiguration),
         ...objects.clone(target || {}),
     };
@@ -68,8 +68,12 @@ export const merge = (
         targetConfiguration,
         configuration,
         {
-            'global.theme.general': () => resolveTheme(configuration.global?.theme, 'general') as any,
-            'global.theme.interaction': () => resolveTheme(configuration.global?.theme, 'interaction') as any,
+            'global.theme': () => {
+                return {
+                    general: resolveTheme(configuration.global?.theme, 'general') as any,
+                    interaction: resolveTheme(configuration.global?.theme, 'interaction') as any,
+                };
+            },
         },
     );
 
