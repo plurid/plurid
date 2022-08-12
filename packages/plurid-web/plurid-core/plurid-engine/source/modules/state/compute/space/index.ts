@@ -83,7 +83,6 @@ const resolveSpace = <C>(
         culledView: [],
 
         view,
-        initialTree: computedTree,
         tree: computedTree,
 
         ...precomputedState?.space,
