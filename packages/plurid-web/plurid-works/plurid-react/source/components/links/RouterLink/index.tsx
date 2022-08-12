@@ -101,22 +101,18 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         // #endregion optional
     } = properties;
 
-    // const htmlAnchorProperties: any = objects.omit(
-    //     {...properties},
-    //     [
-    //         'route',
-    //         'children',
-    //         'asAnchor',
-    //         'theme',
-    //         'style',
-    //         'className',
-    //         'atClick',
-    //     ],
-    // );
-
-    const htmlAnchorProperties: any = {
-        ...properties,
-    };
+    const htmlAnchorProperties: any = objects.omit(
+        {...properties} as any, // HACK circular references
+        [
+            'route',
+            'children',
+            'asAnchor',
+            'theme',
+            'style',
+            'className',
+            'atClick',
+        ],
+    );
 
     const asAnchor = asAnchorProperty ?? DEFAULT_ROUTER_LINK_AS_ANCHOR;
     const theme = themeProperty || plurid;
