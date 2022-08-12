@@ -9,10 +9,6 @@
     } from '@plurid/plurid-themes';
 
     import {
-        objects,
-    } from '@plurid/plurid-functions';
-
-    import {
         pluridRouterNavigate,
     } from '@plurid/plurid-engine';
     // #endregion libraries
@@ -36,9 +32,7 @@
 
 
 // #region module
-export type CustomHTMLAnchorElement = Omit<HTMLAnchorElement, 'children' | 'style' | 'className'>;
-
-export interface PluridRouterLinkOwnProperties extends CustomHTMLAnchorElement {
+export interface PluridRouterLinkOwnProperties {
     // #region required
         // #region values
         route: string;
@@ -54,6 +48,7 @@ export interface PluridRouterLinkOwnProperties extends CustomHTMLAnchorElement {
          * Style as an anchor tag. Default `true`.
          */
         asAnchor?: boolean;
+        target?: '_blank' | '_self';
 
         theme?: Theme;
         style?: React.CSSProperties;
@@ -90,6 +85,7 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         // #region optional
             // #region values
             asAnchor: asAnchorProperty,
+            target,
             theme: themeProperty,
             style,
             className,
@@ -100,19 +96,6 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
             // #endregion methods
         // #endregion optional
     } = properties;
-
-    const htmlAnchorProperties: any = objects.omit(
-        {...properties} as any, // HACK circular references
-        [
-            'route',
-            'children',
-            'asAnchor',
-            'theme',
-            'style',
-            'className',
-            'atClick',
-        ],
-    );
 
     const asAnchor = asAnchorProperty ?? DEFAULT_ROUTER_LINK_AS_ANCHOR;
     const theme = themeProperty || plurid;
@@ -132,6 +115,11 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         }
 
         event.preventDefault();
+
+        if (target === '_blank') {
+            window.open(route);
+            return;
+        }
 
         pluridRouterNavigate(route);
     }
@@ -163,7 +151,6 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     if (!asAnchor) {
         return (
             <StyledPluridRouterLinkDiv
-                {...htmlAnchorProperties}
                 {...renderProperties}
             >
                 {children}
@@ -173,7 +160,6 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
 
     return (
         <StyledPluridRouterLinkAnchor
-            {...htmlAnchorProperties}
             href={route}
             {...renderProperties}
         >
