@@ -1,23 +1,75 @@
 // #region imports
-    // #region internal
-    import actions from './actions';
-    import initialState from './initial';
-    import reducer from './reducer';
-    import resolvers from './resolvers';
-    import selectors from './selectors';
-    import * as Types from './types';
-    // #endregion internal
+    // #region libraries
+    import {
+        createSlice,
+        PayloadAction,
+    } from '@reduxjs/toolkit';
+    // #endregion libraries
+
+
+    // #region external
+    import {
+        getRandomFace,
+    } from '~kernel-planes/NotFound/logic';
+
+    import type {
+        AppState,
+    } from '~kernel-services/state/store';
+    // #endregion external
 // #endregion imports
 
 
 
-// #region exports
-export {
-    actions,
-    initialState,
-    reducer,
-    resolvers,
-    selectors,
-    Types,
+// #region module
+export interface GeneralState {
+    notFoundFace: string;
+}
+
+
+const initialState: GeneralState = {
+    notFoundFace: getRandomFace(),
 };
+
+
+export interface SetGeneralFieldPayload<T = any> {
+    field: string;
+    value: T;
+}
+
+
+export const general = createSlice({
+    name: 'general',
+    initialState,
+    reducers: {
+        setGeneralField: (
+            state,
+            action: PayloadAction<SetGeneralFieldPayload>,
+        ) => {
+            const {
+                field,
+                value,
+            } = action.payload;
+
+            state[field] = value;
+        },
+    },
+});
+// #endregion module
+
+
+
+// #region exports
+export const actions = general.actions;
+
+
+export const getGeneral = (state: AppState) => state.general;
+export const getNotFoundFace = (state: AppState) => state.general.notFoundFace;
+
+export const selectors = {
+    getGeneral,
+    getNotFoundFace,
+};
+
+
+export const reducer = general.reducer;
 // #endregion exports
