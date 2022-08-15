@@ -1,6 +1,6 @@
 // #region imports
     // #region libraries
-    import * as inquirer from 'inquirer';
+    import inquirer from 'inquirer';
     // #endregion libraries
 
 
