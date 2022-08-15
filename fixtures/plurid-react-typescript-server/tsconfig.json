@@ -46,7 +46,7 @@
             ],
             "~shell/*": [
                 "./source/shared/shell/*"
-            ],
+            ]
         },
 
         "outDir": "build",
