@@ -95,6 +95,9 @@ const Head: React.FC<HeadProperties> = (
             {/* MICROSOFT */}
             <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#456c77" />
             <meta name="msapplication-TileColor" content="#ffffff" />
+
+
+            <link rel="preload" href="/assets/Ubuntu-Regular.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
         </Helmet>
     );
     // #endregion render

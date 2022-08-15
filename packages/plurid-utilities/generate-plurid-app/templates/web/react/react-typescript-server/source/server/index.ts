@@ -30,7 +30,11 @@
         shell,
         routes,
         planes,
-    } from '../shared';
+    } from '~shared/index';
+
+    import {
+        APPLICATION_ROOT,
+    } from '~shared/data/constants';
     // #endregion external
 
 
@@ -56,7 +60,6 @@ const port = process.env.PORT || 63000;
 
 
 /** CONSTANTS */
-const applicationRoot = 'plurid-app';
 const openAtStart = watchMode
     ? false
     : isProduction
@@ -134,10 +137,28 @@ const options: PluridServerPartialOptions = {
     open: openAtStart,
     quiet,
     debug,
+    serverName: 'Plurid Server',
+    hostname: 'localhost:' + port,
 };
 
 const template: PluridServerTemplateConfiguration = {
-    root: applicationRoot,
+    root: APPLICATION_ROOT,
+    headScripts: isProduction ? undefined : [
+        `<link rel="stylesheet" href="index.css" />`,
+        `<script>
+            (function() {
+                var log = console.log;
+                console.log = (...args) => {
+                    const print = !args.some(val => /Download the (React|Apollo) DevTools/.test(val));
+                    if (!print) {
+                        return;
+                    }
+
+                    log(...args);
+                }
+            })()
+        </script>`,
+    ],
 };
 
 

@@ -9,7 +9,8 @@
 // #region module
 export const StyledPage = styled.div`
     font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
-    height: 400px;
+    min-height: 400px;
+    margin: 2rem auto;
     display: grid;
     place-content: center;
     text-align: center;

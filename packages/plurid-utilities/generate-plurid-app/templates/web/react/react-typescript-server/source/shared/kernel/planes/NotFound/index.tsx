@@ -6,6 +6,11 @@
     import { connect } from 'react-redux';
     import { ThunkDispatch } from 'redux-thunk';
 
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+
     import {
         PluridPlaneComponentProperty,
     } from '@plurid/plurid-react';
@@ -31,21 +36,21 @@
 
 // #region module
 export interface NotFoundOwnProperties {
+    plurid: PluridPlaneComponentProperty;
 }
 
 export interface NotFoundStateProperties {
+    stateGeneralTheme: Theme;
     stateGeneralNotFoundFace: string;
 }
 
 export interface NotFoundDispatchProperties {
 }
 
-export type NotFoundProperties = NotFoundOwnProperties
+export type NotFoundProperties =
+    & NotFoundOwnProperties
     & NotFoundStateProperties
-    & NotFoundDispatchProperties
-    & {
-        plurid: PluridPlaneComponentProperty,
-    };
+    & NotFoundDispatchProperties;
 
 const NotFound: React.FC<NotFoundProperties> = (
     properties,
@@ -53,6 +58,7 @@ const NotFound: React.FC<NotFoundProperties> = (
     // #region properties
     const {
         // #region state
+        stateGeneralTheme,
         stateGeneralNotFoundFace,
         // #endregion state
     } = properties;
@@ -61,7 +67,9 @@ const NotFound: React.FC<NotFoundProperties> = (
 
     // #region render
     return (
-        <StyledNotFound>
+        <StyledNotFound
+            theme={stateGeneralTheme}
+        >
             <h1>
                 {stateGeneralNotFoundFace}
             </h1>
@@ -78,6 +86,7 @@ const NotFound: React.FC<NotFoundProperties> = (
 const mapStateToProperties = (
     state: AppState,
 ): NotFoundStateProperties => ({
+    stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateGeneralNotFoundFace: selectors.general.getNotFoundFace(state),
 });
 

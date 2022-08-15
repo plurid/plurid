@@ -1,26 +1,19 @@
 // #region imports
-    // #region internal
-    import actions from './actions';
-    import initialState from './initial';
-    import reducer, {
-        metareducer,
-    } from './reducer';
-    import resolvers from './resolvers';
-    import selectors from './selectors';
-    import * as Types from './types';
-    // #endregion internal
+    // #region libraries
+    import {
+        themes,
+    } from '@plurid/plurid-ui-state-react';
+    // #endregion libraries
 // #endregion imports
 
 
 
 // #region exports
-export {
-    actions,
-    initialState,
-    reducer,
-    metareducer,
-    resolvers,
-    selectors,
-    Types,
-};
+export const actions = themes.actions;
+
+
+export const selectors = themes.selectors;
+
+
+export const reducer = themes.reducer;
 // #endregion exports

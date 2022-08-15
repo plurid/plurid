@@ -1,8 +1,18 @@
 // #region imports
     // #region libraries
     import React from 'react';
-    import ReactDOM from 'react-dom';
+
+    import {
+        hydrateRoot,
+    } from 'react-dom/client';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        APPLICATION_ROOT,
+    } from '~shared/data/constants';
+    // #endregion external
 
 
     // #region internal
@@ -18,15 +28,10 @@
 //     navigator.serviceWorker.register('/service-worker.js');
 // }
 
-const pluridApp = document.getElementById('plurid-app');
+const plurid = document.getElementById(APPLICATION_ROOT)!;
 
-
-const render = process.env.PLURID_LIVE_SERVER !== 'true'
-    ? ReactDOM.hydrate
-    : ReactDOM.render;
-
-render(
+hydrateRoot(
+    plurid,
     <Client />,
-    pluridApp,
 );
 // #endregion module

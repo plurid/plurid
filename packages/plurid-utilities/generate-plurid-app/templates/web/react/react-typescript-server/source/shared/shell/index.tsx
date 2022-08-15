@@ -12,6 +12,8 @@
     import {
         GlobalStyle,
     } from './styled';
+
+    import './index.css';
     // #endregion internal
 // #endregion imports
 
@@ -19,6 +21,7 @@
 
 // #region module
 export interface ShellProperties {
+    children?: React.ReactNode;
 }
 
 
