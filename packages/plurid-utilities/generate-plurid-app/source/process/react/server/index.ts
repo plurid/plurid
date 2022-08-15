@@ -364,6 +364,7 @@ const generateReactServerApplication = async (
         '@plurid/plurid-ui-components-react',
         '@plurid/plurid-ui-state-react',
         '@plurid/plurid-react-server',
+        '@reduxjs/toolkit',
         'cross-fetch',
         'cors',
         'dotenv',
@@ -372,8 +373,6 @@ const generateReactServerApplication = async (
         'react-dom',
         'react-helmet-async',
         'react-redux',
-        'redux',
-        'redux-thunk',
         'styled-components',
     ];
     const graphqlDependencies = graphqlService
