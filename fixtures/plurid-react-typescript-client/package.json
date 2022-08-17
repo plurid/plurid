@@ -3,8 +3,8 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
+        "start": "GENERATE_SOURCEMAP=false react-scripts start",
+        "build": "GENERATE_SOURCEMAP=false react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
@@ -13,7 +13,7 @@
         "@plurid/elementql-client-react": "^0.0.0-1",
         "@plurid/plurid-data": "^0.0.0-15",
         "@plurid/plurid-engine": "^0.0.0-14",
-        "@plurid/plurid-functions": "^0.0.0-28",
+        "@plurid/plurid-functions": "^0.0.0-29",
         "@plurid/plurid-functions-react": "^0.0.0-5",
         "@plurid/plurid-icons-react": "^0.0.0-5",
         "@plurid/plurid-pubsub": "^0.0.0-7",
@@ -30,7 +30,7 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-redux": "^8.0.2",
-        "react-scripts": "==4.0.3",
+        "react-scripts": "^5.0.1",
         "styled-components": "^5.3.5",
         "web-vitals": "^2.1.4"
     },
@@ -42,7 +42,7 @@
         "@types/react-dom": "^18.0.6",
         "@types/react-redux": "^7.1.24",
         "@types/styled-components": "^5.1.26",
-        "typescript": "~4.7.4"
+        "typescript": "^4.7.4"
     },
     "eslintConfig": {
         "extends": [
