@@ -243,9 +243,18 @@ export const navigateToRoot = (
         ? rootIndex - 1 || 0
         : rootIndex + 1;
 
-    const root = tree[treeIndex];
+    let root = tree[treeIndex];
     if (!root) {
-        return;
+        // cycle over tree
+        if (type === 'previous') {
+            root = tree[tree.length - 1];
+        } else {
+            root = tree[0];
+        }
+
+        if (!root) {
+            return;
+        }
     }
 
     navigateToPluridPlane(
