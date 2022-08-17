@@ -1,5 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {
+    createRoot,
+} from 'react-dom/client';
 
 import './index.css';
 
@@ -9,9 +11,11 @@ import * as serviceWorker from './serviceWorker';
 
 
 
-ReactDOM.render(
-    <App />,
+const root = createRoot(
     document.getElementById('plurid-app'),
+);
+root.render(
+    <App />,
 );
 
 serviceWorker.unregister();

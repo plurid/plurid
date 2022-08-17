@@ -15,9 +15,10 @@ export default {
         plugins.json(),
         plugins.external(),
         plugins.resolve(),
-        plugins.babel(),
         plugins.commonjs(),
+        /** typescript and sourcemaps in this order to allow for styled components transfomer (?) */
         plugins.sourceMaps(),
+        plugins.typescript(),
         plugins.terser(),
     ],
 };

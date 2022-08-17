@@ -4,6 +4,9 @@ const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+
 
 const {
     BUILD_DIRECTORY,
@@ -15,8 +18,13 @@ const {
 
 
 /** CONSTANTS */
-const entryIndex = path.resolve(__dirname, '../../source/client/index.jsx');
+const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
 const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}/client`);
+
+const styledComponentsTransformer = createStyledComponentsTransformer({
+    ssr: true,
+    displayName: !isProduction,
+});
 
 
 /** PLUGINS */
@@ -45,8 +53,7 @@ const compressionPluginGzip = new CompressionPlugin({
 
 const processEnvironmentPlugin = new webpack.DefinePlugin({
     'process.env.ENV_MODE': JSON.stringify(process.env.ENV_MODE),
-    'process.env.SC_DISABLE_SPEEDY': true, /** HACK: styled components not rendering in production */
-    'process.env.PLURID_LIVE_SERVER': JSON.stringify(''),
+    'process.env.SC_DISABLE_SPEEDY': JSON.stringify(true), /** HACK: styled components not rendering in production */
 });
 
 
@@ -74,34 +81,32 @@ const fileRule = {
     type: 'asset/resource',
     generator: {
         filename: `${ASSETS_DIRECTORY}/[name][ext]`,
+        publicPath: '/',
     },
 };
 
 
-const jsxRule = {
-    test: /\.(js|jsx)$/,
+const tsRule = {
+    test: /\.ts(x?)$/,
     exclude: /node_modules/,
-    use: [{
-        loader: 'babel-loader',
-        options: {
-            presets: [
-                [
-                    '@babel/preset-env',
-                    {
-                        'targets': 'defaults',
-                    },
-                ],
-                '@babel/preset-react',
-            ],
+    use: [
+        {
+            loader: 'ts-loader',
+            options: {
+                configFile: path.resolve(__dirname, '../../tsconfig.json'),
+                getCustomTransformers: () => ({
+                    before: [styledComponentsTransformer]
+                }),
+            },
         },
-    }],
+    ],
 };
 
 
 const rules = {
     styleRule,
     fileRule,
-    jsxRule,
+    tsRule,
 };
 
 
@@ -118,7 +123,13 @@ const baseConfig = {
     },
 
     resolve: {
-        extensions: ['.js', '.jsx', '.json'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+
+        plugins: [
+            new TsconfigPathsPlugin({
+                configFile: path.resolve(__dirname, '../../tsconfig.json'),
+            }),
+        ],
 
         alias: {
             crypto: false,
@@ -147,7 +158,7 @@ const baseConfig = {
         rules: [
             rules.styleRule,
             rules.fileRule,
-            rules.jsxRule,
+            rules.tsRule,
         ],
     },
 };
