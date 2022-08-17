@@ -1,6 +1,6 @@
 // #region imports
     // #region external
-    import environment from '~kernel-services/utilities/environment';
+    import environment from '../../utilities/environment';
     // #endregion external
 
 

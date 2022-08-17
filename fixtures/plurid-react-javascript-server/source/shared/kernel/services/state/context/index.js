@@ -7,5 +7,5 @@
 
 
 // #region module
-export default React.createContext<any>({});
+export default React.createContext({});
 // #endregion module

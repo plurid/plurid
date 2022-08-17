@@ -11,7 +11,7 @@
     // #region external
     import {
         APPLICATION_ROOT,
-    } from '~shared/data/constants';
+    } from '../shared/data/constants';
     // #endregion external
 
 
