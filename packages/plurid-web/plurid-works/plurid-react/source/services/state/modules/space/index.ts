@@ -123,7 +123,7 @@ const initialState: SpaceState = {
 
 
 export const space = createSlice({
-    name: 'space,',
+    name: 'space',
     initialState,
     reducers: {
         setSpaceField: (
