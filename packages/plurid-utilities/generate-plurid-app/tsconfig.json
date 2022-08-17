@@ -8,13 +8,16 @@
 
         "baseUrl": ".",
         "paths": {
-            "#data/*": [
+            "~data/*": [
                 "./source/data/*"
             ],
-            "#files/*": [
-                "./source/files/*"
+            "~inquire/*": [
+                "./source/inquire/*"
             ],
-            "#utilities/*": [
+            "~process/*": [
+                "./source/process/*"
+            ],
+            "~utilities/*": [
                 "./source/utilities/*"
             ]
         },
