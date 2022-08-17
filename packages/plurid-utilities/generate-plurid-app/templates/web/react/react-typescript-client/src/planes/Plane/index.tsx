@@ -1,27 +1,39 @@
-import React from 'react';
+// #region imports
+    // #region libraries
+    import React from 'react';
 
-import {
-    PluridLink,
-} from '@plurid/plurid-react';
-
-import {
-    StyledPlane,
-} from './styled';
-
-import pluridLogo from '../../plurid-logo.png';
+    import {
+        PluridLink,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
 
 
+    // #region external
+    import pluridLogo from '../../plurid-logo.png';
+    // #endregion external
 
+
+    // #region internal
+    import {
+        StyledPlane,
+    } from './styled';
+    // #endregion internal
+// #endregion imports
+
+
+
+// #region module
 const Plane: React.FC<any> = (
     properties,
 ) => {
-    /** properties */
+    // #region properties
     // const {
     //     plurid,
     // } = properties;
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <StyledPlane>
             <div>
@@ -43,7 +55,12 @@ const Plane: React.FC<any> = (
             </div>
         </StyledPlane>
     );
+    // #endregion render
 }
+// #endregion module
 
 
+
+// #region exports
 export default Plane;
+// #endregion exports

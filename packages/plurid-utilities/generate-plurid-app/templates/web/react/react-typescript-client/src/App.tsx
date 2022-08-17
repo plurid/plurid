@@ -14,7 +14,7 @@ import Plane from './planes/Plane';
 
 
 const App = () => {
-    /** properties */
+    // #region properties
     const pluridConfiguration: PluridPartialConfiguration = {
         global: {
             theme: 'plurid',
@@ -44,9 +44,10 @@ const App = () => {
     const pluridView: string[] = [
         '/plane',
     ];
+    // #endregion properties
 
 
-    /** render */
+    // #region render
     return (
         <>
             <PluridApplication
@@ -56,6 +57,7 @@ const App = () => {
             />
         </>
     );
+    // #endregion render
 }
 
 
