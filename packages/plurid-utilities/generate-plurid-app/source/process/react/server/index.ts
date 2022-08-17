@@ -37,6 +37,7 @@
         requiredDevelopmentDependencies,
         requiredDevelopmentJavascriptDependencies,
         requiredDevelopmentTypescriptDependencies,
+        gitIgnore,
     } from './data';
     // #endregion internal
 // #endregion imports
@@ -246,6 +247,12 @@ const setupVersioning = async (
         await executeCommand(
             gitInit,
             { cwd: app.directory },
+        );
+
+        const gitIgnorePath = path.join(app.directory, '.gitignore');
+        fs.writeFileSync(
+            gitIgnorePath,
+            gitIgnore,
         );
     }
 }
