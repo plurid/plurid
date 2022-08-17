@@ -58,6 +58,8 @@ const processArguments = async (
             process.exit(1);
         }
 
+        const start = Date.now();
+
         const directory = resolveAppDirectory(program.directory);
         makeDirectory(directory);
 
@@ -169,6 +171,7 @@ const processArguments = async (
         }
 
         const application: Application = {
+            start,
             directory,
             language,
             ui,

@@ -157,7 +157,10 @@ export const removeGeneratePackage = async (
     exec(uninstallCommand, {
         cwd: app.directory,
     }, () => {
-        console.log('\n\tAll done.');
+        const end = Date.now();
+        const duration = Math.floor((end - app.start) / 1000);
+
+        console.log(`\n\tAll done. Finished setup in ${duration} seconds.`);
 
         const relativePath = path.relative(process.cwd(), app.directory);
 

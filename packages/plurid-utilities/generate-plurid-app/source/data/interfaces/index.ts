@@ -93,6 +93,7 @@ export interface IServices {
 
 
 export interface Application {
+    start: number;
     directory: string;
     language: Language;
     ui: UI;

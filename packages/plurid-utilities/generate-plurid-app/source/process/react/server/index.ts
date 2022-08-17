@@ -29,6 +29,16 @@
         setupPluridAppYaml,
     } from '../general';
     // #endregion external
+
+
+    // #region internal
+    import {
+        requiredDependencies,
+        requiredDevelopmentDependencies,
+        requiredDevelopmentJavascriptDependencies,
+        requiredDevelopmentTypescriptDependencies,
+    } from './data';
+    // #endregion internal
 // #endregion imports
 
 
@@ -44,28 +54,22 @@ const setupPackageJSONReactServer = async (
         value: 'node scripts start',
         path: packageJsonPath,
     });
-
     await addScript({
         name: 'start.local',
         value: 'node scripts start.local',
         path: packageJsonPath,
     });
-    await addScript({
-        name: 'watch.client',
-        value: 'node scripts watch.client',
-        path: packageJsonPath,
-    });
-    await addScript({
-        name: 'watch.server',
-        value: 'node scripts watch.server',
-        path: packageJsonPath,
-    });
-    await addScript({
-        name: 'watch',
-        value: 'node scripts watch',
-        path: packageJsonPath,
-    });
 
+    await addScript({
+        name: 'live',
+        value: 'node scripts live',
+        path: packageJsonPath,
+    });
+    await addScript({
+        name: 'check',
+        value: 'node scripts check',
+        path: packageJsonPath,
+    });
     await addScript({
         name: 'clean',
         value: 'node scripts clean',
@@ -182,6 +186,18 @@ PLURID_BUILD_DIRECTORY=build
 PLURID_DEFAULT_VERBOSE=true
 `;
 
+    const envLocalDeonContents =
+`{
+    ENV_MODE local
+    NODE_ENV development
+    PORT 63000
+
+    PLURID_BUILD_DIRECTORY build
+    PLURID_DEFAULT_VERBOSE true
+    PLURID_WATCH_MODE true
+}
+`;
+
     const envDevelopmentContents =
 `ENV_MODE=development
 NODE_ENV=development
@@ -203,8 +219,13 @@ PLURID_DEFAULT_VERBOSE=false
     try {
         const envLocalPath = path.join(app.directory, './environment/.env.local');
         fs.writeFileSync(envLocalPath, envLocalContents);
+
+        const envLocalDeonPath = path.join(app.directory, './environment/.env.local.deon');
+        fs.writeFileSync(envLocalDeonPath, envLocalDeonContents);
+
         const envDevelopmentPath = path.join(app.directory, './environment/.env.development');
         fs.writeFileSync(envDevelopmentPath, envDevelopmentContents);
+
         const envProductionPath = path.join(app.directory, './environment/.env.production');
         fs.writeFileSync(envProductionPath, envProductionContents);
     } catch (error) {
@@ -348,32 +369,6 @@ const generateReactServerApplication = async (
     const graphqlService = app.services.includes(services.apollo);
     const stripeService = app.services.includes(services.stripe);
 
-    const requiredDependencies = [
-        '@plurid/generate-plurid-app',
-        '@plurid/elementql',
-        '@plurid/elementql-client-react',
-        '@plurid/plurid-data',
-        '@plurid/plurid-engine',
-        '@plurid/plurid-functions',
-        '@plurid/plurid-functions-react',
-        '@plurid/plurid-icons-react',
-        '@plurid/plurid-pubsub',
-        '@plurid/plurid-react',
-        '@plurid/plurid-themes',
-        '@plurid/plurid-ui-components-react',
-        '@plurid/plurid-ui-state-react',
-        '@plurid/plurid-react-server',
-        '@reduxjs/toolkit',
-        'cross-fetch',
-        'cors',
-        'dotenv',
-        'hammerjs',
-        'react',
-        'react-dom',
-        'react-helmet-async',
-        'react-redux',
-        'styled-components',
-    ];
     const graphqlDependencies = graphqlService
         ? [
             '@apollo/client',
@@ -396,68 +391,6 @@ const generateReactServerApplication = async (
         requiredDependenciesPackages,
     );
 
-    const requiredDevelopmentDependencies = [
-        '@types/cors',
-        '@rollup/plugin-commonjs',
-        '@rollup/plugin-json',
-        '@rollup/plugin-node-resolve',
-        '@rollup/plugin-url',
-        '@vitejs/plugin-react',
-        'compression-webpack-plugin',
-        'concurrently',
-        'copy-webpack-plugin',
-        'css-loader',
-        'eslint',
-        'file-loader',
-        'jest',
-        'nodemon',
-        'open',
-        'redux-devtools-extension',
-        'rimraf',
-        'rollup',
-        'rollup-plugin-peer-deps-external',
-        'rollup-plugin-sourcemaps',
-        'rollup-plugin-postcss',
-        'rollup-plugin-terser',
-        'postcss',
-        'source-map-loader',
-        'style-loader',
-        'terser-webpack-plugin',
-        'vite',
-        'vite-tsconfig-paths',
-        'webpack',
-        'webpack-bundle-analyzer',
-        'webpack-cli',
-        'webpack-merge',
-        'webpack-node-externals',
-    ];
-    const requiredDevelopmentTypescriptDependencies = [
-        '@types/express',
-        '@types/jest',
-        '@types/node',
-        '@types/react',
-        '@types/react-dom',
-        '@types/react-redux',
-        '@types/styled-components',
-        '@types/styled-components',
-        '@types/react-stripe-elements',
-        '@typescript-eslint/eslint-plugin',
-        '@typescript-eslint/parser',
-        'rollup-plugin-typescript2',
-        'tslib',
-        'ts-loader',
-        'ts-jest',
-        'tsconfig-paths-webpack-plugin',
-        'typescript',
-        'typescript-plugin-styled-components',
-    ];
-    const requiredDevelopmentJavascriptDependencies = [
-        '@babel/core',
-        '@babel/preset-env',
-        '@babel/preset-react',
-        'babel-loader',
-        '@rollup/plugin-babel',
-    ];
     const requiredDevelopmentDependenciesPackages = app.language === 'TypeScript'
         ? [ ...requiredDevelopmentDependencies, ...requiredDevelopmentTypescriptDependencies].join(' ')
         : [...requiredDevelopmentDependencies, ...requiredDevelopmentJavascriptDependencies].join(' ');
