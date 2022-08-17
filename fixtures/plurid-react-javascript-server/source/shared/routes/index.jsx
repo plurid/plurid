@@ -105,26 +105,11 @@ const notFoundRoute = {
             title="Not Found | Plurid' Application"
         />
     ),
-    spaces: [
-        {
-            value: 'default',
-            universes: [
-                {
-                    value: 'default',
-                    clusters: [
-                        {
-                            value: 'default',
-                            planes: [
-                                {
-                                    value: '/',
-                                    component: NotFoundPlane,
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
-        },
+    planes: [
+        [ '/not-found', NotFoundPlane ],
+    ],
+    view: [
+        '/not-found',
     ],
 };
 
