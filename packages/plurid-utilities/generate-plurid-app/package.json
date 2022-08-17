@@ -1,6 +1,6 @@
 {
     "name": "@plurid/generate-plurid-app",
-    "version": "0.0.0-8",
+    "version": "0.0.0-9",
     "description": "Generate a plurid' application with one command (and some choices)",
     "keywords": [
         "plurid",
@@ -44,10 +44,11 @@
         "clean": "rimraf ./distribution",
         "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
+        "copy.templates": "cp -r ./templates ./distribution",
         "build.clean": "rm -rf `find ./distribution -type d -name __tests__ -not -path './distribution/templates/*'`",
         "build.run": "node scripts/build.js",
         "build.development": "pnpm clean && pnpm build.run",
-        "build.production": "pnpm clean && pnpm lint && pnpm test && pnpm build.run && pnpm build.clean",
+        "build.production": "pnpm clean && pnpm lint && pnpm test && pnpm build.run && pnpm build.clean && pnpm copy.templates",
         "build": "pnpm build.production",
         "prepublishOnly": "pnpm build"
     },
