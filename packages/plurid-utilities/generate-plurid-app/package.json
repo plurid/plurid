@@ -1,6 +1,6 @@
 {
     "name": "@plurid/generate-plurid-app",
-    "version": "0.0.0-7",
+    "version": "0.0.0-8",
     "description": "Generate a plurid' application with one command (and some choices)",
     "keywords": [
         "plurid",
@@ -46,7 +46,7 @@
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
         "copy.server": "cp -r ./source/server ./distribution/server/",
         "start": "pnpm clean && rollup -c ./scripts/rollup.config.js  -w --environment ENV_MODE:local",
-        "build.clean": "rm -rf `find ./distribution/ -type d -name __specs__`",
+        "build.clean": "rm -rf `find ./distribution/ -type d -name __tests__`",
         "build.development": "pnpm clean && rollup -c ./scripts/rollup.config.js  --environment ENV_MODE:development",
         "build.production": "pnpm clean && pnpm lint && pnpm test && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production && pnpm build.clean",
         "build": "pnpm build.production",

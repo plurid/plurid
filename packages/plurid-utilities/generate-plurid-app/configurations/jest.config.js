@@ -29,4 +29,7 @@ module.exports = {
     collectCoverageFrom: [
         'source/*.{js,ts}',
     ],
-}
+    modulePathIgnorePatterns: [
+        'templates',
+    ],
+};
