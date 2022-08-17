@@ -2,7 +2,7 @@
     // #region external
     import {
         Application,
-    } from '../../data/interfaces';
+    } from '~data/interfaces';
     // #endregion external
 
 

@@ -8,7 +8,7 @@
         Renderer,
         Manager,
         Versioning,
-    } from '../data/interfaces';
+    } from '~data/interfaces';
 
     import {
         language as languageTypes,
@@ -16,12 +16,12 @@
         renderer as rendererTypes,
         manager as managerTypes,
         versioning as versioningTypes,
-    } from '../data/constants';
+    } from '~data/constants';
 
     import {
         resolveAppDirectory,
         makeDirectory,
-    } from '../utilities';
+    } from '~utilities/index';
     // #endregion external
 
 

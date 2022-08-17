@@ -1,25 +1,25 @@
 // #region imports
     // #region libraries
-    import fs from 'node:fs';
-    import path from 'node:path';
     import {
         exec,
     } from 'node:child_process';
+    import fs from 'node:fs';
+    import path from 'node:path';
     // #endregion libraries
 
 
     // #region external
     import {
         Application,
-    } from '../../../data/interfaces';
+    } from '~data/interfaces';
 
     import {
         manager,
-    } from '../../../data/constants';
+    } from '~data/constants';
 
     import {
         addScript,
-    } from '../../../utilities';
+    } from '~utilities/index';
     // #endregion external
 // #endregion imports
 

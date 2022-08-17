@@ -9,18 +9,18 @@
     import {
         services,
         manager,
-    } from '../../../data/constants';
+    } from '~data/constants';
 
     import {
         Application,
-    } from '../../../data/interfaces';
+    } from '~data/interfaces';
 
     import {
         copyDirectory,
         executeCommand,
         addScript,
         loadingSpinner,
-    } from '../../../utilities';
+    } from '~utilities/index';
 
     import {
         addScriptPluridApp,

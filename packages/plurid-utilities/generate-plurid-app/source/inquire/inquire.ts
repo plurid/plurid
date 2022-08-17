@@ -8,9 +8,9 @@
     import {
         Question,
         Answers,
-    } from '../data/interfaces';
+    } from '~data/interfaces';
 
-    import processArguments from '../process';
+    import processArguments from '~process/index';
     // #endregion external
 // #endregion imports
 

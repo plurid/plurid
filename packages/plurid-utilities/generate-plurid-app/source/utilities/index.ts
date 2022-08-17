@@ -1,12 +1,10 @@
 // #region imports
     // #region libraries
-    import path from 'path';
-
-    import fs from 'fs';
-
     import {
         exec,
-    } from 'child_process';
+    } from 'node:child_process';
+    import fs from 'node:fs';
+    import path from 'node:path';
 
     import ora from 'ora';
     // #endregion libraries
@@ -15,7 +13,7 @@
     // #region external
     import {
         AddScriptConfiguration,
-    } from '../data/interfaces';
+    } from '~data/interfaces';
     // #endregion external
 // #endregion imports
 
@@ -23,8 +21,8 @@
 
 // #region module
 export const copyDirectory = (
-    src: any,
-    dest: any,
+    src: string,
+    dest: string,
 ) => {
     makeDirectory(dest);
 
@@ -45,8 +43,8 @@ export const copyDirectory = (
 
 
 export const copyFile = (
-    src: any,
-    dest: any,
+    src: string,
+    dest: string,
 ) => {
 	const oldFile = fs.createReadStream(src);
 	const newFile = fs.createWriteStream(dest);
