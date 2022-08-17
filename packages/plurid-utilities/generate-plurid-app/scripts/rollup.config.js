@@ -12,9 +12,9 @@ const globals = {
 export default {
     input: 'source/index.ts',
     external: [
-        'path',
-        'fs',
-        'child_process',
+        'node:fs',
+        'node:path',
+        'node:child_process',
         'commander',
         'inquirer',
         'ora',
