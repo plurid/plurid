@@ -80,6 +80,8 @@ export const handleGlobalShortcuts = (
         && !event.ctrlKey
         && !event.metaKey;
 
+
+    // #region transform
     if (
         event.code === 'KeyF'
         && noModifiers
@@ -256,8 +258,10 @@ export const handleGlobalShortcuts = (
             return dispatch(actions.space.scaleDown());
         }
     }
+    // #endregion transform
 
 
+    // #region plane
     if (event.altKey && event.code === 'KeyF') {
         focusActivePlane(
             dispatch,
@@ -304,7 +308,10 @@ export const handleGlobalShortcuts = (
         );
         return;
     }
+    // #endregion plane
 
+
+    // #region focus
     if (event.altKey && event.code === 'KeyA') {
         focusPreviousRoot(
             dispatch,
@@ -321,6 +328,24 @@ export const handleGlobalShortcuts = (
         return;
     }
 
+    if (event.altKey && event.code === 'Tab') {
+        event.preventDefault();
+
+        if (event.shiftKey) {
+            focusPreviousRoot(
+                dispatch,
+                state,
+            );
+        } else {
+            focusNextRoot(
+                dispatch,
+                state,
+            );
+        }
+
+        return;
+    }
+
 
     if (event.altKey && event.code.startsWith('Digit')) {
         const index = parseInt(event.code.replace('Digit', '')) - 1;
@@ -332,6 +357,7 @@ export const handleGlobalShortcuts = (
         );
         return;
     }
+    // #endregion focus
 
 
     return;
