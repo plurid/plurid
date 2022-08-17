@@ -2,7 +2,7 @@
     // #region libraries
     import {
         combineReducers,
-    } from 'redux';
+    } from '@reduxjs/toolkit';
     // #endregion libraries
 
 
@@ -14,7 +14,7 @@
 
 
 // #region module
-const reducers = combineReducers({
+const reducer = combineReducers({
     general: modules.general.reducer,
     themes: modules.themes.reducer,
 });
@@ -23,5 +23,5 @@ const reducers = combineReducers({
 
 
 // #region exports
-export default reducers;
+export default reducer;
 // #endregion exports

@@ -1,11 +1,12 @@
 // #region imports
     // #region external
-    import environment from '../../utilities/environment';
+    import environment from '~kernel-services/utilities/environment';
     // #endregion external
 
 
     // #region internal
     import storeProduction from './production';
+
     import storeDevelopment from './development';
     // #endregion internal
 // #endregion imports
