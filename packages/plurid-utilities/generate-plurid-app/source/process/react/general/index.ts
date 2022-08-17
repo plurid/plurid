@@ -1,12 +1,10 @@
 // #region imports
     // #region libraries
-    import path from 'path';
-
-    import fs from 'fs';
-
+    import fs from 'node:fs';
+    import path from 'node:path';
     import {
         exec,
-    } from 'child_process';
+    } from 'node:child_process';
     // #endregion libraries
 
 
@@ -53,7 +51,7 @@ export const setupDocker = async (
     }
 
     const dockerProductionContents =
-`FROM node:16.14-alpine AS builder
+`FROM node:16.17-alpine AS builder
 
 ENV PORT 8080
 ENV HOST 0.0.0.0
@@ -68,7 +66,7 @@ RUN yarn install --production false --network-timeout 1000000
 RUN yarn run build.production verbose
 
 
-FROM node:16.14-alpine
+FROM node:16.17-alpine
 
 ENV PORT 8080
 ENV HOST 0.0.0.0
@@ -87,7 +85,7 @@ CMD [ "yarn", "start" ]
 `;
 
     const dockerProductionStillsContents =
-`FROM node:16.14-alpine AS builder
+`FROM node:16.17-alpine AS builder
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer

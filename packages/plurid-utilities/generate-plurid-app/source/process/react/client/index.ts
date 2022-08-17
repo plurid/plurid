@@ -1,10 +1,10 @@
 // #region imports
     // #region libraries
-    import path from 'path';
-
+    import fs from 'node:fs';
+    import path from 'node:path';
     import {
         exec,
-    } from 'child_process';
+    } from 'node:child_process';
     // #endregion libraries
 
 
@@ -29,38 +29,36 @@
         setupPluridAppYaml,
     } from '../general';
     // #endregion external
+
+
+    // #region internal
+    import {
+        requiredPluridReactPackages,
+    } from './data';
+    // #endregion internal
 // #endregion imports
 
 
 
 // #region module
+const updatePackageScripts = async (
+    app: Application,
+) => {
+    const packageJsonPath = path.join(app.directory, './package.json');
+
+    const file = fs.readFileSync(packageJsonPath, 'utf-8');
+    const updatedFile = file
+        .replace(`"start": "react-scripts start",`, `"start": "GENERATE_SOURCEMAP=false react-scripts start",`)
+        .replace(`"build": "react-scripts build",`, `"build": "GENERATE_SOURCEMAP=false react-scripts build",`);
+
+    fs.writeFileSync(packageJsonPath, updatedFile);
+}
+
+
 const generatePluridReactApplication = async (
     app: Application,
 ) => {
     console.log('\n\tAdding the plurid\' packages to the React Application...');
-
-    const requiredPluridReactPackages = [
-        '@plurid/generate-plurid-app',
-        '@plurid/elementql',
-        '@plurid/elementql-client-react',
-        '@plurid/plurid-data',
-        '@plurid/plurid-engine',
-        '@plurid/plurid-functions',
-        '@plurid/plurid-functions-react',
-        '@plurid/plurid-icons-react',
-        '@plurid/plurid-pubsub',
-        '@plurid/plurid-react',
-        '@plurid/plurid-themes',
-        '@plurid/plurid-ui-components-react',
-        '@plurid/plurid-ui-state-react',
-        '@reduxjs/toolkit',
-        'cross-fetch',
-        'hammerjs',
-        'react-redux',
-        'styled-components',
-        '@types/styled-components',
-        'react-scripts@==4.0.3',
-    ];
 
     const pluridReactPackages = requiredPluridReactPackages.join(' ');
 
@@ -102,6 +100,8 @@ const generatePluridReactApplication = async (
         await setupDocker(app);
 
         await addScriptPluridApp(app);
+
+        await updatePackageScripts(app);
 
         await removeGeneratePackage(app);
     });
