@@ -46,7 +46,7 @@
         "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
         "copy.server": "cp -r ./source/server ./distribution/server/",
         "start": "pnpm clean && rollup -c ./scripts/rollup.config.js  -w --environment ENV_MODE:local",
-        "build.clean": "rm -rf `find ./distribution/ -type d -name __tests__`",
+        "build.clean": "rm -rf `find ./distribution -type d -name __tests__ -not -path './distribution/templates/*'`",
         "build.development": "pnpm clean && rollup -c ./scripts/rollup.config.js  --environment ENV_MODE:development",
         "build.production": "pnpm clean && pnpm lint && pnpm test && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production && pnpm build.clean",
         "build": "pnpm build.production",
