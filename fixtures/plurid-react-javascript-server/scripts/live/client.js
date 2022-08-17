@@ -5,7 +5,7 @@ const common = require('./common');
 
 esbuild.build({
     entryPoints: [
-        'source/client/index.tsx',
+        'source/client/index.jsx',
     ],
     outdir: 'build/client',
     define: {

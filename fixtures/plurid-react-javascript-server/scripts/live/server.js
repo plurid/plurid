@@ -5,7 +5,7 @@ const common = require('./common');
 
 esbuild.build({
     entryPoints: [
-        'source/server/index.ts',
+        'source/server/index.js',
     ],
     platform: 'node',
     external: ['./node_modules/*'],
