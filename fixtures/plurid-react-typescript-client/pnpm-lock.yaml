@@ -5,7 +5,7 @@ specifiers:
   '@plurid/elementql-client-react': ^0.0.0-1
   '@plurid/plurid-data': ^0.0.0-15
   '@plurid/plurid-engine': ^0.0.0-14
-  '@plurid/plurid-functions': ^0.0.0-29
+  '@plurid/plurid-functions': ^0.0.0-30
   '@plurid/plurid-functions-react': ^0.0.0-5
   '@plurid/plurid-icons-react': ^0.0.0-5
   '@plurid/plurid-pubsub': ^0.0.0-7
@@ -38,14 +38,14 @@ dependencies:
   '@plurid/elementql': 0.0.0-1
   '@plurid/elementql-client-react': 0.0.0-1
   '@plurid/plurid-data': 0.0.0-15_mxmwhuu22ojdd45featjegrj4i
-  '@plurid/plurid-engine': 0.0.0-14_cpgvwifg7hwl5ok6fh7lzacqvy
-  '@plurid/plurid-functions': 0.0.0-29
+  '@plurid/plurid-engine': 0.0.0-14_kt773jofppm7mairfskggmfi5q
+  '@plurid/plurid-functions': 0.0.0-30
   '@plurid/plurid-functions-react': 0.0.0-5_react@18.2.0
   '@plurid/plurid-icons-react': 0.0.0-5_6lv54evgjlquccbhrezg5vln4a
   '@plurid/plurid-pubsub': 0.0.0-7_j6rh5qdfuoz3cof7w4kggqo4ue
-  '@plurid/plurid-react': 0.0.0-24_4izucjgdrbdifsj7ok4gg6wdhe
+  '@plurid/plurid-react': 0.0.0-24_nrwy2sgl7xcbbjkkngh435aelu
   '@plurid/plurid-themes': 0.0.0-2
-  '@plurid/plurid-ui-components-react': 0.0.0-15_ylhn524uvp27mdrhd2aujjhk64
+  '@plurid/plurid-ui-components-react': 0.0.0-15_kt5wtka5kymbkrsa2oag5x73e4
   '@plurid/plurid-ui-state-react': 0.0.0-6_ke4uuske3atuh6v74tc4levxke
   '@reduxjs/toolkit': 1.8.4_kkwg4cbsojnjnupd3btipussee
   '@testing-library/jest-dom': 5.16.5
@@ -2021,7 +2021,7 @@ packages:
       '@plurid/plurid-themes': 0.0.0-2
     dev: false
 
-  /@plurid/plurid-engine/0.0.0-14_cpgvwifg7hwl5ok6fh7lzacqvy:
+  /@plurid/plurid-engine/0.0.0-14_kt773jofppm7mairfskggmfi5q:
     resolution: {integrity: sha512-zHAGucLyg59k43hgo/8k9XhuG5tWD7D398FeJJO2NHlvxBPHz4HB6/4+L7Z8CckKC/ByiYSJnSaeFkj/am+ABw==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
@@ -2030,7 +2030,7 @@ packages:
       '@plurid/plurid-themes': '*'
     dependencies:
       '@plurid/plurid-data': 0.0.0-15_mxmwhuu22ojdd45featjegrj4i
-      '@plurid/plurid-functions': 0.0.0-29
+      '@plurid/plurid-functions': 0.0.0-30
       '@plurid/plurid-themes': 0.0.0-2
     dev: false
 
@@ -2043,8 +2043,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@plurid/plurid-functions/0.0.0-29:
-    resolution: {integrity: sha512-U/mPBU9uyUGlyfaeoD1/0zCFEjk7HVDEEYnCC5RW+zwiDs20LCFaZDWhL9tLULblFy1bM6kFWMUWU4YdGzz3QQ==}
+  /@plurid/plurid-functions/0.0.0-30:
+    resolution: {integrity: sha512-SWk5XYz9H6CWz5C2LRZ0w2HWS5yI0c6WAliVYQLrFUzdQAexIa5ICeGgCoLGSrSB/zAPexmd5YZ4GRacnKopSQ==}
     engines: {node: '>=12', npm: '>=6'}
     dev: false
 
@@ -2074,7 +2074,7 @@ packages:
       '@plurid/plurid-themes': 0.0.0-2
     dev: false
 
-  /@plurid/plurid-react/0.0.0-24_4izucjgdrbdifsj7ok4gg6wdhe:
+  /@plurid/plurid-react/0.0.0-24_nrwy2sgl7xcbbjkkngh435aelu:
     resolution: {integrity: sha512-nI7vA/i3xMhM4VjmocDT7mktYVYoj7igNVtcnDd40/0KCcPBepsRYzkf8Tg1T+moKD8PlPlpzdN2VlJb/NOY3g==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
@@ -2100,13 +2100,13 @@ packages:
       '@plurid/elementql': 0.0.0-1
       '@plurid/elementql-client-react': 0.0.0-1
       '@plurid/plurid-data': 0.0.0-15_mxmwhuu22ojdd45featjegrj4i
-      '@plurid/plurid-engine': 0.0.0-14_cpgvwifg7hwl5ok6fh7lzacqvy
-      '@plurid/plurid-functions': 0.0.0-29
+      '@plurid/plurid-engine': 0.0.0-14_kt773jofppm7mairfskggmfi5q
+      '@plurid/plurid-functions': 0.0.0-30
       '@plurid/plurid-functions-react': 0.0.0-5_react@18.2.0
       '@plurid/plurid-icons-react': 0.0.0-5_6lv54evgjlquccbhrezg5vln4a
       '@plurid/plurid-pubsub': 0.0.0-7_j6rh5qdfuoz3cof7w4kggqo4ue
       '@plurid/plurid-themes': 0.0.0-2
-      '@plurid/plurid-ui-components-react': 0.0.0-15_ylhn524uvp27mdrhd2aujjhk64
+      '@plurid/plurid-ui-components-react': 0.0.0-15_kt5wtka5kymbkrsa2oag5x73e4
       '@plurid/plurid-ui-state-react': 0.0.0-6_ke4uuske3atuh6v74tc4levxke
       '@reduxjs/toolkit': 1.8.4_kkwg4cbsojnjnupd3btipussee
       cross-fetch: 3.1.5
@@ -2122,7 +2122,7 @@ packages:
     engines: {node: '>=12', npm: '>=6'}
     dev: false
 
-  /@plurid/plurid-ui-components-react/0.0.0-15_ylhn524uvp27mdrhd2aujjhk64:
+  /@plurid/plurid-ui-components-react/0.0.0-15_kt5wtka5kymbkrsa2oag5x73e4:
     resolution: {integrity: sha512-9Mc0GXd5oXu43JW3RgxKqIGp6QWJUJ0NkIsk7c2nG9O0hob78sdIUL8hexIUExa6Q6xdMmdxJC6aY3viJk9MiA==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
@@ -2137,7 +2137,7 @@ packages:
       react-redux: '>=7.2'
       styled-components: '>=5'
     dependencies:
-      '@plurid/plurid-functions': 0.0.0-29
+      '@plurid/plurid-functions': 0.0.0-30
       '@plurid/plurid-functions-react': 0.0.0-5_react@18.2.0
       '@plurid/plurid-icons-react': 0.0.0-5_6lv54evgjlquccbhrezg5vln4a
       '@plurid/plurid-themes': 0.0.0-2

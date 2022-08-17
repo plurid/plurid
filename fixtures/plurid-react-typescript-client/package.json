@@ -13,7 +13,7 @@
         "@plurid/elementql-client-react": "^0.0.0-1",
         "@plurid/plurid-data": "^0.0.0-15",
         "@plurid/plurid-engine": "^0.0.0-14",
-        "@plurid/plurid-functions": "^0.0.0-29",
+        "@plurid/plurid-functions": "^0.0.0-30",
         "@plurid/plurid-functions-react": "^0.0.0-5",
         "@plurid/plurid-icons-react": "^0.0.0-5",
         "@plurid/plurid-pubsub": "^0.0.0-7",
