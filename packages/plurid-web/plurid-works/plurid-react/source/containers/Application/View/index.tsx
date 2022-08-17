@@ -377,6 +377,7 @@ const PluridView: React.FC<PluridViewProperties> = (
         hostname,
         stateSpaceView,
         stateConfiguration,
+        JSON.stringify(stateTree),
     ]);
     // #endregion callbacks
 
@@ -1064,6 +1065,7 @@ const PluridView: React.FC<PluridViewProperties> = (
         }, [
             stateSpaceView,
             stateConfiguration,
+            JSON.stringify(stateTree),
         ]);
         // #endregion effects listeners
 
