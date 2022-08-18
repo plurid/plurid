@@ -49,6 +49,13 @@
         PluridIsoMatcher,
     } from '~services/engine';
     // #endregion external
+
+
+    // #region internal
+    import {
+        PluridScrollTop,
+    } from './styled';
+    // #endregion internal
 // #endregion imports
 
 
@@ -64,6 +71,7 @@ const PluridRouterBrowser = (
         exterior,
         shell,
         hostname,
+        scrollToTop,
 
         static: staticContext,
 
@@ -83,6 +91,8 @@ const PluridRouterBrowser = (
 
 
     // #region references
+    const topContainer = useRef<HTMLDivElement>(null);
+
     const pluridPlanesRegistrar = useRef(
         new PluridPlanesRegistrar(
             pluridPlanes,
@@ -146,6 +156,22 @@ const PluridRouterBrowser = (
 
 
     // #region handlers
+    const scrollTop = () => {
+        if (!topContainer.current || scrollToTop === false) {
+            return;
+        }
+
+        const behavior = (
+            typeof scrollToTop === 'undefined'
+            || scrollToTop === true
+            || scrollToTop === 'smooth'
+        ) ? 'smooth' as const : 'auto' as const;
+
+        topContainer.current.scrollIntoView({
+            behavior,
+        });
+    }
+
     const handleLocation = (
         event?: any,
     ) => {
@@ -175,6 +201,7 @@ const PluridRouterBrowser = (
 
 
         setMatchedPath(matchedPath);
+        scrollTop();
     }
     // #endregion handlers
 
@@ -296,6 +323,10 @@ const PluridRouterBrowser = (
 
     return (
         <>
+            <PluridScrollTop
+                ref={topContainer}
+            />
+
             {PluridRouterExterior && (
                 <PluridRouterExterior
                     matchedRoute={matchedRoute}
