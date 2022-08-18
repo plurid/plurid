@@ -62,13 +62,12 @@ npm install \
     @plurid/plurid-themes \
     @plurid/plurid-ui-components-react \
     @plurid/plurid-ui-state-react \
+    @reduxjs/toolkit \
     cross-fetch \
     hammerjs \
     react \
     react-dom \
     react-redux \
-    redux \
-    redux-thunk \
     styled-components
 ```
 
@@ -87,13 +86,12 @@ yarn add \
     @plurid/plurid-themes \
     @plurid/plurid-ui-components-react \
     @plurid/plurid-ui-state-react \
+    @reduxjs/toolkit \
     cross-fetch \
     hammerjs \
     react \
     react-dom \
     react-redux \
-    redux \
-    redux-thunk \
     styled-components
 ```
 
@@ -126,7 +124,8 @@ A simple, rendering-test application component, could look like
 /** imports */
 import React from 'react';
 
-import PluridApplication, {
+import {
+    PluridApplication,
     PluridPlane,
 } from '@plurid/plurid-react';
 
@@ -136,13 +135,10 @@ import PluridApplication, {
 const Application: React.FC<any> = () => {
     /** plurid' planes */
     const pluridPlanes: PluridPlane[] = [
-        {
-            route: '/',
-            component: {
-                kind: 'react',
-                element: () => (<div>Plurid' Application</div>),
-            },
-        },
+        [
+            '/',
+            () => (<div>Plurid' Application Plane</div>),
+        ],
     ];
 
     /** plurid' view */
