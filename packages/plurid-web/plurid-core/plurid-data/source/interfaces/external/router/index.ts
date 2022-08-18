@@ -87,6 +87,11 @@ export interface PluridRouterProperties<C> {
      * Replace the internal plurid plane with a custom implementation.
      */
     customPlane?: C;
+
+    /**
+     * After router navigation scroll to the top.
+     */
+    scrollToTop?: boolean;
 }
 
 
