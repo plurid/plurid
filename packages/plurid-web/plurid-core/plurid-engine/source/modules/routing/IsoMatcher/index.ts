@@ -65,7 +65,7 @@ class IsoMatcher<C> {
         data: IsoMatcherData<C>,
         origin: string = 'origin',
     ) {
-        if (origin === 'origin' && typeof location !== 'undefined') {
+        if (origin === 'origin' && typeof location !== 'undefined' && location.host) {
             this.origin = location.host;
         } else {
             this.origin = origin;

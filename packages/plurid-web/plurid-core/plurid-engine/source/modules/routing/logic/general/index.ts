@@ -58,7 +58,7 @@ export const computePlaneAddress = (
     route?: string,
     origin: string = 'origin',
 ) => {
-    if (origin === 'origin' && typeof location !== 'undefined') {
+    if (origin === 'origin' && typeof location !== 'undefined' && location.host) {
         origin = location.host;
     }
 
