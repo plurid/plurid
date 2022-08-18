@@ -90,8 +90,10 @@ export interface PluridRouterProperties<C> {
 
     /**
      * After router navigation scroll to the top.
+     *
+     * Default: `smooth`.
      */
-    scrollToTop?: boolean;
+    scrollToTop?: boolean | 'instant' | 'smooth';
 }
 
 
