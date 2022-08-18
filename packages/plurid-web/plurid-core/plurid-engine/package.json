@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.0.0-14",
+    "version": "0.0.0-15",
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
         "plurid",
@@ -51,7 +51,7 @@
         "@plurid/plurid-themes": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "0.0.0-15",
+        "@plurid/plurid-data": "0.0.0-16",
         "@plurid/plurid-functions": "0.0.0-30",
         "@plurid/plurid-pubsub": "0.0.0-7",
         "@plurid/plurid-themes": "0.0.0-2",

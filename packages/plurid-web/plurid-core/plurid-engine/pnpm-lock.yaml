@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@plurid/plurid-data': 0.0.0-15
+  '@plurid/plurid-data': 0.0.0-16
   '@plurid/plurid-functions': 0.0.0-30
   '@plurid/plurid-pubsub': 0.0.0-7
   '@plurid/plurid-themes': 0.0.0-2
@@ -28,9 +28,9 @@ specifiers:
   typescript-transform-paths: ^3.3.1
 
 devDependencies:
-  '@plurid/plurid-data': 0.0.0-15_mxmwhuu22ojdd45featjegrj4i
+  '@plurid/plurid-data': 0.0.0-16_mxmwhuu22ojdd45featjegrj4i
   '@plurid/plurid-functions': 0.0.0-30
-  '@plurid/plurid-pubsub': 0.0.0-7_j6rh5qdfuoz3cof7w4kggqo4ue
+  '@plurid/plurid-pubsub': 0.0.0-7_xoa2igb3g5piihpypjonsezyra
   '@plurid/plurid-themes': 0.0.0-2
   '@rollup/plugin-commonjs': 22.0.2_rollup@2.78.0
   '@types/jest': 28.1.7
@@ -705,8 +705,8 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@plurid/plurid-data/0.0.0-15_mxmwhuu22ojdd45featjegrj4i:
-    resolution: {integrity: sha512-9T7u7t+owaqG/BF6YvUIHK49LqPpWPI4u1QeNQtbOny3EXmT+PSNfWuTK4hXFyzybKS2r/pSYJjNFTxAmihUZQ==}
+  /@plurid/plurid-data/0.0.0-16_mxmwhuu22ojdd45featjegrj4i:
+    resolution: {integrity: sha512-tFVA9ScYbOIg3yVIGx9xqK87zjfxHlS++YJNKXy3T6n/5v2Cd8+D7r03WvXEl6C6ca4EBDiZcycsOMccagEaMQ==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/plurid-themes': '*'
@@ -719,14 +719,14 @@ packages:
     engines: {node: '>=12', npm: '>=6'}
     dev: true
 
-  /@plurid/plurid-pubsub/0.0.0-7_j6rh5qdfuoz3cof7w4kggqo4ue:
+  /@plurid/plurid-pubsub/0.0.0-7_xoa2igb3g5piihpypjonsezyra:
     resolution: {integrity: sha512-vAMIPUSE9NItXCDRRnGIKVNcQ+Ks5aKMLYKDIGKtNsXEpj38eQ1v7dt+8CscYiwHn4aDpwuHA/puXntz+cAvEQ==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/plurid-data': '*'
       '@plurid/plurid-themes': '*'
     dependencies:
-      '@plurid/plurid-data': 0.0.0-15_mxmwhuu22ojdd45featjegrj4i
+      '@plurid/plurid-data': 0.0.0-16_mxmwhuu22ojdd45featjegrj4i
       '@plurid/plurid-themes': 0.0.0-2
     dev: true
 
