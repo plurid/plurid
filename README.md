@@ -67,7 +67,7 @@ npm install -g @plurid/plurid-cli
 and run
 
 ```
-plurid generate
+plurid app generate
 ```
 
 <p align="center">
@@ -83,7 +83,7 @@ plurid generate
 A generated `plurid'` web application, or any other [configured](https://manual.plurid.com/plurid-app/deploy) web application, can be easily deployed to [`plurid.app`](https://plurid.app) using the [`plurid-cli`][plurid-cli] by simply runnning
 
 ``` bash
-plurid deploy
+plurid app deploy
 ```
 
 
