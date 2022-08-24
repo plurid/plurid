@@ -176,22 +176,12 @@ export const space = createSlice({
             const resolvedRotationY = rotationY ?? state.rotationY;
             const resolvedScale = scale ?? state.scale;
 
-            const newState = {
-                ...state,
-                translationX: resolvedTranslationX,
-                translationY: resolvedTranslationY,
-                translationZ: resolvedTranslationZ,
-                rotationX: resolvedRotationX,
-                rotationY: resolvedRotationY,
-                scale: resolvedScale,
-            };
-
-            const transform = computeMatrix(state);
-
-            return {
-                ...newState,
-                transform,
-            };
+            state.translationX = resolvedTranslationX;
+            state.translationY = resolvedTranslationY;
+            state.translationZ = resolvedTranslationZ;
+            state.rotationX = resolvedRotationX;
+            state.rotationY = resolvedRotationY;
+            state.scale = resolvedScale;
         },
         setAnimatedTransform: (
             state,
