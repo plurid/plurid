@@ -1,6 +1,11 @@
 import { performance } from 'perf_hooks';
-import { matrix } from '../';
+import { interaction } from '../';
 
+
+
+const {
+    matrix,
+} = interaction;
 
 
 /**
