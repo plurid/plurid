@@ -122,8 +122,11 @@ const initialState: SpaceState = {
 };
 
 
+export const name = 'space' as const;
+
+
 export const space = createSlice({
-    name: 'space',
+    name,
     initialState,
     reducers: {
         setSpaceField: (
@@ -173,12 +176,22 @@ export const space = createSlice({
             const resolvedRotationY = rotationY ?? state.rotationY;
             const resolvedScale = scale ?? state.scale;
 
-            state.translationX = resolvedTranslationX;
-            state.translationY = resolvedTranslationY;
-            state.translationZ = resolvedTranslationZ;
-            state.rotationX = resolvedRotationX;
-            state.rotationY = resolvedRotationY;
-            state.scale = resolvedScale;
+            const newState = {
+                ...state,
+                translationX: resolvedTranslationX,
+                translationY: resolvedTranslationY,
+                translationZ: resolvedTranslationZ,
+                rotationX: resolvedRotationX,
+                rotationY: resolvedRotationY,
+                scale: resolvedScale,
+            };
+
+            const transform = computeMatrix(state);
+
+            return {
+                ...newState,
+                transform,
+            };
         },
         setAnimatedTransform: (
             state,
@@ -196,9 +209,15 @@ export const space = createSlice({
             state,
             action: PayloadAction<SpaceLocation>,
         ) => {
-            state = {
+            const newState = {
                 ...state,
                 ...action.payload,
+            };
+            const transform = computeMatrix(newState);
+
+            return {
+                ...newState,
+                transform,
             };
         },
         viewCameraMoveForward: (
