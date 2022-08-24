@@ -13,6 +13,7 @@
     import NotFoundPlane from '../kernel/planes/NotFound';
     import StaticPlane from '../kernel/planes/Static';
 
+    import Home from '../kernel/containers/Home';
     import Head from '../kernel/components/Head';
     // #endregion external
 // #endregion imports
@@ -22,7 +23,7 @@
 // #region module
 const indexRoute: PluridReactRoute = {
     value: '/',
-    exterior: Head,
+    exterior: Home,
     planes: [
         [
             '/plane',
