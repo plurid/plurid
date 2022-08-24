@@ -20,6 +20,8 @@ export const cleanTemplate = (
         template,
         {
             collapseWhitespace: true,
+            conservativeCollapse: true,
+            collapseInlineTagWhitespace: false,
         },
     );
 }

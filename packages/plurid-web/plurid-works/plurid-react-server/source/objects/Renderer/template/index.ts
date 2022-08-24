@@ -33,6 +33,7 @@ const template = (
         defaultPreloadedPluridMetastate,
         pluridMetastate,
         globals,
+        minify,
     } = data;
 
     const injectedGlobals = globalsInjector(globals);
@@ -68,6 +69,10 @@ const template = (
     </body>
 </html>
     `;
+
+    if (!minify) {
+        return templateString;
+    }
 
     return cleanTemplate(templateString);
 }

@@ -45,6 +45,7 @@ class PluridRenderer {
     private defaultPreloadedPluridMetastate: string;
     private pluridMetastate: string;
     private globals: Record<string, string>;
+    private minify: boolean;
 
     constructor(
         configuration: PluridRendererConfiguration,
@@ -65,6 +66,7 @@ class PluridRenderer {
             defaultPreloadedPluridMetastate,
             pluridMetastate,
             globals,
+            minify,
         } = configuration;
 
         const {
@@ -97,6 +99,7 @@ class PluridRenderer {
         this.defaultPreloadedPluridMetastate = defaultPreloadedPluridMetastate || DEFAULT__PRELOADED_PLURID_METASTATE__;
         this.pluridMetastate = pluridMetastate || DEFAULT_RENDERER_PLURID_STATE;
         this.globals = globals ?? {};
+        this.minify = minify ?? true;
     }
 
     public html() {
@@ -116,6 +119,7 @@ class PluridRenderer {
             defaultPreloadedPluridMetastate: this.defaultPreloadedPluridMetastate,
             pluridMetastate: this.pluridMetastate,
             globals: this.globals,
+            minify: this.minify,
         };
 
         return template(data);

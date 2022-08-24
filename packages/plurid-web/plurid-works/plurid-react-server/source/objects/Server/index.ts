@@ -1068,6 +1068,7 @@ class PluridServer {
             defaultPreloadedPluridMetastate: this.template?.defaultPreloadedPluridMetastate,
             pluridMetastate: JSON.stringify(pluridMetastate),
             globals,
+            minify: this.template?.minify,
         });
 
         return renderer;

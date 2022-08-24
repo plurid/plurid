@@ -220,6 +220,8 @@ export interface PluridServerTemplateConfiguration {
      * Default: `__PRELOADED_PLURID_METASTATE__`
      */
     defaultPreloadedPluridMetastate?: string;
+
+    minify?: boolean;
 }
 
 
