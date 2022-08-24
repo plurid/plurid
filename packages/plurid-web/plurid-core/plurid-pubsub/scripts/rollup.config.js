@@ -25,7 +25,6 @@ export default {
     plugins: [
         typescript({
             typescript: ttypescript,
-            rollupCommonJSResolveHack: true,
             clean: true,
         }),
         terser({
