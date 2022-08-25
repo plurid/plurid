@@ -29,16 +29,14 @@ export const getTranslationY = (state: AppState): number => state.space.translat
 export const getTranslationZ = (state: AppState): number => state.space.translationZ;
 export const getScale = (state: AppState): number => state.space.scale;
 export const getTree = (state: AppState): TreePlane[] => state.space.tree;
-export const getTransform = (state: AppState) => {
-    return {
-        rotationX: state.space.rotationX,
-        rotationY: state.space.rotationY,
-        translationX: state.space.translationX,
-        translationY: state.space.translationY,
-        translationZ: state.space.translationZ,
-        scale: state.space.scale,
-    };
-}
+export const getTransform = (state: AppState) => ({
+    rotationX: state.space.rotationX,
+    rotationY: state.space.rotationY,
+    translationX: state.space.translationX,
+    translationY: state.space.translationY,
+    translationZ: state.space.translationZ,
+    scale: state.space.scale,
+})
 export const getActiveUniverseID = (state: AppState) => state.space.activeUniverseID;
 
 export const getView = (state: AppState) => state.space.view;
