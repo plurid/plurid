@@ -230,14 +230,25 @@ export interface PluridPubSubSubscribeMessageSpaceScaleWith {
 }
 
 
-
+export interface SpaceTransform {
+    rotationX: number;
+    rotationY: number;
+    translationX: number;
+    translationY: number;
+    translationZ: number;
+    scale: number;
+}
+export interface PluridPubSubMessageSpaceTransformData {
+    value: SpaceTransform;
+    internal?: boolean;
+}
 export interface PluridPubSubPublishMessageSpaceTransform {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM;
-    data?: any;
+    data?: PluridPubSubMessageSpaceTransformData;
 }
 export interface PluridPubSubSubscribeMessageSpaceTransform {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM;
-    callback: PluridPubSubCallback<any>;
+    callback: PluridPubSubCallback<PluridPubSubMessageSpaceTransformData>;
 }
 
 
