@@ -40,6 +40,7 @@
         PluridContext,
         PluridView,
         TreePlane,
+        SpaceTransform,
         PluridPubSub as IPluridPubSub,
         PluridPubSubSubscribeMessage,
         PluridApplicationView,
@@ -117,7 +118,7 @@ export interface PluridViewStateProperties {
     // stateDataUniverses: Indexed<PluridInternalStateUniverse>;
     // viewSize: ViewSize;
     stateSpaceLoading: boolean;
-    stateTransform: any;
+    stateTransform: SpaceTransform;
     // initialTree: TreePlane[];
     stateTree: TreePlane[];
     // activeUniverseID: string;

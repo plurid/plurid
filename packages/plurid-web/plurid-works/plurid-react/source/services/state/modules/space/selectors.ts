@@ -2,6 +2,7 @@
     // #region libraries
     import {
         TreePlane,
+        SpaceTransform,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -36,7 +37,7 @@ export const getTransform = (state: AppState) => ({
     translationY: state.space.translationY,
     translationZ: state.space.translationZ,
     scale: state.space.scale,
-})
+} as SpaceTransform)
 export const getActiveUniverseID = (state: AppState) => state.space.activeUniverseID;
 
 export const getView = (state: AppState) => state.space.view;
