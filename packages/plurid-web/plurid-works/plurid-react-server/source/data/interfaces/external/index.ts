@@ -115,10 +115,10 @@ export interface PluridServerOptions {
 export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 
 
-export interface PluridServerService<P = any> {
+export interface PluridServerService<P = any, PP = any> {
     name: string;
-    Provider: any;
-    properties?: P;
+    Provider: P;
+    properties?: PP;
 }
 
 
