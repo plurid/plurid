@@ -29,7 +29,6 @@ specifiers:
   '@types/react': ^18.0.17
   '@types/react-dom': ^18.0.6
   '@types/react-redux': ^7.1.24
-  '@types/rollup-plugin-peer-deps-external': ^2.2.1
   '@types/styled-components': ^5.1.26
   '@typescript-eslint/eslint-plugin': ^5.33.1
   '@typescript-eslint/parser': ^5.33.1
@@ -58,7 +57,7 @@ specifiers:
   redux: ^4.2.0
   rimraf: ^3.0.2
   rollup: ^2.78.0
-  rollup-plugin-peer-deps-external: ^2.2.4
+  rollup-plugin-node-externals: ^4.1.1
   rollup-plugin-postcss: ^4.0.2
   rollup-plugin-sourcemaps: ^0.6.3
   rollup-plugin-terser: ^7.0.2
@@ -123,7 +122,6 @@ devDependencies:
   '@types/react': 18.0.17
   '@types/react-dom': 18.0.6
   '@types/react-redux': 7.1.24
-  '@types/rollup-plugin-peer-deps-external': 2.2.1
   '@types/styled-components': 5.1.26
   '@typescript-eslint/eslint-plugin': 5.33.1_vsoshirnpb7xw6mr7xomgfas2i
   '@typescript-eslint/parser': 5.33.1_4rv7y5c6xz3vfxwhbrcxxi73bq
@@ -140,7 +138,7 @@ devDependencies:
   postcss: 8.4.16
   rimraf: 3.0.2
   rollup: 2.78.0
-  rollup-plugin-peer-deps-external: 2.2.4_rollup@2.78.0
+  rollup-plugin-node-externals: 4.1.1_rollup@2.78.0
   rollup-plugin-postcss: 4.0.2_postcss@8.4.16
   rollup-plugin-sourcemaps: 0.6.3_fdaagx3hxp3rvolh43o7ztzzga
   rollup-plugin-terser: 7.0.2_rollup@2.78.0
@@ -1554,13 +1552,6 @@ packages:
       '@types/node': 18.7.6
     dev: true
 
-  /@types/rollup-plugin-peer-deps-external/2.2.1:
-    resolution: {integrity: sha512-CUK4Mi3M3A/0coRUeo4McvUFOxR5H6UYd6Wt3D+K4c4fJupolMSoIxsZaBG1g/BJQOaujf78Pf7KhgfhrX1FZA==}
-    dependencies:
-      '@types/node': 18.7.6
-      rollup: 0.63.5
-    dev: true
-
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
@@ -1949,8 +1940,10 @@ packages:
     engines: {node: '>= 0.12.0'}
     dev: false
 
-  /ajv-formats/2.1.1:
+  /ajv-formats/2.1.1_ajv@8.10.0:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -5603,11 +5596,13 @@ packages:
       glob: 7.2.0
     dev: true
 
-  /rollup-plugin-peer-deps-external/2.2.4_rollup@2.78.0:
-    resolution: {integrity: sha512-AWdukIM1+k5JDdAqV/Cxd+nejvno2FVLVeZ74NKggm3Q5s9cbbcOgUPGdbxPi4BXu7xGaZ8HG12F+thImYu/0g==}
+  /rollup-plugin-node-externals/4.1.1_rollup@2.78.0:
+    resolution: {integrity: sha512-hiGCMTKHVoueaTmtcUv1KR0/dlNBuI9GYzHUlSHQbMd7T7yomYdXCFnBisoBqdZYy61EGAIfz8AvJaWWBho3Pg==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
-      rollup: '*'
+      rollup: ^2.60.0
     dependencies:
+      find-up: 5.0.0
       rollup: 2.78.0
     dev: true
 
@@ -5684,14 +5679,6 @@ packages:
       estree-walker: 0.6.1
     dev: true
 
-  /rollup/0.63.5:
-    resolution: {integrity: sha512-dFf8LpUNzIj3oE0vCvobX6rqOzHzLBoblyFp+3znPbjiSmSvOoK2kMKx+Fv9jYduG1rvcCfCveSgEaQHjWRF6g==}
-    hasBin: true
-    dependencies:
-      '@types/estree': 0.0.39
-      '@types/node': 18.7.6
-    dev: true
-
   /rollup/2.78.0:
     resolution: {integrity: sha512-4+YfbQC9QEVvKTanHhIAFVUFSRsezvQF8vFOJwtGfb9Bb+r014S+qryr9PSmw8x6sMnPkmFBGAvIFVQxvJxjtg==}
     engines: {node: '>=10.0.0'}
@@ -5746,7 +5733,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.9
       ajv: 8.10.0
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1_ajv@8.10.0
       ajv-keywords: 5.1.0_ajv@8.10.0
     dev: true
 
