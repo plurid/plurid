@@ -4,7 +4,7 @@ const postcss = require('rollup-plugin-postcss');
 const url = require('@rollup/plugin-url');
 const json = require('@rollup/plugin-json');
 const typescript = require('rollup-plugin-typescript2');
-const external = require('rollup-plugin-peer-deps-external');
+const external = require('rollup-plugin-node-externals').default;
 const resolve = require('@rollup/plugin-node-resolve').default;
 const commonjs = require('@rollup/plugin-commonjs');
 const sourceMaps = require('rollup-plugin-sourcemaps');
@@ -62,7 +62,7 @@ const plugins = {
         ],
     }),
     external: () => external({
-        includeDependencies: true,
+        exclude: esmModules,
     }),
     resolve: () => resolve({
         preferBuiltins: true,
