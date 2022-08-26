@@ -6,6 +6,14 @@
         PluridServerPartialOptions,
         PluridServerTemplateConfiguration,
     } from '@plurid/plurid-react-server';
+
+    import {
+        ApolloProvider,
+    } from '@apollo/client';
+
+    import {
+        Provider as ReduxProvider,
+    } from 'react-redux';
     // #endregion libraries
 
 
@@ -99,8 +107,7 @@ const services: PluridServerService[] = [
     // [START stripe service]
     // {
     //     name: 'Stripe',
-    //     package: 'react-stripe-elements',
-    //     provider: 'StripeProvider',
+    //     Provider: StripeProvider,
     //     properties: {
     //         stripe: null,
     //     },
@@ -110,8 +117,7 @@ const services: PluridServerService[] = [
     // [START apollo service]
     {
         name: 'Apollo',
-        package: '@apollo/client',
-        provider: 'ApolloProvider',
+        Provider: ApolloProvider,
         properties: {
             client: apolloClient,
         },
@@ -121,8 +127,7 @@ const services: PluridServerService[] = [
     // [START redux service]
     {
         name: 'Redux',
-        package: 'react-redux',
-        provider: 'Provider',
+        Provider: ReduxProvider,
         properties: {
             store: reduxStore({}),
             context: reduxContext,
