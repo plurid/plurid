@@ -121,20 +121,6 @@ export interface PluridServerService<P = any> {
     properties?: P;
 }
 
-// export type PluridServerService =
-//     | 'Apollo'
-//     | 'Redux'
-//     | 'Stripe';
-
-
-// export interface PluridServerServicesData {
-//     reduxStore?: any;
-//     reduxStoreValue?: any;
-//     reduxContext?: any;
-//     apolloClient?: any;
-//     stripeScript?: string;
-// }
-
 
 export interface PluridServerConfiguration {
     routes: PluridRoute<PluridReactComponent>[];
