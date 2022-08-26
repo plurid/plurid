@@ -46,7 +46,7 @@ export const requiredDevelopmentDependencies = [
     'redux-devtools-extension',
     'rimraf',
     'rollup',
-    'rollup-plugin-peer-deps-external',
+    'rollup-plugin-node-externals',
     'rollup-plugin-sourcemaps',
     'rollup-plugin-postcss',
     'rollup-plugin-terser',
