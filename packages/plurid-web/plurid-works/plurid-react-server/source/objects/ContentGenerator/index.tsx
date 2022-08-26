@@ -35,27 +35,16 @@
 // #region module
 class PluridContentGenerator {
     private data: PluridContentGeneratorData;
-    private providers: Record<string, any> | undefined;
+
 
     constructor(
         data: PluridContentGeneratorData,
     ) {
         this.data = data;
-
-        this.importProviders();
     }
 
 
     public async render() {
-        if (!this.providers) {
-            await this.importProviders();
-        }
-
-        if (!this.providers) {
-            console.log('Plurid Server Error :: Providers not loaded');
-            return '';
-        }
-
         const {
             pluridMetastate,
             routes,
@@ -106,7 +95,7 @@ class PluridContentGenerator {
             const preserveProperties = preserveResult?.providers?.[service.name];
 
             Wrap = wrapping(
-                this.providers[service.name],
+                service.Provider,
                 Wrap,
                 {
                     ...service.properties,
@@ -124,26 +113,6 @@ class PluridContentGenerator {
         );
 
         return content;
-    }
-
-
-    private async importProviders() {
-        const providers: Record<string, any> = {};
-
-        for (const service of this.data.services) {
-            try {
-                const importedService = await import(service.package);
-                const ImportedServiceProvider = service.provider === 'default'
-                    ? importedService
-                    : importedService[service.provider];
-                providers[service.name] = ImportedServiceProvider;
-            } catch (error) {
-                console.log(`Plurid Server Error :: Service '${service.name}' from '${service.package}' could not be imported.`);
-                continue;
-            }
-        }
-
-        this.providers = providers;
     }
 }
 // #endregion module

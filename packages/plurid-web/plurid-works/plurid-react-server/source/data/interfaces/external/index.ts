@@ -117,8 +117,7 @@ export type PluridServerPartialOptions = Partial<PluridServerOptions>;
 
 export interface PluridServerService<P = any> {
     name: string;
-    package: string;
-    provider: string;
+    Provider: any;
     properties?: P;
 }
 
