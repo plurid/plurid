@@ -19,6 +19,9 @@ const {
     isProduction,
 } = require ('./shared');
 
+const {
+    esModules,
+} = require('../custom');
 
 
 const input = 'source/server/index.ts';
@@ -62,7 +65,7 @@ const plugins = {
         ],
     }),
     external: () => external({
-        exclude: esmModules,
+        exclude: esModules,
     }),
     resolve: () => resolve({
         preferBuiltins: true,

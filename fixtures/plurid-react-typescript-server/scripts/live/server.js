@@ -4,17 +4,17 @@ const common = require('./common');
 const pkg = require('../../package.json');
 
 const {
-    esmModules,
+    esModules,
 } = require('../custom');
 
 
 
-const external = esmModules.length === 0
+const external = esModules.length === 0
     ? ['./node_modules/*']
     : [
         ...Object
             .keys(pkg.dependencies)
-            .filter(dependency => !esmModules.includes(dependency)),
+            .filter(dependency => !esModules.includes(dependency)),
     ];
 
 

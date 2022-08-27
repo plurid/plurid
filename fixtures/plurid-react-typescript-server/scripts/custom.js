@@ -1,6 +1,6 @@
-const esmModules = [
+const esModules = [
     // add packages to be bundled as ES modules
 ];
 
 
-exports.esmModules = esmModules;
+exports.esModules = esModules;
