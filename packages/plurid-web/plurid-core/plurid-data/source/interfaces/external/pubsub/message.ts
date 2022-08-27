@@ -239,7 +239,7 @@ export interface SpaceTransform {
     scale: number;
 }
 export interface PluridPubSubMessageSpaceTransformData {
-    value: SpaceTransform;
+    value: Partial<SpaceTransform>;
     internal?: boolean;
 }
 export interface PluridPubSubPublishMessageSpaceTransform {
