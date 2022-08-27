@@ -80,12 +80,17 @@ export const handleGlobalShortcuts = (
         && !event.ctrlKey
         && !event.metaKey;
 
+    const handleEvent = () => {
+        event.preventDefault();
+    }
+
 
     // #region transform
     if (
         event.code === 'KeyF'
         && noModifiers
     ) {
+        handleEvent();
         return dispatch(actions.configuration.toggleConfigurationSpaceFirstPerson());
     }
 
@@ -95,6 +100,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
             && locks.translationZ
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraMoveForward());
         }
 
@@ -103,6 +109,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
             && locks.translationZ
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraMoveBackward());
         }
 
@@ -112,6 +119,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
             && locks.translationX
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraMoveLeft());
         }
 
@@ -120,6 +128,7 @@ export const handleGlobalShortcuts = (
             && event.shiftKey
             && locks.rotationY
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraTurnLeft());
         }
 
@@ -129,6 +138,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
             && locks.translationX
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraMoveRight());
         }
 
@@ -137,6 +147,7 @@ export const handleGlobalShortcuts = (
             && event.shiftKey
             && locks.rotationY
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraTurnRight());
         }
 
@@ -146,6 +157,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
             && locks.rotationX
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraTurnUp());
         }
 
@@ -154,6 +166,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
             && locks.rotationX
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraTurnDown());
         }
 
@@ -163,6 +176,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
             && locks.translationY
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraMoveUp());
         }
 
@@ -171,6 +185,7 @@ export const handleGlobalShortcuts = (
             && noModifiers
             && locks.translationY
         ) {
+            handleEvent();
             return dispatch(actions.space.viewCameraMoveDown());
         }
     }
@@ -180,6 +195,7 @@ export const handleGlobalShortcuts = (
         event.code === 'KeyR'
         && noModifiers
     ) {
+        handleEvent();
         return dispatch(
             actions.configuration.setConfigurationSpaceTransformMode(
                 TRANSFORM_MODES.ROTATION,
@@ -191,6 +207,7 @@ export const handleGlobalShortcuts = (
         event.code === 'KeyT'
         && noModifiers
     ) {
+        handleEvent();
         return dispatch(
             actions.configuration.setConfigurationSpaceTransformMode(
                 TRANSFORM_MODES.TRANSLATION,
@@ -203,6 +220,7 @@ export const handleGlobalShortcuts = (
         && noModifiers
         && !firstPerson
     ) {
+        handleEvent();
         return dispatch(
             actions.configuration.setConfigurationSpaceTransformMode(
                 TRANSFORM_MODES.SCALE,
@@ -213,48 +231,60 @@ export const handleGlobalShortcuts = (
 
     if (event.key === 'ArrowRight') {
         if (event.shiftKey && locks.rotationY) {
+            handleEvent();
             return dispatch(actions.space.rotateLeft());
         }
         if (event.altKey && locks.translationX) {
+            handleEvent();
             return dispatch(actions.space.translateRight());
         }
     }
 
     if (event.key === 'ArrowLeft') {
         if (event.shiftKey && locks.rotationY) {
+            handleEvent();
             return dispatch(actions.space.rotateRight());
         }
         if (event.altKey && locks.translationX) {
+            handleEvent();
             return dispatch(actions.space.translateLeft());
         }
     }
 
     if (event.key === 'ArrowUp') {
         if (event.shiftKey && event.altKey && locks.translationZ) {
+            handleEvent();
             return dispatch(actions.space.translateIn());
         }
         if (event.shiftKey && !event.altKey && locks.rotationX) {
+            handleEvent();
             return dispatch(actions.space.rotateUp());
         }
         if (event.altKey && !event.shiftKey && locks.translationY) {
+            handleEvent();
             return dispatch(actions.space.translateUp());
         }
         if (event.metaKey || event.ctrlKey && locks.scale) {
+            handleEvent();
             return dispatch(actions.space.scaleUp());
         }
     }
 
     if (event.key === 'ArrowDown') {
         if (event.shiftKey && event.altKey && locks.translationZ) {
+            handleEvent();
             return dispatch(actions.space.translateOut());
         }
         if (event.shiftKey && !event.altKey && locks.rotationX) {
+            handleEvent();
             return dispatch(actions.space.rotateDown());
         }
         if (event.altKey && !event.shiftKey && locks.translationY) {
+            handleEvent();
             return dispatch(actions.space.translateDown());
         }
         if (event.metaKey || event.ctrlKey && locks.scale) {
+            handleEvent();
             return dispatch(actions.space.scaleDown());
         }
     }
@@ -263,6 +293,7 @@ export const handleGlobalShortcuts = (
 
     // #region plane
     if (event.altKey && event.code === 'KeyF') {
+        handleEvent();
         focusActivePlane(
             dispatch,
             state,
@@ -271,6 +302,7 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.altKey && event.code === 'KeyB') {
+        handleEvent();
         focusParentActivePlane(
             dispatch,
             state,
@@ -279,6 +311,7 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.altKey && event.code === 'KeyR') {
+        handleEvent();
         refreshActivePlane(
             state,
             pubsub,
@@ -287,6 +320,7 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.altKey && event.code === 'KeyE') {
+        handleEvent();
         isolateActivePlane(
             state,
             pubsub,
@@ -295,6 +329,7 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.altKey && event.shiftKey && event.code === 'KeyT') {
+        handleEvent();
         openClosedPlane(
             pubsub,
         );
@@ -302,6 +337,7 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.altKey && event.code === 'KeyW') {
+        handleEvent();
         closeActivePlane(
             state,
             pubsub,
@@ -313,6 +349,7 @@ export const handleGlobalShortcuts = (
 
     // #region focus
     if (event.altKey && event.code === 'KeyA') {
+        handleEvent();
         focusPreviousRoot(
             dispatch,
             state,
@@ -321,6 +358,7 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.altKey && event.code === 'KeyD') {
+        handleEvent();
         focusNextRoot(
             dispatch,
             state,
@@ -329,7 +367,7 @@ export const handleGlobalShortcuts = (
     }
 
     if (event.altKey && event.code === 'Tab') {
-        event.preventDefault();
+        handleEvent();
 
         if (event.shiftKey) {
             focusPreviousRoot(
@@ -348,6 +386,8 @@ export const handleGlobalShortcuts = (
 
 
     if (event.altKey && event.code.startsWith('Digit')) {
+        handleEvent();
+
         const index = parseInt(event.code.replace('Digit', '')) - 1;
 
         focusRootIndex(
