@@ -60,6 +60,7 @@ const resolveSpace = <C>(
         translationX: 0,
         translationY: 0,
         translationZ: 0,
+        transform: 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)',
         activeUniverseID: '',
         camera: {
             x: 0,
@@ -81,16 +82,26 @@ const resolveSpace = <C>(
             },
         },
         culledView: [],
+        activePlaneID: '',
+        isolatePlane: '',
+        lastClosedPlane: '',
 
-        view,
         tree: computedTree,
 
         ...precomputedState?.space,
         ...contextState?.space,
         ...localState?.space,
         ...currentState?.space,
+
+        view,
     };
-    // console.log({stateSpace});
+    // console.log({
+    //     stateSpace,
+    //     precomputedState: precomputedState?.space,
+    //     contextState: contextState?.space,
+    //     localState: localState?.space,
+    //     currentState: currentState?.space,
+    // });
 
     if (currentState) {
         stateSpace.translationX = currentState.space.translationX;
