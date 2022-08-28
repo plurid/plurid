@@ -159,6 +159,9 @@ class PluridApplication extends Component<
             contextState,
             hostname,
         );
+        // console.log({
+        //     store: store.space,
+        // });
 
         return store;
     }

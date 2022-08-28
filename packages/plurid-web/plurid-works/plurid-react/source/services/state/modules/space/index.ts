@@ -18,6 +18,7 @@
         SCALE_LOWER_LIMIT,
         SCALE_UPPER_LIMIT,
 
+        PluridStateSpace,
         TreePlane,
         SpaceLocation,
         PluridApplicationView,
@@ -59,30 +60,7 @@ const {
 } = mathematics.geometry;
 
 
-export interface SpaceState {
-    loading: boolean;
-    transform: string;
-    animatedTransform: boolean;
-    transformTime: number;
-    scale: number;
-    rotationX: number;
-    rotationY: number;
-    translationX: number;
-    translationY: number;
-    translationZ: number;
-    tree: TreePlane[];
-    activeUniverseID: string;
-    camera: Coordinates;
-    viewSize: ViewSize;
-    spaceSize: SpaceSize;
-    view: PluridApplicationView;
-    culledView: PluridApplicationView;
-    activePlaneID: string;
-    isolatePlane: string;
-    lastClosedPlane: string;
-}
-
-const initialState: SpaceState = {
+const initialState: PluridStateSpace = {
     loading: true,
     transform: 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)',
     animatedTransform: false,
@@ -197,7 +175,7 @@ export const space = createSlice({
         },
         setSpaceLocation: (
             state,
-            action: PayloadAction<SpaceLocation>,
+            action: PayloadAction<Partial<SpaceLocation>>,
         ) => {
             const newState = {
                 ...state,
