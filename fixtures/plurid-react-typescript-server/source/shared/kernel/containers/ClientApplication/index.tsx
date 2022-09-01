@@ -58,6 +58,15 @@ const ClientApplication: PluridReactRouteComponent<{}> = (
                 view={[
                     '/one'
                 ]}
+                configuration={{
+                    elements: {
+                        plane: {
+                            controls: {
+                                show: false,
+                            },
+                        },
+                    },
+                }}
                 hostname="localhost:63000"
             />
         </>
