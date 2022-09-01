@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react",
-    "version": "0.0.0-26",
+    "version": "0.0.0-27",
     "description": "React implementation of Plurid to explore the web in three dimensions",
     "keywords": [
         "plurid",
@@ -115,7 +115,7 @@
         "ts-node": "^10.9.1",
         "tslib": "^2.4.0",
         "ttypescript": "^1.5.13",
-        "typescript": "^4.8.2",
+        "typescript": "^4.7.4",
         "typescript-transform-paths": "^3.3.1"
     }
 }
