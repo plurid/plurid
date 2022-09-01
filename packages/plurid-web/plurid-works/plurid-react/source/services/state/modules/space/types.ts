@@ -1,16 +1,10 @@
 // #region imports
     // #region libraries
     import {
+        PluridStateSpace,
         LinkCoordinates,
     } from '@plurid/plurid-data';
     // #endregion libraries
-
-
-    // #region internal
-    import type {
-        SpaceState,
-    } from './index';
-    // #endregion internal
 // #endregion imports
 
 
@@ -41,7 +35,7 @@ export interface Coordinates {
 
 
 export interface SetSpaceFieldPayload {
-    field: keyof SpaceState;
+    field: keyof PluridStateSpace;
     value: any;
 }
 

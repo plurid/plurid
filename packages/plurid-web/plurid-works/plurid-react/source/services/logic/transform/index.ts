@@ -2,15 +2,13 @@
     // #region libraries
     import {
         FOCUS_ANCHOR_SUFFIX,
+
+        PluridStateSpace,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region external
-    import {
-        SpaceState,
-    } from '~services/state/modules/space';
-
     import {
         interaction,
     } from '~services/engine';
@@ -40,7 +38,7 @@ const {
 
 
 export const computeMatrix = (
-    spaceState: SpaceState,
+    spaceState: PluridStateSpace,
 ) => {
     const {
         translationX,
