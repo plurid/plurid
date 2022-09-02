@@ -51,11 +51,6 @@
 
 
 // #region module
-const {
-    direction: directionLogic,
-} = interaction;
-
-
 export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     state: AppState,
@@ -427,7 +422,7 @@ export const handleGlobalWheel = (
         deltaY: event.deltaY,
     };
     const absoluteThreshold = 100;
-    const direction = directionLogic.getWheelDirection(deltas, absoluteThreshold);
+    const direction = interaction.direction.getWheelDirection(deltas, absoluteThreshold);
 
     if (modes.rotation) {
         if (direction === directions.left && locks.rotationY) {
