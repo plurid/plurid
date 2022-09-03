@@ -992,6 +992,7 @@ class PluridServer {
             isoMatch,
             this.routes,
             globals,
+            this.options.hostname,
         );
 
         const {
