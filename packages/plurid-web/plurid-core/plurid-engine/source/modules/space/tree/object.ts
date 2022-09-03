@@ -29,6 +29,8 @@ export interface TreeData<C> {
 export default class Tree<C> {
     private data: TreeData<C>;
     private origin: string;
+    private count = 0;
+
 
     constructor(
         data: TreeData<C>,
@@ -37,6 +39,7 @@ export default class Tree<C> {
         this.data = data;
         this.origin = origin;
     }
+
 
     public compute() {
         const {
@@ -50,7 +53,13 @@ export default class Tree<C> {
             view,
             configuration,
             this.origin,
+            this.getCount.bind(this),
         );
+    }
+
+
+    private getCount() {
+        return this.count++;
     }
 }
 // #endregion module

@@ -279,6 +279,7 @@ export const resolveViewItem = <C>(
     view: string | PluridView,
     configuration: PluridConfiguration,
     origin = 'origin',
+    getCount?: () => number,
 ): TreePlane | undefined => {
     // console.log('resolveViewItem', planes);
 
@@ -332,10 +333,13 @@ export const resolveViewItem = <C>(
     if (match) {
         const route = match.match.value;
 
+        const count = getCount ? getCount() : uuid.generate();
+        const planeID = route + '@' + count;
+
         const treePlane: TreePlane = {
             sourceID: route,
 
-            planeID: uuid.generate(),
+            planeID,
 
             // route: resolvedView.route,
             route: viewAddress,
@@ -467,6 +471,7 @@ export const computeSpaceTree = <C>(
     view: PluridApplicationView,
     configuration: PluridConfiguration,
     origin = 'origin',
+    getCount: () => number,
 ): TreePlane[] => {
     // console.log('computeSpaceTree');
     // console.log('planes', planes);
@@ -482,6 +487,7 @@ export const computeSpaceTree = <C>(
             viewItem,
             configuration,
             origin,
+            getCount,
         );
 
         if (treePlane) {
