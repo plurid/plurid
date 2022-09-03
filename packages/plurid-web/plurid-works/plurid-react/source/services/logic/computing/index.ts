@@ -68,94 +68,10 @@ export const computeApplication = (
     planes: PluridPlane<PluridReactComponent>[] | undefined,
     configuration: PluridPartialConfiguration | undefined,
     view: PluridApplicationView | undefined,
+    origin = 'origin',
 ) => {
     const appConfiguration = generalEngine.configuration.merge(configuration);
 
-
-    if (planes) {
-        for (const plane of planes) {
-            const planeData = resolvePluridPlaneData(plane);
-
-            const linkPath = routing.resolveRoute(planeData.route);
-            if (!linkPath) {
-                continue;
-            }
-
-            const {
-                protocol,
-                host,
-                path,
-                space,
-                universe,
-                cluster,
-                plane: planePath,
-                route,
-            } = linkPath;
-
-            const id = route;
-
-            // const planeProperties = {
-            //     ...plane.component,
-            // };
-            // planesPropertiesReference.set(id, planeProperties);
-        }
-    }
-
-
-    // // create tree planes
-    // const treePlanes: TreePlane[] = [];
-
-    // for (const [id, computedIndexedPlane] of computedIndexedPlanes) {
-    //     // const pathProperties = computedIndexedPlane.component.properties?.plurid?.path;
-
-    //     // let planeRouteSource = computedIndexedPlane.route;
-
-    //     // if (pathProperties) {
-    //     //     for (const [key, value] of Object.entries(pathProperties.parameters)) {
-    //     //         planeRouteSource = planeRouteSource.replace(`:${key}`, value as string);
-    //     //     }
-    //     // }
-
-    //     // const planeRoute = router.resolveRoute(planeRouteSource);
-    //     // if (!planeRoute) {
-    //     //     continue;
-    //     // }
-
-    //     // const {
-    //     //     protocol,
-    //     //     host,
-    //     //     path,
-    //     //     space,
-    //     //     universe,
-    //     //     cluster,
-    //     //     plane,
-    //     // } = planeRoute;
-
-    //     // const treePlane: TreePlane = {
-    //     //     ...defaultTreePlane,
-    //     //     routeDivisions: {
-    //     //         protocol: {
-    //     //             value: protocol,
-    //     //             secure: false,
-    //     //         },
-    //     //         host,
-    //     //         path,
-    //     //         space,
-    //     //         universe,
-    //     //         cluster,
-    //     //         plane,
-    //     //         valid: true,
-    //     //     },
-    //     //     sourceID: id,
-    //     //     route: planeRouteSource,
-    //     //     planeID: uuid.generate(),
-    //     //     show: true,
-    //     // };
-    //     // treePlanes.push(treePlane);
-    // }
-
-
-    // create absolute view
     const currentView = view || [];
     const absoluteView = [];
 
@@ -169,31 +85,11 @@ export const computeApplication = (
         }
     }
 
-    // console.log('treePlanes', treePlanes);
-    // console.log('currentView', currentView);
-    // console.log('absoluteView', absoluteView);
-
-    // create tree
-    // const planes = getRegisteredPlanes(planesRegistrar);
-
-    const origin = 'localhost:63000';
-
     const registrar = new PluridPlanesRegistrar(
         planes,
         origin,
     );
     const registrarPlanes = registrar.getAll();
-    // console.log({
-    //     planes,
-    //     registrarPlanes,
-    // });
-
-
-    console.log('computeApplication', {
-        planes: registrarPlanes,
-        configuration: appConfiguration,
-        view: absoluteView,
-    });
 
     const spaceTree = new space.tree.Tree(
         {

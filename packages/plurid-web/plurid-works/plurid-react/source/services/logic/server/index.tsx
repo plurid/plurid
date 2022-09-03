@@ -29,19 +29,17 @@
 
 // #region module
 export const serverComputeMetastate = async (
-    // matchedRoute: router.MatcherResponse<PluridReactComponent>,
     isoMatch: PluridRouteMatch,
     paths: PluridRoute<PluridReactComponent>[],
     globals: Record<string, string> | undefined,
+    hostname = 'origin',
 ): Promise<PluridMetastate> => {
     const protocol = 'http';
-    const host = 'localhost:63000';
 
     const pluridApplications = await collectApplicationsFromPath(
-        // matchedRoute,
         isoMatch,
         protocol,
-        host,
+        hostname,
         globals,
     );
 
@@ -66,6 +64,7 @@ export const serverComputeMetastate = async (
             planes,
             (isoMatch.data as any).defaultConfiguration,
             view,
+            hostname,
         );
         // console.log({
         //     computedTree,
