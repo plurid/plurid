@@ -17,6 +17,7 @@
     import {
         PluridApplication as PluridApplicationProperties,
         PluridState,
+        PluridPlanesRegistrar as IPluridPlanesRegistrar,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -38,6 +39,7 @@
     import {
         state,
         registerPlanes,
+        PluridPlanesRegistrar,
     } from '~services/engine';
     // #endregion external
 
@@ -61,6 +63,7 @@ class PluridApplication extends Component<
     private store: Store<PluridState>;
     private storeUnubscriber: ReduxUnsubscribe | undefined;
     private storeID: string;
+    private planesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
 
 
     constructor(
@@ -70,13 +73,11 @@ class PluridApplication extends Component<
         super(properties);
 
         this.storeID = properties.id || 'default';
-
         this.context = context;
 
-        const defaultStore = this.computeStore();
+        this.prepare();
 
-        this.store = store(defaultStore);
-
+        this.store = store(this.computeStore());
         this.subscribeStore();
     }
 
@@ -104,11 +105,20 @@ class PluridApplication extends Component<
             >
                 <PluridView
                     {...this.props}
+                    planesRegistrar={this.planesRegistrar}
                 />
             </ReduxProvider>
         );
     }
 
+
+    private prepare() {
+        this.planesRegistrar = typeof window === 'undefined' && !this.props.planesRegistrar
+            ? new PluridPlanesRegistrar(
+                this.props.planes,
+                this.props.hostname,
+            ) : this.props.planesRegistrar;
+    }
 
     private computeStore() {
         const {
@@ -117,7 +127,6 @@ class PluridApplication extends Component<
             planes,
             configuration,
             precomputedState,
-            planesRegistrar,
             useLocalStorage,
             hostname,
             space,
@@ -125,7 +134,7 @@ class PluridApplication extends Component<
 
         registerPlanes(
             planes,
-            planesRegistrar,
+            this.planesRegistrar,
             hostname,
         );
 
@@ -138,10 +147,11 @@ class PluridApplication extends Component<
             useLocalStorage,
         );
 
-        const contextState = loadStateFromContext(
-            this.context,
-            space,
-        );
+        const contextState = undefined;
+        // const contextState = loadStateFromContext(
+        //     this.context,
+        //     space,
+        // );
         // console.log({
         //     currentState,
         //     localState,
@@ -152,7 +162,7 @@ class PluridApplication extends Component<
         const store = state.compute(
             view,
             configuration,
-            planesRegistrar,
+            this.planesRegistrar,
             currentState,
             localState,
             precomputedState,

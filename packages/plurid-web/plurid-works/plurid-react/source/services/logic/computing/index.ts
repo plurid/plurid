@@ -188,6 +188,13 @@ export const computeApplication = (
     //     registrarPlanes,
     // });
 
+
+    console.log('computeApplication', {
+        planes: registrarPlanes,
+        configuration: appConfiguration,
+        view: absoluteView,
+    });
+
     const spaceTree = new space.tree.Tree(
         {
             planes: registrarPlanes,

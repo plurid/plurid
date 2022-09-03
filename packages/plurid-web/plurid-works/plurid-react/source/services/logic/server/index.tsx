@@ -55,6 +55,10 @@ export const serverComputeMetastate = async (
         } = application;
         // console.log('serverComputeMetastate view', view);
 
+        // if (view.length === 0) {
+        //     continue;
+        // }
+
         const {
             computedTree,
             appConfiguration,
