@@ -62,6 +62,7 @@ const {
 
 const initialState: PluridStateSpace = {
     loading: true,
+    resolvedLayout: false,
     transform: 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)',
     animatedTransform: false,
     transformTime: 450,

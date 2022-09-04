@@ -19,6 +19,7 @@
 // #region module
 export const getSpace = (state: AppState) => state.space;
 export const getLoading = (state: AppState): boolean => state.space.loading;
+export const getResolvedLayout = (state: AppState): boolean => state.space.resolvedLayout;
 export const getTransformMatrix = (state: AppState) => state.space.transform;
 export const getAnimatedTransform = (state: AppState): boolean => state.space.animatedTransform;
 export const getTransformTime = (state: AppState): number => state.space.transformTime;

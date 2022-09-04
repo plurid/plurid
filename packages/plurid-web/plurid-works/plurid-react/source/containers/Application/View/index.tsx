@@ -118,6 +118,7 @@ export interface PluridViewStateProperties {
     // stateDataUniverses: Indexed<PluridInternalStateUniverse>;
     // viewSize: ViewSize;
     stateSpaceLoading: boolean;
+    stateResolvedLayout: boolean;
     stateTransform: SpaceTransform;
     // initialTree: TreePlane[];
     stateTree: TreePlane[];
@@ -201,6 +202,7 @@ const PluridView: React.FC<PluridViewProperties> = (
         state,
         stateConfiguration,
         // stateSpaceLoading,
+        stateResolvedLayout,
         stateTransform,
         stateSpaceView,
         stateTree,
@@ -281,6 +283,16 @@ const PluridView: React.FC<PluridViewProperties> = (
             setPreventOverscroll(false);
         }, PLURID_DEFAULT_PREVENT_OVERSCROLL_TIMEOUT);
     }
+
+    const resolveLayout = () => {
+        const layout = true;
+
+        treeUpdate(
+            stateSpaceView,
+            stateConfiguration,
+            layout,
+        );
+    }
     // #endregion handlers
 
 
@@ -334,6 +346,7 @@ const PluridView: React.FC<PluridViewProperties> = (
     const treeUpdate = (
         view: PluridApplicationView,
         configuration = stateConfiguration,
+        layout?: boolean,
     ) => {
         // TODO? stateConfiguration update
         const planes = getRegisteredPlanes(planesRegistrar);
@@ -343,6 +356,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                 planes,
                 configuration,
                 view,
+                layout,
             },
             hostname,
         );
@@ -373,7 +387,10 @@ const PluridView: React.FC<PluridViewProperties> = (
     }
 
     const treeUpdateCallback = useCallback(() => {
-        treeUpdate(stateSpaceView);
+        treeUpdate(
+            stateSpaceView,
+            stateConfiguration,
+        );
     }, [
         hostname,
         stateSpaceView,
@@ -1217,6 +1234,21 @@ const PluridView: React.FC<PluridViewProperties> = (
         //     stateSpaceView,
         ]);
         // #endregion effects tree update
+
+
+        // #region layout
+        useEffect(() => {
+            if (!stateResolvedLayout) {
+                resolveLayout();
+                dispatchSetSpaceField({
+                    field: 'resolvedLayout',
+                    value: true,
+                });
+            }
+        }, [
+            stateResolvedLayout,
+        ]);
+        // #endregion layout
     // #endregion effects
 
 
@@ -1270,7 +1302,7 @@ const mapStateToProperties = (
     // stateDataUniverses: selectors.data.getUniverses(state),
     // viewSize: selectors.space.getViewSize(state),
     stateTransform: selectors.space.getTransform(state),
-    // initialTree: selectors.space.getInitialTree(state),
+    stateResolvedLayout: selectors.space.getResolvedLayout(state),
     stateTree: selectors.space.getTree(state),
     // activeUniverseID: selectors.space.getActiveUniverseID(state),
     stateSpaceLoading: selectors.space.getLoading(state),
