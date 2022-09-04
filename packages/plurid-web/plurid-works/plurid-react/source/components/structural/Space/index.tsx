@@ -49,6 +49,7 @@ export interface PluridSpaceOwnProperties {
 export interface PluridSpaceStateProperties {
     stateConfiguration: PluridConfiguration,
     stateGeneralTheme: Theme;
+    stateResolvedLayout: boolean;
 }
 
 export interface PluridSpaceDispatchProperties {
@@ -68,6 +69,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
         // #region state
         stateConfiguration,
         stateGeneralTheme,
+        stateResolvedLayout,
         // #endregion state
     } = properties;
 
@@ -105,6 +107,9 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
             isMounted={isMounted}
             fadeInTime={fadeInTime}
             data-plurid-entity={PLURID_ENTITY_SPACE}
+            style={{
+                opacity: stateResolvedLayout ? 1 : 0
+            }}
         >
             <PluridRoots />
         </StyledPluridSpace>
@@ -118,6 +123,7 @@ const mapStateToProperties = (
 ): PluridSpaceStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+    stateResolvedLayout: selectors.space.getResolvedLayout(state),
 });
 
 
