@@ -6,13 +6,6 @@
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
-
-
-    // #region external
-    import {
-        fadeInAnimation,
-    } from '~services/styled';
-    // #endregion external
 // #endregion imports
 
 
@@ -31,6 +24,7 @@ export const StyledPluridSpace = styled.div<IStyledPluridSpace>`
     overflow: hidden;
     perspective: 2000px;
     outline: none;
+    transition: opacity ${({fadeInTime}) => fadeInTime}ms linear;
 
     background: ${({
         opaque,
@@ -53,29 +47,5 @@ export const StyledPluridSpace = styled.div<IStyledPluridSpace>`
 
         return 'transparent';
     }};
-
-    /* TOFIX */
-    /* opacity: ${({
-        fadeInTime,
-    }) => {
-        if (fadeInTime) {
-            return '0';
-        }
-
-        return '1';
-    }};
-    animation: ${({
-        isMounted,
-        fadeInTime,
-    }) => {
-        if (
-            isMounted
-            && fadeInTime
-        ) {
-            return fadeInAnimation(fadeInTime);
-        }
-
-        return '';
-    }}; */
 `;
 // #endregion module
