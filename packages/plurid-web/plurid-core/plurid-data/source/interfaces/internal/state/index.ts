@@ -47,6 +47,7 @@ export interface PluridStateShortcuts {
 
 export interface PluridStateSpace {
     loading: boolean;
+    resolvedLayout: boolean;
     animatedTransform: boolean;
     transformTime: number;
     scale: number;
