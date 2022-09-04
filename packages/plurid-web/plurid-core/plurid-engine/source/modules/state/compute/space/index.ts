@@ -52,6 +52,7 @@ const resolveSpace = <C>(
 
     const stateSpace: PluridStateSpace = {
         loading: true,
+        resolvedLayout: false,
         animatedTransform: false,
         transformTime: 450,
         scale: 1,

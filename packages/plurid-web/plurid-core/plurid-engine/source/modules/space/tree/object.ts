@@ -20,10 +20,11 @@
 
 // #region module
 export interface TreeData<C> {
-    planes: Map<string, RegisteredPluridPlane<C>>,
-    view: PluridApplicationView,
-    configuration: PluridConfiguration,
-    previousTree?: TreePlane[],
+    planes: Map<string, RegisteredPluridPlane<C>>;
+    view: PluridApplicationView;
+    configuration: PluridConfiguration;
+    layout?: boolean;
+    previousTree?: TreePlane[];
 }
 
 export default class Tree<C> {
@@ -46,12 +47,14 @@ export default class Tree<C> {
             planes,
             view,
             configuration,
+            layout,
         } = this.data;
 
         return computeSpaceTree(
             planes,
             view,
             configuration,
+            layout,
             this.origin,
             this.getCount.bind(this),
         );

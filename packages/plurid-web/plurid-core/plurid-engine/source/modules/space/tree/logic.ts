@@ -470,6 +470,7 @@ export const computeSpaceTree = <C>(
     planes: Map<string, RegisteredPluridPlane<C>>,
     view: PluridApplicationView,
     configuration: PluridConfiguration,
+    layout: boolean | undefined,
     origin = 'origin',
     getCount: () => number,
 ): TreePlane[] => {
@@ -493,6 +494,23 @@ export const computeSpaceTree = <C>(
         if (treePlane) {
             treePlanes.push(treePlane);
         }
+    }
+
+    if (!layout) {
+        const layoutlessTreePlanes = treePlanes.map(plane => {
+            return {
+                ...plane,
+                location: {
+                    rotateX: 0,
+                    rotateY: 0,
+                    translateX: 0,
+                    translateY: 0,
+                    translateZ: 0,
+                },
+            };
+        });
+
+        return layoutlessTreePlanes;
     }
 
     switch(configuration.space.layout.type) {
