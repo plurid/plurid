@@ -16,6 +16,7 @@
         PluridUniverse,
         PluridConfiguration,
         PluridPartialConfiguration,
+        PluridRouterProperties,
         RecursivePartial,
 
         PluridRoute,
@@ -159,6 +160,9 @@ const Plurid = {
     internals,
     // #endregion Utilities
 };
+
+
+type PluridRouterPartialProperties = Partial<PluridRouterProperties<PluridReactComponent>>;
 // #endregion module
 
 
@@ -188,6 +192,9 @@ export {
     PluridPlane,
     PluridView,
     PluridUniverse,
+
+    PluridRouterProperties,
+    PluridRouterPartialProperties,
 
     PluridRoute,
     PluridRouteSpace,
