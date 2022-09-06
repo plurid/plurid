@@ -5,14 +5,14 @@ specifiers:
   '@plurid/deon': 0.0.0-8
   '@plurid/elementql': ^0.0.0-1
   '@plurid/elementql-client-react': ^0.0.0-1
-  '@plurid/plurid-data': ^0.0.0-19
+  '@plurid/plurid-data': ^0.0.0-20
   '@plurid/plurid-engine': ^0.0.0-18
   '@plurid/plurid-functions': ^0.0.0-30
   '@plurid/plurid-functions-react': ^0.0.0-5
   '@plurid/plurid-icons-react': ^0.0.0-5
   '@plurid/plurid-pubsub': ^0.0.0-9
-  '@plurid/plurid-react': ^0.0.0-29
-  '@plurid/plurid-react-server': ^0.0.0-14
+  '@plurid/plurid-react': ^0.0.0-30
+  '@plurid/plurid-react-server': ^0.0.0-15
   '@plurid/plurid-themes': ^0.0.0-2
   '@plurid/plurid-ui-components-react': ^0.0.0-18
   '@plurid/plurid-ui-state-react': ^0.0.0-7
@@ -82,14 +82,14 @@ dependencies:
   '@apollo/client': 3.6.9_onqnqwb3ubg5opvemcqf7c2qhy
   '@plurid/elementql': 0.0.0-1
   '@plurid/elementql-client-react': 0.0.0-1
-  '@plurid/plurid-data': 0.0.0-19_mxmwhuu22ojdd45featjegrj4i
-  '@plurid/plurid-engine': 0.0.0-18_p66bwxjwdp7v23ml6ztwqyhubm
+  '@plurid/plurid-data': 0.0.0-20_mxmwhuu22ojdd45featjegrj4i
+  '@plurid/plurid-engine': 0.0.0-18_ep7r43ywjm4e3rin7cakgptuva
   '@plurid/plurid-functions': 0.0.0-30
   '@plurid/plurid-functions-react': 0.0.0-5_react@18.2.0
   '@plurid/plurid-icons-react': 0.0.0-5_6lv54evgjlquccbhrezg5vln4a
-  '@plurid/plurid-pubsub': 0.0.0-9_q265sir6bfkcgvcdkboka72ur4
-  '@plurid/plurid-react': 0.0.0-29_5jqgztn2ww7w2wu4yo6fblwtai
-  '@plurid/plurid-react-server': 0.0.0-14_5y7iowpy7msu7nzclwvjgrhgke
+  '@plurid/plurid-pubsub': 0.0.0-9_utolto3cr2xvw5pt4b2fo3xria
+  '@plurid/plurid-react': 0.0.0-30_mbcfxq4azge2kjkahbnpmeecje
+  '@plurid/plurid-react-server': 0.0.0-15_jaylyxueo5ktjv2kffakiudkni
   '@plurid/plurid-themes': 0.0.0-2
   '@plurid/plurid-ui-components-react': 0.0.0-18_736o6hxdndagrvxsheg7gt7l4m
   '@plurid/plurid-ui-state-react': 0.0.0-7_yzjbm6gxo2frfyyww6ac35hdoy
@@ -1079,8 +1079,8 @@ packages:
     engines: {node: '>=12', npm: '>=6'}
     dev: false
 
-  /@plurid/plurid-data/0.0.0-19_mxmwhuu22ojdd45featjegrj4i:
-    resolution: {integrity: sha512-zSzh2Kv6ydVG/+XsIV/viRH6IcVAt7tpqTmej6BBbSlHxjmBWCfFSEKJtjkzbdKrqvQlZw6V3oO5ia5pGg8pPg==}
+  /@plurid/plurid-data/0.0.0-20_mxmwhuu22ojdd45featjegrj4i:
+    resolution: {integrity: sha512-LZTJs+I7kOW4E4tqGNIGnq6Fb3QqkyAxqLZWCBGgS7OHZw+ObDKCpy+j+pTV4YC7XlW7yA3gf4H2B/3gZhhzOA==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/plurid-themes': '*'
@@ -1088,7 +1088,7 @@ packages:
       '@plurid/plurid-themes': 0.0.0-2
     dev: false
 
-  /@plurid/plurid-engine/0.0.0-18_p66bwxjwdp7v23ml6ztwqyhubm:
+  /@plurid/plurid-engine/0.0.0-18_ep7r43ywjm4e3rin7cakgptuva:
     resolution: {integrity: sha512-QiBsjdlH1l2dRO1OH/GEV2IkiOef85uivurZlonA13Xwvy9iVk4y9B9hVmKMHFq5rG7kVv7z40K6yzfNthbndw==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
@@ -1096,7 +1096,7 @@ packages:
       '@plurid/plurid-functions': '*'
       '@plurid/plurid-themes': '*'
     dependencies:
-      '@plurid/plurid-data': 0.0.0-19_mxmwhuu22ojdd45featjegrj4i
+      '@plurid/plurid-data': 0.0.0-20_mxmwhuu22ojdd45featjegrj4i
       '@plurid/plurid-functions': 0.0.0-30
       '@plurid/plurid-themes': 0.0.0-2
     dev: false
@@ -1130,19 +1130,19 @@ packages:
       styled-components: 5.3.5_zqyshjqmmmqwn6ax6dftxsbcrq
     dev: false
 
-  /@plurid/plurid-pubsub/0.0.0-9_q265sir6bfkcgvcdkboka72ur4:
+  /@plurid/plurid-pubsub/0.0.0-9_utolto3cr2xvw5pt4b2fo3xria:
     resolution: {integrity: sha512-P1H7f4X/G1ozLhkgcNfPVJAMhs9IhF6vadzBhuQsYMOsof2JjYgBmrMfKxDsjR1f0gbQV/EBSDy5iC3oFqVBOQ==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/plurid-data': '*'
       '@plurid/plurid-themes': '*'
     dependencies:
-      '@plurid/plurid-data': 0.0.0-19_mxmwhuu22ojdd45featjegrj4i
+      '@plurid/plurid-data': 0.0.0-20_mxmwhuu22ojdd45featjegrj4i
       '@plurid/plurid-themes': 0.0.0-2
     dev: false
 
-  /@plurid/plurid-react-server/0.0.0-14_5y7iowpy7msu7nzclwvjgrhgke:
-    resolution: {integrity: sha512-GhEpiIIIG8hitr2uvBN3kAAHo6VR7qlSw9b+up9IPWhNCoe/bvXtwv9k94z5HFAlpu3agp3A7FUBmUqBiraHFQ==}
+  /@plurid/plurid-react-server/0.0.0-15_jaylyxueo5ktjv2kffakiudkni:
+    resolution: {integrity: sha512-zG3n3sIqA1ugvl2iPwgTvirD5c1Y17t7Q+C6fSCXILyR4cd5WznkW8fYiHJzQTGP/q6KedwEbsBHjvpUceBkwg==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/elementql': '*'
@@ -1167,13 +1167,13 @@ packages:
     dependencies:
       '@plurid/elementql': 0.0.0-1
       '@plurid/elementql-client-react': 0.0.0-1
-      '@plurid/plurid-data': 0.0.0-19_mxmwhuu22ojdd45featjegrj4i
-      '@plurid/plurid-engine': 0.0.0-18_p66bwxjwdp7v23ml6ztwqyhubm
+      '@plurid/plurid-data': 0.0.0-20_mxmwhuu22ojdd45featjegrj4i
+      '@plurid/plurid-engine': 0.0.0-18_ep7r43ywjm4e3rin7cakgptuva
       '@plurid/plurid-functions': 0.0.0-30
       '@plurid/plurid-functions-react': 0.0.0-5_react@18.2.0
       '@plurid/plurid-icons-react': 0.0.0-5_6lv54evgjlquccbhrezg5vln4a
-      '@plurid/plurid-pubsub': 0.0.0-9_q265sir6bfkcgvcdkboka72ur4
-      '@plurid/plurid-react': 0.0.0-29_5jqgztn2ww7w2wu4yo6fblwtai
+      '@plurid/plurid-pubsub': 0.0.0-9_utolto3cr2xvw5pt4b2fo3xria
+      '@plurid/plurid-react': 0.0.0-30_mbcfxq4azge2kjkahbnpmeecje
       '@plurid/plurid-themes': 0.0.0-2
       '@plurid/plurid-ui-components-react': 0.0.0-18_736o6hxdndagrvxsheg7gt7l4m
       '@plurid/plurid-ui-state-react': 0.0.0-7_yzjbm6gxo2frfyyww6ac35hdoy
@@ -1194,8 +1194,8 @@ packages:
       - supports-color
     dev: false
 
-  /@plurid/plurid-react/0.0.0-29_5jqgztn2ww7w2wu4yo6fblwtai:
-    resolution: {integrity: sha512-jWgrCXZscjQ3PletyMpaujhZuJfGRSPlsF6yy8cDzoz3Nfq9kRg9c4Lw+ihgel+f1WRCraUjVPJFMdqvNaMqRQ==}
+  /@plurid/plurid-react/0.0.0-30_mbcfxq4azge2kjkahbnpmeecje:
+    resolution: {integrity: sha512-BJf5kXgBwcxydur5QsoXxRbf9+fF5VYRbroPuZzfwy2RJNQhbx0kk7ZnVt1anA/lYL0sGLQNY+oOCm01efkCbg==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/elementql': '*'
@@ -1219,12 +1219,12 @@ packages:
     dependencies:
       '@plurid/elementql': 0.0.0-1
       '@plurid/elementql-client-react': 0.0.0-1
-      '@plurid/plurid-data': 0.0.0-19_mxmwhuu22ojdd45featjegrj4i
-      '@plurid/plurid-engine': 0.0.0-18_p66bwxjwdp7v23ml6ztwqyhubm
+      '@plurid/plurid-data': 0.0.0-20_mxmwhuu22ojdd45featjegrj4i
+      '@plurid/plurid-engine': 0.0.0-18_ep7r43ywjm4e3rin7cakgptuva
       '@plurid/plurid-functions': 0.0.0-30
       '@plurid/plurid-functions-react': 0.0.0-5_react@18.2.0
       '@plurid/plurid-icons-react': 0.0.0-5_6lv54evgjlquccbhrezg5vln4a
-      '@plurid/plurid-pubsub': 0.0.0-9_q265sir6bfkcgvcdkboka72ur4
+      '@plurid/plurid-pubsub': 0.0.0-9_utolto3cr2xvw5pt4b2fo3xria
       '@plurid/plurid-themes': 0.0.0-2
       '@plurid/plurid-ui-components-react': 0.0.0-18_736o6hxdndagrvxsheg7gt7l4m
       '@plurid/plurid-ui-state-react': 0.0.0-7_yzjbm6gxo2frfyyww6ac35hdoy
