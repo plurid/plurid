@@ -13,6 +13,7 @@
         PluridRoute,
         PluridRoutePlane,
         PluridPreserveResponse,
+        PluridRouterProperties,
     } from '@plurid/plurid-data';
 
     import {
@@ -93,6 +94,7 @@ export interface PluridContentGeneratorData {
     helmet: Helmet;
     exterior: PluridReactComponent | undefined;
     shell: PluridReactComponent | undefined;
+    routerProperties: Partial<PluridRouterProperties<PluridReactComponent>>;
     routes: PluridRoute<PluridReactComponent>[];
     planes: PluridRoutePlane<PluridReactComponent>[];
     pluridMetastate: any;

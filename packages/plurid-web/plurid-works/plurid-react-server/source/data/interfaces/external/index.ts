@@ -11,6 +11,7 @@
         PluridRoutePlane,
         PluridPreserve,
         IsoMatcherRouteResult,
+        PluridRouterProperties,
     } from '@plurid/plurid-data';
 
     import {
@@ -132,6 +133,7 @@ export interface PluridServerConfiguration {
 
     exterior?: PluridReactComponent;
     shell?: PluridReactComponent;
+    routerProperties?: Partial<PluridRouterProperties<PluridReactComponent>>;
 
     /**
      * Replace the internal plurid plane with a custom implementation.

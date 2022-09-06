@@ -51,6 +51,7 @@ class PluridContentGenerator {
             planes,
             exterior,
             shell,
+            routerProperties,
             gateway,
             gatewayEndpoint,
             gatewayQuery,
@@ -79,6 +80,7 @@ class PluridContentGenerator {
                     gatewayEndpoint={gatewayEndpoint}
                     gatewayQuery={gatewayQuery}
                     hostname={hostname}
+                    routerProperties={routerProperties}
                 />
             </PluridProvider>
         );

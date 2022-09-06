@@ -33,6 +33,7 @@
     import {
         PluridRoute,
         PluridRoutePlane,
+        PluridRouterProperties,
         PluridPreserveOnServe,
         PluridPreserveAfterServe,
         PluridPreserveOnError,
@@ -121,6 +122,7 @@ class PluridServer {
     private middleware: PluridServerMiddleware[];
     private exterior: PluridReactComponent | undefined;
     private shell: PluridReactComponent | undefined;
+    private routerProperties: Partial<PluridRouterProperties<PluridReactComponent>>;
     private services: PluridServerService[];
     private options: PluridServerOptions;
     private template: PluridServerTemplateConfiguration | undefined;
@@ -148,6 +150,7 @@ class PluridServer {
             middleware,
             exterior,
             shell,
+            routerProperties,
             services,
             options,
             template,
@@ -164,6 +167,7 @@ class PluridServer {
         this.middleware = middleware || [];
         this.exterior = exterior;
         this.shell = shell;
+        this.routerProperties = routerProperties || {};
         this.services = services || [];
         this.options = this.handleOptions(options);
         this.template = template;
@@ -1105,6 +1109,7 @@ class PluridServer {
                 stylesheet,
                 exterior: this.exterior,
                 shell: this.shell,
+                routerProperties: this.routerProperties,
                 helmet: this.helmet,
                 routes: this.routes,
                 planes: this.planes,
