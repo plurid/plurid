@@ -42,6 +42,7 @@
 
     import {
         APPLICATION_ROOT,
+        routerProperties,
     } from '~shared/data/constants';
     // #endregion external
 
@@ -173,6 +174,7 @@ const template: PluridServerTemplateConfiguration = {
 const pluridServer = new PluridServer({
     helmet,
     shell,
+    routerProperties,
     routes,
     planes,
     preserves,
