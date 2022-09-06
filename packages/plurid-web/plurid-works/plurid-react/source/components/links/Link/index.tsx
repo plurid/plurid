@@ -147,8 +147,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         // #region own
         children,
         route: planeRoute,
-        devisible: _devisible,
-        suffix: _suffix,
+        devisible: devisibleProperty,
+        suffix: suffixProperty,
         atClick,
         style,
         className,
@@ -191,8 +191,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     );
     // console.log('absolutePlaneRoute', absolutePlaneRoute);
 
-    const suffix = _suffix ?? PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX;
-    const devisible = _devisible ?? false;
+    const suffix = suffixProperty ?? PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX;
+    const devisible = devisibleProperty ?? false;
     // #endregion properties
 
 
