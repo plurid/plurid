@@ -200,6 +200,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
     const hoverInTimeout = useRef<null | NodeJS.Timeout>(null);
     const hoverOutTimeout = useRef<null | NodeJS.Timeout>(null);
+    const planeRef = useRef<TreePlane | undefined>();
     // #endregion references
 
 
@@ -378,6 +379,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             pluridPlaneID,
             forceShow,
         );
+        // console.log({
+        //     pluridPlaneID,
+        //     forceShow,
+        //     updatedTree,
+        //     updatedPlane,
+        // });
 
         dispatchSetTree(updatedTree);
         setShowLink(show => !show);
@@ -651,14 +658,24 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** Unmount */
     useEffect(() => {
+        // use reference to update plane values
+        const plane = space.tree.logic.getTreePlaneByID(stateTree, pluridPlaneID);
+        planeRef.current = plane;
+
         return () => {
-            if (showLink && linkElement.current === null) {
-                /**
-                 * The plurid plane is active
-                 * but the link element has been removed from the DOM.
-                 */
-                removePlane();
-            }
+            setTimeout(() => {
+                if (
+                    showLink
+                    && linkElement.current === null
+                    && planeRef.current?.show === false
+                ) {
+                    /**
+                     * The plurid plane is active
+                     * but the link element has been removed from the DOM.
+                     */
+                    removePlane();
+                }
+            }, 10);
         }
     }, [
         showLink,
@@ -671,9 +688,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     // #region render
-    // console.log('pluridPlaneID', {pluridPlaneID});
-    // console.log('parentPlaneID', {parentPlaneID});
-
     return (
         <StyledPluridLink
             ref={linkElement}
