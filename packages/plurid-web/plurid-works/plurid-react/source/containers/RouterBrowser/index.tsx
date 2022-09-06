@@ -55,6 +55,8 @@
     import {
         PluridScrollTop,
     } from './styled';
+
+    import FadeIn from './FadeIn';
     // #endregion internal
 // #endregion imports
 
@@ -320,9 +322,10 @@ const PluridRouterBrowser = (
         }
     }
 
-
     return (
         <>
+            <FadeIn />
+
             <PluridScrollTop
                 ref={topContainer}
             />

@@ -47,6 +47,7 @@ export interface PluridRootsStateProperties {
     stateConfiguration: PluridConfiguration;
     spaceTransformMatrix: string;
     spaceAnimatedTransform: boolean;
+    stateResolvedLayout: boolean;
     spaceTransformTime: number;
     stateTree: TreePlane[];
 }
@@ -70,35 +71,41 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         spaceAnimatedTransform,
         spaceTransformTime,
         stateTree,
+        stateResolvedLayout,
         // #endregion state
     } = properties;
     // #endregion properties
 
 
     // #region render
+    // TOFIX use user width/height
+    const width = '100%';
+    const height = stateResolvedLayout
+        ? window.innerHeight + 'px'
+        : 0;
+
+    const transition = spaceAnimatedTransform
+        ? `transform ${spaceTransformTime}ms ease-in-out`
+        // : firstPerson
+        //     ? 'transform 100ms linear'
+        : 'initial';
+
     return (
         <StyledPluridRoots
             style={{
-                // width: typeof window !== 'undefined' ? window.innerWidth + 'px' : '1440px',
-                width: '100%', // TOFIX
-                height: typeof window !== 'undefined' ? window.innerHeight + 'px' : '821px',
+                width,
+                height,
+                transition,
                 transform: spaceTransformMatrix,
-                transition: spaceAnimatedTransform
-                    ? `transform ${spaceTransformTime}ms ease-in-out`
-                    // : firstPerson
-                    //     ? 'transform 100ms linear'
-                        : 'initial',
             }}
             data-plurid-entity={PLURID_ENTITY_ROOTS}
         >
-            {stateTree.map(plane => {
-                return (
-                    <PluridRoot
-                        key={plane.planeID}
-                        plane={plane}
-                    />
-                );
-            })}
+            {stateTree.map(plane => (
+                <PluridRoot
+                    key={plane.planeID}
+                    plane={plane}
+                />
+            ))}
         </StyledPluridRoots>
     );
     // #endregion render
@@ -113,6 +120,7 @@ const mapStateToProperties = (
     spaceAnimatedTransform: selectors.space.getAnimatedTransform(state),
     spaceTransformTime: selectors.space.getTransformTime(state),
     stateTree: selectors.space.getTree(state),
+    stateResolvedLayout: selectors.space.getResolvedLayout(state),
 });
 
 
