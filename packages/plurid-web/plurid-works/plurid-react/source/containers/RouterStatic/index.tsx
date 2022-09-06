@@ -5,6 +5,7 @@
     import {
         PluridRoute,
         PluridRoutePlane,
+        PluridRouterProperties,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -33,6 +34,7 @@ export interface PluridRouterStaticOwnProperties {
     gateway?: boolean;
     gatewayQuery?: string;
     gatewayEndpoint?: string;
+    routerProperties?: Partial<PluridRouterProperties<PluridReactComponent>>;
 }
 
 
@@ -52,6 +54,7 @@ const PluridRouterStatic = (
         gateway,
         gatewayQuery: gatewayQueryProperty,
         gatewayEndpoint: gatewayEndpointProperty,
+        routerProperties,
     } = properties;
 
     const protocol = protocolProperty || 'http';
@@ -74,6 +77,7 @@ const PluridRouterStatic = (
             }}
             protocol={protocol}
             hostname={hostname}
+            {...routerProperties}
         />
     );
     // #endregion render

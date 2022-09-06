@@ -326,11 +326,9 @@ const PluridRouterBrowser = (
 
     return (
         <>
-            {fadeIn && (
-                <FadeIn
-                    time={fadeIn}
-                />
-            )}
+            <FadeIn
+                time={fadeIn}
+            />
 
             <PluridScrollTop
                 ref={topContainer}

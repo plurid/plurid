@@ -41,15 +41,17 @@ const FadeIn: React.FC<FadeInProperties> = (
 
     // #region effects
     useEffect(() => {
-        setTimeout(() => {
-            setFadedIn(true);
-        }, time);
+        if (time > 0) {
+            setTimeout(() => {
+                setFadedIn(true);
+            }, time);
+        }
     }, []);
     // #endregion effects
 
 
     // #region render
-    if (fadedIn) {
+    if (fadedIn || time === 0) {
         return (<></>);
     }
 
