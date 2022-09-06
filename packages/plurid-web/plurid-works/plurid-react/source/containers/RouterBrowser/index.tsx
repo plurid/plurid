@@ -74,6 +74,7 @@ const PluridRouterBrowser = (
         shell,
         hostname,
         scrollToTop,
+        fadeIn: fadeInProperty,
 
         static: staticContext,
 
@@ -84,6 +85,7 @@ const PluridRouterBrowser = (
     // console.log('staticContext', staticContext)
 
     const notFoundPath = notFoundPathProperty || '/not-found';
+    const fadeIn = fadeInProperty ?? 10;
 
     const pluridPlanes = gatherPluridPlanes(
         routes,
@@ -324,7 +326,11 @@ const PluridRouterBrowser = (
 
     return (
         <>
-            <FadeIn />
+            {fadeIn && (
+                <FadeIn
+                    time={fadeIn}
+                />
+            )}
 
             <PluridScrollTop
                 ref={topContainer}

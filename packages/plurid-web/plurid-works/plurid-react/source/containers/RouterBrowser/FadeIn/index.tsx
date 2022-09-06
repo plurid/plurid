@@ -18,11 +18,19 @@
 
 // #region module
 export interface FadeInProperties {
+    time: number;
 }
 
 const FadeIn: React.FC<FadeInProperties> = (
     properties,
 ) => {
+    // #region properties
+    const {
+        time,
+    } = properties;
+    // #endregion properties
+
+
     // #region state
     const [
         fadedIn,
@@ -35,7 +43,7 @@ const FadeIn: React.FC<FadeInProperties> = (
     useEffect(() => {
         setTimeout(() => {
             setFadedIn(true);
-        }, 10);
+        }, time);
     }, []);
     // #endregion effects
 
