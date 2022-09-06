@@ -94,6 +94,13 @@ export interface PluridRouterProperties<C> {
      * Default: `smooth`.
      */
     scrollToTop?: boolean | 'instant' | 'smooth';
+
+    /**
+     * Fade in from black, in milliseconds.
+     *
+     * Default: `10`
+     */
+    fadeIn?: number;
 }
 
 
