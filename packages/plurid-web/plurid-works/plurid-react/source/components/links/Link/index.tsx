@@ -9,10 +9,6 @@
     } from 'react';
 
     import {
-        flushSync,
-    } from 'react-dom';
-
-    import {
         AnyAction,
         ThunkDispatch,
     } from '@reduxjs/toolkit';
@@ -116,6 +112,7 @@ export interface PluridLinkDispatchProperties {
     dispatchSetTree: DispatchAction<typeof actions.space.setTree>;
     dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
     dispatchUpdateSpaceLinkCoordinates: DispatchAction<typeof actions.space.updateSpaceLinkCoordinates>;
+    dispatchRemovePlane: DispatchAction<typeof actions.space.removePlane>;
 }
 
 export type PluridLinkProperties =
@@ -177,6 +174,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         dispatchSetTree,
         dispatchSetSpaceField,
         dispatchUpdateSpaceLinkCoordinates,
+        dispatchRemovePlane,
         // #endregion dispatch
     } = properties;
 
@@ -204,7 +202,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
     const hoverInTimeout = useRef<null | NodeJS.Timeout>(null);
     const hoverOutTimeout = useRef<null | NodeJS.Timeout>(null);
-    const planeRef = useRef<TreePlane | undefined>();
     // #endregion references
 
 
@@ -341,6 +338,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 plane.linkCoordinates.x === linkCoordinates.x
                 || plane.linkCoordinates.y === linkCoordinates.y
             ) {
+                if (pluridPlaneID === plane.planeID) {
+                    continue;
+                }
+
                 setShowLink(true);
                 setPluridPlaneID(plane.planeID);
             }
@@ -496,13 +497,15 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }
 
     const removePlane = () => {
-        const updatedTree = space.tree.logic.removePlaneFromTree(
-            objects.clone((stateTree)),
-            pluridPlaneID,
-        );
+        const pluridPlane = document.getElementById(pluridPlaneID);
+        if (!pluridPlane) {
+            // already removed
+            return;
+        }
 
-        dispatchSetTree(updatedTree);
-        setShowLink(show => !show);
+        dispatchRemovePlane(pluridPlaneID);
+
+        setShowLink(false);
         setShowPreview(false);
     }
 
@@ -546,22 +549,24 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
      * Get Plurid Link Coordinates
      */
     useEffect(() => {
-        const parentPlaneID = getPluridPlaneIDByData(linkElement.current);
-        setParentPlaneID(parentPlaneID);
+        const newParentPlaneID = getPluridPlaneIDByData(linkElement.current);
+        setParentPlaneID(newParentPlaneID);
 
         const linkCoordinates = getPluridLinkCoordinates();
         setLinkCoordinates(linkCoordinates);
 
         const parentPlane = space.tree.logic.getTreePlaneByID(
             stateTree,
-            parentPlaneID,
+            newParentPlaneID,
         );
 
         assignTreePlaneToLink(
             parentPlane,
             linkCoordinates,
         );
-    }, []);
+    }, [
+        // JSON.stringify(stateTree),
+    ]);
 
     /**
      * Update Link Coordinates
@@ -617,21 +622,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         preview,
         mouseOver,
     ]);
-
-    /** Set plane ID */
-    useEffect(() => {
-        if (absolutePlaneRoute) {
-            // const potentialPlaneRoute = statePlaneSources[absolutePlaneRoute.resolvedPath];
-
-            // if (!potentialPlaneRoute) {
-            //     for (const planeRoute of Object.keys(statePlaneSources)) {
-            //         // check each one
-            //     }
-            // }
-
-            // setPlaneID(potentialPlaneRoute);
-        }
-    }, []);
 
     /** PubSub Open Closed Plane */
     useEffect(() => {
@@ -696,16 +686,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     /** Unmount */
     useEffect(() => {
-        // use reference to update plane values
-        const plane = space.tree.logic.getTreePlaneByID(stateTree, pluridPlaneID);
-        planeRef.current = plane;
-
         return () => {
             setTimeout(() => {
                 if (
-                    showLink
+                    pluridPlaneID
+                    && showLink
                     && linkElement.current === null
-                    && planeRef.current?.show === false
                 ) {
                     /**
                      * The plurid plane is active
@@ -796,6 +782,11 @@ const mapDispatchToProperties = (
         payload,
     ) => dispatch(
         actions.space.updateSpaceLinkCoordinates(payload)
+    ),
+    dispatchRemovePlane: (
+        payload,
+    ) => dispatch(
+        actions.space.removePlane(payload)
     ),
 });
 

@@ -8,6 +8,7 @@
 
     import {
         mathematics,
+        objects,
     } from '@plurid/plurid-functions';
 
     import {
@@ -33,6 +34,7 @@
 
     import {
         generalEngine,
+        space as spaceEngine,
     } from '~services/engine';
     // #endregion external
 
@@ -485,6 +487,17 @@ export const space = createSlice({
             action: PayloadAction<PluridApplicationView>,
         ) => {
             state.culledView = action.payload;
+        },
+
+        removePlane: (
+            state,
+            action: PayloadAction<string>,
+        ) => {
+            const updatedTree = spaceEngine.tree.logic.removePlaneFromTree(
+                objects.clone(state.tree),
+                action.payload,
+            );
+            state.tree = updatedTree;
         },
     },
 });
