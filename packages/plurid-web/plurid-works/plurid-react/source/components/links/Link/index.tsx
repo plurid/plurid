@@ -9,6 +9,10 @@
     } from 'react';
 
     import {
+        flushSync,
+    } from 'react-dom';
+
+    import {
         AnyAction,
         ThunkDispatch,
     } from '@reduxjs/toolkit';
@@ -320,6 +324,30 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         updateLinkCoordinates();
     }, PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME);
 
+    const assignTreePlaneToLink = (
+        parentPlane: TreePlane | undefined,
+        linkCoordinates: PluridLinkCoordinates,
+    ) => {
+        if (!parentPlane || !parentPlane.children) {
+            return;
+        }
+
+        for (const plane of parentPlane.children) {
+            if (!plane.linkCoordinates) {
+                continue;
+            }
+
+            if (
+                plane.linkCoordinates.x === linkCoordinates.x
+                || plane.linkCoordinates.y === linkCoordinates.y
+            ) {
+                setShowLink(true);
+                setPluridPlaneID(plane.planeID);
+            }
+        }
+    }
+
+
     const updateTreeWithLink = (
         event: React.MouseEvent<HTMLAnchorElement>,
     ) => {
@@ -523,6 +551,16 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         const linkCoordinates = getPluridLinkCoordinates();
         setLinkCoordinates(linkCoordinates);
+
+        const parentPlane = space.tree.logic.getTreePlaneByID(
+            stateTree,
+            parentPlaneID,
+        );
+
+        assignTreePlaneToLink(
+            parentPlane,
+            linkCoordinates,
+        );
     }, []);
 
     /**
