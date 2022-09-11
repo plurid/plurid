@@ -578,7 +578,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                         ];
                         dispatchSpaceSetView(updatedView);
 
-                        treeUpdate(updatedView);
+                        treeUpdate(updatedView, undefined, true);
                     },
                 },
                 {
@@ -592,7 +592,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                             ...view,
                         ]);
 
-                        treeUpdate(view);
+                        treeUpdate(view, undefined, true);
                     },
                 },
                 {
