@@ -390,6 +390,7 @@ const PluridView: React.FC<PluridViewProperties> = (
         treeUpdate(
             stateSpaceView,
             stateConfiguration,
+            true,
         );
     }, [
         hostname,
