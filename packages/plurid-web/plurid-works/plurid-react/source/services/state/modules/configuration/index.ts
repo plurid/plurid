@@ -44,11 +44,10 @@ export const configuration = createSlice({
     initialState,
     reducers: {
         setConfiguration: (
-            state,
+            _state,
             action: PayloadAction<PluridConfiguration>,
         ) => {
-            state = {
-                ...state,
+            return {
                 ...action.payload,
             };
         },

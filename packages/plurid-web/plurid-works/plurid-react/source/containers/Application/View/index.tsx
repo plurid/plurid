@@ -1083,7 +1083,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             }
         }, [
             stateSpaceView,
-            stateConfiguration,
+            JSON.stringify(stateConfiguration),
             JSON.stringify(stateTree),
         ]);
         // #endregion effects listeners
@@ -1213,6 +1213,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             state.space.lastClosedPlane,
             pluridPubSub.length,
             JSON.stringify(stateTree),
+            JSON.stringify(stateConfiguration),
         ]);
 
         /** PubSub Publish */
@@ -1222,7 +1223,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             }
         }, [
             pluridPubSub.length,
-            stateConfiguration,
+            JSON.stringify(stateConfiguration),
             stateTransform,
         ]);
         // #endregion effects pubsub
