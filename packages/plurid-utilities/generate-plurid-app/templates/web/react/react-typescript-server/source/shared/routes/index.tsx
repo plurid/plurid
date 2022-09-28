@@ -9,11 +9,14 @@
 
 
     // #region external
-    import IndexPagePlane from '../kernel/planes/Index/Page';
-    import NotFoundPlane from '../kernel/planes/NotFound';
-    import StaticPlane from '../kernel/planes/Static';
+    import Head from '~kernel-components/Head';
 
-    import Head from '../kernel/components/Head';
+    import IndexPagePlane from '~kernel-planes/Index/Page';
+    import NotFoundPlane from '~kernel-planes/NotFound';
+    import StaticPlane from '~kernel-planes/Static';
+
+    import Home from '~kernel-containers/Home';
+    import ClientApplication from '~kernel-containers/ClientApplication';
     // #endregion external
 // #endregion imports
 
@@ -22,7 +25,7 @@
 // #region module
 const indexRoute: PluridReactRoute = {
     value: '/',
-    exterior: Head,
+    exterior: Home,
     planes: [
         [
             '/plane',
@@ -38,6 +41,12 @@ const indexRoute: PluridReactRoute = {
 const staticRoute: PluridReactRoute = {
     value: '/static',
     exterior: StaticPlane,
+};
+
+
+const clientRoute: PluridReactRoute = {
+    value: '/client',
+    exterior: ClientApplication,
 };
 
 
@@ -121,6 +130,7 @@ const notFoundRoute: PluridReactRoute = {
 const routes: PluridReactRoute[] = [
     indexRoute,
     staticRoute,
+    clientRoute,
     planesRoute,
     parametricRoute,
     notFoundRoute,

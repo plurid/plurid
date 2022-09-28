@@ -35,6 +35,10 @@
 
 
     // #region external
+    import {
+        routerProperties,
+    } from '~shared/data/constants';
+
     import helmetContext from '~kernel-services/helmet';
 
     // [START ReduxStore]
@@ -89,6 +93,7 @@ const Client: React.FC<any> = () => {
                                 shell={shell}
                                 routes={routes}
                                 planes={planes}
+                                {...routerProperties}
                             />
                         </PluridProvider>
                     {/* </StripeProvider> */}

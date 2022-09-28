@@ -9,10 +9,17 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
+
+    import {
+        PluridRouteComponentProperty,
+        PluridPubSub,
+    } from '@plurid/plurid-react';
     // #endregion libraries
 
 
     // #region external
+    import Head from '~kernel-components/Head';
+
     import { AppState } from '~kernel-services/state/store';
     import StateContext from '~kernel-services/state/context';
     import selectors from '~kernel-services/state/selectors';
@@ -31,6 +38,8 @@
 
 // #region module
 export interface HomeOwnProperties {
+    plurid: PluridRouteComponentProperty;
+    pubsub: PluridPubSub;
 }
 
 export interface HomeStateProperties {
@@ -51,9 +60,15 @@ const Home: React.FC<HomeProperties> = (
 ) => {
     // #region properties
     // const {
-        // /** state */
-        // stateGeneralTheme,
-        // stateInteractionTheme,
+    //     // #region own
+    //     plurid,
+    //     pubsub,
+    //     // #endregion own
+
+    //     // #region state
+    //     stateGeneralTheme,
+    //     stateInteractionTheme,
+    //     // #endregion state
     // } = properties;
     // #endregion properties
 
@@ -61,7 +76,7 @@ const Home: React.FC<HomeProperties> = (
     // #region render
     return (
         <StyledHome>
-            Home
+            <Head />
         </StyledHome>
     );
     // #endregion render
