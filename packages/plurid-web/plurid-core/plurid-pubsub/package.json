@@ -51,7 +51,7 @@
         "@plurid/plurid-data": "^0.0.0-20",
         "@plurid/plurid-themes": "^0.0.0-2",
         "@types/jest": "^29.1.1",
-        "@types/node": "^18.7.23",
+        "@types/node": "^18.8.0",
         "@typescript-eslint/eslint-plugin": "^5.38.1",
         "@typescript-eslint/parser": "^5.38.1",
         "@zerollup/ts-transform-paths": "^1.7.18",
