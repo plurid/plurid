@@ -37,7 +37,6 @@
     "scripts": {
         "clean": "rm -rf ./distribution",
         "lint": "eslint ./source --ext .ts,.tsx",
-        "start": "pnpm clean && rollup -c ./scripts/rollup.config.js -w --environment ENV_MODE:local",
         "build.development": "pnpm clean && rollup -c ./scripts/rollup.config.js --environment ENV_MODE:local --bundleConfigAsCjs",
         "build.production": "rollup -c ./scripts/rollup.config.js --environment ENV_MODE:production --bundleConfigAsCjs",
         "build": "pnpm clean && pnpm build.production",
