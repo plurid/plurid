@@ -1,9 +1,11 @@
 const esbuild = require('esbuild');
+
 const common = require('./common');
 
 
 
 esbuild.build({
+    ...common,
     entryPoints: [
         'source/client/index.tsx',
     ],
@@ -14,5 +16,4 @@ esbuild.build({
         'process.env.PLURID_LIVE_SERVER': JSON.stringify(''),
         global: 'window',
     },
-    ...common,
 });

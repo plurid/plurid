@@ -1,11 +1,13 @@
 const esbuild = require('esbuild');
+
 const common = require('./common');
 
-const pkg = require('../../package.json');
+const pkg = require('../../../package.json');
 
 const {
-    esModules,
-} = require('../custom');
+    resolvedESModules: esModules,
+    resolvedExternals: externals,
+} = require('../logic');
 
 
 
@@ -15,15 +17,16 @@ const external = esModules.length === 0
         ...Object
             .keys(pkg.dependencies)
             .filter(dependency => !esModules.includes(dependency)),
+        ...externals,
     ];
 
 
 esbuild.build({
+    ...common,
     entryPoints: [
         'source/server/index.ts',
     ],
     platform: 'node',
     external,
     outdir: 'build',
-    ...common,
 });
