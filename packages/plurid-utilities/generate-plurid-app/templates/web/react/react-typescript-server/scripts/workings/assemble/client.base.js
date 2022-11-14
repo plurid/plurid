@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -18,8 +18,8 @@ const {
 
 
 /** CONSTANTS */
-const entryIndex = path.resolve(__dirname, '../../source/client/index.tsx');
-const outputPath = path.resolve(__dirname, `../../${BUILD_DIRECTORY}/client`);
+const entryIndex = path.resolve(__dirname, '../../../source/client/index.tsx');
+const outputPath = path.resolve(__dirname, `../../../${BUILD_DIRECTORY}/client`);
 
 const styledComponentsTransformer = createStyledComponentsTransformer({
     ssr: true,
@@ -31,7 +31,7 @@ const styledComponentsTransformer = createStyledComponentsTransformer({
 const copyPlugin = new CopyPlugin({
     patterns: [
         {
-            from: path.resolve(__dirname, '../../source/public'),
+            from: path.resolve(__dirname, '../../../source/public'),
             to: './',
         },
     ],
@@ -93,7 +93,7 @@ const tsRule = {
         {
             loader: 'ts-loader',
             options: {
-                configFile: path.resolve(__dirname, '../../tsconfig.json'),
+                configFile: path.resolve(__dirname, '../../../tsconfig.json'),
                 getCustomTransformers: () => ({
                     before: [styledComponentsTransformer]
                 }),
@@ -127,13 +127,9 @@ const baseConfig = {
 
         plugins: [
             new TsconfigPathsPlugin({
-                configFile: path.resolve(__dirname, '../../tsconfig.json'),
+                configFile: path.resolve(__dirname, '../../../tsconfig.json'),
             }),
         ],
-
-        alias: {
-            crypto: false,
-        },
     },
 
     stats: {

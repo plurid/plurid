@@ -11,12 +11,13 @@ const common = {
         '.mov': 'file',
     },
     watch: {
-        onRebuild(error, result) {
+        onRebuild(error, _result) {
             if (error) console.error('watch build failed:', error)
             else console.log('watch build succeeded')
         },
     },
 };
+
 
 
 module.exports = common;
