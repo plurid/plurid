@@ -13,6 +13,10 @@
     } from './data/interfaces';
 
     import {
+        VERSION,
+    } from './data/constants';
+
+    import {
         inquire,
         questions,
     } from './inquire';
@@ -26,7 +30,7 @@
 // #region module
 async function main(program: Command) {
     program
-        .version('0.0.0-0', '-v, --version');
+        .version(VERSION, '-v, --version');
 
     if (process.argv.length === 2) {
         program

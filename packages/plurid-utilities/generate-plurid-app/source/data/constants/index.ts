@@ -14,6 +14,9 @@
 
 
 // #region module
+export const VERSION = '__#VERSION#__';
+
+
 export const languageTypeScript = 'TypeScript';
 export const languageJavaScript = 'JavaScript';
 export const language: ILanguage = {
