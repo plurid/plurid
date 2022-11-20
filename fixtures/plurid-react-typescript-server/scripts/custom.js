@@ -13,6 +13,13 @@ const externals = [
 ];
 
 
+const environment = {
+    // add environment variables replacements for frontend, e.g.
+    // 'process.env.ENV_NAME': JSON.stringify(process.env.ENV_NAME || ''),
+};
+
+
 
 exports.esModules = esModules;
 exports.externals = externals;
+exports.environment = environment;
