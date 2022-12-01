@@ -12,7 +12,7 @@
 export const pluridRouterNavigate = (
     path: string,
 ) => {
-    if (!CustomEvent || !window) {
+    if (typeof CustomEvent === 'undefined' || typeof window === 'undefined') {
         return;
     }
 
