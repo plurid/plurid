@@ -375,6 +375,20 @@ export interface PluridPubSubSubscribeMessageNavigateToRoot {
 }
 
 
+export type PluridPubSubMessageSetPlanePath = {
+    id: string;
+    value: string;
+}
+export interface PluridPubSubPublishMessageSetPlanePath {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_PLANE_PATH;
+    data: PluridPubSubMessageSetPlanePath;
+}
+export interface PluridPubSubSubscribeMessageSetPlanePath {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_PLANE_PATH;
+    callback: PluridPubSubCallback<PluridPubSubMessageSetPlanePath>;
+}
+
+
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
     | PluridPubSubPublishMessageSpaceAnimatedTransform
@@ -411,6 +425,7 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessagePreviousRoot
     | PluridPubSubPublishMessageNextRoot
     | PluridPubSubPublishMessageNavigateToRoot
+    | PluridPubSubPublishMessageSetPlanePath
     ;
 
 
@@ -450,5 +465,6 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessagePreviousRoot
     | PluridPubSubSubscribeMessageNextRoot
     | PluridPubSubSubscribeMessageNavigateToRoot
+    | PluridPubSubSubscribeMessageSetPlanePath
     ;
 // #endregion module
