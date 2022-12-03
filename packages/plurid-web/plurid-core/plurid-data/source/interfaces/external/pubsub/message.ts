@@ -266,11 +266,13 @@ export interface PluridPubSubSubscribeMessageViewAddPlane {
 
 export interface PluridPubSubPublishMessageViewSetPlanes {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES;
-    data?: any;
+    data?: {
+        view: string[];
+    };
 }
 export interface PluridPubSubSubscribeMessageViewSetPlanes {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES;
-    callback: PluridPubSubCallback<any>;
+    callback: PluridPubSubCallback<PluridPubSubPublishMessageViewSetPlanes>;
 }
 
 export interface PluridPubSubMessageViewRemovePlaneData {
