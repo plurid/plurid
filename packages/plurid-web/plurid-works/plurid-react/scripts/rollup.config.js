@@ -18,6 +18,7 @@ export default [
             dir: 'distribution',
             format: 'cjs',
             exports: 'named',
+            interop: 'auto',
             sourcemap: true,
         },
         plugins,
@@ -28,6 +29,7 @@ export default [
             file: `./distribution/index.es.js`,
             format: 'es',
             exports: 'named',
+            interop: 'auto',
             sourcemap: true,
         },
         plugins,
@@ -38,6 +40,7 @@ export default [
             file: 'distribution/index.min.js',
             format: 'cjs',
             exports: 'named',
+            interop: 'auto',
             sourcemap: true,
         },
         plugins: [
