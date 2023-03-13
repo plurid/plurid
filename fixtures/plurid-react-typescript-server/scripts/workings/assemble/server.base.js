@@ -9,7 +9,7 @@ const resolve = require('@rollup/plugin-node-resolve').default;
 const commonjs = require('@rollup/plugin-commonjs');
 const sourceMaps = require('rollup-plugin-sourcemaps');
 const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
-const { terser } = require('rollup-plugin-terser');
+const terser = require('@rollup/plugin-terser');
 
 
 const {
