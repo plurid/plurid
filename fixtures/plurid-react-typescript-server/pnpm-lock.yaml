@@ -33,11 +33,11 @@ dependencies:
     specifier: ^0.0.0-9
     version: 0.0.0-9(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-themes@0.0.0-2)
   '@plurid/plurid-react':
-    specifier: ^0.0.0-33
-    version: 0.0.0-33(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(@reduxjs/toolkit@1.9.5)(cross-fetch@3.1.6)(hammerjs@2.0.8)(react-dom@18.2.0)(react-redux@8.1.0)(react@18.2.0)(rollup@3.25.1)(styled-components@5.3.11)
+    specifier: ^0.0.0-34
+    version: 0.0.0-34(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(@reduxjs/toolkit@1.9.5)(cross-fetch@3.1.6)(hammerjs@2.0.8)(react-dom@18.2.0)(react-redux@8.1.0)(react@18.2.0)(rollup@3.25.1)(styled-components@5.3.11)
   '@plurid/plurid-react-server':
     specifier: ^0.0.0-15
-    version: 0.0.0-15(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-react@0.0.0-33)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(cross-fetch@3.1.6)(react-dom@18.2.0)(react-helmet-async@1.3.0)(react-redux@8.1.0)(react@18.2.0)(redux@4.2.1)(styled-components@5.3.11)
+    version: 0.0.0-15(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-react@0.0.0-34)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(cross-fetch@3.1.6)(react-dom@18.2.0)(react-helmet-async@1.3.0)(react-redux@8.1.0)(react@18.2.0)(redux@4.2.1)(styled-components@5.3.11)
   '@plurid/plurid-themes':
     specifier: ^0.0.0-2
     version: 0.0.0-2
@@ -1287,7 +1287,7 @@ packages:
       '@plurid/plurid-themes': 0.0.0-2
     dev: false
 
-  /@plurid/plurid-react-server@0.0.0-15(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-react@0.0.0-33)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(cross-fetch@3.1.6)(react-dom@18.2.0)(react-helmet-async@1.3.0)(react-redux@8.1.0)(react@18.2.0)(redux@4.2.1)(styled-components@5.3.11):
+  /@plurid/plurid-react-server@0.0.0-15(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-react@0.0.0-34)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(cross-fetch@3.1.6)(react-dom@18.2.0)(react-helmet-async@1.3.0)(react-redux@8.1.0)(react@18.2.0)(redux@4.2.1)(styled-components@5.3.11):
     resolution: {integrity: sha512-zG3n3sIqA1ugvl2iPwgTvirD5c1Y17t7Q+C6fSCXILyR4cd5WznkW8fYiHJzQTGP/q6KedwEbsBHjvpUceBkwg==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
@@ -1319,7 +1319,7 @@ packages:
       '@plurid/plurid-functions-react': 0.0.0-5(react@18.2.0)
       '@plurid/plurid-icons-react': 0.0.0-5(@plurid/plurid-themes@0.0.0-2)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.11)
       '@plurid/plurid-pubsub': 0.0.0-9(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-themes@0.0.0-2)
-      '@plurid/plurid-react': 0.0.0-33(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(@reduxjs/toolkit@1.9.5)(cross-fetch@3.1.6)(hammerjs@2.0.8)(react-dom@18.2.0)(react-redux@8.1.0)(react@18.2.0)(rollup@3.25.1)(styled-components@5.3.11)
+      '@plurid/plurid-react': 0.0.0-34(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(@reduxjs/toolkit@1.9.5)(cross-fetch@3.1.6)(hammerjs@2.0.8)(react-dom@18.2.0)(react-redux@8.1.0)(react@18.2.0)(rollup@3.25.1)(styled-components@5.3.11)
       '@plurid/plurid-themes': 0.0.0-2
       '@plurid/plurid-ui-components-react': 0.0.0-26(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-state-react@0.0.0-11)(@reduxjs/toolkit@1.9.5)(react-dom@18.2.0)(react-redux@8.1.0)(react@18.2.0)(styled-components@5.3.11)
       '@plurid/plurid-ui-state-react': 0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@1.9.5)
@@ -1340,8 +1340,8 @@ packages:
       - supports-color
     dev: false
 
-  /@plurid/plurid-react@0.0.0-33(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(@reduxjs/toolkit@1.9.5)(cross-fetch@3.1.6)(hammerjs@2.0.8)(react-dom@18.2.0)(react-redux@8.1.0)(react@18.2.0)(rollup@3.25.1)(styled-components@5.3.11):
-    resolution: {integrity: sha512-dVizwEkeETeu1JYzQq99na0TM8uu89MYS5a6QU8/FAWcInXkd7g2KuE14OWGVsRfcZAHCSI7UCwJyJVHiPMwUA==}
+  /@plurid/plurid-react@0.0.0-34(@plurid/elementql-client-react@0.0.0-1)(@plurid/elementql@0.0.0-1)(@plurid/plurid-data@0.0.0-20)(@plurid/plurid-engine@0.0.0-18)(@plurid/plurid-functions-react@0.0.0-5)(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5)(@plurid/plurid-pubsub@0.0.0-9)(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-components-react@0.0.0-26)(@plurid/plurid-ui-state-react@0.0.0-11)(@reduxjs/toolkit@1.9.5)(cross-fetch@3.1.6)(hammerjs@2.0.8)(react-dom@18.2.0)(react-redux@8.1.0)(react@18.2.0)(rollup@3.25.1)(styled-components@5.3.11):
+    resolution: {integrity: sha512-5DbZMqmDNnxYTbomV/XBwR4FQvMsJMhXKwNyTK2UiaKdIgHWdcm+IbpdngWsnvrfqsmdvEobD+hWF+WFbpuBiw==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@plurid/elementql': '*'
