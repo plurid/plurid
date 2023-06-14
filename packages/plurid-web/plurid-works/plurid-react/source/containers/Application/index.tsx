@@ -1,6 +1,9 @@
 // #region imports
     // #region libraries
     import React, {
+        // useContext,
+        // useState,
+        // useEffect,
         Component,
     } from 'react';
 
@@ -27,14 +30,14 @@
         PluridReactComponent,
     } from '~data/interfaces';
 
-    import PluridProviderContext from '~containers/Provider/context';
+    // import PluridProviderContext from '~containers/Provider/context';
 
     import store from '~services/state/store';
     import StateContext from '~services/state/context';
 
-    import {
-        loadStateFromContext,
-    } from '~services/logic/state';
+    // import {
+    //     loadStateFromContext,
+    // } from '~services/logic/state';
 
     import {
         state,
@@ -52,13 +55,160 @@
 
 
 // #region module
-class PluridApplication extends Component<
-    PluridApplicationProperties<PluridReactComponent>,
-    any
-> {
-    static contextType = PluridProviderContext;
+// const FCPluridApplication: React.FC<PluridApplicationProperties<PluridReactComponent>> = (
+//     properties,
+// ) => {
+//     // #region properties
 
-    public context!: React.ContextType<typeof PluridProviderContext>;
+//     // #endregion properties
+
+
+//     // #region context
+//     const context = useContext(PluridProviderContext);
+//     // #endregion context
+
+
+//     // #region state
+//     const [planesRegistrar, setPlanesRegistrar] = useState<IPluridPlanesRegistrar<PluridReactComponent> | undefined>(
+//         typeof window === 'undefined' && !properties.planesRegistrar
+//             ? new PluridPlanesRegistrar(
+//                 properties.planes,
+//                 properties.hostname,
+//             ) : properties.planesRegistrar
+//     );
+//     // #endregion state
+
+
+//     // #region handlers
+//     const computeStore = () => {
+//         const {
+//             // id,
+//             view,
+//             planes,
+//             configuration,
+//             precomputedState,
+//             useLocalStorage,
+//             hostname,
+//             space,
+//         } = properties;
+
+//         registerPlanes(
+//             planes,
+//             planesRegistrar,
+//             hostname,
+//         );
+
+//         const currentState = store
+//             ? store.getState()
+//             : undefined;
+
+//         const localState = state.local.load(
+//             storeID,
+//             useLocalStorage,
+//         );
+
+//         const contextState = undefined;
+//         // const contextState = loadStateFromContext(
+//         //     this.context,
+//         //     space,
+//         // );
+//         // console.log({
+//         //     currentState,
+//         //     localState,
+//         //     precomputedState,
+//         //     contextState,
+//         // });
+
+//         const _store = state.compute(
+//             view,
+//             configuration,
+//             planesRegistrar,
+//             currentState,
+//             localState,
+//             precomputedState,
+//             contextState,
+//             hostname,
+//         );
+//         // console.log({
+//         //     store: store.space,
+//         // });
+
+//         return _store as any;
+//     }
+//     // #endregion handlers
+
+
+//     // #region state
+//     const [store, setStore] = useState<Store<PluridState>>(computeStore());
+//     const [storeUnubscriber, setStoreUnubscriber] = useState<ReduxUnsubscribe | undefined>();
+//     const [storeID, setStoreID] = useState<string>(properties.id || 'default');
+//     // #endregion state
+
+
+//     // #region effects
+//     useEffect(() => {
+//         if (!store) {
+//             return;
+//         }
+
+//         if (typeof localStorage === 'undefined') {
+//             return;
+//         }
+
+//         if (!properties.useLocalStorage) {
+//             return;
+//         }
+
+//         const storeUnubscriber = store.subscribe(() => {
+//             const state = store.getState();
+//             const stateData = JSON.stringify(state);
+
+//             localStorage.setItem(
+//                 'pluridState-' + storeID,
+//                 stateData,
+//             );
+//         });
+
+//         return () => {
+//             storeUnubscriber();
+//         }
+//     }, []);
+
+//     useEffect(() => {
+//         const updatedStore = computeStore();
+
+//         store.dispatch({
+//             type: 'SET_STATE',
+//             payload: updatedStore,
+//         });
+//     }, []);
+//     // #endregion effects
+
+
+//     // #region render
+//     return (
+//         <ReduxProvider
+//             store={store}
+//             context={StateContext}
+//         >
+//             <PluridView
+//                 {...properties}
+//                 planesRegistrar={planesRegistrar}
+//             />
+//         </ReduxProvider>
+//     );
+//     // #endregion render
+// }
+
+
+class PluridApplication extends Component<
+    PluridApplicationProperties<PluridReactComponent>
+    // any,
+    // any
+> {
+    // static contextType = PluridProviderContext;
+
+    // public context!: React.ContextType<typeof PluridProviderContext>;
 
     private store: Store<PluridState>;
     private storeUnubscriber: ReduxUnsubscribe | undefined;
@@ -68,12 +218,12 @@ class PluridApplication extends Component<
 
     constructor(
         properties: PluridApplicationProperties<PluridReactComponent>,
-        context: React.ContextType<typeof PluridProviderContext>,
+        // context: React.ContextType<typeof PluridProviderContext>,
     ) {
-        super(properties, context);
+        super(properties);
 
         this.storeID = properties.id || 'default';
-        this.context = context;
+        // this.context = context;
 
         this.prepare();
 
