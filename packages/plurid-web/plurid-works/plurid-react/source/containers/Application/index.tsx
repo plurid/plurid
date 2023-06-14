@@ -54,7 +54,7 @@
 // #region module
 class PluridApplication extends Component<
     PluridApplicationProperties<PluridReactComponent>,
-    {}
+    any | undefined
 > {
     static contextType = PluridProviderContext;
 
