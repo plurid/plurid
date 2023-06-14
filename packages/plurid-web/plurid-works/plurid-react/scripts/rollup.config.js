@@ -1,7 +1,3 @@
-import {
-    terser,
-} from 'rollup-plugin-terser';
-
 import pkg from '../package.json';
 
 import {
@@ -45,7 +41,6 @@ export default [
         },
         plugins: [
             ...plugins,
-            terser(),
         ],
     },
 ];
