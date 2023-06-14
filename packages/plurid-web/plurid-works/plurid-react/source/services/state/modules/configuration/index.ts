@@ -257,7 +257,7 @@ export const configuration = createSlice({
             action: PayloadAction<any>,
         ) => {
             const layout: any = {
-                type: LAYOUT_TYPES[action.payload],
+                type: (LAYOUT_TYPES as any)[action.payload],
             };
 
             state.space.layout = {

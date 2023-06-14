@@ -83,7 +83,7 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
         // #endregion state
     } = properties;
 
-    const arrowSign = arrowSigns[direction] || '';
+    const arrowSign = (arrowSigns as any)[direction] || '';
     // #endregion properties
 
 
