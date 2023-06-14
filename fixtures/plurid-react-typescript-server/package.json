@@ -40,7 +40,7 @@
         "@plurid/plurid-functions-react": "^0.0.0-5",
         "@plurid/plurid-icons-react": "^0.0.0-5",
         "@plurid/plurid-pubsub": "^0.0.0-9",
-        "@plurid/plurid-react": "^0.0.0-32",
+        "@plurid/plurid-react": "^0.0.0-33",
         "@plurid/plurid-react-server": "^0.0.0-15",
         "@plurid/plurid-themes": "^0.0.0-2",
         "@plurid/plurid-ui-components-react": "^0.0.0-26",
