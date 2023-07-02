@@ -72,6 +72,7 @@ const plugins = {
     }),
     resolve: () => resolve({
         preferBuiltins: true,
+        exportConditions: ['node'],
     }),
     commonjs: () => commonjs(),
     sourceMaps: () => sourceMaps(),
