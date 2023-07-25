@@ -8,12 +8,19 @@
 
 
 
+// #region module
+const slice = themes.factory();
+// #endregion module
+
+
+
 // #region exports
-export const actions = themes.actions;
+export const {
+    actions,
+    reducer,
+} = slice;
 
-
-export const selectors = themes.selectors;
-
-
-export const reducer = themes.reducer;
+export const {
+    selectors,
+} = themes;
 // #endregion exports

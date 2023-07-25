@@ -32,13 +32,15 @@ const initialState: GeneralState = {
 
 
 export interface SetGeneralFieldPayload<T = any> {
-    field: string;
+    field: keyof GeneralState;
     value: T;
 }
 
+export const name = 'general' as const;
+
 
 export const general = createSlice({
-    name: 'general',
+    name,
     initialState,
     reducers: {
         setGeneralField: (

@@ -21,12 +21,18 @@ const external = esModules.length === 0
     ];
 
 
-esbuild.build({
-    ...common,
-    entryPoints: [
-        'source/server/index.ts',
-    ],
-    platform: 'node',
-    external,
-    outdir: 'build',
-});
+
+const build = async () => {
+    const context = await esbuild.context({
+        ...common,
+        entryPoints: [
+            'source/server/index.ts',
+        ],
+        platform: 'node',
+        external,
+        outdir: 'build',
+    });
+
+    context.watch();
+}
+build();

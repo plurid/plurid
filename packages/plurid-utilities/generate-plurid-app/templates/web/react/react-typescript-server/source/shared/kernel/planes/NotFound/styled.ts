@@ -15,7 +15,7 @@ export interface IStyledNotFound {
     theme: Theme;
 }
 
-export const StyledNotFound = styled.div`
+export const StyledNotFound = styled.div<IStyledNotFound>`
     text-align: center;
     height: 100%;
     display: grid;
