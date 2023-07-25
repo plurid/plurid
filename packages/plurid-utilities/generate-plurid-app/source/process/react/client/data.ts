@@ -17,7 +17,7 @@ export const requiredPluridReactPackages = [
     'cross-fetch',
     'hammerjs',
     'react-redux',
-    'styled-components',
+    'styled-components@==5.3.11',
     '@types/styled-components',
     'react-scripts',
 ];

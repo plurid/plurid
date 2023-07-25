@@ -23,7 +23,7 @@ export const requiredDependencies = [
     'react-dom',
     'react-helmet-async',
     'react-redux',
-    'styled-components',
+    'styled-components@==5.3.11',
 ];
 
 
@@ -32,6 +32,7 @@ export const requiredDevelopmentDependencies = [
     '@rollup/plugin-commonjs',
     '@rollup/plugin-json',
     '@rollup/plugin-node-resolve',
+    '@rollup/plugin-terser',
     '@rollup/plugin-url',
     '@vitejs/plugin-react',
     'compression-webpack-plugin',
@@ -49,7 +50,6 @@ export const requiredDevelopmentDependencies = [
     'rollup-plugin-node-externals',
     'rollup-plugin-sourcemaps',
     'rollup-plugin-postcss',
-    'rollup-plugin-terser',
     'postcss',
     'source-map-loader',
     'style-loader',
@@ -70,7 +70,6 @@ export const requiredDevelopmentTypescriptDependencies = [
     '@types/react',
     '@types/react-dom',
     '@types/react-redux',
-    '@types/styled-components',
     '@types/styled-components',
     '@types/react-stripe-elements',
     '@typescript-eslint/eslint-plugin',
