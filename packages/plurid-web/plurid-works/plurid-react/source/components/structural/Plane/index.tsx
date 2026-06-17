@@ -343,8 +343,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // console.log('Render plane');
     const key = planeID + '-' + remountKey;
     const focusAnchorID = planeID + FOCUS_ANCHOR_SUFFIX;
-    // const renderWidth = width;
-    const renderWidth = '100%'; // TOFIX
+    // Render the plane at its computed width (matches the layout's translateX spacing,
+    // which is derived from the same `width`). A hardcoded 100% made every plane span the
+    // full viewport, so fractional widths and multi-column layouts overlapped.
+    const renderWidth = width + 'px';
     const isolatePlaneOpacity = computeIsolatePlaneOpacity();
     const isolatePointerEvents = computeIsolatePointerEvents();
     const transform = cleanTemplate(`

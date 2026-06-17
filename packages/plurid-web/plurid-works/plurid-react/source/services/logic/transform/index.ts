@@ -49,12 +49,16 @@ export const computeMatrix = (
         scale,
     } = spaceState;
 
-    const innerWidth = typeof window === 'undefined'
-        ? 720
-        : window.innerWidth / 2;
-    const innerHeight = typeof window === 'undefined'
-        ? 400
-        : window.innerHeight / 2;
+    // Pivot rotation/scale about the center of the *view container* (tracked in state),
+    // not the raw window. This keeps the pivot correct when the space is embedded,
+    // resized, or rendered server-side — `window` is only a last-resort fallback.
+    const viewWidth = spaceState.viewSize?.width
+        ?? (typeof window === 'undefined' ? 1440 : window.innerWidth);
+    const viewHeight = spaceState.viewSize?.height
+        ?? (typeof window === 'undefined' ? 800 : window.innerHeight);
+
+    const innerWidth = viewWidth / 2;
+    const innerHeight = viewHeight / 2;
 
     const transformOriginX = translationX * -1 + innerWidth;
     const transformOriginY = translationY * -1 + innerHeight;

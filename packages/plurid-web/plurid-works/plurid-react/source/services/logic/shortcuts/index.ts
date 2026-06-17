@@ -400,6 +400,12 @@ export const handleGlobalShortcuts = (
 
 
 
+// Smooth-zoom tuning: the scale delta is proportional to wheel/trackpad magnitude
+// (continuous, CAD-like) instead of a fixed quantized step, clamped so a single
+// aggressive notch can't jump across the whole scale range.
+const SCALE_WHEEL_SENSITIVITY = 0.0015;
+const SCALE_WHEEL_MAX_STEP = 0.2;
+
 export const handleGlobalWheel = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     event: WheelEvent,
@@ -540,24 +546,38 @@ export const handleGlobalWheel = (
         }
     }
 
-    if (modes.scale) {
-        if (direction === directions.down && locks.scale) {
-            return dispatch(actions.space.scaleUp());
+    // Smooth, proportional zoom toward the cursor. The wheel/trackpad magnitude drives
+    // the scale delta directly (continuous, not a quantized fixed step), and ⌘/Ctrl+wheel
+    // zooms from any mode — matching trackpad pinch. Convention: wheel up (deltaY < 0) =
+    // zoom in. The point under the cursor stays anchored (CAD-standard).
+    if (modes.scale || event.metaKey || event.ctrlKey) {
+        if (!locks.scale) {
+            return;
         }
 
-        if (direction === directions.up && locks.scale) {
-            return dispatch(actions.space.scaleDown());
-        }
-    }
+        const zoomAmount = Math.min(
+            Math.abs(event.deltaY) * SCALE_WHEEL_SENSITIVITY,
+            SCALE_WHEEL_MAX_STEP,
+        );
 
-    if (event.metaKey || event.ctrlKey) {
-        if (direction === directions.down && locks.scale) {
-            return dispatch(actions.space.scaleUp());
+        if (zoomAmount === 0) {
+            return;
         }
 
-        if (direction === directions.up && locks.scale) {
-            return dispatch(actions.space.scaleDown());
-        }
+        const deltaScale = event.deltaY < 0 ? zoomAmount : -zoomAmount;
+
+        const target = event.currentTarget as HTMLElement | null;
+        const rect = target && target.getBoundingClientRect
+            ? target.getBoundingClientRect()
+            : null;
+        const originX = rect ? event.clientX - rect.left : event.clientX;
+        const originY = rect ? event.clientY - rect.top : event.clientY;
+
+        return dispatch(actions.space.zoomAtPoint({
+            deltaScale,
+            originX,
+            originY,
+        }));
     }
 
     return;

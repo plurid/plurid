@@ -16,6 +16,12 @@
         Provider as ReduxProvider,
     } from 'react-redux';
 
+    import {
+        StyleSheetManager,
+    } from 'styled-components';
+
+    import isPropValid from '@emotion/is-prop-valid';
+
 
     import {
         PluridApplication as PluridApplicationProperties,
@@ -249,15 +255,20 @@ class PluridApplication extends Component<
 
     public render() {
         return (
-            <ReduxProvider
-                store={this.store}
-                context={StateContext}
-            >
-                <PluridView
-                    {...this.props}
-                    planesRegistrar={this.planesRegistrar}
-                />
-            </ReduxProvider>
+            // styled-components v6 no longer auto-filters props, so engine-internal props
+            // (transformMode, show, active, face, …) would leak onto DOM nodes. Forward
+            // only valid HTML/SVG attributes; the styled templates still receive them all.
+            <StyleSheetManager shouldForwardProp={isPropValid}>
+                <ReduxProvider
+                    store={this.store}
+                    context={StateContext}
+                >
+                    <PluridView
+                        {...this.props}
+                        planesRegistrar={this.planesRegistrar}
+                    />
+                </ReduxProvider>
+            </StyleSheetManager>
         );
     }
 

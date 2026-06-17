@@ -3,7 +3,6 @@
     import React, {
         useRef,
         useState,
-        useEffect,
     } from 'react';
 
     import {
@@ -20,10 +19,6 @@
 
 
     // #region external
-    import {
-        loadHammer,
-    } from '~services/utilities/imports';
-
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
@@ -38,7 +33,6 @@
 
     import {
         arrowSigns,
-        events,
     } from './data';
     // #endregion internal
 // #endregion imports
@@ -89,7 +83,6 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
 
     // #region references
     const pressingInterval = useRef<null | NodeJS.Timeout>(null);
-    const arrowElement = useRef<null | HTMLDivElement>(null);
     // #endregion references
 
 
@@ -102,81 +95,45 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
 
 
     // #region handlers
-    const handleTouch = (
-        event: HammerInput,
+    // Press-and-hold via native Pointer Events (replaces HammerJS tap/press): a click
+    // fires one transform; holding repeats it until release or pointer-leave.
+    const startPress = (
+        event: React.PointerEvent,
     ) => {
         const eventData = {
-            altKey: event.srcEvent.altKey,
+            altKey: event.altKey,
         };
 
-        switch (event.type) {
-            case 'tap':
-                transform(eventData);
-                if (pressingInterval.current) {
-                    setPressed(false);
-                    clearInterval(pressingInterval.current);
-                }
-                break;
-            case 'press':
-                setPressed(true);
-                pressingInterval.current = setInterval(() => {
-                    transform(eventData);
-                }, 30);
-                break;
-            case 'pressup':
-                setPressed(false);
-                if (pressingInterval.current) {
-                    clearInterval(pressingInterval.current);
-                }
-                break;
+        transform(eventData);
+        setPressed(true);
+
+        if (pressingInterval.current) {
+            clearInterval(pressingInterval.current);
         }
+        pressingInterval.current = setInterval(() => {
+            transform(eventData);
+        }, 40);
     }
 
-    const handleMouseLeave = () => {
+    const endPress = () => {
+        setPressed(false);
         if (pressingInterval.current) {
-            setPressed(false);
             clearInterval(pressingInterval.current);
+            pressingInterval.current = null;
         }
     }
     // #endregion handlers
 
 
-    // #region effects
-    /** Touch */
-    useEffect(() => {
-        if (typeof window === 'undefined') {
-            return;
-        }
-
-        let touch: HammerManager;
-
-        const loadTouch = async () => {
-            const HammerImport = await loadHammer();
-            const Hammer = HammerImport.default;
-
-            touch = new Hammer((arrowElement as any).current);
-            touch.on(events, handleTouch);
-        }
-        loadTouch();
-
-        return () => {
-            if (touch) {
-                touch.off(events, handleTouch);
-            }
-        }
-    }, [
-        arrowElement.current,
-    ]);
-    // #endregion effects
-
-
     /** render */
     return (
         <StyledPluridTransformArrow
-            ref={arrowElement}
             theme={interactionTheme}
             pressed={pressed}
-            onMouseLeave={() => handleMouseLeave()}
+            onPointerDown={startPress}
+            onPointerUp={endPress}
+            onPointerLeave={endPress}
+            onPointerCancel={endPress}
         >
             {arrowSign}
         </StyledPluridTransformArrow>

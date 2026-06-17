@@ -2,16 +2,22 @@
   "name": "plurid-render-test",
   "private": true,
   "type": "module",
-  "scripts": { "dev": "vite --port 5273", "build": "vite build" },
+  "scripts": {
+    "dev": "vite --port 5273",
+    "build": "vite build"
+  },
   "dependencies": {
     "@plurid/plurid-react": "workspace:*",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "styled-components": "^6.1.19"
+    "immer": "^10",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "styled-components": "^6.4.2"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.6.0",
     "typescript": "^5.9.3",
-    "vite": "^7.1.5"
+    "vite": "^7.1.5",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0"
   }
 }

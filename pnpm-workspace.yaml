@@ -10,6 +10,22 @@ packages:
 # pnpm 11 blocks dependency postinstall scripts by default. esbuild needs its
 # native binary; core-js (donation ad) and puppeteer (Chromium download, unused) do not.
 allowBuilds:
+  '@parcel/watcher': false
   core-js: false
   esbuild: true
   puppeteer: false
+
+# Dedup to single versions. immer 11's new internal types leak through @reduxjs/toolkit
+# 2.12's slice types (TS "WritableNonArrayDraft cannot be named") → RTK pairs with immer 10.
+# react-redux + styled-components must be single instances or the React context breaks
+# (a stray react-redux@8 / styled-components@5 from older @plurid pkgs → blank render).
+overrides:
+  immer: ^10
+  react-redux: ^9
+  styled-components: ^6
+  # Single @types/react copy across the workspace. Two copies (18 from the libs, 19 from
+  # the React-19 harness) leak into styled-components' shared type inference → TS2742
+  # "inferred type cannot be named" in dts builds. The libs externalize react and build
+  # their types against 18.3 (a subset of 19 at the type level); runtime React stays 19.
+  '@types/react': ^18.3
+  '@types/react-dom': ^18.3

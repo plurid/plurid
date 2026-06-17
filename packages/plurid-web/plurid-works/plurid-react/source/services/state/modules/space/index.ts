@@ -403,6 +403,44 @@ export const space = createSlice({
             state.scale = scale;
             state.transform = computeMatrix(state);
         },
+        zoomAtPoint: (
+            state,
+            action: PayloadAction<{
+                deltaScale: number;
+                originX: number;
+                originY: number;
+            }>,
+        ) => {
+            // Zoom toward a screen point (e.g. the cursor) instead of the view center.
+            // With rotation 0 (the common zoom case) the transform-origin terms in
+            // computeMatrix cancel, so a content point maps to screen as
+            // screen = scale·point + translation. To keep the content under
+            // (originX, originY) fixed as scale s → s', the translation must shift by
+            // (origin − translation)·(1 − s'/s). Exact at rotation 0; close otherwise.
+            const {
+                deltaScale,
+                originX,
+                originY,
+            } = action.payload;
+
+            const previousScale = state.scale;
+            const computedScale = previousScale + deltaScale;
+            const nextScale = Math.min(
+                Math.max(computedScale, SCALE_LOWER_LIMIT),
+                SCALE_UPPER_LIMIT,
+            );
+
+            if (nextScale === previousScale) {
+                return;
+            }
+
+            const ratio = 1 - (nextScale / previousScale);
+
+            state.translationX += (originX - state.translationX) * ratio;
+            state.translationY += (originY - state.translationY) * ratio;
+            state.scale = nextScale;
+            state.transform = computeMatrix(state);
+        },
         scaleDownWith: (
             state,
             action: PayloadAction<number>,

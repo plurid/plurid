@@ -1,0 +1,6 @@
+{
+    "name": "plurid-engine-workspace",
+    "version": "0.0.0",
+    "private": true,
+    "description": "Plurid engine monorepo root. Overrides + allowBuilds live in pnpm-workspace.yaml (pnpm 11 no longer reads the package.json pnpm field)."
+}

@@ -186,7 +186,42 @@ export {
 
 
     // #region Utilities
-    /** Interfaces */
+    /** Enumerations */
+    SPACE_LAYOUT,
+    SIZES,
+    TRANSFORM_MODES,
+    TRANSFORM_TOUCHES,
+    PLURID_ROUTER_LOCATION_CHANGED,
+    PLURID_ROUTER_LOCATION_STORED,
+
+    /** Engine */
+    PluridIsoMatcher,
+    PluridRouteParser,
+
+    /** PubSub */
+    PluridPubSub,
+    PLURID_PUBSUB_TOPIC,
+
+    /** Server */
+    serverComputeMetastate,
+
+    /** Router */
+    pluridRouterNavigate,
+    usePluridRouter,
+
+    getDirectPlaneMatch,
+
+    /** state */
+    pluridStateModules,
+
+    internals,
+    // #endregion Utilities
+};
+
+
+// Type-only re-exports use `export type` so esbuild (per-file transpile) elides them at
+// runtime, instead of emitting runtime re-exports of names that have no JS value.
+export type {
     Theme,
 
     PluridPlane,
@@ -222,37 +257,6 @@ export {
     PluridConfiguration,
     PluridPartialConfiguration,
     RecursivePartial,
-
-    /** Enumerations */
-    SPACE_LAYOUT,
-    SIZES,
-    TRANSFORM_MODES,
-    TRANSFORM_TOUCHES,
-    PLURID_ROUTER_LOCATION_CHANGED,
-    PLURID_ROUTER_LOCATION_STORED,
-
-    /** Engine */
-    PluridIsoMatcher,
-    PluridRouteParser,
-
-    /** PubSub */
-    PluridPubSub,
-    PLURID_PUBSUB_TOPIC,
-
-    /** Server */
-    serverComputeMetastate,
-
-    /** Router */
-    pluridRouterNavigate,
-    usePluridRouter,
-
-    getDirectPlaneMatch,
-
-    /** state */
-    pluridStateModules,
-
-    internals,
-    // #endregion Utilities
 };
 
 

@@ -62,6 +62,15 @@ export const GlobalStyle = createGlobalStyle<IGlobalStyle>`
 
 
 export const StyledView: any = styled.div`
+    /* Anchor the engine's typography to its own root so the host page's body/reset font
+       can't cascade into the toolbar and the rest of the engine UI. The global html rule
+       only sets a default; a consumer styling the body font would otherwise win since body
+       is a closer ancestor. Setting it here (the closest engine ancestor) keeps the UI
+       consistent regardless of the host's styles. */
+    font-family: ${(props: any) =>
+        props.theme?.fontFamilySansSerif
+        || "system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, sans-serif"};
+
     height: 100%;
     min-height: ${(props: any) => {
         if (
