@@ -1,0 +1,15 @@
+# Plurid engine monorepo workspace (added 2026-06-17 for the modernization).
+# Links the engine packages locally so they build + resolve against each other,
+# instead of each pulling published alpha versions from npm.
+packages:
+  - 'packages/plurid-web/plurid-core/*'
+  - 'packages/plurid-web/plurid-works/*'
+  - 'packages/plurid-utilities/*'
+  - 'fixtures/render-test'
+
+# pnpm 11 blocks dependency postinstall scripts by default. esbuild needs its
+# native binary; core-js (donation ad) and puppeteer (Chromium download, unused) do not.
+allowBuilds:
+  core-js: false
+  esbuild: true
+  puppeteer: false
