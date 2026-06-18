@@ -684,7 +684,14 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         JSON.stringify(stateTree),
     ]);
 
-    /** Unmount */
+    /**
+     * Unmount cleanup. The short timeout is deliberate: on unmount React may immediately
+     * remount the link during reconciliation, which re-sets `linkElement.current`. If the
+     * ref is STILL null on the next tick, the link is genuinely gone from the DOM and its
+     * spawned plane should be removed. Deps are only the values the cleanup reads
+     * (`pluridPlaneID`, `showLink`) — NOT `JSON.stringify(stateTree)`, which re-ran this
+     * effect (and scheduled a throwaway timer) on every tree mutation.
+     */
     useEffect(() => {
         return () => {
             setTimeout(() => {
@@ -693,20 +700,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                     && showLink
                     && linkElement.current === null
                 ) {
-                    /**
-                     * The plurid plane is active
-                     * but the link element has been removed from the DOM.
-                     */
                     removePlane();
                 }
             }, 10);
         }
     }, [
         showLink,
-        showPreview,
         pluridPlaneID,
-        parentPlaneID,
-        JSON.stringify(stateTree),
     ]);
     // #endregion effects
 
