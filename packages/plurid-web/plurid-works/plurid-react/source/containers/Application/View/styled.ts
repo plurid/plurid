@@ -97,6 +97,9 @@ export const StyledView: any = styled.div`
     outline: none;
     overflow: hidden;
 
+    /* The space is always a navigation surface (orbit/pan/zoom work in any mode, including
+       the default ALL), so suppress text-selection / native drag / tap highlight and show a
+       grab cursor — like a CAD viewport. Explicit transform modes get a hint cursor. */
     cursor: ${(props: any) => {
         if (
             props.transformMode === TRANSFORM_MODES.TRANSLATION
@@ -109,32 +112,12 @@ export const StyledView: any = styled.div`
         ) {
             return 'ns-resize';
         }
-        return 'initial';
+        return 'grab';
     }};
-    user-select: ${(props: any) => {
-        if (props.transformMode !== 'ALL') {
-            return 'none';
-        }
-        return 'initial !important';
-    }};
-    touch-action: ${(props: any) => {
-        if (props.transformMode !== 'ALL') {
-            return 'none !important';
-        }
-        return 'initial !important';
-    }};
-    -webkit-user-drag: ${(props: any) => {
-        if (props.transformMode !== 'ALL') {
-            return 'none';
-        }
-        return 'initial !important';
-    }};
-    -webkit-tap-highlight-color: ${(props: any) => {
-        if (props.transformMode !== 'ALL') {
-            return 'rgba(0, 0, 0, 0)';
-        }
-        return 'initial !important';
-    }};
+    user-select: none;
+    touch-action: none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 `;
 
 

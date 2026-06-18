@@ -1,6 +1,10 @@
 // #region imports
     // #region libraries
     import {
+        createSelector,
+    } from '@reduxjs/toolkit';
+
+    import {
         TreePlane,
         SpaceTransform,
     } from '@plurid/plurid-data';
@@ -31,14 +35,33 @@ export const getTranslationY = (state: AppState): number => state.space.translat
 export const getTranslationZ = (state: AppState): number => state.space.translationZ;
 export const getScale = (state: AppState): number => state.space.scale;
 export const getTree = (state: AppState): TreePlane[] => state.space.tree;
-export const getTransform = (state: AppState) => ({
-    rotationX: state.space.rotationX,
-    rotationY: state.space.rotationY,
-    translationX: state.space.translationX,
-    translationY: state.space.translationY,
-    translationZ: state.space.translationZ,
-    scale: state.space.scale,
-} as SpaceTransform)
+// Memoized: returns a stable object reference unless one of the six transform scalars
+// changes, so consumers (Viewcube, View) don't re-render on unrelated state updates.
+export const getTransform = createSelector(
+    [
+        getRotationX,
+        getRotationY,
+        getTranslationX,
+        getTranslationY,
+        getTranslationZ,
+        getScale,
+    ],
+    (
+        rotationX,
+        rotationY,
+        translationX,
+        translationY,
+        translationZ,
+        scale,
+    ) => ({
+        rotationX,
+        rotationY,
+        translationX,
+        translationY,
+        translationZ,
+        scale,
+    } as SpaceTransform),
+)
 export const getActiveUniverseID = (state: AppState) => state.space.activeUniverseID;
 
 export const getView = (state: AppState) => state.space.view;

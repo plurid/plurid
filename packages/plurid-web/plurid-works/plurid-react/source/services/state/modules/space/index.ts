@@ -467,6 +467,48 @@ export const space = createSlice({
         ) => {
             state.activeUniverseID = action.payload;
         },
+        flyMove: (
+            state,
+            action: PayloadAction<{
+                forward?: number;
+                strafe?: number;
+                vertical?: number;
+                yaw?: number;
+                pitch?: number;
+            }>,
+        ) => {
+            // Continuous first-person ("fly") step. Applies camera-relative translation +
+            // look deltas in one shot (driven per animation frame by held keys / mouse),
+            // mirroring the viewCamera* sign conventions. Pitch is clamped to avoid flipping
+            // the view past vertical.
+            const {
+                forward = 0,
+                strafe = 0,
+                vertical = 0,
+                yaw = 0,
+                pitch = 0,
+            } = action.payload;
+
+            if (yaw !== 0) {
+                state.rotationY = state.rotationY + yaw;
+            }
+            if (pitch !== 0) {
+                state.rotationX = Math.max(-85, Math.min(85, state.rotationX + pitch));
+            }
+            if (forward !== 0) {
+                state.translationZ += forward * Math.cos(toRadians(-state.rotationY));
+                state.translationX += forward * Math.sin(toRadians(-state.rotationY));
+            }
+            if (strafe !== 0) {
+                state.translationX += strafe * Math.cos(toRadians(state.rotationY));
+                state.translationZ += strafe * Math.sin(toRadians(state.rotationY));
+            }
+            if (vertical !== 0) {
+                state.translationY += vertical;
+            }
+
+            state.transform = computeMatrix(state);
+        },
         spaceResetTransform: (
             state,
         ) => {
@@ -476,6 +518,53 @@ export const space = createSlice({
             state.translationX = 0;
             state.translationY = 0;
             state.translationZ = 0;
+            state.transform = computeMatrix(state);
+        },
+        spaceFitToView: (
+            state,
+        ) => {
+            // Frame all root planes: front-on (rotation 0), scaled + centered so the whole
+            // layout fits the viewport. At rotation 0 a content point maps to screen as
+            // screen = scale·point + translation, so centering the layout's bounding box on
+            // the view center gives translation = viewCenter − scale·boxCenter.
+            const roots = state.tree;
+            if (!roots || roots.length === 0) {
+                return;
+            }
+
+            let minX = Infinity;
+            let maxX = -Infinity;
+            let minY = Infinity;
+            let maxY = -Infinity;
+            for (const plane of roots) {
+                const x = plane.location.translateX;
+                const y = plane.location.translateY;
+                const w = plane.width || 0;
+                const h = plane.height || 0;
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x + w);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y + h);
+            }
+
+            const boxWidth = Math.max(maxX - minX, 1);
+            const boxHeight = Math.max(maxY - minY, 1);
+            const viewWidth = state.viewSize.width;
+            const viewHeight = state.viewSize.height;
+
+            const margin = 0.85;
+            const rawScale = Math.min(viewWidth / boxWidth, viewHeight / boxHeight) * margin;
+            const scale = Math.min(Math.max(rawScale, SCALE_LOWER_LIMIT), SCALE_UPPER_LIMIT);
+
+            const centerX = (minX + maxX) / 2;
+            const centerY = (minY + maxY) / 2;
+
+            state.rotationX = 0;
+            state.rotationY = 0;
+            state.translationZ = 0;
+            state.scale = scale;
+            state.translationX = viewWidth / 2 - scale * centerX;
+            state.translationY = viewHeight / 2 - scale * centerY;
             state.transform = computeMatrix(state);
         },
         setViewSize: (

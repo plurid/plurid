@@ -218,6 +218,8 @@ class PluridApplication extends Component<
 
     private store: Store<PluridState>;
     private storeUnubscriber: ReduxUnsubscribe | undefined;
+    private persistTimeout: ReturnType<typeof setTimeout> | undefined;
+    private persistDirty = false;
     private storeID: string;
     private planesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
 
@@ -250,6 +252,14 @@ class PluridApplication extends Component<
     public componentWillUnmount() {
         if (this.storeUnubscriber) {
             this.storeUnubscriber();
+        }
+        // Flush any pending debounced persistence so the latest state isn't lost.
+        if (this.persistTimeout) {
+            clearTimeout(this.persistTimeout);
+            this.persistTimeout = undefined;
+        }
+        if (this.persistDirty) {
+            this.persistState();
         }
     }
 
@@ -350,15 +360,29 @@ class PluridApplication extends Component<
             return;
         }
 
+        // Persist on a debounce: a single orbit/zoom drag emits a store change per frame,
+        // and serializing the entire state to localStorage on every frame is a real jank
+        // source. Coalesce to one write ~300ms after the state settles; flush on unmount.
         this.storeUnubscriber = this.store.subscribe(() => {
-            const state = this.store.getState();
-            const stateData = JSON.stringify(state);
-
-            localStorage.setItem(
-                'pluridState-' + this.storeID,
-                stateData,
-            );
+            this.persistDirty = true;
+            if (this.persistTimeout) {
+                clearTimeout(this.persistTimeout);
+            }
+            this.persistTimeout = setTimeout(() => {
+                this.persistState();
+            }, 300);
         });
+    }
+
+    private persistState() {
+        if (!this.store || typeof localStorage === 'undefined') {
+            return;
+        }
+        localStorage.setItem(
+            'pluridState-' + this.storeID,
+            JSON.stringify(this.store.getState()),
+        );
+        this.persistDirty = false;
     }
 }
 // #endregion module

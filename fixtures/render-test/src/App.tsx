@@ -46,24 +46,50 @@ const LAYOUTS: { key: string; label: string; layout: any }[] = [
 ];
 
 
+// A larger generated set to stress-test performance (many planes in one space).
+const STRESS_COUNT = 40;
+const STRESS_ACCENTS = ['#4da3ff', '#ffb454', '#7ee787', '#d2a8ff', '#ff7b72'];
+const STRESS_PANELS: (PanelProps & { route: string })[] = Array.from(
+    { length: STRESS_COUNT },
+    (_, i) => ({
+        route: `/unit-${i}`,
+        title: `UNIT ${String(i).padStart(2, '0')}`,
+        code: `U-${String(i).padStart(2, '0')}`,
+        accent: STRESS_ACCENTS[i % STRESS_ACCENTS.length],
+        rows: [
+            ['index', `${i}`],
+            ['load', `${(i * 7) % 100}%`],
+            ['state', i % 2 ? 'active' : 'idle'],
+            ['hash', (i * 2654435761 % 0xffffff).toString(16)],
+        ],
+    }),
+);
+
+
 const App = () => {
     const [layoutKey, setLayoutKey] = useState('columns');
+    const [stress, setStress] = useState(false);
     const active = LAYOUTS.find((l) => l.key === layoutKey) ?? LAYOUTS[0];
+
+    const source = stress ? STRESS_PANELS : PANELS;
 
     const configuration: any = {
         global: { theme: 'plurid' },
-        space: { layout: active.layout, center: true },
-        elements: { plane: { width: 0.32 } },
+        space: {
+            layout: stress ? { type: SPACE_LAYOUT.COLUMNS, columns: 8, gap: 0.04 } : active.layout,
+            center: true,
+        },
+        elements: { plane: { width: stress ? 0.16 : 0.32 } },
     };
 
-    const planes: PluridReactPlane[] = PANELS.map((panel) => ({
+    const planes: PluridReactPlane[] = source.map((panel) => ({
         route: panel.route,
         component: () => (
             <Panel title={panel.title} code={panel.code} accent={panel.accent} rows={panel.rows} />
         ),
     }));
 
-    const view = PANELS.map((panel) => panel.route);
+    const view = source.map((panel) => panel.route);
 
     return (
         <>
@@ -77,22 +103,34 @@ const App = () => {
                 {LAYOUTS.map((l) => (
                     <button
                         key={l.key}
-                        onClick={() => setLayoutKey(l.key)}
+                        onClick={() => { setStress(false); setLayoutKey(l.key); }}
                         style={{
                             padding: '6px 10px', fontSize: 11, letterSpacing: '0.08em',
                             cursor: 'pointer', borderRadius: 6,
-                            border: '1px solid ' + (l.key === layoutKey ? '#4da3ff' : '#ffffff22'),
-                            background: l.key === layoutKey ? '#4da3ff22' : '#0d0f12cc',
-                            color: l.key === layoutKey ? '#cfe6ff' : '#aab2bd',
+                            border: '1px solid ' + (!stress && l.key === layoutKey ? '#4da3ff' : '#ffffff22'),
+                            background: !stress && l.key === layoutKey ? '#4da3ff22' : '#0d0f12cc',
+                            color: !stress && l.key === layoutKey ? '#cfe6ff' : '#aab2bd',
                         }}
                     >
                         {l.label}
                     </button>
                 ))}
+                <button
+                    onClick={() => setStress((s) => !s)}
+                    style={{
+                        padding: '6px 10px', fontSize: 11, letterSpacing: '0.08em',
+                        cursor: 'pointer', borderRadius: 6,
+                        border: '1px solid ' + (stress ? '#ff7b72' : '#ffffff22'),
+                        background: stress ? '#ff7b7222' : '#0d0f12cc',
+                        color: stress ? '#ffd2cd' : '#aab2bd',
+                    }}
+                >
+                    STRESS·{STRESS_COUNT}
+                </button>
             </div>
 
             <PluridApplication
-                key={layoutKey}
+                key={layoutKey + (stress ? '-stress' : '')}
                 configuration={configuration}
                 planes={planes}
                 view={view}

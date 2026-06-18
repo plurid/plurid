@@ -240,19 +240,28 @@ export const StyledToolbarButton = styled.div<IStyledToolbarButton>`
         return '70px';
     }};
 
-    height: 45px;
+    /* An inset rounded chip — shorter than the 45px toolbar so the highlight floats
+       centered with breathing room, instead of a sharp full-height block. */
+    height: 34px;
+    border-radius: 10px;
     display: grid;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     user-select: none;
+    transition: background-color 150ms ease;
 
     @media (hover: hover) {
         :hover {
-            background: ${({
+            background-color: ${({
+                active,
                 theme,
             }) => {
-                return theme.backgroundColorTertiary;
+                if (active) {
+                    return theme.backgroundColorTertiary;
+                }
+                /* Subtle wash on hover, distinct from the solid active fill. */
+                return 'rgba(255, 255, 255, 0.07)';
             }};
         }
     }

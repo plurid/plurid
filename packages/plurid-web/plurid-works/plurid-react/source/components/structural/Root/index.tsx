@@ -235,8 +235,11 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const childrenPlanes = useMemo<JSX.Element[]>(
         () => computeChildrenPlanes(plane),
         [
-            JSON.stringify(plane),
-            JSON.stringify(stateTree),
+            // Reference deps: the tree is rebuilt immutably on every mutation, so `plane`
+            // and `stateTree` change identity exactly when the structure changes — far
+            // cheaper than JSON.stringify-ing the whole tree on each render.
+            plane,
+            stateTree,
         ],
     );
     // #endregion effects

@@ -80,6 +80,16 @@ export const handleGlobalShortcuts = (
     }
 
 
+    // Fit all planes into view (CAD "frame all"): Home or 0.
+    if (
+        (event.key === 'Home' || event.code === 'Digit0')
+        && noModifiers
+    ) {
+        handleEvent();
+        return dispatch(actions.space.spaceFitToView());
+    }
+
+
     // #region transform
     if (
         event.code === 'KeyF'
@@ -89,101 +99,8 @@ export const handleGlobalShortcuts = (
         return dispatch(actions.configuration.toggleConfigurationSpaceFirstPerson());
     }
 
-    if (firstPerson) {
-        if (
-            event.code === 'KeyW'
-            && noModifiers
-            && locks.translationZ
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraMoveForward());
-        }
-
-        if (
-            event.code === 'KeyS'
-            && noModifiers
-            && locks.translationZ
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraMoveBackward());
-        }
-
-
-        if (
-            event.code === 'KeyA'
-            && noModifiers
-            && locks.translationX
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraMoveLeft());
-        }
-
-        if (
-            event.code === 'KeyA'
-            && event.shiftKey
-            && locks.rotationY
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraTurnLeft());
-        }
-
-
-        if (
-            event.code === 'KeyD'
-            && noModifiers
-            && locks.translationX
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraMoveRight());
-        }
-
-        if (
-            event.code === 'KeyD'
-            && event.shiftKey
-            && locks.rotationY
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraTurnRight());
-        }
-
-
-        if (
-            event.code === 'KeyQ'
-            && noModifiers
-            && locks.rotationX
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraTurnUp());
-        }
-
-        if (
-            event.code === 'KeyZ'
-            && noModifiers
-            && locks.rotationX
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraTurnDown());
-        }
-
-
-        if (
-            event.code === 'KeyE'
-            && noModifiers
-            && locks.translationY
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraMoveUp());
-        }
-
-        if (
-            event.code === 'KeyC'
-            && noModifiers
-            && locks.translationY
-        ) {
-            handleEvent();
-            return dispatch(actions.space.viewCameraMoveDown());
-        }
-    }
+    // First-person (fly) movement is handled by the continuous rAF loop + mouse-look in
+    // the View's '#region effects fly' (smooth, held-key driven) — not discrete keydowns.
 
 
     if (
@@ -412,6 +329,9 @@ export const handleGlobalWheel = (
     modes: TransformModes,
     locks: PluridConfigurationSpaceTransformLocks,
 ) => {
+    // Default (ALL) mode treats the wheel as zoom, so claim the event there too — only an
+    // explicit rotation/translation mode lets the wheel mean something else.
+    const wheelZooms = !modes.rotation && !modes.translation;
     if (event.shiftKey
         || event.metaKey
         || event.altKey
@@ -419,6 +339,7 @@ export const handleGlobalWheel = (
         || modes.rotation
         || modes.translation
         || modes.scale
+        || wheelZooms
     ) {
         event.preventDefault();
     }
@@ -550,7 +471,7 @@ export const handleGlobalWheel = (
     // the scale delta directly (continuous, not a quantized fixed step), and ⌘/Ctrl+wheel
     // zooms from any mode — matching trackpad pinch. Convention: wheel up (deltaY < 0) =
     // zoom in. The point under the cursor stays anchored (CAD-standard).
-    if (modes.scale || event.metaKey || event.ctrlKey) {
+    if (modes.scale || event.metaKey || event.ctrlKey || wheelZooms) {
         if (!locks.scale) {
             return;
         }

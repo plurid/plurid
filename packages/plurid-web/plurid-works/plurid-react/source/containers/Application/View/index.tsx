@@ -924,6 +924,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             const MOMENTUM_DECAY = 0.92;
             const MOMENTUM_MIN = 0.05;
             const DRAG_THRESHOLD = 4;          // px before a press becomes an orbit
+            const FLY_LOOK_SENSITIVITY = 0.18; // deg per px when dragging to look in fly mode
 
             const stopMomentum = () => {
                 if (momentumFrame.current !== null) {
@@ -931,6 +932,9 @@ const PluridView: React.FC<PluridViewProperties> = (
                     momentumFrame.current = null;
                 }
             };
+
+            // Whether the most recent drag was an orbit (so momentum only flings on orbit).
+            let navWasOrbit = false;
 
             const rotateByDelta = (dx: number, dy: number) => {
                 if (dx !== 0) {
@@ -941,38 +945,66 @@ const PluridView: React.FC<PluridViewProperties> = (
                 }
             };
 
-            const applySingle = (dx: number, dy: number, altKey: boolean) => {
+            const panByDelta = (dx: number, dy: number, altKey: boolean) => {
+                if (dx !== 0) {
+                    dispatchTranslateXWith(dx * TRANSLATE_SENSITIVITY);
+                }
+                if (dy !== 0) {
+                    if (altKey) {
+                        dispatchTranslateZWith(dy);
+                    } else {
+                        dispatchTranslateYWith(dy);
+                    }
+                }
+            };
+
+            const scaleByDrag = (dy: number) => {
+                const amount = Math.abs(dy) * SCALE_DRAG_SENSITIVITY;
+                if (amount > 0) {
+                    if (dy < 0) {
+                        dispatchScaleUpWith(amount);
+                    } else {
+                        dispatchScaleDownWith(amount);
+                    }
+                }
+            };
+
+            // CAD-style navigation. The explicit rotate/scale/translate modes pin what a drag
+            // does; otherwise (the default ALL mode) a plain drag orbits and a shift- or
+            // middle-button drag pans — so you can navigate the space without first choosing
+            // a mode, like Fusion / SolidWorks / Inventor.
+            const applySingle = (dx: number, dy: number, event: PointerEvent) => {
                 const mode = spaceConfigRef.current.transformMode;
+                navWasOrbit = false;
+                if (spaceConfigRef.current.firstPerson) {
+                    // Fly mode: dragging looks around (yaw/pitch). When the pointer is
+                    // locked the dedicated mouse-look listener takes over (clientX/Y frozen,
+                    // so dx/dy here are ~0).
+                    dispatch(actions.space.flyMove({
+                        yaw: dx * FLY_LOOK_SENSITIVITY,
+                        pitch: -dy * FLY_LOOK_SENSITIVITY,
+                    }));
+                    return;
+                }
                 if (mode === TRANSFORM_MODES.ROTATION) {
+                    navWasOrbit = true;
                     rotateByDelta(dx, dy);
                 } else if (mode === TRANSFORM_MODES.TRANSLATION) {
-                    if (dx !== 0) {
-                        dispatchTranslateXWith(dx * TRANSLATE_SENSITIVITY);
-                    }
-                    if (dy !== 0) {
-                        if (altKey) {
-                            dispatchTranslateZWith(dy);
-                        } else {
-                            dispatchTranslateYWith(dy);
-                        }
-                    }
+                    panByDelta(dx, dy, event.altKey);
                 } else if (mode === TRANSFORM_MODES.SCALE) {
-                    const amount = Math.abs(dy) * SCALE_DRAG_SENSITIVITY;
-                    if (amount > 0) {
-                        if (dy < 0) {
-                            dispatchScaleUpWith(amount);
-                        } else {
-                            dispatchScaleDownWith(amount);
-                        }
+                    scaleByDrag(dy);
+                } else {
+                    const wantsPan = event.shiftKey || (event.buttons & 4) === 4;
+                    if (wantsPan) {
+                        panByDelta(dx, dy, event.altKey);
+                    } else {
+                        navWasOrbit = true;
+                        rotateByDelta(dx, dy);
                     }
                 }
             };
 
             const runMomentum = () => {
-                if (spaceConfigRef.current.transformMode !== TRANSFORM_MODES.ROTATION) {
-                    stopMomentum();
-                    return;
-                }
                 const m = momentum.current;
                 rotateByDelta(m.vx, m.vy);
                 m.vx *= MOMENTUM_DECAY;
@@ -1073,7 +1105,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                     vy: Math.max(-cap, Math.min(cap, dy)),
                 };
                 event.preventDefault();
-                applySingle(dx, dy, event.altKey);
+                applySingle(dx, dy, event);
             };
 
             const endPointer = (event: PointerEvent) => {
@@ -1094,7 +1126,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                     // Only fling momentum if this was an actual orbit drag (not a click).
                     const m = momentum.current;
                     if (wasDragging
-                        && spaceConfigRef.current.transformMode === TRANSFORM_MODES.ROTATION
+                        && navWasOrbit
                         && (Math.abs(m.vx) > MOMENTUM_MIN || Math.abs(m.vy) > MOMENTUM_MIN)) {
                         stopMomentum();
                         momentumFrame.current = requestAnimationFrame(runMomentum);
@@ -1121,6 +1153,106 @@ const PluridView: React.FC<PluridViewProperties> = (
             viewElement.current,
         ]);
         // #endregion effects pointer
+
+
+        // #region effects fly
+        /**
+         * First-person "fly" controls, active only in firstPerson mode. Continuous,
+         * frame-rate-independent movement from held keys (WASD = move, E/Space = up,
+         * Q/Shift = down) via a requestAnimationFrame loop, plus mouse-look: click the view
+         * to lock the pointer and steer with the mouse (Esc releases), or just drag to look
+         * (handled in applySingle). Replaces the old discrete one-step-per-keypress movement.
+         */
+        useEffect(() => {
+            const element = viewElement.current;
+            if (!element || typeof window === 'undefined') {
+                return;
+            }
+            if (!stateConfiguration.space.firstPerson) {
+                return;
+            }
+
+            const FLY_SPEED = 9;            // px per frame (planar)
+            const FLY_VERTICAL = 7;         // px per frame (up/down)
+            const FLY_LOOK = 0.12;          // deg per px (locked mouse-look)
+            const FLY_KEYS = new Set([
+                'KeyW', 'KeyA', 'KeyS', 'KeyD',
+                'KeyE', 'KeyQ', 'Space', 'ShiftLeft',
+            ]);
+
+            const held = new Set<string>();
+            let frame: number | null = null;
+
+            const onKeyDown = (event: KeyboardEvent) => {
+                if (event.metaKey || event.ctrlKey || event.altKey) {
+                    return;
+                }
+                if (FLY_KEYS.has(event.code)) {
+                    held.add(event.code);
+                    event.preventDefault();
+                }
+            };
+            const onKeyUp = (event: KeyboardEvent) => {
+                held.delete(event.code);
+            };
+
+            const onMouseMove = (event: MouseEvent) => {
+                if (document.pointerLockElement !== element) {
+                    return;
+                }
+                const yaw = event.movementX * FLY_LOOK;
+                const pitch = -event.movementY * FLY_LOOK;
+                if (yaw !== 0 || pitch !== 0) {
+                    dispatch(actions.space.flyMove({ yaw, pitch }));
+                }
+            };
+
+            const onClick = () => {
+                if (document.pointerLockElement !== element
+                    && (element as any).requestPointerLock) {
+                    (element as any).requestPointerLock();
+                }
+            };
+
+            const loop = () => {
+                let forward = 0;
+                let strafe = 0;
+                let vertical = 0;
+                if (held.has('KeyW')) { forward += FLY_SPEED; }
+                if (held.has('KeyS')) { forward -= FLY_SPEED; }
+                if (held.has('KeyA')) { strafe += FLY_SPEED; }
+                if (held.has('KeyD')) { strafe -= FLY_SPEED; }
+                if (held.has('KeyE') || held.has('Space')) { vertical += FLY_VERTICAL; }
+                if (held.has('KeyQ') || held.has('ShiftLeft')) { vertical -= FLY_VERTICAL; }
+                if (forward !== 0 || strafe !== 0 || vertical !== 0) {
+                    dispatch(actions.space.flyMove({ forward, strafe, vertical }));
+                }
+                frame = requestAnimationFrame(loop);
+            };
+            frame = requestAnimationFrame(loop);
+
+            window.addEventListener('keydown', onKeyDown);
+            window.addEventListener('keyup', onKeyUp);
+            document.addEventListener('mousemove', onMouseMove);
+            element.addEventListener('click', onClick);
+
+            return () => {
+                if (frame !== null) {
+                    cancelAnimationFrame(frame);
+                }
+                window.removeEventListener('keydown', onKeyDown);
+                window.removeEventListener('keyup', onKeyUp);
+                document.removeEventListener('mousemove', onMouseMove);
+                element.removeEventListener('click', onClick);
+                if (document.pointerLockElement === element && document.exitPointerLock) {
+                    document.exitPointerLock();
+                }
+            };
+        }, [
+            stateConfiguration.space.firstPerson,
+            viewElement.current,
+        ]);
+        // #endregion effects fly
 
 
         // #region effects gamepad

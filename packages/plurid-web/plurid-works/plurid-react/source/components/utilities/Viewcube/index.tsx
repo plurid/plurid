@@ -72,6 +72,7 @@ export interface PluridViewcubeDispatchProperties {
     dispatchRotateYWith: DispatchAction<typeof actions.space.rotateYWith>;
     dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform>;
     dispatchSpaceResetTransform: DispatchActionWithoutPayload<typeof actions.space.spaceResetTransform>;
+    dispatchSpaceFitToView: DispatchActionWithoutPayload<typeof actions.space.spaceFitToView>;
 }
 
 export type PluridViewcubeProperties =
@@ -96,6 +97,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
         dispatchRotateYWith,
         dispatchSetAnimatedTransform,
         dispatchSpaceResetTransform,
+        dispatchSpaceFitToView,
         // #endregion dispatch
     } = properties;
 
@@ -154,14 +156,14 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
     }
 
     const animatedReset = (event: React.MouseEvent) => {
-        if (event.ctrlKey || event.metaKey) {
-            // fit into view
-            return;
-        }
-
-        // reset view
         dispatchSetAnimatedTransform(true);
-        dispatchSpaceResetTransform();
+        if (event.ctrlKey || event.metaKey) {
+            // ⌘/Ctrl-click: hard reset to the identity view.
+            dispatchSpaceResetTransform();
+        } else {
+            // Plain click: fit — frame all planes front-on (the useful default).
+            dispatchSpaceFitToView();
+        }
         setTimeout(() => {
             dispatchSetAnimatedTransform(false);
         }, stateTransformTime);
@@ -292,6 +294,9 @@ const mapDispatchToProperties = (
     ),
     dispatchSpaceResetTransform: () => dispatch(
         actions.space.spaceResetTransform()
+    ),
+    dispatchSpaceFitToView: () => dispatch(
+        actions.space.spaceFitToView()
     ),
 });
 
