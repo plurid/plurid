@@ -56,10 +56,10 @@
         "@plurid/plurid-themes": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-data": "0.0.0-20",
-        "@plurid/plurid-functions": "0.0.0-31",
-        "@plurid/plurid-pubsub": "0.0.0-9",
-        "@plurid/plurid-themes": "0.0.0-2",
+        "@plurid/plurid-data": "workspace:*",
+        "@plurid/plurid-functions": "workspace:*",
+        "@plurid/plurid-pubsub": "workspace:*",
+        "@plurid/plurid-themes": "workspace:*",
         "@rollup/plugin-commonjs": "^25.0.7",
         "@types/jest": "^29.5.11",
         "@types/node": "^20.10.6",

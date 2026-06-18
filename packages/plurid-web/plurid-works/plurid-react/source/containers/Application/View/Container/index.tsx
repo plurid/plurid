@@ -9,6 +9,7 @@
     import PluridOrigin from '~components/utilities/Origin';
     import PluridToolbar from '~components/utilities/Toolbar/General';
     import PluridViewcube from '~components/utilities/Viewcube';
+    import PluridShortcuts from '~components/utilities/Shortcuts';
     // #endregion external
 // #region imports
 
@@ -28,6 +29,7 @@ const PluridViewContainer: React.FC<PluridViewContainerProperties> = (
             <PluridOrigin />
             <PluridToolbar />
             <PluridViewcube />
+            <PluridShortcuts />
         </>
     );
     // #endregion render

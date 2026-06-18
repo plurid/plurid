@@ -69,6 +69,11 @@ const STRESS_PANELS: (PanelProps & { route: string })[] = Array.from(
 const App = () => {
     const [layoutKey, setLayoutKey] = useState('columns');
     const [stress, setStress] = useState(false);
+    // PERSIST toggle is itself persisted so it survives a reload (needed to verify the
+    // save→reload→restore round-trip). Each layout gets its own storage slot via `id`.
+    const [persist, setPersist] = useState(
+        typeof localStorage !== 'undefined' && localStorage.getItem('rt-persist') === '1',
+    );
     const active = LAYOUTS.find((l) => l.key === layoutKey) ?? LAYOUTS[0];
 
     const source = stress ? STRESS_PANELS : PANELS;
@@ -127,13 +132,34 @@ const App = () => {
                 >
                     STRESS·{STRESS_COUNT}
                 </button>
+                <button
+                    onClick={() => setPersist((p) => {
+                        const next = !p;
+                        if (typeof localStorage !== 'undefined') {
+                            localStorage.setItem('rt-persist', next ? '1' : '0');
+                        }
+                        return next;
+                    })}
+                    style={{
+                        padding: '6px 10px', fontSize: 11, letterSpacing: '0.08em',
+                        cursor: 'pointer', borderRadius: 6,
+                        border: '1px solid ' + (persist ? '#7ee787' : '#ffffff22'),
+                        background: persist ? '#7ee78722' : '#0d0f12cc',
+                        color: persist ? '#bff7c4' : '#aab2bd',
+                    }}
+                    title="Persist the space to localStorage; reload restores it"
+                >
+                    PERSIST
+                </button>
             </div>
 
             <PluridApplication
-                key={layoutKey + (stress ? '-stress' : '')}
+                key={layoutKey + (stress ? '-stress' : '') + (persist ? '-p' : '')}
                 configuration={configuration}
                 planes={planes}
                 view={view}
+                useLocalStorage={persist}
+                id={'rt-' + layoutKey + (stress ? '-stress' : '')}
             />
         </>
     );

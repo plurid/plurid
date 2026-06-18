@@ -47,7 +47,8 @@
     } from '@plurid/plurid-data';
 
     import {
-        routing,
+        IsoMatcher as PluridIsoMatcher,
+        RouteParser as PluridRouteParser,
         pluridRouterNavigate,
     } from '@plurid/plurid-engine';
 
@@ -105,10 +106,9 @@
 
 
 // #region module
-const {
-    IsoMatcher: PluridIsoMatcher,
-    RouteParser: PluridRouteParser,
-} = routing;
+// PluridIsoMatcher / PluridRouteParser are imported by name from the engine (above) so
+// TS can reference them as external named imports in this package's .d.ts (a namespace
+// member would inline anonymously and trip TS4094 on the classes' private members).
 
 
 const internals = {

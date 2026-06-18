@@ -110,14 +110,182 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/plurid-utilities/plurid-functions:
+    devDependencies:
+      '@rollup/plugin-terser':
+        specifier: ^0.4.1
+        version: 0.4.4(rollup@4.62.0)
+      '@types/crypto-js':
+        specifier: ^4.1.1
+        version: 4.2.2
+      '@types/jest':
+        specifier: ^29.5.1
+        version: 29.5.14
+      '@types/node':
+        specifier: ^18.16.1
+        version: 18.19.130
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.59.1
+        version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
+      '@typescript-eslint/parser':
+        specifier: ^5.59.1
+        version: 5.62.0(eslint@8.57.1)(typescript@5.9.3)
+      '@zerollup/ts-transform-paths':
+        specifier: ^1.7.18
+        version: 1.7.18(typescript@5.9.3)
+      eslint:
+        specifier: ^8.39.0
+        version: 8.57.1
+      jest:
+        specifier: ^29.5.0
+        version: 29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+      ts-jest:
+        specifier: ^29.1.0
+        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(jest-util@29.7.0)(jest@29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3)))(typescript@5.9.3)
+      ts-node:
+        specifier: ^10.9.1
+        version: 10.9.2(@types/node@18.19.130)(typescript@5.9.3)
+      tslib:
+        specifier: ^2.5.0
+        version: 2.8.1
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.3)
+      ttypescript:
+        specifier: ^1.5.15
+        version: 1.5.15(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      typescript-transform-paths:
+        specifier: ^3.4.6
+        version: 3.5.6(typescript@5.9.3)
+
+  packages/plurid-utilities/plurid-functions-react:
+    devDependencies:
+      '@types/crypto-js':
+        specifier: ^4.1.1
+        version: 4.2.2
+      '@types/jest':
+        specifier: ^29.5.1
+        version: 29.5.14
+      '@types/node':
+        specifier: ^18.16.1
+        version: 18.19.130
+      '@types/react':
+        specifier: ^18.3
+        version: 18.3.31
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.59.1
+        version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
+      '@typescript-eslint/parser':
+        specifier: ^5.59.1
+        version: 5.62.0(eslint@8.57.1)(typescript@5.9.3)
+      '@zerollup/ts-transform-paths':
+        specifier: ^1.7.18
+        version: 1.7.18(typescript@5.9.3)
+      eslint:
+        specifier: ^8.39.0
+        version: 8.57.1
+      jest:
+        specifier: ^29.5.0
+        version: 29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      ts-jest:
+        specifier: ^29.1.0
+        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(jest-util@29.7.0)(jest@29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3)))(typescript@5.9.3)
+      ts-node:
+        specifier: ^10.9.1
+        version: 10.9.2(@types/node@18.19.130)(typescript@5.9.3)
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.3)
+      ttypescript:
+        specifier: ^1.5.15
+        version: 1.5.15(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/plurid-utilities/plurid-icons-react:
+    devDependencies:
+      '@plurid/plurid-themes':
+        specifier: workspace:*
+        version: link:../plurid-themes
+      '@rollup/plugin-terser':
+        specifier: ^0.4.3
+        version: 0.4.4(rollup@4.62.0)
+      '@types/jest':
+        specifier: ^29.5.2
+        version: 29.5.14
+      '@types/node':
+        specifier: ^20.3.3
+        version: 20.19.43
+      '@types/react':
+        specifier: ^18.3
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3
+        version: 18.3.7(@types/react@18.3.31)
+      '@types/styled-components':
+        specifier: ^5.1.26
+        version: 5.1.36
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.60.1
+        version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
+      '@typescript-eslint/parser':
+        specifier: ^5.60.1
+        version: 5.62.0(eslint@8.57.1)(typescript@5.9.3)
+      eslint:
+        specifier: ^8.44.0
+        version: 8.57.1
+      jest:
+        specifier: ^29.5.0
+        version: 29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))
+      jest-config:
+        specifier: ^29.5.0
+        version: 29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      styled-components:
+        specifier: ^6
+        version: 6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      ts-jest:
+        specifier: v29.1.1
+        version: 29.1.1(@babel/core@7.29.7)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(jest@29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3)))(typescript@5.9.3)
+      ts-node:
+        specifier: ^10.9.1
+        version: 10.9.2(@types/node@20.19.43)(typescript@5.9.3)
+      ts-patch:
+        specifier: ^3.0.1
+        version: 3.3.0
+      tslib:
+        specifier: ^2.6.0
+        version: 2.8.1
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      typescript-transform-paths:
+        specifier: ^3.4.6
+        version: 3.5.6(typescript@5.9.3)
+
   packages/plurid-utilities/plurid-routes-server:
     devDependencies:
       '@plurid/deon':
         specifier: ^0.0.0-10
         version: 0.0.0-10
       '@plurid/plurid-functions':
-        specifier: ^0.0.0-30
-        version: 0.0.0-31
+        specifier: workspace:*
+        version: link:../plurid-functions
       '@rollup/plugin-node-resolve':
         specifier: ^14.1.0
         version: 14.1.0(rollup@2.80.0)
@@ -173,11 +341,185 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/plurid-utilities/plurid-themes:
+    devDependencies:
+      '@types/jest':
+        specifier: ^29.5.1
+        version: 29.5.14
+      '@types/node':
+        specifier: ^20.10.6
+        version: 20.19.43
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.59.1
+        version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
+      '@typescript-eslint/parser':
+        specifier: ^5.59.1
+        version: 5.62.0(eslint@8.57.1)(typescript@5.9.3)
+      eslint:
+        specifier: ^8.39.0
+        version: 8.57.1
+      jest:
+        specifier: ^29.5.0
+        version: 29.7.0(@types/node@20.19.43)
+      ts-jest:
+        specifier: ^29.1.0
+        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.43))(typescript@5.9.3)
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/plurid-utilities/plurid-ui-components-react:
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.22.5
+        version: 7.29.7
+      '@plurid/plurid-functions':
+        specifier: workspace:*
+        version: link:../plurid-functions
+      '@plurid/plurid-functions-react':
+        specifier: workspace:*
+        version: link:../plurid-functions-react
+      '@plurid/plurid-icons-react':
+        specifier: workspace:*
+        version: link:../plurid-icons-react
+      '@plurid/plurid-themes':
+        specifier: workspace:*
+        version: link:../plurid-themes
+      '@plurid/plurid-ui-state-react':
+        specifier: workspace:*
+        version: link:../plurid-ui-state-react
+      '@reduxjs/toolkit':
+        specifier: ^1.9.5
+        version: 1.9.7(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.3
+        version: 0.4.4(rollup@4.62.0)
+      '@types/jest':
+        specifier: ^29.5.2
+        version: 29.5.14
+      '@types/node':
+        specifier: ^20.3.3
+        version: 20.19.43
+      '@types/react':
+        specifier: ^18.3
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3
+        version: 18.3.7(@types/react@18.3.31)
+      '@types/react-redux':
+        specifier: ^7.1.25
+        version: 7.1.34
+      '@types/styled-components':
+        specifier: ^5.1.26
+        version: 5.1.36
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.60.1
+        version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
+      '@typescript-eslint/parser':
+        specifier: ^5.60.1
+        version: 5.62.0(eslint@8.57.1)(typescript@5.9.3)
+      eslint:
+        specifier: ^8.44.0
+        version: 8.57.1
+      immer:
+        specifier: ^10
+        version: 10.2.0
+      jest:
+        specifier: ^29.5.0
+        version: 29.7.0(@types/node@20.19.43)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      react-redux:
+        specifier: ^9
+        version: 9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1)
+      redux:
+        specifier: ^4.2.1
+        version: 4.2.1
+      redux-thunk:
+        specifier: ^2.4.2
+        version: 2.4.2(redux@4.2.1)
+      styled-components:
+        specifier: ^6
+        version: 6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      ts-jest:
+        specifier: ^29.1.1
+        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.43))(typescript@5.9.3)
+      ts-patch:
+        specifier: ^3.0.1
+        version: 3.3.0
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      typescript-transform-paths:
+        specifier: ^3.4.6
+        version: 3.5.6(typescript@5.9.3)
+
+  packages/plurid-utilities/plurid-ui-state-react:
+    devDependencies:
+      '@plurid/plurid-themes':
+        specifier: workspace:*
+        version: link:../plurid-themes
+      '@reduxjs/toolkit':
+        specifier: ^1.9.5
+        version: 1.9.7(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.3
+        version: 0.4.4(rollup@4.62.0)
+      '@types/jest':
+        specifier: ^29.5.2
+        version: 29.5.14
+      '@types/node':
+        specifier: ^20.3.3
+        version: 20.19.43
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.60.1
+        version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
+      '@typescript-eslint/parser':
+        specifier: ^5.60.1
+        version: 5.62.0(eslint@8.57.1)(typescript@5.9.3)
+      '@zerollup/ts-transform-paths':
+        specifier: ^1.7.18
+        version: 1.7.18(typescript@5.9.3)
+      eslint:
+        specifier: ^8.44.0
+        version: 8.57.1
+      immer:
+        specifier: ^10
+        version: 10.2.0
+      jest:
+        specifier: ^29.5.0
+        version: 29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))
+      ts-jest:
+        specifier: ^29.1.1
+        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(esbuild@0.19.12)(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3)))(typescript@5.9.3)
+      ts-node:
+        specifier: ^10.9.1
+        version: 10.9.2(@types/node@20.19.43)(typescript@5.9.3)
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.3)
+      ttypescript:
+        specifier: ^1.5.15
+        version: 1.5.15(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/plurid-web/plurid-core/plurid-data:
     devDependencies:
       '@plurid/plurid-themes':
-        specifier: 0.0.0-2
-        version: 0.0.0-2
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-themes
       '@types/node':
         specifier: ^20.10.6
         version: 20.19.43
@@ -203,17 +545,17 @@ importers:
   packages/plurid-web/plurid-core/plurid-engine:
     devDependencies:
       '@plurid/plurid-data':
-        specifier: 0.0.0-20
-        version: 0.0.0-20(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../plurid-data
       '@plurid/plurid-functions':
-        specifier: 0.0.0-31
-        version: 0.0.0-31
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-functions
       '@plurid/plurid-pubsub':
-        specifier: 0.0.0-9
-        version: 0.0.0-9(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../plurid-pubsub
       '@plurid/plurid-themes':
-        specifier: 0.0.0-2
-        version: 0.0.0-2
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-themes
       '@rollup/plugin-commonjs':
         specifier: ^25.0.7
         version: 25.0.8(rollup@4.62.0)
@@ -275,11 +617,11 @@ importers:
   packages/plurid-web/plurid-core/plurid-pubsub:
     devDependencies:
       '@plurid/plurid-data':
-        specifier: ^0.0.0-20
-        version: 0.0.0-20(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../plurid-data
       '@plurid/plurid-themes':
-        specifier: ^0.0.0-2
-        version: 0.0.0-2
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-themes
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.14
@@ -330,32 +672,32 @@ importers:
         specifier: ^0.0.0-1
         version: 0.0.0-1
       '@plurid/plurid-data':
-        specifier: 0.0.0-20
-        version: 0.0.0-20(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../../plurid-core/plurid-data
       '@plurid/plurid-engine':
-        specifier: 0.0.0-18
-        version: 0.0.0-18(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../../plurid-core/plurid-engine
       '@plurid/plurid-functions':
-        specifier: 0.0.0-31
-        version: 0.0.0-31
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-functions
       '@plurid/plurid-functions-react':
-        specifier: 0.0.0-5
-        version: 0.0.0-5(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-functions-react
       '@plurid/plurid-icons-react':
-        specifier: 0.0.0-5
-        version: 0.0.0-5(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-icons-react
       '@plurid/plurid-pubsub':
-        specifier: 0.0.0-9
-        version: 0.0.0-9(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../../plurid-core/plurid-pubsub
       '@plurid/plurid-themes':
-        specifier: 0.0.0-2
-        version: 0.0.0-2
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-themes
       '@plurid/plurid-ui-components-react':
-        specifier: 0.0.0-22
-        version: 0.0.0-22(@plurid/plurid-functions-react@0.0.0-5(react@18.3.1))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-state-react@0.0.0-10(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1)))(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-ui-components-react
       '@plurid/plurid-ui-state-react':
-        specifier: 0.0.0-10
-        version: 0.0.0-10(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1))
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-ui-state-react
       '@rollup/plugin-commonjs':
         specifier: ^24.1.0
         version: 24.1.0(rollup@3.30.0)
@@ -517,32 +859,32 @@ importers:
         specifier: ^0.0.0-1
         version: 0.0.0-1
       '@plurid/plurid-data':
-        specifier: 0.0.0-20
-        version: 0.0.0-20(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../../plurid-core/plurid-data
       '@plurid/plurid-engine':
-        specifier: 0.0.0-18
-        version: 0.0.0-18(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../../plurid-core/plurid-engine
       '@plurid/plurid-functions':
-        specifier: 0.0.0-31
-        version: 0.0.0-31
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-functions
       '@plurid/plurid-functions-react':
-        specifier: 0.0.0-5
-        version: 0.0.0-5(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-functions-react
       '@plurid/plurid-icons-react':
-        specifier: 0.0.0-9
-        version: 0.0.0-9(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-icons-react
       '@plurid/plurid-pubsub':
-        specifier: 0.0.0-9
-        version: 0.0.0-9(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../../plurid-core/plurid-pubsub
       '@plurid/plurid-themes':
-        specifier: 0.0.0-2
-        version: 0.0.0-2
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-themes
       '@plurid/plurid-ui-components-react':
-        specifier: 0.0.0-28
-        version: 0.0.0-28(@plurid/plurid-functions-react@0.0.0-5(react@18.3.1))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-9(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-state-react@0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)))(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-ui-components-react
       '@plurid/plurid-ui-state-react':
-        specifier: 0.0.0-11
-        version: 0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1))
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-ui-state-react
       '@reduxjs/toolkit':
         specifier: ^2.0.1
         version: 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
@@ -653,35 +995,35 @@ importers:
         specifier: ^0.0.0-1
         version: 0.0.0-1
       '@plurid/plurid-data':
-        specifier: 0.0.0-20
-        version: 0.0.0-20(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../../plurid-core/plurid-data
       '@plurid/plurid-engine':
-        specifier: 0.0.0-18
-        version: 0.0.0-18(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../../plurid-core/plurid-engine
       '@plurid/plurid-functions':
-        specifier: 0.0.0-31
-        version: 0.0.0-31
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-functions
       '@plurid/plurid-functions-react':
-        specifier: 0.0.0-5
-        version: 0.0.0-5(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-functions-react
       '@plurid/plurid-icons-react':
-        specifier: 0.0.0-9
-        version: 0.0.0-9(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-icons-react
       '@plurid/plurid-pubsub':
-        specifier: 0.0.0-9
-        version: 0.0.0-9(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-themes@0.0.0-2)
+        specifier: workspace:*
+        version: link:../../plurid-core/plurid-pubsub
       '@plurid/plurid-react':
-        specifier: 0.0.0-34
-        version: 0.0.0-34(f4ecdfa245a35098d600cede6a624158)
+        specifier: workspace:*
+        version: link:../plurid-react
       '@plurid/plurid-themes':
-        specifier: 0.0.0-2
-        version: 0.0.0-2
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-themes
       '@plurid/plurid-ui-components-react':
-        specifier: 0.0.0-28
-        version: 0.0.0-28(@plurid/plurid-functions-react@0.0.0-5(react@18.3.1))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-9(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-state-react@0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)))(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-ui-components-react
       '@plurid/plurid-ui-state-react':
-        specifier: 0.0.0-11
-        version: 0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1))
+        specifier: workspace:*
+        version: link:../../../plurid-utilities/plurid-ui-state-react
       '@redux-devtools/extension':
         specifier: ^3.3.0
         version: 3.3.0(redux@5.0.1)
@@ -1711,126 +2053,6 @@ packages:
     resolution: {integrity: sha512-ZhIRA9sGeegviDNFEdA71leocIwPXwU4vK81p+B7UEhBRl0hZ+O9pD1Rr5wuW9rU5FtfjDnEprntmyVi0ZEL4Q==}
     engines: {node: '>=12', npm: '>=6'}
 
-  '@plurid/plurid-data@0.0.0-20':
-    resolution: {integrity: sha512-LZTJs+I7kOW4E4tqGNIGnq6Fb3QqkyAxqLZWCBGgS7OHZw+ObDKCpy+j+pTV4YC7XlW7yA3gf4H2B/3gZhhzOA==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@plurid/plurid-themes': '*'
-
-  '@plurid/plurid-engine@0.0.0-18':
-    resolution: {integrity: sha512-QiBsjdlH1l2dRO1OH/GEV2IkiOef85uivurZlonA13Xwvy9iVk4y9B9hVmKMHFq5rG7kVv7z40K6yzfNthbndw==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@plurid/plurid-data': '*'
-      '@plurid/plurid-functions': '*'
-      '@plurid/plurid-themes': '*'
-
-  '@plurid/plurid-functions-react@0.0.0-5':
-    resolution: {integrity: sha512-3F4BAESPUW8xPgS+WaitudqdnFzShHr//bff8uyDdDYrthQFLKs0NSL0s0eybFDhgot2lA4NZcBI7Loi0TUQ1Q==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      react: '>=17'
-
-  '@plurid/plurid-functions@0.0.0-31':
-    resolution: {integrity: sha512-V7/+PrwKuNzgK5bJ6g3c2mggYKEWAK/DMWW8L6mffmSnIUGDguCMg4XEGOzRmvQd9h2hgWYFCE7XMYNMy4VuuA==}
-    engines: {node: '>=18', npm: '>=8'}
-
-  '@plurid/plurid-icons-react@0.0.0-5':
-    resolution: {integrity: sha512-LT3QWsAhA1ql4Cq18MyuLaUbIN/yQZZ5zDtEM9EqUsHFsZjHrqL45z2Vo6y5F7geQxvvdvpkUaOYAHh4WoruLA==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@plurid/plurid-themes': '*'
-      react: '>=17'
-      react-dom: '>=17'
-      styled-components: ^6
-
-  '@plurid/plurid-icons-react@0.0.0-9':
-    resolution: {integrity: sha512-UD0lp6K2sVsGnSIgUNrVGB0TI+0Y+EUWu1M2rAsMBcYqwGDyOL3WSGXR1iJnTCtqrEamTGDteflSS3LoktG8cw==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@plurid/plurid-themes': '*'
-      react: '>=18'
-      react-dom: '>=18'
-      styled-components: ^6
-
-  '@plurid/plurid-pubsub@0.0.0-9':
-    resolution: {integrity: sha512-P1H7f4X/G1ozLhkgcNfPVJAMhs9IhF6vadzBhuQsYMOsof2JjYgBmrMfKxDsjR1f0gbQV/EBSDy5iC3oFqVBOQ==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@plurid/plurid-data': '*'
-      '@plurid/plurid-themes': '*'
-
-  '@plurid/plurid-react@0.0.0-34':
-    resolution: {integrity: sha512-5DbZMqmDNnxYTbomV/XBwR4FQvMsJMhXKwNyTK2UiaKdIgHWdcm+IbpdngWsnvrfqsmdvEobD+hWF+WFbpuBiw==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@plurid/elementql': '*'
-      '@plurid/elementql-client-react': '*'
-      '@plurid/plurid-data': '*'
-      '@plurid/plurid-engine': '*'
-      '@plurid/plurid-functions': '*'
-      '@plurid/plurid-functions-react': '*'
-      '@plurid/plurid-icons-react': '*'
-      '@plurid/plurid-pubsub': '*'
-      '@plurid/plurid-themes': '*'
-      '@plurid/plurid-ui-components-react': '*'
-      '@plurid/plurid-ui-state-react': '*'
-      '@reduxjs/toolkit': '>=1.8'
-      cross-fetch: '>=3'
-      hammerjs: '>=2'
-      react: '>=17'
-      react-dom: '>=17'
-      react-redux: ^9
-      styled-components: ^6
-
-  '@plurid/plurid-themes@0.0.0-2':
-    resolution: {integrity: sha512-AietpW07+ZZMzfw5ARV1ED95rBYp0auKtvnflac94WWqzyvHmxEAzWqM9HoncwcPz884yPynM017WSoIFNvKng==}
-    engines: {node: '>=12', npm: '>=6'}
-
-  '@plurid/plurid-ui-components-react@0.0.0-22':
-    resolution: {integrity: sha512-jFzE1smaNnPtXwDo+h+DX654eKC1EGwqsoswP63n1mkehowntoTJoO80zXCrgIy6C2jge8ZyL9/I4edG42MjDw==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@plurid/plurid-functions': '*'
-      '@plurid/plurid-functions-react': '*'
-      '@plurid/plurid-icons-react': '*'
-      '@plurid/plurid-themes': '*'
-      '@plurid/plurid-ui-state-react': '*'
-      '@reduxjs/toolkit': '>=1.8'
-      react: '>=17'
-      react-dom: '>=17'
-      react-redux: ^9
-      styled-components: ^6
-
-  '@plurid/plurid-ui-components-react@0.0.0-28':
-    resolution: {integrity: sha512-uel5DET1FEFFiGuoepOzhdLktU9dvgZ2wbn+iXTwYK/xiqV8z6XhXvAU1T2AQDqOi3T/sytFZ8k9ALledXdRRw==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@plurid/plurid-functions': '*'
-      '@plurid/plurid-functions-react': '*'
-      '@plurid/plurid-icons-react': '*'
-      '@plurid/plurid-themes': '*'
-      '@plurid/plurid-ui-state-react': '*'
-      '@reduxjs/toolkit': '>=1.9'
-      react: '>=18'
-      react-dom: '>=18'
-      react-redux: ^9
-      styled-components: ^6
-
-  '@plurid/plurid-ui-state-react@0.0.0-10':
-    resolution: {integrity: sha512-tY8/w6mq04Yyc3jNKMk83eVHIcPLD60CEBI80SFkBtJfhcFgg5zJ1+MqJ7awLZ+ZUOuuKi0oc68Zpuc04SOisQ==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@plurid/plurid-themes': '*'
-      '@reduxjs/toolkit': '>=1.8'
-
-  '@plurid/plurid-ui-state-react@0.0.0-11':
-    resolution: {integrity: sha512-MUNAHbsxad1McruDLQCkxBRFpNuPASDMSz7JIUawnNKLPH0nKmcLUN0DSuiEwf93ugYyjCnakAj9FKbfjlxT1g==}
-    engines: {node: '>=18', npm: '>=8'}
-    peerDependencies:
-      '@plurid/plurid-themes': '*'
-      '@reduxjs/toolkit': '>=1.9'
-
   '@puppeteer/browsers@0.5.0':
     resolution: {integrity: sha512-Uw6oB7VvmPRLE4iKsjuOh8zgDabhNX67dzo8U/BB0f9527qx+4eeUs+korU98OhG5C4ubg7ufBgVi63XYwS6TQ==}
     engines: {node: '>=14.1.0'}
@@ -1845,6 +2067,17 @@ packages:
     resolution: {integrity: sha512-X34S/rC8S/M1BIrkYD1mJ5f8vlH0BDqxXrs96cvxSBo4FhMdbhU+GUGsmNYov1xjSyLMHgo8NYrUG8bNX7525g==}
     peerDependencies:
       redux: ^3.1.0 || ^4.0.0 || ^5.0.0
+
+  '@reduxjs/toolkit@1.9.7':
+    resolution: {integrity: sha512-t7v8ZPxhhKgOKtU+uyJT13lu4vL7az5aFi4IdoDs/eS548edn2M8Ik9h8fxgvMjGoAUVFSt6ZC1P5cWmQ014QQ==}
+    peerDependencies:
+      react: ^16.9.0 || ^17.0.0 || ^18
+      react-redux: ^9
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-redux:
+        optional: true
 
   '@reduxjs/toolkit@2.12.0':
     resolution: {integrity: sha512-KiT+RzZbp6mQET+Mg+h2c97+9j1sNflUxQkIHI7Yuzf6Peu+OYpmkn6nbHWmLLWj+1ZODUJFwGZ7gx3L9R9EOw==}
@@ -2156,6 +2389,9 @@ packages:
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
+  '@types/crypto-js@4.2.2':
+    resolution: {integrity: sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==}
+
   '@types/detect-port@1.3.5':
     resolution: {integrity: sha512-Rf3/lB9WkDfIL9eEKaSYKc+1L/rNVYBjThk22JTqQw0YozXarX8YljFAz+HCoC6h4B4KwCMsBPZHaFezwT4BNA==}
 
@@ -2214,6 +2450,9 @@ packages:
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
+
+  '@types/node@18.19.130':
+    resolution: {integrity: sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==}
 
   '@types/node@20.19.43':
     resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
@@ -3430,6 +3669,10 @@ packages:
     engines: {node: '>=12'}
     deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
+  global-prefix@4.0.0:
+    resolution: {integrity: sha512-w0Uf9Y9/nyHinEk5vMJKRie+wa4kR5hmDbEhGGds/kG1PwGLLHKRoNMeJOyCQjjBkANlnScqgzcFwGHgmgLkVA==}
+    engines: {node: '>=16'}
+
   globals@13.24.0:
     resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
     engines: {node: '>=8'}
@@ -3596,6 +3839,10 @@ packages:
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
+  ini@4.1.3:
+    resolution: {integrity: sha512-X7rqawQBvfdjS10YU1y1YVreA3SsLrW9dX2CewP2EbBJM4ypVNLDkO5y04gejPwKIY9lR+7r9gn3rFPt/kmWFg==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+
   inquirer@9.3.8:
     resolution: {integrity: sha512-pFGGdaHrmRKMh4WoDDSowddgjT1Vkl90atobmTeSmcPGdYiwikch/m/Ef5wRaiamHejtw0cUUMMerzDUXCci2w==}
     engines: {node: '>=18'}
@@ -3690,6 +3937,10 @@ packages:
 
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  isexe@3.1.5:
+    resolution: {integrity: sha512-6B3tLtFqtQS4ekarvLVMZ+X+VlvQekbe4taUkf/rhVO3d/h0M2rfARm/pXLcPEsjjMsFgrFgSrhQIxcSVrBz8w==}
+    engines: {node: '>=18'}
 
   isstream@0.1.2:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
@@ -3947,6 +4198,10 @@ packages:
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
+
+  kind-of@6.0.3:
+    resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
+    engines: {node: '>=0.10.0'}
 
   kleur@3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
@@ -4822,6 +5077,9 @@ packages:
   requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
 
+  reselect@4.1.8:
+    resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
+
   reselect@5.2.0:
     resolution: {integrity: sha512-AgZ3UOZm3YndfrJ4OYjgrT7bmCm/1iqkjvEfH/oYjzh6PD2qw4QuT3jjnXIrpdt4MTpMXclMT3lXbmRY+XRakw==}
 
@@ -5394,6 +5652,27 @@ packages:
     resolution: {integrity: sha512-uivwYcQaxAucv1CzRp2n/QdYPo4ILf9VXgH19zEIjFx2EJufV16P0JtJVpYHy89DItG6Kwj2oIUjrcK5au+4tQ==}
     engines: {node: '>=8'}
 
+  ts-jest@29.1.1:
+    resolution: {integrity: sha512-D6xjnnbP17cC85nliwGiL+tpoKN0StpgE0TeOjXQTU6MVCfsB4v7aW05CgQ/1OywGb0x/oy9hHFnN+sczTiRaA==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      '@babel/core': '>=7.0.0-beta.0 <8'
+      '@jest/types': ^29.0.0
+      babel-jest: ^29.0.0
+      esbuild: '*'
+      jest: ^29.0.0
+      typescript: '>=4.3 <6'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@jest/types':
+        optional: true
+      babel-jest:
+        optional: true
+      esbuild:
+        optional: true
+
   ts-jest@29.4.11:
     resolution: {integrity: sha512-IrFl7l9AuB/qrNw5quqvAv/hmKMb8dhWOH4jQOGo0Oq8tCeo1O86/iTFG1FaRimgUkF13l4PcepO8ATFT6Ns4g==}
     engines: {node: ^14.15.0 || ^16.10.0 || ^18.0.0 || >=20.0.0}
@@ -5435,6 +5714,10 @@ packages:
       '@swc/wasm':
         optional: true
 
+  ts-patch@3.3.0:
+    resolution: {integrity: sha512-zAOzDnd5qsfEnjd9IGy1IRuvA7ygyyxxdxesbhMdutt8AHFjD8Vw8hU2rMF89HX1BKRWFYqKHrO8Q6lw0NeUZg==}
+    hasBin: true
+
   tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
@@ -5466,6 +5749,13 @@ packages:
     peerDependencies:
       typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
 
+  ttypescript@1.5.15:
+    resolution: {integrity: sha512-48ykDNHzFnPMnv4hYX1P8Q84TvCZyL1QlFxeuxsuZ48X2+ameBgPenvmCkHJtoOSxpoWTWi8NcgNrRnVDOmfSg==}
+    hasBin: true
+    peerDependencies:
+      ts-node: '>=8.0.2'
+      typescript: '>=3.2.2'
+
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
@@ -5496,6 +5786,11 @@ packages:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
 
+  typescript-transform-paths@3.5.6:
+    resolution: {integrity: sha512-3eQTG6Ogt+pgPEh45uX2s9OwcfAVjWnyNO+osjYcOqYaWDVMIFUkqW8e0O1cOaVwdMqQFQf6alDT+76xmeS2Ag==}
+    peerDependencies:
+      typescript: '>=3.6.5'
+
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
@@ -5511,6 +5806,9 @@ packages:
 
   unbzip2-stream@1.4.3:
     resolution: {integrity: sha512-mlExGW4w71ebDJviH16lQLtZS32VKqsSfk80GCfUlwT/4/hNRFsoscrF/c++9xinkMzECL1uL9DDwXqFWkruPg==}
+
+  undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
@@ -5653,6 +5951,11 @@ packages:
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
+    hasBin: true
+
+  which@4.0.0:
+    resolution: {integrity: sha512-GlaYyEb07DPxYCKhKzplCWBJtvxZcZMrL+4UkrTSJHHPyZU4mYYTv3qaOe77H7EODLSSopAUFAc6W8U4yqvscg==}
+    engines: {node: ^16.13.0 || >=18.0.0}
     hasBin: true
 
   word-wrap@1.2.5:
@@ -6290,6 +6593,76 @@ snapshots:
       jest-util: 29.7.0
       slash: 3.0.0
 
+  '@jest/core@29.7.0':
+    dependencies:
+      '@jest/console': 29.7.0
+      '@jest/reporters': 29.7.0
+      '@jest/test-result': 29.7.0
+      '@jest/transform': 29.7.0
+      '@jest/types': 29.6.3
+      '@types/node': 20.19.43
+      ansi-escapes: 4.3.2
+      chalk: 4.1.2
+      ci-info: 3.9.0
+      exit: 0.1.2
+      graceful-fs: 4.2.11
+      jest-changed-files: 29.7.0
+      jest-config: 29.7.0(@types/node@20.19.43)
+      jest-haste-map: 29.7.0
+      jest-message-util: 29.7.0
+      jest-regex-util: 29.6.3
+      jest-resolve: 29.7.0
+      jest-resolve-dependencies: 29.7.0
+      jest-runner: 29.7.0
+      jest-runtime: 29.7.0
+      jest-snapshot: 29.7.0
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      jest-watcher: 29.7.0
+      micromatch: 4.0.8
+      pretty-format: 29.7.0
+      slash: 3.0.0
+      strip-ansi: 6.0.1
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
+  '@jest/core@29.7.0(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))':
+    dependencies:
+      '@jest/console': 29.7.0
+      '@jest/reporters': 29.7.0
+      '@jest/test-result': 29.7.0
+      '@jest/transform': 29.7.0
+      '@jest/types': 29.6.3
+      '@types/node': 20.19.43
+      ansi-escapes: 4.3.2
+      chalk: 4.1.2
+      ci-info: 3.9.0
+      exit: 0.1.2
+      graceful-fs: 4.2.11
+      jest-changed-files: 29.7.0
+      jest-config: 29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+      jest-haste-map: 29.7.0
+      jest-message-util: 29.7.0
+      jest-regex-util: 29.6.3
+      jest-resolve: 29.7.0
+      jest-resolve-dependencies: 29.7.0
+      jest-runner: 29.7.0
+      jest-runtime: 29.7.0
+      jest-snapshot: 29.7.0
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      jest-watcher: 29.7.0
+      micromatch: 4.0.8
+      pretty-format: 29.7.0
+      slash: 3.0.0
+      strip-ansi: 6.0.1
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
   '@jest/core@29.7.0(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))':
     dependencies:
       '@jest/console': 29.7.0
@@ -6563,103 +6936,6 @@ snapshots:
 
   '@plurid/elementql@0.0.0-1': {}
 
-  '@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2)':
-    dependencies:
-      '@plurid/plurid-themes': 0.0.0-2
-
-  '@plurid/plurid-engine@0.0.0-18(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-themes@0.0.0-2)':
-    dependencies:
-      '@plurid/plurid-data': 0.0.0-20(@plurid/plurid-themes@0.0.0-2)
-      '@plurid/plurid-functions': 0.0.0-31
-      '@plurid/plurid-themes': 0.0.0-2
-
-  '@plurid/plurid-functions-react@0.0.0-5(react@18.3.1)':
-    dependencies:
-      react: 18.3.1
-
-  '@plurid/plurid-functions@0.0.0-31': {}
-
-  '@plurid/plurid-icons-react@0.0.0-5(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
-    dependencies:
-      '@plurid/plurid-themes': 0.0.0-2
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      styled-components: 6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-
-  '@plurid/plurid-icons-react@0.0.0-9(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
-    dependencies:
-      '@plurid/plurid-themes': 0.0.0-2
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      styled-components: 6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-
-  '@plurid/plurid-pubsub@0.0.0-9(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-themes@0.0.0-2)':
-    dependencies:
-      '@plurid/plurid-data': 0.0.0-20(@plurid/plurid-themes@0.0.0-2)
-      '@plurid/plurid-themes': 0.0.0-2
-
-  '@plurid/plurid-react@0.0.0-34(f4ecdfa245a35098d600cede6a624158)':
-    dependencies:
-      '@plurid/elementql': 0.0.0-1
-      '@plurid/elementql-client-react': 0.0.0-1
-      '@plurid/plurid-data': 0.0.0-20(@plurid/plurid-themes@0.0.0-2)
-      '@plurid/plurid-engine': 0.0.0-18(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-themes@0.0.0-2)
-      '@plurid/plurid-functions': 0.0.0-31
-      '@plurid/plurid-functions-react': 0.0.0-5(react@18.3.1)
-      '@plurid/plurid-icons-react': 0.0.0-9(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@plurid/plurid-pubsub': 0.0.0-9(@plurid/plurid-data@0.0.0-20(@plurid/plurid-themes@0.0.0-2))(@plurid/plurid-themes@0.0.0-2)
-      '@plurid/plurid-themes': 0.0.0-2
-      '@plurid/plurid-ui-components-react': 0.0.0-28(@plurid/plurid-functions-react@0.0.0-5(react@18.3.1))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-9(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-state-react@0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)))(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@plurid/plurid-ui-state-react': 0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1))
-      '@reduxjs/toolkit': 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
-      '@rollup/plugin-terser': 0.4.4(rollup@4.62.0)
-      cross-fetch: 4.1.0(encoding@0.1.13)
-      hammerjs: 2.0.8
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-redux: 9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1)
-      styled-components: 6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-    transitivePeerDependencies:
-      - rollup
-
-  '@plurid/plurid-themes@0.0.0-2': {}
-
-  '@plurid/plurid-ui-components-react@0.0.0-22(@plurid/plurid-functions-react@0.0.0-5(react@18.3.1))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-5(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-state-react@0.0.0-10(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1)))(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
-    dependencies:
-      '@plurid/plurid-functions': 0.0.0-31
-      '@plurid/plurid-functions-react': 0.0.0-5(react@18.3.1)
-      '@plurid/plurid-icons-react': 0.0.0-5(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@plurid/plurid-themes': 0.0.0-2
-      '@plurid/plurid-ui-state-react': 0.0.0-10(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1))
-      '@reduxjs/toolkit': 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-redux: 9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1)
-      styled-components: 6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-
-  '@plurid/plurid-ui-components-react@0.0.0-28(@plurid/plurid-functions-react@0.0.0-5(react@18.3.1))(@plurid/plurid-functions@0.0.0-31)(@plurid/plurid-icons-react@0.0.0-9(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@plurid/plurid-themes@0.0.0-2)(@plurid/plurid-ui-state-react@0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)))(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
-    dependencies:
-      '@plurid/plurid-functions': 0.0.0-31
-      '@plurid/plurid-functions-react': 0.0.0-5(react@18.3.1)
-      '@plurid/plurid-icons-react': 0.0.0-9(@plurid/plurid-themes@0.0.0-2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@plurid/plurid-themes': 0.0.0-2
-      '@plurid/plurid-ui-state-react': 0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1))
-      '@reduxjs/toolkit': 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-redux: 9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1)
-      styled-components: 6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-
-  '@plurid/plurid-ui-state-react@0.0.0-10(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1))':
-    dependencies:
-      '@plurid/plurid-themes': 0.0.0-2
-      '@reduxjs/toolkit': 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1)
-
-  '@plurid/plurid-ui-state-react@0.0.0-11(@plurid/plurid-themes@0.0.0-2)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1))':
-    dependencies:
-      '@plurid/plurid-themes': 0.0.0-2
-      '@reduxjs/toolkit': 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
-
   '@puppeteer/browsers@0.5.0(typescript@5.9.3)':
     dependencies:
       debug: 4.3.4
@@ -6681,17 +6957,25 @@ snapshots:
       immutable: 4.3.8
       redux: 5.0.1
 
-  '@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1)':
+  '@reduxjs/toolkit@1.9.7(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1))(react@18.3.1)':
     dependencies:
-      '@standard-schema/spec': 1.1.0
-      '@standard-schema/utils': 0.3.0
       immer: 10.2.0
-      redux: 5.0.1
-      redux-thunk: 3.1.0(redux@5.0.1)
-      reselect: 5.2.0
+      redux: 4.2.1
+      redux-thunk: 2.4.2(redux@4.2.1)
+      reselect: 4.1.8
     optionalDependencies:
       react: 18.3.1
       react-redux: 9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@4.2.1)
+
+  '@reduxjs/toolkit@1.9.7(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)':
+    dependencies:
+      immer: 10.2.0
+      redux: 4.2.1
+      redux-thunk: 2.4.2(redux@4.2.1)
+      reselect: 4.1.8
+    optionalDependencies:
+      react: 18.3.1
+      react-redux: 9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1)
 
   '@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@18.3.1)(redux@5.0.1))(react@18.3.1)':
     dependencies:
@@ -6972,6 +7256,8 @@ snapshots:
     dependencies:
       '@types/node': 20.19.43
 
+  '@types/crypto-js@4.2.2': {}
+
   '@types/detect-port@1.3.5': {}
 
   '@types/estree@0.0.39': {}
@@ -7045,6 +7331,10 @@ snapshots:
   '@types/json-schema@7.0.15': {}
 
   '@types/mime@1.3.5': {}
+
+  '@types/node@18.19.130':
+    dependencies:
+      undici-types: 5.26.5
 
   '@types/node@20.19.43':
     dependencies:
@@ -7779,6 +8069,36 @@ snapshots:
       minimist: 1.2.8
       request: 2.88.2
 
+  create-jest@29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3)):
+    dependencies:
+      '@jest/types': 29.6.3
+      chalk: 4.1.2
+      exit: 0.1.2
+      graceful-fs: 4.2.11
+      jest-config: 29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+      jest-util: 29.7.0
+      prompts: 2.4.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
+  create-jest@29.7.0(@types/node@20.19.43):
+    dependencies:
+      '@jest/types': 29.6.3
+      chalk: 4.1.2
+      exit: 0.1.2
+      graceful-fs: 4.2.11
+      jest-config: 29.7.0(@types/node@20.19.43)
+      jest-util: 29.7.0
+      prompts: 2.4.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
   create-jest@29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3)):
     dependencies:
       '@jest/types': 29.6.3
@@ -8505,6 +8825,12 @@ snapshots:
       minimatch: 5.1.9
       once: 1.4.0
 
+  global-prefix@4.0.0:
+    dependencies:
+      ini: 4.1.3
+      kind-of: 6.0.3
+      which: 4.0.0
+
   globals@13.24.0:
     dependencies:
       type-fest: 0.20.2
@@ -8669,6 +8995,8 @@ snapshots:
 
   inherits@2.0.4: {}
 
+  ini@4.1.3: {}
+
   inquirer@9.3.8(@types/node@20.19.43):
     dependencies:
       '@inquirer/external-editor': 1.0.3(@types/node@20.19.43)
@@ -8747,6 +9075,8 @@ snapshots:
       is-inside-container: 1.0.0
 
   isexe@2.0.0: {}
+
+  isexe@3.1.5: {}
 
   isstream@0.1.2: {}
 
@@ -8849,6 +9179,44 @@ snapshots:
       - supports-color
       - ts-node
 
+  jest-cli@29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3)):
+    dependencies:
+      '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+      '@jest/test-result': 29.7.0
+      '@jest/types': 29.6.3
+      chalk: 4.1.2
+      create-jest: 29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+      exit: 0.1.2
+      import-local: 3.2.0
+      jest-config: 29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
+  jest-cli@29.7.0(@types/node@20.19.43):
+    dependencies:
+      '@jest/core': 29.7.0
+      '@jest/test-result': 29.7.0
+      '@jest/types': 29.6.3
+      chalk: 4.1.2
+      create-jest: 29.7.0(@types/node@20.19.43)
+      exit: 0.1.2
+      import-local: 3.2.0
+      jest-config: 29.7.0(@types/node@20.19.43)
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
   jest-cli@29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3)):
     dependencies:
       '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))
@@ -8867,6 +9235,98 @@ snapshots:
       - babel-plugin-macros
       - supports-color
       - ts-node
+
+  jest-config@29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3)):
+    dependencies:
+      '@babel/core': 7.29.7
+      '@jest/test-sequencer': 29.7.0
+      '@jest/types': 29.6.3
+      babel-jest: 29.7.0(@babel/core@7.29.7)
+      chalk: 4.1.2
+      ci-info: 3.9.0
+      deepmerge: 4.3.1
+      glob: 7.2.3
+      graceful-fs: 4.2.11
+      jest-circus: 29.7.0
+      jest-environment-node: 29.7.0
+      jest-get-type: 29.6.3
+      jest-regex-util: 29.6.3
+      jest-resolve: 29.7.0
+      jest-runner: 29.7.0
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      micromatch: 4.0.8
+      parse-json: 5.2.0
+      pretty-format: 29.7.0
+      slash: 3.0.0
+      strip-json-comments: 3.1.1
+    optionalDependencies:
+      '@types/node': 18.19.130
+      ts-node: 10.9.2(@types/node@18.19.130)(typescript@5.9.3)
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
+
+  jest-config@29.7.0(@types/node@20.19.43):
+    dependencies:
+      '@babel/core': 7.29.7
+      '@jest/test-sequencer': 29.7.0
+      '@jest/types': 29.6.3
+      babel-jest: 29.7.0(@babel/core@7.29.7)
+      chalk: 4.1.2
+      ci-info: 3.9.0
+      deepmerge: 4.3.1
+      glob: 7.2.3
+      graceful-fs: 4.2.11
+      jest-circus: 29.7.0
+      jest-environment-node: 29.7.0
+      jest-get-type: 29.6.3
+      jest-regex-util: 29.6.3
+      jest-resolve: 29.7.0
+      jest-runner: 29.7.0
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      micromatch: 4.0.8
+      parse-json: 5.2.0
+      pretty-format: 29.7.0
+      slash: 3.0.0
+      strip-json-comments: 3.1.1
+    optionalDependencies:
+      '@types/node': 20.19.43
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
+
+  jest-config@29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3)):
+    dependencies:
+      '@babel/core': 7.29.7
+      '@jest/test-sequencer': 29.7.0
+      '@jest/types': 29.6.3
+      babel-jest: 29.7.0(@babel/core@7.29.7)
+      chalk: 4.1.2
+      ci-info: 3.9.0
+      deepmerge: 4.3.1
+      glob: 7.2.3
+      graceful-fs: 4.2.11
+      jest-circus: 29.7.0
+      jest-environment-node: 29.7.0
+      jest-get-type: 29.6.3
+      jest-regex-util: 29.6.3
+      jest-resolve: 29.7.0
+      jest-runner: 29.7.0
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      micromatch: 4.0.8
+      parse-json: 5.2.0
+      pretty-format: 29.7.0
+      slash: 3.0.0
+      strip-json-comments: 3.1.1
+    optionalDependencies:
+      '@types/node': 20.19.43
+      ts-node: 10.9.2(@types/node@18.19.130)(typescript@5.9.3)
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
 
   jest-config@29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3)):
     dependencies:
@@ -9147,6 +9607,30 @@ snapshots:
       - supports-color
       - ts-node
 
+  jest@29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3)):
+    dependencies:
+      '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+      '@jest/types': 29.6.3
+      import-local: 3.2.0
+      jest-cli: 29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
+  jest@29.7.0(@types/node@20.19.43):
+    dependencies:
+      '@jest/core': 29.7.0
+      '@jest/types': 29.6.3
+      import-local: 3.2.0
+      jest-cli: 29.7.0(@types/node@20.19.43)
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
   jest@29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3)):
     dependencies:
       '@jest/core': 29.7.0(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))
@@ -9239,6 +9723,8 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  kind-of@6.0.3: {}
 
   kleur@3.0.3: {}
 
@@ -10059,6 +10545,8 @@ snapshots:
 
   requires-port@1.0.0: {}
 
+  reselect@4.1.8: {}
+
   reselect@5.2.0: {}
 
   resolve-cwd@3.0.0:
@@ -10684,6 +11172,23 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  ts-jest@29.1.1(@babel/core@7.29.7)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(jest@29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3)))(typescript@5.9.3):
+    dependencies:
+      bs-logger: 0.2.6
+      fast-json-stable-stringify: 2.1.0
+      jest: 29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))
+      jest-util: 29.7.0
+      json5: 2.2.3
+      lodash.memoize: 4.1.2
+      make-error: 1.3.6
+      semver: 7.8.4
+      typescript: 5.9.3
+      yargs-parser: 21.1.1
+    optionalDependencies:
+      '@babel/core': 7.29.7
+      '@jest/types': 29.6.3
+      babel-jest: 29.7.0(@babel/core@7.29.7)
+
   ts-jest@29.4.11(@babel/core@7.29.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(esbuild@0.18.20)(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3)))(typescript@5.9.3):
     dependencies:
       bs-logger: 0.2.6
@@ -10726,6 +11231,64 @@ snapshots:
       esbuild: 0.19.12
       jest-util: 29.7.0
 
+  ts-jest@29.4.11(@babel/core@7.29.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(jest-util@29.7.0)(jest@29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3)))(typescript@5.9.3):
+    dependencies:
+      bs-logger: 0.2.6
+      fast-json-stable-stringify: 2.1.0
+      handlebars: 4.7.9
+      jest: 29.7.0(@types/node@18.19.130)(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))
+      json5: 2.2.3
+      lodash.memoize: 4.1.2
+      make-error: 1.3.6
+      semver: 7.8.4
+      type-fest: 4.41.0
+      typescript: 5.9.3
+      yargs-parser: 21.1.1
+    optionalDependencies:
+      '@babel/core': 7.29.7
+      '@jest/transform': 29.7.0
+      '@jest/types': 29.6.3
+      babel-jest: 29.7.0(@babel/core@7.29.7)
+      jest-util: 29.7.0
+
+  ts-jest@29.4.11(@babel/core@7.29.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.43))(typescript@5.9.3):
+    dependencies:
+      bs-logger: 0.2.6
+      fast-json-stable-stringify: 2.1.0
+      handlebars: 4.7.9
+      jest: 29.7.0(@types/node@20.19.43)
+      json5: 2.2.3
+      lodash.memoize: 4.1.2
+      make-error: 1.3.6
+      semver: 7.8.4
+      type-fest: 4.41.0
+      typescript: 5.9.3
+      yargs-parser: 21.1.1
+    optionalDependencies:
+      '@babel/core': 7.29.7
+      '@jest/transform': 29.7.0
+      '@jest/types': 29.6.3
+      babel-jest: 29.7.0(@babel/core@7.29.7)
+      jest-util: 29.7.0
+
+  ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.12
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 18.19.130
+      acorn: 8.17.0
+      acorn-walk: 8.3.5
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.4
+      make-error: 1.3.6
+      typescript: 5.9.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+
   ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -10743,6 +11306,15 @@ snapshots:
       typescript: 5.9.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+
+  ts-patch@3.3.0:
+    dependencies:
+      chalk: 4.1.2
+      global-prefix: 4.0.0
+      minimist: 1.2.8
+      resolve: 1.22.12
+      semver: 7.8.4
+      strip-ansi: 6.0.1
 
   tslib@1.14.1: {}
 
@@ -10781,6 +11353,18 @@ snapshots:
       tslib: 1.14.1
       typescript: 5.9.3
 
+  ttypescript@1.5.15(ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3))(typescript@5.9.3):
+    dependencies:
+      resolve: 1.22.12
+      ts-node: 10.9.2(@types/node@18.19.130)(typescript@5.9.3)
+      typescript: 5.9.3
+
+  ttypescript@1.5.15(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))(typescript@5.9.3):
+    dependencies:
+      resolve: 1.22.12
+      ts-node: 10.9.2(@types/node@20.19.43)(typescript@5.9.3)
+      typescript: 5.9.3
+
   tunnel-agent@0.6.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -10804,6 +11388,11 @@ snapshots:
       media-typer: 0.3.0
       mime-types: 2.1.35
 
+  typescript-transform-paths@3.5.6(typescript@5.9.3):
+    dependencies:
+      minimatch: 9.0.9
+      typescript: 5.9.3
+
   typescript@5.9.3: {}
 
   ufo@1.6.4: {}
@@ -10814,6 +11403,8 @@ snapshots:
     dependencies:
       buffer: 5.7.1
       through: 2.3.8
+
+  undici-types@5.26.5: {}
 
   undici-types@6.21.0: {}
 
@@ -10918,6 +11509,10 @@ snapshots:
   which@2.0.2:
     dependencies:
       isexe: 2.0.0
+
+  which@4.0.0:
+    dependencies:
+      isexe: 3.1.5
 
   word-wrap@1.2.5: {}
 

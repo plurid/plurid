@@ -46,7 +46,7 @@
         "@plurid/plurid-themes": "*"
     },
     "devDependencies": {
-        "@plurid/plurid-themes": "0.0.0-2",
+        "@plurid/plurid-themes": "workspace:*",
         "@types/node": "^20.10.6",
         "@typescript-eslint/eslint-plugin": "^6.17.0",
         "@typescript-eslint/parser": "^6.17.0",
