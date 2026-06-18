@@ -328,10 +328,11 @@ export const handleGlobalWheel = (
     event: WheelEvent,
     modes: TransformModes,
     locks: PluridConfigurationSpaceTransformLocks,
+    grabMode: boolean = false,
 ) => {
-    // Default (ALL) mode treats the wheel as zoom, so claim the event there too — only an
-    // explicit rotation/translation mode lets the wheel mean something else.
-    const wheelZooms = !modes.rotation && !modes.translation;
+    // The wheel only zooms the space while navigating (grab mode, scale mode, or
+    // ⌘/Ctrl+wheel). Otherwise it's left alone so page/plane content scrolls normally.
+    const wheelZooms = grabMode;
     if (event.shiftKey
         || event.metaKey
         || event.altKey

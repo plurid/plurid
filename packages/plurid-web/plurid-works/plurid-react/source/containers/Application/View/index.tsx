@@ -268,6 +268,14 @@ const PluridView: React.FC<PluridViewProperties> = (
 
 
     // #region state
+    // Grab/navigate mode (toggle with G). When OFF (default) the space behaves like a
+    // normal page — text is selectable, content is clickable, the wheel scrolls. When ON
+    // a left-drag orbits / pans the 3D space (a hand tool). Middle-drag pans in any mode.
+    const [grabMode, setGrabMode] = useState(false);
+    const [navDragging, setNavDragging] = useState(false);
+    const grabModeRef = useRef(grabMode);
+    grabModeRef.current = grabMode;
+
     const [
         pluridPubSub,
         setPluridPubSub,
@@ -355,6 +363,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             event,
             transformModes,
             transformLocks,
+            grabModeRef.current,
         );
     }, [
         dispatch,
@@ -994,12 +1003,15 @@ const PluridView: React.FC<PluridViewProperties> = (
                 } else if (mode === TRANSFORM_MODES.SCALE) {
                     scaleByDrag(dy);
                 } else {
+                    // Default (ALL) mode. In grab mode a left-drag orbits; shift- or
+                    // middle-drag pans. In normal (content) mode only middle/shift drags
+                    // are tracked at all, and they pan.
                     const wantsPan = event.shiftKey || (event.buttons & 4) === 4;
-                    if (wantsPan) {
-                        panByDelta(dx, dy, event.altKey);
-                    } else {
+                    if (grabModeRef.current && !wantsPan) {
                         navWasOrbit = true;
                         rotateByDelta(dx, dy);
+                    } else {
+                        panByDelta(dx, dy, event.altKey);
                     }
                 }
             };
@@ -1029,6 +1041,17 @@ const PluridView: React.FC<PluridViewProperties> = (
                 // setPointerCapture or preventDefault here, or control clicks get swallowed.
                 const target = event.target as HTMLElement | null;
                 if (target && target.closest && target.closest('input, textarea, select')) {
+                    return;
+                }
+                // Only engage navigation for a deliberate nav gesture; otherwise leave the
+                // press to the browser (text selection, clicks, links) — planes are pages.
+                // Nav = fly mode, grab mode (G), the middle mouse button, or an explicit
+                // rotate/scale/translate mode.
+                const navIntent = spaceConfigRef.current.firstPerson
+                    || grabModeRef.current
+                    || event.button === 1
+                    || spaceConfigRef.current.transformMode !== TRANSFORM_MODES.ALL;
+                if (!navIntent) {
                     return;
                 }
                 stopMomentum();
@@ -1087,6 +1110,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                         return;
                     }
                     pointerDragging.current = true;
+                    setNavDragging(true);
                     lastPointer.current = { x: event.clientX, y: event.clientY };
                     try {
                         element.setPointerCapture(event.pointerId);
@@ -1121,6 +1145,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                 if (activePointers.current.size === 0) {
                     lastPointer.current = null;
                     pointerDownAt.current = null;
+                    setNavDragging(false);
                     const wasDragging = pointerDragging.current;
                     pointerDragging.current = false;
                     // Only fling momentum if this was an actual orbit drag (not a click).
@@ -1255,6 +1280,39 @@ const PluridView: React.FC<PluridViewProperties> = (
         // #endregion effects fly
 
 
+        // #region effects grab-mode
+        /** Toggle grab/navigate mode with G; Escape exits. Ignored while typing in a field. */
+        useEffect(() => {
+            if (typeof window === 'undefined') {
+                return;
+            }
+            const onKeyDown = (event: KeyboardEvent) => {
+                const target = event.target as HTMLElement | null;
+                if (target && (
+                    target.tagName === 'INPUT'
+                    || target.tagName === 'TEXTAREA'
+                    || target.isContentEditable
+                )) {
+                    return;
+                }
+                if (event.metaKey || event.ctrlKey || event.altKey) {
+                    return;
+                }
+                if (event.code === 'KeyG') {
+                    event.preventDefault();
+                    setGrabMode((value) => !value);
+                } else if (event.code === 'Escape' && grabModeRef.current) {
+                    setGrabMode(false);
+                }
+            };
+            window.addEventListener('keydown', onKeyDown);
+            return () => {
+                window.removeEventListener('keydown', onKeyDown);
+            };
+        }, []);
+        // #endregion effects grab-mode
+
+
         // #region effects gamepad
         useEffect(() => {
             const handleGamepadConnect = (
@@ -1368,6 +1426,9 @@ const PluridView: React.FC<PluridViewProperties> = (
             tabIndex={0}
             theme={stateGeneralTheme}
             transformMode={stateConfiguration.space.transformMode}
+            grabNavigation={grabMode}
+            navDragging={navDragging}
+            firstPerson={stateConfiguration.space.firstPerson}
             data-plurid-entity={PLURID_ENTITY_VIEW}
         >
             <GlobalStyle

@@ -97,10 +97,17 @@ export const StyledView: any = styled.div`
     outline: none;
     overflow: hidden;
 
-    /* The space is always a navigation surface (orbit/pan/zoom work in any mode, including
-       the default ALL), so suppress text-selection / native drag / tap highlight and show a
-       grab cursor — like a CAD viewport. Explicit transform modes get a hint cursor. */
+    /* The space is a navigation surface only when navigating: fly mode, grab mode (G), or
+       an explicit rotate/scale/translate mode. Otherwise it behaves like a normal page —
+       text is selectable and the default cursor shows. Cursor: grabbing while dragging,
+       grab when ready to navigate, a hint cursor for the explicit transform modes. */
     cursor: ${(props: any) => {
+        if (props.navDragging) {
+            return 'grabbing';
+        }
+        if (props.firstPerson || props.grabNavigation) {
+            return 'grab';
+        }
         if (
             props.transformMode === TRANSFORM_MODES.TRANSLATION
             || props.transformMode === TRANSFORM_MODES.ROTATION
@@ -112,10 +119,20 @@ export const StyledView: any = styled.div`
         ) {
             return 'ns-resize';
         }
-        return 'grab';
+        return 'auto';
     }};
-    user-select: none;
-    touch-action: none;
+    user-select: ${(props: any) => {
+        const navActive = props.firstPerson
+            || props.grabNavigation
+            || props.transformMode !== 'ALL';
+        return navActive ? 'none' : 'auto';
+    }};
+    touch-action: ${(props: any) => {
+        const navActive = props.firstPerson
+            || props.grabNavigation
+            || props.transformMode !== 'ALL';
+        return navActive ? 'none' : 'auto';
+    }};
     -webkit-user-drag: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 `;

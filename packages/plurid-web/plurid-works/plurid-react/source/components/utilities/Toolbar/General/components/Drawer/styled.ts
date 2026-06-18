@@ -46,11 +46,13 @@ export const StyledPluridDrawerHeading: any = styled.div`
     cursor: pointer;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
-    border-bottom: 1px solid transparent;
     text-align: left;
+    transition: box-shadow 150ms ease;
 
+    /* Just an underline on hover — NO background fill — drawn with an inset box-shadow so
+       it can never reflow / shift the text (a border-bottom toggle nudges the layout). */
     :hover {
-        border-bottom: 1px solid ${(props: any) => {
+        box-shadow: inset 0 -1px 0 0 ${(props: any) => {
             return props.theme.colorPrimary;
         }};
     }

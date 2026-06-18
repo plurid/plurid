@@ -165,7 +165,8 @@ export const StyledToolbarButtons = styled.div<IStyledToolbarButtons>`
     display: grid;
     pointer-events: all;
     display: grid;
-    align-items: center;
+    /* stretch buttons to the full toolbar height so their fill is never short */
+    align-items: stretch;
     justify-content: center;
     justify-items: center;
     border-radius: 22.5px;
@@ -240,10 +241,10 @@ export const StyledToolbarButton = styled.div<IStyledToolbarButton>`
         return '70px';
     }};
 
-    /* An inset rounded chip — shorter than the 45px toolbar so the highlight floats
-       centered with breathing room, instead of a sharp full-height block. */
-    height: 34px;
-    border-radius: 10px;
+    /* Original look: a full-height fill on the button, with a smooth fade. Fill the row the
+       grid stretches us into (min 45px) so the highlight always spans the toolbar height. */
+    min-height: 45px;
+    height: 100%;
     display: grid;
     align-items: center;
     justify-content: center;
@@ -251,25 +252,21 @@ export const StyledToolbarButton = styled.div<IStyledToolbarButton>`
     user-select: none;
     transition: background-color 150ms ease;
 
-    @media (hover: hover) {
-        :hover {
-            background-color: ${({
-                active,
-                theme,
-            }) => {
-                if (active) {
-                    return theme.backgroundColorTertiary;
-                }
-                /* Subtle wash on hover, distinct from the solid active fill. */
-                return 'rgba(255, 255, 255, 0.07)';
-            }};
-        }
+    /* No @media (hover: hover) gate — some setups report hover: none even with a mouse,
+       which silently dropped the hover fill. */
+    :hover {
+        background-color: ${({
+            theme,
+        }) => {
+            return theme.backgroundColorTertiary;
+        }};
     }
 `;
 
 
 export const StyledIcon = styled.div`
     width: 40px;
+    height: 100%;
     display: grid;
     place-content: center;
 
