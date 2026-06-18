@@ -17,6 +17,7 @@ export interface IStyledPluridPlaneBridge {
     planeOpacity: number;
     transparentUI: boolean;
     mouseOver: boolean;
+    bridgeLength: number;
 }
 
 export const StyledPluridPlaneBridge = styled.div<IStyledPluridPlaneBridge>`
@@ -44,9 +45,9 @@ export const StyledPluridPlaneBridge = styled.div<IStyledPluridPlaneBridge>`
 
     position: absolute;
     top: 0;
-    left: -100px;
+    left: ${({ bridgeLength }) => -bridgeLength}px;
     height: 30px;
-    width: 100px;
+    width: ${({ bridgeLength }) => bridgeLength}px;
     opacity: 0.5;
 
     display: flex;

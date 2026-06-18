@@ -806,8 +806,9 @@ export const updateTreeWithNewPlane = <C>(
             rotateX: 0,
             rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
         },
-        bridgeLength: 100,
-        planeAngle: 90,
+        // Configurable bridge geometry (defaults preserve the original 100 / 90).
+        bridgeLength: configuration.space.bridge?.length ?? 100,
+        planeAngle: configuration.space.bridge?.planeAngle ?? 90,
         linkCoordinates,
     };
     // console.log('updatedTreePlane', updatedTreePlane);

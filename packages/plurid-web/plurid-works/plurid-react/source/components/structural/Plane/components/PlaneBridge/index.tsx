@@ -82,6 +82,9 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
     const {
         transparentUI,
     } = stateConfiguration.global;
+
+    // Configurable bridge geometry (defaults to the original 100).
+    const bridgeLength = stateConfiguration.space.bridge?.length ?? 100;
     // #endregion properties
 
 
@@ -93,6 +96,7 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
             planeOpacity={opacity}
             transparentUI={transparentUI}
             mouseOver={mouseOver}
+            bridgeLength={bridgeLength}
             data-plurid-entity={PLURID_ENTITY_PLANE_BRIDGE}
         />
     );

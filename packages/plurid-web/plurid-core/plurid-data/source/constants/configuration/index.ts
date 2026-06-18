@@ -115,6 +115,10 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     transformTouch: TRANSFORM_TOUCHES.PAN,
     firstPerson: false,
     cullingDistance: PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
+    bridge: {
+        length: 100,
+        planeAngle: 90,
+    },
 };
 
 

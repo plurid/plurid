@@ -148,6 +148,16 @@ export interface PluridConfigurationSpace {
     cullingDistance: number;
 
     /**
+     * Geometry of the bridge that joins a plurid-link-spawned child plane to its parent.
+     * `length` — the bridge depth (default 100); `planeAngle` — the child plane's angle
+     * off the parent in degrees (default 90).
+     */
+    bridge?: {
+        length?: number;
+        planeAngle?: number;
+    };
+
+    /**
      * Time for the planes to fade in, in milliseconds.
      *
      * Default 1500
