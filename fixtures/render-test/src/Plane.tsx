@@ -1,11 +1,15 @@
 import React from 'react';
 
+import { PluridLink } from '@plurid/plurid-react';
+
 
 export interface PanelProps {
     title: string;
     code: string;
     accent: string;
     rows: [string, string][];
+    /** Optional plurid link — clicking it spawns the target plane into the space. */
+    link?: { route: string; label: string };
 }
 
 
@@ -13,7 +17,7 @@ export interface PanelProps {
  * A CAD-like instrument panel. Monospace, technical readout, accent rule —
  * each plane in the space reads like a module in a control surface.
  */
-const Panel: React.FC<PanelProps> = ({ title, code, accent, rows }) => (
+const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link }) => (
     <div
         style={{
             height: 360,
@@ -68,6 +72,26 @@ const Panel: React.FC<PanelProps> = ({ title, code, accent, rows }) => (
                 </div>
             ))}
         </div>
+
+        {link && (
+            <div style={{ padding: '0 16px 14px' }}>
+                <PluridLink
+                    route={link.route}
+                    style={{
+                        display: 'inline-block',
+                        fontSize: 11,
+                        letterSpacing: '0.06em',
+                        color: accent,
+                        cursor: 'pointer',
+                        textDecoration: 'none',
+                        borderBottom: `1px dashed ${accent}66`,
+                        paddingBottom: 2,
+                    }}
+                >
+                    {link.label} →
+                </PluridLink>
+            </div>
+        )}
 
         <div
             style={{

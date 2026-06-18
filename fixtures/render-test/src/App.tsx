@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
     PluridApplication,
     PluridReactPlane,
+    PluridLink,
     SPACE_LAYOUT,
 } from '@plurid/plurid-react';
 
@@ -87,13 +88,39 @@ const App = () => {
         elements: { plane: { width: stress ? 0.16 : 0.32 } },
     };
 
-    const planes: PluridReactPlane[] = source.map((panel) => ({
-        route: panel.route,
+    // A plane registered but NOT in the initial `view` — a plurid link spawns it into the
+    // space (joined to its parent by a bridge). This is the "planes are pages" core.
+    const DETAIL_ROUTE = '/geometry/detail';
+    const detailPlane: PluridReactPlane = {
+        route: DETAIL_ROUTE,
         component: () => (
-            <Panel title={panel.title} code={panel.code} accent={panel.accent} rows={panel.rows} />
+            <Panel
+                title="GEOMETRY · DETAIL"
+                code="G-01·D"
+                accent="#4da3ff"
+                rows={[['edges', '6 140'], ['normals', 'per-vertex'], ['uv sets', '2'], ['lod', '3']]}
+            />
         ),
-    }));
+    };
 
+    const planes: PluridReactPlane[] = [
+        ...source.map((panel) => ({
+            route: panel.route,
+            component: () => (
+                <Panel
+                    title={panel.title}
+                    code={panel.code}
+                    accent={panel.accent}
+                    rows={panel.rows}
+                    link={panel.route === '/geometry' ? { route: DETAIL_ROUTE, label: 'open detail' } : undefined}
+                />
+            ),
+        })),
+        detailPlane,
+    ];
+
+    // `view` = the initially-visible roots. DETAIL_ROUTE is intentionally absent → it only
+    // appears when the link is clicked.
     const view = source.map((panel) => panel.route);
 
     return (
