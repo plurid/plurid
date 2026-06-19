@@ -777,6 +777,9 @@ export const updateTreeWithNewPlane = <C>(
     const location = computePluridPlaneLocation(
         linkCoordinates,
         parentPlane,
+        // Couple the parent→child GAP to the same configured length the bridge renders at,
+        // otherwise the bridge visual (width) overshoots/undershoots the actual gap.
+        configuration.space.bridge?.length ?? 100,
     );
     // console.log('location', location);
     // console.log('planeRoute', planeRoute);
@@ -906,6 +909,10 @@ export const updatePlaneLocation = (
     const location = computePluridPlaneLocation(
         linkCoordinates,
         parentPlane,
+        // Use the plane's STORED bridge geometry (set at spawn from config), otherwise this
+        // recompute resets the gap to the default 100 and the bridge visual overshoots.
+        plane.bridgeLength,
+        plane.planeAngle,
     );
 
     plane.location = {

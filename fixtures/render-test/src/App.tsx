@@ -84,9 +84,9 @@ const App = () => {
         space: {
             layout: stress ? { type: SPACE_LAYOUT.COLUMNS, columns: 8, gap: 0.04 } : active.layout,
             center: true,
-            // Tune the link-spawn bridge geometry (default is length 100 / 90°). A gentler
-            // angle reads better for "planes as pages".
-            bridge: { length: 160, planeAngle: 55 },
+            // Tune the link-spawn bridge length (default 100). Drives both the gap between
+            // parent and child AND the rendered bridge, so they stay aligned.
+            bridge: { length: 160 },
         },
         elements: { plane: { width: stress ? 0.16 : 0.32 } },
     };
