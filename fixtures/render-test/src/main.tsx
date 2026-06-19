@@ -2,6 +2,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import * as PR from '@plurid/plurid-react';
 import App from './App';
+import RouterDemo from './RouterDemo';
+
+// `?router` → exercise PluridRouterBrowser SPA navigation (P3-3); default = the CAD harness.
+const Root = /[?&]router/.test(location.search) ? RouterDemo : App;
 
 console.log('[RT] plurid-react export count =', Object.keys(PR).length,
   '| PluridApplication =', typeof (PR as any).PluridApplication,
@@ -19,7 +23,7 @@ class EB extends React.Component<any, any> {
 }
 const el = document.getElementById('plurid-app')!;
 try {
-  createRoot(el).render(React.createElement(EB, null, React.createElement(App)));
+  createRoot(el).render(React.createElement(EB, null, React.createElement(Root)));
   console.log('[RT] render() returned without throwing');
 } catch (e: any) {
   console.error('[RT] SYNC render threw:', e?.message);
