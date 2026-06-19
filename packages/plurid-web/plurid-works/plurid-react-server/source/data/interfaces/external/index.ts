@@ -110,6 +110,13 @@ export interface PluridServerOptions {
     stillsDirectory: string;
 
     stiller: PluridStillerOptions;
+
+    /**
+     * Install `SIGINT`/`SIGTERM` handlers that stop the server and call `process.exit`.
+     * Defaults to `true` (convenient for the CLI). Set to `false` when EMBEDDING the server
+     * in a host process you do not want it to terminate; then manage lifecycle via `stop()`.
+     */
+    attachSignalHandlers: boolean;
 }
 
 

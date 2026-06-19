@@ -205,11 +205,34 @@ class PluridServer {
         this.configureServer();
         this.handleEndpoints();
 
+        // Opt-out (default on for the CLI). A bound, stored handler is registered ONCE and
+        // removed in `stop()`, so multiple server instances don't pile up duplicate handlers,
+        // and an embedding host can disable process termination entirely.
+        if (this.options.attachSignalHandlers) {
+            this.attachSignalHandlers();
+        }
+    }
 
-        process.addListener('SIGINT', () => {
-            this.stop();
-            process.exit(0);
-        });
+    private handleProcessSignal = () => {
+        this.stop();
+        process.exit(0);
+    };
+
+    private signalHandlersAttached = false;
+
+    public attachSignalHandlers() {
+        if (this.signalHandlersAttached) {
+            return;
+        }
+        process.on('SIGINT', this.handleProcessSignal);
+        process.on('SIGTERM', this.handleProcessSignal);
+        this.signalHandlersAttached = true;
+    }
+
+    public detachSignalHandlers() {
+        process.removeListener('SIGINT', this.handleProcessSignal);
+        process.removeListener('SIGTERM', this.handleProcessSignal);
+        this.signalHandlersAttached = false;
     }
 
     static analysis(
@@ -243,6 +266,8 @@ class PluridServer {
     }
 
     public stop() {
+        this.detachSignalHandlers();
+
         if (this.server) {
             if (this.debugAllows('info')) {
                 console.info(
@@ -1195,6 +1220,7 @@ class PluridServer {
             ignore: partialOptions?.ignore || [],
             stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
             stiller: partialOptions?.stiller || defaultStillerOptions,
+            attachSignalHandlers: partialOptions?.attachSignalHandlers ?? true,
         };
         return options;
     }

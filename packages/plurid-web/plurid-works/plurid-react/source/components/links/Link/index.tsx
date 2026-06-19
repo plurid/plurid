@@ -334,9 +334,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 continue;
             }
 
+            // Require BOTH axes to match (the child at the SAME point), not either — with `||`
+            // a plane merely sharing a row (same y) or column (same x) in a grid layout would
+            // be wrongly attached to this link.
             if (
                 plane.linkCoordinates.x === linkCoordinates.x
-                || plane.linkCoordinates.y === linkCoordinates.y
+                && plane.linkCoordinates.y === linkCoordinates.y
             ) {
                 if (pluridPlaneID === plane.planeID) {
                     continue;

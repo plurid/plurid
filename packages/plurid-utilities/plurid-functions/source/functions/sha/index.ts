@@ -1,35 +1,17 @@
 // #region module
-const browserDigestMessage = async (
-    message: string,
-    algorithm: string = 'sha256',
-): Promise<string> => {
-    algorithm = algorithm.toUpperCase().replace('SHA', 'SHA-');
-
-    const msgUint8 = new TextEncoder().encode(message);
-    const hashBuffer = await window.crypto.subtle.digest(algorithm, msgUint8);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    return hashHex;
-}
-
-
 const compute = async (
     data: string,
     algorithm: string = 'sha256',
 ): Promise<string> => {
-    if (typeof window !== 'undefined') {
-        return await browserDigestMessage(
-            data,
-            algorithm,
-        );
-    }
-
-    // FORCE prevent webpack bundling
-    const crypto = eval('require')('crypto'); // eslint-disable-line no-eval
-    return crypto
-        .createHash(algorithm)
-        .update(data)
-        .digest('hex');
+    // Web Crypto (`crypto.subtle`) is available in browsers and Node >= 19, so a single path
+    // covers both. This replaces the old browser/Node split + the `eval('require')('crypto')`
+    // hack (whose only purpose was hiding the Node require from bundlers).
+    const subtleAlgorithm = algorithm.toUpperCase().replace('SHA', 'SHA-');
+    const messageBytes = new TextEncoder().encode(data);
+    const hashBuffer = await globalThis.crypto.subtle.digest(subtleAlgorithm, messageBytes);
+    return Array.from(new Uint8Array(hashBuffer))
+        .map(byte => byte.toString(16).padStart(2, '0'))
+        .join('');
 }
 // #endregion module
 

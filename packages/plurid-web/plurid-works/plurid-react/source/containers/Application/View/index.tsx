@@ -741,13 +741,11 @@ const PluridView: React.FC<PluridViewProperties> = (
                                 forceShow,
                             );
 
+                            // Single dispatch — `togglePlaneFromTree` now returns a NEW
+                            // immutable tree, so this update is detected on the first dispatch.
+                            // (Previously a 50 ms re-dispatch HACK forced the update because the
+                            // old mutating toggle left the tree identity unchanged.)
                             dispatchSetTree(updatedTree);
-
-                            setTimeout(() => {
-                                // HACK
-                                // force the tree to update with show: false
-                                dispatchSetTree(updatedTree);
-                            }, 50);
 
                             dispatchSetSpaceField({
                                 field: 'lastClosedPlane',

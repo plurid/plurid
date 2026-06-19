@@ -30,9 +30,10 @@ export const v4Browser = (
 export const v4Node = (
     separator: string = '',
 ) => {
-    // FORCE prevent webpack bundling
-    const crypto = eval('require')('crypto'); // eslint-disable-line no-eval
-    const id: string = crypto.randomBytes(16).toString('hex');
+    // Web Crypto (`crypto.getRandomValues`) is available in Node >= 19 (and browsers), so this
+    // no longer needs `eval('require')('crypto')` to hide a Node-only require from bundlers.
+    const randomBytes = globalThis.crypto.getRandomValues(new Uint8Array(16));
+    const id = Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('');
     if (!separator) {
         return id;
     }

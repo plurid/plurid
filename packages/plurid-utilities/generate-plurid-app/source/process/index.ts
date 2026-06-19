@@ -116,7 +116,9 @@ const processArguments = async (
                 manager = managerTypes.npm;
         }
 
-        switch (program.versioning.toLowerCase()) {
+        // Guard against an unset value (the `--versioning` flag now defaults to "none", but a
+        // non-interactive caller on an older option set would otherwise throw on `.toLowerCase`).
+        switch ((program.versioning || versioningTypes.none).toLowerCase()) {
             case versioningTypes.git.toLowerCase():
                 versioning = versioningTypes.git;
                 break;

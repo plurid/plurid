@@ -600,122 +600,6 @@ export const computeSpaceTree = <C>(
 }
 
 
-export const isParametric = (
-    viewRoute: string,
-    planeRoute: string,
-) => {
-    return true;
-}
-
-export const matchForParameters = (
-    viewRoute: string,
-    planeRoute: string,
-) => {
-    const splitViewRoute = viewRoute.split('://');
-    const splitPlaneRoute = planeRoute.split('://');
-    // "http://localhost:3000://p://s://u://c://one"
-    // "http://localhost:3000://p://s://u://c://:id"
-
-    const pathViewRoute = splitViewRoute[2];
-    const pathPlaneRoute = splitPlaneRoute[2];
-
-}
-
-
-export const assignPagesFromView = (
-    planes: TreePlane[],
-    view?: PluridApplicationView,
-): TreePlane[] => {
-    if (!view) {
-        return planes;
-    }
-
-    const tree: TreePlane[] = [];
-
-    // const routes: PluridRoute[] = pages.map(page => {
-    //     const route: PluridRoute = {
-    //         value: page.route,
-    //         // value: page.value,
-    //         // view: '',
-    //     };
-    //     return route;
-    // });
-
-    // const router = new Router(routes);
-
-    // console.log('planes', planes);
-    // console.log('view', view);
-
-    for (const viewPlane of view) {
-        if (typeof viewPlane === 'string') {
-            for (const plane of planes) {
-                if (viewPlane === plane.sourceID) {
-                    tree.push(plane);
-                }
-
-                if (isParametric(viewPlane, plane.sourceID)) {
-                    const parametricPlane = {
-                        ...plane,
-                    };
-                    parametricPlane.routeDivisions.plane.parameters.id = 'one';
-                    parametricPlane.routeDivisions.plane.value = 'one';
-                    parametricPlane.route = viewPlane;
-                    tree.push(parametricPlane);
-                }
-            }
-        }
-    }
-
-
-    // for (const [index, viewPage] of view.entries()) {
-        // const viewPagePath = typeof viewPage === 'string'
-        //     ? viewPage
-        //     : viewPage.path;
-
-        // const matchedPage = router.match(viewPagePath);
-
-        // console.log('matchedPage', matchedPage);
-
-        // if (matchedPage) {
-        //     const page = pages.find(p => p.route === matchedPage?.path.value);
-        //     if (!page) {
-        //         break;
-        //     }
-
-        //     const newPage = {
-        //         ...page,
-        //         path: viewPagePath,
-        //         planeID: uuid.generate(),
-        //     };
-
-        //     const viewPageOrdinal = typeof viewPage === 'string'
-        //         ? index
-        //         : typeof viewPage.ordinal === 'number'
-        //             ? viewPage.ordinal
-        //             : index;
-
-        //     const treePage = tree[viewPageOrdinal];
-
-        //     if (typeof treePage === 'undefined') {
-        //         tree[viewPageOrdinal] = newPage;
-        //     } else {
-        //         let elementSet = false;
-        //         let pageIndex = viewPageOrdinal;
-
-        //         do {
-        //             const nextIndex = pageIndex + 1;
-        //             const nextTreePlane = tree[nextIndex];
-        //             if (typeof nextTreePlane === 'undefined') {
-        //                 tree[nextIndex] = newPage;
-        //                 elementSet = true;
-        //             }
-        //         } while (!elementSet);
-        //     }
-        // }
-    // }
-
-    return tree;
-}
 
 
 
@@ -1037,12 +921,13 @@ export const updateTreeWithNewPage = (
             linkCoordinates,
         };
 
-        const updatedTreePlaneParent = {...treePageParent};
-        if (updatedTreePlaneParent.children) {
-            updatedTreePlaneParent.children.push(newTreePlane);
-        } else {
-            updatedTreePlaneParent.children = [newTreePlane];
-        }
+        // New children array instead of `.push` into the shared `treePageParent.children`.
+        const updatedTreePlaneParent = {
+            ...treePageParent,
+            children: treePageParent.children
+                ? [...treePageParent.children, newTreePlane]
+                : [newTreePlane],
+        };
 
         const updatedTree = updateTreePlane(tree, updatedTreePlaneParent);
 
@@ -1063,21 +948,29 @@ export const removePageFromTree = (
     tree: TreePlane[],
     pluridPlaneID: string,
 ): TreePlane[] => {
-    const updatedTree = tree.filter(page => {
+    // Immutable + structurally shared (was mutating `page.children` inside a `.filter`).
+    let changed = false;
+
+    const updatedTree: TreePlane[] = [];
+    for (const page of tree) {
         if (page.planeID === pluridPlaneID) {
-            return false;
+            changed = true;
+            continue;
         }
 
         if (page.children) {
             const pageTree = removePageFromTree(page.children, pluridPlaneID);
-            page.children = pageTree;
-            return page;
+            if (pageTree !== page.children) {
+                changed = true;
+                updatedTree.push({ ...page, children: pageTree });
+                continue;
+            }
         }
 
-        return page;
-    });
+        updatedTree.push(page);
+    }
 
-    return updatedTree;
+    return changed ? updatedTree : tree;
 }
 
 
@@ -1108,26 +1001,18 @@ export const toggleChildren = (
 export const toggleAllChildren = (
     tree: TreePlane[],
     show: boolean,
-) => {
-    const updatedTree: TreePlane[] = [];
-
-    for (const plane of tree) {
-        if (plane.children) {
-            plane.children = toggleAllChildren(
-                plane.children,
-                show,
-            );
-        }
-
-        plane.show = show;
-
-        updatedTree.push(plane);
-    }
-
-    // Return the array actually built in this call (a fresh reference), not the input `tree` —
-    // returning the input ref can defeat downstream change-detection. (The in-place plane
-    // mutation above is addressed centrally by the Phase D tree-immutability refactor.)
-    return updatedTree;
+): TreePlane[] => {
+    // Fully immutable: each plane becomes a NEW node with the toggled `show` and recursively
+    // toggled children. The previous version mutated `plane.show`/`plane.children` in place —
+    // which now throws, since callers (e.g. `togglePlaneFromTree`, post clone-removal) pass the
+    // frozen Redux tree directly.
+    return tree.map((plane) => ({
+        ...plane,
+        show,
+        children: plane.children
+            ? toggleAllChildren(plane.children, show)
+            : plane.children,
+    }));
 }
 
 
@@ -1252,11 +1137,16 @@ export const removeRootFromTree = (
 export const removePlaneFromTree = (
     tree: TreePlane[],
     pluridPlaneID: string,
-) => {
-    const updatedTree: TreePlane[] = [];
+): TreePlane[] => {
+    // Immutable + structurally shared: untouched subtrees keep their reference; only the
+    // branch that drops a node (or whose descendant was dropped) gets a new identity. The
+    // previous version mutated `plane.children` in place.
+    let changed = false;
 
+    const updatedTree: TreePlane[] = [];
     for (const plane of tree) {
         if (plane.planeID === pluridPlaneID) {
+            changed = true;
             continue;
         }
 
@@ -1265,12 +1155,16 @@ export const removePlaneFromTree = (
                 plane.children,
                 pluridPlaneID,
             );
-            plane.children = children;
+            if (children !== plane.children) {
+                changed = true;
+                updatedTree.push({ ...plane, children });
+                continue;
+            }
         }
 
         updatedTree.push(plane);
     }
 
-    return updatedTree;
+    return changed ? updatedTree : tree;
 }
 // #endregion module

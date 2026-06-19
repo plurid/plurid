@@ -37,7 +37,7 @@
     },
     "scripts": {
         "clean": "rm -rf ./distribution",
-        "lint": "eslint ./source --ext .ts,.tsx",
+        "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
         "build.development": "tsup --watch",
         "build.production": "tsup",
         "build": "tsup",

@@ -48,6 +48,7 @@ async function main(program: Command) {
             .option('-u, --ui <ui-engine>', 'set UI engine ("html" -> HTML Custom Elements || "react" -> React || "vue" -> Vue || "angular" -> Angular)', 'react')
             .option('-r, --renderer <renderer>', 'set the application rendering side ("client" -> Client-Side Rendering || "server" -> Server-Side Rendering)', 'server')
             .option('-m, --manager <package-manager>', 'set the package manager ("npm" || "yarn")', 'yarn')
+            .option('-v, --versioning <version-control>', 'set version control ("git" -> Git || "none" -> None)', 'none')
             .option('-s, --services <service-list>', 'pass additional services as a comma-separated list (graphql, redux, stripe)', 'graphql,redux,stripe')
             .option('-c, --containerize', 'use Docker to containerize the application', false)
             .option('-p, --pluridapp', 'deploy the application to plurid.app', true)

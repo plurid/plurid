@@ -6,7 +6,7 @@
 
     import {
         Theme,
-    } from '@plurid/plurid-themes/distribution';
+    } from '@plurid/plurid-themes';
     // #endregion libraries
 // #endregion imports
 
