@@ -193,13 +193,12 @@ export const extractQuery = (
     if (querySplit.length === 2) {
         const queryValues: Indexed<string> = {};
         const query = querySplit[1];
-        const queryItems = query.split('&');
 
-        for (const item of queryItems) {
-            const queryValue = item.split('=');
-            const id = queryValue[0];
-            const value = decodeURIComponent(queryValue[1]);
-
+        // `URLSearchParams` decodes safely: it does NOT throw on a bare `%` (the old
+        // `decodeURIComponent` did) and a valueless flag (`?debug`) yields `''` rather than
+        // the literal string `"undefined"`.
+        const params = new URLSearchParams(query);
+        for (const [id, value] of params) {
             queryValues[id] = value;
         }
 

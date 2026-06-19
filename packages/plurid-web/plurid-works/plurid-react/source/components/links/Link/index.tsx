@@ -523,7 +523,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         defocusLink();
     }, [
         parentPlaneID,
-        JSON.stringify(stateTree),
+        // The tree REFERENCE (not `JSON.stringify(stateTree)`): the space reducer replaces
+        // `state.tree` with a new array on every mutation, so the ref changes at exactly the
+        // same frequency as a content-stringify would — but the comparison is O(1) instead of
+        // re-serializing the whole tree on each of this component's (frequent) re-renders.
+        stateTree,
         linkElement.current,
     ]);
 
@@ -578,7 +582,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }, [
         showLink,
         JSON.stringify(stateViewSize),
-        JSON.stringify(stateTree),
+        stateTree,
     ]);
 
     /** Show Preview */
@@ -647,7 +651,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }, [
         showLink,
         pluridPlaneID,
-        JSON.stringify(stateTree),
+        stateTree,
     ]);
 
     /** PubSub Close Plane */
@@ -681,7 +685,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     }, [
         showLink,
         pluridPlaneID,
-        JSON.stringify(stateTree),
+        stateTree,
     ]);
 
     /**

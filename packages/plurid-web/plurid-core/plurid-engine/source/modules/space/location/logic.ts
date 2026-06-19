@@ -160,17 +160,22 @@ export const computeRootLocationX = <C>(
     index: number,
 ) => {
     const rootData = resolvePluridPlaneData(root);
+    // SSR-safe: `plurid-react-server` renders where `window` is undefined.
+    const innerWidth = typeof window === 'undefined' ? 1440 : window.innerWidth;
 
     let translateX = 0;
     if (configuration && configuration.space) {
+        // VESTIGIAL: `layout` used to be a `string[]` of routes; it is now an object, so this
+        // branch never fires and per-route camera/center placement no-ops. Reworking it to
+        // resolve a root's computed X from the active layout is a Phase D feature task.
         if (Array.isArray(configuration.space.layout)) {
-            const layoutIndex = configuration.space.layout.indexOf(rootData.route);
-            translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
+            const layoutIndex = (configuration.space.layout as string[]).indexOf(rootData.route);
+            translateX = innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
         }
     } else {
         translateX = index === 0
             ? 0
-            : window.innerWidth * index + ROOTS_GAP * index;
+            : innerWidth * index + ROOTS_GAP * index;
     }
 
     return translateX;
@@ -210,13 +215,16 @@ export const computeCameraLocationX = (
     configuration: PluridConfiguration,
 ) => {
     let translateX = 0;
+    const innerWidth = typeof window === 'undefined' ? 1440 : window.innerWidth;
 
+    // VESTIGIAL (see computeRootLocationX): `layout` is no longer a route array, so this never
+    // fires and `space.camera` centering no-ops. Rework with the active layout in Phase D.
     if (configuration.space
         && Array.isArray(configuration.space.layout)
         && typeof configuration.space.camera === 'string'
     ) {
-        const layoutIndex = configuration.space.layout.indexOf(configuration.space.camera || '');
-        translateX = window.innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
+        const layoutIndex = (configuration.space.layout as string[]).indexOf(configuration.space.camera || '');
+        translateX = innerWidth * layoutIndex + ROOTS_GAP * layoutIndex;
     }
 
     // account for camera space inversion

@@ -48,7 +48,12 @@ const computeRowLayout = (
         ? gap
         : gap * width;
 
-    const length = rowLength || Math.ceil(roots.length / rows);
+    // Guard against `rows === 0` (→ `Math.ceil(n/0) === Infinity`, collapsing every plane into
+    // one row) and honor `rowLength` only as a positive count (see column.ts).
+    const safeRows = rows > 0 ? rows : 1;
+    const length = rowLength && rowLength > 0
+        ? rowLength
+        : Math.ceil(roots.length / safeRows);
 
     for (const [index, root] of roots.entries()) {
         const rowIndex = Math.floor(index / length);

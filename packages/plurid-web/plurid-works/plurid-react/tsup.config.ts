@@ -11,11 +11,11 @@ export default defineConfig({
     outDir: 'distribution',
     sourcemap: true,
     clean: true,
-    treeshake: false,
+    treeshake: true,
     external: [
         /^@plurid\//,
         'react', 'react-dom', 'react/jsx-runtime',
         'styled-components', 'redux', 'react-redux', '@reduxjs/toolkit',
-        'cross-fetch', 'immer',
+        'cross-fetch',
     ],
 });

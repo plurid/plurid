@@ -1107,7 +1107,10 @@ export const toggleAllChildren = (
         updatedTree.push(plane);
     }
 
-    return tree;
+    // Return the array actually built in this call (a fresh reference), not the input `tree` —
+    // returning the input ref can defeat downstream change-detection. (The in-place plane
+    // mutation above is addressed centrally by the Phase D tree-immutability refactor.)
+    return updatedTree;
 }
 
 

@@ -48,6 +48,12 @@ const compute = <C>(
 
     let stateConfiguration = generalEngine.configuration.merge(configuration);
 
+    // Each subsequent state layer is merged ON TOP of the accumulated configuration
+    // (passed as the `target` base), so every layer's fields are preserved and later
+    // layers win conflicts — precedence low→high: userConfig < precomputed < context
+    // < local < current. The previous version REASSIGNED `stateConfiguration` to a
+    // fresh `merge(layer)` each iteration, discarding all prior layers so only the last
+    // truthy one survived (layered on defaults alone).
     const configurations = [
         precomputedState?.configuration,
         contextState?.configuration,
@@ -55,9 +61,9 @@ const compute = <C>(
         currentState?.configuration,
     ];
 
-    for (const configuration of configurations) {
-        if (configuration) {
-            stateConfiguration = generalEngine.configuration.merge(configuration);
+    for (const layer of configurations) {
+        if (layer) {
+            stateConfiguration = generalEngine.configuration.merge(layer, stateConfiguration);
         }
     }
 

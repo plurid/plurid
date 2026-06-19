@@ -2,5 +2,10 @@
     "name": "plurid-engine-workspace",
     "version": "0.0.0",
     "private": true,
-    "description": "Plurid engine monorepo root. Overrides + allowBuilds live in pnpm-workspace.yaml (pnpm 11 no longer reads the package.json pnpm field)."
+    "description": "Plurid engine monorepo root. Overrides + allowBuilds live in pnpm-workspace.yaml (pnpm 11 no longer reads the package.json pnpm field).",
+    "scripts": {
+        "build": "pnpm -r --filter='!@plurid/plurid-canvas' --filter='!@plurid/plurid-html' build",
+        "test": "pnpm -r --filter='!@plurid/plurid-canvas' --filter='!@plurid/plurid-html' test",
+        "lint": "pnpm -r --filter='!@plurid/plurid-canvas' --filter='!@plurid/plurid-html' lint"
+    }
 }

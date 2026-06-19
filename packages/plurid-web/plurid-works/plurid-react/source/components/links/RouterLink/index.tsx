@@ -106,6 +106,12 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
     const handleClick = (
         event: React.MouseEvent<Element, MouseEvent>,
     ) => {
+        // Always prevent the browser's default navigation FIRST — this is an SPA router link,
+        // so a full-page load is never wanted. An `atClick` that returns truthy ("I'll handle
+        // it myself") should still suppress the default; previously it returned before
+        // `preventDefault()`, so the browser navigated away anyway.
+        event.preventDefault();
+
         if (atClick) {
             const exit = atClick(event);
 
@@ -113,8 +119,6 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
                 return;
             }
         }
-
-        event.preventDefault();
 
         if (target === '_blank') {
             window.open(route);

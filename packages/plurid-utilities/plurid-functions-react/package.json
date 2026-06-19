@@ -1,6 +1,7 @@
 {
     "name": "@plurid/plurid-functions-react",
     "version": "0.0.0-5",
+    "sideEffects": false,
     "description": "General Utility Functions for Plurid React Applications",
     "keywords": [
         "plurid",

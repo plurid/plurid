@@ -1,8 +1,6 @@
 // #region module
 export const requiredPluridReactPackages = [
     '@plurid/generate-plurid-app',
-    '@plurid/elementql',
-    '@plurid/elementql-client-react',
     '@plurid/plurid-data',
     '@plurid/plurid-engine',
     '@plurid/plurid-functions',
@@ -15,9 +13,8 @@ export const requiredPluridReactPackages = [
     '@plurid/plurid-ui-state-react',
     '@reduxjs/toolkit',
     'cross-fetch',
-    'hammerjs',
     'react-redux',
-    'styled-components@==5.3.11',
+    'styled-components@^6',
     '@types/styled-components',
     'react-scripts',
 ];

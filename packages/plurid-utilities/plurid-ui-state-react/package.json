@@ -1,6 +1,7 @@
 {
     "name": "@plurid/plurid-ui-state-react",
     "version": "0.0.0-11",
+    "sideEffects": false,
     "description": "Plurid User Interface State for React",
     "keywords": [
         "plurid",
@@ -44,11 +45,11 @@
     },
     "peerDependencies": {
         "@plurid/plurid-themes": "*",
-        "@reduxjs/toolkit": ">=1.9"
+        "@reduxjs/toolkit": ">=2"
     },
     "devDependencies": {
         "@plurid/plurid-themes": "workspace:*",
-        "@reduxjs/toolkit": "^1.9.5",
+        "@reduxjs/toolkit": "^2.12.0",
         "@rollup/plugin-terser": "^0.4.3",
         "@types/jest": "^29.5.2",
         "@types/node": "^20.3.3",

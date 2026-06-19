@@ -14,7 +14,7 @@
 
 
 // #region module
-xdescribe('Parser', () => {
+describe('Parser', () => {
     it('works', () => {});
 
     // it('simple string', () => {

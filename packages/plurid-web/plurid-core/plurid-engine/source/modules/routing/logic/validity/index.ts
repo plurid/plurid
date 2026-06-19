@@ -75,7 +75,12 @@ export const checkValidPath = <C>(
                     length,
                     lengthType,
                 );
-                return validLength;
+                // Only short-circuit on FAILURE (like the startsWith/endsWith/includes checks
+                // above) — `return validLength` here returned `true` after the first
+                // length-constrained param, skipping validation of every subsequent param.
+                if (!validLength) {
+                    return false;
+                }
             }
         }
     }

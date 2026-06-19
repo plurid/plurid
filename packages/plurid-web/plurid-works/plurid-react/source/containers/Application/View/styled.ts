@@ -1,67 +1,47 @@
 // #region imports
     // #region libraries
-    import styled, {
-        createGlobalStyle,
-    } from 'styled-components';
+    import styled from 'styled-components';
 
     import {
         TRANSFORM_MODES,
     } from '@plurid/plurid-data';
-
-    import {
-        Theme,
-    } from '@plurid/plurid-themes';
     // #endregion libraries
 // #endregion imports
 
 
 
 // #region module
-export interface IGlobalStyle {
-    theme: Theme;
-    preventOverscroll: boolean;
-}
-
-export const GlobalStyle = createGlobalStyle<IGlobalStyle>`
-    *,
-    *:after,
-    *:before {
+/**
+ * The engine used to inject a `createGlobalStyle` into the HOST document — `html { overflow:
+ * hidden; background: black; color: white }` + `html, body { margin/height/width }`. That
+ * black-screened (and reset-the-margins-of) any page that mounted the engine: a consumer's
+ * own layout would be clobbered by the engine's globals.
+ *
+ * All of those rules now live on `StyledView` (the engine root) instead, scoped to the engine's
+ * own subtree:
+ *   - the `box-sizing`/font reset → scoped to `&` + descendants (never the host's elements);
+ *   - `overflow: hidden`, `font-family`, `height/width: 100%` → already on `StyledView`;
+ *   - `overscroll-behavior-x` → driven by the `preventOverscroll` prop below.
+ *
+ * `background`/`color` are deliberately NOT forced here: `StyledView` stays transparent so the
+ * host's own backdrop shows through the empty space (an opaque surface is opt-in via
+ * `StyledEmpty[opaque]`). Sizing the mount point is the host's responsibility (give it height),
+ * or set `fullHeight` for a `100vh` engine root.
+ */
+export const StyledView: any = styled.div`
+    /* Reset scoped to the engine subtree only — the host page's box model is untouched. */
+    &,
+    & *,
+    & *::after,
+    & *::before {
         box-sizing: border-box;
         font-kerning: auto;
         text-rendering: optimizeLegibility;
     }
 
-    html, body {
-        margin: 0;
-        height: 100%;
-        width: 100%;
-        overscroll-behavior-x: ${
-            ({
-                preventOverscroll,
-            }) => {
-                if (preventOverscroll) {
-                    return 'none';
-                }
+    overscroll-behavior-x: ${(props: any) =>
+        props.preventOverscroll ? 'none' : 'auto'};
 
-                return 'auto';
-            }
-        };
-    }
-
-    html {
-        overflow: hidden;
-        background: black;
-        color: white;
-        font-family: ${
-            ({
-                theme,
-            }) => theme.fontFamilySansSerif
-        }
-    }
-`;
-
-
-export const StyledView: any = styled.div`
     /* Anchor the engine's typography to its own root so the host page's body/reset font
        can't cascade into the toolbar and the rest of the engine UI. The global html rule
        only sets a default; a consumer styling the body font would otherwise win since body

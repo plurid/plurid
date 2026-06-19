@@ -9,7 +9,7 @@
 
 
 // #region module
-xdescribe('getWheelDirection', () => {
+describe('getWheelDirection', () => {
     it('returns "left" direction', () => {
         const deltas = {
             deltaX: 20,

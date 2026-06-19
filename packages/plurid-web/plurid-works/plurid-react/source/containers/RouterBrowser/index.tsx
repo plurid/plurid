@@ -229,8 +229,13 @@ const PluridRouterBrowser = (
         }
 
         if (!cleanNavigation) {
-            if (location.pathname !== matchedPath) {
-                history.pushState(null, '', matchedPath);
+            // Compare the FULL current URL (pathname + search) against `matchedPath` — which
+            // already includes the search (see where it's built) — so a query-bearing URL no
+            // longer pushes a spurious history entry on mount. Use `window.`-qualified globals
+            // rather than the bare `location`/`history` references.
+            const currentUrl = window.location.pathname + window.location.search;
+            if (currentUrl !== matchedPath) {
+                window.history.pushState(null, '', matchedPath);
             }
         }
 

@@ -1,6 +1,7 @@
 {
     "name": "@plurid/plurid-routes-server",
     "version": "0.0.0-0",
+    "sideEffects": false,
     "description": "Plurid Routes Retrieval and Registration",
     "keywords": [
         "plurid",

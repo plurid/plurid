@@ -45,10 +45,6 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
 
-        "plugins": [
-            { "transform": "typescript-transform-paths" },
-            { "transform": "typescript-transform-paths", "afterDeclarations": true }
-        ],
     },
     "include": [
         "source/**/*"

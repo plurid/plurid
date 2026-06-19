@@ -55,10 +55,10 @@ export const factory = (
             state,
             action: PayloadAction<Partial<HeadState>>,
         ) => {
-            state = {
-                ...state,
-                ...action,
-            };
+            // Mutate the Immer draft (reassigning the local `state` was a no-op Immer ignores)
+            // and merge `action.payload` — the old `...action` spread the whole action object
+            // (including `type`), not the payload.
+            Object.assign(state, action.payload);
         },
     },
 });

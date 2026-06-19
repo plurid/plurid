@@ -154,17 +154,24 @@ export const clone = <D>(
     data: D,
     type?: 'json' | 'any',
 ): D => {
-    if (!type || type === 'json') {
-        const cloned = JSON.parse(
-            JSON.stringify(data),
-        );
-
-        return cloned;
+    // Explicit 'json' keeps the fast path for plain JSON-like data, but falls back to the
+    // cycle-safe deep clone on cyclic input — `JSON.stringify` THROWS on cycles, and
+    // `JSON.parse(JSON.stringify(undefined))` throws ("undefined is not valid JSON").
+    if (type === 'json') {
+        try {
+            return JSON.parse(
+                JSON.stringify(data),
+            );
+        } catch (_error) {
+            return deepClone(data);
+        }
     }
 
-    const deepCloned = deepClone(data);
-
-    return deepCloned;
+    // Default (+ 'any'): cycle-safe deep clone. `deepClone` guards primitives/null/undefined,
+    // handles Date/Map/Set/RegExp + cyclic references, and never throws — unlike the old
+    // JSON default which silently dropped functions/undefined and crashed on cycles. This is
+    // the per-tree-mutation hot path, so it must not throw.
+    return deepClone(data);
 }
 
 
@@ -287,53 +294,65 @@ export const merge = <O extends object = any, R = O>(
     > = {} as any,
     trunk?: string,
 ): R => {
-    const result: any = {};
+    const resolverMap = resolvers as Record<string, any>;
 
-    const keysObject = trunk
-        ? getNested(object, trunk)
-        : object;
+    // Only recurse into PLAIN objects; Date/Map/Set/RegExp/class instances are leaf values
+    // (merge them by reference, don't rebuild them as `{}`).
+    const isMergeable = (value: any): boolean =>
+        isObject(value)
+        && (value.constructor === Object || value.constructor === undefined);
 
-    for (const key in keysObject) {
-        const path = trunk
-            ? trunk + '.' + key
-            : key;
+    /**
+     * Recurse on the sub-nodes themselves (NOT a re-walk from the root via `getNested` per
+     * key) so the merge is O(total keys) instead of O(keys × depth); and union BOTH sides'
+     * keys at each level so a field present in `target` but absent from `object` is KEPT
+     * rather than silently dropped (the previous version iterated only `object`'s keys).
+     */
+    const mergeNode = (
+        objectNode: any,
+        targetNode: any,
+        path?: string,
+    ): any => {
+        if (!isMergeable(objectNode) && !isMergeable(targetNode)) {
+            return typeof targetNode !== 'undefined' ? targetNode : objectNode;
+        }
 
-        const resolver = (resolvers as Record<string, any>)[path];
-        if (resolver) {
-            if (typeof resolver === 'function') {
-                const value = resolver();
-                result[key] = value;
+        const result: any = {};
+        const keys = new Set<string>([
+            ...(isObject(objectNode) ? Object.keys(objectNode) : []),
+            ...(isObject(targetNode) ? Object.keys(targetNode) : []),
+        ]);
+
+        for (const key of keys) {
+            const keyPath = path ? path + '.' + key : key;
+
+            // Use `in` so a resolver value of `0` / `false` / `''` is honored (not skipped).
+            if (keyPath in resolverMap) {
+                const resolver = resolverMap[keyPath];
+                result[key] = typeof resolver === 'function' ? resolver() : resolver;
                 continue;
             }
 
-            result[key] = resolver;
-            continue;
+            const objectField = isObject(objectNode) ? objectNode[key] : undefined;
+            const targetField = isObject(targetNode) ? targetNode[key] : undefined;
+
+            if (isMergeable(objectField) || isMergeable(targetField)) {
+                result[key] = mergeNode(objectField, targetField, keyPath);
+                continue;
+            }
+
+            result[key] = typeof targetField !== 'undefined'
+                ? targetField
+                : objectField;
         }
 
-        const field = getNested(object, path);
+        return result;
+    };
 
-        if (isObject(field)) {
-            const value = merge(
-                object,
-                target,
-                resolvers,
-                path,
-            );
+    const objectStart = trunk ? getNested(object, trunk) : object;
+    const targetStart = trunk ? getNested(target, trunk) : target;
 
-            result[key] = value;
-            continue;
-        }
-
-        const targetField = getNested(target, path);
-        if (typeof targetField !== 'undefined') {
-            result[key] = targetField;
-            continue;
-        }
-
-        result[key] = field;
-    }
-
-    return result;
+    return mergeNode(objectStart, targetStart, trunk) as R;
 }
 
 

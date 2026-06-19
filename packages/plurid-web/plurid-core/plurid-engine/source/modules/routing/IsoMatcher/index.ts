@@ -303,7 +303,9 @@ class IsoMatcher<C> {
             if (parametersAndMatch.match) {
                 const plane = this.planesIndex.get(planePath);
                 if (!plane) {
-                    return;
+                    // Try the next candidate, don't abandon the whole match — a later route
+                    // in `planesKeys` may still match.
+                    continue;
                 }
 
                 const {
@@ -315,7 +317,7 @@ class IsoMatcher<C> {
                     parameters,
                 );
                 if (!validPath) {
-                    return;
+                    continue;
                 }
 
                 const query = extractQuery(
@@ -420,7 +422,8 @@ class IsoMatcher<C> {
                 const route = this.routesIndex.get(routePath);
                 // console.log('route', route);
                 if (!route) {
-                    return;
+                    // Try the next candidate route rather than abandoning the whole match.
+                    continue;
                 }
 
                 const {
@@ -433,11 +436,15 @@ class IsoMatcher<C> {
                 );
                 // console.log('validPath', validPath);
                 if (!validPath) {
-                    return;
+                    continue;
                 }
 
+                // Extract the query from the ORIGINAL `value`, not `routeValue` —
+                // `cleanPathValue` already stripped the query off `routeValue` (which is why
+                // params resolve), so `extractQuery(routeValue)` always returned `{}`. The
+                // exact-match branch above already uses `value` correctly.
                 const query = extractQuery(
-                    routeValue,
+                    value,
                 );
 
                 const match = {

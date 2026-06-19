@@ -1,6 +1,7 @@
 {
     "name": "@plurid/plurid-icons-react",
     "version": "0.0.0-9",
+    "sideEffects": false,
     "description": "Plurid Icons for Plurid Applications based on React.",
     "keywords": [
         "plurid",

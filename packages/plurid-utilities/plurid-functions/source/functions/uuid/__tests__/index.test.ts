@@ -10,13 +10,17 @@
 
 // #region module
 describe('uuid v4Browser', () => {
-    // handle crypto for jest - https://stackoverflow.com/a/52612372
-    const crypto = require('crypto');
-    Object.defineProperty((global as any).self, 'crypto', {
-        value: {
-            getRandomValues: (arr: any) => crypto.randomBytes(arr.length),
-        },
-    });
+    // Node 18+ provides globalThis.crypto.getRandomValues natively; only shim if missing.
+    // The previous version polyfilled `self.crypto`, which crashed under jest's node
+    // testEnvironment where `self` is undefined ("Object.defineProperty on non-object").
+    const g: any = globalThis;
+    if (!g.crypto || typeof g.crypto.getRandomValues !== 'function') {
+        const nodeCrypto = require('crypto');
+        g.crypto = {
+            ...(g.crypto || {}),
+            getRandomValues: (arr: any) => nodeCrypto.randomBytes(arr.length),
+        };
+    }
 
     it('generates random uuid', () => {
         const uuid = v4Browser();

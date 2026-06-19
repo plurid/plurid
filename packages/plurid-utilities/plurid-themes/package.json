@@ -1,6 +1,7 @@
 {
     "name": "@plurid/plurid-themes",
     "version": "0.0.0-2",
+    "sideEffects": false,
     "description": "Themes for Plurid Applications",
     "keywords": [
         "plurid",

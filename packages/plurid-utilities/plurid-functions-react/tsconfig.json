@@ -42,12 +42,6 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
 
-        "plugins": [
-            {
-                "transform": "@zerollup/ts-transform-paths",
-                "exclude": ["*"]
-            }
-        ]
     },
     "include": [
         "source/**/*"

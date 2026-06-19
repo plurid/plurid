@@ -1,10 +1,4 @@
 // #region imports
-    // #region libraries
-    // HACK prevent TypeScript error
-    import 'immer';
-    // #endregion libraries
-
-
     // #region internal
     import * as configuration from './configuration';
     import * as general from './general';

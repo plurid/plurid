@@ -48,7 +48,13 @@ const computeColumnLayout = (
         ? gap
         : gap * width;
 
-    const length = columnLength || Math.ceil(roots.length / columns);
+    // Guard against `columns === 0` (→ `Math.ceil(n/0) === Infinity`, which collapses every
+    // plane into one column) and honor an explicit `columnLength` only when it's a positive
+    // count (`|| ` alone would discard a deliberate small value but also a bogus 0/negative).
+    const safeColumns = columns > 0 ? columns : 1;
+    const length = columnLength && columnLength > 0
+        ? columnLength
+        : Math.ceil(roots.length / safeColumns);
 
     for (const [index, root] of roots.entries()) {
         const rowIndex = index % length;

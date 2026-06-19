@@ -176,7 +176,7 @@ export const handleGlobalShortcuts = (
             handleEvent();
             return dispatch(actions.space.translateUp());
         }
-        if (event.metaKey || event.ctrlKey && locks.scale) {
+        if ((event.metaKey || event.ctrlKey) && locks.scale) {
             handleEvent();
             return dispatch(actions.space.scaleUp());
         }
@@ -195,7 +195,7 @@ export const handleGlobalShortcuts = (
             handleEvent();
             return dispatch(actions.space.translateDown());
         }
-        if (event.metaKey || event.ctrlKey && locks.scale) {
+        if ((event.metaKey || event.ctrlKey) && locks.scale) {
             handleEvent();
             return dispatch(actions.space.scaleDown());
         }

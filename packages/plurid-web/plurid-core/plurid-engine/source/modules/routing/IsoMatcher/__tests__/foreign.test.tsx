@@ -51,6 +51,12 @@ const planes: PluridPlane<string>[] = [
 
 
 
+// SKIPPED: foreign-origin (`pttp://other-origin`) matching has two unfixed bugs beyond this
+// correctness sweep — `match.value` is prefixed with the local `plurid://localhost/` origin
+// instead of preserving the foreign address, and parametric foreign route-planes don't match.
+// Cross-origin routing is archived-pluriverse territory (the harness/product use same-origin
+// link-spawn + SPA nav, both covered by the `simple` + `Parser` suites). Re-enable when the
+// foreign-origin normalization is reworked.
 xdescribe('IsoMatcher foreign', () => {
     it('matches simple routes', () => {
         const isoMatcher = new IsoMatcher<string>({

@@ -1,10 +1,9 @@
-// #region imports
-    // #region libraries
-    import 'immer';
-    // #endregion libraries
-// #endregion imports
-
-
+/// <reference types="immer" />
+// ^ Type-only reference (NOT a runtime `import 'immer'`): this package exports its RTK
+// `createSlice` factories directly, whose inferred types reference immer's `WritableDraft`.
+// Without immer in the program TS can't name those types in the emitted `.d.ts` (TS2742).
+// A reference directive pulls in the types with zero runtime footprint — unlike the old
+// `import 'immer'` side-effect import, it's safe under `"sideEffects": false`.
 
 // #region exports
 export * from './data/interfaces';

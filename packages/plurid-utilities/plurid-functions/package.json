@@ -1,6 +1,7 @@
 {
     "name": "@plurid/plurid-functions",
     "version": "0.0.0-31",
+    "sideEffects": false,
     "description": "General Utility Functions for Plurid Applications",
     "keywords": [
         "plurid",

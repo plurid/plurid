@@ -1,8 +1,6 @@
 // #region module
 export const requiredDependencies = [
     '@plurid/generate-plurid-app',
-    '@plurid/elementql',
-    '@plurid/elementql-client-react',
     '@plurid/plurid-data',
     '@plurid/plurid-engine',
     '@plurid/plurid-functions',
@@ -18,12 +16,11 @@ export const requiredDependencies = [
     'cross-fetch',
     'cors',
     'dotenv',
-    'hammerjs',
     'react',
     'react-dom',
     'react-helmet-async',
     'react-redux',
-    'styled-components@==5.3.11',
+    'styled-components@^6',
 ];
 
 

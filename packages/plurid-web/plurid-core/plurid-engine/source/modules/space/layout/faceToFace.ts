@@ -98,16 +98,22 @@ const computeFaceToFaceLayout = (
     const columns = 2 + middle;
     const rows = splitIntoGroups(roots, columns);
 
-    const gapValue = Number.isInteger(gap)
+    // Use the SAME absolute-vs-unit test as column.ts/row.ts (`checkIntegerNonUnit`) instead of
+    // `Number.isInteger`, so a fractional gap like `0.04` is treated as a unit of `width`
+    // consistently across all layouts.
+    const gapValue = mathematics.numbers.checkIntegerNonUnit(gap)
         ? gap
         : gap * width;
 
-    for (const [index, row] of rows.entries()) {
-        const translateY = index * height;
+    for (const [rowIndex, row] of rows.entries()) {
+        // Include the gap in row spacing so gapped rows don't overlap (no-op when gap = 0).
+        const translateY = rowIndex * (height + gapValue);
 
         for (const [index, page] of row.entries()) {
             const first = index === 0;
-            const last = index === columns - 1;
+            // The last plane IN THIS ROW — `columns - 1` is wrong for a final partial row that
+            // holds fewer planes than `columns`.
+            const last = index === row.length - 1;
 
             const translateZ = computeFaceToFaceTranslateZ(
                 width,

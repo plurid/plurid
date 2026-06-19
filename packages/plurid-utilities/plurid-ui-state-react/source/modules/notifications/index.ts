@@ -27,6 +27,19 @@ export const initialState: NotificationsState = [];
 export const name = 'notifications' as const;
 
 
+// `Math.random() + ''` collides under rapid/concurrent notifications. Prefer the platform UUID
+// (browsers + Node ≥ 19) and fall back to a monotonic counter so IDs stay unique even without it.
+let notificationCounter = 0;
+const generateNotificationID = (): string => {
+    const cryptoApi = (globalThis as any).crypto;
+    if (cryptoApi && typeof cryptoApi.randomUUID === 'function') {
+        return cryptoApi.randomUUID();
+    }
+    notificationCounter += 1;
+    return `notification-${Date.now().toString(36)}-${notificationCounter}`;
+};
+
+
 export const factory = (
     state: NotificationsState = initialState,
 ) => createSlice({
@@ -37,7 +50,7 @@ export const factory = (
             state,
             action: PayloadAction<string>,
         ) => {
-            const id = Math.random() + '';
+            const id = generateNotificationID();
             const text = action.payload;
 
             const newNotification: Notification = {
@@ -54,7 +67,7 @@ export const factory = (
             state,
             action: PayloadAction<AddNotificationPayload>,
         ) => {
-            const id = action.payload.id || Math.random() + '';
+            const id = action.payload.id || generateNotificationID();
 
             const newNotification: Notification = {
                 ...action.payload,

@@ -1,6 +1,7 @@
 {
     "name": "@plurid/plurid-pubsub",
     "version": "0.0.0-9",
+    "sideEffects": false,
     "description": "Plurid Publish/Subscribe",
     "keywords": [
         "plurid",
