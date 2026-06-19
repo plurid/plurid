@@ -394,17 +394,30 @@ const PluridView: React.FC<PluridViewProperties> = (
         //     stateTree,
         // });
 
-        // HACK: Merge the compute tree with existing stateTree plane children.
+        // Re-attach the runtime planeID + spawned children from the existing tree onto the
+        // freshly-computed (relaid-out) tree. Keyed by route + a ROUNDED location in an O(n)
+        // Map: the old code did an O(roots²) scan with an EXACT `objects.equals(location)`, so
+        // a sub-pixel relayout drift (100 vs 100.0001) dropped the match and silently closed
+        // spawned planes. Rounding absorbs that drift; roots sit hundreds of px apart, so it
+        // can't cause a false match.
+        const locationKey = (location: any) =>
+            Math.round(location.translateX) + ',' +
+            Math.round(location.translateY) + ',' +
+            Math.round(location.translateZ) + ',' +
+            Math.round(location.rotateX) + ',' +
+            Math.round(location.rotateY);
+        const stateByKey = new Map<string, typeof stateTree[number]>();
         for (const statePlane of stateTree) {
-            for (const [index, computedPlane] of computedTree.entries()) {
-                if (
-                    statePlane.route === computedPlane.route
-                    && objects.equals(statePlane.location, computedPlane.location)
-                ) {
-                    computedPlane.planeID = statePlane.planeID;
-                    if (statePlane.children) {
-                        computedTree[index].children = statePlane.children;
-                    }
+            stateByKey.set(statePlane.route + '@' + locationKey(statePlane.location), statePlane);
+        }
+        for (const computedPlane of computedTree) {
+            const statePlane = stateByKey.get(
+                computedPlane.route + '@' + locationKey(computedPlane.location),
+            );
+            if (statePlane) {
+                computedPlane.planeID = statePlane.planeID;
+                if (statePlane.children) {
+                    computedPlane.children = statePlane.children;
                 }
             }
         }

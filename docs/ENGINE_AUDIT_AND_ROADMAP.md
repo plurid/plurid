@@ -62,9 +62,10 @@ The hardest, highest-risk item — making the engine's tree mutations immutable 
 
 **Still open in D (foundation now in place):**
 - **Consume the structural sharing (per-plane re-render scope).** Attempted + reverted: swapping `PluridPlane`'s whole-`getTree` selection for a parent-by-id lookup is **net-negative without two more pieces** — (a) `connect` re-runs `mapStateToProps` on *every* dispatch, so a raw `getTreePlaneByID` walk turns the orbit hot path into O(n²) **per frame** (must use a *memoized* per-id selector / a `Map<planeID,node>` index, not a raw walk); and (b) `PluridRoot` itself still selects whole `getTree` and rebuilds all child elements each tree mutation, so it defeats the leaf bail-out (must be memoized too). Also note: a spawn legitimately re-renders all planes once (the new plane becomes active → `stateActivePlaneID` changes). Measured at the harness: 6 planes re-render on spawn — partly legitimate. **Do this as: memoized per-id selectors + `React.memo` on both Root and Plane, verified with a render-count harness.**
-- Rewrite the resize merge as a stable-keyed hashmap (fixes the float-equal relayout close + lets the 50 ms `setTree` HACK go).
+- ~~Rewrite the resize merge as a stable-keyed hashmap~~ **DONE** — `View.treeUpdate` now re-attaches runtime `planeID` + spawned children via an O(n) `Map` keyed by `route` + a **rounded** location (was an O(roots²) scan with `objects.equals` on raw floats). The rounding absorbs the sub-pixel relayout drift that silently closed spawned planes (§3 #5). A full layout *switch* (columns→rows) still resets spawned children on purpose — preserving them across a large position change would leave them visually disconnected from the moved root. Verified: layout switch behaves as before, no regression, full corpus green.
 - Delete the bulkier dead code (matrix3d `*Plurid`, 9 quaternion fns, `printMatrix` + their skipped tests, ~46 commented `console.log` blocks).
 - API surface (flat config preset, unify dual export, type `StateContext`).
+- Remove the 50 ms double-`setTree` HACK now that tree identities are immutable (verify toggle/close still works).
 
 ---
 

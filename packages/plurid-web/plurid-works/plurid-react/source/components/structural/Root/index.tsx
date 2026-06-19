@@ -214,8 +214,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     return (<></>);
                 }
 
-                const plane = renderPlane();
-                children.push(plane);
+                // Named `renderedPlane` (not `plane`) so it doesn't shadow the `plane`
+                // PARAMETER that `renderPlane` closes over.
+                const renderedPlane = renderPlane();
+                children.push(renderedPlane);
             }
 
             if (child.children) {
