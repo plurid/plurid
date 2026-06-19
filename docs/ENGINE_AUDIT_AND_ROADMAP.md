@@ -52,6 +52,20 @@ Every §3 finding was re-checked against current source first (two had already b
 
 **Deferred to Phase D (coupled with the tree-helper / immutability / merge refactor — fixing them in isolation would be superseded):** input-mutation immutability across `tree/logic.ts` (§3 engine) → central `mapTree`; the 4-caller `computePluridPlaneLocation` divergence → `placeChildPlane`; the `treeUpdate` float-equal merge (closes spawned planes on sub-pixel relayout) → rewrite as a stable-keyed hashmap; the 50 ms double-`setTree` HACK → removed once tree identities are immutable; dead `inverseMatrix`/`printMatrix`/`useAnimatedTransform` → dead-code deletion. **Cleared as non-bugs:** `ErrorBoundary.componentDidCatch` (intentional; add an `onError` only if desired), `setSpaceField` `(state as any)` (a typing smell, not a runtime bug), and the Parser `comparingPath` comparison (both sides already `splitPath`-normalized).
 
+## Progress — Phase D: tree-mutation core made immutable + clone-free; safe dead-code removed (2026-06-19)
+
+The hardest, highest-risk item — making the engine's tree mutations immutable so the whole-tree clones can go — is **done and verified** (full build + test exit 0; harness spawn bridge=160, link-coordinate updates, **no freeze errors** running directly on RTK's frozen state).
+
+- **Tree immutability + structural sharing.** `updateTreePlane` (`tree/logic.ts`) rewritten to be immutable *and* structurally shared — only the nodes on the path to the changed plane get new identities; untouched subtrees keep their reference (the precondition for per-id memoization). `updateTreeWithNewPlane` (spawn), `updatePlaneLocation`, and `togglePlaneFromTree` no longer `.push`/assign into the shared input arrays (Phase C §3 "input mutation"). `toggleAllChildren` returns its built array. Engine tree suites (`updateTreePage`, `removePageFromTree`, `togglePageFromTree`) stay green.
+- **Removed the redundant whole-tree clones** in `Link` (the three `objects.clone(stateTree)` before `updatePlaneLocation`/`updateTreeWithNewPlane`/`togglePlaneFromTree`) — they re-serialized all planes to change one and existed only to defend against the now-removed mutation. Safe because the mutations are immutable; verified clone-free on frozen state.
+- **Dead code removed (safe subset):** `changeTransform` empty reducer + its `ChangeTransformPayload` type/import; the no-op gamepad `useEffect`; the unused `useAnimatedTransform` import in `View`. **Live `inverseMatrix` row-corruption FIXED** (deep-copies rows — it IS used by plurid-react `computing`, so it was kept+fixed, not deleted). `resolveRoute` confirmed LIVE (kept).
+
+**Still open in D (foundation now in place):**
+- **Consume the structural sharing (per-plane re-render scope).** Attempted + reverted: swapping `PluridPlane`'s whole-`getTree` selection for a parent-by-id lookup is **net-negative without two more pieces** — (a) `connect` re-runs `mapStateToProps` on *every* dispatch, so a raw `getTreePlaneByID` walk turns the orbit hot path into O(n²) **per frame** (must use a *memoized* per-id selector / a `Map<planeID,node>` index, not a raw walk); and (b) `PluridRoot` itself still selects whole `getTree` and rebuilds all child elements each tree mutation, so it defeats the leaf bail-out (must be memoized too). Also note: a spawn legitimately re-renders all planes once (the new plane becomes active → `stateActivePlaneID` changes). Measured at the harness: 6 planes re-render on spawn — partly legitimate. **Do this as: memoized per-id selectors + `React.memo` on both Root and Plane, verified with a render-count harness.**
+- Rewrite the resize merge as a stable-keyed hashmap (fixes the float-equal relayout close + lets the 50 ms `setTree` HACK go).
+- Delete the bulkier dead code (matrix3d `*Plurid`, 9 quaternion fns, `printMatrix` + their skipped tests, ~46 commented `console.log` blocks).
+- API surface (flat config preset, unify dual export, type `StateContext`).
+
 ---
 
 ## 1. Critical / do-first

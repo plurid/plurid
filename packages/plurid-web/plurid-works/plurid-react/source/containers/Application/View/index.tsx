@@ -75,7 +75,6 @@
     // } from '~services/state/types/space';
 
     import {
-        useAnimatedTransform,
         navigateToPluridPlane,
         focusPreviousRoot,
         focusNextRoot,
@@ -1330,37 +1329,6 @@ const PluridView: React.FC<PluridViewProperties> = (
             };
         }, []);
         // #endregion effects grab-mode
-
-
-        // #region effects gamepad
-        useEffect(() => {
-            const handleGamepadConnect = (
-                event: GamepadEvent,
-            ) => {
-                const gamepad = navigator.getGamepads()[event.gamepad.index];
-                if (!gamepad) {
-                    return;
-                }
-            }
-
-            const handleGamepadDisconnect = (
-                event: GamepadEvent,
-            ) => {
-                const gamepad = navigator.getGamepads()[event.gamepad.index];
-                if (!gamepad) {
-                    return;
-                }
-            }
-
-            window.addEventListener('gamepadconnected', handleGamepadConnect);
-            window.addEventListener('gamepaddisconnected', handleGamepadDisconnect);
-
-            return () => {
-                window.removeEventListener('gamepadconnected', handleGamepadConnect);
-                window.removeEventListener('gamepaddisconnected', handleGamepadDisconnect);
-            }
-        }, []);
-        // #endregion effects gamepad
 
 
         // #region effects pubsub

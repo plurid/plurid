@@ -307,7 +307,9 @@ export const inverseMatrix = (
     const cols = 4;
     const rows = 4;
 
-    const A: Matrix = [...matrix];
+    // Deep-copy the ROWS — `[...matrix]` only copies the outer array, leaving the row arrays
+    // shared with the caller's `matrix`, which the in-place row reductions below then corrupt.
+    const A: Matrix = matrix.map(row => [...row]);
     const B = identityMatrix();
 
     let r: number;

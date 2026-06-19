@@ -45,7 +45,6 @@
         SpaceSize,
         Coordinates,
         SetSpaceFieldPayload,
-        ChangeTransformPayload,
         SetTransformPayload,
         UpdateSpaceLinkCoordinatesPayload,
     } from './types';
@@ -126,16 +125,6 @@ export const space = createSlice({
             action: PayloadAction<boolean>,
         ) => {
             state.loading = action.payload;
-        },
-        changeTransform: (
-            state,
-            action: PayloadAction<ChangeTransformPayload>,
-        ) => {
-            // const {
-            //     type,
-            //     kind,
-            //     value,
-            // } = action.payload;
         },
         setTransform: (
             state,

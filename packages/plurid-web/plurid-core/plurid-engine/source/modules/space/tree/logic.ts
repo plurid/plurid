@@ -727,24 +727,37 @@ export const updateTreePlane = (
     tree: TreePlane[],
     updatedPlane: TreePlane,
 ): TreePlane[] => {
-    const updatedTree = tree.map(treePlane => {
+    // Immutable + structurally-shared: only the nodes ON THE PATH to `updatedPlane` get new
+    // object identities; every untouched subtree keeps its original reference (so React.memo /
+    // referential selectors can skip the planes that didn't change). Previously this mutated
+    // `treePlane.children` in place, corrupting the input tree (Redux stale-render/double-apply).
+    let changed = false;
+
+    const mapped = tree.map(treePlane => {
         if (treePlane.planeID === updatedPlane.planeID) {
+            changed = true;
             return updatedPlane;
         }
 
         if (treePlane.children) {
-            const children = updateTreePlane(
+            const newChildren = updateTreePlane(
                 treePlane.children,
                 updatedPlane,
             );
-            treePlane.children = children;
-            return treePlane;
+            if (newChildren !== treePlane.children) {
+                changed = true;
+                return {
+                    ...treePlane,
+                    children: newChildren,
+                };
+            }
         }
 
         return treePlane;
     });
 
-    return updatedTree;
+    // Same reference out when nothing matched — preserves structural sharing up the recursion.
+    return changed ? mapped : tree;
 }
 
 
@@ -873,15 +886,14 @@ export const updateTreeWithNewPlane = <C>(
     // };
     // console.log('newPlane', newPlane);
 
+    // New children array (don't `.push` into the shared `parentPlane.children`, which mutates
+    // the input tree).
     const updatedParentPlane: TreePlane = {
         ...parentPlane,
+        children: parentPlane.children
+            ? [...parentPlane.children, updatedTreePlane]
+            : [updatedTreePlane],
     };
-
-    if (updatedParentPlane.children) {
-        updatedParentPlane.children.push(updatedTreePlane);
-    } else {
-        updatedParentPlane.children = [updatedTreePlane];
-    }
 
     const updatedTree = updateTreePlane(tree, updatedParentPlane);
 
@@ -915,17 +927,22 @@ export const updatePlaneLocation = (
         plane.planeAngle,
     );
 
-    plane.location = {
-        translateX: location.x,
-        translateY: location.y,
-        translateZ: location.z,
-        rotateX: 0,
-        rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
+    // New plane object (don't mutate the live tree node in place); `updateTreePlane` then
+    // swaps it in immutably with structural sharing.
+    const updatedPlane: TreePlane = {
+        ...plane,
+        location: {
+            translateX: location.x,
+            translateY: location.y,
+            translateZ: location.z,
+            rotateX: 0,
+            rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
+        },
     };
 
     const updatedTree = updateTreePlane(
         tree,
-        plane,
+        updatedPlane,
     );
 
     return updatedTree;
@@ -1164,8 +1181,12 @@ export const togglePlaneFromTree = (
                 forceShow,
             );
 
-            plane.children = [ ...childrenUpdatedTree ];
-            updatedTree.push(plane);
+            // New node with the recursively-updated children (don't reassign
+            // `plane.children`, which mutates the input tree).
+            updatedTree.push({
+                ...plane,
+                children: [ ...childrenUpdatedTree ],
+            });
 
             if (childrenUpdatedPlane) {
                 updatedPlane = {

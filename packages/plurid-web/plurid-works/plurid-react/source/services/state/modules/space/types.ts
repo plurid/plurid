@@ -39,12 +39,6 @@ export interface SetSpaceFieldPayload {
     value: any;
 }
 
-export interface ChangeTransformPayload {
-    type: 'rotate' | 'translate' | 'scale';
-    kind: 'set' | 'add';
-    value: number;
-}
-
 export interface SetTransformPayload {
     translationX?: number;
     translationY?: number;

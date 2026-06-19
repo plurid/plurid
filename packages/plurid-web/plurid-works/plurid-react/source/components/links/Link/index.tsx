@@ -309,7 +309,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         dispatchUpdateSpaceLinkCoordinates(payload);
 
         const updatedTree = space.tree.logic.updatePlaneLocation(
-            objects.clone((stateTree)),
+            stateTree,
             parentPlaneID,
             pluridPlaneID,
             objects.clone((newLinkCoordinates)),
@@ -369,7 +369,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             route,
             parentPlaneID,
             linkCoordinates,
-            objects.clone((stateTree)),
+            stateTree,
             planesRegistry.getAll(),
             stateConfiguration,
             hostname,
@@ -404,7 +404,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             updatedTree,
             updatedPlane,
         } = space.tree.logic.togglePlaneFromTree(
-            objects.clone((stateTree)),
+            stateTree,
             pluridPlaneID,
             forceShow,
         );
