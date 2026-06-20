@@ -20,6 +20,19 @@
 
 
 
+> **Current status (2026-06).** This monorepo is mid-modernization. The text below is the
+> original (2022) overview and may reference older paths/names. For what is **live today**,
+> how it fits together, and which packages are legacy/experimental, start here:
+>
+> - **[`CONTEXT-MAP.md`](./CONTEXT-MAP.md)** — package map & status (what's live vs legacy/experimental).
+> - **[`docs/ENGINE_AUDIT_AND_ROADMAP.md`](./docs/ENGINE_AUDIT_AND_ROADMAP.md)** — engine audit + phased roadmap (with progress).
+> - **[`docs/CODEBASE_DEEP_CRITIQUE.md`](./docs/CODEBASE_DEEP_CRITIQUE.md)** — repo-wide critique.
+>
+> **Develop:** `pnpm install`, then `pnpm build` · `pnpm test` · `pnpm lint` (all green as of 2026-06-20).
+> The engine's integration harness is `fixtures/render-test` (`pnpm --filter plurid-render-test dev`, port 5274).
+
+
+
 ### Contents
 
 + [About](#about)
