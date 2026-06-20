@@ -1,0 +1,15 @@
+# Build output + deps + generated artifacts — never format these.
+node_modules
+distribution
+build
+coverage
+*.min.js
+pnpm-lock.yaml
+
+# Archived packages (excluded from the workspace; not maintained).
+packages/plurid-web/plurid-works/plurid-canvas
+packages/plurid-web/plurid-works/plurid-html
+
+# Scaffolding templates ship verbatim to end users — keep their original formatting.
+packages/plurid-utilities/generate-plurid-app/templates
+packages/plurid-utilities/generate-plurid-app/distribution

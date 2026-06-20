@@ -34,7 +34,6 @@
         "npm": ">=6"
     },
     "scripts": {
-        "prepare": "ts-patch install -s",
         "lint": "eslint ./source --ext .ts,.tsx -c ./configurations/.eslintrc.js",
         "test": "jest -c ./configurations/jest.config.js --coverage",
         "clean": "rm -rf ./distribution",
@@ -51,7 +50,6 @@
     },
     "devDependencies": {
         "@plurid/plurid-themes": "workspace:*",
-        "@rollup/plugin-terser": "^0.4.3",
         "@types/jest": "^29.5.2",
         "@types/node": "^20.3.3",
         "@types/react": "^18.2.14",
@@ -67,10 +65,8 @@
         "styled-components": "==5.3.10",
         "ts-jest": "v29.1.1",
         "ts-node": "^10.9.1",
-        "ts-patch": "^3.0.1",
         "tslib": "^2.6.0",
         "typescript": "^5.9.3",
-        "typescript-transform-paths": "^3.4.6",
         "tsup": "^8.5.1"
     },
     "exports": {

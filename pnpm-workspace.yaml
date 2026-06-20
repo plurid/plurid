@@ -6,6 +6,12 @@ packages:
   - 'packages/plurid-web/plurid-works/*'
   - 'packages/plurid-utilities/*'
   - 'fixtures/render-test'
+  # Archived (2026-06-20) — dropped from the build/test loop. Both are abandoned with zero
+  # dependents/imports in the repo: plurid-canvas is an empty `0.0.0-0` with only a sanity
+  # test; plurid-html is a stale-since-2021 Stencil duplicate of the engine (its
+  # `stencil build --docs` no longer runs) with no @plurid deps. Source kept on disk.
+  - '!packages/plurid-web/plurid-works/plurid-canvas'
+  - '!packages/plurid-web/plurid-works/plurid-html'
 
 # pnpm 11 blocks dependency postinstall scripts by default. esbuild needs its
 # native binary; core-js (donation ad) and puppeteer (Chromium download, unused) do not.

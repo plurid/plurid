@@ -2,7 +2,8 @@ name: CI
 
 # Enforces the three quality gates that pass as of 2026-06-20:
 #   pnpm build · pnpm test · pnpm lint
-# (Root scripts already exclude the archival plurid-canvas / plurid-html packages.)
+# (The archival plurid-canvas / plurid-html packages are excluded at the source —
+#  via the `!` globs in pnpm-workspace.yaml — so the recursive root scripts skip them.)
 
 on:
   push:

@@ -2,10 +2,15 @@
     "name": "plurid-engine-workspace",
     "version": "0.0.0",
     "private": true,
-    "description": "Plurid engine monorepo root. Overrides + allowBuilds live in pnpm-workspace.yaml (pnpm 11 no longer reads the package.json pnpm field).",
+    "description": "Plurid engine monorepo root. Overrides + allowBuilds live in pnpm-workspace.yaml (pnpm 11 no longer reads the package.json pnpm field). plurid-canvas + plurid-html are archived (excluded in pnpm-workspace.yaml), so the recursive scripts below no longer need to filter them.",
     "scripts": {
-        "build": "pnpm -r --filter='!@plurid/plurid-canvas' --filter='!@plurid/plurid-html' build",
-        "test": "pnpm -r --filter='!@plurid/plurid-canvas' --filter='!@plurid/plurid-html' test",
-        "lint": "pnpm -r --filter='!@plurid/plurid-canvas' --filter='!@plurid/plurid-html' lint"
+        "build": "pnpm -r build",
+        "test": "pnpm -r test",
+        "lint": "pnpm -r lint",
+        "format": "prettier --write \"packages/**/source/**/*.{ts,tsx}\" \"fixtures/**/src/**/*.{ts,tsx}\"",
+        "format.check": "prettier --check \"packages/**/source/**/*.{ts,tsx}\" \"fixtures/**/src/**/*.{ts,tsx}\""
+    },
+    "devDependencies": {
+        "prettier": "^3.6.2"
     }
 }

@@ -1,7 +1,6 @@
 {
+    "extends": "../../../tsconfig.base.json",
     "compilerOptions": {
-        "sourceMap": true,
-
         "baseUrl": ".",
         "paths": {
             "~data/*": [
@@ -9,36 +8,14 @@
             ],
             "~modules/*": [
                 "./source/modules/*"
-            ],
+            ]
         },
-
-        "strict": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true,
         "strictFunctionTypes": true,
-        "noImplicitThis": true,
         "alwaysStrict": true,
-
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
-        "noImplicitReturns": true,
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-
-        "target": "es6",
-        "lib": [
-            "ES2019"
-        ],
-        "module": "esnext",
-        "moduleResolution": "node",
-        "declaration": true,
         "declarationDir": "distribution",
-
         "preserveSymlinks": true,
-
         "rootDir": "source",
-        "outDir": "distribution",
-
+        "outDir": "distribution"
     },
     "exclude": [
         "node_modules",

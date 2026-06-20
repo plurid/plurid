@@ -1,0 +1,13 @@
+{
+    "//": "House style for the plurid engine monorepo (Phase E, 2026-06-20). Tuned to match the existing source (4-space, single quotes, semicolons, trailing commas everywhere) so `pnpm format` reflows as little as possible. Note: Prettier does NOT understand the `// #region` block convention used throughout — it leaves comments alone, so the regions survive, but run `format` per-file on what you touch rather than across the whole tree at once.",
+    "tabWidth": 4,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "printWidth": 100,
+    "endOfLine": "lf"
+}
