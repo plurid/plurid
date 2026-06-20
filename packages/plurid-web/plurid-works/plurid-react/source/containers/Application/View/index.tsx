@@ -15,7 +15,7 @@
     import { connect } from 'react-redux';
 
 
-    import themes, {
+    import {
         Theme,
     } from '@plurid/plurid-themes';
 
@@ -26,7 +26,6 @@
     import {
         /** constants */
         PLURID_ENTITY_VIEW,
-        PLURID_PUBSUB_TOPIC,
         PLURID_DEFAULT_PREVENT_OVERSCROLL_TIMEOUT,
 
         /** enumerations */
@@ -40,12 +39,8 @@
         PluridView,
         TreePlane,
         SpaceTransform,
-        PluridPubSub as IPluridPubSub,
-        PluridPubSubSubscribeMessage,
         PluridApplicationView,
     } from '@plurid/plurid-data';
-
-    import PluridPubSub from '@plurid/plurid-pubsub';
     // #endregion libraries
 
 
@@ -72,18 +67,6 @@
     // import {
     //     ViewSize,
     // } from '~services/state/types/space';
-
-    import {
-        navigateToPluridPlane,
-        focusPreviousRoot,
-        focusNextRoot,
-        focusRootIndex,
-        focusRootID,
-    } from '~services/logic/animation';
-
-    import {
-        generalEngine,
-    } from '~services/engine';
     // #endregion external
 
 
@@ -99,6 +82,7 @@
     import useViewResize from './hooks/useViewResize';
     import usePointerGestures from './hooks/usePointerGestures';
     import useTreeUpdate from './hooks/useTreeUpdate';
+    import usePluridPubSub from './hooks/usePluridPubSub';
     // #endregion internal
 // #endregion imports
 
@@ -259,15 +243,6 @@ const PluridView: React.FC<PluridViewProperties> = (
     const [navDragging, setNavDragging] = useState(false);
 
     const [
-        pluridPubSub,
-        setPluridPubSub,
-    ] = useState<IPluridPubSub[]>(
-        pubsub
-            ? [pubsub]
-            : [new PluridPubSub()]
-    );
-
-    const [
         preventOverscroll,
         setPreventOverscroll,
     ] = useState(false);
@@ -305,6 +280,42 @@ const PluridView: React.FC<PluridViewProperties> = (
         hostname,
         planesRegistrar,
         dispatchSetTree,
+    });
+
+    // The pubsub bridge — registry + `registerPubSub` + the ~23 topic subscriptions + the
+    // transform/config re-publish — lives in `usePluridPubSub`. Placed AFTER `useTreeUpdate`
+    // (it needs `treeUpdate`) and BEFORE `shortcutsCallback`/`pluridContext` (they read
+    // `pluridPubSub[0]` + `registerPubSub`).
+    const {
+        pluridPubSub,
+        registerPubSub,
+    } = usePluridPubSub({
+        pubsub,
+        state,
+        stateConfiguration,
+        stateTransform,
+        stateSpaceView,
+        stateTree,
+        dispatch,
+        treeUpdate,
+        dispatchers: {
+            dispatchSetConfiguration,
+            dispatchSetGeneralTheme,
+            dispatchSetInteractionTheme,
+            dispatchSetSpaceLocation,
+            dispatchSetAnimatedTransform,
+            dispatchSetTransformTime,
+            dispatchRotateXWith,
+            dispatchRotateX,
+            dispatchRotateYWith,
+            dispatchRotateY,
+            dispatchTranslateXWith,
+            dispatchTranslateYWith,
+            dispatchTranslateZWith,
+            dispatchSpaceSetView,
+            dispatchSetSpaceField,
+            dispatchSetTree,
+        },
     });
     // #endregion handlers
 
@@ -361,411 +372,6 @@ const PluridView: React.FC<PluridViewProperties> = (
 
 
     // #region handlers
-        // #region handlers pubsub
-        const handlePubSubSubscribe = (
-            pubsub: IPluridPubSub,
-        ) => {
-            const subscriptions: PluridPubSubSubscribeMessage[] = [
-                {
-                    topic: PLURID_PUBSUB_TOPIC.CONFIGURATION,
-                    callback: (data) => {
-                        if ((data as any).internal) {
-                            return;
-                        }
-
-                        const computedConfiguration = generalEngine.configuration.merge(
-                            data,
-                            stateConfiguration,
-                        );
-
-                        // Handle themes
-                        if (typeof computedConfiguration.global.theme === 'object') {
-                            if (typeof computedConfiguration.global.theme.general === 'string') {
-                                dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme.general]);
-                            } else {
-                                dispatchSetGeneralTheme(computedConfiguration.global.theme.general);
-                            }
-
-                            if (typeof computedConfiguration.global.theme.interaction === 'string') {
-                                dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme.interaction]);
-                            } else {
-                                dispatchSetInteractionTheme(computedConfiguration.global.theme.interaction);
-                            }
-                        } else if (typeof computedConfiguration.global.theme === 'string') {
-                            dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme]);
-                            dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme]);
-                        }
-
-
-                        dispatchSetConfiguration(computedConfiguration);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
-                    callback: (data) => {
-                        const {
-                            value,
-                            internal,
-                        } = data;
-
-                        if (internal) {
-                            return;
-                        }
-
-                        dispatchSetSpaceLocation(value);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-
-                        dispatchSetAnimatedTransform(value.active);
-
-                        if (value.time) {
-                            dispatchSetTransformTime(value.time);
-                        } else {
-                            dispatchSetTransformTime(450);
-                        }
-                    },
-                },
-
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        dispatchRotateXWith(value);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        dispatchRotateX(value);
-                    },
-                },
-
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        dispatchRotateYWith(value);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        dispatchRotateY(value);
-                    },
-                },
-
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        dispatchTranslateXWith(value);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_TO,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        // dispatchTranslateXTo(value);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_WITH,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        dispatchTranslateYWith(value);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_TO,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        // dispatchTranslateYTo(value);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Z_WITH,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        dispatchTranslateZWith(value);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Z_TO,
-                    callback: (data) => {
-                        const {
-                            value,
-                        } = data;
-                        // dispatchTranslateZTo(value);
-                    },
-                },
-
-                {
-                    topic: PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
-                    callback: (data) => {
-                        const {
-                            plane,
-                        } = data;
-
-                        const updatedView = [
-                            ...stateSpaceView,
-                            plane,
-                        ];
-                        dispatchSpaceSetView(updatedView);
-
-                        treeUpdate(updatedView, undefined, true);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
-                    callback: (data) => {
-                        const {
-                            view,
-                        } = data;
-
-                        dispatchSpaceSetView([
-                            ...view,
-                        ]);
-
-                        treeUpdate(view, undefined, true);
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
-                    callback: (data) => {
-                        const {
-                            plane,
-                        } = data;
-
-                        /** TODO
-                         * a less naive filtering
-                         */
-                        const updatedView = stateSpaceView.filter(view => {
-                            if (typeof view === 'string') {
-                                // REMOVE the matching plane — keep everything else. The old
-                                // `view === plane` did the inverse (kept only the plane that was
-                                // supposed to be removed, dropping all the others).
-                                return view !== plane;
-                            }
-
-                            return true;
-                        });
-
-                        dispatchSpaceSetView(updatedView);
-
-                        treeUpdate(updatedView);
-                    },
-                },
-
-                {
-                    topic: PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
-                    callback: (data) => {
-                        const {
-                            id,
-                        } = data;
-
-                        const plane = space.tree.logic.getTreePlaneByID(
-                            stateTree,
-                            id,
-                        );
-
-                        navigateToPluridPlane(
-                            dispatch,
-                            plane,
-                        );
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
-                    callback: (data) => {
-                        const {
-                            id,
-                        } = data;
-
-                        if (typeof id !== 'string') {
-                            return;
-                        }
-
-                        dispatchSetSpaceField({
-                            field: 'isolatePlane',
-                            value: id,
-                        });
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE,
-                    callback: () => {
-                        const treePlane = stateTree.find(plane => plane.planeID === state.space.lastClosedPlane);
-                        if (treePlane) {
-                            const forceShow = true;
-                            const {
-                                updatedTree,
-                            } = space.tree.logic.togglePlaneFromTree(
-                                stateTree,
-                                treePlane.planeID,
-                                forceShow,
-                            );
-
-                            dispatchSetTree(updatedTree);
-
-                            dispatchSetSpaceField({
-                                field: 'lastClosedPlane',
-                                value: '',
-                            });
-                        }
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
-                    callback: (data) => {
-                        const {
-                            id,
-                        } = data;
-
-                        const treePlane = stateTree.find(plane => plane.planeID === id);
-                        if (treePlane) {
-                            const forceShow = false;
-                            const {
-                                updatedTree,
-                            } = space.tree.logic.togglePlaneFromTree(
-                                stateTree,
-                                treePlane.planeID,
-                                forceShow,
-                            );
-
-                            // Single dispatch — `togglePlaneFromTree` now returns a NEW
-                            // immutable tree, so this update is detected on the first dispatch.
-                            // (Previously a 50 ms re-dispatch HACK forced the update because the
-                            // old mutating toggle left the tree identity unchanged.)
-                            dispatchSetTree(updatedTree);
-
-                            dispatchSetSpaceField({
-                                field: 'lastClosedPlane',
-                                value: id,
-                            });
-                        }
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.PREVIOUS_ROOT,
-                    callback: () => {
-                        focusPreviousRoot(
-                            dispatch,
-                            state,
-                        );
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.NEXT_ROOT,
-                    callback: () => {
-                        focusNextRoot(
-                            dispatch,
-                            state,
-                        );
-                    },
-                },
-                {
-                    topic: PLURID_PUBSUB_TOPIC.NAVIGATE_TO_ROOT,
-                    callback: (data) => {
-                        const index = (data as any).index;
-                        if (typeof index !== 'undefined') {
-                            focusRootIndex(
-                                dispatch,
-                                state,
-                                index,
-                            );
-                            return;
-                        }
-
-                        const id = (data as any).id;
-                        focusRootID(
-                            dispatch,
-                            state,
-                            id,
-                        );
-                    },
-                },
-            ];
-
-            const indexes: string[] = [];
-
-            for (const subscription of subscriptions) {
-                const index = pubsub.subscribe(subscription);
-                indexes.push(index);
-            }
-
-            return () => {
-                for (const index of indexes) {
-                    pubsub.unsubscribe(
-                        index,
-                    );
-                }
-            }
-        }
-
-        const handlePubSubPublish = (
-            pubsub: IPluridPubSub,
-        ) => {
-            const internalTransform = {
-                value: {
-                    ...stateTransform,
-                },
-                internal: true,
-            };
-            pubsub.publish({
-                topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
-                data: internalTransform,
-            });
-
-            pubsub.publish({
-                topic: PLURID_PUBSUB_TOPIC.CONFIGURATION,
-                data: {
-                    ...stateConfiguration,
-                    internal: true,
-                } as any,
-            });
-        }
-
-        // `useCallback` + functional update so this keeps a STABLE identity across renders: it is
-        // part of the `pluridContext` value below, and a fresh function each render would change
-        // the context object and force every `useContext(Context)` consumer (every plane) to
-        // re-render regardless of `React.memo`.
-        const registerPubSub = useCallback((
-            pubsub: IPluridPubSub,
-        ) => {
-            setPluridPubSub(previous => [
-                ...previous,
-                pubsub,
-            ]);
-        }, []);
-        // #endregion handlers pubsub
-
-
         // #region handlers touch
         // Touch/pointer gestures are handled by native Pointer Events in the
         // '#region effects pointer' effect below (replaced HammerJS).
@@ -856,46 +462,6 @@ const PluridView: React.FC<PluridViewProperties> = (
         // #region effects grab-mode
         // Grab/navigate mode (G toggle / Escape exit) now lives in `useGrabMode`.
         // #endregion effects grab-mode
-
-
-        // #region effects pubsub
-        /** PubSub Subscribe */
-        useEffect(() => {
-            const unsubscribers: (() => void)[] = [];
-
-            for (const pubsub of pluridPubSub) {
-                const unsubscriber = handlePubSubSubscribe(pubsub);
-
-                unsubscribers.push(unsubscriber);
-            }
-
-            return () => {
-                for (const unsubscriber of unsubscribers) {
-                    unsubscriber();
-                }
-            }
-        }, [
-            state.space.lastClosedPlane,
-            pluridPubSub.length,
-            // Tree ref (the slice is untouched by transform gestures, so it only changes on
-            // real tree mutations) instead of an O(n) stringify on every re-render. Config is
-            // left stringified on purpose: it may be regenerated by `compute()`, so its
-            // reference is not a reliable change signal, and it is a far smaller object.
-            stateTree,
-            JSON.stringify(stateConfiguration),
-        ]);
-
-        /** PubSub Publish */
-        useEffect(() => {
-            for (const pubsub of pluridPubSub) {
-                handlePubSubPublish(pubsub);
-            }
-        }, [
-            pluridPubSub.length,
-            JSON.stringify(stateConfiguration),
-            stateTransform,
-        ]);
-        // #endregion effects pubsub
 
 
         // #region effects tree update

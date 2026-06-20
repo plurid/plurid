@@ -27,7 +27,9 @@ export interface UseTreeUpdateParameters {
     view: PluridApplicationView;
     configuration: PluridConfiguration;
     tree: TreePlane[];
-    hostname: string;
+    // The View prop is optional; the `space.tree.Tree` constructor's `origin` param is
+    // defaulted (`= 'origin'`), so `undefined` is accepted at runtime — match that here.
+    hostname: string | undefined;
     planesRegistrar: Parameters<typeof getRegisteredPlanes>[0];
     dispatchSetTree: (tree: TreePlane[]) => void;
 }

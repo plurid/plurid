@@ -191,9 +191,9 @@ Fly rAF loop spins every frame even with no keys held (`View:1242-1257`); `Trans
 ## 4. Architecture & code quality
 
 ### 4.1 — Monolith files (HIGH)
-- `containers/Application/View/index.tsx` — **1,596 lines**: 30+ dispatch props, the entire ~350-line pubsub subscribe table (re-created each render), 8 gesture/listener effects, the tree-merge HACK. **Split** into `usePointerGestures`, `useFlyControls`, `useGrabMode`, `usePluridPubSubBridge`, `useViewResize`; make the pubsub table a data-driven `{topic: handler}` map. _Single highest-leverage refactor._
+- **DONE (Phase F) — `containers/Application/View/index.tsx` 1,613 → 692 lines (−57%).** Extracted six behavior-preserving hooks into `View/hooks/`: `useGrabMode`, `useFlyControls`, `useViewResize`, `usePointerGestures`, `useTreeUpdate`, `usePluridPubSub`. The pubsub bridge moved verbatim (the existing `subscriptions: {topic, callback}[]` array IS the data-driven map the audit wanted — relocating it achieved the goal). Each extraction was harness-verified before the next; the pubsub move also fixed a latent `space`-import bug from the `useTreeUpdate` step (the `space.tree.logic` usage now lives in the hook with its own import). **Verified:** build (ESM+CJS+DTS) green; engine 44✓/37 skip + react 1✓; harness sweep — load (5 planes, 0 console errors), full pubsub bridge (CLOSE/OPEN-CLOSED/ISOLATE/CONFIG/NEXT-PREV-NAV root + nav-to-plane — every handler runtime-proven against the live pubsub, 0 swallowed errors), orbit gesture, link-spawn + treeUpdate, persistence round-trip (spawned child survives reload via pagehide flush), and SPA nav (`?router` → /about).
 - `services/logic/router/index.tsx` — **1,549 lines, ~60% dead/commented**, 37 `as any`. Four near-duplicate "walk path→space→universe→cluster→plane, build address, push Application" traversals. **Extract** one `buildPlaneAddress(parts)` + one `iterateRoutePlanes(route, visitor)`.
-- `components/links/Link/index.tsx` — **808 lines**, 6 concerns (DOM coordinate-walk, tree mutation, preview state machine, pubsub, unmount timeout, render). Extract `useLinkCoordinates`, `useLinkPreview`, `useLinkPlaneLifecycle`.
+- `components/links/Link/index.tsx` — **808 lines**, 6 concerns (DOM coordinate-walk, tree mutation, preview state machine, pubsub, unmount timeout, render). **Partly DONE (Phase F):** extracted the self-contained `useLinkPreview` (hover state machine). The `useLinkCoordinates`/`useLinkPlaneLifecycle` split is deferred — the spawn logic is too coupled via the `showLink`/`pluridPlaneID`/`linkCoordinates` "spawn-state triple" to extract safely for the value.
 - `plurid-engine/.../space/tree/logic.ts` — **1,252 lines**, ~26% dead commented blocks (`:176-266, 403-456, 820-874`) + two stub functions. `isParametric` (`:603`) unconditionally returns `true`, making the guard at `:656` always fire (double-push). Delete dead/stubs (→ ~600 lines); split into build/mutate/traverse.
 
 ### 4.2 — Dead code (HIGH)
@@ -279,7 +279,7 @@ After §1.0 un-breaks ts-jest:
 **Phase D — Architecture & API (bigger, do incrementally):**
 11. Delete dead code: matrix3d `*Plurid`, quaternion, commented blocks, stubs (§4.2). _~800 LOC + makes the live path legible._
 12. Extract the tree-walk + `placeChildPlane` helpers (§4.3) — fixes immutability + the 4-caller divergence centrally.
-13. Decompose `View` into gesture hooks + data-driven pubsub map (§4.1); collapse the router's duplicated traversals (§4.1).
+13. **DONE (Phase F)** — Decomposed `View` into six hooks (1,613 → 692 lines, §4.1); extracted `Link`'s `useLinkPreview` + deleted the dead `mapPathsToRoutes` router util. (Deeper router-traversal collapse + the coupled `useLinkCoordinates`/`useLinkPlaneLifecycle` left as future work — too entangled for the value now.)
 14. The config-API ergonomics: flat preset layer + key-union merge + defaults (§5); unify the dual export surface; type `StateContext`.
 
 **Phase E — Tooling baseline:**
