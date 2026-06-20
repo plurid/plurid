@@ -1,8 +1,6 @@
 // #region imports
     // #region libraries
     import {
-        Indexed,
-        PluridRoute,
         RouteDivisions,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -18,30 +16,6 @@
 
 
 // #region module
-export const mapPathsToRoutes = <C, V>(
-    paths: Indexed<string>,
-    view: V,
-) => {
-    const routes: PluridRoute<C>[] = [];
-
-    for (const [key, path] of Object.entries(paths)) {
-        const pathView = (view as any)[key];
-
-        if (pathView) {
-            const route: PluridRoute<C> = {
-                value: '',
-                // path,
-                // view: pathView,
-            };
-            routes.push(route);
-        }
-    }
-
-    return routes;
-}
-
-
-
 // const interplanarExample = '://plane'; // or intraclusterial
 // const interclusterialExample = '://cluster://plane'; // or intrauniversal
 // const interuniversalExample = '://universe://cluster://plane'; // or intraspatial

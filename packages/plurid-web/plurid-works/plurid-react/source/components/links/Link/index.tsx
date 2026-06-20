@@ -93,6 +93,8 @@
     import {
         StyledPluridLink,
     } from './styled';
+
+    import useLinkPreview from './hooks/useLinkPreview';
     // #endregion internal
 // #endregion imports
 
@@ -200,19 +202,29 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     // #region references
     const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
-    const hoverInTimeout = useRef<null | NodeJS.Timeout>(null);
-    const hoverOutTimeout = useRef<null | NodeJS.Timeout>(null);
     // #endregion references
 
 
     // #region state
     const [mouseOver, setMouseOver] = useState(false);
-    const [showPreview, setShowPreview] = useState(false);
     const [showLink, setShowLink] = useState(false);
     const [pluridPlaneID, setPluridPlaneID] = useState('');
     const [parentPlaneID, setParentPlaneID] = useState(getPluridPlaneIDByData(linkElement.current));
     const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
     // #endregion state
+
+
+    // Hover-preview state machine (timers + showPreview) lives in `useLinkPreview`; the lifecycle
+    // handlers below use `setShowPreview` to hide the preview when the plane spawns/toggles.
+    const {
+        showPreview,
+        setShowPreview,
+    } = useLinkPreview({
+        preview,
+        mouseOver,
+        appearTime: previewAppearTime,
+        disappearTime: previewDisappearTime,
+    });
 
 
     // #region handlers
@@ -586,48 +598,6 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         showLink,
         JSON.stringify(stateViewSize),
         stateTree,
-    ]);
-
-    /** Show Preview */
-    useEffect(() => {
-        if (!preview) {
-            return;
-        }
-
-        if (mouseOver && hoverOutTimeout.current) {
-            hoverInTimeout.current = setTimeout(
-                () => {
-                    setShowPreview(true);
-                },
-                previewAppearTime,
-            );
-
-            clearTimeout(hoverOutTimeout.current);
-        }
-
-        if (!mouseOver) {
-            hoverOutTimeout.current = setTimeout(
-                () => {
-                    setShowPreview(false);
-                    if (hoverInTimeout.current) {
-                        clearTimeout(hoverInTimeout.current);
-                    }
-                },
-                previewDisappearTime,
-            );
-        }
-
-        return () => {
-            if (hoverOutTimeout.current) {
-                clearTimeout(hoverOutTimeout.current);
-            }
-            if (hoverInTimeout.current) {
-                clearTimeout(hoverInTimeout.current);
-            }
-        }
-    }, [
-        preview,
-        mouseOver,
     ]);
 
     /** PubSub Open Closed Plane */
