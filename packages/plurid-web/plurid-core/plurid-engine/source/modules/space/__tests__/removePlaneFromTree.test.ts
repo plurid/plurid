@@ -12,7 +12,7 @@
 
     // #region external
     import {
-        removePageFromTree,
+        removePlaneFromTree,
     } from '../tree/logic';
     // #endregion external
 // #endregion imports
@@ -20,7 +20,7 @@
 
 
 // #region module
-describe('removePageFromTree', () => {
+describe('removePlaneFromTree', () => {
     it('removes the tree page on the first child', () => {
         const tree: TreePlane[] = [
             {
@@ -66,7 +66,7 @@ describe('removePageFromTree', () => {
         ];
         const removePageID = 'bbb';
 
-        const result = removePageFromTree(tree, removePageID);
+        const result = removePlaneFromTree(tree, removePageID);
         expect(result).toMatchObject(updatedTree);
     });
 
@@ -132,7 +132,7 @@ describe('removePageFromTree', () => {
         ];
         const removePageID = 'ccc';
 
-        const result = removePageFromTree(tree, removePageID);
+        const result = removePlaneFromTree(tree, removePageID);
         expect(result).toMatchObject(updatedTree);
     });
 
@@ -200,7 +200,7 @@ describe('removePageFromTree', () => {
         ];
         const removePageID = 'ddd';
 
-        const result = removePageFromTree(tree, removePageID);
+        const result = removePlaneFromTree(tree, removePageID);
         expect(result).toMatchObject(updatedTree);
     });
 })

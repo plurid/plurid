@@ -945,34 +945,9 @@ export const updateTreeWithNewPage = (
 }
 
 
-export const removePageFromTree = (
-    tree: TreePlane[],
-    pluridPlaneID: string,
-): TreePlane[] => {
-    // Immutable + structurally shared (was mutating `page.children` inside a `.filter`).
-    let changed = false;
-
-    const updatedTree: TreePlane[] = [];
-    for (const page of tree) {
-        if (page.planeID === pluridPlaneID) {
-            changed = true;
-            continue;
-        }
-
-        if (page.children) {
-            const pageTree = removePageFromTree(page.children, pluridPlaneID);
-            if (pageTree !== page.children) {
-                changed = true;
-                updatedTree.push({ ...page, children: pageTree });
-                continue;
-            }
-        }
-
-        updatedTree.push(page);
-    }
-
-    return changed ? updatedTree : tree;
-}
+// `removePageFromTree` was a byte-for-byte duplicate of `removePlaneFromTree` (below) — same
+// immutable, structurally-shared removal, only the local names differed. It had no production
+// caller (only its own test), so it was deleted and its test repointed at `removePlaneFromTree`.
 
 
 export const toggleChildren = (

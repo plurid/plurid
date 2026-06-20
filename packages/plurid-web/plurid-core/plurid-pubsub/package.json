@@ -29,7 +29,7 @@
     "module": "distribution/index.mjs",
     "types": "distribution/index.d.ts",
     "engines": {
-        "node": ">=12",
+        "node": ">=18",
         "npm": ">=6"
     },
     "scripts": {
