@@ -1,7 +1,6 @@
 // #region imports
     // #region libraries
-    import { AnyAction } from '@reduxjs/toolkit';
-    import { ThunkDispatch } from 'redux-thunk';
+    import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 
 
     import {

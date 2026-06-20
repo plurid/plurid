@@ -264,15 +264,20 @@ export interface PluridPubSubSubscribeMessageViewAddPlane {
     callback: PluridPubSubCallback<PluridPubSubMessageViewAddPlaneData>;
 }
 
+export interface PluridPubSubMessageViewSetPlanesData {
+    view: string[];
+}
 export interface PluridPubSubPublishMessageViewSetPlanes {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES;
-    data?: {
-        view: string[];
-    };
+    data?: PluridPubSubMessageViewSetPlanesData;
 }
 export interface PluridPubSubSubscribeMessageViewSetPlanes {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES;
-    callback: PluridPubSubCallback<PluridPubSubPublishMessageViewSetPlanes>;
+    // The pubsub delivers `message.data` to the callback (see `PluridPubSub.publish`), so the
+    // callback's param is the DATA payload — matching every other subscribe message (e.g.
+    // CONFIGURATION → `PluridPubSubCallback<PluridPartialConfiguration>`). This previously passed
+    // the whole publish-message type by mistake, so `const { view } = data` failed to type-check.
+    callback: PluridPubSubCallback<PluridPubSubMessageViewSetPlanesData>;
 }
 
 export interface PluridPubSubMessageViewRemovePlaneData {
