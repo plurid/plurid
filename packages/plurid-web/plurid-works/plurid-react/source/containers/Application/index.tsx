@@ -97,6 +97,18 @@ class PluridApplication extends Component<
     }
 
 
+    public componentDidMount() {
+        // Restore the product's persisted content AFTER the plane subtree has mounted (so the
+        // consumer's components exist to receive it). Counterpart to the `onPersistContent` save
+        // in `persistState`; opt-in + gated on `useLocalStorage`, same as the space snapshot.
+        if (this.props.useLocalStorage && this.props.onRestoreContent) {
+            const content = state.local.loadContent(this.storeID);
+            if (content !== undefined) {
+                this.props.onRestoreContent(content);
+            }
+        }
+    }
+
     public componentDidUpdate() {
         const updatedStore = this.computeStore();
 
@@ -276,6 +288,16 @@ class PluridApplication extends Component<
             this.storeID,
             this.store.getState(),
         );
+
+        // Opt-in CONTENT seam: ride the same debounce + pagehide flush to persist the product's
+        // own content (e.g. note bodies). The engine stores the returned value opaquely.
+        if (this.props.onPersistContent) {
+            state.local.saveContent(
+                this.storeID,
+                this.props.onPersistContent(),
+            );
+        }
+
         this.persistDirty = false;
     }
 }

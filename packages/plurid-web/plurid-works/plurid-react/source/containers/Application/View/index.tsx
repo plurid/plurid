@@ -83,6 +83,7 @@
     import usePointerGestures from './hooks/usePointerGestures';
     import useTreeUpdate from './hooks/useTreeUpdate';
     import usePluridPubSub from './hooks/usePluridPubSub';
+    import useViewpointURL from './hooks/useViewpointURL';
     // #endregion internal
 // #endregion imports
 
@@ -316,6 +317,12 @@ const PluridView: React.FC<PluridViewProperties> = (
             dispatchSetSpaceField,
             dispatchSetTree,
         },
+    });
+
+    // Two-way bind the camera viewpoint with the URL's `?v=` (deep-link + "share from here").
+    useViewpointURL({
+        stateTransform,
+        dispatchSetSpaceLocation,
     });
     // #endregion handlers
 

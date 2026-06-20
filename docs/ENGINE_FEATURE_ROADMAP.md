@@ -1,10 +1,23 @@
 # Plurid Engine — Feature Roadmap
 
-> **Status (2026-06-20):** forward-looking. The A–F hardening pass is complete and green on all gates
+> **Status (2026-06-21):** in progress. The A–F hardening pass is complete and green on all gates
 > (`pnpm build` / `pnpm test` / `pnpm check`); see [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md)
-> for what landed. This doc is the *next* question — what the **engine** should add to unlock the
-> Spatial-Notes product — and is a plan, not yet code. All cited seams (file paths + symbols) are real,
-> verified against the current source.
+> for what landed. This doc plans what the **engine** should add to unlock the Spatial-Notes product.
+> All cited seams (file paths + symbols) are real, verified against the current source.
+>
+> **Delivered so far (2026-06-21), all harness-verified:**
+> - **#1 Serializable viewpoint (core)** — camera↔URL deep-link/share. `?v=rX,rY,tX,tY,tZ,s` restores
+>   the exact camera on load; orbiting reflects back via `replaceState` (no history spam). New
+>   `services/logic/viewpoint` codec + `View/hooks/useViewpointURL`. (Saved-views + tours deferred —
+>   best built with their product UI to avoid an unused persisted field + version bump now.)
+> - **#5 Both seams** — (a) **content persistence:** opt-in `onPersistContent`/`onRestoreContent` on the
+>   Application ride the engine's debounce + `pagehide` flush (`state.local.saveContent`/`loadContent`,
+>   opaque blob under `pluridContent-<id>`); round-trip verified. (b) **editor coexistence:** the pointer
+>   gesture guard now also skips `isContentEditable` targets (the shortcut handler already guarded
+>   INPUT/TEXTAREA/contentEditable via `verifyPathInputElement`), so a host editor doesn't get hijacked
+>   by orbit-drag; verified (drag-in-editor → no orbit, drag-on-view → orbit).
+>
+> **Next:** #7 minimap (a config-gated UI component — its own focused increment), then #2 undo/redo.
 
 ## Governing principle — engine primitive vs product work
 

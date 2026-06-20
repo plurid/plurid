@@ -143,6 +143,20 @@ export interface PluridApplication<C> {
     useLocalStorage?: boolean // | LocalStorageUsage;
 
     /**
+     * Opt-in CONTENT seam (requires `useLocalStorage`). The engine persists the spatial state
+     * (camera + tree) itself; your *content* (e.g. note bodies) is yours — these callbacks let it
+     * ride the same debounced + `pagehide`-flushed localStorage, keyed by `id`, so you don't
+     * reinvent that machinery.
+     *
+     * `onPersistContent` is invoked on each persist tick; its return value is stored opaquely (the
+     * engine never inspects it — keep it JSON-serializable). `onRestoreContent` is invoked once,
+     * after mount, with the previously-stored value (omitted entirely if there is none). Version
+     * your own content shape inside the blob — the engine does not version it for you.
+     */
+    onPersistContent?: () => unknown;
+    onRestoreContent?: (content: unknown) => void;
+
+    /**
      * Replace the internal plurid plane with a custom implementation.
      */
     customPlane?: C;

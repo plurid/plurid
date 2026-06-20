@@ -159,6 +159,60 @@ const load = (
         return;
     }
 }
+
+
+const CONTENT_PREFIX = 'pluridContent-';
+
+const contentKey = (
+    id: string | undefined,
+) => CONTENT_PREFIX + (id || 'default');
+
+
+/**
+ * Persist an OPAQUE product content blob (the `onPersistContent` seam). Stored under a sibling key
+ * to the space snapshot, with NO engine version stamp — the content shape (and any migration) is
+ * the product's concern; the engine never inspects it. No-op outside the browser / for `undefined`.
+ */
+const saveContent = (
+    id: string | undefined,
+    content: unknown,
+) => {
+    if (content === undefined || typeof localStorage === 'undefined') {
+        return;
+    }
+
+    try {
+        localStorage.setItem(
+            contentKey(id),
+            JSON.stringify(content),
+        );
+    } catch (_error) {
+        // best-effort (storage full / disabled)
+    }
+}
+
+
+/**
+ * Load the opaque product content blob, or `undefined` if absent / unparseable.
+ */
+const loadContent = (
+    id: string | undefined,
+): unknown => {
+    if (typeof localStorage === 'undefined') {
+        return undefined;
+    }
+
+    try {
+        const raw = localStorage.getItem(contentKey(id));
+        if (!raw) {
+            return undefined;
+        }
+
+        return JSON.parse(raw);
+    } catch (_error) {
+        return undefined;
+    }
+}
 // #endregion module
 
 
@@ -168,5 +222,7 @@ export {
     serialize,
     save,
     load,
+    saveContent,
+    loadContent,
 };
 // #endregion exports

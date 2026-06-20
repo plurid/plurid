@@ -191,6 +191,8 @@ const App = () => {
                 view={view}
                 useLocalStorage={persist}
                 id={'rt-' + layoutKey + (stress ? '-stress' : '')}
+                onPersistContent={() => (window as any).__rtContent}
+                onRestoreContent={(c) => { (window as any).__rtRestored = c; }}
             />
         </>
     );

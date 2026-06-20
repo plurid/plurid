@@ -205,7 +205,10 @@ export const usePointerGestures = (
             // starts an orbit (see onPointerMove). We must NOT setPointerCapture or preventDefault
             // here, or control clicks get swallowed.
             const target = event.target as HTMLElement | null;
-            if (target && target.closest && target.closest('input, textarea, select')) {
+            // Form fields AND rich-text editors (contentEditable, e.g. TipTap/Lexical/ProseMirror):
+            // a drag inside them should select/scrub text, not orbit. `isContentEditable` resolves
+            // inheritance (a drag on a text node inside an editable host), matching `useGrabMode`.
+            if (target && ((target.closest && target.closest('input, textarea, select')) || target.isContentEditable)) {
                 return;
             }
             // Only engage navigation for a deliberate nav gesture; otherwise leave the press to the
