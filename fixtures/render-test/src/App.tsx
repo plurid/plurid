@@ -4,6 +4,7 @@ import {
     PluridReactPlane,
     PluridLink,
     SPACE_LAYOUT,
+    definePluridConfiguration,
 } from '@plurid/plurid-react';
 
 import Panel, { PanelProps } from './Plane';
@@ -79,17 +80,17 @@ const App = () => {
 
     const source = stress ? STRESS_PANELS : PANELS;
 
-    const configuration: any = {
-        global: { theme: 'plurid' },
-        space: {
-            layout: stress ? { type: SPACE_LAYOUT.COLUMNS, columns: 8, gap: 0.04 } : active.layout,
-            center: true,
-            // Tune the link-spawn bridge length (default 100). Drives both the gap between
-            // parent and child AND the rendered bridge, so they stay aligned.
-            bridge: { length: 160 },
-        },
-        elements: { plane: { width: stress ? 0.16 : 0.32 } },
-    };
+    // Built with the flat-config shorthand (`definePluridConfiguration`) rather than the full
+    // 5-level nested object — exercises that API end-to-end and doubles as its usage example.
+    const configuration = definePluridConfiguration({
+        theme: 'plurid',
+        center: true,
+        layout: stress ? { type: SPACE_LAYOUT.COLUMNS, columns: 8, gap: 0.04 } : active.layout,
+        planeWidth: stress ? 0.16 : 0.32,
+        // Tune the link-spawn bridge length (default 100). Drives both the gap between parent
+        // and child AND the rendered bridge, so they stay aligned.
+        bridgeLength: 160,
+    });
 
     // A plane registered but NOT in the initial `view` — a plurid link spawns it into the
     // space (joined to its parent by a bridge). This is the "planes are pages" core.
