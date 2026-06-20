@@ -127,42 +127,6 @@ export const matrix3DToMatrix = (
 }
 
 
-export const printMatrix = (
-    matrix: Matrix,
-    name: string,
-) => {
-    const normalize = (
-        value: number,
-    ) => {
-        if (value === 1 || value === 0) {
-            return value + '     ';
-        }
-
-        if (value > 0) {
-            return value.toFixed(2) + '  ';
-        }
-
-        return value.toFixed(2) + ' ';
-    }
-
-
-    console.log('matrix', name + ':');
-
-    for (const row of matrix) {
-        console.log(
-            normalize(row[0]), normalize(row[1]), normalize(row[2]), normalize(row[3]),
-        );
-    }
-
-    console.log(`matrix3d(${
-        matrix.flat().join(',')
-    })`);
-
-    console.log();
-}
-
-
-
 export const rotateXMatrix = (
     angle: number,
 ): Matrix => {

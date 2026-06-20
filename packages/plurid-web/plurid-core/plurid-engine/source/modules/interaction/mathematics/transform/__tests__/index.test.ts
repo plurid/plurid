@@ -27,7 +27,6 @@ const {
     arrayToMatrix,
     matrixToArray,
     multiplyMatrices,
-    printMatrix,
     rotateXMatrix,
     rotateYMatrix,
     rotateZMatrix,
@@ -46,10 +45,7 @@ const {
     getTransformScale,
     getTransformTranslate,
     getTranslationMatrix,
-    rotatePlurid,
-    scalePlurid,
     setTransform,
-    translatePlurid,
 } = matrix3d;
 
 
@@ -229,7 +225,6 @@ describe('transform', () => {
             q,
             rot,
         });
-        printMatrix(arrayToMatrix(rot), 'rot');
 
 
         const setRotate = (
@@ -297,7 +292,6 @@ describe('transform', () => {
                 z: 30,
             }
         );
-        printMatrix(arrayToMatrix(m), 'setRotate');
 
 
 
@@ -320,16 +314,13 @@ describe('transform', () => {
 
 
         // const i = getInitialMatrix();
-        // printMatrix(i, 'i');
 
         // const r = rotateYMatrix(45);
-        // printMatrix(r, 'r');
     });
 
 
     xit('works', () => {
         const iMatrix = getInitialMatrix();
-        printMatrix(iMatrix, 'iMatrix');
 
 
         const currentX1 = 0;
@@ -340,14 +331,12 @@ describe('transform', () => {
         const t1Matrix = translateMatrix(
             nextX1,
         );
-        printMatrix(t1Matrix, 't1Matrix');
 
 
         const m1 = multiplyMatrices(
             iMatrix,
             t1Matrix,
         );
-        printMatrix(m1, 'm1');
 
 
         // const currentY1 = 0;
@@ -363,14 +352,12 @@ describe('transform', () => {
             // 0,
             // 0,
         );
-        printMatrix(t2Matrix, 't2Matrix');
 
 
         const m2 = multiplyMatrices(
             m1,
             t2Matrix,
         );
-        printMatrix(m2, 'm2');
 
 
         // q1 is equal to qFromEuler
@@ -381,16 +368,13 @@ describe('transform', () => {
         const qFromEuler = computeQuaternionFromEulers(0, 0, angle1, false);
         // const r1 = makeRotationMatrixFromQuaternion(qFromEuler);
         // const mr1 = arrayToMatrix(r1);
-        // printMatrix(mr1, 'mr1');
         const r1 = rotationMatrixFromQuaternion(qFromEuler);
-        printMatrix(r1, 'r1');
 
 
         const m3 = multiplyMatrices(
             m2,
             r1,
         );
-        printMatrix(m3, 'm3');
 
 
         // const currentY2 = -500;
@@ -404,14 +388,12 @@ describe('transform', () => {
             // nextY2,
             // 0,
         );
-        printMatrix(t3Matrix, 't3Matrix');
 
 
         const m4 = multiplyMatrices(
             m3,
             t3Matrix,
         );
-        printMatrix(m4, 'm4');
     });
 
 
@@ -421,29 +403,24 @@ describe('transform', () => {
             300,
             -100,
         );
-        printMatrix(t1Matrix, 't1Matrix');
 
         const qFromEuler1 = computeQuaternionFromEulers(0, 0, 90, false);
         const r1 = rotationMatrixFromQuaternion(qFromEuler1);
-        printMatrix(r1, 'r1');
 
         const m1 = multiplyMatrices(
             t1Matrix,
             r1,
         );
-        printMatrix(m1, 'm1');
 
 
         const qFromEuler2 = computeQuaternionFromEulers(0, 0, 91, false);
         const r2 = rotationMatrixFromQuaternion(qFromEuler2);
-        printMatrix(r1, 'r1');
 
 
         const m2 = multiplyMatrices(
             m1,
             r2,
         );
-        printMatrix(m2, 'm2');
     });
 
 
@@ -459,7 +436,6 @@ describe('transform', () => {
         console.log({qMultiply});
 
         const r1 = rotationMatrixFromQuaternion(qMultiply);
-        printMatrix(r1, 'r1');
     });
 
 
@@ -468,7 +444,6 @@ describe('transform', () => {
             400,
             400,
         );
-        printMatrix(t1Matrix, 't1Matrix');
 
 
         const xAngle = 77;
@@ -487,23 +462,19 @@ describe('transform', () => {
         ]);
 
         const r1 = rotationMatrixFromQuaternion(qr);
-        printMatrix(r1, 'r1');
 
 
         const t2Matrix = translateMatrix(
             -400,
             -400,
         );
-        printMatrix(t2Matrix, 't2Matrix');
 
         const t3Matrix = translateMatrix(
             400,
             800,
         );
-        printMatrix(t3Matrix, 't3Matrix');
 
         const s1Matrix = scaleMatrix(0.7);
-        printMatrix(s1Matrix, 's1Matrix');
 
         const m2 = multiplyMatricesArray([
             t2Matrix,
@@ -511,13 +482,11 @@ describe('transform', () => {
             t3Matrix,
             s1Matrix,
         ]);
-        printMatrix(m2, 'm2');
 
         // const matrix3d = matrixToCSSMatrix(r1);
 
         // const values: number[] = getRotationMatrix(matrix3d);
         // // console.log('getRotationMatrix', values);
-        // // printMatrix(arrayToMatrix(values), 'values');
 
 
         // const rotate = getTransformRotate(matrix3d);
