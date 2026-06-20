@@ -75,6 +75,8 @@ class PluridApplication extends Component<
     private storeUnubscriber: ReduxUnsubscribe | undefined;
     private persistTimeout: ReturnType<typeof setTimeout> | undefined;
     private persistDirty = false;
+    private flushPersistImmediate: (() => void) | undefined;
+    private onVisibilityChange: (() => void) | undefined;
     private storeID: string;
     private planesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
 
@@ -107,6 +109,14 @@ class PluridApplication extends Component<
     public componentWillUnmount() {
         if (this.storeUnubscriber) {
             this.storeUnubscriber();
+        }
+        if (typeof window !== 'undefined') {
+            if (this.flushPersistImmediate) {
+                window.removeEventListener('pagehide', this.flushPersistImmediate);
+            }
+            if (this.onVisibilityChange && typeof document !== 'undefined') {
+                document.removeEventListener('visibilitychange', this.onVisibilityChange);
+            }
         }
         // Flush any pending debounced persistence so the latest state isn't lost.
         if (this.persistTimeout) {
@@ -227,6 +237,32 @@ class PluridApplication extends Component<
                 this.persistState();
             }, 300);
         });
+
+        // Flush the pending debounced write SYNCHRONOUSLY when the page is hidden or torn down.
+        // A full reload / navigation does NOT run React's `componentWillUnmount`, so a change made
+        // within the last debounce window (e.g. a plane just spawned by a link click) would be lost
+        // on reload. `pagehide` covers reload/navigation/close (and is bfcache- and mobile-safe
+        // where `beforeunload`/`unload` are not); `visibilitychange: hidden` covers tab switches.
+        if (typeof window !== 'undefined') {
+            this.flushPersistImmediate = () => {
+                if (this.persistTimeout) {
+                    clearTimeout(this.persistTimeout);
+                    this.persistTimeout = undefined;
+                }
+                if (this.persistDirty) {
+                    this.persistState();
+                }
+            };
+            this.onVisibilityChange = () => {
+                if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
+                    this.flushPersistImmediate?.();
+                }
+            };
+            window.addEventListener('pagehide', this.flushPersistImmediate);
+            if (typeof document !== 'undefined') {
+                document.addEventListener('visibilitychange', this.onVisibilityChange);
+            }
+        }
     }
 
     private persistState() {
