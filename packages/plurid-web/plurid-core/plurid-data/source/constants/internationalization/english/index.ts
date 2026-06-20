@@ -55,6 +55,10 @@ const english: Internationalization = {
     toolbarDrawerViewcubeAlwaysOpaque: 'always opaque',
     toolbarDrawerViewcubeConcealViewcube: 'conceal viewcube',
 
+    toolbarDrawerMinimapTitle: 'minimap',
+    toolbarDrawerMinimapShowMinimap: 'show minimap',
+    toolbarDrawerMinimapTransparent: 'transparent',
+
     toolbarDrawerTechnicalTitle: 'technical',
     toolbarDrawerTechnicalCullingDistance: 'culling distance',
 

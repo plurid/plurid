@@ -17,7 +17,14 @@
 >   INPUT/TEXTAREA/contentEditable via `verifyPathInputElement`), so a host editor doesn't get hijacked
 >   by orbit-drag; verified (drag-in-editor → no orbit, drag-on-view → orbit).
 >
-> **Next:** #7 minimap (a config-gated UI component — its own focused increment), then #2 undo/redo.
+> - **#7 Minimap / overview** — opt-in (`configuration.elements.minimap`) 2D overview: a dot per visible
+>   plane, projected onto the two highest-spread world axes (so wall vs depth layouts both read right),
+>   active plane highlighted, click-to-fly via `navigateToPluridPlane`. New `components/utilities/Minimap`
+>   rendered in `View/Container`. Themed like the toolbar/viewcube (general theme), 26px hit zones,
+>   transparent-by-default → opaque-on-hover. Harness-verified.
+>
+> **Next:** #2 undo/redo (a history middleware over the store's tree mutations — the store has no
+> middleware today, a clean seam), then #3 graph, #4 selection, #6 collab seam, #8 WebXR.
 
 ## Governing principle — engine primitive vs product work
 

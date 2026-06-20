@@ -81,6 +81,8 @@ export interface FlatPluridConfiguration {
     toolbar?: boolean;
     /** `elements.viewcube.show`. */
     viewcube?: boolean;
+    /** `elements.minimap.show` — the 2D top-down overview of the space. */
+    minimap?: boolean;
     // #endregion elements
 
     /** Escape hatch: a normal nested partial config, merged LAST (overrides the flat fields above). */
@@ -249,6 +251,8 @@ export interface PluridConfigurationSpaceTransformLocks {
 export interface PluridConfigurationElements {
     toolbar: PluridConfigurationElementsToolbar;
     viewcube: PluridConfigurationElementsViewcube;
+    /** Optional opt-in: a 2D top-down overview/minimap of the space. */
+    minimap?: PluridConfigurationElementsMinimap;
     plane: PluridConfigurationElementsPlane;
     link: PluridConfigurationElementsLink;
     switch: PluridConfigurationElementsSwitch;
@@ -275,6 +279,13 @@ export interface PluridConfigurationElementsViewcube {
      * Show the rotation arrow buttons, and the other buttons for translation, scale, and fit view.
      */
     buttons: boolean;
+}
+
+
+export interface PluridConfigurationElementsMinimap {
+    show: boolean;
+    /** Transparent (see-through) by default, solid only on hover. */
+    transparent: boolean;
 }
 
 

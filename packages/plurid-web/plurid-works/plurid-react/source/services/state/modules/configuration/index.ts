@@ -129,6 +129,22 @@ export const configuration = createSlice({
 
             state.elements.viewcube.conceal = !conceal;
         },
+        toggleConfigurationMinimapHide: (
+            state,
+            action: PayloadAction<boolean>,
+        ) => {
+            if (state.elements.minimap) {
+                state.elements.minimap.show = action.payload;
+            }
+        },
+        toggleConfigurationMinimapTransparent: (
+            state,
+            action: PayloadAction<boolean>,
+        ) => {
+            if (state.elements.minimap) {
+                state.elements.minimap.transparent = action.payload;
+            }
+        },
         toggleConfigurationToolbarConceal: (
             state,
         ) => {

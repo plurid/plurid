@@ -18,6 +18,7 @@
     import MenuMoreSpace from './components/Space';
     import MenuMoreToolbar from './components/Toolbar';
     import MenuMoreViewcube from './components/Viewcube';
+    import MenuMoreMinimap from './components/Minimap';
     import MenuMoreTechnical from './components/Technical';
     import MenuMoreShortcuts from './components/Shortcuts';
     // #endregion internal
@@ -58,6 +59,11 @@ export const moreMenusRecord: Record<string, MoreMenu> = {
         name: internationalization.fields.toolbarDrawerViewcubeTitle,
         drawer: TOOLBAR_DRAWERS.VIEWCUBE,
         component: (<MenuMoreViewcube />),
+    },
+    MINIMAP: {
+        name: internationalization.fields.toolbarDrawerMinimapTitle,
+        drawer: TOOLBAR_DRAWERS.MINIMAP,
+        component: (<MenuMoreMinimap />),
     },
     TECHNICAL: {
         name: internationalization.fields.toolbarDrawerTechnicalTitle,

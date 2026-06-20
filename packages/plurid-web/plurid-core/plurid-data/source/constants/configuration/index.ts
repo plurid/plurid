@@ -62,6 +62,10 @@ export const defaultConfigurationElements: PluridConfigurationElements = {
         conceal: false,
         buttons: true,
     },
+    minimap: {
+        show: false,
+        transparent: true,
+    },
     plane: {
         width: 1,
         opacity: 1,

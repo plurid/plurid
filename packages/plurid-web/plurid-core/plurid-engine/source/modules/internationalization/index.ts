@@ -15,7 +15,11 @@ const internatiolate = (
     lamguage: InternationalizationLanguageType,
     field: InternationalizationFieldType,
 ) => {
-    return internationalization[lamguage][field];
+    // Fall back to English (then the field key) when a locale is missing a string, so a
+    // newly-added field doesn't render blank in every non-English locale until it's translated.
+    return internationalization[lamguage]?.[field]
+        ?? internationalization.english?.[field]
+        ?? field;
 }
 // #endregion module
 

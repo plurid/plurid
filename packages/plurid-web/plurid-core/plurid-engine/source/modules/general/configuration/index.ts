@@ -130,6 +130,7 @@ export const definePluridConfiguration = (
     if (Object.keys(plane).length > 0) { elements.plane = plane; }
     if (flat.toolbar !== undefined) { elements.toolbar = { show: flat.toolbar }; }
     if (flat.viewcube !== undefined) { elements.viewcube = { show: flat.viewcube }; }
+    if (flat.minimap !== undefined) { elements.minimap = { show: flat.minimap }; }
     if (Object.keys(elements).length > 0) { partial.elements = elements; }
     // #endregion elements
 

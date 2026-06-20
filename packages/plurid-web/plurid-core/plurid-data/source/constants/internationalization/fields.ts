@@ -45,6 +45,10 @@ const internationalizationFields = {
     toolbarDrawerViewcubeAlwaysOpaque: 'toolbarDrawerViewcubeAlwaysOpaque',
     toolbarDrawerViewcubeConcealViewcube: 'toolbarDrawerViewcubeConcealViewcube',
 
+    toolbarDrawerMinimapTitle: 'toolbarDrawerMinimapTitle',
+    toolbarDrawerMinimapShowMinimap: 'toolbarDrawerMinimapShowMinimap',
+    toolbarDrawerMinimapTransparent: 'toolbarDrawerMinimapTransparent',
+
     toolbarDrawerTechnicalTitle: 'toolbarDrawerTechnicalTitle',
     toolbarDrawerTechnicalCullingDistance: 'toolbarDrawerTechnicalCullingDistance',
 

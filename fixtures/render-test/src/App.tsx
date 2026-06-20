@@ -90,6 +90,8 @@ const App = () => {
         // Tune the link-spawn bridge length (default 100). Drives both the gap between parent
         // and child AND the rendered bridge, so they stay aligned.
         bridgeLength: 160,
+        // Opt-in 2D overview (engine feature #7).
+        minimap: true,
     });
 
     // A plane registered but NOT in the initial `view` — a plurid link spawns it into the
