@@ -71,4 +71,47 @@ export const getCulledView = (state: AppState) => state.space.culledView;
 export const getActivePlaneID = (state: AppState) => state.space.activePlaneID;
 export const getIsolatePlane = (state: AppState) => state.space.isolatePlane;
 export const getLastClosedPlane = (state: AppState) => state.space.lastClosedPlane;
+
+
+// Normalized `planeID -> node` index, rebuilt ONLY when the tree reference changes (so it is
+// NOT recomputed during the per-frame transform dispatches of an orbit/pan/zoom gesture, which
+// leave `state.space.tree` untouched). Because tree mutations are structurally shared
+// (`updateTreePlane`), an unchanged plane keeps the SAME node reference across rebuilds.
+const buildPlaneIndex = (
+    tree: TreePlane[],
+): Map<string, TreePlane> => {
+    const index = new Map<string, TreePlane>();
+    const walk = (planes: TreePlane[]) => {
+        for (const plane of planes) {
+            if (plane.planeID) {
+                index.set(plane.planeID, plane);
+            }
+            if (plane.children && plane.children.length > 0) {
+                walk(plane.children);
+            }
+        }
+    };
+    walk(tree);
+    return index;
+};
+
+export const getPlaneIndex = createSelector(
+    [getTree],
+    buildPlaneIndex,
+);
+
+/**
+ * Factory for a PER-INSTANCE memoized "resolve a plane node by id" selector. Use one per
+ * connected component (via `connect`'s `makeMapStateToProps` factory form) so each plane's
+ * lookup is an O(1) `Map.get` off the shared, memoized index — instead of every plane walking
+ * the whole tree on every dispatch (which made the orbit hot path O(n²)). Returns a STABLE
+ * node reference for an unchanged plane, so `connect` can bail out of its re-render.
+ */
+export const makeGetTreePlaneByID = () => createSelector(
+    [
+        getPlaneIndex,
+        (_state: AppState, planeID: string | undefined) => planeID,
+    ],
+    (index, planeID) => (planeID ? index.get(planeID) : undefined),
+);
 // #endregion module

@@ -17,6 +17,11 @@ const PERSISTED_STATE_VERSION = 1;
 
 const STORAGE_PREFIX = 'pluridState-';
 
+// Surface a serialization failure exactly once: it means the state holds something
+// non-serializable (a cycle, a DOM/function ref leaked into the tree) — a real bug that would
+// otherwise silently disable persistence forever. Distinct from the environmental setItem miss.
+let serializeFailureWarned = false;
+
 /**
  * Only the meaningful, durable space fields are persisted — NOT the whole Redux state.
  * Excluded on purpose: transient flags (`loading`, `resolvedLayout`, `animatedTransform`,
@@ -84,10 +89,30 @@ const save = (
         return;
     }
 
+    let serialized: string;
+    try {
+        serialized = serialize(state);
+    } catch (error) {
+        // A serialization failure is a CODE bug (the persisted snapshot should be plain data),
+        // not the best-effort environmental miss the setItem catch below handles — so it must not
+        // be swallowed silently. Warn once and bail (the previous snapshot stays). This is the
+        // failure mode that silently drops every save after the offending value enters the tree.
+        if (!serializeFailureWarned && typeof console !== 'undefined') {
+            serializeFailureWarned = true;
+            console.warn(
+                '[plurid] state persistence skipped — could not serialize the space snapshot. '
+                + 'A non-serializable value (cycle, DOM node, or function) is in the persisted '
+                + 'fields. Persistence is disabled until it is removed.',
+                error,
+            );
+        }
+        return;
+    }
+
     try {
         localStorage.setItem(
             storageKey(id),
-            serialize(state),
+            serialized,
         );
     } catch (_error) {
         // storage may be full or disabled (private mode) — persistence is best-effort.

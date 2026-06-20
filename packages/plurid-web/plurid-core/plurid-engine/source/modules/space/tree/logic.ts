@@ -14,6 +14,7 @@
         PluridConfiguration,
         RegisteredPluridPlane,
         TreePlane,
+        TreePlaneLocation,
         LinkCoordinates,
         PathParameters,
         PluridRoute,
@@ -1167,4 +1168,154 @@ export const removePlaneFromTree = (
 
     return changed ? updatedTree : tree;
 }
+
+
+// #region structural sharing
+/**
+ * `width`/`height` carry-forward: the layout recompute (`computeSpaceTree`) emits a root/child
+ * plane with `width: 0, height: 0` because it cannot know the eventually-rendered pixel size —
+ * that is measured at runtime by the plane's ResizeObserver and written back via a SEPARATE
+ * `updateSpaceTreePlane` dispatch. So a `0` (or missing) incoming dimension means "unmeasured,
+ * keep what we already have", NOT "the plane shrank to zero". Treating it as a change would both
+ * blow away the live measurement on every relayout AND defeat reference reuse below.
+ */
+const carriedDimension = (
+    next: number | undefined,
+    previous: number,
+): number => (
+    (!next && previous) ? previous : (next as number)
+);
+
+const sameLocation = (
+    a: TreePlaneLocation,
+    b: TreePlaneLocation,
+): boolean =>
+    a.translateX === b.translateX
+    && a.translateY === b.translateY
+    && a.translateZ === b.translateZ
+    && a.rotateX === b.rotateX
+    && a.rotateY === b.rotateY;
+
+/**
+ * Every field the renderer/engine reads off a node EXCEPT `children` (reconciled recursively) and
+ * `width`/`height` (carry-forward, handled by the caller). `routeDivisions`/`linkCoordinates` are
+ * derived from `route`, so an equal `route` implies they match too.
+ */
+const sameNodeOwnFields = (
+    a: TreePlane,
+    b: TreePlane,
+): boolean =>
+    a.sourceID === b.sourceID
+    && a.planeID === b.planeID
+    && a.parentPlaneID === b.parentPlaneID
+    && a.route === b.route
+    && a.show === b.show
+    && a.bridgeLength === b.bridgeLength
+    && a.planeAngle === b.planeAngle
+    && sameLocation(a.location, b.location);
+
+// Mutually recursive with `reconcileNode`; declared as hoisted `function`s so order doesn't matter.
+function reconcileNodeList(
+    previous: TreePlane[] | undefined,
+    next: TreePlane[],
+): TreePlane[] {
+    if (!previous || previous.length === 0) {
+        return next;
+    }
+
+    const previousByID = new Map<string, TreePlane>();
+    for (const node of previous) {
+        if (node.planeID) {
+            previousByID.set(node.planeID, node);
+        }
+    }
+
+    let everyReused = previous.length === next.length;
+    const reconciled = next.map((nextNode, index) => {
+        // Pair by stable runtime identity (planeID), falling back to position.
+        const previousNode = (nextNode.planeID && previousByID.get(nextNode.planeID))
+            || previous[index];
+        const result = reconcileNode(previousNode, nextNode);
+        if (result !== previous[index]) {
+            everyReused = false;
+        }
+        return result;
+    });
+
+    // If every node was reused in the same order/length, keep the previous ARRAY reference too, so
+    // a consumer reading the whole list (e.g. `<PluridRoots>`) can also bail.
+    return everyReused ? previous : reconciled;
+}
+
+function reconcileNode(
+    previous: TreePlane | undefined,
+    next: TreePlane,
+): TreePlane {
+    if (!previous || previous === next) {
+        return next;
+    }
+
+    // Depth-first: reconcile children so a subtree whose descendants are all unchanged collapses
+    // to the previous reference here.
+    let children = next.children;
+    if (next.children && next.children.length > 0) {
+        children = reconcileNodeList(previous.children, next.children);
+    } else if (
+        (!next.children || next.children.length === 0)
+        && previous.children
+        && previous.children.length === 0
+    ) {
+        children = previous.children;
+    }
+
+    const width = carriedDimension(next.width, previous.width);
+    const height = carriedDimension(next.height, previous.height);
+
+    const unchanged =
+        sameNodeOwnFields(previous, next)
+        && children === previous.children
+        && width === previous.width
+        && height === previous.height;
+
+    if (unchanged) {
+        return previous;
+    }
+
+    // Partially changed: new node, but graft the reconciled children + carried dimensions so deeper
+    // unchanged subtrees and the live measurement survive.
+    if (
+        children !== next.children
+        || width !== next.width
+        || height !== next.height
+    ) {
+        return {
+            ...next,
+            width,
+            height,
+            children,
+        };
+    }
+
+    return next;
+}
+
+/**
+ * Structural-sharing reconciliation: returns `nextTree`, but every node (and array) that is
+ * deep-equal to its counterpart in `previousTree` is replaced by the PREVIOUS reference. Producers
+ * of a new tree routinely rebuild it from scratch (a layout recompute emits brand-new node objects
+ * for every plane even when only one moved); without this, every connected `<PluridRoot>`/`<Plane>`
+ * receives fresh-identity props and re-renders. Running this in the `setTree` reducer means EVERY
+ * tree-replacing path (link spawn, relayout, resize, persistence restore) gets reference stability
+ * for free, so per-plane memoization actually pays off and only the genuinely-changed planes render.
+ */
+export const reconcileTree = (
+    previousTree: TreePlane[] | undefined,
+    nextTree: TreePlane[],
+): TreePlane[] => {
+    if (!previousTree || previousTree === nextTree) {
+        return nextTree;
+    }
+    return reconcileNodeList(previousTree, nextTree);
+};
+// #endregion structural sharing
 // #endregion module

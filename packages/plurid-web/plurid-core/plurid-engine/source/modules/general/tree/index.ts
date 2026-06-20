@@ -56,14 +56,19 @@ export const updateTreeByPlaneIDWithLinkCoordinates = (
     planeID: string,
     linkCoordinates: LinkCoordinates,
 ): TreePlane[] => {
+    // Structurally shared: only the node that matches `planeID` (and the spine of ancestors above
+    // it) gets a new identity; unchanged siblings — and the array itself when nothing matched —
+    // keep their references, so connected planes can bail out of re-rendering. The old version
+    // rebuilt EVERY node that merely HAD children, breaking refs across the whole tree.
+    let changed = false;
+
     const updatedTree = tree.map(treePlane => {
         if (treePlane.planeID === planeID) {
-            const updatedPlane = {
+            changed = true;
+            return {
                 ...treePlane,
                 linkCoordinates,
             };
-
-            return updatedPlane;
         }
 
         if (treePlane.children) {
@@ -73,17 +78,18 @@ export const updateTreeByPlaneIDWithLinkCoordinates = (
                 linkCoordinates,
             );
 
-            const updatedPlane = {
-                ...treePlane,
-                children: updatedChildren,
-            };
-
-            return updatedPlane;
+            if (updatedChildren !== treePlane.children) {
+                changed = true;
+                return {
+                    ...treePlane,
+                    children: updatedChildren,
+                };
+            }
         }
 
         return treePlane;
     });
 
-    return updatedTree;
+    return changed ? updatedTree : tree;
 }
 // #endregion module

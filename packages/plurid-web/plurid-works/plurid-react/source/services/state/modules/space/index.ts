@@ -2,6 +2,7 @@
     // #region libraries
     import {
         createSlice,
+        original,
         PayloadAction,
     } from '@reduxjs/toolkit';
 
@@ -446,9 +447,16 @@ export const space = createSlice({
             state,
             action: PayloadAction<TreePlane[]>,
         ) => {
-            state.tree = [
-                ...action.payload,
-            ];
+            // Structural-sharing reconciliation against the REAL previous references (immer's
+            // `original`, not the draft proxy or a `current` copy — those would defeat the
+            // referential equality consumers rely on). Producers rebuild the whole tree from
+            // scratch on relayout/spawn; this swaps every unchanged subtree back to its prior
+            // reference so only genuinely-changed planes re-render.
+            const previousTree = original(state.tree) as TreePlane[] | undefined;
+            state.tree = spaceEngine.tree.logic.reconcileTree(
+                previousTree,
+                action.payload,
+            );
         },
         setActiveUniverse: (
             state,

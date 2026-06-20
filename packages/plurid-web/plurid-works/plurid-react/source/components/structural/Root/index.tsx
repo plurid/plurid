@@ -58,8 +58,12 @@ export interface PluridRootOwnProperties {
     plane: TreePlane;
 }
 
+// Intentionally empty: PluridRoot no longer subscribes to the whole tree. It renders from its
+// `plane` ownProp (kept current by structural sharing), so it re-renders only when its OWN
+// root subtree changes — not on every unrelated mutation (which previously forced new ownProps
+// onto every child plane and defeated their memoization).
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PluridRootStateProperties {
-    stateTree: TreePlane[];
 }
 
 export interface PluridRootDispatchProperties {
@@ -79,10 +83,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         // #region own
         plane,
         // #endregion own
-
-        // #region state
-        stateTree,
-        // #endregion state
     } = properties;
 
     const {
@@ -237,11 +237,11 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     const childrenPlanes = useMemo<JSX.Element[]>(
         () => computeChildrenPlanes(plane),
         [
-            // Reference deps: the tree is rebuilt immutably on every mutation, so `plane`
-            // and `stateTree` change identity exactly when the structure changes — far
-            // cheaper than JSON.stringify-ing the whole tree on each render.
+            // Just `plane`: the tree is rebuilt immutably + structurally shared, so this root's
+            // node changes identity exactly when its OWN subtree changes — recomputing the
+            // child elements only then (and keeping their references stable otherwise, so the
+            // child planes can bail out of their own re-render).
             plane,
-            stateTree,
         ],
     );
     // #endregion effects
@@ -351,9 +351,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
 
 const mapStateToProperties = (
-    state: AppState,
+    _state: AppState,
 ): PluridRootStateProperties => ({
-    stateTree: selectors.space.getTree(state),
+    // No tree subscription — PluridRoot bails on unrelated mutations and re-renders only when
+    // its `plane` ownProp (structurally shared) changes.
 });
 
 
@@ -363,6 +364,11 @@ const mapDispatchToProperties = (
 });
 
 
+// `React.memo` is REQUIRED, not redundant with `connect`: `<PluridRoots>` subscribes to the
+// per-frame transform matrix, so it re-renders on every orbit frame and every spawn dispatch, and
+// react-redux v9 `connect` re-runs the wrapped component on those parent renders unless it is
+// memoized. With the tree structurally shared (`reconcileTree`), an unchanged root's `plane`
+// ownProp is referentially stable, so `React.memo`'s shallow compare bails the re-render entirely.
 const ConnectedPluridRoot = connect(
     mapStateToProperties,
     mapDispatchToProperties,
@@ -370,7 +376,7 @@ const ConnectedPluridRoot = connect(
     {
         context: StateContext,
     },
-)(PluridRoot);
+)(React.memo(PluridRoot));
 // #endregion module
 
 

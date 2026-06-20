@@ -92,10 +92,17 @@ export interface PluridPlaneOwnProperties {
 }
 
 export interface PluridPlaneStateProperties {
-    stateTree: TreePlane[];
+    // Only THIS plane's parent node (resolved by id off the memoized plane index), not the
+    // whole tree — so an unrelated mutation (which structural sharing leaves this parent's
+    // reference untouched) yields shallow-equal props and react-redux skips the re-render.
+    stateParentPlane: TreePlane | undefined;
     // stateViewSize: ViewSize;
     stateViewSize: any;
-    stateActivePlaneID: string;
+    // A per-instance DERIVED boolean (`activePlaneID === this planeID`), not the raw shared
+    // `activePlaneID` string: `activePlaneID` changes on every hover over ANY plane, so subscribing
+    // to the string re-rendered all 40 planes on each hover. The boolean only flips for the two
+    // planes whose active-state actually changes.
+    stateIsActivePlane: boolean;
     stateIsolatePlane: string;
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
@@ -141,9 +148,9 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         // #endregion required
 
         // #region state
-        stateTree,
+        stateParentPlane,
         stateViewSize,
-        stateActivePlaneID,
+        stateIsActivePlane,
         stateIsolatePlane,
         stateGeneralTheme,
         stateConfiguration,
@@ -176,10 +183,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         ? planeWidth
         : planeWidth * stateViewSize.width;
 
-    const parentTreePlane = space.tree.logic.getTreePlaneByID(
-        stateTree,
-        treePlane.parentPlaneID,
-    );
+    // Resolved in `makeMapStateToProps` off the memoized plane index (no per-render tree walk).
+    const parentTreePlane = stateParentPlane;
     // #endregion properties
 
 
@@ -264,7 +269,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     const debouncedSetActivePlane = useDebouncedCallback(
         () => {
-            if (stateActivePlaneID === planeID) {
+            if (stateIsActivePlane) {
                 return;
             }
 
@@ -439,16 +444,25 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 }
 
 
-const mapStateToProps = (
-    state: AppState,
-): PluridPlaneStateProperties => ({
-    stateTree: selectors.space.getTree(state),
-    stateViewSize: selectors.space.getViewSize(state),
-    stateActivePlaneID: selectors.space.getActivePlaneID(state),
-    stateIsolatePlane: selectors.space.getIsolatePlane(state),
-    stateGeneralTheme: selectors.themes.getGeneralTheme(state),
-    stateConfiguration: selectors.configuration.getConfiguration(state),
-});
+// Factory form (`connect` detects it because it returns a function): each plane instance gets
+// its OWN memoized parent-by-id selector, so the lookup is an O(1) `Map.get` off the shared
+// memoized index — never a per-dispatch tree walk. During an orbit gesture the tree is
+// untouched, so this returns shallow-equal props and the plane skips re-render entirely.
+const makeMapStateToProps = () => {
+    const getParentPlane = selectors.space.makeGetTreePlaneByID();
+
+    return (
+        state: AppState,
+        ownProps: PluridPlaneOwnProperties,
+    ): PluridPlaneStateProperties => ({
+        stateParentPlane: getParentPlane(state, ownProps.treePlane?.parentPlaneID),
+        stateViewSize: selectors.space.getViewSize(state),
+        stateIsActivePlane: selectors.space.getActivePlaneID(state) === ownProps.planeID,
+        stateIsolatePlane: selectors.space.getIsolatePlane(state),
+        stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+        stateConfiguration: selectors.configuration.getConfiguration(state),
+    });
+};
 
 
 const mapDispatchToProps = (
@@ -467,14 +481,16 @@ const mapDispatchToProps = (
 });
 
 
+// `React.memo` so a plane whose own props (its structurally-shared `treePlane` + memoized state
+// props) are unchanged bails out even when an ancestor re-renders — see the matching note in Root.
 const ConnectedPluridPlane = connect(
-    mapStateToProps,
+    makeMapStateToProps,
     mapDispatchToProps,
     null,
     {
         context: StateContext,
     },
-)(PluridPlane);
+)(React.memo(PluridPlane));
 // #endregion module
 
 

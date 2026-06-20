@@ -3,6 +3,7 @@
     import React, {
         useRef,
         useCallback,
+        useMemo,
         useState,
         useEffect,
     } from 'react';
@@ -834,16 +835,18 @@ const PluridView: React.FC<PluridViewProperties> = (
             });
         }
 
-        const registerPubSub = (
+        // `useCallback` + functional update so this keeps a STABLE identity across renders: it is
+        // part of the `pluridContext` value below, and a fresh function each render would change
+        // the context object and force every `useContext(Context)` consumer (every plane) to
+        // re-render regardless of `React.memo`.
+        const registerPubSub = useCallback((
             pubsub: IPluridPubSub,
         ) => {
-            const pluridPubSubs = [
-                ...pluridPubSub,
+            setPluridPubSub(previous => [
+                ...previous,
                 pubsub,
-            ];
-
-            setPluridPubSub(pluridPubSubs);
-        }
+            ]);
+        }, []);
         // #endregion handlers pubsub
 
 
@@ -1408,7 +1411,12 @@ const PluridView: React.FC<PluridViewProperties> = (
 
 
     // #region render
-    const pluridContext: PluridContext<PluridReactComponent> = {
+    // Memoized so the `Context.Provider` value below is referentially stable across View's many
+    // re-renders (it re-renders on every transform tick / spawn dispatch). A fresh context object
+    // each render would re-render EVERY `useContext(Context)` consumer — i.e. every plane — no
+    // matter how well `React.memo` + structural sharing gate their props. Stable here ⇒ planes
+    // only re-render when their own data actually changes.
+    const pluridContext = useMemo<PluridContext<PluridReactComponent>>(() => ({
         planesRegistrar,
         planeContext,
         planeContextValue,
@@ -1420,7 +1428,18 @@ const PluridView: React.FC<PluridViewProperties> = (
 
         defaultPubSub: pluridPubSub[0],
         registerPubSub,
-    };
+    }), [
+        planesRegistrar,
+        planeContext,
+        planeContextValue,
+        customPlane,
+        planeNotFound,
+        planeRenderError,
+        matchedRoute,
+        hostname,
+        pluridPubSub,
+        registerPubSub,
+    ]);
 
     return (
         <StyledView
