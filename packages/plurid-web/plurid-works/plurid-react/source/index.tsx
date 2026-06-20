@@ -16,6 +16,7 @@
         PluridUniverse,
         PluridConfiguration,
         PluridPartialConfiguration,
+        FlatPluridConfiguration,
         PluridRouterProperties,
         RecursivePartial,
 
@@ -50,6 +51,7 @@
         IsoMatcher as PluridIsoMatcher,
         RouteParser as PluridRouteParser,
         pluridRouterNavigate,
+        definePluridConfiguration,
     } from '@plurid/plurid-engine';
 
     import PluridPubSub from '@plurid/plurid-pubsub';
@@ -197,6 +199,7 @@ export {
     /** Engine */
     PluridIsoMatcher,
     PluridRouteParser,
+    definePluridConfiguration,
 
     /** PubSub */
     PluridPubSub,
@@ -256,6 +259,7 @@ export type {
 
     PluridConfiguration,
     PluridPartialConfiguration,
+    FlatPluridConfiguration,
     RecursivePartial,
 };
 

@@ -35,6 +35,59 @@
 export type PluridPartialConfiguration = RecursivePartial<PluridConfiguration>;
 
 
+/**
+ * A FLAT shorthand for the most common `PluridConfiguration` options, so consumers don't have to
+ * author the full 5-level nested object for everyday setup. Expanded + merged over the defaults by
+ * the engine's `definePluridConfiguration`. Everything is optional; anything not covered here can
+ * be supplied as a normal nested partial via `extend` (merged last, so it wins).
+ */
+export interface FlatPluridConfiguration {
+    // #region global
+    /** `global.theme` — a plurid theme name, or `{ general, interaction }`. */
+    theme?: ThemeName | PluridConfigurationTheme;
+    /** `global.micro` — render the space with NO engine elements (toolbar/viewcube/controls). */
+    micro?: boolean;
+    /** `global.transparentUI` — render the engine elements transparent. */
+    transparentUI?: boolean;
+    /** `global.language` — UI language. */
+    language?: InternationalizationLanguageType;
+    // #endregion global
+
+    // #region space
+    /** `space.layout` — the plane layout (e.g. `{ type: SPACE_LAYOUT.COLUMNS, columns: 3 }`). */
+    layout?: PluridLayout;
+    /** `space.perspective` — CSS perspective; recommended 1300–2000. */
+    perspective?: number;
+    /** `space.center` — center the camera on the first root. */
+    center?: boolean;
+    /** `space.firstPerson` — first-person ("fly") navigation. */
+    firstPerson?: boolean;
+    /** `space.bridge.length` — parent→child gap + rendered bridge length. */
+    bridgeLength?: number;
+    /** `space.bridge.planeAngle` — spawned child plane angle. */
+    bridgePlaneAngle?: number;
+    /** `space.transformLocks` — lock a subset of the transform axes. */
+    transformLocks?: RecursivePartial<PluridConfigurationSpaceTransformLocks>;
+    // #endregion space
+
+    // #region elements
+    /** `elements.plane.width` — fraction of the viewport (≤1) or absolute px (>1). */
+    planeWidth?: number;
+    /** `elements.plane.opacity`. */
+    planeOpacity?: number;
+    /** `elements.plane.controls.show` — per-plane control buttons. */
+    planeControls?: boolean;
+    /** `elements.toolbar.show`. */
+    toolbar?: boolean;
+    /** `elements.viewcube.show`. */
+    viewcube?: boolean;
+    // #endregion elements
+
+    /** Escape hatch: a normal nested partial config, merged LAST (overrides the flat fields above). */
+    extend?: PluridPartialConfiguration;
+}
+
+
 export interface PluridConfiguration {
     global: PluridConfigurationGlobal;
     elements: PluridConfigurationElements;
