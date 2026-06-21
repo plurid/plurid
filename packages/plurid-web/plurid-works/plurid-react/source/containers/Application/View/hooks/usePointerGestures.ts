@@ -163,10 +163,17 @@ export const usePointerGestures = (
             // a heavy orbit the X/Y mapping is approximate — a known v1 limitation.)
             if (movingSelection.current) {
                 const scale = stateRef.current?.space?.scale || 1;
-                dispatch(actions.space.transformSelectedPlanes({
-                    deltaX: dx / scale,
-                    deltaY: dy / scale,
-                }));
+                if (event.altKey) {
+                    // Alt-drag moves the selection in DEPTH (Z) instead of the X-Y plane.
+                    dispatch(actions.space.transformSelectedPlanes({
+                        deltaZ: dy / scale,
+                    }));
+                } else {
+                    dispatch(actions.space.transformSelectedPlanes({
+                        deltaX: dx / scale,
+                        deltaY: dy / scale,
+                    }));
+                }
                 return;
             }
             if (spaceConfigRef.current.firstPerson) {
@@ -318,6 +325,10 @@ export const usePointerGestures = (
                 }
                 pointerDragging.current = true;
                 setNavDragging(true);
+                // A selection move begins — turn on the live alignment-guide overlay.
+                if (movingSelection.current) {
+                    dispatch(actions.space.setDraggingSelection(true));
+                }
                 lastPointer.current = { x: event.clientX, y: event.clientY };
                 try {
                     element.setPointerCapture(event.pointerId);
@@ -357,9 +368,10 @@ export const usePointerGestures = (
                 const wasMoving = movingSelection.current;
                 pointerDragging.current = false;
                 movingSelection.current = false;
-                // On release of a selection move, edge-snap the group to nearby planes.
+                // On release of a selection move, edge-snap the group + drop the guide overlay.
                 if (wasDragging && wasMoving) {
                     dispatch(actions.space.snapSelection(undefined));
+                    dispatch(actions.space.setDraggingSelection(false));
                 }
                 // Only fling momentum if this was an actual orbit drag (not a click).
                 const m = momentum.current;

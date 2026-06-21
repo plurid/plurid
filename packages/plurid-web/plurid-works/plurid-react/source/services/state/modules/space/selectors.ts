@@ -74,6 +74,7 @@ export const getIsolatePlane = (state: AppState) => state.space.isolatePlane;
 export const getLastClosedPlane = (state: AppState) => state.space.lastClosedPlane;
 
 export const getSelectedPlaneIDs = (state: AppState): string[] => state.space.selectedPlaneIDs;
+export const getDraggingSelection = (state: AppState): boolean => state.space.draggingSelection;
 
 /**
  * Factory for a memoized "is THIS plane selected" selector. One per connected plane (via `connect`'s

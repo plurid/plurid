@@ -72,6 +72,8 @@ export interface PluridStateSpace {
     lastClosedPlane: string;
     /** Multi-selection working set — the planes the user has selected to act on as a group. */
     selectedPlaneIDs: string[];
+    /** True while the selection is being drag-moved — drives the live alignment-guide overlay. */
+    draggingSelection: boolean;
 }
 
 

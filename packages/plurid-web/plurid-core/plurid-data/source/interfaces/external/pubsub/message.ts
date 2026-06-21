@@ -10,6 +10,7 @@
 
     import {
         PlaneLink,
+        TreePlane,
     } from '~interfaces/internal/tree';
     // #endregion external
 // #endregion imports
@@ -468,6 +469,33 @@ export interface PluridPubSubSubscribeMessageClearSelection {
 }
 
 
+/**
+ * A state-based snapshot of the SHARED arrangement (structure + manual positions via `tree`, and the
+ * link graph). The engine emits it on collaborative change; a peer applies it. (Op-based per-action
+ * mutations are a future enhancement on top of this seam.)
+ */
+export interface PluridCollaborationSnapshot {
+    tree?: TreePlane[];
+    links?: PlaneLink[];
+}
+export interface PluridPubSubPublishMessageCollaborationMutation {
+    topic: typeof PLURID_PUBSUB_TOPIC.COLLABORATION_MUTATION;
+    data: PluridCollaborationSnapshot;
+}
+export interface PluridPubSubSubscribeMessageCollaborationMutation {
+    topic: typeof PLURID_PUBSUB_TOPIC.COLLABORATION_MUTATION;
+    callback: PluridPubSubCallback<PluridCollaborationSnapshot>;
+}
+export interface PluridPubSubPublishMessageApplyRemoteMutation {
+    topic: typeof PLURID_PUBSUB_TOPIC.APPLY_REMOTE_MUTATION;
+    data: PluridCollaborationSnapshot;
+}
+export interface PluridPubSubSubscribeMessageApplyRemoteMutation {
+    topic: typeof PLURID_PUBSUB_TOPIC.APPLY_REMOTE_MUTATION;
+    callback: PluridPubSubCallback<PluridCollaborationSnapshot>;
+}
+
+
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
     | PluridPubSubPublishMessageSpaceAnimatedTransform
@@ -511,6 +539,8 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageSetSelection
     | PluridPubSubPublishMessageToggleSelection
     | PluridPubSubPublishMessageClearSelection
+    | PluridPubSubPublishMessageCollaborationMutation
+    | PluridPubSubPublishMessageApplyRemoteMutation
     ;
 
 
@@ -557,5 +587,7 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageSetSelection
     | PluridPubSubSubscribeMessageToggleSelection
     | PluridPubSubSubscribeMessageClearSelection
+    | PluridPubSubSubscribeMessageCollaborationMutation
+    | PluridPubSubSubscribeMessageApplyRemoteMutation
     ;
 // #endregion module

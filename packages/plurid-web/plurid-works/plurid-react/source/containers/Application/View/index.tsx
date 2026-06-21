@@ -38,6 +38,7 @@
         PluridContext,
         PluridView,
         TreePlane,
+        PlaneLink,
         SpaceTransform,
         PluridApplicationView,
     } from '@plurid/plurid-data';
@@ -83,6 +84,7 @@
     import usePointerGestures from './hooks/usePointerGestures';
     import useTreeUpdate from './hooks/useTreeUpdate';
     import usePluridPubSub from './hooks/usePluridPubSub';
+    import useCollaboration from './hooks/useCollaboration';
     import useViewpointURL from './hooks/useViewpointURL';
     // #endregion internal
 // #endregion imports
@@ -103,6 +105,7 @@ export interface PluridViewStateProperties {
     stateTransform: SpaceTransform;
     // initialTree: TreePlane[];
     stateTree: TreePlane[];
+    stateLinks: PlaneLink[];
     // activeUniverseID: string;
     // stateSpaceLocation: any;
     // stateCulledView: any;
@@ -187,6 +190,7 @@ const PluridView: React.FC<PluridViewProperties> = (
         stateTransform,
         stateSpaceView,
         stateTree,
+        stateLinks,
         stateGeneralTheme,
         // #endregion state
 
@@ -317,6 +321,15 @@ const PluridView: React.FC<PluridViewProperties> = (
             dispatchSetSpaceField,
             dispatchSetTree,
         },
+    });
+
+    // Collaboration seam: emit/apply shared-arrangement snapshots on the instance pubsub (the host
+    // bridges it to a transport). Same pubsub the bridge subscribes its topics on.
+    useCollaboration({
+        pubsub: pluridPubSub[0],
+        stateTree,
+        stateLinks,
+        dispatch,
     });
 
     // Two-way bind the camera viewpoint with the URL's `?v=` (deep-link + "share from here").
@@ -565,6 +578,7 @@ const mapStateToProperties = (
     stateTransform: selectors.space.getTransform(state),
     stateResolvedLayout: selectors.space.getResolvedLayout(state),
     stateTree: selectors.space.getTree(state),
+    stateLinks: selectors.space.getPlaneLinks(state),
     // activeUniverseID: selectors.space.getActiveUniverseID(state),
     stateSpaceLoading: selectors.space.getLoading(state),
     // stateSpaceLocation: selectors.space.getTransform(state),

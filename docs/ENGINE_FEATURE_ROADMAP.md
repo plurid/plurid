@@ -57,8 +57,30 @@
 >   (`snapSelection`, 12px threshold). Harness-verified end-to-end: shift-click, ring, group-drag, pin
 >   survives relayout, snap-on-release.
 >
-> **Next:** #6 collaboration seam, then #8 WebXR. (Product-side, engine stays out of the way: backlinks
-> *panel* UI + drag-to-link gesture for #3; alignment-guide overlay + grid option + Z-axis move for #4.)
+> - **#6 Collaboration seam** — transport-agnostic, self-contained in `View/hooks/useCollaboration`. The
+>   engine PUBLISHES a state-based snapshot `{tree, links}` to `space.collaborationMutation` whenever the
+>   SHARED arrangement actually changes — gated by a *collaborative signature* (structure `planeID:show` +
+>   pinned-plane positions + link graph) so pure relayout reflows DON'T emit (no echo storms). It APPLIES
+>   inbound `space.applyRemoteMutation` snapshots via `setSpaceField` (NOT `setTree`, so a remote move
+>   overrides the local pin instead of being carried). Echo is prevented without a transport round-trip:
+>   applying a remote snapshot pre-sets `lastSignature` so the resulting state change stays quiet; remote
+>   dispatches carry `meta.remote` so the history middleware leaves them out of LOCAL undo. The host owns
+>   the wire (websocket / y-*) + presence — it forwards one topic to the other. Harness-verified: emit on
+>   change, silent on reflow, inbound apply (remote move wins), no echo.
+>
+> - **Polish pass (2026-06-21)** — (a) **undo now covers moves + links**, not just structure: the history
+>   middleware was reworked to snapshot `{tree, links}` and watch the STATE before/after each action
+>   (catching the direct-mutation `transformSelectedPlanes`/`snapSelection`/link reducers), keyed on a
+>   shared `arrangementSignature` (structure + pinned positions + links) that both undo AND collaboration
+>   consume so they agree on "what is a change"; harness-verified move-undo/redo + link-undo/redo + spawn
+>   regression. (b) **Z-axis drag** — Alt-drag moves the selection in depth (verified Z changes, Y doesn't).
+>   (c) **Live alignment-guide overlay** — a `draggingSelection` flag drives an `AlignmentGuides` layer in
+>   the camera frame that previews the X/Y edge a release would snap to (verified: shows only mid-drag at
+>   the snap targets, gone on release). *Grid-snap was evaluated and skipped — low value for plane-sized
+>   objects vs edge-alignment, which is the useful snap.*
+>
+> **Next:** #8 WebXR (frontier / near-rewrite). (Product-side, engine stays out of the way: backlinks
+> *panel* UI + drag-to-link for #3; CRDT/presence + the actual transport on top of the #6 seam.)
 
 ## Governing principle — engine primitive vs product work
 
@@ -86,7 +108,7 @@ Front-load the cheap, purely-additive wins; defer the two big lifts and the rewr
 | 4 ✅ | [Minimap / overview](#7-minimap--overview) | Small→Med | Cheap delight; orientation in big spaces |
 | 5 ✅ | [Inter-plane link graph + 3D edges](#3-inter-plane-link-graph--3d-edges) | Large | The differentiator |
 | 6 ✅ | [Spatial selection: multi-select / group / snap](#4-spatial-selection-multi-select--group--snapping) | Med→Large | Authoring of arrangement |
-| 7 | [Collaboration seam](#6-collaboration-seam) | Med→Large | Makes multiplayer pluggable |
+| 7 ✅ | [Collaboration seam](#6-collaboration-seam) | Med→Large | Makes multiplayer pluggable |
 | 8 | [WebXR renderer](#8-webxr-renderer) | Large | Frontier / R&D; near-rewrite of rendering |
 
 Each feature block lists its **Goal · Seams · Approach · Effort · Risks · Verify**, and calls out any
@@ -159,7 +181,9 @@ author the space. (Content undo belongs to whatever editor the product supplies 
 > restore so post-restore relayouts stay quiet. Snapshots are references to the immutable
 > `state.space.tree` (cheap), bounded at 100, never persisted. Harness-verified: spawn→undo→redo,
 > close→undo→reopen→redo (faithful to the `CLOSE_PLANE` handler's `setTree(show=false)`), keyboard path.
-> *Position-only edits (a future drag-to-move, #4) will need the signature extended to include location.*
+> *Update (polish pass): the middleware was reworked to snapshot `{tree, links}` and key on the shared
+> `arrangementSignature` (structure + pinned positions + links), so undo now also covers moves/snaps (#4)
+> and link edits (#3) — not just structure.*
 
 **Seams.**
 - The store is RTK `configureStore` with **no custom middleware today**
@@ -275,8 +299,8 @@ is drawn.
 > pin survives a recompute at the reconcile choke point, snap aligns within threshold / leaves alone
 > beyond, snap-on-release round-trip.
 >
-> *Deferred (noted): a live alignment-guide overlay, a grid-snap option, Z-axis drag, and folding link/
-> move edits into undo (the history signature is structural — position changes aren't captured yet).*
+> *Polish landed (see the header block): live alignment-guide overlay, Z-axis (Alt) drag, and move/link
+> undo are all DONE. Grid-snap was evaluated + skipped (low value for plane-sized objects).*
 
 **Goal.** Select multiple planes, move/group them, with snapping and alignment guides — i.e. let users
 *author* the arrangement, not just navigate a host-defined one.
@@ -346,8 +370,26 @@ modes, dragging selects text instead of orbiting, and the content survives a rel
 
 ---
 
-## 6. Collaboration seam
+## 6. Collaboration seam  ✅ DELIVERED (2026-06-21)
 *(transport-agnostic mutation stream) — Effort: Medium → Large*
+
+> **Delivered.** `View/hooks/useCollaboration` — no store/compute plumbing; runs on the instance pubsub
+> (`pluridPubSub[0]`, i.e. the host's passed-in one). **Outbound:** an effect over `[tree, links]` emits
+> `{tree, links}` to `space.collaborationMutation` only when a *collaborative signature* changes —
+> structure (`planeID:show`) + pinned-plane positions + link `id/source/target/kind`. Auto-layout
+> positions are deliberately excluded, so resize/sibling-reflow churn never emits (storm-free). The first
+> pass just seeds the baseline (no broadcast of initial state). **Inbound:** subscribes
+> `space.applyRemoteMutation`; applies the tree via `setSpaceField` (bypasses `reconcileNode`'s pinned-
+> location carry, so a remote MOVE wins) + `setPlaneLinks`, both tagged `meta.remote`. **Echo guard:** the
+> inbound handler pre-sets `lastSignature` to the incoming snapshot, so the resulting state change is seen
+> as "already known" and not bounced back (React auto-batches the two dispatches into one render, so no
+> intermediate emit); `meta.remote` also keeps peer changes out of the LOCAL undo stack (history
+> middleware skips them). State-based + last-writer-wins via the receiver's own reconcile; op-based deltas
+> + true CRDT + presence are the product's to build ON the seam. Harness-verified: emit-on-change,
+> silent-on-reflow, inbound-apply (remote move overrides pin), no echo.
+>
+> *Two-instance wiring (A.out→B.applyRemote, B.out→A.applyRemote over an in-memory/websocket channel) is
+> host integration — the four verified mechanics are exactly what make two bridged instances converge.*
 
 **Goal.** Make multiplayer a **pluggable product/infra layer**, not an engine rewrite. The engine ships the
 *seam* (an authoritative mutation stream + an apply-remote entry point), not a server.

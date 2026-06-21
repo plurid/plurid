@@ -87,6 +87,7 @@ const resolveSpace = <C>(
         isolatePlane: '',
         lastClosedPlane: '',
         selectedPlaneIDs: [],
+        draggingSelection: false,
 
         tree: computedTree,
         links: [],

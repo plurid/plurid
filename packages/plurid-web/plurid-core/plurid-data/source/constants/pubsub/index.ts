@@ -55,6 +55,12 @@ export const PLURID_PUBSUB_TOPIC = {
     TOGGLE_SELECTION: 'space.toggleSelection',
     CLEAR_SELECTION: 'space.clearSelection',
 
+    // Collaboration seam (transport-agnostic). The engine PUBLISHES `collaborationMutation` when the
+    // shared arrangement changes; a host forwards it over its transport and republishes incoming peer
+    // changes as `applyRemoteMutation`.
+    COLLABORATION_MUTATION: 'space.collaborationMutation',
+    APPLY_REMOTE_MUTATION: 'space.applyRemoteMutation',
+
     SET_PLANE_PATH: 'plane.setPath',
 } as const;
 

@@ -4,75 +4,63 @@
         Middleware,
     } from '@reduxjs/toolkit';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        arrangementSignature,
+    } from '~services/logic/arrangement/signature';
+    // #endregion external
 // #endregion imports
 
 
 
 // #region module
-const SET_TREE = 'space/setTree';
-const SET_SPACE_FIELD = 'space/setSpaceField';
 const UNDO = 'space/undo';
 const REDO = 'space/redo';
 
-/** Bound stack depth. Snapshots are tree references, so this is cheap; the cap just bounds memory. */
+/** Bound stack depth. Snapshots hold tree/link references, so this is cheap; the cap just bounds memory. */
 const HISTORY_LIMIT = 100;
 
 
-/** The tree-setting actions: dedicated `setTree` (close / open / relayout) + `setSpaceField({field:'tree'})` (spawn). */
-const treeOfAction = (action: any): unknown | undefined => {
-    if (action?.type === SET_TREE) {
-        return action.payload;
-    }
-    if (action?.type === SET_SPACE_FIELD && action?.payload?.field === 'tree') {
-        return action.payload.value;
-    }
-    return undefined;
-}
-
-/**
- * A STRUCTURAL signature of the tree — the sorted set of `planeID:show`, ignoring position. Two
- * trees with the same planes + visibility but different layout positions share a signature. This is
- * what makes undo work: every spawn/close/open fires SEVERAL `setTree`s (the change itself, then the
- * View's reactive relayouts + measurement re-flows), and only the first changes the structure. We
- * record one history entry per structural change and ignore the relayout churn — otherwise an undo's
- * restore would just be re-reconciled away by the next relayout. (A position-only edit — e.g. a
- * future drag-to-move — would need this extended to include location.)
- */
-const signature = (tree: any): string => {
-    const parts: string[] = [];
-    const walk = (nodes: any[]) => {
-        for (const node of nodes) {
-            parts.push(node.planeID + ':' + (node.show ? 1 : 0));
-            if (node.children) {
-                walk(node.children);
-            }
-        }
-    };
-    walk(Array.isArray(tree) ? tree : []);
-    return parts.sort().join('|');
+interface ArrangementSnapshot {
+    tree: unknown;
+    links: unknown;
 }
 
 
 /**
- * Spatial undo/redo over the engine's tree mutations.
+ * Spatial undo/redo over the engine's authored arrangement: structure (spawn / close / open), manual
+ * positions (drag-move / snap), and the link graph.
  *
- * Records one snapshot per STRUCTURAL change (see `signature`); restore re-sets the tree directly
- * (raw, exact) via `setSpaceField`. Snapshots are references to the immutable `state.space.tree`
- * (reducers produce new trees + `reconcileTree` shares structure), so the stacks are memory-cheap.
- * History lives in this closure — never persisted, never serialized, never triggers a render.
+ * Records one snapshot per change in the shared `arrangementSignature` (structure + pinned positions +
+ * links) — so a single user action is one entry, while the relayout reflows it triggers are ignored
+ * (they don't change the signature), which is what lets a restore stick instead of being re-reconciled
+ * away. Watches the STATE before/after each action rather than specific action types, so it covers both
+ * the `setTree`/`setSpaceField` paths AND the direct-mutation reducers (`transformSelectedPlanes`,
+ * `snapSelection`, `addPlaneLink`, …). Restore re-sets tree + links directly (raw, exact) via
+ * `setSpaceField` + `setPlaneLinks`. Snapshots are references to the immutable state slices, so the
+ * stacks are memory-cheap; history is closure-local (never persisted, never serialized, never renders).
+ * Remote collaboration mutations (`meta.remote`) are skipped — a peer's change isn't in YOUR undo.
  */
 export const createHistoryMiddleware = (): Middleware => {
-    let undoStack: unknown[] = [];
-    let redoStack: unknown[] = [];
+    let undoStack: ArrangementSnapshot[] = [];
+    let redoStack: ArrangementSnapshot[] = [];
     let applying = false;
-    // Signature of the last committed structure — set lazily from the first tree we see.
+    // Signature of the last committed arrangement — set lazily from the first state we see.
     let lastSignature: string | null = null;
 
-    const restore = (dispatch: any, tree: unknown) => {
+    const snapshotOf = (state: any): ArrangementSnapshot => ({
+        tree: state.space.tree,
+        links: state.space.links,
+    });
+
+    const restore = (dispatch: any, snapshot: ArrangementSnapshot) => {
         applying = true;
-        dispatch({ type: SET_SPACE_FIELD, payload: { field: 'tree', value: tree } });
+        dispatch({ type: 'space/setSpaceField', payload: { field: 'tree', value: snapshot.tree } });
+        dispatch({ type: 'space/setPlaneLinks', payload: snapshot.links });
         applying = false;
-        lastSignature = signature(tree);
+        lastSignature = arrangementSignature(snapshot.tree as any, snapshot.links as any);
     };
 
     return (store) => (next) => (action: any) => {
@@ -80,8 +68,8 @@ export const createHistoryMiddleware = (): Middleware => {
             if (undoStack.length === 0) {
                 return undefined;
             }
-            const previous = undoStack.pop();
-            redoStack.push((store.getState() as any).space.tree);
+            const previous = undoStack.pop() as ArrangementSnapshot;
+            redoStack.push(snapshotOf(store.getState()));
             restore(store.dispatch, previous);
             return undefined;
         }
@@ -90,34 +78,46 @@ export const createHistoryMiddleware = (): Middleware => {
             if (redoStack.length === 0) {
                 return undefined;
             }
-            const future = redoStack.pop();
-            undoStack.push((store.getState() as any).space.tree);
+            const future = redoStack.pop() as ArrangementSnapshot;
+            undoStack.push(snapshotOf(store.getState()));
             restore(store.dispatch, future);
             return undefined;
         }
 
-        if (!applying) {
-            const nextTree = treeOfAction(action);
-            if (nextTree !== undefined) {
-                const previousTree = (store.getState() as any).space.tree;
-                if (lastSignature === null) {
-                    lastSignature = signature(previousTree);
-                }
-                const nextSignature = signature(nextTree);
-                if (nextSignature !== lastSignature) {
-                    // A real structural change (plane added / removed / shown / hidden).
-                    undoStack.push(previousTree);
-                    if (undoStack.length > HISTORY_LIMIT) {
-                        undoStack.shift();
-                    }
-                    lastSignature = nextSignature;
-                    redoStack = []; // a fresh user action invalidates the redo branch
-                }
-                // else: a relayout/measurement re-flow (same structure) — ignore.
-            }
+        const previousState = store.getState() as any;
+        const previousTree = previousState.space.tree;
+        const previousLinks = previousState.space.links;
+
+        const result = next(action);
+
+        // Don't record our own restores, or a peer's remotely-applied change.
+        if (applying || action.meta?.remote) {
+            return result;
         }
 
-        return next(action);
+        const nextState = store.getState() as any;
+        // Fast path: neither slice changed reference (e.g. the per-frame orbit transform actions).
+        if (nextState.space.tree === previousTree
+            && nextState.space.links === previousLinks) {
+            return result;
+        }
+
+        if (lastSignature === null) {
+            lastSignature = arrangementSignature(previousTree, previousLinks);
+        }
+        const nextSignature = arrangementSignature(nextState.space.tree, nextState.space.links);
+        if (nextSignature !== lastSignature) {
+            // A real authoring change (plane added/removed/shown/hidden/moved, link edited).
+            undoStack.push({ tree: previousTree, links: previousLinks });
+            if (undoStack.length > HISTORY_LIMIT) {
+                undoStack.shift();
+            }
+            lastSignature = nextSignature;
+            redoStack = []; // a fresh user action invalidates the redo branch
+        }
+        // else: a relayout / measurement re-flow (same arrangement) — ignore.
+
+        return result;
     };
 }
 // #endregion module

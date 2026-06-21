@@ -105,6 +105,7 @@ const initialState: PluridStateSpace = {
     isolatePlane: '',
     lastClosedPlane: '',
     selectedPlaneIDs: [],
+    draggingSelection: false,
 };
 
 
@@ -710,6 +711,12 @@ export const space = createSlice({
             if (state.selectedPlaneIDs.length > 0) {
                 state.selectedPlaneIDs = [];
             }
+        },
+        setDraggingSelection: (
+            state,
+            action: PayloadAction<boolean>,
+        ) => {
+            state.draggingSelection = action.payload;
         },
         // Move every selected plane by a delta (space-local units) and pin it. Mutates the tree
         // DIRECTLY (Immer, no `reconcileTree`) so the move lands; `manuallyPositioned` then makes the
