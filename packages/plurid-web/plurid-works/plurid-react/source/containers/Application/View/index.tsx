@@ -326,6 +326,7 @@ const PluridView: React.FC<PluridViewProperties> = (
     // Collaboration seam: emit/apply shared-arrangement snapshots on the instance pubsub (the host
     // bridges it to a transport). Same pubsub the bridge subscribes its topics on.
     useCollaboration({
+        enabled: stateConfiguration.space.collaboration === true,
         pubsub: pluridPubSub[0],
         stateTree,
         stateLinks,

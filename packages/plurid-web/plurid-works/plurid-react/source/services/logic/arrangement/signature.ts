@@ -29,13 +29,17 @@ export const arrangementSignature = (
     const parts: string[] = [];
     const walk = (nodes: TreePlane[]) => {
         for (const node of nodes) {
-            let entry = node.planeID + ':' + (node.show ? 1 : 0);
-            if (node.manuallyPositioned) {
-                entry += ':' + Math.round(node.location.translateX)
-                    + ',' + Math.round(node.location.translateY)
-                    + ',' + Math.round(node.location.translateZ);
+            // A node with no stable id can't be a meaningful signature entry — skip it (but still
+            // recurse), so a malformed node can't collide with others as "undefined:…".
+            if (node.planeID) {
+                let entry = node.planeID + ':' + (node.show ? 1 : 0);
+                if (node.manuallyPositioned) {
+                    entry += ':' + Math.round(node.location.translateX)
+                        + ',' + Math.round(node.location.translateY)
+                        + ',' + Math.round(node.location.translateZ);
+                }
+                parts.push(entry);
             }
-            parts.push(entry);
             if (node.children) {
                 walk(node.children);
             }

@@ -674,6 +674,17 @@ export const space = createSlice({
         ) => {
             state.links = action.payload;
         },
+        // Atomically replace the whole authored arrangement (tree + links) in ONE action — set
+        // DIRECTLY (no `reconcileTree`), so an undo restore or a remote collaboration apply lands
+        // EXACTLY, overriding the pinned-location carry in `reconcileNode`. One dispatch = one render,
+        // which is what keeps the collaboration echo guard + the undo restore atomic.
+        restoreArrangement: (
+            state,
+            action: PayloadAction<{ tree: TreePlane[]; links: PlaneLink[] }>,
+        ) => {
+            state.tree = action.payload.tree;
+            state.links = action.payload.links;
+        },
         // #endregion link graph
 
         // #region selection
@@ -791,7 +802,9 @@ export const space = createSlice({
                     for (const o of others) {
                         const d = o.location[axis] - s.location[axis];
                         const abs = Math.abs(d);
-                        if (abs <= bestAbs) {
+                        // Strictly closer wins — so equal-distance candidates are a deterministic
+                        // first-wins, not "whichever the loop visited last".
+                        if (abs < bestAbs) {
                             bestAbs = abs;
                             best = d;
                         }

@@ -79,6 +79,18 @@
 >   the snap targets, gone on release). *Grid-snap was evaluated and skipped — low value for plane-sized
 >   objects vs edge-alignment, which is the useful snap.*
 >
+> - **Audit & hardening pass (2026-06-21)** — three adversarial code audits over FR2/FR3/FR4/FR6 found 2
+>   real bugs + 2 smells (and 4 false positives, rejected). Fixed: **(R1)** the history middleware now
+>   compares each action's own before/after `arrangementSignature` instead of tracking a running
+>   `lastSignature` that went STALE across a skipped remote apply and recorded the next relayout as a
+>   *phantom* undo entry; **(R2)** undo-restore + the collaboration inbound now apply `{tree, links}` in
+>   ONE `restoreArrangement` reducer (atomic, no reconcile) instead of two dispatches — removes the
+>   echo-on-intermediate-render fragility; **(R3)** collaboration is now **opt-in** via
+>   `configuration.space.collaboration` (default off — a single-user app no longer broadcasts); **(R4)**
+>   nits — guide overlay always clears on pointer-up (covers `pointercancel`), deterministic snap
+>   tie-break, signature guards a missing `planeID`. Re-verified in the harness: undo-after-remote no
+>   longer pollutes, collab emit/apply/echo intact, opt-in on/off, snap + guides + gesture unaffected.
+>
 > **Next:** #8 WebXR (frontier / near-rewrite). (Product-side, engine stays out of the way: backlinks
 > *panel* UI + drag-to-link for #3; CRDT/presence + the actual transport on top of the #6 seam.)
 

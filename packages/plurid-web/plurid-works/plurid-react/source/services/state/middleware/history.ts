@@ -36,19 +36,20 @@ interface ArrangementSnapshot {
  * Records one snapshot per change in the shared `arrangementSignature` (structure + pinned positions +
  * links) — so a single user action is one entry, while the relayout reflows it triggers are ignored
  * (they don't change the signature), which is what lets a restore stick instead of being re-reconciled
- * away. Watches the STATE before/after each action rather than specific action types, so it covers both
- * the `setTree`/`setSpaceField` paths AND the direct-mutation reducers (`transformSelectedPlanes`,
- * `snapSelection`, `addPlaneLink`, …). Restore re-sets tree + links directly (raw, exact) via
- * `setSpaceField` + `setPlaneLinks`. Snapshots are references to the immutable state slices, so the
- * stacks are memory-cheap; history is closure-local (never persisted, never serialized, never renders).
- * Remote collaboration mutations (`meta.remote`) are skipped — a peer's change isn't in YOUR undo.
+ * away. It is STATELESS: it compares THIS action's before/after signatures rather than tracking a
+ * running `lastSignature` — a tracked signature would go stale across a skipped (`meta.remote`) remote
+ * apply and mis-record the next relayout as a phantom entry. Watching the state before/after each
+ * action (not specific action types) covers both the `setTree`/`setSpaceField` paths AND the direct-
+ * mutation reducers (`transformSelectedPlanes`, `snapSelection`, `addPlaneLink`, …). Restore re-sets
+ * tree + links atomically via `restoreArrangement` (raw, exact, no reconcile). Snapshots are references
+ * to the immutable state slices, so the stacks are memory-cheap; history is closure-local (never
+ * persisted, never serialized, never renders). Remote collaboration mutations (`meta.remote`) are
+ * skipped — a peer's change isn't in YOUR undo.
  */
 export const createHistoryMiddleware = (): Middleware => {
     let undoStack: ArrangementSnapshot[] = [];
     let redoStack: ArrangementSnapshot[] = [];
     let applying = false;
-    // Signature of the last committed arrangement — set lazily from the first state we see.
-    let lastSignature: string | null = null;
 
     const snapshotOf = (state: any): ArrangementSnapshot => ({
         tree: state.space.tree,
@@ -57,10 +58,11 @@ export const createHistoryMiddleware = (): Middleware => {
 
     const restore = (dispatch: any, snapshot: ArrangementSnapshot) => {
         applying = true;
-        dispatch({ type: 'space/setSpaceField', payload: { field: 'tree', value: snapshot.tree } });
-        dispatch({ type: 'space/setPlaneLinks', payload: snapshot.links });
+        dispatch({
+            type: 'space/restoreArrangement',
+            payload: { tree: snapshot.tree, links: snapshot.links },
+        });
         applying = false;
-        lastSignature = arrangementSignature(snapshot.tree as any, snapshot.links as any);
     };
 
     return (store) => (next) => (action: any) => {
@@ -102,20 +104,18 @@ export const createHistoryMiddleware = (): Middleware => {
             return result;
         }
 
-        if (lastSignature === null) {
-            lastSignature = arrangementSignature(previousTree, previousLinks);
-        }
+        // Compare THIS action's before/after arrangement. A relayout reflow leaves the signature
+        // unchanged (it only moves auto-layout positions) and is ignored; a real authoring change
+        // (plane added/removed/shown/hidden/moved, link edited) flips it and is recorded.
+        const previousSignature = arrangementSignature(previousTree, previousLinks);
         const nextSignature = arrangementSignature(nextState.space.tree, nextState.space.links);
-        if (nextSignature !== lastSignature) {
-            // A real authoring change (plane added/removed/shown/hidden/moved, link edited).
+        if (previousSignature !== nextSignature) {
             undoStack.push({ tree: previousTree, links: previousLinks });
             if (undoStack.length > HISTORY_LIMIT) {
                 undoStack.shift();
             }
-            lastSignature = nextSignature;
             redoStack = []; // a fresh user action invalidates the redo branch
         }
-        // else: a relayout / measurement re-flow (same arrangement) — ignore.
 
         return result;
     };

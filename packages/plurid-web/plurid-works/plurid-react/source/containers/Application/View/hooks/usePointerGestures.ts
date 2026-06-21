@@ -368,10 +368,13 @@ export const usePointerGestures = (
                 const wasMoving = movingSelection.current;
                 pointerDragging.current = false;
                 movingSelection.current = false;
-                // On release of a selection move, edge-snap the group + drop the guide overlay.
+                // Always drop the guide overlay when the last pointer lifts — covers an interrupted
+                // move (pointercancel / a second pointer) too, not just the clean snap path below.
+                // Idempotent: the reducer no-ops when the flag is already false.
+                dispatch(actions.space.setDraggingSelection(false));
+                // Edge-snap the group only on the clean release of a real (past-threshold) move.
                 if (wasDragging && wasMoving) {
                     dispatch(actions.space.snapSelection(undefined));
-                    dispatch(actions.space.setDraggingSelection(false));
                 }
                 // Only fling momentum if this was an actual orbit drag (not a click).
                 const m = momentum.current;

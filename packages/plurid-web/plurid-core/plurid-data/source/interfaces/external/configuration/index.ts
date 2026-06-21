@@ -62,6 +62,8 @@ export interface FlatPluridConfiguration {
     center?: boolean;
     /** `space.firstPerson` — first-person ("fly") navigation. */
     firstPerson?: boolean;
+    /** `space.collaboration` — opt in to the collaboration seam (publish/apply arrangement snapshots). */
+    collaboration?: boolean;
     /** `space.bridge.length` — parent→child gap + rendered bridge length. */
     bridgeLength?: number;
     /** `space.bridge.planeAngle` — spawned child plane angle. */
@@ -199,6 +201,16 @@ export interface PluridConfigurationSpace {
     transformTouch: keyof typeof TRANSFORM_TOUCHES;
 
     firstPerson: boolean;
+
+    /**
+     * Opt in to the collaboration seam: the engine publishes `space.collaborationMutation`
+     * snapshots when the shared arrangement changes and applies `space.applyRemoteMutation` from
+     * peers. Off by default — a single-user app shouldn't broadcast mutations. The host wires the
+     * transport + presence.
+     *
+     * Default `false`.
+     */
+    collaboration?: boolean;
 
     cullingDistance: number;
 

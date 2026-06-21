@@ -32,6 +32,8 @@
 
 // #region module
 export interface UseCollaborationParameters {
+    /** `configuration.space.collaboration` — collaboration is OFF unless the host opts in. */
+    enabled: boolean;
     /** The instance pubsub (a host's passed-in one, or the View's). Collaboration is wired on it. */
     pubsub: IPluridPubSub | undefined;
     stateTree: TreePlane[];
@@ -55,6 +57,7 @@ export interface UseCollaborationParameters {
  */
 export const useCollaboration = (
     {
+        enabled,
         pubsub,
         stateTree,
         stateLinks,
@@ -66,7 +69,7 @@ export const useCollaboration = (
 
     // #region outbound
     useEffect(() => {
-        if (!pubsub) {
+        if (!enabled || !pubsub) {
             return;
         }
 
@@ -93,6 +96,7 @@ export const useCollaboration = (
             },
         });
     }, [
+        enabled,
         pubsub,
         stateTree,
         stateLinks,
@@ -102,40 +106,32 @@ export const useCollaboration = (
 
     // #region inbound
     useEffect(() => {
-        if (!pubsub) {
+        if (!enabled || !pubsub) {
             return;
         }
 
         const index = pubsub.subscribe({
             topic: PLURID_PUBSUB_TOPIC.APPLY_REMOTE_MUTATION,
             callback: (data: PluridCollaborationSnapshot) => {
-                if (!data) {
+                // The seam's contract: a peer sends a COMPLETE arrangement snapshot (the engine's
+                // outbound always emits both `tree` + `links`). An incomplete one is ignored rather
+                // than guessed at — which also keeps this callback free of a stale `stateTree`/
+                // `stateLinks` closure, so the inbound effect never needs to re-subscribe.
+                if (!data || !data.tree || !data.links) {
                     return;
                 }
 
-                // Pre-set the baseline to the incoming snapshot so the resulting state change does
-                // NOT bounce straight back out as our own mutation.
-                lastSignature.current = arrangementSignature(
-                    data.tree ?? stateTree,
-                    data.links ?? stateLinks,
-                );
-
-                if (data.tree) {
-                    // `setSpaceField`, not `setTree`: skip `reconcileNode`'s pinned-location carry so a
-                    // remote move overrides the local pin. `meta.remote` keeps it out of local undo.
-                    dispatch({
-                        type: 'space/setSpaceField',
-                        payload: { field: 'tree', value: data.tree },
-                        meta: { remote: true },
-                    } as AnyAction);
-                }
-                if (data.links) {
-                    dispatch({
-                        type: 'space/setPlaneLinks',
-                        payload: data.links,
-                        meta: { remote: true },
-                    } as AnyAction);
-                }
+                // Pre-set the baseline to the incoming snapshot so the resulting state change does NOT
+                // bounce straight back out as our own mutation. `restoreArrangement` sets tree + links
+                // in ONE action (one render) — no intermediate `{tree-new, links-old}` signature can
+                // leak an echo — and it bypasses `reconcileNode`, so a remote move overrides the local
+                // pin. `meta.remote` keeps it out of LOCAL undo.
+                lastSignature.current = arrangementSignature(data.tree, data.links);
+                dispatch({
+                    type: 'space/restoreArrangement',
+                    payload: { tree: data.tree, links: data.links },
+                    meta: { remote: true },
+                } as AnyAction);
             },
         });
 
@@ -143,6 +139,7 @@ export const useCollaboration = (
             pubsub.unsubscribe(index);
         };
     }, [
+        enabled,
         pubsub,
         dispatch,
     ]);

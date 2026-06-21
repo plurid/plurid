@@ -112,6 +112,7 @@ export const definePluridConfiguration = (
     if (flat.perspective !== undefined) { space.perspective = flat.perspective; }
     if (flat.center !== undefined) { space.center = flat.center; }
     if (flat.firstPerson !== undefined) { space.firstPerson = flat.firstPerson; }
+    if (flat.collaboration !== undefined) { space.collaboration = flat.collaboration; }
     if (flat.transformLocks !== undefined) { space.transformLocks = flat.transformLocks; }
     if (flat.bridgeLength !== undefined || flat.bridgePlaneAngle !== undefined) {
         space.bridge = {};
