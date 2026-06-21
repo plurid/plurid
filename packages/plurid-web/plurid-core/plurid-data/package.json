@@ -1,67 +1,67 @@
 {
-  "name": "@plurid/plurid-data",
-  "version": "0.0.0-20",
-  "sideEffects": false,
-  "description": "Plurid Constants, Interfaces, Enumerations",
-  "keywords": [
-    "plurid",
-    "data",
-    "constants",
-    "interfaces",
-    "enumerations"
-  ],
-  "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
-  "license": "SEE LICENSE IN LICENSE",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/plurid/plurid"
-  },
-  "bugs": {
-    "email": "source@plurid.com",
-    "url": "https://github.com/plurid/plurid/issues"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
-  "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-data",
-  "files": [
-    "distribution/"
-  ],
-  "main": "distribution/index.js",
-  "module": "distribution/index.mjs",
-  "jsnext:main": "distribution/index.es.js",
-  "engines": {
-    "node": ">=18",
-    "npm": ">=6"
-  },
-  "scripts": {
-    "clean": "rm -rf ./distribution",
-    "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
-    "build.development": "tsup --watch",
-    "build.production": "tsup",
-    "build": "tsup",
-    "prepublishOnly": "pnpm build"
-  },
-  "peerDependencies": {
-    "@plurid/plurid-themes": "*"
-  },
-  "devDependencies": {
-    "@plurid/plurid-themes": "workspace:*",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^20.10.6",
-    "jest": "^30.4.2",
-    "ts-jest": "^29.4.11",
-    "ts-node": "^10.9.2",
-    "typescript": "^6.0.3",
-    "tsup": "^8.5.1"
-  },
-  "types": "distribution/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./distribution/index.d.ts",
-      "import": "./distribution/index.mjs",
-      "require": "./distribution/index.js"
+    "name": "@plurid/plurid-data",
+    "version": "0.0.0-21",
+    "sideEffects": false,
+    "description": "Plurid Constants, Interfaces, Enumerations",
+    "keywords": [
+        "plurid",
+        "data",
+        "constants",
+        "interfaces",
+        "enumerations"
+    ],
+    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
+    "license": "SEE LICENSE IN LICENSE",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/plurid"
+    },
+    "bugs": {
+        "email": "source@plurid.com",
+        "url": "https://github.com/plurid/plurid/issues"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
+        "access": "public"
+    },
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-data",
+    "files": [
+        "distribution/"
+    ],
+    "main": "distribution/index.js",
+    "module": "distribution/index.mjs",
+    "jsnext:main": "distribution/index.es.js",
+    "engines": {
+        "node": ">=18",
+        "npm": ">=6"
+    },
+    "scripts": {
+        "clean": "rm -rf ./distribution",
+        "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
+        "build.development": "tsup --watch",
+        "build.production": "tsup",
+        "build": "tsup",
+        "prepublishOnly": "pnpm build"
+    },
+    "peerDependencies": {
+        "@plurid/plurid-themes": "*"
+    },
+    "devDependencies": {
+        "@plurid/plurid-themes": "workspace:*",
+        "@types/jest": "^30.0.0",
+        "@types/node": "^20.10.6",
+        "jest": "^30.4.2",
+        "ts-jest": "^29.4.11",
+        "ts-node": "^10.9.2",
+        "typescript": "^6.0.3",
+        "tsup": "^8.5.1"
+    },
+    "types": "distribution/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./distribution/index.d.ts",
+            "import": "./distribution/index.mjs",
+            "require": "./distribution/index.js"
+        }
     }
-  }
 }

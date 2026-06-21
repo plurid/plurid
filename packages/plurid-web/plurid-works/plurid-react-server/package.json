@@ -1,132 +1,132 @@
 {
-  "name": "@plurid/plurid-react-server",
-  "version": "0.0.0-15",
-  "description": "React implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
-  "keywords": [
-    "plurid",
-    "react",
-    "web",
-    "3D",
-    "html",
-    "server-side rendering"
-  ],
-  "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
-  "license": "SEE LICENSE IN LICENSE",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/plurid/plurid"
-  },
-  "bugs": {
-    "email": "source@plurid.com",
-    "url": "https://github.com/plurid/plurid/issues"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
-  "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-react-server",
-  "files": [
-    "distribution/"
-  ],
-  "main": "distribution/index.js",
-  "module": "distribution/index.mjs",
-  "types": "distribution/index.d.ts",
-  "engines": {
-    "node": ">=18",
-    "npm": ">=6"
-  },
-  "scripts": {
-    "clean": "rm -rf ./distribution",
-    "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
-    "build.development": "tsup --watch",
-    "build.production": "tsup",
-    "build": "tsup",
-    "esbuild": "esbuild source/index.ts --bundle --platform=node --outfile=distribution/index.js --external:react",
-    "prepublishOnly": "pnpm build"
-  },
-  "peerDependencies": {
-    "@plurid/elementql": "*",
-    "@plurid/elementql-client-react": "*",
-    "@plurid/plurid-data": "*",
-    "@plurid/plurid-engine": "*",
-    "@plurid/plurid-functions": "*",
-    "@plurid/plurid-functions-react": "*",
-    "@plurid/plurid-icons-react": "*",
-    "@plurid/plurid-pubsub": "*",
-    "@plurid/plurid-react": "*",
-    "@plurid/plurid-themes": "*",
-    "@plurid/plurid-ui-components-react": "*",
-    "@plurid/plurid-ui-state-react": "*",
-    "cross-fetch": ">=3.1",
-    "puppeteer": ">=22",
-    "react": ">=19",
-    "react-dom": ">=19",
-    "react-helmet-async": ">=1",
-    "react-redux": ">=9",
-    "redux": ">=4",
-    "styled-components": ">=6"
-  },
-  "peerDependenciesMeta": {
-    "puppeteer": {
-      "optional": true
+    "name": "@plurid/plurid-react-server",
+    "version": "0.0.0-16",
+    "description": "React implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
+    "keywords": [
+        "plurid",
+        "react",
+        "web",
+        "3D",
+        "html",
+        "server-side rendering"
+    ],
+    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
+    "license": "SEE LICENSE IN LICENSE",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/plurid"
+    },
+    "bugs": {
+        "email": "source@plurid.com",
+        "url": "https://github.com/plurid/plurid/issues"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
+        "access": "public"
+    },
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-react-server",
+    "files": [
+        "distribution/"
+    ],
+    "main": "distribution/index.js",
+    "module": "distribution/index.mjs",
+    "types": "distribution/index.d.ts",
+    "engines": {
+        "node": ">=18",
+        "npm": ">=6"
+    },
+    "scripts": {
+        "clean": "rm -rf ./distribution",
+        "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
+        "build.development": "tsup --watch",
+        "build.production": "tsup",
+        "build": "tsup",
+        "esbuild": "esbuild source/index.ts --bundle --platform=node --outfile=distribution/index.js --external:react",
+        "prepublishOnly": "pnpm build"
+    },
+    "peerDependencies": {
+        "@plurid/elementql": "*",
+        "@plurid/elementql-client-react": "*",
+        "@plurid/plurid-data": "*",
+        "@plurid/plurid-engine": "*",
+        "@plurid/plurid-functions": "*",
+        "@plurid/plurid-functions-react": "*",
+        "@plurid/plurid-icons-react": "*",
+        "@plurid/plurid-pubsub": "*",
+        "@plurid/plurid-react": "*",
+        "@plurid/plurid-themes": "*",
+        "@plurid/plurid-ui-components-react": "*",
+        "@plurid/plurid-ui-state-react": "*",
+        "cross-fetch": ">=3.1",
+        "puppeteer": ">=22",
+        "react": ">=19",
+        "react-dom": ">=19",
+        "react-helmet-async": ">=1",
+        "react-redux": ">=9",
+        "redux": ">=4",
+        "styled-components": ">=6"
+    },
+    "peerDependenciesMeta": {
+        "puppeteer": {
+            "optional": true
+        }
+    },
+    "dependencies": {
+        "compression": "^1.7.4",
+        "detect-port": "^1.5.1",
+        "express": "^5.1.0",
+        "html-minifier-terser": "^7.2.0",
+        "open": "^10.0.2"
+    },
+    "devDependencies": {
+        "@apollo/client": "^3.8.8",
+        "@babel/core": "^7.23.7",
+        "@plurid/elementql": "^0.0.0-1",
+        "@plurid/elementql-client-react": "^0.0.0-1",
+        "@plurid/plurid-data": "workspace:*",
+        "@plurid/plurid-engine": "workspace:*",
+        "@plurid/plurid-functions": "workspace:*",
+        "@plurid/plurid-functions-react": "workspace:*",
+        "@plurid/plurid-icons-react": "workspace:*",
+        "@plurid/plurid-pubsub": "workspace:*",
+        "@plurid/plurid-react": "workspace:*",
+        "@plurid/plurid-themes": "workspace:*",
+        "@plurid/plurid-ui-components-react": "workspace:*",
+        "@plurid/plurid-ui-state-react": "workspace:*",
+        "@redux-devtools/extension": "^3.3.0",
+        "@types/compression": "^1.7.5",
+        "@types/detect-port": "^1.3.5",
+        "@types/express": "^5.0.0",
+        "@types/html-minifier-terser": "^7.0.2",
+        "@types/jest": "^30.0.0",
+        "@types/node": "^20.10.6",
+        "@types/react": "^19.2.0",
+        "@types/react-dom": "^19.2.0",
+        "@types/react-redux": "^7.1.33",
+        "@types/react-stripe-elements": "^6.0.9",
+        "@types/styled-components": "^5.1.34",
+        "cross-fetch": "^4.0.0",
+        "graphql": "^16.8.1",
+        "jest": "^30.4.2",
+        "jest-config": "^30.4.2",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+        "react-helmet-async": "^2.0.4",
+        "react-redux": "^9.3.0",
+        "redux": "^5.0.1",
+        "redux-thunk": "^3.1.0",
+        "styled-components": "^6.4.2",
+        "ts-jest": "^29.4.11",
+        "ts-node": "^10.9.2",
+        "tslib": "^2.6.2",
+        "typescript": "^6.0.3",
+        "tsup": "^8.5.1"
+    },
+    "exports": {
+        ".": {
+            "types": "./distribution/index.d.ts",
+            "import": "./distribution/index.mjs",
+            "require": "./distribution/index.js"
+        }
     }
-  },
-  "dependencies": {
-    "compression": "^1.7.4",
-    "detect-port": "^1.5.1",
-    "express": "^5.1.0",
-    "html-minifier-terser": "^7.2.0",
-    "open": "^10.0.2"
-  },
-  "devDependencies": {
-    "@apollo/client": "^3.8.8",
-    "@babel/core": "^7.23.7",
-    "@plurid/elementql": "^0.0.0-1",
-    "@plurid/elementql-client-react": "^0.0.0-1",
-    "@plurid/plurid-data": "workspace:*",
-    "@plurid/plurid-engine": "workspace:*",
-    "@plurid/plurid-functions": "workspace:*",
-    "@plurid/plurid-functions-react": "workspace:*",
-    "@plurid/plurid-icons-react": "workspace:*",
-    "@plurid/plurid-pubsub": "workspace:*",
-    "@plurid/plurid-react": "workspace:*",
-    "@plurid/plurid-themes": "workspace:*",
-    "@plurid/plurid-ui-components-react": "workspace:*",
-    "@plurid/plurid-ui-state-react": "workspace:*",
-    "@redux-devtools/extension": "^3.3.0",
-    "@types/compression": "^1.7.5",
-    "@types/detect-port": "^1.3.5",
-    "@types/express": "^5.0.0",
-    "@types/html-minifier-terser": "^7.0.2",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^20.10.6",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
-    "@types/react-redux": "^7.1.33",
-    "@types/react-stripe-elements": "^6.0.9",
-    "@types/styled-components": "^5.1.34",
-    "cross-fetch": "^4.0.0",
-    "graphql": "^16.8.1",
-    "jest": "^30.4.2",
-    "jest-config": "^30.4.2",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-helmet-async": "^2.0.4",
-    "react-redux": "^9.3.0",
-    "redux": "^5.0.1",
-    "redux-thunk": "^3.1.0",
-    "styled-components": "^6.4.2",
-    "ts-jest": "^29.4.11",
-    "ts-node": "^10.9.2",
-    "tslib": "^2.6.2",
-    "typescript": "^6.0.3",
-    "tsup": "^8.5.1"
-  },
-  "exports": {
-    ".": {
-      "types": "./distribution/index.d.ts",
-      "import": "./distribution/index.mjs",
-      "require": "./distribution/index.js"
-    }
-  }
 }

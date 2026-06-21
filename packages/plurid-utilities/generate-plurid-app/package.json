@@ -1,74 +1,74 @@
 {
-  "name": "@plurid/generate-plurid-app",
-  "version": "0.0.0-13",
-  "description": "Generate a plurid' application with one command (and some choices)",
-  "keywords": [
-    "plurid",
-    "generate",
-    "application",
-    "3D",
-    "html",
-    "react"
-  ],
-  "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
-  "license": "SEE LICENSE IN LICENSE",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/plurid/plurid"
-  },
-  "bugs": {
-    "email": "source@plurid.com",
-    "url": "https://github.com/plurid/plurid/issues"
-  },
-  "homepage": "https://github.com/plurid/plurid/blob/master/packages/generate-plurid-app/README.md",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
-  "engines": {
-    "node": ">=18",
-    "npm": ">=6"
-  },
-  "main": "distribution/index.js",
-  "module": "distribution/index.mjs",
-  "typings": "distribution/types/index.d.ts",
-  "bin": {
-    "generate-plurid-app": "binder/generate-plurid-app"
-  },
-  "files": [
-    "distribution",
-    "binder"
-  ],
-  "preferGlobal": true,
-  "scripts": {
-    "clean": "rimraf ./distribution",
-    "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
-    "copy.templates": "cp -r ./templates ./distribution",
-    "build.clean": "rm -rf `find ./distribution -type d -name __tests__ -not -path './distribution/templates/*'`",
-    "build.run": "node scripts/build.js",
-    "build.development": "pnpm clean && pnpm build.run",
-    "build.production": "tsup",
-    "build": "tsup",
-    "prepublishOnly": "pnpm build"
-  },
-  "dependencies": {
-    "commander": "^11.0.0",
-    "inquirer": "^9.2.8",
-    "ora": "^6.3.1"
-  },
-  "devDependencies": {
-    "@types/inquirer": "^9.0.3",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^20.4.4",
-    "esbuild": "^0.28.1",
-    "esbuild-plugin-replace": "^1.4.0",
-    "jest": "^30.4.2",
-    "jest-config": "^30.4.2",
-    "rimraf": "^5.0.1",
-    "ts-jest": "^29.4.11",
-    "ts-node": "^10.9.1",
-    "tslib": "^2.6.1",
-    "typescript": "^6.0.3",
-    "tsup": "^8.5.1"
-  }
+    "name": "@plurid/generate-plurid-app",
+    "version": "0.0.0-14",
+    "description": "Generate a plurid' application with one command (and some choices)",
+    "keywords": [
+        "plurid",
+        "generate",
+        "application",
+        "3D",
+        "html",
+        "react"
+    ],
+    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
+    "license": "SEE LICENSE IN LICENSE",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/plurid"
+    },
+    "bugs": {
+        "email": "source@plurid.com",
+        "url": "https://github.com/plurid/plurid/issues"
+    },
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/generate-plurid-app/README.md",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
+        "access": "public"
+    },
+    "engines": {
+        "node": ">=18",
+        "npm": ">=6"
+    },
+    "main": "distribution/index.js",
+    "module": "distribution/index.mjs",
+    "typings": "distribution/types/index.d.ts",
+    "bin": {
+        "generate-plurid-app": "binder/generate-plurid-app"
+    },
+    "files": [
+        "distribution",
+        "binder"
+    ],
+    "preferGlobal": true,
+    "scripts": {
+        "clean": "rimraf ./distribution",
+        "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
+        "copy.templates": "cp -r ./templates ./distribution",
+        "build.clean": "rm -rf `find ./distribution -type d -name __tests__ -not -path './distribution/templates/*'`",
+        "build.run": "node scripts/build.js",
+        "build.development": "pnpm clean && pnpm build.run",
+        "build.production": "tsup",
+        "build": "tsup",
+        "prepublishOnly": "pnpm build"
+    },
+    "dependencies": {
+        "commander": "^11.0.0",
+        "inquirer": "^9.2.8",
+        "ora": "^6.3.1"
+    },
+    "devDependencies": {
+        "@types/inquirer": "^9.0.3",
+        "@types/jest": "^30.0.0",
+        "@types/node": "^20.4.4",
+        "esbuild": "^0.28.1",
+        "esbuild-plugin-replace": "^1.4.0",
+        "jest": "^30.4.2",
+        "jest-config": "^30.4.2",
+        "rimraf": "^5.0.1",
+        "ts-jest": "^29.4.11",
+        "ts-node": "^10.9.1",
+        "tslib": "^2.6.1",
+        "typescript": "^6.0.3",
+        "tsup": "^8.5.1"
+    }
 }

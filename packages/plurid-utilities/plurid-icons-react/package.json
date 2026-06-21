@@ -1,75 +1,75 @@
 {
-  "name": "@plurid/plurid-icons-react",
-  "version": "0.0.0-9",
-  "sideEffects": false,
-  "description": "Plurid Icons for Plurid Applications based on React.",
-  "keywords": [
-    "plurid",
-    "icons",
-    "react"
-  ],
-  "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
-  "license": "SEE LICENSE IN LICENSE",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/plurid/plurid-icons"
-  },
-  "bugs": {
-    "email": "source@plurid.com",
-    "url": "https://github.com/plurid/plurid-icons/issues"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
-  "homepage": "https://github.com/plurid/plurid-icons/blob/master/packages/plurid-icons-react/README.md",
-  "files": [
-    "distribution/"
-  ],
-  "main": "distribution/index.js",
-  "module": "distribution/index.mjs",
-  "types": "distribution/index.d.ts",
-  "engines": {
-    "node": ">=18",
-    "npm": ">=6"
-  },
-  "scripts": {
-    "test": "jest -c ./configurations/jest.config.js --coverage",
-    "clean": "rm -rf ./distribution",
-    "build.development": "tsup --watch",
-    "build.production": "tsup",
-    "build": "tsup",
-    "prepublishOnly": "pnpm build"
-  },
-  "peerDependencies": {
-    "@plurid/plurid-themes": "*",
-    "react": ">=19",
-    "react-dom": ">=19",
-    "styled-components": ">=6"
-  },
-  "devDependencies": {
-    "@plurid/plurid-themes": "workspace:*",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^20.3.3",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
-    "@types/styled-components": "^5.1.26",
-    "jest": "^30.4.2",
-    "jest-config": "^30.4.2",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "styled-components": "^6.4.2",
-    "ts-jest": "^29.4.11",
-    "ts-node": "^10.9.1",
-    "tslib": "^2.6.0",
-    "typescript": "^6.0.3",
-    "tsup": "^8.5.1"
-  },
-  "exports": {
-    ".": {
-      "types": "./distribution/index.d.ts",
-      "import": "./distribution/index.mjs",
-      "require": "./distribution/index.js"
+    "name": "@plurid/plurid-icons-react",
+    "version": "0.0.0-10",
+    "sideEffects": false,
+    "description": "Plurid Icons for Plurid Applications based on React.",
+    "keywords": [
+        "plurid",
+        "icons",
+        "react"
+    ],
+    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
+    "license": "SEE LICENSE IN LICENSE",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/plurid-icons"
+    },
+    "bugs": {
+        "email": "source@plurid.com",
+        "url": "https://github.com/plurid/plurid-icons/issues"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
+        "access": "public"
+    },
+    "homepage": "https://github.com/plurid/plurid-icons/blob/master/packages/plurid-icons-react/README.md",
+    "files": [
+        "distribution/"
+    ],
+    "main": "distribution/index.js",
+    "module": "distribution/index.mjs",
+    "types": "distribution/index.d.ts",
+    "engines": {
+        "node": ">=18",
+        "npm": ">=6"
+    },
+    "scripts": {
+        "test": "jest -c ./configurations/jest.config.js --coverage",
+        "clean": "rm -rf ./distribution",
+        "build.development": "tsup --watch",
+        "build.production": "tsup",
+        "build": "tsup",
+        "prepublishOnly": "pnpm build"
+    },
+    "peerDependencies": {
+        "@plurid/plurid-themes": "*",
+        "react": ">=19",
+        "react-dom": ">=19",
+        "styled-components": ">=6"
+    },
+    "devDependencies": {
+        "@plurid/plurid-themes": "workspace:*",
+        "@types/jest": "^30.0.0",
+        "@types/node": "^20.3.3",
+        "@types/react": "^19.2.0",
+        "@types/react-dom": "^19.2.0",
+        "@types/styled-components": "^5.1.26",
+        "jest": "^30.4.2",
+        "jest-config": "^30.4.2",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+        "styled-components": "^6.4.2",
+        "ts-jest": "^29.4.11",
+        "ts-node": "^10.9.1",
+        "tslib": "^2.6.0",
+        "typescript": "^6.0.3",
+        "tsup": "^8.5.1"
+    },
+    "exports": {
+        ".": {
+            "types": "./distribution/index.d.ts",
+            "import": "./distribution/index.mjs",
+            "require": "./distribution/index.js"
+        }
     }
-  }
 }
