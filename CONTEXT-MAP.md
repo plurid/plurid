@@ -1,8 +1,10 @@
 # Plurid — Package Map & Status
 
-_Last updated: 2026-06-20._
+_Last updated: 2026-06-21._
 
 This is the governance map for the monorepo: **what is live, what is legacy, what is experimental**, and how the workspace/quality gates cover each package. It exists because folder names alone don't make those distinctions clear (the lens both `docs/ENGINE_AUDIT_AND_ROADMAP.md` and `docs/CODEBASE_DEEP_CRITIQUE.md` asked for).
+
+> New here? To **use** the engine read [`GETTING_STARTED.md`](./GETTING_STARTED.md); to **work on** it read [`CONTRIBUTING.md`](./CONTRIBUTING.md). This file is the package-by-package status reference.
 
 ## What is live right now
 
@@ -37,25 +39,30 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 | `@plurid/plurid-ui-state-react` | UI state slices | **LIVE (utilities)** | BTL | ✅ | Add reducer tests per action. |
 | `@plurid/generate-plurid-app` | scaffolding CLI | **LIVE (tooling)** | BTL | ✅ | Still scaffolds CRA — Vite rewrite pending. `--versioning` fixed. |
 | `fixtures/render-test` | CAD verification harness | **FIXTURE** | B | build-only | The engine's integration harness (port 5274). In the workspace; dev-served. |
-| `@plurid/plurid-canvas` | canvas render adapter | **LEGACY / not live** | BTL | ❌ (filtered) | In `plurid-works/*` glob but excluded from root scripts. Align to a render-adapter interface or archive. |
-| `@plurid/plurid-html` | Stencil HTML adapter | **LEGACY / not live** | BT | ❌ (filtered) | Duplicates engine math locally; not an engine consumer. Archive candidate. |
+| `@plurid/plurid-canvas` | canvas render adapter | **ARCHIVED** | — | ❌ (de-globbed) | De-globbed from the workspace (`!` in `pnpm-workspace.yaml`, 2026-06-20). Source kept on disk; out of every gate. |
+| `@plurid/plurid-html` | Stencil HTML adapter | **ARCHIVED** | — | ❌ (de-globbed) | De-globbed (`!` in `pnpm-workspace.yaml`). Stale Stencil duplicate of the engine; source kept on disk. |
 | `@plurid/plurid-pttp` (browser extension) | Chrome extension | **EXPERIMENTAL** | TL | ❌ (outside workspace) | `packages/plurid-web/plurid-browser/…`, not in workspace globs. |
 | `packages/plurid-native` | SwiftUI prototype | **EXPERIMENTAL** | — | ❌ | Prototype; tracks Xcode user-state + `.DS_Store` (should be git-ignored). |
 | `fixtures/extras/*`, `fixtures/plurid-react-*`, `…/themes-react` | generated/demo fixtures | **FIXTURE / demo** | varies | ❌ (outside workspace) | Not governed; some are generator outputs. |
 
 ## Workspace & gates
 
-- **Workspace globs** (`pnpm-workspace.yaml`): `packages/plurid-web/plurid-core/*`, `packages/plurid-web/plurid-works/*`, `packages/plurid-utilities/*`, `fixtures/render-test`. Note this **includes** canvas + html.
-- **Root scripts** (`package.json`) run `pnpm -r` with `--filter='!@plurid/plurid-canvas' --filter='!@plurid/plurid-html'`, so those two are excluded from build/test/lint. As of 2026-06-20, **root `build` + `test` + `lint` all pass**.
+- **Workspace globs** (`pnpm-workspace.yaml`): `packages/plurid-web/plurid-core/*`, `packages/plurid-web/plurid-works/*`, `packages/plurid-utilities/*`, `fixtures/render-test` — with canvas + html **de-globbed** via explicit `!` negations (so they're no longer first-class).
+- **Root scripts** (`package.json`): `build` + `test` are plain `pnpm -r` (no canvas/html filter needed anymore — they're out of the workspace). `lint` is a **single flat-config ESLint 10 pass** over the live source (`eslint.config.mjs` at the root), not `pnpm -r lint` — there are no per-package eslint configs. As of 2026-06-21, **root `build` + `test` + `lint` all pass** on React 19 / TypeScript 5.9 / jest 30 / Node 22+ (CI: Node 24).
+- **Type-check** is separate from build: `tsup`/esbuild does not type-check, so `pnpm --filter <pkg> check` (`tsc`) is the real type gate.
 - **Outside the workspace entirely**: the browser extension, the native prototype, and `fixtures/extras/*`.
 
 ## Recommended status moves
 
 - **Decide `plurid-routes-server`**: live or legacy. If legacy, mark it and drop from the primary graph.
-- **Archive `plurid-canvas` + `plurid-html`** explicitly (move under an `archive/` path or document as legacy) so the workspace glob stops implying they're first-class.
+- ✅ **Archive `plurid-canvas` + `plurid-html`** — done (2026-06-20): both de-globbed from the workspace (`!` in `pnpm-workspace.yaml`); source kept on disk. Optionally move them under an `archive/` path later.
 - **Git-ignore** native Xcode user-state + `.DS_Store`; treat the native + extension surfaces as clearly experimental.
 
 ## See also
 
+- `GETTING_STARTED.md` — install → render → configure → control (for **using** the engine).
+- `CONTRIBUTING.md` — layout, gates, the render-test harness, and how to add a seam (for **working on** it).
+- `docs/CONTROL_SURFACE.md` — the full developer-control-surface reference.
+- `examples/` — runnable references (`minimal`, `control-surface`).
 - `docs/ENGINE_AUDIT_AND_ROADMAP.md` — engine-deep audit + phased roadmap (with per-phase progress).
 - `docs/CODEBASE_DEEP_CRITIQUE.md` — repo-wide critique (governance, package shapes, product ideas).

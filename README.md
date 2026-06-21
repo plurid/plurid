@@ -15,191 +15,160 @@
 
 
 <h3 align="center">
-    explore information as a 3D structure
+    a 3D spatial engine for the web — planes are pages
 </h3>
 
 
 
-> **Current status (2026-06).** This monorepo is mid-modernization. The text below is the
-> original (2022) overview and may reference older paths/names. For what is **live today**,
-> how it fits together, and which packages are legacy/experimental, start here:
->
-> - **[`CONTEXT-MAP.md`](./CONTEXT-MAP.md)** — package map & status (what's live vs legacy/experimental).
-> - **[`docs/ENGINE_AUDIT_AND_ROADMAP.md`](./docs/ENGINE_AUDIT_AND_ROADMAP.md)** — engine audit + phased roadmap (with progress).
-> - **[`docs/CODEBASE_DEEP_CRITIQUE.md`](./docs/CODEBASE_DEEP_CRITIQUE.md)** — repo-wide critique.
->
-> **Develop:** `pnpm install`, then `pnpm build` · `pnpm test` · `pnpm lint` (all green as of 2026-06-20).
-> The engine's integration harness is `fixtures/render-test` (`pnpm --filter plurid-render-test dev`, port 5274).
+`plurid'` renders pieces of content as **planes** floating in a navigable **3D space**. A plane is just a
+component (a page, a note, a fragment); the space is a CSS-3D scene you can orbit, pan, zoom, and fly
+through. Planes can **link** to one another — following a link spawns the target as a new plane in the same
+space, so the connections between ideas stay visible instead of replacing what you were looking at.
+
+It is a transparent **engine**, not an app: it facilitates spatial navigation and arrangement, and the host
+developer decides what the app is *for*. Everything the engine does is reachable from the host through a
+layered [control surface](./docs/CONTROL_SURFACE.md) — config knobs for the common case, a pub/sub bus to
+drive and observe it, and a single `onReady` escape hatch to the raw store when you need it.
+
+Built on **CSS 3D transforms** (`perspective` + `preserve-3d` + `matrix3d`), **React 19**, and **Redux
+Toolkit** — no WebGL, no canvas. Planes are real DOM, so your content stays selectable, accessible, and
+styleable.
+
+> **Status (2026-06).** Actively developed. The engine builds, type-checks, tests, and lints green, and
+> renders + 3D-navigates on **React 19 · TypeScript 5.9 · Node 22+** (CI on Node 24). The reference
+> integration harness is `fixtures/render-test`.
 
 
 
 ### Contents
 
-+ [About](#about)
-+ [Plurid' Application](#plurid-application)
++ [Quickstart](#quickstart)
++ [The model](#the-model)
++ [Documentation](#documentation)
 + [Packages](#packages)
-+ [Codeophon](#codeophon)
++ [Develop](#develop)
++ [License](#license)
 
 
 
-## About
+## Quickstart
 
-The monorepository contains packages implementing the `plurid'` technology to transform information into a 3D explorable structure based on the [plurid specification](https://github.com/plurid/plurid/tree/master/packages/plurid-specification).
-
-With `plurid'`, a grouping of related information (such as a web page, or a fragment of one) can now reside on a `plane of content` (a `Plurid Plane`) in a three-dimensional space (a `Plurid Space`).
-
-The content of one `Plurid Plane` can be linked to another through the `Plurid Link` which at action (click, tap, hover) effectively generates a new `plane of content` in the same space.
-
-The `Plurid Space` can be transformed, rotated, scaled, translated, in order to get a better grasp of the contextual links of the displayed information (text, images, videos, and so forth).
-
-`plurid'` is being used extensively in the <a target="_blank" href="https://plurid.com/products">`plurid' ∂products`</a>.
-
-New applications leveraging the `plurid'` technology can be easily generated and developed through the [`plurid.app`](https://plurid.app/assembler) assembler or [programatically](#plurid-application).
-
-
-<p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
-</p>
-
-
-
-## Plurid' Application
-
-To generate a `plurid'` application programatically use the `Command-Line Interface` tool `@plurid/generate-plurid-app` (provided the [`NodeJS`](https://nodejs.org/en/) runtime is installed on the machine) by running the command
+Install the React adapter and its `@plurid/*` peers (see
+[`GETTING_STARTED.md`](./GETTING_STARTED.md) for the full list):
 
 ``` bash
-npx @plurid/generate-plurid-app
+npm install @plurid/plurid-react react react-dom
 ```
 
-or install the `Command-Line Interface` tool `@plurid/plurid-cli`
+Render three planes into a space:
 
-``` bash
-npm install -g @plurid/plurid-cli
+``` tsx
+import React from 'react';
+import { PluridApplication, PluridReactPlane } from '@plurid/plurid-react';
+
+const planes: PluridReactPlane[] = [
+    { route: '/one',   component: () => <div style={page}>Plane one</div> },
+    { route: '/two',   component: () => <div style={page}>Plane two</div> },
+    { route: '/three', component: () => <div style={page}>Plane three</div> },
+];
+
+const view = ['/one', '/two', '/three'];
+
+const page = { padding: 24, height: '100%', background: '#0d0f12', color: '#cfe6ff' } as const;
+
+const App = () => <PluridApplication planes={planes} view={view} />;
+
+export default App;
 ```
 
-and run
+Drag to orbit, scroll to zoom, hold **G** to grab-pan. That's the whole engine — everything else is
+opt-in. The step-by-step walkthrough (planes, views, configuration, the control surface) lives in
+**[`GETTING_STARTED.md`](./GETTING_STARTED.md)**.
 
-```
-plurid app generate
-```
 
-<p align="center">
-    <a target="_blank" href="https://youtu.be/aV7MWFDVFkk">
-        <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-app-generate.png" height="600px">
-    </a>
-</p>
 
-<p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/diagrams/plurid-generate.png" height="600px">
-</p>
+## The model
 
-A generated `plurid'` web application, or any other [configured](https://manual.plurid.com/plurid-app/deploy) web application, can be easily deployed to [`plurid.app`](https://plurid.app) using the [`plurid-cli`][plurid-cli] by simply runnning
+| Concept | What it is |
+|---|---|
+| **Plane** | A unit of content (a component) addressed by a `route`. Real DOM on a 3D-positioned surface. |
+| **Space** | The 3D scene that holds planes. Transformable: orbit / pan / zoom / fly. |
+| **View** | The list of plane routes shown initially — the starting arrangement. |
+| **Link** | A connection from one plane to another; following it spawns the target plane in the same space. |
+| **Universe / Cluster** | Higher groupings of spaces, for multi-space arrangements. |
+| **Viewpoint** | The camera state, encodable to/from a short string for share links, saved views, and tours. |
 
-``` bash
-plurid app deploy
-```
+The host stays in control: undo/redo, persistence, gestures, shortcuts, and chrome are all configurable or
+replaceable, and `onReady(api)` hands you the Redux store + pub/sub bus for anything the declarative surface
+doesn't cover. See **[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)**.
+
+
+
+## Documentation
+
+| Doc | For |
+|---|---|
+| **[`GETTING_STARTED.md`](./GETTING_STARTED.md)** | Install → render → configure → control. Start here to *use* the engine. |
+| **[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)** | The developer-control surface — `onReady`, pub/sub control & observe topics, config, storage adapter, gestures, shortcuts, UI slots. |
+| **[`examples/`](./examples)** | Runnable references: [`minimal`](./examples/minimal) (hello-world) and [`control-surface`](./examples/control-surface) (every seam in one component). |
+| **[`CONTRIBUTING.md`](./CONTRIBUTING.md)** | Monorepo layout, build/test/lint gates, the render-test harness, and how to add a config field / pub/sub topic / export. |
+| **[`CONTEXT-MAP.md`](./CONTEXT-MAP.md)** | Package map & status — what's live vs. legacy/experimental, and which gates cover each package. |
+| **[`docs/ENGINE_AUDIT_AND_ROADMAP.md`](./docs/ENGINE_AUDIT_AND_ROADMAP.md)** · **[`docs/ENGINE_FEATURE_ROADMAP.md`](./docs/ENGINE_FEATURE_ROADMAP.md)** · **[`docs/CODEBASE_DEEP_CRITIQUE.md`](./docs/CODEBASE_DEEP_CRITIQUE.md)** | Engine-deep audit, the feature roadmap (with progress), and the repo-wide critique. |
 
 
 
 ## Packages
 
+The live graph (full status in [`CONTEXT-MAP.md`](./CONTEXT-MAP.md)):
 
-[@plurid/plurid-specification][plurid-specification] • `plurid'` specification
+```
+plurid-data ──► plurid-engine ──► plurid-react ──► (your app)
+  (types,        (plane tree,      (render adapter,
+   constants)     layout, routing,   controls, links)
+                  3D math)         └► plurid-react-server (SSR / static stills)
+plurid-pubsub ──────────────────────► (host ↔ engine event bridge)
+```
 
-[plurid-specification]: https://github.com/plurid/plurid/tree/master/packages/plurid-specification
+| Package | Role |
+|---|---|
+| [`@plurid/plurid-data`](./packages/plurid-web/plurid-core/plurid-data) | Shared types, constants, enumerations. |
+| [`@plurid/plurid-engine`](./packages/plurid-web/plurid-core/plurid-engine) | Plane tree, layout, routing, 3D math. Framework-agnostic core. |
+| [`@plurid/plurid-pubsub`](./packages/plurid-web/plurid-core/plurid-pubsub) | The publish/subscribe message bus. |
+| [`@plurid/plurid-react`](./packages/plurid-web/plurid-works/plurid-react) | The primary render adapter (React). |
+| [`@plurid/plurid-react-server`](./packages/plurid-web/plurid-works/plurid-react-server) | SSR / static "stills" for the React adapter. |
+| `@plurid/plurid-{themes,icons-react,ui-components-react,ui-state-react,functions,functions-react}` | Supporting utilities. |
+| [`@plurid/generate-plurid-app`](./packages/plurid-utilities/generate-plurid-app) | Scaffolding CLI. |
 
-
-### Generate
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-cli">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-cli.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-cli][plurid-cli] • `plurid'` application life-cycle management: generation, development, deployment, maintenance
-
-[plurid-cli]: https://github.com/plurid/plurid/tree/master/packages/plurid-cli
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/generate-plurid-app">
-    <img src="https://img.shields.io/npm/v/@plurid/generate-plurid-app.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/generate-plurid-app][generate-plurid-app] • generate a `plurid'` application with one command (and some choices)
-
-[generate-plurid-app]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/generate-plurid-app
+Legacy/experimental (canvas + html adapters, native prototype, browser extension) and fixtures are listed
+in [`CONTEXT-MAP.md`](./CONTEXT-MAP.md).
 
 
 
-### Shared
+## Develop
 
+This repository is a **pnpm workspace** (pnpm 11, Node ≥ 22). From the root:
 
-#### Web
+``` bash
+pnpm install          # link the workspace
+pnpm build            # build every package (tsup: ESM + CJS + d.ts)
+pnpm test             # jest across the workspace
+pnpm lint             # one flat-config ESLint pass
+pnpm --filter @plurid/plurid-react check   # tsc type-check (build does NOT type-check)
+```
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-data">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-data.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
+Run the engine in a live browser harness:
 
-[@plurid/plurid-data][plurid-data] • constants, enumerations, interfaces
+``` bash
+pnpm --filter plurid-render-test dev       # Vite — prints the local URL (port 5273)
+```
 
-[plurid-data]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-data
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-engine">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-engine.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-engine][plurid-engine] • 3D and utility functions
-
-[plurid-engine]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-engine
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-pubsub">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-pubsub.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-pubsub][plurid-pubsub] • publish/subscribe message bus
-
-[plurid-pubsub]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-pubsub
+`fixtures/render-test` is the engine's "always rendering" gate — a CAD-style multi-plane scene used to
+verify rendering + interaction after any change. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the full
+workflow.
 
 
 
-### Implementations
+## License
 
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-html">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-html.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-html][plurid-html] • implementation for `HTML` Custom Elements
-
-[plurid-html]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-html
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-react.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-react][plurid-react] • implementation for `React`
-
-[plurid-react]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react
-
-
-
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/plurid-react-server">
-    <img src="https://img.shields.io/npm/v/@plurid/plurid-react-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/plurid-react-server][plurid-react-server] • server for the `React` implementation
-
-[plurid-react-server]: https://github.com/plurid/plurid/tree/master/packages/plurid/web/plurid-react-server
-
-
-
-## [Codeophon](https://github.com/ly3xqhl8g9/codeophon)
-
-+ licensing: [delicense](https://github.com/ly3xqhl8g9/delicense)
-+ versioning: [αver](https://github.com/ly3xqhl8g9/alpha-versioning)
+[`DEL`](./LICENSE) ([delicense](https://github.com/ly3xqhl8g9/delicense)) · versioning with
+[αver](https://github.com/ly3xqhl8g9/alpha-versioning) · [Codeophon](https://github.com/ly3xqhl8g9/codeophon).
