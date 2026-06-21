@@ -1,94 +1,94 @@
 {
-    "name": "@plurid/plurid-ui-components-react",
-    "version": "0.0.0-28",
-    "sideEffects": false,
-    "description": "Plurid User Interface Components for React",
-    "keywords": [
-        "plurid",
-        "ui",
-        "components",
-        "react"
-    ],
-    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
-    "license": "SEE LICENSE IN LICENSE",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/plurid/plurid-ui"
-    },
-    "bugs": {
-        "email": "source@plurid.com",
-        "url": "https://github.com/plurid/plurid-ui/issues"
-    },
-    "homepage": "https://github.com/plurid/plurid-ui",
-    "publishConfig": {
-        "registry": "https://registry.npmjs.org/",
-        "access": "public"
-    },
-    "files": [
-        "distribution/"
-    ],
-    "main": "distribution/index.js",
-    "module": "distribution/index.mjs",
-    "types": "distribution/index.d.ts",
-    "engines": {
-        "node": ">=18",
-        "npm": ">=6"
-    },
-    "scripts": {
-        "test": "jest -c ./configurations/jest.config.js",
-        "lint": "eslint -c ./configurations/.eslintrc.js ./source/index.ts",
-        "clean": "rm -rf ./distribution",
-        "build.development": "tsup --watch",
-        "build.production": "tsup",
-        "build": "tsup",
-        "prepublishOnly": "pnpm build"
-    },
-    "peerDependencies": {
-        "@plurid/plurid-functions": "*",
-        "@plurid/plurid-functions-react": "*",
-        "@plurid/plurid-icons-react": "*",
-        "@plurid/plurid-themes": "*",
-        "@plurid/plurid-ui-state-react": "*",
-        "@reduxjs/toolkit": ">=2",
-        "react": ">=18",
-        "react-dom": ">=18",
-        "react-redux": ">=9",
-        "styled-components": ">=5"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.22.5",
-        "@plurid/plurid-functions": "workspace:*",
-        "@plurid/plurid-functions-react": "workspace:*",
-        "@plurid/plurid-icons-react": "workspace:*",
-        "@plurid/plurid-themes": "workspace:*",
-        "@plurid/plurid-ui-state-react": "workspace:*",
-        "@reduxjs/toolkit": "^2.12.0",
-        "@types/jest": "^29.5.2",
-        "@types/node": "^20.3.3",
-        "@types/react": "^18.2.14",
-        "@types/react-dom": "^18.2.6",
-        "@types/react-redux": "^7.1.25",
-        "@types/styled-components": "^5.1.26",
-        "@typescript-eslint/eslint-plugin": "^5.60.1",
-        "@typescript-eslint/parser": "^5.60.1",
-        "eslint": "^8.44.0",
-        "immer": "^10.0.2",
-        "jest": "^29.5.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "react-redux": "^9.3.0",
-        "redux": "^5.0.1",
-        "redux-thunk": "^3.1.0",
-        "styled-components": "==5.3.10",
-        "ts-jest": "^29.1.1",
-        "typescript": "^5.9.3",
-        "tsup": "^8.5.1"
-    },
-    "exports": {
-        ".": {
-            "types": "./distribution/index.d.ts",
-            "import": "./distribution/index.mjs",
-            "require": "./distribution/index.js"
-        }
+  "name": "@plurid/plurid-ui-components-react",
+  "version": "0.0.0-28",
+  "sideEffects": false,
+  "description": "Plurid User Interface Components for React",
+  "keywords": [
+    "plurid",
+    "ui",
+    "components",
+    "react"
+  ],
+  "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plurid/plurid-ui"
+  },
+  "bugs": {
+    "email": "source@plurid.com",
+    "url": "https://github.com/plurid/plurid-ui/issues"
+  },
+  "homepage": "https://github.com/plurid/plurid-ui",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "files": [
+    "distribution/"
+  ],
+  "main": "distribution/index.js",
+  "module": "distribution/index.mjs",
+  "types": "distribution/index.d.ts",
+  "engines": {
+    "node": ">=18",
+    "npm": ">=6"
+  },
+  "scripts": {
+    "test": "jest -c ./configurations/jest.config.js",
+    "lint": "eslint -c ./configurations/.eslintrc.js ./source/index.ts",
+    "clean": "rm -rf ./distribution",
+    "build.development": "tsup --watch",
+    "build.production": "tsup",
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "@plurid/plurid-functions": "*",
+    "@plurid/plurid-functions-react": "*",
+    "@plurid/plurid-icons-react": "*",
+    "@plurid/plurid-themes": "*",
+    "@plurid/plurid-ui-state-react": "*",
+    "@reduxjs/toolkit": ">=2",
+    "react": ">=19",
+    "react-dom": ">=19",
+    "react-redux": ">=9",
+    "styled-components": ">=6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@plurid/plurid-functions": "workspace:*",
+    "@plurid/plurid-functions-react": "workspace:*",
+    "@plurid/plurid-icons-react": "workspace:*",
+    "@plurid/plurid-themes": "workspace:*",
+    "@plurid/plurid-ui-state-react": "workspace:*",
+    "@reduxjs/toolkit": "^2.12.0",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.3.3",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/react-redux": "^7.1.25",
+    "@types/styled-components": "^5.1.26",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "eslint": "^8.44.0",
+    "immer": "^10.0.2",
+    "jest": "^29.7.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-redux": "^9.3.0",
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0",
+    "styled-components": "^6.4.2",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.9.3",
+    "tsup": "^8.5.1"
+  },
+  "exports": {
+    ".": {
+      "types": "./distribution/index.d.ts",
+      "import": "./distribution/index.mjs",
+      "require": "./distribution/index.js"
     }
+  }
 }

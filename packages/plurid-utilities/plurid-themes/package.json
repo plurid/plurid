@@ -1,63 +1,63 @@
 {
-    "name": "@plurid/plurid-themes",
-    "version": "0.0.0-2",
-    "sideEffects": false,
-    "description": "Themes for Plurid Applications",
-    "keywords": [
-        "plurid",
-        "applications",
-        "themes"
-    ],
-    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
-    "license": "SEE LICENSE IN LICENSE",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/plurid/plurid-themes"
-    },
-    "bugs": {
-        "email": "source@plurid.com",
-        "url": "https://github.com/plurid/plurid-themes/issues"
-    },
-    "homepage": "https://github.com/plurid/plurid-themes",
-    "publishConfig": {
-        "registry": "https://registry.npmjs.org/",
-        "access": "public"
-    },
-    "files": [
-        "distribution/"
-    ],
-    "main": "distribution/index.js",
-    "module": "distribution/index.mjs",
-    "types": "distribution/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./distribution/index.d.ts",
-            "import": "./distribution/index.mjs",
-            "require": "./distribution/index.js"
-        }
-    },
-    "engines": {
-        "node": ">=18",
-        "npm": ">=6"
-    },
-    "scripts": {
-        "test": "jest -c ./configurations/jest.config.js source",
-        "lint": "eslint -c ./configurations/.eslintrc.js ./source/index.ts",
-        "clean": "rm -rf ./distribution",
-        "build.development": "tsup --watch",
-        "build.production": "tsup",
-        "build": "tsup",
-        "prepublishOnly": "pnpm build"
-    },
-    "devDependencies": {
-        "@types/jest": "^29.5.1",
-        "@types/node": "^20.10.6",
-        "@typescript-eslint/eslint-plugin": "^5.59.1",
-        "@typescript-eslint/parser": "^5.59.1",
-        "eslint": "^8.39.0",
-        "jest": "^29.5.0",
-        "ts-jest": "^29.1.0",
-        "tsup": "^8.5.1",
-        "typescript": "^5.9.3"
+  "name": "@plurid/plurid-themes",
+  "version": "0.0.0-2",
+  "sideEffects": false,
+  "description": "Themes for Plurid Applications",
+  "keywords": [
+    "plurid",
+    "applications",
+    "themes"
+  ],
+  "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plurid/plurid-themes"
+  },
+  "bugs": {
+    "email": "source@plurid.com",
+    "url": "https://github.com/plurid/plurid-themes/issues"
+  },
+  "homepage": "https://github.com/plurid/plurid-themes",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "files": [
+    "distribution/"
+  ],
+  "main": "distribution/index.js",
+  "module": "distribution/index.mjs",
+  "types": "distribution/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./distribution/index.d.ts",
+      "import": "./distribution/index.mjs",
+      "require": "./distribution/index.js"
     }
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=6"
+  },
+  "scripts": {
+    "test": "jest -c ./configurations/jest.config.js source",
+    "lint": "eslint -c ./configurations/.eslintrc.js ./source/index.ts",
+    "clean": "rm -rf ./distribution",
+    "build.development": "tsup --watch",
+    "build.production": "tsup",
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "eslint": "^8.39.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
 }
