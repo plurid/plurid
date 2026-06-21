@@ -34,6 +34,9 @@
 
         PluridPubSubPublishMessage,
         PluridPubSubSubscribeMessage,
+
+        PluridApi,
+        PluridStore,
         // #endregion interfaces
 
 
@@ -107,6 +110,13 @@
     import {
         usePluridRouter,
     } from './services/hooks';
+
+    // Escape-hatch primitives (Tier 3): the same building blocks the engine uses internally, so a
+    // power-user can read derived state and compute "did the arrangement change" without forking.
+    import pluridSelectors from './services/state/selectors';
+    import {
+        arrangementSignature,
+    } from './services/logic/arrangement/signature';
     // #endregion internal
 // #endregion imports
 
@@ -167,6 +177,10 @@ const Plurid = {
     /** Viewpoint */
     encodeViewpoint,
     decodeViewpoint,
+
+    /** Escape-hatch primitives */
+    selectors: pluridSelectors,
+    arrangementSignature,
 
     internals,
     // #endregion Utilities
@@ -230,6 +244,16 @@ export {
     /** state */
     pluridStateModules,
 
+    /**
+     * Escape-hatch primitives — the engine's own building blocks, for hosts building custom
+     * controls/layout: `pluridSelectors` (read derived state off the store from `onReady`) +
+     * `arrangementSignature` (the structural hash undo/collaboration agree on). Lower-level geometry
+     * (tree reconcile, location compute, interaction) lives on `@plurid/plurid-engine` (`space.tree`,
+     * `space.location`, `interaction`).
+     */
+    pluridSelectors,
+    arrangementSignature,
+
     internals,
     // #endregion Utilities
 };
@@ -269,6 +293,9 @@ export type {
 
     PluridPubSubPublishMessage,
     PluridPubSubSubscribeMessage,
+
+    PluridApi,
+    PluridStore,
 
     PluridConfiguration,
     PluridPartialConfiguration,

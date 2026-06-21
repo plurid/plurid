@@ -2,6 +2,7 @@
     // #region libraries
     import {
         PluridState,
+        PluridStorageAdapter,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -56,6 +57,30 @@ const storageKey = (
 
 
 /**
+ * The default backend: `localStorage` wrapped in the adapter shape, or `undefined` outside the
+ * browser (SSR / no storage) — in which case every persistence entry point no-ops. A caller-supplied
+ * adapter always wins over this.
+ */
+const localStorageAdapter = (): PluridStorageAdapter | undefined => {
+    if (typeof localStorage === 'undefined') {
+        return undefined;
+    }
+
+    return {
+        getItem: (key) => localStorage.getItem(key),
+        setItem: (key, value) => { localStorage.setItem(key, value); },
+        removeItem: (key) => { localStorage.removeItem(key); },
+    };
+}
+
+
+/** Resolve the effective backend: the caller's adapter, else the default localStorage one. */
+const resolveAdapter = (
+    adapter: PluridStorageAdapter | undefined,
+): PluridStorageAdapter | undefined => adapter || localStorageAdapter();
+
+
+/**
  * Build a focused, versioned snapshot of the persistable space state.
  */
 const serialize = (
@@ -80,13 +105,16 @@ const serialize = (
 
 
 /**
- * Persist the focused space snapshot to localStorage. No-op outside the browser.
+ * Persist the focused space snapshot via the storage adapter (default `localStorage`). No-op when
+ * there is no state or no available backend.
  */
 const save = (
     id: string | undefined,
     state: PluridState | undefined,
+    adapter?: PluridStorageAdapter,
 ) => {
-    if (!state || typeof localStorage === 'undefined') {
+    const store = resolveAdapter(adapter);
+    if (!state || !store) {
         return;
     }
 
@@ -111,12 +139,13 @@ const save = (
     }
 
     try {
-        localStorage.setItem(
+        store.setItem(
             storageKey(id),
             serialized,
         );
     } catch (_error) {
-        // storage may be full or disabled (private mode) — persistence is best-effort.
+        // storage may be full or disabled (private mode), or a custom adapter threw — persistence
+        // is best-effort.
     }
 }
 
@@ -129,17 +158,19 @@ const save = (
 const load = (
     id: string | undefined,
     useLocalStorage: boolean | undefined,
+    adapter?: PluridStorageAdapter,
 ): PluridState | undefined => {
     if (!useLocalStorage) {
         return;
     }
 
-    if (typeof localStorage === 'undefined') {
+    const store = resolveAdapter(adapter);
+    if (!store) {
         return;
     }
 
     try {
-        const stateData = localStorage.getItem(storageKey(id));
+        const stateData = store.getItem(storageKey(id));
         if (!stateData) {
             return;
         }
@@ -177,18 +208,20 @@ const contentKey = (
 const saveContent = (
     id: string | undefined,
     content: unknown,
+    adapter?: PluridStorageAdapter,
 ) => {
-    if (content === undefined || typeof localStorage === 'undefined') {
+    const store = resolveAdapter(adapter);
+    if (content === undefined || !store) {
         return;
     }
 
     try {
-        localStorage.setItem(
+        store.setItem(
             contentKey(id),
             JSON.stringify(content),
         );
     } catch (_error) {
-        // best-effort (storage full / disabled)
+        // best-effort (storage full / disabled / custom adapter threw)
     }
 }
 
@@ -198,13 +231,15 @@ const saveContent = (
  */
 const loadContent = (
     id: string | undefined,
+    adapter?: PluridStorageAdapter,
 ): unknown => {
-    if (typeof localStorage === 'undefined') {
+    const store = resolveAdapter(adapter);
+    if (!store) {
         return undefined;
     }
 
     try {
-        const raw = localStorage.getItem(contentKey(id));
+        const raw = store.getItem(contentKey(id));
         if (!raw) {
             return undefined;
         }

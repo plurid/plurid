@@ -19,16 +19,29 @@
 
 
 // #region module
+export interface PluridStoreOptions {
+    /** Include the spatial undo/redo history middleware. Default `true`. */
+    history?: boolean;
+}
+
+
 const store: (
     preloadedState: AppState | {},
+    options?: PluridStoreOptions,
 ) => Store<AppState> = (
     preloadedState: AppState | {},
+    options?: PluridStoreOptions,
 ) => configureStore({
     preloadedState,
     reducer,
     devTools: false,
+    // `history` defaults to true; an explicit `false` drops the middleware entirely (no per-action
+    // signature cost, no snapshot memory) — for hosts owning their own undo or never mutating the
+    // arrangement.
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(createHistoryMiddleware()),
+        options?.history === false
+            ? getDefaultMiddleware()
+            : getDefaultMiddleware().concat(createHistoryMiddleware()),
 });
 
 

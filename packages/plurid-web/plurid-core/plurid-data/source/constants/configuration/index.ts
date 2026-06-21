@@ -119,10 +119,15 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     transformTouch: TRANSFORM_TOUCHES.PAN,
     firstPerson: false,
     collaboration: false,
+    undo: true,
     viewpointURLWrite: false,
     viewpointURLRestore: false,
     viewpointURLParam: 'v',
     viewpointURLDebounce: 400,
+    timings: {
+        persistDebounce: 300,
+        viewpointChangeDebounce: 250,
+    },
     cullingDistance: PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
     bridge: {
         length: 100,

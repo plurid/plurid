@@ -26,8 +26,12 @@
     import {
         PluridApplication as PluridApplicationProperties,
         PluridState,
+        PluridApi,
+        PluridPubSub as IPluridPubSub,
         PluridPlanesRegistrar as IPluridPlanesRegistrar,
     } from '@plurid/plurid-data';
+
+    import PluridPubSub from '@plurid/plurid-pubsub';
     // #endregion libraries
 
 
@@ -76,6 +80,9 @@ class PluridApplication extends Component<
     // public context!: React.ContextType<typeof PluridProviderContext>;
 
     private store: Store<PluridState>;
+    // Own the instance pubsub (use the host's if passed, else create one) so it's the SAME bus the
+    // View subscribes its topics on AND the one handed to the host via `onReady(api)`.
+    private pubsub: IPluridPubSub;
     private storeUnubscriber: ReduxUnsubscribe | undefined;
     private persistTimeout: ReturnType<typeof setTimeout> | undefined;
     private persistDirty = false;
@@ -84,6 +91,9 @@ class PluridApplication extends Component<
     private viewpointUnsubscriber: ReduxUnsubscribe | undefined;
     private viewpointTimeout: ReturnType<typeof setTimeout> | undefined;
     private lastViewpoint: string | undefined;
+    // Resolved `space.timings` debounce windows (ms), captured once from the merged configuration.
+    private persistDebounceMs = 300;
+    private viewpointDebounceMs = 250;
     private storeID: string;
     private planesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
 
@@ -95,11 +105,28 @@ class PluridApplication extends Component<
         super(properties);
 
         this.storeID = properties.id || 'default';
+        this.pubsub = properties.pubsub || new PluridPubSub();
         // this.context = context;
 
         this.prepare();
 
-        this.store = store(this.computeStore());
+        // Build the preloaded state once, then read the resolved `space.undo` off the merged
+        // configuration to decide whether the store includes the history middleware. Default true;
+        // an explicit `space.undo: false` drops it (no per-action signature cost / snapshot memory).
+        const preloadedState = this.computeStore();
+        const resolvedSpace = (preloadedState as any)?.configuration?.space;
+        const historyEnabled = resolvedSpace?.undo !== false;
+        this.store = store(preloadedState, { history: historyEnabled });
+
+        // Resolve the tunable debounce windows once (default 300 / 250 if unset).
+        const timings = resolvedSpace?.timings;
+        if (typeof timings?.persistDebounce === 'number') {
+            this.persistDebounceMs = timings.persistDebounce;
+        }
+        if (typeof timings?.viewpointChangeDebounce === 'number') {
+            this.viewpointDebounceMs = timings.viewpointChangeDebounce;
+        }
+
         this.subscribeStore();
         this.subscribeViewpoint();
     }
@@ -110,10 +137,32 @@ class PluridApplication extends Component<
         // consumer's components exist to receive it). Counterpart to the `onPersistContent` save
         // in `persistState`; opt-in + gated on `useLocalStorage`, same as the space snapshot.
         if (this.props.useLocalStorage && this.props.onRestoreContent) {
-            const content = state.local.loadContent(this.storeID);
+            const content = state.local.loadContent(this.storeID, this.props.storageAdapter);
             if (content !== undefined) {
                 this.props.onRestoreContent(content);
             }
+        }
+
+        // The master escape hatch. Fired here (post-mount) so the View has already subscribed the
+        // pubsub control/emit topics — a host can publish on `api.pubsub` immediately. The `store`
+        // is structurally a `PluridStore` (getState/dispatch/subscribe).
+        if (this.props.onReady) {
+            this.props.onReady({
+                store: this.store,
+                pubsub: this.pubsub,
+                getSnapshot: () => this.store.getState(),
+                getViewpoint: () => {
+                    const space = this.store.getState().space;
+                    return encodeViewpoint({
+                        rotationX: space.rotationX,
+                        rotationY: space.rotationY,
+                        translationX: space.translationX,
+                        translationY: space.translationY,
+                        translationZ: space.translationZ,
+                        scale: space.scale,
+                    });
+                },
+            });
         }
     }
 
@@ -168,6 +217,7 @@ class PluridApplication extends Component<
                     <PluridView
                         {...this.props}
                         planesRegistrar={this.planesRegistrar}
+                        pubsub={this.pubsub}
                     />
                 </ReduxProvider>
             </StyleSheetManager>
@@ -208,6 +258,7 @@ class PluridApplication extends Component<
         const localState = state.local.load(
             this.storeID,
             useLocalStorage,
+            this.props.storageAdapter,
         );
 
         const contextState = undefined;
@@ -262,7 +313,7 @@ class PluridApplication extends Component<
             }
             this.persistTimeout = setTimeout(() => {
                 this.persistState();
-            }, 300);
+            }, this.persistDebounceMs);
         });
 
         // Flush the pending debounced write SYNCHRONOUSLY when the page is hidden or torn down.
@@ -326,7 +377,7 @@ class PluridApplication extends Component<
                     this.lastViewpoint = viewpoint;
                     this.props.onViewpointChange(viewpoint);
                 }
-            }, 250);
+            }, this.viewpointDebounceMs);
         });
     }
 
@@ -340,6 +391,7 @@ class PluridApplication extends Component<
         state.local.save(
             this.storeID,
             this.store.getState(),
+            this.props.storageAdapter,
         );
 
         // Opt-in CONTENT seam: ride the same debounce + pagehide flush to persist the product's
@@ -348,6 +400,7 @@ class PluridApplication extends Component<
             state.local.saveContent(
                 this.storeID,
                 this.props.onPersistContent(),
+                this.props.storageAdapter,
             );
         }
 

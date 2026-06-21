@@ -64,6 +64,8 @@ export interface FlatPluridConfiguration {
     firstPerson?: boolean;
     /** `space.collaboration` — opt in to the collaboration seam (publish/apply arrangement snapshots). */
     collaboration?: boolean;
+    /** `space.undo` — record spatial undo/redo history. ON by default; set false to drop the middleware. */
+    undo?: boolean;
     /** `space.viewpointURLWrite` — reflect the camera into the URL query param. */
     viewpointURLWrite?: boolean;
     /** `space.viewpointURLRestore` — restore the camera from the URL query param on load. */
@@ -72,12 +74,34 @@ export interface FlatPluridConfiguration {
     viewpointURLParam?: string;
     /** `space.viewpointURLDebounce` — ms to coalesce URL writes during an orbit. */
     viewpointURLDebounce?: number;
+    /** `space.timings` — tunable debounce windows (persist, viewpoint-change). */
+    timings?: PluridConfigurationSpaceTimings;
+    /** `space.gestures` — pointer-navigation sensitivities, drag threshold, momentum. */
+    gestures?: PluridConfigurationSpaceGestures;
+    /** `space.shortcuts` — disable / remap / extend the engine keyboard shortcuts. */
+    shortcuts?: PluridConfigurationSpaceShortcuts;
     /** `space.bridge.length` — parent→child gap + rendered bridge length. */
     bridgeLength?: number;
     /** `space.bridge.planeAngle` — spawned child plane angle. */
     bridgePlaneAngle?: number;
     /** `space.transformLocks` — lock a subset of the transform axes. */
     transformLocks?: RecursivePartial<PluridConfigurationSpaceTransformLocks>;
+    /** `space.opaque` — opaque space background. Default `true`. */
+    opaque?: boolean;
+    /** `space.camera` — ID of the root to point the camera at. */
+    camera?: string;
+    /** `space.transformOrigin` — show / size the transform-origin indicator. */
+    transformOrigin?: RecursivePartial<PluridConfigurationSpaceTransformOrigin>;
+    /** `space.transformMode` — restrict to one transform type, or all. */
+    transformMode?: keyof typeof TRANSFORM_MODES;
+    /** `space.transformMultimode` — allow multiple simultaneous transforms. */
+    transformMultimode?: boolean;
+    /** `space.transformTouch` — touch-gesture → transform mapping. */
+    transformTouch?: keyof typeof TRANSFORM_TOUCHES;
+    /** `space.cullingDistance` — distance beyond which planes are culled. */
+    cullingDistance?: number;
+    /** `space.fadeInTime` — plane fade-in duration (ms). */
+    fadeInTime?: number;
     // #endregion space
 
     // #region elements
@@ -221,6 +245,14 @@ export interface PluridConfigurationSpace {
     collaboration?: boolean;
 
     /**
+     * Record spatial undo/redo history (the arrangement-signature middleware). ON by default. Set
+     * `false` to drop the history middleware entirely — a host that owns its own undo, or one that
+     * never mutates the arrangement, pays neither the per-action signature cost nor the snapshot
+     * memory. When off, `space.undo` / `space.redo` (pubsub + shortcuts) are no-ops. Default `true`.
+     */
+    undo?: boolean;
+
+    /**
      * Reflect the camera viewpoint into the URL query string on every change (so a view is
      * shareable / bookmarkable). OFF by default — the engine does NOT touch the URL unless asked.
      * Independent of `viewpointURLRestore`. Default `false`.
@@ -243,6 +275,24 @@ export interface PluridConfigurationSpace {
      * during an orbit, so this coalesces the writes. Default `400`.
      */
     viewpointURLDebounce?: number;
+
+    /**
+     * Tunable debounce windows (persist, viewpoint-change). Each field defaults independently; see
+     * {@link PluridConfigurationSpaceTimings}.
+     */
+    timings?: PluridConfigurationSpaceTimings;
+
+    /**
+     * Tune pointer-navigation feel — sensitivities, drag threshold, momentum; see
+     * {@link PluridConfigurationSpaceGestures}. Read live by the gesture layer.
+     */
+    gestures?: PluridConfigurationSpaceGestures;
+
+    /**
+     * Disable / remap / extend the engine's keyboard shortcuts; see
+     * {@link PluridConfigurationSpaceShortcuts}.
+     */
+    shortcuts?: PluridConfigurationSpaceShortcuts;
 
     cullingDistance: number;
 
@@ -292,6 +342,89 @@ export interface PluridConfigurationSpaceTransformLocks {
 }
 
 
+/**
+ * Stable IDs for the engine's keyboard shortcuts — the keys of `shortcuts.disabled` / `shortcuts.keymap`.
+ * `transformNudge` is the whole arrow-key transform group (rotate/translate/scale by step).
+ */
+export type PluridShortcutID =
+    | 'undo'
+    | 'clearSelection'
+    | 'fitToView'
+    | 'toggleFirstPerson'
+    | 'modeRotation'
+    | 'modeTranslation'
+    | 'modeScale'
+    | 'transformNudge'
+    | 'focusPlane'
+    | 'focusParent'
+    | 'refreshPlane'
+    | 'isolatePlane'
+    | 'openClosedPlane'
+    | 'closePlane'
+    | 'focusPreviousRoot'
+    | 'focusNextRoot'
+    | 'cycleRoot'
+    | 'focusRootIndex';
+
+
+/**
+ * Take control of the keyboard. `disabled` drops engine shortcuts (`true` = all, or specific IDs) so
+ * a host can claim those keys; `keymap` remaps a shortcut's primary `event.code` (single-key
+ * shortcuts only — not the `transformNudge` arrows); `onUnhandledKey` receives every keydown the
+ * engine did NOT consume, so a host extends with its own bindings without fighting the engine.
+ */
+export interface PluridConfigurationSpaceShortcuts {
+    disabled?: boolean | PluridShortcutID[];
+    keymap?: Partial<Record<PluridShortcutID, string>>;
+    onUnhandledKey?: (event: KeyboardEvent) => void;
+}
+
+
+/**
+ * Tunable debounce windows (ms). The defaults coalesce per-frame churn during an orbit/zoom into a
+ * single trailing write/callback; raise them to persist/notify less often, lower them for snappier
+ * round-trips. Each field falls back to its default when omitted.
+ */
+export interface PluridConfigurationSpaceTimings {
+    /** Debounce before the space snapshot is persisted after the state settles. Default `300`. */
+    persistDebounce?: number;
+    /** Debounce before `onViewpointChange` fires after the camera settles. Default `250`. */
+    viewpointChangeDebounce?: number;
+}
+
+
+/**
+ * Tune the feel of pointer navigation — sensitivities, the click-vs-orbit threshold, and the
+ * post-orbit momentum fling. Each field defaults independently (read live, so a host can retune
+ * mid-session); omit the object entirely to keep every default.
+ */
+export interface PluridConfigurationSpaceGestures {
+    /** Orbit rotation sensitivity, degrees per pixel of drag. Default `0.22`. */
+    rotateSensitivity?: number;
+    /** Pan translation sensitivity, pixels per pixel of drag. Default `1`. */
+    translateSensitivity?: number;
+    /** Drag-to-scale sensitivity. Default `0.004`. */
+    scaleSensitivity?: number;
+    /** Two-pointer pinch-zoom sensitivity. Default `0.01`. */
+    pinchSensitivity?: number;
+    /**
+     * Fly-mode look sensitivity, degrees per pixel. Governs both drag-to-look (default `0.18`) and
+     * pointer-locked mouse-look (default `0.12`); set it to unify both.
+     */
+    flyLookSensitivity?: number;
+    /** Fly-mode planar move speed, pixels per frame (WASD). Default `9`. */
+    flySpeed?: number;
+    /** Pixels a press must travel before it becomes an orbit (below it stays a click). Default `4`. */
+    dragThreshold?: number;
+    /** Per-frame momentum velocity decay, 0–1 (lower = stops sooner). Default `0.92`. */
+    momentumDecay?: number;
+    /** Momentum halts once |velocity| drops below this. Default `0.05`. */
+    momentumMin?: number;
+    /** Disable the post-orbit momentum fling entirely (release stops dead). Default `false`. */
+    disableMomentum?: boolean;
+}
+
+
 export interface PluridConfigurationElements {
     toolbar: PluridConfigurationElementsToolbar;
     viewcube: PluridConfigurationElementsViewcube;
@@ -300,6 +433,16 @@ export interface PluridConfigurationElements {
     plane: PluridConfigurationElementsPlane;
     link: PluridConfigurationElementsLink;
     switch: PluridConfigurationElementsSwitch;
+    /** The 3D beams drawn between plane↔plane links. Shown by default; `{ show: false }` hides them. */
+    planeLinks?: PluridConfigurationElementsToggle;
+    /** The live alignment guides drawn while dragging a selection. Shown by default. */
+    alignmentGuides?: PluridConfigurationElementsToggle;
+}
+
+
+/** A minimal `{ show }` toggle for elements whose only configuration is visibility. */
+export interface PluridConfigurationElementsToggle {
+    show?: boolean;
 }
 
 

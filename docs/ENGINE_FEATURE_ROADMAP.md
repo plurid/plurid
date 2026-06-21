@@ -494,6 +494,56 @@ selection/group, the persistence + edit-focus + collab *seams*, minimap, and —
 
 ---
 
+## Developer Control Surface — DELIVERED (Tiers 0–3, all verified in the harness)
+
+Guiding principle: **Plurid is transparent infrastructure** — it facilitates 3D spatial navigation/arrangement
+and otherwise stays out of the way; the host developer decides what the app is for. So every imposed behavior
+gets an opt-out, every engine action a programmatic trigger, every state change an observation seam, and there
+is one master escape hatch for the unknown-unknowns. "Extremely powerful, yet minimal": the common 90% is a few
+consistent seams; almost no one needs the escape hatch.
+
+**Tier 0 — master escape hatch.** `onReady?: (api: PluridApi) => void` on `PluridApplication`, fired once
+post-mount. `PluridApi = { store, pubsub, getSnapshot(): PluridState, getViewpoint(): string }`. `store` is the
+raw Redux store (read any state, dispatch any action — the `pluridStateModules` action creators are exported —
+observe every change); documented as the unstable-internal power seam. Anything the engine can do, a host can.
+
+**Tier 1 — declarative pubsub surface.** Control topics: `space.fitToView`, `space.resetTransform`, `space.undo`,
+`space.redo`, `space.setTree` (+ the prior link/selection/viewpoint/collab topics). One observe channel
+`space.changed` `{ kind, value }` (`useEngineEvents`) fires on selection/tree/links/activePlane/isolate/
+layoutResolved/loading changes — subscribe once, NOT per-frame camera (that's the debounced `onViewpointChange`).
+
+**Tier 2 — opt out the always-on.**
+- `configuration.space.undo?: boolean` (default true) — false drops the history middleware entirely (store
+  factory takes `{ history }`); `undo`/`redo` become no-ops.
+- `storageAdapter?: PluridStorageAdapter` prop — redirect ALL persistence (space snapshot + content blob) to a
+  custom key→string backend (sessionStorage / in-memory / IndexedDB-mirror / encrypted); default `localStorage`.
+  Engine keeps owning serialization/versioning. Orthogonal to `useLocalStorage` (which gates *whether*).
+- `configuration.space.timings?` — `persistDebounce` (300), `viewpointChangeDebounce` (250).
+
+**Tier 3 — granular knobs + overrides + exports.**
+- `configuration.space.gestures?` — rotate/translate/scale/pinch/flyLook **sensitivities**, `dragThreshold`,
+  momentum (`momentumDecay`/`momentumMin`/`disableMomentum`), `flySpeed`. Read LIVE in `usePointerGestures`/
+  `useFlyControls`. (A `buttonMap` for left/middle/wheel→orbit|pan|zoom is the one deferred sub-item — it would
+  rework the nav-intent branching + wheel handler.)
+- `configuration.space.shortcuts?` — `disabled` (`true` = all, or `PluridShortcutID[]`), `keymap` (remap a
+  shortcut's `event.code`), `onUnhandledKey(e)`. The if-ladder was refactored into a data-driven binding table
+  (same order/conditions preserved) so disable/remap/extend + a data-generated help overlay all fall out.
+- UI **render-slots** on `PluridApplication`: `renderToolbar/renderViewcube/renderMinimap/renderShortcuts`
+  (`Container` does `slot?.() ?? <Default/>` — SUBSTITUTE, vs the `elements.*.show` flags / `global.micro` which
+  HIDE). New `elements.planeLinks?.show` + `elements.alignmentGuides?.show` (default shown).
+- **Escape-hatch exports** from `@plurid/plurid-react`: `pluridSelectors`, `arrangementSignature` (+ engine
+  `space.tree`/`space.location`/`interaction` already namespaced on `@plurid/plurid-engine`).
+- **Flat-preset completeness**: `definePluridConfiguration` now maps the previously nested-only `opaque`,
+  `camera`, `transformOrigin`, `transformMode`, `transformMultimode`, `transformTouch`, `cullingDistance`,
+  `fadeInTime` (plus all of the above), with `extend` as the catch-all.
+
+Verification: every tier was exercised in `fixtures/render-test` (the harness gained reusable, default-OFF query
+params: `undo`, `store=memory`, `persistMs`, `rotateSens`, `dragThreshold`, `scDisable`, `scRemap`, `slotToolbar`,
+`hideLinks`) plus node-level unit checks of the storage adapter + flat mapper. `pnpm build` (data→engine→react)
++ `pnpm check` green throughout.
+
+---
+
 ## Notes
 
 - Nothing here is started; this is the plan. The cheap front of the queue (#1, #5, #7) is purely additive and

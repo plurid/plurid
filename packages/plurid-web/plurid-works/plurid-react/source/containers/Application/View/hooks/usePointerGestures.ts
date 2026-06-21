@@ -100,14 +100,22 @@ export const usePointerGestures = (
             return;
         }
 
-        const ROTATE_SENSITIVITY = 0.22;   // deg per px
-        const TRANSLATE_SENSITIVITY = 1;   // px per px
-        const SCALE_DRAG_SENSITIVITY = 0.004;
-        const PINCH_SENSITIVITY = 0.01;
-        const MOMENTUM_DECAY = 0.92;
-        const MOMENTUM_MIN = 0.05;
-        const DRAG_THRESHOLD = 4;          // px before a press becomes an orbit
-        const FLY_LOOK_SENSITIVITY = 0.18; // deg per px when dragging to look in fly mode
+        // Gesture feel is read LIVE from `space.gestures` (each field with its default) so a host can
+        // retune sensitivities/threshold/momentum mid-session without re-binding the listeners.
+        const gx = () => {
+            const g = spaceConfigRef.current.gestures || {};
+            return {
+                rotate: g.rotateSensitivity ?? 0.22,        // deg per px
+                translate: g.translateSensitivity ?? 1,     // px per px
+                scale: g.scaleSensitivity ?? 0.004,
+                pinch: g.pinchSensitivity ?? 0.01,
+                flyLook: g.flyLookSensitivity ?? 0.18,      // deg per px (fly-mode look)
+                dragThreshold: g.dragThreshold ?? 4,        // px before a press becomes an orbit
+                momentumDecay: g.momentumDecay ?? 0.92,
+                momentumMin: g.momentumMin ?? 0.05,
+                disableMomentum: g.disableMomentum ?? false,
+            };
+        };
 
         const stopMomentum = () => {
             if (momentumFrame.current !== null) {
@@ -120,17 +128,18 @@ export const usePointerGestures = (
         let navWasOrbit = false;
 
         const rotateByDelta = (dx: number, dy: number) => {
+            const sensitivity = gx().rotate;
             if (dx !== 0) {
-                dispatchRotateYWith(dx * ROTATE_SENSITIVITY);
+                dispatchRotateYWith(dx * sensitivity);
             }
             if (dy !== 0) {
-                dispatchRotateXWith(-dy * ROTATE_SENSITIVITY);
+                dispatchRotateXWith(-dy * sensitivity);
             }
         };
 
         const panByDelta = (dx: number, dy: number, altKey: boolean) => {
             if (dx !== 0) {
-                dispatchTranslateXWith(dx * TRANSLATE_SENSITIVITY);
+                dispatchTranslateXWith(dx * gx().translate);
             }
             if (dy !== 0) {
                 if (altKey) {
@@ -142,7 +151,7 @@ export const usePointerGestures = (
         };
 
         const scaleByDrag = (dy: number) => {
-            const amount = Math.abs(dy) * SCALE_DRAG_SENSITIVITY;
+            const amount = Math.abs(dy) * gx().scale;
             if (amount > 0) {
                 if (dy < 0) {
                     dispatchScaleUpWith(amount);
@@ -179,9 +188,10 @@ export const usePointerGestures = (
             if (spaceConfigRef.current.firstPerson) {
                 // Fly mode: dragging looks around (yaw/pitch). When the pointer is locked the
                 // dedicated mouse-look listener takes over (clientX/Y frozen, so dx/dy here are ~0).
+                const flyLook = gx().flyLook;
                 dispatch(actions.space.flyMove({
-                    yaw: dx * FLY_LOOK_SENSITIVITY,
-                    pitch: -dy * FLY_LOOK_SENSITIVITY,
+                    yaw: dx * flyLook,
+                    pitch: -dy * flyLook,
                 }));
                 return;
             }
@@ -206,11 +216,12 @@ export const usePointerGestures = (
         };
 
         const runMomentum = () => {
+            const { momentumDecay, momentumMin } = gx();
             const m = momentum.current;
             rotateByDelta(m.vx, m.vy);
-            m.vx *= MOMENTUM_DECAY;
-            m.vy *= MOMENTUM_DECAY;
-            if (Math.abs(m.vx) < MOMENTUM_MIN && Math.abs(m.vy) < MOMENTUM_MIN) {
+            m.vx *= momentumDecay;
+            m.vy *= momentumDecay;
+            if (Math.abs(m.vx) < momentumMin && Math.abs(m.vy) < momentumMin) {
                 stopMomentum();
                 return;
             }
@@ -294,7 +305,7 @@ export const usePointerGestures = (
                 const pts = Array.from(activePointers.current.values());
                 const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
                 if (pinchDistance.current !== null) {
-                    const deltaScale = (dist - pinchDistance.current) * PINCH_SENSITIVITY;
+                    const deltaScale = (dist - pinchDistance.current) * gx().pinch;
                     if (deltaScale !== 0) {
                         const rect = element.getBoundingClientRect();
                         const originX = (pts[0].x + pts[1].x) / 2 - rect.left;
@@ -320,7 +331,7 @@ export const usePointerGestures = (
                 const moved = origin
                     ? Math.hypot(event.clientX - origin.x, event.clientY - origin.y)
                     : 0;
-                if (moved < DRAG_THRESHOLD) {
+                if (moved < gx().dragThreshold) {
                     return;
                 }
                 pointerDragging.current = true;
@@ -376,11 +387,14 @@ export const usePointerGestures = (
                 if (wasDragging && wasMoving) {
                     dispatch(actions.space.snapSelection(undefined));
                 }
-                // Only fling momentum if this was an actual orbit drag (not a click).
+                // Only fling momentum if this was an actual orbit drag (not a click), and the host
+                // hasn't disabled the fling.
                 const m = momentum.current;
+                const { momentumMin, disableMomentum } = gx();
                 if (wasDragging
                     && navWasOrbit
-                    && (Math.abs(m.vx) > MOMENTUM_MIN || Math.abs(m.vy) > MOMENTUM_MIN)) {
+                    && !disableMomentum
+                    && (Math.abs(m.vx) > momentumMin || Math.abs(m.vy) > momentumMin)) {
                     stopMomentum();
                     momentumFrame.current = requestAnimationFrame(runMomentum);
                 }

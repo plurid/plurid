@@ -10,6 +10,8 @@
 
     import {
         TreePlane,
+
+        PLURID_ENTITY_ALIGNMENT_GUIDES,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -121,7 +123,9 @@ const AlignmentGuides: React.FC<AlignmentGuidesProperties> = (
     }
 
     return (
-        <StyledAlignmentGuides>
+        <StyledAlignmentGuides
+            data-plurid-entity={PLURID_ENTITY_ALIGNMENT_GUIDES}
+        >
             {guides.map((guide, index) => (
                 <StyledAlignmentGuide
                     key={guide.axis + index}

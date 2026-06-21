@@ -69,6 +69,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
     // #region properties
     const {
         // #region state
+        stateConfiguration,
         spaceTransformMatrix,
         spaceAnimatedTransform,
         spaceTransformTime,
@@ -109,8 +110,12 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                 />
             ))}
 
-            <PluridPlaneLinks />
-            <AlignmentGuides />
+            {stateConfiguration.elements.planeLinks?.show !== false && (
+                <PluridPlaneLinks />
+            )}
+            {stateConfiguration.elements.alignmentGuides?.show !== false && (
+                <AlignmentGuides />
+            )}
         </StyledPluridRoots>
     );
     // #endregion render

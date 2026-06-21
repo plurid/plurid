@@ -575,6 +575,40 @@ export const usePluridPubSub = (
                     dispatchSetSpaceLocation(viewpoint);
                 },
             },
+            {
+                // High-value declarative control. The niche actions stay on the `onReady` api.
+                topic: PLURID_PUBSUB_TOPIC.FIT_TO_VIEW,
+                callback: () => {
+                    dispatch(actions.space.spaceFitToView());
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.RESET_TRANSFORM,
+                callback: () => {
+                    dispatch(actions.space.spaceResetTransform());
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.UNDO,
+                callback: () => {
+                    dispatch(actions.space.undo());
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.REDO,
+                callback: () => {
+                    dispatch(actions.space.redo());
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SET_TREE,
+                callback: (data) => {
+                    const tree = (data as any)?.tree;
+                    if (Array.isArray(tree)) {
+                        dispatch(actions.space.setTree(tree));
+                    }
+                },
+            },
         ];
 
         const indexes: string[] = [];

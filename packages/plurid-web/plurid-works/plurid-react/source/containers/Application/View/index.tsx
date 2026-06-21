@@ -85,6 +85,7 @@
     import useTreeUpdate from './hooks/useTreeUpdate';
     import usePluridPubSub from './hooks/usePluridPubSub';
     import useCollaboration from './hooks/useCollaboration';
+    import useEngineEvents from './hooks/useEngineEvents';
     import useViewpointURL from './hooks/useViewpointURL';
     // #endregion internal
 // #endregion imports
@@ -333,6 +334,14 @@ const PluridView: React.FC<PluridViewProperties> = (
         dispatch,
     });
 
+    // Engine→host OBSERVE channel: publish `space.changed` { kind, value } whenever a watched slice
+    // changes. Always on (publishing to a no-subscriber topic is free); the host subscribes only if it
+    // cares. Same instance pubsub as the control bridge + collaboration.
+    useEngineEvents({
+        pubsub: pluridPubSub[0],
+        state,
+    });
+
     // Optionally bind the camera viewpoint with the URL's `?<param>=` — BOTH directions opt-in
     // (default off, no URL pollution), param-name configurable.
     useViewpointURL({
@@ -359,11 +368,13 @@ const PluridView: React.FC<PluridViewProperties> = (
             event,
             stateConfiguration.space.firstPerson,
             transformLocks,
+            stateConfiguration.space.shortcuts,
         );
     }, [
         pluridPubSub,
         stateConfiguration.space.firstPerson,
         stateConfiguration.space.transformLocks,
+        stateConfiguration.space.shortcuts,
         dispatch,
     ]);
 
@@ -481,6 +492,8 @@ const PluridView: React.FC<PluridViewProperties> = (
         useFlyControls({
             viewElement,
             firstPerson: stateConfiguration.space.firstPerson,
+            flySpeed: stateConfiguration.space.gestures?.flySpeed,
+            flyLook: stateConfiguration.space.gestures?.flyLookSensitivity,
             dispatch,
         });
         // #endregion effects fly
@@ -563,7 +576,12 @@ const PluridView: React.FC<PluridViewProperties> = (
                 value={pluridContext}
             >
                 {stateSpaceView.length !== 0 ? (
-                    <PluridViewContainer />
+                    <PluridViewContainer
+                        renderToolbar={properties.renderToolbar as any}
+                        renderViewcube={properties.renderViewcube as any}
+                        renderMinimap={properties.renderMinimap as any}
+                        renderShortcuts={properties.renderShortcuts as any}
+                    />
                 ) : (
                     <></>
                 )}

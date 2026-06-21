@@ -22,6 +22,10 @@
 export interface UseFlyControlsParameters {
     viewElement: React.RefObject<HTMLDivElement>;
     firstPerson: boolean;
+    /** `space.gestures.flySpeed` — planar move speed, px/frame. Default 9. */
+    flySpeed?: number;
+    /** `space.gestures.flyLookSensitivity` — pointer-locked mouse-look, deg/px. Default 0.12. */
+    flyLook?: number;
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
 }
 
@@ -36,6 +40,8 @@ export const useFlyControls = (
     {
         viewElement,
         firstPerson,
+        flySpeed,
+        flyLook,
         dispatch,
     }: UseFlyControlsParameters,
 ) => {
@@ -48,9 +54,9 @@ export const useFlyControls = (
             return;
         }
 
-        const FLY_SPEED = 9;            // px per frame (planar)
-        const FLY_VERTICAL = 7;         // px per frame (up/down)
-        const FLY_LOOK = 0.12;          // deg per px (locked mouse-look)
+        const FLY_SPEED = flySpeed ?? 9;            // px per frame (planar)
+        const FLY_VERTICAL = (flySpeed ?? 9) * (7 / 9); // up/down scales with planar speed (default 7)
+        const FLY_LOOK = flyLook ?? 0.12;           // deg per px (locked mouse-look)
         const FLY_KEYS = new Set([
             'KeyW', 'KeyA', 'KeyS', 'KeyD',
             'KeyE', 'KeyQ', 'Space', 'ShiftLeft',
@@ -140,6 +146,8 @@ export const useFlyControls = (
     }, [
         firstPerson,
         viewElement.current,
+        flySpeed,
+        flyLook,
     ]);
 }
 // #endregion module

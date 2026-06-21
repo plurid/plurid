@@ -113,11 +113,23 @@ export const definePluridConfiguration = (
     if (flat.center !== undefined) { space.center = flat.center; }
     if (flat.firstPerson !== undefined) { space.firstPerson = flat.firstPerson; }
     if (flat.collaboration !== undefined) { space.collaboration = flat.collaboration; }
+    if (flat.undo !== undefined) { space.undo = flat.undo; }
     if (flat.viewpointURLWrite !== undefined) { space.viewpointURLWrite = flat.viewpointURLWrite; }
     if (flat.viewpointURLRestore !== undefined) { space.viewpointURLRestore = flat.viewpointURLRestore; }
     if (flat.viewpointURLParam !== undefined) { space.viewpointURLParam = flat.viewpointURLParam; }
     if (flat.viewpointURLDebounce !== undefined) { space.viewpointURLDebounce = flat.viewpointURLDebounce; }
+    if (flat.timings !== undefined) { space.timings = flat.timings; }
+    if (flat.gestures !== undefined) { space.gestures = flat.gestures; }
+    if (flat.shortcuts !== undefined) { space.shortcuts = flat.shortcuts; }
     if (flat.transformLocks !== undefined) { space.transformLocks = flat.transformLocks; }
+    if (flat.opaque !== undefined) { space.opaque = flat.opaque; }
+    if (flat.camera !== undefined) { space.camera = flat.camera; }
+    if (flat.transformOrigin !== undefined) { space.transformOrigin = flat.transformOrigin; }
+    if (flat.transformMode !== undefined) { space.transformMode = flat.transformMode; }
+    if (flat.transformMultimode !== undefined) { space.transformMultimode = flat.transformMultimode; }
+    if (flat.transformTouch !== undefined) { space.transformTouch = flat.transformTouch; }
+    if (flat.cullingDistance !== undefined) { space.cullingDistance = flat.cullingDistance; }
+    if (flat.fadeInTime !== undefined) { space.fadeInTime = flat.fadeInTime; }
     if (flat.bridgeLength !== undefined || flat.bridgePlaneAngle !== undefined) {
         space.bridge = {};
         if (flat.bridgeLength !== undefined) { space.bridge.length = flat.bridgeLength; }

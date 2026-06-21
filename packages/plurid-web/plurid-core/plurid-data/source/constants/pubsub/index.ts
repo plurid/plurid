@@ -64,6 +64,21 @@ export const PLURID_PUBSUB_TOPIC = {
     /** Programmatic camera control: a host publishes an encoded viewpoint to move/jump the camera. */
     SET_VIEWPOINT: 'space.setViewpoint',
 
+    // High-value declarative control (the niche operations are reachable via the `onReady` api). All
+    // no-data unless noted.
+    FIT_TO_VIEW: 'space.fitToView',
+    RESET_TRANSFORM: 'space.resetTransform',
+    UNDO: 'space.undo',
+    REDO: 'space.redo',
+    SET_TREE: 'space.setTree',          // data: { tree }
+
+    /**
+     * The single engine→host OBSERVE channel: published as `{ kind, value }` whenever a watched slice
+     * changes (`selection`/`tree`/`links`/`activePlane`/`isolate`/`layoutResolved`/`loading`). One
+     * subscription covers all of them — finer than diffing snapshots, lighter than N topics.
+     */
+    CHANGED: 'space.changed',
+
     SET_PLANE_PATH: 'plane.setPath',
 } as const;
 

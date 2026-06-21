@@ -12,6 +12,8 @@
         directions,
 
         PluridConfigurationSpaceTransformLocks,
+        PluridConfigurationSpaceShortcuts,
+        PluridShortcutID,
 
         PluridPubSub as IPluridPubSub,
         TransformModes,
@@ -50,6 +52,176 @@
 
 
 // #region module
+/**
+ * One keyboard shortcut. `match` replicates the original `if`-condition verbatim (so ORDER + the
+ * loose modifier checks are preserved exactly); `code` is the default `event.code` a `keymap` entry
+ * remaps; `run` performs the action (calling `ctx.prevent()` itself) and returns `false` to fall
+ * through to the next binding (used only by the arrow `transformNudge`, which no-ops when no axis is
+ * unlocked). The whole table is data so the config can disable / remap by `id` and a help overlay can
+ * generate from it.
+ */
+interface ShortcutContext {
+    dispatch: ThunkDispatch<{}, {}, AnyAction>;
+    state: AppState;
+    pubsub: IPluridPubSub;
+    event: KeyboardEvent;
+    firstPerson: boolean;
+    locks: PluridConfigurationSpaceTransformLocks;
+    noModifiers: boolean;
+    prevent: () => void;
+}
+
+interface ShortcutBinding {
+    id: PluridShortcutID;
+    /** Default `event.code` (omitted for the arrow group, whose triggers are fixed). Remappable via `keymap`. */
+    code?: string;
+    match: (event: KeyboardEvent, code: string | undefined, ctx: ShortcutContext) => boolean;
+    run: (ctx: ShortcutContext) => boolean | void;
+}
+
+
+const runTransformNudge = (ctx: ShortcutContext): boolean => {
+    const { event: e, locks, dispatch, prevent } = ctx;
+
+    if (e.key === 'ArrowRight') {
+        if (e.shiftKey && locks.rotationY) { prevent(); dispatch(actions.space.rotateLeft()); return true; }
+        if (e.altKey && locks.translationX) { prevent(); dispatch(actions.space.translateRight()); return true; }
+    }
+    if (e.key === 'ArrowLeft') {
+        if (e.shiftKey && locks.rotationY) { prevent(); dispatch(actions.space.rotateRight()); return true; }
+        if (e.altKey && locks.translationX) { prevent(); dispatch(actions.space.translateLeft()); return true; }
+    }
+    if (e.key === 'ArrowUp') {
+        if (e.shiftKey && e.altKey && locks.translationZ) { prevent(); dispatch(actions.space.translateIn()); return true; }
+        if (e.shiftKey && !e.altKey && locks.rotationX) { prevent(); dispatch(actions.space.rotateUp()); return true; }
+        if (e.altKey && !e.shiftKey && locks.translationY) { prevent(); dispatch(actions.space.translateUp()); return true; }
+        if ((e.metaKey || e.ctrlKey) && locks.scale) { prevent(); dispatch(actions.space.scaleUp()); return true; }
+    }
+    if (e.key === 'ArrowDown') {
+        if (e.shiftKey && e.altKey && locks.translationZ) { prevent(); dispatch(actions.space.translateOut()); return true; }
+        if (e.shiftKey && !e.altKey && locks.rotationX) { prevent(); dispatch(actions.space.rotateDown()); return true; }
+        if (e.altKey && !e.shiftKey && locks.translationY) { prevent(); dispatch(actions.space.translateDown()); return true; }
+        if ((e.metaKey || e.ctrlKey) && locks.scale) { prevent(); dispatch(actions.space.scaleDown()); return true; }
+    }
+    return false;
+}
+
+
+// The binding table — SAME order and SAME (deliberately loose) match conditions as the original
+// if-ladder, so first-match-wins behavior is byte-for-byte preserved. Only the surrounding
+// disable / remap / unhandled-key plumbing is new.
+const SHORTCUTS: ShortcutBinding[] = [
+    {
+        // Cmd/Ctrl+Z = undo, +Shift = redo. The `inputOnPath` guard lets an editor keep its own undo.
+        id: 'undo', code: 'KeyZ',
+        match: (e, code) => (e.metaKey || e.ctrlKey) && e.code === code,
+        run: ({ dispatch, event, prevent }) => {
+            prevent();
+            dispatch(event.shiftKey ? actions.space.redo() : actions.space.undo());
+        },
+    },
+    {
+        // Escape clears the selection — only when something is selected, so an empty Escape still
+        // reaches the host (help overlay, etc.) via `onUnhandledKey`.
+        id: 'clearSelection', code: 'Escape',
+        match: (e, code, ctx) => e.code === code && ctx.state.space.selectedPlaneIDs.length > 0,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.space.clearSelection()); },
+    },
+    {
+        // Frame all planes (CAD "fit"): Home or 0.
+        id: 'fitToView', code: 'Digit0',
+        match: (e, code, ctx) => (e.key === 'Home' || e.code === code) && ctx.noModifiers,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.space.spaceFitToView()); },
+    },
+    {
+        id: 'toggleFirstPerson', code: 'KeyF',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.toggleConfigurationSpaceFirstPerson()); },
+    },
+    {
+        id: 'modeRotation', code: 'KeyR',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.ROTATION)); },
+    },
+    {
+        id: 'modeTranslation', code: 'KeyT',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.TRANSLATION)); },
+    },
+    {
+        id: 'modeScale', code: 'KeyS',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !ctx.firstPerson,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.SCALE)); },
+    },
+    {
+        // Arrow-key transform nudges (rotate / translate / scale by step, gated on the axis locks).
+        // Falls through (returns false) when no axis matches, so a plain arrow still reaches the host.
+        id: 'transformNudge',
+        match: (e) => e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'ArrowDown',
+        run: (ctx) => runTransformNudge(ctx),
+    },
+    {
+        id: 'focusPlane', code: 'KeyF',
+        match: (e, code) => e.altKey && e.code === code,
+        run: ({ dispatch, state, prevent }) => { prevent(); focusActivePlane(dispatch, state); },
+    },
+    {
+        id: 'focusParent', code: 'KeyB',
+        match: (e, code) => e.altKey && e.code === code,
+        run: ({ dispatch, state, prevent }) => { prevent(); focusParentActivePlane(dispatch, state); },
+    },
+    {
+        id: 'refreshPlane', code: 'KeyR',
+        match: (e, code) => e.altKey && e.code === code,
+        run: ({ state, pubsub, prevent }) => { prevent(); refreshActivePlane(state, pubsub); },
+    },
+    {
+        id: 'isolatePlane', code: 'KeyE',
+        match: (e, code) => e.altKey && e.code === code,
+        run: ({ state, pubsub, prevent }) => { prevent(); isolateActivePlane(state, pubsub); },
+    },
+    {
+        id: 'openClosedPlane', code: 'KeyT',
+        match: (e, code) => e.altKey && e.shiftKey && e.code === code,
+        run: ({ pubsub, prevent }) => { prevent(); openClosedPlane(pubsub); },
+    },
+    {
+        id: 'closePlane', code: 'KeyW',
+        match: (e, code) => e.altKey && e.code === code,
+        run: ({ state, pubsub, prevent }) => { prevent(); closeActivePlane(state, pubsub); },
+    },
+    {
+        id: 'focusPreviousRoot', code: 'KeyA',
+        match: (e, code) => e.altKey && e.code === code,
+        run: ({ dispatch, state, prevent }) => { prevent(); focusPreviousRoot(dispatch, state); },
+    },
+    {
+        id: 'focusNextRoot', code: 'KeyD',
+        match: (e, code) => e.altKey && e.code === code,
+        run: ({ dispatch, state, prevent }) => { prevent(); focusNextRoot(dispatch, state); },
+    },
+    {
+        id: 'cycleRoot', code: 'Tab',
+        match: (e, code) => e.altKey && e.code === code,
+        run: ({ dispatch, state, event, prevent }) => {
+            prevent();
+            if (event.shiftKey) { focusPreviousRoot(dispatch, state); } else { focusNextRoot(dispatch, state); }
+        },
+    },
+    {
+        // Alt+Digit jumps to a root by index — `code` matching is `startsWith('Digit')`, not exact, so
+        // it ignores `keymap` (kept special).
+        id: 'focusRootIndex',
+        match: (e) => e.altKey && e.code.startsWith('Digit'),
+        run: ({ dispatch, state, event, prevent }) => {
+            prevent();
+            const index = parseInt(event.code.replace('Digit', '')) - 1;
+            focusRootIndex(dispatch, state, index);
+        },
+    },
+];
+
+
 export const handleGlobalShortcuts = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     state: AppState,
@@ -57,6 +229,7 @@ export const handleGlobalShortcuts = (
     event: KeyboardEvent,
     firstPerson: boolean,
     locks: PluridConfigurationSpaceTransformLocks,
+    shortcuts?: PluridConfigurationSpaceShortcuts,
 ) => {
     if (event.defaultPrevented) {
         return;
@@ -66,271 +239,49 @@ export const handleGlobalShortcuts = (
         dom.getEventPath(event),
     );
     if (inputOnPath) {
+        // The engine never consumes keys typed into inputs / editors; `onUnhandledKey` is deliberately
+        // NOT fired here either, so a host doesn't react to ordinary typing.
         return;
     }
 
-    const noModifiers = !event.shiftKey
-        && !event.altKey
-        && !event.ctrlKey
-        && !event.metaKey;
+    const disabledAll = shortcuts?.disabled === true;
+    const disabledSet = Array.isArray(shortcuts?.disabled)
+        ? new Set(shortcuts?.disabled)
+        : null;
+    const keymap = shortcuts?.keymap;
 
-    const handleEvent = () => {
-        event.preventDefault();
-    }
+    const ctx: ShortcutContext = {
+        dispatch,
+        state,
+        pubsub,
+        event,
+        firstPerson,
+        locks,
+        noModifiers: !event.shiftKey && !event.altKey && !event.ctrlKey && !event.metaKey,
+        prevent: () => event.preventDefault(),
+    };
 
-
-    // Undo / redo of spatial arrangement (spawn / close / open / relayout): Cmd/Ctrl+Z,
-    // Cmd/Ctrl+Shift+Z. The `inputOnPath` guard above already lets an editor keep its own undo.
-    if ((event.metaKey || event.ctrlKey) && event.code === 'KeyZ') {
-        handleEvent();
-        if (event.shiftKey) {
-            return dispatch(actions.space.redo());
-        }
-        return dispatch(actions.space.undo());
-    }
-
-
-    // Escape clears the multi-selection — but only when something is selected, so an empty Escape
-    // still reaches anything else listening for it (e.g. the help overlay).
-    if (event.code === 'Escape' && state.space.selectedPlaneIDs.length > 0) {
-        handleEvent();
-        return dispatch(actions.space.clearSelection());
-    }
-
-
-    // Fit all planes into view (CAD "frame all"): Home or 0.
-    if (
-        (event.key === 'Home' || event.code === 'Digit0')
-        && noModifiers
-    ) {
-        handleEvent();
-        return dispatch(actions.space.spaceFitToView());
-    }
-
-
-    // #region transform
-    if (
-        event.code === 'KeyF'
-        && noModifiers
-    ) {
-        handleEvent();
-        return dispatch(actions.configuration.toggleConfigurationSpaceFirstPerson());
-    }
-
-    // First-person (fly) movement is handled by the continuous rAF loop + mouse-look in
-    // the View's '#region effects fly' (smooth, held-key driven) — not discrete keydowns.
-
-
-    if (
-        event.code === 'KeyR'
-        && noModifiers
-    ) {
-        handleEvent();
-        return dispatch(
-            actions.configuration.setConfigurationSpaceTransformMode(
-                TRANSFORM_MODES.ROTATION,
-            ),
-        );
-    }
-
-    if (
-        event.code === 'KeyT'
-        && noModifiers
-    ) {
-        handleEvent();
-        return dispatch(
-            actions.configuration.setConfigurationSpaceTransformMode(
-                TRANSFORM_MODES.TRANSLATION,
-            ),
-        );
-    }
-
-    if (
-        event.code === 'KeyS'
-        && noModifiers
-        && !firstPerson
-    ) {
-        handleEvent();
-        return dispatch(
-            actions.configuration.setConfigurationSpaceTransformMode(
-                TRANSFORM_MODES.SCALE,
-            ),
-        );
-    }
-
-
-    if (event.key === 'ArrowRight') {
-        if (event.shiftKey && locks.rotationY) {
-            handleEvent();
-            return dispatch(actions.space.rotateLeft());
-        }
-        if (event.altKey && locks.translationX) {
-            handleEvent();
-            return dispatch(actions.space.translateRight());
+    if (!disabledAll) {
+        for (const binding of SHORTCUTS) {
+            if (disabledSet && disabledSet.has(binding.id)) {
+                continue;
+            }
+            const code = (keymap && keymap[binding.id]) || binding.code;
+            if (!binding.match(event, code, ctx)) {
+                continue;
+            }
+            // `run` returns `false` only when the matched binding decided not to act (the arrow
+            // nudge with every relevant axis locked) — fall through to the next binding / unhandled.
+            if (binding.run(ctx) !== false) {
+                return;
+            }
         }
     }
 
-    if (event.key === 'ArrowLeft') {
-        if (event.shiftKey && locks.rotationY) {
-            handleEvent();
-            return dispatch(actions.space.rotateRight());
-        }
-        if (event.altKey && locks.translationX) {
-            handleEvent();
-            return dispatch(actions.space.translateLeft());
-        }
+    // Nothing in the engine consumed this key — hand it to the host so it can add its own bindings.
+    if (shortcuts?.onUnhandledKey) {
+        shortcuts.onUnhandledKey(event);
     }
-
-    if (event.key === 'ArrowUp') {
-        if (event.shiftKey && event.altKey && locks.translationZ) {
-            handleEvent();
-            return dispatch(actions.space.translateIn());
-        }
-        if (event.shiftKey && !event.altKey && locks.rotationX) {
-            handleEvent();
-            return dispatch(actions.space.rotateUp());
-        }
-        if (event.altKey && !event.shiftKey && locks.translationY) {
-            handleEvent();
-            return dispatch(actions.space.translateUp());
-        }
-        if ((event.metaKey || event.ctrlKey) && locks.scale) {
-            handleEvent();
-            return dispatch(actions.space.scaleUp());
-        }
-    }
-
-    if (event.key === 'ArrowDown') {
-        if (event.shiftKey && event.altKey && locks.translationZ) {
-            handleEvent();
-            return dispatch(actions.space.translateOut());
-        }
-        if (event.shiftKey && !event.altKey && locks.rotationX) {
-            handleEvent();
-            return dispatch(actions.space.rotateDown());
-        }
-        if (event.altKey && !event.shiftKey && locks.translationY) {
-            handleEvent();
-            return dispatch(actions.space.translateDown());
-        }
-        if ((event.metaKey || event.ctrlKey) && locks.scale) {
-            handleEvent();
-            return dispatch(actions.space.scaleDown());
-        }
-    }
-    // #endregion transform
-
-
-    // #region plane
-    if (event.altKey && event.code === 'KeyF') {
-        handleEvent();
-        focusActivePlane(
-            dispatch,
-            state,
-        );
-        return;
-    }
-
-    if (event.altKey && event.code === 'KeyB') {
-        handleEvent();
-        focusParentActivePlane(
-            dispatch,
-            state,
-        );
-        return;
-    }
-
-    if (event.altKey && event.code === 'KeyR') {
-        handleEvent();
-        refreshActivePlane(
-            state,
-            pubsub,
-        );
-        return;
-    }
-
-    if (event.altKey && event.code === 'KeyE') {
-        handleEvent();
-        isolateActivePlane(
-            state,
-            pubsub,
-        );
-        return;
-    }
-
-    if (event.altKey && event.shiftKey && event.code === 'KeyT') {
-        handleEvent();
-        openClosedPlane(
-            pubsub,
-        );
-        return;
-    }
-
-    if (event.altKey && event.code === 'KeyW') {
-        handleEvent();
-        closeActivePlane(
-            state,
-            pubsub,
-        );
-        return;
-    }
-    // #endregion plane
-
-
-    // #region focus
-    if (event.altKey && event.code === 'KeyA') {
-        handleEvent();
-        focusPreviousRoot(
-            dispatch,
-            state,
-        );
-        return;
-    }
-
-    if (event.altKey && event.code === 'KeyD') {
-        handleEvent();
-        focusNextRoot(
-            dispatch,
-            state,
-        );
-        return;
-    }
-
-    if (event.altKey && event.code === 'Tab') {
-        handleEvent();
-
-        if (event.shiftKey) {
-            focusPreviousRoot(
-                dispatch,
-                state,
-            );
-        } else {
-            focusNextRoot(
-                dispatch,
-                state,
-            );
-        }
-
-        return;
-    }
-
-
-    if (event.altKey && event.code.startsWith('Digit')) {
-        handleEvent();
-
-        const index = parseInt(event.code.replace('Digit', '')) - 1;
-
-        focusRootIndex(
-            dispatch,
-            state,
-            index,
-        );
-        return;
-    }
-    // #endregion focus
-
-
-    return;
 }
 
 

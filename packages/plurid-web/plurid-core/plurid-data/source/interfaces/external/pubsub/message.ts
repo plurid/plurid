@@ -512,6 +512,74 @@ export interface PluridPubSubSubscribeMessageSetViewpoint {
 }
 
 
+// No-data declarative control.
+export interface PluridPubSubPublishMessageFitToView {
+    topic: typeof PLURID_PUBSUB_TOPIC.FIT_TO_VIEW;
+    data?: any;
+}
+export interface PluridPubSubSubscribeMessageFitToView {
+    topic: typeof PLURID_PUBSUB_TOPIC.FIT_TO_VIEW;
+    callback: PluridPubSubCallback<any>;
+}
+export interface PluridPubSubPublishMessageResetTransform {
+    topic: typeof PLURID_PUBSUB_TOPIC.RESET_TRANSFORM;
+    data?: any;
+}
+export interface PluridPubSubSubscribeMessageResetTransform {
+    topic: typeof PLURID_PUBSUB_TOPIC.RESET_TRANSFORM;
+    callback: PluridPubSubCallback<any>;
+}
+export interface PluridPubSubPublishMessageUndo {
+    topic: typeof PLURID_PUBSUB_TOPIC.UNDO;
+    data?: any;
+}
+export interface PluridPubSubSubscribeMessageUndo {
+    topic: typeof PLURID_PUBSUB_TOPIC.UNDO;
+    callback: PluridPubSubCallback<any>;
+}
+export interface PluridPubSubPublishMessageRedo {
+    topic: typeof PLURID_PUBSUB_TOPIC.REDO;
+    data?: any;
+}
+export interface PluridPubSubSubscribeMessageRedo {
+    topic: typeof PLURID_PUBSUB_TOPIC.REDO;
+    callback: PluridPubSubCallback<any>;
+}
+
+export interface PluridPubSubMessageSetTree {
+    tree: TreePlane[];
+}
+export interface PluridPubSubPublishMessageSetTree {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_TREE;
+    data: PluridPubSubMessageSetTree;
+}
+export interface PluridPubSubSubscribeMessageSetTree {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_TREE;
+    callback: PluridPubSubCallback<PluridPubSubMessageSetTree>;
+}
+
+export type PluridChangeKind =
+    | 'selection'
+    | 'tree'
+    | 'links'
+    | 'activePlane'
+    | 'isolate'
+    | 'layoutResolved'
+    | 'loading';
+export interface PluridPubSubMessageChanged {
+    kind: PluridChangeKind;
+    value: any;
+}
+export interface PluridPubSubPublishMessageChanged {
+    topic: typeof PLURID_PUBSUB_TOPIC.CHANGED;
+    data: PluridPubSubMessageChanged;
+}
+export interface PluridPubSubSubscribeMessageChanged {
+    topic: typeof PLURID_PUBSUB_TOPIC.CHANGED;
+    callback: PluridPubSubCallback<PluridPubSubMessageChanged>;
+}
+
+
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
     | PluridPubSubPublishMessageSpaceAnimatedTransform
@@ -558,6 +626,12 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageCollaborationMutation
     | PluridPubSubPublishMessageApplyRemoteMutation
     | PluridPubSubPublishMessageSetViewpoint
+    | PluridPubSubPublishMessageFitToView
+    | PluridPubSubPublishMessageResetTransform
+    | PluridPubSubPublishMessageUndo
+    | PluridPubSubPublishMessageRedo
+    | PluridPubSubPublishMessageSetTree
+    | PluridPubSubPublishMessageChanged
     ;
 
 
@@ -607,5 +681,11 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageCollaborationMutation
     | PluridPubSubSubscribeMessageApplyRemoteMutation
     | PluridPubSubSubscribeMessageSetViewpoint
+    | PluridPubSubSubscribeMessageFitToView
+    | PluridPubSubSubscribeMessageResetTransform
+    | PluridPubSubSubscribeMessageUndo
+    | PluridPubSubSubscribeMessageRedo
+    | PluridPubSubSubscribeMessageSetTree
+    | PluridPubSubSubscribeMessageChanged
     ;
 // #endregion module

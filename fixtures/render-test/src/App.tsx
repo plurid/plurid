@@ -80,6 +80,59 @@ const App = () => {
 
     const source = stress ? STRESS_PANELS : PANELS;
 
+    // Tier 2 opt-out verification surface (default behavior unchanged — all opt-in via query params):
+    //   ?undo=0          → space.undo:false (drop the history middleware)
+    //   ?store=memory    → route persistence to an in-memory adapter (window.__rtStore), not localStorage
+    //   ?persistMs=80    → space.timings.persistDebounce override
+    const params = typeof location !== 'undefined'
+        ? new URLSearchParams(location.search)
+        : new URLSearchParams();
+    const undoOff = params.get('undo') === '0';
+    const memoryStore = params.get('store') === 'memory';
+    const persistMs = params.get('persistMs') ? Number(params.get('persistMs')) : undefined;
+    // Gesture-feel overrides (Tier 3): ?rotateSens=0.44&dragThreshold=0
+    const rotateSens = params.get('rotateSens') ? Number(params.get('rotateSens')) : undefined;
+    const dragThreshold = params.get('dragThreshold') !== null ? Number(params.get('dragThreshold')) : undefined;
+    const gestures = (rotateSens !== undefined || dragThreshold !== undefined)
+        ? {
+            ...(rotateSens !== undefined ? { rotateSensitivity: rotateSens } : {}),
+            ...(dragThreshold !== undefined ? { dragThreshold } : {}),
+        }
+        : undefined;
+    // Shortcut config (Tier 3): ?scDisable=all | ?scDisable=modeRotation,modeScale | ?scRemap=modeRotation:KeyP
+    // onUnhandledKey is ALWAYS wired to a window collector so a test can assert it fires.
+    const scDisableRaw = params.get('scDisable');
+    const scDisabled = scDisableRaw === 'all'
+        ? true
+        : (scDisableRaw ? scDisableRaw.split(',') as any : undefined);
+    const scRemapRaw = params.get('scRemap');
+    const scKeymap = scRemapRaw
+        ? Object.fromEntries(scRemapRaw.split(',').map((pair) => pair.split(':'))) as any
+        : undefined;
+    const shortcuts = {
+        ...(scDisabled !== undefined ? { disabled: scDisabled } : {}),
+        ...(scKeymap ? { keymap: scKeymap } : {}),
+        onUnhandledKey: (event: KeyboardEvent) => {
+            const log: string[] = ((window as any).__rtUnhandled = (window as any).__rtUnhandled || []);
+            log.push(event.code);
+        },
+    };
+    // Tier 3 UI overrides: ?slotToolbar=1 (custom toolbar render-slot) · ?hideLinks=1 (hide plane links)
+    const slotToolbar = params.get('slotToolbar') === '1';
+    const hideLinks = params.get('hideLinks') === '1';
+
+    // A throwaway in-memory backend so a test can confirm writes land HERE (not localStorage).
+    const memoryAdapter = React.useMemo(() => {
+        if (!memoryStore) return undefined;
+        const map: Map<string, string> = ((window as any).__rtStore =
+            (window as any).__rtStore || new Map());
+        return {
+            getItem: (k: string) => (map.has(k) ? map.get(k)! : null),
+            setItem: (k: string, v: string) => { map.set(k, v); },
+            removeItem: (k: string) => { map.delete(k); },
+        };
+    }, [memoryStore]);
+
     // Built with the flat-config shorthand (`definePluridConfiguration`) rather than the full
     // 5-level nested object — exercises that API end-to-end and doubles as its usage example.
     const configuration = definePluridConfiguration({
@@ -92,6 +145,15 @@ const App = () => {
         bridgeLength: 160,
         // Opt-in 2D overview (engine feature #7).
         minimap: true,
+        // Tier 2 opt-outs (only set when the query param is present, else default).
+        ...(undoOff ? { undo: false } : {}),
+        ...(persistMs !== undefined ? { timings: { persistDebounce: persistMs } } : {}),
+        // Tier 3 gesture-feel overrides.
+        ...(gestures ? { gestures } : {}),
+        // Tier 3 shortcut control (onUnhandledKey always on; disabled/keymap via params).
+        shortcuts,
+        // Tier 3 element show-flags (nested via `extend`).
+        ...(hideLinks ? { extend: { elements: { planeLinks: { show: false }, alignmentGuides: { show: false } } } } : {}),
     });
 
     // A plane registered but NOT in the initial `view` — a plurid link spawns it into the
@@ -191,11 +253,23 @@ const App = () => {
                 configuration={configuration}
                 planes={planes}
                 view={view}
-                useLocalStorage={persist}
+                useLocalStorage={persist || memoryStore}
+                storageAdapter={memoryAdapter}
                 id={'rt-' + layoutKey + (stress ? '-stress' : '')}
                 onPersistContent={() => (window as any).__rtContent}
                 onRestoreContent={(c) => { (window as any).__rtRestored = c; }}
                 onViewpointChange={(v) => { (window as any).__rtViewpoint = v; }}
+                onReady={(api) => { (window as any).__pluridApi = api; }}
+                renderToolbar={slotToolbar
+                    ? () => (
+                        <div
+                            id="rt-custom-toolbar"
+                            style={{ position: 'fixed', bottom: 12, left: 12, zIndex: 9999, color: '#7ee787' }}
+                        >
+                            CUSTOM TOOLBAR
+                        </div>
+                    )
+                    : undefined}
             />
         </>
     );

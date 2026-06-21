@@ -11,6 +11,8 @@
     import {
         PlaneLink,
         TreePlane,
+
+        PLURID_ENTITY_PLANE_LINKS,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -134,7 +136,9 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
     });
 
     return (
-        <StyledPluridPlaneLinks>
+        <StyledPluridPlaneLinks
+            data-plurid-entity={PLURID_ENTITY_PLANE_LINKS}
+        >
             {beams}
         </StyledPluridPlaneLinks>
     );

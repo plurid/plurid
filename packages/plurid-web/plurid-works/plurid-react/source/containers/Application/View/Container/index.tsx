@@ -18,20 +18,36 @@
 
 // #region module
 export interface PluridViewContainerProperties {
+    /**
+     * Optional render-slots — when provided, each REPLACES the engine's default overlay (rendered at
+     * the same spot). Omit to keep the default. The `elements.*.show` flags / `global.micro` still
+     * apply to the defaults; a slot bypasses them entirely (the host owns that element).
+     */
+    renderToolbar?: () => unknown;
+    renderViewcube?: () => unknown;
+    renderMinimap?: () => unknown;
+    renderShortcuts?: () => unknown;
 }
 
 const PluridViewContainer: React.FC<PluridViewContainerProperties> = (
-    _properties,
+    properties,
 ) => {
+    const {
+        renderToolbar,
+        renderViewcube,
+        renderMinimap,
+        renderShortcuts,
+    } = properties;
+
     // #region render
     return (
         <>
             <PluridSpace />
             <PluridOrigin />
-            <PluridToolbar />
-            <PluridViewcube />
-            <PluridMinimap />
-            <PluridShortcuts />
+            {renderToolbar ? renderToolbar() as React.ReactNode : <PluridToolbar />}
+            {renderViewcube ? renderViewcube() as React.ReactNode : <PluridViewcube />}
+            {renderMinimap ? renderMinimap() as React.ReactNode : <PluridMinimap />}
+            {renderShortcuts ? renderShortcuts() as React.ReactNode : <PluridShortcuts />}
         </>
     );
     // #endregion render
