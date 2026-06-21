@@ -47,6 +47,10 @@ export const PLURID_PUBSUB_TOPIC = {
     NEXT_ROOT: 'space.nextRoot',
     NAVIGATE_TO_ROOT: 'space.navigateToRoot',
 
+    ADD_PLANE_LINK: 'space.addPlaneLink',
+    REMOVE_PLANE_LINK: 'space.removePlaneLink',
+    SET_PLANE_LINKS: 'space.setPlaneLinks',
+
     SET_PLANE_PATH: 'plane.setPath',
 } as const;
 

@@ -3,6 +3,7 @@
     import {
         PluridStateSpace,
         LinkCoordinates,
+        PlaneLink,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -51,5 +52,10 @@ export interface SetTransformPayload {
 export interface UpdateSpaceLinkCoordinatesPayload {
     planeID: string;
     linkCoordinates: LinkCoordinates;
+}
+
+export interface UpdatePlaneLinkPayload {
+    id: string;
+    update: Partial<Omit<PlaneLink, 'id'>>;
 }
 // #endregion module

@@ -32,8 +32,21 @@
 >   `state.space.tree`, so the stacks are memory-cheap; history is closure-local (never persisted, never
 >   rendered). Harness-verified: spawn→undo→redo, close→undo→reopen→redo, and the keyboard path.
 >
-> **Next:** #3 inter-plane graph + 3D edges (the differentiator), then #4 selection/group, #6 collab
-> seam, #8 WebXR.
+> - **#3 Inter-plane link graph + 3D edges** — a separate `links: PlaneLink[]` adjacency list on space
+>   state (independent of the parent→child `tree`), with `addPlaneLink`/`removePlaneLink`/
+>   `updatePlaneLink`/`setPlaneLinks` reducers, memoized `getPlaneLinks`/`makeGetBacklinks`/
+>   `makeGetLinksForPlane` selectors, persistence (`links` in `PERSISTED_SPACE_FIELDS`, version→2), and a
+>   **public pubsub seam** (`space.addPlaneLink`/`removePlaneLink`/`setPlaneLinks`) so a host manages the
+>   graph the same way it closes planes. Rendered as true-3D CSS **beams** (`components/structural/
+>   PlaneLinks`): a single edges layer inside `StyledPluridRoots` (the camera frame) draws one
+>   `computeEdgeTransform(a,b)` beam per link between plane centres — so edges ride the camera matrix and
+>   stay attached under orbit with **zero per-frame JS** (verified: the beam's local transform is constant
+>   while its screen rect tracks the orbit). Edges to a closed/absent plane simply don't draw. Harness-
+>   verified: add→edge attached through orbit, `getBacklinks` (in 3a), survives reload, pubsub add/remove.
+>
+> **Next:** #4 selection/group/snap, then #6 collab seam, #8 WebXR. (Backlinks *panel* UI + a host
+> drag-to-link gesture are product-side — the engine ships the `getBacklinks` selector + the edges + the
+> seam.)
 
 ## Governing principle — engine primitive vs product work
 
@@ -59,7 +72,7 @@ Front-load the cheap, purely-additive wins; defer the two big lifts and the rewr
 | 2 ✅ | [Content-persistence + editor-focus seams](#5-two-enabling-seams-content-persistence--editor-focus) | Small | Unblocks product authoring without the engine owning content |
 | 3 ✅ | [Spatial undo/redo](#2-spatial-undoredo) | Med | Table-stakes once users author the space |
 | 4 ✅ | [Minimap / overview](#7-minimap--overview) | Small→Med | Cheap delight; orientation in big spaces |
-| 5 | [Inter-plane link graph + 3D edges](#3-inter-plane-link-graph--3d-edges) | Large | The differentiator |
+| 5 ✅ | [Inter-plane link graph + 3D edges](#3-inter-plane-link-graph--3d-edges) | Large | The differentiator |
 | 6 | [Spatial selection: multi-select / group / snap](#4-spatial-selection-multi-select--group--snapping) | Med→Large | Authoring of arrangement |
 | 7 | [Collaboration seam](#6-collaboration-seam) | Med→Large | Makes multiplayer pluggable |
 | 8 | [WebXR renderer](#8-webxr-renderer) | Large | Frontier / R&D; near-rewrite of rendering |
@@ -163,13 +176,36 @@ undo reopens it.
 
 ---
 
-## 3. Inter-plane link graph + 3D edges
+## 3. Inter-plane link graph + 3D edges  ✅ DELIVERED (2026-06-21)
 *Effort: Large — the differentiator*
 
 **Goal.** Model **arbitrary** plane↔plane relationships (not just parent→child), render them as 3D edges in
 the space, and surface **backlinks**. "Spatial + linked" is the genuinely novel combination (Obsidian's graph,
 but you live inside it). Today only the parent→child hierarchy is modeled, and only the parent→child connector
 is drawn.
+
+> **Delivered.** State: `links: PlaneLink[]` (`{id, sourcePlaneID, targetPlaneID, kind?, sourceAnchor?,
+> targetAnchor?}`) on space state, separate from `tree` (links cross the tree). Reducers `addPlaneLink`
+> (dedupes by id and by source+target+kind) / `removePlaneLink` / `updatePlaneLink` / `setPlaneLinks`.
+> Memoized selectors `getPlaneLinks`, `makeGetBacklinks(planeID)`, `makeGetLinksForPlane(planeID)`.
+> Persisted (`links` added to `PERSISTED_SPACE_FIELDS`; `PERSISTED_STATE_VERSION` 1→2; `resolveSpace`
+> defaults `links: []` so a fresh load can't crash). **Public seam:** pubsub topics `space.addPlaneLink`
+> / `space.removePlaneLink` / `space.setPlaneLinks` (typed message interfaces + bridge handlers in
+> `usePluridPubSub`) — a host manages the graph exactly as it closes planes.
+>
+> **Rendering — chose the CSS-3D beam (option ii), not the SVG overlay.** `components/structural/PlaneLinks`
+> renders ONE edges layer inside `StyledPluridRoots` (the element that carries the camera matrix), as a
+> `preserve-3d`, `pointer-events:none` sibling of the roots. Because every plane is `position:absolute` at
+> the shared roots origin, all plane `location`s live in one frame; `computeEdgeTransform(a,b)` builds a thin
+> beam (`translate3d` to centre A, then `rotateY(atan2(-dz,dx)) rotateZ(atan2(dy,dxz))`, width = ‖B−A‖) that
+> connects plane **centres**. The beam's transform is in space-local coords, so it **rides the camera matrix
+> on the parent** — orbits with the planes, zero per-frame JS (verified: local transform constant, screen rect
+> tracks the orbit). An edge whose endpoint is closed/absent draws nothing and reappears when both return.
+> `React.memo` + memoized inputs keep the layer from re-rendering on orbit frames.
+>
+> *Deferred (product-side): a backlinks list **panel** (needs note titles → product), a drag-from-A-to-B
+> create gesture, and edge styling by `kind`. Undo currently covers `tree` mutations, not link mutations —
+> extend the history signature to fold in `links` if link edits should be undoable.*
 
 **Seams.**
 - `TreePlane` (`parentPlaneID`, `children`, `linkCoordinates`, `bridgeLength`, `planeAngle`) at

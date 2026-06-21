@@ -7,6 +7,10 @@
     import {
         PluridPartialConfiguration,
     } from '~interfaces/external/configuration';
+
+    import {
+        PlaneLink,
+    } from '~interfaces/internal/tree';
     // #endregion external
 // #endregion imports
 
@@ -396,6 +400,40 @@ export interface PluridPubSubSubscribeMessageSetPlanePath {
 }
 
 
+export interface PluridPubSubPublishMessageAddPlaneLink {
+    topic: typeof PLURID_PUBSUB_TOPIC.ADD_PLANE_LINK;
+    data: PlaneLink;
+}
+export interface PluridPubSubSubscribeMessageAddPlaneLink {
+    topic: typeof PLURID_PUBSUB_TOPIC.ADD_PLANE_LINK;
+    callback: PluridPubSubCallback<PlaneLink>;
+}
+
+export interface PluridPubSubMessageRemovePlaneLink {
+    id: string;
+}
+export interface PluridPubSubPublishMessageRemovePlaneLink {
+    topic: typeof PLURID_PUBSUB_TOPIC.REMOVE_PLANE_LINK;
+    data: PluridPubSubMessageRemovePlaneLink;
+}
+export interface PluridPubSubSubscribeMessageRemovePlaneLink {
+    topic: typeof PLURID_PUBSUB_TOPIC.REMOVE_PLANE_LINK;
+    callback: PluridPubSubCallback<PluridPubSubMessageRemovePlaneLink>;
+}
+
+export interface PluridPubSubMessageSetPlaneLinks {
+    links: PlaneLink[];
+}
+export interface PluridPubSubPublishMessageSetPlaneLinks {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_PLANE_LINKS;
+    data: PluridPubSubMessageSetPlaneLinks;
+}
+export interface PluridPubSubSubscribeMessageSetPlaneLinks {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_PLANE_LINKS;
+    callback: PluridPubSubCallback<PluridPubSubMessageSetPlaneLinks>;
+}
+
+
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
     | PluridPubSubPublishMessageSpaceAnimatedTransform
@@ -433,6 +471,9 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageNextRoot
     | PluridPubSubPublishMessageNavigateToRoot
     | PluridPubSubPublishMessageSetPlanePath
+    | PluridPubSubPublishMessageAddPlaneLink
+    | PluridPubSubPublishMessageRemovePlaneLink
+    | PluridPubSubPublishMessageSetPlaneLinks
     ;
 
 
@@ -473,5 +514,8 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageNextRoot
     | PluridPubSubSubscribeMessageNavigateToRoot
     | PluridPubSubSubscribeMessageSetPlanePath
+    | PluridPubSubSubscribeMessageAddPlaneLink
+    | PluridPubSubSubscribeMessageRemovePlaneLink
+    | PluridPubSubSubscribeMessageSetPlaneLinks
     ;
 // #endregion module

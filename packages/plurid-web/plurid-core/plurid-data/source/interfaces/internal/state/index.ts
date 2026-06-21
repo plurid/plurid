@@ -17,6 +17,7 @@
 
     import {
         TreePlane,
+        PlaneLink,
     } from '../tree';
 
     import {
@@ -58,6 +59,8 @@ export interface PluridStateSpace {
     translationZ: number;
     transform: string;
     tree: TreePlane[];
+    /** Arbitrary plane↔plane relationships, independent of the parent→child `tree`. */
+    links: PlaneLink[];
     activeUniverseID: string;
     camera: Coordinates;
     viewSize: ViewSize;

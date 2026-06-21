@@ -6,6 +6,7 @@
 
     import {
         TreePlane,
+        PlaneLink,
         SpaceTransform,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -114,4 +115,39 @@ export const makeGetTreePlaneByID = () => createSelector(
     ],
     (index, planeID) => (planeID ? index.get(planeID) : undefined),
 );
+
+
+// #region link graph
+export const getPlaneLinks = (state: AppState): PlaneLink[] => state.space.links;
+
+/**
+ * Factory for a memoized "links pointing TO this plane" selector (backlinks). One per connected
+ * component (via `connect`'s `makeMapStateToProps` form). Recomputes only when `links` or the id
+ * changes — NOT during the per-frame transform dispatches of an orbit (which leave `links` alone).
+ */
+export const makeGetBacklinks = () => createSelector(
+    [
+        getPlaneLinks,
+        (_state: AppState, planeID: string | undefined) => planeID,
+    ],
+    (links, planeID) => (planeID
+        ? links.filter(link => link.targetPlaneID === planeID)
+        : []),
+);
+
+/**
+ * Factory for a memoized "all edges incident to this plane" selector (either direction).
+ */
+export const makeGetLinksForPlane = () => createSelector(
+    [
+        getPlaneLinks,
+        (_state: AppState, planeID: string | undefined) => planeID,
+    ],
+    (links, planeID) => (planeID
+        ? links.filter(link =>
+            link.sourcePlaneID === planeID
+            || link.targetPlaneID === planeID)
+        : []),
+);
+// #endregion link graph
 // #endregion module

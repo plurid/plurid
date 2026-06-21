@@ -13,7 +13,7 @@
  * Bump when the persisted shape changes. A stored snapshot with a different version is
  * ignored on load (falls back to a fresh space) rather than risking a partial mis-merge.
  */
-const PERSISTED_STATE_VERSION = 1;
+const PERSISTED_STATE_VERSION = 2;
 
 const STORAGE_PREFIX = 'pluridState-';
 
@@ -42,6 +42,7 @@ const PERSISTED_SPACE_FIELDS = [
     'isolatePlane',
     'lastClosedPlane',
     'tree',
+    'links',
 ] as const;
 
 interface PersistedSnapshot {

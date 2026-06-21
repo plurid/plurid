@@ -22,6 +22,7 @@
 
         PluridStateSpace,
         TreePlane,
+        PlaneLink,
         SpaceLocation,
         PluridApplicationView,
     } from '@plurid/plurid-data';
@@ -48,6 +49,7 @@
         SetSpaceFieldPayload,
         SetTransformPayload,
         UpdateSpaceLinkCoordinatesPayload,
+        UpdatePlaneLinkPayload,
     } from './types';
 
     import * as selectors from './selectors';
@@ -75,6 +77,7 @@ const initialState: PluridStateSpace = {
     translationY: 0,
     translationZ: 0,
     tree: [],
+    links: [],
     activeUniverseID: '',
     camera: {
         x: 0,
@@ -623,6 +626,53 @@ export const space = createSlice({
             );
             state.tree = updatedTree;
         },
+
+        // #region link graph
+        // Arbitrary plane↔plane relationships, kept separate from the parent→child `tree`.
+        addPlaneLink: (
+            state,
+            action: PayloadAction<PlaneLink>,
+        ) => {
+            const link = action.payload;
+            const exists = state.links.some(existing =>
+                existing.id === link.id
+                || (existing.sourcePlaneID === link.sourcePlaneID
+                    && existing.targetPlaneID === link.targetPlaneID
+                    && existing.kind === link.kind)
+            );
+            if (!exists) {
+                state.links.push(link);
+            }
+        },
+        removePlaneLink: (
+            state,
+            action: PayloadAction<string>,
+        ) => {
+            state.links = state.links.filter(
+                link => link.id !== action.payload,
+            );
+        },
+        updatePlaneLink: (
+            state,
+            action: PayloadAction<UpdatePlaneLinkPayload>,
+        ) => {
+            const {
+                id,
+                update,
+            } = action.payload;
+            const link = state.links.find(link => link.id === id);
+            if (link) {
+                Object.assign(link, update);
+            }
+        },
+        setPlaneLinks: (
+            state,
+            action: PayloadAction<PlaneLink[]>,
+        ) => {
+            state.links = action.payload;
+        },
+        // #endregion link graph
+
         // No-op markers — the history middleware intercepts `space/undo` + `space/redo` and does the
         // real work (re-dispatching `setTree` with a snapshot). Defined here only so RTK generates
         // the `undo()` / `redo()` action creators + their types.

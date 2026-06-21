@@ -491,6 +491,39 @@ export const usePluridPubSub = (
                     );
                 },
             },
+            {
+                // Public seam for a host to manage the inter-plane link graph. `data` is the
+                // `PlaneLink` (must carry `id`, `sourcePlaneID`, `targetPlaneID`); the engine renders
+                // an edge once both endpoints are present and stays content-agnostic about `kind`.
+                topic: PLURID_PUBSUB_TOPIC.ADD_PLANE_LINK,
+                callback: (data) => {
+                    const link = data as any;
+                    if (!link || !link.id || !link.sourcePlaneID || !link.targetPlaneID) {
+                        return;
+                    }
+                    dispatch(actions.space.addPlaneLink(link));
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.REMOVE_PLANE_LINK,
+                callback: (data) => {
+                    const id = (data as any)?.id;
+                    if (!id) {
+                        return;
+                    }
+                    dispatch(actions.space.removePlaneLink(id));
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SET_PLANE_LINKS,
+                callback: (data) => {
+                    const links = (data as any)?.links;
+                    if (!Array.isArray(links)) {
+                        return;
+                    }
+                    dispatch(actions.space.setPlaneLinks(links));
+                },
+            },
         ];
 
         const indexes: string[] = [];

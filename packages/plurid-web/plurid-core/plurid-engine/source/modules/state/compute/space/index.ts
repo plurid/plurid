@@ -88,6 +88,7 @@ const resolveSpace = <C>(
         lastClosedPlane: '',
 
         tree: computedTree,
+        links: [],
 
         ...precomputedState?.space,
         ...contextState?.space,

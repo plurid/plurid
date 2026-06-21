@@ -37,6 +37,31 @@ export interface TreePlane {
 }
 
 
+/**
+ * An arbitrary directed relationship between two planes, independent of the parent→child tree.
+ * Links cross the tree (any plane may relate to any other), so they live in a SEPARATE adjacency
+ * list on space state — not on `TreePlane`. The engine treats `kind` opaquely (a product label).
+ */
+export interface PlaneLink {
+    id: string;
+    sourcePlaneID: string;
+    targetPlaneID: string;
+    /** Opaque, product-defined relationship label (e.g. 'reference', 'mention'). */
+    kind?: string;
+    /** Where on each plane the edge attaches; defaults to the plane centre. */
+    sourceAnchor?: PlaneLinkAnchor;
+    targetAnchor?: PlaneLinkAnchor;
+}
+
+
+export type PlaneLinkAnchor =
+    | 'center'
+    | 'top'
+    | 'bottom'
+    | 'left'
+    | 'right';
+
+
 export interface RouteDivisions {
     protocol: RouteHostProtocol;
     host: RouteHostDivision;

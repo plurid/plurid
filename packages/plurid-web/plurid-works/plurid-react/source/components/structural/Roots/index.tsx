@@ -22,6 +22,7 @@
 
     // #region external
     import PluridRoot from '~components/structural/Root';
+    import PluridPlaneLinks from '~components/structural/PlaneLinks';
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
@@ -106,6 +107,8 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                     plane={plane}
                 />
             ))}
+
+            <PluridPlaneLinks />
         </StyledPluridRoots>
     );
     // #endregion render
