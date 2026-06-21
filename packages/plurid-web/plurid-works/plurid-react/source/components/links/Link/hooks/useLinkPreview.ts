@@ -33,8 +33,8 @@ export const useLinkPreview = (
         disappearTime,
     }: UseLinkPreviewParameters,
 ) => {
-    const hoverInTimeout = useRef<null | NodeJS.Timeout>(null);
-    const hoverOutTimeout = useRef<null | NodeJS.Timeout>(null);
+    const hoverInTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
+    const hoverOutTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
     const [showPreview, setShowPreview] = useState(false);
 
     useEffect(() => {

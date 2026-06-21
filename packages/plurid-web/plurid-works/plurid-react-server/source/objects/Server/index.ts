@@ -646,7 +646,7 @@ class PluridServer {
 
 
             const data = request.body;
-            if (!data && !data.path) {
+            if (!data || !data.path) {
                 if (this.debugAllows('warn')) {
                     const requestTime = this.computeRequestTime(request);
 

@@ -72,9 +72,9 @@ class PluridRenderer {
         const {
             gradientBackground,
             gradientForeground,
-        // TOFIX
-        // } = resolveBackgroundStyle(reduxState);
-        } = resolveBackgroundStyle('');
+        // The metastate carries `themes.general` (see `serverComputeMetastate`), so the SSR'd background
+        // gradient matches the active theme; `resolveBackgroundStyle` falls back to a default if it can't parse.
+        } = resolveBackgroundStyle(pluridMetastate || '');
 
         const defaultStyleBasic = `
             body {

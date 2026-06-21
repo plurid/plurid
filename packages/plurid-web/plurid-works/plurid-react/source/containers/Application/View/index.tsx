@@ -230,7 +230,7 @@ const PluridView: React.FC<PluridViewProperties> = (
 
     // #region references
     const viewElement = useRef<HTMLDivElement | null>(null);
-    const scrollTimeout = useRef<NodeJS.Timeout>();
+    const scrollTimeout = useRef<ReturnType<typeof setTimeout>>();
     // Always-latest snapshot of the full app state for event handlers. Lets the keydown
     // callback read fresh state without being recreated on every transform tick — which
     // previously forced the keydown+wheel listeners to detach/reattach each frame.

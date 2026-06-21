@@ -1,19 +1,21 @@
 {
     "//": "Shared compiler baseline for every active @plurid package (added 2026-06-20, Phase E).",
-    "//target": "ES2020 (up from the old per-package ES6): tsup/esbuild controls the *runtime* build target per package, so this only governs type-checking + .d.ts emit, where a modern lib is strictly a superset of the old [ES6,ES2016,ES2017]. Each package extends this and adds only its own baseUrl/paths/outDir/include/exclude (path-relative options that must live next to the package).",
-    "//ts6": "DEFERRED 2026-06-21: TS 6 is a real migration, not a bump — it errors on deprecated options (baseUrl/moduleResolution=node10/downlevelIteration; needs `ignoreDeprecations: 6.0` or a config rework), `moduleResolution: bundler` needs every @plurid pkg's package.json `exports`/`types` (else TS7016), @types/node + @types/jest stop auto-resolving under TS6 + pnpm's isolated node_modules, and `global`/`NodeJS.Timeout` usages need `globalThis`/`ReturnType<typeof setTimeout>`. Pair it with the TS7 native-compiler migration. Staying on TS 5.9 (green).",
+    "//target": "ES2024 (bumped from ES2020 → ES2022 → ES2024 on 2026-06-21): tsup/esbuild controls the *runtime* build target per package, so this only governs type-checking + .d.ts emit, where a newer lib is strictly a superset (ADDS globals: Error.cause, Array.at, Object.hasOwn/groupBy, structuredClone, Promise.withResolvers, class fields). ES2024 is the newest lib TypeScript 5.9 ships; ES2025 needs TypeScript 6 (the deferred migration — see //ts6). Matches the Node 22+ floor (engines.node >=22, CI node 24). Each package extends this and adds only its own baseUrl/paths/outDir/include/exclude (path-relative options that must live next to the package).",
+    "//ts6": "DONE 2026-06-21: migrated to TypeScript 6.0.3 + lib ES2025. The deferral blockers were resolved minimally: (1) `ignoreDeprecations: 6.0` keeps moduleResolution:node + baseUrl; `downlevelIteration` dropped (redundant at ES2024). (2) TS6 + pnpm's isolated node_modules stops AUTO-discovering ambient @types, so `types: [node, jest]` lists them EXPLICITLY (named resolution still follows the symlinks); `@types/node` + `@types/jest` are devDeps of every active package. (3) `global` → `globalThis` (plurid-functions) and `NodeJS.Timeout` → `ReturnType<typeof setTimeout>` (icons/ui-components/react). moduleResolution stays `node` (bundler would need every pkg's package.json exports/types — a separate cleanup). Toolchain confirmed TS6-ok: ts-jest peers `<7`, tsup `>=4.5`.",
     "compilerOptions": {
         "module": "ESNext",
         "moduleResolution": "node",
-        "target": "ES2020",
-        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "ignoreDeprecations": "6.0",
+        "target": "ES2024",
+        "lib": ["ES2025", "DOM", "DOM.Iterable"],
         "jsx": "react",
+
+        "types": ["node", "jest"],
 
         "declaration": true,
         "sourceMap": true,
         "allowJs": false,
         "esModuleInterop": true,
-        "downlevelIteration": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,

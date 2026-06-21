@@ -114,7 +114,7 @@ const Notification: React.FC<NotificationProperties> = (
 
 
     // #region references
-    const notificationTimeout = useRef<NodeJS.Timeout | null>(null);
+    const notificationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     // #endregion references
 
 

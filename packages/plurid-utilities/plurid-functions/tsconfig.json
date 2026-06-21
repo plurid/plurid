@@ -11,9 +11,6 @@
             ]
         },
         "outDir": "distribution",
-        "typeRoots": [
-            "node_modules/@types"
-        ],
         "declarationDir": "distribution"
     },
     "include": [

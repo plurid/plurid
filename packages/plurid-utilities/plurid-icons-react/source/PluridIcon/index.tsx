@@ -84,8 +84,8 @@ const PluridIcon: React.FC<PluridIconProperties> = (
 
 
     // #region references
-    const hoverInTimeout = useRef<null | NodeJS.Timeout>(null);
-    const hoverOutTimeout = useRef<null | NodeJS.Timeout>(null);
+    const hoverInTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
+    const hoverOutTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
     // #endregion references
 
 

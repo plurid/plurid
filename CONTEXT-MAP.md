@@ -48,7 +48,7 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 ## Workspace & gates
 
 - **Workspace globs** (`pnpm-workspace.yaml`): `packages/plurid-web/plurid-core/*`, `packages/plurid-web/plurid-works/*`, `packages/plurid-utilities/*`, `fixtures/render-test` — with canvas, html, and **plurid-routes-server** **de-globbed** via explicit `!` negations (so they're no longer first-class).
-- **Root scripts** (`package.json`): `build` + `test` are plain `pnpm -r` (no canvas/html filter needed anymore — they're out of the workspace). `lint` is a **single flat-config ESLint 10 pass** over the live source (`eslint.config.mjs` at the root), not `pnpm -r lint` — there are no per-package eslint configs. As of 2026-06-21, **root `build` + `test` + `lint` all pass** on React 19 / TypeScript 5.9 / jest 30 / Node 22+ (CI: Node 24).
+- **Root scripts** (`package.json`): `build` + `test` are plain `pnpm -r` (no canvas/html filter needed anymore — they're out of the workspace). `lint` is a **single flat-config ESLint 10 pass** over the live source (`eslint.config.mjs` at the root), not `pnpm -r lint` — there are no per-package eslint configs. As of 2026-06-21, **root `build` + `test` + `lint` all pass** on React 19 / TypeScript 6.0 (lib ES2025) / jest 30 / Node 22+ (CI: Node 24).
 - **Type-check** is separate from build: `tsup`/esbuild does not type-check, so `pnpm --filter <pkg> check` (`tsc`) is the real type gate.
 - **Outside the workspace entirely**: the browser extension, the native prototype, and `fixtures/extras/*`.
 

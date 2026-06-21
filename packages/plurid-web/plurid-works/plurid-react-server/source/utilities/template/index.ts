@@ -60,6 +60,21 @@ export const resolveBackgroundStyle = (
 }
 
 
+/**
+ * Escape a value destined for a double-quoted HTML attribute, so a value containing `"` (or angle
+ * brackets) cannot break out of the attribute / tag. `&` first to avoid double-encoding.
+ */
+export const escapeAttribute = (
+    value: string,
+) => {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+
 export const recordToString = (
     record: Record<string, string> | undefined,
 ) => {
@@ -67,13 +82,10 @@ export const recordToString = (
         return '';
     }
 
-    let recordString = '';
-
-    for (const [key, value] of Object.entries(record)) {
-        recordString += `${key}="${value}"`;
-    }
-
-    return recordString;
+    // Space-separated `key="value"` pairs, values escaped against attribute/tag breakout.
+    return Object.entries(record)
+        .map(([key, value]) => `${key}="${escapeAttribute(value)}"`)
+        .join(' ');
 }
 
 

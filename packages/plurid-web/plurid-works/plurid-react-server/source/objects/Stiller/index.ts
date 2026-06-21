@@ -25,28 +25,25 @@ export const replacePluridResolution = (
 
 /**
  * https://techoverflow.net/2019/11/08/how-to-fix-puppetteer-running-as-root-without-no-sandbox-is-not-supported/
+ * `process.getuid` is POSIX-only (absent on Windows) — guard before calling so the Stiller doesn't
+ * crash with `process.getuid is not a function`.
  */
 const isCurrentUserRoot = () => {
-    // UID 0 is always root
-    return (process as any).getuid() == 0;
+    return typeof process.getuid === 'function' && process.getuid() === 0;
 }
 
+/**
+ * Still a single route on an ALREADY-LAUNCHED browser (one browser is reused across all routes — see
+ * `still()`). A fresh page per route; the page is always closed, even on navigation failure.
+ */
 const render = async (
-    puppeteer: any,
+    browser: any,
     host: string,
     route: string,
     configuration: StillerConfiguration,
 ) => {
     const start = Date.now();
 
-    const browser = await puppeteer.launch({
-        defaultViewport: {
-            width: 1366,
-            height: 768,
-        },
-        headless: true,
-        args: isCurrentUserRoot() ? ['--no-sandbox'] : undefined,
-    });
     const page = await browser.newPage();
 
     try {
@@ -61,22 +58,26 @@ const render = async (
                 timeout: configuration.timeout,
             },
         );
-    } catch (err) {
-        throw new Error(`${route} timed out.`);
+
+        const pageContent = await page.content();
+        const html = replacePluridResolution(pageContent);
+
+        const stilltime = Date.now() - start;
+        console.info(`\tStilled '${route}' in ${(stilltime / 1000).toFixed(2)} seconds.`);
+
+        return {
+            route,
+            html,
+            stilltime,
+        };
+    } catch (error) {
+        // Preserve the underlying Puppeteer reason (timeout / navigation / DNS) — in the message (so it
+        // surfaces everywhere) AND as the native `cause` (lib ES2022).
+        const reason = error instanceof Error ? error.message : String(error);
+        throw new Error(`Could not still '${route}': ${reason}`, { cause: error });
+    } finally {
+        await page.close();
     }
-
-    const pageContent = await page.content();
-    const html = replacePluridResolution(pageContent);
-    await browser.close();
-
-    const stilltime = Date.now() - start;
-    console.info(`\tStilled '${route}' in ${(stilltime / 1000).toFixed(2)} seconds.`);
-
-    return {
-        route,
-        html,
-        stilltime,
-    };
 }
 
 
@@ -91,7 +92,7 @@ const render = async (
  * to serve the adequate plurid space structure when asked for the given route.
  */
 class Stiller {
-    private puppeteer: any;
+    private puppeteer: any = null;
     private host: string;
     private routes: string[];
     private configuration: StillerConfiguration;
@@ -99,10 +100,12 @@ class Stiller {
     constructor(
         options: StillerOptions,
     ) {
+        // `puppeteer` is an OPTIONAL dependency — only stills generation needs it, not SSR. Stay null on
+        // a missing install; `still()` fails fast with an actionable message instead of an `undefined` crash.
         try {
             this.puppeteer = require('puppeteer');
-        } catch (error) {
-            console.error('could not load puppeteer: check puppeteer is installed');
+        } catch (_error) {
+            this.puppeteer = null;
         }
 
         const {
@@ -117,13 +120,34 @@ class Stiller {
     }
 
     async * still() {
-        for (const route of this.routes) {
-            yield await render(
-                this.puppeteer,
-                this.host,
-                route,
-                this.configuration,
+        if (!this.puppeteer) {
+            throw new Error(
+                "Plurid Stiller: the optional 'puppeteer' dependency is not installed. "
+                + 'Install it to generate stills (npm install puppeteer).',
             );
+        }
+
+        // One browser for ALL routes — launching a browser costs seconds; a page is cheap. Always closed.
+        const browser = await this.puppeteer.launch({
+            defaultViewport: {
+                width: 1366,
+                height: 768,
+            },
+            headless: true,
+            args: isCurrentUserRoot() ? ['--no-sandbox'] : undefined,
+        });
+
+        try {
+            for (const route of this.routes) {
+                yield await render(
+                    browser,
+                    this.host,
+                    route,
+                    this.configuration,
+                );
+            }
+        } finally {
+            await browser.close();
         }
     }
 }

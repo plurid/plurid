@@ -82,7 +82,7 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
 
 
     // #region references
-    const pressingInterval = useRef<null | NodeJS.Timeout>(null);
+    const pressingInterval = useRef<null | ReturnType<typeof setTimeout>>(null);
     // #endregion references
 
 

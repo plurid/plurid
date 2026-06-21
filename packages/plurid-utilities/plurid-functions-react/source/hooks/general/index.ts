@@ -33,7 +33,9 @@ const useFalseAfterTimedTrue = (
 
     // #region effects
     useEffect(() => {
-        let timeout: NodeJS.Timeout | undefined;
+        // `ReturnType<typeof setTimeout>` (universal) instead of the Node-only `NodeJS.Timeout` — works in
+        // both the browser (number) and Node without depending on @types/node being resolvable.
+        let timeout: ReturnType<typeof setTimeout> | undefined;
 
         if (disabledAfterActivation) {
             timeout = setTimeout(() => {

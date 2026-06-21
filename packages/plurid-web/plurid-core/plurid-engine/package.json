@@ -69,6 +69,6 @@
     "rimraf": "^5.0.5",
     "ts-jest": "^29.4.11",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

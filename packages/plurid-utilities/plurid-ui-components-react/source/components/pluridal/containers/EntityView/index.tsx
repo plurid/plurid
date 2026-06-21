@@ -178,7 +178,7 @@ const EntityView: React.ForwardRefExoticComponent<EntityViewType> = forwardRef((
 
 
     // #region references
-    const bottomTimeout = useRef<NodeJS.Timeout | null>();
+    const bottomTimeout = useRef<ReturnType<typeof setTimeout> | null>();
     const entityList = useRef<HTMLUListElement | null>(null);
     // #endregion references
 

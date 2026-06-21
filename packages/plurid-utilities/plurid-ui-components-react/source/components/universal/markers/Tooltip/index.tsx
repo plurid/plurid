@@ -71,7 +71,7 @@ const Tooltip: React.FC<TooltipProperties> = (
 
     // #region references
     const mounted = useMounted();
-    const hoverOutTimeout = useRef<NodeJS.Timeout | null>(null);
+    const hoverOutTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     // #endregion references
 
 

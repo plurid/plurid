@@ -3,6 +3,7 @@
     import {
         cleanTemplate,
         globalsInjector,
+        safeStore,
     } from '~utilities/template';
 
     import {
@@ -62,7 +63,7 @@ const template = (
 
         <script>
             ${injectedGlobals}
-            window.${defaultPreloadedPluridMetastate} = ${pluridMetastate};
+            window.${defaultPreloadedPluridMetastate} = ${safeStore(pluridMetastate)};
         </script>
 
         ${bodyScripts.join('\n')}

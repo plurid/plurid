@@ -36,7 +36,7 @@
 
 // #region module
 export const factoryUseAnimatedTransform = () => {
-    let timeout: NodeJS.Timeout | undefined;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
 
     return (
         dispatch: ThunkDispatch<{}, {}, AnyAction>,

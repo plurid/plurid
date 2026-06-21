@@ -147,7 +147,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
 
 
     // #region references
-    const menuTimeout = useRef<null | NodeJS.Timeout>(null);
+    const menuTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
     // #endregion references
 
 

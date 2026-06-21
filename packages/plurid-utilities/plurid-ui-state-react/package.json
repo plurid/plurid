@@ -55,7 +55,7 @@
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "tsup": "^8.5.1"
   },
   "exports": {
