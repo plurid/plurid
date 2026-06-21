@@ -1,38 +1,25 @@
 // #region imports
     // #region external
-    import Stiller from '../';
+    import {
+        replacePluridResolution,
+    } from '../';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
-describe('Stiller', () => {
-    it.only('works', async () => {
-        const routes = [
-            '/',
-            '/products',
-        ];
-        // const stiller = new Stiller({
-        //     host: 'https://plurid.com',
-        //     routes,
-        // });
+// `Stiller.still()` drives Puppeteer against a live server (an integration concern, exercised manually).
+// `replacePluridResolution` is its one pure, deterministic piece — unit-test that.
+describe('Stiller — replacePluridResolution', () => {
+    it('collapses the render viewport to zero to avoid the loading flash', () => {
+        const html = '<div style="width: 1366px; height: 768px;">content</div>';
+        expect(replacePluridResolution(html)).toBe('<div style="width: 0px; height: 0px;">content</div>');
+    });
 
-        // const sequence = stiller.still();
-
-        // const values = [];
-
-        // let next;
-        // while (
-        //     !(next = await sequence.next()).done
-        // ) {
-        //     values.push(next.value);
-        // }
-        // console.log(values);
-
-
-        // expect(values).toStrictEqual(routes);
-        expect([]).toStrictEqual([]);
+    it('leaves html without the render viewport untouched', () => {
+        const html = '<div style="color: red;">content</div>';
+        expect(replacePluridResolution(html)).toBe(html);
     });
 });
 // #endregion module

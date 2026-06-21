@@ -12,9 +12,10 @@
 // #region module
 /**
  * Replace the rendering viewport resolution in order to reduce the loading flash.
+ * Exported for unit testing — it is the one pure, deterministic piece of the Puppeteer-driven Stiller.
  * @param html
  */
-const replacePluridResolution = (
+export const replacePluridResolution = (
     html: string,
 ) => {
     const normalResolution = 'width: 1366px; height: 768px;';

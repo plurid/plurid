@@ -20,7 +20,7 @@
 
 
 // #region module
-describe('togglePageFromTree', () => {
+describe('togglePlaneFromTree', () => {
     it('toggle page level one child', () => {
         const tree: TreePlane[] = [
             {
@@ -82,7 +82,7 @@ describe('togglePageFromTree', () => {
         expect(result).toMatchObject(updatedTree);
     });
 
-    it.only('toggle page', () => {
+    it('toggle page with an additional sibling root', () => {
         const tree: TreePlane[] = [
             {
                 ...defaultTreePlane,

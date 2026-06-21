@@ -12,6 +12,11 @@ packages:
   # `stencil build --docs` no longer runs) with no @plurid deps. Source kept on disk.
   - '!packages/plurid-web/plurid-works/plurid-canvas'
   - '!packages/plurid-web/plurid-works/plurid-html'
+  # Legacy (2026-06-21) — orphaned: ZERO in-repo consumers (no package.json lists it, no source
+  # imports it), only a placeholder "doesn't look like anything to me" test. A pluriverse-era
+  # Express route-cache utility, not part of the live data→engine→react→react-server graph. Source
+  # kept on disk + last npm publish stands; re-glob this line if it is revived as a standalone tool.
+  - '!packages/plurid-utilities/plurid-routes-server'
 
 # pnpm 11 blocks dependency postinstall scripts by default. esbuild needs its
 # native binary; core-js (donation ad) and puppeteer (Chromium download, unused) do not.

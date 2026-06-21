@@ -234,48 +234,6 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/plurid-utilities/plurid-routes-server:
-    devDependencies:
-      '@plurid/deon':
-        specifier: ^0.0.0-10
-        version: 0.0.0-10
-      '@plurid/plurid-functions':
-        specifier: workspace:*
-        version: link:../plurid-functions
-      '@types/body-parser':
-        specifier: ^1.19.5
-        version: 1.19.6
-      '@types/express':
-        specifier: ^4.17.14
-        version: 4.17.25
-      '@types/jest':
-        specifier: ^30.0.0
-        version: 30.0.0
-      body-parser:
-        specifier: ^1.20.0
-        version: 1.20.5
-      express:
-        specifier: ^4.18.1
-        version: 4.22.2
-      jest:
-        specifier: ^30.4.2
-        version: 30.4.2(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))
-      jest-config:
-        specifier: ^30.4.2
-        version: 30.4.2(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))
-      ts-jest:
-        specifier: ^29.4.11
-        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@20.19.43)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3)))(typescript@5.9.3)
-      ts-node:
-        specifier: ^10.9.1
-        version: 10.9.2(@types/node@20.19.43)(typescript@5.9.3)
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(postcss@8.5.15)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
   packages/plurid-utilities/plurid-themes:
     devDependencies:
       '@types/jest':
@@ -584,7 +542,7 @@ importers:
         version: 2.3.0(@babel/core@7.29.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       cross-fetch:
         specifier: ^4.0.0
-        version: 4.1.0(encoding@0.1.13)
+        version: 4.1.0
       esbuild:
         specifier: ^0.28.1
         version: 0.28.1
@@ -735,7 +693,7 @@ importers:
         version: 5.1.36
       cross-fetch:
         specifier: ^4.0.0
-        version: 4.1.0(encoding@0.1.13)
+        version: 4.1.0
       graphql:
         specifier: ^16.8.1
         version: 16.14.2
@@ -1565,11 +1523,6 @@ packages:
   '@pkgr/core@0.3.6':
     resolution: {integrity: sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA==}
     engines: {node: ^14.18.0 || >=16.0.0}
-
-  '@plurid/deon@0.0.0-10':
-    resolution: {integrity: sha512-LQJT0lbND8dV5MhkgVLulWhLGXISw205I49jFqOp0dvJtpOt4ib5lKgKN7cFXArl2KVIWNd0k/t7bWYfXpNqzQ==}
-    engines: {node: '>=12', npm: '>=6'}
-    hasBin: true
 
   '@plurid/elementql-client-react@0.0.0-1':
     resolution: {integrity: sha512-Ve+7E1yQGNiNjyz+rC3KskK1f+AR/Ihyu6mPFE8y/raBnNVCB6ghoUZWjbaeVcyH5vWvRrNmp9lIqDDXtac1VQ==}
@@ -2452,10 +2405,6 @@ packages:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
 
-  commander@9.5.0:
-    resolution: {integrity: sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==}
-    engines: {node: ^12.20.0 || >=14}
-
   compressible@2.0.18:
     resolution: {integrity: sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==}
     engines: {node: '>= 0.6'}
@@ -2502,9 +2451,6 @@ packages:
 
   create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
-
-  cross-fetch@3.2.0:
-    resolution: {integrity: sha512-Q+xVJLoGOeIMXZmbUK4HYk+69cQH6LudR0Vu/pRm2YlU/hDV9CiS0gKUMaWY5f2NeUH9C1nV3bsTlCo0FsTV1Q==}
 
   cross-fetch@4.1.0:
     resolution: {integrity: sha512-uKm5PU+MHTootlWEY+mZ4vvXoCn4fLQxT9dSc1sXVMSFkINTJVN8cAQROpwcKm8bJ/c7rgZVIBWzH5T78sNZZw==}
@@ -2639,9 +2585,6 @@ packages:
   encodeurl@2.0.0:
     resolution: {integrity: sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==}
     engines: {node: '>= 0.8'}
-
-  encoding@0.1.13:
-    resolution: {integrity: sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==}
 
   entities@6.0.1:
     resolution: {integrity: sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==}
@@ -4031,10 +3974,6 @@ packages:
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
-  sync-fetch@0.4.5:
-    resolution: {integrity: sha512-esiWJ7ixSKGpd9DJPBTC4ckChqdOjIwJfYhVHkcQ2Gnm41323p1TRmEI+esTQ9ppD+b5opps2OTEGTCGX5kF+g==}
-    engines: {node: '>=14'}
-
   synckit@0.11.13:
     resolution: {integrity: sha512-eNRKgb3z66Yp3D2CixVujOUvXLFUTij/zVnV8KRyvFdQwpz7I5DS8UfRkTeLzb64u+dkzDSdelE24izu+zSSUg==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -5247,13 +5186,6 @@ snapshots:
 
   '@pkgr/core@0.3.6': {}
 
-  '@plurid/deon@0.0.0-10':
-    dependencies:
-      commander: 9.5.0
-      cross-fetch: 3.2.0(encoding@0.1.13)
-      encoding: 0.1.13
-      sync-fetch: 0.4.5(encoding@0.1.13)
-
   '@plurid/elementql-client-react@0.0.0-1':
     dependencies:
       '@plurid/elementql-client': 0.0.0-1
@@ -6104,8 +6036,6 @@ snapshots:
 
   commander@4.1.1: {}
 
-  commander@9.5.0: {}
-
   compressible@2.0.18:
     dependencies:
       mime-db: 1.54.0
@@ -6152,15 +6082,9 @@ snapshots:
 
   create-require@1.1.1: {}
 
-  cross-fetch@3.2.0(encoding@0.1.13):
+  cross-fetch@4.1.0:
     dependencies:
-      node-fetch: 2.7.0(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
-
-  cross-fetch@4.1.0(encoding@0.1.13):
-    dependencies:
-      node-fetch: 2.7.0(encoding@0.1.13)
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
 
@@ -6260,10 +6184,6 @@ snapshots:
   emoji-regex@9.2.2: {}
 
   encodeurl@2.0.0: {}
-
-  encoding@0.1.13:
-    dependencies:
-      iconv-lite: 0.6.3
 
   entities@6.0.1: {}
 
@@ -7524,11 +7444,9 @@ snapshots:
     dependencies:
       lower-case: 1.1.4
 
-  node-fetch@2.7.0(encoding@0.1.13):
+  node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
-    optionalDependencies:
-      encoding: 0.1.13
 
   node-int64@0.4.0: {}
 
@@ -8081,13 +7999,6 @@ snapshots:
   symbol-observable@4.0.0: {}
 
   symbol-tree@3.2.4: {}
-
-  sync-fetch@0.4.5(encoding@0.1.13):
-    dependencies:
-      buffer: 5.7.1
-      node-fetch: 2.7.0(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
 
   synckit@0.11.13:
     dependencies:

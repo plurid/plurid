@@ -15,28 +15,53 @@
 
 // #region module
 describe('matrix computation', () => {
-    // xit: this euler test changed convention during modernization (the rotation matrix is the same, but the extracted/composed angle decomposition differs — euler order is ambiguous). Legacy non-render math; verify the intended convention before recomputing.
-    xit('rotateMatrix() computes rotation matrix from euler angles', () => {
-        const rotationMatrix = rotateMatrix(10, 20, 30);
-        const result = [
-            0.8434932686554564,
-            -0.4184120444176479,
-            0.336824088834481,
-            0,
-            0.4924038765075056,
-            0.8528685319515203,
-            -0.17364817766748872,
-            0,
-            -0.21461017714291933,
-            0.3123245560200204,
-            0.9254165783978489,
-            0,
-            0,
-            0,
-            0,
-            1,
-        ];
-        expect(rotationMatrix).toEqual(result);
+    // The exact entries of `rotateMatrix` depend on the euler order/convention (which shifted during the
+    // quaternion modernization), so the old hardcoded-matrix assertion was brittle. But a rotation matrix
+    // is ALWAYS orthonormal, right-handed (det +1), and translation-free — convention-independent
+    // invariants that actually prove correctness rather than pinning one composition. (Column-major,
+    // 16-element; translation lives at indices 12/13/14, per `translateMatrix` below.)
+    it('rotateMatrix() produces a valid orthonormal rotation matrix', () => {
+        const dot = (a: number[], b: number[]) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+
+        // zero rotation is the identity
+        const identity = rotateMatrix(0, 0, 0);
+        [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1].forEach((value, index) => {
+            expect(identity[index]).toBeCloseTo(value, 10);
+        });
+
+        for (const [x, y, z] of [[0.3, 0.5, 0.2], [10, 20, 30], [-1.2, 0.7, 2.4]]) {
+            const matrix = rotateMatrix(x, y, z);
+
+            // the 3x3 rotation block as column vectors (column-major)
+            const c0 = [matrix[0], matrix[1], matrix[2]];
+            const c1 = [matrix[4], matrix[5], matrix[6]];
+            const c2 = [matrix[8], matrix[9], matrix[10]];
+
+            // each column is unit length, and the columns are mutually orthogonal
+            expect(dot(c0, c0)).toBeCloseTo(1, 10);
+            expect(dot(c1, c1)).toBeCloseTo(1, 10);
+            expect(dot(c2, c2)).toBeCloseTo(1, 10);
+            expect(dot(c0, c1)).toBeCloseTo(0, 10);
+            expect(dot(c0, c2)).toBeCloseTo(0, 10);
+            expect(dot(c1, c2)).toBeCloseTo(0, 10);
+
+            // right-handed: determinant of the 3x3 block = c0 · (c1 × c2) ≈ +1
+            const cross = [
+                c1[1] * c2[2] - c1[2] * c2[1],
+                c1[2] * c2[0] - c1[0] * c2[2],
+                c1[0] * c2[1] - c1[1] * c2[0],
+            ];
+            expect(dot(c0, cross)).toBeCloseTo(1, 10);
+
+            // pure rotation: no translation, canonical homogeneous bottom row
+            expect(matrix[12]).toBeCloseTo(0, 10);
+            expect(matrix[13]).toBeCloseTo(0, 10);
+            expect(matrix[14]).toBeCloseTo(0, 10);
+            expect(matrix[3]).toBeCloseTo(0, 10);
+            expect(matrix[7]).toBeCloseTo(0, 10);
+            expect(matrix[11]).toBeCloseTo(0, 10);
+            expect(matrix[15]).toBeCloseTo(1, 10);
+        }
     });
 
     it('translateMatrix() computes translation matrix from euler distances', () => {

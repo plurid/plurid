@@ -26,12 +26,12 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 
 | Package | Role | Status | Gates | Root gates | Notes |
 |---|---|---|---|---|---|
-| `@plurid/plurid-data` | shared types/constants/enums/theme+route data | **LIVE (core)** | B·L | ✅ | No test script (add invariants if any). Locale data bundled — see subpath-export backlog. |
+| `@plurid/plurid-data` | shared types/constants/enums/theme+route data | **LIVE (core)** | BTL | ✅ | Has `test` + invariant suite (default config, pubsub-topic uniqueness, `defaultTreePlane`). Locale data bundled — see subpath-export backlog. |
 | `@plurid/plurid-engine` | plane tree, layout, routing, math | **LIVE (core)** | BTL | ✅ | The deepest module. Tree mutations now immutable + structurally shared. 37 skipped tests = routing/matrix/transform/faceToFace debt. |
 | `@plurid/plurid-pubsub` | event bridge | **LIVE (core)** | BTL | ✅ | Thin behavioral tests. |
 | `@plurid/plurid-react` | primary render adapter | **LIVE (works)** | BTL | ✅ | Sanity test only — needs interaction/render tests. `View`/`router`/`Link` are the decomposition targets. |
 | `@plurid/plurid-react-server` | SSR / static "stills" | **LIVE (works)** | BTL | ✅ | Signal handlers now opt-out. Stiller/Puppeteer hardening pending. |
-| `@plurid/plurid-routes-server` | route server | **LIVE? (utilities)** | BTL | ✅ | **No obvious in-repo consumer** — confirm live or mark legacy. |
+| `@plurid/plurid-routes-server` | route server | **LEGACY / orphaned** | — | ❌ (de-globbed) | De-globbed (`!` in `pnpm-workspace.yaml`, 2026-06-21). Zero in-repo consumers; a pluriverse-era Express route-cache, not in the live graph. Source kept on disk. |
 | `@plurid/plurid-functions`, `…-react` | utilities | **LIVE (utilities)** | BT | ✅ | Best-covered utilities. `eval` removed. |
 | `@plurid/plurid-themes` | theme objects | **LIVE (utilities)** | BTL | ✅ | Aggregate default export — subpath exports pending. |
 | `@plurid/plurid-icons-react` | icon set | **LIVE (utilities)** | BTL | ✅ | All-icons bundle, treeshake off — subpath exports pending. |
@@ -47,14 +47,14 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 
 ## Workspace & gates
 
-- **Workspace globs** (`pnpm-workspace.yaml`): `packages/plurid-web/plurid-core/*`, `packages/plurid-web/plurid-works/*`, `packages/plurid-utilities/*`, `fixtures/render-test` — with canvas + html **de-globbed** via explicit `!` negations (so they're no longer first-class).
+- **Workspace globs** (`pnpm-workspace.yaml`): `packages/plurid-web/plurid-core/*`, `packages/plurid-web/plurid-works/*`, `packages/plurid-utilities/*`, `fixtures/render-test` — with canvas, html, and **plurid-routes-server** **de-globbed** via explicit `!` negations (so they're no longer first-class).
 - **Root scripts** (`package.json`): `build` + `test` are plain `pnpm -r` (no canvas/html filter needed anymore — they're out of the workspace). `lint` is a **single flat-config ESLint 10 pass** over the live source (`eslint.config.mjs` at the root), not `pnpm -r lint` — there are no per-package eslint configs. As of 2026-06-21, **root `build` + `test` + `lint` all pass** on React 19 / TypeScript 5.9 / jest 30 / Node 22+ (CI: Node 24).
 - **Type-check** is separate from build: `tsup`/esbuild does not type-check, so `pnpm --filter <pkg> check` (`tsc`) is the real type gate.
 - **Outside the workspace entirely**: the browser extension, the native prototype, and `fixtures/extras/*`.
 
 ## Recommended status moves
 
-- **Decide `plurid-routes-server`**: live or legacy. If legacy, mark it and drop from the primary graph.
+- ✅ **Decided `plurid-routes-server` → LEGACY** (2026-06-21): zero in-repo consumers, de-globbed from the workspace, dropped from the primary graph.
 - ✅ **Archive `plurid-canvas` + `plurid-html`** — done (2026-06-20): both de-globbed from the workspace (`!` in `pnpm-workspace.yaml`); source kept on disk. Optionally move them under an `archive/` path later.
 - **Git-ignore** native Xcode user-state + `.DS_Store`; treat the native + extension surfaces as clearly experimental.
 
