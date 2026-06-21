@@ -37,6 +37,7 @@
 
         PluridApi,
         PluridStore,
+        PluridStorageAdapter,
         // #endregion interfaces
 
 
@@ -296,6 +297,7 @@ export type {
 
     PluridApi,
     PluridStore,
+    PluridStorageAdapter,
 
     PluridConfiguration,
     PluridPartialConfiguration,

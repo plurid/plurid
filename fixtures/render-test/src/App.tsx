@@ -93,10 +93,16 @@ const App = () => {
     // Gesture-feel overrides (Tier 3): ?rotateSens=0.44&dragThreshold=0
     const rotateSens = params.get('rotateSens') ? Number(params.get('rotateSens')) : undefined;
     const dragThreshold = params.get('dragThreshold') !== null ? Number(params.get('dragThreshold')) : undefined;
-    const gestures = (rotateSens !== undefined || dragThreshold !== undefined)
+    const btnLeft = params.get('btnLeft') as any;       // orbit|pan|zoom|disabled
+    const btnWheel = params.get('btnWheel') as any;     // zoom|disabled
+    const buttonMap = (btnLeft || btnWheel)
+        ? { ...(btnLeft ? { left: btnLeft } : {}), ...(btnWheel ? { wheel: btnWheel } : {}) }
+        : undefined;
+    const gestures = (rotateSens !== undefined || dragThreshold !== undefined || buttonMap)
         ? {
             ...(rotateSens !== undefined ? { rotateSensitivity: rotateSens } : {}),
             ...(dragThreshold !== undefined ? { dragThreshold } : {}),
+            ...(buttonMap ? { buttonMap } : {}),
         }
         : undefined;
     // Shortcut config (Tier 3): ?scDisable=all | ?scDisable=modeRotation,modeScale | ?scRemap=modeRotation:KeyP

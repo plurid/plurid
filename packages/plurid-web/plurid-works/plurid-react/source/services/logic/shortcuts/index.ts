@@ -298,7 +298,14 @@ export const handleGlobalWheel = (
     modes: TransformModes,
     locks: PluridConfigurationSpaceTransformLocks,
     grabMode: boolean = false,
+    wheelDisabled: boolean = false,
 ) => {
+    // `gestures.buttonMap.wheel: 'disabled'` hands the wheel entirely back to the page — plurid
+    // neither zooms nor preventDefaults, so native scrolling works everywhere.
+    if (wheelDisabled) {
+        return;
+    }
+
     // The wheel only zooms the space while navigating (grab mode, scale mode, or
     // ⌘/Ctrl+wheel). Otherwise it's left alone so page/plane content scrolls normally.
     const wheelZooms = grabMode;

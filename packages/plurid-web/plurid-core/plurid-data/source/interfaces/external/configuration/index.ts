@@ -422,6 +422,24 @@ export interface PluridConfigurationSpaceGestures {
     momentumMin?: number;
     /** Disable the post-orbit momentum fling entirely (release stops dead). Default `false`. */
     disableMomentum?: boolean;
+    /**
+     * Remap what each pointer input does in the default (ALL) transform mode — so a host can make
+     * left-drag orbit directly (no grab mode), claim left-drag for itself (`disabled`), or stop the
+     * wheel from zooming. Only consulted when set; omit to keep the CAD defaults (left orbits only in
+     * grab mode, middle / shift-drag pans, wheel zooms in grab / scale / ⌘). Does not affect the
+     * explicit rotate/translate/scale modes, selection-drag, or fly mode.
+     */
+    buttonMap?: PluridConfigurationSpaceGesturesButtonMap;
+}
+
+
+export interface PluridConfigurationSpaceGesturesButtonMap {
+    /** Left-button drag. Default: orbit, but only while grab mode is on. */
+    left?: 'orbit' | 'pan' | 'zoom' | 'disabled';
+    /** Middle-button drag. Default: pan. */
+    middle?: 'orbit' | 'pan' | 'zoom' | 'disabled';
+    /** Wheel / trackpad. Default: zoom (in grab / scale / ⌘). `disabled` leaves scrolling to the page. */
+    wheel?: 'zoom' | 'disabled';
 }
 
 

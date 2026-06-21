@@ -522,9 +522,9 @@ layoutResolved/loading changes — subscribe once, NOT per-frame camera (that's 
 
 **Tier 3 — granular knobs + overrides + exports.**
 - `configuration.space.gestures?` — rotate/translate/scale/pinch/flyLook **sensitivities**, `dragThreshold`,
-  momentum (`momentumDecay`/`momentumMin`/`disableMomentum`), `flySpeed`. Read LIVE in `usePointerGestures`/
-  `useFlyControls`. (A `buttonMap` for left/middle/wheel→orbit|pan|zoom is the one deferred sub-item — it would
-  rework the nav-intent branching + wheel handler.)
+  momentum (`momentumDecay`/`momentumMin`/`disableMomentum`), `flySpeed`, and `buttonMap`
+  (`left`/`middle` → orbit|pan|zoom|disabled, `wheel` → zoom|disabled; consulted only when set, so the CAD
+  defaults are byte-identical without it). Read LIVE in `usePointerGestures`/`useFlyControls`.
 - `configuration.space.shortcuts?` — `disabled` (`true` = all, or `PluridShortcutID[]`), `keymap` (remap a
   shortcut's `event.code`), `onUnhandledKey(e)`. The if-ladder was refactored into a data-driven binding table
   (same order/conditions preserved) so disable/remap/extend + a data-generated help overlay all fall out.

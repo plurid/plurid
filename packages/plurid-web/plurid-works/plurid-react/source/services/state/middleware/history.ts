@@ -47,7 +47,7 @@ interface ArrangementSnapshot {
  * skipped — a peer's change isn't in YOUR undo.
  */
 export const createHistoryMiddleware = (): Middleware => {
-    let undoStack: ArrangementSnapshot[] = [];
+    const undoStack: ArrangementSnapshot[] = [];
     let redoStack: ArrangementSnapshot[] = [];
     let applying = false;
 

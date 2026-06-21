@@ -89,6 +89,8 @@ export const usePointerGestures = (
     const movingSelection = useRef<boolean>(false);
     const momentum = useRef<{ vx: number; vy: number }>({ vx: 0, vy: 0 });
     const momentumFrame = useRef<number | null>(null);
+    // The mouse button that started the current drag — lets `applySingle` resolve the `buttonMap`.
+    const navButton = useRef<number>(-1);
     // Always-latest space config (transformMode/locks/firstPerson) for the pointer handlers, so
     // they can attach once instead of re-binding on every config change.
     const spaceConfigRef = useRef(spaceConfiguration);
@@ -115,6 +117,23 @@ export const usePointerGestures = (
                 momentumMin: g.momentumMin ?? 0.05,
                 disableMomentum: g.disableMomentum ?? false,
             };
+        };
+
+        // Resolve the `gestures.buttonMap` action for an initiating button — ONLY in the default (ALL)
+        // mode and not fly mode. `undefined` (no map / unmapped button) means "use the CAD defaults".
+        const buttonOverrideFor = (
+            button: number,
+        ): 'orbit' | 'pan' | 'zoom' | 'disabled' | undefined => {
+            const map = spaceConfigRef.current.gestures?.buttonMap;
+            if (!map
+                || spaceConfigRef.current.firstPerson
+                || spaceConfigRef.current.transformMode !== TRANSFORM_MODES.ALL
+            ) {
+                return undefined;
+            }
+            if (button === 0) { return map.left; }
+            if (button === 1) { return map.middle; }
+            return undefined;
         };
 
         const stopMomentum = () => {
@@ -203,14 +222,27 @@ export const usePointerGestures = (
             } else if (mode === TRANSFORM_MODES.SCALE) {
                 scaleByDrag(dy);
             } else {
-                // Default (ALL) mode. In grab mode a left-drag orbits; shift- or middle-drag pans.
-                // In normal (content) mode only middle/shift drags are tracked at all, and they pan.
-                const wantsPan = event.shiftKey || (event.buttons & 4) === 4;
-                if (grabModeRef.current && !wantsPan) {
+                // Default (ALL) mode. A `buttonMap` entry (when set) is authoritative for the
+                // initiating button; otherwise the CAD defaults: in grab mode a left-drag orbits;
+                // shift- or middle-drag pans. (In normal mode only middle/shift drags are tracked.)
+                const override = buttonOverrideFor(navButton.current);
+                if (override === 'orbit') {
                     navWasOrbit = true;
                     rotateByDelta(dx, dy);
-                } else {
+                } else if (override === 'pan') {
                     panByDelta(dx, dy, event.altKey);
+                } else if (override === 'zoom') {
+                    scaleByDrag(dy);
+                } else if (override === 'disabled') {
+                    // The host claimed this button — plurid does nothing with the drag.
+                } else {
+                    const wantsPan = event.shiftKey || (event.buttons & 4) === 4;
+                    if (grabModeRef.current && !wantsPan) {
+                        navWasOrbit = true;
+                        rotateByDelta(dx, dy);
+                    } else {
+                        panByDelta(dx, dy, event.altKey);
+                    }
                 }
             }
         };
@@ -252,10 +284,15 @@ export const usePointerGestures = (
             // Drag-to-move: a plain left-drag on an ALREADY-SELECTED plane (normal mode only) moves the
             // whole selection. Orbit requires grab mode, so this never competes with it; shift is left
             // to pan, and a no-drag click still reaches the plane's shift-click selection toggle.
+            // When a `buttonMap` claims the initiating button, it is authoritative — it overrides BOTH
+            // the selection-move and the default nav decision for that button.
+            const override = buttonOverrideFor(event.button);
+
             let moveIntent = false;
             const selection = stateRef.current?.space?.selectedPlaneIDs;
             if (
-                selection && selection.length > 0
+                override === undefined
+                && selection && selection.length > 0
                 && event.button === 0
                 && !event.shiftKey
                 && !spaceConfigRef.current.firstPerson
@@ -271,13 +308,19 @@ export const usePointerGestures = (
                 }
             }
 
-            const navIntent = spaceConfigRef.current.firstPerson
-                || grabModeRef.current
-                || event.button === 1
-                || spaceConfigRef.current.transformMode !== TRANSFORM_MODES.ALL;
+            // A `buttonMap` of `disabled` releases the button to the host (no nav, even in grab mode);
+            // a mapped action (orbit/pan/zoom) engages nav directly (no grab mode needed).
+            const navIntent = override === 'disabled'
+                ? false
+                : (spaceConfigRef.current.firstPerson
+                    || grabModeRef.current
+                    || event.button === 1
+                    || spaceConfigRef.current.transformMode !== TRANSFORM_MODES.ALL
+                    || override !== undefined);
             if (!navIntent && !moveIntent) {
                 return;
             }
+            navButton.current = event.button;
             movingSelection.current = moveIntent;
             stopMomentum();
             momentum.current = { vx: 0, vy: 0 };

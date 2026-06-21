@@ -398,11 +398,13 @@ const PluridView: React.FC<PluridViewProperties> = (
             transformModes,
             transformLocks,
             grabModeRef.current,
+            stateConfiguration.space.gestures?.buttonMap?.wheel === 'disabled',
         );
     }, [
         dispatch,
         stateConfiguration.space.transformMode,
         stateConfiguration.space.transformLocks,
+        stateConfiguration.space.gestures,
     ]);
 
     // #endregion callbacks
