@@ -559,7 +559,7 @@ const Dropdown: React.FC<DropdownProperties> = (
                                         autoComplete="false"
                                         autoCorrect="false"
                                         style={{
-                                            padding: !!filterUpdate
+                                            padding: filterUpdate
                                                 ? left
                                                     ? '0 1.3rem 0 0'
                                                     : '0 0 0 1.3rem'
@@ -571,10 +571,10 @@ const Dropdown: React.FC<DropdownProperties> = (
                         )}
 
                         {filteredSelectables.map((selectable, index) => {
-                            let selectableID = typeof selectable === 'string'
+                            const selectableID = typeof selectable === 'string'
                                 ? selectable
                                 : selectable.id;
-                            let selectableValue = typeof selectable === 'string'
+                            const selectableValue = typeof selectable === 'string'
                                 ? selectable
                                 : selectable.value;
 

@@ -183,9 +183,9 @@ export const clone = <D>(
 export const mapToObject = <K, V>(
     map: Map<K, V>,
 ) => {
-    let obj: any = {};
+    const obj: any = {};
 
-    for (let [key, value] of map) {
+    for (const [key, value] of map) {
         obj[key] = value;
     }
 

@@ -10,11 +10,15 @@
     "scripts": {
         "build": "pnpm -r build",
         "test": "pnpm -r test",
-        "lint": "pnpm -r lint",
+        "lint": "eslint packages/plurid-web/plurid-core packages/plurid-web/plurid-works packages/plurid-utilities fixtures/render-test/src",
         "format": "prettier --write \"packages/**/source/**/*.{ts,tsx}\" \"fixtures/**/src/**/*.{ts,tsx}\"",
         "format.check": "prettier --check \"packages/**/source/**/*.{ts,tsx}\" \"fixtures/**/src/**/*.{ts,tsx}\""
     },
     "devDependencies": {
-        "prettier": "^3.6.2"
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.5.0",
+        "globals": "^17.6.0",
+        "prettier": "^3.6.2",
+        "typescript-eslint": "^8.61.1"
     }
 }

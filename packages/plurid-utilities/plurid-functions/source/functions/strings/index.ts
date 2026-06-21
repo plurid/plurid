@@ -274,7 +274,7 @@ export const shuffle = (
     character: string,
     count = 1,
 ): string => {
-    if (count = 0) {
+    if (count === 0) {
         return value;
     }
 
@@ -303,7 +303,7 @@ export const trimEnd = (
     character: string,
     count = 1,
 ): string => {
-    if (count = 0) {
+    if (count === 0) {
         return value;
     }
 

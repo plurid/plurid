@@ -12,7 +12,7 @@ export const placeCaretAtEnd = (
         sel.removeAllRanges();
         sel.addRange(range);
     } else if (typeof (document as any).body.createTextRange !== "undefined") {
-        var textRange = (document as any).body!.createTextRange();
+        const textRange = (document as any).body!.createTextRange();
         textRange.moveToElementText(el);
         textRange.collapse(false);
         textRange.select();

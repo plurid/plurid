@@ -62,7 +62,6 @@ export interface PluridRootOwnProperties {
 // `plane` ownProp (kept current by structural sharing), so it re-renders only when its OWN
 // root subtree changes — not on every unrelated mutation (which previously forced new ownProps
 // onto every child plane and defeated their memoization).
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PluridRootStateProperties {
 }
 

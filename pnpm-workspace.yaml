@@ -20,6 +20,8 @@ allowBuilds:
   core-js: false
   esbuild: true
   puppeteer: false
+  # jest 30's module resolver (jest-resolve) — needs its native binary; same as esbuild.
+  unrs-resolver: true
 
 # Dedup to single versions. immer 11's new internal types leak through @reduxjs/toolkit
 # 2.12's slice types (TS "WritableNonArrayDraft cannot be named") → RTK pairs with immer 10.

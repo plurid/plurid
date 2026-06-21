@@ -1,6 +1,7 @@
 {
     "//": "Shared compiler baseline for every active @plurid package (added 2026-06-20, Phase E).",
     "//target": "ES2020 (up from the old per-package ES6): tsup/esbuild controls the *runtime* build target per package, so this only governs type-checking + .d.ts emit, where a modern lib is strictly a superset of the old [ES6,ES2016,ES2017]. Each package extends this and adds only its own baseUrl/paths/outDir/include/exclude (path-relative options that must live next to the package).",
+    "//ts6": "DEFERRED 2026-06-21: TS 6 is a real migration, not a bump — it errors on deprecated options (baseUrl/moduleResolution=node10/downlevelIteration; needs `ignoreDeprecations: 6.0` or a config rework), `moduleResolution: bundler` needs every @plurid pkg's package.json `exports`/`types` (else TS7016), @types/node + @types/jest stop auto-resolving under TS6 + pnpm's isolated node_modules, and `global`/`NodeJS.Timeout` usages need `globalThis`/`ReturnType<typeof setTimeout>`. Pair it with the TS7 native-compiler migration. Staying on TS 5.9 (green).",
     "compilerOptions": {
         "module": "ESNext",
         "moduleResolution": "node",

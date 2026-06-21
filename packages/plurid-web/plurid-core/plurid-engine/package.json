@@ -1,78 +1,74 @@
 {
-    "name": "@plurid/plurid-engine",
-    "version": "0.0.0-18",
-    "sideEffects": false,
-    "description": "Plurid Engine and Utility Functions",
-    "keywords": [
-        "plurid",
-        "engine"
-    ],
-    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
-    "license": "SEE LICENSE IN LICENSE",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/plurid/plurid"
-    },
-    "bugs": {
-        "email": "source@plurid.com",
-        "url": "https://github.com/plurid/plurid/issues"
-    },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-engine",
-    "publishConfig": {
-        "registry": "https://registry.npmjs.org/",
-        "access": "public"
-    },
-    "files": [
-        "distribution"
-    ],
-    "main": "distribution/index.js",
-    "module": "distribution/index.mjs",
-    "types": "distribution/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./distribution/index.d.ts",
-            "import": "./distribution/index.mjs",
-            "require": "./distribution/index.js"
-        }
-    },
-    "engines": {
-        "node": ">=18",
-        "npm": ">=6"
-    },
-    "scripts": {
-        "clean": "rimraf ./distribution",
-        "clean.tests": "find ./distribution -type d -name \"__tests__\" -prune -exec rm -rf {} +",
-        "clean.performance": "find ./distribution -type d -name \"__performance__\" -prune -exec rm -rf {} +",
-        "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
-        "test.suite": "jest -c configurations/jest.config.js",
-        "lint": "eslint -c ./configurations/.eslintrc.js ./source --ext .ts,.tsx",
-        "build.development": "tsup --watch",
-        "build.production": "tsup",
-        "build": "tsup",
-        "prepublishOnly": "pnpm build"
-    },
-    "peerDependencies": {
-        "@plurid/plurid-data": "*",
-        "@plurid/plurid-functions": "*",
-        "@plurid/plurid-themes": "*"
-    },
-    "devDependencies": {
-        "@plurid/plurid-data": "workspace:*",
-        "@plurid/plurid-functions": "workspace:*",
-        "@plurid/plurid-pubsub": "workspace:*",
-        "@plurid/plurid-themes": "workspace:*",
-        "@types/jest": "^29.5.11",
-        "@types/node": "^20.10.6",
-        "@typescript-eslint/eslint-plugin": "^6.17.0",
-        "@typescript-eslint/parser": "^6.17.0",
-        "coveralls": "^3.1.1",
-        "eslint": "^8.56.0",
-        "jest": "^29.7.0",
-        "jest-config": "^29.7.0",
-        "jest-environment-jsdom": "^29.7.0",
-        "rimraf": "^5.0.5",
-        "ts-jest": "^29.1.1",
-        "tsup": "^8.5.1",
-        "typescript": "^5.9.3"
+  "name": "@plurid/plurid-engine",
+  "version": "0.0.0-18",
+  "sideEffects": false,
+  "description": "Plurid Engine and Utility Functions",
+  "keywords": [
+    "plurid",
+    "engine"
+  ],
+  "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plurid/plurid"
+  },
+  "bugs": {
+    "email": "source@plurid.com",
+    "url": "https://github.com/plurid/plurid/issues"
+  },
+  "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-engine",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "files": [
+    "distribution"
+  ],
+  "main": "distribution/index.js",
+  "module": "distribution/index.mjs",
+  "types": "distribution/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./distribution/index.d.ts",
+      "import": "./distribution/index.mjs",
+      "require": "./distribution/index.js"
     }
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=6"
+  },
+  "scripts": {
+    "clean": "rimraf ./distribution",
+    "clean.tests": "find ./distribution -type d -name \"__tests__\" -prune -exec rm -rf {} +",
+    "clean.performance": "find ./distribution -type d -name \"__performance__\" -prune -exec rm -rf {} +",
+    "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
+    "test.suite": "jest -c configurations/jest.config.js",
+    "build.development": "tsup --watch",
+    "build.production": "tsup",
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "@plurid/plurid-data": "*",
+    "@plurid/plurid-functions": "*",
+    "@plurid/plurid-themes": "*"
+  },
+  "devDependencies": {
+    "@plurid/plurid-data": "workspace:*",
+    "@plurid/plurid-functions": "workspace:*",
+    "@plurid/plurid-pubsub": "workspace:*",
+    "@plurid/plurid-themes": "workspace:*",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.10.6",
+    "coveralls": "^3.1.1",
+    "jest": "^30.4.2",
+    "jest-config": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.4.11",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
 }

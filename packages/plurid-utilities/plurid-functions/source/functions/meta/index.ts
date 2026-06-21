@@ -6,16 +6,15 @@ export const debounce = (
 ) => {
     let timeout: any;
 
-    return function (this: any) {
-        let context = this;
-        let args = arguments;
+    return function (this: any, ...args: any[]) {
+        const context = this;
 
-        let later = function() {
+        const later = function() {
             timeout = null;
             if (!immediate) func.apply(context, args);
         };
 
-        let callNow = immediate && !timeout;
+        const callNow = immediate && !timeout;
 
         clearTimeout(timeout);
 
