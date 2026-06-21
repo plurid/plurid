@@ -51,6 +51,10 @@ export const PLURID_PUBSUB_TOPIC = {
     REMOVE_PLANE_LINK: 'space.removePlaneLink',
     SET_PLANE_LINKS: 'space.setPlaneLinks',
 
+    SET_SELECTION: 'space.setSelection',
+    TOGGLE_SELECTION: 'space.toggleSelection',
+    CLEAR_SELECTION: 'space.clearSelection',
+
     SET_PLANE_PATH: 'plane.setPath',
 } as const;
 

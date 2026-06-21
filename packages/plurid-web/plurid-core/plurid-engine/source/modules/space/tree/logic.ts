@@ -1176,7 +1176,7 @@ const sameLocation = (
  * `width`/`height` (carry-forward, handled by the caller). `routeDivisions`/`linkCoordinates` are
  * derived from `route`, so an equal `route` implies they match too.
  */
-const sameNodeOwnFields = (
+const sameNodeOwnFieldsExceptLocation = (
     a: TreePlane,
     b: TreePlane,
 ): boolean =>
@@ -1186,7 +1186,13 @@ const sameNodeOwnFields = (
     && a.route === b.route
     && a.show === b.show
     && a.bridgeLength === b.bridgeLength
-    && a.planeAngle === b.planeAngle
+    && a.planeAngle === b.planeAngle;
+
+const sameNodeOwnFields = (
+    a: TreePlane,
+    b: TreePlane,
+): boolean =>
+    sameNodeOwnFieldsExceptLocation(a, b)
     && sameLocation(a.location, b.location);
 
 // Mutually recursive with `reconcileNode`; declared as hoisted `function`s so order doesn't matter.
@@ -1246,28 +1252,44 @@ function reconcileNode(
     const width = carriedDimension(next.width, previous.width);
     const height = carriedDimension(next.height, previous.height);
 
+    // A manually-pinned plane keeps its user-set location + flag across auto-layout recomputes —
+    // the same carry-forward idea as measured `width`/`height`. (The deliberate MOVE mutates the
+    // tree directly via `transformSelectedPlanes`, bypassing reconcile, so it is NOT clobbered here.)
+    const pinned = previous.manuallyPositioned === true;
+    const location = pinned ? previous.location : next.location;
+    const manuallyPositioned = pinned ? true : next.manuallyPositioned;
+
+    const ownUnchanged = pinned
+        ? sameNodeOwnFieldsExceptLocation(previous, next)
+        : sameNodeOwnFields(previous, next);
+
     const unchanged =
-        sameNodeOwnFields(previous, next)
+        ownUnchanged
         && children === previous.children
         && width === previous.width
-        && height === previous.height;
+        && height === previous.height
+        && manuallyPositioned === previous.manuallyPositioned;
 
     if (unchanged) {
         return previous;
     }
 
-    // Partially changed: new node, but graft the reconciled children + carried dimensions so deeper
-    // unchanged subtrees and the live measurement survive.
+    // Partially changed: graft the reconciled children + carried dimensions + carried location/flag
+    // so deeper unchanged subtrees, live measurement, and manual positioning all survive.
     if (
         children !== next.children
         || width !== next.width
         || height !== next.height
+        || location !== next.location
+        || manuallyPositioned !== next.manuallyPositioned
     ) {
         return {
             ...next,
             width,
             height,
             children,
+            location,
+            manuallyPositioned,
         };
     }
 

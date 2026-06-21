@@ -70,6 +70,8 @@ export interface PluridStateSpace {
     activePlaneID: string;
     isolatePlane: string;
     lastClosedPlane: string;
+    /** Multi-selection working set — the planes the user has selected to act on as a group. */
+    selectedPlaneIDs: string[];
 }
 
 

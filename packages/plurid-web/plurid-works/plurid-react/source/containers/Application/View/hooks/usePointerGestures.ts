@@ -19,6 +19,7 @@
 
     // #region external
     import actions from '~services/state/actions';
+    import { AppState } from '~services/state/store';
 
     import {
         DispatchAction,
@@ -34,6 +35,8 @@ export interface UsePointerGesturesParameters {
     /** `stateConfiguration.space` — mirrored into a ref so the handlers read live values. */
     spaceConfiguration: PluridConfigurationSpace;
     grabModeRef: React.MutableRefObject<boolean>;
+    /** Always-latest app state — the handlers read `selectedPlaneIDs` + `scale` for drag-to-move. */
+    stateRef: React.MutableRefObject<AppState>;
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
     setNavDragging: (value: boolean) => void;
 
@@ -61,6 +64,7 @@ export const usePointerGestures = (
         viewElement,
         spaceConfiguration,
         grabModeRef,
+        stateRef,
         dispatch,
         setNavDragging,
         dispatchRotateXWith,
@@ -81,6 +85,8 @@ export const usePointerGestures = (
     // it's a click, which must pass through to UI controls (plane header icons, toolbar buttons).
     const pointerDragging = useRef<boolean>(false);
     const pointerDownAt = useRef<{ x: number; y: number } | null>(null);
+    // True for the duration of a drag that MOVES the current selection (vs orbits/pans the camera).
+    const movingSelection = useRef<boolean>(false);
     const momentum = useRef<{ vx: number; vy: number }>({ vx: 0, vy: 0 });
     const momentumFrame = useRef<number | null>(null);
     // Always-latest space config (transformMode/locks/firstPerson) for the pointer handlers, so
@@ -152,6 +158,17 @@ export const usePointerGestures = (
         const applySingle = (dx: number, dy: number, event: PointerEvent) => {
             const mode = spaceConfigRef.current.transformMode;
             navWasOrbit = false;
+            // Drag-to-move the selection: convert the screen delta to space-local units (÷ scale) and
+            // shift every selected plane. No camera change, no momentum fling. (Head-on is exact; under
+            // a heavy orbit the X/Y mapping is approximate — a known v1 limitation.)
+            if (movingSelection.current) {
+                const scale = stateRef.current?.space?.scale || 1;
+                dispatch(actions.space.transformSelectedPlanes({
+                    deltaX: dx / scale,
+                    deltaY: dy / scale,
+                }));
+                return;
+            }
             if (spaceConfigRef.current.firstPerson) {
                 // Fly mode: dragging looks around (yaw/pitch). When the pointer is locked the
                 // dedicated mouse-look listener takes over (clientX/Y frozen, so dx/dy here are ~0).
@@ -214,13 +231,36 @@ export const usePointerGestures = (
             // Only engage navigation for a deliberate nav gesture; otherwise leave the press to the
             // browser (text selection, clicks, links) — planes are pages. Nav = fly mode, grab mode
             // (G), the middle mouse button, or an explicit rotate/scale/translate mode.
+            // Drag-to-move: a plain left-drag on an ALREADY-SELECTED plane (normal mode only) moves the
+            // whole selection. Orbit requires grab mode, so this never competes with it; shift is left
+            // to pan, and a no-drag click still reaches the plane's shift-click selection toggle.
+            let moveIntent = false;
+            const selection = stateRef.current?.space?.selectedPlaneIDs;
+            if (
+                selection && selection.length > 0
+                && event.button === 0
+                && !event.shiftKey
+                && !spaceConfigRef.current.firstPerson
+                && !grabModeRef.current
+                && spaceConfigRef.current.transformMode === TRANSFORM_MODES.ALL
+            ) {
+                const planeEl = target && target.closest
+                    ? target.closest('[data-plurid-plane]')
+                    : null;
+                const planeID = planeEl && planeEl.getAttribute('data-plurid-plane');
+                if (planeID && selection.includes(planeID)) {
+                    moveIntent = true;
+                }
+            }
+
             const navIntent = spaceConfigRef.current.firstPerson
                 || grabModeRef.current
                 || event.button === 1
                 || spaceConfigRef.current.transformMode !== TRANSFORM_MODES.ALL;
-            if (!navIntent) {
+            if (!navIntent && !moveIntent) {
                 return;
             }
+            movingSelection.current = moveIntent;
             stopMomentum();
             momentum.current = { vx: 0, vy: 0 };
             pointerDragging.current = false;
@@ -314,7 +354,13 @@ export const usePointerGestures = (
                 pointerDownAt.current = null;
                 setNavDragging(false);
                 const wasDragging = pointerDragging.current;
+                const wasMoving = movingSelection.current;
                 pointerDragging.current = false;
+                movingSelection.current = false;
+                // On release of a selection move, edge-snap the group to nearby planes.
+                if (wasDragging && wasMoving) {
+                    dispatch(actions.space.snapSelection(undefined));
+                }
                 // Only fling momentum if this was an actual orbit drag (not a click).
                 const m = momentum.current;
                 if (wasDragging

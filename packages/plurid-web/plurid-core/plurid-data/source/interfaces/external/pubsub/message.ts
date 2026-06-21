@@ -434,6 +434,40 @@ export interface PluridPubSubSubscribeMessageSetPlaneLinks {
 }
 
 
+export interface PluridPubSubMessageSetSelection {
+    ids: string[];
+}
+export interface PluridPubSubPublishMessageSetSelection {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_SELECTION;
+    data: PluridPubSubMessageSetSelection;
+}
+export interface PluridPubSubSubscribeMessageSetSelection {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_SELECTION;
+    callback: PluridPubSubCallback<PluridPubSubMessageSetSelection>;
+}
+
+export interface PluridPubSubMessageToggleSelection {
+    id: string;
+}
+export interface PluridPubSubPublishMessageToggleSelection {
+    topic: typeof PLURID_PUBSUB_TOPIC.TOGGLE_SELECTION;
+    data: PluridPubSubMessageToggleSelection;
+}
+export interface PluridPubSubSubscribeMessageToggleSelection {
+    topic: typeof PLURID_PUBSUB_TOPIC.TOGGLE_SELECTION;
+    callback: PluridPubSubCallback<PluridPubSubMessageToggleSelection>;
+}
+
+export interface PluridPubSubPublishMessageClearSelection {
+    topic: typeof PLURID_PUBSUB_TOPIC.CLEAR_SELECTION;
+    data?: any;
+}
+export interface PluridPubSubSubscribeMessageClearSelection {
+    topic: typeof PLURID_PUBSUB_TOPIC.CLEAR_SELECTION;
+    callback: PluridPubSubCallback<any>;
+}
+
+
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
     | PluridPubSubPublishMessageSpaceAnimatedTransform
@@ -474,6 +508,9 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageAddPlaneLink
     | PluridPubSubPublishMessageRemovePlaneLink
     | PluridPubSubPublishMessageSetPlaneLinks
+    | PluridPubSubPublishMessageSetSelection
+    | PluridPubSubPublishMessageToggleSelection
+    | PluridPubSubPublishMessageClearSelection
     ;
 
 
@@ -517,5 +554,8 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageAddPlaneLink
     | PluridPubSubSubscribeMessageRemovePlaneLink
     | PluridPubSubSubscribeMessageSetPlaneLinks
+    | PluridPubSubSubscribeMessageSetSelection
+    | PluridPubSubSubscribeMessageToggleSelection
+    | PluridPubSubSubscribeMessageClearSelection
     ;
 // #endregion module

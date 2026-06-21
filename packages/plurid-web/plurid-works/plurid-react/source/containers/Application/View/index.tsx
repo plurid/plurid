@@ -442,6 +442,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             viewElement,
             spaceConfiguration: stateConfiguration.space,
             grabModeRef,
+            stateRef,
             dispatch,
             setNavDragging,
             dispatchRotateXWith,

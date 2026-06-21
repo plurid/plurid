@@ -104,6 +104,9 @@ export interface PluridPlaneStateProperties {
     // planes whose active-state actually changes.
     stateIsActivePlane: boolean;
     stateIsolatePlane: string;
+    // A per-instance DERIVED boolean (this plane is in `selectedPlaneIDs`), same memoization
+    // rationale as `stateIsActivePlane` — only flips for the plane whose selection actually changes.
+    stateIsSelected: boolean;
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
 }
@@ -111,6 +114,7 @@ export interface PluridPlaneStateProperties {
 export interface PluridPlaneDispatchProperties {
     dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
     dispatchUpdateSpaceTreePlane: DispatchAction<typeof actions.space.updateSpaceTreePlane>;
+    dispatchToggleSelection: DispatchAction<typeof actions.space.toggleSelection>;
 }
 
 export type PluridPlaneProperties =
@@ -152,6 +156,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateViewSize,
         stateIsActivePlane,
         stateIsolatePlane,
+        stateIsSelected,
         stateGeneralTheme,
         stateConfiguration,
         // #endregion state
@@ -159,6 +164,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         // #region dispatch
         dispatchSetSpaceField,
         dispatchUpdateSpaceTreePlane,
+        dispatchToggleSelection,
         // #endregion dispatch
     } = properties;
 
@@ -265,6 +271,18 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         };
 
         dispatchSetSpaceField(payload);
+    }
+
+    const handlePlaneClick = (
+        event: React.MouseEvent,
+    ) => {
+        // Shift+click toggles this plane's membership in the multi-selection. Plain clicks pass
+        // through untouched so the host's plane content stays fully interactive; `preventDefault`
+        // suppresses the stray text-selection a shift+click would otherwise start.
+        if (event.shiftKey) {
+            event.preventDefault();
+            dispatchToggleSelection(planeID);
+        }
     }
 
     const debouncedSetActivePlane = useDebouncedCallback(
@@ -385,6 +403,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             onMouseLeave={() => setMouseOver(false)}
             onMouseOver={() => debouncedSetActivePlane()}
             onMouseMove={() => debouncedSetActivePlane()}
+            onClick={handlePlaneClick}
+            selected={stateIsSelected}
             transparentUI={transparentUI}
             mouseOver={mouseOver}
             data-plurid-plane={planeID}
@@ -450,6 +470,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 // untouched, so this returns shallow-equal props and the plane skips re-render entirely.
 const makeMapStateToProps = () => {
     const getParentPlane = selectors.space.makeGetTreePlaneByID();
+    const getIsSelected = selectors.space.makeGetIsPlaneSelected();
 
     return (
         state: AppState,
@@ -459,6 +480,7 @@ const makeMapStateToProps = () => {
         stateViewSize: selectors.space.getViewSize(state),
         stateIsActivePlane: selectors.space.getActivePlaneID(state) === ownProps.planeID,
         stateIsolatePlane: selectors.space.getIsolatePlane(state),
+        stateIsSelected: getIsSelected(state, ownProps.planeID),
         stateGeneralTheme: selectors.themes.getGeneralTheme(state),
         stateConfiguration: selectors.configuration.getConfiguration(state),
     });
@@ -477,6 +499,11 @@ const mapDispatchToProps = (
         payload,
     ) => dispatch(
         actions.space.updateSpaceTreePlane(payload),
+    ),
+    dispatchToggleSelection: (
+        payload,
+    ) => dispatch(
+        actions.space.toggleSelection(payload),
     ),
 });
 

@@ -44,9 +44,21 @@
 >   while its screen rect tracks the orbit). Edges to a closed/absent plane simply don't draw. Harness-
 >   verified: add→edge attached through orbit, `getBacklinks` (in 3a), survives reload, pubsub add/remove.
 >
-> **Next:** #4 selection/group/snap, then #6 collab seam, #8 WebXR. (Backlinks *panel* UI + a host
-> drag-to-link gesture are product-side — the engine ships the `getBacklinks` selector + the edges + the
-> seam.)
+> - **#4 Spatial selection: multi-select · group-move · snap** — `selectedPlaneIDs[]` on space state
+>   (toggle/set/dedupe/clear reducers, memoized `makeGetIsPlaneSelected`, public pubsub seam
+>   `space.setSelection`/`toggleSelection`/`clearSelection`); a 3px accent ring on selected planes;
+>   **shift+click** toggles selection, **Escape** clears. Group-move uses the **sticky manual-position**
+>   model (user's choice): a `transformSelectedPlanes({delta})` reducer shifts every selected plane and
+>   sets `manuallyPositioned`, and `reconcileNode` then **carries a pinned plane's location across every
+>   relayout** (the same carry-forward as measured width/height — verified at the choke point: a
+>   recompute that reset + un-flagged the plane left it pinned while un-pinned planes reflowed). A
+>   drag-to-move gesture in `usePointerGestures` (screen-delta ÷ scale → space units, gated to selected
+>   planes in normal mode so it never fights orbit), and an edge-snap to nearby planes on release
+>   (`snapSelection`, 12px threshold). Harness-verified end-to-end: shift-click, ring, group-drag, pin
+>   survives relayout, snap-on-release.
+>
+> **Next:** #6 collaboration seam, then #8 WebXR. (Product-side, engine stays out of the way: backlinks
+> *panel* UI + drag-to-link gesture for #3; alignment-guide overlay + grid option + Z-axis move for #4.)
 
 ## Governing principle — engine primitive vs product work
 
@@ -73,7 +85,7 @@ Front-load the cheap, purely-additive wins; defer the two big lifts and the rewr
 | 3 ✅ | [Spatial undo/redo](#2-spatial-undoredo) | Med | Table-stakes once users author the space |
 | 4 ✅ | [Minimap / overview](#7-minimap--overview) | Small→Med | Cheap delight; orientation in big spaces |
 | 5 ✅ | [Inter-plane link graph + 3D edges](#3-inter-plane-link-graph--3d-edges) | Large | The differentiator |
-| 6 | [Spatial selection: multi-select / group / snap](#4-spatial-selection-multi-select--group--snapping) | Med→Large | Authoring of arrangement |
+| 6 ✅ | [Spatial selection: multi-select / group / snap](#4-spatial-selection-multi-select--group--snapping) | Med→Large | Authoring of arrangement |
 | 7 | [Collaboration seam](#6-collaboration-seam) | Med→Large | Makes multiplayer pluggable |
 | 8 | [WebXR renderer](#8-webxr-renderer) | Large | Frontier / R&D; near-rewrite of rendering |
 
@@ -241,8 +253,30 @@ is drawn.
 
 ---
 
-## 4. Spatial selection: multi-select · group · snapping
+## 4. Spatial selection: multi-select · group · snapping  ✅ DELIVERED (2026-06-21)
 *Effort: Medium → Large*
+
+> **Delivered.** **Selection:** `selectedPlaneIDs: string[]` on space state (NOT persisted — a transient
+> working set, distinct from the persisted hover `activePlaneID`); reducers `setSelection` (dedupes) /
+> `toggleSelection` / `addToSelection` / `clearSelection`; per-instance memoized `makeGetIsPlaneSelected`
+> so a plane re-renders only when its own selected-ness flips; public pubsub seam `space.setSelection` /
+> `toggleSelection` / `clearSelection`. **Interaction:** a 3px `colorPrimary` ring on selected planes
+> (verified correlating exactly with state); **shift+click** toggles (plain clicks pass through to host
+> content); **Escape** clears (only when non-empty, so it still reaches the help overlay).
+> **Group-move — chose STICKY manual positions (user decision):** `transformSelectedPlanes({deltaX,
+> deltaY, deltaZ})` shifts each selected plane by a space-local delta and sets `manuallyPositioned`;
+> `reconcileNode` carries a pinned plane's `location` + flag across every relayout (same carry-forward as
+> measured width/height — the move mutates the tree directly, bypassing reconcile, so it lands; relayouts
+> then preserve it). A drag-to-move gesture in `usePointerGestures` (screen delta ÷ `scale` → space
+> units; engages only on a plain left-drag of an already-selected plane in normal mode, so it never
+> competes with orbit, which needs grab mode). **Snap:** `snapSelection` edge-aligns the group to a
+> nearby plane's left/top edge within a 12px threshold, dispatched on drag-release. Harness-verified:
+> shift-click multi-select + ring, group-drag (all move together, ÷scale correct, unselected gated out),
+> pin survives a recompute at the reconcile choke point, snap aligns within threshold / leaves alone
+> beyond, snap-on-release round-trip.
+>
+> *Deferred (noted): a live alignment-guide overlay, a grid-snap option, Z-axis drag, and folding link/
+> move edits into undo (the history signature is structural — position changes aren't captured yet).*
 
 **Goal.** Select multiple planes, move/group them, with snapping and alignment guides — i.e. let users
 *author* the arrangement, not just navigate a host-defined one.

@@ -50,6 +50,7 @@
         SetTransformPayload,
         UpdateSpaceLinkCoordinatesPayload,
         UpdatePlaneLinkPayload,
+        TransformSelectedPlanesPayload,
     } from './types';
 
     import * as selectors from './selectors';
@@ -103,6 +104,7 @@ const initialState: PluridStateSpace = {
     activePlaneID: '',
     isolatePlane: '',
     lastClosedPlane: '',
+    selectedPlaneIDs: [],
 };
 
 
@@ -672,6 +674,138 @@ export const space = createSlice({
             state.links = action.payload;
         },
         // #endregion link graph
+
+        // #region selection
+        // A multi-selection working set, distinct from the hover-driven `activePlaneID`.
+        setSelection: (
+            state,
+            action: PayloadAction<string[]>,
+        ) => {
+            // Dedupe defensively; selection is a set.
+            state.selectedPlaneIDs = [...new Set(action.payload)];
+        },
+        toggleSelection: (
+            state,
+            action: PayloadAction<string>,
+        ) => {
+            const id = action.payload;
+            if (state.selectedPlaneIDs.includes(id)) {
+                state.selectedPlaneIDs = state.selectedPlaneIDs.filter(s => s !== id);
+            } else {
+                state.selectedPlaneIDs.push(id);
+            }
+        },
+        addToSelection: (
+            state,
+            action: PayloadAction<string>,
+        ) => {
+            const id = action.payload;
+            if (!state.selectedPlaneIDs.includes(id)) {
+                state.selectedPlaneIDs.push(id);
+            }
+        },
+        clearSelection: (
+            state,
+        ) => {
+            if (state.selectedPlaneIDs.length > 0) {
+                state.selectedPlaneIDs = [];
+            }
+        },
+        // Move every selected plane by a delta (space-local units) and pin it. Mutates the tree
+        // DIRECTLY (Immer, no `reconcileTree`) so the move lands; `manuallyPositioned` then makes the
+        // reconcile carry this location across later relayouts — see `reconcileNode`.
+        transformSelectedPlanes: (
+            state,
+            action: PayloadAction<TransformSelectedPlanesPayload>,
+        ) => {
+            const {
+                deltaX = 0,
+                deltaY = 0,
+                deltaZ = 0,
+            } = action.payload;
+
+            if (state.selectedPlaneIDs.length === 0
+                || (deltaX === 0 && deltaY === 0 && deltaZ === 0)) {
+                return;
+            }
+
+            const selected = new Set(state.selectedPlaneIDs);
+            const walk = (nodes: TreePlane[]) => {
+                for (const node of nodes) {
+                    if (selected.has(node.planeID)) {
+                        node.location.translateX += deltaX;
+                        node.location.translateY += deltaY;
+                        node.location.translateZ += deltaZ;
+                        node.manuallyPositioned = true;
+                    }
+                    if (node.children) {
+                        walk(node.children);
+                    }
+                }
+            };
+            walk(state.tree);
+        },
+        // Edge-align the selection to nearby planes (typically on drag-release): find the smallest
+        // X- and Y-offset (each within `threshold`) that lines a selected plane's left/top edge up with
+        // an un-selected plane's, then shift the WHOLE selection by it so the group stays cohesive.
+        // Operates on `location` (left/top corners), which live on the tree — plane SIZES are DOM-only.
+        snapSelection: (
+            state,
+            action: PayloadAction<{ threshold?: number } | undefined>,
+        ) => {
+            const threshold = action.payload?.threshold ?? 12;
+            if (state.selectedPlaneIDs.length === 0) {
+                return;
+            }
+
+            const selected = new Set(state.selectedPlaneIDs);
+            const all: TreePlane[] = [];
+            const collect = (nodes: TreePlane[]) => {
+                for (const node of nodes) {
+                    all.push(node);
+                    if (node.children) {
+                        collect(node.children);
+                    }
+                }
+            };
+            collect(state.tree);
+
+            const sel = all.filter(p => selected.has(p.planeID));
+            const others = all.filter(p => !selected.has(p.planeID) && p.show !== false);
+            if (sel.length === 0 || others.length === 0) {
+                return;
+            }
+
+            // Nearest qualifying alignment offset on an axis (0 if none within threshold).
+            const bestOffset = (axis: 'translateX' | 'translateY'): number => {
+                let best = 0;
+                let bestAbs = threshold;
+                for (const s of sel) {
+                    for (const o of others) {
+                        const d = o.location[axis] - s.location[axis];
+                        const abs = Math.abs(d);
+                        if (abs <= bestAbs) {
+                            bestAbs = abs;
+                            best = d;
+                        }
+                    }
+                }
+                return best;
+            };
+
+            const offsetX = bestOffset('translateX');
+            const offsetY = bestOffset('translateY');
+            if (offsetX === 0 && offsetY === 0) {
+                return;
+            }
+
+            for (const s of sel) {
+                s.location.translateX += offsetX;
+                s.location.translateY += offsetY;
+                s.manuallyPositioned = true;
+            }
+        },
+        // #endregion selection
 
         // No-op markers — the history middleware intercepts `space/undo` + `space/redo` and does the
         // real work (re-dispatching `setTree` with a snapshot). Defined here only so RTK generates

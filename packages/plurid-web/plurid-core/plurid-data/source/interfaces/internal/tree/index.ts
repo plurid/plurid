@@ -34,6 +34,12 @@ export interface TreePlane {
     children?: TreePlane[];
     bridgeLength?: number;
     planeAngle?: number;
+    /**
+     * Set when the user has dragged this plane to a manual position. The auto-layout then leaves it
+     * pinned (its `location` is carried across relayouts, like measured `width`/`height`) and arranges
+     * only the un-pinned planes around it. Persisted with the tree, so manual arrangement survives reload.
+     */
+    manuallyPositioned?: boolean;
 }
 
 

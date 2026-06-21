@@ -58,4 +58,10 @@ export interface UpdatePlaneLinkPayload {
     id: string;
     update: Partial<Omit<PlaneLink, 'id'>>;
 }
+
+export interface TransformSelectedPlanesPayload {
+    deltaX?: number;
+    deltaY?: number;
+    deltaZ?: number;
+}
 // #endregion module

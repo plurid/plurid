@@ -19,6 +19,7 @@ export interface IStyledPluridPlane {
     transparentUI: boolean;
     planeControls: boolean;
     planeOpacity: number;
+    selected: boolean;
 }
 
 export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
@@ -44,10 +45,17 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     }};
     box-shadow: ${({
         planeOpacity,
+        selected,
         theme,
     }) => {
+        // A 3px accent ring marks selection — distinct from the hover/active highlight, and kept
+        // even when the plane is fully transparent so a selected-but-faded plane still reads.
+        const ring = `0 0 0 3px ${theme.colorPrimary}`;
         if (planeOpacity === 0) {
-            return 'none';
+            return selected ? ring : 'none';
+        }
+        if (selected) {
+            return `${ring}, ${theme.boxShadowUmbra}`;
         }
         return theme.boxShadowUmbra;
     }};

@@ -73,6 +73,23 @@ export const getActivePlaneID = (state: AppState) => state.space.activePlaneID;
 export const getIsolatePlane = (state: AppState) => state.space.isolatePlane;
 export const getLastClosedPlane = (state: AppState) => state.space.lastClosedPlane;
 
+export const getSelectedPlaneIDs = (state: AppState): string[] => state.space.selectedPlaneIDs;
+
+/**
+ * Factory for a memoized "is THIS plane selected" selector. One per connected plane (via `connect`'s
+ * `makeMapStateToProps` form), so each plane reads a stable boolean and re-renders only when its own
+ * selected-ness flips — not whenever any other plane's selection changes.
+ */
+export const makeGetIsPlaneSelected = () => createSelector(
+    [
+        getSelectedPlaneIDs,
+        (_state: AppState, planeID: string | undefined) => planeID,
+    ],
+    (selectedPlaneIDs, planeID) => (planeID
+        ? selectedPlaneIDs.includes(planeID)
+        : false),
+);
+
 
 // Normalized `planeID -> node` index, rebuilt ONLY when the tree reference changes (so it is
 // NOT recomputed during the per-frame transform dispatches of an orbit/pan/zoom gesture, which

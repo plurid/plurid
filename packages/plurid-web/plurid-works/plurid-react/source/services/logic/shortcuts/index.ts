@@ -90,6 +90,14 @@ export const handleGlobalShortcuts = (
     }
 
 
+    // Escape clears the multi-selection — but only when something is selected, so an empty Escape
+    // still reaches anything else listening for it (e.g. the help overlay).
+    if (event.code === 'Escape' && state.space.selectedPlaneIDs.length > 0) {
+        handleEvent();
+        return dispatch(actions.space.clearSelection());
+    }
+
+
     // Fit all planes into view (CAD "frame all"): Home or 0.
     if (
         (event.key === 'Home' || event.code === 'Digit0')

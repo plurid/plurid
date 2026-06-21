@@ -524,6 +524,35 @@ export const usePluridPubSub = (
                     dispatch(actions.space.setPlaneLinks(links));
                 },
             },
+            {
+                // Public seam for the multi-selection working set. A host wires its own select
+                // trigger (e.g. a plane-header click) to these; the built-in shift+click + Escape
+                // publish them too.
+                topic: PLURID_PUBSUB_TOPIC.SET_SELECTION,
+                callback: (data) => {
+                    const ids = (data as any)?.ids;
+                    if (!Array.isArray(ids)) {
+                        return;
+                    }
+                    dispatch(actions.space.setSelection(ids));
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.TOGGLE_SELECTION,
+                callback: (data) => {
+                    const id = (data as any)?.id;
+                    if (!id) {
+                        return;
+                    }
+                    dispatch(actions.space.toggleSelection(id));
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.CLEAR_SELECTION,
+                callback: () => {
+                    dispatch(actions.space.clearSelection());
+                },
+            },
         ];
 
         const indexes: string[] = [];
