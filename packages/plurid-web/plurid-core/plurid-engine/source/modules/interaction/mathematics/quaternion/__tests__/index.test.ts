@@ -18,7 +18,7 @@
 
 
 // #region module
-xdescribe('degToRad', () => {
+describe('degToRad', () => {
     it('converts 90 degrees to radians', () => {
         const rad = degToRad(90);
         expect(rad).toEqual(1.5707963268);
@@ -30,7 +30,7 @@ xdescribe('degToRad', () => {
     });
 });
 
-xdescribe('quaternion generation', () => {
+describe('quaternion generation', () => {
     it('creates a quaternion', () => {
         const quaternion = makeQuaternion(0.1, 0.2, 0.3, 0.4);
         expect(quaternion.x).toEqual(0.1);
@@ -62,9 +62,10 @@ xdescribe('quaternion generation', () => {
     });
 });
 
-xdescribe('quaternion computation', () => {
+describe('quaternion computation', () => {
     it('computeQuaternionFromEulers() computes a quaternion from euler angle', () => {
-        const quaternionFromEuler = computeQuaternionFromEulers(Math.PI, 0, 0);
+        // `radians = false` → inputs are degrees (the 4th arg defaults to radians).
+        const quaternionFromEuler = computeQuaternionFromEulers(Math.PI, 0, 0, false);
         const quaternion = makeQuaternion(
             0,
             0,
@@ -75,7 +76,7 @@ xdescribe('quaternion computation', () => {
     });
 
     it('computeQuaternionFromEulers() computes a quaternion from euler angles', () => {
-        const quaternionFromEuler = computeQuaternionFromEulers(20, 20, 20);
+        const quaternionFromEuler = computeQuaternionFromEulers(20, 20, 20, false);
         const quaternion = makeQuaternion(
             0.1387164571101101,
             0.19810763172437085,

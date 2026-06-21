@@ -9,7 +9,7 @@
 
 
 // #region module
-xdescribe('resolveRoute', () => {
+describe('resolveRoute', () => {
     it('handles plane', () => {
         const link = '/plane-one';
         const result = resolveRoute(link);

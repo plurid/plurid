@@ -57,6 +57,7 @@ const planes: PluridPlane<string>[] = [
 // Cross-origin routing is archived-pluriverse territory (the harness/product use same-origin
 // link-spawn + SPA nav, both covered by the `simple` + `Parser` suites). Re-enable when the
 // foreign-origin normalization is reworked.
+// SKIP (needs routing review): IsoMatcher resolution changed (match values now origin-prefixed; parametric matches return undefined) — confirm correct-vs-regression before trusting these expectations.
 xdescribe('IsoMatcher foreign', () => {
     it('matches simple routes', () => {
         const isoMatcher = new IsoMatcher<string>({

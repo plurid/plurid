@@ -199,7 +199,7 @@ describe('transform', () => {
     });
 
 
-    xit('works', () => {
+    it('works', () => {
         const pointP = {
             w: 0,
             i: 0,
@@ -319,7 +319,7 @@ describe('transform', () => {
     });
 
 
-    xit('works', () => {
+    it('works', () => {
         const iMatrix = getInitialMatrix();
 
 
@@ -397,7 +397,7 @@ describe('transform', () => {
     });
 
 
-    xit('works', () => {
+    it('works', () => {
         const t1Matrix = translateMatrix(
             0,
             300,
@@ -424,7 +424,7 @@ describe('transform', () => {
     });
 
 
-    xit('works', () => {
+    it('works', () => {
         const qFromEuler1 = computeQuaternionFromEulers(0, 0, 90, false);
         const qPoint = makeQuaternion(0, 300, -100, 0);
         const qInverse = inverseQuaternion(qFromEuler1);
@@ -439,7 +439,7 @@ describe('transform', () => {
     });
 
 
-    xit('works', () => {
+    it('works', () => {
         const t1Matrix = translateMatrix(
             400,
             400,

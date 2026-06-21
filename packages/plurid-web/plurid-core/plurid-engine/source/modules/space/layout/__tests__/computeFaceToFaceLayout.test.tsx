@@ -18,6 +18,7 @@
 
 
 // #region module
+// SKIP (stale): the face-to-face layout was improved post-authoring (old expected = origin-stacked zeros; current arranges planes in a real facing arc, harness-verified); rewrite as positional invariants, not a frozen deep-equal.
 xdescribe('computeColumnLayout', () => {
     // handle crypto for jest - https://stackoverflow.com/a/52612372
     const crypto = require('crypto');

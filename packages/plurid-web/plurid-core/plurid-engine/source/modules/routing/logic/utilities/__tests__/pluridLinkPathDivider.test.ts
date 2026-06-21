@@ -9,7 +9,7 @@
 
 
 // #region module
-xdescribe('pluridLinkPathDivider', () => {
+describe('pluridLinkPathDivider', () => {
     it('works', () => {});
 
     // it('handles plane', () => {
