@@ -41,6 +41,10 @@
     import store from '~services/state/store';
     import StateContext from '~services/state/context';
 
+    import {
+        encodeViewpoint,
+    } from '~services/logic/viewpoint';
+
     // import {
     //     loadStateFromContext,
     // } from '~services/logic/state';
@@ -77,6 +81,9 @@ class PluridApplication extends Component<
     private persistDirty = false;
     private flushPersistImmediate: (() => void) | undefined;
     private onVisibilityChange: (() => void) | undefined;
+    private viewpointUnsubscriber: ReduxUnsubscribe | undefined;
+    private viewpointTimeout: ReturnType<typeof setTimeout> | undefined;
+    private lastViewpoint: string | undefined;
     private storeID: string;
     private planesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
 
@@ -94,6 +101,7 @@ class PluridApplication extends Component<
 
         this.store = store(this.computeStore());
         this.subscribeStore();
+        this.subscribeViewpoint();
     }
 
 
@@ -121,6 +129,13 @@ class PluridApplication extends Component<
     public componentWillUnmount() {
         if (this.storeUnubscriber) {
             this.storeUnubscriber();
+        }
+        if (this.viewpointUnsubscriber) {
+            this.viewpointUnsubscriber();
+        }
+        if (this.viewpointTimeout) {
+            clearTimeout(this.viewpointTimeout);
+            this.viewpointTimeout = undefined;
         }
         if (typeof window !== 'undefined') {
             if (this.flushPersistImmediate) {
@@ -275,6 +290,44 @@ class PluridApplication extends Component<
                 document.addEventListener('visibilitychange', this.onVisibilityChange);
             }
         }
+    }
+
+    /**
+     * Programmatic GET seam: push the ENCODED viewpoint to `onViewpointChange` whenever the camera
+     * settles (debounced ~250ms — the camera changes per frame during an orbit). Independent of the
+     * URL config + `useLocalStorage`, so a host can drive its OWN share links / storage / sync. Only
+     * wired when the host actually supplies the callback.
+     */
+    private subscribeViewpoint() {
+        if (!this.store || !this.props.onViewpointChange) {
+            return;
+        }
+
+        this.viewpointUnsubscriber = this.store.subscribe(() => {
+            if (this.viewpointTimeout) {
+                clearTimeout(this.viewpointTimeout);
+            }
+            this.viewpointTimeout = setTimeout(() => {
+                if (!this.store || !this.props.onViewpointChange) {
+                    return;
+                }
+                const space = this.store.getState().space;
+                const viewpoint = encodeViewpoint({
+                    rotationX: space.rotationX,
+                    rotationY: space.rotationY,
+                    translationX: space.translationX,
+                    translationY: space.translationY,
+                    translationZ: space.translationZ,
+                    scale: space.scale,
+                });
+                // Fire only when the viewpoint actually changed — store updates fire for unrelated
+                // state too (a spawn, a selection), which don't move the camera.
+                if (viewpoint !== this.lastViewpoint) {
+                    this.lastViewpoint = viewpoint;
+                    this.props.onViewpointChange(viewpoint);
+                }
+            }, 250);
+        });
     }
 
     private persistState() {

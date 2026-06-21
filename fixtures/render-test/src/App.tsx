@@ -195,6 +195,7 @@ const App = () => {
                 id={'rt-' + layoutKey + (stress ? '-stress' : '')}
                 onPersistContent={() => (window as any).__rtContent}
                 onRestoreContent={(c) => { (window as any).__rtRestored = c; }}
+                onViewpointChange={(v) => { (window as any).__rtViewpoint = v; }}
             />
         </>
     );

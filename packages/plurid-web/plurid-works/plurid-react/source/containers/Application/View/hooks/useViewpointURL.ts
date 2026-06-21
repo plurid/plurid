@@ -26,41 +26,51 @@ export interface UseViewpointURLParameters {
     stateTransform: SpaceTransform;
     /** `setSpaceLocation` — sets the 6 scalars AND recomputes the rendered matrix. */
     dispatchSetSpaceLocation: (payload: SpaceTransform) => void;
+    /** `configuration.space.viewpointURLWrite` — reflect the camera into the URL. Default off. */
+    write: boolean;
+    /** `configuration.space.viewpointURLRestore` — restore the camera from the URL on load. Default off. */
+    restore: boolean;
+    /** `configuration.space.viewpointURLParam` — the query-param name. Default `v`. */
+    param: string;
     /** Debounce (ms) before reflecting a changed transform into the URL. Default 400. */
     debounce?: number;
 }
 
 
 /**
- * Two-way bind the camera viewpoint and the URL's `?v=`:
- * - ON MOUNT, if the URL carries a viewpoint, restore it (instant — overrides any persisted camera,
- *   so an explicit deep-link wins over the last-saved view).
- * - ON TRANSFORM CHANGE, reflect it back into the URL via debounced `replaceState` (see
- *   `writeViewpointToURL` — preserves path/query/hash, no history spam).
+ * Optionally bind the camera viewpoint and the URL's `?<param>=` — both directions are OPT-IN and
+ * INDEPENDENT, and the engine touches the URL ONLY when asked:
+ * - `restore`: ON MOUNT, if the URL carries a viewpoint, restore it (instant — a deep-link overrides
+ *   any persisted camera).
+ * - `write`: ON TRANSFORM CHANGE, reflect it back via debounced `replaceState` (preserves path/query/
+ *   hash, no history spam).
  *
- * The first write is skipped so the pre-restore default transform never clobbers the `?v=` the user
- * arrived with before the restore lands.
+ * Default config has BOTH off → no URL pollution. The first write is skipped so the pre-restore
+ * default transform never clobbers the `?<param>=` the user arrived with.
  */
 export const useViewpointURL = (
     {
         stateTransform,
         dispatchSetSpaceLocation,
+        write,
+        restore,
+        param,
         debounce = 400,
     }: UseViewpointURLParameters,
 ) => {
     // #region restore once on mount
     const restored = useRef(false);
     useEffect(() => {
-        if (restored.current) {
+        if (!restore || restored.current) {
             return;
         }
         restored.current = true;
 
-        const viewpoint = readViewpointFromURL();
+        const viewpoint = readViewpointFromURL(param);
         if (viewpoint) {
             dispatchSetSpaceLocation(viewpoint);
         }
-    }, []);
+    }, [restore, param]);
     // #endregion restore once on mount
 
 
@@ -68,8 +78,11 @@ export const useViewpointURL = (
     const writeTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
     const skipFirstWrite = useRef(true);
     useEffect(() => {
-        // Don't write on the mount render — let the restore above apply first, so we never overwrite
-        // the incoming `?v=` with the default transform.
+        if (!write) {
+            return;
+        }
+        // Don't write on the first run — let the restore above apply first, so we never overwrite
+        // the incoming `?<param>=` with the default transform.
         if (skipFirstWrite.current) {
             skipFirstWrite.current = false;
             return;
@@ -79,7 +92,7 @@ export const useViewpointURL = (
             clearTimeout(writeTimeout.current);
         }
         writeTimeout.current = setTimeout(() => {
-            writeViewpointToURL(stateTransform);
+            writeViewpointToURL(stateTransform, param);
         }, debounce);
 
         return () => {
@@ -87,7 +100,7 @@ export const useViewpointURL = (
                 clearTimeout(writeTimeout.current);
             }
         };
-    }, [stateTransform, debounce]);
+    }, [write, param, stateTransform, debounce]);
     // #endregion reflect transform → URL
 }
 // #endregion module

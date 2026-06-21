@@ -64,6 +64,14 @@ export interface FlatPluridConfiguration {
     firstPerson?: boolean;
     /** `space.collaboration` — opt in to the collaboration seam (publish/apply arrangement snapshots). */
     collaboration?: boolean;
+    /** `space.viewpointURLWrite` — reflect the camera into the URL query param. */
+    viewpointURLWrite?: boolean;
+    /** `space.viewpointURLRestore` — restore the camera from the URL query param on load. */
+    viewpointURLRestore?: boolean;
+    /** `space.viewpointURLParam` — the viewpoint query-param name (default `v`). */
+    viewpointURLParam?: string;
+    /** `space.viewpointURLDebounce` — ms to coalesce URL writes during an orbit. */
+    viewpointURLDebounce?: number;
     /** `space.bridge.length` — parent→child gap + rendered bridge length. */
     bridgeLength?: number;
     /** `space.bridge.planeAngle` — spawned child plane angle. */
@@ -211,6 +219,30 @@ export interface PluridConfigurationSpace {
      * Default `false`.
      */
     collaboration?: boolean;
+
+    /**
+     * Reflect the camera viewpoint into the URL query string on every change (so a view is
+     * shareable / bookmarkable). OFF by default — the engine does NOT touch the URL unless asked.
+     * Independent of `viewpointURLRestore`. Default `false`.
+     */
+    viewpointURLWrite?: boolean;
+
+    /**
+     * Restore the camera viewpoint FROM the URL query string on load (a deep-link wins over the
+     * last-saved camera). OFF by default. Independent of `viewpointURLWrite`. Default `false`.
+     */
+    viewpointURLRestore?: boolean;
+
+    /**
+     * The query-param name the viewpoint rides on, e.g. `?v=…`. Default `'v'`.
+     */
+    viewpointURLParam?: string;
+
+    /**
+     * Debounce (ms) before a changed viewpoint is written to the URL — the camera changes per frame
+     * during an orbit, so this coalesces the writes. Default `400`.
+     */
+    viewpointURLDebounce?: number;
 
     cullingDistance: number;
 

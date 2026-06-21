@@ -6,10 +6,17 @@
 > All cited seams (file paths + symbols) are real, verified against the current source.
 >
 > **Delivered so far (2026-06-21), all harness-verified:**
-> - **#1 Serializable viewpoint (core)** — camera↔URL deep-link/share. `?v=rX,rY,tX,tY,tZ,s` restores
->   the exact camera on load; orbiting reflects back via `replaceState` (no history spam). New
->   `services/logic/viewpoint` codec + `View/hooks/useViewpointURL`. (Saved-views + tours deferred —
->   best built with their product UI to avoid an unused persisted field + version bump now.)
+> - **#1 Serializable viewpoint (core)** — camera↔URL deep-link/share, encoded `rX,rY,tX,tY,tZ,s`. New
+>   `services/logic/viewpoint` codec + `View/hooks/useViewpointURL`. **Fully OPT-IN + dev-controlled
+>   (2026-06-21):** the engine does NOT touch the URL by default. `configuration.space.viewpointURLWrite`
+>   (reflect camera → URL) and `viewpointURLRestore` (restore camera ← URL on load) are *independent*
+>   booleans (both default false); `viewpointURLParam` (default `v`) + `viewpointURLDebounce` are
+>   configurable. **Full programmatic control regardless of the URL:** `space.setViewpoint` pubsub (set the
+>   camera from an encoded string, instant or `animated`), an `onViewpointChange(v)` Application callback
+>   (get the encoded viewpoint on settle), and `encodeViewpoint`/`decodeViewpoint` exported from the public
+>   API so a host can build any share/storage/sync it wants. Harness-verified: clean URL by default, write
+>   on, restore on, custom param, set (instant/animated/invalid-ignored), get-callback. (Saved-views + tours
+>   stay product-side.)
 > - **#5 Both seams** — (a) **content persistence:** opt-in `onPersistContent`/`onRestoreContent` on the
 >   Application ride the engine's debounce + `pagehide` flush (`state.local.saveContent`/`loadContent`,
 >   opaque blob under `pluridContent-<id>`); round-trip verified. (b) **editor coexistence:** the pointer

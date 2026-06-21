@@ -496,6 +496,22 @@ export interface PluridPubSubSubscribeMessageApplyRemoteMutation {
 }
 
 
+export interface PluridPubSubMessageSetViewpoint {
+    /** An encoded viewpoint, e.g. the `v` value `rotationX,rotationY,tX,tY,tZ,scale`. */
+    viewpoint: string;
+    /** Smoothly animate the camera to it (vs jump instantly). Default `false`. */
+    animated?: boolean;
+}
+export interface PluridPubSubPublishMessageSetViewpoint {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_VIEWPOINT;
+    data: PluridPubSubMessageSetViewpoint;
+}
+export interface PluridPubSubSubscribeMessageSetViewpoint {
+    topic: typeof PLURID_PUBSUB_TOPIC.SET_VIEWPOINT;
+    callback: PluridPubSubCallback<PluridPubSubMessageSetViewpoint>;
+}
+
+
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
     | PluridPubSubPublishMessageSpaceAnimatedTransform
@@ -541,6 +557,7 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageClearSelection
     | PluridPubSubPublishMessageCollaborationMutation
     | PluridPubSubPublishMessageApplyRemoteMutation
+    | PluridPubSubPublishMessageSetViewpoint
     ;
 
 
@@ -589,5 +606,6 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageClearSelection
     | PluridPubSubSubscribeMessageCollaborationMutation
     | PluridPubSubSubscribeMessageApplyRemoteMutation
+    | PluridPubSubSubscribeMessageSetViewpoint
     ;
 // #endregion module

@@ -333,10 +333,15 @@ const PluridView: React.FC<PluridViewProperties> = (
         dispatch,
     });
 
-    // Two-way bind the camera viewpoint with the URL's `?v=` (deep-link + "share from here").
+    // Optionally bind the camera viewpoint with the URL's `?<param>=` — BOTH directions opt-in
+    // (default off, no URL pollution), param-name configurable.
     useViewpointURL({
         stateTransform,
         dispatchSetSpaceLocation,
+        write: stateConfiguration.space.viewpointURLWrite === true,
+        restore: stateConfiguration.space.viewpointURLRestore === true,
+        param: stateConfiguration.space.viewpointURLParam || 'v',
+        debounce: stateConfiguration.space.viewpointURLDebounce,
     });
     // #endregion handlers
 

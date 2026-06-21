@@ -41,7 +41,12 @@
         focusNextRoot,
         focusRootIndex,
         focusRootID,
+        useAnimatedTransform,
     } from '~services/logic/animation';
+
+    import {
+        decodeViewpoint,
+    } from '~services/logic/viewpoint';
 
     import {
         generalEngine,
@@ -551,6 +556,23 @@ export const usePluridPubSub = (
                 topic: PLURID_PUBSUB_TOPIC.CLEAR_SELECTION,
                 callback: () => {
                     dispatch(actions.space.clearSelection());
+                },
+            },
+            {
+                // Programmatic camera control: decode the host-supplied viewpoint and move the camera
+                // there. `setSpaceLocation` sets the 6 scalars + recomputes the matrix; `animated`
+                // routes it through the transform animation (otherwise it jumps). Invalid encodings
+                // are ignored, never corrupting the view.
+                topic: PLURID_PUBSUB_TOPIC.SET_VIEWPOINT,
+                callback: (data) => {
+                    const viewpoint = decodeViewpoint((data as any)?.viewpoint);
+                    if (!viewpoint) {
+                        return;
+                    }
+                    if ((data as any)?.animated) {
+                        useAnimatedTransform(dispatch);
+                    }
+                    dispatchSetSpaceLocation(viewpoint);
                 },
             },
         ];

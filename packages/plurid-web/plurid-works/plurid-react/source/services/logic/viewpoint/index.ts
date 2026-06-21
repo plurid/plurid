@@ -90,31 +90,37 @@ export const decodeViewpoint = (
 };
 
 
-/** Read the viewpoint encoded in the current URL's `?v=` (or `null` if absent/invalid). SSR-safe. */
-export const readViewpointFromURL = (): SpaceTransform | null => {
+/**
+ * Read the viewpoint encoded in the current URL's `?<param>=` (or `null` if absent/invalid). The
+ * param name defaults to `v` but is host-configurable. SSR-safe.
+ */
+export const readViewpointFromURL = (
+    param: string = VIEWPOINT_PARAM,
+): SpaceTransform | null => {
     if (typeof window === 'undefined') {
         return null;
     }
 
-    const raw = new URLSearchParams(window.location.search).get(VIEWPOINT_PARAM);
+    const raw = new URLSearchParams(window.location.search).get(param);
     return decodeViewpoint(raw);
 };
 
 
 /**
- * Reflect a viewpoint into the URL via `replaceState` — preserving pathname, other query params, and
- * hash, and NOT pushing a history entry (the transform changes per-frame during orbit; pushState
- * would flood the back-stack). SSR-safe.
+ * Reflect a viewpoint into the URL `?<param>=` via `replaceState` — preserving pathname, other query
+ * params, and hash, and NOT pushing a history entry (the transform changes per-frame during orbit;
+ * pushState would flood the back-stack). SSR-safe.
  */
 export const writeViewpointToURL = (
     transform: SpaceTransform,
+    param: string = VIEWPOINT_PARAM,
 ): void => {
     if (typeof window === 'undefined') {
         return;
     }
 
     const url = new URL(window.location.href);
-    url.searchParams.set(VIEWPOINT_PARAM, encodeViewpoint(transform));
+    url.searchParams.set(param, encodeViewpoint(transform));
     window.history.replaceState(window.history.state, '', url.toString());
 };
 // #endregion module

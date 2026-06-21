@@ -157,6 +157,14 @@ export interface PluridApplication<C> {
     onRestoreContent?: (content: unknown) => void;
 
     /**
+     * Programmatic GET of the camera viewpoint: invoked (debounced) whenever the camera settles,
+     * with the ENCODED viewpoint string (the same `v` value the URL uses). Independent of the URL
+     * config — a host can wire its own share links / storage / sync with this + `space.setViewpoint`
+     * (to set) without the engine ever touching the URL.
+     */
+    onViewpointChange?: (viewpoint: string) => void;
+
+    /**
      * Replace the internal plurid plane with a custom implementation.
      */
     customPlane?: C;

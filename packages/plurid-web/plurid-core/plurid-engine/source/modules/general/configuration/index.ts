@@ -113,6 +113,10 @@ export const definePluridConfiguration = (
     if (flat.center !== undefined) { space.center = flat.center; }
     if (flat.firstPerson !== undefined) { space.firstPerson = flat.firstPerson; }
     if (flat.collaboration !== undefined) { space.collaboration = flat.collaboration; }
+    if (flat.viewpointURLWrite !== undefined) { space.viewpointURLWrite = flat.viewpointURLWrite; }
+    if (flat.viewpointURLRestore !== undefined) { space.viewpointURLRestore = flat.viewpointURLRestore; }
+    if (flat.viewpointURLParam !== undefined) { space.viewpointURLParam = flat.viewpointURLParam; }
+    if (flat.viewpointURLDebounce !== undefined) { space.viewpointURLDebounce = flat.viewpointURLDebounce; }
     if (flat.transformLocks !== undefined) { space.transformLocks = flat.transformLocks; }
     if (flat.bridgeLength !== undefined || flat.bridgePlaneAngle !== undefined) {
         space.bridge = {};

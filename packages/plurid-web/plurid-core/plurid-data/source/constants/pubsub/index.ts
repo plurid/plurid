@@ -61,6 +61,9 @@ export const PLURID_PUBSUB_TOPIC = {
     COLLABORATION_MUTATION: 'space.collaborationMutation',
     APPLY_REMOTE_MUTATION: 'space.applyRemoteMutation',
 
+    /** Programmatic camera control: a host publishes an encoded viewpoint to move/jump the camera. */
+    SET_VIEWPOINT: 'space.setViewpoint',
+
     SET_PLANE_PATH: 'plane.setPath',
 } as const;
 

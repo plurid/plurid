@@ -100,6 +100,11 @@
     } from './services/logic/router';
 
     import {
+        encodeViewpoint,
+        decodeViewpoint,
+    } from './services/logic/viewpoint';
+
+    import {
         usePluridRouter,
     } from './services/hooks';
     // #endregion internal
@@ -159,6 +164,10 @@ const Plurid = {
     IsoMatcher: PluridIsoMatcher,
     routerNavigate: pluridRouterNavigate,
 
+    /** Viewpoint */
+    encodeViewpoint,
+    decodeViewpoint,
+
     internals,
     // #endregion Utilities
 };
@@ -213,6 +222,10 @@ export {
     usePluridRouter,
 
     getDirectPlaneMatch,
+
+    /** Viewpoint — encode/decode the camera ↔ the `v`-style string, for full host control */
+    encodeViewpoint,
+    decodeViewpoint,
 
     /** state */
     pluridStateModules,
