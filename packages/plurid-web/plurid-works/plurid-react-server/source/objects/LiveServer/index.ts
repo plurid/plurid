@@ -54,7 +54,7 @@ class LiveServer {
     }
 
     private setupExpressServer() {
-
+        // Not implemented — see `start()`.
     }
 
     private setupHttpServer() {
@@ -72,8 +72,13 @@ class LiveServer {
     }
 
 
-    public start() {
-
+    public start(): never {
+        // `LiveServer` (hot-reload dev server) is a stub — its setup/start are unimplemented. Fail loudly
+        // rather than silently no-op so callers aren't misled into thinking a server started. Use a bundler
+        // dev server (tsx / Vite) for live reload; `PluridServer` is the production server.
+        throw new Error(
+            'PluridLiveServer is not implemented yet. Use `PluridServer` (production) or a bundler dev server (tsx/Vite) for live reload.',
+        );
     }
 }
 // #endregion module

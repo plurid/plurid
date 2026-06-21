@@ -102,7 +102,7 @@ class PluridRenderer {
         this.minify = minify ?? true;
     }
 
-    public html() {
+    public async html() {
         const data: RendererTemplateData = {
             htmlLanguage: this.htmlLanguage,
             head: this.head,

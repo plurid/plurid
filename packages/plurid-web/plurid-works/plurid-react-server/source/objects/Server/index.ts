@@ -11,9 +11,6 @@
     } from 'express';
 
     import compression from 'compression';
-    import {
-        json as jsonParser,
-    } from 'body-parser';
 
     import open from 'open';
 
@@ -82,6 +79,7 @@
         DEFAULT_SERVER_OPTIONS,
 
         CATCH_ALL_ROUTE,
+        CATCH_ALL_ROUTE_PATTERN,
         PTTP_ROUTE,
     } from '~data/constants';
 
@@ -92,7 +90,7 @@
 
     import PluridRenderer from '../Renderer';
     import PluridContentGenerator from '../ContentGenerator';
-    // import PluridStillsManager from '../StillsManager';
+    import PluridStillsManager from '../StillsManager';
 
     import {
         recordToString,
@@ -134,7 +132,7 @@ class PluridServer {
     private server: Server | undefined;
     private port: number | string;
 
-    // private stills: PluridStillsManager;
+    private stills: PluridStillsManager;
     private isoMatcher: routing.IsoMatcher<PluridReactComponent>;
 
 
@@ -192,7 +190,7 @@ class PluridServer {
         // });
         // this.urlRouter = new PluridURLRouter(urlRoutes);
 
-        // this.stills = new PluridStillsManager(this.options);
+        this.stills = new PluridStillsManager(this.options);
         this.isoMatcher = new PluridIsoMatcher(
             {
                 routes: this.routes,
@@ -329,7 +327,7 @@ class PluridServer {
 
     private handleEndpoints() {
         this.serverApplication.get(
-            CATCH_ALL_ROUTE,
+            CATCH_ALL_ROUTE_PATTERN,
             async (request, response, next) => {
                 this.handleGetRequest(
                     request, response, next,
@@ -340,7 +338,7 @@ class PluridServer {
         if (this.usePTTP) {
             this.serverApplication.post(
                 PTTP_ROUTE,
-                jsonParser() as any, // FORCED
+                express.json() as any, // body parsing is built into Express 5
                 async (request, response, next) => {
                     this.handlePTTPRequest(
                         request, response,
@@ -471,30 +469,31 @@ class PluridServer {
             // }
 
 
-            // // HANDLE STILLS
-            // const still = this.stills.get(matchingPath);
+            // HANDLE STILLS — serve a pre-generated static still (if one exists for this route) instead of
+            // rendering on the fly. Stills are produced by `PluridStillsGenerator` and loaded by StillsManager.
+            const still = this.stills.get(matchingPath);
 
-            // if (
-            //     still
-            // ) {
-            //     if (this.debugAllows('info')) {
-            //         const requestTime = this.computeRequestTime(request);
+            if (
+                still
+            ) {
+                if (this.debugAllows('info')) {
+                    const requestTime = this.computeRequestTime(request);
 
-            //         console.info(
-            //             `[${time.stamp()} :: ${requestID}] (200 OK) Still Handled GET ${matchingPath}${requestTime}`,
-            //         );
-            //     }
+                    console.info(
+                        `[${time.stamp()} :: ${requestID}] (200 OK) Still Handled GET ${matchingPath}${requestTime}`,
+                    );
+                }
 
-            //     response.send(still);
+                response.send(still);
 
-            //     this.resolvePreserveAfterServe(
-            //         preserveAfterServe,
-            //         request,
-            //         response,
-            //     );
+                this.resolvePreserveAfterServe(
+                    preserveAfterServe,
+                    request,
+                    response,
+                );
 
-            //     return;
-            // }
+                return;
+            }
 
 
             const isoMatch = this.isoMatcher.match(
@@ -506,28 +505,28 @@ class PluridServer {
             if (
                 !isoMatch
             ) {
-                // const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
-                // if (notFoundStill) {
-                //     if (this.debugAllows('info')) {
-                //         const requestTime = this.computeRequestTime(request);
+                const notFoundStill = this.stills.get(NOT_FOUND_ROUTE);
+                if (notFoundStill) {
+                    if (this.debugAllows('info')) {
+                        const requestTime = this.computeRequestTime(request);
 
-                //         console.info(
-                //             `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
-                //         );
-                //     }
+                        console.info(
+                            `[${time.stamp()} :: ${requestID}] (404 Not Found) Handled GET ${matchingPath}${requestTime}`,
+                        );
+                    }
 
-                //     response
-                //         .status(404)
-                //         .send(notFoundStill);
+                    response
+                        .status(404)
+                        .send(notFoundStill);
 
-                //     this.resolvePreserveAfterServe(
-                //         preserveAfterServe,
-                //         request,
-                //         response,
-                //     );
+                    this.resolvePreserveAfterServe(
+                        preserveAfterServe,
+                        request,
+                        response,
+                    );
 
-                //     return;
-                // }
+                    return;
+                }
 
                 const isoMatchNotFound = this.isoMatcher.match(
                     NOT_FOUND_ROUTE,
@@ -571,7 +570,7 @@ class PluridServer {
 
                 response
                     .status(404)
-                    .send(renderer.html());
+                    .send(await renderer.html());
 
                 this.resolvePreserveAfterServe(
                     preserveAfterServe,
@@ -600,7 +599,7 @@ class PluridServer {
                 );
             }
 
-            response.send(renderer.html());
+            response.send(await renderer.html());
 
             this.resolvePreserveAfterServe(
                 preserveAfterServe,
@@ -1244,7 +1243,7 @@ class PluridServer {
 
         if (this.options.compression) {
             this.serverApplication.use(
-                compression(),
+                compression() as any, // @types/compression targets Express 4's handler type
             );
 
             this.serverApplication.get(

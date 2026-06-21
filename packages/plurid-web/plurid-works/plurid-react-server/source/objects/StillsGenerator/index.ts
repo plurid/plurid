@@ -59,7 +59,22 @@ class StillsGenerator {
         const serverPath = path.join(process.cwd(), this.options.server);
         const buildPath = path.join(process.cwd(), this.options.build);
 
-        const pluridServer: PluridServer = require(serverPath);
+        // The generator reads the application routes from the BUILT server bundle — fail with an actionable
+        // message (not a raw MODULE_NOT_FOUND) if it hasn't been built yet. Handle either default-exported
+        // (esbuild/tsup `export default`) or directly-exported server instances.
+        let serverModule: any;
+        try {
+            serverModule = require(serverPath);
+        } catch (error) {
+            const reason = error instanceof Error ? error.message : String(error);
+            throw new Error(
+                `Plurid StillsGenerator: could not load the built server at '${serverPath}'. `
+                + 'Build the server first so the generator can read its routes. '
+                + `(${reason})`,
+                { cause: error },
+            );
+        }
+        const pluridServer: PluridServer = serverModule?.default ?? serverModule;
         const serverInformation = PluridServer.analysis(pluridServer);
 
         const stillerOptions = serverInformation.options.stiller;
@@ -74,109 +89,112 @@ class StillsGenerator {
             },
         });
 
+        // Always stop the forked server — even if stilling throws partway — so it never outlives the run.
+        try {
+            /**
+             * Read the application routes.
+             */
+            const stillRoutes: PluridReactRoute[] = [];
 
-        /**
-         * Read the application routes.
-         */
-        const stillRoutes: PluridReactRoute[] = [];
+            for (const route of serverInformation.routes) {
+                if (route.value.includes('/:')) {
+                    continue;
+                }
 
-        for (const route of serverInformation.routes) {
-            if (route.value.includes('/:')) {
-                continue;
+                if (stillerOptions.ignore.includes(route.value)) {
+                    continue;
+                }
+
+                stillRoutes.push(route);
             }
 
-            if (stillerOptions.ignore.includes(route.value)) {
-                continue;
+            const stillRoutesPaths = stillRoutes.map(stillRoute => stillRoute.value);
+
+            console.info('\n\tParsed the following still routes:');
+
+            for (const stillRoutePath of stillRoutesPaths) {
+                console.info(`\t  ${stillRoutePath}`);
             }
 
-            stillRoutes.push(route);
-        }
 
-        const stillRoutesPaths = stillRoutes.map(stillRoute => stillRoute.value);
+            /**
+             * Sleep 1.5 seconds to let the server spin up.
+             */
+            await new Promise(resolve => setTimeout(resolve, 1500));
 
-        console.info('\n\tParsed the following still routes:');
+            const startTime = Date.now();
+            const estimatedDuration = 3 * serverInformation.routes.length;
+            console.info(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
 
-        for (const stillRoutePath of stillRoutesPaths) {
-            console.info(`\t  ${stillRoutePath}`);
-        }
+            const stiller = new Stiller({
+                host: 'http://localhost:' + serverPort,
+                routes: [
+                    ...stillRoutesPaths,
+                ],
+                configuration: {
+                    waitUntil: stillerOptions.waitUntil,
+                    timeout: stillerOptions.timeout,
+                },
+            });
 
-
-        /**
-         * Sleep 1.5 seconds to let the server spin up.
-         */
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        const startTime = Date.now();
-        const estimatedDuration = 3 * serverInformation.routes.length;
-        console.info(`\n\tStarting to generate stills... (this may take about ${estimatedDuration} seconds)\n`);
-
-        const stiller = new Stiller({
-            host: 'http://localhost:' + serverPort,
-            routes: [
-                ...stillRoutesPaths,
-            ],
-            configuration: {
-                waitUntil: stillerOptions.waitUntil,
-                timeout: stillerOptions.timeout,
-            },
-        });
-
-        const sequence = stiller.still();
-        const stills = [];
-        let next;
-        while (
-            !(next = await sequence.next()).done
-        ) {
-            stills.push(next.value);
-        }
-
-        const endTime = Date.now();
-        const duration = (endTime - startTime) / 1000;
-        const plural = stills.length === 1 ? '' : 's';
-        console.info(`\n\tGenerated ${stills.length} still${plural} in ${duration.toFixed(2)} seconds.\n`);
-
-
-        /**
-         * Generate the stills as .json in the `/stills` build directory
-         * so they can be loaded by the Plurid Server
-         *
-         * Generate a metadata.json file.
-         */
-        const stillsPath = path.join(buildPath, './stills');
-        await fs.mkdir(
-            stillsPath,
-            {
-                recursive: true,
-            },
-        );
-
-        const metadataFile = [];
-
-        for (const still of stills) {
-            if (!still) {
-                continue;
+            // A Stiller failure (missing puppeteer, navigation timeout) propagates out of this loop, aborting
+            // the run with the underlying reason — rather than silently writing partial/empty stills.
+            const sequence = stiller.still();
+            const stills = [];
+            let next;
+            while (
+                !(next = await sequence.next()).done
+            ) {
+                stills.push(next.value);
             }
 
-            const stillName = uuid.generate() + '.json';
-            const metadataItem = {
-                route: still.route,
-                name: stillName,
-            };
-            metadataFile.push(metadataItem);
-            const stillJSON = JSON.stringify(still, null, 4);
-            const stillFile = path.join(stillsPath, stillName);
-            await fs.writeFile(stillFile, stillJSON);
+            const endTime = Date.now();
+            const duration = (endTime - startTime) / 1000;
+            const plural = stills.length === 1 ? '' : 's';
+            console.info(`\n\tGenerated ${stills.length} still${plural} in ${duration.toFixed(2)} seconds.\n`);
+
+
+            /**
+             * Generate the stills as .json in the `/stills` build directory
+             * so they can be loaded by the Plurid Server
+             *
+             * Generate a metadata.json file.
+             */
+            const stillsPath = path.join(buildPath, './stills');
+            await fs.mkdir(
+                stillsPath,
+                {
+                    recursive: true,
+                },
+            );
+
+            const metadataFile = [];
+
+            for (const still of stills) {
+                if (!still) {
+                    continue;
+                }
+
+                const stillName = uuid.generate() + '.json';
+                const metadataItem = {
+                    route: still.route,
+                    name: stillName,
+                };
+                metadataFile.push(metadataItem);
+                const stillJSON = JSON.stringify(still, null, 4);
+                const stillFile = path.join(stillsPath, stillName);
+                await fs.writeFile(stillFile, stillJSON);
+            }
+
+            const metadataFilePath = path.join(stillsPath, 'metadata.json');
+            const metadataJSON = JSON.stringify(metadataFile, null, 4);
+            await fs.writeFile(metadataFilePath, metadataJSON);
+        } finally {
+            /**
+             * Gracefully stop the forked server (it handles SIGTERM via `attachSignalHandlers`).
+             */
+            child.kill('SIGTERM');
         }
-
-        const metadataFilePath = path.join(stillsPath, 'metadata.json');
-        const metadataJSON = JSON.stringify(metadataFile, null, 4);
-        await fs.writeFile(metadataFilePath, metadataJSON);
-
-
-        /**
-         * Gracefully stop the server.
-         */
-        child.kill(2);
     }
 }
 // #endregion module

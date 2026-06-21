@@ -35,7 +35,11 @@ export const DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE = '/index.js';
 export const DEFAULT__PRELOADED_PLURID_METASTATE__ = '__PRELOADED_PLURID_METASTATE__';
 
 
+// String sentinel meaning "all routes" — used to match a catch-all `preserve` (`preserve.serve === '*'`).
 export const CATCH_ALL_ROUTE = '*';
+// The Express route PATTERN for the catch-all GET. A RegExp (not the bare `'*'` string) so it works under
+// Express 5 / path-to-regexp v8, where unnamed string wildcards are no longer valid.
+export const CATCH_ALL_ROUTE_PATTERN = /.*/;
 export const NOT_FOUND_ROUTE = process.env.PLURID_SERVER_NOT_FOUND_ROUTE || '/not-found';
 export const PTTP_ROUTE = process.env.PLURID_SERVER_PTTP_ROUTE || '/pttp';
 

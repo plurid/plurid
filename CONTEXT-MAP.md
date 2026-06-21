@@ -30,7 +30,7 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 | `@plurid/plurid-engine` | plane tree, layout, routing, math | **LIVE (core)** | BTL | ✅ | The deepest module. Tree mutations now immutable + structurally shared. 37 skipped tests = routing/matrix/transform/faceToFace debt. |
 | `@plurid/plurid-pubsub` | event bridge | **LIVE (core)** | BTL | ✅ | Thin behavioral tests. |
 | `@plurid/plurid-react` | primary render adapter | **LIVE (works)** | BTL | ✅ | Sanity test only — needs interaction/render tests. `View`/`router`/`Link` are the decomposition targets. |
-| `@plurid/plurid-react-server` | SSR / static "stills" | **LIVE (works)** | BTL | ✅ | Signal handlers now opt-out. Stiller/Puppeteer hardening pending. |
+| `@plurid/plurid-react-server` | SSR / static "stills" | **LIVE (works)** | BTL | ✅ | Hardened 2026-06-21: XSS-safe metastate injection, Express 5 (+ html-minifier-terser), Stiller browser-reuse/leak-safe, **stills pipeline re-wired** (Puppeteer = optional peer), template-util + Renderer SSR tests. |
 | `@plurid/plurid-routes-server` | route server | **LEGACY / orphaned** | — | ❌ (de-globbed) | De-globbed (`!` in `pnpm-workspace.yaml`, 2026-06-21). Zero in-repo consumers; a pluriverse-era Express route-cache, not in the live graph. Source kept on disk. |
 | `@plurid/plurid-functions`, `…-react` | utilities | **LIVE (utilities)** | BT | ✅ | Best-covered utilities. `eval` removed. |
 | `@plurid/plurid-themes` | theme objects | **LIVE (utilities)** | BTL | ✅ | Aggregate default export — subpath exports pending. |

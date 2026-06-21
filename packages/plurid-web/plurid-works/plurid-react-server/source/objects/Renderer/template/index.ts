@@ -15,7 +15,7 @@
 
 
 // #region module
-const template = (
+const template = async (
     data: RendererTemplateData,
 ) => {
     const {

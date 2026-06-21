@@ -2,7 +2,7 @@
     // #region libraries
     import {
         minify,
-    } from 'html-minifier';
+    } from 'html-minifier-terser';
 
     import {
         Theme,
