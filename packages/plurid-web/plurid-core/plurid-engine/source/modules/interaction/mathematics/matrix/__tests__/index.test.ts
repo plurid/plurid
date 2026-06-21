@@ -14,9 +14,9 @@
 
 
 // #region module
-// SKIP (stale): legacy euler-math — computeQuaternionFromEulers now defaults to radians, so these degree-era expectations are stale; exported via the interaction namespace but NOT in the live transform path (which uses computeMatrix).
-xdescribe('matrix computation', () => {
-    it('rotateMatrix() computes rotation matrix from euler angles', () => {
+describe('matrix computation', () => {
+    // xit: this euler test changed convention during modernization (the rotation matrix is the same, but the extracted/composed angle decomposition differs — euler order is ambiguous). Legacy non-render math; verify the intended convention before recomputing.
+    xit('rotateMatrix() computes rotation matrix from euler angles', () => {
         const rotationMatrix = rotateMatrix(10, 20, 30);
         const result = [
             0.8434932686554564,
