@@ -79,6 +79,17 @@ export const handleGlobalShortcuts = (
     }
 
 
+    // Undo / redo of spatial arrangement (spawn / close / open / relayout): Cmd/Ctrl+Z,
+    // Cmd/Ctrl+Shift+Z. The `inputOnPath` guard above already lets an editor keep its own undo.
+    if ((event.metaKey || event.ctrlKey) && event.code === 'KeyZ') {
+        handleEvent();
+        if (event.shiftKey) {
+            return dispatch(actions.space.redo());
+        }
+        return dispatch(actions.space.undo());
+    }
+
+
     // Fit all planes into view (CAD "frame all"): Home or 0.
     if (
         (event.key === 'Home' || event.code === 'Digit0')

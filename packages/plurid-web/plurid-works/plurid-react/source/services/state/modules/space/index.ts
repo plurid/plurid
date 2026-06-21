@@ -623,6 +623,11 @@ export const space = createSlice({
             );
             state.tree = updatedTree;
         },
+        // No-op markers — the history middleware intercepts `space/undo` + `space/redo` and does the
+        // real work (re-dispatching `setTree` with a snapshot). Defined here only so RTK generates
+        // the `undo()` / `redo()` action creators + their types.
+        undo: (_state) => {},
+        redo: (_state) => {},
     },
 });
 // #endregion module

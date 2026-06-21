@@ -23,8 +23,17 @@
 >   rendered in `View/Container`. Themed like the toolbar/viewcube (general theme), 26px hit zones,
 >   transparent-by-default → opaque-on-hover. Harness-verified.
 >
-> **Next:** #2 undo/redo (a history middleware over the store's tree mutations — the store has no
-> middleware today, a clean seam), then #3 graph, #4 selection, #6 collab seam, #8 WebXR.
+> - **#2 Spatial undo/redo** — a history middleware (`services/state/middleware/history.ts`) over the
+>   store's tree mutations, wired into both stores; `Cmd/Ctrl+Z` / `Cmd/Ctrl+Shift+Z` (the existing
+>   `inputOnPath` guard lets a host editor keep its own undo). Records **one snapshot per structural
+>   change** — a tree *signature* of `planeID:show` filters the spawn/close/open relayout churn (each
+>   user action fires several `setTree`s; only the first changes structure), which is what lets a restore
+>   stick instead of being re-reconciled away. Snapshots are references to the immutable
+>   `state.space.tree`, so the stacks are memory-cheap; history is closure-local (never persisted, never
+>   rendered). Harness-verified: spawn→undo→redo, close→undo→reopen→redo, and the keyboard path.
+>
+> **Next:** #3 inter-plane graph + 3D edges (the differentiator), then #4 selection/group, #6 collab
+> seam, #8 WebXR.
 
 ## Governing principle — engine primitive vs product work
 
@@ -46,10 +55,10 @@ Front-load the cheap, purely-additive wins; defer the two big lifts and the rewr
 
 | Order | Feature | Effort | Why here |
 |------:|---------|--------|----------|
-| 1 | [Serializable viewpoint](#1-serializable-viewpoint) | Small→Med | Cheap, additive; unblocks sharing + presentation |
-| 2 | [Content-persistence + editor-focus seams](#5-two-enabling-seams-content-persistence--editor-focus) | Small | Unblocks product authoring without the engine owning content |
-| 3 | [Spatial undo/redo](#2-spatial-undoredo) | Med | Table-stakes once users author the space |
-| 4 | [Minimap / overview](#7-minimap--overview) | Small→Med | Cheap delight; orientation in big spaces |
+| 1 ✅ | [Serializable viewpoint](#1-serializable-viewpoint) | Small→Med | Cheap, additive; unblocks sharing + presentation |
+| 2 ✅ | [Content-persistence + editor-focus seams](#5-two-enabling-seams-content-persistence--editor-focus) | Small | Unblocks product authoring without the engine owning content |
+| 3 ✅ | [Spatial undo/redo](#2-spatial-undoredo) | Med | Table-stakes once users author the space |
+| 4 ✅ | [Minimap / overview](#7-minimap--overview) | Small→Med | Cheap delight; orientation in big spaces |
 | 5 | [Inter-plane link graph + 3D edges](#3-inter-plane-link-graph--3d-edges) | Large | The differentiator |
 | 6 | [Spatial selection: multi-select / group / snap](#4-spatial-selection-multi-select--group--snapping) | Med→Large | Authoring of arrangement |
 | 7 | [Collaboration seam](#6-collaboration-seam) | Med→Large | Makes multiplayer pluggable |
@@ -106,11 +115,26 @@ away, "jump back" → it animates. A tour plays through its views.
 
 ---
 
-## 2. Spatial undo/redo
+## 2. Spatial undo/redo  ✅ DELIVERED (2026-06-21)
 *Effort: Medium*
 
 **Goal.** Undo/redo of *arrangement* (spawn / close / move / relink). Becomes table-stakes the moment users
 author the space. (Content undo belongs to whatever editor the product supplies — out of scope here.)
+
+> **Delivered.** `services/state/middleware/history.ts` — a closure-local history middleware concatenated
+> into both stores. `Cmd/Ctrl+Z` / `Cmd/Ctrl+Shift+Z` wired in `services/logic/shortcuts` (behind the
+> existing `inputOnPath` guard, so a host editor keeps its own undo). Two no-op reducers `space.undo` /
+> `space.redo` exist only so RTK generates the action creators; the middleware does the work and restores
+> via `setSpaceField({field:'tree'})`. **Key implementation finding:** a single user action fires *several*
+> `setTree`s — the change itself, then the View's reactive relayout + measurement re-flows — so naive
+> snapshot-per-`setTree` records the relayout noise and an undo's restore is immediately re-reconciled
+> away. The fix is to record **one snapshot per *structural* change**, detected by a tree *signature* (the
+> sorted set of `planeID:show`, position-independent); relayouts share a signature and are ignored. The
+> `applying` flag suppresses re-recording during a restore, and `lastSignature` is re-seeded on each
+> restore so post-restore relayouts stay quiet. Snapshots are references to the immutable
+> `state.space.tree` (cheap), bounded at 100, never persisted. Harness-verified: spawn→undo→redo,
+> close→undo→reopen→redo (faithful to the `CLOSE_PLANE` handler's `setTree(show=false)`), keyboard path.
+> *Position-only edits (a future drag-to-move, #4) will need the signature extended to include location.*
 
 **Seams.**
 - The store is RTK `configureStore` with **no custom middleware today**

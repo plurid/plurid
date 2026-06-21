@@ -11,6 +11,8 @@
     import reducer, {
         AppState,
     } from '../reducer';
+
+    import createHistoryMiddleware from '../../middleware/history';
     // #endregion external
 // #endregion imports
 
@@ -25,6 +27,8 @@ const store: (
     preloadedState,
     reducer,
     devTools: true,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(createHistoryMiddleware()),
 });
 
 
