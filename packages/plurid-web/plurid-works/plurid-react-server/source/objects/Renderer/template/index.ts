@@ -55,7 +55,7 @@ const template = async (
 
         ${headScripts.join('\n')}
 
-        <script src="${vendorScriptSource}"></script>
+        ${vendorScriptSource ? `<script src="${vendorScriptSource}"></script>` : ''}
         <script defer src="${mainScriptSource}"></script>
     </head>
     <body ${bodyAttributes}>

@@ -620,7 +620,7 @@ class PluridServer {
 
             response
                 .status(500)
-                .send(SERVER_ERROR_TEMPLATE);
+                .send(this.template?.errorHtml || SERVER_ERROR_TEMPLATE);
 
             return;
         }
@@ -776,7 +776,7 @@ class PluridServer {
 
             response
                 .status(500)
-                .send(SERVER_ERROR_TEMPLATE);
+                .send(this.template?.errorHtml || SERVER_ERROR_TEMPLATE);
 
             return;
         }
@@ -1046,7 +1046,7 @@ class PluridServer {
             helmet,
         }: any = this.helmet;
 
-        const head = helmet ? `
+        const helmetHead = helmet ? `
             ${helmet.meta.toString()}
             ${helmet.title.toString()}
             ${helmet.base.toString()}
@@ -1055,6 +1055,11 @@ class PluridServer {
             ${helmet.noscript.toString()}
             ${helmet.script.toString()}
         ` : '';
+
+        // Static head (favicon, manifest, default title/meta/links) from the
+        // template config, placed AFTER the helmet output so that per-route
+        // <Helmet> tags (which appear first) override these defaults.
+        const head = helmetHead + this.buildStaticHead();
 
         const htmlAttributes = {
             ...this.template?.htmlAttributes,
@@ -1101,6 +1106,88 @@ class PluridServer {
         });
 
         return renderer;
+    }
+
+    /**
+     * Build the static `<head>` markup from the template config (favicon set,
+     * manifest, default title / meta / links). Returns an empty string when none
+     * are configured, so the head is byte-identical to before for existing apps.
+     */
+    private buildStaticHead(): string {
+        const template = this.template;
+
+        if (!template) {
+            return '';
+        }
+
+        const escapeAttribute = (value: string) => value
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;');
+        const escapeText = (value: string) => value
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        const parts: string[] = [];
+
+        const favicon = template.favicon;
+        if (typeof favicon === 'string') {
+            parts.push(`<link rel="icon" href="${escapeAttribute(favicon)}">`);
+        } else if (favicon) {
+            if (favicon.icon) {
+                parts.push(`<link rel="icon" href="${escapeAttribute(favicon.icon)}">`);
+            }
+            if (favicon.apple) {
+                parts.push(`<link rel="apple-touch-icon" href="${escapeAttribute(favicon.apple)}">`);
+            }
+            for (const [size, href] of Object.entries(favicon.sizes || {})) {
+                parts.push(`<link rel="icon" sizes="${escapeAttribute(size)}" href="${escapeAttribute(href)}">`);
+            }
+            if (favicon.maskIcon) {
+                const color = favicon.themeColor
+                    ? ` color="${escapeAttribute(favicon.themeColor)}"`
+                    : '';
+                parts.push(`<link rel="mask-icon" href="${escapeAttribute(favicon.maskIcon)}"${color}>`);
+            }
+            if (favicon.themeColor) {
+                parts.push(`<meta name="theme-color" content="${escapeAttribute(favicon.themeColor)}">`);
+            }
+        }
+
+        if (template.manifest) {
+            parts.push(`<link rel="manifest" href="${escapeAttribute(template.manifest)}">`);
+        }
+
+        const head = template.head;
+        if (head) {
+            if (head.title) {
+                parts.push(`<title>${escapeText(head.title)}</title>`);
+            }
+            if (head.description) {
+                parts.push(`<meta name="description" content="${escapeAttribute(head.description)}">`);
+            }
+            for (const meta of head.meta || []) {
+                const selector = meta.name
+                    ? `name="${escapeAttribute(meta.name)}"`
+                    : meta.property
+                        ? `property="${escapeAttribute(meta.property)}"`
+                        : '';
+                if (!selector) {
+                    continue;
+                }
+                parts.push(`<meta ${selector} content="${escapeAttribute(meta.content)}">`);
+            }
+            for (const link of head.links || []) {
+                parts.push(`<link rel="${escapeAttribute(link.rel)}" href="${escapeAttribute(link.href)}">`);
+            }
+        }
+
+        if (parts.length === 0) {
+            return '';
+        }
+
+        return '\n            ' + parts.join('\n            ');
     }
 
     private async getContentAndStyles(
@@ -1214,6 +1301,7 @@ class PluridServer {
             open: partialOptions?.open ?? DEFAULT_SERVER_OPTIONS.OPEN,
             buildDirectory: partialOptions?.buildDirectory || DEFAULT_SERVER_OPTIONS.BUILD_DIRECTORY,
             assetsDirectory: partialOptions?.assetsDirectory || DEFAULT_SERVER_OPTIONS.ASSETS_DIRECTORY,
+            publicDirectory: partialOptions?.publicDirectory || '',
             gatewayEndpoint: partialOptions?.gatewayEndpoint || DEFAULT_SERVER_OPTIONS.GATEWAY,
             staticCache: partialOptions?.staticCache || 0,
             ignore: partialOptions?.ignore || [],
@@ -1275,6 +1363,21 @@ class PluridServer {
                 maxAge: this.options.staticCache,
             }),
         );
+
+        // Serve the public directory (favicon, og-image, manifest, robots) at `/`.
+        // `index: false` keeps it from hijacking the `/` SSR route; the mount is
+        // skipped unless the directory exists, so apps without one are unaffected.
+        const publicPath = this.options.publicDirectory
+            || path.join(this.options.buildDirectory, 'public');
+
+        if (fs.existsSync(publicPath)) {
+            this.serverApplication.use(
+                express.static(publicPath, {
+                    index: false,
+                    maxAge: this.options.staticCache,
+                }),
+            );
+        }
 
         this.loadMiddleware();
     }

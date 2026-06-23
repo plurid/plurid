@@ -1,0 +1,19 @@
+{
+    "extends": "../../../../tsconfig.base.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "rootDir": "./source",
+        "outDir": "distribution",
+        "declarationDir": "distribution",
+        "types": [
+            "node"
+        ]
+    },
+    "include": [
+        "source"
+    ],
+    "exclude": [
+        "node_modules",
+        "distribution"
+    ]
+}

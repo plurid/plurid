@@ -87,6 +87,15 @@ export interface PluridServerOptions {
     assetsDirectory: string;
 
     /**
+     * Directory of static assets (favicon, og-image, manifest, robots) served at
+     * the URL root `/`. Empty string (the default) resolves to
+     * `<buildDirectory>/public`; the mount is skipped if the directory does not
+     * exist, so apps without a public directory are unaffected. The framework
+     * points this at `source/public` during `plurid dev`.
+     */
+    publicDirectory: string;
+
+    /**
      * Default: `/gateway`.
      */
     gatewayEndpoint: string;
@@ -216,6 +225,48 @@ export interface PluridServerTemplateConfiguration {
     defaultPreloadedPluridMetastate?: string;
 
     minify?: boolean;
+
+    /**
+     * Favicon links injected into `<head>`. A bare string is the primary icon
+     * (`rel="icon"`); the object expands to icon / apple-touch-icon / sized /
+     * mask-icon links plus a `theme-color` meta. Paths resolve against the served
+     * public directory (see `PluridServerOptions.publicDirectory`).
+     */
+    favicon?: string | {
+        icon?: string;
+        apple?: string;
+        sizes?: Record<string, string>;
+        maskIcon?: string;
+        themeColor?: string;
+    };
+
+    /**
+     * Web app manifest href, injected as `<link rel="manifest">`.
+     */
+    manifest?: string;
+
+    /**
+     * Static `<head>` metadata injected AHEAD of the react-helmet-async output,
+     * so per-route `<Helmet>` tags still override these defaults.
+     */
+    head?: {
+        title?: string;
+        description?: string;
+        meta?: Array<{
+            name?: string;
+            property?: string;
+            content: string;
+        }>;
+        links?: Array<{
+            rel: string;
+            href: string;
+        }>;
+    };
+
+    /**
+     * Override the built-in 500 error page HTML (sent on a render failure).
+     */
+    errorHtml?: string;
 }
 
 

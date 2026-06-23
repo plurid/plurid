@@ -92,7 +92,10 @@ class PluridRenderer {
         this.styles = styles;
         this.headScripts = headScripts;
         this.bodyScripts = bodyScripts;
-        this.vendorScriptSource = vendorScriptSource || DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE;
+        // `??` (not `||`) so an explicit empty string is preserved as "no vendor
+        // chunk" (single-bundle builds) and the template skips the `<script>`;
+        // `undefined` still falls back to the default `/vendor.js`.
+        this.vendorScriptSource = vendorScriptSource ?? DEFAULT_RENDERER_VENDOR_SCRIPT_SOURCE;
         this.mainScriptSource = mainScriptSource || DEFAULT_RENDERER_MAIN_SCRIPT_SOURCE;
         this.root = root || DEFAULT_RENDERER_ROOT;
         this.content = assetsPathRewrite(content) || '';
