@@ -12,12 +12,32 @@ Resolved this round (the 2026-07-02 engine-improvement round):
 - **Engine matrix3d dead code - DONE.** The `*Plurid` fns were already gone; the residual dead `setTransform` (only its own test referenced it) removed 2026-07-02, along with its now-unused imports. `getTransform*` readers (+ `getTranslationMatrix`, a live internal) stay. NOTE the path drifted from the original finding: `plurid-engine/source/modules/interaction/mathematics/transform/matrix3d/index.ts`.
 - **`Roots` "TOFIX use user width/height" - RESOLVED** via the opt-in `space.dimensions` (`PluridConfigurationSpaceDimensions` in plurid-data; flat `spaceDimensions`; consumed by `Roots` with a `resolveDimension` helper; defaults byte-identical: width `'100%'`, height `window.innerHeight`). Limitation documented: layouts still compute from `viewSize` - dimensions sizes the container only.
 - **`ExternalPlane` "TOFIX load only once" - FIXED**: the effect-local `loading` flag (which StrictMode's double effect-invocation defeated - each closure owned its own copy) is now a `loadStarted` ref.
+- **react-redux 9 + React 19 prop-context PRODUCTION break - FIXED (2026-07-02, ui-components 0.0.0-31).**
+  Passing `context` as a PROP to a `connect`ed component (the generic-lib pattern of
+  `Head`/`ToolbarGeneral`/`Notifications`/`SittingTray`+children, consumed by every app's
+  kernel Head with its own `StateContext`) resolves to the DEFAULT react-redux context in
+  the PRODUCTION build only - server rendering then reads the null default and throws
+  `Cannot read properties of null (reading 'store')`, and `PluridServer` swallows it into
+  an empty-root fallback. Development builds accept the prop, so the bug is invisible in
+  dev and in jest; it reproduces in ~25 lines with `NODE_ENV=production` at require time.
+  All 8 prop-context components now wrap in `bridgeReduxContext` (`source/utilities/redux`,
+  exported publicly): read the custom context's VALUE, re-publish it on the default
+  `ReactReduxContext` locally, keep the inner `connect` default-context. Proven against the
+  built dist in both flavors; wiring pinned by `bridgeReduxContext.test.tsx`. Every app's
+  production SSR on the modern stack was affected (latent - production containers still run
+  pre-modernization builds).
 
 Still open / accepted:
 
 - **Per-frame Redux dispatch on pointer-move - ACCEPTED BY DESIGN.** Single-delta `*With` actions + Phase-D memoization (only `PluridRoots` re-renders per frame; planes bail via per-id selector factories); only post-release momentum is rAF-throttled. See section 2's "NOT A BOTTLENECK" note.
 - **SS3 line references have drifted** post-Phase-F (the View logic now lives in `View/hooks/*`). Spot-verified fixed as of 2026-07-02: the `VIEW_REMOVE_PLANE` inverted filter (now `view !== plane`, `usePluridPubSub.ts` with the inversion documented inline), the unguarded `requestPointerLock` (now guarded + try/catch + promise-catch in `useFlyControls.ts`), and the 50 ms double-`setTree` HACK (removed; self-documented at `usePluridPubSub.ts:449`). Re-grep any remaining SS3 item before acting on it.
 - New seams landed this round (documented in `docs/ARCHITECTURE.md` + `docs/CONTROL_SURFACE.md`): `usePluridPlane()` plane-content lens (plurid-react), `composePluridUIState()` (plurid-ui-state-react), plurid-kit config loading + baked-in styled-v6 workarounds. `culledView` remains in state but uncomputed (its dispatch is commented out) - wiring it is roadmap, and `usePluridPlane` deliberately ships no fake `visible` field until then.
+- **plurid-kit `ServerOnly<T>` thunk ambiguity - KNOWN FOOTGUN (denote pilot, 2026-07-02).**
+  `resolveServerOnly` invokes ANY function it receives to unwrap it, so a config field whose
+  T is itself a function (`handlers: (server) => void`) passed BARE gets called with no
+  arguments during resolution (`handlers(undefined)`). Callers must pass the THUNK form:
+  `handlers: () => (server) => {...}`. Roadmap refinement for the next kit publish: treat
+  `value.length > 0` (a function declaring parameters) as the value itself, not a thunk.
 
 ---
 

@@ -11,6 +11,10 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
+    import {
+        bridgeReduxContext,
+    } from '~utilities/redux';
+
 
     import {
         PluridIconNewStateline,
@@ -214,5 +218,5 @@ const ConnectedStateLine = connect(
 
 
 // #region exports
-export default ConnectedStateLine;
+export default bridgeReduxContext(ConnectedStateLine, 'StateLine');
 // #endregion exports

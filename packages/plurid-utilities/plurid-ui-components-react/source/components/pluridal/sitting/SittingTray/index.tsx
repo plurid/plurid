@@ -8,6 +8,10 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
+    import {
+        bridgeReduxContext,
+    } from '~utilities/redux';
+
 
     import {
         Theme,
@@ -131,5 +135,5 @@ const ConnectedSittingTray = connect(
 
 
 // #region exports
-export default ConnectedSittingTray;
+export default bridgeReduxContext(ConnectedSittingTray, 'SittingTray');
 // #endregion exports

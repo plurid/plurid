@@ -10,6 +10,10 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
+    import {
+        bridgeReduxContext,
+    } from '~utilities/redux';
+
 
     import {
         Theme,
@@ -196,5 +200,5 @@ const ConnectedStateImage = connect(
 
 
 // #region exports
-export default ConnectedStateImage;
+export default bridgeReduxContext(ConnectedStateImage, 'StateImage');
 // #endregion exports

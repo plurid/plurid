@@ -8,6 +8,10 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
+    import {
+        bridgeReduxContext,
+    } from '~utilities/redux';
+
 
     import {
         StateOfAny,
@@ -210,5 +214,5 @@ const ConnectedHead = connect(
 
 
 // #region exports
-export default ConnectedHead;
+export default bridgeReduxContext(ConnectedHead, 'Head');
 // #endregion exports

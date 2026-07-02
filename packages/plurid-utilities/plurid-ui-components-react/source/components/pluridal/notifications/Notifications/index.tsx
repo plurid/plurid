@@ -8,6 +8,10 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
+    import {
+        bridgeReduxContext,
+    } from '~utilities/redux';
+
 
     import {
         Theme,
@@ -158,5 +162,5 @@ const ConnectedNotifications = connect(
 
 
 // #region exports
-export default ConnectedNotifications;
+export default bridgeReduxContext(ConnectedNotifications, 'Notifications');
 // #endregion exports

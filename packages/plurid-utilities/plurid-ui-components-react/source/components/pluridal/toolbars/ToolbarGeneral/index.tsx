@@ -8,6 +8,10 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
+    import {
+        bridgeReduxContext,
+    } from '~utilities/redux';
+
 
     import {
         Theme,
@@ -215,5 +219,5 @@ const ConnectedToolbarGeneral = connect(
 
 
 // #region exports
-export default ConnectedToolbarGeneral;
+export default bridgeReduxContext(ConnectedToolbarGeneral, 'ToolbarGeneral');
 // #endregion exports

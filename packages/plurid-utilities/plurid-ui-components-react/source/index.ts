@@ -15,6 +15,10 @@ export {
     pluridShouldForwardProp,
 } from '~utilities/styled';
 
+export {
+    bridgeReduxContext,
+} from '~utilities/redux';
+
 export default {
     ...universal.buttons,
     ...universal.form,

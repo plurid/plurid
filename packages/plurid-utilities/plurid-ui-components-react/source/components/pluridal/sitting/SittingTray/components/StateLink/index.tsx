@@ -11,6 +11,10 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
+    import {
+        bridgeReduxContext,
+    } from '~utilities/redux';
+
 
     import {
         PluridIconCopy,
@@ -133,5 +137,5 @@ const ConnectedStateLink = connect(
 
 
 // #region exports
-export default ConnectedStateLink;
+export default bridgeReduxContext(ConnectedStateLink, 'StateLink');
 // #endregion exports
