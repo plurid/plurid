@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-ui-components-react",
-    "version": "0.0.0-29",
+    "version": "0.0.0-30",
     "sideEffects": false,
     "description": "Plurid User Interface Components for React",
     "keywords": [

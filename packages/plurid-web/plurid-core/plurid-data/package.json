@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-data",
-    "version": "0.0.0-21",
+    "version": "0.0.0-22",
     "sideEffects": false,
     "description": "Plurid Constants, Interfaces, Enumerations",
     "keywords": [

@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-ui-state-react",
-    "version": "0.0.0-12",
+    "version": "0.0.0-13",
     "sideEffects": false,
     "description": "Plurid User Interface State for React",
     "keywords": [
