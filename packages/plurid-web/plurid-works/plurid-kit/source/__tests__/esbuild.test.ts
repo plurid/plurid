@@ -132,5 +132,66 @@ describe('loadPluridConfig', () => {
             fs.rmSync(directory, { recursive: true, force: true });
         }
     });
+
+    it('bundles a config whose import graph reaches binary assets', async () => {
+        // the loader-map chicken-and-egg: the asset loaders live IN the config,
+        // so config evaluation itself must tolerate assets (empty modules)
+        const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'plurid-kit-'));
+        try {
+            fs.writeFileSync(path.join(directory, 'logo.png'), Buffer.from([0x89, 0x50, 0x4e, 0x47]));
+            fs.writeFileSync(
+                path.join(directory, 'routes.ts'),
+                `import logo from './logo.png';
+                export const routes = [{ value: '/', logo }];`,
+            );
+            fs.writeFileSync(
+                path.join(directory, 'plurid.config.ts'),
+                `import { routes } from './routes';
+                export default {
+                    serverName: 'asset-fixture',
+                    routes,
+                    bundle: { loaders: { '.png': 'file' } },
+                };`,
+            );
+
+            const config = await loadPluridConfig(directory);
+            expect(config.serverName).toBe('asset-fixture');
+            expect((config.bundle?.loaders as any)?.['.png']).toBe('file');
+        } finally {
+            fs.rmSync(directory, { recursive: true, force: true });
+        }
+    });
+
+    it('warns and returns {} for a config that cannot bundle', async () => {
+        const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'plurid-kit-'));
+        try {
+            fs.writeFileSync(
+                path.join(directory, 'plurid.config.ts'),
+                `import missing from './does-not-exist';
+                export default { serverName: missing };`,
+            );
+
+            const config = await loadPluridConfig(directory);
+            expect(config).toEqual({});
+        } finally {
+            fs.rmSync(directory, { recursive: true, force: true });
+        }
+    });
+});
+
+
+describe('resolveServerOnly arity', () => {
+    it('invokes a zero-arg thunk', async () => {
+        const { resolveServerOnly } = await import('../shared');
+        const resolved = await resolveServerOnly(() => 'produced');
+        expect(resolved).toBe('produced');
+    });
+
+    it('returns a parameterized function AS the value (handlers shape)', async () => {
+        const { resolveServerOnly } = await import('../shared');
+        const handler = (server: unknown) => server;
+        const resolved = await resolveServerOnly(handler);
+        expect(resolved).toBe(handler);
+    });
 });
 // #endregion module

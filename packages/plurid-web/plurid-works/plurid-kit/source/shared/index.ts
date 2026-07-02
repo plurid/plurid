@@ -22,6 +22,13 @@ export async function resolveServerOnly<T>(
         return value;
     }
 
+    // A function DECLARING parameters cannot be a zero-arg thunk - it IS the
+    // value (e.g. `handlers: (server) => {...}` passed bare). Only invoke
+    // parameterless functions as thunks.
+    if ((value as (...args: unknown[]) => unknown).length > 0) {
+        return value as T;
+    }
+
     const produced = await (value as () => T | Promise<T> | Promise<{ default: T }>)();
 
     if (
