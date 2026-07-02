@@ -1,6 +1,6 @@
 # Plurid — Package Map & Status
 
-_Last updated: 2026-06-21._
+_Last updated: 2026-07-02._
 
 This is the governance map for the monorepo: **what is live, what is legacy, what is experimental**, and how the workspace/quality gates cover each package. It exists because folder names alone don't make those distinctions clear (the lens both `docs/ENGINE_AUDIT_AND_ROADMAP.md` and `docs/CODEBASE_DEEP_CRITIQUE.md` asked for).
 
@@ -31,16 +31,18 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 | `@plurid/plurid-pubsub` | event bridge | **LIVE (core)** | BTL | ✅ | Thin behavioral tests. |
 | `@plurid/plurid-react` | primary render adapter | **LIVE (works)** | BTL | ✅ | Sanity test only — needs interaction/render tests. `View`/`router`/`Link` are the decomposition targets. |
 | `@plurid/plurid-react-server` | SSR / static "stills" | **LIVE (works)** | BTL | ✅ | Hardened 2026-06-21: XSS-safe metastate injection, Express 5 (+ html-minifier-terser), Stiller browser-reuse/leak-safe, **stills pipeline re-wired** (Puppeteer = optional peer), template-util + Renderer SSR tests. |
+| `@plurid/plurid-kit` | framework layer (config + CLI + bootstraps) | **LIVE (framework, build-out)** | BTL | yes | Unpublished (`0.0.0-0`), bin `plurid`. `plurid.config.ts` contract + `dev/build/start/info` CLI (now config-loading) + `createPluridServer`/`createPluridClient`; bakes the styled-components v6 workarounds. Plan of record: `docs/FRAMEWORK_PLAN.md`. |
 | `@plurid/plurid-routes-server` | route server | **LEGACY / orphaned** | — | ❌ (de-globbed) | De-globbed (`!` in `pnpm-workspace.yaml`, 2026-06-21). Zero in-repo consumers; a pluriverse-era Express route-cache, not in the live graph. Source kept on disk. |
 | `@plurid/plurid-functions`, `…-react` | utilities | **LIVE (utilities)** | BT | ✅ | Best-covered utilities. `eval` removed. |
 | `@plurid/plurid-themes` | theme objects | **LIVE (utilities)** | BTL | ✅ | Aggregate default export — subpath exports pending. |
 | `@plurid/plurid-icons-react` | icon set | **LIVE (utilities)** | BTL | ✅ | All-icons bundle, treeshake off — subpath exports pending. |
 | `@plurid/plurid-ui-components-react` | UI components | **LIVE (utilities)** | BTL | ✅ | Aggregate bundle, treeshake off. |
 | `@plurid/plurid-ui-state-react` | UI state slices | **LIVE (utilities)** | BTL | ✅ | Add reducer tests per action. |
-| `@plurid/generate-plurid-app` | scaffolding CLI | **LIVE (tooling)** | BTL | ✅ | Still scaffolds CRA — Vite rewrite pending. `--versioning` fixed. |
-| `fixtures/render-test` | CAD verification harness | **FIXTURE** | B | build-only | The engine's integration harness (port 5274). In the workspace; dev-served. |
+| `@plurid/generate-plurid-app` | scaffolding CLI | **LIVE (tooling)** | BTL | ✅ | Still scaffolds CRA - superseded: `docs/FRAMEWORK_PLAN.md` P5 reworks the templates to emit the plurid-kit shape. `--versioning` fixed. |
+| `fixtures/render-test` | CAD verification harness | **FIXTURE** | B | build-only | The engine's integration harness (port 5273). In the workspace; dev-served. |
 | `@plurid/plurid-canvas` | canvas render adapter | **ARCHIVED** | — | ❌ (de-globbed) | De-globbed from the workspace (`!` in `pnpm-workspace.yaml`, 2026-06-20). Source kept on disk; out of every gate. |
 | `@plurid/plurid-html` | Stencil HTML adapter | **ARCHIVED** | — | ❌ (de-globbed) | De-globbed (`!` in `pnpm-workspace.yaml`). Stale Stencil duplicate of the engine; source kept on disk. |
+| `plurid-works/plurid-html-server` | (husk directory) | **HUSK** | — | n/a (no package) | LICENSE files only, no `package.json` - invisible to pnpm. Listed here so the map is complete. |
 | `@plurid/plurid-pttp` (browser extension) | Chrome extension | **EXPERIMENTAL** | TL | ❌ (outside workspace) | `packages/plurid-web/plurid-browser/…`, not in workspace globs. |
 | `packages/plurid-native` | SwiftUI prototype | **EXPERIMENTAL** | — | ❌ | Prototype; tracks Xcode user-state + `.DS_Store` (should be git-ignored). |
 | `fixtures/extras/*`, `fixtures/plurid-react-*`, `…/themes-react` | generated/demo fixtures | **FIXTURE / demo** | varies | ❌ (outside workspace) | Not governed; some are generator outputs. |
@@ -60,6 +62,7 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 
 ## See also
 
+- `docs/ARCHITECTURE.md` - how the engine actually works (layers, render pipeline, camera/state model, pubsub protocol, SSR, consumption modes).
 - `GETTING_STARTED.md` — install → render → configure → control (for **using** the engine).
 - `CONTRIBUTING.md` — layout, gates, the render-test harness, and how to add a seam (for **working on** it).
 - `docs/CONTROL_SURFACE.md` — the full developer-control-surface reference.

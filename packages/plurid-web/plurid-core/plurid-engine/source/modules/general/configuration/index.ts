@@ -109,6 +109,7 @@ export const definePluridConfiguration = (
     // #region space
     const space: PluridPartialConfiguration['space'] = {};
     if (flat.layout !== undefined) { space.layout = flat.layout; }
+    if (flat.spaceDimensions !== undefined) { space.dimensions = flat.spaceDimensions; }
     if (flat.perspective !== undefined) { space.perspective = flat.perspective; }
     if (flat.center !== undefined) { space.center = flat.center; }
     if (flat.firstPerson !== undefined) { space.firstPerson = flat.firstPerson; }

@@ -34,8 +34,8 @@ Built on **CSS 3D transforms** (`perspective` + `preserve-3d` + `matrix3d`), **R
 Toolkit** — no WebGL, no canvas. Planes are real DOM, so your content stays selectable, accessible, and
 styleable.
 
-> **Status (2026-06).** Actively developed. The engine builds, type-checks, tests, and lints green, and
-> renders + 3D-navigates on **React 19 · TypeScript 5.9 · Node 22+** (CI on Node 24). The reference
+> **Status (2026-07).** Actively developed. The engine builds, type-checks, tests, and lints green, and
+> renders + 3D-navigates on **React 19 · TypeScript 6.0 · Node 22+** (CI on Node 24). The reference
 > integration harness is `fixtures/render-test`.
 
 
@@ -109,11 +109,12 @@ doesn't cover. See **[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)**.
 | Doc | For |
 |---|---|
 | **[`GETTING_STARTED.md`](./GETTING_STARTED.md)** | Install → render → configure → control. Start here to *use* the engine. |
+| **[`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)** | How the engine actually works - package layers, render pipeline, camera/state model, the pubsub wire catalog, SSR, consumption modes + the hack-to-seam replacement map. |
 | **[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)** | The developer-control surface — `onReady`, pub/sub control & observe topics, config, storage adapter, gestures, shortcuts, UI slots. |
 | **[`examples/`](./examples)** | Runnable references: [`minimal`](./examples/minimal) (hello-world) and [`control-surface`](./examples/control-surface) (every seam in one component). |
 | **[`CONTRIBUTING.md`](./CONTRIBUTING.md)** | Monorepo layout, build/test/lint gates, the render-test harness, and how to add a config field / pub/sub topic / export. |
 | **[`CONTEXT-MAP.md`](./CONTEXT-MAP.md)** | Package map & status — what's live vs. legacy/experimental, and which gates cover each package. |
-| **[`docs/ENGINE_AUDIT_AND_ROADMAP.md`](./docs/ENGINE_AUDIT_AND_ROADMAP.md)** · **[`docs/ENGINE_FEATURE_ROADMAP.md`](./docs/ENGINE_FEATURE_ROADMAP.md)** · **[`docs/CODEBASE_DEEP_CRITIQUE.md`](./docs/CODEBASE_DEEP_CRITIQUE.md)** | Engine-deep audit, the feature roadmap (with progress), and the repo-wide critique. |
+| **[`docs/ENGINE_AUDIT_AND_ROADMAP.md`](./docs/ENGINE_AUDIT_AND_ROADMAP.md)** · **[`docs/ENGINE_FEATURE_ROADMAP.md`](./docs/ENGINE_FEATURE_ROADMAP.md)** · **[`docs/FRAMEWORK_PLAN.md`](./docs/FRAMEWORK_PLAN.md)** · **[`docs/CODEBASE_DEEP_CRITIQUE.md`](./docs/CODEBASE_DEEP_CRITIQUE.md)** | Engine-deep audit, the feature roadmap (with progress), the plurid-kit framework plan, and the repo-wide critique (historical snapshot). |
 
 
 
@@ -126,6 +127,7 @@ plurid-data ──► plurid-engine ──► plurid-react ──► (your app)
   (types,        (plane tree,      (render adapter,
    constants)     layout, routing,   controls, links)
                   3D math)         └► plurid-react-server (SSR / static stills)
+                                        └► plurid-kit (plurid.config.ts + CLI + bootstraps)
 plurid-pubsub ──────────────────────► (host ↔ engine event bridge)
 ```
 
@@ -136,8 +138,9 @@ plurid-pubsub ──────────────────────
 | [`@plurid/plurid-pubsub`](./packages/plurid-web/plurid-core/plurid-pubsub) | The publish/subscribe message bus. |
 | [`@plurid/plurid-react`](./packages/plurid-web/plurid-works/plurid-react) | The primary render adapter (React). |
 | [`@plurid/plurid-react-server`](./packages/plurid-web/plurid-works/plurid-react-server) | SSR / static "stills" for the React adapter. |
+| [`@plurid/plurid-kit`](./packages/plurid-web/plurid-works/plurid-kit) | Framework layer: `plurid.config.ts` + the `plurid` CLI + client/server bootstraps over plurid-react-server. In build-out, unpublished - see [`docs/FRAMEWORK_PLAN.md`](./docs/FRAMEWORK_PLAN.md). |
 | `@plurid/plurid-{themes,icons-react,ui-components-react,ui-state-react,functions,functions-react}` | Supporting utilities. |
-| [`@plurid/generate-plurid-app`](./packages/plurid-utilities/generate-plurid-app) | Scaffolding CLI. |
+| [`@plurid/generate-plurid-app`](./packages/plurid-utilities/generate-plurid-app) | Scaffolding CLI (templates to be reworked to the kit shape - FRAMEWORK_PLAN P5). |
 
 Legacy/experimental (canvas + html adapters, native prototype, browser extension) and fixtures are listed
 in [`CONTEXT-MAP.md`](./CONTEXT-MAP.md).

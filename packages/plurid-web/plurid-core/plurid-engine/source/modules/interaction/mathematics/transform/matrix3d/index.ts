@@ -1,19 +1,3 @@
-// #region imports
-    // #region external
-    import {
-        multiplyArrayOfMatrices,
-        matrixArrayToCSSMatrix,
-        rotateMatrix,
-        translateMatrix,
-        scaleMatrix,
-    } from '../../matrix';
-
-    // import { radToDeg } from './quaternion';
-    // #endregion external
-// #endregion imports
-
-
-
 // #region module
 /**
  * Converts the CSS string matrix3d into an array of numbers.
@@ -126,30 +110,6 @@ export function getScalationValue(
     }
 
     return scale;
-}
-
-
-
-/**
- * Returns a a matrix3d CSS string.
- *
- * @param       rotationMatrix
- * @param       translationMatrix
- * @param       scalationMatrix
- * @returns     matrix3d CSS string.
- */
-export function setTransform(
-    rotationMatrix: number[],
-    translationMatrix: number[],
-    scalationMatrix: number[],
-): string {
-    const transformMatrix = multiplyArrayOfMatrices([
-        translationMatrix,
-        rotationMatrix,
-        scalationMatrix,
-    ]);
-
-    return matrixArrayToCSSMatrix(transformMatrix);
 }
 
 

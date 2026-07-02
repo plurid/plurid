@@ -1,8 +1,12 @@
 // #region imports
     // #region libraries
-    import styled, {
+    import {
         css,
     } from 'styled-components';
+
+    import {
+        styled,
+    } from '~utilities/styled';
 
     import {
         Theme,

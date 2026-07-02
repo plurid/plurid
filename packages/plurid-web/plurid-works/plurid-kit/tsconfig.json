@@ -6,7 +6,8 @@
         "outDir": "distribution",
         "declarationDir": "distribution",
         "types": [
-            "node"
+            "node",
+            "jest"
         ]
     },
     "include": [

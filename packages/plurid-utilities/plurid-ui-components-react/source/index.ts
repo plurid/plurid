@@ -11,6 +11,10 @@
 export * from './data/enumerations';
 export * from './data/interfaces';
 
+export {
+    pluridShouldForwardProp,
+} from '~utilities/styled';
+
 export default {
     ...universal.buttons,
     ...universal.form,

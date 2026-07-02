@@ -28,6 +28,8 @@
 
     import Context from '~services/context';
 
+    import PluridPlaneIDContext from '~services/hooks/plane/context';
+
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
@@ -188,25 +190,30 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
                     if (renderablePlane) {
                         return (
-                            <PluridPlane
-                                {...planeProperties}
+                            <PluridPlaneIDContext.Provider
+                                key={keyBase + child.planeID}
+                                value={child.planeID}
                             >
-                                {!PlaneContext
-                                    ? (
-                                        <Plane
-                                            {...properties}
-                                        />
-                                    ) : (
-                                        <PlaneContext.Provider
-                                            value={planeContextValue}
-                                        >
+                                <PluridPlane
+                                    {...planeProperties}
+                                >
+                                    {!PlaneContext
+                                        ? (
                                             <Plane
                                                 {...properties}
                                             />
-                                        </PlaneContext.Provider>
-                                    )
-                                }
-                            </PluridPlane>
+                                        ) : (
+                                            <PlaneContext.Provider
+                                                value={planeContextValue}
+                                            >
+                                                <Plane
+                                                    {...properties}
+                                                />
+                                            </PlaneContext.Provider>
+                                        )
+                                    }
+                                </PluridPlane>
+                            </PluridPlaneIDContext.Provider>
                         );
                     }
 
@@ -319,28 +326,32 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         <StyledPluridRoot
             data-plurid-entity={PLURID_ENTITY_ROOT}
         >
-            <PluridPlane
-                plane={pluridPlane}
-                treePlane={plane}
-                planeID={plane.planeID}
-                location={location}
+            <PluridPlaneIDContext.Provider
+                value={plane.planeID}
             >
-                {!PlaneContext
-                    ? (
-                        <Plane
-                            {...planeProperties}
-                        />
-                    ) : (
-                        <PlaneContext.Provider
-                            value={planeContextValue}
-                        >
+                <PluridPlane
+                    plane={pluridPlane}
+                    treePlane={plane}
+                    planeID={plane.planeID}
+                    location={location}
+                >
+                    {!PlaneContext
+                        ? (
                             <Plane
                                 {...planeProperties}
                             />
-                        </PlaneContext.Provider>
-                    )
-                }
-            </PluridPlane>
+                        ) : (
+                            <PlaneContext.Provider
+                                value={planeContextValue}
+                            >
+                                <Plane
+                                    {...planeProperties}
+                                />
+                            </PlaneContext.Provider>
+                        )
+                    }
+                </PluridPlane>
+            </PluridPlaneIDContext.Provider>
 
             {childrenPlanes}
         </StyledPluridRoot>

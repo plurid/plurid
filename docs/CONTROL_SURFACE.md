@@ -11,6 +11,9 @@ hatch.
 > Everything below is verified by automated tests (`*/__tests__/`) and the render-test harness
 > (`fixtures/render-test`, which exposes each feature behind a default-OFF query param). The
 > harness `App.tsx` is a working reference for every snippet here.
+>
+> The machinery behind each tier (the store, the bus, the config merge, the render pipeline) is
+> documented in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 
 - [Tier 0 — the escape hatch (`onReady`)](#tier-0--the-escape-hatch)
 - [Tier 1 — declarative control & observe (pubsub)](#tier-1--declarative-control--observe)
@@ -242,4 +245,5 @@ partial, merged last so it wins).
 | Go fully headless | `{ micro: true }` |
 
 See [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) for the design rationale and the
-engine⟷product boundary.
+engine⟷product boundary, and [`ARCHITECTURE.md`](./ARCHITECTURE.md) for how the machinery under
+this surface actually works.

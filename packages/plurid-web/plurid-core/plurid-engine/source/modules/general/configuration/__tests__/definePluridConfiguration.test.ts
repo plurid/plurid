@@ -115,6 +115,22 @@ describe('definePluridConfiguration', () => {
         expect(configuration.space.timings).toEqual({ persistDebounce: 80, viewpointChangeDebounce: 40 });
     });
 
+    it('maps spaceDimensions to space.dimensions (default: absent)', () => {
+        const unset = definePluridConfiguration({ theme: 'plurid' });
+        expect(unset.space.dimensions).toBeUndefined();
+
+        const configuration = definePluridConfiguration({
+            spaceDimensions: {
+                width: 900,
+                height: '60vh',
+            },
+        });
+        expect(configuration.space.dimensions).toEqual({
+            width: 900,
+            height: '60vh',
+        });
+    });
+
     it('maps the Tier 3 gestures + shortcuts objects through wholesale', () => {
         const onUnhandledKey = () => { /* host handler */ };
         const configuration = definePluridConfiguration({

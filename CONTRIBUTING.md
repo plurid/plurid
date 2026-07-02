@@ -42,11 +42,12 @@ packages/
     plurid-works/                # adapters
       plurid-react/              #   the primary render adapter (React)
       plurid-react-server/       #   SSR / static "stills"
+      plurid-kit/                #   framework layer (plurid.config.ts + CLI + bootstraps)
       plurid-canvas/  plurid-html/   # ARCHIVED — excluded from the workspace (see pnpm-workspace.yaml)
   plurid-utilities/              # themes, icons, ui-components, ui-state, functions(+react), generate-plurid-app
 fixtures/
   render-test/                   # the live browser harness (in the workspace)
-docs/                            # CONTROL_SURFACE, audit, roadmap, critique
+docs/                            # ARCHITECTURE, CONTROL_SURFACE, audit, roadmaps, framework plan, critique
 examples/                        # copy-pasteable reference components
 ```
 
@@ -130,6 +131,10 @@ repo (compiled clean, rendered blank):
 
 The control surface is built from a few repeated patterns. Match them when extending it (full rationale in
 [`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)).
+
+Docs are part of the checklist: a new topic, knob, or export also updates
+[`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) (the topic catalog / Appendix A inventory) and
+[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md) (the quick reference).
 
 ### A configuration knob
 

@@ -8,6 +8,7 @@ import {
 } from '@plurid/plurid-react';
 
 import Panel, { PanelProps } from './Plane';
+import MediaPlane from './MediaPlane';
 
 
 // A small "control surface" of distinct planes, laid out in space. Each plane is a
@@ -126,6 +127,28 @@ const App = () => {
     // Tier 3 UI overrides: ?slotToolbar=1 (custom toolbar render-slot) · ?hideLinks=1 (hide plane links)
     const slotToolbar = params.get('slotToolbar') === '1';
     const hideLinks = params.get('hideLinks') === '1';
+    // Substrate-seam verification surface (default OFF):
+    //   ?media=1             → add a consumer-style media plane (usePluridPlane lens,
+    //                          lazy image, button-driven video; window.__rtPlaneLens)
+    //   ?spaceW=900&spaceH=600 → space.dimensions (the opt-in roots-container sizing)
+    const media = params.get('media') === '1';
+    const spaceW = params.get('spaceW') ? Number(params.get('spaceW')) : undefined;
+    const spaceH = params.get('spaceH') ? Number(params.get('spaceH')) : undefined;
+    const spaceDimensions = (spaceW !== undefined || spaceH !== undefined)
+        ? {
+            ...(spaceW !== undefined ? { width: spaceW } : {}),
+            ...(spaceH !== undefined ? { height: spaceH } : {}),
+        }
+        : undefined;
+    // assertion helper: read the roots container's applied size
+    if (typeof window !== 'undefined') {
+        (window as any).__rtRootsSize = () => {
+            const roots = document.querySelector('[data-plurid-entity="PluridRoots"]') as HTMLElement | null;
+            return roots
+                ? { width: roots.style.width, height: roots.style.height }
+                : undefined;
+        };
+    }
 
     // A throwaway in-memory backend so a test can confirm writes land HERE (not localStorage).
     const memoryAdapter = React.useMemo(() => {
@@ -160,6 +183,8 @@ const App = () => {
         shortcuts,
         // Tier 3 element show-flags (nested via `extend`).
         ...(hideLinks ? { extend: { elements: { planeLinks: { show: false }, alignmentGuides: { show: false } } } } : {}),
+        // Opt-in roots-container sizing (the E2/D2 substrate seam).
+        ...(spaceDimensions ? { spaceDimensions } : {}),
     });
 
     // A plane registered but NOT in the initial `view` — a plurid link spawns it into the
@@ -191,11 +216,16 @@ const App = () => {
             ),
         })),
         detailPlane,
+        // ?media=1 - the consumer-built media plane (the substrate-seam proof).
+        ...(media ? [{ route: '/media', component: MediaPlane }] : []),
     ];
 
     // `view` = the initially-visible roots. DETAIL_ROUTE is intentionally absent → it only
     // appears when the link is clicked.
-    const view = source.map((panel) => panel.route);
+    const view = [
+        ...source.map((panel) => panel.route),
+        ...(media ? ['/media'] : []),
+    ];
 
     return (
         <>

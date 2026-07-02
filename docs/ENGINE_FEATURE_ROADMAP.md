@@ -1,5 +1,13 @@
 # Plurid Engine — Feature Roadmap
 
+> **Status (2026-07-02):** the delivered control surface is real but consumer adoption is ZERO -
+> as measured 2026-07-02 (applications workspace), none of the 42 de- apps use onReady /
+> onViewpointChange / onPersistContent / storageAdapter / render slots; denote works around them
+> with window globals + setTimeout hacks. The adoption path (the hack -> seam replacement map)
+> is `docs/ARCHITECTURE.md` section 12. Delivered this round: the plane-content lens
+> `usePluridPlane()` (see the capability-seams note under Notes). Architecture reference:
+> `docs/ARCHITECTURE.md`.
+>
 > **Status (2026-06-21):** in progress. The A–F hardening pass is complete and green on all gates
 > (`pnpm build` / `pnpm test` / `pnpm check`); see [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md)
 > for what landed. This doc plans what the **engine** should add to unlock the Spatial-Notes product.
@@ -353,7 +361,7 @@ behavior is defined and demonstrated.
 
 ---
 
-## 5. Two enabling seams: content-persistence + editor-focus
+## 5. Two enabling seams: content-persistence + editor-focus - DELIVERED (2026-06-21)
 *Effort: Small · do early*
 
 **Goal.** The *only* engine-side parts of "editable notes": (a) let a product's content ride the engine's
@@ -437,7 +445,7 @@ with no echo storms.
 
 ---
 
-## 7. Minimap / overview
+## 7. Minimap / overview - DELIVERED (2026-06-21)
 *Effort: Small → Medium*
 
 **Goal.** Orientation in large spaces — see the whole layout + where the camera is, at a glance.
@@ -546,6 +554,16 @@ params: `undo`, `store=memory`, `persistMs`, `rotateSens`, `dragThreshold`, `scD
 
 ## Notes
 
+- **Plane-content capability seams (the substrate principle, 2026-07-02).** Operator decision:
+  the engine ships NO media components - "the engine just renders what the consumer passes;
+  depict/deview passing images/videos is their specificity... the issue is if the API is clean
+  and powerful enough to handle all these cases beautifully." Delivered: `usePluridPlane()`
+  (live per-plane lens: active/selected/isolation/shown/scale/viewSize/location) + the opt-in
+  `space.dimensions` sizing + the `ExternalPlane` reference loader + the consumer media-plane
+  recipe (`docs/ARCHITECTURE.md` 12.6, working example `fixtures/render-test/src/MediaPlane.tsx`).
+  Future capability seams, in the same spirit: wire `culledView` for real (its dispatch is
+  commented out; then the lens can expose true visibility), per-plane width taught to the layout
+  algorithms, content-measured planes (the dormant `updatePlaneSize`/ResizeObserver seam).
 - Nothing here is started; this is the plan. The cheap front of the queue (#1, #5, #7) is purely additive and
   low-risk on the current green base; #3 and #6 are the substantial efforts; #8 is a deliberate rewrite to be
   taken only behind a renderer abstraction.

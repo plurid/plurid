@@ -81,10 +81,19 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 
 
     // #region render
-    // TOFIX use user width/height
-    const width = '100%';
+    // `space.dimensions` (opt-in) sizes the roots container; the defaults are
+    // the historical behavior (fill the host horizontally, window vertically).
+    const dimensions = stateConfiguration.space.dimensions;
+    const resolveDimension = (
+        value: number | string | undefined,
+        fallback: string | number,
+    ) => value === undefined
+        ? fallback
+        : typeof value === 'number' ? value + 'px' : value;
+
+    const width = resolveDimension(dimensions?.width, '100%');
     const height = stateResolvedLayout
-        ? window.innerHeight + 'px'
+        ? resolveDimension(dimensions?.height, window.innerHeight + 'px')
         : 0;
 
     const transition = spaceAnimatedTransform

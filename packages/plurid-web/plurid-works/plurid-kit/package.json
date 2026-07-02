@@ -60,7 +60,8 @@
         "build": "tsup",
         "build.development": "tsup --watch",
         "build.production": "tsup",
-        "prepublishOnly": "pnpm build"
+        "prepublishOnly": "pnpm build",
+        "test": "jest -c ./configurations/jest.config.js"
     },
     "dependencies": {
         "dotenv": "^16.4.7",
@@ -81,15 +82,18 @@
         "@plurid/plurid-engine": "workspace:*",
         "@plurid/plurid-react": "workspace:*",
         "@plurid/plurid-react-server": "workspace:*",
+        "@types/jest": "^30.0.0",
         "@types/node": "^20.10.6",
         "@types/react": "^19.2.0",
         "@types/react-dom": "^19.2.0",
+        "jest": "^30.4.2",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "react-helmet-async": "^2.0.4",
         "react-redux": "^9.3.0",
         "redux": "^5.0.1",
         "styled-components": "^6.4.2",
+        "ts-jest": "^29.4.11",
         "tslib": "^2.6.2",
         "tsup": "^8.5.1",
         "typescript": "^6.0.3"

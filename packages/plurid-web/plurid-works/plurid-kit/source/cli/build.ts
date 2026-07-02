@@ -14,6 +14,10 @@
     } from './esbuild';
 
     import {
+        loadPluridConfig,
+    } from './config';
+
+    import {
         loadEnvironment,
     } from './environment';
     // #endregion internal
@@ -48,12 +52,29 @@ export async function build(
         fs.rmSync('build', { recursive: true, force: true });
     }
 
+    // `plurid.config.ts` build-time knobs (`bundle.*`); absent config -> defaults.
+    const config = await loadPluridConfig();
+    const bundle = config.bundle ?? {};
+
     // client (browser, minified, single iife bundle) + server (node, minified)
     const clientResult = await esbuild.build(
-        clientBuildOptions({ mode, metafile: true }),
+        clientBuildOptions({
+            mode,
+            metafile: true,
+            clientExternals: bundle.clientExternals,
+            define: bundle.define,
+            loaders: bundle.loaders,
+            environment: bundle.environment,
+        }),
     );
     await esbuild.build(
-        serverBuildOptions({ mode, metafile: true }),
+        serverBuildOptions({
+            mode,
+            metafile: true,
+            forceBundle: bundle.forceBundle,
+            define: bundle.define,
+            loaders: bundle.loaders,
+        }),
     );
 
     // copy the public directory (favicons, og, manifest, robots) into the build

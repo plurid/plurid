@@ -3,6 +3,11 @@ module.exports = {
     transform: {
         '.(ts|tsx)': 'ts-jest'
     },
+    moduleNameMapper: {
+        '^~components/(.*)$': '<rootDir>/source/components/$1',
+        '^~data/(.*)$': '<rootDir>/source/data/$1',
+        '^~utilities/(.*)$': '<rootDir>/source/utilities/$1',
+    },
     testEnvironment: 'node',
     testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
     testPathIgnorePatterns: [

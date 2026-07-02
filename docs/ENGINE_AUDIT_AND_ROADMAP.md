@@ -1,8 +1,23 @@
 # Plurid Engine — Audit & Modernization Roadmap
 
-_Last updated: 2026-06-19. Scope: the whole `plurid` monorepo (engine + utilities + peripheral packages). Based on a multi-agent read-only audit cross-verified against source (and, where load-bearing, by running the code/tests)._
+_Last updated: 2026-07-02 (content through the 2026-06-21 phases + the 2026-07-02 re-verification below). Scope: the whole `plurid` monorepo (engine + utilities + peripheral packages). Based on a multi-agent read-only audit cross-verified against source (and, where load-bearing, by running the code/tests)._
 
-This is the standing "what's left to make the engine modern, ergonomic, correct, and fast" plan. It catalogs concrete findings (with `file:line` + suggested fix + severity) and ends with a phased roadmap. Severity = **High** (correctness/perf/DX blocker), **Med**, **Low**.
+This is the standing "what's left to make the engine modern, ergonomic, correct, and fast" plan. It catalogs concrete findings (with `file:line` + suggested fix + severity) and ends with a phased roadmap. Severity = **High** (correctness/perf/DX blocker), **Med**, **Low**. Architecture reference: `docs/ARCHITECTURE.md`.
+
+## Open items (re-verified 2026-07-02, code-read)
+
+Resolved this round (the 2026-07-02 engine-improvement round):
+
+- **styled-components prop leak (the fleet's #1 console friction) - FIXED.** `plurid-ui-components-react` now routes every one of its 48 `styled.*` files through a shared filtered factory (`source/utilities/styled`: `@emotion/is-prop-valid` + a `{'size','selected'}` deny-set), matching the filter `plurid-react` already applied inside `PluridApplication`. Public export `pluridShouldForwardProp` for app-level `StyleSheetManager` reuse. Custom props (`level`/`isDisabled`/`inline`/...) no longer reach the DOM; SSR-render tests pin it.
+- **Engine matrix3d dead code - DONE.** The `*Plurid` fns were already gone; the residual dead `setTransform` (only its own test referenced it) removed 2026-07-02, along with its now-unused imports. `getTransform*` readers (+ `getTranslationMatrix`, a live internal) stay. NOTE the path drifted from the original finding: `plurid-engine/source/modules/interaction/mathematics/transform/matrix3d/index.ts`.
+- **`Roots` "TOFIX use user width/height" - RESOLVED** via the opt-in `space.dimensions` (`PluridConfigurationSpaceDimensions` in plurid-data; flat `spaceDimensions`; consumed by `Roots` with a `resolveDimension` helper; defaults byte-identical: width `'100%'`, height `window.innerHeight`). Limitation documented: layouts still compute from `viewSize` - dimensions sizes the container only.
+- **`ExternalPlane` "TOFIX load only once" - FIXED**: the effect-local `loading` flag (which StrictMode's double effect-invocation defeated - each closure owned its own copy) is now a `loadStarted` ref.
+
+Still open / accepted:
+
+- **Per-frame Redux dispatch on pointer-move - ACCEPTED BY DESIGN.** Single-delta `*With` actions + Phase-D memoization (only `PluridRoots` re-renders per frame; planes bail via per-id selector factories); only post-release momentum is rAF-throttled. See section 2's "NOT A BOTTLENECK" note.
+- **SS3 line references have drifted** post-Phase-F (the View logic now lives in `View/hooks/*`). Spot-verified fixed as of 2026-07-02: the `VIEW_REMOVE_PLANE` inverted filter (now `view !== plane`, `usePluridPubSub.ts` with the inversion documented inline), the unguarded `requestPointerLock` (now guarded + try/catch + promise-catch in `useFlyControls.ts`), and the 50 ms double-`setTree` HACK (removed; self-documented at `usePluridPubSub.ts:449`). Re-grep any remaining SS3 item before acting on it.
+- New seams landed this round (documented in `docs/ARCHITECTURE.md` + `docs/CONTROL_SURFACE.md`): `usePluridPlane()` plane-content lens (plurid-react), `composePluridUIState()` (plurid-ui-state-react), plurid-kit config loading + baked-in styled-v6 workarounds. `culledView` remains in state but uncomputed (its dispatch is commented out) - wiring it is roadmap, and `usePluridPlane` deliberately ships no fake `visible` field until then.
 
 ---
 
@@ -197,7 +212,7 @@ Fly rAF loop spins every frame even with no keys held (`View:1242-1257`); `Trans
 - `plurid-engine/.../space/tree/logic.ts` — **1,252 lines**, ~26% dead commented blocks (`:176-266, 403-456, 820-874`) + two stub functions. `isParametric` (`:603`) unconditionally returns `true`, making the guard at `:656` always fire (double-push). Delete dead/stubs (→ ~600 lines); split into build/mutate/traverse.
 
 ### 4.2 — Dead code (HIGH)
-- Engine matrix3d `*Plurid` functions — **zero live consumers** (verified; plurid-html uses its own). Safe to delete: `rotatePlurid/translatePlurid/scalePlurid/setTransform/getTranslationMatrix` + ~90 lines of commented Euler experiments (`mathematics/transform/matrix3d/index.ts`). Keep only the live `getTransform*` readers. (~50% of the file.)
+- **DONE (2026-07-02, completed).** Engine matrix3d `*Plurid` functions — **zero live consumers** (verified; plurid-html uses its own). The `rotatePlurid/translatePlurid/scalePlurid` fns were deleted in an earlier pass; the residual `setTransform` (+ its now-unused imports) removed 2026-07-02. Kept: the live `getTransform*` readers and `getTranslationMatrix` (a live internal reader — the original finding listed it in error).
 - Quaternion module (`mathematics/quaternion/index.ts`, 255 lines) — only `degToRad`/`radToDeg` are used; the quaternion fns have only test refs. Delete or document as a reserved toolkit.
 - ~46 commented-out `console.log` blocks across `router`, `Link`, `Root`, `server` (plurid-react); ~20 across engine routing.
 - `changeTransform` reducer is an empty stub (`space/index.ts:130`); gamepad effect is a no-op stub (`View/index.tsx:1316`); `resolveRoute`/`mapPathsToRoutes` are abandoned stubs that echo input (`routing/logic/general/index.ts`).

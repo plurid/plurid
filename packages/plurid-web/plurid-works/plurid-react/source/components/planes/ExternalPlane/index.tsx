@@ -192,6 +192,7 @@ const ExternalPlane: PluridReactFunctionalComponent<
 
     // #region references
     const mounted = useRef(false);
+    const loadStarted = useRef(false);
     // #endregion references
 
 
@@ -212,15 +213,15 @@ const ExternalPlane: PluridReactFunctionalComponent<
     });
 
     useEffect(() => {
-        let loading = false;
+        // Load exactly once per mounted instance: an effect-local flag resets on
+        // StrictMode's simulated remount (each closure owns its own copy), so the
+        // guard must live on a ref that survives it.
+        if (loadStarted.current) {
+            return;
+        }
+        loadStarted.current = true;
 
         const load = async () => {
-            // TOFIX - load only once
-            if (loading) {
-                return;
-            }
-            loading = true;
-
             try {
                 // console.log('ExternalPlane > plurid', plurid);
 

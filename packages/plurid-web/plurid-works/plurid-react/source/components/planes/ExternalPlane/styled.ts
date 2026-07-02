@@ -17,4 +17,4 @@ export interface IStyledExternalPlane {
 
 export const StyledExternalPlane = styled.div<IStyledExternalPlane>`
 `;
-// #region module
+// #endregion module

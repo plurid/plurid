@@ -45,7 +45,6 @@ const {
     getTransformScale,
     getTransformTranslate,
     getTranslationMatrix,
-    setTransform,
 } = matrix3d;
 
 

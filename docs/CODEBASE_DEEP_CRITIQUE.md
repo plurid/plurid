@@ -2,6 +2,13 @@
 
 Generated: 2026-06-19
 
+> **Historical snapshot (2026-06-19).** Since this was written: canvas/html/routes-server were
+> archived + de-globbed (`pnpm-workspace.yaml`); `CONTEXT-MAP.md` was added (the governance lens
+> this doc asked for); `@plurid/plurid-kit` was added (`docs/FRAMEWORK_PLAN.md`); the architecture
+> reference is now `docs/ARCHITECTURE.md`. Individual findings below may be resolved - the
+> MAINTAINED ledgers are `docs/ENGINE_AUDIT_AND_ROADMAP.md` and `docs/FRAMEWORK_PLAN.md`; read
+> this doc for the analysis, not for current state.
+
 This document is a broad codebase critique of the current monorepo. It focuses on architecture, correctness risks, performance, build health, testing, package structure, stale surfaces, and product/feature opportunities.
 
 It is complementary to `docs/ENGINE_AUDIT_AND_ROADMAP.md`, which already gives a detailed engine-centered roadmap. This file widens the lens to the entire repository and calls out repo-level governance and product-shape issues as well.
@@ -272,6 +279,8 @@ Fix direction:
 
 ### 7. The Generator Can Fail In Normal CLI Use
 
+> **SUPERSEDED (2026-07):** `docs/FRAMEWORK_PLAN.md` P5 reworks the generator to emit the plurid-kit shape; the kit owns bundling.
+
 `@plurid/generate-plurid-app` has a CLI option path bug:
 
 - The command action destructures `versioning`.
@@ -339,6 +348,8 @@ Fix direction:
 - Use generated entrypoints rather than hand-maintained broad barrels.
 
 ### 10. Workspace Governance Does Not Cover Everything That Looks Live
+
+> **DONE (2026-06-21):** `CONTEXT-MAP.md` is exactly this lens - per-package live/legacy/experimental status + gate coverage.
 
 The root workspace excludes some packages by pattern and root scripts exclude others by filter:
 
@@ -955,6 +966,8 @@ The native SwiftUI package currently looks like a prototype. It has minimal impl
 
 ### README Is Stale
 
+> **DONE (2026-06-21):** the root README was rewritten (status callout, doc table, packages table).
+
 The root README still references older package paths and product names. It describes a broad ecosystem, but does not clearly tell a new contributor what is live today.
 
 Fix direction:
@@ -982,6 +995,8 @@ Fix direction:
 - Add examples that are tested against the engine and React adapter.
 
 ### Existing Audit Should Become A Maintained Roadmap
+
+> **DONE:** `docs/ENGINE_AUDIT_AND_ROADMAP.md` carries per-phase progress + a dated open-items block (re-verified 2026-07-02).
 
 `docs/ENGINE_AUDIT_AND_ROADMAP.md` is already valuable. It should be kept, but it should not become the only source of truth.
 
@@ -1065,6 +1080,8 @@ If React, HTML, canvas, and native are all desired, define an adapter conformanc
 Only adapters that pass should be presented as live.
 
 ### 6. Modern Generator
+
+> **SUPERSEDED (2026-07):** the modern path is `@plurid/plurid-kit` (`docs/FRAMEWORK_PLAN.md`); P5 makes the generator emit the kit shape.
 
 Turn the generator into a high-confidence onboarding path:
 
@@ -1165,6 +1182,8 @@ Success criteria:
 - Performance and route behavior can be inspected without reading internals.
 
 ## Deletion And Archival Candidates
+
+> **DONE (2026-06-20/21):** canvas + html + routes-server archived/de-globbed via `!` negations in `pnpm-workspace.yaml`; source kept on disk.
 
 These areas should be reviewed with the deletion test: if removing or archiving the code makes the live system easier to understand without breaking supported use cases, prefer archiving.
 

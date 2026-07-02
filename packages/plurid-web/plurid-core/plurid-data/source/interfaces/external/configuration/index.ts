@@ -56,6 +56,8 @@ export interface FlatPluridConfiguration {
     // #region space
     /** `space.layout` — the plane layout (e.g. `{ type: SPACE_LAYOUT.COLUMNS, columns: 3 }`). */
     layout?: PluridLayout;
+    /** `space.dimensions` - explicit space-container size (number = px, string passthrough). */
+    spaceDimensions?: PluridConfigurationSpaceDimensions;
     /** `space.perspective` — CSS perspective; recommended 1300–2000. */
     perspective?: number;
     /** `space.center` — center the camera on the first root. */
@@ -193,6 +195,19 @@ export interface PluridConfigurationSpace {
     layout: PluridLayout;
 
     /**
+     * Explicit dimensions for the space container (the roots frame). By default
+     * the space fills its host horizontally (width `'100%'`) and sizes to the
+     * window vertically (height `window.innerHeight`) - the historical behavior.
+     * Opt in for hosts embedding the space in a sized container.
+     *
+     * A `number` is pixels; a `string` passes through (`'100%'`, `'60vh'`).
+     *
+     * Note: the layout algorithms still compute plane spacing from the measured
+     * view size; `dimensions` sizes the container only.
+     */
+    dimensions?: PluridConfigurationSpaceDimensions;
+
+    /**
      * Perspective value. Recommended between 1300 and 2000.
      *
      * Default `2000`.
@@ -323,6 +338,18 @@ export interface PluridConfigurationSpace {
      * Listen for the URL change and transition the camera/open plurids.
      */
     // routeURL?: boolean;
+}
+
+
+export interface PluridConfigurationSpaceDimensions {
+    /**
+     * `number` is pixels; a `string` passes through (`'100%'`, `'60vh'`).
+     */
+    width?: number | string;
+    /**
+     * `number` is pixels; a `string` passes through (`'100%'`, `'60vh'`).
+     */
+    height?: number | string;
 }
 
 

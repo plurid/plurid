@@ -110,6 +110,7 @@
 
     import {
         usePluridRouter,
+        usePluridPlane,
     } from './services/hooks';
 
     // Escape-hatch primitives (Tier 3): the same building blocks the engine uses internally, so a
@@ -236,6 +237,9 @@ export {
     pluridRouterNavigate,
     usePluridRouter,
 
+    /** Plane lens - live per-plane signals for plane content (the substrate seam) */
+    usePluridPlane,
+
     getDirectPlaneMatch,
 
     /** Viewpoint — encode/decode the camera ↔ the `v`-style string, for full host control */
@@ -262,6 +266,11 @@ export {
 
 // Type-only re-exports use `export type` so esbuild (per-file transpile) elides them at
 // runtime, instead of emitting runtime re-exports of names that have no JS value.
+export type {
+    PluridPlaneLens,
+    PluridPlaneIsolation,
+} from './services/hooks/plane';
+
 export type {
     Theme,
 

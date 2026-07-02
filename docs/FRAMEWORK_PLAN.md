@@ -1,7 +1,15 @@
 # Plurid Framework Plan - `@plurid/plurid-kit`
 
-Generated: 2026-06-23
-Status: **Executing (greenlit 2026-06-23).** Scope = **P0-P2** (framework skeleton + runtime batteries + denote thin-slice proof). P3-P5 are the staged roadmap.
+Generated: 2026-06-23. Last updated: 2026-07-02.
+Status: **P0-P3 DONE (2026-06-23)** - P2/P3 end-to-end in denote pending the operator
+publish of `@plurid/plurid-kit` + the P1 `plurid-react-server` bump. **P4 UNBLOCKED
+(2026-07-02):** the React-19/styled-6 fleet migration - the P4 gate - is complete
+(27/27 active web apps on full-latest, operator-verified 2026-07, applications
+workspace), and the 2026-07-02 engine round landed the P4 engine-side deltas (the CLI
+now LOADS `plurid.config.ts` - `bundle.*` knobs wired into `dev`/`build`; both
+styled-components v6 workarounds baked into `clientBuildOptions`; kit jest baseline +
+README/LICENSE). Remaining P4 = per-app config + thinning (applications workspace,
+post-publish). P5 pending.
 
 **Progress**
 
@@ -20,9 +28,24 @@ Status: **Executing (greenlit 2026-06-23).** Scope = **P0-P2** (framework skelet
   - **`/vendor.js` 404 fix**: the single-bundle client has no vendor chunk, so `createPluridServer` (production) sets `template.vendorScriptSource = ''` and reads `build/asset-manifest.json` for `mainScriptSource`. Engine made this work additively: Renderer `vendorScriptSource ?? DEFAULT` (was `||`, so an explicit `''` is now preserved as "skip") + the template emits the vendor `<script>` only when truthy.
   - **Reference `production.dockerfile`** (`packages/plurid-web/plurid-works/plurid-kit/templates/`): one Dockerfile per service-type (not per app), monorepo build context, `pnpm install` -> build libs (`^...`) -> `plurid build` -> `pnpm deploy --prod /deploy` (self-contained) -> slim runtime `pnpm exec plurid start`. P5's scaffolder emits it.
   - **Verified** (contained runtime tests): real `plurid build` on a scratch app -> correct `build/{index.js, client/index.js, public/**, asset-manifest.json}`; production `createPluridServer` render -> `<script src>` points at the manifest's hashed main, NO `/vendor.js`, NO empty `<script src="">`, SSR content, favicon 200 from `build/public`. Backward-compat regression: an existing raw `PluridServer` (no template) still emits the default `/vendor.js` + `/index.js`.
-- **P4 - next.** Generalize past denote - **gated by the React-18->19 / styled-5->6 migration** of the ~54 unmigrated apps (see the risk callout + section 5 P4).
+- **P4 - engine side DONE (2026-07-02); GATE LIFTED.** The fleet migration completed
+  (27/27 active web apps on React 19 / styled 6 / full-latest, operator-verified
+  2026-07, applications workspace). Engine-side deltas landed this round:
+  (1) `source/cli/config.ts` `loadPluridConfig` - the CLI esbuild-bundles + imports the
+  app's `plurid.config.ts` and wires `bundle.{clientExternals,forceBundle,define,
+  loaders,environment}` into `clientBuildOptions`/`serverBuildOptions` (the typed
+  replacement for each app's `scripts/custom.js` is now actually read); (2) the two
+  styled-components v6 workarounds baked into `clientBuildOptions` (`SC_DISABLE_SPEEDY`
+  define + `styledComponentsBrowserAlias` -> the app's
+  `dist/styled-components.browser.esm.js`, existsSync-guarded) so adopting apps delete
+  both hand-rolled hacks; (3) kit jest baseline (`source/__tests__/esbuild.test.ts`,
+  7 tests - alias resolution, define pinning, config round-trip) - kit is no longer the
+  only package `pnpm -r test` skips; (4) README + LICENSE/LICENSE.deon (the
+  `SEE LICENSE IN LICENSE` pointer now resolves). Remaining P4 = the per-app work in
+  the applications workspace (add `plurid.config.ts`, swap entries, delete `scripts/`),
+  post-publish.
 
-> **Biggest risk (verified 2026-06-23):** generalizing past denote (P4) is **gated by a React-18->19 + styled-components-5->6 migration of ~54 apps** - the modernized engine hard-peers `react>=19`/`styled-components>=6`, and **denote is the only app already migrated**. That migration, not the config interface, is the dominant cost. See section 5 P4 and section 9.
+> **Biggest risk (verified 2026-06-23) - RESOLVED (2026-07):** generalizing past denote (P4) was **gated by a React-18->19 + styled-components-5->6 migration of ~54 apps** - the modernized engine hard-peers `react>=19`/`styled-components>=6`, and at the time **denote was the only app migrated**. That migration completed 2026-07 (27/27 active fleet on full-latest); the gate is lifted. The historical text stands as dated evidence. See section 5 P4 and section 9.
 
 A batteries-included, configurable framework - a Next.js for plurid - built on top of the existing `@plurid/plurid-react-server` SSR runtime, so that a plurid web app becomes thin: **just its routes + shell + content + a `plurid.config.ts`**. denote is the proven vertical slice it is built against.
 
@@ -38,7 +61,7 @@ Companion docs: `docs/ENGINE_AUDIT_AND_ROADMAP.md` (engine), `docs/CONTROL_SURFA
 - **Hardcoded HTML template** (`source/objects/Renderer/template/index.ts`). The `<head>` is composed only from `react-helmet-async` (`Server/index.ts:~1049`). There is **no favicon / metadata API**.
 - **Static serving pinned to `build/client`** (`configureServer()`, `Server/index.ts:~1228`). An app's `source/public/` (favicon, og-image, manifest, robots) is **never served** - which is exactly why denote shows the default browser globe instead of its favicon.
 
-Because the runtime ships none of the app plumbing, **each plurid web app copy-pastes ~2,100 LOC of identical boilerplate**. Verified inventory (ground-truth, all domains): **58 web frontends** (52 `plurid-com` cores/tools/general/admin + 6 across `plurid-cloud`/`plurid-app`/`plurid-link`/`plurid-shop`); of those, **~55 use `new PluridServer`** (the framework target) and **3 are out of scope** - `plurid-cloud/products/{delog,messager}` and `plurid-com/general/data` use `@plurid/deserve-router`, not PluridServer. (57 `scripts/custom.js`, 58 `client/Client.tsx`.)
+Because the runtime ships none of the app plumbing, **each plurid web app copy-pastes ~2,100 LOC of identical boilerplate**. Verified inventory (ground-truth, all domains, as measured 2026-06-23): **58 web frontends** (52 `plurid-com` cores/tools/general/admin + 6 across `plurid-cloud`/`plurid-app`/`plurid-link`/`plurid-shop`); of those, **~55 use `new PluridServer`** (the framework target) and **3 are out of scope** - `plurid-cloud/products/{delog,messager}` and `plurid-com/general/data` use `@plurid/deserve-router`, not PluridServer. (57 `scripts/custom.js`, 58 `client/Client.tsx`.) Post-migration status (2026-07): the ACTIVE fleet is 27 apps, all on React 19 / styled 6 / full-latest - a different counting basis (active-and-booting vs all-frontends-on-disk); both figures stand with their dates. The de- app consumption measurements of 2026-07-02 (42 apps: 29 cores + 13 tools) are in `docs/ARCHITECTURE.md` section 12.
 
 | Boilerplate | LOC | Per-app variance |
 |---|---|---|
@@ -180,10 +203,10 @@ denote-first, prove-then-generalize, never boil the ocean.
 | Phase | Goal | Key changes | Verify | Main risk |
 |---|---|---|---|---|
 | **P0  DONE** | Scaffold `@plurid/plurid-kit` | `defineConfig` + the full `PluridConfig` contract + `createPluridServer`/`createPluridClient` stubs + CLI skeleton; tsup build (ESM+CJS+DTS) |  tsup build clean; a denote-shaped `plurid.config.ts` type-checks losslessly (`tsc --noEmit` green); `plurid` bin runs | none (nothing runs) - "wrong contract" mitigated by projecting via indexed-access types off `PluridServerConfiguration` |
-| **P1** | Runtime batteries | `publicDirectory` mount, `template.head`/favicon serialization, error-page hooks, metafile script sources (all additive) | a raw `PluridServer` + `publicDirectory` serves `/favicon.ico`; denote's existing `server/index.ts` still boots unchanged | none (backward-compatible) |
-| **P2** | `plurid dev` + migrate denote (**the proof**) | generalize `dev.cjs`; add `denote/plurid.config.ts`; run `plurid dev` **with `scripts/` still present** -> assert identical to `node scripts/dev.cjs`; **then** delete denote's `scripts/` + server/client boilerplate | HTTP 200 on :33721, 3D/Lexical/gizmo interactive, **favicon now 200**, zero console errors, `__PRELOADED_*` set; metafile diff shows no externalization regression | tsconfig `~`-alias resolution (pass the app's tsconfig), the requester deep-path (keep in `forceBundle`), client store memoization. Reversible (working-tree restore) |
-| **P3** | `plurid build`/`start` + production Dockerfile | one esbuild production pass -> the `build/{index.js,client/**,public/**}` the `web-app` chart serves; new multi-stage `production.dockerfile` (`pnpm deploy --filter` -> `plurid build` -> slim -> `plurid start`) = the single Dockerfile-per-service-type | build+run denote's image from the monorepo context -> parity; slim; no `scripts/` | carry forward `SC_DISABLE_SPEEDY` (styled-components prod footgun); pin `@plurid/plurid-*` exact for reproducible images |
-| **P4** | Generalize - **gated by a React/styled migration** | **Prerequisite, and the dominant cost: migrate the ~54 React-18 / styled-components-5 apps -> React 19 + styled-components 6.** The modernized engine (`plurid-react-server` AND `plurid-react`) **hard-peers `react>=19`, `react-dom>=19`, `styled-components>=6`, `react-redux>=9`**; apps pin `@plurid/plurid-*` at `*` so a rebuild pulls the R19/sc6 engine -> peer break. **denote is the ONLY app already on R19/sc6** (50 apps are pinned `styled ==5.3.10`). *Then* per app: add `plurid.config.ts`, swap scripts, delete `scripts/`. Sample spanning every axis: `denote`, a freshly-migrated core (`depict`), `deon`/`defile` (real handlers), `general/account` (StripeProvider), `general/www` (DndProvider), a `plurid-cloud/*` | each migrated+thinned app boots HTTP 200, console-clean, **styled-6 renders correctly** | **the React-18->19 + styled-5->6 migration is the real risk, NOT the config** - styled 5->6 has breaking changes (the engine itself needed a 5->6 fix; `datasign` is a half-migrated R18/sc6 oddball). Per app, behind the framework's verification gate |
+| **P1 DONE** | Runtime batteries | `publicDirectory` mount, `template.head`/favicon serialization, error-page hooks, metafile script sources (all additive) | a raw `PluridServer` + `publicDirectory` serves `/favicon.ico`; denote's existing `server/index.ts` still boots unchanged | none (backward-compatible) |
+| **P2 DONE** (end-to-end pending operator publish) | `plurid dev` + migrate denote (**the proof**) | generalize `dev.cjs`; add `denote/plurid.config.ts`; run `plurid dev` **with `scripts/` still present** -> assert identical to `node scripts/dev.cjs`; **then** delete denote's `scripts/` + server/client boilerplate | HTTP 200 on :33721, 3D/Lexical/gizmo interactive, **favicon now 200**, zero console errors, `__PRELOADED_*` set; metafile diff shows no externalization regression | tsconfig `~`-alias resolution (pass the app's tsconfig), the requester deep-path (keep in `forceBundle`), client store memoization. Reversible (working-tree restore) |
+| **P3 DONE** (end-to-end pending operator publish) | `plurid build`/`start` + production Dockerfile | one esbuild production pass -> the `build/{index.js,client/**,public/**}` the `web-app` chart serves; new multi-stage `production.dockerfile` (`pnpm deploy --filter` -> `plurid build` -> slim -> `plurid start`) = the single Dockerfile-per-service-type | build+run denote's image from the monorepo context -> parity; slim; no `scripts/` | carry forward `SC_DISABLE_SPEEDY` (styled-components prod footgun); pin `@plurid/plurid-*` exact for reproducible images |
+| **P4** (gate LIFTED 2026-07; engine side done) | Generalize - prerequisite complete | **The prerequisite migration is COMPLETE (2026-07: 27/27 active apps on React 19 / styled 6, operator-verified, applications workspace).** Engine side landed 2026-07-02: config loading in the CLI (`bundle.*` wired), styled-v6 workarounds baked in, kit tests + README. Remaining, per app (applications workspace, post-publish): add `plurid.config.ts`, swap scripts, delete `scripts/`. Sample spanning every axis: `denote`, a core (`depict`), `deon`/`defile` (real handlers), `general/account` (StripeProvider), `general/www` (DndProvider), a `plurid-cloud/*` | each thinned app boots HTTP 200, console-clean, **styled-6 renders correctly** | per-app drift (each app's custom.js externals map onto `bundle.*`); behind the framework's verification gate |
 | **P5** | Rework `generate-plurid-app` | emit `plurid.config.ts` + `source/{routes,shell}` + `source/server/preserves/` stubs + `public/` + a 3-script `package.json` + the framework dep; delete the CRA-era webpack/rollup template tree | a generated app has no `scripts/`, boots via `plurid dev`, ~50-100 LOC app-specific | keep the scaffolder's test suite green; have it import `defineConfig` so a bad stub fails to type-check |
 
 **Coexistence / safety.** The legacy (`scripts/`) and framework (`plurid.config.ts`) paths are mutually invisible - the CLI reads a config legacy apps lack; the legacy runner reads a `scripts/` migrated apps lack. P1 parallels before P2 deletes; per-app migration is atomic, independent, and reversible; the framework being a dependency means a framework bug can't break a not-yet-migrated app.

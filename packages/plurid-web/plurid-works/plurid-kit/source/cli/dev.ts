@@ -13,6 +13,10 @@
     } from './esbuild';
 
     import {
+        loadPluridConfig,
+    } from './config';
+
+    import {
         loadEnvironment,
         DEFAULT_DEV_PORT,
     } from './environment';
@@ -50,8 +54,23 @@ export async function dev(
         || process.env.PORT
         || DEFAULT_DEV_PORT;
 
-    const clientOptions = clientBuildOptions({ mode });
-    const serverOptions = serverBuildOptions({ mode });
+    // `plurid.config.ts` build-time knobs (`bundle.*`); absent config -> defaults.
+    const config = await loadPluridConfig();
+    const bundle = config.bundle ?? {};
+
+    const clientOptions = clientBuildOptions({
+        mode,
+        clientExternals: bundle.clientExternals,
+        define: bundle.define,
+        loaders: bundle.loaders,
+        environment: bundle.environment,
+    });
+    const serverOptions = serverBuildOptions({
+        mode,
+        forceBundle: bundle.forceBundle,
+        define: bundle.define,
+        loaders: bundle.loaders,
+    });
 
     const link = `http://localhost:${port}`;
 

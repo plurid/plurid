@@ -317,5 +317,7 @@ string. `encodeViewpoint` / `decodeViewpoint` are exported for full host control
 - **[`examples/minimal`](./examples/minimal)** — the hello-world above, as a runnable file.
 - **[`examples/control-surface`](./examples/control-surface)** — every seam in one small "spatial notes" component.
 - **[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)** — the full per-knob / per-topic reference.
+- **[`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)** - when you want to know how it works inside (render pipeline, camera/state model, pubsub protocol, consumption modes).
+- **Server rendering + the batteries path** - [`@plurid/plurid-react-server`](./packages/plurid-web/plurid-works/plurid-react-server) (SSR/stills) and [`@plurid/plurid-kit`](./packages/plurid-web/plurid-works/plurid-kit) (`plurid.config.ts` + CLI; see [`docs/FRAMEWORK_PLAN.md`](./docs/FRAMEWORK_PLAN.md)).
 - **[`CONTEXT-MAP.md`](./CONTEXT-MAP.md)** — which packages are live, and what each is for.
 - **[`CONTRIBUTING.md`](./CONTRIBUTING.md)** — to work on the engine itself.

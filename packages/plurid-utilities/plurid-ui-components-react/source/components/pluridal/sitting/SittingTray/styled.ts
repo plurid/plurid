@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
-    import styled from 'styled-components';
+    import {
+        styled,
+    } from '~utilities/styled';
     // #endregion libraries
 // #endregion imports
 
