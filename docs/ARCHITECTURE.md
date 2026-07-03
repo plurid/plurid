@@ -829,10 +829,10 @@ Each fleet hack maps onto a shipped seam:
 
 | Current hack (fleet) | The seam that replaces it |
 |---|---|
-| `window.pluridSpacePubSub` globals | `onReady(api)` - the api owns store + pubsub (3.1) |
-| `setTimeout`-after-mount sequencing | `onRestoreContent` + the `space.changed` observe channel (3.1, 7) |
-| hand-rolled `localStorer` | `storageAdapter` + `onPersistContent`/`onRestoreContent` (6) |
-| `historyPlayer` camera persistence | the viewpoint codec + `SET_VIEWPOINT` + `onViewpointChange` (4) |
+| `window.pluridSpacePubSub` globals | DONE in denote (2026-07-03): a typed app-side registry (`~kernel-services/engine`) fed from the route exterior's engine-injected `pubsub` prop. `onReady(api)` is the equivalent for mode-B embeds that own the `PluridApplication` element (3.1); mode-A route exteriors already receive the handle as props. |
+| `setTimeout`-after-mount sequencing | PARTLY structural: the 1-tick deferrals around `pubsub.publish` cover child-effects-before-View-subscription mount ordering; a buffered/ready-gated publish is engine roadmap. `onRestoreContent` + the `space.changed` observe channel cover restore sequencing (3.1, 7). |
+| hand-rolled `localStorer` | RE-DIAGNOSED (2026-07-03): denote's `localStorer` stores APP data (owner id), not engine state - not an engine seam. `storageAdapter` + `onPersistContent`/`onRestoreContent` (6) apply to engine-space persistence only. |
+| `historyPlayer` camera persistence | RE-DIAGNOSED (2026-07-03): denote's `HistoryPlayer` is note-EDIT playback (app domain), not camera history; its store-capture-via-connect is app architecture. The viewpoint codec + `SET_VIEWPOINT` + `onViewpointChange` (4) remain the seams for actual camera persistence. |
 | forked overlay components | `renderToolbar`/`renderViewcube`/`renderMinimap`/`renderShortcuts` slots (3.4) |
 | tolerated unknown-prop console spam | fixed ui-components styled factory + `pluridShouldForwardProp` (Appendix A) |
 | hand-rolled per-app state modules | `composePluridUIState` (plurid-ui-state-react) |
