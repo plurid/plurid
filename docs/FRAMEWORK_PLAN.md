@@ -1,7 +1,17 @@
 # Plurid Framework Plan - `@plurid/plurid-kit`
 
 Generated: 2026-06-23. Last updated: 2026-07-02.
-Status: **P0-P3 DONE (2026-06-23)** - P2/P3 end-to-end in denote pending the operator
+Status: **P0-P4 DONE. P4 EXECUTED (2026-07-03): all 27 active web apps run on the
+published `@plurid/plurid-kit@0.0.0-2`** (denote hand-piloted; 12 cores + 14 platform
+apps via `applications/scripts/migrate-kit.mjs`; every app boot-check PASS at its
+canonical port; denote production SSR verified on `plurid start`). Per-app deltas the
+codemod handles: serverName derivation (the recipe's copied-'General WWW' artifact),
+redux-context detection, DndProvider/Stripe third services, favicon-from-public,
+the asset-loader `bundle` block, `.env.development` canonical ports. Hand-ported:
+middleware (account/com-www/link-www - server-entry spread, config stays client-safe),
+dashboard (pre-alias relative imports, literal root, no PTTP CORS handler). The legacy
+`scripts/` stacks remain as `dev.legacy` until retirement. P5 pending.
+History: **P0-P3 DONE (2026-06-23)** - P2/P3 end-to-end in denote was pending the operator
 publish of `@plurid/plurid-kit` + the P1 `plurid-react-server` bump. **P4 UNBLOCKED
 (2026-07-02):** the React-19/styled-6 fleet migration - the P4 gate - is complete
 (27/27 active web apps on full-latest, operator-verified 2026-07, applications
