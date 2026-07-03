@@ -10,7 +10,16 @@ redux-context detection, DndProvider/Stripe third services, favicon-from-public,
 the asset-loader `bundle` block, `.env.development` canonical ports. Hand-ported:
 middleware (account/com-www/link-www - server-entry spread, config stays client-safe),
 dashboard (pre-alias relative imports, literal root, no PTTP CORS handler). The legacy
-`scripts/` stacks remain as `dev.legacy` until retirement. P5 pending.
+`scripts/` stacks remain as `dev.legacy` until retirement. P5 pending -
+**deploy pilot PROVEN (2026-07-03)**: the workspace-aware production image
+(applications `configurations/docker/kit-app.production.dockerfile`, APP_NAME/
+APP_PATH build args) = libs + `plurid build` built OUTSIDE docker (CI caches),
+the builder stage runs `pnpm deploy --prod --legacy` (workspace libs packed
+from distribution/, engine packages from public npm - NO private registry, NO
+token) + copies build/; runtime = node:24-alpine + `node build/index.js`.
+denote containerized: production SSR correct (15,423b real content, 0 errors),
+566MB. pnpm 11 gotcha: unlisted dependency build scripts ERROR inside deploy -
+`allowBuilds: protobufjs: false` (postinstall = version stamping, skippable).
 History: **P0-P3 DONE (2026-06-23)** - P2/P3 end-to-end in denote was pending the operator
 publish of `@plurid/plurid-kit` + the P1 `plurid-react-server` bump. **P4 UNBLOCKED
 (2026-07-02):** the React-19/styled-6 fleet migration - the P4 gate - is complete
