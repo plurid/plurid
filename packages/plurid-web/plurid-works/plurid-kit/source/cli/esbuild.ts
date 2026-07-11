@@ -153,6 +153,14 @@ function environmentDefines(
 export function clientBuildOptions(
     options: {
         mode: 'development' | 'production';
+        /**
+         * The DEPLOYMENT-TARGET mode inlined as `process.env.ENV_MODE`
+         * ('local' points the constants' API URLs at the local mesh;
+         * 'development'/'production' at the plurid.dev/.com domains).
+         * Distinct from `mode`, which drives the BUILD semantics
+         * (NODE_ENV, minification, sourcemaps). Defaults to `mode`.
+         */
+        environmentMode?: string;
         clientExternals?: string[];
         metafile?: boolean;
         alias?: Record<string, string>;
@@ -185,7 +193,7 @@ export function clientBuildOptions(
             ...(options.alias ?? {}),
         },
         define: {
-            'process.env.ENV_MODE': JSON.stringify(options.mode),
+            'process.env.ENV_MODE': JSON.stringify(options.environmentMode ?? options.mode),
             'process.env.NODE_ENV': JSON.stringify(options.mode),
             'process.env.SC_DISABLE_SPEEDY': JSON.stringify('true'),
             'process.env.PLURID_LIVE_SERVER': JSON.stringify(''),
@@ -204,6 +212,8 @@ export function clientBuildOptions(
 export function serverBuildOptions(
     options: {
         mode: 'development' | 'production';
+        /** Deployment-target mode for `process.env.ENV_MODE` (see clientBuildOptions). */
+        environmentMode?: string;
         forceBundle?: Array<string | ((dependency: string) => string | undefined)>;
         metafile?: boolean;
         define?: Record<string, string>;
@@ -228,7 +238,7 @@ export function serverBuildOptions(
             ...(options.loaders as BuildOptions['loader'] ?? {}),
         },
         define: {
-            'process.env.ENV_MODE': JSON.stringify(options.mode),
+            'process.env.ENV_MODE': JSON.stringify(options.environmentMode ?? options.mode),
             'process.env.NODE_ENV': JSON.stringify(options.mode),
             ...(options.define ?? {}),
         },

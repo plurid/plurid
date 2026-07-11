@@ -99,6 +99,24 @@ describe('serverBuildOptions', () => {
 });
 
 
+describe('environmentMode (the deployment target vs the build mode)', () => {
+    it('inlines ENV_MODE from environmentMode while NODE_ENV keeps the build mode', () => {
+        const options = clientBuildOptions({ mode: 'development', environmentMode: 'local' });
+        expect(options.define?.['process.env.ENV_MODE']).toBe('"local"');
+        expect(options.define?.['process.env.NODE_ENV']).toBe('"development"');
+
+        const server = serverBuildOptions({ mode: 'development', environmentMode: 'local' });
+        expect(server.define?.['process.env.ENV_MODE']).toBe('"local"');
+        expect(server.define?.['process.env.NODE_ENV']).toBe('"development"');
+    });
+
+    it('defaults ENV_MODE to the build mode when environmentMode is absent (plurid build)', () => {
+        const options = clientBuildOptions({ mode: 'production' });
+        expect(options.define?.['process.env.ENV_MODE']).toBe('"production"');
+    });
+});
+
+
 describe('loadPluridConfig', () => {
     it('returns {} where no config file exists', async () => {
         const empty = fs.mkdtempSync(path.join(os.tmpdir(), 'plurid-kit-'));

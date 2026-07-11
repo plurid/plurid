@@ -46,6 +46,12 @@ export async function dev(
     argv: string[],
 ): Promise<void> {
     const mode = 'development';
+    // The deployment TARGET the bundles talk to, distinct from the build
+    // semantics: 'local' (the default - constants' API URLs point at the local
+    // mesh, matching the legacy dev.cjs behavior) vs 'development'/'production'
+    // (the plurid.dev/.com domains). Overridable via ENV_MODE, e.g.
+    // `ENV_MODE=development plurid dev` to develop against the dev cloud.
+    const environmentMode = process.env.ENV_MODE || 'local';
     loadEnvironment(mode);
 
     const watch = argv.includes('--watch');
@@ -60,6 +66,7 @@ export async function dev(
 
     const clientOptions = clientBuildOptions({
         mode,
+        environmentMode,
         clientExternals: bundle.clientExternals,
         define: bundle.define,
         loaders: bundle.loaders,
@@ -67,6 +74,7 @@ export async function dev(
     });
     const serverOptions = serverBuildOptions({
         mode,
+        environmentMode,
         forceBundle: bundle.forceBundle,
         define: bundle.define,
         loaders: bundle.loaders,
@@ -99,7 +107,7 @@ export async function dev(
         env: {
             ...process.env,
             PORT: String(port),
-            ENV_MODE: mode,
+            ENV_MODE: environmentMode,
             NODE_ENV: mode,
         },
     });

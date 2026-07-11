@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-kit",
-    "version": "0.0.0-2",
+    "version": "0.0.0-3",
     "description": "Batteries-included framework for building and serving plurid apps - the `plurid` CLI + plurid.config.ts + conventions on top of @plurid/plurid-react-server.",
     "keywords": [
         "plurid",
