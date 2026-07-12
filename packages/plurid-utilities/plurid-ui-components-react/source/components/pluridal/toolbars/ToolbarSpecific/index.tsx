@@ -15,6 +15,11 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
+
+
+    import {
+        bridgeReduxContext,
+    } from '~utilities/redux';
     // #endregion libraries
 
 
@@ -234,5 +239,5 @@ const ConnectedToolbarSpecific = connect(
 
 
 // #region exports
-export default ConnectedToolbarSpecific;
+export default bridgeReduxContext(ConnectedToolbarSpecific, 'ToolbarSpecific');
 // #endregion exports
