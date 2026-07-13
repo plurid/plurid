@@ -1,573 +1,115 @@
-# Plurid Engine — Feature Roadmap
-
-> **Status (2026-07-02):** the delivered control surface is real but consumer adoption is ZERO -
-> as measured 2026-07-02 (applications workspace), none of the 42 de- apps use onReady /
-> onViewpointChange / onPersistContent / storageAdapter / render slots; denote works around them
-> with window globals + setTimeout hacks. The adoption path (the hack -> seam replacement map)
-> is `docs/ARCHITECTURE.md` section 12. Delivered this round: the plane-content lens
-> `usePluridPlane()` (see the capability-seams note under Notes). Architecture reference:
-> `docs/ARCHITECTURE.md`.
->
-> **Status (2026-06-21):** in progress. The A–F hardening pass is complete and green on all gates
-> (`pnpm build` / `pnpm test` / `pnpm check`); see [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md)
-> for what landed. This doc plans what the **engine** should add to unlock the Spatial-Notes product.
-> All cited seams (file paths + symbols) are real, verified against the current source.
->
-> **Delivered so far (2026-06-21), all harness-verified:**
-> - **#1 Serializable viewpoint (core)** — camera↔URL deep-link/share, encoded `rX,rY,tX,tY,tZ,s`. New
->   `services/logic/viewpoint` codec + `View/hooks/useViewpointURL`. **Fully OPT-IN + dev-controlled
->   (2026-06-21):** the engine does NOT touch the URL by default. `configuration.space.viewpointURLWrite`
->   (reflect camera → URL) and `viewpointURLRestore` (restore camera ← URL on load) are *independent*
->   booleans (both default false); `viewpointURLParam` (default `v`) + `viewpointURLDebounce` are
->   configurable. **Full programmatic control regardless of the URL:** `space.setViewpoint` pubsub (set the
->   camera from an encoded string, instant or `animated`), an `onViewpointChange(v)` Application callback
->   (get the encoded viewpoint on settle), and `encodeViewpoint`/`decodeViewpoint` exported from the public
->   API so a host can build any share/storage/sync it wants. Harness-verified: clean URL by default, write
->   on, restore on, custom param, set (instant/animated/invalid-ignored), get-callback. (Saved-views + tours
->   stay product-side.)
-> - **#5 Both seams** — (a) **content persistence:** opt-in `onPersistContent`/`onRestoreContent` on the
->   Application ride the engine's debounce + `pagehide` flush (`state.local.saveContent`/`loadContent`,
->   opaque blob under `pluridContent-<id>`); round-trip verified. (b) **editor coexistence:** the pointer
->   gesture guard now also skips `isContentEditable` targets (the shortcut handler already guarded
->   INPUT/TEXTAREA/contentEditable via `verifyPathInputElement`), so a host editor doesn't get hijacked
->   by orbit-drag; verified (drag-in-editor → no orbit, drag-on-view → orbit).
->
-> - **#7 Minimap / overview** — opt-in (`configuration.elements.minimap`) 2D overview: a dot per visible
->   plane, projected onto the two highest-spread world axes (so wall vs depth layouts both read right),
->   active plane highlighted, click-to-fly via `navigateToPluridPlane`. New `components/utilities/Minimap`
->   rendered in `View/Container`. Themed like the toolbar/viewcube (general theme), 26px hit zones,
->   transparent-by-default → opaque-on-hover. Harness-verified.
->
-> - **#2 Spatial undo/redo** — a history middleware (`services/state/middleware/history.ts`) over the
->   store's tree mutations, wired into both stores; `Cmd/Ctrl+Z` / `Cmd/Ctrl+Shift+Z` (the existing
->   `inputOnPath` guard lets a host editor keep its own undo). Records **one snapshot per structural
->   change** — a tree *signature* of `planeID:show` filters the spawn/close/open relayout churn (each
->   user action fires several `setTree`s; only the first changes structure), which is what lets a restore
->   stick instead of being re-reconciled away. Snapshots are references to the immutable
->   `state.space.tree`, so the stacks are memory-cheap; history is closure-local (never persisted, never
->   rendered). Harness-verified: spawn→undo→redo, close→undo→reopen→redo, and the keyboard path.
->
-> - **#3 Inter-plane link graph + 3D edges** — a separate `links: PlaneLink[]` adjacency list on space
->   state (independent of the parent→child `tree`), with `addPlaneLink`/`removePlaneLink`/
->   `updatePlaneLink`/`setPlaneLinks` reducers, memoized `getPlaneLinks`/`makeGetBacklinks`/
->   `makeGetLinksForPlane` selectors, persistence (`links` in `PERSISTED_SPACE_FIELDS`, version→2), and a
->   **public pubsub seam** (`space.addPlaneLink`/`removePlaneLink`/`setPlaneLinks`) so a host manages the
->   graph the same way it closes planes. Rendered as true-3D CSS **beams** (`components/structural/
->   PlaneLinks`): a single edges layer inside `StyledPluridRoots` (the camera frame) draws one
->   `computeEdgeTransform(a,b)` beam per link between plane centres — so edges ride the camera matrix and
->   stay attached under orbit with **zero per-frame JS** (verified: the beam's local transform is constant
->   while its screen rect tracks the orbit). Edges to a closed/absent plane simply don't draw. Harness-
->   verified: add→edge attached through orbit, `getBacklinks` (in 3a), survives reload, pubsub add/remove.
->
-> - **#4 Spatial selection: multi-select · group-move · snap** — `selectedPlaneIDs[]` on space state
->   (toggle/set/dedupe/clear reducers, memoized `makeGetIsPlaneSelected`, public pubsub seam
->   `space.setSelection`/`toggleSelection`/`clearSelection`); a 3px accent ring on selected planes;
->   **shift+click** toggles selection, **Escape** clears. Group-move uses the **sticky manual-position**
->   model (user's choice): a `transformSelectedPlanes({delta})` reducer shifts every selected plane and
->   sets `manuallyPositioned`, and `reconcileNode` then **carries a pinned plane's location across every
->   relayout** (the same carry-forward as measured width/height — verified at the choke point: a
->   recompute that reset + un-flagged the plane left it pinned while un-pinned planes reflowed). A
->   drag-to-move gesture in `usePointerGestures` (screen-delta ÷ scale → space units, gated to selected
->   planes in normal mode so it never fights orbit), and an edge-snap to nearby planes on release
->   (`snapSelection`, 12px threshold). Harness-verified end-to-end: shift-click, ring, group-drag, pin
->   survives relayout, snap-on-release.
->
-> - **#6 Collaboration seam** — transport-agnostic, self-contained in `View/hooks/useCollaboration`. The
->   engine PUBLISHES a state-based snapshot `{tree, links}` to `space.collaborationMutation` whenever the
->   SHARED arrangement actually changes — gated by a *collaborative signature* (structure `planeID:show` +
->   pinned-plane positions + link graph) so pure relayout reflows DON'T emit (no echo storms). It APPLIES
->   inbound `space.applyRemoteMutation` snapshots via `setSpaceField` (NOT `setTree`, so a remote move
->   overrides the local pin instead of being carried). Echo is prevented without a transport round-trip:
->   applying a remote snapshot pre-sets `lastSignature` so the resulting state change stays quiet; remote
->   dispatches carry `meta.remote` so the history middleware leaves them out of LOCAL undo. The host owns
->   the wire (websocket / y-*) + presence — it forwards one topic to the other. Harness-verified: emit on
->   change, silent on reflow, inbound apply (remote move wins), no echo.
->
-> - **Polish pass (2026-06-21)** — (a) **undo now covers moves + links**, not just structure: the history
->   middleware was reworked to snapshot `{tree, links}` and watch the STATE before/after each action
->   (catching the direct-mutation `transformSelectedPlanes`/`snapSelection`/link reducers), keyed on a
->   shared `arrangementSignature` (structure + pinned positions + links) that both undo AND collaboration
->   consume so they agree on "what is a change"; harness-verified move-undo/redo + link-undo/redo + spawn
->   regression. (b) **Z-axis drag** — Alt-drag moves the selection in depth (verified Z changes, Y doesn't).
->   (c) **Live alignment-guide overlay** — a `draggingSelection` flag drives an `AlignmentGuides` layer in
->   the camera frame that previews the X/Y edge a release would snap to (verified: shows only mid-drag at
->   the snap targets, gone on release). *Grid-snap was evaluated and skipped — low value for plane-sized
->   objects vs edge-alignment, which is the useful snap.*
->
-> - **Audit & hardening pass (2026-06-21)** — three adversarial code audits over FR2/FR3/FR4/FR6 found 2
->   real bugs + 2 smells (and 4 false positives, rejected). Fixed: **(R1)** the history middleware now
->   compares each action's own before/after `arrangementSignature` instead of tracking a running
->   `lastSignature` that went STALE across a skipped remote apply and recorded the next relayout as a
->   *phantom* undo entry; **(R2)** undo-restore + the collaboration inbound now apply `{tree, links}` in
->   ONE `restoreArrangement` reducer (atomic, no reconcile) instead of two dispatches — removes the
->   echo-on-intermediate-render fragility; **(R3)** collaboration is now **opt-in** via
->   `configuration.space.collaboration` (default off — a single-user app no longer broadcasts); **(R4)**
->   nits — guide overlay always clears on pointer-up (covers `pointercancel`), deterministic snap
->   tie-break, signature guards a missing `planeID`. Re-verified in the harness: undo-after-remote no
->   longer pollutes, collab emit/apply/echo intact, opt-in on/off, snap + guides + gesture unaffected.
->
-> **Next:** #8 WebXR (frontier / near-rewrite). (Product-side, engine stays out of the way: backlinks
-> *panel* UI + drag-to-link for #3; CRDT/presence + the actual transport on top of the #6 seam.)
-
-## Governing principle — engine primitive vs product work
-
-Plurid is a **content-agnostic library**: a plane is `{ route, component }`, and the host app passes
-whatever React it wants — including an editor. So the *editor itself*, note CRUD, a search UI, AI, and a
-cloud backend are **product** work. The **engine's** job is the reusable **spatial primitives** and the
-**seams** that let a product ride the engine instead of fighting it.
-
-Every item below is scoped to the engine side of that line. The product-owned counterparts are listed in
-[Engine ⟷ product boundary](#engine--product-boundary) so the split is explicit.
-
-The engine renders with **CSS 3D transforms** (`perspective` + `preserve-3d` + per-plane `matrix3d`), state
-lives in a **Redux-Toolkit** store isolated behind a custom `StateContext`, and the View was just decomposed
-into hooks under `containers/Application/View/hooks/`. That base is why most of these are additive, not rewrites.
-
-## Recommended sequence
-
-Front-load the cheap, purely-additive wins; defer the two big lifts and the rewrite.
-
-| Order | Feature | Effort | Why here |
-|------:|---------|--------|----------|
-| 1 ✅ | [Serializable viewpoint](#1-serializable-viewpoint) | Small→Med | Cheap, additive; unblocks sharing + presentation |
-| 2 ✅ | [Content-persistence + editor-focus seams](#5-two-enabling-seams-content-persistence--editor-focus) | Small | Unblocks product authoring without the engine owning content |
-| 3 ✅ | [Spatial undo/redo](#2-spatial-undoredo) | Med | Table-stakes once users author the space |
-| 4 ✅ | [Minimap / overview](#7-minimap--overview) | Small→Med | Cheap delight; orientation in big spaces |
-| 5 ✅ | [Inter-plane link graph + 3D edges](#3-inter-plane-link-graph--3d-edges) | Large | The differentiator |
-| 6 ✅ | [Spatial selection: multi-select / group / snap](#4-spatial-selection-multi-select--group--snapping) | Med→Large | Authoring of arrangement |
-| 7 ✅ | [Collaboration seam](#6-collaboration-seam) | Med→Large | Makes multiplayer pluggable |
-| 8 | [WebXR renderer](#8-webxr-renderer) | Large | Frontier / R&D; near-rewrite of rendering |
-
-Each feature block lists its **Goal · Seams · Approach · Effort · Risks · Verify**, and calls out any
-**Decision** (an open fork to settle at implementation time, not silently pre-chosen).
-
----
-
-## 1. Serializable viewpoint
-*(camera-in-URL · saved views · guided tours) — Effort: Small → Medium · do first*
-
-**Goal.** Make the current 3D viewpoint a first-class, encodable, restorable thing. One primitive unlocks
-four features: deep-links, "share from *here*", saved views/bookmarks, and guided tours (animate between
-saved viewpoints). Today the viewpoint is ephemeral — the URL encodes *which plane*, never *from where*.
-
-**Seams.**
-- `SpaceTransform` — the 6-tuple `{ rotationX, rotationY, translationX, translationY, translationZ, scale }`
-  at `plurid-core/plurid-data/source/interfaces/external/pubsub/message.ts` (`:233`).
-- Space transform selectors at `plurid-works/plurid-react/source/services/state/modules/space/selectors.ts`
-  (`getTransformMatrix`, `getTransformTime`, …) and the actions `setTransform` / `setAnimatedTransform` /
-  `setTransformTime` in `.../state/modules/space/index.ts`.
-- The restore-with-animation pattern already used by `navigateToPluridPlane` / `useAnimatedTransform` in
-  `plurid-works/plurid-react/source/services/logic/animation/index.ts` (set `animatedTransform: true` →
-  `setTransform(target)` → clear after `PLURID_DEFAULT_ANIMATED_TRANSFORM_TIMEOUT`).
-- URL write `window.history.pushState(null, '', matchedPath)` in
-  `plurid-works/plurid-react/source/containers/RouterBrowser/index.tsx` (`:238`); URL read via `handleLocation`
-  (same file) + `extractQuery` in `plurid-core/plurid-engine/source/modules/routing/Parser/logic.ts`.
-- Persistence: `PERSISTED_SPACE_FIELDS` + `PERSISTED_STATE_VERSION` + `save`/`load` in
-  `plurid-core/plurid-engine/source/modules/state/local/index.ts` (storage key `pluridState-<id>`).
-
-**Approach.**
-1. New `encodeViewpoint(SpaceTransform): string` / `decodeViewpoint(string): SpaceTransform` codec — a compact
-   rounded tuple (`v=rX,rY,tX,tY,tZ,s`) in a small `modules/space/viewpoint` module.
-2. Reflect transform into the URL with **`replaceState` + a heavy debounce** for transform-only changes (orbit
-   mutates the transform per frame — `pushState` would flood history); keep `pushState` for *route* changes.
-3. On load / `popstate`, parse `?v=` → `decodeViewpoint` → `setTransform` (instant on load, animated on an
-   explicit "jump to view").
-4. Saved views: add `savedViewpoints: Record<string, SpaceTransform>` to the space state + actions
-   `setSavedViewpoint` / `removeSavedViewpoint`, and add it to `PERSISTED_SPACE_FIELDS` (**bump
-   `PERSISTED_STATE_VERSION`** so old snapshots fall back cleanly).
-5. Tours: an ordered list of saved viewpoints played via the `setAnimatedTransform` + `setTransform` step
-   pattern with per-step delays.
-
-**Decision.** URL encoding form — rounded comma tuple (readable, short) vs base64-JSON (opaque, future-proof).
-Recommend the rounded tuple.
-
-**Risks.** History spam (mitigated by `replaceState` + debounce); URL length; SSR (`window` guards — the
-engine already runs server-side).
-
-**Verify (harness).** Orbit, copy the URL, open it in a fresh tab → identical viewpoint. Save a view, orbit
-away, "jump back" → it animates. A tour plays through its views.
-
----
-
-## 2. Spatial undo/redo  ✅ DELIVERED (2026-06-21)
-*Effort: Medium*
-
-**Goal.** Undo/redo of *arrangement* (spawn / close / move / relink). Becomes table-stakes the moment users
-author the space. (Content undo belongs to whatever editor the product supplies — out of scope here.)
-
-> **Delivered.** `services/state/middleware/history.ts` — a closure-local history middleware concatenated
-> into both stores. `Cmd/Ctrl+Z` / `Cmd/Ctrl+Shift+Z` wired in `services/logic/shortcuts` (behind the
-> existing `inputOnPath` guard, so a host editor keeps its own undo). Two no-op reducers `space.undo` /
-> `space.redo` exist only so RTK generates the action creators; the middleware does the work and restores
-> via `setSpaceField({field:'tree'})`. **Key implementation finding:** a single user action fires *several*
-> `setTree`s — the change itself, then the View's reactive relayout + measurement re-flows — so naive
-> snapshot-per-`setTree` records the relayout noise and an undo's restore is immediately re-reconciled
-> away. The fix is to record **one snapshot per *structural* change**, detected by a tree *signature* (the
-> sorted set of `planeID:show`, position-independent); relayouts share a signature and are ignored. The
-> `applying` flag suppresses re-recording during a restore, and `lastSignature` is re-seeded on each
-> restore so post-restore relayouts stay quiet. Snapshots are references to the immutable
-> `state.space.tree` (cheap), bounded at 100, never persisted. Harness-verified: spawn→undo→redo,
-> close→undo→reopen→redo (faithful to the `CLOSE_PLANE` handler's `setTree(show=false)`), keyboard path.
-> *Update (polish pass): the middleware was reworked to snapshot `{tree, links}` and key on the shared
-> `arrangementSignature` (structure + pinned positions + links), so undo now also covers moves/snaps (#4)
-> and link edits (#3) — not just structure.*
-
-**Seams.**
-- The store is RTK `configureStore` with **no custom middleware today**
-  (`plurid-works/plurid-react/source/services/state/store/{production,development}/index.ts`) → a clean,
-  single insertion point.
-- Undoable space actions: `setTree`, `updateSpaceTreePlane`, `updateSpaceLinkCoordinates`, `removePlane`.
-- `setTree` already reconciles via `reconcileTree` (`plurid-core/plurid-engine/source/modules/space/tree/logic.ts:1286`)
-  off Immer's `original()` → **structural sharing makes tree snapshots cheap** (a history stack is mostly
-  shared structure).
-- Transient, **not** undoable: per-frame `rotate*` / `translate*` / `scale*` / `flyMove`, and hover
-  `activePlaneID`.
-
-**Approach.** A thin history middleware that captures `state.space.tree` (+ a label) on the undoable action
-set, onto a bounded stack; `undo()` / `redo()` dispatch `setTree(snapshot)`. Coalesce rapid same-type ops (one
-drag = one entry). Wire `Cmd/Ctrl+Z` and `Cmd/Ctrl+Shift+Z` in `services/logic/shortcuts`. **Do not** persist
-the history stack.
-
-**Decision.** Middleware vs an explicit `history` slice — recommend middleware (one choke-point, no reducer
-churn). Camera-undo (a separate, coalesced transform history) is optional and can come later.
-
-**Risks.** Choosing the exact undoable set; coalescing heuristics; the interaction with persistence (exclude
-history) and with collab (an undo is itself a mutation — see #6).
-
-**Verify.** Unit tests for the history reducer; harness — spawn → undo (gone) → redo (back); close a plane →
-undo reopens it.
-
----
-
-## 3. Inter-plane link graph + 3D edges  ✅ DELIVERED (2026-06-21)
-*Effort: Large — the differentiator*
-
-**Goal.** Model **arbitrary** plane↔plane relationships (not just parent→child), render them as 3D edges in
-the space, and surface **backlinks**. "Spatial + linked" is the genuinely novel combination (Obsidian's graph,
-but you live inside it). Today only the parent→child hierarchy is modeled, and only the parent→child connector
-is drawn.
-
-> **Delivered.** State: `links: PlaneLink[]` (`{id, sourcePlaneID, targetPlaneID, kind?, sourceAnchor?,
-> targetAnchor?}`) on space state, separate from `tree` (links cross the tree). Reducers `addPlaneLink`
-> (dedupes by id and by source+target+kind) / `removePlaneLink` / `updatePlaneLink` / `setPlaneLinks`.
-> Memoized selectors `getPlaneLinks`, `makeGetBacklinks(planeID)`, `makeGetLinksForPlane(planeID)`.
-> Persisted (`links` added to `PERSISTED_SPACE_FIELDS`; `PERSISTED_STATE_VERSION` 1→2; `resolveSpace`
-> defaults `links: []` so a fresh load can't crash). **Public seam:** pubsub topics `space.addPlaneLink`
-> / `space.removePlaneLink` / `space.setPlaneLinks` (typed message interfaces + bridge handlers in
-> `usePluridPubSub`) — a host manages the graph exactly as it closes planes.
->
-> **Rendering — chose the CSS-3D beam (option ii), not the SVG overlay.** `components/structural/PlaneLinks`
-> renders ONE edges layer inside `StyledPluridRoots` (the element that carries the camera matrix), as a
-> `preserve-3d`, `pointer-events:none` sibling of the roots. Because every plane is `position:absolute` at
-> the shared roots origin, all plane `location`s live in one frame; `computeEdgeTransform(a,b)` builds a thin
-> beam (`translate3d` to centre A, then `rotateY(atan2(-dz,dx)) rotateZ(atan2(dy,dxz))`, width = ‖B−A‖) that
-> connects plane **centres**. The beam's transform is in space-local coords, so it **rides the camera matrix
-> on the parent** — orbits with the planes, zero per-frame JS (verified: local transform constant, screen rect
-> tracks the orbit). An edge whose endpoint is closed/absent draws nothing and reappears when both return.
-> `React.memo` + memoized inputs keep the layer from re-rendering on orbit frames.
->
-> *Deferred (product-side): a backlinks list **panel** (needs note titles → product), a drag-from-A-to-B
-> create gesture, and edge styling by `kind`. Undo currently covers `tree` mutations, not link mutations —
-> extend the history signature to fold in `links` if link edits should be undoable.*
-
-**Seams.**
-- `TreePlane` (`parentPlaneID`, `children`, `linkCoordinates`, `bridgeLength`, `planeAngle`) at
-  `plurid-core/plurid-data/source/interfaces/internal/tree/index.ts`.
-- The existing parent→child connector `PlaneBridge` — a CSS `position:absolute` bar (`left:-bridgeLength`,
-  `width:bridgeLength`, fixed height) at
-  `plurid-works/plurid-react/source/components/structural/Plane/components/PlaneBridge/styled.ts`. It is *co-located*
-  with the child (parent→child only), so it is **not** a true point-to-point line — that's the thing to generalize.
-- Rotation-aware placement `computePluridPlaneLocation` at
-  `plurid-core/plurid-engine/source/modules/space/location/logic.ts:70` (the 2D rotate-aware math for where a
-  child sits relative to a parent — reusable for edge endpoints).
-- `reconcileTree` for cheap state updates.
-
-**Approach.**
-1. Add a **separate adjacency list** `links: PlaneLink[]` to the space state —
-   `{ id, sourcePlaneID, targetPlaneID, kind?, sourceAnchor?, targetAnchor? }`. Keep it off `TreePlane`
-   (links cross the tree; a node-local field can't express A→C).
-2. Actions `addPlaneLink` / `removePlaneLink` / `updatePlaneLink`; persist `links` (version bump).
-3. Backlinks = a memoized selector `getBacklinks(planeID)` grouping the list by `targetPlaneID`.
-4. **Edge rendering — the key fork.** Two options:
-   - **(i) screen-space SVG overlay** — project each plane's anchor (world → screen via the global matrix)
-     each frame and draw lines. Simpler, but re-projects every frame (perf) and loses true 3D occlusion.
-   - **(ii) a CSS-3D "beam" element per edge** — positioned/rotated *in* the space via a generalized
-     `computeEdgeTransform(a, b)` that reuses the bridge styling + the `computePluridPlaneLocation` math. True
-     3D, integrates with the existing matrix, no per-frame JS.
-   - **Recommend (ii)** for consistency with the CSS-3D renderer.
-
-**Risks.** The 3D line-between-two-arbitrary-anchors geometry (rotation-aware); perf with many edges; the
-"create a link" gesture (drag from A to B) is partly product UX.
-
-**Verify.** Add a link A→B programmatically → a 3D connector appears and stays attached under orbit;
-`getBacklinks(B)` returns A; survives reload.
-
----
-
-## 4. Spatial selection: multi-select · group · snapping  ✅ DELIVERED (2026-06-21)
-*Effort: Medium → Large*
-
-> **Delivered.** **Selection:** `selectedPlaneIDs: string[]` on space state (NOT persisted — a transient
-> working set, distinct from the persisted hover `activePlaneID`); reducers `setSelection` (dedupes) /
-> `toggleSelection` / `addToSelection` / `clearSelection`; per-instance memoized `makeGetIsPlaneSelected`
-> so a plane re-renders only when its own selected-ness flips; public pubsub seam `space.setSelection` /
-> `toggleSelection` / `clearSelection`. **Interaction:** a 3px `colorPrimary` ring on selected planes
-> (verified correlating exactly with state); **shift+click** toggles (plain clicks pass through to host
-> content); **Escape** clears (only when non-empty, so it still reaches the help overlay).
-> **Group-move — chose STICKY manual positions (user decision):** `transformSelectedPlanes({deltaX,
-> deltaY, deltaZ})` shifts each selected plane by a space-local delta and sets `manuallyPositioned`;
-> `reconcileNode` carries a pinned plane's `location` + flag across every relayout (same carry-forward as
-> measured width/height — the move mutates the tree directly, bypassing reconcile, so it lands; relayouts
-> then preserve it). A drag-to-move gesture in `usePointerGestures` (screen delta ÷ `scale` → space
-> units; engages only on a plain left-drag of an already-selected plane in normal mode, so it never
-> competes with orbit, which needs grab mode). **Snap:** `snapSelection` edge-aligns the group to a
-> nearby plane's left/top edge within a 12px threshold, dispatched on drag-release. Harness-verified:
-> shift-click multi-select + ring, group-drag (all move together, ÷scale correct, unselected gated out),
-> pin survives a recompute at the reconcile choke point, snap aligns within threshold / leaves alone
-> beyond, snap-on-release round-trip.
->
-> *Polish landed (see the header block): live alignment-guide overlay, Z-axis (Alt) drag, and move/link
-> undo are all DONE. Grid-snap was evaluated + skipped (low value for plane-sized objects).*
-
-**Goal.** Select multiple planes, move/group them, with snapping and alignment guides — i.e. let users
-*author* the arrangement, not just navigate a host-defined one.
-
-**Seams.**
-- Today there is only a single, hover-driven `activePlaneID` (set by a `mouseOver` effect →
-  `setSpaceField` in `components/structural/Plane/index.tsx`) plus `isolatePlane`. No selection *set*, no
-  drag-to-move.
-- A plane's position lives in `TreePlane.location` (relative to its parent); the global camera is
-  `state.space.transform`. Placement math: `computePluridPlaneLocation`.
-
-**Approach.**
-1. Add `selectedPlaneIDs: string[]` to the space state + `setSelection` / `toggleSelection` /
-   `clearSelection` + a memoized `getSelectedPlanes` (distinct from the hover `activePlaneID`).
-2. `transformSelectedPlanes({ dTranslate, dRotate })` updating each selected plane's `location`
-   (parent-relative — needs care for children).
-3. A drag-to-move gesture in/beside `usePointerGestures`, **gated by the edit/selection arbitration from #5b**
-   so a drag on a selected plane moves it instead of orbiting.
-4. Snapping to a grid / other planes' anchors + an alignment-guide overlay.
-
-**Decision (the hard part).** Free-move conflicts with the **auto-layout** model — today locations are
-computed by the layout algorithms (column/row/sheaves/…). Free placement needs a **"manual-position override"**
-concept (a plane pinned manually vs layout-driven), and a defined behavior when the layout is switched. Settle
-this model decision before building the gesture.
-
-**Risks.** The layout-vs-manual tension above; group-transform math with parent-relative coords; gesture
-arbitration with orbit/pan.
-
-**Verify.** Shift-click several planes, drag → they move together; snapping to grid/guides works; layout-switch
-behavior is defined and demonstrated.
-
----
-
-## 5. Two enabling seams: content-persistence + editor-focus - DELIVERED (2026-06-21)
-*Effort: Small · do early*
-
-**Goal.** The *only* engine-side parts of "editable notes": (a) let a product's content ride the engine's
-persistence machinery, and (b) let a host editor coexist with the gesture/shortcut layer. (The editor and the
-content schema stay product-owned.)
-
-**Seams.**
-- `state.local.save` / `load` + `PERSISTED_SPACE_FIELDS` + the debounce (300 ms) and `pagehide` /
-  `visibilitychange` flush wired in `containers/Application/index.tsx`.
-- The form-field guard already in `services/logic/shortcuts` (typing in an input doesn't trigger shortcuts) and
-  the drag-threshold in `usePointerGestures` — the two places that already "stand down" for some input.
-
-**Approach.**
-1. **Content-persistence seam.** Optional `onPersistPlaneContent(planeID)` / `onRestorePlaneContent(planeID,
-   data)` callbacks (or a small registry) the `Application` invokes during `save` / `load`, storing an **opaque**
-   `planeContent: Record<planeID, unknown>` blob via the *same* debounce + `pagehide` + versioning machinery.
-   The engine never inspects the blob → it stays content-agnostic, and any product's note bodies persist for
-   free.
-2. **Editor-focus / input-arbitration.** An `editingPlaneID` flag (focus mode) set via a new pubsub topic
-   `PLANE_EDIT_FOCUS` (or a context callback). While set, `usePointerGestures` / `useGrabMode` / the shortcut
-   handler **stand down** for events originating inside that plane — no orbit on drag-to-select-text, no
-   `R`/`T`/`S`/`G` hijack while typing. This generalizes the existing form-field skip into an explicit mode any
-   plane content can request.
-
-**Decision.** Callback-registry vs pubsub for both seams (consistency with the existing pubsub API argues for
-pubsub on the edit-focus signal at least).
-
-**Risks.** Keeping the engine content-agnostic (no product schema leaks into engine types); arbitration edge
-cases (nested editors, focus loss).
-
-**Verify (harness).** A plane containing a `<textarea>` / `contentEditable`: typing doesn't switch transform
-modes, dragging selects text instead of orbiting, and the content survives a reload through the seam.
-
----
-
-## 6. Collaboration seam  ✅ DELIVERED (2026-06-21)
-*(transport-agnostic mutation stream) — Effort: Medium → Large*
-
-> **Delivered.** `View/hooks/useCollaboration` — no store/compute plumbing; runs on the instance pubsub
-> (`pluridPubSub[0]`, i.e. the host's passed-in one). **Outbound:** an effect over `[tree, links]` emits
-> `{tree, links}` to `space.collaborationMutation` only when a *collaborative signature* changes —
-> structure (`planeID:show`) + pinned-plane positions + link `id/source/target/kind`. Auto-layout
-> positions are deliberately excluded, so resize/sibling-reflow churn never emits (storm-free). The first
-> pass just seeds the baseline (no broadcast of initial state). **Inbound:** subscribes
-> `space.applyRemoteMutation`; applies the tree via `setSpaceField` (bypasses `reconcileNode`'s pinned-
-> location carry, so a remote MOVE wins) + `setPlaneLinks`, both tagged `meta.remote`. **Echo guard:** the
-> inbound handler pre-sets `lastSignature` to the incoming snapshot, so the resulting state change is seen
-> as "already known" and not bounced back (React auto-batches the two dispatches into one render, so no
-> intermediate emit); `meta.remote` also keeps peer changes out of the LOCAL undo stack (history
-> middleware skips them). State-based + last-writer-wins via the receiver's own reconcile; op-based deltas
-> + true CRDT + presence are the product's to build ON the seam. Harness-verified: emit-on-change,
-> silent-on-reflow, inbound-apply (remote move overrides pin), no echo.
->
-> *Two-instance wiring (A.out→B.applyRemote, B.out→A.applyRemote over an in-memory/websocket channel) is
-> host integration — the four verified mechanics are exactly what make two bridged instances converge.*
-
-**Goal.** Make multiplayer a **pluggable product/infra layer**, not an engine rewrite. The engine ships the
-*seam* (an authoritative mutation stream + an apply-remote entry point), not a server.
-
-**Seams.**
-- The RTK store + the same undoable action set as #2.
-- The existing pubsub external API and its `internal: true` echo-guard flag (already used in `usePluridPubSub`
-  to keep the View's own re-publish from feeding back).
-- `reconcileTree` (incoming remote trees reconcile cheaply against the local one).
-
-**Approach.** A middleware that emits an authoritative **mutation stream** — `{ action, payload, planeID?, ts }`
-— for the collaborative subset to a pluggable sink (callback or pubsub topic), plus an
-`applyRemoteMutation(m)` entry that dispatches incoming remote mutations guarded against echo (reuse the
-`internal` flag pattern). The engine stays transport-agnostic — the product wires the sink/source to its
-transport (y-websocket, etc.). **Presence** (others' cursors/cameras) is a separate pubsub channel the product
-renders.
-
-**Decision.** Op-based (emit actions) vs state-based (emit full trees) sync — recommend op-based for the
-arrangement actions, with a full-tree state-based **resync fallback**. Last-writer-wins composes with
-`reconcileTree`; true CRDT is the product's choice on top.
-
-**Risks.** Echo loops (the `internal` flag); op ordering; the seam must not couple the engine to any transport.
-
-**Verify.** Two harness instances sharing an in-memory channel — spawn/move/close in one reflects in the other,
-with no echo storms.
-
----
-
-## 7. Minimap / overview - DELIVERED (2026-06-21)
-*Effort: Small → Medium*
-
-**Goal.** Orientation in large spaces — see the whole layout + where the camera is, at a glance.
-
-**Seams.** `state.space.tree` (plane positions) + the transform selectors (camera) + the bounding-box math
-already inside `spaceFitToView` (`state/modules/space/index.ts`).
-
-**Approach.** A fixed-corner component that projects each plane's `location` to a 2D top-down (or iso) minimap,
-draws plane rects + a camera marker/frustum, and on click calls `navigateToPluridPlane` to fly there. Pure
-selectors + a click-to-fly; throttle redraws.
-
-**Decision.** Projection (top-down vs isometric).
-
-**Risks.** Projection choice; perf with many planes (throttle).
-
-**Verify.** Minimap shows all planes + a camera marker; clicking a plane flies the camera to it.
-
----
-
-## 8. WebXR renderer
-*Effort: Large (near-rewrite) — frontier / exploratory*
-
-**Goal.** View the space in VR/AR — the boldest expression of "spatial."
-
-**Seams (and the catch).** Rendering is **CSS 3D transforms** (`Space` / `Roots` / `Plane` `styled.ts`,
-`perspective` + `preserve-3d` + `matrix3d`). The state/tree/transform model is **renderer-agnostic** (good — it
-could feed a WebGL scene), but the *rendering and interaction* layers assume DOM/pointer.
-
-**Approach (R&D, not near-term).** Prerequisite: cleanly separate the tree/transform model from the CSS-3D
-rendering layer (a renderer abstraction). Then a parallel WebGL renderer (Three / R3F) consumes the same tree +
-per-plane location, with plane content as textured quads — *DOM-content-in-WebGL is the hard part*
-(`CSS3DRenderer`, or html-as-texture) — plus a WebXR session. Scope is honestly large: the entire pointer
-interaction layer would need an XR-input counterpart.
-
-**Verify.** N/A near-term — a spike behind the renderer abstraction.
-
----
-
-## Engine ⟷ product boundary
-
-**The engine owns** the eight primitives above (spatial state, viewpoints, undo/redo, the link graph + edges,
-selection/group, the persistence + edit-focus + collab *seams*, minimap, and — eventually — the renderer).
-
-**The product owns** (and the engine just stays out of the way):
-
-| Product capability | Engine's only obligation |
-|---|---|
-| The editor component (TipTap/Lexical/CodeMirror/…) | Don't fight its input (#5b edit-focus) |
-| Note CRUD + content schema | Persist an opaque content blob (#5a) |
-| Search **index + command-palette UI** | Provide the fly-to animation (exists: `navigateToPluridPlane`) |
-| AI / semantic (embeddings, auto-link, generate) | — (operates on product-owned content) |
-| Cloud backend + accounts + permissions + sharing infra | Provide the collab mutation seam (#6) + viewpoint URLs (#1) |
-| Publish / export pipeline (image/PDF/embed) | The server pkg's headless-render `Stiller` is the one engine-adjacent piece (currently unwired) |
-
----
-
-## Developer Control Surface — DELIVERED (Tiers 0–3, all verified in the harness)
-
-Guiding principle: **Plurid is transparent infrastructure** — it facilitates 3D spatial navigation/arrangement
-and otherwise stays out of the way; the host developer decides what the app is for. So every imposed behavior
-gets an opt-out, every engine action a programmatic trigger, every state change an observation seam, and there
-is one master escape hatch for the unknown-unknowns. "Extremely powerful, yet minimal": the common 90% is a few
-consistent seams; almost no one needs the escape hatch.
-
-**Tier 0 — master escape hatch.** `onReady?: (api: PluridApi) => void` on `PluridApplication`, fired once
-post-mount. `PluridApi = { store, pubsub, getSnapshot(): PluridState, getViewpoint(): string }`. `store` is the
-raw Redux store (read any state, dispatch any action — the `pluridStateModules` action creators are exported —
-observe every change); documented as the unstable-internal power seam. Anything the engine can do, a host can.
-
-**Tier 1 — declarative pubsub surface.** Control topics: `space.fitToView`, `space.resetTransform`, `space.undo`,
-`space.redo`, `space.setTree` (+ the prior link/selection/viewpoint/collab topics). One observe channel
-`space.changed` `{ kind, value }` (`useEngineEvents`) fires on selection/tree/links/activePlane/isolate/
-layoutResolved/loading changes — subscribe once, NOT per-frame camera (that's the debounced `onViewpointChange`).
-
-**Tier 2 — opt out the always-on.**
-- `configuration.space.undo?: boolean` (default true) — false drops the history middleware entirely (store
-  factory takes `{ history }`); `undo`/`redo` become no-ops.
-- `storageAdapter?: PluridStorageAdapter` prop — redirect ALL persistence (space snapshot + content blob) to a
-  custom key→string backend (sessionStorage / in-memory / IndexedDB-mirror / encrypted); default `localStorage`.
-  Engine keeps owning serialization/versioning. Orthogonal to `useLocalStorage` (which gates *whether*).
-- `configuration.space.timings?` — `persistDebounce` (300), `viewpointChangeDebounce` (250).
-
-**Tier 3 — granular knobs + overrides + exports.**
-- `configuration.space.gestures?` — rotate/translate/scale/pinch/flyLook **sensitivities**, `dragThreshold`,
-  momentum (`momentumDecay`/`momentumMin`/`disableMomentum`), `flySpeed`, and `buttonMap`
-  (`left`/`middle` → orbit|pan|zoom|disabled, `wheel` → zoom|disabled; consulted only when set, so the CAD
-  defaults are byte-identical without it). Read LIVE in `usePointerGestures`/`useFlyControls`.
-- `configuration.space.shortcuts?` — `disabled` (`true` = all, or `PluridShortcutID[]`), `keymap` (remap a
-  shortcut's `event.code`), `onUnhandledKey(e)`. The if-ladder was refactored into a data-driven binding table
-  (same order/conditions preserved) so disable/remap/extend + a data-generated help overlay all fall out.
-- UI **render-slots** on `PluridApplication`: `renderToolbar/renderViewcube/renderMinimap/renderShortcuts`
-  (`Container` does `slot?.() ?? <Default/>` — SUBSTITUTE, vs the `elements.*.show` flags / `global.micro` which
-  HIDE). New `elements.planeLinks?.show` + `elements.alignmentGuides?.show` (default shown).
-- **Escape-hatch exports** from `@plurid/plurid-react`: `pluridSelectors`, `arrangementSignature` (+ engine
-  `space.tree`/`space.location`/`interaction` already namespaced on `@plurid/plurid-engine`).
-- **Flat-preset completeness**: `definePluridConfiguration` now maps the previously nested-only `opaque`,
-  `camera`, `transformOrigin`, `transformMode`, `transformMultimode`, `transformTouch`, `cullingDistance`,
-  `fadeInTime` (plus all of the above), with `extend` as the catch-all.
-
-Verification: every tier was exercised in `fixtures/render-test` (the harness gained reusable, default-OFF query
-params: `undo`, `store=memory`, `persistMs`, `rotateSens`, `dragThreshold`, `scDisable`, `scRemap`, `slotToolbar`,
-`hideLinks`) plus node-level unit checks of the storage adapter + flat mapper. `pnpm build` (data→engine→react)
-+ `pnpm check` green throughout.
-
----
-
-## Notes
-
-- **Plane-content capability seams (the substrate principle, 2026-07-02).** Operator decision:
-  the engine ships NO media components - "the engine just renders what the consumer passes;
-  depict/deview passing images/videos is their specificity... the issue is if the API is clean
-  and powerful enough to handle all these cases beautifully." Delivered: `usePluridPlane()`
-  (live per-plane lens: active/selected/isolation/shown/scale/viewSize/location) + the opt-in
-  `space.dimensions` sizing + the `ExternalPlane` reference loader + the consumer media-plane
-  recipe (`docs/ARCHITECTURE.md` 12.6, working example `fixtures/render-test/src/MediaPlane.tsx`).
-  Future capability seams, in the same spirit: wire `culledView` for real (its dispatch is
-  commented out; then the lens can expose true visibility), per-plane width taught to the layout
-  algorithms, content-measured planes (the dormant `updatePlaneSize`/ResizeObserver seam).
-- Nothing here is started; this is the plan. The cheap front of the queue (#1, #5, #7) is purely additive and
-  low-risk on the current green base; #3 and #6 are the substantial efforts; #8 is a deliberate rewrite to be
-  taken only behind a renderer abstraction.
-- Each feature's **Decision** line is an open fork to settle when that feature is picked up — they are flagged,
-  not silently pre-chosen.
-- Cross-reference: [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md) (the completed hardening pass
-  A–F) and the harness at `fixtures/render-test` (the CAD verification scene used in every **Verify** above).
+# Plurid Engine Feature Roadmap
+
+Status: **capability ledger and forward plan, verified 2026-07-13**.
+
+This document answers two questions: what reusable spatial capabilities already exist, and what capability work comes next. Implementation mechanics and public signatures are authoritative in [`ARCHITECTURE.md`](./ARCHITECTURE.md) and [`CONTROL_SURFACE.md`](./CONTROL_SURFACE.md).
+
+## Governing boundary
+
+Plurid is content-agnostic. A plane hosts consumer-provided React content. The engine owns spatial state and reusable spatial interaction; products own their content and domain behavior.
+
+| Engine | Product |
+| --- | --- |
+| camera, viewpoint codec, navigation, layout, plane tree | note/image/message domain models |
+| selection, pinned movement, snapping, links, spatial history | editors, media tooling, model providers, product histories |
+| persistence and collaboration transport seams | databases, CRDT choice, authorization, conflict policy |
+| input arbitration, focus, sizing, visibility, rendering | product UX, search, explorer, sharing, billing |
+| control/observe APIs and replaceable engine UI | product commands and application chrome |
+
+A feature belongs in the engine when Denote, Depict, or Dechat can use the same primitive without importing one another's domain concepts.
+
+## Delivered capabilities
+
+| Capability | Engine status | Product status |
+| --- | --- | --- |
+| Serializable viewpoint | Delivered: opt-in URL read/write, codec, pubsub set, callback observation | Denote uses viewpoint configuration; broader saved-view/share UX remains product work |
+| Content persistence seam | Delivered: opaque content callback path plus storage adapter | Product adoption remains partial; domain content storage stays outside the engine |
+| Editor/input coexistence | Delivered: input/contenteditable guards and configurable gestures/shortcuts | Must be protected by Denote browser tests |
+| Spatial undo/redo | Delivered: bounded arrangement history covering tree, links, and pinned movement | Product must keep editor/domain undo separate |
+| Inter-plane links and CSS-3D edges | Delivered: state, selectors, persistence, pubsub, renderer | Backlink panels and drag-to-connect UX remain product work |
+| Selection and arrangement | Delivered: multi-select, group movement, manual pinning, snapping, guides, Z movement | Needs realistic product-scale usability validation |
+| Collaboration seam | Delivered: transport-agnostic mutation/apply path with echo and local-history controls | Transport, presence, CRDT, authorization, and conflict UX remain product work |
+| Minimap | Delivered: projected overview with navigation and replaceable render slot | Needs large-space and accessibility validation |
+| Developer control surface | Delivered: configuration, callbacks, pubsub, slots, selectors, `onReady` | Adoption in the application portfolio is still partial |
+| Plane-content lens | Delivered: `usePluridPlane()` exposes live plane context to consumer content | Depict is the main generality test |
+| Container sizing | Delivered: opt-in space dimensions | Needs responsive/embed browser coverage |
+
+“Delivered” means present in the engine and exercised in its harness/tests. It does not mean a flagship product has fully adopted or protected the capability.
+
+## Next 1: Visibility, culling, and virtualization
+
+Real culling is the immediate capability priority. The repository contains culling configuration, calculation, state, selectors, and UI, but the View update is commented and rendering does not consume a true visible set.
+
+The capability must define:
+
+- visibility and distance semantics in the camera frame;
+- overscan and hysteresis;
+- active, selected, focused, linked, or animating exceptions;
+- whether non-visible planes are hidden, detached, or virtualized;
+- preservation of editor/component state;
+- visibility reporting through `usePluridPlane()`;
+- behavior during persistence, collaboration, minimap, and link rendering.
+
+Verification requires parameterized large-space browser scenarios and measured budgets, not only a unit test of the visibility calculation.
+
+## Next 2: Deterministic readiness and command delivery
+
+Products should not need one-tick `setTimeout` calls to wait for View subscriptions. Add an explicit readiness contract or buffered command mechanism that works in route-driven and direct-embed modes.
+
+Verification: a host restores content/viewpoint, sets selection, or navigates immediately after mount without timing assumptions, duplicate application, or lost commands.
+
+## Next 3: Accessible and configurable interaction
+
+Continue treating embedded content as first-class web UI. Define keyboard navigation between planes, focus visibility, reduced-motion behavior, screen-reader structure, touch ergonomics, and remappable commands. Engine overlays and slots need semantic and focus contracts, not only visual customization.
+
+Verification: automated accessibility checks plus keyboard-only and touch browser flows in the harness and Denote.
+
+## Next 4: Content measurement and layout contracts
+
+The engine already carries measured plane size and dormant/update seams, but layout algorithms need a clear contract for variable width/height, ResizeObserver updates, stable relayout, and consumer-controlled constraints.
+
+This is important for Depict media, Dechat artifacts, and Denote editors. It must avoid feedback loops between content layout and spatial layout.
+
+Verification: mixed-size planes resize without oscillation, loss of manual position, broken links, or unrelated tree churn.
+
+## Next 5: Browser, visual, and performance observability
+
+Expose a development-only diagnostic surface for plane identity, tree parentage, layout bounds, culled state, render/commit counts, active gestures, links, and camera state. Keep it out of production bundles by default.
+
+Combine that with automated browser/visual suites and repeatable performance scenarios so engine behavior can be diagnosed rather than inferred from screenshots or console logs.
+
+## Later: Renderer abstraction and WebXR
+
+WebXR is a strategic direction, not the next implementation task. First stabilize renderer-independent contracts for planes, geometry, content capability, camera, hit testing, selection, and input. Then prototype a WebGL/WebXR adapter behind those contracts.
+
+The research must explicitly address selectable/editable DOM content, accessibility, DOM overlays versus textures, focus transfer, controller/hand input, and parity between flat-browser and immersive sessions. A WebXR implementation that forks product state or route/tree semantics is not an acceptable renderer adapter.
+
+## Product adoption sequence
+
+### Denote
+
+Adopt and protect viewpoint, persistence, readiness, selection, links, collaboration transport, input arbitration, and large-space behavior. Denote is the integration/regression product.
+
+### Depict
+
+Validate the plane-content lens, variable-size/media planes, visibility/culling, selection, and media-oriented layout. Do not add image/video components to the engine.
+
+### Dechat
+
+Validate branching layouts, streaming content stability, artifacts as planes, context navigation, and history/collaboration boundaries. Do not add LLM provider or message semantics to the engine.
+
+## Feature admission template
+
+Before implementing a new engine capability, record:
+
+1. the product problem and at least two plausible consumers;
+2. why existing control/configuration surfaces are insufficient;
+3. the engine/product ownership boundary;
+4. public API and backward-compatibility impact;
+5. state, persistence, collaboration, input, SSR, and accessibility effects;
+6. unit, browser, visual, performance, and product verification;
+7. removal or migration of any product workaround.
+
+## Definition of done
+
+A capability is done when its domain behavior is tested, its public control/observation surface is documented, the render harness verifies it, at least one product consumes it, performance/accessibility consequences are measured where relevant, and no undocumented product workaround remains.

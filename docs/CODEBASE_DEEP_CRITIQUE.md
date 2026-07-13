@@ -1,13 +1,8 @@
 # Plurid Codebase Deep Critique
 
-Generated: 2026-06-19
+Generated: 2026-06-19. Status: **historical snapshot; not maintained as current state**.
 
-> **Historical snapshot (2026-06-19).** Since this was written: canvas/html/routes-server were
-> archived + de-globbed (`pnpm-workspace.yaml`); `CONTEXT-MAP.md` was added (the governance lens
-> this doc asked for); `@plurid/plurid-kit` was added (`docs/FRAMEWORK_PLAN.md`); the architecture
-> reference is now `docs/ARCHITECTURE.md`. Individual findings below may be resolved - the
-> MAINTAINED ledgers are `docs/ENGINE_AUDIT_AND_ROADMAP.md` and `docs/FRAMEWORK_PLAN.md`; read
-> this doc for the analysis, not for current state.
+> **Historical snapshot (2026-06-19).** Since this was written: canvas/html/routes-server were archived + de-globbed (`pnpm-workspace.yaml`); `CONTEXT-MAP.md` was added (the governance lens this doc asked for); `@plurid/plurid-kit` was added (`docs/FRAMEWORK_PLAN.md`); the architecture reference is now `docs/ARCHITECTURE.md`. Individual findings below may be resolved - the MAINTAINED references are `docs/README.md`, `docs/ARCHITECTURE.md`, `docs/ENGINE_AUDIT_AND_ROADMAP.md`, and `docs/FRAMEWORK_PLAN.md`; read this document for provenance and reasoning, not for current counts, versions, or open-item status.
 
 This document is a broad codebase critique of the current monorepo. It focuses on architecture, correctness risks, performance, build health, testing, package structure, stale surfaces, and product/feature opportunities.
 
@@ -611,10 +606,10 @@ The build passes, but bundle sizes are high for support packages:
 Fix direction:
 
 - Publish subpath exports:
-  - `@plurid/plurid-icons-react/add`
-  - `@plurid/plurid-themes/dark`
-  - `@plurid/plurid-data/locales/en`
-  - `@plurid/plurid-ui-components-react/dropdown`
+    - `@plurid/plurid-icons-react/add`
+    - `@plurid/plurid-themes/dark`
+    - `@plurid/plurid-data/locales/en`
+    - `@plurid/plurid-ui-components-react/dropdown`
 - Keep aggregate exports for convenience but mark them as convenience paths, not hot paths.
 - Track fixture bundle size in CI.
 
@@ -985,13 +980,13 @@ The specification materials are useful as historical/product context, but they d
 Fix direction:
 
 - Create a short current spec:
-  - Plane.
-  - Space.
-  - Route.
-  - Link.
-  - View.
-  - Layout.
-  - Render adapter.
+    - Plane.
+    - Space.
+    - Route.
+    - Link.
+    - View.
+    - Layout.
+    - Render adapter.
 - Add examples that are tested against the engine and React adapter.
 
 ### Existing Audit Should Become A Maintained Roadmap
