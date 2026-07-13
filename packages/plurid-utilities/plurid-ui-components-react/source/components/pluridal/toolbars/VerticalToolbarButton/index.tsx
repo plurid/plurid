@@ -61,6 +61,9 @@ const VerticalToolbarButton: React.FC<VerticalToolbarButtonOwnProperties> = (
     // #region render
     return (
         <StyledVerticalToolbarButton
+            type='button'
+            aria-label={text}
+            title={text}
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
             onClick={atClick}

@@ -21,7 +21,13 @@ export interface IStyledVerticalToolbarButton {
     theme: Theme;
 }
 
-export const StyledVerticalToolbarButton: any = styled.div<IStyledVerticalToolbarButton>`
+export const StyledVerticalToolbarButton: any = styled.button<IStyledVerticalToolbarButton>`
+    appearance: none;
+    border: 0;
+    padding: 0;
+    width: 100%;
+    color: inherit;
+    font: inherit;
     position: relative;
     cursor: pointer;
     height: 40px;
@@ -61,6 +67,13 @@ export const StyledVerticalToolbarButton: any = styled.div<IStyledVerticalToolba
         }
         return 'transparent';
     }};
+
+    &:focus-visible {
+        outline: 2px solid ${(props: IStyledVerticalToolbarButton) => {
+            return props.theme.colorPrimary;
+        }};
+        outline-offset: -2px;
+    }
 
     @media (hover: hover) {
         :hover {
