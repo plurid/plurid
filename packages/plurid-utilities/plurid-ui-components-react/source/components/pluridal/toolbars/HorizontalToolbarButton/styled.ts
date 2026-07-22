@@ -52,13 +52,13 @@ export const StyledHorizontalToolbarButton = styled.div<IStyledHorizontalToolbar
     };
 
     @media (hover: hover) {
-        :hover {
+        &:hover {
             background: ${(props: IStyledHorizontalToolbarButton) => {
                 return props.theme.backgroundColorTertiary;
             }};
         }
 
-        :hover svg {
+        &:hover svg {
             transform: ${(props: IStyledHorizontalToolbarButton) => {
                 if (props.scaleIcon) {
                     return 'scale(1.2)';

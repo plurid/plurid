@@ -90,7 +90,7 @@ export const StyledSwitchSlider: any = styled.span`
         return '0';
     }};
 
-    :before {
+    &:before {
         position: absolute;
         content: "";
         height: 26px;

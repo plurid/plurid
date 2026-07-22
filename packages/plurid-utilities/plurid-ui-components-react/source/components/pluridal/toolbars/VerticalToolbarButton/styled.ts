@@ -76,13 +76,13 @@ export const StyledVerticalToolbarButton: any = styled.button<IStyledVerticalToo
     }
 
     @media (hover: hover) {
-        :hover {
+        &:hover {
             background: ${(props: IStyledVerticalToolbarButton) => {
                 return props.theme.backgroundColorTertiary;
             }};
         }
 
-        :hover svg {
+        &:hover svg {
             transform: ${(props: IStyledVerticalToolbarButton) => {
                 if (props.scaleIcon) {
                     return 'scale(1.2)';

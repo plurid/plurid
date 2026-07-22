@@ -24,7 +24,7 @@ export const StyledSittings: any = styled.div`
         cursor: pointer;
     }
 
-    :hover {
+    &:hover {
         background-color: ${(props: any) => {
             return props.theme.backgroundColorTertiary;
         }};

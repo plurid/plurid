@@ -84,7 +84,7 @@ export const StyledTooltipText = styled.div<IStyledTooltipText>`
         return props.theme.boxShadowUmbra;
     }};
 
-    :before {
+    &:before {
         content: '';
         position: absolute;
         top: -10px;

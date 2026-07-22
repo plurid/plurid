@@ -29,7 +29,7 @@ export const StyledSelector = styled.li<IStyledSelector>`
             : 'initial'
     };
 
-    :hover {
+    &:hover {
         background-color: ${
             ({
                 theme,

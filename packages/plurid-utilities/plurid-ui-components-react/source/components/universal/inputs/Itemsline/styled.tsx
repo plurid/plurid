@@ -45,7 +45,7 @@ export const StyledItemsline = styled.div<IStyledItemsline>`
         user-select: none;
         line-height: 1.2rem;
 
-        :hover {
+        &:hover {
             text-decoration: line-through;
         }
     }

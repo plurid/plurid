@@ -47,7 +47,7 @@ export const StyledFormbutton = styled.div<IStyledFormbutton>`
         return props.theme.colorPrimary;
     }};
 
-    :hover {
+    &:hover {
         background-color: ${(props: IStyledFormbutton) => {
             if (!props.hoverEffect) {
                 return 'initial';

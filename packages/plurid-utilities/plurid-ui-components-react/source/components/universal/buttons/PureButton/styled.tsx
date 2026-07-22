@@ -178,7 +178,7 @@ export const StyledPureButton: any = styled.button<IStyledPureButton>`
     min-width: 160px;
 
     @media (hover: hover) {
-        :hover {
+        &:hover {
             background-color: ${
                 ({
                     theme,
@@ -206,7 +206,7 @@ export const StyledPureButton: any = styled.button<IStyledPureButton>`
         }
     }
 
-    :active {
+    &:active {
         box-shadow: ${
             ({
                 theme,

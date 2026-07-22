@@ -139,7 +139,7 @@ export const StyledEnterIcon: any = styled.div`
         return props.theme.colorPrimary;
     }};
 
-    :hover {
+    &:hover {
         border: 1px solid ${(props: any) => {
             return props.theme.colorPrimary;
         }};
